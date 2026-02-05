@@ -1,7 +1,6 @@
 import { EventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerTranslations } from '../models/translations';
 import type { EventCalendarClasses } from './eventCalendarClasses';
-import { AIProvider } from '../internals/components/ai-helper';
 
 export interface EventCalendarProps<TEvent extends object, TResource extends object>
   extends React.HTMLAttributes<HTMLDivElement>, EventCalendarParameters<TEvent, TResource> {
@@ -25,11 +24,6 @@ export interface EventCalendarProps<TEvent extends object, TResource extends obj
    * Not required for `'gemini-nano'`.
    */
   aiHelperApiKey?: string;
-  /**
-   * The LLM provider to use.
-   * @default 'anthropic'
-   */
-  aiHelperProvider?: AIProvider;
   /**
    * The model to use for parsing natural language.
    * @default 'claude-3-haiku-20240307' for Anthropic, `undefined` for Gemini Nano.

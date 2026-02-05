@@ -14,6 +14,7 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-schedule
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useAiHelper } from './useAiHelper';
+import { useAiHelperContext } from './AiHelperContext';
 import { ProgressButton } from './progress-button';
 import { EventDraggableDialogTrigger } from '../event-draggable-dialog';
 import type { AiHelperCommandPaletteProps } from './AiHelperCommandPalette.types';
@@ -126,6 +127,7 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
   const translations = useTranslations();
   const store = useSchedulerStoreContext();
   const processingMessage = useProcessingMessage(state.status === 'processing');
+  const aiHelperContext = useAiHelperContext();
 
   // Get resource info for display
   const resourceId = state.parsedResponse?.event?.resource;
@@ -161,7 +163,12 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
         {/* Prompting State */}
         {state.status === 'prompting' && (
           <React.Fragment>
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            {aiHelperContext?.isOffline && aiHelperContext?.isGeminiNanoAvailable && (
+              <Alert severity="info" sx={{ mb: 2, textAlign: 'left' }}>
+                You are offline. Using Gemini Nano on-device AI.
+              </Alert>
+            )}
+            <Typography variant="h6" gutterBottom>
               {translations.aiHelperTitle}
             </Typography>
             <form onSubmit={handleSubmit}>

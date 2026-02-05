@@ -47,7 +47,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     translations,
     aiHelper,
     aiHelperApiKey,
-    aiHelperProvider,
     aiHelperModel,
     aiHelperDefaultDuration,
     aiHelperExtraContext,
@@ -58,15 +57,49 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     store.set('aiHelper', { ...INITIAL_AI_HELPER_STATE, status: 'prompting' });
   }, [store]);
 
+  const [isOffline, setIsOffline] = React.useState(
+    typeof navigator !== 'undefined' ? !navigator.onLine : false,
+  );
+  const [isGeminiNanoAvailable, setIsGeminiNanoAvailable] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    async function checkAvailability() {
+      try {
+        if (typeof (globalThis as any).LanguageModel !== 'undefined') {
+          const availability = await (globalThis as any).LanguageModel.availability();
+          setIsGeminiNanoAvailable(availability !== 'unavailable');
+        }
+      } catch {
+        // API not available
+      }
+    }
+    checkAvailability();
+  }, []);
+
+  const useGeminiNano = isOffline && isGeminiNanoAvailable;
+
   const aiHelperContextValue = React.useMemo<AiHelperContextValue | null>(
     () =>
       aiHelper
         ? {
             open: openAiHelper,
             isEnabled: true,
+            isOffline,
+            isGeminiNanoAvailable,
           }
         : null,
-    [aiHelper, openAiHelper],
+    [aiHelper, openAiHelper, isOffline, isGeminiNanoAvailable],
   );
 
   // Keyboard shortcut for AI helper (Cmd+K / Ctrl+K)
@@ -97,8 +130,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
                 {aiHelper && (
                   <AiHelperCommandPalette
                     apiKey={aiHelperApiKey}
-                    provider={aiHelperProvider}
-                    model={aiHelperModel}
+                    provider={useGeminiNano ? 'gemini-nano' : undefined}
+                    model={useGeminiNano ? undefined : aiHelperModel}
                     defaultDuration={aiHelperDefaultDuration}
                     extraContext={aiHelperExtraContext}
                   />

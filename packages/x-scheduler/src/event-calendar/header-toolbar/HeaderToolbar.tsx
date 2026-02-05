@@ -8,6 +8,8 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import MenuOpen from '@mui/icons-material/MenuOpen';
 import Menu from '@mui/icons-material/Menu';
 import AutoAwesome from '@mui/icons-material/AutoAwesome';
+import WifiOffIcon from '@mui/icons-material/WifiOff';
+import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
@@ -119,7 +121,13 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       <HeaderToolbarActions className={classes.headerToolbarActions}>
         {aiHelper?.isEnabled && (
           <IconButton aria-label={translations.aiHelperTitle} onClick={aiHelper.open} size="small">
-            <AutoAwesome />
+            <Badge
+              invisible={!(aiHelper.isOffline && aiHelper.isGeminiNanoAvailable)}
+              badgeContent={<WifiOffIcon sx={{ fontSize: 14 }} />}
+              color="info"
+            >
+              <AutoAwesome />
+            </Badge>
           </IconButton>
         )}
         <PreferencesMenu />
