@@ -5,8 +5,8 @@
     "build": "next build",
     "start": "next start -p 5002",
     "test": "playwright test",
-    "ci:compare": "node --experimental-strip-types ci-scripts/compare-benchmarks.ts",
-    "ci:metadata": "node --experimental-strip-types ci-scripts/prepare-metadata.ts"
+    "ci:compare": "tsx ci-scripts/compare-benchmarks.ts",
+    "ci:metadata": "tsx ci-scripts/prepare-metadata.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
@@ -26,6 +26,7 @@
     "@types/node": "^22.15.18",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
+    "tsx": "catalog:",
     "typescript": "^5.8.3"
   }
 }
