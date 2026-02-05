@@ -46,8 +46,8 @@ const EventCalendarSidePanel = styled('aside', {
   name: 'MuiEventCalendar',
   slot: 'SidePanel',
 })(({ theme }) => ({
-  width: '100%',
   minWidth: 300,
+  width: 'fit-content',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),

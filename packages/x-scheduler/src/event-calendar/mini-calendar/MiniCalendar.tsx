@@ -23,7 +23,6 @@ const MiniCalendarRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'MiniCalendar',
 })(({ theme }) => ({
-  width: '100%',
   userSelect: 'none',
   border: '1px solid',
   borderColor: theme.palette.divider,
