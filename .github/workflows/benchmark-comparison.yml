@@ -52,140 +52,24 @@ jobs:
       - name: Run benchmarks
         run: pnpm --filter benchmark-tool test
 
-      - name: Extract metrics and compare
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+      - name: Compare benchmarks
+        id: compare
+        working-directory: test/benchmark-tool
         env:
+          BENCHMARKS_DIR: ./benchmarks
           FAIL_THRESHOLD: ${{ env.BENCHMARK_FAIL_THRESHOLD }}
+        run: |
+          RESULT=$(pnpm ci:compare)
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          echo "$RESULT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Post comparison comment
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const fs = require('fs');
-            const path = require('path');
+            const result = JSON.parse(`${{ steps.compare.outputs.result }}`);
 
-            const failThreshold = parseFloat(process.env.FAIL_THRESHOLD) || 5;
-
-            // Extract total duration from a trace file
-            function extractTotalDuration(trace) {
-              let totalDuration = 0;
-              for (const event of trace.traceEvents) {
-                if (event.ph === 'X') {
-                  totalDuration += event.dur;
-                }
-              }
-              return totalDuration;
-            }
-
-            // Read PR benchmark results per file
-            const benchmarksDir = './test/benchmark-tool/benchmarks';
-            const prMetricsByFile = {};
-
-            if (fs.existsSync(benchmarksDir)) {
-              const files = fs.readdirSync(benchmarksDir).filter(f => f.endsWith('.json'));
-              for (const file of files) {
-                const trace = JSON.parse(fs.readFileSync(path.join(benchmarksDir, file), 'utf-8'));
-                prMetricsByFile[file] = extractTotalDuration(trace);
-              }
-            }
-
-            // Fetch baseline metrics from performance-benchmark-data repository
-            // Find the latest benchmark folder (YYYY-MM-DD-HH-MM-SS format)
-            const masterMetricsByFile = {};
-            try {
-              // List directories in mui-x folder using GitHub API
-              const contentsResponse = await fetch('https://api.github.com/repos/mnajdova/performance-benchmark-data/contents/mui-x');
-              if (contentsResponse.ok) {
-                const contents = await contentsResponse.json();
-                // Filter directories and sort by name (timestamp format sorts chronologically)
-                const folders = contents
-                  .filter(item => item.type === 'dir')
-                  .map(item => item.name)
-                  .sort()
-                  .reverse();
-
-                if (folders.length > 0) {
-                  const latestFolder = folders[0];
-                  console.log(`Using latest benchmark folder: ${latestFolder}`);
-
-                  // Fetch metadata.json to get the list of benchmark files
-                  const metadataResponse = await fetch(`https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/metadata.json`);
-                  if (metadataResponse.ok) {
-                    const metadata = await metadataResponse.json();
-
-                    // Fetch metrics from each benchmark file listed in metadata
-                    for (const filePath of metadata.files) {
-                      const fileName = filePath.split('/').pop();
-                      const fileResponse = await fetch(`https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/${fileName}`);
-                      if (fileResponse.ok) {
-                        const trace = await fileResponse.json();
-                        masterMetricsByFile[fileName] = extractTotalDuration(trace);
-                      }
-                    }
-                  }
-                }
-              }
-            } catch (e) {
-              console.log('Could not fetch baseline metrics:', e.message);
-            }
-
-            // Get all unique file names from both PR and master
-            const allFiles = [...new Set([...Object.keys(prMetricsByFile), ...Object.keys(masterMetricsByFile)])].sort();
-            const hasMasterMetrics = Object.keys(masterMetricsByFile).length > 0;
-
-            // Track benchmarks that exceed the threshold
-            const failedBenchmarks = [];
-
-            let body;
-            if (hasMasterMetrics) {
-              // Build per-file comparison rows
-              const fileRows = allFiles.map(file => {
-                const prDuration = prMetricsByFile[file] || 0;
-                const masterDuration = masterMetricsByFile[file] || 0;
-                const diff = prDuration - masterDuration;
-                const diffPercentNum = masterDuration > 0 ? (diff / masterDuration) * 100 : (prDuration > 0 ? Infinity : 0);
-                const diffPercent = masterDuration > 0 ? diffPercentNum.toFixed(2) : (prDuration > 0 ? '+∞' : '0.00');
-                const emoji = diff > 0 ? '🔺' : diff < 0 ? '🔽' : '➡️';
-                const benchmarkName = file.replace('.json', '');
-
-                // Check if regression exceeds threshold
-                if (diffPercentNum > failThreshold) {
-                  failedBenchmarks.push({ name: benchmarkName, diff: diffPercent });
-                }
-
-                return `| ${benchmarkName} | ${masterDuration.toLocaleString()} | ${prDuration.toLocaleString()} | ${emoji} ${diff > 0 ? '+' : ''}${diff.toLocaleString()} (${diffPercent}%) |`;
-              }).join('\n');
-
-              let statusSection = '';
-              if (failedBenchmarks.length > 0) {
-                statusSection = `
-            > **⚠️ Performance regression detected!** The following benchmarks exceed the ${failThreshold}% threshold:
-            > ${failedBenchmarks.map(b => `\`${b.name}\` (+${b.diff}%)`).join(', ')}
-
-            `;
-              }
-
-              body = `## Performance Comparison
-            ${statusSection}
-            | Benchmark | Master (μs) | PR (μs) | Diff |
-            |-----------|-------------|---------|------|
-            ${fileRows}
-            `;
-            } else {
-              const fileRows = allFiles.map(file => {
-                const prDuration = prMetricsByFile[file] || 0;
-                const benchmarkName = file.replace('.json', '');
-                return `| ${benchmarkName} | ${prDuration.toLocaleString()} |`;
-              }).join('\n');
-
-              body = `## Performance Comparison
-
-            > **Note:** Baseline metrics not found. Showing PR metrics only.
-
-            | Benchmark | PR (μs) |
-            |-----------|---------|
-            ${fileRows}
-            `;
-            }
-
-            // Find existing comment
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -201,18 +85,17 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 comment_id: botComment.id,
-                body,
+                body: result.body,
               });
             } else {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.payload.pull_request.number,
-                body,
+                body: result.body,
               });
             }
 
-            // Fail the pipeline if any benchmark exceeds the threshold
-            if (failedBenchmarks.length > 0) {
-              core.setFailed(`Performance regression detected: ${failedBenchmarks.map(b => b.name).join(', ')} exceeded the ${failThreshold}% threshold`);
+            if (result.shouldFail) {
+              core.setFailed(result.failMessage);
             }
