@@ -17,13 +17,7 @@ This feature requires an API key from OpenAI or Anthropic.
 
 ## Demo
 
-Click the sparkle button in the toolbar to open the AI helper. Describe the event you want to create in natural language, and the AI will parse it into a structured event.
-
-{{"demo": "AiHelperDemo.js", "bg": "inline"}}
-
-:::info
-Try the [full-screen demo](/x/react-scheduler/full-screen-ai-helper/) for a better experience.
-:::
+[Open the full-screen demo](/x/react-scheduler/full-screen-ai-helper/) to try the AI helper. Click the sparkle button in the toolbar to open the AI helper. Describe the event you want to create in natural language, and the AI will parse it into a structured event.
 
 ## Usage
 
