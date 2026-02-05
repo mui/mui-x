@@ -19,7 +19,7 @@ import {
 import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { useStore } from '@base-ui/utils/store';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { schedulerPaletteStyles } from '../../utils/tokens';
+import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const ResourceMenuLegendContainer = styled('div', {
@@ -34,19 +34,19 @@ const ResourceMenuLegendContainer = styled('div', {
 const ResourceMenuColorDot = styled('span', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuColorDot',
-})({
+})(({ theme }) => ({
   width: 8,
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
-  ...schedulerPaletteStyles,
-});
+  backgroundColor: 'var(--event-main)',
+  variants: getPaletteVariants(theme),
+}));
 
 const ResourceMenuColorRadioButton = styled('button', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuColorRadioButton',
-})({
+})<{ palette?: PaletteName }>(({ theme }) => ({
   width: 24,
   height: 24,
   borderRadius: '50%',
@@ -55,14 +55,14 @@ const ResourceMenuColorRadioButton = styled('button', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'var(--event-color-9)',
-  color: 'var(--event-color-1)',
+  backgroundColor: 'var(--event-main)',
+  color: 'var(--event-on-surface-bold)',
   '&:disabled': {
     cursor: 'not-allowed',
     opacity: 0.5,
   },
-  ...schedulerPaletteStyles,
-});
+  variants: getPaletteVariants(theme),
+}));
 
 interface ResourceSelectProps {
   readOnly?: boolean;
