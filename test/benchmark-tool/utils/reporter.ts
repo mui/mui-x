@@ -39,6 +39,7 @@ function mapRenderEventToTraceEvent(event: RenderEvent): TraceEvent {
     tid: 0,
     args: {
       id: event.id,
+      name: event.name,
       phase: event.phase,
     },
   };

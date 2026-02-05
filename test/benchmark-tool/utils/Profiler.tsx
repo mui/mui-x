@@ -6,6 +6,7 @@ export const CAPTURE_RENDER_FN = '__captureRender';
 
 export interface RenderEvent {
   id: string;
+  name?: string;
   phase: 'mount' | 'update' | 'nested-update';
   actualDuration: number;
 }
@@ -16,7 +17,7 @@ function onRender(id: string, phase: 'mount' | 'update' | 'nested-update', actua
 
 export function Profiler({ children }: { children: React.ReactNode }) {
   return (
-    <React.Profiler id="Bench" onRender={onRender}>
+    <React.Profiler id="bench" onRender={onRender}>
       {children}
     </React.Profiler>
   );
