@@ -26,9 +26,7 @@ export default function FullScreenAiHelper() {
           p: 1.5,
           display: 'flex',
           alignItems: 'center',
-          gap: 2,
-          borderBottom: 1,
-          borderColor: 'divider',
+          gap: 1,
         }}
       >
         <FormControl size="small" sx={{ minWidth: 130 }}>
@@ -50,7 +48,7 @@ export default function FullScreenAiHelper() {
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
           placeholder={provider === 'anthropic' ? 'sk-ant-...' : 'sk-...'}
-          sx={{ width: 300 }}
+          sx={{ width: 300, '& .MuiInputBase-root': { height: 40 } }}
         />
       </Box>
 
