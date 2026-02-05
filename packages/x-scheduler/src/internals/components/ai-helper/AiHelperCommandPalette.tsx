@@ -161,11 +161,8 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
         {/* Prompting State */}
         {state.status === 'prompting' && (
           <React.Fragment>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" sx={{ mb: 2 }}>
               {translations.aiHelperTitle}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              {translations.aiHelperDescription}
             </Typography>
             <form onSubmit={handleSubmit}>
               <TextField

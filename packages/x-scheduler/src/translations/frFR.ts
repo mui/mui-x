@@ -13,9 +13,9 @@ export const frFR: Partial<SchedulerTranslations> = {
   allDay: 'Toute la journée',
 
   // AI Helper
-  aiHelperTitle: "Créer un événement avec l'IA",
+  aiHelperTitle: "Qu'est-ce qu'on planifie ?",
   aiHelperDescription: "Décrivez l'événement que vous souhaitez créer",
-  aiHelperPlaceholder: 'ex: "Réunion avec Jean demain à 15h"',
+  aiHelperPlaceholder: 'Réunion avec Jean demain à 15h...',
   aiHelperConfirmButton: "C'est bon",
   aiHelperEditButton: 'Modifier',
   aiHelperProcessing: 'Traitement en cours...',

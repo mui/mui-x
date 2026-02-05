@@ -106,9 +106,9 @@ export const enUS: SchedulerTranslations = {
   loading: 'Loading...',
 
   // AI Helper
-  aiHelperTitle: 'Create Event with AI',
+  aiHelperTitle: "What's on the agenda?",
   aiHelperDescription: 'Describe the event you want to create',
-  aiHelperPlaceholder: 'e.g., "Meeting with John tomorrow at 3pm"',
+  aiHelperPlaceholder: 'Meeting with John tomorrow at 3pm...',
   aiHelperConfirmButton: 'Looks good',
   aiHelperEditButton: 'It needs edit',
   aiHelperProcessing: 'Processing...',
