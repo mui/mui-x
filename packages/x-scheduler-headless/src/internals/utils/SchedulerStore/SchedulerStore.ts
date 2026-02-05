@@ -145,7 +145,7 @@ export class SchedulerStore<
       areEventsResizable: parameters.areEventsResizable ?? false,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
       canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
-      eventColor: parameters.eventColor ?? 'jade',
+      eventColor: parameters.eventColor ?? 'teal',
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
@@ -353,6 +353,13 @@ export class SchedulerStore<
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
     this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.displayTimezone)), event);
+  };
+
+  /**
+   * Goes to a specific date without changing the view.
+   */
+  public goToDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+    this.setVisibleDate(visibleDate, event);
   };
 
   /**

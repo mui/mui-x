@@ -156,8 +156,8 @@ export const initialEvents = [
 ];
 
 export const resources = [
-  { title: 'Weekly Patterns', id: 'weekly', eventColor: 'violet' },
-  { title: 'Monthly Patterns', id: 'monthly', eventColor: 'jade' },
+  { title: 'Weekly Patterns', id: 'weekly', eventColor: 'purple' },
+  { title: 'Monthly Patterns', id: 'monthly', eventColor: 'teal' },
   { title: 'Yearly Patterns', id: 'yearly', eventColor: 'lime' },
   { title: 'All-day & Spanning', id: 'allday', eventColor: 'orange' },
 ];
