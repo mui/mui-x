@@ -58,23 +58,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     store.set('aiHelper', { ...INITIAL_AI_HELPER_STATE, status: 'prompting' });
   }, [store]);
 
-  // Keyboard shortcut: Cmd/Ctrl + K to open AI helper
-  React.useEffect(() => {
-    if (!aiHelper) {
-      return undefined;
-    }
-
-    const handler = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
-        event.preventDefault();
-        openAiHelper();
-      }
-    };
-
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [aiHelper, openAiHelper]);
-
   const aiHelperContextValue = React.useMemo<AiHelperContextValue | null>(
     () =>
       aiHelper
