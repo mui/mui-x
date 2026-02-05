@@ -46,8 +46,8 @@ const EventCalendarSidePanel = styled('aside', {
   name: 'MuiEventCalendar',
   slot: 'SidePanel',
 })(({ theme }) => ({
-  width: '100%',
   minWidth: 300,
+  width: 'fit-content',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
@@ -61,6 +61,7 @@ const EventCalendarMainPanel = styled('div', {
   flexGrow: 1,
   gap: theme.spacing(2),
   minHeight: 0,
+
   '&[data-view="month"]': {
     maxHeight: '100%',
     overflow: 'hidden',
@@ -74,9 +75,11 @@ const EventCalendarContent = styled('section', {
   display: 'flex',
   flex: 1,
   overflow: 'auto',
-  maxHeight: 'fit-content',
+  height: 'fit-content',
+  maxHeight: '100%',
   '&[data-view="month"]': {
-    maxHeight: 'none',
+    height: '100%',
+    maxHeight: '100%',
   },
   '&[data-side-panel-open="false"]': {
     gridColumn: '1 / -1',
