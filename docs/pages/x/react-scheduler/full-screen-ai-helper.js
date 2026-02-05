@@ -32,7 +32,11 @@ export default function FullScreenAiHelper() {
       >
         <FormControl size="small" sx={{ minWidth: 130 }}>
           <InputLabel>Provider</InputLabel>
-          <Select value={provider} label="Provider" onChange={(event) => setProvider(event.target.value)}>
+          <Select
+            value={provider}
+            label="Provider"
+            onChange={(event) => setProvider(event.target.value)}
+          >
             <MenuItem value="anthropic">Anthropic</MenuItem>
             <MenuItem value="openai">OpenAI</MenuItem>
           </Select>
