@@ -166,11 +166,11 @@ If you're using composition, you can get those click events as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
-<ChartContainer onAxisClick={onAxisClick}>
+<ChartsContainer onAxisClick={onAxisClick}>
   {/* ... */}
   <LinePlot onItemClick={onLineClick} />
   <AreaPlot onItemClick={onAreaClick} />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 ## Styling
@@ -295,10 +295,10 @@ This will lead to strange behaviors.
 <LineChart skipAnimation />
 
 // For a composed chart
-<ChartContainer>
+<ChartsContainer>
   <LinePlot skipAnimation />
   <AreaPlot skipAnimation />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "LineAnimation.js"}}

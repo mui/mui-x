@@ -15,34 +15,35 @@ import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { EventItemProps } from './EventItem.types';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { schedulerPaletteStyles } from '../../../utils/tokens';
 import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
+import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'EventItemCard',
-})<{ 'data-variant'?: 'compact' | 'filled' | 'regular' }>(({ theme }) => ({
+})<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-3)',
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+
   '&[data-variant="compact"], &[data-variant="regular"]': {
-    '&:active': {
-      backgroundColor: 'var(--interactive-active-bg)',
-    },
-    '&:hover': {
-      backgroundColor: 'var(--interactive-hover-bg)',
-    },
-  },
-  '&[data-variant="filled"]': {
-    backgroundColor: 'var(--event-color-3)',
-    color: 'var(--event-color-12)',
-  },
-  '&[data-variant="compact"]': {
     containerType: 'inline-size',
     cursor: 'pointer',
     height: 'fit-content',
   },
-  ...schedulerPaletteStyles,
+  '&[data-variant="filled"]': {
+    backgroundColor: 'var(--event-surface-bold)',
+    color: 'var(--event-on-surface-bold)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-bold-hover)',
+    },
+  },
+  '&[data-variant="regular"]': {
+    cursor: 'pointer',
+  },
+  variants: getPaletteVariants(theme),
 }));
 
 const EventItemCardWrapper = styled('div', {
@@ -63,7 +64,7 @@ const EventItemTitle = styled('span', {
   slot: 'EventItemTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-color-12)',
+  color: theme.palette.text.primary,
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -74,7 +75,7 @@ const EventItemTime = styled('time', {
   slot: 'EventItemTime',
 })<{ 'data-compact'?: boolean }>(({ theme }) => ({
   display: 'inline-block',
-  color: 'var(--event-color-11)',
+  color: theme.palette.text.secondary,
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -89,9 +90,9 @@ const EventItemTime = styled('time', {
 const EventItemRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'EventItemRecurringIcon',
-})({
-  color: 'var(--event-color-11)',
-});
+})(({ theme }) => ({
+  color: theme.palette.text.primary,
+}));
 
 const ResourceLegendColor = styled('span', {
   name: 'MuiEventCalendar',
@@ -101,7 +102,7 @@ const ResourceLegendColor = styled('span', {
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-main)',
 });
 
 const EventItemCardContent = styled('p', {

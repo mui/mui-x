@@ -1,68 +1,32 @@
 'use client';
-import * as React from 'react';
-import { ChartsSurface, type ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
 import { type ChartAnyPluginSignature, type ChartSeriesType } from '@mui/x-charts/internals';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import {
-  ChartDataProviderPremium,
-  type ChartDataProviderPremiumProps,
-} from '../ChartDataProviderPremium';
-import { useChartContainerPremiumProps } from './useChartContainerPremiumProps';
+  ChartsContainerPremium,
+  type ChartsContainerPremiumProps,
+  type ChartsContainerPremiumSlotProps,
+  type ChartsContainerPremiumSlots,
+} from '../ChartsContainerPremium';
 
-export interface ChartContainerPremiumSlots {}
+/**
+ * @deprecated Use `ChartsContainerPremiumSlots` instead. We added S to the charts prefix to align with other components.
+ */
+export type ChartContainerPremiumSlots = ChartsContainerPremiumSlots;
 
-export interface ChartContainerPremiumSlotProps {}
+/**
+ * @deprecated Use `ChartsContainerPremiumSlotProps` instead. We added S to the charts prefix to align with other components.
+ */
+export type ChartContainerPremiumSlotProps = ChartsContainerPremiumSlotProps;
 
+/**
+ * @deprecated Use `ChartsContainerPremiumProps` instead. We added S to the charts prefix to align with other components.
+ */
 export type ChartContainerPremiumProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartDataProviderPremiumProps<TSeries, TSignatures> & ChartsSurfaceProps;
-
-type ChartContainerPremiumComponent = <
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(
-  props: ChartContainerPremiumProps<TSeries, TSignatures> & {
-    ref?: React.ForwardedRef<SVGSVGElement>;
-  },
-) => React.JSX.Element;
+> = ChartsContainerPremiumProps<TSeries, TSignatures>;
 
 /**
- * It sets up the data providers as well as the `<svg>` for the chart.
- *
- * This is a combination of both the `ChartDataProviderPremium` and `ChartsSurface` components.
- *
- * Demos:
- *
- * - [Composition](https://mui.com/x/api/charts/composition/)
- *
- * API:
- *
- * - [ChartContainer API](https://mui.com/x/api/charts/chart-container/)
- *
- * @example
- * ```jsx
- * <ChartContainerPremium
- *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
- *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
- * >
- *    <BarPlot />
- *    <ChartsXAxis axisId="x-axis" />
- * </ChartContainerPremium>
- * ```
+ * @deprecated Use `ChartsContainerPremium` instead. We added S to the charts prefix to align with other components.
  */
-const ChartContainerPremium = React.forwardRef(function ChartContainerPremium<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartContainerPremiumProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
-  const { chartDataProviderPremiumProps, children, chartsSurfaceProps } =
-    useChartContainerPremiumProps<TSeries, TSignatures>(props, ref);
-
-  return (
-    <ChartDataProviderPremium<TSeries, TSignatures> {...chartDataProviderPremiumProps}>
-      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
-    </ChartDataProviderPremium>
-  );
-}) as unknown as ChartContainerPremiumComponent;
-
-export { ChartContainerPremium };
+export const ChartContainerPremium = ChartsContainerPremium;

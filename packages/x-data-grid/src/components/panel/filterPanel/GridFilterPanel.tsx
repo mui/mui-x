@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
+import { type GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
-import { GridFilterForm, GridFilterFormProps } from './GridFilterForm';
+import { GridFilterForm, type GridFilterFormProps } from './GridFilterForm';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
@@ -16,7 +16,7 @@ import {
   gridFilterableColumnDefinitionsSelector,
   gridFilterableColumnLookupSelector,
 } from '../../../hooks/features/columns/gridColumnsSelector';
-import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export interface GetColumnForNewFilterArgs {
   currentFilters: GridFilterItem[];

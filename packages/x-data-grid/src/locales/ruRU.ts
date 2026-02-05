@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
@@ -196,6 +196,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'истина',
   booleanCellFalseLabel: 'ложь',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Развернуть',
+  longTextCellCollapseLabel: 'Свернуть',
 
   // Actions cell more text
   actionsCellMore: 'ещё',

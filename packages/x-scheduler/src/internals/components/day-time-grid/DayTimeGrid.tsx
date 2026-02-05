@@ -28,6 +28,7 @@ import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClass
 
 const FIXED_CELL_WIDTH = 68;
 const HOUR_HEIGHT = 46;
+const HOURS_IN_DAY = 24;
 
 const DayTimeGridContainer = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
@@ -70,7 +71,7 @@ const DayTimeGridHeaderRow = styled(CalendarGrid.HeaderRow, {
   display: 'grid',
   gridTemplateColumns: 'minmax(var(--fixed-cell-width), auto) repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBlockEnd: `1px solid ${theme.palette.divider}`,
 }));
 
 const DayTimeGridAllDayEventsGrid = styled('div', {
@@ -78,28 +79,39 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
   slot: 'DayTimeGridAllDayEventsGrid',
 })(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'minmax(var(--fixed-cell-width), auto) repeat(auto-fit, minmax(0, 1fr))',
+  gridTemplateColumns: 'var(--fixed-cell-width) repeat(var(--column-count), 1fr) fit-content(100%)',
   width: '100%',
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  gridTemplateColumnsFull: 'var(--fixed-cell-width) minmax(0, 1fr) fit-content(100%)',
+  borderBlockEnd: `1px solid ${theme.palette.divider}`,
+  /* Only show border on header cell when there's no scrollbar */
+  [`&:not[data-has-scroll] .${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`]: {
+    borderInlineEnd: `1px solid ${theme.palette.divider}`,
+  },
   [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}`]: {
     overflowY: 'scroll',
     scrollbarGutter: 'stable',
     height: '100%',
-    scrollbarColor: `${theme.palette.action.hover} ${theme.palette.action.hover}`,
-  },
-  [`&[data-weekend][data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}`]: {
-    scrollbarColor: `${theme.palette.action.hover} ${theme.palette.action.hover}`,
-  },
-  /* Webkit (Chrome, Safari, Edge) */
-  [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}::-webkit-scrollbar`]:
-    {
+    gridColumn: '-1',
+    /* Make scrollbar invisible by setting transparent colors */
+    scrollbarColor: 'transparent transparent',
+    background: 'transparent',
+    /* Webkit browsers (Chrome, Safari, Edge) */
+    '&::-webkit-scrollbar': {
       background: 'transparent',
     },
-  [`&[data-weekend][data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}::-webkit-scrollbar`]:
-    {
+    '&::-webkit-scrollbar-thumb': {
+      background: 'transparent',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: 'transparent',
+    },
+  },
+  /* Weekend columns show visible scrollbar for visual distinction */
+  [`&[data-weekend][data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}`]: {
+    background: theme.palette.action.hover,
+    '&::-webkit-scrollbar': {
       background: theme.palette.action.hover,
     },
+  },
 }));
 
 const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
@@ -109,12 +121,13 @@ const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
   position: 'relative',
   backgroundColor: 'transparent',
   display: 'grid',
-  gridTemplateColumns: 'repeat(var(--column-count), minmax(0, 1fr))',
-  gridTemplateRows: '1fr auto',
+  gridTemplateColumns: 'subgrid',
+  gridColumn: '2 / -1',
+  gridRow: 1,
   width: '100%',
   height: '100%',
-  '& > *:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+  '& > *': {
+    borderInlineStart: `1px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -130,12 +143,13 @@ const DayTimeGridAllDayEventsHeaderCell = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridAllDayEventsHeaderCell',
 })(({ theme }) => ({
+  gridColumn: '1',
+  gridRow: '1',
   fontSize: theme.typography.caption.fontSize,
   fontStyle: 'italic',
   padding: theme.spacing(1),
   textAlign: 'end',
   color: theme.palette.text.secondary,
-  borderRight: `1px solid ${theme.palette.divider}`,
   overflowWrap: 'break-word',
   wordBreak: 'break-word',
   hyphens: 'auto',
@@ -149,7 +163,7 @@ const DayTimeGridHeaderContent = styled('span', {
   flexDirection: 'column',
   alignItems: 'center',
   gap: theme.spacing(1),
-  padding: 10,
+  padding: theme.spacing(1.25),
 }));
 
 const DayTimeGridHeaderButton = styled('button', {
@@ -212,7 +226,8 @@ const DayTimeGridScrollableContent = styled(CalendarGrid.TimeScrollableContent, 
   display: 'flex',
   height: `calc(var(--hour-height) * 24)`,
   position: 'relative',
-  overflow: 'auto',
+  overflowY: 'auto',
+  overflowX: 'clip',
 });
 
 const DayTimeGridTimeAxis = styled('div', {
@@ -229,9 +244,8 @@ const DayTimeGridTimeAxisCell = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridTimeAxisCell',
 })(({ theme }) => ({
-  height: 'calc(100% / 24)',
-  lineHeight: 'calc(100% / 24)',
-  borderRight: `1px solid ${theme.palette.divider}`,
+  height: `calc(100% / ${HOURS_IN_DAY})`,
+  lineHeight: `calc(100% / ${HOURS_IN_DAY})`,
   paddingInline: theme.spacing(1),
   textAlign: 'end',
   '&:not(:first-of-type)::after': {
@@ -239,7 +253,7 @@ const DayTimeGridTimeAxisCell = styled('div', {
     position: 'absolute',
     left: 'var(--fixed-cell-width)',
     right: 0,
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBlockEnd: `1px solid ${theme.palette.divider}`,
     top: 'calc(var(--hour) * var(--hour-height))',
     zIndex: 1,
   },
@@ -258,14 +272,11 @@ const DayTimeGridTimeAxisText = styled('time', {
 const DayTimeGridGrid = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridGrid',
-})(({ theme }) => ({
+})({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
-  '& > *:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
-  },
-}));
+});
 
 // TODO: Replace with a proper loading overlay component that is shared across views
 const DayTimeGridLoadingOverlay = styled(Typography, {
@@ -317,6 +328,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const formatTime = useFormatTime();
 
+  const [hasScroll, setHasScroll] = React.useState(false);
+
   const { start, end } = React.useMemo(
     () => ({
       start: days[0].value,
@@ -340,8 +353,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     if (!body || !allDayHeader) {
       return;
     }
-    const hasScroll = body.scrollHeight > body.clientHeight;
-    allDayHeader.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
+    setHasScroll(body.scrollHeight > body.clientHeight);
   }, [occurrencesMap]);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
@@ -396,6 +408,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         className={classes.dayTimeGridAllDayEventsGrid}
         ref={allDayHeaderWrapperRef}
         data-weekend={lastIsWeekend || undefined}
+        data-has-scroll={hasScroll || undefined}
+        style={{ '--column-count': days.length } as React.CSSProperties}
       >
         <DayTimeGridAllDayEventsHeaderCell
           className={classes.dayTimeGridAllDayEventsHeaderCell}
@@ -405,12 +419,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           {translations.allDay}
         </DayTimeGridAllDayEventsHeaderCell>
         <DayTimeGridAllDayEventsRow
-          className={classes.dayTimeGridAllDayEventsRow}
           as={CalendarGrid.DayRow}
           start={start}
           end={end}
           role="row"
-          style={{ '--column-count': days.length } as React.CSSProperties}
+          className={classes.dayTimeGridAllDayEventsRow}
         >
           {occurrences.days.map((day) => (
             <DayGridCell key={day.key} day={day} row={occurrences} />

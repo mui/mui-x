@@ -8,12 +8,8 @@ import { type ChartPlugin } from '../../models';
 import { type UseChartBrushSignature, type Point } from './useChartBrush.types';
 import { selectorIsBrushEnabled } from './useChartBrush.selectors';
 
-export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
-  store,
-  svgRef,
-  instance,
-  params,
-}) => {
+export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, instance, params }) => {
+  const { svgRef } = instance;
   const isEnabled = store.use(selectorIsBrushEnabled);
 
   useEnhancedEffect(() => {

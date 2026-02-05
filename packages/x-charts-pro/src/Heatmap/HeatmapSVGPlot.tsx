@@ -61,6 +61,8 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
               height={yScale.bandwidth()}
               x={x}
               y={y}
+              xIndex={xIndex}
+              yIndex={yIndex}
               color={color}
               dataIndex={dataIndex}
               seriesId={series.seriesOrder[0]}

@@ -1,11 +1,11 @@
 import {
   GRID_ROOT_GROUP_ID,
-  GridGroupNode,
-  GridRowId,
-  GridRowTreeConfig,
-  GridTreeNode,
+  type GridGroupNode,
+  type GridRowId,
+  type GridRowTreeConfig,
+  type GridTreeNode,
 } from '@mui/x-data-grid';
-import { GridTreeDepths } from '@mui/x-data-grid/internals';
+import type { GridTreeDepths } from '@mui/x-data-grid/internals';
 import {
   getNodePathInTree,
   getGroupRowIdFromPath,

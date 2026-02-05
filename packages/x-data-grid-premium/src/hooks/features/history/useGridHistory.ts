@@ -1,21 +1,21 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import debounce from '@mui/utils/debounce';
 import {
   useGridEvent,
   useGridApiMethod,
-  GridStateInitializer,
+  type GridStateInitializer,
   isUndoShortcut,
   isRedoShortcut,
   runIf,
   useGridNativeEventListener,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridEvents } from '@mui/x-data-grid-pro';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import {
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type {
   GridHistoryApi,
   GridHistoryState,
   GridHistoryItem,

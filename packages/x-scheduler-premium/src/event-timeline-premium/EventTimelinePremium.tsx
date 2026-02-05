@@ -11,9 +11,9 @@ import {
   useEventTimelinePremium,
 } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { EventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { eventDialogSlots, EventDialogClassesContext } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
 import {
@@ -21,10 +21,6 @@ import {
   getEventTimelinePremiumUtilityClass,
 } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
-// TODO: Remove these CSS imports during the MUI X migration
-import '../styles/index.css';
-import '../styles/colors.css';
-import '../styles/tokens.css';
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
@@ -69,6 +65,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     monthsHeaderMonthLabel: ['monthsHeaderMonthLabel'],
     yearsHeader: ['yearsHeader'],
     yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
+    ...eventDialogSlots,
   };
 
   return composeClasses(slots, getEventTimelinePremiumUtilityClass, classes);
@@ -125,9 +122,9 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   };
 
   return (
-    <EventTimelinePremiumStoreContext.Provider value={store}>
-      <SchedulerStoreContext.Provider value={store as any}>
-        <EventTimelinePremiumClassesContext.Provider value={classes}>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <EventTimelinePremiumClassesContext.Provider value={classes}>
+        <EventDialogClassesContext.Provider value={classes}>
           <EventTimelinePremiumRoot
             ref={forwardedRef}
             className={clsx(classes.root, className)}
@@ -144,9 +141,9 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
             </EventTimelinePremiumHeaderToolbar>
             <EventTimelinePremiumContent />
           </EventTimelinePremiumRoot>
-        </EventTimelinePremiumClassesContext.Provider>
-      </SchedulerStoreContext.Provider>
-    </EventTimelinePremiumStoreContext.Provider>
+        </EventDialogClassesContext.Provider>
+      </EventTimelinePremiumClassesContext.Provider>
+    </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;
 

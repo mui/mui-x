@@ -4,9 +4,9 @@ import { Timeout } from '@mui/utils/useTimeout';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
-import { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
+import type { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
+import { type PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
 import { BrowserSpeechRecognition } from '../../utils/speechRecognition';
 
 export type PromptFieldRecordProps = Omit<GridSlotProps['baseIconButton'], 'className'> & {
