@@ -105,7 +105,7 @@ export class SchedulerStore<
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
       errors: [],
-      ...(parameters.dataSource ? { isLoading: true } : { isLoading: false }),
+      isLoading: !!parameters.dataSource,
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -145,7 +145,7 @@ export class SchedulerStore<
       areEventsResizable: parameters.areEventsResizable ?? false,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
       canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
-      eventColor: parameters.eventColor ?? 'jade',
+      eventColor: parameters.eventColor ?? 'teal',
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,

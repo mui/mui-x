@@ -15,6 +15,7 @@ export default function FullEventCalendar() {
       style={{
         display: 'flex',
         height: '100vh',
+        padding: 12,
       }}
     >
       <EventCalendar
