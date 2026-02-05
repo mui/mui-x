@@ -21,12 +21,22 @@ export function formatMonthAndDayOfMonth(date: TemporalSupportedObject, adapter:
   return adapter.formatByString(date, dateFormat);
 }
 
+/**
+ * @example "13 December"
+ */
 export function formatDayOfMonthAndMonthFullLetter(
   date: TemporalSupportedObject,
   adapter: Adapter,
 ) {
   const f = adapter.formats;
   const dateFormat = `${f.dayOfMonth} ${f.monthFullLetter}`;
+
+  return adapter.formatByString(date, dateFormat);
+}
+
+export function formatMonthFullLetterAndYear(date: TemporalSupportedObject, adapter: Adapter) {
+  const f = adapter.formats;
+  const dateFormat = `${f.monthFullLetter} ${f.yearPadded}`;
 
   return adapter.formatByString(date, dateFormat);
 }

@@ -21,10 +21,6 @@ import {
   getEventTimelinePremiumUtilityClass,
 } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
-// TODO: Remove these CSS imports during the MUI X migration
-import '../styles/index.css';
-import '../styles/colors.css';
-import '../styles/tokens.css';
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {

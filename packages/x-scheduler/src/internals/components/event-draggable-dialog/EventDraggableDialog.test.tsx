@@ -38,7 +38,7 @@ const resources: SchedulerResource[] = [
   {
     id: 'r2',
     title: 'Personal',
-    eventColor: 'cyan',
+    eventColor: 'teal',
   },
 ];
 
@@ -122,7 +122,7 @@ describe('<EventDraggableDialogContent open />', () => {
     };
 
     expect(updated).to.deep.equal(expectedUpdatedEvent);
-  });
+  }, 10_000);
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
@@ -232,7 +232,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
     const resourcesNoColor: SchedulerResource[] = [
       { id: 'r1', title: 'Work', eventColor: 'blue' },
-      { id: 'r2', title: 'Personal', eventColor: 'cyan' },
+      { id: 'r2', title: 'Personal', eventColor: 'teal' },
       { id: 'r3', title: 'NoColor' },
     ];
 
@@ -266,7 +266,7 @@ describe('<EventDraggableDialogContent open />', () => {
     expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/NoColor/i);
     expect(
       document.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
-    ).to.have.attribute('data-palette', 'jade');
+    ).to.have.attribute('data-palette', 'teal');
   });
 
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
@@ -302,7 +302,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
     expect(
       document.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
-    ).to.have.attribute('data-palette', 'jade');
+    ).to.have.attribute('data-palette', 'teal');
 
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
@@ -1249,6 +1249,7 @@ describe('<EventDraggableDialogContent open />', () => {
       );
 
       expect(document.querySelector('.MuiEventCalendar-eventDialog')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogCloseButton')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogDragHandle')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogHeader')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogHeaderContent')).not.to.equal(

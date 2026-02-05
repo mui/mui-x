@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './chart-container-premium.json';
+import jsonPageContent from './charts-container-premium.json';
 
 export default function Page(props) {
   const { descriptions } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/chart-container-premium',
+    'docsx/translations/api-docs/charts/charts-container-premium',
     false,
-    /\.\/chart-container-premium.*\.json$/,
+    /\.\/charts-container-premium.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
