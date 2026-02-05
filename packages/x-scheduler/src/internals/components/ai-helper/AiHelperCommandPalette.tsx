@@ -9,7 +9,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import { useStore } from '@base-ui/utils/store';
 import type { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useAiHelper } from './useAiHelper';
 import { ProgressButton } from './progress-button';
@@ -93,6 +96,17 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
 
   const [inputValue, setInputValue] = React.useState('');
   const translations = useTranslations();
+  const store = useSchedulerStoreContext();
+
+  // Get resource info for display
+  const resourceId = state.parsedResponse?.event?.resource;
+  const resource = useStore(
+    store,
+    React.useCallback(
+      (s: any) => schedulerResourceSelectors.processedResource(s, resourceId),
+      [resourceId],
+    ),
+  );
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -199,6 +213,11 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
                   {typeof state.parsedResponse.event.rrule === 'string'
                     ? state.parsedResponse.event.rrule
                     : formatRecurrence(state.parsedResponse.event.rrule)}
+                </Typography>
+              )}
+              {resource && (
+                <Typography>
+                  <strong>Resource:</strong> {resource.title}
                 </Typography>
               )}
             </Box>

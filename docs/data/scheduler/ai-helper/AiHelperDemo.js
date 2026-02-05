@@ -8,7 +8,9 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { defaultVisibleDate } from '../datasets/personal-agenda';
+// eslint-disable-next-line no-restricted-imports
+
+import { defaultVisibleDate, resources } from '../datasets/personal-agenda';
 
 export default function AiHelperDemo() {
   const [events, setEvents] = React.useState([]);
@@ -72,6 +74,7 @@ export default function AiHelperDemo() {
       <Box sx={{ height: 600, width: '100%' }}>
         <EventCalendar
           events={events}
+          resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
           aiHelper={isAiHelperEnabled}

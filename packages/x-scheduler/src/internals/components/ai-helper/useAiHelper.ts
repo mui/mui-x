@@ -71,8 +71,10 @@ function validateAndNormalize(
       end: data.event.end || adapter.toJsDate(end).toISOString(),
       description: data.event.description,
       allDay: data.event.allDay ?? false,
-      color: data.event.color,
       rrule: data.event.rrule,
+      resource: data.event.resource,
+      // Only include color if explicitly set by LLM
+      ...(data.event.color ? { color: data.event.color } : {}),
     },
   };
 }
@@ -145,8 +147,10 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
             end,
             description: parsedEvent.description,
             allDay: parsedEvent.allDay,
-            color: parsedEvent.color as any,
+            // Only set color if explicitly provided, otherwise let resource color apply
+            ...(parsedEvent.color ? { color: parsedEvent.color as any } : {}),
             rrule: parsedEvent.rrule as any,
+            resource: parsedEvent.resource,
           });
 
           store.set('visibleDate', start);
@@ -158,8 +162,9 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
             end,
             description: parsedEvent.description,
             allDay: parsedEvent.allDay,
-            color: parsedEvent.color as any,
+            ...(parsedEvent.color ? { color: parsedEvent.color as any } : {}),
             rrule: parsedEvent.rrule as any,
+            resource: parsedEvent.resource,
             id: eventId,
           };
           const processedEvent = processEvent(eventWithId, displayTimezone, adapter);

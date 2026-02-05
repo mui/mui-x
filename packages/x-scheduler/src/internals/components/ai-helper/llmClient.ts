@@ -1,7 +1,16 @@
 import type { SchedulerState } from '@mui/x-scheduler-headless/internals';
 import type { AiHelperParsedResponse } from '@mui/x-scheduler-headless/models';
+import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 
 export type AiEventParseResponse = AiHelperParsedResponse;
+
+/**
+ * Resource info for the LLM context.
+ */
+export interface LLMResourceInfo {
+  id: string;
+  title: string;
+}
 
 /**
  * Context sent to the LLM for parsing natural language into events.
@@ -15,6 +24,8 @@ export interface LLMContext {
   defaultDurationMinutes: number;
   /** Additional context provided by the user */
   extraContext: string;
+  /** Available resources */
+  resources: LLMResourceInfo[];
 }
 
 export type AIProvider = 'openai' | 'anthropic' | 'gemini-nano';
@@ -34,7 +45,8 @@ interface SchedulerEventCreationProperties {
   // Optional fields
   description?: string;             // The description of the event
   allDay?: boolean;                 // Whether the event is an all-day event (default: false)
-  color?: SchedulerEventColor;      // The color of the event
+  color?: SchedulerEventColor;      // DO NOT SET unless user explicitly asks for a color - resources have their own colors
+  resource?: string;                // The ID of the resource this event is assigned to
 
   // Recurrence rule (for recurring events)
   rrule?: RecurringEventRecurrenceRule;
@@ -94,11 +106,19 @@ export function buildContext(
 ): LLMContext {
   const { adapter, displayTimezone } = storeState;
 
+  // Get resources from the store
+  const processedResources = schedulerResourceSelectors.processedResourceFlatList(storeState);
+  const resources: LLMResourceInfo[] = processedResources.map((r) => ({
+    id: r.id,
+    title: r.title,
+  }));
+
   return {
     currentDateTime: adapter.now(displayTimezone).toISOString(),
     defaultTimezone: displayTimezone,
     defaultDurationMinutes: defaultDuration,
     extraContext,
+    resources,
   };
 }
 
@@ -139,6 +159,19 @@ When the user says "tomorrow", "next week", "next Monday", etc., calculate dates
 ## Other Context
 - Default event duration: ${context.defaultDurationMinutes} minutes
 ${context.extraContext ? `- Additional context: ${context.extraContext}` : ''}
+${context.resources.length > 0 ? `\n## Available Resources
+The following resources (categories, people, rooms, etc.) are available:
+${context.resources.map((r) => `- "${r.title}" (id: "${r.id}")`).join('\n')}
+
+IMPORTANT: Infer the appropriate resource from context, even if not explicitly mentioned:
+- Vacation, holidays, time off → assign to "Holidays" if available
+- Gym, workout, exercise, run, yoga → assign to "Workout" if available
+- Doctor, dentist, medical, health appointment → assign to "Medical" if available
+- Birthday, anniversary, celebration → assign to "Birthdays" if available
+- Meeting, standup, 1-on-1, work-related → assign to "Work" if available
+- Personal errands, shopping, personal tasks → assign to "Personal" if available
+
+Only leave resource empty if you truly cannot determine which category fits.` : ''}
 
 ## Data Model (TypeScript)
 ${EVENT_CREATION_SCHEMA}
@@ -153,7 +186,7 @@ Return ONLY valid JSON (no markdown, no code blocks):
     "end": "datetime WITHOUT Z suffix (use default duration if not specified)",
     "description": "string (optional)",
     "allDay": false,
-    "color": "optional color from SchedulerEventColor",
+    "resource": "optional resource ID from available resources",
     "rrule": "optional RecurringEventRecurrenceRule object"
   },
   "confidence": 0.95,
@@ -166,7 +199,10 @@ IMPORTANT RULES:
    - Infer from context (e.g., "lunch at noon" → title: "Lunch")
    - If completely unclear, use "New Event" as placeholder
 
-2. Return ONLY ONE event. If the user asks for multiple events (e.g., "5 meetings"), create ONE event with a recurrence rule instead:
+2. DO NOT set the "color" field unless the user explicitly asks for a specific color (e.g., "make it red").
+   Events will automatically inherit the color from their assigned resource. Setting color explicitly overrides this.
+
+3. Return ONLY ONE event. If the user asks for multiple events (e.g., "5 meetings"), create ONE event with a recurrence rule instead:
    - "5 daily meetings" → ONE event with rrule: { freq: "DAILY", count: 5 }
    - "3 weekly syncs" → ONE event with rrule: { freq: "WEEKLY", count: 3 }
 

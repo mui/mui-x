@@ -7,6 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { resources } from '../../../data/scheduler/datasets/personal-agenda';
 
 export default function FullScreenAiHelper() {
   const [events, setEvents] = React.useState([]);
@@ -51,6 +52,7 @@ export default function FullScreenAiHelper() {
       <div style={{ flex: 1, minHeight: 0 }}>
         <EventCalendar
           events={events}
+          resources={resources}
           onEventsChange={setEvents}
           aiHelper={!!apiKey}
           aiHelperApiKey={apiKey}

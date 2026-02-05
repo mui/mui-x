@@ -10,7 +10,7 @@ import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 // eslint-disable-next-line no-restricted-imports
 import { AIProvider } from '@mui/x-scheduler/internals/components/ai-helper';
-import { defaultVisibleDate } from '../datasets/personal-agenda';
+import { defaultVisibleDate, resources } from '../datasets/personal-agenda';
 
 export default function AiHelperDemo() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>([]);
@@ -76,6 +76,7 @@ export default function AiHelperDemo() {
       <Box sx={{ height: 600, width: '100%' }}>
         <EventCalendar
           events={events}
+          resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
           aiHelper={isAiHelperEnabled}
