@@ -28,7 +28,7 @@ export default function AiHelperDemo() {
           <Select
             value={provider}
             label="Provider"
-            onChange={(e) => setProvider(e.target.value)}
+            onChange={(event) => setProvider(event.target.value)}
           >
             <MenuItem value="anthropic">Anthropic</MenuItem>
             <MenuItem value="openai">OpenAI</MenuItem>
@@ -39,7 +39,7 @@ export default function AiHelperDemo() {
           label="API Key"
           type="password"
           value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
+          onChange={(event) => setApiKey(event.target.value)}
           placeholder={provider === 'anthropic' ? 'sk-ant-...' : 'sk-...'}
           sx={{ flex: 1, maxWidth: 400 }}
         />
