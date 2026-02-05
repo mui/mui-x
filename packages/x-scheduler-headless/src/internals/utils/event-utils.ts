@@ -106,10 +106,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
-    if (
-      event.resource &&
-      checkResourceVisibility(event.resource) === false
-    ) {
+    if (event.resource && checkResourceVisibility(event.resource) === false) {
       continue;
     }
 
