@@ -1,4 +1,4 @@
-name: Benchmark
+name: Benchmark Comparison
 
 on:
   pull_request:
@@ -21,7 +21,7 @@ env:
 
 jobs:
   comparison:
-    name: Comparison
+    name: Check Changes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR branch
