@@ -10,7 +10,7 @@ test(
   iterateTest(
     10,
     async ({ page }, _, { renders }) => {
-      const { setName } = await goToPage(__filename, page, renders);
+      const { startBench, endBench } = await goToPage(__filename, page, renders);
 
       // Wait for chart to be visible
       const svg = page.locator('svg:not([aria-hidden="true"])');
@@ -21,20 +21,20 @@ test(
       const centerX = boundingBox.width / 2;
       const centerY = boundingBox.height / 2;
 
-      setName('Hover');
-
       await svg.hover({ position: { x: centerX, y: centerY } });
 
       const deltaY = -1000; // Negative for zooming in
       const steps = 20;
 
-      setName('Zooming in');
+      startBench();
 
       for (let i = 0; i < steps; i += 1) {
         // Scroll in smaller increments to simulate a smoother zoom
         // eslint-disable-next-line no-await-in-loop
         await page.mouse.wheel(0, deltaY / steps);
       }
+
+      endBench();
     },
     async (iterations) => {
       const report = generateReportFromIterations(iterations);
