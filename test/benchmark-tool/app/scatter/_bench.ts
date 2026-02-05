@@ -7,5 +7,5 @@ test('benchmark render', async ({ page }) => {
   // Wait for chart to be visible
   await expect(page.locator('svg:not([aria-hidden="true"])')).toBeVisible();
 
-  saveReport();
+  await saveReport();
 });
