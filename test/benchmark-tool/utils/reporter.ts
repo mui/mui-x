@@ -1,11 +1,11 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
-import type { TraceEvent } from './reporter-types';
+import type { TraceEvent, TraceFileObjectFormat } from './reporter-types';
 import type { RenderEvent } from './Profiler';
 
 const benchmarksDir = path.resolve(__dirname, '../benchmarks');
 
-export async function saveReport(report: Report, route: string) {
+export async function saveReport(report: TraceFileObjectFormat, route: string) {
   // Ensure benchmarks directory exists
   await fs.mkdir(benchmarksDir, { recursive: true });
 
@@ -16,10 +16,6 @@ export async function saveReport(report: Report, route: string) {
 
   // eslint-disable-next-line no-console
   console.log(`Report saved to: ${filePath}`);
-}
-
-interface Report {
-  traceEvents: TraceEvent[];
 }
 
 function getEventKey(event: RenderEvent): string {
@@ -35,10 +31,12 @@ function calculateStdDev(values: number[], mean: number): number {
   return Math.sqrt(squaredDiffs.reduce((sum, v) => sum + v, 0) / values.length);
 }
 
-export function generateReportFromIterations(iterations: RenderEvent[][]): Report {
+export function generateReportFromIterations(iterations: RenderEvent[][]): TraceFileObjectFormat {
   if (iterations.length === 0) {
     return { traceEvents: [] };
   }
+
+  const iterationCount = iterations.length;
 
   // Get the expected order from the first iteration
   const firstIteration = iterations[0];
@@ -89,18 +87,24 @@ export function generateReportFromIterations(iterations: RenderEvent[][]): Repor
   });
 
   return {
+    metadata: {
+      iterations: iterationCount,
+    },
     traceEvents: mergedEvents.map(mapRenderEventToTraceEvent),
   };
 }
 
-export function generateReport(events: RenderEvent[]): Report {
+export function generateReport(events: RenderEvent[]): TraceFileObjectFormat {
   return {
     traceEvents: events.map(mapRenderEventToTraceEvent),
   };
 }
 
 function mapRenderEventToTraceEvent(
-  event: RenderEvent & { stdDev?: number; coefficientOfVariation?: number },
+  event: RenderEvent & {
+    stdDev?: number;
+    coefficientOfVariation?: number;
+  },
 ): TraceEvent {
   return {
     name: 'React Render',
