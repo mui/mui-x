@@ -114,4 +114,9 @@ export const enUS: SchedulerTranslations = {
   aiHelperProcessing: 'Processing...',
   aiHelperRetry: 'Try again',
   aiHelperGenericError: 'Something went wrong. Please try again.',
+
+  // MiniCalendar
+  miniCalendarLabel: 'Calendar',
+  miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
+  miniCalendarGoToNextMonth: 'Show next month in calendar',
 };
