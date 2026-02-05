@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import type {
-  AiHelperState,
-  UseAiHelperProps,
-  UseAiHelperReturn,
-} from './AiHelperCommandPalette.types';
+import { schedulerAiHelperSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import type { AiHelperState } from '@mui/x-scheduler-headless/models';
+import type { UseAiHelperProps, UseAiHelperReturn } from './AiHelperCommandPalette.types';
 import { buildContext, parseEventWithLLM, type AiEventParseResponse } from './llmClient';
 
 const INITIAL_STATE: AiHelperState = {
@@ -88,22 +87,22 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
     extraContext = '',
   } = props;
 
-  const [state, setState] = React.useState<AiHelperState>(INITIAL_STATE);
   const store = useSchedulerStoreContext();
+  const state = useStore(store, schedulerAiHelperSelectors.aiHelper);
 
   const open = React.useCallback(() => {
-    setState((s) => ({ ...s, status: 'prompting' }));
-  }, []);
+    store.set('aiHelper', { ...store.state.aiHelper, status: 'prompting' });
+  }, [store]);
 
   const close = React.useCallback(() => {
-    setState(INITIAL_STATE);
-  }, []);
+    store.set('aiHelper', INITIAL_STATE);
+  }, [store]);
 
   const submit = React.useCallback(
     async (prompt: string) => {
       if (!apiKey) {
-        setState((s) => ({
-          ...s,
+        store.set('aiHelper', {
+          ...store.state.aiHelper,
           status: 'error',
           prompt,
           parsedResponse: {
@@ -112,11 +111,11 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
             confidence: 0,
             error: 'API key is required',
           },
-        }));
+        });
         return;
       }
 
-      setState((s) => ({ ...s, status: 'processing', prompt }));
+      store.set('aiHelper', { ...store.state.aiHelper, status: 'processing', prompt });
 
       try {
         const context = buildContext(store.state, defaultDuration, extraContext);
@@ -130,13 +129,13 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
 
         // Check if LLM returned an error
         if (validated.error || !validated.event) {
-          setState((s) => ({ ...s, status: 'error', parsedResponse: validated }));
+          store.set('aiHelper', { ...store.state.aiHelper, status: 'error', parsedResponse: validated });
         } else {
-          setState((s) => ({ ...s, status: 'confirming', parsedResponse: validated }));
+          store.set('aiHelper', { ...store.state.aiHelper, status: 'confirming', parsedResponse: validated });
         }
       } catch (error: any) {
-        setState((s) => ({
-          ...s,
+        store.set('aiHelper', {
+          ...store.state.aiHelper,
           status: 'error',
           parsedResponse: {
             summary: '',
@@ -144,15 +143,16 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
             confidence: 0,
             error: error.message || 'Failed to parse event',
           },
-        }));
+        });
       }
     },
     [apiKey, provider, model, defaultDuration, extraContext, store],
   );
 
   const confirm = React.useCallback(() => {
-    if (state.parsedResponse?.event) {
-      const { event } = state.parsedResponse;
+    const { parsedResponse } = store.state.aiHelper;
+    if (parsedResponse?.event) {
+      const { event } = parsedResponse;
 
       try {
         // Convert ISO strings back to temporal objects using the adapter
@@ -175,17 +175,17 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
         // eslint-disable-next-line no-console
         console.log('AI Helper: Event created', createdEvent);
       } catch (error) {
-         
         console.error('AI Helper: Failed to create event', error);
       }
 
       close();
     }
-  }, [state.parsedResponse, store, close, defaultDuration]);
+  }, [store, close, defaultDuration]);
 
   const edit = React.useCallback(() => {
-    if (state.parsedResponse?.event) {
-      const { event } = state.parsedResponse;
+    const { parsedResponse } = store.state.aiHelper;
+    if (parsedResponse?.event) {
+      const { event } = parsedResponse;
       const { adapter, displayTimezone } = store.state;
 
       const start = adapter.date(event.start, displayTimezone);
@@ -202,11 +202,11 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
       });
       close();
     }
-  }, [state.parsedResponse, store, close, defaultDuration]);
+  }, [store, close, defaultDuration]);
 
   const retry = React.useCallback(() => {
-    setState((s) => ({ ...s, status: 'prompting', parsedResponse: null }));
-  }, []);
+    store.set('aiHelper', { ...store.state.aiHelper, status: 'prompting', parsedResponse: null });
+  }, [store]);
 
   return { state, open, close, submit, confirm, edit, retry };
 }

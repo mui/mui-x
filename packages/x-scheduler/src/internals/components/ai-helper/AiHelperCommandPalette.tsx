@@ -11,10 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useAiHelper } from './useAiHelper';
-import type {
-  AiHelperCommandPaletteProps,
-  AiHelperCommandPaletteHandle,
-} from './AiHelperCommandPalette.types';
+import type { AiHelperCommandPaletteProps } from './AiHelperCommandPalette.types';
 
 /**
  * Format a datetime string for display.
@@ -81,13 +78,10 @@ function formatRecurrence(rrule: Record<string, unknown>): string {
 /**
  * Command palette modal for creating events with AI assistance.
  */
-export const AiHelperCommandPalette = React.forwardRef<
-  AiHelperCommandPaletteHandle,
-  AiHelperCommandPaletteProps
->(function AiHelperCommandPalette(props, ref) {
+export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
   const { apiKey, provider, model, defaultDuration, extraContext } = props;
 
-  const { state, open, close, submit, confirm, edit, retry } = useAiHelper({
+  const { state, close, submit, confirm, edit, retry } = useAiHelper({
     apiKey,
     provider,
     model,
@@ -97,9 +91,6 @@ export const AiHelperCommandPalette = React.forwardRef<
 
   const [inputValue, setInputValue] = React.useState('');
   const translations = useTranslations();
-
-  // Expose open method via ref
-  React.useImperativeHandle(ref, () => ({ open }), [open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -223,4 +214,4 @@ export const AiHelperCommandPalette = React.forwardRef<
       </DialogContent>
     </Dialog>
   );
-});
+}

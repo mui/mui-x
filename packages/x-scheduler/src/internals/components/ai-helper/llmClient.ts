@@ -1,4 +1,7 @@
 import type { SchedulerState } from '@mui/x-scheduler-headless/internals';
+import type { AiHelperParsedResponse } from '@mui/x-scheduler-headless/models';
+
+export type AiEventParseResponse = AiHelperParsedResponse;
 
 /**
  * Context sent to the LLM for parsing natural language into events.
@@ -65,28 +68,6 @@ interface RecurringEventRecurrenceRule {
 // - Daily for 10 occurrences: { freq: "DAILY", count: 10 }
 // - As RFC5545 string: "FREQ=WEEKLY;BYDAY=MO,WE,FR"
 `.trim();
-
-/**
- * Response from the LLM after parsing a natural language prompt.
- */
-export interface AiEventParseResponse {
-  /** Human-readable summary of what the AI understood */
-  summary: string;
-  /** Parsed event data (null if parsing failed) */
-  event: {
-    title: string;
-    start: string;
-    end?: string;
-    description?: string;
-    allDay?: boolean;
-    color?: string;
-    rrule?: Record<string, unknown> | string;
-  } | null;
-  /** Confidence score from 0 to 1 */
-  confidence: number;
-  /** Error description if parsing failed */
-  error: string;
-}
 
 /**
  * Build context from scheduler state for the LLM.

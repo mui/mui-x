@@ -1,21 +1,6 @@
-import type { AiEventParseResponse } from './llmClient';
+import type { AiHelperState } from '@mui/x-scheduler-headless/models';
 
-/**
- * Status of the AI helper state machine.
- */
-export type AiHelperStatus = 'closed' | 'prompting' | 'processing' | 'error' | 'confirming';
-
-/**
- * State of the AI helper.
- */
-export interface AiHelperState {
-  /** Current status */
-  status: AiHelperStatus;
-  /** The prompt entered by the user */
-  prompt: string;
-  /** The parsed response from the LLM */
-  parsedResponse: AiEventParseResponse | null;
-}
+export type { AiHelperState, AiHelperStatus } from '@mui/x-scheduler-headless/models';
 
 /**
  * Props for the AI helper hook.

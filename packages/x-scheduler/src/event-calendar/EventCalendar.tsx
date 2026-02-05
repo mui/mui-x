@@ -6,6 +6,7 @@ import {
   useExtractEventCalendarParameters,
 } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import type { AiHelperState } from '@mui/x-scheduler-headless/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
@@ -16,9 +17,14 @@ import { EventCalendarRoot } from './EventCalendarRoot';
 import {
   AiHelperCommandPalette,
   AiHelperContext,
-  type AiHelperCommandPaletteHandle,
   type AiHelperContextValue,
 } from '../internals/components/ai-helper';
+
+const INITIAL_AI_HELPER_STATE: AiHelperState = {
+  status: 'closed',
+  prompt: '',
+  parsedResponse: null,
+};
 
 export const EventCalendar = React.forwardRef(function EventCalendar<
   TEvent extends object,
@@ -47,7 +53,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     ...other
   } = forwardedProps;
 
-  const aiHelperRef = React.useRef<AiHelperCommandPaletteHandle>(null);
+  const openAiHelper = React.useCallback(() => {
+    store.set('aiHelper', { ...INITIAL_AI_HELPER_STATE, status: 'prompting' });
+  }, [store]);
 
   // Keyboard shortcut: Cmd/Ctrl + K to open AI helper
   React.useEffect(() => {
@@ -58,23 +66,23 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        aiHelperRef.current?.open();
+        openAiHelper();
       }
     };
 
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [aiHelper]);
+  }, [aiHelper, openAiHelper]);
 
   const aiHelperContextValue = React.useMemo<AiHelperContextValue | null>(
     () =>
       aiHelper
         ? {
-            open: () => aiHelperRef.current?.open(),
+            open: openAiHelper,
             isEnabled: true,
           }
         : null,
-    [aiHelper],
+    [aiHelper, openAiHelper],
   );
 
   return (
@@ -87,7 +95,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
                 <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
                 {aiHelper && (
                   <AiHelperCommandPalette
-                    ref={aiHelperRef}
                     apiKey={aiHelperApiKey}
                     provider={aiHelperProvider}
                     model={aiHelperModel}
