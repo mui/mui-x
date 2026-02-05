@@ -18,6 +18,7 @@ import { DayView } from '../day-view/DayView';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
+import { MiniCalendar } from './mini-calendar';
 import { schedulerTokens } from '../internals/utils/tokens';
 import { useEventCalendarClasses } from './EventCalendarClassesContext';
 
@@ -45,8 +46,8 @@ const EventCalendarSidePanel = styled('aside', {
   name: 'MuiEventCalendar',
   slot: 'SidePanel',
 })(({ theme }) => ({
-  width: '100%',
-  minWidth: 250,
+  minWidth: 300,
+  width: 'fit-content',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
@@ -60,6 +61,7 @@ const EventCalendarMainPanel = styled('div', {
   flexGrow: 1,
   gap: theme.spacing(2),
   minHeight: 0,
+
   '&[data-view="month"]': {
     maxHeight: '100%',
     overflow: 'hidden',
@@ -73,27 +75,15 @@ const EventCalendarContent = styled('section', {
   display: 'flex',
   flex: 1,
   overflow: 'auto',
-  maxHeight: 'fit-content',
+  height: 'fit-content',
+  maxHeight: '100%',
   '&[data-view="month"]': {
-    maxHeight: 'none',
+    height: '100%',
+    maxHeight: '100%',
   },
   '&[data-side-panel-open="false"]': {
     gridColumn: '1 / -1',
   },
-}));
-
-const EventCalendarMonthCalendarPlaceholder = styled('section', {
-  name: 'MuiEventCalendar',
-  slot: 'MonthCalendarPlaceholder',
-})(({ theme }) => ({
-  backgroundColor: theme.palette.grey[100],
-  height: 220,
-  width: '100%',
-  borderRadius: theme.shape.borderRadius,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: theme.palette.grey[500],
 }));
 
 const EventCalendarErrorContainer = styled(Alert, {
@@ -154,12 +144,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
         <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
           <Collapse in={isSidePanelOpen} orientation="horizontal">
             <EventCalendarSidePanel className={classes.sidePanel}>
-              <EventCalendarMonthCalendarPlaceholder
-                className={classes.monthCalendarPlaceholder}
-                aria-label="Month calendar"
-              >
-                Month Calendar
-              </EventCalendarMonthCalendarPlaceholder>
+              <MiniCalendar />
               <ResourcesLegend />
             </EventCalendarSidePanel>
           </Collapse>

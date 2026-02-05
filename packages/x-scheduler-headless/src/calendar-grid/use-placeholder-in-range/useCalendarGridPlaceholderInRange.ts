@@ -39,7 +39,7 @@ export function useCalendarGridPlaceholderInRange(
     const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      id: 'occurrence-placeholder',
+      id: originalEventId ?? 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
       displayTimezone: {
         start: startProcessed,
@@ -81,7 +81,7 @@ export function useCalendarGridPlaceholderInRange(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, adapter, originalEvent, occurrences, maxIndex]);
+  }, [rawPlaceholder, adapter, originalEvent, originalEventId, occurrences, maxIndex]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {
