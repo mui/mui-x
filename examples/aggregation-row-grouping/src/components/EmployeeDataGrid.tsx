@@ -1,67 +1,3 @@
----
-title: Tutorial - Data Grid with Aggregation and Row Grouping
-description: Learn how to use aggregation functions and row grouping in the Data Grid Premium to analyze and organize your data.
----
-
-# Build a Data Grid with Aggregation and Row Grouping
-
-## Overview
-
-This tutorial walks you through building a client-side Data Grid that demonstrates aggregation functions and row grouping using the MUI X Data Grid Premium.
-You will define data locally and use the grid to group rows by column values and apply aggregation functions (such as sum, average, min, max) to analyze data within those groups.
-
-:::success
-If you'd rather skip the tutorial entirely, you can check out [the complete app code on GitHub](https://github.com/mui/mui-x/tree/master/examples/aggregation-row-grouping/).
-:::
-
-## Prerequisites
-
-- Basic React knowledge
-- Understanding of TypeScript interfaces
-
-### Relevant documentation
-
-The docs listed below may be useful if you're new to the MUI X Data Grid:
-
-- [Row grouping](/x/react-data-grid/row-grouping/)
-- [Aggregation](/x/react-data-grid/aggregation/)
-- [Column definition](/x/react-data-grid/column-definition/)
-- [Pagination](/x/react-data-grid/pagination/)
-
-## Part one: App setup
-
-In part one, you'll set up a React app with Vite and install the dependencies you need for the Data Grid Premium.
-
-### 1. Create the project
-
-Create a new directory and scaffold a React app with Vite in TypeScript:
-
-```bash
-mkdir aggregation-row-grouping &&
-cd aggregation-row-grouping &&
-pnpm create vite@latest . -- --template react-ts &&
-pnpm install
-```
-
-:::success
-This tutorial uses pnpm, but all MUI libraries are also compatible with npm and yarn.
-See the [Material UI installation page](https://mui.com/material-ui/getting-started/installation/) for more details.
-:::
-
-### 2. Install dependencies
-
-Install Material UI and MUI X Data Grid Premium:
-
-```bash
-pnpm install @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid-premium @fontsource/roboto
-```
-
-### 3. Set up the app shell
-
-Create a `components` directory and add a placeholder for the grid.
-Create `src/components/EmployeeDataGrid.tsx`:
-
-```tsx
 import * as React from 'react';
 import {
   DataGridPremium,
@@ -71,77 +7,6 @@ import {
 } from '@mui/x-data-grid-premium';
 import { Box, Typography } from '@mui/material';
 
-const EmployeeDataGrid = () => {
-  return (
-    <Box sx={{ height: 600, width: '100%' }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        MUI X Data Grid Premium - Aggregation & Row Grouping
-      </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Row grouping by department and role, with aggregation (sum) on salary and
-        projects.
-      </Typography>
-    </Box>
-  );
-};
-
-export default EmployeeDataGrid;
-```
-
-Update `src/App.tsx`:
-
-```tsx
-import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
-import { Container } from '@mui/material';
-import EmployeeDataGrid from './components/EmployeeDataGrid';
-
-function App() {
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <EmployeeDataGrid />
-      </Container>
-    </React.Fragment>
-  );
-}
-
-export default App;
-```
-
-Replace the contents of `src/main.tsx` with:
-
-```tsx
-import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
-import App from './App';
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
-```
-
-### 4. Run the app
-
-```bash
-pnpm dev
-```
-
-The app runs on `http://localhost:5173`.
-
-## Part two: Data Grid with aggregation and row grouping
-
-In this section you'll add local data, column definitions, row grouping, and aggregation to `EmployeeDataGrid.tsx`.
-
-### 5. Define the data structure and rows
-
-Define an `Employee` interface and a local array of rows.
-Add this below the imports in `EmployeeDataGrid.tsx`:
-
-```tsx
 interface Employee {
   id: number;
   name: string;
@@ -555,18 +420,7 @@ const EMPLOYEE_DATA: Employee[] = [
     projects: 3,
   },
 ];
-```
 
-**What's happening here:**
-
-- `Employee` describes one row in the grid; `projects` and `salary` are used for aggregation.
-- `EMPLOYEE_DATA` is the in-memory dataset. The grid will group and aggregate over these rows on the client.
-
-### 6. Define the grid columns
-
-Add column definitions that match your data:
-
-```tsx
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 80 },
   { field: 'name', headerName: 'Name', width: 200 },
@@ -581,21 +435,14 @@ const columns: GridColDef[] = [
     valueFormatter: (value) => `$${value?.toLocaleString()}`,
   },
   { field: 'startDate', headerName: 'Start Date', width: 130 },
-  { field: 'projects', headerName: 'Projects', width: 120, type: 'number' },
+  {
+    field: 'projects',
+    headerName: 'Projects',
+    width: 120,
+    type: 'number',
+  },
 ];
-```
 
-**What's happening here:**
-
-- `field` matches properties on `Employee`.
-- `type: 'number'` on `salary` and `projects` allows aggregation.
-- `valueFormatter` formats salary as currency.
-
-### 7. Configure row grouping and aggregation
-
-Use `useGridApiRef` and `useKeepGroupedColumnsHidden` to set initial row grouping and aggregation:
-
-```tsx
 function EmployeeDataGrid() {
   const apiRef = useGridApiRef();
 
@@ -615,82 +462,14 @@ function EmployeeDataGrid() {
   });
 
   return (
-    // ... JSX next
-  );
-}
-```
-
-**What's happening here:**
-
-- `apiRef` is used by `useKeepGroupedColumnsHidden` to hide grouped columns from the column panel.
-- `rowGrouping.model` groups rows by `department`, then by `role` inside each department.
-- `aggregation.model` applies `sum` to `salary` and `projects` for each group.
-
-### 8. Configure aggregation position
-
-Control where aggregated values appear:
-
-```tsx
-getAggregationPosition={(groupNode) =>
-  groupNode.depth === -1 ? 'footer' : 'inline'
-}
-```
-
-**What's happening here:**
-
-- Root level (`depth === -1`): aggregates in a footer row.
-- Nested groups: aggregates inline with the group header.
-
-### 9. Render the Data Grid Premium
-
-Render the grid with `rows`, `columns`, and the options you defined:
-
-```tsx
-<DataGridPremium
-  apiRef={apiRef}
-  rows={EMPLOYEE_DATA}
-  columns={columns}
-  initialState={initialState}
-  pagination
-  pageSizeOptions={[10, 25, 50, 100]}
-  disableRowSelectionOnClick
-  getAggregationPosition={(groupNode) =>
-    groupNode.depth === -1 ? 'footer' : 'inline'
-  }
-/>
-```
-
-**What's happening here:**
-
-- `DataGridPremium` is required for row grouping and aggregation.
-- `rows={EMPLOYEE_DATA}` passes your local data.
-- `initialState` holds the grouping and aggregation config.
-- `getAggregationPosition` sets where aggregates are shown (footer vs inline).
-
-### 10. Complete component
-
-With the `EMPLOYEE_DATA` and `columns` from steps 5 and 6 in place, the rest of `EmployeeDataGrid.tsx` is:
-
-```tsx
-function EmployeeDataGrid() {
-  const apiRef = useGridApiRef();
-
-  const initialState = useKeepGroupedColumnsHidden({
-    apiRef,
-    initialState: {
-      rowGrouping: { model: ['department', 'role'] },
-      aggregation: { model: { salary: 'sum', projects: 'sum' } },
-    },
-  });
-
-  return (
     <Box sx={{ height: 600, width: '100%' }}>
       <Typography variant="h4" component="h1" gutterBottom>
         MUI X Data Grid Premium - Aggregation & Row Grouping
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Row grouping by department and role, with aggregation (sum) on salary and
-        projects.
+        This example demonstrates row grouping by department and role, with aggregation functions
+        applied to salary (sum) and projects (sum). Try expanding/collapsing groups to see
+        aggregated values.
       </Typography>
 
       <DataGridPremium
@@ -701,51 +480,10 @@ function EmployeeDataGrid() {
         pagination
         pageSizeOptions={[10, 25, 50, 100]}
         disableRowSelectionOnClick
-        getAggregationPosition={(groupNode) =>
-          groupNode.depth === -1 ? 'footer' : 'inline'
-        }
+        getAggregationPosition={(groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')}
       />
     </Box>
   );
 }
 
 export default EmployeeDataGrid;
-```
-
-You should see employee data grouped by department and role, with sum of salary and projects per group. Expand and collapse groups to explore the hierarchy.
-
-## Understanding aggregation and row grouping
-
-### Row grouping
-
-Rows are grouped by column values. Here we use:
-
-1. **Department** – top-level groups
-2. **Role** – subgroups inside each department
-
-You can expand or collapse groups to see detail rows.
-
-### Aggregation functions
-
-Aggregations summarize values in a group. Common functions:
-
-- `sum` – total of values
-- `avg` – average
-- `min` / `max` – minimum or maximum
-- `size` – number of rows
-
-This tutorial uses `sum` for salary and projects.
-
-### Aggregation position
-
-`getAggregationPosition` controls where aggregates appear:
-
-- `'footer'` – footer row (e.g. root level)
-- `'inline'` – next to the group header (e.g. nested groups)
-- `null` – hide aggregates for that level
-
-## Learn more
-
-- [Row grouping](/x/react-data-grid/row-grouping/)
-- [Aggregation](/x/react-data-grid/aggregation/)
-- [Data Grid Premium](/x/react-data-grid/getting-started/#premium-features)
