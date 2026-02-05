@@ -31,11 +31,7 @@ export default function FullScreenAiHelper() {
       >
         <FormControl size="small" sx={{ minWidth: 130 }}>
           <InputLabel>Provider</InputLabel>
-          <Select
-            value={provider}
-            label="Provider"
-            onChange={(e) => setProvider(e.target.value)}
-          >
+          <Select value={provider} label="Provider" onChange={(event) => setProvider(event.target.value)}>
             <MenuItem value="anthropic">Anthropic</MenuItem>
             <MenuItem value="openai">OpenAI</MenuItem>
           </Select>
@@ -46,7 +42,7 @@ export default function FullScreenAiHelper() {
           label="API Key"
           type="password"
           value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
+          onChange={(event) => setApiKey(event.target.value)}
           placeholder={provider === 'anthropic' ? 'sk-ant-...' : 'sk-...'}
           sx={{ width: 300, '& .MuiInputBase-root': { height: 40 } }}
         />
@@ -59,9 +55,7 @@ export default function FullScreenAiHelper() {
           aiHelper={!!apiKey}
           aiHelperApiKey={apiKey}
           aiHelperProvider={provider}
-          aiHelperModel={
-            provider === 'anthropic' ? 'claude-3-haiku-20240307' : 'gpt-4o-mini'
-          }
+          aiHelperModel={provider === 'anthropic' ? 'claude-3-haiku-20240307' : 'gpt-4o-mini'}
           aiHelperDefaultDuration={60}
         />
       </div>

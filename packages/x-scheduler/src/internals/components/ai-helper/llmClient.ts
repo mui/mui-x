@@ -17,6 +17,8 @@ export interface LLMContext {
   extraContext: string;
 }
 
+export type AIProvider = 'openai' | 'anthropic' | 'gemini-nano';
+
 /**
  * The full TypeScript data model for event creation.
  * This is sent to the LLM so it understands all available fields.
@@ -313,15 +315,42 @@ export async function parseEventWithAnthropic(
 }
 
 /**
+ * Parse a natural language prompt into an event using Chrome's built-in Prompt API (Gemini Nano).
+ */
+export async function parseEventWithGeminiNano(
+  prompt: string,
+  context: LLMContext,
+): Promise<AiEventParseResponse> {
+  const session = await (globalThis as any).LanguageModel.create({
+    initialPrompts: [{ role: 'system', content: buildSystemPrompt(context) }],
+  });
+
+  try {
+    const result: string = await session.prompt(prompt);
+    // The response may contain markdown code blocks, so strip them
+    const jsonStr = result
+      .replace(/```json?\n?/g, '')
+      .replace(/```/g, '')
+      .trim();
+    return JSON.parse(jsonStr);
+  } finally {
+    session.destroy();
+  }
+}
+
+/**
  * Parse a natural language prompt into an event using the specified provider.
  */
 export async function parseEventWithLLM(
   prompt: string,
   context: LLMContext,
   apiKey: string,
-  provider: 'openai' | 'anthropic' = 'openai',
+  provider: AIProvider = 'openai',
   model?: string,
 ): Promise<AiEventParseResponse> {
+  if (provider === 'gemini-nano') {
+    return parseEventWithGeminiNano(prompt, context);
+  }
   if (provider === 'anthropic') {
     return parseEventWithAnthropic(prompt, context, apiKey, model);
   }
