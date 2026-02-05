@@ -55,46 +55,32 @@ jobs:
             const fs = require('fs');
             const path = require('path');
 
-            // Extract metrics from PR benchmark results
-            function extractMetrics(trace) {
-              const durationByEvent = {};
+            // Extract total duration from a trace file
+            function extractTotalDuration(trace) {
               let totalDuration = 0;
-              let eventCount = 0;
-
               for (const event of trace.traceEvents) {
                 if (event.ph === 'X') {
                   totalDuration += event.dur;
-                  eventCount += 1;
-                  // Include phase (mount/update) in the event key for better granularity
-                  const phase = event.args?.phase;
-                  const eventKey = phase ? `${event.name} (${phase})` : event.name;
-                  durationByEvent[eventKey] = (durationByEvent[eventKey] ?? 0) + event.dur;
                 }
               }
-
-              return { totalDuration, eventCount, durationByEvent };
+              return totalDuration;
             }
 
-            // Read PR benchmark results
+            // Read PR benchmark results per file
             const benchmarksDir = './test/benchmark-tool/benchmarks';
-            let prMetrics = { totalDuration: 0, eventCount: 0, durationByEvent: {} };
+            const prMetricsByFile = {};
 
             if (fs.existsSync(benchmarksDir)) {
               const files = fs.readdirSync(benchmarksDir).filter(f => f.endsWith('.json'));
               for (const file of files) {
                 const trace = JSON.parse(fs.readFileSync(path.join(benchmarksDir, file), 'utf-8'));
-                const metrics = extractMetrics(trace);
-                prMetrics.totalDuration += metrics.totalDuration;
-                prMetrics.eventCount += metrics.eventCount;
-                for (const [event, duration] of Object.entries(metrics.durationByEvent)) {
-                  prMetrics.durationByEvent[event] = (prMetrics.durationByEvent[event] ?? 0) + duration;
-                }
+                prMetricsByFile[file] = extractTotalDuration(trace);
               }
             }
 
             // Fetch baseline metrics from performance-benchmark-data repository
             // Find the latest benchmark folder (YYYY-MM-DD-HH-MM-SS format)
-            let masterMetrics = null;
+            const masterMetricsByFile = {};
             try {
               // List directories in mui-x folder using GitHub API
               const contentsResponse = await fetch('https://api.github.com/repos/mnajdova/performance-benchmark-data/contents/mui-x');
@@ -115,20 +101,14 @@ jobs:
                   const metadataResponse = await fetch(`https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/metadata.json`);
                   if (metadataResponse.ok) {
                     const metadata = await metadataResponse.json();
-                    masterMetrics = { totalDuration: 0, eventCount: 0, durationByEvent: {} };
 
-                    // Fetch and aggregate metrics from each benchmark file listed in metadata
+                    // Fetch metrics from each benchmark file listed in metadata
                     for (const filePath of metadata.files) {
                       const fileName = filePath.split('/').pop();
                       const fileResponse = await fetch(`https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/${fileName}`);
                       if (fileResponse.ok) {
                         const trace = await fileResponse.json();
-                        const metrics = extractMetrics(trace);
-                        masterMetrics.totalDuration += metrics.totalDuration;
-                        masterMetrics.eventCount += metrics.eventCount;
-                        for (const [event, duration] of Object.entries(metrics.durationByEvent)) {
-                          masterMetrics.durationByEvent[event] = (masterMetrics.durationByEvent[event] ?? 0) + duration;
-                        }
+                        masterMetricsByFile[fileName] = extractTotalDuration(trace);
                       }
                     }
                   }
@@ -138,53 +118,43 @@ jobs:
               console.log('Could not fetch baseline metrics:', e.message);
             }
 
-            const prDuration = prMetrics.totalDuration;
+            // Get all unique file names from both PR and master
+            const allFiles = [...new Set([...Object.keys(prMetricsByFile), ...Object.keys(masterMetricsByFile)])].sort();
+            const hasMasterMetrics = Object.keys(masterMetricsByFile).length > 0;
 
             let body;
-            if (masterMetrics) {
-              const masterDuration = masterMetrics.totalDuration;
-              const diff = prDuration - masterDuration;
-              const diffPercent = masterDuration > 0 ? ((diff / masterDuration) * 100).toFixed(2) : 'N/A';
-              const emoji = diff > 0 ? '🔺' : diff < 0 ? '🔽' : '➡️';
+            if (hasMasterMetrics) {
+              // Build per-file comparison rows
+              const fileRows = allFiles.map(file => {
+                const prDuration = prMetricsByFile[file] || 0;
+                const masterDuration = masterMetricsByFile[file] || 0;
+                const diff = prDuration - masterDuration;
+                const diffPercent = masterDuration > 0 ? ((diff / masterDuration) * 100).toFixed(2) : (prDuration > 0 ? '+∞' : '0.00');
+                const emoji = diff > 0 ? '🔺' : diff < 0 ? '🔽' : '➡️';
+                const benchmarkName = file.replace('.json', '');
+                return `| ${benchmarkName} | ${masterDuration.toLocaleString()} | ${prDuration.toLocaleString()} | ${emoji} ${diff > 0 ? '+' : ''}${diff.toLocaleString()} (${diffPercent}%) |`;
+              }).join('\n');
 
               body = `## Performance Comparison
 
-            | Metric | Master | PR | Diff |
-            |--------|--------|-----|------|
-            | Total Duration (μs) | ${masterDuration.toLocaleString()} | ${prDuration.toLocaleString()} | ${emoji} ${diff > 0 ? '+' : ''}${diff.toLocaleString()} (${diffPercent}%) |
-            | Event Count | ${masterMetrics.eventCount} | ${prMetrics.eventCount} | ${prMetrics.eventCount - masterMetrics.eventCount} |
-
-            <details>
-            <summary>Duration by Event Type</summary>
-
-            | Event | Master (μs) | PR (μs) |
-            |-------|-------------|---------|
-            ${Object.keys({ ...masterMetrics.durationByEvent, ...prMetrics.durationByEvent })
-              .map(event => `| ${event} | ${(masterMetrics.durationByEvent[event] || 0).toLocaleString()} | ${(prMetrics.durationByEvent[event] || 0).toLocaleString()} |`)
-              .join('\n')}
-
-            </details>
+            | Benchmark | Master (μs) | PR (μs) | Diff |
+            |-----------|-------------|---------|------|
+            ${fileRows}
             `;
             } else {
+              const fileRows = allFiles.map(file => {
+                const prDuration = prMetricsByFile[file] || 0;
+                const benchmarkName = file.replace('.json', '');
+                return `| ${benchmarkName} | ${prDuration.toLocaleString()} |`;
+              }).join('\n');
+
               body = `## Performance Comparison
 
             > **Note:** Baseline metrics not found. Showing PR metrics only.
 
-            | Metric | PR |
-            |--------|-----|
-            | Total Duration (μs) | ${prDuration.toLocaleString()} |
-            | Event Count | ${prMetrics.eventCount} |
-
-            <details>
-            <summary>Duration by Event Type</summary>
-
-            | Event | PR (μs) |
-            |-------|---------|
-            ${Object.keys(prMetrics.durationByEvent)
-              .map(event => `| ${event} | ${prMetrics.durationByEvent[event].toLocaleString()} |`)
-              .join('\n')}
-
-            </details>
+            | Benchmark | PR (μs) |
+            |-----------|---------|
+            ${fileRows}
             `;
             }
 
