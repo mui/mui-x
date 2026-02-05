@@ -113,9 +113,7 @@ function EmployeeDataGrid() {
         pagination
         pageSizeOptions={[10, 25, 50, 100]}
         disableRowSelectionOnClick
-        getAggregationPosition={(groupNode) =>
-          groupNode.depth === -1 ? 'footer' : 'inline'
-        }
+        getAggregationPosition={(groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')}
       />
     </Box>
   );

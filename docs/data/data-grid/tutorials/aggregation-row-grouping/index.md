@@ -710,9 +710,9 @@ const EmployeeDataGrid = () => {
         MUI X Data Grid Premium - Aggregation & Row Grouping
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        This example demonstrates row grouping by department and role, with aggregation functions
-        applied to salary (sum) and projects (sum). Try expanding/collapsing groups to see
-        aggregated values.
+        This example demonstrates row grouping by department and role, with
+        aggregation functions applied to salary (sum) and projects (sum). Try
+        expanding/collapsing groups to see aggregated values.
       </Typography>
     </Box>
   );
@@ -957,18 +957,18 @@ getAggregationPosition={(groupNode) =>
 Finally, render the Grid with your configuration:
 
 ```tsx
-      <DataGridPremium
-        apiRef={apiRef}
-        columns={columns}
-        dataSource={dataSource}
-        initialState={initialState}
-        pagination
-        pageSizeOptions={[10, 25, 50, 100]}
-        disableRowSelectionOnClick
-        getAggregationPosition={(groupNode) =>
-          groupNode.depth === -1 ? 'footer' : 'inline'
-        }
-      />
+<DataGridPremium
+  apiRef={apiRef}
+  columns={columns}
+  dataSource={dataSource}
+  initialState={initialState}
+  pagination
+  pageSizeOptions={[10, 25, 50, 100]}
+  disableRowSelectionOnClick
+  getAggregationPosition={(groupNode) =>
+    groupNode.depth === -1 ? 'footer' : 'inline'
+  }
+/>
 ```
 
 **What's happening here:**
@@ -1092,9 +1092,9 @@ function EmployeeDataGrid() {
         MUI X Data Grid Premium - Aggregation & Row Grouping
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        This example demonstrates row grouping by department and role, with aggregation functions
-        applied to salary (sum) and projects (sum). Try expanding/collapsing groups to see
-        aggregated values.
+        This example demonstrates row grouping by department and role, with
+        aggregation functions applied to salary (sum) and projects (sum). Try
+        expanding/collapsing groups to see aggregated values.
       </Typography>
 
       <DataGridPremium
@@ -1143,6 +1143,7 @@ Common aggregation functions include:
 - `size` - Counts the number of rows in the group
 
 In this tutorial, we use `sum` to calculate:
+
 - Total salary for each group
 - Total number of projects for each group
 
