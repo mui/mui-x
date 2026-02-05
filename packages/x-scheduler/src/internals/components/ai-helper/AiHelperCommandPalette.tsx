@@ -127,7 +127,7 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
   }
 
   return (
-    <Dialog open onClose={close} maxWidth="sm" fullWidth>
+    <Dialog open onClose={close} maxWidth="xs" fullWidth>
       <DialogContent sx={{ textAlign: 'center', py: 4 }}>
         {/* Prompting State */}
         {state.status === 'prompting' && (
@@ -166,12 +166,12 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
             <Alert severity="error" sx={{ mb: 2, textAlign: 'left' }}>
               {state.parsedResponse?.error || translations.aiHelperGenericError}
             </Alert>
-            <Stack direction="row" spacing={2} justifyContent="center">
-              <Button onClick={close} variant="outlined">
-                {translations.cancel}
-              </Button>
-              <Button onClick={retry} variant="contained">
+            <Stack spacing={1.5}>
+              <Button onClick={retry} variant="contained" fullWidth>
                 {translations.aiHelperRetry}
+              </Button>
+              <Button onClick={close} variant="outlined" fullWidth>
+                {translations.cancel}
               </Button>
             </Stack>
           </React.Fragment>
@@ -180,13 +180,9 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
         {/* Confirming State */}
         {state.status === 'confirming' && state.parsedResponse?.event && (
           <React.Fragment>
-            <Typography variant="body1" gutterBottom>
-              {state.parsedResponse.summary}
-            </Typography>
-
             <Box
               sx={{
-                my: 3,
+                mb: 3,
                 p: 2,
                 bgcolor: 'action.hover',
                 borderRadius: 1,
@@ -222,13 +218,15 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
               )}
             </Box>
 
-            <Stack direction="row" spacing={2} justifyContent="center">
+            <Stack spacing={1.5}>
               {state.occurrence && (
                 <EventDraggableDialogTrigger occurrence={state.occurrence} onClick={close}>
-                  <Button variant="outlined">{translations.aiHelperEditButton}</Button>
+                  <Button variant="outlined" fullWidth>
+                    {translations.aiHelperEditButton}
+                  </Button>
                 </EventDraggableDialogTrigger>
               )}
-              <ProgressButton timeoutMs={5000} onClick={confirm} variant="contained">
+              <ProgressButton timeoutMs={5000} onClick={confirm} variant="contained" fullWidth>
                 {translations.aiHelperConfirmButton}
               </ProgressButton>
             </Stack>
