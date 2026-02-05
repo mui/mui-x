@@ -1,8 +1,0 @@
-{
-  "name": "@mui-x-internal/performance",
-  "private": true,
-  "scripts": {
-    "typescript": "tsc -p tsconfig.json"
-  },
-  "devDependencies": {}
-}
