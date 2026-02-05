@@ -52,7 +52,6 @@ export default function AiHelperDemo() {
           onChange={(event) => setProvider(event.target.value as AIProvider)}
         >
           <MenuItem value="anthropic">Anthropic</MenuItem>
-          <MenuItem value="openai">OpenAI</MenuItem>
           {geminiNanoAvailable && (
             <MenuItem value="gemini-nano">Gemini Nano</MenuItem>
           )}
@@ -69,7 +68,7 @@ export default function AiHelperDemo() {
           aiHelperApiKey={API_KEY}
           aiHelperProvider={provider}
           aiHelperModel={
-            provider === 'anthropic' ? 'claude-3-haiku-20240307' : 'gpt-4o-mini'
+            provider === 'anthropic' ? 'claude-3-haiku-20240307' : undefined
           }
           aiHelperDefaultDuration={60}
         />

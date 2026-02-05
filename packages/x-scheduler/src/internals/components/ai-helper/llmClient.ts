@@ -30,7 +30,7 @@ export interface LLMContext {
   locale: string;
 }
 
-export type AIProvider = 'openai' | 'anthropic' | 'gemini-nano';
+export type AIProvider = 'anthropic' | 'gemini-nano';
 
 /**
  * The full TypeScript data model for event creation.
@@ -248,82 +248,6 @@ If you cannot parse the input or it's not a valid event description, return:
 }
 
 /**
- * Parse a natural language prompt into an event using OpenAI API.
- */
-export async function parseEventWithOpenAI(
-  prompt: string,
-  context: LLMContext,
-  apiKey: string,
-  model: string = 'gpt-4o-mini',
-): Promise<AiEventParseResponse> {
-  const systemPrompt = buildSystemPrompt(context);
-  const payload = {
-    model,
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: prompt },
-    ],
-    response_format: { type: 'json_object' },
-    temperature: 0.1,
-  };
-
-  // eslint-disable-next-line no-console
-  console.log('AI Helper [OpenAI] - System Prompt:', systemPrompt);
-  // eslint-disable-next-line no-console
-  console.log('AI Helper [OpenAI] - User Prompt:', prompt);
-
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    throw new Error(`LLM API error: ${response.status}`);
-  }
-
-  const data = await response.json();
-  const rawContent = data.choices[0].message.content;
-
-  // eslint-disable-next-line no-console
-  console.log('AI Helper [OpenAI] - Raw Response:', rawContent);
-
-  // Check if response looks like JSON before parsing to avoid throwing errors
-  const trimmed = rawContent.trim();
-  if (!trimmed.startsWith('{')) {
-    // eslint-disable-next-line no-console
-    console.log('AI Helper [OpenAI] - Response is not JSON:', trimmed.substring(0, 100));
-    return {
-      summary: '',
-      event: null,
-      confidence: 0,
-      error:
-        'I couldn\'t understand that as an event. Try something like "Meeting tomorrow at 3pm" or "Lunch with John on Friday".',
-    };
-  }
-
-  try {
-    const result = JSON.parse(rawContent);
-    // eslint-disable-next-line no-console
-    console.log('AI Helper [OpenAI] - Parsed Result:', result);
-    return result;
-  } catch (parseError) {
-    // eslint-disable-next-line no-console
-    console.error('AI Helper [OpenAI] - JSON Parse Error:', parseError);
-    return {
-      summary: '',
-      event: null,
-      confidence: 0,
-      error:
-        'I couldn\'t understand that as an event. Try something like "Meeting tomorrow at 3pm" or "Lunch with John on Friday".',
-    };
-  }
-}
-
-/**
  * Parse a natural language prompt into an event using Anthropic API.
  */
 export async function parseEventWithAnthropic(
@@ -385,7 +309,7 @@ export async function parseEventWithAnthropic(
     console.log('AI Helper [Anthropic] - Parsed Result:', result);
     return result;
   } catch (parseError) {
-    // eslint-disable-next-line no-console
+     
     console.error('AI Helper [Anthropic] - JSON Parse Error:', parseError);
     return {
       summary: '',
@@ -428,14 +352,11 @@ export async function parseEventWithLLM(
   prompt: string,
   context: LLMContext,
   apiKey: string,
-  provider: AIProvider = 'openai',
+  provider: AIProvider = 'anthropic',
   model?: string,
 ): Promise<AiEventParseResponse> {
   if (provider === 'gemini-nano') {
     return parseEventWithGeminiNano(prompt, context);
   }
-  if (provider === 'anthropic') {
-    return parseEventWithAnthropic(prompt, context, apiKey, model);
-  }
-  return parseEventWithOpenAI(prompt, context, apiKey, model);
+  return parseEventWithAnthropic(prompt, context, apiKey, model);
 }
