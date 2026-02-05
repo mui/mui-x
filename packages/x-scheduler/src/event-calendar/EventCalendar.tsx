@@ -69,6 +69,23 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     [aiHelper, openAiHelper],
   );
 
+  // Keyboard shortcut for AI helper (Cmd+K / Ctrl+K)
+  React.useEffect(() => {
+    if (!aiHelper) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault();
+        openAiHelper();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [aiHelper, openAiHelper]);
+
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <TranslationsProvider translations={translations}>
