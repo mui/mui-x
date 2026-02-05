@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import type { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useAiHelper } from './useAiHelper';
 import { ProgressButton } from './progress-button';
@@ -40,10 +41,8 @@ function formatDateTime(dateTimeString: string | undefined): string {
 /**
  * Format a recurrence rule for display.
  */
-function formatRecurrence(rrule: Record<string, unknown>): string {
-  const freq = rrule.freq as string;
-  const interval = (rrule.interval as number) || 1;
-  const byDay = rrule.byDay as string[] | undefined;
+function formatRecurrence(rrule: RecurringEventRecurrenceRule): string {
+  const { freq, interval = 1, byDay } = rrule;
 
   const freqMap: Record<string, string> = {
     DAILY: 'day',
@@ -71,7 +70,8 @@ function formatRecurrence(rrule: Record<string, unknown>): string {
   if (rrule.count) {
     text += `, ${rrule.count} times`;
   } else if (rrule.until) {
-    text += `, until ${formatDateTime(rrule.until as string)}`;
+    const untilStr = typeof rrule.until === 'string' ? rrule.until : String(rrule.until);
+    text += `, until ${formatDateTime(untilStr)}`;
   }
 
   return text;
