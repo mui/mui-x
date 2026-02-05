@@ -16,5 +16,6 @@ export default defineConfig({
     command: 'pnpm build && pnpm start',
     url: 'http://localhost:5002',
     reuseExistingServer: !process.env.CI,
+    stdout: 'pipe'
   },
 });

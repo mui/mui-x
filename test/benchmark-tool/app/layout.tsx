@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { Metadata } from 'next';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 import { Profiler } from '../utils/Profiler';
 
 export const metadata: Metadata = {
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Profiler>{children}</Profiler>
+        <AppRouterCacheProvider>
+          <Profiler>{children}</Profiler>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
