@@ -105,7 +105,7 @@ export class SchedulerStore<
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
       errors: [],
-      ...(parameters.dataSource ? { isLoading: true } : { isLoading: false }),
+      isLoading: !!parameters.dataSource,
       aiHelper: { status: 'closed' as const, prompt: '', parsedResponse: null, occurrence: null },
     };
 
