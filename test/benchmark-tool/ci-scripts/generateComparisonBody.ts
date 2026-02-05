@@ -25,6 +25,11 @@ function getEmoji(diff: number): string {
   return '➖';
 }
 
+function formatMs(microseconds: number): string {
+  const ms = microseconds / 1000;
+  return `${ms.toFixed(2)} ms`;
+}
+
 export function generateComparisonBody(
   prMetricsByFile: Record<string, number>,
   masterMetricsByFile: Record<string, number>,
@@ -52,7 +57,8 @@ export function generateComparisonBody(
           failedBenchmarks.push({ name: benchmarkName, diff: diffPercent.str });
         }
 
-        return `| ${benchmarkName} | ${masterDuration.toLocaleString()} | ${prDuration.toLocaleString()} | ${emoji} ${diff > 0 ? '+' : ''}${diff.toLocaleString()} (${diffPercent.str}%) |`;
+        const diffMs = diff / 1000;
+        return `| ${benchmarkName} | ${formatMs(masterDuration)} | ${formatMs(prDuration)} | ${emoji} ${diffMs > 0 ? '+' : ''}${diffMs.toFixed(2)} ms (${diffPercent.str}%) |`;
       })
       .join('\n');
 
@@ -67,8 +73,8 @@ export function generateComparisonBody(
 
     body = `## Performance Comparison
 ${statusSection}
-| Benchmark | Master (μs) | PR (μs) | Diff |
-|-----------|-------------|---------|------|
+| Benchmark | Master | PR | Diff |
+|-----------|--------|-----|------|
 ${fileRows}
 `;
   } else {
@@ -76,7 +82,7 @@ ${fileRows}
       .map((file) => {
         const prDuration = prMetricsByFile[file] || 0;
         const benchmarkName = file.replace('.json', '');
-        return `| ${benchmarkName} | ${prDuration.toLocaleString()} |`;
+        return `| ${benchmarkName} | ${formatMs(prDuration)} |`;
       })
       .join('\n');
 
@@ -84,8 +90,8 @@ ${fileRows}
 
 > **Note:** Baseline metrics not found. Showing PR metrics only.
 
-| Benchmark | PR (μs) |
-|-----------|---------|
+| Benchmark | PR |
+|-----------|-----|
 ${fileRows}
 `;
   }
