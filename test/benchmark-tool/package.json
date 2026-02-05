@@ -7,6 +7,7 @@
     "test": "playwright test app/**/_bench.ts"
   },
   "dependencies": {
+    "@base-ui/react": "^1.1.0",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",

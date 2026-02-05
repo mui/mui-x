@@ -12,6 +12,7 @@ export interface RenderEvent {
 }
 
 function onRender(id: string, phase: 'mount' | 'update' | 'nested-update', actualDuration: number) {
+  console.log('render found', id, phase, actualDuration);
   (window as any)[CAPTURE_RENDER_FN]?.({ id, phase, actualDuration } satisfies RenderEvent);
 }
 
