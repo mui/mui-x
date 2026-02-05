@@ -7,7 +7,7 @@ description: Learn how to use aggregation functions and row grouping in the Data
 
 ## Overview
 
-This tutorial walks you through building a Data Grid that demonstrates aggregation functions and row grouping using the MUI X Data Grid Premium.
+This tutorial walks you through building a Data Grid that demonstrates aggregation functions and row grouping using the MUI X Data Grid Premium.
 The primary purpose is to show how to group rows by column values and apply aggregation functions (such as sum, average, min, max) to analyze data within those groups.
 This tutorial also demonstrates the use of the [Data Source layer](/x/react-data-grid/server-side-data/), which streamlines the development of key Data Grid features when working with server-side data by providing an interface for communications between the Grid on the client and the data on the server.
 
@@ -23,7 +23,7 @@ If you'd rather skip the tutorial entirely, you can check out [the complete app 
 
 ### Relevant documentation
 
-The docs listed below may be useful if you're new to the MUI X Data Grid:
+The docs listed below may be useful if you're new to the MUI X Data Grid:
 
 - [Row grouping](/x/react-data-grid/row-grouping/)
 - [Aggregation](/x/react-data-grid/aggregation/)
@@ -63,7 +63,7 @@ pnpm install --save-dev typescript @types/express @types/node tsx
 
 :::success
 This tutorial uses pnpm, but all MUI libraries are also compatible with npm and yarn.
-See the [Material UI installation page](https://mui.com/material-ui/getting-started/installation/) for more details.
+See the [Material UI installation page](https://mui.com/material-ui/getting-started/installation/) for more details.
 :::
 
 Create a `tsconfig.json` file:
@@ -95,7 +95,7 @@ pnpm create vite@latest . -- --template react-ts &&
 pnpm install
 ```
 
-Install Material UI and MUI X dependencies:
+Install Material UI and MUI X dependencies:
 
 ```bash
 pnpm install @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid-premium @fontsource/roboto
@@ -707,7 +707,7 @@ const EmployeeDataGrid = () => {
   return (
     <Box sx={{ height: 600, width: '100%' }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        MUI X Data Grid Premium - Aggregation & Row Grouping
+        MUI X Data Grid Premium - Aggregation & Row Grouping
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         This example demonstrates row grouping by department and role, with
@@ -745,7 +745,7 @@ export default App;
 
 **What's happening here:**
 
-- `CssBaseline` is a Material UI component that applies consistent baseline CSS styles across different browsers, removing default margins and padding, and setting up consistent font rendering.
+- `CssBaseline` is a Material UI component that applies consistent baseline CSS styles across different browsers, removing default margins and padding, and setting up consistent font rendering.
 
 Replace the boilerplate code in `client/src/main.tsx` with the following:
 
@@ -1089,7 +1089,7 @@ function EmployeeDataGrid() {
   return (
     <Box sx={{ height: 600, width: '100%' }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        MUI X Data Grid Premium - Aggregation & Row Grouping
+        MUI X Data Grid Premium - Aggregation & Row Grouping
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         This example demonstrates row grouping by department and role, with
