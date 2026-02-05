@@ -42,14 +42,14 @@ Try the [full-screen demo](/x/react-scheduler/full-screen-ai-helper/) for a bett
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `aiHelper` | `boolean` | `false` | Enable the AI helper feature |
-| `aiHelperApiKey` | `string` | - | API key for the LLM provider |
-| `aiHelperProvider` | `'openai' \| 'anthropic'` | `'openai'` | The LLM provider to use |
-| `aiHelperModel` | `string` | `'gpt-4o-mini'` | The model to use |
-| `aiHelperDefaultDuration` | `number` | `60` | Default event duration in minutes |
-| `aiHelperExtraContext` | `string` | - | Additional context for the LLM |
+| Prop                      | Type                      | Default         | Description                       |
+| ------------------------- | ------------------------- | --------------- | --------------------------------- |
+| `aiHelper`                | `boolean`                 | `false`         | Enable the AI helper feature      |
+| `aiHelperApiKey`          | `string`                  | -               | API key for the LLM provider      |
+| `aiHelperProvider`        | `'openai' \| 'anthropic'` | `'openai'`      | The LLM provider to use           |
+| `aiHelperModel`           | `string`                  | `'gpt-4o-mini'` | The model to use                  |
+| `aiHelperDefaultDuration` | `number`                  | `60`            | Default event duration in minutes |
+| `aiHelperExtraContext`    | `string`                  | -               | Additional context for the LLM    |
 
 ## Examples of natural language input
 
