@@ -146,17 +146,22 @@ Return ONLY valid JSON (no markdown, no code blocks):
 {
   "summary": "Brief description of what you understood",
   "event": {
-    "title": "string (required)",
+    "title": "string (REQUIRED - if unclear, use 'New Event' or infer from context)",
     "start": "datetime WITHOUT Z suffix, e.g. 2026-02-05T15:00:00 (required)",
     "end": "datetime WITHOUT Z suffix (use default duration if not specified)",
     "description": "string (optional)",
     "allDay": false,
     "color": "optional color from SchedulerEventColor",
-    "rrule": "optional RecurringEventRecurrenceRule object or RFC5545 string"
+    "rrule": "optional RecurringEventRecurrenceRule object"
   },
   "confidence": 0.95,
   "error": ""
 }
+
+IMPORTANT: The "title" field is REQUIRED. Always provide a title:
+- Use the event name if mentioned (e.g., "Meeting with John" → title: "Meeting with John")
+- Infer from context (e.g., "lunch at noon" → title: "Lunch")
+- If completely unclear, use "New Event" as placeholder
 
 If you cannot parse the input or it's not a valid event description, return:
 {
