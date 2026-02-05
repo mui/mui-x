@@ -60,7 +60,7 @@ export async function fetchMasterMetrics(): Promise<Record<string, number>> {
       }
     }
   } catch (error) {
-    console.warn('Could not fetch baseline metrics:', (error as Error).message);
+    console.error(error);
   }
 
   return masterMetricsByFile;

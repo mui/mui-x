@@ -70,7 +70,7 @@ jobs:
           COMMIT_SHA: ${{ github.sha }}
           REPO_NAME: ${{ github.repository }}
         run: |
-          METADATA=$(pnpm ci:metadata)
+          METADATA=$(pnpm --silent ci:metadata)
           echo "data<<EOF" >> $GITHUB_OUTPUT
           echo "$METADATA" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
