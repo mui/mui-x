@@ -15,6 +15,10 @@ on:
 permissions:
   pull-requests: write
 
+env:
+  # Maximum allowed performance regression percentage before failing the pipeline
+  BENCHMARK_FAIL_THRESHOLD: 8
+
 jobs:
   comparison:
     name: Comparison
@@ -50,10 +54,14 @@ jobs:
 
       - name: Extract metrics and compare
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        env:
+          FAIL_THRESHOLD: ${{ env.BENCHMARK_FAIL_THRESHOLD }}
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
+
+            const failThreshold = parseFloat(process.env.FAIL_THRESHOLD) || 5;
 
             // Extract total duration from a trace file
             function extractTotalDuration(trace) {
@@ -122,6 +130,9 @@ jobs:
             const allFiles = [...new Set([...Object.keys(prMetricsByFile), ...Object.keys(masterMetricsByFile)])].sort();
             const hasMasterMetrics = Object.keys(masterMetricsByFile).length > 0;
 
+            // Track benchmarks that exceed the threshold
+            const failedBenchmarks = [];
+
             let body;
             if (hasMasterMetrics) {
               // Build per-file comparison rows
@@ -129,14 +140,30 @@ jobs:
                 const prDuration = prMetricsByFile[file] || 0;
                 const masterDuration = masterMetricsByFile[file] || 0;
                 const diff = prDuration - masterDuration;
-                const diffPercent = masterDuration > 0 ? ((diff / masterDuration) * 100).toFixed(2) : (prDuration > 0 ? '+∞' : '0.00');
+                const diffPercentNum = masterDuration > 0 ? (diff / masterDuration) * 100 : (prDuration > 0 ? Infinity : 0);
+                const diffPercent = masterDuration > 0 ? diffPercentNum.toFixed(2) : (prDuration > 0 ? '+∞' : '0.00');
                 const emoji = diff > 0 ? '🔺' : diff < 0 ? '🔽' : '➡️';
                 const benchmarkName = file.replace('.json', '');
+
+                // Check if regression exceeds threshold
+                if (diffPercentNum > failThreshold) {
+                  failedBenchmarks.push({ name: benchmarkName, diff: diffPercent });
+                }
+
                 return `| ${benchmarkName} | ${masterDuration.toLocaleString()} | ${prDuration.toLocaleString()} | ${emoji} ${diff > 0 ? '+' : ''}${diff.toLocaleString()} (${diffPercent}%) |`;
               }).join('\n');
 
-              body = `## Performance Comparison
+              let statusSection = '';
+              if (failedBenchmarks.length > 0) {
+                statusSection = `
+            > **⚠️ Performance regression detected!** The following benchmarks exceed the ${failThreshold}% threshold:
+            > ${failedBenchmarks.map(b => `\`${b.name}\` (+${b.diff}%)`).join(', ')}
 
+            `;
+              }
+
+              body = `## Performance Comparison
+            ${statusSection}
             | Benchmark | Master (μs) | PR (μs) | Diff |
             |-----------|-------------|---------|------|
             ${fileRows}
@@ -183,4 +210,9 @@ jobs:
                 issue_number: context.payload.pull_request.number,
                 body,
               });
+            }
+
+            // Fail the pipeline if any benchmark exceeds the threshold
+            if (failedBenchmarks.length > 0) {
+              core.setFailed(`Performance regression detected: ${failedBenchmarks.map(b => b.name).join(', ')} exceeded the ${failThreshold}% threshold`);
             }
