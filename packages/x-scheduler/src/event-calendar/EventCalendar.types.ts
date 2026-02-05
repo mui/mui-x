@@ -21,18 +21,18 @@ export interface EventCalendarProps<TEvent extends object, TResource extends obj
   aiHelper?: boolean;
   /**
    * API key for the LLM provider.
-   * Required when `aiHelper` is `true` and `aiHelperProvider` is `'openai'` or `'anthropic'`.
+   * Required when `aiHelper` is `true` and `aiHelperProvider` is `'anthropic'`.
    * Not required for `'gemini-nano'`.
    */
   aiHelperApiKey?: string;
   /**
    * The LLM provider to use.
-   * @default 'openai'
+   * @default 'anthropic'
    */
   aiHelperProvider?: AIProvider;
   /**
    * The model to use for parsing natural language.
-   * @default 'gpt-4o-mini' for OpenAI, 'claude-3-haiku-20240307' for Anthropic
+   * @default 'claude-3-haiku-20240307' for Anthropic, `undefined` for Gemini Nano.
    */
   aiHelperModel?: string;
   /**
