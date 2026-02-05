@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -38,12 +38,6 @@ export default function AiHelperDemo() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="body2" color="text.secondary">
-        {isGeminiNano
-          ? 'Gemini Nano runs locally in your browser — no API key needed. Click the sparkle button in the toolbar to create events using natural language.'
-          : 'Click the sparkle button in the toolbar to create events using natural language.'}
-      </Typography>
-
       <FormControl size="small" sx={{ minWidth: 150 }}>
         <InputLabel>Provider</InputLabel>
         <Select
@@ -56,6 +50,10 @@ export default function AiHelperDemo() {
             <MenuItem value="gemini-nano">Gemini Nano</MenuItem>
           )}
         </Select>
+        <FormHelperText>
+          Click the sparkle button in the toolbar to create events using natural
+          language.
+        </FormHelperText>
       </FormControl>
 
       <Box sx={{ height: 600, width: '100%' }}>
