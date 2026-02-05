@@ -66,28 +66,6 @@ export function getDaysTheOccurrenceIsVisibleOn(
   return dayKeys;
 }
 
-const checkResourceVisibility = (
-  resourceId: string,
-  visibleResources: Record<string, boolean>,
-  resourceParentIds: Map<string, string | null>,
-): boolean => {
-  if (!resourceId) {
-    return true;
-  }
-
-  const isResourceVisible = visibleResources[resourceId] !== false;
-
-  if (isResourceVisible) {
-    const parentId = resourceParentIds.get(resourceId);
-    if (!parentId) {
-      return isResourceVisible;
-    }
-    return checkResourceVisibility(parentId, visibleResources, resourceParentIds);
-  }
-
-  return isResourceVisible;
-};
-
 /**
  * Returns the occurrences to render in the given date range, expanding recurring events.
  */
@@ -96,11 +74,41 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
 
+  const resourceVisibilityCache = new Map<string, boolean>();
+
+  const checkResourceVisibility = (resourceId: string): boolean => {
+    if (!resourceId) {
+      return true;
+    }
+
+    const cached = resourceVisibilityCache.get(resourceId);
+    if (cached !== undefined) {
+      return cached;
+    }
+
+    const isResourceVisible = visibleResources[resourceId] !== false;
+
+    let result: boolean;
+    if (isResourceVisible) {
+      const parentId = resourceParentIds.get(resourceId);
+      if (!parentId) {
+        result = isResourceVisible;
+      } else {
+        result = checkResourceVisibility(parentId);
+      }
+    } else {
+      result = isResourceVisible;
+    }
+
+    resourceVisibilityCache.set(resourceId, result);
+    return result;
+  };
+
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
     if (
       event.resource &&
-      checkResourceVisibility(event.resource, visibleResources, resourceParentIds) === false
+      checkResourceVisibility(event.resource) === false
     ) {
       continue;
     }
