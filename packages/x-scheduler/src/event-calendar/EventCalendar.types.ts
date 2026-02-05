@@ -9,9 +9,7 @@ import type { EventCalendarClasses } from './eventCalendarClasses';
 export type EventCalendarApiRef<
   TEvent extends object = any,
   TResource extends object = any,
-> = React.RefObject<
-  Partial<SchedulerPublicAPI<EventCalendarStore<TEvent, TResource>>> | undefined
->;
+> = React.RefObject<Partial<SchedulerPublicAPI<EventCalendarStore<TEvent, TResource>>> | undefined>;
 
 export interface EventCalendarProps<TEvent extends object, TResource extends object>
   extends React.HTMLAttributes<HTMLDivElement>, EventCalendarParameters<TEvent, TResource> {
