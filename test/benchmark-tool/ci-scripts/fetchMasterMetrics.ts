@@ -39,12 +39,16 @@ export async function fetchMasterMetrics(): Promise<Record<string, number>> {
     const results = await Promise.all(
       metadata.files.map(async (filePath) => {
         const fileName = filePath.split('/').pop()!;
-        const fileResponse = await fetch(
-          `https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/${fileName}`,
-        );
-        if (fileResponse.ok) {
-          const trace = (await fileResponse.json()) as Trace;
-          return { fileName, duration: extractTotalDuration(trace) };
+        try {
+          const fileResponse = await fetch(
+            `https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/${fileName}`,
+          );
+          if (fileResponse.ok) {
+            const trace = (await fileResponse.json()) as Trace;
+            return { fileName, duration: extractTotalDuration(trace) };
+          }
+        } catch (error) {
+          console.error(error);
         }
         return null;
       }),
