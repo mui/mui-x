@@ -76,8 +76,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   React.useEffect(() => {
     async function checkAvailability() {
       try {
-        if (typeof (globalThis as any).LanguageModel !== 'undefined') {
-          const availability = await (globalThis as any).LanguageModel.availability();
+        if (typeof LanguageModel !== 'undefined') {
+          const availability = await LanguageModel.availability();
           setIsGeminiNanoAvailable(availability !== 'unavailable');
         }
       } catch {

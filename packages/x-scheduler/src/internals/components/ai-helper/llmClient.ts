@@ -327,7 +327,7 @@ export async function parseEventWithGeminiNano(
   prompt: string,
   context: LLMContext,
 ): Promise<AiEventParseResponse> {
-  const session = await (globalThis as any).LanguageModel.create({
+  const session = await LanguageModel.create({
     initialPrompts: [{ role: 'system', content: buildSystemPrompt(context) }],
   });
 
