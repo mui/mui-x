@@ -1,0 +1,29 @@
+{
+  "name": "benchmark-tool",
+  "scripts": {
+    "dev": "next dev -p 5002",
+    "build": "next build",
+    "start": "next start -p 5002",
+    "test": "playwright test app/**/_bench.ts"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.1.0",
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.1.0",
+    "@mui/material-nextjs": "^7.1.0",
+    "@mui/x-charts": "workspace:*",
+    "@mui/x-charts-pro": "workspace:*",
+    "@playwright/test": "catalog:",
+    "next": "^16.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.18",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "typescript": "^5.8.3"
+  }
+}
