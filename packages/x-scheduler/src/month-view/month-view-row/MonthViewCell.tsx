@@ -179,18 +179,15 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
     day.value,
   );
+  const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  // Selector hooks
-  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
-
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
-  const isToday = adapter.isSameDay(day.value, now);
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
