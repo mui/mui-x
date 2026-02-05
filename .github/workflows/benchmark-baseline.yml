@@ -64,24 +64,13 @@ jobs:
 
       - name: Prepare metadata
         id: prepare-metadata
+        working-directory: test/benchmark-tool
         env:
           FILES: ${{ steps.files.outputs.list }}
           COMMIT_SHA: ${{ github.sha }}
           REPO_NAME: ${{ github.repository }}
-          TIMESTAMP_FOLDER: ${{ steps.timestamp.outputs.folder }}
         run: |
-          METADATA=$(node << 'EOF'
-          const files = JSON.parse(process.env.FILES);
-          const data = {
-            commit: process.env.COMMIT_SHA,
-            repository: process.env.REPO_NAME,
-            date: new Date().toISOString(),
-            timestamp: Date.now(),
-            files: files
-          };
-          console.log(JSON.stringify(data, null, 2));
-          EOF
-          )
+          METADATA=$(pnpm ci:metadata)
           echo "data<<EOF" >> $GITHUB_OUTPUT
           echo "$METADATA" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
