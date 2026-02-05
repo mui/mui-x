@@ -270,6 +270,20 @@ export async function parseEventWithOpenAI(
   // eslint-disable-next-line no-console
   console.log('AI Helper [OpenAI] - Raw Response:', rawContent);
 
+  // Check if response looks like JSON before parsing to avoid throwing errors
+  const trimmed = rawContent.trim();
+  if (!trimmed.startsWith('{')) {
+    // eslint-disable-next-line no-console
+    console.log('AI Helper [OpenAI] - Response is not JSON:', trimmed.substring(0, 100));
+    return {
+      summary: '',
+      event: null,
+      confidence: 0,
+      error:
+        "I couldn't understand that as an event. Try something like \"Meeting tomorrow at 3pm\" or \"Lunch with John on Friday\".",
+    };
+  }
+
   try {
     const result = JSON.parse(rawContent);
     // eslint-disable-next-line no-console
@@ -278,13 +292,12 @@ export async function parseEventWithOpenAI(
   } catch (parseError) {
     // eslint-disable-next-line no-console
     console.error('AI Helper [OpenAI] - JSON Parse Error:', parseError);
-    // Return a user-friendly error response
     return {
       summary: '',
       event: null,
       confidence: 0,
       error:
-        'I can only create one event at a time. Please describe a single event, or use recurrence for repeating events (e.g., "daily standup for 5 days").',
+        "I couldn't understand that as an event. Try something like \"Meeting tomorrow at 3pm\" or \"Lunch with John on Friday\".",
     };
   }
 }
@@ -331,6 +344,20 @@ export async function parseEventWithAnthropic(
   // eslint-disable-next-line no-console
   console.log('AI Helper [Anthropic] - Raw Response:', rawContent);
 
+  // Check if response looks like JSON before parsing to avoid throwing errors
+  const trimmed = rawContent.trim();
+  if (!trimmed.startsWith('{')) {
+    // eslint-disable-next-line no-console
+    console.log('AI Helper [Anthropic] - Response is not JSON:', trimmed.substring(0, 100));
+    return {
+      summary: '',
+      event: null,
+      confidence: 0,
+      error:
+        "I couldn't understand that as an event. Try something like \"Meeting tomorrow at 3pm\" or \"Lunch with John on Friday\".",
+    };
+  }
+
   try {
     const result = JSON.parse(rawContent);
     // eslint-disable-next-line no-console
@@ -339,13 +366,12 @@ export async function parseEventWithAnthropic(
   } catch (parseError) {
     // eslint-disable-next-line no-console
     console.error('AI Helper [Anthropic] - JSON Parse Error:', parseError);
-    // Return a user-friendly error response
     return {
       summary: '',
       event: null,
       confidence: 0,
       error:
-        'I can only create one event at a time. Please describe a single event, or use recurrence for repeating events (e.g., "daily standup for 5 days").',
+        "I couldn't understand that as an event. Try something like \"Meeting tomorrow at 3pm\" or \"Lunch with John on Friday\".",
     };
   }
 }
