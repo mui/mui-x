@@ -9,8 +9,8 @@ test(
   'Base UI Contained Triggers',
   iterateTest(
     10,
-    async ({ page }) => {
-      await goToPage(__filename, page);
+    async ({ page }, _, { renders }) => {
+      await goToPage(__filename, page, renders);
 
       // Wait for the browser to be idle before finishing the iteration
       await page.evaluate(() => {
