@@ -81,13 +81,7 @@ function validateAndNormalize(
  * Hook for managing the AI helper state and actions.
  */
 export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
-  const {
-    apiKey,
-    provider = 'openai',
-    model,
-    defaultDuration = 60,
-    extraContext = '',
-  } = props;
+  const { apiKey, provider = 'openai', model, defaultDuration = 60, extraContext = '' } = props;
 
   const store = useSchedulerStoreContext();
   const state = useStore(store, schedulerAiHelperSelectors.aiHelper);

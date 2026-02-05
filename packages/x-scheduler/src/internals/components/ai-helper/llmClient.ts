@@ -106,12 +106,17 @@ export function buildSystemPrompt(context: LLMContext): string {
 
   return `You parse natural language into calendar events for a scheduler application.
 
-## IMPORTANT: Current Date and Time
+## IMPORTANT: Current Date, Time, and Timezone
 TODAY IS: ${formattedDate}
 CURRENT TIME: ${formattedTime}
 CURRENT YEAR: ${now.getFullYear()}
-ISO datetime: ${context.currentDateTime}
-Timezone: ${context.defaultTimezone}
+USER'S TIMEZONE: ${context.defaultTimezone}
+
+CRITICAL TIMEZONE RULES:
+- When the user says a time like "3pm", they mean 3pm in THEIR timezone (${context.defaultTimezone}), NOT UTC.
+- Return datetime strings WITHOUT the "Z" suffix - use format: "YYYY-MM-DDTHH:mm:ss" (no timezone indicator)
+- Example: If user says "meeting at 3pm" and their timezone is America/New_York, return "2026-02-05T15:00:00" (NOT "2026-02-05T15:00:00Z")
+- The scheduler will interpret these times in the user's display timezone.
 
 You MUST use ${now.getFullYear()} as the year for all events unless the user explicitly specifies a different year.
 When the user says "tomorrow", "next week", "next Monday", etc., calculate dates relative to TODAY (${formattedDate}).
@@ -129,8 +134,8 @@ Return ONLY valid JSON (no markdown, no code blocks):
   "summary": "Brief description of what you understood",
   "event": {
     "title": "string (required)",
-    "start": "ISO8601 datetime string (required)",
-    "end": "ISO8601 datetime string (use default duration if not specified)",
+    "start": "datetime WITHOUT Z suffix, e.g. 2026-02-05T15:00:00 (required)",
+    "end": "datetime WITHOUT Z suffix (use default duration if not specified)",
     "description": "string (optional)",
     "allDay": false,
     "color": "optional color from SchedulerEventColor",
