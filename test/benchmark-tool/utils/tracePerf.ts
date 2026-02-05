@@ -6,8 +6,8 @@ import { routeToFileName } from './utils';
 const tracesDir = path.resolve(__dirname, '../traces');
 
 export class Trace {
-  started = false;
-  client: CDPSession | null = null;
+  private started = false;
+  private client: CDPSession | null = null;
 
   constructor(
     private page: Page,
