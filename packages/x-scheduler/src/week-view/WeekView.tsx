@@ -13,7 +13,6 @@ import { createSelectorMemoized } from '@base-ui/utils/store';
 import { StandaloneWeekViewProps, WeekViewProps } from './WeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import '../index.css';
 import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 
 const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
