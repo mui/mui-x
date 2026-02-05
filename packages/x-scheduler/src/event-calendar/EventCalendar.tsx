@@ -63,9 +63,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
       return undefined;
     }
 
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
+    const handler = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault();
         openAiHelper();
       }
     };

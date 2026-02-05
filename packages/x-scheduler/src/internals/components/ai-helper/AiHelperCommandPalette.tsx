@@ -92,8 +92,8 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
   const [inputValue, setInputValue] = React.useState('');
   const translations = useTranslations();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     if (inputValue.trim() && state.status === 'prompting') {
       submit(inputValue.trim());
     }
@@ -127,7 +127,7 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
                 autoFocus
                 fullWidth
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(event) => setInputValue(event.target.value)}
                 placeholder={translations.aiHelperPlaceholder}
               />
             </form>
