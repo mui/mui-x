@@ -158,10 +158,15 @@ Return ONLY valid JSON (no markdown, no code blocks):
   "error": ""
 }
 
-IMPORTANT: The "title" field is REQUIRED. Always provide a title:
-- Use the event name if mentioned (e.g., "Meeting with John" → title: "Meeting with John")
-- Infer from context (e.g., "lunch at noon" → title: "Lunch")
-- If completely unclear, use "New Event" as placeholder
+IMPORTANT RULES:
+1. The "title" field is REQUIRED. Always provide a title:
+   - Use the event name if mentioned (e.g., "Meeting with John" → title: "Meeting with John")
+   - Infer from context (e.g., "lunch at noon" → title: "Lunch")
+   - If completely unclear, use "New Event" as placeholder
+
+2. Return ONLY ONE event. If the user asks for multiple events (e.g., "5 meetings"), create ONE event with a recurrence rule instead:
+   - "5 daily meetings" → ONE event with rrule: { freq: "DAILY", count: 5 }
+   - "3 weekly syncs" → ONE event with rrule: { freq: "WEEKLY", count: 3 }
 
 If you cannot parse the input or it's not a valid event description, return:
 {
@@ -222,12 +227,28 @@ export async function parseEventWithOpenAI(
   }
 
   const data = await response.json();
-  const result = JSON.parse(data.choices[0].message.content);
+  const rawContent = data.choices[0].message.content;
 
   // eslint-disable-next-line no-console
-  console.log('AI Helper [OpenAI] - Result:', result);
+  console.log('AI Helper [OpenAI] - Raw Response:', rawContent);
 
-  return result;
+  try {
+    const result = JSON.parse(rawContent);
+    // eslint-disable-next-line no-console
+    console.log('AI Helper [OpenAI] - Parsed Result:', result);
+    return result;
+  } catch (parseError) {
+    // eslint-disable-next-line no-console
+    console.error('AI Helper [OpenAI] - JSON Parse Error:', parseError);
+    // Return a user-friendly error response
+    return {
+      summary: '',
+      event: null,
+      confidence: 0,
+      error:
+        'I can only create one event at a time. Please describe a single event, or use recurrence for repeating events (e.g., "daily standup for 5 days").',
+    };
+  }
 }
 
 /**
@@ -267,13 +288,28 @@ export async function parseEventWithAnthropic(
   }
 
   const data = await response.json();
-  const content = data.content[0].text;
-  const result = JSON.parse(content);
+  const rawContent = data.content[0].text;
 
   // eslint-disable-next-line no-console
-  console.log('AI Helper [Anthropic] - Result:', result);
+  console.log('AI Helper [Anthropic] - Raw Response:', rawContent);
 
-  return result;
+  try {
+    const result = JSON.parse(rawContent);
+    // eslint-disable-next-line no-console
+    console.log('AI Helper [Anthropic] - Parsed Result:', result);
+    return result;
+  } catch (parseError) {
+    // eslint-disable-next-line no-console
+    console.error('AI Helper [Anthropic] - JSON Parse Error:', parseError);
+    // Return a user-friendly error response
+    return {
+      summary: '',
+      event: null,
+      confidence: 0,
+      error:
+        'I can only create one event at a time. Please describe a single event, or use recurrence for repeating events (e.g., "daily standup for 5 days").',
+    };
+  }
 }
 
 /**
