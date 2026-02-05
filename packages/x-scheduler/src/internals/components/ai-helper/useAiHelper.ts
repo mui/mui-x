@@ -3,7 +3,8 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { schedulerAiHelperSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import type { AiHelperState } from '@mui/x-scheduler-headless/models';
+import { processEvent } from '@mui/x-scheduler-headless/process-event';
+import type { AiHelperState, SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import type { UseAiHelperProps, UseAiHelperReturn } from './AiHelperCommandPalette.types';
 import { buildContext, parseEventWithLLM, type AiEventParseResponse } from './llmClient';
 
@@ -11,6 +12,7 @@ const INITIAL_STATE: AiHelperState = {
   status: 'closed',
   prompt: '',
   parsedResponse: null,
+  occurrence: null,
 };
 
 /**
@@ -91,7 +93,7 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
   const state = useStore(store, schedulerAiHelperSelectors.aiHelper);
 
   const open = React.useCallback(() => {
-    store.set('aiHelper', { ...store.state.aiHelper, status: 'prompting' });
+    store.set('aiHelper', { ...INITIAL_STATE, status: 'prompting' });
   }, [store]);
 
   const close = React.useCallback(() => {
@@ -129,9 +131,55 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
 
         // Check if LLM returned an error
         if (validated.error || !validated.event) {
-          store.set('aiHelper', { ...store.state.aiHelper, status: 'error', parsedResponse: validated });
+          store.set('aiHelper', {
+            ...store.state.aiHelper,
+            status: 'error',
+            parsedResponse: validated,
+          });
         } else {
-          store.set('aiHelper', { ...store.state.aiHelper, status: 'confirming', parsedResponse: validated });
+          // Create the event immediately and generate occurrence for the edit dialog
+          const { adapter, displayTimezone } = store.state;
+          const parsedEvent = validated.event;
+          const start = adapter.date(parsedEvent.start, displayTimezone);
+          const end = parsedEvent.end
+            ? adapter.date(parsedEvent.end, displayTimezone)
+            : adapter.addMinutes(start, defaultDuration);
+
+          const eventId = store.createEvent({
+            title: parsedEvent.title,
+            start,
+            end,
+            description: parsedEvent.description,
+            allDay: parsedEvent.allDay,
+            color: parsedEvent.color as any,
+            rrule: parsedEvent.rrule as any,
+          });
+
+          store.set('visibleDate', start);
+
+          // Generate occurrence directly from the event data
+          const eventWithId = {
+            title: parsedEvent.title,
+            start,
+            end,
+            description: parsedEvent.description,
+            allDay: parsedEvent.allDay,
+            color: parsedEvent.color as any,
+            rrule: parsedEvent.rrule as any,
+            id: eventId,
+          };
+          const processedEvent = processEvent(eventWithId, displayTimezone, adapter);
+          const occurrence: SchedulerEventOccurrence = {
+            ...processedEvent,
+            key: String(eventId),
+          };
+
+          store.set('aiHelper', {
+            ...store.state.aiHelper,
+            status: 'confirming',
+            parsedResponse: validated,
+            occurrence,
+          });
         }
       } catch (error: any) {
         store.set('aiHelper', {
@@ -150,63 +198,18 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
   );
 
   const confirm = React.useCallback(() => {
-    const { parsedResponse } = store.state.aiHelper;
-    if (parsedResponse?.event) {
-      const { event } = parsedResponse;
-
-      try {
-        // Convert ISO strings back to temporal objects using the adapter
-        const { adapter, displayTimezone } = store.state;
-        const start = adapter.date(event.start, displayTimezone);
-        const end = event.end
-          ? adapter.date(event.end, displayTimezone)
-          : adapter.addMinutes(start, defaultDuration);
-
-        const createdEvent = store.createEvent({
-          title: event.title,
-          start,
-          end,
-          description: event.description,
-          allDay: event.allDay,
-          color: event.color as any,
-          rrule: event.rrule as any,
-        });
-
-        // eslint-disable-next-line no-console
-        console.log('AI Helper: Event created', createdEvent);
-      } catch (error) {
-        console.error('AI Helper: Failed to create event', error);
-      }
-
-      close();
-    }
-  }, [store, close, defaultDuration]);
-
-  const edit = React.useCallback(() => {
-    const { parsedResponse } = store.state.aiHelper;
-    if (parsedResponse?.event) {
-      const { event } = parsedResponse;
-      const { adapter, displayTimezone } = store.state;
-
-      const start = adapter.date(event.start, displayTimezone);
-      const end = event.end
-        ? adapter.date(event.end, displayTimezone)
-        : adapter.addMinutes(start, defaultDuration);
-
-      store.setOccurrencePlaceholder({
-        type: 'creation',
-        surfaceType: event.allDay ? 'day-grid' : 'time-grid',
-        start,
-        end,
-        resourceId: null,
-      });
-      close();
-    }
-  }, [store, close, defaultDuration]);
+    // Event was already created in submit(), just close
+    close();
+  }, [close]);
 
   const retry = React.useCallback(() => {
-    store.set('aiHelper', { ...store.state.aiHelper, status: 'prompting', parsedResponse: null });
+    store.set('aiHelper', {
+      ...store.state.aiHelper,
+      status: 'prompting',
+      parsedResponse: null,
+      occurrence: null,
+    });
   }, [store]);
 
-  return { state, open, close, submit, confirm, edit, retry };
+  return { state, open, close, submit, confirm, retry };
 }

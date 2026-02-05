@@ -24,6 +24,7 @@ const INITIAL_AI_HELPER_STATE: AiHelperState = {
   status: 'closed',
   prompt: '',
   parsedResponse: null,
+  occurrence: null,
 };
 
 export const EventCalendar = React.forwardRef(function EventCalendar<

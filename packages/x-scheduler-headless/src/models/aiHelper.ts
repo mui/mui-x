@@ -1,3 +1,5 @@
+import type { SchedulerEventOccurrence } from './event';
+
 /**
  * Status of the AI helper state machine.
  */
@@ -35,4 +37,6 @@ export interface AiHelperState {
   prompt: string;
   /** The parsed response from the LLM */
   parsedResponse: AiHelperParsedResponse | null;
+  /** The occurrence of the created event (available in confirming state) */
+  occurrence: SchedulerEventOccurrence | null;
 }

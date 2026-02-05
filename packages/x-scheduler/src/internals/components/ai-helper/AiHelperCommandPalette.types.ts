@@ -30,10 +30,8 @@ export interface UseAiHelperReturn {
   close: () => void;
   /** Submit a prompt to the LLM */
   submit: (prompt: string) => Promise<void>;
-  /** Confirm and create the parsed event */
+  /** Confirm the created event and close */
   confirm: () => void;
-  /** Open the edit dialog with parsed event data */
-  edit: () => void;
   /** Retry after an error */
   retry: () => void;
 }

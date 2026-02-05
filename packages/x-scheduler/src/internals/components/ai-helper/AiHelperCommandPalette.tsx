@@ -11,6 +11,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useAiHelper } from './useAiHelper';
+import { ProgressButton } from './progress-button';
+import { EventDraggableDialogTrigger } from '../event-draggable-dialog';
 import type { AiHelperCommandPaletteProps } from './AiHelperCommandPalette.types';
 
 /**
@@ -81,7 +83,7 @@ function formatRecurrence(rrule: Record<string, unknown>): string {
 export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
   const { apiKey, provider, model, defaultDuration, extraContext } = props;
 
-  const { state, close, submit, confirm, edit, retry } = useAiHelper({
+  const { state, close, submit, confirm, retry } = useAiHelper({
     apiKey,
     provider,
     model,
@@ -202,12 +204,14 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
             </Box>
 
             <Stack direction="row" spacing={2} justifyContent="center">
-              <Button onClick={edit} variant="outlined">
-                {translations.aiHelperEditButton}
-              </Button>
-              <Button onClick={confirm} variant="contained">
+              {state.occurrence && (
+                <EventDraggableDialogTrigger occurrence={state.occurrence} onClick={close}>
+                  <Button variant="outlined">{translations.aiHelperEditButton}</Button>
+                </EventDraggableDialogTrigger>
+              )}
+              <ProgressButton timeoutMs={5000} onClick={confirm} variant="contained">
                 {translations.aiHelperConfirmButton}
-              </Button>
+              </ProgressButton>
             </Stack>
           </React.Fragment>
         )}
