@@ -1,4 +1,4 @@
-name: Performance Benchmark - Master
+name: Benchmark
 
 on:
   push:
@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   benchmark:
-    name: Run Performance Benchmark
+    name: Store Data
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

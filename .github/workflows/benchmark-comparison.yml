@@ -1,4 +1,4 @@
-name: Performance
+name: Benchmark
 
 on:
   pull_request:
@@ -16,8 +16,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  performance:
-    name: Performance Comparison
+  comparison:
+    name: Comparison
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR branch
