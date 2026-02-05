@@ -30,7 +30,9 @@ export default function AiHelperDemo() {
           <Select
             value={provider}
             label="Provider"
-            onChange={(e) => setProvider(e.target.value as 'openai' | 'anthropic')}
+            onChange={(event) =>
+              setProvider(event.target.value as 'openai' | 'anthropic')
+            }
           >
             <MenuItem value="anthropic">Anthropic</MenuItem>
             <MenuItem value="openai">OpenAI</MenuItem>
