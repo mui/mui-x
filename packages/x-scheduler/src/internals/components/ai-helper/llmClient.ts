@@ -309,7 +309,6 @@ export async function parseEventWithAnthropic(
     console.log('AI Helper [Anthropic] - Parsed Result:', result);
     return result;
   } catch (parseError) {
-     
     console.error('AI Helper [Anthropic] - JSON Parse Error:', parseError);
     return {
       summary: '',
