@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { goToPage, getRouteFromFilename } from '../../utils/goToPage';
-import { iterateTest } from '../../utils/iterateTest';
-import { generateReportFromIterations, saveReport } from '../../utils/reporter';
+import { goToPage, getRouteFromFilename } from '../../../utils/goToPage';
+import { iterateTest } from '../../../utils/iterateTest';
+import { generateReportFromIterations, saveReport } from '../../../utils/reporter';
 
 const route = getRouteFromFilename(__filename);
 

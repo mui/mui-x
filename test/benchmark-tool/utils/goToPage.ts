@@ -14,7 +14,7 @@ export function getRouteFromFilename(filename: string): string {
   return path.dirname(filename).split('/app').pop()!;
 }
 
-export async function goToPage(filename: string, page: Page, renders: RenderEvent[] = []) {
+export async function goToPage(filename: string, page: Page, renders: RenderEvent[]) {
   const route = getRouteFromFilename(filename);
 
   // Initialize or update state for this page
