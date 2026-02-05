@@ -59,7 +59,7 @@ jobs:
           BENCHMARKS_DIR: ./benchmarks
           FAIL_THRESHOLD: ${{ env.BENCHMARK_FAIL_THRESHOLD }}
         run: |
-          RESULT=$(pnpm ci:compare)
+          RESULT=$(pnpm --silent ci:compare)
           echo "result<<EOF" >> $GITHUB_OUTPUT
           echo "$RESULT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
