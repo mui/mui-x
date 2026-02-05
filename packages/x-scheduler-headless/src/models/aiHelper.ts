@@ -14,7 +14,10 @@ export type AiHelperStatus = 'closed' | 'prompting' | 'processing' | 'error' | '
  * Event data as returned by the LLM (with string dates instead of temporal objects).
  * This is converted to SchedulerEventCreationProperties before creating the event.
  */
-export type AiHelperParsedEvent = Omit<SchedulerEventCreationProperties, 'start' | 'end' | 'rrule' | 'color'> & {
+export type AiHelperParsedEvent = Omit<
+  SchedulerEventCreationProperties,
+  'start' | 'end' | 'rrule' | 'color'
+> & {
   /** Start datetime as ISO string (without Z suffix) */
   start: string;
   /** End datetime as ISO string (without Z suffix) */
