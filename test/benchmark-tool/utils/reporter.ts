@@ -64,11 +64,19 @@ export function generateReportFromIterations(iterations: RenderEvent[][]): Trace
   }
 
   // Merge events by calculating mean duration and standard deviation
+  // Calculate mean relative start times to preserve gaps between events
   const mergedEvents: RenderEvent[] = firstIteration.map((event, index) => {
     const durations = iterations.map((iteration) => iteration[index].actualDuration);
     const meanDuration = calculateMean(durations);
     const stdDev = calculateStdDev(durations, meanDuration);
     const coefficientOfVariation = meanDuration > 0 ? stdDev / meanDuration : 0;
+
+    // Calculate mean relative start time (relative to first event in each iteration)
+    const relativeStartTimes = iterations.map((iteration) => {
+      const firstEventStartTime = iteration[0].startTime;
+      return iteration[index].startTime - firstEventStartTime;
+    });
+    const meanStartTime = calculateMean(relativeStartTimes);
 
     // Only warn for meaningful durations (>1ms) to avoid noise from measurement overhead
     if (meanDuration > 1 && coefficientOfVariation > 0.1) {
@@ -81,6 +89,7 @@ export function generateReportFromIterations(iterations: RenderEvent[][]): Trace
     return {
       ...event,
       actualDuration: meanDuration,
+      startTime: meanStartTime,
       stdDev,
       coefficientOfVariation,
     };
@@ -95,8 +104,19 @@ export function generateReportFromIterations(iterations: RenderEvent[][]): Trace
 }
 
 export function generateReport(events: RenderEvent[]): TraceFileObjectFormat {
+  if (events.length === 0) {
+    return { traceEvents: [] };
+  }
+
+  // Make timestamps relative to the first event's start time
+  const firstStartTime = events[0].startTime;
   return {
-    traceEvents: events.map(mapRenderEventToTraceEvent),
+    traceEvents: events.map((event) =>
+      mapRenderEventToTraceEvent({
+        ...event,
+        startTime: event.startTime - firstStartTime,
+      }),
+    ),
   };
 }
 
@@ -110,7 +130,7 @@ function mapRenderEventToTraceEvent(
     name: 'React Render',
     cat: 'react',
     ph: 'X',
-    ts: 0, // Placeholder, should be replaced with actual timestamp
+    ts: Math.round(event.startTime * 1000), // Convert ms to µs
     dur: Math.round(event.actualDuration * 1000), // Convert ms to µs
     pid: 0,
     tid: 0,
