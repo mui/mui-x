@@ -184,9 +184,10 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
       position?: 'top' | 'bottom' | 'none';
       /**
        * The height of the axis.
+       * Set to `'auto'` to automatically calculate the height based on tick label measurements.
        * @default 45 if an axis label is provided, 25 otherwise.
        */
-      height?: number;
+      height?: number | 'auto';
     }
   : AxisProps extends ChartsYAxisProps
     ? {
@@ -202,14 +203,15 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
         position?: 'left' | 'right' | 'none';
         /**
          * The width of the axis.
+         * Set to `'auto'` to automatically calculate the width based on tick label measurements.
          * @default 65 if an axis label is provided, 45 otherwise.
          */
-        width?: number;
+        width?: number | 'auto';
       }
     : {
         position?: 'top' | 'bottom' | 'left' | 'right' | 'none';
-        height?: number;
-        width?: number;
+        height?: number | 'auto';
+        width?: number | 'auto';
       };
 
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
@@ -415,6 +417,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
        * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       * - `'auto-size'` The value is used for computing axis auto-size dimensions.
        */
       location: 'legend';
     }
@@ -425,6 +428,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
        * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       * - `'auto-size'` The value is used for computing axis auto-size dimensions.
        */
       location: 'tooltip' | 'zoom-slider-tooltip';
       /**
@@ -439,6 +443,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
        * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       * - `'auto-size'` The value is used for computing axis auto-size dimensions.
        */
       location: 'tick';
       /**
@@ -458,6 +463,17 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * Can be `undefined` if the scale doesn't support it, e.g., band, point scales.
        */
       tickNumber?: number;
+    }
+  | {
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       * - `'auto-size'` The value is used for computing axis auto-size dimensions.
+       */
+      location: 'auto-size';
     };
 
 type MinMaxConfig<S extends ScaleName = ScaleName> = S extends ContinuousScaleName
@@ -612,15 +628,17 @@ export type ComputedAxis<
      */
     triggerTooltip?: boolean;
   } & (AxisProps extends ChartsXAxisProps
-    ? MakeRequired<AxisSideConfig<AxisProps>, 'height'>
+    ? AxisSideConfig<AxisProps> & { height: number }
     : AxisProps extends ChartsYAxisProps
-      ? MakeRequired<AxisSideConfig<AxisProps>, 'width'>
+      ? AxisSideConfig<AxisProps> & { width: number }
       : AxisSideConfig<AxisProps>);
+
 export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
   S,
   V,
   ChartsXAxisProps
 >;
+
 export type ComputedYAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
   S,
   V,
