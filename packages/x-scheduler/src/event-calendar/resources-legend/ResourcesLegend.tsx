@@ -1,7 +1,5 @@
 'use client';
 import * as React from 'react';
-import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
-import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import { styled } from '@mui/material/styles';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -31,28 +29,12 @@ const ResourcesLegendItemRoot = styled(FormControlLabel, {
 })(({ theme }) => ({
   marginLeft: 0,
   marginRight: 0,
-  padding: theme.spacing(1),
-  borderRadius: theme.shape.borderRadius,
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+  '& .MuiCheckbox-root': {
+    color: 'var(--event-main)',
+    '&.Mui-checked': {
+      color: 'var(--event-main)',
+    },
   },
-  '& .MuiFormControlLabel-label': {
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    flex: 1,
-  },
-}));
-
-const ResourcesLegendItemColorDot = styled('span', {
-  name: 'MuiEventCalendar',
-  slot: 'ResourcesLegendItemColorDot',
-})(({ theme }) => ({
-  width: 10,
-  height: 10,
-  borderRadius: '50%',
-  flexShrink: 0,
-  backgroundColor: 'var(--event-main)',
   variants: getPaletteVariants(theme),
 }));
 
@@ -80,14 +62,12 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
   return (
     <ResourcesLegendItemRoot
       className={classes.resourcesLegendItem}
-      labelPlacement="start"
+      data-palette={eventColor}
       control={
         <Checkbox
           className={classes.resourcesLegendItemCheckbox}
           checked={isVisible}
           onChange={(event) => onToggle(resource.id, event)}
-          icon={<VisibilityOffOutlined fontSize="small" />}
-          checkedIcon={<VisibilityOutlined fontSize="small" />}
           size="small"
           slotProps={{
             input: {
@@ -96,22 +76,12 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
                 : translations.showEventsLabel(resource.title),
             },
           }}
-          sx={{
-            p: 0,
-            '&.Mui-checked': { color: 'action.active' },
-          }}
         />
       }
       label={
-        <React.Fragment>
-          <ResourcesLegendItemColorDot
-            className={classes.resourcesLegendItemColorDot}
-            data-palette={eventColor}
-          />
-          <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
-            {resource.title}
-          </ResourcesLegendItemName>
-        </React.Fragment>
+        <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
+          {resource.title}
+        </ResourcesLegendItemName>
       }
     />
   );
