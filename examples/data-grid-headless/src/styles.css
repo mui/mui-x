@@ -90,7 +90,7 @@
 .grid-wrapper {
   flex: 1 1 auto;
   min-width: 0;
-  max-height: 100%;
+  max-height: calc(100% - 2 * var(--space-4));
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -168,6 +168,65 @@
 
 .grid-tr:last-child .grid-td {
   border-bottom: none;
+}
+
+/* ===========================================
+   Grid Footer (Pagination)
+   =========================================== */
+
+.grid-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--gray-50);
+  flex-shrink: 0;
+}
+
+.grid-footer__info {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.grid-footer__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.grid-footer__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-background);
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--color-text);
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.grid-footer__btn:hover:not(:disabled) {
+  background-color: var(--gray-100);
+}
+
+.grid-footer__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.grid-footer__page-info {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  padding: 0 var(--space-2);
+  white-space: nowrap;
 }
 
 /* ===========================================
