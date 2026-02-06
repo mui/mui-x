@@ -22,6 +22,8 @@ const ResourcesLegendRoot = styled('section', {
   display: 'flex',
   flexDirection: 'column',
   padding: theme.spacing(1),
+  overflowY: 'auto',
+  scrollbarWidth: 'thin',
 }));
 
 const ResourcesLegendLabel = styled(Typography, {
