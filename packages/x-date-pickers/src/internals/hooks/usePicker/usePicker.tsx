@@ -75,6 +75,7 @@ export const usePicker = <
     // Other props
     autoFocus,
     name,
+    keepOpenDuringFieldFocus,
   } = props;
 
   const { className, sx, ...propsToForwardToView } = props;
@@ -306,6 +307,7 @@ export const usePicker = <
       reduceAnimations,
       triggerRef,
       triggerStatus,
+      keepOpenDuringFieldFocus: Boolean(keepOpenDuringFieldFocus),
       hasNextStep,
       fieldFormat: format ?? '',
       name,
@@ -329,6 +331,7 @@ export const usePicker = <
       label,
       sx,
       triggerStatus,
+      keepOpenDuringFieldFocus,
       hasNextStep,
       timezone,
       state.open,
