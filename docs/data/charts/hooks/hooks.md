@@ -49,7 +49,7 @@ This means a component using those hook should follow one of the below mentioned
 
 1. a `slot` of a chart component
 2. a child of a chart component
-3. a child of the `<ChartDataProvider />`
+3. a child of the `<ChartsDataProvider />`
 
 For example if you create a component `<CustomLegend />` that uses the `useLegend()` hook, you could use it as follow:
 
@@ -66,12 +66,12 @@ For example if you create a component `<CustomLegend />` that uses the `useLegen
 </LineChart>
 
 // ✅ Correct usage with composition API
-<ChartDataProvider series={[...]}>
+<ChartsDataProvider series={[...]}>
   <ChartsSurface>
     <LinePlot />
   </ChartsSurface>
   <CustomLegend /> {/* useLegend works here */}
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 ```jsx

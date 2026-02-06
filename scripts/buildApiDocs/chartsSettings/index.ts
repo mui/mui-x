@@ -115,6 +115,9 @@ export default chartsApiPages;
       'x-charts/src/ChartContainer/ChartContainer.tsx',
       'x-charts-pro/src/ChartContainerPro/ChartContainerPro.tsx',
       'x-charts-premium/src/ChartContainerPremium/ChartContainerPremium.tsx',
+      'x-charts/src/ChartDataProvider/ChartDataProvider.tsx',
+      'x-charts-pro/src/ChartDataProviderPro/ChartDataProviderPro.tsx',
+      'x-charts-premium/src/ChartDataProviderPremium/ChartDataProviderPremium.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
