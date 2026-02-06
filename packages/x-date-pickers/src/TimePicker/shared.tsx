@@ -113,6 +113,15 @@ export function useTimePickerDefaultizedProps<
       toolbar: {
         ampm,
         ampmInClock: themeProps.ampmInClock,
+        minTime: themeProps.minTime,
+        maxTime: themeProps.maxTime,
+        disablePast: themeProps.disablePast,
+        disableFuture: themeProps.disableFuture,
+        disableIgnoringDatePartForTimeValidation:
+          themeProps.disableIgnoringDatePartForTimeValidation,
+        referenceDate: themeProps.referenceDate,
+        defaultValue: themeProps.defaultValue,
+        timezone: themeProps.timezone,
         ...themeProps.slotProps?.toolbar,
       },
     },
