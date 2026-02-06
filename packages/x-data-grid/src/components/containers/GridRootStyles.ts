@@ -470,8 +470,11 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
-      zIndex: 40, // Should be above the column separator
+      zIndex: 'var(--unstable_pinnedColumnLayer)', // Should be above the column separator
       background: vars.header.background.base,
+    },
+    [`& .${c['columnHeader--last']}.${c['columnHeader--pinnedRight']} .${c.columnSeparator}`]: {
+      left: '-3px',
     },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
