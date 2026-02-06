@@ -267,6 +267,9 @@ export const useGridRowEditing = (
             ...rowParams,
             field: params.field,
             reason,
+            // Pass the pressed key so the edit state can be initialized with it.
+            // This avoids losing the first character when using a controlled rowModesModel.
+            key: isPrintableKey(event) ? event.key : undefined,
           };
           apiRef.current.publishEvent('rowEditStart', newParams, event);
         }
@@ -285,7 +288,14 @@ export const useGridRowEditing = (
         reason === GridRowEditStartReasons.printableKeyDown ||
         reason === GridRowEditStartReasons.deleteKeyDown
       ) {
-        startRowEditModeParams.deleteValue = !!field;
+        // If the user typed a printable key, initialize the value with that key
+        // to avoid losing the first character when the component is controlled.
+        if (reason === GridRowEditStartReasons.printableKeyDown && params.key && field) {
+          startRowEditModeParams.initialValue = params.key;
+        } else {
+          // For Delete / Backspace we clear the value
+          startRowEditModeParams.deleteValue = !!field;
+        }
       }
 
       apiRef.current.startRowEditMode(startRowEditModeParams);
