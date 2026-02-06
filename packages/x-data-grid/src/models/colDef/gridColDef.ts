@@ -356,10 +356,50 @@ export interface GridSingleSelectColDef<
   /**
    * Used to determine the value used for a value option.
    * @param {ValueOptions} value The current value option.
-   * @returns {string} The value to be used.
+   * @returns {string | number} The value to be used.
    * @default {defaultGetOptionValue}
    */
-  getOptionValue: (value: ValueOptions) => any;
+  getOptionValue: (value: ValueOptions) => string | number;
+}
+
+/**
+ * Column Definition interface used for columns with the `multiSelect` type.
+ * @demos
+ *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
+ */
+export interface GridMultiSelectColDef<
+  R extends GridValidRowModel = any,
+  V = any[],
+  F = string,
+> extends GridBaseColDef<R, V, F> {
+  /**
+   * The type of the column.
+   * @default 'multiSelect'
+   */
+  type: 'multiSelect';
+  /**
+   * To be used in combination with `type: 'multiSelect'`. This is an array (or a function returning an array) of the possible cell values and labels.
+   */
+  valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams<R>) => Array<ValueOptions>);
+  /**
+   * Used to determine the label displayed for a given value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The text to be displayed.
+   * @default {defaultGetOptionLabel}
+   */
+  getOptionLabel: (value: ValueOptions) => string;
+  /**
+   * Used to determine the value used for a value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string | number} The value to be used.
+   * @default {defaultGetOptionValue}
+   */
+  getOptionValue: (value: ValueOptions) => string | number;
+  /**
+   * The separator used to join array values for display and export.
+   * @default ', '
+   */
+  separator?: string;
 }
 
 /**
@@ -370,7 +410,8 @@ export interface GridSingleSelectColDef<
 export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridBaseColDef<R, V, F>
   | GridActionsColDef<R, V, F>
-  | GridSingleSelectColDef<R, V, F>;
+  | GridSingleSelectColDef<R, V, F>
+  | GridMultiSelectColDef<R, V, F>;
 
 /**
  * Column Definition interface used for the list view column.

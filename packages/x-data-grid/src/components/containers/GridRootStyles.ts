@@ -331,6 +331,12 @@ export const GridRootStyles = styled('div', {
         flex: 'none !important',
         width: 'unset !important',
       },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
+      },
     },
     [`&.${c.withSidePanel}`]: {
       flexDirection: 'row',
