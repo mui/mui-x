@@ -259,6 +259,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
         focusYear(year + horizontalDirection);
         event.preventDefault();
         break;
+      case 'Enter':
+      case ' ':
+        handleYearSelection(event, year);
+        event.preventDefault();
+        break;
       default:
         break;
     }
