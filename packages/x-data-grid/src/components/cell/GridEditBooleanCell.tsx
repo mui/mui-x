@@ -104,6 +104,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"
+        row={row}
         {...rootProps.slotProps?.baseCheckbox}
       />
     </label>
