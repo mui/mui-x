@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
-const isDevEnvironment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
+const isDevEnvironment = process.env.NODE_ENV !== 'production' || process.env.IS_TEST_ENV;
 
 const noop = () => {};
 
