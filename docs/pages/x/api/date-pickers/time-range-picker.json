@@ -22,6 +22,12 @@
       "deprecationInfo": "Use the <a href=\"https://mui.com/x/react-date-pickers/fields/\">field component</a> instead."
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
+    "focusedSectionOnFocus": {
+      "type": {
+        "name": "union",
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
+      }
+    },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },

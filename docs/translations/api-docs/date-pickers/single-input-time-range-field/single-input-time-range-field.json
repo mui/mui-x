@@ -33,6 +33,9 @@
     "focused": {
       "description": "If <code>true</code>, the component is displayed in focused state."
     },
+    "focusedSectionOnFocus": {
+      "description": "The index or type of the section to focus when the field is focused. If <code>null</code>, no section will be focused. If <code>undefined</code>, the first section will be focused."
+    },
     "format": { "description": "Format of the date when rendered in the input(s)." },
     "formatDensity": {
       "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."

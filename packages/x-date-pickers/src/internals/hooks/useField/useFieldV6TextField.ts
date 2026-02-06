@@ -7,7 +7,7 @@ import useTimeout from '@mui/utils/useTimeout';
 import useForkRef from '@mui/utils/useForkRef';
 import { UseFieldParameters, UseFieldProps, UseFieldReturnValue } from './useField.types';
 import { useSplitFieldProps } from '../../../hooks';
-import { FieldSectionType, InferFieldSection } from '../../../models';
+import { FieldSelectedSections, InferFieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid } from './useField.utils';
 import { PickerValidValue } from '../../models';
@@ -167,7 +167,7 @@ export const useFieldV6TextField = <
     setSelectedSections(sectionIndex);
   }
 
-  function focusField(newSelectedSection: number | FieldSectionType = 0) {
+  function focusField(newSelectedSection: FieldSelectedSections = 0) {
     if (getActiveElement(inputRef.current) === inputRef.current) {
       return;
     }
@@ -195,7 +195,7 @@ export const useFieldV6TextField = <
         input.value.length &&
         Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length
       ) {
-        setSelectedSections('all');
+        setSelectedSections(internalPropsWithDefaults.focusedSectionOnFocus ?? 'all');
       } else {
         syncSelectionFromDOM();
       }
