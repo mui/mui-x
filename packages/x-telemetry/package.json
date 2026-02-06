@@ -30,7 +30,7 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@fingerprintjs/fingerprintjs": "^3.4.2",
-    "ci-info": "^4.3.1",
+    "ci-info": "^4.4.0",
     "conf": "^11.0.2",
     "is-docker": "^4.0.0",
     "node-machine-id": "^1.1.12"
