@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { SchedulerProcessedDate } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context/useSchedulerStoreContext';
@@ -8,7 +9,11 @@ export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue 
   const { start, end } = parameters;
 
   const store = useSchedulerStoreContext();
-  const state = useStore(store, schedulerOccurrenceSelectors.isStartedOrEnded, start, end);
+
+  const started = useStore(store, schedulerOccurrenceSelectors.isStarted, start);
+  const ended = useStore(store, schedulerOccurrenceSelectors.isEnded, end);
+
+  const state = React.useMemo(() => ({ started, ended }), [started, ended]);
 
   return { state };
 }
