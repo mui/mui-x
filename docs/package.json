@@ -98,7 +98,7 @@
     "rxjs": "^7.8.2",
     "styled-components": "^6.1.19",
     "stylis": "catalog:",
-    "webpack-bundle-analyzer": "^5.1.1"
+    "webpack-bundle-analyzer": "^5.2.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "catalog:",
