@@ -6,3 +6,4 @@ export * from './schedulerRecurringEventSelectors';
 export * from './schedulerOccurrencePlaceholderSelectors';
 export * from './schedulerNowSelectors';
 export * from './schedulerOtherSelectors';
+export * from './schedulerAiHelperSelectors';

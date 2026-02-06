@@ -6,6 +6,7 @@ import {
   useExtractEventCalendarParameters,
 } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import type { AiHelperState } from '@mui/x-scheduler-headless/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
@@ -13,6 +14,18 @@ import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
 import { EventCalendarClassesContext } from './EventCalendarClassesContext';
 import { EventDialogClassesContext } from '../internals/components/event-draggable-dialog/EventDialogClassesContext';
 import { EventCalendarRoot } from './EventCalendarRoot';
+import {
+  AiHelperCommandPalette,
+  AiHelperContext,
+  type AiHelperContextValue,
+} from '../internals/components/ai-helper';
+
+const INITIAL_AI_HELPER_STATE: AiHelperState = {
+  status: 'closed',
+  prompt: '',
+  parsedResponse: null,
+  occurrence: null,
+};
 
 export const EventCalendar = React.forwardRef(function EventCalendar<
   TEvent extends object,
@@ -30,16 +43,101 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const store = useEventCalendar(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { translations, ...other } = forwardedProps;
+  const {
+    translations,
+    aiHelper,
+    aiHelperApiKey,
+    aiHelperModel,
+    aiHelperDefaultDuration,
+    aiHelperExtraContext,
+    ...other
+  } = forwardedProps;
+
+  const openAiHelper = React.useCallback(() => {
+    store.set('aiHelper', { ...INITIAL_AI_HELPER_STATE, status: 'prompting' });
+  }, [store]);
+
+  const [isOffline, setIsOffline] = React.useState(
+    typeof navigator !== 'undefined' ? !navigator.onLine : false,
+  );
+  const [isGeminiNanoAvailable, setIsGeminiNanoAvailable] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    async function checkAvailability() {
+      try {
+        if (typeof LanguageModel !== 'undefined') {
+          const availability = await LanguageModel.availability();
+          setIsGeminiNanoAvailable(availability !== 'unavailable');
+        }
+      } catch {
+        // API not available
+      }
+    }
+    checkAvailability();
+  }, []);
+
+  const useGeminiNano = isOffline && isGeminiNanoAvailable;
+
+  const aiHelperContextValue = React.useMemo<AiHelperContextValue | null>(
+    () =>
+      aiHelper
+        ? {
+            open: openAiHelper,
+            isEnabled: true,
+            isOffline,
+            isGeminiNanoAvailable,
+          }
+        : null,
+    [aiHelper, openAiHelper, isOffline, isGeminiNanoAvailable],
+  );
+
+  // Keyboard shortcut for AI helper (Cmd+K / Ctrl+K)
+  React.useEffect(() => {
+    if (!aiHelper) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault();
+        openAiHelper();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [aiHelper, openAiHelper]);
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <TranslationsProvider translations={translations}>
         <EventCalendarClassesContext.Provider value={classes}>
           <EventDialogClassesContext.Provider value={classes}>
-            <EventDraggableDialogProvider>
-              <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-            </EventDraggableDialogProvider>
+            <AiHelperContext.Provider value={aiHelperContextValue}>
+              <EventDraggableDialogProvider>
+                <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+                {aiHelper && (
+                  <AiHelperCommandPalette
+                    apiKey={aiHelperApiKey}
+                    provider={useGeminiNano ? 'gemini-nano' : undefined}
+                    model={useGeminiNano ? undefined : aiHelperModel}
+                    defaultDuration={aiHelperDefaultDuration}
+                    extraContext={aiHelperExtraContext}
+                  />
+                )}
+              </EventDraggableDialogProvider>
+            </AiHelperContext.Provider>
           </EventDialogClassesContext.Provider>
         </EventCalendarClassesContext.Provider>
       </TranslationsProvider>

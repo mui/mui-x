@@ -5,3 +5,4 @@ export * from './view';
 export * from './preferences';
 export * from './recurringEvent';
 export * from './dragAndDrop';
+export * from './aiHelper';

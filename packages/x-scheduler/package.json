@@ -84,6 +84,7 @@
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "@mui/icons-material": "catalog:",
+    "@types/dom-chromium-ai": "^0.0.14",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

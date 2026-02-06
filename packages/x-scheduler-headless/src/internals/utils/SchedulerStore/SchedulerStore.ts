@@ -106,6 +106,7 @@ export class SchedulerStore<
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
       errors: [],
       isLoading: !!parameters.dataSource,
+      aiHelper: { status: 'closed' as const, prompt: '', parsedResponse: null, occurrence: null },
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);

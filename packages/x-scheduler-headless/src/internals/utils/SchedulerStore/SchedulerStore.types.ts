@@ -15,6 +15,7 @@ import {
   SchedulerResourceModelStructure,
   TemporalSupportedObject,
   SchedulerEventSide,
+  AiHelperState,
 } from '../../../models';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 
@@ -156,6 +157,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * The errors that occurred during data fetching.
    */
   errors: Error[];
+  /**
+   * The state of the AI helper.
+   */
+  aiHelper: AiHelperState;
 }
 
 export interface SchedulerDataSource<TEvent extends object> {
