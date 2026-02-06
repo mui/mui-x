@@ -16,6 +16,7 @@ import {
   gridFilteredSortedRowIdsSelector,
   gridRowIdSelector,
   type GridRowId,
+  useGridSelector,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
@@ -53,19 +54,32 @@ export const useGridDataSourceLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs'
+    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs' | 'treeData'
   >,
 ): void => {
+  const isNestedLazyLoadingEnabled = useGridSelector(privateApiRef, () =>
+    props.treeData
+      ? true
+      : ((
+          privateApiRef.current.unstable_applyPipeProcessors(
+            'getRowsParams',
+            {},
+          ) as Partial<GridGetRowsParams> & { groupFields: string[] }
+        )?.groupFields?.length ?? 0) > 0,
+  );
+
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.LazyLoading,
-      props.dataSource && props.lazyLoading ? () => true : () => false,
+      props.dataSource && props.lazyLoading && !isNestedLazyLoadingEnabled
+        ? () => true
+        : () => false,
     );
-  }, [privateApiRef, props.lazyLoading, props.dataSource]);
+  }, [privateApiRef, props.lazyLoading, props.dataSource, isNestedLazyLoadingEnabled]);
 
-  const [lazyLoadingRowsUpdateStrategyActive, setLazyLoadingRowsUpdateStrategyActive] =
-    React.useState(false);
+  const [isStrategyActive, setStrategyActive] = React.useState(false);
+
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const previousLastRowIndex = React.useRef(0);
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
@@ -239,7 +253,7 @@ export const useGridDataSourceLazyLoader = (
     [ensureValidRowCount],
   );
 
-  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
+  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
         return;
@@ -486,7 +500,7 @@ export const useGridDataSourceLazyLoader = (
   const handleStrategyActivityChange = React.useCallback<
     GridEventListener<'strategyAvailabilityChange'>
   >(() => {
-    setLazyLoadingRowsUpdateStrategyActive(
+    setStrategyActive(
       privateApiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) ===
         DataSourceRowsUpdateStrategy.LazyLoading,
     );
@@ -495,47 +509,35 @@ export const useGridDataSourceLazyLoader = (
   useGridRegisterStrategyProcessor(
     privateApiRef,
     DataSourceRowsUpdateStrategy.LazyLoading,
-    'dataSourceRowsUpdate',
+    'dataSourceRootRowsUpdate',
     handleDataUpdate,
   );
 
   useGridEvent(privateApiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
 
-  useGridEvent(
-    privateApiRef,
-    'rowCountChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleRowCountChange),
-  );
+  useGridEvent(privateApiRef, 'rowCountChange', runIf(isStrategyActive, handleRowCountChange));
   useGridEvent(
     privateApiRef,
     'rowsScrollEndIntersection',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleIntersection),
+    runIf(isStrategyActive, handleIntersection),
   );
   useGridEvent(
     privateApiRef,
     'renderedRowsIntervalChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, throttledHandleRenderedRowsIntervalChange),
+    runIf(isStrategyActive, throttledHandleRenderedRowsIntervalChange),
   );
   useGridEvent(
     privateApiRef,
     'sortModelChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleGridSortModelChange),
+    runIf(isStrategyActive, handleGridSortModelChange),
   );
   useGridEvent(
     privateApiRef,
     'filterModelChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleGridFilterModelChange),
+    runIf(isStrategyActive, handleGridFilterModelChange),
   );
-  useGridEvent(
-    privateApiRef,
-    'rowDragStart',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleDragStart),
-  );
-  useGridEvent(
-    privateApiRef,
-    'rowDragEnd',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleDragEnd),
-  );
+  useGridEvent(privateApiRef, 'rowDragStart', runIf(isStrategyActive, handleDragStart));
+  useGridEvent(privateApiRef, 'rowDragEnd', runIf(isStrategyActive, handleDragEnd));
 
   React.useEffect(() => {
     setStrategyAvailability();
