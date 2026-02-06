@@ -28,6 +28,7 @@ import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
+import MUIIconButton from '@mui/material/IconButton';
 import MUIPopper, { type PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
@@ -53,6 +54,7 @@ import {
   GridFilterAltIcon,
   GridFilterListIcon,
   GridKeyboardArrowRight,
+  GridKeyboardArrowLeft,
   GridMoreVertIcon,
   GridRemoveIcon,
   GridSearchIcon,
@@ -69,6 +71,8 @@ import {
   GridDownloadIcon,
   GridLongTextCellExpandIcon,
   GridLongTextCellCollapseIcon,
+  GridFirstPageIcon,
+  GridLastPageIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -217,6 +221,81 @@ const StyledPagination = styled(MUIPagination, {
   },
 })) as typeof MUIPagination;
 
+interface TablePaginationActionsProps {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
+  getItemAriaLabel?: (type: 'first' | 'last' | 'next' | 'previous', page: number) => string;
+}
+
+const PaginationActionsWithIcons = React.forwardRef<HTMLDivElement, TablePaginationActionsProps>(
+  function PaginationActionsWithIcons(props, ref) {
+    const { count, page, rowsPerPage, onPageChange, getItemAriaLabel } = props;
+    const rootProps = useGridRootProps();
+    const theme = useTheme();
+    const isRtl = theme.direction === 'rtl';
+
+    const handleFirstPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      onPageChange(event, 0);
+    };
+
+    const handleBackButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      onPageChange(event, page - 1);
+    };
+
+    const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      onPageChange(event, page + 1);
+    };
+
+    const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+    };
+
+    const FirstPageIconComponent = rootProps.slots.paginationFirstIcon;
+    const PreviousIconComponent = rootProps.slots.paginationPreviousIcon;
+    const NextIconComponent = rootProps.slots.paginationNextIcon;
+    const LastPageIconComponent = rootProps.slots.paginationLastIcon;
+
+    return (
+      <div ref={ref} style={{ flexShrink: 0, marginLeft: theme.spacing(2.5) }}>
+        <MUIIconButton
+          onClick={handleFirstPageButtonClick}
+          disabled={page === 0}
+          aria-label={getItemAriaLabel?.('first', page + 1) || 'Go to first page'}
+          size="small"
+        >
+          {isRtl ? <LastPageIconComponent /> : <FirstPageIconComponent />}
+        </MUIIconButton>
+        <MUIIconButton
+          onClick={handleBackButtonClick}
+          disabled={page === 0}
+          aria-label={getItemAriaLabel?.('previous', page + 1) || 'Go to previous page'}
+          size="small"
+        >
+          {isRtl ? <NextIconComponent /> : <PreviousIconComponent />}
+        </MUIIconButton>
+        <MUIIconButton
+          onClick={handleNextButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label={getItemAriaLabel?.('next', page + 1) || 'Go to next page'}
+          size="small"
+        >
+          {isRtl ? <PreviousIconComponent /> : <NextIconComponent />}
+        </MUIIconButton>
+        <MUIIconButton
+          onClick={handleLastPageButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label={getItemAriaLabel?.('last', page + 1) || 'Go to last page'}
+          size="small"
+        >
+          {isRtl ? <FirstPageIconComponent /> : <LastPageIconComponent />}
+        </MUIIconButton>
+      </div>
+    );
+  },
+);
+
 const BasePagination = forwardRef<any, P['basePagination']>(function BasePagination(props, ref) {
   const { onRowsPerPageChange, material, disabled, ...other } = props;
   const computedProps = React.useMemo(() => {
@@ -232,6 +311,9 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const { estimatedRowCount } = rootProps;
+
+  // Extract ActionsComponent from material prop if provided, otherwise use our custom one
+  const ActionsComponent = material?.ActionsComponent || PaginationActionsWithIcons;
 
   return (
     <StyledPagination
@@ -249,6 +331,7 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
         })
       }
       getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
+      ActionsComponent={ActionsComponent}
       {...computedProps}
       {...other}
       {...material}
@@ -787,10 +870,15 @@ const iconSlots: GridIconSlotsComponent = {
   loadIcon: GridLoadIcon,
   filterPanelAddIcon: GridAddIcon,
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
+  filterPanelDeleteAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
   longTextCellExpandIcon: GridLongTextCellExpandIcon,
   longTextCellCollapseIcon: GridLongTextCellCollapseIcon,
+  paginationFirstIcon: GridFirstPageIcon,
+  paginationPreviousIcon: GridKeyboardArrowLeft,
+  paginationNextIcon: GridKeyboardArrowRight,
+  paginationLastIcon: GridLastPageIcon,
 };
 
 const baseSlots: GridBaseSlots = {
