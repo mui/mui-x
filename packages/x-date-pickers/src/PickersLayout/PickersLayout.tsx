@@ -91,6 +91,14 @@ export const PickersLayoutContentWrapper = styled('div', {
   gridRow: 2,
   display: 'flex',
   flexDirection: 'column',
+  variants: [
+    {
+      props: (p) => p.shouldRenderTimeInASingleColumn === true,
+      style: {
+        gridColumn: '1 / 4',
+      },
+    },
+  ],
 });
 
 type PickersLayoutComponent = (<TValue extends PickerValidValue>(
