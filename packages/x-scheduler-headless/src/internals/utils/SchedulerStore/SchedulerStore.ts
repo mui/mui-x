@@ -547,4 +547,13 @@ export class SchedulerStore<
       this.set('occurrencePlaceholder', newPlaceholder);
     }
   };
+
+  /**
+   * Builds an object containing the methods that should be exposed publicly by the Scheduler components.
+   */
+  public buildPublicAPI() {
+    return {
+      setVisibleDate: this.setVisibleDate,
+    };
+  }
 }

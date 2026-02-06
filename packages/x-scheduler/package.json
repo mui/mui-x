@@ -22,7 +22,8 @@
     "./standalone-event": "./src/standalone-event/index.ts",
     "./translations": "./src/translations/index.ts",
     "./internals": "./src/internals/index.ts",
-    "./week-view": "./src/week-view/index.ts"
+    "./week-view": "./src/week-view/index.ts",
+    "./use-event-calendar-api-ref": "./src/use-event-calendar-api-ref/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
