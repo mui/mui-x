@@ -5,6 +5,7 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Collapse from '@mui/material/Collapse';
+import Divider from '@mui/material/Divider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   eventCalendarPreferenceSelectors,
@@ -51,6 +52,9 @@ const EventCalendarSidePanel = styled('aside', {
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
+  border: '1px solid',
+  borderColor: theme.palette.divider,
+  borderRadius: theme.shape.borderRadius,
 }));
 
 const EventCalendarMainPanel = styled('div', {
@@ -145,6 +149,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
           <Collapse in={isSidePanelOpen} orientation="horizontal">
             <EventCalendarSidePanel className={classes.sidePanel}>
               <MiniCalendar />
+              <Divider />
               <ResourcesLegend />
             </EventCalendarSidePanel>
           </Collapse>

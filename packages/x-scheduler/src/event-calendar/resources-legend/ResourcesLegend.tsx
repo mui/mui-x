@@ -18,10 +18,21 @@ import { useEventCalendarClasses } from '../EventCalendarClassesContext';
 const ResourcesLegendRoot = styled('section', {
   name: 'MuiEventCalendar',
   slot: 'ResourcesLegend',
-})({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-});
+  padding: theme.spacing(1),
+}));
+
+const ResourcesLegendLabel = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'ResourcesLegendLabel',
+})(({ theme }) => ({
+  ...theme.typography.subtitle2,
+  fontWeight: theme.typography.fontWeightMedium,
+  paddingLeft: theme.spacing(1.25),
+  paddingBottom: theme.spacing(1),
+}));
 
 const ResourcesLegendItemRoot = styled(FormControlLabel, {
   name: 'MuiEventCalendar',
@@ -43,7 +54,6 @@ const ResourcesLegendItemName = styled(Typography, {
   slot: 'ResourcesLegendItemName',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
-  color: theme.palette.text.secondary,
 }));
 
 interface ResourcesLegendItemProps {
@@ -122,6 +132,9 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
       {...props}
       className={clsx(props.className, classes.resourcesLegend)}
     >
+      <ResourcesLegendLabel className={classes.resourcesLegendLabel}>
+        {translations.resourcesLabel}
+      </ResourcesLegendLabel>
       {resources.map((resource) => (
         <ResourcesLegendItem
           key={resource.id}
