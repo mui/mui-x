@@ -35,7 +35,7 @@ export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGr
     }
   }, [grid, apiRef]);
 
-  const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+  const sortedRowIds = grid.use(rowsPlugin.selectors.processedRowIds);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
