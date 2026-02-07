@@ -53,14 +53,9 @@ export function GenerationChart({ data, selectedCountries }: GenerationChartProp
               domainLimit: 'strict',
               valueFormatter: (value: Date) => dateFormatter(value),
               zoom: true,
-              tickNumber: 6,
             },
           ]}
-          yAxis={[
-            {
-              valueFormatter: (value: number) => `${(value / 1000).toFixed(0)}k`,
-            },
-          ]}
+          yAxis={[{ valueFormatter: (value: number) => `${(value / 1000).toFixed(0)}k` }]}
           hideLegend
           margin={{ top: 20, bottom: 20, left: 5, right: 5 }}
           sx={{
