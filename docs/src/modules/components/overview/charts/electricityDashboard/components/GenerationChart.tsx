@@ -24,7 +24,42 @@ const valueFormatter = (value: number | null) => {
   return `${Math.round(value).toLocaleString()} MW`;
 };
 
+const series = COUNTRIES.map((country) => ({
+  id: country.code,
+  dataKey: `${country.code}_gen`,
+  label: country.name,
+  showMark: false,
+  valueFormatter,
+}));
+
+const xAxis = [
+  {
+    dataKey: 'date',
+    scaleType: 'time' as const,
+    domainLimit: 'strict' as const,
+    valueFormatter: (value: Date) => dateFormatter(value),
+    zoom: true,
+  },
+];
+
+const yAxis = [{ valueFormatter: (value: number) => `${(value / 1000).toFixed(0)}k` }];
+
+const chartSx = {
+  [`& .${lineElementClasses.root}`]: {
+    strokeWidth: 1,
+  },
+};
+
+const margin = { top: 20, bottom: 20, left: 5, right: 5 };
+
 export function GenerationChart({ data, selectedCountries }: GenerationChartProps) {
+  const hiddenItems = COUNTRIES.filter(
+    (country) => !selectedCountries.has(country.code),
+  ).map((country) => ({
+    type: 'line' as const,
+    seriesId: country.code,
+  }));
+
   return (
     <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Typography variant="subtitle2" fontWeight={600} gutterBottom>
@@ -33,36 +68,13 @@ export function GenerationChart({ data, selectedCountries }: GenerationChartProp
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <LineChartPro
           dataset={data}
-          hiddenItems={COUNTRIES.filter((country) => !selectedCountries.has(country.code)).map(
-            (country) => ({
-              type: 'line',
-              seriesId: country.code,
-            }),
-          )}
-          series={COUNTRIES.map((country) => ({
-            id: country.code,
-            dataKey: `${country.code}_gen`,
-            label: country.name,
-            showMark: false,
-            valueFormatter,
-          }))}
-          xAxis={[
-            {
-              dataKey: 'date',
-              scaleType: 'time',
-              domainLimit: 'strict',
-              valueFormatter: (value: Date) => dateFormatter(value),
-              zoom: true,
-            },
-          ]}
-          yAxis={[{ valueFormatter: (value: number) => `${(value / 1000).toFixed(0)}k` }]}
+          hiddenItems={hiddenItems}
+          series={series}
+          xAxis={xAxis}
+          yAxis={yAxis}
+          margin={margin}
           hideLegend
-          margin={{ top: 20, bottom: 20, left: 5, right: 5 }}
-          sx={{
-            [`& .${lineElementClasses.root}`]: {
-              strokeWidth: 1,
-            },
-          }}
+          sx={chartSx}
         />
       </Box>
     </Box>

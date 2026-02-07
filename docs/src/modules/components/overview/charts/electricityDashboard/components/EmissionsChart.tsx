@@ -25,6 +25,7 @@ const valueFormatter = (value: number | null) => {
 };
 
 // Color scale from green (low emissions) to red (high emissions)
+// Color scale from green (low emissions) to red (high emissions)
 const EMISSION_COLORS = [
   '#2e7d32', // (low)
   '#388e3c',
@@ -39,7 +40,41 @@ const EMISSION_COLORS = [
   '#e53935', // (high)
 ];
 
+const series = COUNTRIES.map((country) => ({
+  id: country.code,
+  dataKey: `${country.code}_co2`,
+  label: country.name,
+  showMark: false,
+  valueFormatter,
+}));
+
+const xAxis = [
+  {
+    dataKey: 'date',
+    scaleType: 'time' as const,
+    valueFormatter: (value: Date) => dateFormatter(value),
+    zoom: true,
+  },
+];
+
+const yAxis = [{ valueFormatter: (value: number) => `${Math.round(value)}` }];
+
+const chartSx = {
+  [`& .${lineElementClasses.root}`]: {
+    strokeWidth: 1,
+  },
+};
+
+const margin = { top: 20, bottom: 20, left: 5, right: 5 };
+
 export function EmissionsChart({ data, selectedCountries }: EmissionsChartProps) {
+  const hiddenItems = COUNTRIES.filter(
+    (country) => !selectedCountries.has(country.code),
+  ).map((country) => ({
+    type: 'line' as const,
+    seriesId: country.code,
+  }));
+
   return (
     <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Typography variant="subtitle2" fontWeight={600} gutterBottom>
@@ -48,36 +83,14 @@ export function EmissionsChart({ data, selectedCountries }: EmissionsChartProps)
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <LineChartPro
           dataset={data}
-          hiddenItems={COUNTRIES.filter((country) => !selectedCountries.has(country.code)).map(
-            (country) => ({
-              type: 'line',
-              seriesId: country.code,
-            }),
-          )}
+          hiddenItems={hiddenItems}
           colors={EMISSION_COLORS}
-          series={COUNTRIES.map((country) => ({
-            id: country.code,
-            dataKey: `${country.code}_co2`,
-            label: country.name,
-            showMark: false,
-            valueFormatter,
-          }))}
-          xAxis={[
-            {
-              dataKey: 'date',
-              scaleType: 'time',
-              valueFormatter: (value: Date) => dateFormatter(value),
-              zoom: true,
-            },
-          ]}
-          yAxis={[{ valueFormatter: (value: number) => `${Math.round(value)}` }]}
+          series={series}
+          xAxis={xAxis}
+          yAxis={yAxis}
+          margin={margin}
           hideLegend
-          margin={{ top: 20, bottom: 20, left: 5, right: 5 }}
-          sx={{
-            [`& .${lineElementClasses.root}`]: {
-              strokeWidth: 1,
-            },
-          }}
+          sx={chartSx}
         />
       </Box>
     </Box>
