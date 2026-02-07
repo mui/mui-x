@@ -52,7 +52,6 @@ export function EmissionsChart({ data }: EmissionsChartProps) {
             dataKey: `${country.code}_co2`,
             label: country.name,
             showMark: false,
-            area: true,
             valueFormatter,
           }))}
           xAxis={[

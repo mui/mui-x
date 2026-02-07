@@ -123,8 +123,10 @@ export function filterAndTransformData(
   // Calculate totals
   const totalGenerationTrend: number[] = [];
   const totalEmissionsTrend: number[] = [];
+  const trendDates: Date[] = [];
 
-  for (let i = startIndex; i <= endIndex; i += Math.max(1, Math.floor(totalHours / 24))) {
+  const step = Math.max(1, Math.floor(totalHours / 24));
+  for (let i = startIndex; i <= endIndex; i += step) {
     let genSum = 0;
     let emSum = 0;
     let count = 0;
@@ -135,6 +137,7 @@ export function filterAndTransformData(
     });
     totalGenerationTrend.push(genSum);
     totalEmissionsTrend.push(count > 0 ? emSum / count : 0);
+    trendDates.push(hourIndexToDate(i));
   }
 
   const cleanestCountry = countryStats.reduce((min, c) =>
@@ -151,6 +154,7 @@ export function filterAndTransformData(
       totalGeneration: totalGenerationSum,
       generationTrend: downsample(totalGenerationTrend, 24),
       emissionsTrend: downsample(totalEmissionsTrend, 24),
+      trendDates,
     },
     cleanestCountry,
   };

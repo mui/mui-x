@@ -31,6 +31,7 @@ export interface FilteredData {
     totalGeneration: number;
     generationTrend: number[];
     emissionsTrend: number[];
+    trendDates: Date[];
   };
   cleanestCountry: CountryStats | null;
 }

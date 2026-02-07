@@ -23,10 +23,12 @@ export interface StatCardProps {
   value: string;
   subtitle?: string;
   data: number[];
+  xAxisData?: Date[];
+  valueFormatter?: (value: number | null) => string;
   color?: string;
 }
 
-export function StatCard({ title, value, subtitle, data, color = '#4254FB' }: StatCardProps) {
+export function StatCard({ title, value, subtitle, data, xAxisData, valueFormatter, color = '#4254FB' }: StatCardProps) {
   const gradientId = React.useId();
 
   return (
@@ -52,6 +54,13 @@ export function StatCard({ title, value, subtitle, data, color = '#4254FB' }: St
             <Box sx={{ width: '100%', height: 50, minWidth: 80 }}>
               <SparkLineChart
                 data={data}
+                xAxis={{
+                  scaleType: 'time',
+                  data: xAxisData,
+                  valueFormatter: (date: Date) =>
+                    date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                }}
+                valueFormatter={valueFormatter}
                 area
                 showHighlight
                 showTooltip

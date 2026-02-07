@@ -79,6 +79,8 @@ export default function ElectricityDashboard() {
               value={`${formatNumber(filteredData.totals.totalGeneration)} MWh`}
               subtitle="Selected period"
               data={filteredData.totals.generationTrend}
+              xAxisData={filteredData.totals.trendDates}
+              valueFormatter={(v) => (v != null ? `${formatNumber(v)} MWh` : '')}
               color="#1976d2"
             />
             <StatCard
@@ -86,6 +88,8 @@ export default function ElectricityDashboard() {
               value={`${Math.round(filteredData.totals.avgEmissions)} gCO₂/kWh`}
               subtitle="Weighted average"
               data={filteredData.totals.emissionsTrend}
+              xAxisData={filteredData.totals.trendDates}
+              valueFormatter={(v) => (v != null ? `${Math.round(v)} gCO₂/kWh` : '')}
               color="#ff9800"
             />
             {filteredData.cleanestCountry && (
@@ -94,6 +98,8 @@ export default function ElectricityDashboard() {
                 value={filteredData.cleanestCountry.name}
                 subtitle={`${Math.round(filteredData.cleanestCountry.avgEmissions)} gCO₂/kWh`}
                 data={filteredData.cleanestCountry.emissionsTrend}
+                xAxisData={filteredData.totals.trendDates}
+                valueFormatter={(v) => (v != null ? `${Math.round(v)} gCO₂/kWh` : '')}
                 color="#4caf50"
               />
             )}
