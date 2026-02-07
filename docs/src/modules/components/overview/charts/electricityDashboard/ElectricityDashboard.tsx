@@ -37,6 +37,9 @@ export default function ElectricityDashboard() {
   );
 
   const filteredData = useFilteredData(dateRange[0], dateRange[1]);
+  const [selectedCountries, setSelectedCountries] = React.useState<Set<string>>(
+    new Set(filteredData.countryStats.map((country) => country.code)),
+  );
 
   return (
     <ThemeProvider theme={customTheme}>
@@ -112,16 +115,23 @@ export default function ElectricityDashboard() {
             sx={{ flex: 1, minHeight: 250 }}
           >
             <Paper variant="outlined" sx={{ flex: 1, p: 2, minWidth: 0 }}>
-              <GenerationChart data={filteredData.chartData} />
+              <GenerationChart
+                data={filteredData.chartData}
+                selectedCountries={selectedCountries}
+              />
             </Paper>
             <Paper variant="outlined" sx={{ flex: 1, p: 2, minWidth: 0 }}>
-              <EmissionsChart data={filteredData.chartData} />
+              <EmissionsChart data={filteredData.chartData} selectedCountries={selectedCountries} />
             </Paper>
           </Stack>
 
           {/* Data Grid */}
           <Paper variant="outlined" sx={{ p: 2, minHeight: 300 }}>
-            <CountryGrid data={filteredData.countryStats} />
+            <CountryGrid
+              data={filteredData.countryStats}
+              selectedCountries={selectedCountries}
+              onSelectedCountriesChange={setSelectedCountries}
+            />
           </Paper>
         </Stack>
       </Paper>

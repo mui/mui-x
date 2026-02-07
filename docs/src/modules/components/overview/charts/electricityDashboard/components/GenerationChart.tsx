@@ -8,6 +8,7 @@ import type { ChartDataPoint } from '../types/electricity';
 
 interface GenerationChartProps {
   data: ChartDataPoint[];
+  selectedCountries: Set<string>;
 }
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
@@ -23,16 +24,23 @@ const valueFormatter = (value: number | null) => {
   return `${Math.round(value).toLocaleString()} MW`;
 };
 
-export function GenerationChart({ data }: GenerationChartProps) {
+export function GenerationChart({ data, selectedCountries }: GenerationChartProps) {
   return (
-    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Typography variant="subtitle2" fontWeight={600} gutterBottom>
         Electricity Generation (MW)
       </Typography>
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <LineChartPro
           dataset={data}
+          hiddenItems={COUNTRIES.filter((country) => !selectedCountries.has(country.code)).map(
+            (country) => ({
+              type: 'line',
+              seriesId: country.code,
+            }),
+          )}
           series={COUNTRIES.map((country) => ({
+            id: country.code,
             dataKey: `${country.code}_gen`,
             label: country.name,
             showMark: false,
@@ -45,6 +53,7 @@ export function GenerationChart({ data }: GenerationChartProps) {
               domainLimit: 'strict',
               valueFormatter: (value: Date) => dateFormatter(value),
               zoom: true,
+              tickNumber: 6,
             },
           ]}
           yAxis={[

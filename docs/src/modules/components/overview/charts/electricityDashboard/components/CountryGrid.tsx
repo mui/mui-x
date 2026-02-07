@@ -7,6 +7,8 @@ import type { CountryStats } from '../types/electricity';
 
 interface CountryGridProps {
   data: CountryStats[];
+  selectedCountries: Set<string>;
+  onSelectedCountriesChange: (selected: Set<string>) => void;
 }
 
 function SparklineCell({ value, color }: { value: number[]; color: string }) {
@@ -73,7 +75,16 @@ const columns: GridColDef<CountryStats>[] = [
   },
 ];
 
-export function CountryGrid({ data }: CountryGridProps) {
+export function CountryGrid({
+  data,
+  selectedCountries,
+  onSelectedCountriesChange,
+}: CountryGridProps) {
+  const rowSelectionModel = React.useMemo(
+    () => ({ type: 'include' as const, ids: selectedCountries }),
+    [selectedCountries],
+  );
+
   return (
     <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Typography variant="subtitle2" fontWeight={600} gutterBottom>
@@ -102,7 +113,12 @@ export function CountryGrid({ data }: CountryGridProps) {
           columns={columns}
           getRowId={(row) => row.code}
           density="compact"
+          checkboxSelection
           disableRowSelectionOnClick
+          rowSelectionModel={rowSelectionModel}
+          onRowSelectionModelChange={(newSelection) =>
+            onSelectedCountriesChange(newSelection.ids as Set<string>)
+          }
           hideFooter
           initialState={{
             sorting: {

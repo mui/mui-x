@@ -8,6 +8,7 @@ import type { ChartDataPoint } from '../types/electricity';
 
 interface EmissionsChartProps {
   data: ChartDataPoint[];
+  selectedCountries: Set<string>;
 }
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
@@ -38,7 +39,7 @@ const EMISSION_COLORS = [
   '#e53935', // (high)
 ];
 
-export function EmissionsChart({ data }: EmissionsChartProps) {
+export function EmissionsChart({ data, selectedCountries }: EmissionsChartProps) {
   return (
     <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Typography variant="subtitle2" fontWeight={600} gutterBottom>
@@ -47,8 +48,15 @@ export function EmissionsChart({ data }: EmissionsChartProps) {
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <LineChartPro
           dataset={data}
+          hiddenItems={COUNTRIES.filter((country) => !selectedCountries.has(country.code)).map(
+            (country) => ({
+              type: 'line',
+              seriesId: country.code,
+            }),
+          )}
           colors={EMISSION_COLORS}
           series={COUNTRIES.map((country) => ({
+            id: country.code,
             dataKey: `${country.code}_co2`,
             label: country.name,
             showMark: false,
