@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { lineElementClasses, areaElementClasses } from '@mui/x-charts/LineChart';
+import { lineElementClasses } from '@mui/x-charts/LineChart';
 import { COUNTRIES } from '../data/countries';
 import type { ChartDataPoint } from '../types/electricity';
 
@@ -25,7 +25,7 @@ const valueFormatter = (value: number | null) => {
 
 // Color scale from green (low emissions) to red (high emissions)
 const EMISSION_COLORS = [
-  '#2e7d32', // Norway, Sweden (low)
+  '#2e7d32', // (low)
   '#388e3c',
   '#43a047',
   '#66bb6a',
@@ -35,7 +35,7 @@ const EMISSION_COLORS = [
   '#ffca28',
   '#ffa726',
   '#ff7043',
-  '#e53935', // Poland (high)
+  '#e53935', // (high)
 ];
 
 export function EmissionsChart({ data }: EmissionsChartProps) {
@@ -62,19 +62,12 @@ export function EmissionsChart({ data }: EmissionsChartProps) {
               zoom: true,
             },
           ]}
-          yAxis={[
-            {
-              valueFormatter: (value: number) => `${Math.round(value)}`,
-            },
-          ]}
+          yAxis={[{ valueFormatter: (value: number) => `${Math.round(value)}` }]}
           hideLegend
-          margin={{ left: 50, right: 10, top: 10, bottom: 30 }}
+          margin={{ top: 20, bottom: 20, left: 5, right: 5 }}
           sx={{
             [`& .${lineElementClasses.root}`]: {
               strokeWidth: 1,
-            },
-            [`& .${areaElementClasses.root}`]: {
-              opacity: 0.1,
             },
           }}
         />

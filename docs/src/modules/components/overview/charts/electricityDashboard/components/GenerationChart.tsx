@@ -25,7 +25,7 @@ const valueFormatter = (value: number | null) => {
 
 export function GenerationChart({ data }: GenerationChartProps) {
   return (
-    <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
       <Typography variant="subtitle2" fontWeight={600} gutterBottom>
         Electricity Generation (MW)
       </Typography>
@@ -42,6 +42,7 @@ export function GenerationChart({ data }: GenerationChartProps) {
             {
               dataKey: 'date',
               scaleType: 'time',
+              domainLimit: 'strict',
               valueFormatter: (value: Date) => dateFormatter(value),
               zoom: true,
             },
@@ -52,10 +53,10 @@ export function GenerationChart({ data }: GenerationChartProps) {
             },
           ]}
           hideLegend
-          margin={{ left: 50, right: 10, top: 10, bottom: 30 }}
+          margin={{ top: 20, bottom: 20, left: 5, right: 5 }}
           sx={{
             [`& .${lineElementClasses.root}`]: {
-              strokeWidth: 1.5,
+              strokeWidth: 1,
             },
           }}
         />
