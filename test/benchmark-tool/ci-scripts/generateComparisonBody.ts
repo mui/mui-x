@@ -76,6 +76,8 @@ ${statusSection}
 | Benchmark | Master | PR | Diff |
 |-----------|--------|-----|------|
 ${fileRows}
+
+> Fail threshold: **${failThreshold}%**
 `;
   } else {
     const fileRows = allFiles
