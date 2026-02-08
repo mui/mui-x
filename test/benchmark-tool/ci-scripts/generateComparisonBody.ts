@@ -15,11 +15,11 @@ function calculateDiffPercent(
   return { num: 0, str: '0.00' };
 }
 
-function getEmoji(diff: number): string {
-  if (diff > 0) {
+function getEmoji(diffPercent: number, failThreshold: number): string {
+  if (diffPercent > failThreshold) {
     return '❌';
   }
-  if (diff < 0) {
+  if (diffPercent < -failThreshold) {
     return '✅';
   }
   return '➖';
@@ -50,7 +50,7 @@ export function generateComparisonBody(
         const masterDuration = masterMetricsByFile[file] || 0;
         const diff = prDuration - masterDuration;
         const diffPercent = calculateDiffPercent(diff, masterDuration, prDuration);
-        const emoji = getEmoji(diff);
+        const emoji = getEmoji(diffPercent.num, failThreshold);
         const benchmarkName = file.replace('.json', '');
 
         if (diffPercent.num > failThreshold) {
