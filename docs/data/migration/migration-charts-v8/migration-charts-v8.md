@@ -343,3 +343,27 @@ If you're using these classes manually in your styles, update them accordingly:
 -`.MuiBar-root`
 +`.MuiBarChart-root`
 ```
+
+## ChartsSurface
+
+### `data-has-focused-item` attribute removed
+
+The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
+If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem` hook instead.
+
+```ts
+const focusedItem = useFocusedItem();
+const hasFocusedItem = focusedItem !== null;
+```
+
+## Typescript
+
+### Remove default generic of `SeriesItemIdentifier`
+
+In v9 the argument of `SeriesItemIdentifier` is now required.
+
+It accepts an union of series types.
+For example:
+
+- `SeriesItemIdentifier<'bar'>` for a BarChart.
+- `SeriesItemIdentifier<'bar' | 'line'>` if you compose bar and line series.

@@ -24,10 +24,7 @@ const MiniCalendarRoot = styled('div', {
   slot: 'MiniCalendar',
 })(({ theme }) => ({
   userSelect: 'none',
-  border: '1px solid',
-  borderColor: theme.palette.divider,
   padding: theme.spacing(1),
-  borderRadius: theme.shape.borderRadius,
 }));
 
 const MiniCalendarHeader = styled('div', {
