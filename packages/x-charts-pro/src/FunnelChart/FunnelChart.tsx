@@ -297,7 +297,7 @@ FunnelChart.propTypes = {
    * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number.isRequired,
+    dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['funnel']).isRequired,
   }),
@@ -373,7 +373,7 @@ FunnelChart.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**

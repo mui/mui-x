@@ -488,7 +488,7 @@ SparkLineChart.propTypes = {
    */
   highlightedItem: PropTypes.oneOfType([
     PropTypes.shape({
-      dataIndex: PropTypes.number.isRequired,
+      dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['bar']).isRequired,
     }),
@@ -498,12 +498,12 @@ SparkLineChart.propTypes = {
       type: PropTypes.oneOf(['line']).isRequired,
     }),
     PropTypes.shape({
-      dataIndex: PropTypes.number.isRequired,
+      dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['scatter']).isRequired,
     }),
     PropTypes.shape({
-      dataIndex: PropTypes.number.isRequired,
+      dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['pie']).isRequired,
     }),
@@ -603,7 +603,7 @@ SparkLineChart.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**

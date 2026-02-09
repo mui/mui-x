@@ -281,7 +281,7 @@ RadarChart.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
