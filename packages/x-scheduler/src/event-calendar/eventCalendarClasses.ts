@@ -54,10 +54,10 @@ export interface EventCalendarClasses extends EventDialogClasses {
   preferencesMenu: string;
   /** Styles applied to the resources legend root element. */
   resourcesLegend: string;
+  /** Styles applied to the resources legend label element. */
+  resourcesLegendLabel: string;
   /** Styles applied to resources legend item elements. */
   resourcesLegendItem: string;
-  /** Styles applied to resources legend item color dot elements. */
-  resourcesLegendItemColorDot: string;
   /** Styles applied to resources legend item name elements. */
   resourcesLegendItemName: string;
   /** Styles applied to resources legend item checkbox elements. */
@@ -246,8 +246,8 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'viewSwitcher',
     'preferencesMenu',
     'resourcesLegend',
+    'resourcesLegendLabel',
     'resourcesLegendItem',
-    'resourcesLegendItemColorDot',
     'resourcesLegendItemName',
     'resourcesLegendItemCheckbox',
     'agendaView',
@@ -353,8 +353,8 @@ const slots = {
   viewSwitcher: ['viewSwitcher'],
   preferencesMenu: ['preferencesMenu'],
   resourcesLegend: ['resourcesLegend'],
+  resourcesLegendLabel: ['resourcesLegendLabel'],
   resourcesLegendItem: ['resourcesLegendItem'],
-  resourcesLegendItemColorDot: ['resourcesLegendItemColorDot'],
   resourcesLegendItemName: ['resourcesLegendItemName'],
   resourcesLegendItemCheckbox: ['resourcesLegendItemCheckbox'],
   agendaView: ['agendaView'],

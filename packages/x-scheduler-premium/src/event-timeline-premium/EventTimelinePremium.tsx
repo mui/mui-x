@@ -104,7 +104,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // We don't want the plan suffix in the theme, otherwise we couldn't share the theme entry across packages
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
 
   const {
