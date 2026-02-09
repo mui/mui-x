@@ -7,7 +7,7 @@ import { useButton } from '../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../base-ui-copy/utils/types';
 import { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
-import { useDragPreview } from '../utils/useDragPreview';
+import { useDragPreview } from '../internals/utils/useDragPreview';
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   componentProps: StandaloneEvent.Props,

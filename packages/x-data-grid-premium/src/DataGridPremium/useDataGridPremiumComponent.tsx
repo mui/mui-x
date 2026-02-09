@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
   useGridInitializeState,
@@ -80,8 +80,8 @@ import {
   useFirstRender,
 } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
-import { GridPrivateApiPremium } from '../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import type { GridPrivateApiPremium } from '../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { useGridDataSourcePremium as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePremium';
 // Premium-only features
 import {
@@ -116,6 +116,7 @@ import {
   chartsIntegrationStateInitializer,
   useGridChartsIntegration,
 } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
+import { historyStateInitializer, useGridHistory } from '../hooks/features/history/useGridHistory';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -200,6 +201,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(listViewStateInitializer, apiRef, props);
   useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
   useGridInitializeState(chartsIntegrationStateInitializer, apiRef, props);
+  useGridInitializeState(historyStateInitializer, apiRef, props);
 
   useGridSidebar(apiRef, props);
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
@@ -248,6 +250,7 @@ export const useDataGridPremiumComponent = (
   useGridListView(apiRef, props);
   useGridAiAssistant(apiRef, props);
   useGridChartsIntegration(apiRef, props);
+  useGridHistory(apiRef, props);
   useGridPivotingExportState(apiRef);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.

@@ -1,10 +1,10 @@
 import type { RefObject } from '@mui/x-internals/types';
 import {
-  GridColDef,
-  GridColumnGroupingModel,
-  GridRowId,
-  GridRowModel,
-  GridRowTreeConfig,
+  type GridColDef,
+  type GridColumnGroupingModel,
+  type GridRowId,
+  type GridRowModel,
+  type GridRowTreeConfig,
   gridStringOrNumberComparator,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';

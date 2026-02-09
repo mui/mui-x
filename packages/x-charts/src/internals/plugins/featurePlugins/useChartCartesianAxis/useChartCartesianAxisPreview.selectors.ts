@@ -4,10 +4,7 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
-import {
-  selectorChartSeriesConfig,
-  selectorChartSeriesProcessed,
-} from '../../corePlugins/useChartSeries';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
 import {
   selectorChartNormalizedXScales,
@@ -29,6 +26,7 @@ import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
 import { getRange } from './getAxisScale';
 import { zoomScaleRange } from './zoom';
 import { isOrdinalScale } from '../../../scaleGuards';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 
 function createPreviewDrawingArea(
   axisDirection: 'x' | 'y',

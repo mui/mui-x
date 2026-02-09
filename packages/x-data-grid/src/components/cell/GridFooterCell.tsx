@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import { vars } from '../../constants/cssVariables';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';

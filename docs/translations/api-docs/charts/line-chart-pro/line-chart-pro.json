@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axesGap": {
+      "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
+    },
     "axisHighlight": {
       "description": "The configuration of axes highlight.",
       "seeMoreText": "See {{link}} for more details."
@@ -143,6 +146,8 @@
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "toolbar": "Custom component for the toolbar.",
     "tooltip": "Custom component for the tooltip popper.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis.",
     "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
     "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
   }

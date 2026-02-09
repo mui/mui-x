@@ -7,9 +7,10 @@ import { idSelectors } from '../plugins/id';
 import { selectionSelectors } from '../plugins/selection';
 import { itemsSelectors } from '../plugins/items';
 import { TreeViewAnyStore } from '../models';
+import { TreeViewStoreInContext } from '../TreeViewProvider';
 
 export function useTreeViewRootProps<TStore extends TreeViewAnyStore>(
-  store: TStore,
+  store: TreeViewStoreInContext<TStore>,
   forwardedProps: React.HTMLAttributes<HTMLUListElement>,
   ref: React.Ref<HTMLUListElement | null> | undefined,
 ) {

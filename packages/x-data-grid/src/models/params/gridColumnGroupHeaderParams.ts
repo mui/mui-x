@@ -1,4 +1,4 @@
-import { GridColumnGroup } from '../gridColumnGrouping';
+import type { GridColumnGroup } from '../gridColumnGrouping';
 
 /**
  * Object passed as parameter in the column group header renderer.

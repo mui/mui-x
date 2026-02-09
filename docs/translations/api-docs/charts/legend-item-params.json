@@ -2,18 +2,13 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "color": { "description": "The color used in the legend" },
-    "id": {
-      "description": "The identifier of the legend element.<br />Used for internal purpose such as <code>key</code> props"
-    },
     "label": { "description": "The label displayed in the legend" },
     "markType": { "description": "" },
     "maxValue": { "description": "The maximum value of the category" },
     "minValue": { "description": "The minimum value of the category" },
     "seriesId": { "description": "The identifier of the series" },
+    "type": { "description": "The type of the series" },
     "dataIndex": { "description": "The data index of the item in the series data array" },
-    "itemId": { "description": "The identifier of the pie item" },
-    "type": {
-      "description": "The type of the series<br />This property is always defined, but marked as optional to avoid breaking changes. It will become required in a future major version."
-    }
+    "itemId": { "description": "The identifier of the pie item" }
   }
 }

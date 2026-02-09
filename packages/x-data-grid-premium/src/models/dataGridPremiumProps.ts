@@ -1,15 +1,16 @@
-import { RefObject } from '@mui/x-internals/types';
-import {
+import type { RefObject } from '@mui/x-internals/types';
+import type {
   GridCallbackDetails,
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
   GridGetRowsError,
   GridUpdateRowError,
-  type GridColDef,
+  GridColDef,
   GridLocaleTextApi,
+  GridEvents,
 } from '@mui/x-data-grid-pro';
-import {
+import type {
   GridExperimentalProFeatures,
   DataGridProPropsWithDefaultValue,
   DataGridProPropsWithoutDefaultValue,
@@ -24,25 +25,26 @@ import type {
   GridAggregationFunctionDataSource,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
-import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
-import { GridPremiumSlotProps } from './gridPremiumSlotProps';
-import { GridInitialStatePremium } from './gridStatePremium';
-import { GridApiPremium } from './gridApiPremium';
-import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import type { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
+import type { GridPremiumSlotProps } from './gridPremiumSlotProps';
+import type { GridInitialStatePremium } from './gridStatePremium';
+import type { GridApiPremium } from './gridApiPremium';
+import type { GridCellSelectionModel } from '../hooks/features/cellSelection';
 import type {
   GridPivotingColDefOverrides,
   PivotingColDefCallback,
   GridPivotModel,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
-import {
+import type {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
-import {
+import type {
   Conversation,
   PromptResponse,
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
   charts?: boolean;
@@ -158,6 +160,22 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default false
    */
   chartsIntegration: boolean;
+  /**
+   * The maximum size of the history stack.
+   * Set to 0 to disable the undo/redo feature.
+   * @default 30
+   */
+  historyStackSize: number;
+  /**
+   * Map of grid events to their undo/redo handlers.
+   * @default Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events
+   */
+  historyEventHandlers: Record<GridEvents, GridHistoryEventHandler<any>>;
+  /**
+   * List of grid events after which the history stack items should be re-validated.
+   * @default ['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']
+   */
+  historyValidationEvents: GridEvents[];
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<
@@ -365,4 +383,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * @param {string} activeChartId The new active chart id.
    */
   onActiveChartIdChange?: (activeChartId: string) => void;
+  /**
+   * Callback fired when an undo operation is executed.
+   */
+  onUndo?: GridEventListener<'undo'>;
+  /**
+   * Callback fired when a redo operation is executed.
+   */
+  onRedo?: GridEventListener<'redo'>;
 }

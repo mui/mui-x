@@ -70,6 +70,6 @@ export const initialEvents: SchedulerEvent[] = [
 export const resources: SchedulerResource[] = [
   { title: 'Fiat 500', id: 'fiat-500', eventColor: 'indigo' },
   { title: 'Volkswagen ID3', id: 'volkswagen-id3', eventColor: 'blue' },
-  { title: 'Peugeot 3008', id: 'peugeot-3008', eventColor: 'jade' },
+  { title: 'Peugeot 3008', id: 'peugeot-3008', eventColor: 'teal' },
   { title: 'Cupra Leon', id: 'cupra-leon', eventColor: 'orange' },
 ];

@@ -37,8 +37,18 @@ export * from './colorPalettes';
 
 // Pro components
 export * from './Heatmap';
+export { ChartsContainerPro } from './ChartsContainerPro';
+export type {
+  ChartsContainerProProps,
+  ChartsContainerProSlots,
+  ChartsContainerProSlotProps,
+} from './ChartsContainerPro';
 export { ChartContainerPro } from './ChartContainerPro';
-export type { ChartContainerProProps } from './ChartContainerPro';
+export type {
+  ChartContainerProProps,
+  ChartContainerProSlots,
+  ChartContainerProSlotProps,
+} from './ChartContainerPro';
 export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
 export * from './SankeyChart';

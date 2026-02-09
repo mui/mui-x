@@ -30,6 +30,7 @@ const state = (withEmptyCells: boolean) => ({
     },
   },
   cartesianAxis: {
+    axesGap: 0,
     x: [
       {
         id: 'x-1',

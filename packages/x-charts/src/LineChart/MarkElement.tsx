@@ -25,7 +25,7 @@ const MarkElementPath = styled('path', {
 }));
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
+  Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
     /**
      * If `true`, the marker is hidden.
      * @default false
@@ -70,7 +70,7 @@ function MarkElement(props: MarkElementProps) {
   const {
     x,
     y,
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     shape,
@@ -84,10 +84,10 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     isHighlighted,
     isFaded,
@@ -134,7 +134,7 @@ MarkElement.propTypes = {
    * @default false
    */
   hidden: PropTypes.bool,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, the marker is faded.
    * @default false
