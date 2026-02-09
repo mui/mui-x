@@ -134,6 +134,7 @@ const TimeGridEventTime = styled('time', {
   lineHeight: 1.43,
   '&[data-lines-clamp]': {
     ...linesClampStyles(1),
+    paddingInlineEnd: theme.spacing(1.5),
   },
   '@container (max-width: 50px & max-height: 50px)': {
     display: 'none',

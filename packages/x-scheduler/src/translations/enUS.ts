@@ -3,6 +3,7 @@ import { SchedulerTranslations } from '../models/translations';
 export const enUS: SchedulerTranslations = {
   // ResourcesLegend
   hideEventsLabel: (resourceName) => `Hide events for ${resourceName}`,
+  resourcesLabel: 'Resources',
   resourcesLegendSectionLabel: 'Resource legend',
   showEventsLabel: (resourceName) => `Show events for ${resourceName}`,
 
