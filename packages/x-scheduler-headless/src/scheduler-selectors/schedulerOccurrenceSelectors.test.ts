@@ -10,70 +10,61 @@ import { processDate } from '../process-date';
 import { schedulerOccurrenceSelectors } from './schedulerOccurrenceSelectors';
 
 describe('schedulerOccurrenceSelectors', () => {
-  describe('isStartedOrEnded', () => {
-    it('should return started=false and ended=false when now is before start', () => {
+  describe('isStarted', () => {
+    it('should return false when now is before start', () => {
       const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T08:00:00Z', 'default');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
-      const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
 
-      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
-
-      expect(result.started).to.equal(false);
-      expect(result.ended).to.equal(false);
+      expect(schedulerOccurrenceSelectors.isStarted(state, start)).to.equal(false);
     });
 
-    it('should return started=true and ended=false when now is equal to start', () => {
+    it('should return true when now is equal to start', () => {
       const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:00:00Z', 'default');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
-      const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
 
-      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
-
-      expect(result.started).to.equal(true);
-      expect(result.ended).to.equal(false);
+      expect(schedulerOccurrenceSelectors.isStarted(state, start)).to.equal(true);
     });
 
-    it('should return started=true and ended=false when now is between start and end', () => {
+    it('should return true when now is after start', () => {
       const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:30:00Z', 'default');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
+
+      expect(schedulerOccurrenceSelectors.isStarted(state, start)).to.equal(true);
+    });
+  });
+
+  describe('isEnded', () => {
+    it('should return false when now is before end', () => {
+      const state = getEventTimelinePremiumStateFromParameters({ events: [] });
+      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:30:00Z', 'default');
+
       const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
 
-      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
-
-      expect(result.started).to.equal(true);
-      expect(result.ended).to.equal(false);
+      expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(false);
     });
 
-    it('should return started=true and ended=false when now is equal to end', () => {
+    it('should return false when now is equal to end', () => {
       const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T11:00:00Z', 'default');
 
-      const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
       const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
 
-      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
-
-      expect(result.started).to.equal(true);
-      expect(result.ended).to.equal(false);
+      expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(false);
     });
 
-    it('should return started=true and ended=true when now is after end', () => {
+    it('should return true when now is after end', () => {
       const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T12:00:00Z', 'default');
 
-      const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
       const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
 
-      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
-
-      expect(result.started).to.equal(true);
-      expect(result.ended).to.equal(true);
+      expect(schedulerOccurrenceSelectors.isEnded(state, end)).to.equal(true);
     });
   });
 

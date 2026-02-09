@@ -147,7 +147,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       svg?.addEventListener(interaction, callback, options);
 
       return {
-        cleanup: () => svg?.removeEventListener(interaction, callback),
+        cleanup: () => svg?.removeEventListener(interaction, callback, options),
       };
     },
     [svgRef],

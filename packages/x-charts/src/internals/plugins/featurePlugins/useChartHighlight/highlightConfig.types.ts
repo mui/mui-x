@@ -2,7 +2,7 @@ export type HighlightOptions = 'none' | 'item' | 'series';
 
 export type FadeOptions = 'none' | 'series' | 'global';
 
-export type HighlightScope = {
+export type CommonHighlightScope = {
   /**
    * The scope of highlighted elements.
    * - 'none': no highlight.
@@ -20,3 +20,5 @@ export type HighlightScope = {
    */
   fade?: FadeOptions;
 };
+
+export type { HighlightScope } from '../../../../models/seriesType/config';

@@ -93,15 +93,18 @@ const occurrencesGroupedByResourceMapSelector = createSelectorMemoized(
 );
 
 export const schedulerOccurrenceSelectors = {
-  // TODO: Pass the occurrence key instead of the start and end dates once the occurrences are stored in the state.
-  isStartedOrEnded: createSelectorMemoized(
+  isStarted: createSelector(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
-    (adapter, now, start: SchedulerProcessedDate, end: SchedulerProcessedDate) => {
-      return {
-        started: adapter.isBefore(start.value, now) || adapter.isEqual(start.value, now),
-        ended: adapter.isBefore(end.value, now),
-      };
+    (adapter, now, start: SchedulerProcessedDate) => {
+      return adapter.isBefore(start.value, now) || adapter.isEqual(start.value, now);
+    },
+  ),
+  isEnded: createSelector(
+    (state: State) => state.adapter,
+    (state: State) => state.nowUpdatedEveryMinute,
+    (adapter, now, end: SchedulerProcessedDate) => {
+      return adapter.isBefore(end.value, now);
     },
   ),
   groupedByResourceList: occurrencesGroupedByResourceListSelector,
