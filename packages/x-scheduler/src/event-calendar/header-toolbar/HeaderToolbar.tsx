@@ -7,6 +7,9 @@ import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import MenuOpen from '@mui/icons-material/MenuOpen';
 import Menu from '@mui/icons-material/Menu';
+import AutoAwesome from '@mui/icons-material/AutoAwesome';
+import WifiOffIcon from '@mui/icons-material/WifiOff';
+import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
@@ -22,6 +25,7 @@ import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { PreferencesMenu } from './preferences-menu';
 import { useEventCalendarClasses } from '../EventCalendarClassesContext';
+import { useAiHelperContext } from '../../internals/components/ai-helper';
 
 const HeaderToolbarRoot = styled('header', {
   name: 'MuiEventCalendar',
@@ -78,6 +82,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const translations = useTranslations();
   const adapter = useAdapter();
   const classes = useEventCalendarClasses();
+  const aiHelper = useAiHelperContext();
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
@@ -114,6 +119,17 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         </HeaderToolbarLabel>
       </HeaderToolbarLeftElement>
       <HeaderToolbarActions className={classes.headerToolbarActions}>
+        {aiHelper?.isEnabled && (
+          <IconButton aria-label={translations.aiHelperTitle} onClick={aiHelper.open} size="small">
+            <Badge
+              invisible={!(aiHelper.isOffline && aiHelper.isGeminiNanoAvailable)}
+              badgeContent={<WifiOffIcon sx={{ fontSize: 14 }} />}
+              color="info"
+            >
+              <AutoAwesome />
+            </Badge>
+          </IconButton>
+        )}
         <PreferencesMenu />
 
         <HeaderToolbarDateNavigator className={classes.headerToolbarDateNavigator}>

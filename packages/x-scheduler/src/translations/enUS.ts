@@ -106,6 +106,22 @@ export const enUS: SchedulerTranslations = {
   // General
   loading: 'Loading...',
 
+  // AI Helper
+  aiHelperTitle: "What's on the agenda?",
+  aiHelperDescription: 'Describe the event you want to create',
+  aiHelperPlaceholder: 'Meeting with John tomorrow at 3pm...',
+  aiHelperConfirmButton: 'Looks good',
+  aiHelperEditButton: 'It needs edit',
+  aiHelperProcessing: 'Processing...',
+  aiHelperRetry: 'Try again',
+  aiHelperGenericError: 'Something went wrong. Please try again.',
+  aiHelperPlaceholderWithRecording: 'Type or use the microphone...',
+  aiHelperPlaceholderListening: 'Listening...',
+  aiHelperRecord: 'Record',
+  aiHelperStopRecording: 'Stop recording',
+  aiHelperSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  aiHelperSend: 'Send',
+
   // MiniCalendar
   miniCalendarLabel: 'Calendar',
   miniCalendarGoToPreviousMonth: 'Show previous month in calendar',

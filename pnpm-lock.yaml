@@ -1774,6 +1774,9 @@ importers:
       '@mui/system':
         specifier: 'catalog:'
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
+      '@types/dom-chromium-ai':
+        specifier: ^0.0.14
+        version: 0.0.14
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -5945,6 +5948,9 @@ packages:
 
   '@types/doctrine@0.0.9':
     resolution: {integrity: sha512-eOIHzCUSH7SMfonMG1LsC2f8vxBFtho6NGBznK41R84YzPuvSBzrhEps33IsQiOW9+VL6NQ9DbjQJznk/S4uRA==}
+
+  '@types/dom-chromium-ai@0.0.14':
+    resolution: {integrity: sha512-inGI/sSihVWbJUt4jXZqjcdT8lee3BZHyhbBOafR4wVS8JYQ9u9XoWW6kcvJazhAyAlJ6lL7V6wxoFvnomEKTA==}
 
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
@@ -16549,6 +16555,8 @@ snapshots:
   '@types/device-uuid@1.0.3': {}
 
   '@types/doctrine@0.0.9': {}
+
+  '@types/dom-chromium-ai@0.0.14': {}
 
   '@types/eslint-scope@3.7.7':
     dependencies:
