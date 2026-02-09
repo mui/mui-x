@@ -38,13 +38,15 @@ function parsePayload(rawInput: string): TranslationPayload {
 
   try {
     parsed = JSON.parse(rawInput.replace(/^\uFEFF/, ''));
-  } catch(error) {
+  } catch (error) {
     const parseErrorDetail = error instanceof Error ? error.message : String(error);
-    throw new Error(`Invalid compact JSON input. ${parseErrorDetail}`, { cause: error });
+    throw new Error(`Invalid compact JSON input. ${parseErrorDetail}`);
   }
 
   if (!isPlainObject(parsed)) {
-    throw new Error('Input must be a JSON object: { "<package>": { "<key>": { "<locale>": "..." } } }.');
+    throw new Error(
+      'Input must be a JSON object: { "<package>": { "<key>": { "<locale>": "..." } } }.',
+    );
   }
 
   const payload: TranslationPayload = {};
@@ -91,7 +93,10 @@ function getPropertyName(prop: ts.PropertyAssignment): string | undefined {
   return undefined;
 }
 
-function findLocaleObjectLiteral(sourceText: string, variableName: string): ts.ObjectLiteralExpression {
+function findLocaleObjectLiteral(
+  sourceText: string,
+  variableName: string,
+): ts.ObjectLiteralExpression {
   const sourceFile = ts.createSourceFile('locale.ts', sourceText, ts.ScriptTarget.Latest, true);
   let match: ts.ObjectLiteralExpression | undefined;
 
@@ -171,7 +176,8 @@ function insertMissingProperties(
   const firstProperty = objectLiteral.properties[0];
   let propertyIndent = '  ';
   if (firstProperty) {
-    const lineStart = sourceText.lastIndexOf(lineEnding, firstProperty.getStart()) + lineEnding.length;
+    const lineStart =
+      sourceText.lastIndexOf(lineEnding, firstProperty.getStart()) + lineEnding.length;
     const leading = sourceText.slice(lineStart, firstProperty.getStart());
     const matched = leading.match(/^\s*/);
     if (matched) {
@@ -223,7 +229,10 @@ function insertMissingProperties(
   };
 }
 
-export function applyTranslations(rawInput: string, options: ApplyTranslationsOptions = {}): ApplyTranslationsResult {
+export function applyTranslations(
+  rawInput: string,
+  options: ApplyTranslationsOptions = {},
+): ApplyTranslationsResult {
   const payload = parsePayload(rawInput);
   const dryRun = options.dryRun ?? false;
   const missingData = getMissingTranslations();
@@ -240,7 +249,9 @@ export function applyTranslations(rawInput: string, options: ApplyTranslationsOp
 
     const packageMissing = missingData.packages[packageName];
     if (!packageMissing) {
-      warnings.push(`Skipping package "${packageName}" because it has no missing translation data.`);
+      warnings.push(
+        `Skipping package "${packageName}" because it has no missing translation data.`,
+      );
       continue;
     }
 
@@ -261,7 +272,9 @@ export function applyTranslations(rawInput: string, options: ApplyTranslationsOp
 
         const localePath = path.join(ROOT, packageConfig.localesDir, `${localeCode}.ts`);
         if (!fs.existsSync(localePath)) {
-          warnings.push(`Skipping "${packageName}.${key}.${localeCode}" because "${localePath}" was not found.`);
+          warnings.push(
+            `Skipping "${packageName}.${key}.${localeCode}" because "${localePath}" was not found.`,
+          );
           continue;
         }
 

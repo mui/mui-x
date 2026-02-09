@@ -66,7 +66,7 @@ function readMultilineInputFromStdin(): Promise<string> {
     stdin.setEncoding('utf8');
 
     if (!stdin.isTTY) {
-      const chunks: string[] = [];
+      const chunks = [];
 
       stdin.on('data', (chunk) => {
         chunks.push(chunk);
