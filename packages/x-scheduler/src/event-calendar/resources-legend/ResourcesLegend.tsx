@@ -1,7 +1,5 @@
 'use client';
 import * as React from 'react';
-import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
-import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import { styled } from '@mui/material/styles';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -14,16 +12,29 @@ import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 import clsx from 'clsx';
 import { ResourcesLegendProps } from './ResourcesLegend.types';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
-import { schedulerPaletteStyles } from '../../internals/utils/tokens';
+import { getPaletteVariants } from '../../internals/utils/tokens';
 import { useEventCalendarClasses } from '../EventCalendarClassesContext';
 
 const ResourcesLegendRoot = styled('section', {
   name: 'MuiEventCalendar',
   slot: 'ResourcesLegend',
-})({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-});
+  padding: theme.spacing(1),
+  overflowY: 'auto',
+  scrollbarWidth: 'thin',
+}));
+
+const ResourcesLegendLabel = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'ResourcesLegendLabel',
+})(({ theme }) => ({
+  ...theme.typography.subtitle2,
+  fontWeight: theme.typography.fontWeightMedium,
+  paddingLeft: theme.spacing(1.25),
+  paddingBottom: theme.spacing(1),
+}));
 
 const ResourcesLegendItemRoot = styled(FormControlLabel, {
   name: 'MuiEventCalendar',
@@ -31,37 +42,20 @@ const ResourcesLegendItemRoot = styled(FormControlLabel, {
 })(({ theme }) => ({
   marginLeft: 0,
   marginRight: 0,
-  padding: theme.spacing(1),
-  borderRadius: theme.shape.borderRadius,
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+  '& .MuiCheckbox-root': {
+    color: 'var(--event-main)',
+    '&.Mui-checked': {
+      color: 'var(--event-main)',
+    },
   },
-  '& .MuiFormControlLabel-label': {
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    flex: 1,
-  },
+  variants: getPaletteVariants(theme),
 }));
-
-const ResourcesLegendItemColorDot = styled('span', {
-  name: 'MuiEventCalendar',
-  slot: 'ResourcesLegendItemColorDot',
-})({
-  width: 8,
-  height: 8,
-  borderRadius: '50%',
-  flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
-  ...schedulerPaletteStyles,
-});
 
 const ResourcesLegendItemName = styled(Typography, {
   name: 'MuiEventCalendar',
   slot: 'ResourcesLegendItemName',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
-  color: theme.palette.text.secondary,
 }));
 
 interface ResourcesLegendItemProps {
@@ -80,14 +74,12 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
   return (
     <ResourcesLegendItemRoot
       className={classes.resourcesLegendItem}
-      labelPlacement="start"
+      data-palette={eventColor}
       control={
         <Checkbox
           className={classes.resourcesLegendItemCheckbox}
           checked={isVisible}
           onChange={(event) => onToggle(resource.id, event)}
-          icon={<VisibilityOffOutlined fontSize="small" />}
-          checkedIcon={<VisibilityOutlined fontSize="small" />}
           size="small"
           slotProps={{
             input: {
@@ -96,22 +88,12 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
                 : translations.showEventsLabel(resource.title),
             },
           }}
-          sx={{
-            p: 0,
-            '&.Mui-checked': { color: 'action.active' },
-          }}
         />
       }
       label={
-        <React.Fragment>
-          <ResourcesLegendItemColorDot
-            className={classes.resourcesLegendItemColorDot}
-            data-palette={eventColor}
-          />
-          <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
-            {resource.title}
-          </ResourcesLegendItemName>
-        </React.Fragment>
+        <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
+          {resource.title}
+        </ResourcesLegendItemName>
       }
     />
   );
@@ -152,6 +134,9 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
       {...props}
       className={clsx(props.className, classes.resourcesLegend)}
     >
+      <ResourcesLegendLabel className={classes.resourcesLegendLabel}>
+        {translations.resourcesLabel}
+      </ResourcesLegendLabel>
       {resources.map((resource) => (
         <ResourcesLegendItem
           key={resource.id}
