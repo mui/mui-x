@@ -5,33 +5,34 @@ productId: x-charts
 
 # Charts - Hooks
 
-<p class="description">Use hooks to access chart data and utilities for building custom components.</p>
+<p class="description">Access chart data, scales, legend, and layout from custom components via React hooks.</p>
 
 ## Available hooks
 
+Chart hooks expose series data, scales, axes, legend, and layout so you can build custom chart elements (for example, a custom legend or overlay) that stay in sync with the chart.
 The charts package provides several categories of hooks.
 
 ### Series and Data hooks
 
-- [**useSeries()**](/x/react-charts/hooks/use-series/) - Access raw series data for all chart types
+- [`useSeries()`](/x/react-charts/hooks/use-series/) - Access raw series data for all chart types
 - Specific series hooks for individual chart types (`useBarSeries()`, `useLineSeries()`, etc.)
-- [**useDataset()**](/x/react-charts/hooks/use-dataset/) - Access the dataset used to populate series and axes data.
-  Only works when you use the `dataset` prop.
+- [`useDataset()`](/x/react-charts/hooks/use-dataset/) - Access the dataset that populates series and axes.
+  Works only when the chart uses the `dataset` prop.
 
 ### Axes hooks
 
-- [**useAxes()**](/x/react-charts/hooks/use-axes/) - Access axis configuration and properties for cartesian and polar charts
+- [`useAxes()`](/x/react-charts/hooks/use-axes/) - Access axis configuration and properties for Cartesian and polar charts
   - Cartesian axes hooks (`useXAxes()`, `useYAxes()`, `useXAxis()`, `useYAxis()`)
   - Polar axes hooks (`useRotationAxes()`, `useRadiusAxes()`, `useRotationAxis()`, `useRadiusAxis()`)
 
 ### Legend hooks
 
-- [**useLegend()**](/x/react-charts/hooks/use-legend/) - Access formatted legend data to create custom legend components
+- [`useLegend()`](/x/react-charts/hooks/use-legend/) - Access formatted legend data to create custom legend components
 
 ### Layout and positioning hooks
 
-- [**useDrawingArea()**](/x/react-charts/hooks/use-drawing-area/) - Access the chart's drawing area dimensions and coordinates
-- [**useScale()**](/x/react-charts/hooks/use-scale/) - Access D3 scale functions for coordinate transformations (`useXScale()`, `useYScale()`)
+- [`useDrawingArea()`](/x/react-charts/hooks/use-drawing-area/) - Access the chart's drawing area dimensions and coordinates
+- [`useScale()`](/x/react-charts/hooks/use-scale/) - Access D3 scale functions for coordinate transformations (`useXScale()`, `useYScale()`)
 
 ## Quick start
 
@@ -46,17 +47,17 @@ import { useSeries, useLegend, ... } from '@mui/x-charts-premium/hooks';
 
 ## Caveats
 
-All chart hooks must be used within a chart context.
-A component using these hooks must follow one of these structures:
+Use chart hooks only within a chart context.
+Place the component that uses them in one of these positions:
 
-1. A `slot` of a chart component
+1. A slot of a chart component
 2. A child of a chart component
 3. A child of the `ChartDataProvider` component
 
-For example, if you create a `CustomLegend` component that uses the `useLegend()` hook, you can use it as follows:
+For example, if you create a `CustomLegend` component that calls `useLegend()`, you can render it as follows:
 
 ```jsx
-// ✅ Correct usage with slot API
+// ✅ Correct usage as a slot
 <LineChart
   series={[...]}
   slots={{ legend: CustomLegend }}
@@ -67,7 +68,7 @@ For example, if you create a `CustomLegend` component that uses the `useLegend()
   <CustomLegend /> {/* useLegend() works here */}
 </LineChart>
 
-// ✅ Correct usage with composition API
+// ✅ Correct usage when composing a custom chart
 <ChartDataProvider series={[...]}>
   <ChartsSurface>
     <LinePlot />
@@ -77,9 +78,9 @@ For example, if you create a `CustomLegend` component that uses the `useLegend()
 ```
 
 ```jsx
-// ❌ Incorrect usage - outside chart context
+// ❌ Incorrect: outside chart context
 <div>
   <LineChart series={[...]} />
-  <CustomLegend /> {/* useLegend() will not work here */}
+  <CustomLegend /> {/* useLegend() does not work here */}
 </div>
 ```
