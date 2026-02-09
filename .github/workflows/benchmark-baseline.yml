@@ -1,0 +1,116 @@
+name: Benchmark Baseline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: Store Data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+        with:
+          version: 10.27.0
+          run_install: false
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 22.18.0
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm --filter @mui/x-charts-premium... build
+
+      - name: Install Playwright browsers
+        run: pnpm --filter benchmark-tool exec playwright install chromium --with-deps
+
+      - name: Run performance benchmarks
+        working-directory: test/benchmark-tool
+        run: pnpm test
+
+      - name: Generate timestamp folder name
+        id: timestamp
+        run: echo "folder=$(date -u '+%Y-%m-%d-%H-%M-%S')" >> $GITHUB_OUTPUT
+
+      - name: List benchmark output files
+        id: files
+        working-directory: test/benchmark-tool
+        run: |
+          # List all JSON files in benchmarks directory
+          FILES=$(find benchmarks -name "*.json" -type f | sort | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "list=$FILES" >> $GITHUB_OUTPUT
+
+      - name: Prepare metadata
+        id: prepare-metadata
+        working-directory: test/benchmark-tool
+        env:
+          FILES: ${{ steps.files.outputs.list }}
+          COMMIT_SHA: ${{ github.sha }}
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          METADATA=$(pnpm --silent ci:metadata)
+          echo "data<<EOF" >> $GITHUB_OUTPUT
+          echo "$METADATA" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Checkout data repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: mnajdova/performance-benchmark-data
+          path: benchmark-data
+          token: ${{ secrets.BENCHMARK_DATA_TOKEN }}
+
+      - name: Create benchmark folder and copy files
+        env:
+          METADATA: ${{ steps.prepare-metadata.outputs.data }}
+          REPO_NAME: ${{ github.repository }}
+          TIMESTAMP_FOLDER: ${{ steps.timestamp.outputs.folder }}
+        run: |
+          # Extract just the repository name (after the /)
+          REPO_DIR=$(echo "$REPO_NAME" | cut -d'/' -f2)
+
+          # Create timestamped directory
+          BENCHMARK_DIR="benchmark-data/$REPO_DIR/$TIMESTAMP_FOLDER"
+          mkdir -p "$BENCHMARK_DIR"
+
+          # Copy all benchmark output files to the new folder
+          cp -r test/benchmark-tool/benchmarks/* "$BENCHMARK_DIR/"
+
+          # Write metadata.json
+          echo "$METADATA" > "$BENCHMARK_DIR/metadata.json"
+
+      - name: Commit and push benchmark data
+        working-directory: benchmark-data
+        env:
+          REPO_NAME: ${{ github.repository }}
+          TIMESTAMP_FOLDER: ${{ steps.timestamp.outputs.folder }}
+        run: |
+          # Extract just the repository name (after the /)
+          REPO_DIR=$(echo "$REPO_NAME" | cut -d'/' -f2)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$REPO_DIR/$TIMESTAMP_FOLDER"
+          git commit -m "Add benchmark data for ${{ github.repository }}@${{ github.sha }}"
+          git push
