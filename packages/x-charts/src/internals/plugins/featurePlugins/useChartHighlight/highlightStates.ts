@@ -1,18 +1,9 @@
 import type { SeriesId } from '../../../../models/seriesType';
 import type {
-  ChartSeriesType,
   ChartsSeriesConfig,
   HighlightScope,
 } from '../../../../models/seriesType/config';
 import type { HighlightItemData } from './useChartHighlight.types';
-
-const SeriesWithDataIndex = new Set<SeriesTypeWithDataIndex>([
-  'radar',
-  'line',
-  'scatter',
-  'bar',
-  'rangeBar',
-] as unknown as SeriesTypeWithDataIndex[]);
 
 type SeriesTypeWithDataIndex =
   | 'radar'
@@ -21,12 +12,6 @@ type SeriesTypeWithDataIndex =
   | 'bar'
   // Conditional type to add 'rangeBar' if it exists in ChartsSeriesConfig
   | (ChartsSeriesConfig extends { rangeBar: any } ? 'rangeBar' : never);
-
-export function isBatchRenderingSeriesType(
-  type: ChartSeriesType | undefined,
-): type is SeriesTypeWithDataIndex {
-  return SeriesWithDataIndex.has(type as SeriesTypeWithDataIndex);
-}
 
 export function isSeriesHighlighted<SeriesType extends SeriesTypeWithDataIndex>(
   scope: Partial<HighlightScope<SeriesType>> | null,
