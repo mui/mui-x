@@ -1,9 +1,8 @@
-import type { MakeOptional } from '@mui/x-internals/types';
 import type {
   ChartSeriesType,
+  HighlightItemIdentifier,
   HighlightScope,
   SeriesId,
-  SeriesItemIdentifier,
 } from '../../../../models/seriesType';
 import type { ChartsSeriesConfig } from '../../../../models/seriesType/config';
 
@@ -26,7 +25,7 @@ export function isBatchRenderingSeriesType(
 
 export function isSeriesHighlighted<SeriesType extends SeriesTypeWithBatchRendering>(
   scope: Partial<HighlightScope<SeriesType>> | null,
-  item: MakeOptional<SeriesItemIdentifier<SeriesType>, 'dataIndex'> | null,
+  item: HighlightItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   return scope?.highlight === 'series' && item?.seriesId === seriesId;
@@ -34,7 +33,7 @@ export function isSeriesHighlighted<SeriesType extends SeriesTypeWithBatchRender
 
 export function isSeriesFaded<SeriesType extends SeriesTypeWithBatchRendering>(
   scope: Partial<HighlightScope<SeriesType>> | null,
-  item: MakeOptional<SeriesItemIdentifier<SeriesType>, 'dataIndex'> | null,
+  item: HighlightItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   if (isSeriesHighlighted(scope, item, seriesId)) {
@@ -53,7 +52,7 @@ export function isSeriesFaded<SeriesType extends SeriesTypeWithBatchRendering>(
  */
 export function getSeriesHighlightedDataIndex<SeriesType extends SeriesTypeWithBatchRendering>(
   scope: Partial<HighlightScope<SeriesType>> | null,
-  item: MakeOptional<SeriesItemIdentifier<SeriesType>, 'dataIndex'> | null,
+  item: HighlightItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   return scope?.highlight === 'item' && item?.seriesId === seriesId ? item.dataIndex : null;
@@ -66,7 +65,7 @@ export function getSeriesHighlightedDataIndex<SeriesType extends SeriesTypeWithB
  */
 export function getSeriesUnfadedDataIndex<SeriesType extends SeriesTypeWithBatchRendering>(
   scope: Partial<HighlightScope<SeriesType>> | null,
-  item: MakeOptional<SeriesItemIdentifier<SeriesType>, 'dataIndex'> | null,
+  item: HighlightItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   if (isSeriesHighlighted(scope, item, seriesId)) {

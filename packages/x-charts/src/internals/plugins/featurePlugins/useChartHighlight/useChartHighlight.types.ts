@@ -1,5 +1,5 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
-import { type ChartSeriesType, type SeriesItemIdentifier } from '../../../../models/seriesType';
+import { MakeOptional, type DefaultizedProps } from '@mui/x-internals/types';
+import { HighlightItemIdentifier, type ChartSeriesType, } from '../../../../models/seriesType';
 import { type ChartPluginSignature } from '../../models';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
@@ -12,9 +12,9 @@ export interface UseChartHighlightInstance<SeriesType extends ChartSeriesType> {
   clearHighlight: () => void;
   /**
    * Set the highlighted item.
-   * @param {SeriesItemIdentifier<SeriesType>} item The item to highlight.
+   * @param {HighlightItemIdentifier<SeriesType>} item The item to highlight.
    */
-  setHighlight: (item: SeriesItemIdentifier<SeriesType>) => void;
+  setHighlight: (item: HighlightItemIdentifier<SeriesType>) => void;
 }
 
 export interface UseChartHighlightParameters<SeriesType extends ChartSeriesType> {
@@ -22,13 +22,13 @@ export interface UseChartHighlightParameters<SeriesType extends ChartSeriesType>
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem?: SeriesItemIdentifier<SeriesType> | null;
+  highlightedItem?: HighlightItemIdentifier<SeriesType> | null;
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
-  onHighlightChange?: (highlightedItem: SeriesItemIdentifier<SeriesType> | null) => void;
+  onHighlightChange?: (highlightedItem: HighlightItemIdentifier<SeriesType> | null) => void;
 }
 
 export type UseChartHighlightDefaultizedParameters<SeriesType extends ChartSeriesType> =
@@ -43,7 +43,7 @@ export interface UseChartHighlightState<SeriesType extends ChartSeriesType> {
     /**
      * The item currently highlighted.
      */
-    item: SeriesItemIdentifier<SeriesType> | null;
+    item: HighlightItemIdentifier<SeriesType> | null;
     /**
      * The last interaction highlight update.
      * Used to decide if highlight should be based on pointer position or keyboard navigation.

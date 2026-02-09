@@ -1,5 +1,5 @@
 import type {
-  SeriesItemIdentifier,
+  HighlightItemIdentifier,
   ChartSeriesType,
   HighlightScope,
 } from '../../../../models/seriesType';
@@ -13,13 +13,13 @@ function alwaysFalse(): boolean {
  */
 export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
   highlightScope: HighlightScope<SeriesType> | null | undefined,
-  highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+  highlightedItem: HighlightItemIdentifier<SeriesType> | null,
 ) {
   if (!highlightScope || !highlightedItem) {
     return alwaysFalse;
   }
 
-  return function isFaded(item: SeriesItemIdentifier<ChartSeriesType> | null): boolean {
+  return function isFaded(item: HighlightItemIdentifier<ChartSeriesType> | null): boolean {
     if (!item) {
       return false;
     }

@@ -1,6 +1,6 @@
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type HighlightScope } from './highlightConfig.types';
-import { type SeriesItemIdentifier } from '../../../../models/seriesType';
+import { type HighlightItemIdentifier } from '../../../../models/seriesType';
 
 function alwaysFalse(): boolean {
   return false;
@@ -11,13 +11,13 @@ function alwaysFalse(): boolean {
  */
 export function createIsHighlighted<SeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
   highlightScope: HighlightScope<SeriesType> | null | undefined,
-  highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+  highlightedItem: HighlightItemIdentifier<SeriesType> | null,
 ) {
   if (!highlightScope || !highlightedItem) {
     return alwaysFalse;
   }
 
-  return function isHighlighted(item: SeriesItemIdentifier<ChartSeriesType> | null): boolean {
+  return function isHighlighted(item: HighlightItemIdentifier<ChartSeriesType> | null): boolean {
     if (!item) {
       return false;
     }

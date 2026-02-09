@@ -1,5 +1,5 @@
 import type { ChartSeriesType } from '@mui/x-charts/internals';
-import type { SeriesItemIdentifier } from '@mui/x-charts/models';
+import type { HighlightItemIdentifier } from '@mui/x-charts/models';
 import type {
   SankeyHighlightScope,
   SankeyLinkHighlight,
@@ -105,7 +105,7 @@ export function createSankeyIsHighlighted(
   const nodeHighlight = highlightScope?.nodes?.highlight ?? DEFAULT_NODE_HIGHLIGHT;
   const linkHighlight = highlightScope?.links?.highlight ?? DEFAULT_LINK_HIGHLIGHT;
 
-  return function isHighlighted(item: SeriesItemIdentifier<ChartSeriesType> | null): boolean {
+  return function isHighlighted(item: HighlightItemIdentifier<ChartSeriesType> | null): boolean {
     if (!item || item.type !== 'sankey') {
       return false;
     }

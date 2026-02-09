@@ -5,7 +5,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartPluginOptions, ChartResponse, ChartPlugin } from '../../models';
 import type { UseChartHighlightSignature } from './useChartHighlight.types';
-import type { ChartSeriesType, SeriesItemIdentifier } from '../../../../models/seriesType';
+import type { ChartSeriesType, HighlightItemIdentifier, SeriesItemIdentifier } from '../../../../models/seriesType';
 
 export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -58,7 +58,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
     });
   });
 
-  const setHighlight = useEventCallback((newItem: SeriesItemIdentifier<SeriesType>) => {
+  const setHighlight = useEventCallback((newItem: HighlightItemIdentifier<SeriesType>) => {
     const prevHighlight = store.state.highlight;
 
     const cleanedIdentifier = instance.cleanIdentifier(newItem);

@@ -3,7 +3,7 @@ import { type SeriesId } from '../../../../models/seriesType/common';
 import type {
   ChartSeriesType,
   HighlightScope,
-  SeriesItemIdentifier,
+  HighlightItemIdentifier,
 } from '../../../../models/seriesType';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type UseChartHighlightSignature } from './useChartHighlight.types';
@@ -63,7 +63,7 @@ export const selectorChartsHighlightScope = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartsHighlightScope<SeriesType extends ChartSeriesType>(
     seriesIdToHighlightScope: HighlightLookUp<ChartSeriesType>,
-    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
   ): HighlightScope<SeriesType> | null {
     if (!highlightedItem) {
       return null;
@@ -87,7 +87,7 @@ export const selectorChartsIsHighlightedCallback = createSelectorMemoized(
   selectorChartSeriesConfig,
   function selectorChartsIsHighlightedCallback<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
   ) {
     if (highlightedItem === null || highlightScope === null) {
@@ -106,7 +106,7 @@ export const selectorChartsIsFadedCallback = createSelectorMemoized(
   selectorChartSeriesConfig,
   function selectorChartsIsFadedCallback<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
   ) {
     if (highlightedItem === null || highlightScope === null) {
@@ -125,12 +125,12 @@ export const selectorChartsIsHighlighted = createSelector(
   selectorChartSeriesConfig,
   function selectorChartsIsHighlighted<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
     /**
      * The item to test if it's highlighted or not.
      */
-    item: SeriesItemIdentifier<ChartSeriesType> | null,
+    item: HighlightItemIdentifier<ChartSeriesType> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;
@@ -148,12 +148,12 @@ export const selectorChartsIsFaded = createSelector(
   selectorChartSeriesConfig,
   function selectorChartsIsFaded<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
     /**
      * The item to test if it's faded or not.
      */
-    item: SeriesItemIdentifier<ChartSeriesType> | null,
+    item: HighlightItemIdentifier<ChartSeriesType> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;
@@ -178,7 +178,7 @@ export const selectorChartIsSeriesHighlighted = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartIsSeriesHighlighted<SeriesType extends ChartSeriesType>(
     scope: Partial<HighlightScope<SeriesType>> | null,
-    item: SeriesItemIdentifier<SeriesType> | null,
+    item: HighlightItemIdentifier<SeriesType> | null,
     seriesId: SeriesId,
   ) {
     if (!isBatchRenderingSeriesType(item?.type)) {
@@ -193,7 +193,7 @@ export const selectorChartIsSeriesFaded = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartIsSeriesFaded<SeriesType extends ChartSeriesType>(
     scope: Partial<HighlightScope<SeriesType>> | null,
-    item: SeriesItemIdentifier<SeriesType> | null,
+    item: HighlightItemIdentifier<SeriesType> | null,
     seriesId: SeriesId,
   ) {
     if (!isBatchRenderingSeriesType(item?.type)) {
@@ -208,7 +208,7 @@ export const selectorChartSeriesUnfadedItem = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartSeriesUnfadedItem<SeriesType extends ChartSeriesType>(
     scope: Partial<HighlightScope<SeriesType>> | null,
-    item: SeriesItemIdentifier<SeriesType> | null,
+    item: HighlightItemIdentifier<SeriesType> | null,
     seriesId: SeriesId,
   ) {
     if (!isBatchRenderingSeriesType(item?.type)) {
@@ -223,7 +223,7 @@ export const selectorChartSeriesHighlightedItem = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartSeriesHighlightedItem<SeriesType extends ChartSeriesType>(
     scope: Partial<HighlightScope<SeriesType>> | null,
-    item: SeriesItemIdentifier<SeriesType> | null,
+    item: HighlightItemIdentifier<SeriesType> | null,
     seriesId: SeriesId,
   ) {
     if (!isBatchRenderingSeriesType(item?.type)) {

@@ -358,12 +358,31 @@ const hasFocusedItem = focusedItem !== null;
 
 ## Typescript
 
-### Remove default generic of `SeriesItemIdentifier`
+### Identifiers are now generics
 
-In v9 the argument of `SeriesItemIdentifier` is now required.
+In v9 we introduce generics to our identifiers.
+
+This will allow you to get the correct type according to the series you're using.
+
+#### Remove default generic of `SeriesItemIdentifier`
+
+The argument of `SeriesItemIdentifier` is now required.
 
 It accepts an union of series types.
 For example:
 
 - `SeriesItemIdentifier<'bar'>` for a BarChart.
 - `SeriesItemIdentifier<'bar' | 'line'>` if you compose bar and line series.
+
+#### Add generic to `HighlightScope`
+
+The `HighlightScope` is now a generic and require its argument the same way `SeriesItemIdentifier` does.
+
+#### Replace `HighlightItemData` by `HighlightItemIdentifier<SeriesType>`
+
+The `HighlightItemData` type got replaced by `HighlightItemIdentifier<SeriesType>`.
+
+The main difference with `SeriesItemIdentifier` is the `dataIndex`.
+
+- `SeriesItemIdentifier<'bar'>` has `dataIndex` as required. It identifies an item of the series.
+- `HighlightItemIdentifier<'bar'>` has `dataIndex` as optional. In such case the identifier represent the entire series.
