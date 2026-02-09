@@ -349,11 +349,11 @@ If you're using these classes manually in your styles, update them accordingly:
 ### `data-has-focused-item` attribute removed
 
 The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
-If you were relying on this attribute to style the chart when an item is focused, you should use the `:focus-within` CSS pseudo-class instead.
+If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem` hook instead.
 
-```diff
--`.MuiChartsSurface-root[data-has-focused-item]`
-+`.MuiChartsSurface-root:focus-within`
+```ts
+const focusedItem = useFocusedItem();
+const hasFocusedItem = focusedItem !== null;
 ```
 
 ## Typescript
