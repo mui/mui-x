@@ -5,7 +5,8 @@ import {
   getSeriesHighlightedDataIndex,
   getSeriesUnfadedDataIndex,
 } from './highlightStates';
-import type {  SeriesId, SeriesItemIdentifier } from '../../../../models/seriesType';
+import type { SeriesId, SeriesItemIdentifier } from '../../../../models/seriesType';
+import type { CommonHighlightScope } from './highlightConfig.types';
 
 describe('highlightStates', () => {
   const s1: SeriesId = 's1';
