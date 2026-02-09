@@ -122,7 +122,7 @@ export default function ElementHighlights() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              } as HighlightScope<'bar'>,
             }))}
           />
         )}
@@ -136,7 +136,7 @@ export default function ElementHighlights() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              } as HighlightScope<'line'>,
             }))}
             slots={withArea ? {} : { line: CustomLine }}
           />
@@ -150,7 +150,7 @@ export default function ElementHighlights() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              } as HighlightScope<'scatter'>,
             }))}
           />
         )}
@@ -163,7 +163,7 @@ export default function ElementHighlights() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              } as HighlightScope<'pie'>,
             }))}
           />
         )}
