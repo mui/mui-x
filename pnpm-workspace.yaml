@@ -19,7 +19,7 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': ^7.3.7
-  '@mui/internal-test-utils': 2.0.18-canary.5
+  '@mui/internal-test-utils': 2.0.18-canary.6
   '@mui/material': ^7.3.7
   '@mui/stylis-plugin-rtl': ^7.3.7
   '@mui/system': ^7.3.7
@@ -40,7 +40,7 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.7.1
   '@types/use-sync-external-store': ^1.5.0
-  '@typescript-eslint/parser': ^8.53.1
+  '@typescript-eslint/parser': ^8.54.0
   '@vitejs/plugin-react': ^5.1.2
   '@vitejs/plugin-react-swc': ^4.2.2
   '@vitest/browser': ^4.0.18
@@ -64,7 +64,7 @@ catalog:
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.0
-  motion: ^12.29.0
+  motion: ^12.29.2
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
   react: 19.2.3
@@ -76,7 +76,7 @@ catalog:
   serve: ^14.2.5
   stylis: ^4.3.6
   tsx: ^4.21.0
-  type-fest: ^5.4.2
+  type-fest: ^5.4.3
   use-sync-external-store: ^1.6.0
   vite: ^7.3.1
   vitest: ^4.0.18
