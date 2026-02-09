@@ -8,6 +8,10 @@ components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider, ChartsB
 
 <p class="description">Zoom and pan charts or specific axes.</p>
 
+Zoom and pan let users explore chart data in detail.
+Zoom narrows the visible range on one or more axes so viewers can focus on a region of interest.
+Pan moves the visible window so they can shift the view without changing the zoom level.
+
 You can enable zooming on the Pro and Premium versions of line, bar, scatter, and heatmap charts.
 
 ## Basic usage
@@ -85,7 +89,7 @@ The following options are available:
 
 Customize the value shown in the tooltip by using the `valueFormatter` property of the respective axis.
 
-When formatting the zoom slider tooltip, `valueFormatter` is called with `zoom-slider-tooltip` as its location.
+When formatting the zoom slider tooltip, the chart calls `valueFormatter()` with `zoom-slider-tooltip` as its location.
 
 {{"demo": "ZoomSliderTooltip.js"}}
 
@@ -98,7 +102,7 @@ The zoom slider does not display values outside the range delimited by `minStart
 
 ### Composition
 
-When composing a custom component, render the axes' sliders by rendering the `ChartZoomSlider` component.
+When composing a custom component, render the `ChartZoomSlider` component to show the axes' sliders.
 
 {{"demo": "ZoomSliderComposition.js"}}
 
@@ -121,8 +125,8 @@ Customize it by setting the `zoom.slider.preview.markerSize` property on the ser
 
 Manage the zoom state in two ways:
 
-- Define an initial state with the `initialZoom` prop
-- Imperatively set a zoom value with the `setZoomData()` method of the public API
+1. Define an initial state with the `initialZoom` prop
+2. Imperatively set a zoom value with the `setZoomData()` method of the public API
 
 In addition, the `onZoomChange` prop is a function that receives the new zoom state.
 
@@ -142,7 +146,7 @@ Control the zoom state to synchronize zoom between multiple charts.
 
 ## Zoom interactions configuration
 
-Have fine-grained control over which interactions are enabled and under which conditions by using the `zoomInteractionConfig` prop.
+Use the `zoomInteractionConfig` prop to choose which interactions are enabled and when.
 
 ### Interactions
 
@@ -180,7 +184,7 @@ The `zoomInteractionConfig` prop lets you specify which interactions are enabled
 
 :::warning
 
-\* The `wheel` pan interaction is only added automatically if pan is enabled for at least one x-axis and not enabled for any y-axis.
+\* The chart only adds the `wheel` pan interaction automatically if pan is enabled for at least one x-axis and not enabled for any y-axis.
 :::
 
 :::info
@@ -255,7 +259,7 @@ Available pointer modes:
 
 Define multiple interactions of the same type with different configurations.
 
-In the example below, the pan `drag` interaction is configured to require a specific key combination for mouse, while touch interactions don't require any key to be pressed:
+In the example below, the pan `drag` interaction requires a specific key combination for mouse, while touch interactions don't require any key to be pressed:
 
 ```jsx
 <BarChartPro
