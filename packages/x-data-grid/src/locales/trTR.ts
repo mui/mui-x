@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const trTRGrid: Partial<GridLocaleText> = {
   // Root
@@ -161,6 +161,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Evet',
   booleanCellFalseLabel: 'Hayır',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Genişlet',
+  longTextCellCollapseLabel: 'Gizle',
 
   // Actions cell more text
   actionsCellMore: 'daha fazla',

@@ -1,21 +1,21 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import {
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type {
   GridEditingApi,
   GridEditingPrivateApi,
   GridEditingSharedApi,
   GridEditingSharedPrivateApi,
 } from '../../../models/api/gridEditingApi';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridConfiguration } from '../../../models/configuration/gridConfiguration';
-import { GridRowId } from '../../../models/gridRows';
+import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
+import type { GridRowId } from '../../../models/gridRows';
 import { useGridCellEditing } from './useGridCellEditing';
 import { GridCellModes, GridEditModes } from '../../../models/gridEditRowModel';
 import { useGridRowEditing } from './useGridRowEditing';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 
 export const editingStateInitializer: GridStateInitializer = (state) => ({

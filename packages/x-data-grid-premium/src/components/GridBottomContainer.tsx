@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   gridClasses,
@@ -9,7 +9,7 @@ import {
   gridRowsLoadingSelector,
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
-  GridGroupNode,
+  type GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { GridAggregationRowOverlay } from './GridAggregationRowOverlay';

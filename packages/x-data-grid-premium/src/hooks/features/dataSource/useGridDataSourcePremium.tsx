@@ -1,22 +1,22 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   useGridEvent as addEventHandler,
   useGridApiMethod,
-  GridEventLookup,
+  type GridEventLookup,
   GRID_ROOT_GROUP_ID,
-  GridValidRowModel,
+  type GridValidRowModel,
   useGridEvent,
-  GridUpdateRowParams,
-  GridRowModel,
+  type GridUpdateRowParams,
+  type GridRowModel,
   gridRowTreeSelector,
 } from '@mui/x-data-grid-pro';
 import {
   useGridDataSourceBasePro,
   useGridRegisterStrategyProcessor,
-  GridPipeProcessor,
+  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   gridPivotInitialColumnsSelector,
   runIf,
@@ -25,8 +25,8 @@ import {
   DataSourceRowsUpdateStrategy,
   getGroupKeys,
 } from '@mui/x-data-grid-pro/internals';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type {
   GridDataSourcePremiumPrivateApi,

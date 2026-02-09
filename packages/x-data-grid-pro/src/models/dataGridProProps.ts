@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import {
+import type * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
+import type {
   GridEventListener,
   GridCallbackDetails,
   GridRowParams,
@@ -24,7 +24,7 @@ import type {
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import type { GridApiPro } from './gridApiPro';
-import {
+import type {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';

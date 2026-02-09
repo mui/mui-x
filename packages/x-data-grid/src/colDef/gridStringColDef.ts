@@ -1,6 +1,6 @@
 import { renderEditInputCell } from '../components/cell/GridEditInputCell';
 import { gridStringOrNumberComparator } from '../hooks/features/sorting/gridSortingUtils';
-import { GridColTypeDef } from '../models/colDef/gridColDef';
+import type { GridColTypeDef } from '../models/colDef/gridColDef';
 import { getGridStringOperators, getGridStringQuickFilterFn } from './gridStringOperators';
 
 /**

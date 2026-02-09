@@ -1,4 +1,4 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 
 export function getPublicApiRef<PrivateApi extends GridPrivateApiCommunity>(

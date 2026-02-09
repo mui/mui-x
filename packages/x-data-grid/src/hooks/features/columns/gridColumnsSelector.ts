@@ -3,10 +3,10 @@ import {
   createSelectorMemoized,
   createRootSelector,
 } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
-  GridColumnLookup,
-  GridPinnedColumnFields,
+  type GridColumnLookup,
+  type GridPinnedColumnFields,
   EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
 import { gridIsRtlSelector } from '../../core/gridCoreSelector';
