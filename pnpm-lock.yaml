@@ -208,8 +208,8 @@ catalogs:
       specifier: ^4.21.0
       version: 4.21.0
     type-fest:
-      specifier: ^5.4.2
-      version: 5.4.2
+      specifier: ^5.4.3
+      version: 5.4.4
     use-sync-external-store:
       specifier: ^1.6.0
       version: 1.6.0
@@ -1279,7 +1279,7 @@ importers:
         version: 15.8.1
       type-fest:
         specifier: 'catalog:'
-        version: 5.4.2
+        version: 5.4.4
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -4406,7 +4406,7 @@ packages:
   '@mui/base@5.0.0-beta.40-1':
     resolution: {integrity: sha512-agKXuNNy0bHUmeU7pNmoZwNFr7Hiyhojkb9+2PVyDG5+6RafYuyMgbrav8CndsB7KUc/U51JAw9vKNDLYBzaUA==}
     engines: {node: '>=12.0.0'}
-    deprecated: This package has been replaced by @base-ui-components/react
+    deprecated: This package has been replaced by @base-ui/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -11625,8 +11625,8 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
 
-  type-fest@5.4.2:
-    resolution: {integrity: sha512-FLEenlVYf7Zcd34ISMLo3ZzRE1gRjY1nMDTp+bQRBiPsaKyIW8K3Zr99ioHDUgA9OGuGGJPyYpNcffGmBhJfGg==}
+  type-fest@5.4.4:
+    resolution: {integrity: sha512-JnTrzGu+zPV3aXIUhnyWJj4z/wigMsdYajGLIYakqyOW1nPllzXEJee0QQbHj+CTIQtXGlAjuK0UY+2xTyjVAw==}
     engines: {node: '>=20'}
 
   type-is@2.0.1:
@@ -23424,7 +23424,7 @@ snapshots:
 
   type-fest@2.19.0: {}
 
-  type-fest@5.4.2:
+  type-fest@5.4.4:
     dependencies:
       tagged-tag: 1.0.0
 
