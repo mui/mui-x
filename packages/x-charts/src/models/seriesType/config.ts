@@ -99,6 +99,9 @@ export interface ChartsSeriesConfig {
   };
 }
 
+/**
+ * All the existing series types.
+ */
 export type ChartSeriesType = keyof ChartsSeriesConfig;
 
 export type CartesianChartSeriesType = keyof Pick<
