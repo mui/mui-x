@@ -356,6 +356,7 @@
   { "name": "HeatmapTooltipSlots", "kind": "Interface" },
   { "name": "HeatmapValueType", "kind": "TypeAlias" },
   { "name": "HighlightElementClassKey", "kind": "TypeAlias" },
+  { "name": "HighlightItemIdentifier", "kind": "TypeAlias" },
   { "name": "HighlightOptions", "kind": "TypeAlias" },
   { "name": "HighlightScope", "kind": "TypeAlias" },
   { "name": "ItemTooltip", "kind": "Interface" },

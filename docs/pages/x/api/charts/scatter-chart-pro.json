@@ -43,7 +43,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type: 'scatter' }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'scatter' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -84,7 +84,7 @@
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: SeriesItemIdentifier<SeriesType> | null) => void",
+        "type": "function(highlightedItem: HighlightItemIdentifier<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },
