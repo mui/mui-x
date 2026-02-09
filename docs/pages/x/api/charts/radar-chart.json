@@ -21,7 +21,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'radar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'radar' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -33,12 +33,15 @@
       "default": "'axis'"
     },
     "highlightedItem": {
-      "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
-      }
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'radar' }&gt;"
+      }
+    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
@@ -113,7 +116,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'radar' }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }"
       }
     },
     "width": { "type": { "name": "number" } }

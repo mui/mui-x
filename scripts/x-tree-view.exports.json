@@ -50,6 +50,7 @@
   { "name": "TreeViewCancellableEventHandler", "kind": "TypeAlias" },
   { "name": "TreeViewCollapseIcon", "kind": "Variable" },
   { "name": "TreeViewDefaultItemModelProperties", "kind": "TypeAlias" },
+  { "name": "TreeViewDOMStructure", "kind": "TypeAlias" },
   { "name": "TreeViewExpandIcon", "kind": "Variable" },
   { "name": "TreeViewItemId", "kind": "TypeAlias" },
   { "name": "TreeViewItemsReorderingAction", "kind": "TypeAlias" },

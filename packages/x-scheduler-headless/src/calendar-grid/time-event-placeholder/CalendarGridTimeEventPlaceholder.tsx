@@ -4,8 +4,8 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { CalendarGridTimeEventPlaceholderCssVars } from './CalendarGridTimeEventPlaceholderCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
-import { useEvent } from '../../utils/useEvent';
-import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
+import { useEvent } from '../../internals/utils/useEvent';
+import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 
 export const CalendarGridTimeEventPlaceholder = React.forwardRef(
   function CalendarGridTimeEventPlaceholder(

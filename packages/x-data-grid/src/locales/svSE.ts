@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const svSEGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const svSEGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Luftig',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Ångra',
+  toolbarRedo: 'Gör om',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolumner',
@@ -162,6 +166,10 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ja',
   booleanCellFalseLabel: 'nej',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Expandera',
+  longTextCellCollapseLabel: 'Kollapsa',
 
   // Actions cell more text
   actionsCellMore: 'mer',

@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axesGap": {
+      "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
+    },
     "axisHighlight": {
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
@@ -30,6 +33,9 @@
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "initialHiddenItems": {
+      "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
     "initialZoom": {
       "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
@@ -122,5 +128,30 @@
     "zoomData": { "description": "The list of zoom data related to each axis." },
     "zoomInteractionConfig": { "description": "Configuration for zoom interactions." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "bar": "The component that renders the bar.",
+    "barLabel": "The component that renders the bar label.",
+    "baseButton": "",
+    "baseDivider": "",
+    "baseIconButton": "",
+    "baseMenuItem": "",
+    "baseMenuList": "",
+    "basePopper": "",
+    "baseTooltip": "",
+    "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
+    "legend": "Custom rendering of the legend.",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
+    "tooltip": "Custom component for the tooltip popper.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis.",
+    "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
+    "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
+  }
 }

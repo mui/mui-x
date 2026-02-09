@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const plPLGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfort',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Cofnij',
+  toolbarRedo: 'Ponów',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolumny',
@@ -157,6 +161,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'tak',
   booleanCellFalseLabel: 'nie',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Rozwiń',
+  longTextCellCollapseLabel: 'Zwiń',
 
   // Actions cell more text
   actionsCellMore: 'więcej',

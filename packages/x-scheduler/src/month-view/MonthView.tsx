@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
@@ -9,7 +10,6 @@ import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import {
   useExtractEventCalendarParameters,
   EventCalendarState as State,
@@ -18,12 +18,14 @@ import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/even
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import clsx from 'clsx';
 import { MonthViewProps, StandaloneMonthViewProps } from './MonthView.types';
-import { EventPopoverProvider } from '../internals/components/event-popover';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
-import '../index.css';
+import { useEventCalendarClasses } from '../event-calendar/EventCalendarClassesContext';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -100,6 +102,18 @@ const MonthViewBody = styled('div', {
   maxHeight: '100%',
 });
 
+// TODO: Replace with a proper loading overlay component that is shared across views
+const MonthViewLoadingOverlay = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewLoadingOverlay',
+})(({ theme }) => ({
+  position: 'absolute',
+  fontSize: theme.typography.body1.fontSize,
+  padding: 2,
+  color: theme.palette.text.secondary,
+  zIndex: 1,
+}));
+
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
 const EVENT_HEIGHT = 18;
@@ -137,6 +151,7 @@ export const MonthView = React.memo(
     const adapter = useAdapter();
     const translations = useTranslations();
     const store = useEventCalendarStoreContext();
+    const classes = useEventCalendarClasses();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
@@ -145,6 +160,7 @@ export const MonthView = React.memo(
 
     // Selector hooks
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
+    const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
@@ -184,34 +200,49 @@ export const MonthView = React.memo(
     );
 
     return (
-      <MonthViewRoot {...props} ref={handleRef}>
-        <EventPopoverProvider containerRef={containerRef}>
-          <MoreEventsPopoverProvider containerRef={containerRef}>
-            <MonthViewGrid>
-              <MonthViewHeader ownerState={{ showWeekNumber }}>
-                {showWeekNumber && (
-                  <MonthViewWeekHeaderCell>{translations.weekAbbreviation}</MonthViewWeekHeaderCell>
-                )}
-                {weeks[0].map((weekDay) => (
-                  <MonthViewHeaderCell key={weekDay.key} date={weekDay} skipDataCurrent>
-                    {adapter.formatByString(weekDay.value, 'ccc')}
-                  </MonthViewHeaderCell>
-                ))}
-              </MonthViewHeader>
-              <MonthViewBody>
-                {weeks.map((week, weekIdx) => (
-                  <MonthViewWeekRow
-                    key={weekIdx}
-                    maxEvents={maxEvents}
-                    days={week}
-                    occurrencesMap={occurrencesMap}
-                    firstDayRef={weekIdx === 0 ? cellRef : undefined}
-                  />
-                ))}
-              </MonthViewBody>
-            </MonthViewGrid>
-          </MoreEventsPopoverProvider>
-        </EventPopoverProvider>
+      <MonthViewRoot
+        {...props}
+        ref={handleRef}
+        className={clsx(props.className, classes.monthView)}
+      >
+        <MoreEventsPopoverProvider>
+          <MonthViewGrid className={classes.monthViewGrid}>
+            <MonthViewHeader className={classes.monthViewHeader} ownerState={{ showWeekNumber }}>
+              {showWeekNumber && (
+                <MonthViewWeekHeaderCell className={classes.monthViewWeekHeaderCell}>
+                  {translations.weekAbbreviation}
+                </MonthViewWeekHeaderCell>
+              )}
+              {weeks[0].map((weekDay) => (
+                <MonthViewHeaderCell
+                  className={classes.monthViewHeaderCell}
+                  key={weekDay.key}
+                  date={weekDay}
+                  skipDataCurrent
+                >
+                  {adapter.formatByString(weekDay.value, 'ccc')}
+                </MonthViewHeaderCell>
+              ))}
+            </MonthViewHeader>
+            <MonthViewBody className={classes.monthViewBody}>
+              {isLoading && (
+                <MonthViewLoadingOverlay className={classes.monthViewLoadingOverlay}>
+                  {translations.loading}
+                </MonthViewLoadingOverlay>
+              )}
+
+              {weeks.map((week, weekIdx) => (
+                <MonthViewWeekRow
+                  key={weekIdx}
+                  maxEvents={maxEvents}
+                  days={week}
+                  occurrencesMap={occurrencesMap}
+                  firstDayRef={weekIdx === 0 ? cellRef : undefined}
+                />
+              ))}
+            </MonthViewBody>
+          </MonthViewGrid>
+        </MoreEventsPopoverProvider>
       </MonthViewRoot>
     );
   }),
@@ -235,7 +266,9 @@ export const StandaloneMonthView = React.forwardRef(function StandaloneMonthView
 
   return (
     <EventCalendarProvider {...parameters}>
-      <MonthView ref={forwardedRef} {...forwardedProps} />
+      <EventDraggableDialogProvider>
+        <MonthView ref={forwardedRef} {...forwardedProps} />
+      </EventDraggableDialogProvider>
     </EventCalendarProvider>
   );
 }) as StandaloneMonthViewComponent;

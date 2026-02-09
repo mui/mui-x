@@ -3,12 +3,12 @@ import { type ChartSeriesType } from '../models/seriesType/config';
 import {
   type ProcessedSeries,
   type UseChartSeriesSignature,
-  selectorChartSeriesConfig,
 } from '../internals/plugins/corePlugins/useChartSeries';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useSeries } from './useSeries';
 import type { LegendItemParams } from '../ChartsLegend';
 import { useStore } from '../internals/store/useStore';
-import { type ChartSeriesConfig } from '../internals/plugins/models/seriesConfig';
+import { type ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 function getSeriesToDisplay(
   series: ProcessedSeries,

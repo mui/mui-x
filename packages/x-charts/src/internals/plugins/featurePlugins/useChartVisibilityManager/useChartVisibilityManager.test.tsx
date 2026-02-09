@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, screen, within } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
@@ -185,6 +184,62 @@ describe('useChartVisibilityManager', () => {
 
       expect(series1Item?.classList.contains(legendClasses.hidden)).to.equal(false);
       expect(series2Item?.classList.contains(legendClasses.hidden)).to.equal(true);
+    });
+  });
+
+  describe('initialHiddenItems', () => {
+    it('should hide items on initial render with initialHiddenItems', async () => {
+      render(
+        <BarChart
+          height={300}
+          width={300}
+          skipAnimation
+          series={[
+            { id: 'series-1', label: 'Series 1', data: [10, 20] },
+            { id: 'series-2', label: 'Series 2', data: [15, 25] },
+          ]}
+          xAxis={[{ data: ['A', 'B'] }]}
+          initialHiddenItems={[{ type: 'bar', seriesId: 'series-1' }]}
+        />,
+      );
+
+      // Only series-2 should be visible (bars with non-zero dimensions)
+      expect(getVisibleBars().length).to.equal(2);
+
+      // The legend item for series-1 should be marked as hidden
+      const legend = await screen.findByRole('list');
+      const series1Item = within(legend).getByText('Series 1').closest(`.${legendClasses.series}`);
+      const series2Item = within(legend).getByText('Series 2').closest(`.${legendClasses.series}`);
+
+      expect(series1Item?.classList.contains(legendClasses.hidden)).to.equal(true);
+      expect(series2Item?.classList.contains(legendClasses.hidden)).to.equal(false);
+    });
+
+    it('should allow toggling visibility when using initialHiddenItems', async () => {
+      const { user } = render(
+        <BarChart
+          height={300}
+          width={300}
+          skipAnimation
+          series={[
+            { id: 'series-1', label: 'Series 1', data: [10, 20] },
+            { id: 'series-2', label: 'Series 2', data: [15, 25] },
+          ]}
+          xAxis={[{ data: ['A', 'B'] }]}
+          initialHiddenItems={[{ type: 'bar', seriesId: 'series-1' }]}
+          slotProps={{ legend: { toggleVisibilityOnClick: true } }}
+        />,
+      );
+
+      // Initially only series-2 should be visible
+      expect(getVisibleBars().length).to.equal(2);
+
+      // Click on series-1 legend item to show it
+      const series1Button = await screen.findByRole('button', { name: /Series 1/ });
+      await user.click(series1Button);
+
+      // All bars should now be visible
+      expect(getVisibleBars().length).to.equal(4);
     });
   });
 });

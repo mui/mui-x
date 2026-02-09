@@ -1,7 +1,7 @@
 ---
 title: React Range Bar chart
 productId: x-charts
-components: BarChartPremium, RangeBarPlot, ChartDataProviderPremium
+components: BarChartPremium, RangeBarPlot, ChartDataProviderPremium, ChartsContainerPremium
 ---
 
 # Charts - Range Bar [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
@@ -48,7 +48,7 @@ An alternative is to use a `colorMap`, which maps values to colors. The color se
 Unlike other chart types, the `colorMap` property does not work for the numerical axis of range bar charts (that is, the y-axis for vertical range bar charts and the x-axis for horizontal range bar charts).
 :::
 
-You can learn more about the `colorMap` in the [Styling docs](/x/react-charts/styling/#values-color).
+You can learn more about the `colorMap` in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "RangeBarColorScale.js"}}
 

@@ -199,7 +199,13 @@ export {
   getActiveElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
-export { isNavigationKey, isPasteShortcut, isCopyShortcut } from '../utils/keyboardUtils';
+export {
+  isNavigationKey,
+  isPasteShortcut,
+  isCopyShortcut,
+  isUndoShortcut,
+  isRedoShortcut,
+} from '../utils/keyboardUtils';
 export * from '../utils/utils';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';

@@ -1,10 +1,10 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
-import { GridSortingModelApplier } from './gridSortingState';
+import type { GridSortingModelApplier } from './gridSortingState';
 import type { GridRowId, GridTreeNode } from '../../../models';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import {
+import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type {
   GridComparatorFn,
   GridSortDirection,
   GridSortItem,

@@ -1,9 +1,9 @@
-import type { SchedulerEvent, SchedulerProcessedEvent } from './event';
+import type { SchedulerEvent, SchedulerProcessedEventDraft } from './event';
 
 export type RenderDragPreviewParameters =
   | {
       type: 'internal-event';
-      data: SchedulerProcessedEvent;
+      data: SchedulerProcessedEventDraft;
     }
   | { type: 'standalone-event'; data: SchedulerOccurrencePlaceholderExternalDragData };
 

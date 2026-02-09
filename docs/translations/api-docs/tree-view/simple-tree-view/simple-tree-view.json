@@ -31,6 +31,9 @@
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
+    "itemHeight": {
+      "description": "Sets the height in pixel of an item. If not provided, no height restriction is applied to the tree item content element."
+    },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {
       "description": "Callback fired when Tree Items are expanded/collapsed.",

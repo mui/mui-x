@@ -182,6 +182,7 @@ export function sankey<
     computeNodeValues(graph);
     computeNodeDepths(graph);
     computeNodeHeights(graph);
+    computeNodeLayers(graph);
 
     if (!withPositions) {
       return graph;
@@ -323,7 +324,7 @@ export function sankey<
   function computeNodeLayers({ nodes }: CompleteGraph<true>) {
     const x = (max(nodes, (d) => d.depth) ?? 0) + 1;
     const kx = (x1 - x0 - dx) / (x - 1);
-    const columns = new Array(x);
+    const columns = new Array<CompleteNode<true>[]>(x);
     for (const node of nodes) {
       const i = Math.max(0, Math.min(x - 1, Math.floor(align.call(null, node, x))));
       node.layer = i;
@@ -363,7 +364,7 @@ export function sankey<
 
   function computeNodeBreadths(graph: CompleteGraph<true>) {
     const columns = computeNodeLayers(graph);
-    py = Math.min(dy, (y1 - y0) / (max(columns, (c) => c.length) - 1));
+    py = Math.min(dy, (y1 - y0) / (max(columns, (c) => c.length)! - 1));
     initializeNodeBreadths(columns);
     for (let i = 0; i < iterations; ++i) {
       const alpha = Math.pow(0.99, i);

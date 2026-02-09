@@ -8,7 +8,9 @@ import {
 export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
-  extends Omit<CommonSeriesType<HeatmapValueType>, 'color' | 'colorGetter'>, CartesianSeriesType {
+  extends
+    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter'>,
+    CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each bar.
@@ -42,11 +44,11 @@ export type HeatmapItemIdentifier = {
   /**
    * The x index of the cell. Useful to identify the cell position in the heatmap even if there is no data.
    */
-  xIndex?: number;
+  xIndex: number;
   /**
    * The y index of the cell. Useful to identify the cell position in the heatmap even if there is no data.
    */
-  yIndex?: number;
+  yIndex: number;
 };
 
 export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<

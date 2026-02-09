@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
-import { RefObject } from '@mui/x-internals/types';
-import { DataGridPro, useGridApiRef, GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
+import { type RefObject } from '@mui/x-internals/types';
+import {
+  DataGridPro,
+  useGridApiRef,
+  type GridApi,
+  type DataGridProProps,
+} from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

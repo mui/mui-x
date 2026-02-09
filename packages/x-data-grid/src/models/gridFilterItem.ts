@@ -1,4 +1,4 @@
-import { GridBaseColDef } from './colDef/gridColDef';
+import type { GridBaseColDef } from './colDef/gridColDef';
 
 /**
  * Filter item definition interface.

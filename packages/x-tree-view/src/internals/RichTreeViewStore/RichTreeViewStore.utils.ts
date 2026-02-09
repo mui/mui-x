@@ -16,6 +16,7 @@ export const parametersToStateMapper: TreeViewParametersToStateMapper<
     ...deriveStateFromParameters(parameters),
     editedItemId: null,
     lazyLoadedItems: null,
+    domStructure: parameters.domStructure ?? 'nested',
   }),
   updateStateFromParameters: (newMinimalState, parameters) => {
     const newState: Partial<RichTreeViewState<any, any>> = {

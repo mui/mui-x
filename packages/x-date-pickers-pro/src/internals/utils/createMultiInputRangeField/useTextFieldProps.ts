@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { PickersTextField, PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';

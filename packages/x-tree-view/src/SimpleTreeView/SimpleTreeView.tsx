@@ -196,6 +196,11 @@ SimpleTreeView.propTypes = {
    */
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
+   * Sets the height in pixel of an item.
+   * If not provided, no height restriction is applied to the tree item content element.
+   */
+  itemHeight: PropTypes.number,
+  /**
    * Whether multiple items can be selected.
    * @default false
    */
