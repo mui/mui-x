@@ -184,7 +184,7 @@ Event colors can be set at two levels. The effective color resolves in the follo
 <EventCalendar eventColor="pink" />
 ```
 
-4. The default color palette, `"jade"`
+4. The default color palette, `"teal"`
 
 The following demo shows one event for each palette:
 

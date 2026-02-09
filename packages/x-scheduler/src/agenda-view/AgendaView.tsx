@@ -23,7 +23,6 @@ import { EventCalendarProvider } from '../internals/components/EventCalendarProv
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import { useEventCalendarClasses } from '../event-calendar/EventCalendarClassesContext';
-import '../index.css';
 import {
   EventDraggableDialogProvider,
   EventDraggableDialogTrigger,
@@ -128,6 +127,8 @@ const EventsList = styled('ul', {
   display: 'flex',
   flexDirection: 'column',
   padding: theme.spacing(1),
+  margin: 0,
+  listStyle: 'none',
   flexGrow: 1,
 }));
 

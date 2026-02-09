@@ -1,6 +1,7 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import { type ChartSeriesDefaultized, type ChartSeriesType } from '../models/seriesType/config';
+import { type SeriesItemIdentifier } from '../models/seriesType';
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { useStore } from '../internals/store/useStore';
 import { useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
@@ -15,7 +16,6 @@ import {
 } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { isCartesianSeries } from '../internals/isCartesian';
 import { type AxisId } from '../models/axis';
-import { type SeriesItemIdentifier } from '../models/seriesType';
 
 export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;

@@ -13,6 +13,7 @@ import {
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { eventDialogSlots, EventDialogClassesContext } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
 import {
@@ -20,10 +21,6 @@ import {
   getEventTimelinePremiumUtilityClass,
 } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
-// TODO: Remove these CSS imports during the MUI X migration
-import '../styles/index.css';
-import '../styles/colors.css';
-import '../styles/tokens.css';
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
@@ -68,6 +65,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     monthsHeaderMonthLabel: ['monthsHeaderMonthLabel'],
     yearsHeader: ['yearsHeader'],
     yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
+    ...eventDialogSlots,
   };
 
   return composeClasses(slots, getEventTimelinePremiumUtilityClass, classes);
@@ -106,7 +104,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // We don't want the plan suffix in the theme, otherwise we couldn't share the theme entry across packages
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
 
   const {
@@ -126,22 +124,24 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventTimelinePremiumClassesContext.Provider value={classes}>
-        <EventTimelinePremiumRoot
-          ref={forwardedRef}
-          className={clsx(classes.root, className)}
-          {...forwardedProps}
-        >
-          <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
-            <Select value={view} onChange={handleViewChange} size="small">
-              {views.map((viewItem) => (
-                <MenuItem key={viewItem} value={viewItem}>
-                  {viewItem}
-                </MenuItem>
-              ))}
-            </Select>
-          </EventTimelinePremiumHeaderToolbar>
-          <EventTimelinePremiumContent />
-        </EventTimelinePremiumRoot>
+        <EventDialogClassesContext.Provider value={classes}>
+          <EventTimelinePremiumRoot
+            ref={forwardedRef}
+            className={clsx(classes.root, className)}
+            {...forwardedProps}
+          >
+            <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
+              <Select value={view} onChange={handleViewChange} size="small">
+                {views.map((viewItem) => (
+                  <MenuItem key={viewItem} value={viewItem}>
+                    {viewItem}
+                  </MenuItem>
+                ))}
+              </Select>
+            </EventTimelinePremiumHeaderToolbar>
+            <EventTimelinePremiumContent />
+          </EventTimelinePremiumRoot>
+        </EventDialogClassesContext.Provider>
       </EventTimelinePremiumClassesContext.Provider>
     </SchedulerStoreContext.Provider>
   );

@@ -3,3 +3,5 @@ export {
   EventDraggableDialogTrigger,
   useEventDraggableDialogContext,
 } from './EventDraggableDialog';
+export * from './eventDialogClasses';
+export * from './EventDialogClassesContext';

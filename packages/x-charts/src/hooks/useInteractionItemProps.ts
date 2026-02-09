@@ -19,8 +19,8 @@ function onPointerDown(event: React.PointerEvent) {
   }
 }
 
-export const useInteractionItemProps = <ChartSeries extends ChartSeriesType>(
-  data: SeriesItemIdentifierWithData<ChartSeries>,
+export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
+  data: SeriesItemIdentifierWithData<SeriesType>,
   skip?: boolean,
 ): {
   onPointerEnter?: () => void;
@@ -31,7 +31,7 @@ export const useInteractionItemProps = <ChartSeries extends ChartSeriesType>(
     useChartContext<
       [
         UseChartInteractionSignature,
-        UseChartHighlightSignature<ChartSeries>,
+        UseChartHighlightSignature<SeriesType>,
         UseChartTooltipSignature,
       ]
     >();

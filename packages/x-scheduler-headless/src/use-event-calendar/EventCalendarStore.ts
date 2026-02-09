@@ -226,6 +226,12 @@ export class ExtendableEventCalendarStore<
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
   };
+
+  public buildPublicAPI() {
+    return {
+      ...super.buildPublicAPI(),
+    };
+  }
 }
 
 /**
