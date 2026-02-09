@@ -48,74 +48,6 @@ type DataGridElements = BaseElements & {
   scrollbarHorizontal: React.RefObject<HTMLElement | null>;
 };
 
-type ScrollProperty = 'scrollTop' | 'scrollLeft';
-
-function useScrollbarRefCallback(
-  scrollerRef: React.RefObject<HTMLElement | null>,
-  refSetter: (node: HTMLDivElement | null) => void,
-  scrollProperty: ScrollProperty,
-) {
-  const isLocked = React.useRef(false);
-  const lastPosition = React.useRef(0);
-
-  const handleScrollerScroll = useEventCallback((scrollbar: HTMLElement) => {
-    const scroller = scrollerRef.current;
-    if (!scroller) {
-      return;
-    }
-
-    const scrollerPosition = scroller[scrollProperty];
-    if (scrollerPosition === lastPosition.current) {
-      return;
-    }
-    lastPosition.current = scrollerPosition;
-
-    if (isLocked.current) {
-      isLocked.current = false;
-      return;
-    }
-    isLocked.current = true;
-
-    scrollbar[scrollProperty] = scrollerPosition;
-  });
-
-  const handleScrollbarScroll = useEventCallback((scrollbar: HTMLElement) => {
-    const scroller = scrollerRef.current;
-    if (!scroller) {
-      return;
-    }
-
-    if (isLocked.current) {
-      isLocked.current = false;
-      return;
-    }
-    isLocked.current = true;
-
-    scroller[scrollProperty] = scrollbar[scrollProperty];
-  });
-
-  return useRefCallback((scrollbar) => {
-    refSetter(scrollbar);
-
-    const scroller = scrollerRef.current;
-    if (!scroller) {
-      return undefined;
-    }
-
-    const onScrollerScroll = () => handleScrollerScroll(scrollbar);
-    const onScrollbarScroll = () => handleScrollbarScroll(scrollbar);
-
-    const options: AddEventListenerOptions = { passive: true };
-    scroller.addEventListener('scroll', onScrollerScroll, options);
-    scrollbar.addEventListener('scroll', onScrollbarScroll, options);
-
-    return () => {
-      scroller.removeEventListener('scroll', onScrollerScroll);
-      scrollbar.removeEventListener('scroll', onScrollbarScroll);
-    };
-  });
-}
-
 export class LayoutDataGrid extends Layout<DataGridElements> {
   static elements = [
     'scroller',
@@ -320,4 +252,72 @@ export class LayoutList extends Layout<ListElements> {
       } as React.CSSProperties,
     })),
   };
+}
+
+type ScrollProperty = 'scrollTop' | 'scrollLeft';
+
+function useScrollbarRefCallback(
+  scrollerRef: React.RefObject<HTMLElement | null>,
+  refSetter: (node: HTMLDivElement | null) => void,
+  scrollProperty: ScrollProperty,
+) {
+  const isLocked = React.useRef(false);
+  const lastPosition = React.useRef(0);
+
+  const handleScrollerScroll = useEventCallback((scrollbar: HTMLElement) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return;
+    }
+
+    const scrollerPosition = scroller[scrollProperty];
+    if (scrollerPosition === lastPosition.current) {
+      return;
+    }
+    lastPosition.current = scrollerPosition;
+
+    if (isLocked.current) {
+      isLocked.current = false;
+      return;
+    }
+    isLocked.current = true;
+
+    scrollbar[scrollProperty] = scrollerPosition;
+  });
+
+  const handleScrollbarScroll = useEventCallback((scrollbar: HTMLElement) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return;
+    }
+
+    if (isLocked.current) {
+      isLocked.current = false;
+      return;
+    }
+    isLocked.current = true;
+
+    scroller[scrollProperty] = scrollbar[scrollProperty];
+  });
+
+  return useRefCallback((scrollbar) => {
+    refSetter(scrollbar);
+
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return undefined;
+    }
+
+    const onScrollerScroll = () => handleScrollerScroll(scrollbar);
+    const onScrollbarScroll = () => handleScrollbarScroll(scrollbar);
+
+    const options: AddEventListenerOptions = { passive: true };
+    scroller.addEventListener('scroll', onScrollerScroll, options);
+    scrollbar.addEventListener('scroll', onScrollbarScroll, options);
+
+    return () => {
+      scroller.removeEventListener('scroll', onScrollerScroll);
+      scrollbar.removeEventListener('scroll', onScrollbarScroll);
+    };
+  });
 }
