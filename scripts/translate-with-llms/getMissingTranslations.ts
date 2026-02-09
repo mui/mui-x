@@ -1,8 +1,8 @@
 import * as ts from 'typescript';
 import * as fs from 'fs';
 import * as path from 'path';
-import localeNames from '../localeNames';
 import { pathToFileURL } from 'url';
+import localeNames from '../localeNames';
 import { PACKAGE_CONFIGS, type TranslatePackageConfig } from './packageConfigs';
 
 interface EnglishEntry {
@@ -237,15 +237,20 @@ function processPackage(_pkgName: string, config: TranslatePackageConfig): Packa
   };
 }
 
-export function getMissingTranslations(packageNames?: string | string[]): MissingTranslationsOutput {
+export function getMissingTranslations(
+  packageNames?: string | string[],
+): MissingTranslationsOutput {
   const localeMap: Record<string, string> = {};
   const allLocales = new Set<string>();
   const result: Record<string, PackageOutput> = {};
-  const normalizedPackageNames = Array.isArray(packageNames)
-    ? packageNames
-    : packageNames
-      ? [packageNames]
-      : undefined;
+  let normalizedPackageNames: string[] | undefined;
+  if (Array.isArray(packageNames)) {
+    normalizedPackageNames = packageNames;
+  } else if (typeof packageNames === 'string') {
+    normalizedPackageNames = [packageNames];
+  } else {
+    normalizedPackageNames = undefined;
+  }
   const selectedPackages = normalizedPackageNames
     ? Object.entries(PACKAGE_CONFIGS).filter(([name]) => normalizedPackageNames.includes(name))
     : Object.entries(PACKAGE_CONFIGS);
