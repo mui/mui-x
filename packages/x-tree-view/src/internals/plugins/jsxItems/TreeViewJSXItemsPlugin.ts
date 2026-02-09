@@ -96,6 +96,8 @@ export class TreeViewJSXItemsPlugin {
       },
     });
 
+    // If a parent was selected while its children were unmounted (collapsed with unmountOnExit),
+    // re-run selection propagation now that the children are registered.
     if (parentId !== null && selectionSelectors.isItemSelected(this.store.state, parentId)) {
       this.store.selection.setItemSelection({
         itemId: parentId,
