@@ -20,9 +20,10 @@ export default function ControlledHighlight() {
       seriesId: 'A',
       dataIndex: 0,
     });
-  const [highlight, setHighlight] =
-    React.useState<HighlightScope<'bar'>['highlight']>('item');
-  const [fade, setFade] = React.useState<HighlightScope<'bar'>['fade']>('global');
+  const [highlight, setHighlight] = React.useState<'none' | 'item' | 'series'>(
+    'item',
+  );
+  const [fade, setFade] = React.useState<'none' | 'series' | 'global'>('global');
 
   const handleHighLightedSeries = (event: any, newHighLightedSeries: string) => {
     if (newHighLightedSeries !== null) {
@@ -107,7 +108,7 @@ export default function ControlledHighlight() {
           label="highlighted"
           value={highlight}
           onChange={(event) =>
-            setHighlight(event.target.value as HighlightScope<'bar'>['highlight'])
+            setHighlight(event.target.value as 'none' | 'item' | 'series')
           }
           sx={{ minWidth: 150 }}
         >
@@ -120,7 +121,7 @@ export default function ControlledHighlight() {
           label="faded"
           value={fade}
           onChange={(event) =>
-            setFade(event.target.value as HighlightScope<'bar'>['fade'])
+            setFade(event.target.value as 'none' | 'series' | 'global')
           }
           sx={{ minWidth: 150 }}
         >

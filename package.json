@@ -71,7 +71,7 @@
     "@inquirer/prompts": "8.1.0",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.11",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.60",
-    "@mui/internal-code-infra": "0.0.3-canary.86",
+    "@mui/internal-code-infra": "0.0.3-canary.87",
     "@mui/internal-markdown": "2.0.14",
     "@mui/internal-netlify-cache": "0.0.2-canary.1",
     "@mui/internal-test-utils": "catalog:",

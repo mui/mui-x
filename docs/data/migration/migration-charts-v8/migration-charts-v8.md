@@ -362,7 +362,7 @@ const hasFocusedItem = focusedItem !== null;
 
 In v9 the argument of `SeriesItemIdentifier` is now required.
 
-It accept an union of series types.
+It accepts an union of series types.
 For example:
 
 - `SeriesItemIdentifier<'bar'>` for a BarChart.

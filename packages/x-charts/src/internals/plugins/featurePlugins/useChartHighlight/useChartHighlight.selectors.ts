@@ -10,9 +10,9 @@ import { type UseChartHighlightSignature } from './useChartHighlight.types';
 import {
   getSeriesHighlightedDataIndex,
   getSeriesUnfadedDataIndex,
-  isBatchRenderingSeriesType,
   isSeriesFaded,
   isSeriesHighlighted,
+  isBatchRenderingSeriesType,
 } from './highlightStates';
 import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';

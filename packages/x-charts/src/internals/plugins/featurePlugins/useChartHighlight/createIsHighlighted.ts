@@ -1,8 +1,6 @@
-import type {
-  SeriesItemIdentifier,
-  ChartSeriesType,
-  HighlightScope,
-} from '../../../../models/seriesType';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import { type HighlightScope } from './highlightConfig.types';
+import { type SeriesItemIdentifier } from '../../../../models/seriesType';
 
 function alwaysFalse(): boolean {
   return false;

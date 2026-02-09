@@ -283,7 +283,7 @@ export interface DefaultizedSankeySeriesType extends DefaultizedProps<
   /**
    * Highlight scope for the series derived from nodeOptions and linksOptions
    */
-  highlightScope?: SankeyHighlightScope;
+  highlightScope: SankeyHighlightScope;
 }
 
 type SankeyNodeIdentifierBase = {

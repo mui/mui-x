@@ -8,7 +8,7 @@ import {
   BarChartPremium,
   RangeBarSeries,
 } from '@mui/x-charts-premium/BarChartPremium';
-import { RangeBarValueType } from '@mui/x-charts-premium/models';
+import { RangeBarValueType, HighlightScope } from '@mui/x-charts-premium/models';
 
 export default function RangeBarAnimation() {
   const [seriesNb, setSeriesNb] = React.useState(2);
@@ -72,7 +72,7 @@ export default function RangeBarAnimation() {
   );
 }
 
-const highlightScope = {
+const highlightScope: HighlightScope<'rangeBar'> = {
   highlight: 'series',
   fade: 'global',
 } as const;
