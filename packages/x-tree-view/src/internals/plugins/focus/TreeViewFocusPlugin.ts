@@ -1,19 +1,35 @@
 import { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
 import { expansionSelectors } from '../expansion';
 import { focusSelectors } from './selectors';
-import { itemsSelectors } from '../items';
+import { itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../items';
+import { TreeViewItemMeta } from '../../models';
 import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
 
 export class TreeViewFocusPlugin {
   private store: MinimalTreeViewStore<any, any>;
 
+  /**
+   * Cached previous value of `itemOrderedChildrenIdsLookup`.
+   * Used to find the removed item's sibling position when both meta and children
+   * are updated atomically (RichTreeView).
+   */
+  private lastChildrenIdsLookup: Record<string, TreeViewItemId[]>;
+
   // We can't type `store`, otherwise we get the following TS error:
   // 'focus' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
   constructor(store: any) {
     this.store = store;
+    this.lastChildrenIdsLookup = store.state.itemOrderedChildrenIdsLookup;
+
+    // Cache the previous children ordering for use when detecting item removal.
+    // Must be registered before the meta effect so it fires first on atomic updates.
+    this.store.registerStoreEffect(itemsSelectors.itemOrderedChildrenIdsLookup, (prev) => {
+      this.lastChildrenIdsLookup = prev;
+    });
 
     // Whenever the items change, we need to ensure the focused item is still present.
-    this.store.registerStoreEffect(itemsSelectors.itemMetaLookup, () => {
+    // If the focused item was removed, focus the closest neighbor instead of the first item.
+    this.store.registerStoreEffect(itemsSelectors.itemMetaLookup, (previousMetaLookup) => {
       const focusedItemId = focusSelectors.focusedItemId(store.state);
       if (focusedItemId == null) {
         return;
@@ -24,15 +40,76 @@ export class TreeViewFocusPlugin {
         return;
       }
 
-      const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
-      if (defaultFocusableItemId == null) {
+      const closestItemId = this.getClosestFocusableItem(focusedItemId, previousMetaLookup);
+
+      if (closestItemId == null) {
         this.setFocusedItemId(null);
         return;
       }
 
-      this.applyItemFocus(null, defaultFocusableItemId);
+      this.applyItemFocus(null, closestItemId);
     });
   }
+
+  /**
+   * Find the closest focusable item to the removed item.
+   * Priority: next sibling > previous sibling > parent > default focusable item.
+   */
+  private getClosestFocusableItem = (
+    removedItemId: TreeViewItemId,
+    previousMetaLookup: Record<string, TreeViewItemMeta>,
+  ): TreeViewItemId | null => {
+    const removedMeta = previousMetaLookup[removedItemId];
+    if (!removedMeta) {
+      return focusSelectors.defaultFocusableItemId(this.store.state);
+    }
+
+    const parentKey = removedMeta.parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+
+    // Try the current children first: in SimpleTreeView, the children ordering
+    // is updated separately from the meta, so the removed item may still appear
+    // in the current children list.
+    // Fall back to the cached previous children for RichTreeView where both
+    // meta and children are updated atomically.
+    const currentChildren = this.store.state.itemOrderedChildrenIdsLookup[parentKey] ?? [];
+    let siblingIds: TreeViewItemId[];
+    let removedIndex: number;
+
+    if (currentChildren.includes(removedItemId)) {
+      siblingIds = currentChildren;
+      removedIndex = currentChildren.indexOf(removedItemId);
+    } else {
+      siblingIds = this.lastChildrenIdsLookup[parentKey] ?? [];
+      removedIndex = siblingIds.indexOf(removedItemId);
+    }
+
+    if (removedIndex === -1) {
+      return focusSelectors.defaultFocusableItemId(this.store.state);
+    }
+
+    // Scan forward first (next siblings), then backward (previous siblings).
+    for (let i = removedIndex + 1; i < siblingIds.length; i += 1) {
+      if (itemsSelectors.canItemBeFocused(this.store.state, siblingIds[i])) {
+        return siblingIds[i];
+      }
+    }
+
+    for (let i = removedIndex - 1; i >= 0; i -= 1) {
+      if (itemsSelectors.canItemBeFocused(this.store.state, siblingIds[i])) {
+        return siblingIds[i];
+      }
+    }
+
+    // No focusable siblings left — try the parent
+    if (
+      removedMeta.parentId != null &&
+      itemsSelectors.canItemBeFocused(this.store.state, removedMeta.parentId)
+    ) {
+      return removedMeta.parentId;
+    }
+
+    return focusSelectors.defaultFocusableItemId(this.store.state);
+  };
 
   private setFocusedItemId = (itemId: TreeViewItemId | null) => {
     const focusedItemId = focusSelectors.focusedItemId(this.store.state);
