@@ -26,7 +26,9 @@ export const PACKAGE_CONFIGS: Record<string, TranslatePackageConfig> = {
     englishVariableName: 'enUSLocaleText',
     localesDir: 'packages/x-charts/src/locales',
     excludeFiles: ['index.ts', 'enUS.ts'],
-    getLocaleVariableName: (localeCode) => `${localeCode}LocalText`,
+    getLocaleVariableName: (localeCode) =>
+      // Most locales use <localeCode>LocaleText; frFR is currently an outlier.
+      localeCode === 'frFR' ? `${localeCode}LocalText` : `${localeCode}LocaleText`,
   },
   'x-scheduler': {
     englishSource: 'packages/x-scheduler/src/translations/enUS.ts',
