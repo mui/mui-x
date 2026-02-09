@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import { BarItemIdentifier, HighlightScope } from '@mui/x-charts/models';
+import { BarItemIdentifier } from '@mui/x-charts/models';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
