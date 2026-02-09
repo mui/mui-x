@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridEventPriority, useGridNativeEventListener } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { serializeCellValue } from '../export/serializers/csvSerializer';

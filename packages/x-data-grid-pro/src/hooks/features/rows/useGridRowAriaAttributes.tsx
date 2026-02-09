@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GridTreeNode,
+  type GridTreeNode,
   useGridSelector,
   gridFilteredTopLevelRowCountSelector,
   GRID_ROOT_GROUP_ID,

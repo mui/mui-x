@@ -48,16 +48,14 @@ const Root = styled('div', {
     display: 'flex',
     width: 14,
     height: 14,
+    ['& > *']: {
+      width: '100%',
+      height: '100%',
+    },
     [`&.${labelMarkClasses.line}`]: {
       width: 16,
-      height: 'unset',
+      height: 8,
       alignItems: 'center',
-      [`.${labelMarkClasses.mask}`]: {
-        height: 4,
-        width: '100%',
-        borderRadius: 1,
-        overflow: 'hidden',
-      },
     },
     [`&.${labelMarkClasses.square}`]: {
       height: 13,
@@ -71,14 +69,6 @@ const Root = styled('div', {
     },
     svg: {
       display: 'block',
-    },
-    [`& .${labelMarkClasses.mask} > *`]: {
-      height: '100%',
-      width: '100%',
-    },
-    [`& .${labelMarkClasses.mask}`]: {
-      height: '100%',
-      width: '100%',
     },
   };
 });
@@ -105,19 +95,34 @@ const ChartsLabelMark = consumeThemeProps(
         ref={ref}
         {...other}
       >
-        <div className={classes?.mask}>
-          {typeof Component === 'function' ? (
-            <Component className={classes?.fill} color={color} />
-          ) : (
-            <svg viewBox="0 0 24 24" preserveAspectRatio={type === 'line' ? 'none' : undefined}>
-              {type === 'circle' ? (
-                <circle className={classes?.fill} r="12" cx="12" cy="12" fill={color} />
-              ) : (
-                <rect className={classes?.fill} width="24" height="24" fill={color} />
-              )}
-            </svg>
-          )}
-        </div>
+        {typeof Component === 'function' ? (
+          <Component className={classes?.fill} color={color} />
+        ) : (
+          <React.Fragment>
+            {type === 'circle' && (
+              <svg viewBox="0 0 15 15">
+                <circle className={classes?.fill} r="7.5" cx="7.5" cy="7.5" fill={color} />
+              </svg>
+            )}
+            {type === 'line' && (
+              <svg viewBox="0 0 16 8" preserveAspectRatio="none">
+                <path
+                  className={classes?.fill}
+                  d="M 2 4 L 14 4"
+                  stroke={color}
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </svg>
+            )}
+            {type !== 'line' && type !== 'circle' && (
+              <svg viewBox="0 0 13 13">
+                <rect className={classes?.fill} width="13" height="13" fill={color} />
+              </svg>
+            )}
+          </React.Fragment>
+        )}
       </Root>
     );
   },

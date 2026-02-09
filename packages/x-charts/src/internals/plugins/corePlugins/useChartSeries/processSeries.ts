@@ -2,12 +2,13 @@ import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { type AllSeriesType } from '../../../../models/seriesType';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
-import { type ChartSeriesConfig, type SeriesProcessorParams } from '../../models/seriesConfig';
+import { type ChartSeriesConfig, type SeriesProcessorParams } from '../useChartSeriesConfig';
 import {
   type DefaultizedSeriesGroups,
   type ProcessedSeries,
   type SeriesLayout,
 } from './useChartSeries.types';
+import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';
 
 /**
  * This method groups series by type and adds defaultized values such as the ids and colors.
@@ -64,6 +65,7 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
   defaultizedSeries: DefaultizedSeriesGroups<TSeriesType>,
   seriesConfig: ChartSeriesConfig<TSeriesType>,
   dataset?: Readonly<DatasetType>,
+  isItemVisible?: IsItemVisibleFunction,
 ): ProcessedSeries<TSeriesType> => {
   const processedSeries: ProcessedSeries<TSeriesType> = {};
 
@@ -71,7 +73,8 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
   (Object.keys(seriesConfig) as TSeriesType[]).forEach((type) => {
     const group = defaultizedSeries[type];
     if (group !== undefined) {
-      processedSeries[type] = seriesConfig[type]?.seriesProcessor?.(group, dataset) ?? group;
+      processedSeries[type] =
+        seriesConfig[type]?.seriesProcessor?.(group, dataset, isItemVisible) ?? group;
     }
   });
 
@@ -102,7 +105,7 @@ export const applySeriesLayout = <TSeriesType extends ChartSeriesType>(
 
       if (newValue && newValue !== processedSeries[type]) {
         processingDetected = true;
-        (seriesLayout as any)[type] = newValue;
+        seriesLayout[type] = newValue;
       }
     }
   });

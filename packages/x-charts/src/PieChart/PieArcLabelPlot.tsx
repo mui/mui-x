@@ -60,9 +60,12 @@ export interface PieArcLabelPlotProps
       | 'paddingAngle'
       | 'arcLabel'
       | 'arcLabelMinAngle'
-      | 'id'
     >,
     ComputedPieRadius {
+  /**
+   * The id of this series.
+   */
+  seriesId: string;
   /**
    * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
@@ -94,7 +97,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     data,
     faded = { additionalRadius: -5 },
     highlighted,
-    id,
+    seriesId,
     innerRadius,
     outerRadius,
     paddingAngle = 0,
@@ -110,7 +113,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     arcLabelRadius,
     cornerRadius,
     paddingAngle,
-    id,
+    id: seriesId,
     highlighted,
     faded,
     data,
@@ -134,7 +137,8 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
           outerRadius={item.outerRadius}
           arcLabelRadius={item.arcLabelRadius}
           cornerRadius={item.cornerRadius}
-          id={id}
+          hidden={item.hidden}
+          seriesId={seriesId}
           color={item.color}
           isFaded={item.isFaded}
           isHighlighted={item.isHighlighted}
@@ -219,7 +223,7 @@ PieArcLabelPlot.propTypes = {
   /**
    * The id of this series.
    */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The radius between circle center and the beginning of the arc.
    * @default 0

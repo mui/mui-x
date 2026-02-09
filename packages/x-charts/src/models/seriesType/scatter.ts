@@ -88,4 +88,5 @@ export interface DefaultizedScatterSeriesType extends DefaultizedProps<
   CommonDefaultizedProps | 'color' | 'markerSize'
 > {
   preview: MakeRequired<NonNullable<ScatterSeriesType['preview']>, 'markerSize'>;
+  hidden: boolean;
 }

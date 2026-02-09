@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "apiRef": {
-      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useRichTreeViewProApiRef()</code>."
+      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useRichTreeViewApiProRef()</code>."
     },
     "canMoveItemToNewPosition": {
       "description": "Used to determine if a given item can move to some new position.",
@@ -45,6 +45,9 @@
       "description": "Whether the items should be focusable when disabled."
     },
     "disableSelection": { "description": "Whether selection is disabled." },
+    "domStructure": {
+      "description": "When equal to &#39;flat&#39;, the tree is rendered as a flat list (children are rendered as siblings of their parents). When equal to &#39;nested&#39;, the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children). Nested DOM structure is not compatible with collapse / expansion animations."
+    },
     "expandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
@@ -108,6 +111,9 @@
     },
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
+    },
+    "itemHeight": {
+      "description": "Sets the height in pixel of an item. If not provided, no height restriction is applied to the tree item content element."
     },
     "itemsReordering": {
       "description": "If <code>true</code>, the reordering of items is enabled."
@@ -219,6 +225,9 @@
     "slots": { "description": "Overridable component slots." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "virtualization": {
+      "description": "Whether virtualization is enabled. If true, the DOM structure will be set to &#39;flat&#39;. If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization."
     }
   },
   "classDescriptions": {

@@ -1,5 +1,5 @@
-import { GridValidRowModel } from './gridRows';
-import { GridCellParams } from './params/gridCellParams';
+import type { GridValidRowModel } from './gridRows';
+import type { GridCellParams } from './params/gridCellParams';
 
 /**
  * A function used to process cellClassName params.

@@ -26,14 +26,20 @@ export function HeatmapTooltipContent(props: HeatmapTooltipContentProps) {
 
   const tooltipData = useItemTooltip<'heatmap'>();
 
-  if (!tooltipData || !heatmapSeries || heatmapSeries.seriesOrder.length === 0) {
+  const dataIndex = tooltipData?.identifier.dataIndex;
+  if (
+    !tooltipData ||
+    dataIndex === undefined ||
+    !heatmapSeries ||
+    heatmapSeries.seriesOrder.length === 0
+  ) {
     return null;
   }
 
   const { series, seriesOrder } = heatmapSeries;
   const seriesId = seriesOrder[0];
 
-  const { color, value, identifier, markType } = tooltipData;
+  const { color, value, markType } = tooltipData;
 
   const [xIndex, yIndex] = value;
 
@@ -45,9 +51,7 @@ export function HeatmapTooltipContent(props: HeatmapTooltipContentProps) {
   const formattedY =
     yAxis.valueFormatter?.(yAxis.data![yIndex], { location: 'tooltip', scale: yAxis.scale }) ??
     yAxis.data![yIndex].toLocaleString();
-  const formattedValue = series[seriesId].valueFormatter(value, {
-    dataIndex: identifier.dataIndex,
-  });
+  const formattedValue = series[seriesId].valueFormatter(value, { dataIndex });
 
   const seriesLabel = getLabel(series[seriesId].label, 'tooltip');
 

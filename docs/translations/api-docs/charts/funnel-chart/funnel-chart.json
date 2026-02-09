@@ -14,12 +14,18 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hiddenItems": {
+      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+    },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "initialHiddenItems": {
+      "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
@@ -36,6 +42,15 @@
         "data": {
           "name": "data",
           "description": "The data about the clicked axis and items associated with it."
+        }
+      }
+    },
+    "onHiddenItemsChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenItems": {
+          "name": "hiddenItems",
+          "description": "The new list of hidden identifiers."
         }
       }
     },
@@ -58,6 +73,12 @@
         }
       }
     },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
     "series": {
       "description": "The series to display in the funnel chart. An array of <a href='/x/api/charts/funnel-series/'>FunnelSeries</a> objects."
     },
@@ -66,6 +87,7 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
@@ -84,6 +106,8 @@
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "toolbar": "Custom component for the toolbar.",
-    "tooltip": "Custom component for the tooltip popper."
+    "tooltip": "Custom component for the tooltip popper.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis."
   }
 }

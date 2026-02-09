@@ -31,17 +31,34 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
     });
   });
 
+  const handlePointerEnter = useEventCallback(function handlePointerEnter(
+    event: React.PointerEvent,
+  ) {
+    store.set('interaction', {
+      ...store.state.interaction,
+      pointerType: event.pointerType,
+    });
+  });
+  const handlePointerLeave = useEventCallback(function handlePointerLeave() {
+    store.set('interaction', {
+      ...store.state.interaction,
+      pointerType: null,
+    });
+  });
+
   return {
     instance: {
       cleanInteraction,
       setLastUpdateSource,
       setPointerCoordinate,
+      handlePointerEnter,
+      handlePointerLeave,
     },
   };
 };
 
 useChartInteraction.getInitialState = () => ({
-  interaction: { item: null, pointer: null, lastUpdate: 'pointer' },
+  interaction: { item: null, pointer: null, lastUpdate: 'pointer', pointerType: null },
 });
 
 useChartInteraction.params = {};

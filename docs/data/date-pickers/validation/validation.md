@@ -208,7 +208,7 @@ The `maxDateTime` prop prevents the selection of all values after `props.maxDate
 {{"demo": "DateTimeValidationMaxDateTime.js", "defaultCodeOpen": false}}
 
 :::warning
-If you want to set time boundaries independent of the date, use the [`time boundaries`](#set-time-boundaries) instead.
+If you want to set time boundaries independent of the date, use the [`time boundaries`](#minimum-and-maximum-time) instead.
 
 For now, you cannot use `maxDateTime` and `maxTime` together.
 `maxDateTime` will override the `maxTime` behavior, and the same goes for `minDateTime` and `minTime`.

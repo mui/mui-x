@@ -2,9 +2,9 @@ import * as React from 'react';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import {
   DataGrid,
-  DataGridProps,
-  GridRowsProp,
-  GridColDef,
+  type DataGridProps,
+  type GridRowsProp,
+  type GridColDef,
   gridClasses,
   gridColumnLookupSelector,
 } from '@mui/x-data-grid';

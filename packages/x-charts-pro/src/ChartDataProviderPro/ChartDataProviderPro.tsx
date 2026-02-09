@@ -7,6 +7,8 @@ import {
   type ChartAnyPluginSignature,
   type ChartProviderProps,
   ChartsSlotsProvider,
+  type ChartSeriesConfig,
+  defaultSeriesConfig,
 } from '@mui/x-charts/internals';
 import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
@@ -22,6 +24,10 @@ import { useChartDataProviderProProps } from './useChartDataProviderProProps';
 const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-pro';
 
+export interface ChartDataProviderProSlots extends ChartsSlotsPro {}
+
+export interface ChartDataProviderProSlotProps extends ChartsSlotPropsPro {}
+
 export type ChartDataProviderProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
@@ -30,12 +36,15 @@ export type ChartDataProviderProProps<
     /**
      * Slots to customize charts' components.
      */
-    slots?: Partial<ChartsSlotsPro>;
+    slots?: Partial<ChartDataProviderProSlots>;
     /**
      * The props for the slots.
      */
-    slotProps?: Partial<ChartsSlotPropsPro>;
+    slotProps?: Partial<ChartDataProviderProSlotProps>;
   };
+
+export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> =
+  defaultSeriesConfig;
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -48,7 +57,7 @@ export type ChartDataProviderProProps<
  *
  * API:
  *
- * - [ChartDataProviderPro API](https://mui.com/x/api/charts/chart-data-provider/)
+ * - [ChartDataProviderPro API](https://mui.com/x/api/charts/chart-data-provider-pro/)
  *
  * @example
  * ```jsx
@@ -71,6 +80,7 @@ function ChartDataProviderPro<
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartDataProviderProProps({
       ...props,
+      seriesConfig: props.seriesConfig ?? defaultSeriesConfigPro,
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 

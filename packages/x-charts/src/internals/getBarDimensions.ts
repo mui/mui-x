@@ -1,6 +1,6 @@
-import type { ScaleName, ChartsXAxisProps, ChartsYAxisProps } from '../models';
-import type { ComputedAxis } from '../models/axis';
+import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
+import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
 
 function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number, reverse: boolean) {
@@ -50,17 +50,27 @@ export function getBarDimensions(params: {
     return null;
   }
 
-  const values = series.stackedData[dataIndex];
+  const values = series.visibleStackedData[dataIndex];
   const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-  const minValueCoord = Math.round(Math.min(...valueCoordinates));
-  const maxValueCoord = Math.round(Math.max(...valueCoordinates));
+  const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
 
-  const barSize =
-    seriesValue === 0 ? 0 : Math.max(series.minBarSize, maxValueCoord - minValueCoord);
-  const startCoordinate = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse)
-    ? maxValueCoord - barSize
-    : minValueCoord;
+  let barSize = 0;
+  if (seriesValue !== 0) {
+    if (!series.hidden) {
+      barSize = Math.max(series.minBarSize, maxValueCoord - minValueCoord);
+    }
+  }
+
+  const shouldInvert = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse);
+
+  let startCoordinate = 0;
+
+  if (shouldInvert) {
+    startCoordinate = maxValueCoord - barSize;
+  } else {
+    startCoordinate = minValueCoord;
+  }
 
   return {
     x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,

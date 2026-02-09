@@ -7,17 +7,27 @@ import {
   type ChartAnyPluginSignature,
   type ChartProviderProps,
   ChartsSlotsProvider,
-  defaultSlotsMaterial,
+  type ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
+import { defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import {
+  type ChartsSlotPropsPro,
+  type ChartsSlotsPro,
+  defaultSeriesConfigPro,
+} from '@mui/x-charts-pro/internals';
 import { type ChartDataProviderProProps } from '@mui/x-charts-pro/ChartDataProviderPro';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '@mui/x-charts-pro/internals';
+import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderPremiumProps } from './useChartDataProviderPremiumProps';
 
 const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-premium';
+
+export interface ChartDataProviderPremiumSlots extends ChartsSlotsPro {}
+
+export interface ChartDataProviderPremiumSlotProps extends ChartsSlotPropsPro {}
 
 export type ChartDataProviderPremiumProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
@@ -27,12 +37,19 @@ export type ChartDataProviderPremiumProps<
     /**
      * Slots to customize charts' components.
      */
-    slots?: Partial<ChartsSlotsPro>;
+    slots?: Partial<ChartDataProviderPremiumSlots>;
     /**
      * The props for the slots.
      */
-    slotProps?: Partial<ChartsSlotPropsPro>;
+    slotProps?: Partial<ChartDataProviderPremiumSlotProps>;
   };
+
+export const defaultSeriesConfigPremium: ChartSeriesConfig<
+  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie'
+> = {
+  ...defaultSeriesConfigPro,
+  rangeBar: rangeBarSeriesConfig,
+};
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -45,11 +62,11 @@ export type ChartDataProviderPremiumProps<
  *
  * API:
  *
- * - [ChartDataProviderPro API](https://mui.com/x/api/charts/chart-data-provider/)
+ * - [ChartDataProviderPremium API](https://mui.com/x/api/charts/chart-data-provider-premium/)
  *
  * @example
  * ```jsx
- * <ChartDataProviderPro
+ * <ChartDataProviderPremium
  *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
  *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
  * >
@@ -58,7 +75,7 @@ export type ChartDataProviderPremiumProps<
  *      <ChartsXAxis axisId="x-axis" />
  *   </ChartsSurface>
  *   {'Custom Legend Component'}
- * </ChartDataProviderPro>
+ * </ChartDataProviderPremium>
  * ```
  */
 function ChartDataProviderPremium<
@@ -68,6 +85,7 @@ function ChartDataProviderPremium<
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartDataProviderPremiumProps({
       ...props,
+      seriesConfig: props.seriesConfig ?? defaultSeriesConfigPremium,
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 

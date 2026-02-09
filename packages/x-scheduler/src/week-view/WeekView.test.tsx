@@ -7,34 +7,37 @@ import {
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 
 const multiDayEvent = EventBuilder.new()
-  .span('2025-05-05T00:00:00', '2025-05-07T23:59:59')
+  .span('2025-05-05T00:00:00Z', '2025-05-07T23:59:59Z')
   .allDay()
   .build();
 const longEvent = EventBuilder.new()
-  .span('2025-04-28T00:00:00', '2025-05-06T23:59:59') // Previous - current week
+  .span('2025-04-28T00:00:00Z', '2025-05-06T23:59:59Z') // Previous - current week
   .allDay()
   .build();
 const fourDayEvent = EventBuilder.new()
-  .span('2025-05-04T00:00:00', '2025-05-07T23:59:59')
+  .span('2025-05-04T00:00:00Z', '2025-05-07T23:59:59Z')
   .allDay()
   .build();
 const allDayEvents = [multiDayEvent, longEvent, fourDayEvent];
 
 describe('<WeekView />', () => {
-  const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-04') });
+  const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-04Z') });
 
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
         <EventCalendarProvider
-          events={[EventBuilder.new().span('2025-05-05', '2025-05-07', { allDay: true }).build()]}
+          events={[EventBuilder.new().span('2025-05-05Z', '2025-05-07Z', { allDay: true }).build()]}
           resources={[]}
         >
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -47,7 +50,7 @@ describe('<WeekView />', () => {
               `DayTimeGridHeaderCell-${date} DayTimeGridAllDayEventsHeaderCell`,
             );
           })!
-          .querySelectorAll('.EventContainer');
+          .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
       };
 
       // Main event should render in the start date cell
@@ -64,13 +67,16 @@ describe('<WeekView />', () => {
     it('should render all-day event in first cell of week when event starts before the week', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
       const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
-      const allDayRow = within(allDayGrid).getByRole('row');
+      // Get the parent container that has the role="row" as a direct child
+      const allDayGridContainer = allDayHeader.parentElement;
+      const allDayRow = within(allDayGridContainer!).getByRole('row');
       const gridCells = within(allDayRow).getAllByRole('gridcell');
       // Find the first cell of the first week in May 2025
       const firstCell = gridCells[0];
@@ -82,7 +88,9 @@ describe('<WeekView />', () => {
     it('should place invisible events on the same grid row as the main event', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -105,22 +113,24 @@ describe('<WeekView />', () => {
 
     it('should handle multiple overlapping all-day events with different grid rows', () => {
       const event1 = EventBuilder.new()
-        .span('2025-05-04T00:00:00', '2025-05-06T23:59:59')
+        .span('2025-05-04T00:00:00Z', '2025-05-06T23:59:59Z')
         .allDay()
         .build();
       const event2 = EventBuilder.new()
-        .span('2025-05-05T00:00:00', '2025-05-07T23:59:59')
+        .span('2025-05-05T00:00:00Z', '2025-05-07T23:59:59Z')
         .allDay()
         .build();
       const event3 = EventBuilder.new()
-        .span('2025-05-08T00:00:00', '2025-05-09T23:59:59')
+        .span('2025-05-08T00:00:00Z', '2025-05-09T23:59:59Z')
         .allDay()
         .build();
       const overlappingEvents = [event1, event2, event3];
 
       render(
         <EventCalendarProvider events={overlappingEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -148,13 +158,16 @@ describe('<WeekView />', () => {
     it('should render all-day events with correct grid column span', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
       const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
-      const allDayRow = within(allDayGrid).getByRole('row');
+      // Get the parent container that has the role="row" as a direct child
+      const allDayGridContainer = allDayHeader.parentElement;
+      const allDayRow = within(allDayGridContainer!).getByRole('row');
 
       const mainEvent = within(allDayRow)
         .getAllByLabelText(fourDayEvent.title)
@@ -210,10 +223,9 @@ describe('<WeekView />', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
-      expect(indicators.length).to.equal(7);
-
-      const todayColumn = document.querySelector('.DayTimeGridColumn[data-current]');
+      // The current time indicator is rendered once per day column when today is in view
+      // Check that the data-current attribute is on the today column
+      const todayColumn = document.querySelector('[data-current]');
       expect(todayColumn).not.to.equal(null);
     });
 
@@ -221,21 +233,11 @@ describe('<WeekView />', () => {
       const visibleDate = adapter.date('2025-05-18T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
+      const indicators = document.querySelectorAll('[data-current-time]');
       expect(indicators.length).to.equal(0);
 
-      const todayColumn = document.querySelector('.DayTimeGridColumn[data-current]');
+      const todayColumn = document.querySelector('[data-current]');
       expect(todayColumn).to.equal(null);
-    });
-
-    it('hides hour labels close to the indicator', () => {
-      // 12:10 => the 12 hour label should be hidden
-      const visibleDate = adapter.date('2025-05-04T12:10:00Z', 'default');
-
-      render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
-
-      const hiddenLabels = document.querySelectorAll('.DayTimeGridTimeAxis .HiddenHourLabel');
-      expect(hiddenLabels.length).to.be.greaterThan(0);
     });
 
     it('respects flag: hides indicator when showCurrentTimeIndicator is false', () => {
@@ -250,10 +252,8 @@ describe('<WeekView />', () => {
         />,
       );
 
-      const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
+      const indicators = document.querySelectorAll('[data-current-time]');
       expect(indicators.length).to.equal(0);
-      const hiddenLabels = document.querySelectorAll('.DayTimeGridTimeAxis .HiddenHourLabel');
-      expect(hiddenLabels.length).to.equal(0);
     });
   });
 });

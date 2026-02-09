@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
@@ -10,7 +10,7 @@ import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiCon
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type Position = 'vertical' | 'horizontal';
 type OwnerState = DataGridProcessedProps;
@@ -39,7 +39,10 @@ const useUtilityClasses = (ownerState: OwnerState, position: Position) => {
 // don't have a method to find the required size for scrollbars on those platforms.
 export const scrollbarSizeCssExpression = 'calc(max(var(--DataGrid-scrollbarSize), 14px))';
 
-const Scrollbar = styled('div')({
+const Scrollbar = styled('div', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   position: 'absolute',
   display: 'inline-block',
   zIndex: 60,
@@ -49,7 +52,9 @@ const Scrollbar = styled('div')({
   '--size': scrollbarSizeCssExpression,
 });
 
-const ScrollbarVertical = styled(Scrollbar)({
+const ScrollbarVertical = styled(Scrollbar, {
+  slot: 'internal',
+})({
   width: 'var(--size)',
   height:
     'calc(var(--DataGrid-hasScrollY) * (100% - var(--DataGrid-headersTotalHeight) - var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize)))',
@@ -64,7 +69,9 @@ const ScrollbarVertical = styled(Scrollbar)({
   right: 0,
 });
 
-const ScrollbarHorizontal = styled(Scrollbar)({
+const ScrollbarHorizontal = styled(Scrollbar, {
+  slot: 'internal',
+})({
   width:
     'calc(var(--DataGrid-hasScrollX) * (100% - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize)))',
   height: 'var(--size)',
@@ -78,7 +85,9 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   bottom: 0,
 });
 
-export const ScrollbarCorner = styled(Scrollbar)({
+export const ScrollbarCorner = styled(Scrollbar, {
+  slot: 'internal',
+})({
   width: 'var(--size)',
   height: 'var(--size)',
   right: 0,

@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/d9cf3df228aa4a3e7a7b1663bad0d7167f40d22c/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/547089c282f363442b7ac6852b9dd0897bae91ee/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -176,6 +176,8 @@ jobs:
           name: '`pnpm @mui/x-charts-vendor build` was run?'
           command: |
             # #target-branch-reference
+            # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
+            # For example, when creating v9 from v8, `master -> v8.x`
             if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
             then
               echo "No changes to dependencies detected. Skipping..."

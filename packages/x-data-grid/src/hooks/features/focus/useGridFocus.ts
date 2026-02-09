@@ -1,28 +1,29 @@
 'use client';
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { gridClasses } from '../../../constants/gridClasses';
-import { GridEventListener, GridEventLookup } from '../../../models/events';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridFocusApi, GridFocusPrivateApi } from '../../../models/api/gridFocusApi';
-import { GridCellParams } from '../../../models/params/gridCellParams';
+import type { GridEventListener, GridEventLookup } from '../../../models/events';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridFocusApi, GridFocusPrivateApi } from '../../../models/api/gridFocusApi';
+import type { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridEvent } from '../../utils/useGridEvent';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { isNavigationKey } from '../../../utils/keyboardUtils';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { isNavigationKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridFocusCellSelector,
   gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { doesSupportPreventScroll } from '../../../utils/doesSupportPreventScroll';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
-import { GridCellCoordinates } from '../../../models/gridCell';
+import type { GridCellCoordinates } from '../../../models/gridCell';
 import type { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 
@@ -66,6 +67,51 @@ export const useGridFocus = (
     (id, field) => {
       const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === id && focusedCell?.field === field) {
+        /**
+         * Check if the state matches the actual DOM focus. They can get out of sync after `updateRows()` remounts the cell.
+         */
+        if (apiRef.current.getCellMode(id, field) !== 'view') {
+          return;
+        }
+
+        const cellElement = apiRef.current.getCellElement(id, field);
+        if (!cellElement) {
+          return;
+        }
+
+        const gridRoot = apiRef.current.rootElementRef!.current;
+        const doc = ownerDocument(gridRoot);
+        const activeElement = doc.activeElement;
+
+        // We can take focus if:
+        // - Focus is inside the grid, OR
+        // - Focus is "lost" (on body/documentElement/null, e.g., after cell remount during undo/redo)
+        // We should NOT take focus if it's intentionally outside the grid (e.g., in a Portal/Dialog).
+        // React synthetic events bubble through the React component tree, not the DOM tree,
+        // so events from Portal content can trigger this code even though focus is elsewhere.
+        // This avoids https://github.com/mui/mui-x/issues/21063
+        const allowTakingFocus =
+          !activeElement ||
+          activeElement === doc.body ||
+          activeElement === doc.documentElement ||
+          gridRoot?.contains(activeElement);
+
+        if (!allowTakingFocus) {
+          return;
+        }
+
+        if (cellElement.contains(doc.activeElement!)) {
+          return;
+        }
+
+        if (doesSupportPreventScroll()) {
+          cellElement.focus({ preventScroll: true });
+        } else {
+          const scrollPosition = apiRef.current.getScrollPosition();
+          cellElement.focus();
+          apiRef.current.scroll(scrollPosition);
+        }
+
         return;
       }
 
@@ -280,6 +326,7 @@ export const useGridFocus = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (
+        isPasteShortcut(event) ||
         event.key === 'Enter' ||
         event.key === 'Tab' ||
         event.key === 'Shift' ||

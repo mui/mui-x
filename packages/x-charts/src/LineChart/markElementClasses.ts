@@ -22,8 +22,7 @@ export interface MarkElementClasses {
 export type MarkElementClassKey = keyof MarkElementClasses;
 
 export interface MarkElementOwnerState {
-  id: SeriesId;
-  color: string;
+  seriesId: SeriesId;
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<MarkElementClasses>;
@@ -43,11 +42,11 @@ export const markElementClasses: MarkElementClasses = generateUtilityClasses('Mu
 ]);
 
 export const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted, skipAnimation } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
     root: [
       'root',
-      `series-${id}`,
+      `series-${seriesId}`,
       isHighlighted && 'highlighted',
       isFaded && 'faded',
       skipAnimation ? undefined : 'animate',

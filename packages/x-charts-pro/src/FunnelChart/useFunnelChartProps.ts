@@ -56,7 +56,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
     id: direction === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY,
     ...categoryAxis,
     ...(categoryAxis?.size ? { [isHorizontal ? 'height' : 'width']: categoryAxis.size } : {}),
-    position: (categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none')) as any,
+    position: categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none'),
   };
 
   // If the scaleType is not defined or is 'band', our job is simple.

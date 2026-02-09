@@ -1,4 +1,4 @@
 <ScatterChart
   series={[{ data, label: 'pv', id: 'pvId' }]}
-  xAxis={[{ min: 0 }]}
+  xAxis={[{ min: 0, height: 28 }]}
 />

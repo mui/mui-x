@@ -2,11 +2,18 @@ import {
   type AxisId,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  useBarPlotData,
+  type SeriesProcessorResult,
   useStore,
 } from '@mui/x-charts/internals';
-import { type ChartDrawingArea } from '@mui/x-charts/hooks';
+import {
+  type ChartDrawingArea,
+  useBarSeriesContext,
+  useChartId,
+  useXAxes,
+  useYAxes,
+} from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
+import { processBarDataForPlot } from '@mui/x-charts/internals';
 import { type PreviewPlotProps } from './PreviewPlot.types';
 
 interface BarPreviewPlotProps extends PreviewPlotProps {
@@ -36,7 +43,7 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
             return (
               <BarElement
                 key={dataIndex}
-                id={seriesId}
+                seriesId={seriesId}
                 dataIndex={dataIndex}
                 color={color}
                 skipAnimation
@@ -58,9 +65,40 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
 
 function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
-
   const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
   const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
+  const seriesData =
+    useBarSeriesContext() ??
+    ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
+  const defaultXAxisId = useXAxes().xAxisIds[0];
+  const defaultYAxisId = useYAxes().yAxisIds[0];
 
-  return useBarPlotData(drawingArea, xAxes, yAxes);
+  const chartId = useChartId();
+
+  const stackingGroups = seriesData.stackingGroups.filter((group) =>
+    group.ids.some((seriesId) => {
+      const series = seriesData.series[seriesId];
+      const xAxisId = series.xAxisId ?? defaultXAxisId;
+      const yAxisId = series.yAxisId ?? defaultYAxisId;
+      return xAxisId === axisId || yAxisId === axisId;
+    }),
+  );
+  const filteredSeries = Object.fromEntries(
+    Object.entries(seriesData.series).filter(([_, series]) => {
+      const xAxisId = series.xAxisId ?? defaultXAxisId;
+      const yAxisId = series.yAxisId ?? defaultYAxisId;
+      return xAxisId === axisId || yAxisId === axisId;
+    }),
+  );
+
+  return processBarDataForPlot(
+    drawingArea,
+    chartId,
+    stackingGroups,
+    filteredSeries,
+    xAxes,
+    yAxes,
+    defaultXAxisId,
+    defaultYAxisId,
+  );
 }

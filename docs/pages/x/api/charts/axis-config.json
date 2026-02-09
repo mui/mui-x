@@ -16,10 +16,13 @@
     "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
     "domainLimit": {
       "type": {
-        "description": "'nice' | 'strict' | ((min: number, max: number) =&gt; { min: number; max: number })"
+        "description": "'nice' | 'strict' | ((min: NumberValue, max: NumberValue) =&gt; { min: NumberValue; max: NumberValue })"
       }
     },
-    "height": { "type": { "description": "number" }, "default": "30" },
+    "height": {
+      "type": { "description": "number" },
+      "default": "45 if an axis label is provided, 25 otherwise."
+    },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },
     "label": { "type": { "description": "string" } },

@@ -10,9 +10,12 @@ export * from '@mui/x-tree-view/TreeItemProvider';
 export * from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 export * from '@mui/x-tree-view/TreeItemLabelInput';
 
-export { unstable_resetCleanupTracking } from '@mui/x-tree-view/internals';
-
 export * from '@mui/x-tree-view/models';
 export * from '@mui/x-tree-view/icons';
-export * from '@mui/x-tree-view/hooks';
+export {
+  useTreeItemUtils,
+  useTreeItemModel,
+  useApplyPropagationToSelectedItemsOnMount,
+  useTreeViewApiRef,
+} from '@mui/x-tree-view/hooks';
 export * from './hooks';

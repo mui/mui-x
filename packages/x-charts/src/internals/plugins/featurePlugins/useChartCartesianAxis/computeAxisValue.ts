@@ -1,4 +1,4 @@
-import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import { type ScaleBand, type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
 import { type ContinuousScaleName, type ScaleName } from '../../../../models';
 import {
@@ -24,7 +24,7 @@ import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import type { ChartDrawingArea } from '../../../../hooks';
-import { type ChartSeriesConfig } from '../../models/seriesConfig';
+import { type ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { type ComputedAxisConfig } from './useChartCartesianAxis.types';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { type ZoomData } from './zoom.types';
@@ -42,6 +42,18 @@ function getRange(
       : [drawingArea.top + drawingArea.height, drawingArea.top];
 
   return reverse ? [range[1], range[0]] : range;
+}
+
+function shouldIgnoreGapRatios(scale: ScaleBand<{ toString(): string }>, categoryGapRatio: number) {
+  const step = scale.step();
+
+  const paddingPx = step * categoryGapRatio;
+
+  /* If the padding is less than 0.1px, we consider it negligible and ignore it.
+   * This prevents issues where very small gaps cause rendering artifacts or unexpected layouts.
+   * A threshold of 0.1px is chosen as it's generally below the perceptible limit for most displays.
+   */
+  return paddingPx < 0.1;
 }
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
@@ -126,8 +138,10 @@ export function computeAxisValue<T extends ChartSeriesType>({
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
 
       if (isBandScale(scale) && isBandScaleConfig(axis)) {
-        const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-        const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
+        const desiredCategoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+        const ignoreGapRatios = shouldIgnoreGapRatios(scale, desiredCategoryGapRatio);
+        const categoryGapRatio = ignoreGapRatios ? 0 : desiredCategoryGapRatio;
+        const barGapRatio = ignoreGapRatios ? 0 : (axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO);
 
         completeAxis[axis.id] = {
           offset: 0,
@@ -137,7 +151,12 @@ export function computeAxisValue<T extends ChartSeriesType>({
           triggerTooltip,
           ...axis,
           data,
-          scale,
+          /* Doing this here is technically wrong, but acceptable in practice.
+           * In theory, this should be done in the normalized scale selector, but then we'd need that selector to depend
+           * on the zoom range, which would void its goal (which is to be independent of zoom).
+           * Since we only ignore gap ratios when they're practically invisible, the small errors caused by this
+           * discrepancy will hopefully not be noticeable. */
+          scale: ignoreGapRatios ? scale.copy().padding(0) : scale,
           tickNumber,
           colorScale:
             axis.colorMap &&

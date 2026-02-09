@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
+  type GridApi,
   useGridApiRef,
   DataGridPremium,
-  DataGridPremiumProps,
-  GridColDef,
+  type DataGridPremiumProps,
+  type GridColDef,
 } from '@mui/x-data-grid-premium';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { SinonSpy, spy, stub, SinonStub } from 'sinon';
+import { type SinonSpy, spy, stub, type SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -634,7 +634,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(processRowUpdateSpy.args[0]).to.deep.equal([
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
-        { rowId: '1' },
+        { rowId: 1 },
       ]);
     });
 
@@ -801,17 +801,17 @@ describe('<DataGridPremium /> - Clipboard', () => {
         [
           { id: 0, currencyPair: '12', price1M: '12' }, // new row
           { id: 0, currencyPair: 'USDGBP', price1M: 1 }, // old row
-          { rowId: '0' }, // row id
+          { rowId: 0 }, // row id
         ],
         [
           { id: 1, currencyPair: '12', price1M: '12' }, // new row
           { id: 1, currencyPair: 'USDEUR', price1M: 11 }, // old row
-          { rowId: '1' }, // row id
+          { rowId: 1 }, // row id
         ],
         [
           { id: 2, currencyPair: '12', price1M: '12' }, // new row
           { id: 2, currencyPair: 'GBPEUR', price1M: 21 }, // old row
-          { rowId: '2' }, // row id
+          { rowId: 2 }, // row id
         ],
       ]);
     });

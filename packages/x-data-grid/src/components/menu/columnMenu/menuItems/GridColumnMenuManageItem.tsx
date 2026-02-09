@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
-import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
+import type { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
 function GridColumnMenuManageItem(props: GridColumnMenuItemProps) {

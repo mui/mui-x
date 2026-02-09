@@ -25,10 +25,9 @@ import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasIntera
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
   store,
-  seriesConfig,
-  svgRef,
   instance,
 }) => {
+  const { svgRef } = instance;
   const { rotationAxis, radiusAxis, dataset } = params;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -69,7 +68,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       rotation: defaultizeAxis(rotationAxis, dataset, 'rotation'),
       radius: defaultizeAxis(radiusAxis, dataset, 'radius'),
     });
-  }, [seriesConfig, drawingArea, rotationAxis, radiusAxis, dataset, store]);
+  }, [drawingArea, rotationAxis, radiusAxis, dataset, store]);
 
   const svg2rotation = React.useMemo(
     () => generateSvg2rotation({ cx: center.cx, cy: center.cy }),

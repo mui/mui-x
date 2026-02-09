@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { vars } from '../../constants/cssVariables';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -7,28 +7,41 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { gridClasses } from '../../constants';
 
-const Filler = styled('div')({
+const Filler = styled('div', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   display: 'flex',
   flexDirection: 'row',
   width: 'var(--DataGrid-rowWidth)',
   boxSizing: 'border-box',
 });
 
-const Pinned = styled('div')({
+const Pinned = styled('div', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   position: 'sticky',
   height: '100%',
   boxSizing: 'border-box',
   borderTop: '1px solid var(--rowBorderColor)',
   backgroundColor: vars.cell.background.pinned,
 });
-const PinnedLeft = styled(Pinned)({
+const PinnedLeft = styled(Pinned, {
+  slot: 'internal',
+})({
   left: 0,
 });
-const PinnedRight = styled(Pinned)({
+const PinnedRight = styled(Pinned, {
+  slot: 'internal',
+})({
   right: 0,
 });
 
-const Main = styled('div')({
+const Main = styled('div', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   flexGrow: 1,
   borderTop: '1px solid var(--rowBorderColor)',
 });

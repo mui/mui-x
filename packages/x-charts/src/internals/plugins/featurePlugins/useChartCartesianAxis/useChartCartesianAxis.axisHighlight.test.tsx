@@ -14,7 +14,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
   it('should call onHighlightedAxisChange when crossing any value', async () => {
     const onHighlightedAxisChange = vi.fn();
-    const { user } = render(
+    const { user, container } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
@@ -28,7 +28,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 75, clientY: 60 } }]);
 
@@ -72,7 +72,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
   it('should call onHighlightedAxisChange when axis got modified', async () => {
     const onHighlightedAxisChange = vi.fn();
-    const { user, setProps } = render(
+    const { user, setProps, container } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
@@ -86,7 +86,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 45, clientY: 60 } }]);
 
@@ -107,7 +107,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
   it('should not call onHighlightedAxisChange when axis got modified but highlighted item stay the same', async () => {
     const onHighlightedAxisChange = vi.fn();
-    const { user, setProps } = render(
+    const { user, setProps, container } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
@@ -121,7 +121,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
@@ -139,7 +139,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
   it('should call onHighlightedAxisChange when highlighted axis got removed', async () => {
     const onHighlightedAxisChange = vi.fn();
-    const { user, setProps } = render(
+    const { user, setProps, container } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
@@ -153,7 +153,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
@@ -173,7 +173,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   });
 
   it('should allow to highlight axes without data', async () => {
-    const { user } = render(
+    const { user, container } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
@@ -188,7 +188,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
     await waitFor(() => {
@@ -198,7 +198,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   });
 
   it('should allow to highlight axes with data', async () => {
-    const { user } = render(
+    const { user, container } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
@@ -213,7 +213,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
     await waitFor(() => {

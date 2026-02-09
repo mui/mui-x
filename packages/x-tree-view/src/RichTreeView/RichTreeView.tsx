@@ -1,20 +1,24 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import { lazyLoadingSelectors } from '../internals/plugins/useTreeViewLazyLoading';
+import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
+import { TreeViewValidItem } from '../models';
+import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
+import { itemsSelectors } from '../internals/plugins/items';
+import { useTreeViewStore } from '../internals/hooks/useTreeViewStore';
+import { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -67,12 +71,10 @@ type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefine
  * - [RichTreeView API](https://mui.com/x/api/tree-view/rich-tree-view/)
  */
 const RichTreeView = React.forwardRef(function RichTreeView<
-  R extends {},
+  R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined = undefined,
->(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
+>(inProps: RichTreeViewProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
-  const { slots, slotProps, ...other } = props;
-
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
       warnOnce([
@@ -83,24 +85,28 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView<RichTreeViewPluginSignatures, typeof props>({
-    plugins: RICH_TREE_VIEW_PLUGINS,
-    rootRef: ref,
-    props: other,
-  });
-  const isLoading = useStore(contextValue.store, lazyLoadingSelectors.isItemLoading, null);
-  const error = useStore(contextValue.store, lazyLoadingSelectors.itemError, null);
+  const {
+    slots: inSlots,
+    slotProps,
+    apiRef,
+    parameters,
+    forwardedProps,
+  } = useExtractRichTreeViewParameters(props);
 
+  // Context hooks
+  const store = useTreeViewStore(RichTreeViewStore, parameters);
+
+  // Ref hooks
+  const ref = React.useRef<HTMLUListElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, ref);
+
+  // Selector hooks
+  const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const error = useStore(store, lazyLoadingSelectors.itemError, null);
+
+  // Feature hooks
   const classes = useUtilityClasses(props);
-
-  const Root = slots?.root ?? RichTreeViewRoot;
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
-    className: classes.root,
-    getSlotProps: getRootProps,
-    ownerState: props as RichTreeViewProps<any, any>,
-  });
+  const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
@@ -112,14 +118,22 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 
   return (
     <TreeViewProvider
-      contextValue={contextValue}
+      store={store}
       classes={classes}
       slots={slots}
       slotProps={slotProps}
+      apiRef={apiRef}
+      rootRef={ref}
     >
-      <Root {...rootProps}>
-        <RichTreeViewItems slots={slots} slotProps={slotProps} />
-      </Root>
+      <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
+        <RichTreeViewItems
+          slots={slots}
+          slotProps={slotProps}
+          forwardedProps={forwardedProps}
+          ownerState={props}
+          rootRef={handleRef}
+        />
+      </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );
 }) as RichTreeViewComponent;
@@ -180,6 +194,13 @@ RichTreeView.propTypes = {
    * @default false
    */
   disableSelection: PropTypes.bool,
+  /**
+   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
+   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
+   * Nested DOM structure is not compatible with collapse / expansion animations.
+   * @default 'nested'
+   */
+  domStructure: PropTypes.oneOf(['flat', 'nested']),
   /**
    * Expanded item ids.
    * Used when the item's expansion is controlled.
@@ -250,6 +271,11 @@ RichTreeView.propTypes = {
    * @default 12px
    */
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * Sets the height in pixel of an item.
+   * If not provided, no height restriction is applied to the tree item content element.
+   */
+  itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
    * Whether multiple items can be selected.

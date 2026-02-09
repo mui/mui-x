@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { TreeViewAnyPluginSignature } from '../models';
+import { TreeViewAnyStore } from '../models';
 import { TreeViewContextValue } from './TreeViewProvider.types';
 
 /**
@@ -8,14 +8,8 @@ import { TreeViewContextValue } from './TreeViewProvider.types';
  */
 export const TreeViewContext = React.createContext<TreeViewContextValue<any> | null>(null);
 
-export const useTreeViewContext = <
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
->() => {
-  const context = React.useContext(TreeViewContext) as TreeViewContextValue<
-    TSignatures,
-    TOptionalSignatures
-  >;
+export const useTreeViewContext = <TStore extends TreeViewAnyStore>() => {
+  const context = React.useContext(TreeViewContext) as TreeViewContextValue<TStore> | null;
   if (context == null) {
     throw new Error(
       [
