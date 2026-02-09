@@ -6,7 +6,7 @@ components: ChartsContainer, ChartDataProvider
 
 # Charts - Plugins
 
-<p class="description">The library uses two systems to perform data processing: plugins and the series config.</p>
+<p class="description">Extend charts with plugins that add features, process data, and handle events.</p>
 
 :::warning
 This information is for advanced use cases.
@@ -16,11 +16,11 @@ Most charts should not require changes to either the plugins or the series confi
 Plugins are functions that add features to the chart.
 They can process data, add internal state, or listen to events.
 
-You can pass plugins to the `ChartContainer` or `ChartDataProvider` component with the `plugins` prop.
+You can pass plugins to the `ChartsContainer` or `ChartDataProvider` component with the `plugins` prop.
 
 :::info
 Notice that `myChartPlugins` is defined outside of the component.
-That's because plugins contain hooks, so you should not modify their order.
+Plugins contain hooks, so don't change their order.
 :::
 
 ```jsx
@@ -31,10 +31,9 @@ function MyChart() {
 }
 ```
 
-## Plugins per chart
+## Default plugins for each chart type
 
-You can import the default array of plugins from the corresponding chart folder.
-This lets you get the exact same features as the component when using composition.
+Import the default plugin array from the corresponding chart folder to match the built-in chart's behavior when composing a custom component.
 
 ```ts
 // Community package
@@ -57,15 +56,14 @@ You can import plugins individually from `@mui/x-charts/plugins`.
 
 When creating your custom array of plugins, note that some plugins have dependencies.
 
-- Dependencies: plugins that must be set before them to work.
-- Optional dependencies: plugins that must be set before them to enable some features.
+- **Dependencies:** plugins that must appear earlier in the array to work.
+- **Optional dependencies:** plugins that must appear earlier to enable certain behavior.
 
-For example, `useChartClosestPoint()` has `useChartCartesianAxis()` as a dependency and `useChartHighlight()` as an optional dependency.
+For example, `useChartClosestPoint()` depends on `useChartCartesianAxis()` and optionally on `useChartHighlight()`.
 
-- `[useChartClosestPoint, useChartCartesianAxis]` does not work because the closest point plugin is before the cartesian one.
-- `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin is set before the closest point one.
-- `[useChartCartesianAxis, useChartClosestPoint, useChartHighlight]` works with limited features.
-  The highlight plugin is after the closest point one, so you get the highlight feature, but not highlight based on closest point.
+- `[useChartClosestPoint, useChartCartesianAxis]` does not work because the closest-point plugin comes before the cartesian one.
+- `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin comes first.
+- `[useChartCartesianAxis, useChartClosestPoint, useChartHighlight]` works with limited behavior: you get highlighting, but not highlight based on closest point.
 
 | Plugin                                             | Dependencies            | Optional dependency                            |
 | :------------------------------------------------- | :---------------------- | :--------------------------------------------- |
@@ -83,8 +81,7 @@ For example, `useChartClosestPoint()` has `useChartCartesianAxis()` as a depende
 ## Custom plugins
 
 :::warning
-Creating custom plugins is not encouraged.
-:::
+We do not recommend creating custom plugins.
 
-The plugin's internal implementation is not stable.
-It can break at any time, including patch and minor versions.
+Plugin internals are not stable and can change in any release, including patch and minor versions.
+:::
