@@ -3,6 +3,7 @@ import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
 import { checkbox, confirm } from '@inquirer/prompts';
 import { applyTranslations } from './applyTranslations';
+import { getMissingTranslations } from './getMissingTranslations';
 import { buildPrompt } from './getPrompt';
 import { PACKAGE_CONFIGS } from './packageConfigs';
 
@@ -150,6 +151,17 @@ async function main() {
     choices: packageNames.map((name) => ({ name, value: name, checked: true })),
     validate: (value) => (value.length > 0 ? true : 'Select at least one package.'),
   });
+
+  const missingTranslations = getMissingTranslations(selectedPackages);
+  const totalMissingKeys = Object.values(missingTranslations.packages).reduce(
+    (sum, packageData) => sum + Object.keys(packageData.missing).length,
+    0,
+  );
+
+  if (totalMissingKeys === 0) {
+    process.stdout.write('\nNo missing locales found for the selected package(s).\n');
+    return;
+  }
 
   const prompt = buildPrompt(selectedPackages);
   const copied = copyToClipboard(prompt);
