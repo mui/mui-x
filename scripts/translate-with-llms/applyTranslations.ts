@@ -1,7 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as ts from 'typescript';
-import { pathToFileURL } from 'node:url';
 import { getMissingTranslations } from './getMissingTranslations';
 import { PACKAGE_CONFIGS } from './packageConfigs';
 
@@ -9,9 +8,18 @@ type LocaleTranslations = Record<string, string>;
 type KeyTranslations = Record<string, LocaleTranslations>;
 type TranslationPayload = Record<string, KeyTranslations>;
 
-interface ParsedArguments {
-  inputPath?: string;
-  dryRun: boolean;
+interface ApplyTranslationsOptions {
+  dryRun?: boolean;
+}
+
+interface ApplyTranslationsResult {
+  mode: 'dry-run' | 'write';
+  filesTargeted: number;
+  filesUpdated: number;
+  translationsInserted: number;
+  commentedOutFieldsUncommentedInPlace: number;
+  translationsSkippedAlreadyPresent: number;
+  warnings: string[];
 }
 
 interface FileUpdateTarget {
@@ -25,50 +33,14 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function parseArguments(argv: string[]): ParsedArguments {
-  const inputOption = argv.find((arg) => arg.startsWith('--input='));
-  const inputIndex = argv.indexOf('--input');
-
-  if (inputOption && inputIndex !== -1) {
-    throw new Error('Use either "--input=<path>" or "--input <path>", not both.');
-  }
-
-  let inputPath: string | undefined;
-
-  if (inputOption) {
-    inputPath = inputOption.slice('--input='.length);
-  } else if (inputIndex !== -1) {
-    inputPath = argv[inputIndex + 1];
-    if (!inputPath || inputPath.startsWith('--')) {
-      throw new Error('Missing path after "--input".');
-    }
-  }
-
-  return {
-    inputPath,
-    dryRun: argv.includes('--dry-run'),
-  };
-}
-
-function readInput(args: ParsedArguments): string {
-  if (args.inputPath) {
-    return fs.readFileSync(path.resolve(args.inputPath), 'utf8');
-  }
-
-  if (process.stdin.isTTY) {
-    throw new Error('No input provided. Use "--input <path>" or pipe compact JSON to stdin.');
-  }
-
-  return fs.readFileSync(0, 'utf8');
-}
-
 function parsePayload(rawInput: string): TranslationPayload {
   let parsed: unknown;
 
   try {
-    parsed = JSON.parse(rawInput);
-  } catch {
-    throw new Error('Invalid compact JSON input.');
+    parsed = JSON.parse(rawInput.replace(/^\uFEFF/, ''));
+  } catch(error) {
+    const parseErrorDetail = error instanceof Error ? error.message : String(error);
+    throw new Error(`Invalid compact JSON input. ${parseErrorDetail}`, { cause: error });
   }
 
   if (!isPlainObject(parsed)) {
@@ -251,9 +223,9 @@ function insertMissingProperties(
   };
 }
 
-function main() {
-  const args = parseArguments(process.argv.slice(2));
-  const payload = parsePayload(readInput(args));
+export function applyTranslations(rawInput: string, options: ApplyTranslationsOptions = {}): ApplyTranslationsResult {
+  const payload = parsePayload(rawInput);
+  const dryRun = options.dryRun ?? false;
   const missingData = getMissingTranslations();
 
   const updatesByFile = new Map<string, FileUpdateTarget>();
@@ -319,37 +291,23 @@ function main() {
     alreadyPresentCount += skipped;
     uncommentedCount += uncommented;
 
-    if (inserted > 0 && !args.dryRun) {
+    if (inserted > 0 && !dryRun) {
       fs.writeFileSync(localePath, nextSource);
       filesUpdated += 1;
     }
 
-    if (inserted > 0 && args.dryRun) {
+    if (inserted > 0 && dryRun) {
       filesUpdated += 1;
     }
   }
 
-  warnings.forEach((warning) => process.stderr.write(`Warning: ${warning}\n`));
-
-  process.stdout.write(
-    [
-      `Mode: ${args.dryRun ? 'dry-run' : 'write'}`,
-      `Files targeted: ${updatesByFile.size}`,
-      `Files updated: ${filesUpdated}`,
-      `Translations inserted: ${insertedCount}`,
-      `Commented-out fields uncommented in place: ${uncommentedCount}`,
-      `Translations skipped (already present): ${alreadyPresentCount}`,
-      `Warnings: ${warnings.length}`,
-    ].join('\n'),
-  );
-  process.stdout.write('\n');
-}
-
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  try {
-    main();
-  } catch (error) {
-    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-    process.exitCode = 1;
-  }
+  return {
+    mode: dryRun ? 'dry-run' : 'write',
+    filesTargeted: updatesByFile.size,
+    filesUpdated,
+    translationsInserted: insertedCount,
+    commentedOutFieldsUncommentedInPlace: uncommentedCount,
+    translationsSkippedAlreadyPresent: alreadyPresentCount,
+    warnings,
+  };
 }

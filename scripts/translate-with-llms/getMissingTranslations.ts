@@ -237,17 +237,25 @@ function processPackage(_pkgName: string, config: TranslatePackageConfig): Packa
   };
 }
 
-export function getMissingTranslations(packageName?: string): MissingTranslationsOutput {
+export function getMissingTranslations(packageNames?: string | string[]): MissingTranslationsOutput {
   const localeMap: Record<string, string> = {};
   const allLocales = new Set<string>();
   const result: Record<string, PackageOutput> = {};
-  const selectedPackages = packageName
-    ? Object.entries(PACKAGE_CONFIGS).filter(([name]) => name === packageName)
+  const normalizedPackageNames = Array.isArray(packageNames)
+    ? packageNames
+    : packageNames
+      ? [packageNames]
+      : undefined;
+  const selectedPackages = normalizedPackageNames
+    ? Object.entries(PACKAGE_CONFIGS).filter(([name]) => normalizedPackageNames.includes(name))
     : Object.entries(PACKAGE_CONFIGS);
 
-  if (packageName && selectedPackages.length === 0) {
+  if (normalizedPackageNames && selectedPackages.length !== normalizedPackageNames.length) {
+    const unknownPackages = normalizedPackageNames.filter((name) => !PACKAGE_CONFIGS[name]);
     const availablePackages = Object.keys(PACKAGE_CONFIGS).sort().join(', ');
-    throw new Error(`Unknown package "${packageName}". Available packages: ${availablePackages}`);
+    throw new Error(
+      `Unknown package(s): ${unknownPackages.join(', ')}. Available packages: ${availablePackages}`,
+    );
   }
 
   for (const [pkgName, config] of selectedPackages) {
@@ -419,22 +427,6 @@ function formatName(format: OutputFormat) {
   }
 }
 
-function parseFormatArgument(argv: string[]): OutputFormat {
-  const formatOption = argv.find((arg) => arg.startsWith('--format='));
-  const rawFormat = formatOption?.split('=')[1];
-
-  if (
-    rawFormat === 'json' ||
-    rawFormat === 'json-compact' ||
-    rawFormat === 'toml' ||
-    rawFormat === 'toon'
-  ) {
-    return rawFormat;
-  }
-
-  return 'json';
-}
-
 function printComparisonTable(data: MissingTranslationsOutput) {
   const formats: OutputFormat[] = ['json', 'json-compact', 'toml', 'toon'];
 
@@ -458,19 +450,20 @@ function printComparisonTable(data: MissingTranslationsOutput) {
 
 function main() {
   const argv = process.argv.slice(2);
-  const packageName = parsePackageArgument(argv);
-  const data = getMissingTranslations(packageName);
-
-  if (argv.includes('--compare')) {
-    printComparisonTable(data);
-    return;
+  if (!argv.includes('--compare')) {
+    throw new Error('Only --compare is supported for this script now.');
   }
 
-  const format = parseFormatArgument(argv);
-  process.stdout.write(serialize(data, format));
-  process.stdout.write('\n');
+  const packageName = parsePackageArgument(argv);
+  const data = getMissingTranslations(packageName);
+  printComparisonTable(data);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main();
+  try {
+    main();
+  } catch (error) {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.exitCode = 1;
+  }
 }
