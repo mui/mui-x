@@ -50,6 +50,10 @@ export async function exportImage(
     applyStyles(svg, previousStyles);
     exportDoc.body.replaceChildren(elementClone);
     exportDoc.body.style.margin = '0px';
+    /* Set display block through styles to ensure that CSS rules that target `body` don't accidentally target this
+     * iframe's body, which might cause the body to have no intrinsic width or height, leading to the canvas having a
+     * size of 0px, which causes the `toBlob` call to return null. */
+    exportDoc.body.style.display = 'block';
     /* The body's parent has a width of 0, so we use fit-content to ensure that the body adjusts its width to the width
      * of its children. */
     exportDoc.body.style.width = 'fit-content';
@@ -82,6 +86,13 @@ export async function exportImage(
   canvas.height = exportDocBodySize.height * ratio;
   canvas.style.width = `${exportDocBodySize.width}px`;
   canvas.style.height = `${exportDocBodySize.height}px`;
+
+  if (canvas.width === 0 || canvas.height === 0) {
+    doc.body.removeChild(iframe);
+    throw new Error(
+      `MUI X Charts: Cannot export an image with zero width or height. Width: ${canvas.width}px. Height: ${canvas.height}px.`,
+    );
+  }
 
   try {
     await drawDocument(iframe.contentDocument!, canvas, {
