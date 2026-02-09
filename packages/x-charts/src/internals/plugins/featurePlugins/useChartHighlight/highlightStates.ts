@@ -1,8 +1,5 @@
 import type { SeriesId } from '../../../../models/seriesType';
-import type {
-  ChartsSeriesConfig,
-  HighlightScope,
-} from '../../../../models/seriesType/config';
+import type { ChartsSeriesConfig, HighlightScope } from '../../../../models/seriesType/config';
 import type { HighlightItemData } from './useChartHighlight.types';
 
 type SeriesTypeWithDataIndex =
