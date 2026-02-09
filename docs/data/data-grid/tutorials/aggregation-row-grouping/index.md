@@ -748,4 +748,4 @@ This tutorial uses `sum` for salary and projects.
 
 - [Row grouping](/x/react-data-grid/row-grouping/)
 - [Aggregation](/x/react-data-grid/aggregation/)
-- [Data Grid Premium](/x/react-data-grid/getting-started/#premium-features)
+- [Data Grid Premium](/x/react-data-grid/getting-started/)
