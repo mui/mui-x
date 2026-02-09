@@ -85,10 +85,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.focus(view.getItemRoot('2.2'));
         expect(view.getFocusedItemId()).to.equal('2.2');
 
-        view.setItems([
-          { id: '1' },
-          { id: '2', children: [{ id: '2.1' }, { id: '2.3' }] },
-        ]);
+        view.setItems([{ id: '1' }, { id: '2', children: [{ id: '2.1' }, { id: '2.3' }] }]);
         expect(view.getFocusedItemId()).to.equal('2.3');
       });
     });

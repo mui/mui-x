@@ -22,30 +22,33 @@ export class TreeViewFocusPlugin {
 
     // Whenever the items change, we need to ensure the focused item is still present.
     // If the focused item was removed, focus the closest neighbor instead of the first item.
-    this.store.registerStoreEffect(itemStructureSelector, (previous: ReturnType<typeof itemStructureSelector>) => {
-      const focusedItemId = focusSelectors.focusedItemId(store.state);
-      if (focusedItemId == null) {
-        return;
-      }
+    this.store.registerStoreEffect(
+      itemStructureSelector,
+      (previous: ReturnType<typeof itemStructureSelector>) => {
+        const focusedItemId = focusSelectors.focusedItemId(store.state);
+        if (focusedItemId == null) {
+          return;
+        }
 
-      const hasItemBeenRemoved = !itemsSelectors.itemMeta(store.state, focusedItemId);
-      if (!hasItemBeenRemoved) {
-        return;
-      }
+        const hasItemBeenRemoved = !itemsSelectors.itemMeta(store.state, focusedItemId);
+        if (!hasItemBeenRemoved) {
+          return;
+        }
 
-      const closestItemId = this.getClosestFocusableItem(
-        focusedItemId,
-        previous.metaLookup,
-        previous.childrenIdsLookup,
-      );
+        const closestItemId = this.getClosestFocusableItem(
+          focusedItemId,
+          previous.metaLookup,
+          previous.childrenIdsLookup,
+        );
 
-      if (closestItemId == null) {
-        this.setFocusedItemId(null);
-        return;
-      }
+        if (closestItemId == null) {
+          this.setFocusedItemId(null);
+          return;
+        }
 
-      this.applyItemFocus(null, closestItemId);
-    });
+        this.applyItemFocus(null, closestItemId);
+      },
+    );
   }
 
   /**
