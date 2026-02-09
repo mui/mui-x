@@ -1,4 +1,4 @@
-import type { HighlightItemIdentifier, } from '../../../../models';
+import type { HighlightItemIdentifier } from '../../../../models';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
 export type HighlightCreator<SeriesType extends ChartSeriesType> = (
