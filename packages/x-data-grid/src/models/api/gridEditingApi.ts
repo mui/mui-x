@@ -132,7 +132,6 @@ export interface GridStartRowEditModeParams {
   /**
    * The initial value for the given `fieldToFocus`.
    * If `deleteValue` is also true, this value is not used.
-   * @deprecated No longer needed.
    */
   initialValue?: string;
 }
