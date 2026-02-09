@@ -178,7 +178,7 @@ async function main() {
   }
 
   const proceed = await confirm({
-    message: 'Ready to paste the LLM response into this CLI now?',
+    message: 'Ready to paste the LLM response into this CLI now?\nThe JSON response from LLM should be copied to your clipboard before you proceed',
     default: true,
   });
 
