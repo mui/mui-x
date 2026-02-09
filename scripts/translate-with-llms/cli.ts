@@ -28,22 +28,27 @@ function copyToClipboard(text: string): boolean {
   );
 }
 
+const getCommands = () => {
+  if (process.platform === 'darwin') {
+    return [{ command: 'pbpaste', args: [] }];
+  }
+  if (process.platform === 'win32') {
+    return [
+      {
+        command: 'powershell',
+        args: ['-NoProfile', '-Command', 'Get-Clipboard -Raw'],
+      },
+    ];
+  }
+  return [
+    { command: 'wl-paste', args: [] },
+    { command: 'xclip', args: ['-selection', 'clipboard', '-o'] },
+    { command: 'xsel', args: ['--clipboard', '--output'] },
+  ];
+};
+
 function readFromClipboard(): string | null {
-  const commands: Array<{ command: string; args: string[] }> =
-    process.platform === 'darwin'
-      ? [{ command: 'pbpaste', args: [] }]
-      : process.platform === 'win32'
-        ? [
-            {
-              command: 'powershell',
-              args: ['-NoProfile', '-Command', 'Get-Clipboard -Raw'],
-            },
-          ]
-        : [
-            { command: 'wl-paste', args: [] },
-            { command: 'xclip', args: ['-selection', 'clipboard', '-o'] },
-            { command: 'xsel', args: ['--clipboard', '--output'] },
-          ];
+  const commands = getCommands();
 
   for (const { command, args } of commands) {
     const result = spawnSync(command, args, { encoding: 'utf8' });
@@ -169,7 +174,9 @@ async function main() {
   process.stdout.write('\n');
   process.stdout.write(`Prompt generated for ${selectedPackages.length} package(s).\n`);
   process.stdout.write(copied ? 'Prompt copied to clipboard.\n' : 'Clipboard copy failed.\n');
-  process.stdout.write('Paste the prompt into your preferred LLM, then copy only the JSON response.\nUse Gemini, ChatGPT or similar. Avoid coding agents like Claude Code for this task, they\'ll try to scan file system and overcomplicate things.\n');
+  process.stdout.write(
+    "Paste the prompt into your preferred LLM, then copy only the JSON response.\nUse Gemini, ChatGPT or similar. Avoid coding agents like Claude Code for this task, they'll try to scan file system and overcomplicate things.\n",
+  );
 
   if (!copied) {
     process.stdout.write('\n----- PROMPT START -----\n');
@@ -178,7 +185,8 @@ async function main() {
   }
 
   const proceed = await confirm({
-    message: 'Ready to paste the LLM response into this CLI now?\nThe JSON response from LLM should be copied to your clipboard before you proceed',
+    message:
+      'Ready to paste the LLM response into this CLI now?\nThe JSON response from LLM should be copied to your clipboard before you proceed',
     default: true,
   });
 
