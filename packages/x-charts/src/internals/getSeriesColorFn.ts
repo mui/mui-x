@@ -1,5 +1,5 @@
 import { type CommonSeriesType, type ColorCallbackValue } from '../models/seriesType/common';
-import { ChartSeriesType } from '../models/seriesType/config';
+import { type ChartSeriesType } from '../models/seriesType/config';
 
 export function getSeriesColorFn<TValue>(series: {
   color: NonNullable<CommonSeriesType<TValue, ChartSeriesType>['color']>;
