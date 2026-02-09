@@ -5,14 +5,14 @@ productId: x-charts
 
 # Charts - Content Security Policy (CSP)
 
-<p class="description">This section covers the details of setting up a Content Security Policy.</p>
+<p class="description">How to configure a Content Security Policy so MUI X Charts runs correctly and export works when your app restricts script and style sources.</p>
 
 ## What is a Content Security Policy (CSP)?
 
-A Content Security Policy (CSP) mitigates cross-site scripting (XSS) attacks by requiring developers to whitelist the sources their assets are retrieved from.
-This list is returned as a header from the server.
-For instance, say you have a site hosted at `https://example.com` the CSP header `default-src: 'self';` lets you load all assets that are located at `https://example.com/*` and denies all others.
-If there is a section of your website that's vulnerable to XSS where unescaped user input is displayed, an attacker could input something like:
+A Content Security Policy (CSP) mitigates cross-site scripting (XSS) attacks by requiring you to allowlist the sources your assets are loaded from.
+The server sends this list in a response header.
+For example, with a site at `https://example.com`, the CSP header `default-src: 'self';` lets you load assets from `https://example.com/*` and blocks all others.
+If part of your site is vulnerable to XSS and renders unescaped user input, an attacker could inject something like:
 
 ```html
 <script>
@@ -20,29 +20,28 @@ If there is a section of your website that's vulnerable to XSS where unescaped u
 </script>
 ```
 
-This vulnerability lets the attacker execute anything.
-But with a secure CSP header, the browser will not load this script.
+The attacker could then run arbitrary code.
+A strict CSP header prevents the browser from loading that script.
 
-You can read more about CSP in the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP).
+See the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP) for more on CSP.
 
 ## Setting up a CSP
 
-The MUI X Charts package depends on Material UI.
-To set up a CSP, you need to follow Material UI's [CSP implementation guide](/material-ui/guides/content-security-policy/#how-does-one-implement-csp).
+MUI X Charts depends on Material UI.
+Follow Material UI's [CSP implementation guide](/material-ui/guides/content-security-policy/#how-does-one-implement-csp) to set up a CSP.
 
 ### CSP for exporting
 
 You can [export charts](/x/react-charts/export/) as images or PDFs with MUI X Charts.
 When a CSP is set, you need to configure additional settings for exporting to work.
 
-To enable exporting with CSP, you need to enable the use of `data:` and `blob:` URIs for images.
-Add the following directives to your CSP header:
+Enable `data:` and `blob:` URIs for images by adding these directives to your CSP header:
 
 ```text
 Content-Security-Policy: img-src 'self' data: blob:;
 ```
 
-If your CSP defines a nonce for scripts or styles (for example, `script-src 'nonce-<value>'`), you also need to provide the same nonce when exporting.
+If your CSP uses a nonce for scripts or styles (for example, `script-src 'nonce-<value>'`), provide the same nonce when exporting.
 
 Pass the nonce to the `printOptions` and `imageExportOptions` props of the `toolbar` slot.
 
