@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartProviderProps } from '../../context/ChartProvider/ChartProvider.types';
 import { RADAR_PLUGINS, type RadarChartPluginSignatures } from '../RadarChart.plugins';
 import { type RadarSeriesType } from '../../models/seriesType/radar';
 import {
@@ -116,7 +115,7 @@ function RadarDataProvider<
       margin={defaultizedMargin}
       colors={colors}
       skipAnimation={skipAnimation}
-      plugins={(plugins ?? RADAR_PLUGINS) as ChartProviderProps<'radar', TSignatures>['plugins']}
+      plugins={plugins ?? RADAR_PLUGINS}
       rotationAxis={rotationAxes}
       radiusAxis={radiusAxis}
       seriesConfig={RADAR_SERIES_CONFIG}

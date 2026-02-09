@@ -1,10 +1,16 @@
 import { type UseChartAnimationSignature, useChartAnimation } from './useChartAnimation';
 import { type UseChartDimensionsSignature, useChartDimensions } from './useChartDimensions';
+import { type UseChartElementRefSignature, useChartElementRef } from './useChartElementRef';
 import {
   type UseChartExperimentalFeaturesSignature,
   useChartExperimentalFeatures,
 } from './useChartExperimentalFeature';
 import { type UseChartIdSignature, useChartId, type UseChartIdParameters } from './useChartId';
+import {
+  type UseChartSeriesConfigSignature,
+  useChartSeriesConfig,
+  type UseChartSeriesConfigParameters,
+} from './useChartSeriesConfig';
 import { type UseChartSeriesSignature, useChartSeries } from './useChartSeries';
 import {
   type UseChartInteractionListenerSignature,
@@ -17,7 +23,9 @@ import type { ChartSeriesType } from '../../../models/seriesType/config';
  * These plugins are used by the Charts components.
  */
 export const CHART_CORE_PLUGINS = [
+  useChartElementRef,
   useChartId,
+  useChartSeriesConfig,
   useChartExperimentalFeatures,
   useChartDimensions,
   useChartSeries,
@@ -26,7 +34,9 @@ export const CHART_CORE_PLUGINS = [
 ] as const;
 
 export type ChartCorePluginSignatures<TSeriesType extends ChartSeriesType = ChartSeriesType> = [
+  UseChartElementRefSignature,
   UseChartIdSignature,
+  UseChartSeriesConfigSignature<TSeriesType>,
   UseChartExperimentalFeaturesSignature,
   UseChartDimensionsSignature,
   UseChartSeriesSignature<TSeriesType>,
@@ -34,4 +44,5 @@ export type ChartCorePluginSignatures<TSeriesType extends ChartSeriesType = Char
   UseChartInteractionListenerSignature,
 ];
 
-export interface ChartCorePluginParameters extends UseChartIdParameters {}
+export interface ChartCorePluginParameters
+  extends UseChartIdParameters, UseChartSeriesConfigParameters {}

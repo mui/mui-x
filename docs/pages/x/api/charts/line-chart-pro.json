@@ -39,7 +39,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'line' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'line' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -50,16 +50,13 @@
       }
     },
     "highlightedItem": {
-      "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
-      }
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'line' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'line' }&gt;"
       }
     },
     "initialZoom": {
@@ -132,7 +129,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'line' }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }"
       }
     },
     "width": { "type": { "name": "number" } },
@@ -252,6 +249,18 @@
       "name": "tooltip",
       "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
+      "class": null
+    },
+    {
+      "name": "xAxis",
+      "description": "Custom component for the x-axis.",
+      "default": "ChartsXAxis",
+      "class": null
+    },
+    {
+      "name": "yAxis",
+      "description": "Custom component for the y-axis.",
+      "default": "ChartsYAxis",
       "class": null
     },
     {

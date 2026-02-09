@@ -18,10 +18,9 @@ import { selectorChartXAxis, selectorChartYAxis } from './useChartFunnelAxisRend
 export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
   params,
   store,
-  seriesConfig,
-  svgRef,
   instance,
 }) => {
+  const { svgRef } = instance;
   const { xAxis, yAxis, dataset, gap } = params;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -61,7 +60,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
         y: defaultizeYAxis(yAxis, dataset, 0),
       },
     });
-  }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store, gap]);
+  }, [drawingArea, xAxis, yAxis, dataset, store, gap]);
 
   React.useEffect(() => {
     const element = svgRef.current;

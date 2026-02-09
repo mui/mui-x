@@ -8,7 +8,7 @@ import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occ
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
-import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
+import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
   day: TemporalSupportedObject,
@@ -25,12 +25,10 @@ export function useCalendarGridPlaceholderInDay(
     rowStart,
   );
 
-  const originalEvent = useStore(store, (state) => {
-    if (!isInternalDragOrResizePlaceholder(rawPlaceholder)) {
-      return null;
-    }
-    return schedulerEventSelectors.processedEventRequired(state, rawPlaceholder.eventId);
-  });
+  const originalEventId = isInternalDragOrResizePlaceholder(rawPlaceholder)
+    ? rawPlaceholder.eventId
+    : null;
+  const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
@@ -39,7 +37,7 @@ export function useCalendarGridPlaceholderInDay(
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      id: 'occurrence-placeholder',
+      id: originalEventId ?? 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
     };
 
@@ -108,5 +106,5 @@ export function useCalendarGridPlaceholderInDay(
         daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
       },
     };
-  }, [adapter, day, originalEvent, rawPlaceholder, row.days, rowEnd]);
+  }, [adapter, day, originalEvent, originalEventId, rawPlaceholder, row.days, rowEnd]);
 }

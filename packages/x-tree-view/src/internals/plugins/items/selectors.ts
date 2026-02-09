@@ -3,6 +3,7 @@ import { TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
 import { isItemDisabled, TREE_VIEW_ROOT_PARENT_ID } from './utils';
 import { MinimalTreeViewState } from '../../MinimalTreeViewStore';
+import { RichTreeViewState } from '../../RichTreeViewStore';
 
 const EMPTY_CHILDREN: TreeViewItemId[] = [];
 
@@ -10,7 +11,7 @@ export const itemsSelectors = {
   /**
    * Gets the DOM structure of the Tree View.
    */
-  domStructure: createSelector((state: MinimalTreeViewState<any, any>) => state.domStructure),
+  domStructure: createSelector((state: RichTreeViewState<any, any>) => state.domStructure),
   /**
    * Checks whether the disabled items are focusable.
    */
@@ -94,4 +95,8 @@ export const itemsSelectors = {
   itemChildrenIndentation: createSelector(
     (state: MinimalTreeViewState<any, any>) => state.itemChildrenIndentation,
   ),
+  /**
+   * Gets the height of an individual item.
+   */
+  itemHeight: createSelector((state: MinimalTreeViewState<any, any>) => state.itemHeight),
 };

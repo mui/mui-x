@@ -25,7 +25,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
         await act(async () => screen.getByText('13').focus());
         // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
@@ -47,7 +47,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
       ];
       interactions.forEach(({ key, expectFocusedDay }) => {
         // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
@@ -71,7 +71,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
         await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
         // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
@@ -109,7 +109,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
           await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
           // Don't care about what's focused.
-          // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+          // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
           fireEvent.keyDown(document.activeElement!, { key });
 
           // Based on column header, screen reader should pronounce <Day Number> <Week Day>
@@ -126,7 +126,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
         const nextMonthButton = screen.getByRole('button', { name: 'Next month' });
         await act(async () => nextMonthButton.focus());
         // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
 
         expect(document.activeElement).toHaveAccessibleName('Next month');

@@ -1,6 +1,6 @@
 import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 import { Adapter } from '../use-adapter';
-import { getDateKey } from '../utils/date-utils';
+import { getDateKey } from '../internals/utils/date-utils';
 
 /**
  * Creates a processed date object from a date object.

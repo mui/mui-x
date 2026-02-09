@@ -3,6 +3,8 @@ import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
 
+export type { TemporalTimezone } from '../base-ui-copy/types';
+
 /**
  * Base shape for processed scheduler events.
  *
@@ -281,18 +283,17 @@ export type SchedulerRenderableEventOccurrence =
 export type SchedulerEventId = string | number;
 
 export type SchedulerEventColor =
-  | 'primary'
-  | 'mauve'
-  | 'violet'
-  | 'cyan'
-  | 'jade'
   | 'red'
-  | 'lime'
-  | 'orange'
-  | 'yellow'
   | 'pink'
+  | 'purple'
   | 'indigo'
-  | 'blue';
+  | 'blue'
+  | 'teal'
+  | 'green'
+  | 'lime'
+  | 'amber'
+  | 'orange'
+  | 'grey';
 
 export type SchedulerEventSide = 'start' | 'end';
 
@@ -348,7 +349,7 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends Sche
    */
   occurrenceKey: string;
   /**
-   * The data of the event to use when dropping the event outside of the Event Calendar or the Timeline.
+   * The data of the event to use when dropping the event outside of the Event Calendar or the Event Timeline Premium.
    */
   originalOccurrence: SchedulerEventOccurrence;
 }
@@ -359,11 +360,11 @@ export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOcc
    */
   type: 'external-drag';
   /**
-   * The data of the event to insert in the Event Calendar or the Timeline when dropped.
+   * The data of the event to insert in the Event Calendar or the Event Timeline Premium when dropped.
    */
   eventData: SchedulerOccurrencePlaceholderExternalDragData;
   /**
-   * Callback fired when the event is dropped into the Event Calendar or the Timeline.
+   * Callback fired when the event is dropped into the Event Calendar or the Event Timeline Premium.
    */
   onEventDrop?: () => void;
 }
@@ -423,7 +424,7 @@ export type SchedulerEventPasteProperties = Partial<
   Pick<SchedulerEvent, 'start' | 'resource' | 'allDay'>
 >;
 
-// TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Timeline.
+// TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Event Timeline Premium.
 /**
  * The type of surface the event is being rendered on.
  */

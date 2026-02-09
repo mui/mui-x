@@ -21,6 +21,8 @@
     "@mui/x-date-pickers-pro": "workspace:*",
     "@mui/x-scheduler": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
+    "@mui/x-scheduler-premium": "workspace:*",
+    "@mui/x-scheduler-headless-premium": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@react-spring/web": "catalog:",
     "@types/moment-jalaali": "catalog:",

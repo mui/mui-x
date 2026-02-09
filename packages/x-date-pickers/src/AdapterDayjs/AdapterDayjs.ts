@@ -267,7 +267,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
    * We have to parse again the value to make sure the `fixOffset` method is applied.
    * See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
    */
-  private adjustOffset = (value: Dayjs) => {
+  protected adjustOffset = (value: Dayjs) => {
     if (!this.hasTimezonePlugin()) {
       return value;
     }

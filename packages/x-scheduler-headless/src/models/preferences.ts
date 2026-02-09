@@ -29,8 +29,6 @@ export interface EventCalendarPreferences extends SchedulerPreferences {
   showEmptyDaysInAgenda: boolean;
 }
 
-export interface TimelinePreferences extends SchedulerPreferences {}
-
 export interface EventCalendarPreferencesMenuConfig {
   /**
    * Whether the menu item to toggle weekend visibility is visible.

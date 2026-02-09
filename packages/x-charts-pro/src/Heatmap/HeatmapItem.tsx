@@ -27,9 +27,15 @@ export interface HeatmapItemProps {
   height: number;
   x: number;
   y: number;
+  xIndex: number;
+  yIndex: number;
   color: string;
   isHighlighted?: boolean;
   isFaded?: boolean;
+  /**
+   * The border radius of the heatmap cell in pixels.
+   */
+  borderRadius?: number;
   /**
    * The props used for each component slot.
    * @default {}
@@ -69,6 +75,9 @@ function HeatmapItem(props: HeatmapItemProps) {
     value,
     isHighlighted = false,
     isFaded = false,
+    borderRadius,
+    xIndex,
+    yIndex,
     slotProps = {},
     slots = {},
     ...other
@@ -81,7 +90,7 @@ function HeatmapItem(props: HeatmapItemProps) {
     props.slotProps,
   );
   const interactionProps = useInteractionItemProps(
-    { type: 'heatmap', seriesId, dataIndex },
+    { type: 'heatmap', seriesId, dataIndex, xIndex, yIndex },
     skipInteractionItemProps,
   );
 
@@ -98,7 +107,7 @@ function HeatmapItem(props: HeatmapItemProps) {
   const Cell = slots?.cell ?? HeatmapCell;
   const cellProps = useSlotProps({
     elementType: Cell,
-    additionalProps: interactionProps,
+    additionalProps: { ...interactionProps, rx: borderRadius, ry: borderRadius },
     externalForwardedProps: { ...other },
     externalSlotProps: slotProps.cell,
     ownerState,

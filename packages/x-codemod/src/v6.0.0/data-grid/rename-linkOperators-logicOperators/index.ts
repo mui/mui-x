@@ -1,4 +1,4 @@
-import renameCSSClasses from '../../../util/renameCSSClasses';
+import type { Collection, JSCodeshift } from 'jscodeshift';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import renameIdentifiers, { PreRequisiteUsage, matchImport } from '../../../util/renameIdentifiers';
 
@@ -50,10 +50,41 @@ const renamedLiterals = {
   filterPanelLinkOperator: 'filterPanelLogicOperator',
 };
 
-const renamedClasses = {
-  'MuiDataGrid-filterFormLinkOperatorInput': 'MuiDataGrid-filterFormLogicOperatorInput',
-  'MuiDataGrid-withBorder': 'MuiDataGrid-withBorderColor',
-};
+interface RenameCSSClassesArgs {
+  root: Collection<any>;
+  j: JSCodeshift;
+}
+
+/**
+ * Renames CSS classes when they are literals based on the provided mapping.
+ */
+function renameCSSClasses({ root, j }: RenameCSSClassesArgs) {
+  const renamedClasses = {
+    'MuiDataGrid-filterFormLinkOperatorInput': 'MuiDataGrid-filterFormLogicOperatorInput',
+    'MuiDataGrid-withBorder': 'MuiDataGrid-withBorderColor',
+  };
+
+  root
+    .find(j.Literal)
+    .filter(
+      (path) =>
+        !!Object.keys(renamedClasses).find((className) => {
+          const literal = path.node.value as any;
+          return (
+            typeof literal === 'string' &&
+            literal.includes(className) &&
+            !literal.includes(renamedClasses[className])
+          );
+        }),
+    )
+    .replaceWith((path) => {
+      const literal = path.node.value as any;
+      const targetClassKey = Object.keys(renamedClasses).find((className) =>
+        literal.includes(className),
+      )!;
+      return j.literal(literal.replace(targetClassKey, renamedClasses[targetClassKey]));
+    });
+}
 
 export default function transform(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;
@@ -98,7 +129,7 @@ export default function transform(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI
     // Rename the classes
     // - 'MuiDataGrid-filterFormLinkOperatorInput'
     // + 'MuiDataGrid-filterFormLogicOperatorInput'
-    renameCSSClasses({ j, root, renamedClasses });
+    renameCSSClasses({ j, root });
   }
 
   return root.toSource(printOptions);

@@ -80,7 +80,8 @@ export default function ZoomHeatmap() {
           },
         ]}
         series={[{ data: seriesData }]}
-        slots={{ cell: HeatmapCell, tooltip: Tooltip }}
+        borderRadius={4}
+        slots={{ tooltip: Tooltip }}
       />
       <Typography variant="caption">Source: GitHub</Typography>
     </Stack>
@@ -138,8 +139,4 @@ function TooltipContent() {
       </Typography>
     </Stack>
   );
-}
-
-function HeatmapCell({ ownerState, ...props }) {
-  return <rect {...props} rx={4} ry={4} fill={ownerState.color} />;
 }

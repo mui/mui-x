@@ -13,6 +13,16 @@ describe('processEvent', () => {
 
     expect(processed.modelInBuiltInFormat.timezone).to.equal('America/New_York');
   });
+
+  it('should fallback to "default" timezone when event.timezone is not provided', () => {
+    const event = EventBuilder.new().build();
+
+    const processed = processEvent(event, 'Europe/Paris', adapter);
+
+    expect(processed.dataTimezone.timezone).to.equal('default');
+    expect(processed.displayTimezone.timezone).to.equal('Europe/Paris');
+  });
+
   describe('displayTimezone', () => {
     it('converts start and end to the display timezone', () => {
       const event = EventBuilder.new(adapter)

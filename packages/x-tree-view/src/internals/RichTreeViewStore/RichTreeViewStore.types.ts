@@ -1,4 +1,4 @@
-import { TreeViewItemId, TreeViewValidItem } from '../../models';
+import { TreeViewDOMStructure, TreeViewItemId, TreeViewValidItem } from '../../models';
 import { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
 import { RichTreeViewLazyLoadedItemsStatus } from '../plugins/lazyLoading';
 
@@ -19,6 +19,12 @@ export interface RichTreeViewState<
    * Is null if lazy loading is not enabled.
    */
   lazyLoadedItems: RichTreeViewLazyLoadedItemsStatus | null;
+  /**
+   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
+   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
+   * Nested DOM structure is not compatible with collapse / expansion animations.
+   */
+  domStructure: TreeViewDOMStructure;
 }
 
 export interface RichTreeViewStoreParameters<
@@ -39,4 +45,11 @@ export interface RichTreeViewStoreParameters<
    * @default () => false
    */
   isItemEditable?: boolean | ((item: R) => boolean);
+  /**
+   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
+   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
+   * Nested DOM structure is not compatible with collapse / expansion animations.
+   * @default 'nested'
+   */
+  domStructure?: TreeViewDOMStructure;
 }

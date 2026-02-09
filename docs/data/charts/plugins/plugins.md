@@ -1,7 +1,7 @@
 ---
 title: Charts - Plugins
 productId: x-charts
-components: ChartContainer, ChartDataProvider
+components: ChartsContainer, ChartDataProvider
 ---
 
 # Charts - Plugins
@@ -27,7 +27,7 @@ That's because plugins contain hooks, so you should not modify their order.
 const myChartPlugins = [useChartInteraction, useChartHighlight];
 
 function MyChart() {
-  return <ChartContainer plugins={myChartPlugins}>{/* ... */}</ChartContainer>;
+  return <ChartsContainer plugins={myChartPlugins}>{/* ... */}</ChartsContainer>;
 }
 ```
 
@@ -45,9 +45,9 @@ import { PIE_CHART_PRO_PLUGINS, PieChartProPluginSignatures } from '@mui/x-chart
 
 
 function MyPieChart() {
-    return <ChartContainer plugins={PIE_CHART_PLUGINS}>
+    return <ChartsContainer plugins={PIE_CHART_PLUGINS}>
         {/* ... */}
-    </ChartContainer>
+    </ChartsContainer>
 }
 ```
 

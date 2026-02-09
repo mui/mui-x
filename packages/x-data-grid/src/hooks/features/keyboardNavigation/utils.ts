@@ -1,8 +1,8 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { Rowspan } from '@mui/x-virtualizer';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GridRowId } from '../../../models';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridRowId } from '../../../models';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 export const getLeftColumnIndex = ({
   currentColIndex,
