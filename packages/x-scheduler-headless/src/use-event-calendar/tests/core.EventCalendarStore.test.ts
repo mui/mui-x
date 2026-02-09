@@ -25,7 +25,7 @@ describe('Core - EventCalendarStore', () => {
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
-        eventColor: 'jade',
+        eventColor: 'teal',
         eventCreation: true,
         eventIdList: [],
         eventModelList: [],
@@ -106,7 +106,7 @@ describe('Core - EventCalendarStore', () => {
           },
           adapter,
         );
-      }).toWarnDev(['Scheduler: A component is changing the default view state']);
+      }).toWarnDev(['MUI: A component is changing the default view state']);
 
       expect(store.state.view).to.equal(defaultView);
     });
@@ -116,7 +116,7 @@ describe('Core - EventCalendarStore', () => {
 
       expect(() => {
         store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
-      }).toWarnDev('Scheduler: A component is changing the uncontrolled view state');
+      }).toWarnDev('MUI: A component is changing the uncontrolled view state');
 
       expect(store.state.view).to.equal('day');
     });
@@ -132,7 +132,7 @@ describe('Core - EventCalendarStore', () => {
           },
           adapter,
         );
-      }).toWarnDev('Scheduler: A component is changing the controlled view state');
+      }).toWarnDev('MUI: A component is changing the controlled view state');
 
       expect(store.state.view).to.equal('day');
     });

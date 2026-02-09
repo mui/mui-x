@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const faIRGrid: Partial<GridLocaleText> = {
   // Root
@@ -166,6 +166,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'صحیح',
   booleanCellFalseLabel: 'غلط',
+
+  // Long text cell
+  longTextCellExpandLabel: 'بازکردن پنل جزئیات',
+  longTextCellCollapseLabel: 'بستن پنل جزئیات',
 
   // Actions cell more text
   actionsCellMore: 'بیشتر',

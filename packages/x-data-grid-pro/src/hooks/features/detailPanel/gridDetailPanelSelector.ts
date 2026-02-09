@@ -3,7 +3,7 @@ import {
   createRootSelector,
   createSelectorMemoized,
 } from '@mui/x-data-grid/internals';
-import { GridStatePro } from '../../../models/gridStatePro';
+import type { GridStatePro } from '../../../models/gridStatePro';
 
 export const gridDetailPanelStateSelector = createRootSelector(
   (state: GridStatePro) => state.detailPanel,

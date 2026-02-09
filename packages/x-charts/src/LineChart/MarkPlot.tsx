@@ -98,7 +98,7 @@ function MarkPlot(props: MarkPlotProps) {
               return (
                 <Mark
                   key={`${seriesId}-${index}`}
-                  id={seriesId}
+                  seriesId={seriesId}
                   dataIndex={index}
                   shape={shape}
                   color={color}

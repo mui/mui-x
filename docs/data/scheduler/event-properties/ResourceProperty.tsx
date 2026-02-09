@@ -114,14 +114,14 @@ const initialEvents: CustomEvent[] = [
 ];
 
 const rooms: SchedulerResource[] = [
-  { id: 'Room A', title: 'Room A', eventColor: 'violet' },
-  { id: 'Room B', title: 'Room B', eventColor: 'jade' },
+  { id: 'Room A', title: 'Room A', eventColor: 'purple' },
+  { id: 'Room B', title: 'Room B', eventColor: 'teal' },
   { id: 'Room C', title: 'Room C', eventColor: 'lime' },
 ];
 
 const classes: SchedulerResource[] = [
   { id: 'french', title: 'French', eventColor: 'orange' },
-  { id: 'science', title: 'Science', eventColor: 'cyan' },
+  { id: 'science', title: 'Science', eventColor: 'teal' },
   { id: 'english', title: 'English', eventColor: 'pink' },
   { id: 'history', title: 'History', eventColor: 'indigo' },
 ];

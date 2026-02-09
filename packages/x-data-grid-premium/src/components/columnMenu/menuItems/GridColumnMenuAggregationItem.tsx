@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
+import { type GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -11,7 +11,7 @@ import {
   getAvailableAggregationFunctions,
 } from '../../../hooks/features/aggregation/gridAggregationUtils';
 import { gridAggregationModelSelector } from '../../../hooks/features/aggregation/gridAggregationSelectors';
-import { GridAggregationModel } from '../../../hooks/features/aggregation/gridAggregationInterfaces';
+import type { GridAggregationModel } from '../../../hooks/features/aggregation/gridAggregationInterfaces';
 
 function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;

@@ -79,58 +79,58 @@ describe('recurring-events/rRuleString', () => {
 
     it('should throw when the input is empty', () => {
       expect(() => parseRRule(adapter, '', 'default')).to.throw(
-        'Scheduler: RRULE must include a FREQ property.',
+        'MUI: RRULE must include a FREQ property.',
       );
     });
 
     it('should throw when the key or the value are empty', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;=2', 'default')).to.throw(
-        'Scheduler: Invalid RRULE part: "=2"',
+        'MUI: Invalid RRULE part: "=2"',
       );
       expect(() => parseRRule(adapter, 'FREQ=DAILY;INTERVAL=', 'default')).to.throw(
-        'Scheduler: Invalid RRULE part: "INTERVAL="',
+        'MUI: Invalid RRULE part: "INTERVAL="',
       );
     });
 
     it('should throw when UNTIL is invalid', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;UNTIL=not-a-date', 'default')).to.throw(
-        'Scheduler: Invalid UNTIL date: "NOT-A-DATE"',
+        'MUI: Invalid UNTIL date: "NOT-A-DATE"',
       );
     });
 
     it('should throw when FREQ is missing', () => {
       expect(() => parseRRule(adapter, 'INTERVAL=2', 'default')).to.throw(
-        'Scheduler: RRULE must include a FREQ property.',
+        'MUI: RRULE must include a FREQ property.',
       );
     });
 
     it('should throw when the RRULE contains unsupported properties', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;FOO=bar', 'default')).to.throw(
-        'Scheduler: Unsupported RRULE property: "FOO"',
+        'MUI: Unsupported RRULE property: "FOO"',
       );
     });
 
     it('should throw for invalid INTERVAL value', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;INTERVAL=zero', 'default')).to.throw(
-        'Scheduler: Invalid INTERVAL value: "ZERO"',
+        'MUI: Invalid INTERVAL value: "ZERO"',
       );
     });
 
     it('should throw for invalid BYMONTHDAY values', () => {
       expect(() => parseRRule(adapter, 'FREQ=MONTHLY;BYMONTHDAY=0,50', 'default')).to.throw(
-        'Scheduler: Invalid BYMONTHDAY values: "0,50"',
+        'MUI: Invalid BYMONTHDAY values: "0,50"',
       );
     });
 
     it('should throw for invalid BYMONTH values', () => {
       expect(() => parseRRule(adapter, 'FREQ=YEARLY;BYMONTH=0,13', 'default')).to.throw(
-        'Scheduler: Invalid BYMONTH values: "0,13"',
+        'MUI: Invalid BYMONTH values: "0,13"',
       );
     });
 
     it('should throw for invalid COUNT value', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;COUNT=-2', 'default')).to.throw(
-        'Scheduler: Invalid COUNT value: "-2"',
+        'MUI: Invalid COUNT value: "-2"',
       );
     });
 

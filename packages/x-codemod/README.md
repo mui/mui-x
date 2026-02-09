@@ -80,7 +80,9 @@ The corresponding sub-sections are listed below
 
 - [`preset-safe-for-charts`](#preset-safe-for-charts-v900)
 
-### 🚀 `preset-safe` for Charts v9.0.0
+### Charts codemods
+
+#### 🚀 `preset-safe` for Charts v9.0.0
 
 The `preset-safe` codemods for Charts.
 
@@ -94,6 +96,7 @@ The list includes these transformers
 
 - [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
 - [`rename-chart-api-import`](#rename-chart-api-import)
+- [`rename-id-to-series-id`](#rename-id-to-series-id)
 
 ### `replace-heatmap-hide-legend-false`
 
@@ -138,6 +141,29 @@ Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-
 -import type { ChartApi } from '@mui/x-charts/ChartContainer';
 +import type { ChartApi } from '@mui/x-charts/context';
 ```
+
+#### `rename-id-to-series-id`
+
+Rename the props `id` to `seriesId`.
+
+```diff
+- <PieArc id='series-a' />
++ <PieArc seriesId='series-a' />
+```
+
+Here is the list of slots and components that are impacted by the renaming:
+
+| slot          | Component                                |
+| :------------ | :--------------------------------------- |
+| pieArc        | PieArc                                   |
+|               | PieArcPlot                               |
+| pieArcLabel   | PieArcLabel                              |
+|               | PieArcLabelPlot                          |
+| bar           | BarElement, AnimatedRangeBarElementProps |
+| area          | AnimatedArea, AreaElement                |
+| line          | AnimatedLine, LineElement                |
+| mark          | MarkElement                              |
+| lineHighlight | LineHighlightElement                     |
 
 ## v8.0.0
 

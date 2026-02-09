@@ -3,6 +3,7 @@ import { SchedulerTranslations } from '../models/translations';
 export const enUS: SchedulerTranslations = {
   // ResourcesLegend
   hideEventsLabel: (resourceName) => `Hide events for ${resourceName}`,
+  resourcesLabel: 'Resources',
   resourcesLegendSectionLabel: 'Resource legend',
   showEventsLabel: (resourceName) => `Show events for ${resourceName}`,
 
@@ -48,7 +49,7 @@ export const enUS: SchedulerTranslations = {
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,
 
-  // EventPopover
+  // EventDraggableDialog
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close modal',
   closeButtonLabel: 'Close',
@@ -104,4 +105,9 @@ export const enUS: SchedulerTranslations = {
 
   // General
   loading: 'Loading...',
+
+  // MiniCalendar
+  miniCalendarLabel: 'Calendar',
+  miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
+  miniCalendarGoToNextMonth: 'Show next month in calendar',
 };

@@ -1,5 +1,5 @@
-import { GridPinnedColumnPosition } from '@mui/x-data-grid';
-import { GridPinnedColumnFields } from '@mui/x-data-grid/internals';
+import type { GridPinnedColumnPosition } from '@mui/x-data-grid';
+import type { GridPinnedColumnFields } from '@mui/x-data-grid/internals';
 
 /**
  * The column pinning API interface that is available in the grid [[apiRef]].

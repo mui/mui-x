@@ -1,20 +1,23 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
   gridClasses,
-  GridColDef,
+  type GridColDef,
   GridMenu,
-  GridSlotProps,
-  GridSortDirection,
+  type GridSlotProps,
+  type GridSortDirection,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { GridColumnSortButton, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
+import type {
+  GridPivotModel,
+  DropPosition,
+} from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
   getAggregationFunctionLabel,
@@ -22,7 +25,6 @@ import {
 } from '../../hooks/features/aggregation/gridAggregationUtils';
 import { GridPivotPanelFieldMenu } from './GridPivotPanelFieldMenu';
 import type { FieldTransferObject } from './GridPivotPanelBody';
-import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridPivotInitialColumnsSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';

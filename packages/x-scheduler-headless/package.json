@@ -35,7 +35,9 @@
     "./use-event-occurrences-grouped-by-day": "./src/use-event-occurrences-grouped-by-day/index.ts",
     "./use-event-occurrences-with-day-grid-position": "./src/use-event-occurrences-with-day-grid-position/index.ts",
     "./use-event-occurrences-with-timeline-position": "./src/use-event-occurrences-with-timeline-position/index.ts",
-    "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts"
+    "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts",
+    "./use-draggable-dialog": "./src/use-draggable-dialog/index.ts",
+    "./use-event-calendar-api-ref": "./src/use-event-calendar-api-ref/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {

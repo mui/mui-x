@@ -1,7 +1,11 @@
-import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/scheduler';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import {
+  createSchedulerRenderer,
+  SchedulerStoreRunner,
+  AnyEventCalendarStore,
+} from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
-import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { EventCalendarProvider } from '../../../internals/components/EventCalendarProvider';
 import { PreferencesMenu } from './PreferencesMenu';
 import { getPreferencesMenu, openPreferencesMenu } from '../../../internals/utils/test-utils';
 
@@ -125,8 +129,8 @@ describe('<PreferencesMenu />', () => {
   it('should show "Show empty days" ONLY in Agenda view when enabled in config', async () => {
     const { user } = render(
       <EventCalendarProvider events={[]}>
-        <SchedulerStoreRunner
-          context={EventCalendarStoreContext}
+        <SchedulerStoreRunner<AnyEventCalendarStore>
+          context={SchedulerStoreContext}
           onMount={(store) => store.setView('agenda', {} as any)}
         />
         <PreferencesMenu />
@@ -142,8 +146,8 @@ describe('<PreferencesMenu />', () => {
   it('should NOT show "Show empty days" in non-Agenda views even when enabled in config', async () => {
     const { user } = render(
       <EventCalendarProvider events={[]}>
-        <SchedulerStoreRunner
-          context={EventCalendarStoreContext}
+        <SchedulerStoreRunner<AnyEventCalendarStore>
+          context={SchedulerStoreContext}
           onMount={(store) => store.setView('week', {} as any)}
         />
         <PreferencesMenu />
@@ -164,8 +168,8 @@ describe('<PreferencesMenu />', () => {
           toggleEmptyDaysInAgenda: false,
         }}
       >
-        <SchedulerStoreRunner
-          context={EventCalendarStoreContext}
+        <SchedulerStoreRunner<AnyEventCalendarStore>
+          context={SchedulerStoreContext}
           onMount={(store) => store.setView('agenda', {} as any)}
         />
         <PreferencesMenu />

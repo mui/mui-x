@@ -1,7 +1,8 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { EventDialogClasses, eventDialogClassKeys } from '@mui/x-scheduler/internals';
 
-export interface EventTimelinePremiumClasses {
+export interface EventTimelinePremiumClasses extends EventDialogClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the header toolbar element. */
@@ -36,6 +37,8 @@ export interface EventTimelinePremiumClasses {
   event: string;
   /** Styles applied to event resize handler elements. */
   eventResizeHandler: string;
+  /** Styles applied to event lines clamp elements. */
+  eventLinesClamp: string;
   /** Styles applied to the time header root element. */
   timeHeader: string;
   /** Styles applied to time header cell elements. */
@@ -110,6 +113,7 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'titleCellLegendColor',
     'event',
     'eventResizeHandler',
+    'eventLinesClamp',
     'timeHeader',
     'timeHeaderCell',
     'timeHeaderDayLabel',
@@ -133,5 +137,6 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'monthsHeaderMonthLabel',
     'yearsHeader',
     'yearsHeaderYearLabel',
+    ...eventDialogClassKeys,
   ],
 );
