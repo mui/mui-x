@@ -11,37 +11,31 @@ const EventDraggableDialogHeaderRoot = styled('header', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-end',
   gap: theme.spacing(1.5),
-  backgroundColor: theme.palette.action.hover,
-  padding: theme.spacing(3),
-}));
+  padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
 
-const EventDraggableDialogHeaderContent = styled('div', {
-  name: 'MuiEventDraggableDialog',
-  slot: 'HeaderContent',
-})(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(1),
-  flex: 1,
+  cursor: 'move',
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
 }));
 
 interface EventDraggableDialogHeaderProps {
-  children: React.ReactNode;
   onClose: () => void;
+  handleRef?: React.RefObject<HTMLElement | null>;
 }
 
 export default function EventDraggableDialogHeader(props: EventDraggableDialogHeaderProps) {
-  const { children, onClose } = props;
+  const { onClose, handleRef } = props;
   const classes = useEventDialogClasses();
   const translations = useTranslations();
 
   return (
-    <EventDraggableDialogHeaderRoot className={classes.eventDialogHeader}>
-      <EventDraggableDialogHeaderContent className={classes.eventDialogHeaderContent}>
-        {children}
-      </EventDraggableDialogHeaderContent>
+    <EventDraggableDialogHeaderRoot
+      ref={handleRef as React.RefObject<HTMLElement>}
+      className={classes.eventDialogHeader}
+    >
       <IconButton
         className={classes.eventDialogCloseButton}
         size="small"

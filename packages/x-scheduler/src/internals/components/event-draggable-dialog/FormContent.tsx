@@ -50,15 +50,29 @@ const DialogContent = styled(MuiDialogContent, {
 })({
   cursor: 'default',
   userSelect: 'text',
+  padding: 0,
+  minWidth: 360,
+  width: 450,
 });
+
+const EventDraggableDialogHeaderContent = styled('div', {
+  name: 'MuiEventDraggableDialog',
+  slot: 'HeaderContent',
+})(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(1),
+  flex: 1,
+}));
 
 interface FormContentProps {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
+  handleRef?: React.RefObject<HTMLElement | null>;
 }
 
 export function FormContent(props: FormContentProps) {
-  const { occurrence, onClose } = props;
+  const { occurrence, onClose, handleRef } = props;
 
   // Context hooks
   const adapter = useAdapter();
@@ -230,7 +244,8 @@ export function FormContent(props: FormContentProps) {
   return (
     <DialogContent className={classes.eventDialogContent}>
       <form onSubmit={handleSubmit}>
-        <EventDraggableDialogHeader onClose={onClose}>
+        <EventDraggableDialogHeader onClose={onClose} handleRef={handleRef} />
+        <EventDraggableDialogHeaderContent className={classes.eventDialogHeaderContent}>
           <TextField
             name="title"
             defaultValue={occurrence.title}
@@ -253,7 +268,7 @@ export function FormContent(props: FormContentProps) {
             onColorChange={handleColorChange}
             color={controlled.color}
           />
-        </EventDraggableDialogHeader>
+        </EventDraggableDialogHeaderContent>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={tabValue} onChange={handleTabChange}>
             <Tab label={translations.generalTabLabel} value="general" />

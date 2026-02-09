@@ -102,10 +102,11 @@ const EventDraggableDialogResourceTitle = styled('p', {
 type ReadonlyContentProps = {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
+  handleRef?: React.RefObject<HTMLElement | null>;
 };
 
 export default function ReadonlyContent(props: ReadonlyContentProps) {
-  const { occurrence, onClose } = props;
+  const { occurrence, onClose, handleRef } = props;
 
   // Context hooks
   const adapter = useAdapter();
@@ -138,7 +139,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   return (
     <React.Fragment>
-      <EventDraggableDialogHeader onClose={onClose}>
+      <EventDraggableDialogHeader onClose={onClose} handleRef={handleRef}>
         <EventDraggableDialogTitle className={classes.eventDialogTitle}>
           {occurrence.title}
         </EventDraggableDialogTitle>

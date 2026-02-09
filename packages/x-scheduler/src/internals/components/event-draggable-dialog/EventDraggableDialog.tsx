@@ -1,9 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
@@ -27,7 +24,7 @@ import { useEventDialogClasses } from './EventDialogClassesContext';
 
 interface PaperComponentProps extends PaperProps {
   anchorRef: React.RefObject<HTMLElement>;
-  handleRef: React.RefObject<HTMLDivElement>;
+  handleRef: React.RefObject<HTMLElement>;
 }
 
 // 1. Setup the Draggable Paper Logic
@@ -82,7 +79,6 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
       {...other}
       ref={nodeRef}
       sx={{
-        p: 2,
         borderWidth: 0,
         borderTopWidth: 1,
         height: 'fit-content',
@@ -112,7 +108,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   // Ref hooks
-  const handleRef = React.useRef<HTMLButtonElement>(null);
+  const handleRef = React.useRef<HTMLElement>(null);
 
   return (
     <Dialog
@@ -136,22 +132,10 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
       }}
       {...other}
     >
-      <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <IconButton
-          size="small"
-          aria-label="Drag to move dialog"
-          aria-roledescription="draggable"
-          ref={handleRef}
-          className={classes.eventDialogDragHandle}
-          sx={{ cursor: 'move' }}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-      </Box>
       {isEventReadOnly ? (
-        <ReadonlyContent occurrence={occurrence} onClose={onClose} />
+        <ReadonlyContent occurrence={occurrence} onClose={onClose} handleRef={handleRef} />
       ) : (
-        <FormContent occurrence={occurrence} onClose={onClose} />
+        <FormContent occurrence={occurrence} onClose={onClose} handleRef={handleRef} />
       )}
     </Dialog>
   );

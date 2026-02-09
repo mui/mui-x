@@ -3,8 +3,6 @@ export interface EventDialogClasses {
   eventDialog: string;
   /** Styles applied to the event dialog close button element. */
   eventDialogCloseButton: string;
-  /** Styles applied to the event dialog drag handle element. */
-  eventDialogDragHandle: string;
   /** Styles applied to the event dialog header element. */
   eventDialogHeader: string;
   /** Styles applied to the event dialog header content element. */
@@ -50,7 +48,6 @@ export type EventDialogClassKey = keyof EventDialogClasses;
 export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialog',
   'eventDialogCloseButton',
-  'eventDialogDragHandle',
   'eventDialogHeader',
   'eventDialogHeaderContent',
   'eventDialogReadonlyContent',
@@ -76,7 +73,6 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
 export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]> = {
   eventDialog: ['eventDialog'],
   eventDialogCloseButton: ['eventDialogCloseButton'],
-  eventDialogDragHandle: ['eventDialogDragHandle'],
   eventDialogHeader: ['eventDialogHeader'],
   eventDialogHeaderContent: ['eventDialogHeaderContent'],
   eventDialogReadonlyContent: ['eventDialogReadonlyContent'],
