@@ -344,6 +344,18 @@ If you're using these classes manually in your styles, update them accordingly:
 +`.MuiBarChart-root`
 ```
 
+## ChartsSurface
+
+### `data-has-focused-item` attribute removed
+
+The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
+If you were relying on this attribute to style the chart when an item is focused, you should use the `:focus-within` CSS pseudo-class instead.
+
+```diff
+-`.MuiChartsSurface-root[data-has-focused-item]`
++`.MuiChartsSurface-root:focus-within`
+```
+
 ## Typescript
 
 ### Remove default generic of `SeriesItemIdentifier`
