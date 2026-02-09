@@ -1,3 +1,4 @@
+'use client';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';

@@ -12,7 +12,8 @@ import {
   DEFAULT_SCHEDULER_PREFERENCES,
   SchedulerParametersToStateMapper,
   SchedulerStore,
-} from '../utils/SchedulerStore';
+  SchedulerInstanceName,
+} from '../internals/utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
@@ -69,7 +70,11 @@ const mapper: SchedulerParametersToStateMapper<
   },
 };
 
-export class EventCalendarStore<
+/**
+ * Base class that can be extended by premium stores.
+ * Accepts instanceName as a parameter to allow subclasses to provide their own instance name.
+ */
+export class ExtendableEventCalendarStore<
   TEvent extends object,
   TResource extends object,
 > extends SchedulerStore<
@@ -78,8 +83,12 @@ export class EventCalendarStore<
   EventCalendarState,
   EventCalendarParameters<TEvent, TResource>
 > {
-  public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
-    super(parameters, adapter, 'Event Calendar', mapper);
+  public constructor(
+    parameters: EventCalendarParameters<TEvent, TResource>,
+    adapter: Adapter,
+    instanceName: SchedulerInstanceName,
+  ) {
+    super(parameters, adapter, instanceName, mapper);
 
     if (process.env.NODE_ENV !== 'production') {
       // Add listeners to assert the state validity (not applied in prod)
@@ -95,7 +104,7 @@ export class EventCalendarStore<
     if (!views.includes(view)) {
       throw new Error(
         [
-          `Event Calendar: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
+          `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
           'Please ensure that the requested view is included in the views array.',
         ].join('\n'),
       );
@@ -148,7 +157,7 @@ export class EventCalendarStore<
     const siblingVisibleDateGetter = this.state.viewConfig?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
-        'Event Calendar: No config found for the current view. Please use useInitializeView in your custom view.',
+        'MUI: No config found for the current view. Please use useInitializeView in your custom view.',
       );
       return;
     }
@@ -217,4 +226,22 @@ export class EventCalendarStore<
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
   };
+
+  public buildPublicAPI() {
+    return {
+      ...super.buildPublicAPI(),
+    };
+  }
+}
+
+/**
+ * Store for the EventCalendar component.
+ */
+export class EventCalendarStore<
+  TEvent extends object,
+  TResource extends object,
+> extends ExtendableEventCalendarStore<TEvent, TResource> {
+  public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
+    super(parameters, adapter, 'EventCalendarStore');
+  }
 }

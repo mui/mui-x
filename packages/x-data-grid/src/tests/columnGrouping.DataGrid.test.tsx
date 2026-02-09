@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/internal-test-utils';
-import { DataGrid, DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, type DataGridProps, type GridRowModel, type GridColDef } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

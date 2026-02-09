@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { EventCalendarParameters, useEventCalendar } from '../use-event-calendar';
-import { EventCalendarStoreContext } from '../use-event-calendar-store-context';
 import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(
@@ -10,11 +9,7 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
   const store = useEventCalendar(parameters);
 
   return (
-    <EventCalendarStoreContext.Provider value={store}>
-      <SchedulerStoreContext.Provider value={store as any}>
-        {children}
-      </SchedulerStoreContext.Provider>
-    </EventCalendarStoreContext.Provider>
+    <SchedulerStoreContext.Provider value={store as any}>{children}</SchedulerStoreContext.Provider>
   );
 }
 

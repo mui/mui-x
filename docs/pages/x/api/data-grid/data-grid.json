@@ -714,6 +714,12 @@
       "class": null
     },
     {
+      "name": "baseTextarea",
+      "description": "The custom Textarea component used in the grid for multiline text editing.",
+      "default": "InputBase with multiline",
+      "class": null
+    },
+    {
       "name": "baseToggleButton",
       "description": "The custom ToggleButton component used in the grid.",
       "default": "ToggleButton",
@@ -771,6 +777,18 @@
       "name": "booleanCellFalseIcon",
       "description": "Icon displayed on the boolean cell to represent the false value.",
       "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "undoIcon",
+      "description": "Icon displayed on the undo button in the toolbar.",
+      "default": "GridUndoIcon",
+      "class": null
+    },
+    {
+      "name": "redoIcon",
+      "description": "Icon displayed on the redo button in the toolbar.",
+      "default": "GridRedoIcon",
       "class": null
     },
     {
@@ -981,6 +999,18 @@
       "name": "menuItemCheckIcon",
       "description": "Icon displayed to indicate that a menu item is selected.",
       "default": "GridCheckIcon",
+      "class": null
+    },
+    {
+      "name": "longTextCellExpandIcon",
+      "description": "Icon displayed on the long text cell to expand the content.",
+      "default": "GridLongTextCellExpandIcon",
+      "class": null
+    },
+    {
+      "name": "longTextCellCollapseIcon",
+      "description": "Icon displayed on the long text cell popup to collapse the content.",
+      "default": "GridLongTextCellCollapseIcon",
       "class": null
     }
   ],
@@ -1526,6 +1556,36 @@
       "isGlobal": false
     },
     {
+      "key": "editLongTextCell",
+      "className": "MuiDataGrid-editLongTextCell",
+      "description": "Styles applied to the edit long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopperContent",
+      "className": "MuiDataGrid-editLongTextCellPopperContent",
+      "description": "Styles applied to the edit long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopup",
+      "className": "MuiDataGrid-editLongTextCellPopup",
+      "description": "Styles applied to the edit long text cell popup.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellTextarea",
+      "className": "MuiDataGrid-editLongTextCellTextarea",
+      "description": "Styles applied to the edit long text cell textarea.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellValue",
+      "className": "MuiDataGrid-editLongTextCellValue",
+      "description": "Styles applied to the edit long text cell value element.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGrid-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -1607,6 +1667,42 @@
       "key": "iconSeparator",
       "className": "MuiDataGrid-iconSeparator",
       "description": "Styles applied to the column header separator icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCell",
+      "className": "MuiDataGrid-longTextCell",
+      "description": "Styles applied to the long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellCollapseButton",
+      "className": "MuiDataGrid-longTextCellCollapseButton",
+      "description": "Styles applied to the long text cell collapse button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellContent",
+      "className": "MuiDataGrid-longTextCellContent",
+      "description": "Styles applied to the long text cell content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellExpandButton",
+      "className": "MuiDataGrid-longTextCellExpandButton",
+      "description": "Styles applied to the long text cell expand button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopperContent",
+      "className": "MuiDataGrid-longTextCellPopperContent",
+      "description": "Styles applied to the long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopup",
+      "className": "MuiDataGrid-longTextCellPopup",
+      "description": "Styles applied to the long text cell popup.",
       "isGlobal": false
     },
     {

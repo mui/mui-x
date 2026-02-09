@@ -1,5 +1,5 @@
 import { getKeyDefault } from '../../hooks/features/dataSource/cache';
-import { GridGetRowsParams, GridGetRowsResponse } from '../../models/gridDataSource';
+import type { GridGetRowsParams, GridGetRowsResponse } from '../../models/gridDataSource';
 
 export class TestCache {
   private cache: Map<string, GridGetRowsResponse>;

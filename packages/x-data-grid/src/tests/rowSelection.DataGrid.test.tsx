@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -11,12 +11,12 @@ import {
 } from '@mui/internal-test-utils';
 import {
   DataGrid,
-  DataGridProps,
-  GridRowId,
+  type DataGridProps,
+  type GridRowId,
   GridEditModes,
   useGridApiRef,
-  GridApi,
-  GridRowSelectionModel,
+  type GridApi,
+  type GridRowSelectionModel,
   gridRowSelectionIdsSelector,
 } from '@mui/x-data-grid';
 import {

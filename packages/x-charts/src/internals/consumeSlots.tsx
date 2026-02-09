@@ -1,3 +1,4 @@
+'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import useSlotProps from '@mui/utils/useSlotProps';
@@ -64,7 +65,7 @@ export const consumeSlots = <
   function ConsumeSlotsInternal(props: React.PropsWithoutRef<Props>, ref: React.ForwardedRef<Ref>) {
     const themedProps = useThemeProps({
       props,
-      // eslint-disable-next-line material-ui/mui-name-matches-component-name
+      // eslint-disable-next-line mui/material-ui-name-matches-component-name
       name,
     });
 

@@ -1,3 +1,4 @@
+'use client';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
@@ -6,7 +7,10 @@ import { gridRowSelectionCountSelector } from '../hooks/features/rowSelection/gr
 import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
-import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
+import {
+  GridFooterContainer,
+  type GridFooterContainerProps,
+} from './containers/GridFooterContainer';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(

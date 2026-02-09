@@ -1,5 +1,6 @@
 {
   "props": {
+    "axesGap": { "type": { "name": "number" }, "default": "0" },
     "brushConfig": {
       "type": {
         "name": "shape",
@@ -20,7 +21,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: any, seriesId?: { toLocaleString: func, toString: func, valueOf: func }, type: object }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: object }&gt;"
       }
     },
     "highlightedAxis": {
@@ -30,12 +31,15 @@
       }
     },
     "highlightedItem": {
-      "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
-      }
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: object }&gt;"
+      }
+    },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
@@ -104,7 +108,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }"
       }
     },
     "voronoiMaxRadius": {
@@ -137,6 +141,10 @@
     "import { ChartContainer } from '@mui/x-charts-pro';",
     "import { ChartContainer } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null }
+  ],
   "classes": [],
   "spread": true,
   "themeDefaultProps": false,
@@ -144,6 +152,6 @@
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/ChartContainer/ChartContainer.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li>\n<li><a href=\"/x/react-charts/localization/\">Charts - Localization</a></li>\n<li><a href=\"/x/react-charts/plugins/\">Charts - Plugins</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li>\n<li><a href=\"/x/react-charts/localization/\">Charts - Localization</a></li>\n<li><a href=\"/x/react-charts/plugins/\">Charts - Plugins</a></li></ul>",
   "cssComponent": false
 }

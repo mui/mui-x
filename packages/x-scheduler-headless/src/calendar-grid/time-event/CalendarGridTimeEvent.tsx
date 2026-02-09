@@ -7,16 +7,16 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
-import { useDraggableEvent } from '../../utils/useDraggableEvent';
-import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
-import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
+import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
+import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
+import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
-import { generateOccurrenceFromEvent } from '../../utils/event-utils';
+import { generateOccurrenceFromEvent } from '../../internals/utils/event-utils';
 
 export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeEvent(
   componentProps: CalendarGridTimeEvent.Props,

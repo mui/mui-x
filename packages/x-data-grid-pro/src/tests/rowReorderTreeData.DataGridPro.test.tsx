@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, createEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   DataGridPro,
-  DataGridProProps,
-  GridRowModel,
+  type DataGridProProps,
+  type GridRowModel,
   gridRowTreeSelector,
-  GridApi,
+  type GridApi,
   useGridApiRef,
   GRID_ROOT_GROUP_ID,
   type ReorderValidationContext,

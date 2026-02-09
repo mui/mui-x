@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const caESGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const caESGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Compacta',
   toolbarDensityStandard: 'Estàndard',
   toolbarDensityComfortable: 'Còmoda',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Desfés',
+  toolbarRedo: 'Refés',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columnes',
@@ -162,6 +166,10 @@ const caESGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sí',
   booleanCellFalseLabel: 'no',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Expandeix',
+  longTextCellCollapseLabel: 'Contrau',
 
   // Actions cell more text
   actionsCellMore: 'més',

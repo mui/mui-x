@@ -135,7 +135,7 @@ The bar charts use by priority:
 2. The band axis color
 3. The series color
 
-Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorScale.js"}}
 
@@ -249,10 +249,10 @@ If you're composing a custom component, you can incorporate click events as show
 Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ```jsx
-<ChartContainer onAxisClick={onAxisClick}>
+<ChartsContainer onAxisClick={onAxisClick}>
   {/* ... */}
   <BarPlot onItemClick={onItemClick} />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 ## Animation
@@ -266,9 +266,9 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 <BarChart skipAnimation />
 
 // For a composed chart
-<ChartContainer>
+<ChartsContainer>
   <BarPlot skipAnimation />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "BarAnimation.js"}}
@@ -308,6 +308,7 @@ Here's how the Bar Chart is composed:
         <BarPlot />
         <ChartsOverlay />
         <ChartsAxisHighlight />
+        <FocusedBar />
       </g>
       <ChartsAxis />
       <ChartsClipPath id={clipPathId} />

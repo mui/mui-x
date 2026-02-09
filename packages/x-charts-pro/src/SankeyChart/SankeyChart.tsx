@@ -12,6 +12,8 @@ import { useSankeyChartProps } from './useSankeyChartProps';
 import type { SankeySeriesType } from './sankey.types';
 import { SankeyTooltip } from './SankeyTooltip';
 import type { SankeyChartSlotExtension } from './sankeySlots.types';
+import { FocusedSankeyNode } from './FocusedSankeyNode';
+import { FocusedSankeyLink } from './FocusedSankeyLink';
 import { SankeyDataProvider } from './SankeyDataProvider';
 import type { ChartContainerProProps } from '../ChartContainerPro';
 import type { SankeyChartPluginSignatures } from './SankeyChart.plugins';
@@ -69,6 +71,8 @@ const SankeyChart = React.forwardRef(function SankeyChart(
         <ChartsSurface {...chartsSurfaceProps}>
           <SankeyPlot {...sankeyPlotProps} />
           <ChartsOverlay {...overlayProps} />
+          <FocusedSankeyNode />
+          <FocusedSankeyLink />
           {children}
         </ChartsSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
@@ -99,6 +103,7 @@ SankeyChart.propTypes = {
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */
@@ -116,7 +121,7 @@ SankeyChart.propTypes = {
   highlightedItem: PropTypes.oneOfType([
     PropTypes.shape({
       nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       subType: PropTypes.oneOf([
         /**
          * Subtype to differentiate between node and link
@@ -126,7 +131,7 @@ SankeyChart.propTypes = {
       type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       subType: PropTypes.oneOf([
         /**
@@ -220,7 +225,7 @@ SankeyChart.propTypes = {
   tooltipItem: PropTypes.oneOfType([
     PropTypes.shape({
       nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       subType: PropTypes.oneOf([
         /**
          * Subtype to differentiate between node and link
@@ -230,7 +235,7 @@ SankeyChart.propTypes = {
       type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       subType: PropTypes.oneOf([
         /**

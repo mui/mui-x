@@ -1,3 +1,4 @@
+'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import * as React from 'react';
@@ -67,7 +68,7 @@ export const consumeThemeProps = <
   ) {
     const themedProps = useThemeProps({
       props,
-      // eslint-disable-next-line material-ui/mui-name-matches-component-name
+      // eslint-disable-next-line mui/material-ui-name-matches-component-name
       name,
     });
 

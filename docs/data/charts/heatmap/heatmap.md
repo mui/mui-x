@@ -1,7 +1,7 @@
 ---
 title: React Heatmap chart
 productId: x-charts
-components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent
+components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent, FocusedHeatmapCell, HeatmapPremium
 ---
 
 # Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -39,7 +39,7 @@ You can specify x and y ticks with the `xAxis` and `yAxis` props.
 ## Color mapping
 
 To customize the color mapping, use the `zAxis` configuration.
-You can either use the piecewise or continuous [color mapping](https://mui.com/x/react-charts/styling/#values-color).
+You can either use the piecewise or continuous [color mapping](https://mui.com/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorConfig.js"}}
 
@@ -56,6 +56,18 @@ To modify this styling, use the `heatmapClasses.highlighted` and `heatmapClasses
 In the following demo, we replace the highlight saturation by a border radius and reduce the saturation of the faded cells.
 
 {{"demo": "HighlightClasses.js"}}
+
+## Click event
+
+Use `onItemClick` to know which cell is clicked by user.
+
+The first argument is the click event.
+The second one is the item identifier.
+It contains the properties `xIndex` and `yIndex` that are the indexes of the clicked cell along the x- and y-axes respectively.
+
+If this cell has associated data, the `dataIndex` property indicates the position of the cell's data within the series' `data` array.
+
+{{"demo": "HeatmapCellClick.js"}}
 
 ## Common features
 
@@ -91,3 +103,21 @@ You can modify it with `slots.legend` and `slotProps.legend`.
 ## Custom item
 
 {{"demo": "CustomItem.js"}}
+
+## WebGL Renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
+
+:::info
+This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+:::
+
+Heatmaps can contain a large number of cells.
+To improve performance when rendering many cells, you can use the WebGL renderer by setting the `renderer` prop to `'webgl'`.
+
+The WebGL renderer has some limitations compared to the SVG renderer:
+
+- The `cell` slot is not supported;
+- The heatmap cell cannot be customized using CSS;
+
+The following example showcases a heatmap with approximately 8800 cells rendered using WebGL.
+
+{{"demo": "WebGLHeatmap.js"}}

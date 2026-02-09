@@ -37,8 +37,9 @@ type GestureManagerTyped = GestureManager<
 >;
 
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
-  svgRef,
+  instance,
 }) => {
+  const { svgRef } = instance;
   const gestureManagerRef = React.useRef<GestureManagerTyped | null>(null);
 
   React.useEffect(() => {
@@ -146,7 +147,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       svg?.addEventListener(interaction, callback, options);
 
       return {
-        cleanup: () => svg?.removeEventListener(interaction, callback),
+        cleanup: () => svg?.removeEventListener(interaction, callback, options),
       };
     },
     [svgRef],

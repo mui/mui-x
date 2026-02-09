@@ -6,9 +6,9 @@ import { useAnimateBar } from '../hooks/animation/useAnimateBar';
 
 export interface BarProps extends Omit<
   React.SVGProps<SVGRectElement>,
-  'id' | 'color' | 'ref' | 'x' | 'y' | 'height' | 'width'
+  'color' | 'ref' | 'x' | 'y' | 'height' | 'width'
 > {
-  id: SeriesId;
+  seriesId: SeriesId;
   dataIndex: number;
   color: string;
   ownerState: BarElementOwnerState;
@@ -47,7 +47,7 @@ export interface BarProps extends Omit<
 }
 
 export function AnimatedBarElement(props: BarProps) {
-  const { ownerState, skipAnimation, id, dataIndex, xOrigin, yOrigin, ...other } = props;
+  const { ownerState, skipAnimation, seriesId, dataIndex, xOrigin, yOrigin, ...other } = props;
 
   const animatedProps = useAnimateBar(props);
 
