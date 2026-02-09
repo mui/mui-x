@@ -1,3 +1,4 @@
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
 import { expansionSelectors } from '../expansion';
 import { focusSelectors } from './selectors';
@@ -5,31 +6,23 @@ import { itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../items';
 import { TreeViewItemMeta } from '../../models';
 import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
 
+const itemStructureSelector = createSelectorMemoized(
+  itemsSelectors.itemMetaLookup,
+  itemsSelectors.itemOrderedChildrenIdsLookup,
+  (metaLookup, childrenIdsLookup) => ({ metaLookup, childrenIdsLookup }),
+);
+
 export class TreeViewFocusPlugin {
   private store: MinimalTreeViewStore<any, any>;
-
-  /**
-   * Cached previous value of `itemOrderedChildrenIdsLookup`.
-   * Used to find the removed item's sibling position when both meta and children
-   * are updated atomically (RichTreeView).
-   */
-  private lastChildrenIdsLookup: Record<string, TreeViewItemId[]>;
 
   // We can't type `store`, otherwise we get the following TS error:
   // 'focus' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
   constructor(store: any) {
     this.store = store;
-    this.lastChildrenIdsLookup = store.state.itemOrderedChildrenIdsLookup;
-
-    // Cache the previous children ordering for use when detecting item removal.
-    // Must be registered before the meta effect so it fires first on atomic updates.
-    this.store.registerStoreEffect(itemsSelectors.itemOrderedChildrenIdsLookup, (prev) => {
-      this.lastChildrenIdsLookup = prev;
-    });
 
     // Whenever the items change, we need to ensure the focused item is still present.
     // If the focused item was removed, focus the closest neighbor instead of the first item.
-    this.store.registerStoreEffect(itemsSelectors.itemMetaLookup, (previousMetaLookup) => {
+    this.store.registerStoreEffect(itemStructureSelector, (previous: ReturnType<typeof itemStructureSelector>) => {
       const focusedItemId = focusSelectors.focusedItemId(store.state);
       if (focusedItemId == null) {
         return;
@@ -40,7 +33,11 @@ export class TreeViewFocusPlugin {
         return;
       }
 
-      const closestItemId = this.getClosestFocusableItem(focusedItemId, previousMetaLookup);
+      const closestItemId = this.getClosestFocusableItem(
+        focusedItemId,
+        previous.metaLookup,
+        previous.childrenIdsLookup,
+      );
 
       if (closestItemId == null) {
         this.setFocusedItemId(null);
@@ -58,6 +55,7 @@ export class TreeViewFocusPlugin {
   private getClosestFocusableItem = (
     removedItemId: TreeViewItemId,
     previousMetaLookup: Record<string, TreeViewItemMeta>,
+    previousChildrenIdsLookup: Record<string, TreeViewItemId[]>,
   ): TreeViewItemId | null => {
     const removedMeta = previousMetaLookup[removedItemId];
     if (!removedMeta) {
@@ -65,23 +63,8 @@ export class TreeViewFocusPlugin {
     }
 
     const parentKey = removedMeta.parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-
-    // Try the current children first: in SimpleTreeView, the children ordering
-    // is updated separately from the meta, so the removed item may still appear
-    // in the current children list.
-    // Fall back to the cached previous children for RichTreeView where both
-    // meta and children are updated atomically.
-    const currentChildren = this.store.state.itemOrderedChildrenIdsLookup[parentKey] ?? [];
-    let siblingIds: TreeViewItemId[];
-    let removedIndex: number;
-
-    if (currentChildren.includes(removedItemId)) {
-      siblingIds = currentChildren;
-      removedIndex = currentChildren.indexOf(removedItemId);
-    } else {
-      siblingIds = this.lastChildrenIdsLookup[parentKey] ?? [];
-      removedIndex = siblingIds.indexOf(removedItemId);
-    }
+    const siblingIds = previousChildrenIdsLookup[parentKey] ?? [];
+    const removedIndex = siblingIds.indexOf(removedItemId);
 
     if (removedIndex === -1) {
       return focusSelectors.defaultFocusableItemId(this.store.state);
