@@ -9,7 +9,7 @@ import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
-import reactMajor from '@mui/x-internals/reactMajor';
+import useRefCallback from '../../utils/useRefCallback';
 import { PinnedRows, PinnedColumns, Size } from '../../models/core';
 import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
@@ -701,25 +701,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     scheduleUpdateRenderContext,
     ...createSpanningAPI(),
   };
-}
-
-export function useRefCallback(fn: (node: HTMLDivElement) => (() => void) | undefined) {
-  const refCleanup = React.useRef<() => void | undefined>(undefined);
-  const refCallback = useEventCallback((node: HTMLDivElement | null) => {
-    if (!node) {
-      // Cleanup for R18
-      refCleanup.current?.();
-      return;
-    }
-
-    refCleanup.current = fn(node);
-
-    if (reactMajor >= 19) {
-      /* eslint-disable-next-line consistent-return */
-      return refCleanup.current;
-    }
-  });
-  return refCallback;
 }
 
 type RenderContextInputs = ReturnType<typeof inputsSelector>;

@@ -5,8 +5,9 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import * as platform from '@mui/x-internals/platform';
 import { Store, createSelectorMemoized } from '@mui/x-internals/store';
 import { Dimensions } from '../../features/dimensions';
-import { Virtualization, useRefCallback, type VirtualizationLayoutParams } from './virtualization';
+import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
+import useRefCallback from '../../utils/useRefCallback';
 
 /* eslint-disable react-hooks/rules-of-hooks */
 
