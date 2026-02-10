@@ -1,18 +1,16 @@
-import { ChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
+import { ChartSeriesType } from '../models/seriesType/config';
 import {
   createGetNextIndexFocusedItem,
   createGetPreviousIndexFocusedItem,
   createGetNextSeriesFocusedItem,
   createGetPreviousSeriesFocusedItem,
 } from './commonNextFocusItem';
-import type { KeyboardFocusHandler } from './plugins/featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 
-function createKeyboardFocusHandler<
-  TSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
-  OutputSeriesType extends Exclude<ChartSeriesType, 'sankey'> = TSeriesType,
->(outSeriesTypes: Set<Exclude<ChartSeriesType, 'sankey'>>, allowCycles?: boolean) {
-  // @ts-expect-error
-  const keyboardFocusHandler: KeyboardFocusHandler<TSeriesType, OutputSeriesType> = (event) => {
+function createKeyboardFocusHandler<TSeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
+  outSeriesTypes: Set<TSeriesType>,
+  allowCycles?: boolean,
+) {
+  const keyboardFocusHandler = (event: KeyboardEvent) => {
     switch (event.key) {
       case 'ArrowRight':
         return createGetNextIndexFocusedItem(outSeriesTypes, allowCycles);
