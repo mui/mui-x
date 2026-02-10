@@ -6,6 +6,15 @@ import type { SchedulerResourceId } from './resource';
 export type { TemporalTimezone } from '../base-ui-copy/types';
 
 /**
+ * The valid input types for event date fields (`start`, `end`, `exDates`).
+ *
+ * - A `TemporalSupportedObject` (e.g. `Date`, `TZDate`) is used as-is (instant semantics).
+ * - A `string` ending with `"Z"` is treated as an instant (UTC).
+ * - A `string` without `"Z"` is treated as wall-time and interpreted in `event.timezone` (or `"default"`).
+ */
+export type SchedulerEventDateInput = string | TemporalSupportedObject;
+
+/**
  * Base shape for processed scheduler events.
  *
  * Contains properties that are required for rendering and user interaction,
@@ -184,12 +193,20 @@ export interface SchedulerEvent {
   description?: string;
   /**
    * The start date and time of the event.
+   *
+   * Accepts a date object or an ISO string.
+   * Strings ending with `"Z"` are instants; strings without `"Z"` are wall-time
+   * (interpreted in `event.timezone` or `"default"`).
    */
-  start: TemporalSupportedObject;
+  start: SchedulerEventDateInput;
   /**
    * The end date and time of the event.
+   *
+   * Accepts a date object or an ISO string.
+   * Strings ending with `"Z"` are instants; strings without `"Z"` are wall-time
+   * (interpreted in `event.timezone` or `"default"`).
    */
-  end: TemporalSupportedObject;
+  end: SchedulerEventDateInput;
   /**
    * The timezone of the event dates.
    */
@@ -209,8 +226,10 @@ export interface SchedulerEvent {
   /**
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
+   *
+   * Accepts date objects or ISO strings (same semantics as `start`/`end`).
    */
-  exDates?: TemporalSupportedObject[];
+  exDates?: SchedulerEventDateInput[];
   /**
    * Whether the event is an all-day event.
    * @default false
@@ -407,8 +426,14 @@ export interface SchedulerProcessedDate {
  * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
  * All other properties are optional and can be skipped if not modified.
  */
-export type SchedulerEventUpdatedProperties = Partial<SchedulerEvent> & {
+export type SchedulerEventUpdatedProperties = Omit<
+  Partial<SchedulerEvent>,
+  'start' | 'end' | 'exDates'
+> & {
   id: SchedulerEventId;
+  start?: TemporalSupportedObject;
+  end?: TemporalSupportedObject;
+  exDates?: TemporalSupportedObject[];
 };
 
 /**
@@ -421,7 +446,7 @@ export type SchedulerEventCreationProperties = Omit<SchedulerEvent, 'id'>;
  * Properties to pass to the methods that paste an event.
  */
 export type SchedulerEventPasteProperties = Partial<
-  Pick<SchedulerEvent, 'start' | 'resource' | 'allDay'>
+  Pick<SchedulerEvent, 'resource' | 'allDay'> & { start: TemporalSupportedObject }
 >;
 
 // TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Event Timeline Premium.
@@ -429,6 +454,17 @@ export type SchedulerEventPasteProperties = Partial<
  * The type of surface the event is being rendered on.
  */
 export type EventSurfaceType = 'day-grid' | 'time-grid' | 'timeline';
+
+/**
+ * Maps the setter value type for `SchedulerEventModelStructure`.
+ * Date input fields are resolved to `TemporalSupportedObject` because
+ * setters are only called by internal code with already-resolved date objects.
+ */
+type SchedulerEventSetterValue<K extends keyof SchedulerEvent> = K extends 'start' | 'end'
+  ? TemporalSupportedObject
+  : K extends 'exDates'
+    ? TemporalSupportedObject[] | undefined
+    : SchedulerEvent[K];
 
 export type SchedulerEventModelStructure<TEvent extends object> = {
   [key in keyof SchedulerEvent]?: {
@@ -439,7 +475,7 @@ export type SchedulerEventModelStructure<TEvent extends object> = {
      */
     setter?: (
       event: TEvent | Partial<TEvent>,
-      value: SchedulerEvent[key],
+      value: SchedulerEventSetterValue<key>,
     ) => TEvent | Partial<TEvent>;
   };
 };

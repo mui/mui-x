@@ -57,13 +57,14 @@ The `timezone` field does not affect the event dates. It is only used internally
 
 ## Event date values
 
-The `start` and `end` fields of an event must represent a fixed moment in time.
+The `start` and `end` fields of an event can be provided as:
 
-They are expected to be provided as JavaScript `Date` objects or timezone-aware
-date objects (such as `TZDate`).
+- JavaScript `Date` objects or timezone-aware date objects (such as `TZDate`) — treated as instants.
+- ISO strings ending with `"Z"` (e.g. `"2024-01-10T13:00:00Z"`) — treated as instants (UTC).
+- ISO strings without `"Z"` (e.g. `"2024-01-10T09:00:00"`) — treated as **wall-time** and interpreted in `event.timezone` (or `"default"` if not set).
 
 :::info
-The timezone of the date object itself is not used to define event semantics.
+When using date objects, the timezone of the object itself is not used to define event semantics.
 Only the instant it represents is taken into account.
 :::
 
@@ -115,13 +116,21 @@ This is the only case where Scheduler intentionally operates on wall-time semant
 instead of pure instants.
 :::
 
-## What Scheduler does not support yet
+## Wall-time event definitions (string dates)
 
-Scheduler currently does not support wall-time event definitions based on string dates.
+When event dates are provided as strings without a trailing `Z`, they are interpreted as **wall-time** values in the event's `timezone`.
 
-This means:
+This is useful when your data stores local times (e.g. from a calendar API) and you want the Scheduler to interpret them correctly without manual conversion.
 
-- Dates without an explicit instant (for example `"2024-03-10 09:00"`) are not supported
-- Event dates are not reinterpreted based on `event.timezone`
+```ts
+const event = {
+  start: '2024-03-10T09:00:00', // 09:00 local time in America/New_York
+  end: '2024-03-10T10:00:00',
+  timezone: 'America/New_York',
+};
+```
 
-Support for string-based, wall-time event definitions is planned for a future release.
+- The event will be displayed at 09:00 in `America/New_York`, regardless of DST.
+- Strings ending with `Z` (e.g. `"2024-03-10T14:00:00Z"`) are still treated as UTC instants.
+
+{{"demo": "TimezoneDatasetWallTime.js", "bg": "inline", "defaultCodeOpen": false}}

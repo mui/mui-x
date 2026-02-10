@@ -499,7 +499,9 @@ export class SchedulerStore<
     }
 
     const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
-    const cleanChanges: Partial<SchedulerEvent> = { ...changes };
+    const cleanChanges: SchedulerEventPasteProperties & { end?: TemporalSupportedObject } = {
+      ...changes,
+    };
     if (cleanChanges.start != null) {
       cleanChanges.end = adapter.addMilliseconds(
         cleanChanges.start,
@@ -508,7 +510,10 @@ export class SchedulerStore<
     }
 
     if (copiedEvent.action === 'cut') {
-      const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
+      const updatedEvent: SchedulerEventUpdatedProperties = {
+        id: copiedEvent.id,
+        ...cleanChanges,
+      };
       return this.updateEvents({ updated: [updatedEvent] }).updated[0];
     }
 

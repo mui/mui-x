@@ -286,7 +286,7 @@ export function decideSplitRRule(
   originalRule: RecurringEventRecurrenceRule,
   originalSeriesStart: TemporalSupportedObject,
   splitStart: TemporalSupportedObject,
-  changes: Partial<SchedulerEvent>,
+  changes: Partial<SchedulerEventUpdatedProperties>,
 ): RecurringEventRecurrenceRule | undefined {
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');

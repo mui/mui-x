@@ -11,7 +11,7 @@ import {
   SchedulerEventOccurrence,
   SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
-import { processEvent } from '@mui/x-scheduler-headless/process-event';
+import { processEvent, resolveEventDate } from '@mui/x-scheduler-headless/process-event';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/internals/utils/recurring-events';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
@@ -97,7 +97,7 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set exception dates for recurrence. */
+  /** Set exception dates for recurrence (instant-based, must end with Z). */
   exDates(dates?: string[]) {
     dates?.forEach((date) => {
       if (!date.endsWith('Z')) {
@@ -106,6 +106,12 @@ export class EventBuilder {
     });
 
     this.event.exDates = dates?.map((date) => this.adapter.date(date, 'default'));
+    return this;
+  }
+
+  /** Set exception dates as raw strings (instant or wall-time). */
+  exDatesStrings(dates: string[]) {
+    this.event.exDates = dates;
     return this;
   }
 
@@ -152,6 +158,37 @@ export class EventBuilder {
   // ─────────────────────────────────────────────
   // Time setters
   // ─────────────────────────────────────────────
+
+  /**
+   * Sets the start as a raw string (instant or wall-time).
+   * No conversion is performed — the string is stored as-is.
+   */
+  startAtString(start: string) {
+    this.event.start = start;
+    return this;
+  }
+
+  /**
+   * Sets the end as a raw string (instant or wall-time).
+   * No conversion is performed — the string is stored as-is.
+   */
+  endAtString(end: string) {
+    this.event.end = end;
+    return this;
+  }
+
+  /**
+   * Sets both start and end as raw strings (instant or wall-time).
+   * No conversion is performed — the strings are stored as-is.
+   */
+  spanStrings(start: string, end: string, opts?: { allDay?: boolean }) {
+    this.event.start = start;
+    this.event.end = end;
+    if (opts?.allDay !== undefined) {
+      this.event.allDay = opts.allDay;
+    }
+    return this;
+  }
 
   /**
    * Manually sets the start date/time using an ISO-like string.
@@ -246,8 +283,10 @@ export class EventBuilder {
    * - If kind + rule: merges your rrule over the preset.
    */
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
-    const anchor =
-      this.event.start ?? this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, 'default');
+    const dataTimezone = this.event.timezone ?? 'default';
+    const anchor = this.event.start
+      ? resolveEventDate(this.event.start, dataTimezone, this.adapter)
+      : this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, 'default');
 
     let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
 
@@ -279,9 +318,10 @@ export class EventBuilder {
    * Defaults to the event start date.
    */
   toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
+    const dataTimezone = this.event.timezone ?? 'default';
     const rawStart = occurrenceStartDate
       ? this.adapter.date(occurrenceStartDate, 'default')
-      : this.event.start;
+      : resolveEventDate(this.event.start, dataTimezone, this.adapter);
 
     const baseProcessed = processEvent(this.event, this.displayTimezone, this.adapter);
     const originalDurationMs =
