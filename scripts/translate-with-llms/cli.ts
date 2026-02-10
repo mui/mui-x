@@ -1,6 +1,5 @@
 import { spawnSync } from 'node:child_process';
 import { createInterface } from 'node:readline';
-import { pathToFileURL } from 'node:url';
 import { checkbox, confirm } from '@inquirer/prompts';
 import { applyTranslations } from './applyTranslations';
 import { getMissingTranslations } from './getMissingTranslations';
@@ -226,9 +225,7 @@ async function main() {
   process.stdout.write('\n');
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main().catch((error) => {
-    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-    process.exitCode = 1;
-  });
-}
+main().catch((error) => {
+  process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+  process.exitCode = 1;
+});
