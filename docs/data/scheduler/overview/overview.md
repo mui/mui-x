@@ -21,20 +21,25 @@ This package is not published yet.
 
 ## Common features
 
-- [Event properties](/x/react-scheduler/event-properties/)
-- [Resource properties](/x/react-scheduler/resource-properties/)
-- [Recurring events](/x/react-scheduler/recurring-events/)
-- [Drag interactions](/x/react-scheduler/drag-interactions/)
-- [Timezone support](/x/react-scheduler/timezone-support/)
+- [Event properties](/x/react-scheduler/event-properties/) (TODO: Duplicate for Event Calendar and Event Timeline)
+- [Resource properties](/x/react-scheduler/resource-properties/) (TODO: Duplicate for Event Calendar and Event Timeline)
+- [Recurring events](/x/react-scheduler/recurring-events/) (TODO: Duplicate for Event Calendar and Event Timeline)
+- [Drag interactions](/x/react-scheduler/drag-interactions/) (TODO: Duplicate for Event Calendar and Event Timeline)
+- [Timezone support](/x/react-scheduler/timezone-support/) (TODO: Duplicate for Event Calendar and Event Timeline)
 
 ## Event Calendar
 
-- [Event Calendar](/x/react-scheduler/event-calendar/) ([full screen demo](/x/react-scheduler/full-screen-event-calendar/))
-- [Lazy Loading](/x/react-scheduler/lazy-loading/)
-- [Week View](/x/react-scheduler/week-view/)
-- [Day View](/x/react-scheduler/day-view/)
-- [Month View](/x/react-scheduler/month-view/)
-- [Agenda View](/x/react-scheduler/agenda-view/)
+- [Full screen demo](/x/react-scheduler/full-screen-event-calendar/) (TODO: replace with overview page?)
+- [Events](/x/react-scheduler/event-calendar/events/)
+- [Navigation](/x/react-scheduler/event-calendar/navigation/)
+- [Views](/x/react-scheduler/event-calendar/views/)
+- [Week View](/x/react-scheduler/event-calendar/week-view/)
+- [Day View](/x/react-scheduler/event-calendar/day-view/)
+- [Month View](/x/react-scheduler/event-calendar/month-view/)
+- [Agenda View](/x/react-scheduler/event-calendar/agenda-view/)
+- [Lazy Loading](/x/react-scheduler/event-calendar/lazy-loading/)
+- [Preferences](/x/react-scheduler/event-calendar/preferences/)
+- [Localization](/x/react-scheduler/event-calendar/localization/)
 
 ## Event Timeline Premium
 
