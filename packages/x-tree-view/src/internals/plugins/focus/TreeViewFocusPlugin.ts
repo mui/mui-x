@@ -21,7 +21,7 @@ export class TreeViewFocusPlugin {
         // If no item is focused or the focused item is still present, we don't need to do anything.
         const focusedItemId = focusSelectors.focusedItemId(store.state);
         if (focusedItemId == null || itemsSelectors.itemMeta(store.state, focusedItemId)) {
-          return;
+          return undefined;
         }
 
         const itemToFocusId = getNextNavigableItem(previous, focusedItemId);
@@ -31,8 +31,7 @@ export class TreeViewFocusPlugin {
         }
 
         if (itemToFocusId == null) {
-          this.setFocusedItemId(null);
-          return;
+          return this.setFocusedItemId(null);
         }
 
         this.applyItemFocus(null, itemToFocusId);
