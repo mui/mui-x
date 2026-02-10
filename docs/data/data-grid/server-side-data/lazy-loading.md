@@ -129,7 +129,8 @@ This is useful for dashboards such as stock tickers, where values can change eve
 
 ### Dynamically updated datasets
 
-The following demo uses `lazyLoadingRevalidateMs="1_000"` (1 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
+The following demo uses `lazyLoadingRevalidateMs="3_000"` (3 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
+
 Note that the row IDs stay stable but the row values change over time.
 This is useful for dashboards such as stock trackers, where rows represent the same entities while values are updated continuously.
 

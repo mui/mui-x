@@ -7,6 +7,7 @@ import {
   GridRenderCellParams,
 } from '@mui/x-data-grid-pro';
 import Typography from '@mui/material/Typography';
+import { alpha, type SxProps, type Theme } from '@mui/material/styles';
 
 const STOCKS = [
   { symbol: 'AAPL', name: 'Apple Inc.' },
@@ -53,6 +54,13 @@ interface StockRow {
   volume: number;
 }
 
+interface StockRowWithChange extends StockRow {
+  priceChangeId: number;
+  changeValueChangeId: number;
+  changePercentChangeId: number;
+  volumeChangeId: number;
+}
+
 // Generate base prices for each stock (deterministic)
 const basePrices: Record<string, number> = {};
 STOCKS.forEach((stock, i) => {
@@ -92,7 +100,61 @@ function fakeStockServer(params: GridGetRowsParams) {
   });
 }
 
-const columns: GridColDef[] = [
+function FlashOnChange({
+  children,
+  changeId,
+  align = 'left',
+  fontWeight,
+  sx,
+}: {
+  children: React.ReactNode;
+  changeId: number;
+  align?: 'left' | 'right';
+  fontWeight?: 'regular' | 'bold';
+  sx?: SxProps<Theme>;
+}) {
+  const [flash, setFlash] = React.useState(false);
+
+  React.useEffect(() => {
+    if (changeId === 0) {
+      return undefined;
+    }
+
+    setFlash(true);
+    const timeout = setTimeout(() => setFlash(false), 500);
+    return () => clearTimeout(timeout);
+  }, [changeId]);
+
+  return (
+    <Typography
+      variant="body2"
+      display="flex"
+      alignItems="center"
+      justifyContent={align === 'right' ? 'flex-end' : 'flex-start'}
+      height="100%"
+      paddingRight="10px"
+      paddingLeft="10px"
+      width="100%"
+      fontWeight={fontWeight === 'bold' ? 'bold' : undefined}
+      sx={[
+        (theme) => ({
+          position: 'relative',
+          width: 'calc(100% + 20px)',
+          left: '-10px',
+          transition: 'background-color 500ms ease',
+          backgroundColor: flash
+            ? alpha(theme.palette.warning.main, 0.22)
+            : 'transparent',
+        }),
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+    >
+      {children}
+    </Typography>
+  );
+}
+
+const columns: GridColDef<StockRowWithChange>[] = [
   { field: 'symbol', headerName: 'Symbol', width: 100 },
   { field: 'name', headerName: 'Company', flex: 1, minWidth: 180 },
   {
@@ -100,20 +162,17 @@ const columns: GridColDef[] = [
     headerName: 'Price',
     type: 'number',
     width: 110,
-    renderCell: (params: GridRenderCellParams) => (
-      <Typography
-        variant="body2"
-        display="flex"
-        alignItems="center"
-        justifyContent="flex-end"
-        height="100%"
+    renderCell: (params: GridRenderCellParams<StockRowWithChange, number>) => (
+      <FlashOnChange
+        changeId={params.row.priceChangeId}
+        align="right"
+        fontWeight="bold"
         sx={{
           color: params.row.change >= 0 ? 'success.main' : 'error.main',
-          fontWeight: 'bold',
         }}
       >
         ${params.value?.toFixed(2)}
-      </Typography>
+      </FlashOnChange>
     ),
   },
   {
@@ -121,55 +180,104 @@ const columns: GridColDef[] = [
     headerName: 'Change',
     type: 'number',
     width: 100,
-    renderCell: (params: GridRenderCellParams) => (
-      <Typography
-        variant="body2"
-        display="flex"
-        alignItems="center"
-        justifyContent="flex-end"
-        height="100%"
-        sx={{ color: params.value >= 0 ? 'success.main' : 'error.main' }}
-      >
-        {params.value >= 0 ? '+' : ''}
-        {params.value?.toFixed(2)}
-      </Typography>
-    ),
+    renderCell: (params: GridRenderCellParams<StockRowWithChange, number>) => {
+      const value = params.value ?? 0;
+      return (
+        <FlashOnChange
+          changeId={params.row.changeValueChangeId}
+          align="right"
+          sx={{ color: value >= 0 ? 'success.main' : 'error.main' }}
+        >
+          {value >= 0 ? '+' : ''}
+          {value.toFixed(2)}
+        </FlashOnChange>
+      );
+    },
   },
   {
     field: 'changePercent',
     headerName: '% Change',
     type: 'number',
     width: 110,
-    renderCell: (params: GridRenderCellParams) => (
-      <Typography
-        variant="body2"
-        display="flex"
-        alignItems="center"
-        justifyContent="flex-end"
-        height="100%"
-        sx={{ color: params.value >= 0 ? 'success.main' : 'error.main' }}
-      >
-        {params.value >= 0 ? '+' : ''}
-        {params.value?.toFixed(2)}%
-      </Typography>
-    ),
+    renderCell: (params: GridRenderCellParams<StockRowWithChange, number>) => {
+      const value = params.value ?? 0;
+      return (
+        <FlashOnChange
+          changeId={params.row.changePercentChangeId}
+          align="right"
+          sx={{ color: value >= 0 ? 'success.main' : 'error.main' }}
+        >
+          {value >= 0 ? '+' : ''}
+          {value.toFixed(2)}%
+        </FlashOnChange>
+      );
+    },
   },
   {
     field: 'volume',
     headerName: 'Volume',
     type: 'number',
     width: 130,
-    valueFormatter: (value: number) => value?.toLocaleString(),
+    renderCell: (params: GridRenderCellParams<StockRowWithChange, number>) => (
+      <FlashOnChange changeId={params.row.volumeChangeId} align="right">
+        {params.value?.toLocaleString()}
+      </FlashOnChange>
+    ),
   },
 ];
 
 function ServerSideLazyLoadingRevalidation() {
+  const previousRowsById = React.useRef<
+    Map<number, Pick<StockRow, 'price' | 'change' | 'changePercent' | 'volume'>>
+  >(new Map());
+  const changeIdCounter = React.useRef(1);
+
   const dataSource: GridDataSource = React.useMemo(
     () => ({
       getRows: async (params: GridGetRowsParams) => {
         const response = await fakeStockServer(params);
+        const rows: StockRowWithChange[] = response.rows.map((row) => {
+          const previousRow = previousRowsById.current.get(row.id);
+          let priceChangeId = 0;
+          let changeValueChangeId = 0;
+          let changePercentChangeId = 0;
+          let volumeChangeId = 0;
+
+          if (previousRow && previousRow.price !== row.price) {
+            priceChangeId = changeIdCounter.current;
+            changeIdCounter.current += 1;
+          }
+          if (previousRow && previousRow.change !== row.change) {
+            changeValueChangeId = changeIdCounter.current;
+            changeIdCounter.current += 1;
+          }
+          if (previousRow && previousRow.changePercent !== row.changePercent) {
+            changePercentChangeId = changeIdCounter.current;
+            changeIdCounter.current += 1;
+          }
+          if (previousRow && previousRow.volume !== row.volume) {
+            volumeChangeId = changeIdCounter.current;
+            changeIdCounter.current += 1;
+          }
+
+          previousRowsById.current.set(row.id, {
+            price: row.price,
+            change: row.change,
+            changePercent: row.changePercent,
+            volume: row.volume,
+          });
+
+          return {
+            ...row,
+            priceChangeId,
+            changeValueChangeId,
+            changePercentChangeId,
+            volumeChangeId,
+          };
+        });
+
         return {
-          rows: response.rows,
+          rows,
           rowCount: response.rowCount,
         };
       },
@@ -184,7 +292,7 @@ function ServerSideLazyLoadingRevalidation() {
         dataSource={dataSource}
         dataSourceCache={null}
         lazyLoading
-        lazyLoadingRevalidateMs={1000}
+        lazyLoadingRevalidateMs={3_000}
         paginationModel={{ page: 0, pageSize: 10 }}
       />
     </div>

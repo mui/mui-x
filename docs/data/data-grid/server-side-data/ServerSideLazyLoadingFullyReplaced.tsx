@@ -114,7 +114,7 @@ function FlashOnChange({
         left: '-10px',
         transition: 'background-color 500ms ease',
         backgroundColor: flash
-          ? alpha(theme.palette.success.main, 0.18)
+          ? alpha(theme.palette.warning.main, 0.22)
           : 'transparent',
       })}
     >
