@@ -276,8 +276,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#868d23e803bab3896e860e1d78a405354f5fe24c
-        version: https://codeload.github.com/mui/material-ui/tar.gz/868d23e803bab3896e860e1d78a405354f5fe24c(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
+        specifier: github:dav-is/material-ui#78290b3d41d11ffd0dedfd2d61f717bdec9ad77b
+        version: https://codeload.github.com/dav-is/material-ui/tar.gz/78290b3d41d11ffd0dedfd2d61f717bdec9ad77b(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.7(@types/react@19.2.9)(react@19.2.3)
@@ -4409,7 +4409,7 @@ packages:
   '@mui/base@5.0.0-beta.40-1':
     resolution: {integrity: sha512-agKXuNNy0bHUmeU7pNmoZwNFr7Hiyhojkb9+2PVyDG5+6RafYuyMgbrav8CndsB7KUc/U51JAw9vKNDLYBzaUA==}
     engines: {node: '>=12.0.0'}
-    deprecated: This package has been replaced by @base-ui/react
+    deprecated: This package has been replaced by @base-ui-components/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4602,8 +4602,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/868d23e803bab3896e860e1d78a405354f5fe24c':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/868d23e803bab3896e860e1d78a405354f5fe24c}
+  '@mui/monorepo@https://codeload.github.com/dav-is/material-ui/tar.gz/78290b3d41d11ffd0dedfd2d61f717bdec9ad77b':
+    resolution: {tarball: https://codeload.github.com/dav-is/material-ui/tar.gz/78290b3d41d11ffd0dedfd2d61f717bdec9ad77b}
     version: 7.3.7
     engines: {node: '>=22.18.0', pnpm: 10.28.2}
 
@@ -15085,7 +15085,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
       '@types/react': 19.2.9
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/868d23e803bab3896e860e1d78a405354f5fe24c(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
+  '@mui/monorepo@https://codeload.github.com/dav-is/material-ui/tar.gz/78290b3d41d11ffd0dedfd2d61f717bdec9ad77b(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
     dependencies:
       '@netlify/functions': 5.1.2
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
