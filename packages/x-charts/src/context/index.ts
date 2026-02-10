@@ -1,5 +1,4 @@
 export type {
-  HighlightScope,
   FadeOptions,
   HighlightOptions,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
