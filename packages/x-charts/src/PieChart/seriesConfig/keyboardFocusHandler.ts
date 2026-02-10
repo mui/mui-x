@@ -2,4 +2,6 @@ import createKeyboardFocusHandler from '../../internals/createKeyboardFocusHandl
 
 const outSeriesTypes: Set<'pie'> = new Set(['pie']);
 
-export default createKeyboardFocusHandler(outSeriesTypes);
+const keyboardFocusHandler = createKeyboardFocusHandler(outSeriesTypes);
+
+export default keyboardFocusHandler;
