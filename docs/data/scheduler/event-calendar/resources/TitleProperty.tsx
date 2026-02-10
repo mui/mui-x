@@ -4,7 +4,7 @@ import {
   SchedulerResourceModelStructure,
 } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { initialEvents, defaultVisibleDate } from '../datasets/personal-agenda';
+import { initialEvents, defaultVisibleDate } from '../../datasets/personal-agenda';
 
 interface CustomResource {
   id: string;

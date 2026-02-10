@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { initialEvents, defaultVisibleDate } from '../datasets/personal-agenda';
+import { initialEvents, defaultVisibleDate } from '../../datasets/personal-agenda';
 
 export const resources = [
   { name: 'Work', id: 'work', eventColor: 'purple' },

@@ -11,13 +11,15 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-## All day events
+## Basic properties
 
-You can use the `allDay` property on your event model to define it as all-day:
+### All day
+
+Use the `allDay` property on the event model to define it as all-day:
 
 ```ts
 const event = {
-  // ...other even properties
+  // ...other properties
   allDay: true,
 };
 ```
@@ -26,12 +28,21 @@ const event = {
 
 ### Color
 
-The Event Calendar supports several color palettes, the following demo shows one event for each palette:
+Use the `color` property on the event model to define its color:
+
+```ts
+const event = {
+  // ...other properties
+  color: 'lime',
+};
+```
+
+Here is the list of all the available color palettes:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::success
-Event colors can also be defined at on the resources or at the component levels.
+Event colors can also be defined on the resources or at the component levels.
 The effective color resolves in the following order:
 
 1. The `color` assigned to the event
@@ -55,3 +66,46 @@ The effective color resolves in the following order:
 4. The default color palette, `"teal"`
 
 :::
+
+### Class name
+
+Use the `className` property on your events to apply custom CSS styles.
+
+```ts
+const event = {
+  // ...other properties
+  className: 'highlighted-event',
+};
+```
+
+{{"demo": "ClassNameProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+When defined, the class is applied to the event root DOM element in all views (Week, Month, Day, and Agenda views).
+:::
+
+## Define the data in custom properties
+
+Use the `eventModelStructure` prop to define how to read and write properties of the event model when they don't match the model expected by the components:
+
+```tsx
+const eventModelStructure = {
+  title: {
+    getter: (event) => event.name,
+    setter: (event, newValue) => {
+      event.name = newValue;
+    },
+  },
+};
+
+function Calendar() {
+  return (
+    <EventCalendar
+      events={[{ name: 'Event 1' /** ... */ }]}
+      eventModelStructure={eventModelStructure}
+    />
+  );
+}
+```
+
+{{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}

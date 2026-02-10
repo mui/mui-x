@@ -4,7 +4,7 @@ import {
   initialEvents,
   resources,
   defaultVisibleDate,
-} from '../datasets/personal-agenda';
+} from '../../datasets/personal-agenda';
 
 export default function DefaultVisibleResources() {
   const [events, setEvents] = React.useState(initialEvents);
@@ -20,7 +20,6 @@ export default function DefaultVisibleResources() {
           holidays: false,
           medical: false,
         }}
-        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

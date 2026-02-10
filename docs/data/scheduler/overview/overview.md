@@ -22,7 +22,6 @@ This package is not published yet.
 ## Common features
 
 - [Event properties](/x/react-scheduler/event-properties/) (TODO: Duplicate for Event Calendar and Event Timeline)
-- [Resource properties](/x/react-scheduler/resource-properties/) (TODO: Duplicate for Event Calendar and Event Timeline)
 - [Recurring events](/x/react-scheduler/recurring-events/) (TODO: Duplicate for Event Calendar and Event Timeline)
 - [Drag interactions](/x/react-scheduler/drag-interactions/) (TODO: Duplicate for Event Calendar and Event Timeline)
 - [Timezone support](/x/react-scheduler/timezone-support/) (TODO: Duplicate for Event Calendar and Event Timeline)
@@ -31,6 +30,7 @@ This package is not published yet.
 
 - [Full screen demo](/x/react-scheduler/full-screen-event-calendar/) (TODO: replace with overview page?)
 - [Events](/x/react-scheduler/event-calendar/events/)
+- [Resources](/x/react-scheduler/event-calendar/resources/)
 - [Navigation](/x/react-scheduler/event-calendar/navigation/)
 - [Views](/x/react-scheduler/event-calendar/views/)
 - [Week View](/x/react-scheduler/event-calendar/week-view/)

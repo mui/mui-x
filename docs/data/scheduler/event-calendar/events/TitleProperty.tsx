@@ -3,13 +3,24 @@ import { startOfWeek } from 'date-fns/startOfWeek';
 import { setDay } from 'date-fns/setDay';
 import { setHours } from 'date-fns/setHours';
 import { setMinutes } from 'date-fns/setMinutes';
-
+import {
+  RecurringEventRecurrenceRule,
+  SchedulerEventModelStructure,
+} from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { defaultVisibleDate } from '../datasets/personal-agenda';
+import { defaultVisibleDate } from '../../datasets/personal-agenda';
 
 const START_OF_FIRST_WEEK = startOfWeek(defaultVisibleDate);
 
-const initialEvents = [
+interface CustomEvent {
+  id: string;
+  start: Date;
+  end: Date;
+  name: string;
+  rrule: RecurringEventRecurrenceRule;
+}
+
+const initialEvents: CustomEvent[] = [
   {
     id: 'work-daily-standup',
     start: setMinutes(setHours(setDay(START_OF_FIRST_WEEK, 3), 9), 0),
@@ -26,7 +37,7 @@ const initialEvents = [
   },
 ];
 
-const eventModelStructure = {
+const eventModelStructure: SchedulerEventModelStructure<CustomEvent> = {
   title: {
     getter: (event) => event.name,
     setter: (event, newValue) => {
