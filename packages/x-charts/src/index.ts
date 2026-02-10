@@ -43,6 +43,7 @@ export * from './ChartsBrushOverlay';
 export * from './utils';
 export * from './ChartsWebGLSurface';
 export * from './ChartsLayerContainer';
+export * from './ChartsSvgLayer';
 
 // Locales should be imported from `@mui/x-charts/locales`
 // export * from './locales';
