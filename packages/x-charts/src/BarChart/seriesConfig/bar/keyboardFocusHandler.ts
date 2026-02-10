@@ -1,4 +1,4 @@
-import createKeyboardFocusHandler from '../../../internals/createKeyboardFocusHandler';
+import { createKeyboardFocusHandler } from '../../../internals/createKeyboardFocusHandler';
 import type { KeyboardFocusHandler } from '../../../internals/plugins/featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 
 const outSeriesTypes: Set<'bar' | 'line' | 'scatter'> = new Set(['bar', 'line', 'scatter']);
