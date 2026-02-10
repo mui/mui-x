@@ -3,13 +3,9 @@ import {
   checkBarChartScaleErrors,
   type ComputedAxis,
   type ComputedAxisConfig,
-  type D3Scale,
-  getBandSize,
-  type ScaleName,
   useStore,
 } from '@mui/x-charts/internals';
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '@mui/x-charts/models';
-import { type DefaultizedRangeBarSeriesType } from '../../models/seriesType/rangeBar';
 import { type ProcessedRangeBarData, type ProcessedRangeBarSeriesData } from './types';
 import { useRangeBarSeriesContext } from '../../hooks/useRangeBarSeries';
 import { createGetRangeBarDimensions } from '../createGetRangeBarDimensions';
@@ -107,47 +103,4 @@ export function useRangeBarPlotData(
   });
 
   return data;
-}
-
-export function getRangeBarDimensions(
-  layout: 'vertical' | 'horizontal',
-  xAxis: ComputedAxis<ScaleName, any, ChartsXAxisProps>,
-  yAxis: ComputedAxis<ScaleName, any, ChartsYAxisProps>,
-  seriesData: DefaultizedRangeBarSeriesType['data'],
-  dataIndex: number,
-  seriesCount: number,
-  seriesIndex: number,
-) {
-  const xScale = xAxis.scale as D3Scale<any>;
-  const yScale = yAxis.scale as D3Scale<any>;
-
-  const verticalLayout = layout === 'vertical';
-  const baseScaleConfig = (verticalLayout ? xAxis : yAxis) as ComputedAxis<'band'>;
-  const baseValue = baseScaleConfig.data![dataIndex];
-  const seriesValue = seriesData[dataIndex];
-
-  const { barWidth, offset } = getBandSize(
-    baseScaleConfig.scale.bandwidth(),
-    seriesCount,
-    baseScaleConfig.barGapRatio,
-  );
-  const barOffset = seriesIndex * (barWidth + offset);
-
-  if (seriesValue == null) {
-    return null;
-  }
-
-  const valueCoordinates = seriesValue.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
-
-  const minValueCoord = Math.round(Math.min(...valueCoordinates));
-  const maxValueCoord = Math.round(Math.max(...valueCoordinates));
-
-  const barSize = maxValueCoord - minValueCoord;
-
-  return {
-    x: verticalLayout ? xScale(baseValue)! + barOffset : minValueCoord,
-    y: verticalLayout ? minValueCoord : yScale(baseValue)! + barOffset,
-    height: verticalLayout ? barSize : barWidth,
-    width: verticalLayout ? barWidth : barSize,
-  };
 }
