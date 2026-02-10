@@ -6,7 +6,7 @@ import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../../datasets/palette-demo';
+} from '../../datasets/personal-agenda';
 
 export default function Translations() {
   const [events, setEvents] = React.useState(initialEvents);
