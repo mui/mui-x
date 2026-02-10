@@ -19,7 +19,7 @@ You can use the `rrule` property on your event model to define its repeating pat
 
 ```ts
 const event = {
-  // ...other event properties
+  // ...other properties
   rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
 };
 ```

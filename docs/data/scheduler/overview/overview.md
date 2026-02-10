@@ -17,18 +17,19 @@ This package is not published yet.
 
 ## Getting started
 
+- Overview (TODO)
 - [Quickstart](/x/react-scheduler/quickstart/)
 
-## Common features
+## Main features
 
 - [Event properties](/x/react-scheduler/event-properties/) (TODO: Duplicate for Event Calendar and Event Timeline)
-- [Recurring events](/x/react-scheduler/recurring-events/) (TODO: Duplicate for Event Calendar and Event Timeline)
-- [Drag interactions](/x/react-scheduler/drag-interactions/) (TODO: Duplicate for Event Calendar and Event Timeline)
-- [Timezone support](/x/react-scheduler/timezone-support/) (TODO: Duplicate for Event Calendar and Event Timeline)
+- [Recurring events](/x/react-scheduler/recurring-events/)
+- [Drag interactions](/x/react-scheduler/drag-interactions/)
+- [Timezone support](/x/react-scheduler/timezone-support/)
 
 ## Event Calendar
 
-- [Full screen demo](/x/react-scheduler/full-screen-event-calendar/) (TODO: replace with overview page?)
+- [Full screen demo](/x/react-scheduler/full-screen-event-calendar/) (TODO: Remove once we have the overview page)
 - [Events](/x/react-scheduler/event-calendar/events/)
 - [Resources](/x/react-scheduler/event-calendar/resources/)
 - [Navigation](/x/react-scheduler/event-calendar/navigation/)
@@ -41,6 +42,11 @@ This package is not published yet.
 - [Preferences](/x/react-scheduler/event-calendar/preferences/)
 - [Localization](/x/react-scheduler/event-calendar/localization/)
 
-## Event Timeline Premium
+## Event Timeline
 
-- [Event Timeline Premium](/x/react-scheduler/event-timeline-premium/) ([full screen demo](/x/react-scheduler/full-screen-event-timeline-premium/))
+- [Main oage](/x/react-scheduler/event-timeline-premium/) (TODO: Remove once all the content is in feature pages)
+- [Full screen demo](/x/react-scheduler/full-screen-event-timeline-premium/) (TODO: Remove once we have the overview page)
+- Events (TODO)
+- Resources (TODO)
+- Navigation (TODO)
+- Localization (TODO)

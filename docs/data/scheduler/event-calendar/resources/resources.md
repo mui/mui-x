@@ -15,11 +15,27 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
+## Define resources
+
+Use the `resources` prop to define the list of resources the events can be associated to and the `resource` property on the event model to link an event to its resource:
+
+```tsx
+const event = [
+  { resource: 'work' /** other properties */ },
+  { resource: 'holidays' /** other properties */ },
+];
+
+const resources = [
+  { name: 'Work', id: 'work' },
+  { name: 'Holidays', id: 'holidays' },
+];
+
+<EventCalendar events={events} resources={resources} />;
+```
+
 ## Visible resources
 
-### Initialize the visible resources
-
-Use the `defaultVisibleResources` prop to set the visible resources to use when the Event Calendar mounts.
+Use the `defaultVisibleResources` prop to initialize the visible resources.
 A resource is visible if not in the object or if set to `true`.
 
 {{"demo": "DefaultVisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -46,7 +62,7 @@ return (
 
 ### Color
 
-Use the `color` property on the resource model to define its color.
+Use the `eventColor` property to define a resource's color.
 Here is the list of all the available color palettes:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -55,19 +71,19 @@ Here is the list of all the available color palettes:
 Event colors can also be defined on the event or at the component levels.
 The effective color resolves in the following order:
 
-1. The `color` assigned to the event
+1. The `color` property assigned to the event
 
 ```tsx
 <EventCalendar events={[{ id: '1', title: 'Event 1', color: 'pink' }]} />
 ```
 
-2. The `eventColor` assigned to the event's resource
+2. The `eventColor` property assigned to the event's resource
 
 ```tsx
 <EventCalendar resources={[{ id: '1', title: 'Resource 1', eventColor: 'pink' }]} />
 ```
 
-3. The `eventColor` assigned to the Event Calendar
+3. The `eventColor` prop assigned to the Event Calendar
 
 ```tsx
 <EventCalendar eventColor="pink" />
@@ -77,7 +93,33 @@ The effective color resolves in the following order:
 
 :::
 
-## Define the data in custom properties
+### Drag interactions
+
+Use the `areEventsDraggable` property to mark a resource's events as draggable to another point in time:
+
+```ts
+const resource = {
+  // ...other properties
+  areEventsDraggable: true,
+};
+```
+
+Use the `areEventsResizable` property to mark a resource's events as resizable by dragging it's start or end edge:
+
+```ts
+const resource = {
+  // ...other properties
+  areEventsResizable: true,
+  areEventsResizable: "start" // only the start edge is draggable.
+  areEventsResizable: "end" // only the end edge is draggable.
+};
+```
+
+:::success
+Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/drag-interactions/).
+:::
+
+## Store data in custom properties
 
 Use the `resourceModelStructure` prop to define how to read properties of the resource model when they don't match the model expected by the components:
 

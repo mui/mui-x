@@ -17,7 +17,7 @@ This package is not published yet.
 
 ## Initialize the preferences
 
-Use the `defaultPreferences` prop to set the preferences to use when the Event Calendar mounts:
+Use the `defaultPreferences` prop to initialize the preferences:
 
 ```tsx
 const defaultPreferences = {

@@ -17,7 +17,7 @@ This package is not published yet.
 
 ## Default visible date
 
-Use the `defaultVisibleDate` prop to set the visible date to use when the Event Calendar mounts:
+Use the `defaultVisibleDate` prop to initialize the visible date:
 
 ```tsx
 const defaultVisibleDate = DateTime.fromISO('2025-11-01');

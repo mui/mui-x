@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { setHours } from 'date-fns/setHours';
 import { setMinutes } from 'date-fns/setMinutes';
+import Stack from '@mui/material/Stack';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 import capitalize from '@mui/utils/capitalize';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { defaultVisibleDate } from '../datasets/personal-agenda';
+import { defaultVisibleDate } from '../../datasets/personal-agenda';
 
 const initialEvents = [
   // July 1, 2025 (defaultVisibleDate) - Tuesday schedule
@@ -112,7 +115,7 @@ const classes = [
   { id: 'history', title: 'History', eventColor: 'indigo' },
 ];
 
-export default function ResourceProperty() {
+export default function DynamicResourceProperty() {
   const [resourceProperty, setResourceProperty] = React.useState('room');
   const [events, setEvents] = React.useState(initialEvents);
 
@@ -137,25 +140,19 @@ export default function ResourceProperty() {
   );
 
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%' }}
-    >
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button
-          onClick={() => setResourceProperty('room')}
-          disabled={resourceProperty === 'room'}
-          type="button"
-        >
-          Group by Room
-        </button>
-        <button
-          onClick={() => setResourceProperty('teacher')}
-          disabled={resourceProperty === 'teacher'}
-          type="button"
-        >
-          Group by Teacher
-        </button>
-      </div>
+    <Stack spacing={2} style={{ width: '100%' }}>
+      <ToggleButtonGroup
+        exclusive
+        onChange={(event, newResourceProperty) => {
+          if (newResourceProperty !== null) {
+            setResourceProperty(newResourceProperty);
+          }
+        }}
+        value={resourceProperty}
+      >
+        <ToggleButton value="room">Group by Room</ToggleButton>
+        <ToggleButton value="teacher">Group by Teacher</ToggleButton>
+      </ToggleButtonGroup>
       <div style={{ height: '600px', width: '100%' }}>
         <EventCalendar
           events={events}
@@ -167,6 +164,6 @@ export default function ResourceProperty() {
           views={['day']}
         />
       </div>
-    </div>
+    </Stack>
   );
 }

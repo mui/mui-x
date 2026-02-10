@@ -27,7 +27,7 @@ Use the `views` prop to define which views can be accessed in the Event Calendar
 
 ## Default view
 
-Use the `defaultView` prop to set the view to use when the Event Calendar mounts:
+Use the `defaultView` prop to initialize the view:
 
 ```tsx
 <EventCalendar defaultView="agenda" />
