@@ -6,6 +6,7 @@ import {
   useExtractEventCalendarParameters,
 } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import { EventCalendarProps } from './EventCalendar.types';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
@@ -30,7 +31,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const store = useEventCalendar(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { translations, ...other } = forwardedProps;
+  const { translations, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
