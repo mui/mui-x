@@ -310,7 +310,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
           getRows: async (params: GridGetRowsParams) => {
             const groupKeysString = JSON.stringify(params.groupKeys);
             const rows = treeData[groupKeysString] || [];
-            return { rows, rowCount: rows.length };
+            return { rows, rowCount: rows.length, version };
           },
           getGroupKey: (row) => row.name,
           getChildrenCount: (row) => row.descendantCount,
