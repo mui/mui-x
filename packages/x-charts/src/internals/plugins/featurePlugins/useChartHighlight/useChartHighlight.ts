@@ -5,11 +5,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartPluginOptions, ChartResponse, ChartPlugin } from '../../models';
 import type { UseChartHighlightSignature } from './useChartHighlight.types';
-import type {
-  ChartSeriesType,
-  HighlightItemIdentifier,
-  SeriesItemIdentifier,
-} from '../../../../models/seriesType';
+import type { ChartSeriesType, HighlightItemIdentifier } from '../../../../models/seriesType';
 
 export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   SeriesType extends ChartSeriesType = ChartSeriesType,
