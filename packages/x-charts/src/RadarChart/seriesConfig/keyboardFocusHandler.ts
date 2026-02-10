@@ -2,4 +2,4 @@ import createKeyboardFocusHandler from '../../internals/createKeyboardFocusHandl
 
 const outSeriesTypes: Set<'radar'> = new Set(['radar']);
 
-export default createKeyboardFocusHandler(outSeriesTypes, ['left', 'right']);
+export default createKeyboardFocusHandler(outSeriesTypes, true);
