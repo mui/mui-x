@@ -1,7 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["@mui/material/themeCssVarsAugmentation", "vitest/globals", "node"],
+    "types": [
+      "@mui/material/themeCssVarsAugmentation",
+      "vitest/globals",
+      "node",
+      "../../mui-env.d.ts"
+    ],
     "skipLibCheck": true
   },
   "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]

@@ -7,7 +7,8 @@
       "dayjs/plugin/timezone.d.ts",
       "dayjs/plugin/utc.d.ts",
       "vitest/globals",
-      "node"
+      "node",
+      "../../mui-env.d.ts"
     ],
     "noImplicitAny": false,
     "skipLibCheck": true

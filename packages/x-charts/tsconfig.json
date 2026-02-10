@@ -5,7 +5,8 @@
       "@mui/internal-test-utils/initMatchers",
       "@mui/material/themeCssVarsAugmentation",
       "vitest/globals",
-      "node"
+      "node",
+      "../../mui-env.d.ts"
     ],
     "skipLibCheck": true
   },
