@@ -111,8 +111,11 @@ export interface GridMultiSelectCellProps extends GridRenderCellParams {
     root?: React.HTMLAttributes<HTMLDivElement>;
     /**
      * Props passed to the chip elements.
+     * Can be an object or a function that receives the chip value and index.
      */
-    chip?: Partial<GridSlotProps['baseChip']>;
+    chip?:
+      | Partial<GridSlotProps['baseChip']>
+      | ((value: any, index: number) => Partial<GridSlotProps['baseChip']>);
     /**
      * Props passed to the overflow chip element.
      */
@@ -126,6 +129,18 @@ export interface GridMultiSelectCellProps extends GridRenderCellParams {
      */
     popperContent?: React.HTMLAttributes<HTMLDivElement>;
   };
+}
+
+function resolveChipSlotProps(
+  slotProps: GridMultiSelectCellProps['slotProps'],
+  value: any,
+  index: number,
+): Partial<GridSlotProps['baseChip']> | undefined {
+  const chip = slotProps?.chip;
+  if (typeof chip === 'function') {
+    return chip(value, index);
+  }
+  return chip;
 }
 
 function getOptionLabel(
@@ -308,28 +323,31 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
       {...slotProps?.root}
       className={clsx(classes.root, hasFocus && 'Mui-focused', slotProps?.root?.className)}
     >
-      {arrayValue.map((v, index) => (
-        <GridMultiSelectCellChip
-          key={index}
-          as={rootProps.slots.baseChip}
-          ownerState={rootProps as OwnerState}
-          ref={(el: HTMLDivElement) => {
-            if (el) {
-              chipsRef.current.set(index, el);
-            } else {
-              chipsRef.current.delete(index);
-            }
-          }}
-          label={getOptionLabel(colDef as GridMultiSelectColDef, v, valueOptions)}
-          size="small"
-          {...slotProps?.chip}
-          className={clsx(
-            classes.chip,
-            index >= visibleCount && classes.chipHidden,
-            slotProps?.chip?.className,
-          )}
-        />
-      ))}
+      {arrayValue.map((v, index) => {
+        const chipProps = resolveChipSlotProps(slotProps, v, index);
+        return (
+          <GridMultiSelectCellChip
+            key={index}
+            as={rootProps.slots.baseChip}
+            ownerState={rootProps as OwnerState}
+            ref={(el: HTMLDivElement) => {
+              if (el) {
+                chipsRef.current.set(index, el);
+              } else {
+                chipsRef.current.delete(index);
+              }
+            }}
+            label={getOptionLabel(colDef as GridMultiSelectColDef, v, valueOptions)}
+            size="small"
+            {...chipProps}
+            className={clsx(
+              classes.chip,
+              index >= visibleCount && classes.chipHidden,
+              chipProps?.className,
+            )}
+          />
+        );
+      })}
       {hiddenCount > 0 && (
         <GridMultiSelectCellOverflow
           as={rootProps.slots.baseChip}
@@ -392,15 +410,18 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
               } as React.CSSProperties
             }
           >
-            {arrayValue.map((v, index) => (
-              <rootProps.slots.baseChip
-                key={index}
-                label={getOptionLabel(colDef as GridMultiSelectColDef, v, valueOptions)}
-                size="small"
-                {...slotProps?.chip}
-                className={clsx(classes.chip, slotProps?.chip?.className)}
-              />
-            ))}
+            {arrayValue.map((v, index) => {
+              const chipProps = resolveChipSlotProps(slotProps, v, index);
+              return (
+                <rootProps.slots.baseChip
+                  key={index}
+                  label={getOptionLabel(colDef as GridMultiSelectColDef, v, valueOptions)}
+                  size="small"
+                  {...chipProps}
+                  className={clsx(classes.chip, chipProps?.className)}
+                />
+              );
+            })}
           </GridMultiSelectCellPopperContent>
         </GridMultiSelectCellPopper>
       )}

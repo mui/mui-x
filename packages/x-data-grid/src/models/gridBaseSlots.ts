@@ -97,6 +97,7 @@ export type AutocompleteProps<
 
   slotProps?: {
     textField: TextFieldProps;
+    chip?: ChipProps | ((value: Value, index: number) => ChipProps);
   };
 };
 

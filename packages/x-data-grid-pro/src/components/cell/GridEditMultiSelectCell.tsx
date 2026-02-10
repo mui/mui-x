@@ -140,8 +140,11 @@ export interface GridEditMultiSelectCellProps extends GridRenderEditCellParams {
     value?: React.HTMLAttributes<HTMLDivElement>;
     /**
      * Props passed to the chip elements.
+     * Can be an object or a function that receives the chip value and index.
      */
-    chip?: Partial<GridSlotProps['baseChip']>;
+    chip?:
+      | Partial<GridSlotProps['baseChip']>
+      | ((value: any, index: number) => Partial<GridSlotProps['baseChip']>);
     /**
      * Props passed to the popper element.
      */
@@ -153,7 +156,8 @@ export interface GridEditMultiSelectCellProps extends GridRenderEditCellParams {
     /**
      * Props passed to the autocomplete element.
      */
-    autocomplete?: Partial<AutocompleteProps<ValueOptions, true, false, false>>;
+    autocomplete?: Partial<AutocompleteProps<ValueOptions, true, false, false>> &
+      Partial<BaseAutocompletePropsOverrides>;
   };
 }
 
@@ -201,17 +205,21 @@ function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
         {...slotProps?.value}
         className={clsx(classes.value, slotProps?.value?.className)}
       >
-        {currentValue.map((val: any, index: number) => (
-          <rootProps.slots.baseChip
-            key={index}
-            label={getOptionLabel(
-              valueOptions.find((option) => getOptionValue(option) === val) ?? val,
-            )}
-            size="small"
-            {...slotProps?.chip}
-            className={clsx(classes.chip, slotProps?.chip?.className)}
-          />
-        ))}
+        {currentValue.map((val: any, index: number) => {
+          const chipSlotProps =
+            typeof slotProps?.chip === 'function' ? slotProps.chip(val, index) : slotProps?.chip;
+          return (
+            <rootProps.slots.baseChip
+              key={index}
+              label={getOptionLabel(
+                valueOptions.find((option) => getOptionValue(option) === val) ?? val,
+              )}
+              size="small"
+              {...chipSlotProps}
+              className={clsx(classes.chip, chipSlotProps?.className)}
+            />
+          );
+        })}
       </GridEditMultiSelectCellValue>
       <GridEditMultiSelectCellPopper
         as={rootProps.slots.basePopper}
@@ -346,12 +354,17 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
           size: 'small',
           inputRef,
         },
-      }}
-      material={{
-        // @ts-expect-error the types require import from Material UI package
-        slots: { popper: GridEditMultiSelectCellAutocompletePopper },
+        chip: slotProps?.chip as GridSlotProps['baseChip'],
       }}
       {...slotProps?.autocomplete}
+      material={{
+        ...slotProps?.autocomplete?.material,
+        slots: {
+          // @ts-expect-error the types require import from Material UI package
+          popper: GridEditMultiSelectCellAutocompletePopper,
+          ...slotProps?.autocomplete?.material?.slots,
+        },
+      }}
     />
   );
 }
