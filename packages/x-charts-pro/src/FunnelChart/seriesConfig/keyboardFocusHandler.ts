@@ -1,5 +1,4 @@
-import type { KeyboardFocusHandler } from '@mui/x-charts/internals';
-import { createKeyboardFocusHandler } from '@mui/x-charts/internals';
+import { createKeyboardFocusHandler, type KeyboardFocusHandler } from '@mui/x-charts/internals';
 
 const outSeriesTypes: Set<'funnel'> = new Set(['funnel']);
 
