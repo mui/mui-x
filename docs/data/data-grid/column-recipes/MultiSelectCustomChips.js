@@ -48,10 +48,13 @@ const rows = [
   },
 ];
 
-const getTagChipProps = (value) => ({
-  color: tagColorMap[value] ?? 'default',
-  variant: 'filled',
-});
+const getTagChipProps = (value) => {
+  console.log('value', value);
+  return {
+    color: tagColorMap[value] ?? 'default',
+    variant: 'filled',
+  };
+};
 
 const getAssigneeChipProps = (option) => ({
   avatar: (

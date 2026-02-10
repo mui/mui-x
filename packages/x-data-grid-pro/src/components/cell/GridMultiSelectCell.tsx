@@ -308,7 +308,8 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
     >
       {arrayValue.map((v, index) => {
         const option = optionByValue.get(v) ?? v;
-        const chipProps = typeof slotProps?.chip === 'function' ? slotProps.chip(option, index) : slotProps?.chip;
+        const chipProps =
+          typeof slotProps?.chip === 'function' ? slotProps.chip(option, index) : slotProps?.chip;
         return (
           <GridMultiSelectCellChip
             key={index}
@@ -397,7 +398,10 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
           >
             {arrayValue.map((v, index) => {
               const option = optionByValue.get(v) ?? v;
-              const chipProps = typeof slotProps?.chip === 'function' ? slotProps.chip(option, index) : slotProps?.chip;
+              const chipProps =
+                typeof slotProps?.chip === 'function'
+                  ? slotProps.chip(option, index)
+                  : slotProps?.chip;
               return (
                 <rootProps.slots.baseChip
                   key={index}
