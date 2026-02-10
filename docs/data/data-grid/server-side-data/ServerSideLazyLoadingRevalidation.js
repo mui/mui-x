@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import { alpha } from '@mui/material/styles';
 
 const STOCKS = [
@@ -192,6 +196,8 @@ const columns = [
 ];
 
 function ServerSideLazyLoadingRevalidation() {
+  const apiRef = useGridApiRef();
+  const [useCache, setUseCache] = React.useState(false);
   const previousRowsById = React.useRef(new Map());
   const changeIdCounter = React.useRef(1);
 
@@ -249,16 +255,46 @@ function ServerSideLazyLoadingRevalidation() {
   );
 
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <DataGridPro
-        columns={columns}
-        dataSource={dataSource}
-        dataSourceCache={null}
-        lazyLoading
-        lazyLoadingRevalidateMs={3_000}
-        paginationModel={{ page: 0, pageSize: 10 }}
-      />
-    </div>
+    <Stack sx={{ width: '100%' }} spacing={1}>
+      <Stack
+        direction="row"
+        spacing={1}
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <FormControlLabel
+          control={
+            <Switch
+              checked={useCache}
+              onChange={(event) => setUseCache(event.target.checked)}
+              size="small"
+            />
+          }
+          label="Use cache"
+        />
+        {useCache && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => apiRef.current?.dataSource.cache.clear()}
+          >
+            Clear cache
+          </Button>
+        )}
+      </Stack>
+      <div style={{ width: '100%', height: 360 }}>
+        <DataGridPro
+          key={useCache ? 'cached' : 'uncached'}
+          apiRef={apiRef}
+          columns={columns}
+          dataSource={dataSource}
+          dataSourceCache={useCache ? undefined : null}
+          lazyLoading
+          lazyLoadingRevalidateMs={3_000}
+          paginationModel={{ page: 0, pageSize: 10 }}
+        />
+      </div>
+    </Stack>
   );
 }
 
