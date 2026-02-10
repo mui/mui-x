@@ -36,6 +36,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     columnHeaderHeight +
     // border
     2;
+  const sleep = (ms: number) =>
+    new Promise<void>((resolve) => {
+      setTimeout(resolve, ms);
+    });
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -252,6 +256,67 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // first row is the start of the first page
       expect(afterFilteringSearchParams.get('start')).to.equal('0');
+    });
+
+    it('should not refetch already fetched rows on scroll-back when cache entry is still valid', async () => {
+      render(<TestDataSourceLazyLoader mockServerRowCount={20} disableVirtualization={false} />);
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      fetchRowsSpy.resetHistory();
+
+      await act(async () => {
+        apiRef.current?.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 1,
+          lastRowIndex: 5,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+        await sleep(700);
+      });
+
+      expect(fetchRowsSpy.callCount).to.equal(0);
+    });
+
+    it('should not refetch during polling when cache entry is still valid', async () => {
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={20}
+          disableVirtualization={false}
+          lazyLoadingRevalidateMs={100}
+        />,
+      );
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      fetchRowsSpy.resetHistory();
+
+      await act(async () => {
+        await sleep(450);
+      });
+
+      expect(fetchRowsSpy.callCount).to.equal(0);
+    });
+
+    it('should periodically revalidate the current range when lazyLoadingRevalidateMs is set', async () => {
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={20}
+          disableVirtualization={false}
+          dataSourceCache={null}
+          lazyLoadingRevalidateMs={100}
+        />,
+      );
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
+      await waitFor(() => expect(getRow(19)).not.to.be.undefined);
+
+      fetchRowsSpy.resetHistory();
+
+      await waitFor(
+        () => {
+          expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+        },
+        { timeout: 1_500 },
+      );
     });
   });
 
