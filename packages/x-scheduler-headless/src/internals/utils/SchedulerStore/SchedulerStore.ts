@@ -105,7 +105,7 @@ export class SchedulerStore<
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
       errors: [],
-      ...(parameters.dataSource ? { isLoading: true } : { isLoading: false }),
+      isLoading: !!parameters.dataSource,
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -145,7 +145,7 @@ export class SchedulerStore<
       areEventsResizable: parameters.areEventsResizable ?? false,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
       canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
-      eventColor: parameters.eventColor ?? 'jade',
+      eventColor: parameters.eventColor ?? 'teal',
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
@@ -275,13 +275,16 @@ export class SchedulerStore<
     this.eventManager.on(eventName, handler);
   };
 
-  protected setVisibleDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+  protected setVisibleDate = (
+    visibleDate: TemporalSupportedObject,
+    event: React.UIEvent | null = null,
+  ) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
     const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
 
     if (hasChange) {
-      const eventDetails = createChangeEventDetails('none', event.nativeEvent);
+      const eventDetails = createChangeEventDetails('none', event?.nativeEvent);
       onVisibleDateChange?.(visibleDate, eventDetails);
 
       if (!eventDetails.isCanceled && visibleDateProp === undefined) {
@@ -353,6 +356,13 @@ export class SchedulerStore<
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
     this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.displayTimezone)), event);
+  };
+
+  /**
+   * Goes to a specific date without changing the view.
+   */
+  public goToDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+    this.setVisibleDate(visibleDate, event);
   };
 
   /**
@@ -540,4 +550,13 @@ export class SchedulerStore<
       this.set('occurrencePlaceholder', newPlaceholder);
     }
   };
+
+  /**
+   * Builds an object containing the methods that should be exposed publicly by the Scheduler components.
+   */
+  public buildPublicAPI() {
+    return {
+      setVisibleDate: this.setVisibleDate,
+    };
+  }
 }

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import { useEventCalendarPremium } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
 import {
   useEventCalendarUtilityClasses,
@@ -27,7 +28,7 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // Use the same theme name to share theme customizations with base EventCalendar
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
 
   const {
@@ -39,7 +40,8 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   const store = useEventCalendarPremium(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { translations, ...other } = forwardedProps;
+  const { translations, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>

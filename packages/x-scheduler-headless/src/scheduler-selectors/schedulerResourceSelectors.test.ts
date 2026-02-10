@@ -437,10 +437,10 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should return resource eventColor when resource has eventColor', () => {
-        const resources = [{ id: 'resource-1', title: 'Resource 1', eventColor: 'ruby' }];
+        const resources = [{ id: 'resource-1', title: 'Resource 1', eventColor: 'purple' }];
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, 'resource-1');
-        expect(result).to.equal('ruby');
+        expect(result).to.equal('purple');
       });
 
       it('should return state eventColor when resourceId does not exist', () => {

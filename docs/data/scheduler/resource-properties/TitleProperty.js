@@ -4,9 +4,9 @@ import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { initialEvents, defaultVisibleDate } from '../datasets/personal-agenda';
 
 export const resources = [
-  { name: 'Work', id: 'work', eventColor: 'violet' },
+  { name: 'Work', id: 'work', eventColor: 'purple' },
   { name: 'Holidays', id: 'holidays', eventColor: 'red' },
-  { name: 'Workout', id: 'workout', eventColor: 'jade' },
+  { name: 'Workout', id: 'workout', eventColor: 'teal' },
   { name: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
   { name: 'Personal', id: 'personal', eventColor: 'orange' },
   { name: 'Medical', id: 'medical', eventColor: 'indigo' },
