@@ -17,17 +17,16 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'rangeBar'> = (params
     return null;
   }
 
-  const dimensions = createGetRangeBarDimensions(
-    {
-      verticalLayout: itemSeries.layout === 'vertical',
-      xAxisConfig: axesConfig.x,
-      yAxisConfig: axesConfig.y,
-      series: itemSeries,
-      numberOfGroups: series.rangeBar.seriesOrder.length,
-    })(
-      identifier.dataIndex,
-      series.rangeBar.seriesOrder.findIndex((id) => id === itemSeries.id),
-    );
+  const dimensions = createGetRangeBarDimensions({
+    verticalLayout: itemSeries.layout === 'vertical',
+    xAxisConfig: axesConfig.x,
+    yAxisConfig: axesConfig.y,
+    series: itemSeries,
+    numberOfGroups: series.rangeBar.seriesOrder.length,
+  })(
+    identifier.dataIndex,
+    series.rangeBar.seriesOrder.findIndex((id) => id === itemSeries.id),
+  );
 
   if (dimensions == null) {
     return null;
