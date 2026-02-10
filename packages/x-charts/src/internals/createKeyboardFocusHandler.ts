@@ -6,8 +6,8 @@ import {
   createGetPreviousSeriesFocusedItem,
 } from './commonNextFocusItem';
 
-function createKeyboardFocusHandler(
-  outSeriesTypes: Set<Exclude<ChartSeriesType, 'sankey'>>,
+function createKeyboardFocusHandler<TSeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
+  outSeriesTypes: Set<TSeriesType>,
   allowCycles?: boolean,
 ) {
   const keyboardFocusHandler = (event: KeyboardEvent) => {
