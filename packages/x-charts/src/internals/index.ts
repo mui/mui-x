@@ -78,6 +78,7 @@ export * from './commonNextFocusItem';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
+export { default as createKeyboardFocusHandler } from './createKeyboardFocusHandler';
 export * from './plugins/utils/defaultSeriesConfig';
 
 // contexts

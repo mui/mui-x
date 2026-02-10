@@ -41,7 +41,6 @@ export * from './Toolbar';
 export * from './ChartsWrapper';
 export * from './ChartsBrushOverlay';
 export * from './utils';
-export { default as createKeyboardFocusHandler } from './internals/createKeyboardFocusHandler';
 
 // Locales should be imported from `@mui/x-charts/locales`
 // export * from './locales';
