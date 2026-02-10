@@ -13,7 +13,7 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/u
 import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { getAxisIndex } from './getAxisValue';
-import { getSVGPoint } from '../../../getSVGPoint';
+import { getSurfacePoint } from '../../../getSurfacePoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
@@ -141,7 +141,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       const srvEvent = event.detail.srcEvent;
       const target = event.detail.target as SVGElement | undefined;
-      const svgPoint = getSVGPoint(element, srvEvent);
+      const svgPoint = getSurfacePoint(element, srvEvent);
 
       // Release the pointer capture if we are panning, as this would cause the tooltip to
       // be locked to the first "section" it touches.
@@ -196,7 +196,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
 
-      const svgPoint = getSVGPoint(element, event.detail.srcEvent);
+      const svgPoint = getSurfacePoint(element, event.detail.srcEvent);
 
       const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
       isXAxis = xIndex !== -1;
