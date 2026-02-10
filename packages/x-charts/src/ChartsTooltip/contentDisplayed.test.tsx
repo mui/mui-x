@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { createRenderer, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, waitFor, screen } from '@mui/internal-test-utils';
 import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
+import { legendClasses } from '../ChartsLegend';
 
 const config: Partial<BarChartProps> = {
   dataset: [
@@ -316,6 +317,223 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
           'current',
           '400',
         ]);
+      });
+    });
+  });
+
+  describe('visibility filtering', () => {
+    it('should only show visible series in axis tooltip for BarChart', async () => {
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          hideLegend={false}
+          slotProps={{
+            tooltip: { trigger: 'axis' },
+            legend: { toggleVisibilityOnClick: true },
+          }}
+        />,
+        { wrapper },
+      );
+
+      const svg = container.querySelector('svg')!;
+
+      // Trigger the tooltip - all series should be visible initially
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const cellTexts = [...cells].map((cell) => cell.textContent);
+        // All series should be present in tooltip
+        expect(cellTexts).to.include('S1');
+        expect(cellTexts).to.include('S2');
+      });
+
+      // Click legend to hide S2
+      const s2Legend = screen.getByRole('button', { name: /S2/ });
+      await user.click(s2Legend);
+
+      // Verify legend item is marked as hidden
+      expect(s2Legend.classList.contains(legendClasses.hidden)).to.equal(true);
+
+      // Move pointer slightly to trigger tooltip update
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 199,
+          y: 61,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const cellTexts = [...cells].map((cell) => cell.textContent);
+        // S2 should NOT be in tooltip
+        expect(cellTexts).to.include('S1');
+        expect(cellTexts).to.not.include('S2');
+      });
+    });
+
+    it('should update tooltip when toggling multiple series visibility', async () => {
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          dataset={[
+            { x: 'A', v1: 4, v2: 2, v3: 3 },
+            { x: 'B', v1: 1, v2: 1, v3: 2 },
+          ]}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+            { dataKey: 'v3', id: 's3', label: 'S3' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          hideLegend={false}
+          slotProps={{
+            tooltip: { trigger: 'axis' },
+            legend: { toggleVisibilityOnClick: true },
+          }}
+        />,
+        { wrapper },
+      );
+
+      const svg = container.querySelector('svg')!;
+
+      // Hide S1 and S3
+      const s1Legend = screen.getByRole('button', { name: /S1/ });
+      const s3Legend = screen.getByRole('button', { name: /S3/ });
+      await user.click(s1Legend);
+      await user.click(s3Legend);
+
+      // Trigger tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const cellTexts = [...cells].map((cell) => cell.textContent);
+        // Only S2 should be visible
+        expect(cellTexts).to.not.include('S1');
+        expect(cellTexts).to.include('S2');
+        expect(cellTexts).to.not.include('S3');
+      });
+    });
+
+    it('should show all series again when toggled back to visible', async () => {
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          hideLegend={false}
+          slotProps={{
+            tooltip: { trigger: 'axis' },
+            legend: { toggleVisibilityOnClick: true },
+          }}
+        />,
+        { wrapper },
+      );
+
+      const svg = container.querySelector('svg')!;
+      const s2Legend = screen.getByRole('button', { name: /S2/ });
+
+      // Hide S2
+      await user.click(s2Legend);
+
+      // Trigger tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const cellTexts = [...cells].map((cell) => cell.textContent);
+        expect(cellTexts).to.include('S1');
+        expect(cellTexts).to.not.include('S2');
+      });
+
+      // Show S2 again
+      await user.click(s2Legend);
+
+      // Move pointer to trigger tooltip update
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 199,
+          y: 61,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const cellTexts = [...cells].map((cell) => cell.textContent);
+        // Both series should be present again
+        expect(cellTexts).to.include('S1');
+        expect(cellTexts).to.include('S2');
+      });
+    });
+
+    it('should filter hidden series in BarChart axis tooltip', async () => {
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          hideLegend={false}
+          slotProps={{
+            tooltip: { trigger: 'axis' },
+            legend: { toggleVisibilityOnClick: true },
+          }}
+        />,
+      );
+
+      const svg = container.querySelector('svg')!;
+
+      // Hide S1 series
+      const s1Legend = screen.getByRole('button', { name: /S1/ });
+      await user.click(s1Legend);
+
+      // Trigger tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const cellTexts = [...cells].map((cell) => cell.textContent);
+        // Only S2 should be in the tooltip
+        expect(cellTexts).to.not.include('S1');
+        expect(cellTexts).to.include('S2');
+        expect(cellTexts).to.include('2'); // S2 value
       });
     });
   });
