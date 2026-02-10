@@ -6,4 +6,4 @@ const outSeriesTypes: Set<'bar' | 'line' | 'scatter'> = new Set(['bar', 'line', 
 const keyboardFocusHandler: KeyboardFocusHandler<'bar', 'bar' | 'line' | 'scatter'> =
   createKeyboardFocusHandler(outSeriesTypes);
 
-export default createKeyboardFocusHandler(outSeriesTypes);
+export default keyboardFocusHandler;

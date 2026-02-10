@@ -1,26 +1,9 @@
-import {
-  type KeyboardFocusHandler,
-  createGetNextIndexFocusedItem,
-  createGetPreviousIndexFocusedItem,
-  createGetNextSeriesFocusedItem,
-  createGetPreviousSeriesFocusedItem,
-} from '@mui/x-charts/internals';
+import { KeyboardFocusHandler } from "@mui/x-charts/internals";
+import createKeyboardFocusHandler from "@mui/x-charts/internals/createKeyboardFocusHandler";
 
 const outSeriesTypes: Set<'funnel'> = new Set(['funnel']);
 
-const keyboardFocusHandler: KeyboardFocusHandler<'funnel', 'funnel'> = (event) => {
-  switch (event.key) {
-    case 'ArrowRight':
-      return createGetNextIndexFocusedItem(outSeriesTypes);
-    case 'ArrowLeft':
-      return createGetPreviousIndexFocusedItem(outSeriesTypes);
-    case 'ArrowDown':
-      return createGetPreviousSeriesFocusedItem(outSeriesTypes);
-    case 'ArrowUp':
-      return createGetNextSeriesFocusedItem(outSeriesTypes);
-    default:
-      return null;
-  }
-};
+const keyboardFocusHandler: KeyboardFocusHandler<'funnel', 'funnel'> =
+  createKeyboardFocusHandler(outSeriesTypes);
 
 export default keyboardFocusHandler;
