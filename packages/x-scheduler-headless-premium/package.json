@@ -17,7 +17,8 @@
     "./event-timeline-premium-provider": "./src/event-timeline-premium-provider/index.ts",
     "./event-timeline-premium-selectors": "./src/event-timeline-premium-selectors/index.ts",
     "./use-event-timeline-premium": "./src/use-event-timeline-premium/index.ts",
-    "./use-event-timeline-premium-store-context": "./src/use-event-timeline-premium-store-context/index.ts"
+    "./use-event-timeline-premium-store-context": "./src/use-event-timeline-premium-store-context/index.ts",
+    "./use-event-calendar-premium-api-ref": "./src/use-event-calendar-premium-api-ref/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
