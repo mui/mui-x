@@ -11,24 +11,14 @@ function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number,
   return reverse ? !invertStartCoordinate : invertStartCoordinate;
 }
 
-export function getBarDimensions(params: {
+export function createGetBarDimensions(params: {
   verticalLayout: boolean;
   xAxisConfig: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
   yAxisConfig: ComputedAxis<ScaleName, any, ChartsYAxisProps>;
   series: ChartSeriesDefaultized<'bar'>;
-  dataIndex: number;
   numberOfGroups: number;
-  groupIndex: number;
 }) {
-  const {
-    verticalLayout,
-    xAxisConfig,
-    yAxisConfig,
-    series,
-    dataIndex,
-    numberOfGroups,
-    groupIndex,
-  } = params;
+  const { verticalLayout, xAxisConfig, yAxisConfig, series, numberOfGroups } = params;
 
   const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
   const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
@@ -38,44 +28,46 @@ export function getBarDimensions(params: {
     numberOfGroups,
     baseScaleConfig.barGapRatio,
   );
-  const barOffset = groupIndex * (barWidth + offset);
 
   const xScale = xAxisConfig.scale;
   const yScale = yAxisConfig.scale;
 
-  const baseValue = baseScaleConfig.data![dataIndex];
-  const seriesValue = series.data[dataIndex];
+  return function getBarDimensions(dataIndex: number, groupIndex: number) {
+    const barOffset = groupIndex * (barWidth + offset);
+    const baseValue = baseScaleConfig.data![dataIndex];
+    const seriesValue = series.data[dataIndex];
 
-  if (seriesValue == null) {
-    return null;
-  }
-
-  const values = series.visibleStackedData[dataIndex];
-  const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
-
-  const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
-
-  let barSize = 0;
-  if (seriesValue !== 0) {
-    if (!series.hidden) {
-      barSize = Math.max(series.minBarSize, maxValueCoord - minValueCoord);
+    if (seriesValue == null) {
+      return null;
     }
-  }
 
-  const shouldInvert = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse);
+    const values = series.visibleStackedData[dataIndex];
+    const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-  let startCoordinate = 0;
+    const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
 
-  if (shouldInvert) {
-    startCoordinate = maxValueCoord - barSize;
-  } else {
-    startCoordinate = minValueCoord;
-  }
+    let barSize = 0;
+    if (seriesValue !== 0) {
+      if (!series.hidden) {
+        barSize = Math.max(series.minBarSize, maxValueCoord - minValueCoord);
+      }
+    }
 
-  return {
-    x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
-    y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
-    height: verticalLayout ? barSize : barWidth,
-    width: verticalLayout ? barWidth : barSize,
+    const shouldInvert = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse);
+
+    let startCoordinate = 0;
+
+    if (shouldInvert) {
+      startCoordinate = maxValueCoord - barSize;
+    } else {
+      startCoordinate = minValueCoord;
+    }
+
+    return {
+      x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
+      y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
+      height: verticalLayout ? barSize : barWidth,
+      width: verticalLayout ? barWidth : barSize,
+    };
   };
 }
