@@ -29,6 +29,7 @@ import {
 import { type ChartsLabelMarkProps } from '../ChartsLabel';
 import { selectorChartsInteractionTooltipRotationAxes } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { isPolarSeriesType } from '../internals/isPolar';
+import { selectorIsItemVisibleGetter } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.selectors';
 
 export interface UseAxesTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType | PolarChartSeriesType =
@@ -117,6 +118,8 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
 
   const colorProcessors = useColorProcessor();
 
+  const isItemVisible = store.use(selectorIsItemVisibleGetter);
+
   if (tooltipXAxes.length === 0 && tooltipYAxes.length === 0 && tooltipRotationAxes.length === 0) {
     return null;
   }
@@ -150,6 +153,11 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
       }
       return seriesOfType.seriesOrder.forEach((seriesId) => {
         const seriesToAdd = seriesOfType.series[seriesId]!;
+
+        // Skip hidden series
+        if (!isItemVisible({ type: seriesType, seriesId })) {
+          return;
+        }
 
         const providedXAxisId = seriesToAdd.xAxisId ?? defaultXAxis.id;
         const providedYAxisId = seriesToAdd.yAxisId ?? defaultYAxis.id;
@@ -198,6 +206,11 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
       }
       return seriesOfType.seriesOrder.forEach((seriesId) => {
         const seriesToAdd = seriesOfType.series[seriesId]!;
+
+        // Skip hidden series
+        if (!isItemVisible({ type: seriesType, seriesId })) {
+          return;
+        }
 
         const providedRotationAxisId: AxisId | undefined =
           // @ts-expect-error Should be fixed when we introduce a polar series with a rotationAxisId
