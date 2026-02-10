@@ -20,16 +20,16 @@ const renderMultiSelectOptions = ({
 }: {
   column: GridMultiSelectColDef;
   OptionComponent: React.ElementType;
-  getOptionLabel: NonNullable<GridMultiSelectColDef['getOptionLabel']>;
-  getOptionValue: NonNullable<GridMultiSelectColDef['getOptionValue']>;
+  getOptionLabel?: NonNullable<GridMultiSelectColDef['getOptionLabel']>;
+  getOptionValue?: NonNullable<GridMultiSelectColDef['getOptionValue']>;
   isSelectNative: boolean;
   baseSelectOptionProps: GridSlotsComponentsProps['baseSelectOption'];
 }) => {
   const iterableColumnValues = ['', ...(getValueOptions(column) || [])];
 
   return iterableColumnValues.map((option) => {
-    const value = getOptionValue(option);
-    let label = getOptionLabel(option);
+    const value = getOptionValue ? getOptionValue(option) : String(option);
+    let label = getOptionLabel ? getOptionLabel(option) : String(option);
     if (label === '') {
       label = ' '; // To force the height of the empty option
     }
@@ -69,8 +69,8 @@ function GridFilterInputMultiSelect(props: GridFilterInputMultiSelectProps) {
 
   const resolvedColumn = apiRef.current.getColumn(item.field) as GridMultiSelectColDef | undefined;
 
-  const getOptionValue = resolvedColumn!.getOptionValue;
-  const getOptionLabel = resolvedColumn!.getOptionLabel;
+  const getOptionValue = resolvedColumn?.getOptionValue;
+  const getOptionLabel = resolvedColumn?.getOptionLabel;
 
   const currentValueOptions = React.useMemo(() => {
     return getValueOptions(resolvedColumn!);
@@ -79,11 +79,9 @@ function GridFilterInputMultiSelect(props: GridFilterInputMultiSelectProps) {
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       // NativeSelect casts the value to a string, convert it back to the original type.
-      const value = getValueFromValueOptions(
-        event.target.value,
-        currentValueOptions,
-        getOptionValue,
-      );
+      const value = getOptionValue
+        ? getValueFromValueOptions(event.target.value, currentValueOptions, getOptionValue)
+        : event.target.value;
       applyValue({ ...item, value });
     },
     [currentValueOptions, getOptionValue, applyValue, item],

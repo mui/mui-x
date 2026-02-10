@@ -49,7 +49,11 @@ export default function CustomSelectionOperator() {
     return data.columns.map((col) => {
       const filterOperators =
         col.filterOperators ??
-        defaultColumnTypes[col.type ?? DEFAULT_GRID_COL_TYPE_KEY].filterOperators;
+        defaultColumnTypes[col.type ?? DEFAULT_GRID_COL_TYPE_KEY]?.filterOperators;
+
+      if (!filterOperators) {
+        return col;
+      }
 
       return {
         ...col,
