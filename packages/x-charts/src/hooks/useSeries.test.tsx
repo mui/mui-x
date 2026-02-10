@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useSeries } from './useSeries';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
 import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
 
 function UseSeries() {
@@ -18,9 +18,9 @@ describe('useSeries', () => {
   it.skipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
-    const errorMessage1 = 'MUI X Charts: Could not find the Chart context.';
+    const errorMessage1 = 'MUI X Charts: Could not find the Charts context.';
     const errorMessage2 =
-      'It looks like you rendered your component outside of a ChartDataProvider.';
+      'It looks like you rendered your component outside of a ChartsDataProvider.';
     const errorMessage3 = 'The above error occurred in the <UseSeries> component:';
     const expectedError =
       reactMajor < 19 ? [errorMessage3] : [errorMessage1, errorMessage2].join('\n');
@@ -39,7 +39,7 @@ describe('useSeries', () => {
 
   it('should not throw an error when parent context is present', () => {
     render(
-      <ChartProvider<'bar'>
+      <ChartsProvider<'bar'>
         pluginParams={{
           series: [{ type: 'bar', id: 'test-id', data: [1, 2] }],
           width: 200,
@@ -48,7 +48,7 @@ describe('useSeries', () => {
         }}
       >
         <UseSeries />
-      </ChartProvider>,
+      </ChartsProvider>,
     );
 
     expect(screen.getByText('test-id')).toBeVisible();

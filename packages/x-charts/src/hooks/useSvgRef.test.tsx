@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useSvgRef } from './useSvgRef';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
 
 function UseSvgRef() {
   const ref = useSvgRef();
@@ -33,16 +33,16 @@ describe('useSvgRef', () => {
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(
-      'MUI X Charts: Could not find the Chart context.',
+      'MUI X Charts: Could not find the Charts context.',
     );
   });
 
   it('should not throw an error when parent context is present', async () => {
     function RenderDrawingProvider() {
       return (
-        <ChartProvider pluginParams={{ width: 200, height: 200 }}>
+        <ChartsProvider pluginParams={{ width: 200, height: 200 }}>
           <UseSvgRef />
-        </ChartProvider>
+        </ChartsProvider>
       );
     }
 
