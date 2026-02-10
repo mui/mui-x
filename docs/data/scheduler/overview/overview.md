@@ -25,7 +25,7 @@ This package is not published yet.
 - [Event properties](/x/react-scheduler/event-properties/) (TODO: Split for Event Calendar and Event Timeline)
 - [Recurring events](/x/react-scheduler/recurring-events/)
 - [Drag interactions](/x/react-scheduler/drag-interactions/) (TODO: Probably split between Event Calendar and Event Timeline)
-- [Timezone support](/x/react-scheduler/timezone-support/)
+- [Timezone support](/x/react-scheduler/timezone/)
 
 ## Event Calendar
 
