@@ -66,7 +66,7 @@
     "@babel/plugin-transform-object-rest-spread": "7.28.6",
     "@babel/plugin-transform-react-constant-elements": "catalog:",
     "@babel/traverse": "catalog:",
-    "@babel/types": "7.28.6",
+    "@babel/types": "7.29.0",
     "@emotion/cache": "catalog:",
     "@inquirer/prompts": "8.1.0",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.11",
