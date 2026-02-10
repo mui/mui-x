@@ -10,13 +10,17 @@ import type { KeyboardFocusHandler } from './plugins/featurePlugins/useChartKeyb
 function createKeyboardFocusHandler<
   TSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutputSeriesType extends Exclude<ChartSeriesType, 'sankey'> = TSeriesType,
->(outSeriesTypes: Set<Exclude<ChartSeriesType, 'sankey'>>) {
+>(
+  outSeriesTypes: Set<Exclude<ChartSeriesType, 'sankey'>>,
+  allowCycles: Array<'left' | 'right'> = [],
+) {
+  // @ts-expect-error
   const keyboardFocusHandler: KeyboardFocusHandler<TSeriesType, OutputSeriesType> = (event) => {
     switch (event.key) {
       case 'ArrowRight':
-        return createGetNextIndexFocusedItem(outSeriesTypes);
+        return createGetNextIndexFocusedItem(outSeriesTypes, allowCycles.includes('right'));
       case 'ArrowLeft':
-        return createGetPreviousIndexFocusedItem(outSeriesTypes);
+        return createGetPreviousIndexFocusedItem(outSeriesTypes, allowCycles.includes('left'));
       case 'ArrowDown':
         return createGetPreviousSeriesFocusedItem(outSeriesTypes);
       case 'ArrowUp':
