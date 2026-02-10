@@ -120,6 +120,16 @@ With this feature, you would be able to use the `lazyLoading` flag in use cases 
 Before it is implemented internally you can use the [row pinning](/x/react-data-grid/row-pinning/) feature to implement nested lazy loading with a few limitations.
 Check the [server-side data recipes](/x/react-data-grid/server-side-data/recipes/) section for a working example.
 
+## Polling revalidation
+
+Use the `lazyLoadingRevalidateMs` prop to periodically revalidate the visible rows in the background.
+When combined with a low cache TTL, this enables real-time data updates—for example, a stock ticker dashboard where prices change every second.
+
+The polling timer resets whenever the viewport changes (for example, when the user scrolls to a new area).
+Set `lazyLoadingRevalidateMs` to `0` (the default) to disable polling.
+
+{{"demo": "ServerSideLazyLoadingRevalidation.js", "bg": "inline"}}
+
 ## Error handling
 
 To handle errors, use the `onDataSourceError()` prop as described in [Server-side data overview—Error handling](/x/react-data-grid/server-side-data/#error-handling).
