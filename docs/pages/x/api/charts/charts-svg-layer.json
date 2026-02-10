@@ -1,0 +1,25 @@
+{
+  "props": {},
+  "name": "ChartsSvgLayer",
+  "imports": [
+    "import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';",
+    "import { ChartsSvgLayer } from '@mui/x-charts';",
+    "import { ChartsSvgLayer } from '@mui/x-charts-pro';",
+    "import { ChartsSvgLayer } from '@mui/x-charts-premium';"
+  ],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChartsSvgLayer-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChartsSvgLayer",
+  "filename": "/packages/x-charts/src/ChartsSvgLayer/ChartsSvgLayer.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
+  "cssComponent": false
+}

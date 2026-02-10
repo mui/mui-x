@@ -120,6 +120,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsSurface',
   },
   {
+    pathname: '/x/api/charts/charts-svg-layer',
+    title: 'ChartsSvgLayer',
+  },
+  {
     pathname: '/x/api/charts/charts-text',
     title: 'ChartsText',
   },
