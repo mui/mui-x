@@ -4,7 +4,7 @@ import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-pr
 import {
   resources as agendaResources,
   defaultVisibleDate,
-} from '../datasets/personal-agenda';
+} from '../../datasets/personal-agenda';
 
 const flatResources = agendaResources.map((r) => ({
   id: r.id,

@@ -8,7 +8,7 @@ import {
 import {
   resources as agendaResources,
   defaultVisibleDate,
-} from '../datasets/personal-agenda';
+} from '../../datasets/personal-agenda';
 
 const flatResources: SchedulerResource[] = agendaResources.map((r) => ({
   id: r.id,
