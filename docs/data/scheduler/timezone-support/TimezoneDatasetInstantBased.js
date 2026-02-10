@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
-import { TZDate } from '@date-fns/tz';
 import {
   defaultVisibleDate,
   initialEvents,
@@ -11,16 +10,16 @@ import {
 export default function TimezoneDatasetInstantBased() {
   const eventModelStructure = {
     start: {
-      getter: (event) => new TZDate(event.start, event.timezone),
+      getter: (event) => event.start,
       setter: (event, newValue) => {
-        event.start = newValue.toISOString();
+        event.start = newValue;
         return event;
       },
     },
     end: {
-      getter: (event) => new TZDate(event.end, event.timezone),
+      getter: (event) => event.end,
       setter: (event, newValue) => {
-        event.end = newValue.toISOString();
+        event.end = newValue;
         return event;
       },
     },

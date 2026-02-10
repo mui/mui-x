@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { format } from 'date-fns/format';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 
 import {
@@ -25,6 +26,11 @@ const TITLES = [
   'Dinner with Friends',
   'Shopping',
 ];
+
+/**
+ * Converts a Date to a wall-time ISO string (no trailing Z).
+ */
+const str = (date) => format(date, "yyyy-MM-dd'T'HH:mm:ss");
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -90,15 +96,32 @@ function generateRandomEventsInRange(rangeStart, rangeEnd, resources) {
 
     const id = `event-${eventStart.getTime()}-${i}`;
 
-    events.push({
-      id,
-      start: allDay ? new Date(eventStart.setHours(0, 0, 0, 0)) : eventStart,
-      end: allDay ? new Date(eventStart.setHours(23, 59, 59, 999)) : clampedEnd,
-      title: randomChoice(TITLES),
-      resource: resource.id,
-      allDay,
-      readOnly,
-    });
+    if (allDay) {
+      const allDayStart = new Date(eventStart);
+      allDayStart.setHours(0, 0, 0, 0);
+      const allDayEnd = new Date(allDayStart);
+      allDayEnd.setHours(23, 59, 59, 999);
+
+      events.push({
+        id,
+        start: str(allDayStart),
+        end: str(allDayEnd),
+        title: randomChoice(TITLES),
+        resource: resource.id,
+        allDay,
+        readOnly,
+      });
+    } else {
+      events.push({
+        id,
+        start: str(eventStart),
+        end: str(clampedEnd),
+        title: randomChoice(TITLES),
+        resource: resource.id,
+        allDay,
+        readOnly,
+      });
+    }
   }
 
   return events;

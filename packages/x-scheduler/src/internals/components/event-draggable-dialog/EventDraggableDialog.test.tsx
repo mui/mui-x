@@ -14,7 +14,6 @@ import {
   SchedulerResource,
   SchedulerResourceId,
   SchedulerOccurrencePlaceholderCreation,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -114,8 +113,10 @@ describe('<EventDraggableDialogContent open />', () => {
       id: DEFAULT_EVENT.id,
       title: 'Running test',
       description: DEFAULT_EVENT.description,
-      start: adapter.startOfDay(DEFAULT_EVENT.start as TemporalSupportedObject),
-      end: adapter.endOfDay(DEFAULT_EVENT.end as TemporalSupportedObject),
+      start: (
+        adapter.startOfDay(adapter.date(DEFAULT_EVENT.start, 'default')) as Date
+      ).toISOString(),
+      end: (adapter.endOfDay(adapter.date(DEFAULT_EVENT.end, 'default')) as Date).toISOString(),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',

@@ -7,11 +7,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
 } from 'test/utils/scheduler';
-import {
-  SchedulerEvent,
-  SchedulerResource,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-headless/models';
+import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-headless/models';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 
 const baseResources: SchedulerResource[] = [
@@ -150,7 +146,7 @@ describe('<EventTimelinePremium />', () => {
       const totalWidth = 64 * 7 * 12; // 64px * 7 days * 12 weeks
       const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
       const weekDayNumber = adapter.differenceInDays(
-        baseEvents[0].start as TemporalSupportedObject,
+        adapter.date(baseEvents[0].start, 'default'),
         startOfWeek,
       );
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };

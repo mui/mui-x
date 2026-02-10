@@ -24,6 +24,13 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
 );
 
 /**
+ * Converts a TemporalSupportedObject to an ISO Z-string.
+ */
+function toISOString(date: TemporalSupportedObject): string {
+  return (date as Date).toISOString();
+}
+
+/**
  * Minimal event builder for tests.
  *
  * Scope:
@@ -44,8 +51,8 @@ export class EventBuilder {
     this.event = {
       id,
       title: `Event ${id}`,
-      start,
-      end,
+      start: toISOString(start),
+      end: toISOString(end),
       description: `Event ${id} description`,
     };
   }
@@ -105,7 +112,7 @@ export class EventBuilder {
       }
     });
 
-    this.event.exDates = dates?.map((date) => this.adapter.date(date, 'default'));
+    this.event.exDates = dates;
     return this;
   }
 
@@ -191,30 +198,28 @@ export class EventBuilder {
   }
 
   /**
-   * Manually sets the start date/time using an ISO-like string.
-   * Useful for fine-grained control (e.g., pairing with `.endAt(...)`).
+   * Manually sets the start date/time using an ISO Z-string or date object.
+   * Date objects are converted to ISO Z-strings.
    */
   startAt(start: string | TemporalSupportedObject) {
     if (typeof start === 'string' && !start.endsWith('Z')) {
       throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
     }
 
-    const startDate = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
-    this.event.start = startDate;
+    this.event.start = typeof start === 'string' ? start : toISOString(start);
     return this;
   }
 
   /**
-   * Manually sets the end date/time using an ISO-like string.
-   * Useful for fine-grained control (e.g., pairing with `.startAt(...)`).
+   * Manually sets the end date/time using an ISO Z-string or date object.
+   * Date objects are converted to ISO Z-strings.
    */
   endAt(end: string | TemporalSupportedObject) {
     if (typeof end === 'string' && !end.endsWith('Z')) {
       throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
     }
 
-    const endDate = typeof end === 'string' ? this.adapter.date(end, 'default') : end;
-    this.event.end = endDate;
+    this.event.end = typeof end === 'string' ? end : toISOString(end);
     return this;
   }
 
@@ -228,8 +233,8 @@ export class EventBuilder {
 
     const startDate = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
-    this.event.start = startDate;
-    this.event.end = endDate;
+    this.event.start = toISOString(startDate);
+    this.event.end = toISOString(endDate);
     return this;
   }
 
@@ -243,8 +248,8 @@ export class EventBuilder {
     }
 
     const d = this.adapter.date(date, 'default');
-    this.event.start = this.adapter.startOfDay(d);
-    this.event.end = this.adapter.endOfDay(d);
+    this.event.start = toISOString(this.adapter.startOfDay(d));
+    this.event.end = toISOString(this.adapter.endOfDay(d));
     this.event.allDay = true;
     return this;
   }
@@ -265,8 +270,8 @@ export class EventBuilder {
       throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
     }
 
-    this.event.start = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
-    this.event.end = typeof end === 'string' ? this.adapter.date(end, 'default') : end;
+    this.event.start = typeof start === 'string' ? start : toISOString(start);
+    this.event.end = typeof end === 'string' ? end : toISOString(end);
     if (opts?.allDay !== undefined) {
       this.event.allDay = opts.allDay;
     }
@@ -330,8 +335,8 @@ export class EventBuilder {
 
     const occurrenceModel: SchedulerEvent = {
       ...this.event,
-      start: rawStart,
-      end: rawEnd,
+      start: toISOString(rawStart),
+      end: toISOString(rawEnd),
     };
 
     const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter);

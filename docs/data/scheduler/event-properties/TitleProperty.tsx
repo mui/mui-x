@@ -3,6 +3,7 @@ import { startOfWeek } from 'date-fns/startOfWeek';
 import { setDay } from 'date-fns/setDay';
 import { setHours } from 'date-fns/setHours';
 import { setMinutes } from 'date-fns/setMinutes';
+import { format } from 'date-fns/format';
 import {
   RecurringEventRecurrenceRule,
   SchedulerEventModelStructure,
@@ -12,10 +13,15 @@ import { defaultVisibleDate } from '../datasets/personal-agenda';
 
 const START_OF_FIRST_WEEK = startOfWeek(defaultVisibleDate);
 
+/**
+ * Converts a Date to a wall-time ISO string (no trailing Z).
+ */
+const str = (date: Date): string => format(date, "yyyy-MM-dd'T'HH:mm:ss");
+
 interface CustomEvent {
   id: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   name: string;
   rrule: RecurringEventRecurrenceRule;
 }
@@ -23,15 +29,15 @@ interface CustomEvent {
 const initialEvents: CustomEvent[] = [
   {
     id: 'work-daily-standup',
-    start: setMinutes(setHours(setDay(START_OF_FIRST_WEEK, 3), 9), 0),
-    end: setMinutes(setHours(setDay(START_OF_FIRST_WEEK, 3), 9), 30),
+    start: str(setMinutes(setHours(setDay(START_OF_FIRST_WEEK, 3), 9), 0)),
+    end: str(setMinutes(setHours(setDay(START_OF_FIRST_WEEK, 3), 9), 30)),
     name: 'Daily Standup',
     rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
   },
   {
     id: 'work-retro',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 2), 16),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 2), 17),
+    start: str(setHours(setDay(START_OF_FIRST_WEEK, 2), 16)),
+    end: str(setHours(setDay(START_OF_FIRST_WEEK, 2), 17)),
     name: 'Team Retrospective',
     rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
   },

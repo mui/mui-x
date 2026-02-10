@@ -4,14 +4,20 @@
 
 import { addDays } from 'date-fns/addDays';
 import { addMonths } from 'date-fns/addMonths';
+import { format } from 'date-fns/format';
 
 // Timeline starts July 1, 2025
 export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
-// Helper to create dates relative to the start
+/**
+ * Converts a Date to a wall-time ISO string (no trailing Z).
+ */
+const str = (d) => format(d, "yyyy-MM-dd'T'HH:mm:ss");
+
+// Helper to create date strings relative to the start
 const date = (monthOffset, day) => {
   const baseDate = addMonths(defaultVisibleDate, monthOffset);
-  return addDays(baseDate, day - 1);
+  return str(addDays(baseDate, day - 1));
 };
 
 export const resources = [

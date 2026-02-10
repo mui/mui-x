@@ -465,7 +465,10 @@ export class SchedulerStore<
     end: TemporalSupportedObject,
   ) => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
-    const duplicatedEvent = createEventFromRecurringEvent(original, { start, end });
+    const duplicatedEvent = createEventFromRecurringEvent(original, {
+      start: (start as Date).toISOString(),
+      end: (end as Date).toISOString(),
+    });
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 

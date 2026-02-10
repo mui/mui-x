@@ -81,9 +81,16 @@ export function applyRecurringUpdateFollowing(
   );
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
+  const { start: changesStart, end: changesEnd, exDates: changesExDates, ...changesRest } = changes;
+
   const newEvent: SchedulerEvent = {
     ...originalEvent.modelInBuiltInFormat,
-    ...changes,
+    ...changesRest,
+    ...(changesStart != null ? { start: (changesStart as Date).toISOString() } : {}),
+    ...(changesEnd != null ? { end: (changesEnd as Date).toISOString() } : {}),
+    ...(changesExDates != null
+      ? { exDates: changesExDates.map((d) => (d as Date).toISOString()) }
+      : {}),
     id: newEventId,
     rrule: newRRule,
     extractedFromId: originalEvent.modelInBuiltInFormat.id,
@@ -210,8 +217,24 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const {
+    start: onlyThisStart,
+    end: onlyThisEnd,
+    exDates: onlyThisExDates,
+    ...onlyThisRest
+  } = changes;
+
   return {
-    created: [createEventFromRecurringEvent(originalEvent, changes)],
+    created: [
+      createEventFromRecurringEvent(originalEvent, {
+        ...onlyThisRest,
+        ...(onlyThisStart != null ? { start: (onlyThisStart as Date).toISOString() } : {}),
+        ...(onlyThisEnd != null ? { end: (onlyThisEnd as Date).toISOString() } : {}),
+        ...(onlyThisExDates != null
+          ? { exDates: onlyThisExDates.map((d) => (d as Date).toISOString()) }
+          : {}),
+      }),
+    ],
     updated: [
       {
         id: originalEvent.id,

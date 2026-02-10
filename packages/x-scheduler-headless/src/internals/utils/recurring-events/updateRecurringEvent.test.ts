@@ -221,6 +221,8 @@ describe('recurring-events/updateRecurringEvent', () => {
         {
           ...defaultEvent.modelInBuiltInFormat,
           ...changes,
+          start: (changes.start as Date).toISOString(),
+          end: (changes.end as Date).toISOString(),
           id: `${defaultEvent.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
           extractedFromId: defaultEvent.id,
           rrule: {
@@ -301,6 +303,8 @@ describe('recurring-events/updateRecurringEvent', () => {
         {
           ...original.modelInBuiltInFormat,
           ...changes,
+          start: (changes.start as Date).toISOString(),
+          end: (changes.end as Date).toISOString(),
           id: `${original.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
           extractedFromId: original.id,
           rrule: {
@@ -647,6 +651,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.created).to.deep.equal([
         {
           ...changesWithoutId,
+          start: (changesWithoutId.start as Date).toISOString(),
+          end: (changesWithoutId.end as Date).toISOString(),
           extractedFromId: defaultEvent.id,
           description: defaultEvent.description,
         },
@@ -711,6 +717,8 @@ describe('recurring-events/updateRecurringEvent', () => {
           extractedFromId: defaultEvent.id,
           description: defaultEvent.description,
           ...changesWithoutId,
+          start: (changesWithoutId.start as Date).toISOString(),
+          end: (changesWithoutId.end as Date).toISOString(),
         },
       ]);
       expect(updatedEvents.updated).to.deep.equal([

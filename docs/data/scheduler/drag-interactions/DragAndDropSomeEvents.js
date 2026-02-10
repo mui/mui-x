@@ -11,8 +11,8 @@ const enhancedInitialEvents = [
   ...initialEvents,
   {
     id: 'additional-event-1',
-    start: new Date('2025-07-01T12:00:00'),
-    end: new Date('2025-07-01T14:00:00'),
+    start: '2025-07-01T12:00:00',
+    end: '2025-07-01T14:00:00',
     title: 'Lunch',
     resource: 'personal',
     draggable: true,

@@ -2,15 +2,8 @@ import { adapter } from 'test/utils/scheduler/adapters';
 import { resolveEventDate } from '@mui/x-scheduler-headless/process-event';
 
 describe('resolveEventDate', () => {
-  it('passes through date objects unchanged', () => {
-    const dateObj = adapter.date('2025-01-01T10:00:00Z', 'default');
-    const result = resolveEventDate(dateObj, 'America/New_York', adapter);
-    expect(result).toBe(dateObj);
-  });
-
-  it('converts Z-string to an instant in the default timezone', () => {
+  it('converts Z-string to an instant', () => {
     const result = resolveEventDate('2025-01-01T10:00:00Z', 'America/New_York', adapter);
-    expect(adapter.getTimezone(result)).to.equal('system');
     expect(result.getTime()).to.equal(new Date('2025-01-01T10:00:00Z').getTime());
   });
 
@@ -24,7 +17,6 @@ describe('resolveEventDate', () => {
 
   it('uses "default" timezone when dataTimezone is "default"', () => {
     const result = resolveEventDate('2025-01-01T09:00:00', 'default', adapter);
-    expect(adapter.getTimezone(result)).to.equal('system');
     expect(adapter.getHours(result)).to.equal(9);
   });
 });

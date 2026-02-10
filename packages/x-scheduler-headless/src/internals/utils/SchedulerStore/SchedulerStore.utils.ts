@@ -104,15 +104,30 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
 /**
  * Updates an event model based on the provided changes and model structure.
+ * Converts internal date objects (`TemporalSupportedObject`) to strings
+ * before applying them to the user's model, because `SchedulerEvent` date
+ * fields are strings.
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ): TEvent {
+  const { start, end, exDates, ...rest } = changes;
+  const stringified: Record<string, any> = { ...rest };
+  if (start != null) {
+    stringified.start = (start as Date).toISOString();
+  }
+  if (end != null) {
+    stringified.end = (end as Date).toISOString();
+  }
+  if (exDates != null) {
+    stringified.exDates = exDates.map((d) => (d as Date).toISOString());
+  }
+
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
-    changes,
+    stringified as SchedulerEventUpdatedProperties,
     eventModelStructure,
   );
 }
@@ -125,9 +140,22 @@ export function createEventModel<TEvent extends object>(
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ) {
   const id = crypto.randomUUID();
+  const { start, end, exDates, ...eventRest } = event;
+  const builtInEvent: SchedulerEvent = {
+    ...eventRest,
+    id,
+    start: typeof start === 'string' ? start : (start as Date).toISOString(),
+    end: typeof end === 'string' ? end : (end as Date).toISOString(),
+    ...(exDates != null
+      ? {
+          exDates: exDates.map((d) => (typeof d === 'string' ? d : (d as Date).toISOString())),
+        }
+      : {}),
+  };
+
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(
     null,
-    { ...event, id },
+    builtInEvent,
     eventModelStructure,
   );
 

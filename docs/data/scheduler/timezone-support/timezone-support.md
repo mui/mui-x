@@ -17,63 +17,75 @@ This package is not published yet.
 
 TODO: Issue #20394 - Create documentation and demos
 
-{{"demo": "TimezoneDatasetInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
-
 ## Overview
 
-Scheduler always renders dates in the timezone defined by the `displayTimezone` prop.
+The Scheduler accepts event dates (`start` and `end`) as **strings** and supports two semantics depending on the format:
 
-Event dates (`start`, `end`, etc.) represent fixed moments in time. This means an event
-always represents the same moment, regardless of the timezone in which it is displayed.
-Changing `displayTimezone` only affects how the date is shown to the user, not when the
-event actually happens.
+- **Instant strings** end with `"Z"` and represent a fixed moment in UTC (e.g. `"2024-01-10T13:00:00Z"`).
+- **Wall-time strings** have no `"Z"` suffix and represent a local date/time that is interpreted in the event's `timezone` (e.g. `"2024-01-10T09:00:00"`).
 
-For example, an event with `start: 2024-01-10T13:00:00Z`:
-
-- is displayed as `14:00` in `Europe/Paris` (UTC+1)
-- is displayed as `08:00` in `America/New_York` (UTC-5)
-
-In all cases, it is still the same event happening at the same instant in time.
-
-Events can optionally define a `timezone` field. This field is metadata and does not
-reinterpret or shift the event start or end dates.
-
-The `timezone` field is only used internally in situations where wall-time matters, such as:
-
-- Recurring event rules (RRULE)
-- Daylight Saving Time calculations
-
-For example:
-
-```ts
-const event = {
-  start: new Date('2024-01-10T13:00:00Z'),
-  end: new Date('2024-01-10T14:00:00Z'),
-  timezone: 'Europe/Paris',
-};
-```
-
-The `timezone` field does not affect the event dates. It is only used internally for recurrence and daylight saving time handling.
+All events are rendered in the timezone defined by the `displayTimezone` prop.
 
 ## Event date values
 
-The `start` and `end` fields of an event can be provided as:
+### Instant strings (with `Z`)
 
-- JavaScript `Date` objects or timezone-aware date objects (such as `TZDate`) — treated as instants.
-- ISO strings ending with `"Z"` (e.g. `"2024-01-10T13:00:00Z"`) — treated as instants (UTC).
-- ISO strings without `"Z"` (e.g. `"2024-01-10T09:00:00"`) — treated as **wall-time** and interpreted in `event.timezone` (or `"default"` if not set).
+A string ending with `"Z"` represents a fixed moment in time.
+Changing `displayTimezone` shifts the displayed hour, but the event still refers to the same instant.
 
-:::info
-When using date objects, the timezone of the object itself is not used to define event semantics.
-Only the instant it represents is taken into account.
-:::
+```ts
+const event = {
+  id: '1',
+  title: 'Team sync',
+  start: '2024-01-10T13:00:00Z', // 13:00 UTC
+  end: '2024-01-10T14:00:00Z',
+};
+```
+
+This event is displayed as:
+
+- `14:00` in `Europe/Paris` (UTC+1)
+- `08:00` in `America/New_York` (UTC−5)
+
+### Wall-time strings (without `Z`)
+
+A string without a `"Z"` suffix represents a local time.
+It is interpreted in `event.timezone` (or `"default"` if no timezone is set).
+
+```ts
+const event = {
+  id: '1',
+  title: 'Morning standup',
+  start: '2024-01-10T09:00:00', // 09:00 local time in New York
+  end: '2024-01-10T09:30:00',
+  timezone: 'America/New_York',
+};
+```
+
+This event always happens at 09:00 in New York, regardless of DST changes.
+
+{{"demo": "TimezoneDatasetWallTime.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## The `timezone` field
+
+The `timezone` field on an event determines:
+
+1. **How wall-time strings are interpreted** — a start of `"2024-01-10T09:00:00"` with `timezone: "America/New_York"` means 09:00 in New York (14:00 UTC in winter, 13:00 UTC in summer).
+2. **How recurring event rules are evaluated** — a daily event at 09:00 in `Europe/Paris` stays at 09:00 local time even across DST boundaries.
+
+For instant strings (ending with `"Z"`), the `timezone` field does not affect how the start/end are resolved — they are already absolute points in time.
+However, it is still used for recurring event calculations.
+
+If no `timezone` is set, the Scheduler uses `"default"`.
 
 ## Rendering behavior
 
-Scheduler renders all events in the timezone defined by the `displayTimezone` prop.
+The `displayTimezone` prop controls how all events are rendered in the UI.
 
-Changing `displayTimezone` only affects how event dates are displayed in the UI.
+Changing `displayTimezone` only affects the visual representation.
 It does not modify the event data or change when an event occurs.
+
+{{"demo": "TimezoneDatasetInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Creating an event
 
@@ -86,51 +98,25 @@ This may evolve in future releases to allow setting the event's original timezon
 
 ## Recurring events and timezones
 
-While single events are updated using pure instants, recurring events define
-a pattern that is evaluated in a specific timezone.
+Recurring events define a pattern that is evaluated in a specific timezone.
 
 For example, consider a daily recurring event that happens every day at 09:00
 in the `Europe/Paris` timezone:
 
 ```ts
 const event = {
-  start: new Date('2024-03-01T08:00:00Z'),
-  end: new Date('2024-03-01T09:00:00Z'),
+  id: '1',
+  title: 'Daily standup',
+  start: '2024-03-01T08:00:00Z', // 09:00 in Paris (UTC+1 in winter)
+  end: '2024-03-01T09:00:00Z',
   timezone: 'Europe/Paris',
   rrule: { freq: 'DAILY' },
 };
 ```
 
-Even when daylight saving time starts, the event continues to happen at 09:00
-local time in Europe/Paris.
+Even when daylight saving time starts (March 31 in 2024), the event continues
+to happen at 09:00 local time in Europe/Paris.
 
-To achieve this, Scheduler uses the event's timezone to interpret and update
-the recurrence pattern correctly.
+The Scheduler uses the event's `timezone` to interpret and expand
+the recurrence pattern correctly across DST boundaries.
 
-This is the only case where Scheduler intentionally operates on day/hour semantics
-instead of pure instants.
-
-:::info
-Recurring event updates are pattern-based.
-This is the only case where Scheduler intentionally operates on wall-time semantics
-instead of pure instants.
-:::
-
-## Wall-time event definitions (string dates)
-
-When event dates are provided as strings without a trailing `Z`, they are interpreted as **wall-time** values in the event's `timezone`.
-
-This is useful when your data stores local times (e.g. from a calendar API) and you want the Scheduler to interpret them correctly without manual conversion.
-
-```ts
-const event = {
-  start: '2024-03-10T09:00:00', // 09:00 local time in America/New_York
-  end: '2024-03-10T10:00:00',
-  timezone: 'America/New_York',
-};
-```
-
-- The event will be displayed at 09:00 in `America/New_York`, regardless of DST.
-- Strings ending with `Z` (e.g. `"2024-03-10T14:00:00Z"`) are still treated as UTC instants.
-
-{{"demo": "TimezoneDatasetWallTime.js", "bg": "inline", "defaultCodeOpen": false}}
