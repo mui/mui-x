@@ -208,6 +208,8 @@ function ServerSideLazyLoadingFullyReplaced() {
           lazyLoading
           lazyLoadingRevalidateMs={2_000}
           paginationModel={{ page: 0, pageSize: 10 }}
+          disableColumnSorting
+          disableColumnFilter
         />
       </div>
     </Stack>
