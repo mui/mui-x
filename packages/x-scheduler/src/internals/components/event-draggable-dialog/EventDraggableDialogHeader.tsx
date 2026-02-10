@@ -11,23 +11,21 @@ const EventDraggableDialogHeaderRoot = styled('header', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
-  justifyContent: 'flex-end',
+  justifyContent: 'space-between',
   gap: theme.spacing(1.5),
-  padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+  padding: `${theme.spacing(3)} ${theme.spacing(3)}`,
 
   cursor: 'move',
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
 }));
 
 interface EventDraggableDialogHeaderProps {
   onClose: () => void;
   handleRef?: React.RefObject<HTMLElement | null>;
+  children?: React.ReactNode;
 }
 
 export default function EventDraggableDialogHeader(props: EventDraggableDialogHeaderProps) {
-  const { onClose, handleRef } = props;
+  const { children, onClose, handleRef } = props;
   const classes = useEventDialogClasses();
   const translations = useTranslations();
 
@@ -36,13 +34,13 @@ export default function EventDraggableDialogHeader(props: EventDraggableDialogHe
       ref={handleRef as React.RefObject<HTMLElement>}
       className={classes.eventDialogHeader}
     >
+      {children}
       <IconButton
         className={classes.eventDialogCloseButton}
-        size="small"
         aria-label={translations.closeButtonAriaLabel}
         onClick={onClose}
       >
-        <CloseRounded fontSize="small" />
+        <CloseRounded />
       </IconButton>
     </EventDraggableDialogHeaderRoot>
   );

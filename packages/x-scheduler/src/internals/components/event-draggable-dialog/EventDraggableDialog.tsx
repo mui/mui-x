@@ -78,12 +78,15 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     <Paper
       {...other}
       ref={nodeRef}
-      sx={{
+      sx={(theme) => ({
         borderWidth: 0,
         borderTopWidth: 1,
         height: 'fit-content',
         m: 0,
-      }}
+        '&[data-dragging]': {
+          outline: `1px solid ${theme.palette.primary.light}`,
+        },
+      })}
     />
   );
 } as any as DialogProps['PaperComponent'];

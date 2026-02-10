@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
-import Box from '@mui/material/Box';
+
 import { EVENT_COLORS } from '@mui/x-scheduler-headless/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
@@ -21,6 +21,8 @@ import { useStore } from '@base-ui/utils/store';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 import { useEventDialogClasses } from './EventDialogClassesContext';
+
+const NO_RESOURCE_VALUE = '';
 
 const ResourceMenuLegendContainer = styled('div', {
   name: 'MuiEventDraggableDialog',
@@ -35,12 +37,22 @@ const ResourceMenuColorDot = styled('span', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuColorDot',
 })(({ theme }) => ({
-  width: 8,
-  height: 8,
-  borderRadius: '50%',
+  width: 14,
+  height: 14,
+  borderRadius: '2px',
   flexShrink: 0,
   backgroundColor: 'var(--event-main)',
   variants: getPaletteVariants(theme),
+}));
+
+const ColorSelectionContainer = styled('div', {
+  name: 'MuiEventDraggableDialog',
+  slot: 'ColorSelectionContainer',
+})(({ theme }) => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: theme.spacing(1),
+  borderRadius: theme.shape.borderRadius,
 }));
 
 const ResourceMenuColorRadioButton = styled('button', {
@@ -49,14 +61,14 @@ const ResourceMenuColorRadioButton = styled('button', {
 })<{ palette?: PaletteName }>(({ theme }) => ({
   width: 24,
   height: 24,
-  borderRadius: '50%',
+  borderRadius: theme.shape.borderRadius,
   border: 'none',
   cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'var(--event-main)',
-  color: 'var(--event-on-surface-bold)',
+  color: 'white',
   '&:disabled': {
     cursor: 'not-allowed',
     opacity: 0.5,
@@ -72,7 +84,7 @@ interface ResourceSelectProps {
   color: SchedulerEventColor | null;
 }
 
-interface ResourceMenuTriggerContentProps {
+interface ResourceSelectAdornmentProps {
   resource: ResourceOptionType | null;
   color: SchedulerEventColor | null;
 }
@@ -83,7 +95,7 @@ interface ResourceOptionType {
   eventColor: SchedulerEventColor;
 }
 
-function ResourceMenuTriggerContent(props: ResourceMenuTriggerContentProps) {
+function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   const { resource, color } = props;
 
   const store = useSchedulerStoreContext();
@@ -111,7 +123,7 @@ function ResourceMenuTriggerContent(props: ResourceMenuTriggerContentProps) {
   );
 }
 
-export default function ResourceMenu(props: ResourceSelectProps) {
+export default function ResourceAndColorSection(props: ResourceSelectProps) {
   const { readOnly, resourceId, onResourceChange, onColorChange, color } = props;
 
   // Context hooks
@@ -142,84 +154,63 @@ export default function ResourceMenu(props: ResourceSelectProps) {
     [resourcesOptions, resourceId],
   );
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleChange = (event: SelectChangeEvent<string>) => {
+    const value = event.target.value;
+    onResourceChange((value === NO_RESOURCE_VALUE ? null : value) as SchedulerResourceId);
   };
 
   return (
     <React.Fragment>
-      <Button
-        onClick={handleClick}
-        aria-label={translations.resourceLabel}
-        aria-controls={open ? 'resource-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        endIcon={<ExpandMoreRounded fontSize="small" />}
-      >
-        <ResourceMenuTriggerContent resource={resource} color={color} />
-        <span>{resource ? resource.label : translations.labelInvalidResource}</span>
-      </Button>
-      <Menu
-        id="resource-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-      >
-        <ListSubheader>Resources</ListSubheader>
-        {resourcesOptions.map((resourceOption) => (
-          <MenuItem
-            key={resourceOption.value}
-            disabled={readOnly}
-            selected={resourceId === resourceOption.value}
-            onClick={() => {
-              onResourceChange(resourceOption.value as SchedulerResourceId);
-              handleClose();
-            }}
-            aria-label={resourceOption.label}
-          >
-            <ListItemIcon>
-              <ResourceMenuColorDot
-                className={classes.eventDialogResourceMenuColorDot}
-                data-palette={resourceOption.eventColor}
-              />
-            </ListItemIcon>
-            <ListItemText>{resourceOption.label}</ListItemText>
-            {resourceId === resourceOption.value && (
-              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-                <CheckIcon fontSize="small" />
-              </ListItemIcon>
-            )}
-          </MenuItem>
-        ))}
-        <ListSubheader>Colors</ListSubheader>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, px: 2, pb: 1 }}>
-          {EVENT_COLORS.map((colorOption) => (
-            <ResourceMenuColorRadioButton
-              key={colorOption}
-              type="button"
-              disabled={readOnly}
-              onClick={() => {
-                onColorChange(colorOption);
-                handleClose();
-              }}
-              aria-label={colorOption}
-              data-palette={colorOption}
-              className={classes.eventDialogResourceMenuColorRadioButton}
+      <FormControl size="small" fullWidth>
+        <InputLabel id="resource-select-label">{translations.resourceLabel}</InputLabel>
+        <Select
+          labelId="resource-select-label"
+          label={translations.resourceLabel}
+          value={resourceId ?? NO_RESOURCE_VALUE}
+          displayEmpty
+          onChange={handleChange}
+          readOnly={readOnly}
+          startAdornment={
+            <InputAdornment position="start">
+              <ResourceSelectAdornment resource={resource} color={color} />
+            </InputAdornment>
+          }
+          renderValue={() => (resource ? resource.label : translations.labelInvalidResource)}
+        >
+          {resourcesOptions.map((resourceOption) => (
+            <MenuItem
+              key={resourceOption.value ?? NO_RESOURCE_VALUE}
+              value={resourceOption.value ?? NO_RESOURCE_VALUE}
+              aria-label={resourceOption.label}
             >
-              {color === colorOption && <CheckIcon fontSize="small" />}
-            </ResourceMenuColorRadioButton>
+              <ListItemIcon>
+                <ResourceMenuColorDot
+                  className={classes.eventDialogResourceMenuColorDot}
+                  data-palette={resourceOption.eventColor}
+                />
+              </ListItemIcon>
+              <ListItemText>{resourceOption.label}</ListItemText>
+            </MenuItem>
           ))}
-        </Box>
-      </Menu>
+        </Select>
+      </FormControl>
+      <ColorSelectionContainer role="radiogroup" aria-label={translations.colorPickerLabel}>
+        {EVENT_COLORS.map((colorOption) => (
+          <ResourceMenuColorRadioButton
+            key={colorOption}
+            type="button"
+            role="radio"
+            aria-checked={color === colorOption}
+            disabled={readOnly}
+            onClick={() => onColorChange(colorOption)}
+            aria-label={colorOption}
+            data-palette={colorOption}
+            className={classes.eventDialogResourceMenuColorRadioButton}
+          >
+            {color === colorOption && <CheckIcon fontSize="small" />}
+          </ResourceMenuColorRadioButton>
+        ))}
+      </ColorSelectionContainer>
     </React.Fragment>
   );
 }

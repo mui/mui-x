@@ -40,6 +40,7 @@ export function useDraggableDialog(
       },
       onDragStart: () => {
         preventUnhandled.start();
+        element.setAttribute('data-dragging', 'true');
       },
       onDrag: ({ location }) => {
         const { deltaX, deltaY } = getDeltas(location);
@@ -55,6 +56,7 @@ export function useDraggableDialog(
       },
       onDrop: ({ location }) => {
         preventUnhandled.stop();
+        element.removeAttribute('data-dragging');
 
         const { deltaX, deltaY } = getDeltas(location);
 
