@@ -87,8 +87,6 @@ export type AutocompleteProps<
   disableCloseOnSelect?: boolean;
   /** If true, the popup opens when the input is focused. */
   openOnFocus?: boolean;
-  /** If true, the first option is automatically highlighted. */
-  autoHighlight?: boolean;
 
   /* New props */
 

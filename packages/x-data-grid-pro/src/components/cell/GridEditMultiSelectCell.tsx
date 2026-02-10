@@ -348,7 +348,6 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
       isOptionEqualToValue={isOptionEqualToValue}
       disableCloseOnSelect
       openOnFocus
-      autoHighlight
       slotProps={{
         textField: {
           size: 'small',
