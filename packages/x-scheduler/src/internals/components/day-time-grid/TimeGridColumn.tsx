@@ -22,17 +22,17 @@ const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridColumn',
 })(({ theme }) => ({
-  borderRight: `1px solid ${theme.palette.divider}`,
+  borderInlineStart: `1px solid ${theme.palette.divider}`,
   flexGrow: 1,
   flexShrink: 0,
   flexBasis: 0,
   minWidth: 0,
   position: 'relative',
-  '&:first-of-type': {
-    borderLeft: `1px solid ${theme.palette.divider}`,
-  },
   '&[data-weekend]': {
     backgroundColor: theme.palette.action.hover,
+  },
+  ':last-of-type': {
+    borderInlineEnd: `1px solid ${theme.palette.divider}`,
   },
 }));
 

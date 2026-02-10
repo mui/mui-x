@@ -30,7 +30,7 @@ import {
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { findSkeletonRowsSection } from '../lazyLoader/utils';
+import { findSkeletonRowsSection, adjustRowParams } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
 
 enum LoadingTrigger {
@@ -95,25 +95,6 @@ export const useGridDataSourceLazyLoader = (
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
 
-  // Adjust the render context range to fit the pagination model's page size
-  // First row index should be decreased to the start of the page, end row index should be increased to the end of the page
-  const adjustRowParams = React.useCallback(
-    (params: GridGetRowsParams) => {
-      if (typeof params.start !== 'number') {
-        return params;
-      }
-
-      const paginationModel = gridPaginationModelSelector(privateApiRef);
-
-      return {
-        ...params,
-        start: params.start - (params.start % paginationModel.pageSize),
-        end: params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
-      };
-    },
-    [privateApiRef],
-  );
-
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setLoading(true);
     privateApiRef.current.dataSource.cache.clear();
@@ -177,10 +158,17 @@ export const useGridDataSourceLazyLoader = (
       return;
     }
 
-    const pageToSkip = adjustRowParams({
-      start: renderedRowsIntervalCache.current.firstRowToRender,
-      end: renderedRowsIntervalCache.current.lastRowToRender,
-    } as GridGetRowsParams);
+    const paginationModel = gridPaginationModelSelector(privateApiRef);
+    const pageToSkip = adjustRowParams(
+      {
+        start: renderedRowsIntervalCache.current.firstRowToRender,
+        end: renderedRowsIntervalCache.current.lastRowToRender,
+      },
+      {
+        pageSize: paginationModel.pageSize,
+        rowCount: pageRowCount,
+      },
+    );
 
     let hasChanged = false;
     const isInitialPage =
@@ -247,7 +235,7 @@ export const useGridDataSourceLazyLoader = (
       }),
       'addSkeletonRows',
     );
-  }, [privateApiRef, adjustRowParams]);
+  }, [privateApiRef]);
 
   const updateLoadingTrigger = React.useCallback(
     (rowCount: number) => {
@@ -384,14 +372,19 @@ export const useGridDataSourceLazyLoader = (
 
       privateApiRef.current.setLoading(true);
 
-      fetchRows(adjustRowParams(getRowsParams));
+      fetchRows(
+        adjustRowParams(getRowsParams, {
+          pageSize: paginationModel.pageSize,
+          rowCount: privateApiRef.current.state.pagination.rowCount,
+        }),
+      );
     },
   );
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
   >(
-    (params) => {
+    (renderContext) => {
       if (rowsStale.current) {
         return;
       }
@@ -399,22 +392,22 @@ export const useGridDataSourceLazyLoader = (
       const sortModel = gridSortModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
-        start: params.firstRowIndex,
-        end: params.lastRowIndex - 1,
+        start: renderContext.firstRowIndex,
+        end: renderContext.lastRowIndex - 1,
         sortModel,
         filterModel,
       };
 
       if (
-        renderedRowsIntervalCache.current.firstRowToRender === params.firstRowIndex &&
-        renderedRowsIntervalCache.current.lastRowToRender === params.lastRowIndex
+        renderedRowsIntervalCache.current.firstRowToRender === renderContext.firstRowIndex &&
+        renderedRowsIntervalCache.current.lastRowToRender === renderContext.lastRowIndex
       ) {
         return;
       }
 
       renderedRowsIntervalCache.current = {
-        firstRowToRender: params.firstRowIndex,
-        lastRowToRender: params.lastRowIndex,
+        firstRowToRender: renderContext.firstRowIndex,
+        lastRowToRender: renderContext.lastRowIndex,
       };
 
       const currentVisibleRows = getVisibleRows(privateApiRef);
@@ -422,10 +415,7 @@ export const useGridDataSourceLazyLoader = (
       const skeletonRowsSection = findSkeletonRowsSection({
         apiRef: privateApiRef,
         visibleRows: currentVisibleRows.rows,
-        range: {
-          firstRowIndex: params.firstRowIndex,
-          lastRowIndex: params.lastRowIndex - 1,
-        },
+        range: renderContext,
       });
 
       if (!skeletonRowsSection) {
@@ -435,9 +425,15 @@ export const useGridDataSourceLazyLoader = (
       getRowsParams.start = skeletonRowsSection.firstRowIndex;
       getRowsParams.end = skeletonRowsSection.lastRowIndex;
 
-      fetchRows(adjustRowParams(getRowsParams));
+      const paginationModel = gridPaginationModelSelector(privateApiRef);
+      fetchRows(
+        adjustRowParams(getRowsParams, {
+          pageSize: paginationModel.pageSize,
+          rowCount: privateApiRef.current.state.pagination.rowCount,
+        }),
+      );
     },
-    [privateApiRef, adjustRowParams, fetchRows],
+    [privateApiRef, fetchRows],
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(

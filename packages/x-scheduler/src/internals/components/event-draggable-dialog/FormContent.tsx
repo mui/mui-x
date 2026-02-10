@@ -33,6 +33,7 @@ import EventDraggableDialogHeader from './EventDraggableDialogHeader';
 import ResourceMenu from './ResourceMenu';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
+import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const FormActions = styled('div', {
   name: 'MuiEventDraggableDialog',
@@ -63,6 +64,7 @@ export function FormContent(props: FormContentProps) {
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useSchedulerStoreContext();
+  const classes = useEventDialogClasses();
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
@@ -226,9 +228,9 @@ export function FormContent(props: FormContentProps) {
   };
 
   return (
-    <DialogContent>
+    <DialogContent className={classes.eventDialogContent}>
       <form onSubmit={handleSubmit}>
-        <EventDraggableDialogHeader>
+        <EventDraggableDialogHeader onClose={onClose}>
           <TextField
             name="title"
             defaultValue={occurrence.title}
@@ -274,7 +276,7 @@ export function FormContent(props: FormContentProps) {
         />
         <Divider />
         <DialogActions>
-          <FormActions>
+          <FormActions className={classes.eventDialogFormActions}>
             <Button color="error" type="button" onClick={handleDelete}>
               {translations.deleteEvent}
             </Button>

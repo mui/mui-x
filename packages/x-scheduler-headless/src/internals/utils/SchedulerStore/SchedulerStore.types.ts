@@ -262,7 +262,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * The color palette used for all events.
    * Can be overridden per resource using the `eventColor` property on the resource model.
    * Can be overridden per event using the `color` property on the event model.
-   * @default "jade"
+   * @default "teal"
    */
   eventColor?: SchedulerEventColor;
   /**
@@ -359,3 +359,12 @@ export interface UpdateEventsParameters {
 }
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
+
+/**
+ * The unique identifier for each scheduler store type.
+ * Used by context hooks to assert the store type at runtime.
+ */
+export type SchedulerInstanceName =
+  | 'EventCalendarStore'
+  | 'EventCalendarPremiumStore'
+  | 'EventTimelinePremiumStore';

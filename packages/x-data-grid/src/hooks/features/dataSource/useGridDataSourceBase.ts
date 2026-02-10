@@ -302,6 +302,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       return undefined;
     }
     if (props.dataSource) {
+      apiRef.current.setRows([]);
       apiRef.current.dataSource.cache.clear();
       apiRef.current.dataSource.fetchRows();
     }

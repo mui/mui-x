@@ -13,10 +13,7 @@ import {
   selectorChartSvgWidth,
   selectorChartSvgHeight,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
-import {
-  selectorChartsHasFocusedItem,
-  selectorChartsIsKeyboardNavigationEnabled,
-} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
+import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
@@ -81,7 +78,6 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const propsWidth = store.use(selectorChartPropsWidth);
   const propsHeight = store.use(selectorChartPropsHeight);
   const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
-  const hasFocusedItem = store.use(selectorChartsHasFocusedItem);
 
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
@@ -98,7 +94,6 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={clsx(classes.root, className)}
       tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
-      data-has-focused-item={hasFocusedItem || undefined}
       {...other}
       onPointerEnter={(event) => {
         other.onPointerEnter?.(event);

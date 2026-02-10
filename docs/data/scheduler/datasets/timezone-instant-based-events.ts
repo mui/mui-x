@@ -4,9 +4,9 @@
 import { RecurringEventRecurrenceRule, SchedulerResource } from '@mui/x-scheduler/models';
 
 export const resources: SchedulerResource[] = [
-  { id: 'ny', title: 'New York', eventColor: 'violet' },
-  { id: 'paris', title: 'Paris', eventColor: 'jade' },
-  { id: 'tokyo', title: 'Tokyo', eventColor: 'cyan' },
+  { id: 'ny', title: 'New York', eventColor: 'purple' },
+  { id: 'paris', title: 'Paris', eventColor: 'teal' },
+  { id: 'tokyo', title: 'Tokyo', eventColor: 'teal' },
   { id: 'la', title: 'Los Angeles', eventColor: 'orange' },
   { id: 'sydney', title: 'Sydney', eventColor: 'pink' },
 ];

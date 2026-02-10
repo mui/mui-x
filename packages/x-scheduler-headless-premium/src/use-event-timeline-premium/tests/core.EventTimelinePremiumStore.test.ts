@@ -19,7 +19,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
-        eventColor: 'jade',
+        eventColor: 'teal',
         eventCreation: true,
         eventIdList: [],
         eventModelList: [],
