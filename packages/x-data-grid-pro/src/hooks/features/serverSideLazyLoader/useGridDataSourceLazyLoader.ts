@@ -54,7 +54,7 @@ export const useGridDataSourceLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs'
+    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs' | 'lazyLoadingRevalidateMs'
   >,
 ): void => {
   const setStrategyAvailability = React.useCallback(() => {
@@ -72,6 +72,7 @@ export const useGridDataSourceLazyLoader = (
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const rowsStale = React.useRef<boolean>(false);
   const draggedRowId = React.useRef<GridRowId | null>(null);
+  const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -105,9 +106,28 @@ export const useGridDataSourceLazyLoader = (
     [privateApiRef, fetchRows],
   );
 
-  const debouncedRevalidate = React.useMemo(
-    () => debounce(revalidate, 500),
-    [revalidate],
+  const debouncedRevalidate = React.useMemo(() => debounce(revalidate, 500), [revalidate]);
+
+  const stopPolling = React.useCallback(() => {
+    if (pollingIntervalRef.current !== null) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+  }, []);
+
+  const startPolling = React.useCallback(
+    (params: Partial<GridGetRowsParams>) => {
+      stopPolling();
+
+      if (props.lazyLoadingRevalidateMs <= 0) {
+        return;
+      }
+
+      pollingIntervalRef.current = setInterval(() => {
+        revalidate(params);
+      }, props.lazyLoadingRevalidateMs);
+    },
+    [props.lazyLoadingRevalidateMs, stopPolling, revalidate],
   );
 
   // Adjust the render context range to fit the pagination model's page size
@@ -423,9 +443,12 @@ export const useGridDataSourceLazyLoader = (
         { params: params.fetchParams, response },
         false,
       );
+      if (loadingTrigger.current === LoadingTrigger.VIEWPORT) {
+        startPolling(params.fetchParams);
+      }
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
-    [privateApiRef, updateLoadingTrigger, addSkeletonRows],
+    [privateApiRef, updateLoadingTrigger, addSkeletonRows, startPolling],
   );
 
   const handleRowCountChange = React.useCallback(() => {
@@ -533,14 +556,16 @@ export const useGridDataSourceLazyLoader = (
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
       debouncedRevalidate.clear();
+      stopPolling();
     };
-  }, [throttledHandleRenderedRowsIntervalChange, debouncedRevalidate]);
+  }, [throttledHandleRenderedRowsIntervalChange, debouncedRevalidate, stopPolling]);
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
       debouncedRevalidate.clear();
+      stopPolling();
       previousLastRowIndex.current = 0;
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
@@ -555,7 +580,13 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, debouncedRevalidate],
+    [
+      privateApiRef,
+      debouncedFetchRows,
+      throttledHandleRenderedRowsIntervalChange,
+      debouncedRevalidate,
+      stopPolling,
+    ],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
@@ -563,6 +594,7 @@ export const useGridDataSourceLazyLoader = (
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
       debouncedRevalidate.clear();
+      stopPolling();
       previousLastRowIndex.current = 0;
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
@@ -577,7 +609,13 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, debouncedRevalidate],
+    [
+      privateApiRef,
+      debouncedFetchRows,
+      throttledHandleRenderedRowsIntervalChange,
+      debouncedRevalidate,
+      stopPolling,
+    ],
   );
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {
