@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as ts from 'typescript';
+import { z } from 'zod';
 import { getMissingTranslations } from './getMissingTranslations';
 import { PACKAGE_CONFIGS } from './packageConfigs';
 
@@ -29,9 +30,10 @@ interface FileUpdateTarget {
 
 const ROOT = path.resolve(__dirname, '..', '..');
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
+const translationPayloadSchema = z.record(
+  z.string(),
+  z.record(z.string(), z.record(z.string(), z.string())),
+);
 
 function parsePayload(rawInput: string): TranslationPayload {
   let parsed: unknown;
@@ -43,42 +45,21 @@ function parsePayload(rawInput: string): TranslationPayload {
     throw new Error(`Invalid compact JSON input. ${parseErrorDetail}`);
   }
 
-  if (!isPlainObject(parsed)) {
+  const parseResult = translationPayloadSchema.safeParse(parsed);
+  if (!parseResult.success) {
+    const detail = parseResult.error.issues
+      .map((issue) => {
+        const pathString = issue.path.length > 0 ? issue.path.join('.') : '<root>';
+        return `${pathString}: ${issue.message}`;
+      })
+      .join('; ');
+
     throw new Error(
-      'Input must be a JSON object: { "<package>": { "<key>": { "<locale>": "..." } } }.',
+      `Input must be a JSON object: { "<package>": { "<key>": { "<locale>": "..." } } }. ${detail}`,
     );
   }
 
-  const payload: TranslationPayload = {};
-
-  for (const [packageName, packageValue] of Object.entries(parsed)) {
-    if (!isPlainObject(packageValue)) {
-      throw new Error(`Package "${packageName}" must map to an object.`);
-    }
-
-    const keysOutput: KeyTranslations = {};
-    for (const [key, keyValue] of Object.entries(packageValue)) {
-      if (!isPlainObject(keyValue)) {
-        throw new Error(`Key "${packageName}.${key}" must map to an object of locales.`);
-      }
-
-      const localesOutput: LocaleTranslations = {};
-      for (const [localeCode, translationValue] of Object.entries(keyValue)) {
-        if (typeof translationValue !== 'string') {
-          throw new Error(
-            `Translation "${packageName}.${key}.${localeCode}" must be a string in compact JSON format.`,
-          );
-        }
-        localesOutput[localeCode] = translationValue;
-      }
-
-      keysOutput[key] = localesOutput;
-    }
-
-    payload[packageName] = keysOutput;
-  }
-
-  return payload;
+  return parseResult.data;
 }
 
 function getPropertyName(prop: ts.PropertyAssignment): string | undefined {
