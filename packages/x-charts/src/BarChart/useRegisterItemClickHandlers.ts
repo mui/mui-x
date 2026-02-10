@@ -7,7 +7,7 @@ import { type UseChartHighlightSignature } from '../internals/plugins/featurePlu
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useChartContext } from '../context/ChartProvider';
-import { getSVGPoint } from '../internals/getSVGPoint';
+import { getSurfacePoint } from '../internals/getSurfacePoint';
 import { useStore } from '../internals/store/useStore';
 import { selectorBarItemAtPosition } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 
@@ -57,7 +57,7 @@ export function useRegisterItemClickHandlers(
 
       lastPointerUp = null;
 
-      const svgPoint = getSVGPoint(element, point);
+      const svgPoint = getSurfacePoint(element, point);
 
       if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
         return;
