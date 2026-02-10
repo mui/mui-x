@@ -1,12 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": [
-      "@mui/internal-test-utils/initMatchers",
-      "vitest/globals",
-      "node",
-      "../../mui-env.d.ts"
-    ],
+    "types": ["@mui/internal-test-utils/initMatchers", "vitest/globals", "node"],
     "noImplicitAny": false,
     "skipLibCheck": true
   },

@@ -1,12 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": [
-      "node",
-      "@mui/internal-test-utils/initMatchers",
-      "vitest/globals",
-      "../../mui-env.d.ts"
-    ],
+    "types": ["node", "@mui/internal-test-utils/initMatchers", "vitest/globals"],
     "skipLibCheck": true
   },
   "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]

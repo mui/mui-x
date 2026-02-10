@@ -6,8 +6,7 @@
       "@mui/material/themeCssVarsAugmentation",
       "vitest/globals",
       "node",
-      "react",
-      "../../mui-env.d.ts"
+      "react"
     ],
     "skipLibCheck": true
   },

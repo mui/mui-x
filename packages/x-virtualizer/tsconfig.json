@@ -1,8 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["@mui/internal-test-utils/initMatchers", "chai-dom", "node", "../../mui-env.d.ts"],
-    "skipLibCheck": true
+    "types": ["@mui/internal-test-utils/initMatchers", "chai-dom", "node"]
   },
   "include": ["src/**/*"]
 }
