@@ -11,7 +11,7 @@ import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
-import { createGetBarDimensions } from '../internals/getBarDimensions';
+import { createGetBarDimensions } from '../internals/createGetBarDimensions';
 import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
