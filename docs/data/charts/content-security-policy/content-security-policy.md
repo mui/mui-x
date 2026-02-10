@@ -30,7 +30,7 @@ See the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/
 MUI X Charts depends on Material UI.
 Follow Material UI's [CSP implementation guide](/material-ui/guides/content-security-policy/#how-does-one-implement-csp) to set up a CSP.
 
-### CSP for exporting
+### CSP for exporting charts
 
 You can [export charts](/x/react-charts/export/) as images or PDFs with MUI X Charts.
 When a CSP is set, you need to configure additional settings for exporting to work.
