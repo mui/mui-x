@@ -2,8 +2,7 @@ export {}; // Ensure this file is treated as a module to avoid global scope TS e
 
 declare global {
   interface MUIEnv {
-    NODE_ENV?: 'development' | 'production';
-    IS_TEST_ENV?: 'true';
+    NODE_ENV?: 'production' | 'development';
   }
 
   interface Process {
