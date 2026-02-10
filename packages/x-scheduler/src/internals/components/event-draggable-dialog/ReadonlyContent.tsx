@@ -16,7 +16,8 @@ import EventDraggableDialogHeader from './EventDraggableDialogHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { schedulerPaletteStyles } from '../../utils/tokens';
+import { getPaletteVariants, PaletteName } from '../../utils/tokens';
+import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const ReadonlyContentRoot = styled('div', {
   name: 'MuiEventDraggableDialog',
@@ -53,7 +54,7 @@ const EventDraggableDialogTitle = styled('p', {
   margin: 0,
   fontSize: theme.typography.body1.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
-  color: 'var(--event-color-12)',
+  color: 'var(--event-on-surface-subtle-primary)',
 }));
 
 const EventDraggableDialogResourceContainer = styled('div', {
@@ -77,14 +78,14 @@ const EventDraggableDialogResourceLegendContainer = styled('div', {
 const ResourceLegendColorDot = styled('span', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceLegendColor',
-})({
+})<{ palette?: PaletteName }>(({ theme }) => ({
   width: 8,
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
-  ...schedulerPaletteStyles,
-});
+  backgroundColor: 'var(--event-main)',
+  variants: getPaletteVariants(theme),
+}));
 
 const EventDraggableDialogResourceTitle = styled('p', {
   name: 'MuiEventDraggableDialog',
@@ -92,7 +93,7 @@ const EventDraggableDialogResourceTitle = styled('p', {
 })(({ theme }) => ({
   margin: 0,
   fontSize: theme.typography.body2.fontSize,
-  color: 'var(--event-color-11)',
+  color: 'var(--event-on-surface-subtle-secondary)',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
@@ -110,6 +111,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useSchedulerStoreContext();
+  const classes = useEventDialogClasses();
 
   // Selector hooks
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
@@ -136,27 +138,34 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   return (
     <React.Fragment>
-      <EventDraggableDialogHeader>
-        <EventDraggableDialogTitle>{occurrence.title}</EventDraggableDialogTitle>
+      <EventDraggableDialogHeader onClose={onClose}>
+        <EventDraggableDialogTitle className={classes.eventDialogTitle}>
+          {occurrence.title}
+        </EventDraggableDialogTitle>
 
-        <EventDraggableDialogResourceContainer>
-          <EventDraggableDialogResourceLegendContainer>
+        <EventDraggableDialogResourceContainer className={classes.eventDialogResourceContainer}>
+          <EventDraggableDialogResourceLegendContainer
+            className={classes.eventDialogResourceLegendContainer}
+          >
             {resource?.eventColor && resource.eventColor !== color && (
               <ResourceLegendColorDot
-                className="ResourceLegendColor"
+                className={classes.eventDialogResourceLegendColor}
                 data-palette={resource.eventColor}
               />
             )}
 
-            <ResourceLegendColorDot className="ResourceLegendColor" data-palette={color} />
+            <ResourceLegendColorDot
+              className={classes.eventDialogResourceLegendColor}
+              data-palette={color}
+            />
           </EventDraggableDialogResourceLegendContainer>
-          <EventDraggableDialogResourceTitle>
+          <EventDraggableDialogResourceTitle className={classes.eventDialogResourceTitle}>
             {resource?.title || translations.noResourceAriaLabel}
           </EventDraggableDialogResourceTitle>
         </EventDraggableDialogResourceContainer>
       </EventDraggableDialogHeader>
-      <ReadonlyContentRoot>
-        <EventDraggableDialogDateTimeContainer>
+      <ReadonlyContentRoot className={classes.eventDialogReadonlyContent}>
+        <EventDraggableDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
           <CalendarMonthRounded fontSize="small" />
           <Typography variant="body2" component="p" noWrap>
             <time
@@ -190,7 +199,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
           <Typography variant="body2">{occurrence.description}</Typography>
         ) : null}
       </ReadonlyContentRoot>
-      <EventDraggableDialogActions>
+      <EventDraggableDialogActions className={classes.eventDialogActions}>
         <Button variant="contained" type="button" onClick={onClose}>
           {translations.closeButtonLabel}
         </Button>

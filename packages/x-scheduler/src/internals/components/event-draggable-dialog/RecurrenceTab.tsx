@@ -30,6 +30,7 @@ import {
 import { useTranslations } from '../../utils/TranslationsContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
+import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const RecurrenceTabContent = styled('div', {
   name: 'MuiEventDraggableDialog',
@@ -55,6 +56,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useSchedulerStoreContext();
+  const classes = useEventDialogClasses();
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
@@ -306,7 +308,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       aria-labelledby="recurrence-tab"
       hidden={tabValue !== 'recurrence'}
     >
-      <RecurrenceTabContent>
+      <RecurrenceTabContent className={classes.eventDialogRecurrenceTabContent}>
         <FormControl fullWidth size="small">
           <InputLabel id="recurrence-preset-label">
             {translations.recurrenceMainSelectCustomLabel}

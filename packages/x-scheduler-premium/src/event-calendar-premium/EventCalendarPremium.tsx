@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import { useEventCalendarPremium } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
-import { EventCalendarPremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium-store-context';
 import {
   useEventCalendarUtilityClasses,
   EventCalendarClassesContext,
@@ -29,7 +28,7 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // Use the same theme name to share theme customizations with base EventCalendar
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
 
   const {
@@ -41,22 +40,19 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   const store = useEventCalendarPremium(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { translations, ...other } = forwardedProps;
+  const { translations, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
 
   return (
-    <EventCalendarPremiumStoreContext.Provider value={store}>
-      <EventCalendarStoreContext.Provider value={store}>
-        <SchedulerStoreContext.Provider value={store as any}>
-          <TranslationsProvider translations={translations}>
-            <EventCalendarClassesContext.Provider value={classes}>
-              <EventDraggableDialogProvider>
-                <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-              </EventDraggableDialogProvider>
-            </EventCalendarClassesContext.Provider>
-          </TranslationsProvider>
-        </SchedulerStoreContext.Provider>
-      </EventCalendarStoreContext.Provider>
-    </EventCalendarPremiumStoreContext.Provider>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <TranslationsProvider translations={translations}>
+        <EventCalendarClassesContext.Provider value={classes}>
+          <EventDraggableDialogProvider>
+            <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+          </EventDraggableDialogProvider>
+        </EventCalendarClassesContext.Provider>
+      </TranslationsProvider>
+    </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarPremiumComponent;
 

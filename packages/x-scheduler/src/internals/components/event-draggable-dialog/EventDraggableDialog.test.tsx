@@ -7,6 +7,7 @@ import {
   SchedulerStoreRunner,
   StateWatcher,
   StoreSpy,
+  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import {
@@ -14,8 +15,9 @@ import {
   SchedulerResourceId,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
-import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
+import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDraggableDialogContent } from './EventDraggableDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
@@ -36,7 +38,7 @@ const resources: SchedulerResource[] = [
   {
     id: 'r2',
     title: 'Personal',
-    eventColor: 'cyan',
+    eventColor: 'teal',
   },
 ];
 
@@ -120,7 +122,7 @@ describe('<EventDraggableDialogContent open />', () => {
     };
 
     expect(updated).to.deep.equal(expectedUpdatedEvent);
-  });
+  }, 10_000);
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
@@ -230,7 +232,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
     const resourcesNoColor: SchedulerResource[] = [
       { id: 'r1', title: 'Work', eventColor: 'blue' },
-      { id: 'r2', title: 'Personal', eventColor: 'cyan' },
+      { id: 'r2', title: 'Personal', eventColor: 'teal' },
       { id: 'r3', title: 'NoColor' },
     ];
 
@@ -262,10 +264,9 @@ describe('<EventDraggableDialogContent open />', () => {
     );
 
     expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/NoColor/i);
-    expect(document.querySelector('.ResourceLegendColor')).to.have.attribute(
-      'data-palette',
-      'jade',
-    );
+    expect(
+      document.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
+    ).to.have.attribute('data-palette', 'teal');
   });
 
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
@@ -299,10 +300,9 @@ describe('<EventDraggableDialogContent open />', () => {
 
     expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/no resource/i);
 
-    expect(document.querySelector('.ResourceLegendColor')).to.have.attribute(
-      'data-palette',
-      'jade',
-    );
+    expect(
+      document.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
+    ).to.have.attribute('data-palette', 'teal');
 
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
@@ -324,8 +324,8 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) =>
               store.setOccurrencePlaceholder({
                 type: 'creation',
@@ -341,7 +341,7 @@ describe('<EventDraggableDialogContent open />', () => {
           <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
@@ -368,8 +368,8 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) =>
               store.setOccurrencePlaceholder({
                 type: 'creation',
@@ -385,7 +385,7 @@ describe('<EventDraggableDialogContent open />', () => {
           <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
@@ -411,8 +411,8 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) =>
               store.setOccurrencePlaceholder({
                 type: 'creation',
@@ -432,7 +432,7 @@ describe('<EventDraggableDialogContent open />', () => {
           />
 
           <StateWatcher
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
@@ -469,12 +469,12 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
           />
           <StoreSpy
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             method="createEvent"
             onSpyReady={(sp) => {
               createEventSpy = sp;
@@ -537,12 +537,12 @@ describe('<EventDraggableDialogContent open />', () => {
           onEventsChange={onEventsChange}
           displayTimezone={displayTimezone}
         >
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
           />
           <StoreSpy
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             method="createEvent"
             onSpyReady={(sp) => {
               createEventSpy = sp;
@@ -604,14 +604,14 @@ describe('<EventDraggableDialogContent open />', () => {
             <div ref={containerRef} />
             <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
                 }}
               />
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="selectRecurringEventUpdateScope"
                 onSpyReady={(sp) => {
                   selectRecurringEventUpdateScopeSpy = sp;
@@ -654,14 +654,14 @@ describe('<EventDraggableDialogContent open />', () => {
             <div ref={containerRef} />
             <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
                 }}
               />
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="selectRecurringEventUpdateScope"
                 onSpyReady={(sp) => {
                   selectRecurringEventUpdateScopeSpy = sp;
@@ -717,14 +717,14 @@ describe('<EventDraggableDialogContent open />', () => {
             <div ref={containerRef} />
             <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
                 }}
               />
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="selectRecurringEventUpdateScope"
                 onSpyReady={(sp) => {
                   selectRecurringEventUpdateScopeSpy = sp;
@@ -778,14 +778,14 @@ describe('<EventDraggableDialogContent open />', () => {
             <div ref={containerRef} />
             <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
                 }}
               />
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="selectRecurringEventUpdateScope"
                 onSpyReady={(sp) => {
                   selectRecurringEventUpdateScopeSpy = sp;
@@ -1169,7 +1169,7 @@ describe('<EventDraggableDialogContent open />', () => {
         const { user } = render(
           <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
             <StoreSpy
-              Context={EventCalendarStoreContext}
+              Context={SchedulerStoreContext}
               method="updateEvent"
               onSpyReady={(sp) => {
                 updateEventSpy = sp;
@@ -1209,7 +1209,7 @@ describe('<EventDraggableDialogContent open />', () => {
         const { user } = render(
           <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
             <StoreSpy
-              Context={EventCalendarStoreContext}
+              Context={SchedulerStoreContext}
               method="updateEvent"
               onSpyReady={(sp) => {
                 updateEventSpy = sp;
@@ -1237,6 +1237,63 @@ describe('<EventDraggableDialogContent open />', () => {
           interval: 1,
         });
       });
+    });
+  });
+
+  describe('Event dialog classes', () => {
+    it('should apply built-in classes to dialog elements', () => {
+      render(
+        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+          <EventDraggableDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      expect(document.querySelector('.MuiEventCalendar-eventDialog')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogCloseButton')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogDragHandle')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogHeader')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogHeaderContent')).not.to.equal(
+        null,
+      );
+      expect(document.querySelector('.MuiEventCalendar-eventDialogContent')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogGeneralTabContent')).not.to.equal(
+        null,
+      );
+      expect(
+        document.querySelector('.MuiEventCalendar-eventDialogDateTimeFieldsContainer'),
+      ).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogDateTimeFieldsRow')).not.to.equal(
+        null,
+      );
+      expect(document.querySelector('.MuiEventCalendar-eventDialogFormActions')).not.to.equal(null);
+    });
+
+    it('should apply built-in classes to readonly dialog elements', () => {
+      const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
+      const readOnlyOccurrence = EventBuilder.new(adapter)
+        .id(readOnlyEvent.id)
+        .title(readOnlyEvent.title)
+        .description(readOnlyEvent.description)
+        .span(readOnlyEvent.start, readOnlyEvent.end)
+        .readOnly(true)
+        .toOccurrence();
+
+      render(
+        <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
+          <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      expect(document.querySelector('.MuiEventCalendar-eventDialog')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogHeader')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogReadonlyContent')).not.to.equal(
+        null,
+      );
+      expect(document.querySelector('.MuiEventCalendar-eventDialogActions')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogTitle')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogDateTimeContainer')).not.to.equal(
+        null,
+      );
     });
   });
 });

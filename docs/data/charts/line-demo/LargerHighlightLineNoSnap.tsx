@@ -18,7 +18,7 @@ const xLabels = [
   'Page G',
 ];
 
-const highlightScope: HighlightScope = {
+const highlightScope: HighlightScope<'line'> = {
   highlight: 'item',
   fade: 'global',
 };
