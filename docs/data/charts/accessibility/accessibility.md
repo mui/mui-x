@@ -71,7 +71,7 @@ components: {
 
 {{"demo": "KeyboardNavigation.js"}}
 
-This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, and sankey.
+This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, sankey, and range-bar.
 
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
 When focused, the chart highlights a value item that can be modified with arrow navigation.
