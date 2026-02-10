@@ -359,9 +359,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       });
 
       // Rerender with S2 hidden
-      setProps(
-        { hiddenItems: [{ type: 'bar', seriesId: 'series-2' }] }
-      );
+      setProps({ hiddenItems: [{ type: 'bar', seriesId: 'series-2' }] });
 
       // Trigger tooltip again
       await user.pointer({
