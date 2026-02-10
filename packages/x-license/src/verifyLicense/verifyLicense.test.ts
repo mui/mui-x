@@ -176,7 +176,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should throw if the license is expired by more than a 30 days', () => {
-        vi.stubEnv('IS_TEST_ENV', undefined);
+        vi.stubGlobal('MUI_TEST_ENV', undefined);
 
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),

@@ -39,14 +39,17 @@ export const alias = [
   },
 ];
 
+// TODO: Replace with 'development' once https://github.com/mui/material-ui/pull/47692 is released
+// and X repo depends on it.
+const NODE_ENV = 'test';
+
 export default defineConfig({
   // If enabling babel plugins, ensure the tests in CI are stable
   // https://github.com/mui/mui-x/pull/18341
   plugins: [react()],
   // We seem to need both this and the `env` property below to make it work.
   define: {
-    'process.env.NODE_ENV': '"development"',
-    'process.env.IS_TEST_ENV': '"true"',
+    'process.env.NODE_ENV': `"${NODE_ENV}"`,
     LICENSE_DISABLE_CHECK: 'false',
   },
   esbuild: {
@@ -62,8 +65,7 @@ export default defineConfig({
     // Required for some tests that contain early returns or conditional tests.
     passWithNoTests: true,
     env: {
-      NODE_ENV: 'development',
-      IS_TEST_ENV: 'true',
+      NODE_ENV,
       VITEST: 'true',
     },
     browser: {
