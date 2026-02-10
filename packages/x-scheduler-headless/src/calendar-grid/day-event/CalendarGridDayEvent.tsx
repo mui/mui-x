@@ -6,7 +6,7 @@ import { useId } from '@base-ui/utils/useId';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
-import { useDraggableEvent } from '../../utils/useDraggableEvent';
+import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
 import { useAdapter } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -14,12 +14,12 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
-import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
+import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
-import { generateOccurrenceFromEvent } from '../../utils/event-utils';
+import { generateOccurrenceFromEvent } from '../../internals/utils/event-utils';
 
 export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEvent(
   componentProps: CalendarGridDayEvent.Props,
@@ -75,7 +75,9 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
 
-    return adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1);
+    return adapter.startOfDay(
+      adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1),
+    );
   });
 
   const firstEventOfSeries = schedulerEventSelectors.processedEvent(store.state, eventId)!;

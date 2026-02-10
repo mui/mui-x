@@ -62,13 +62,28 @@ const offsetRatio = {
   middle: 0.5,
 } as const;
 
-export type TickItemType = {
+export type TickItem = {
   /**
-   * This property is undefined only if it's the tick closing the last band
+   * The value of the tick.
+   * It is only `undefined` if it's the tick closing the last band.
    */
   value?: any;
+  /**
+   * The formatted value of the tick.
+   * It is only `undefined` if it's the tick closing the last band.
+   */
   formattedValue?: string;
+  /**
+   * The offset in pixels relative to the SVG origin.
+   * For an x-axis, it is relative to the left side of the SVG.
+   * For a y-axis, it is relative to the top side of the SVG.
+   */
   offset: number;
+  /**
+   * The offset in pixels relative to the tick position.
+   * For an x-axis, a positive value means the label is shifted to the right of the tick.
+   * For a y-axis, a positive value means the label is shifted downwards from the tick.
+   */
   labelOffset: number;
 };
 
@@ -328,7 +343,7 @@ export function getTicks(options: GetTicksOptions) {
     typeof tickInterval === 'object' ? tickInterval : getDefaultTicks(scale, tickNumber);
 
   // Ticks inside the drawing area
-  const visibleTicks: TickItemType[] = [];
+  const visibleTicks: TickItem[] = [];
 
   for (let i = 0; i < ticks.length; i += 1) {
     const value = ticks[i];
@@ -371,7 +386,7 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
 
 export function useTicks(
   options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
-): TickItemType[] {
+): TickItem[] {
   const {
     scale,
     tickNumber,

@@ -4,6 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useSvgRef } from '../../../../hooks';
 import { type UseChartTooltipSignature } from '../../featurePlugins/useChartTooltip';
 import { type SeriesItemIdentifier } from '../../../../models/seriesType';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type UseChartInteractionSignature } from '../useChartInteraction';
 import { type UseChartHighlightSignature } from '../useChartHighlight';
 import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
@@ -15,11 +16,11 @@ import { type ChartState } from '../../models';
 /**
  * Hook to get pointer interaction props for chart items.
  */
-export function useRegisterPointerInteractions(
+export function useRegisterPointerInteractions<SeriesType extends ChartSeriesType>(
   getItemAtPosition: (
     state: ChartState<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>,
     point: { x: number; y: number },
-  ) => SeriesItemIdentifier | undefined,
+  ) => SeriesItemIdentifier<SeriesType> | undefined,
   onItemEnter?: () => void,
   onItemLeave?: () => void,
 ) {
@@ -30,7 +31,7 @@ export function useRegisterPointerInteractions(
   const svgRef = useSvgRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
   const interactionActive = React.useRef(false);
-  const lastItemRef = React.useRef<SeriesItemIdentifier | undefined>(undefined);
+  const lastItemRef = React.useRef<SeriesItemIdentifier<SeriesType> | undefined>(undefined);
 
   const onItemEnterRef = useEventCallback(() => onItemEnter?.());
   const onItemLeaveRef = useEventCallback(() => onItemLeave?.());

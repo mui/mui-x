@@ -1,4 +1,4 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   getCell,
@@ -12,15 +12,15 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   DataGridPro,
-  DataGridProProps,
+  type DataGridProProps,
   GRID_TREE_DATA_GROUPING_FIELD,
-  GridApi,
-  GridGroupNode,
+  type GridApi,
+  type GridGroupNode,
   GridLogicOperator,
-  GridRowsProp,
+  type GridRowsProp,
   useGridApiRef,
-  GridPaginationModel,
-  GridColDef,
+  type GridPaginationModel,
+  type GridColDef,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
