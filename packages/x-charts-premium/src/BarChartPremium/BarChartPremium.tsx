@@ -31,7 +31,7 @@ import {
   type RangeBarSeriesType,
 } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
-import { FocusedRangeBar } from './FocusedRangeBar';
+import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
 import { RangeBarPreviewPlot } from '../ChartZoomSlider/internals/previews/RangeBarPreviewPlot';
 
 import type {} from '../typeOverloads/modules';

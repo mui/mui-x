@@ -8,7 +8,7 @@ import {
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '@mui/x-charts/models';
 import { type ProcessedRangeBarData, type ProcessedRangeBarSeriesData } from './types';
 import { useRangeBarSeriesContext } from '../../hooks/useRangeBarSeries';
-import { createGetRangeBarDimensions } from '../createGetRangeBarDimensions';
+import { createGetRangeBarDimensions } from './createGetRangeBarDimensions';
 
 export function useRangeBarPlotData(
   drawingArea: ChartDrawingArea,
