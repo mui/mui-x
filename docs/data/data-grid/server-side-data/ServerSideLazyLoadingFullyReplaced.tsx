@@ -7,6 +7,7 @@ import {
   GridRenderCellParams,
 } from '@mui/x-data-grid-pro';
 import Typography from '@mui/material/Typography';
+import { alpha } from '@mui/material/styles';
 
 const COMPANIES = [
   { symbol: 'AAPL', name: 'Apple Inc.' },
@@ -30,6 +31,16 @@ interface ReplacedStockRow {
   name: string;
   price: number;
   batch: number;
+  priceChangeId: number;
+  batchChangeId: number;
+}
+
+interface ServerReplacedStockRow {
+  id: string;
+  symbol: string;
+  name: string;
+  price: number;
+  batch: number;
 }
 
 const getDatasetVersion = () => Math.floor(Date.now() / BACKEND_REPLACEMENT_MS);
@@ -44,7 +55,7 @@ function fakeReplacingServer(params: GridGetRowsParams) {
   const end = typeof params.end === 'number' ? params.end : start + 14;
   const version = getDatasetVersion();
 
-  const rows: ReplacedStockRow[] = [];
+  const rows: ServerReplacedStockRow[] = [];
   for (let i = start; i <= end && i < ROW_COUNT; i += 1) {
     const company = COMPANIES[i % COMPANIES.length];
     rows.push({
@@ -56,47 +67,135 @@ function fakeReplacingServer(params: GridGetRowsParams) {
     });
   }
 
-  return new Promise<{ rows: ReplacedStockRow[]; rowCount: number }>((resolve) => {
-    setTimeout(() => resolve({ rows, rowCount: ROW_COUNT }), 50);
-  });
+  return new Promise<{ rows: ServerReplacedStockRow[]; rowCount: number }>(
+    (resolve) => {
+      setTimeout(() => resolve({ rows, rowCount: ROW_COUNT }), 50);
+    },
+  );
 }
 
-const columns: GridColDef[] = [
+function FlashOnChange({
+  children,
+  changeId,
+  align = 'left',
+  fontWeight,
+}: {
+  children: React.ReactNode;
+  changeId: number;
+  align?: 'left' | 'right';
+  fontWeight?: 'regular' | 'bold';
+}) {
+  const [flash, setFlash] = React.useState(false);
+
+  React.useEffect(() => {
+    if (changeId === 0) {
+      return undefined;
+    }
+
+    setFlash(true);
+    const timeout = setTimeout(() => setFlash(false), 500);
+    return () => clearTimeout(timeout);
+  }, [changeId]);
+
+  return (
+    <Typography
+      variant="body2"
+      display="flex"
+      alignItems="center"
+      justifyContent={align === 'right' ? 'flex-end' : 'flex-start'}
+      height="100%"
+      paddingRight="10px"
+      paddingLeft="10px"
+      width="100%"
+      fontWeight={fontWeight === 'bold' ? 'bold' : undefined}
+      sx={(theme) => ({
+        position: 'relative',
+        width: 'calc(100% + 20px)',
+        left: '-10px',
+        transition: 'background-color 500ms ease',
+        backgroundColor: flash
+          ? alpha(theme.palette.success.main, 0.18)
+          : 'transparent',
+      })}
+    >
+      {children}
+    </Typography>
+  );
+}
+
+const columns: GridColDef<ReplacedStockRow>[] = [
   { field: 'symbol', headerName: 'Symbol', width: 100 },
-  { field: 'name', headerName: 'Company', flex: 1, minWidth: 180 },
-  {
-    field: 'price',
-    headerName: 'Price',
-    type: 'number',
-    width: 120,
-    renderCell: (params: GridRenderCellParams) => (
-      <Typography
-        variant="body2"
-        display="flex"
-        alignItems="center"
-        justifyContent="flex-end"
-        height="100%"
-        sx={{ fontWeight: 'bold' }}
-      >
-        ${params.value?.toFixed(2)}
-      </Typography>
-    ),
-  },
+  { field: 'name', headerName: 'Company', flex: 1, minWidth: 150 },
+
   {
     field: 'batch',
     headerName: 'Data batch',
     width: 140,
-    valueFormatter: (value: number) => `#${value}`,
+    renderCell: (params: GridRenderCellParams<ReplacedStockRow, number>) => (
+      <FlashOnChange changeId={params.row.batchChangeId}>
+        #{params.value}
+      </FlashOnChange>
+    ),
+  },
+  {
+    field: 'price',
+    headerName: 'Price',
+    type: 'number',
+    width: 140,
+    renderCell: (params: GridRenderCellParams<ReplacedStockRow, number>) => (
+      <FlashOnChange
+        changeId={params.row.priceChangeId}
+        align="right"
+        fontWeight="bold"
+      >
+        ${params.value?.toFixed(2)}
+      </FlashOnChange>
+    ),
   },
 ];
 
 function ServerSideLazyLoadingFullyReplaced() {
+  const previousRowsByIndex = React.useRef<
+    Map<number, Pick<ReplacedStockRow, 'price' | 'batch'>>
+  >(new Map());
+  const changeIdCounter = React.useRef(1);
+
   const dataSource: GridDataSource = React.useMemo(
     () => ({
       getRows: async (params: GridGetRowsParams) => {
         const response = await fakeReplacingServer(params);
+        const start = typeof params.start === 'number' ? params.start : 0;
+
+        const rows: ReplacedStockRow[] = response.rows.map((row, indexOffset) => {
+          const absoluteIndex = start + indexOffset;
+          const previousRow = previousRowsByIndex.current.get(absoluteIndex);
+          let priceChangeId = 0;
+          let batchChangeId = 0;
+
+          if (previousRow && previousRow.price !== row.price) {
+            priceChangeId = changeIdCounter.current;
+            changeIdCounter.current += 1;
+          }
+
+          if (previousRow && previousRow.batch !== row.batch) {
+            batchChangeId = changeIdCounter.current;
+            changeIdCounter.current += 1;
+          }
+
+          previousRowsByIndex.current.set(absoluteIndex, {
+            price: row.price,
+            batch: row.batch,
+          });
+
+          return {
+            ...row,
+            priceChangeId,
+            batchChangeId,
+          };
+        });
+
         return {
-          rows: response.rows,
+          rows,
           rowCount: response.rowCount,
         };
       },
@@ -111,7 +210,7 @@ function ServerSideLazyLoadingFullyReplaced() {
         dataSource={dataSource}
         dataSourceCache={null}
         lazyLoading
-        lazyLoadingRevalidateMs={2000}
+        lazyLoadingRevalidateMs={2_000}
         paginationModel={{ page: 0, pageSize: 10 }}
       />
     </div>
