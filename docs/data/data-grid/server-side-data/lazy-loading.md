@@ -120,15 +120,27 @@ With this feature, you would be able to use the `lazyLoading` flag in use cases 
 Before it is implemented internally you can use the [row pinning](/x/react-data-grid/row-pinning/) feature to implement nested lazy loading with a few limitations.
 Check the [server-side data recipes](/x/react-data-grid/server-side-data/recipes/) section for a working example.
 
-## Polling revalidation
+## Dynamic data
 
-Use the `lazyLoadingRevalidateMs` prop to periodically revalidate the visible rows in the background.
-When combined with a low cache TTL, this enables real-time data updates—for example, a stock ticker dashboard where prices change every second.
-
-The polling timer resets whenever the viewport changes (for example, when the user scrolls to a new area).
+For data sets that can change in the background, use `lazyLoadingRevalidateMs` to periodically revalidate the visible range.
 Set `lazyLoadingRevalidateMs` to `0` (the default) to disable polling.
 
+- **Scroll-back revalidation:** When users scroll back to an already fetched range, the Grid checks cache first. If the cache entry has expired (or data is stale), it fetches again, diffs against current rows, and updates only the range with actual changes.
+- **Cache integration:** You can clear cache programmatically with `apiRef.current.dataSource.cache.clear()` or disable client-side caching with `dataSourceCache={null}` to keep the Grid closely synced with the backend.
+
+### Dynamically updated data
+
+In this scenario, row IDs stay stable but row values change over time.
+This is useful for dashboards such as stock trackers, where rows represent the same entities while values are updated continuously.
+
 {{"demo": "ServerSideLazyLoadingRevalidation.js", "bg": "inline"}}
+
+### Entirely new data
+
+In this scenario, the backend can replace the data set with entirely new rows, including new row IDs.
+On each revalidation, only the visible range is replaced with the latest rows, and scrolling loads new ranges from the current data set.
+
+{{"demo": "ServerSideLazyLoadingFullyReplaced.js", "bg": "inline"}}
 
 ## Error handling
 

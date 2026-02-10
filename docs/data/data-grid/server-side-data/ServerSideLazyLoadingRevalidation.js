@@ -87,6 +87,10 @@ const columns = [
     renderCell: (params) => (
       <Typography
         variant="body2"
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        height="100%"
         sx={{
           color: params.row.change >= 0 ? 'success.main' : 'error.main',
           fontWeight: 'bold',
@@ -104,6 +108,10 @@ const columns = [
     renderCell: (params) => (
       <Typography
         variant="body2"
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        height="100%"
         sx={{ color: params.value >= 0 ? 'success.main' : 'error.main' }}
       >
         {params.value >= 0 ? '+' : ''}
@@ -119,6 +127,10 @@ const columns = [
     renderCell: (params) => (
       <Typography
         variant="body2"
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        height="100%"
         sx={{ color: params.value >= 0 ? 'success.main' : 'error.main' }}
       >
         {params.value >= 0 ? '+' : ''}

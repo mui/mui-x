@@ -43,6 +43,16 @@ const STOCKS = [
 
 const ROW_COUNT = 30;
 
+interface StockRow {
+  id: number;
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  volume: number;
+}
+
 // Generate base prices for each stock (deterministic)
 const basePrices: Record<string, number> = {};
 STOCKS.forEach((stock, i) => {
@@ -55,7 +65,7 @@ function fakeStockServer(params: GridGetRowsParams) {
   const start = typeof params.start === 'number' ? params.start : 0;
   const end = typeof params.end === 'number' ? params.end : start + 14;
 
-  const rows = [];
+  const rows: StockRow[] = [];
   for (let i = start; i <= end && i < ROW_COUNT; i += 1) {
     const stock = STOCKS[i % STOCKS.length];
     const base = basePrices[stock.symbol];
@@ -77,7 +87,7 @@ function fakeStockServer(params: GridGetRowsParams) {
     });
   }
 
-  return new Promise<{ rows: typeof rows; rowCount: number }>((resolve) => {
+  return new Promise<{ rows: StockRow[]; rowCount: number }>((resolve) => {
     setTimeout(() => resolve({ rows, rowCount: ROW_COUNT }), 50);
   });
 }
@@ -93,6 +103,10 @@ const columns: GridColDef[] = [
     renderCell: (params: GridRenderCellParams) => (
       <Typography
         variant="body2"
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        height="100%"
         sx={{
           color: params.row.change >= 0 ? 'success.main' : 'error.main',
           fontWeight: 'bold',
@@ -110,6 +124,10 @@ const columns: GridColDef[] = [
     renderCell: (params: GridRenderCellParams) => (
       <Typography
         variant="body2"
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        height="100%"
         sx={{ color: params.value >= 0 ? 'success.main' : 'error.main' }}
       >
         {params.value >= 0 ? '+' : ''}
@@ -125,6 +143,10 @@ const columns: GridColDef[] = [
     renderCell: (params: GridRenderCellParams) => (
       <Typography
         variant="body2"
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        height="100%"
         sx={{ color: params.value >= 0 ? 'success.main' : 'error.main' }}
       >
         {params.value >= 0 ? '+' : ''}

@@ -534,7 +534,9 @@ export const useGridDataSourceLazyLoader = (
         // SWR: No skeleton rows in viewport — all visible rows have real data.
         // Schedule background revalidation if cache has expired for this range.
         if (loadingTrigger.current === LoadingTrigger.VIEWPORT) {
-          debouncedRevalidate(adjustRowParams(getRowsParams));
+          const adjustedParams = adjustRowParams(getRowsParams);
+          debouncedRevalidate(adjustedParams);
+          startPolling(adjustedParams);
         }
         return;
       }
@@ -544,7 +546,7 @@ export const useGridDataSourceLazyLoader = (
 
       fetchRows(adjustRowParams(getRowsParams));
     },
-    [privateApiRef, adjustRowParams, fetchRows, debouncedRevalidate],
+    [privateApiRef, adjustRowParams, fetchRows, debouncedRevalidate, startPolling],
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
