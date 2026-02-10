@@ -95,7 +95,7 @@
       "description": "The type of renderer to use for the scatter plot. - <code>svg-single</code>: Renders every scatter item in a <code>&lt;circle /&gt;</code> element. - <code>svg-batch</code>: Batch renders scatter items in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/scatter/#performance\">https://mui.com/x/react-charts/scatter/#performance</a>"
     },
     "series": {
-      "description": "The series to display in the scatter chart. An array of <a href='/x/api/charts/scatter-series/'>ScatterSeries</a> objects."
+      "description": "The series to display in the scatter chart. An array of [[ScatterSeries]] objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
@@ -111,10 +111,10 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
     "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
     },
     "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
     },
     "zAxis": { "description": "The configuration of the z-axes." }
   },
