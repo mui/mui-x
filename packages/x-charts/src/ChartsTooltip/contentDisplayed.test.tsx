@@ -322,6 +322,78 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
   });
 
   describe('visibility filtering', () => {
+    it('should filter hidden series using hiddenItems prop', async () => {
+      const { user, container, rerender } = render(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis' } }}
+        />,
+        { wrapper },
+      );
+
+      const svg = container.querySelector('svg')!;
+
+      // Trigger the tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '4'];
+        const secondRow = ['S2', '2'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+
+      // Rerender with S2 hidden
+      rerender(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          hiddenItems={[{ type: 'bar', seriesId: 's2' }]}
+          slotProps={{ tooltip: { trigger: 'axis' } }}
+        />,
+      );
+
+      // Trigger tooltip again
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 201,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '1'];
+        // S2 should NOT be in tooltip - only one row
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'B',
+          ...firstRow,
+        ]);
+      });
+    });
+
     it('should only show visible series in axis tooltip for BarChart', async () => {
       const { user, container } = render(
         <BarChart
@@ -341,6 +413,11 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       );
 
       const svg = container.querySelector('svg')!;
+
+      // Wait for chart to fully render
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /S1/ })).toBeTruthy();
+      });
 
       // Trigger the tooltip - all series should be visible initially
       await user.pointer({

@@ -154,8 +154,8 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
       return seriesOfType.seriesOrder.forEach((seriesId) => {
         const seriesToAdd = seriesOfType.series[seriesId]!;
 
-        // Skip hidden series
-        if (!isItemVisible({ type: seriesType, seriesId })) {
+        // Skip hidden series (only if visibility manager is available)
+        if (isItemVisible && !isItemVisible({ type: seriesType, seriesId })) {
           return;
         }
 
@@ -207,8 +207,8 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
       return seriesOfType.seriesOrder.forEach((seriesId) => {
         const seriesToAdd = seriesOfType.series[seriesId]!;
 
-        // Skip hidden series
-        if (!isItemVisible({ type: seriesType, seriesId })) {
+        // Skip hidden series (only if visibility manager is available)
+        if (isItemVisible && !isItemVisible({ type: seriesType, seriesId })) {
           return;
         }
 
