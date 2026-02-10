@@ -48,8 +48,6 @@ export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, cont
     };
   }, [store, registerChild, unregisterChild, idAttribute, itemId]);
 
-  // Track mount state so the upsert cleanup can distinguish unmount from deps change.
-  // Must be declared before the upsert effect so its cleanup runs first on unmount.
   useIsoLayoutEffect(() => {
     isMountedRef.current = true;
     return () => {

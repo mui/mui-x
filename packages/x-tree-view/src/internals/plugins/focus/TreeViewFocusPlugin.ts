@@ -1,16 +1,9 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
 import { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
 import { expansionSelectors } from '../expansion';
 import { focusSelectors } from './selectors';
-import { itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../items';
-import { TreeViewItemMeta } from '../../models';
+import { itemsSelectors } from '../items';
 import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
-
-const itemStructureSelector = createSelectorMemoized(
-  itemsSelectors.itemMetaLookup,
-  itemsSelectors.itemOrderedChildrenIdsLookup,
-  (metaLookup, childrenIdsLookup) => ({ metaLookup, childrenIdsLookup }),
-);
+import { getFirstNavigableItem, getNextNavigableItem } from '../../utils/tree';
 
 export class TreeViewFocusPlugin {
   private store: MinimalTreeViewStore<any, any>;
@@ -23,79 +16,29 @@ export class TreeViewFocusPlugin {
     // Whenever the items change, we need to ensure the focused item is still present.
     // If the focused item was removed, focus the closest neighbor instead of the first item.
     this.store.registerStoreEffect(
-      itemStructureSelector,
-      (previous: ReturnType<typeof itemStructureSelector>) => {
+      (state) => state,
+      (previous) => {
+        // If no item is focused or the focused item is still present, we don't need to do anything.
         const focusedItemId = focusSelectors.focusedItemId(store.state);
-        if (focusedItemId == null) {
+        if (focusedItemId == null || itemsSelectors.itemMeta(store.state, focusedItemId)) {
           return;
         }
 
-        const hasItemBeenRemoved = !itemsSelectors.itemMeta(store.state, focusedItemId);
-        if (!hasItemBeenRemoved) {
-          return;
+        const itemToFocusId = getNextNavigableItem(previous, focusedItemId);
+        // We reached the end of the tree, check from the beginning
+        if (itemToFocusId === null) {
+          return getFirstNavigableItem(this.store.state);
         }
 
-        const closestItemId = this.getClosestFocusableItem(
-          focusedItemId,
-          previous.metaLookup,
-          previous.childrenIdsLookup,
-        );
-
-        if (closestItemId == null) {
+        if (itemToFocusId == null) {
           this.setFocusedItemId(null);
           return;
         }
 
-        this.applyItemFocus(null, closestItemId);
+        this.applyItemFocus(null, itemToFocusId);
       },
     );
   }
-
-  /**
-   * Find the closest focusable item to the removed item.
-   * Priority: next sibling > previous sibling > parent > default focusable item.
-   */
-  private getClosestFocusableItem = (
-    removedItemId: TreeViewItemId,
-    previousMetaLookup: Record<string, TreeViewItemMeta>,
-    previousChildrenIdsLookup: Record<string, TreeViewItemId[]>,
-  ): TreeViewItemId | null => {
-    const removedMeta = previousMetaLookup[removedItemId];
-    if (!removedMeta) {
-      return focusSelectors.defaultFocusableItemId(this.store.state);
-    }
-
-    const parentKey = removedMeta.parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-    const siblingIds = previousChildrenIdsLookup[parentKey] ?? [];
-    const removedIndex = siblingIds.indexOf(removedItemId);
-
-    if (removedIndex === -1) {
-      return focusSelectors.defaultFocusableItemId(this.store.state);
-    }
-
-    // Scan forward first (next siblings), then backward (previous siblings).
-    for (let i = removedIndex + 1; i < siblingIds.length; i += 1) {
-      if (itemsSelectors.canItemBeFocused(this.store.state, siblingIds[i])) {
-        return siblingIds[i];
-      }
-    }
-
-    for (let i = removedIndex - 1; i >= 0; i -= 1) {
-      if (itemsSelectors.canItemBeFocused(this.store.state, siblingIds[i])) {
-        return siblingIds[i];
-      }
-    }
-
-    // No focusable siblings left — try the parent
-    if (
-      removedMeta.parentId != null &&
-      itemsSelectors.canItemBeFocused(this.store.state, removedMeta.parentId)
-    ) {
-      return removedMeta.parentId;
-    }
-
-    return focusSelectors.defaultFocusableItemId(this.store.state);
-  };
 
   private setFocusedItemId = (itemId: TreeViewItemId | null) => {
     const focusedItemId = focusSelectors.focusedItemId(this.store.state);

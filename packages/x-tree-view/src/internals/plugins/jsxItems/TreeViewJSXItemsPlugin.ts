@@ -1,7 +1,7 @@
 import { TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
 import type { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
-import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from '../items';
+import { buildSiblingIndexes, itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../items';
 import { jsxItemsitemWrapper, useJSXItemsItemPlugin } from './itemPlugin';
 
 export class TreeViewJSXItemsPlugin {
@@ -20,12 +20,8 @@ export class TreeViewJSXItemsPlugin {
 
   /**
    * Insert or update an item in the state from a Tree Item component.
-   * If the item already exists and belongs to the same owner
-   * (e.g. after a deps-change re-run of the layout effect),
+   * If the item already exists and belongs to the same owner (e.g. after a deps-change re-run of the layout effect),
    * its meta is updated in place instead of removing and re-inserting.
-   * @param {TreeViewItemMeta} item The meta-information of the item to insert or update.
-   * @param {symbol} ownerToken A unique token identifying the calling component instance.
-   * @returns {() => void} A function to remove the item from the state.
    */
   public upsertJSXItem = (item: TreeViewItemMeta, ownerToken: symbol) => {
     const currentOwner = this.itemOwners.get(item.id);
@@ -41,8 +37,7 @@ export class TreeViewJSXItemsPlugin {
     }
 
     this.itemOwners.set(item.id, ownerToken);
-
-    const existingMeta = this.store.state.itemMetaLookup[item.id];
+    const existingMeta = itemsSelectors.itemMeta(this.store.state, item.id);
 
     if (existingMeta != null) {
       // Update the existing item in place.
@@ -63,7 +58,6 @@ export class TreeViewJSXItemsPlugin {
         });
       }
     } else {
-      // Insert the item.
       this.store.update({
         itemMetaLookup: { ...this.store.state.itemMetaLookup, [item.id]: item },
         // For Simple Tree View, we don't have a proper `item` object, so we create a very basic one.
