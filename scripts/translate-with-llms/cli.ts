@@ -1,13 +1,13 @@
 import { spawnSync } from 'node:child_process';
 import { createInterface } from 'node:readline';
-import { checkbox, confirm } from '@inquirer/prompts';
+import { checkbox, confirm, input } from '@inquirer/prompts';
 import { applyTranslations } from './applyTranslations';
 import { getMissingTranslations } from './getMissingTranslations';
 import { buildPrompt } from './getPrompt';
 import { PACKAGE_CONFIGS } from './packageConfigs';
 
-function runClipboardCommand(command: string, args: string[], input: string): boolean {
-  const result = spawnSync(command, args, { input, encoding: 'utf8' });
+function runClipboardCommand(command: string, args: string[], inputText: string): boolean {
+  const result = spawnSync(command, args, { input: inputText, encoding: 'utf8' });
   return !result.error && result.status === 0;
 }
 
@@ -146,6 +146,17 @@ function formatSummary(result: ReturnType<typeof applyTranslations>): string {
   ].join('\n');
 }
 
+function parseLocaleCodes(raw: string): string[] {
+  return Array.from(
+    new Set(
+      raw
+        .split(/[,\s]+/)
+        .map((locale) => locale.trim())
+        .filter((locale) => locale.length > 0),
+    ),
+  );
+}
+
 async function main() {
   const dryRun = process.argv.slice(2).includes('--dry-run');
   const packageNames = Object.keys(PACKAGE_CONFIGS).sort();
@@ -156,7 +167,24 @@ async function main() {
     validate: (value) => (value.length > 0 ? true : 'Select at least one package.'),
   });
 
-  const missingTranslations = getMissingTranslations(selectedPackages);
+  const translateAllLocales = await confirm({
+    message: 'Translate all locales?',
+    default: true,
+  });
+
+  let selectedLocales: string[] | undefined;
+  if (!translateAllLocales) {
+    const localeInput = await input({
+      message: 'Enter locale codes (comma or space separated, e.g. frFR, deDE):',
+      validate: (value) =>
+        parseLocaleCodes(value).length > 0
+          ? true
+          : 'Enter at least one locale code or choose "all locales".',
+    });
+    selectedLocales = parseLocaleCodes(localeInput);
+  }
+
+  const missingTranslations = getMissingTranslations(selectedPackages, selectedLocales);
   const totalMissingKeys = Object.values(missingTranslations.packages).reduce(
     (sum, packageData) => sum + Object.keys(packageData.missing).length,
     0,
@@ -167,7 +195,7 @@ async function main() {
     return;
   }
 
-  const prompt = buildPrompt(selectedPackages);
+  const prompt = buildPrompt(selectedPackages, selectedLocales);
   const copied = copyToClipboard(prompt);
 
   process.stdout.write('\n');

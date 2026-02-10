@@ -8,9 +8,9 @@ function normalizeSelectedPackages(packageNames?: string | string[]): string[] |
   return Array.isArray(packageNames) ? packageNames : [packageNames];
 }
 
-export function buildPrompt(packageNames?: string | string[]) {
+export function buildPrompt(packageNames?: string[], localeCodes?: string[]) {
   const selectedPackageNames = normalizeSelectedPackages(packageNames);
-  const data = getMissingTranslations(selectedPackageNames);
+  const data = getMissingTranslations(selectedPackageNames, localeCodes);
   const missingByPackage: Record<string, Record<string, { en: string; locales: string[] }>> = {};
 
   for (const [packageName, packageData] of Object.entries(data.packages)) {

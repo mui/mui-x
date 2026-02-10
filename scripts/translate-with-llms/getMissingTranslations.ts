@@ -153,7 +153,16 @@ function stripQuotes(value: string): string {
   return trimmed;
 }
 
-function processPackage(_pkgName: string, config: TranslatePackageConfig): PackageOutput {
+interface ProcessPackageOptions {
+  selectedLocaleCodes: Set<string>;
+  matchedLocales: Set<string>;
+}
+
+function processPackageWithLocaleFilter(
+  _pkgName: string,
+  config: TranslatePackageConfig,
+  options?: ProcessPackageOptions,
+): PackageOutput {
   const englishPath = path.join(ROOT, config.englishSource);
   const englishSource = fs.readFileSync(englishPath, 'utf-8');
   const englishEntries = extractObjectProperties(englishSource, config.englishVariableName);
@@ -170,11 +179,22 @@ function processPackage(_pkgName: string, config: TranslatePackageConfig): Packa
     return fs.statSync(fullPath).isFile();
   });
 
-  // Build inverted index: key → list of locales missing it
+  const localeFilesToProcess =
+    options.selectedLocaleCodes && options.selectedLocaleCodes.size > 0
+      ? filteredLocaleFiles.filter((fileName) => {
+          const localeCode = fileNameToLocaleCode(fileName);
+          const isSelected = options.selectedLocaleCodes!.has(localeCode);
+          if (isSelected) {
+            options.matchedLocales?.add(localeCode);
+          }
+          return isSelected;
+        })
+      : filteredLocaleFiles;
+
   const missingByKey = new Map<string, string[]>();
   const skippedFunctions: string[] = [];
 
-  for (const file of filteredLocaleFiles) {
+  for (const file of localeFilesToProcess) {
     const localeCode = fileNameToLocaleCode(file);
     const filePath = path.join(localesDir, file);
     const source = fs.readFileSync(filePath, 'utf-8');
@@ -212,25 +232,21 @@ function processPackage(_pkgName: string, config: TranslatePackageConfig): Packa
 }
 
 export function getMissingTranslations(
-  packageNames?: string | string[],
+  packageNames?: string[],
+  localeCodes?: string[],
 ): MissingTranslationsOutput {
   const localeMap: Record<string, string> = {};
   const allLocales = new Set<string>();
   const result: Record<string, PackageOutput> = {};
-  let normalizedPackageNames: string[] | undefined;
-  if (Array.isArray(packageNames)) {
-    normalizedPackageNames = packageNames;
-  } else if (typeof packageNames === 'string') {
-    normalizedPackageNames = [packageNames];
-  } else {
-    normalizedPackageNames = undefined;
-  }
-  const selectedPackages = normalizedPackageNames
-    ? Object.entries(PACKAGE_CONFIGS).filter(([name]) => normalizedPackageNames.includes(name))
+
+  const matchedLocales = new Set<string>();
+
+  const selectedPackages = packageNames
+    ? Object.entries(PACKAGE_CONFIGS).filter(([name]) => packageNames.includes(name))
     : Object.entries(PACKAGE_CONFIGS);
 
-  if (normalizedPackageNames && selectedPackages.length !== normalizedPackageNames.length) {
-    const unknownPackages = normalizedPackageNames.filter((name) => !PACKAGE_CONFIGS[name]);
+  if (packageNames && selectedPackages.length !== packageNames.length) {
+    const unknownPackages = packageNames.filter((name) => !PACKAGE_CONFIGS[name]);
     const availablePackages = Object.keys(PACKAGE_CONFIGS).sort().join(', ');
     throw new Error(
       `Unknown package(s): ${unknownPackages.join(', ')}. Available packages: ${availablePackages}`,
@@ -238,7 +254,10 @@ export function getMissingTranslations(
   }
 
   for (const [pkgName, config] of selectedPackages) {
-    const pkgResult = processPackage(pkgName, config);
+    const pkgResult = processPackageWithLocaleFilter(pkgName, config, {
+      selectedLocaleCodes: new Set(localeCodes),
+      matchedLocales,
+    });
     result[pkgName] = pkgResult;
 
     for (const entry of Object.values(pkgResult.missing)) {
@@ -248,8 +267,19 @@ export function getMissingTranslations(
     }
   }
 
-  // Build locale legend once
-  for (const code of Array.from(allLocales).sort()) {
+  if (localeCodes && localeCodes.length > 0) {
+    const unknownLocales = localeCodes.filter((locale) => !matchedLocales.has(locale));
+
+    if (unknownLocales.length > 0) {
+      throw new Error(
+        `Unknown locale code(s): ${unknownLocales.join(', ')}. Make sure locale files exist for the selected package(s).`,
+      );
+    }
+  }
+
+  const localeCodexToUse = localeCodes && localeCodes.length > 0 ? localeCodes : allLocales;
+
+  for (const code of localeCodexToUse) {
     localeMap[code] = getLanguageName(code);
   }
 
