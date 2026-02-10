@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { createRenderer, waitFor, screen } from '@mui/internal-test-utils';
+import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
-import { legendClasses } from '../ChartsLegend';
-
 const config: Partial<BarChartProps> = {
   dataset: [
     { x: 'A', v1: 4, v2: 2 },
