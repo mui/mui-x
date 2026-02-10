@@ -327,8 +327,8 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         <BarChart
           {...config}
           series={[
-            { dataKey: 'v1', id: 's1', label: 'S1' },
-            { dataKey: 'v2', id: 's2', label: 'S2' },
+            { dataKey: 'v1', id: 'series-1', label: 'S1' },
+            { dataKey: 'v2', id: 'series-2', label: 'S2' },
           ]}
           xAxis={[{ dataKey: 'x', position: 'none' }]}
           slotProps={{ tooltip: { trigger: 'axis' } }}
@@ -364,11 +364,11 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         <BarChart
           {...config}
           series={[
-            { dataKey: 'v1', id: 's1', label: 'S1' },
-            { dataKey: 'v2', id: 's2', label: 'S2' },
+            { dataKey: 'v1', id: 'series-1', label: 'S1' },
+            { dataKey: 'v2', id: 'series-2', label: 'S2' },
           ]}
           xAxis={[{ dataKey: 'x', position: 'none' }]}
-          hiddenItems={[{ type: 'bar', seriesId: 's2' }]}
+          hiddenItems={[{ type: 'bar', seriesId: 'series-2' }]}
           slotProps={{ tooltip: { trigger: 'axis' } }}
         />,
       );
