@@ -97,7 +97,7 @@ function ServerSideLazyLoadingFullyReplaced() {
         dataSource={dataSource}
         dataSourceCache={null}
         lazyLoading
-        lazyLoadingRevalidateMs={1000}
+        lazyLoadingRevalidateMs={2000}
         paginationModel={{ page: 0, pageSize: 10 }}
       />
     </div>

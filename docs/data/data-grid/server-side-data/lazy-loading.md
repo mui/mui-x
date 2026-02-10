@@ -120,25 +120,27 @@ With this feature, you would be able to use the `lazyLoading` flag in use cases 
 Before it is implemented internally you can use the [row pinning](/x/react-data-grid/row-pinning/) feature to implement nested lazy loading with a few limitations.
 Check the [server-side data recipes](/x/react-data-grid/server-side-data/recipes/) section for a working example.
 
-## Dynamic data
+## Dynamic data and cache revalidation
 
-For data sets that can change in the background, use `lazyLoadingRevalidateMs` to periodically revalidate the visible range.
-Set `lazyLoadingRevalidateMs` to `0` (the default) to disable polling.
+When users scroll back to an already fetched range, the Data Grid performs a revalidation for that range. It checks the cache, if the cache entry is outdated (or the cache is disabled), it refetches the data from the server, diffs against current rows, and updates only if the subset is _actually changed_ minimizing the actual row replacements in the Data Grid.
 
-- **Scroll-back revalidation:** When users scroll back to an already fetched range, the Grid checks cache first. If the cache entry has expired (or data is stale), it fetches again, diffs against current rows, and updates only the range with actual changes.
-- **Cache integration:** You can clear cache programmatically with `apiRef.current.dataSource.cache.clear()` or disable client-side caching with `dataSourceCache={null}` to keep the Grid closely synced with the backend.
+For highly dynamic use cases, where the revalidation is required for the current viewport too, you can add polling with `lazyLoadingRevalidateMs` to trigger revalidation based on the `setInterval()` timer every "X" milliseconds.
+This is useful for dashboards such as stock tickers, where values can change every few seconds.
 
-### Dynamically updated data
+### Dynamically updated datasets
 
-In this scenario, row IDs stay stable but row values change over time.
+The following demo uses `lazyLoadingRevalidateMs="1_000"` (1 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
+Note that the row IDs stay stable but the row values change over time.
 This is useful for dashboards such as stock trackers, where rows represent the same entities while values are updated continuously.
 
 {{"demo": "ServerSideLazyLoadingRevalidation.js", "bg": "inline"}}
 
-### Entirely new data
+### Dynamically replaced datasets
 
 In this scenario, the backend can replace the data set with entirely new rows, including new row IDs.
 On each revalidation, only the visible range is replaced with the latest rows, and scrolling loads new ranges from the current data set.
+
+The demo below uses data batch numbers to identify the data set and replace the current viewport with the latest data set. It uses `lazyLoadingRevalidateMs="2_000"` (2 seconds) to revalidate the current viewport and get the latest data set. But the actual update only happens if the data batch is different from the previous one, which is only regenerated on the backend server every 10 seconds.
 
 {{"demo": "ServerSideLazyLoadingFullyReplaced.js", "bg": "inline"}}
 
