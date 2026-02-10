@@ -13,7 +13,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { BarPlot, type BarSeries } from '@mui/x-charts/BarChart';
+import { BarPlot, FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -31,6 +31,7 @@ import {
   type RangeBarSeriesType,
 } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
+import { FocusedRangeBar } from './FocusedRangeBar';
 import { RangeBarPreviewPlot } from '../ChartZoomSlider/internals/previews/RangeBarPreviewPlot';
 
 import type {} from '../typeOverloads/modules';
@@ -139,6 +140,8 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
             <RangeBarPlot {...rangeBarPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
+            <FocusedBar />
+            <FocusedRangeBar />
           </g>
           <ChartsAxis {...chartsAxisProps} />
           <ChartZoomSlider />

@@ -12,6 +12,7 @@ import { type ChartsXAxisProps, type ChartsYAxisProps } from '@mui/x-charts/mode
 import { type DefaultizedRangeBarSeriesType } from '../../models/seriesType/rangeBar';
 import { type ProcessedRangeBarData, type ProcessedRangeBarSeriesData } from './types';
 import { useRangeBarSeriesContext } from '../../hooks/useRangeBarSeries';
+import { createGetRangeBarDimensions } from '../createGetRangeBarDimensions';
 
 export function useRangeBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -33,13 +34,20 @@ export function useRangeBarPlotData(
   const yMax = drawingArea.top + drawingArea.height;
 
   const data = seriesOrder.map((seriesId, seriesIndex) => {
+    const verticalLayout = series[seriesId].layout === 'vertical';
+    const getRangeBarDimensions = createGetRangeBarDimensions({
+      verticalLayout,
+      xAxisConfig: xAxes[series[seriesId].xAxisId ?? defaultXAxisId],
+      yAxisConfig: yAxes[series[seriesId].yAxisId ?? defaultYAxisId],
+      series: series[seriesId],
+      numberOfGroups: seriesOrder.length,
+    });
+
     const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
     const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
 
     const xAxisConfig = xAxes[xAxisId];
     const yAxisConfig = yAxes[yAxisId];
-
-    const verticalLayout = series[seriesId].layout === 'vertical';
 
     checkBarChartScaleErrors(
       verticalLayout,
@@ -59,54 +67,32 @@ export function useRangeBarPlotData(
     const yOrigin = Math.round(yScale(0) ?? 0);
 
     const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
-    const bandWidth = baseScaleConfig.scale.bandwidth();
-
-    const { barWidth, offset } = getBandSize(
-      bandWidth,
-      seriesOrder.length,
-      baseScaleConfig.barGapRatio,
-    );
-    const barOffset = seriesIndex * (barWidth + offset);
 
     const { data: currentSeriesData, layout } = series[seriesId];
 
     const seriesDataPoints: ProcessedRangeBarData[] = [];
 
     for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
-      const baseValue = baseScaleConfig.data![dataIndex];
-      const seriesValue = currentSeriesData[dataIndex];
+      const dimensions = getRangeBarDimensions(dataIndex, seriesIndex);
 
-      if (seriesValue == null) {
+      if (
+        dimensions === null ||
+        dimensions.x > xMax ||
+        dimensions.x + dimensions.width < xMin ||
+        dimensions.y > yMax ||
+        dimensions.y + dimensions.height < yMin
+      ) {
         continue;
       }
-
-      const valueCoordinates = seriesValue.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
-
-      const minValueCoord = Math.round(Math.min(...valueCoordinates));
-      const maxValueCoord = Math.round(Math.max(...valueCoordinates));
-
-      const barSize = maxValueCoord - minValueCoord;
 
       const result = {
         seriesId,
         dataIndex,
-        x: verticalLayout ? xScale(baseValue)! + barOffset : minValueCoord,
-        y: verticalLayout ? minValueCoord : yScale(baseValue)! + barOffset,
-        height: verticalLayout ? barSize : barWidth,
-        width: verticalLayout ? barWidth : barSize,
         color: colorGetter(dataIndex),
         value: currentSeriesData[dataIndex],
         hidden: series[seriesId].hidden,
+        ...dimensions,
       };
-
-      if (
-        result.x > xMax ||
-        result.x + result.width < xMin ||
-        result.y > yMax ||
-        result.y + result.height < yMin
-      ) {
-        continue;
-      }
 
       seriesDataPoints.push(result);
     }
