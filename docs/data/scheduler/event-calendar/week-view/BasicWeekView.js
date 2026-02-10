@@ -5,7 +5,7 @@ import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/personal-agenda';
+} from '../../datasets/personal-agenda';
 
 export default function BasicWeekView() {
   const [events, setEvents] = React.useState(initialEvents);
