@@ -5,9 +5,9 @@ import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/personal-agenda';
+} from '../../datasets/personal-agenda';
 
-export default function EventCreationInteraction() {
+export default function EventCreationDuration() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
@@ -18,7 +18,7 @@ export default function EventCreationInteraction() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
-        eventCreation={{ interaction: 'click' }}
+        eventCreation={{ duration: 60 }}
       />
     </div>
   );

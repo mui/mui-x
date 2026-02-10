@@ -3,5 +3,6 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
+  areEventsDraggable
   defaultPreferences={{ isSidePanelOpen: false }}
 />

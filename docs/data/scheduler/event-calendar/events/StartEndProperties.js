@@ -1,22 +1,11 @@
 import * as React from 'react';
 import { parseISO } from 'date-fns/parseISO';
 import { formatISO } from 'date-fns/formatISO';
-import {
-  RecurringEventRecurrenceRule,
-  SchedulerEventModelStructure,
-} from '@mui/x-scheduler/models';
+
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { defaultVisibleDate } from '../datasets/personal-agenda';
+import { defaultVisibleDate } from '../../datasets/personal-agenda';
 
-interface CustomEvent {
-  id: string;
-  start: string;
-  end: string;
-  title: string;
-  rrule: RecurringEventRecurrenceRule;
-}
-
-const initialEvents: CustomEvent[] = [
+const initialEvents = [
   {
     id: 'work-daily-standup',
     start: '2025-07-02T09:00:00',
@@ -33,7 +22,7 @@ const initialEvents: CustomEvent[] = [
   },
 ];
 
-const eventModelStructure: SchedulerEventModelStructure<CustomEvent> = {
+const eventModelStructure = {
   start: {
     getter: (event) => parseISO(event.start),
     setter: (event, newValue) => {

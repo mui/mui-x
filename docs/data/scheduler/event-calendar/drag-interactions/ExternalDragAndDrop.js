@@ -4,22 +4,22 @@ import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
-import { SchedulerOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
+
 // TODO: Estimate if we can avoid all imports from the headless package.
 import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/personal-agenda';
-import classes from './EventCalendarExternalDragAndDrop.module.css';
+} from '../../datasets/personal-agenda';
+import classes from './ExternalDragAndDrop.module.css';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
   'CalendarGridDayEvent',
 ]);
 
-const initialExternalEvents: SchedulerOccurrencePlaceholderExternalDragData[] = [
+const initialExternalEvents = [
   {
     id: 'external-1',
     title: 'External Event 1',
@@ -47,21 +47,18 @@ const initialExternalEvents: SchedulerOccurrencePlaceholderExternalDragData[] = 
   },
 ];
 
-export default function EventCalendarExternalDragAndDrop() {
+export default function ExternalDragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
-  const [placeholder, setPlaceholder] =
-    React.useState<SchedulerOccurrencePlaceholderExternalDragData | null>(null);
+  const [placeholder, setPlaceholder] = React.useState(null);
   const [externalEvents, setExternalEvents] = React.useState(initialExternalEvents);
 
-  const handleEventDropInsideEventCalendar = (
-    removedEvent: SchedulerOccurrencePlaceholderExternalDragData,
-  ) => {
+  const handleEventDropInsideEventCalendar = (removedEvent) => {
     setExternalEvents((prev) =>
       prev.filter((event) => event.id !== removedEvent.id),
     );
   };
 
-  const externalEventsContainerRef = React.useRef<HTMLDivElement>(null);
+  const externalEventsContainerRef = React.useRef(null);
   React.useEffect(() => {
     if (!externalEventsContainerRef.current) {
       return undefined;
@@ -71,7 +68,7 @@ export default function EventCalendarExternalDragAndDrop() {
       element: externalEventsContainerRef.current,
       canDrop: (arg) => isValidDropTarget(arg.source.data),
       onDragEnter: (args) => {
-        const data = args.source.data as any;
+        const data = args.source.data;
         if (!isValidDropTarget(data)) {
           return;
         }

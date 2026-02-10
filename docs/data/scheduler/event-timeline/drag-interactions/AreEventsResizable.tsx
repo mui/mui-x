@@ -5,19 +5,18 @@ import {
   defaultVisibleDate,
   initialEvents,
   resources,
-} from '../datasets/company-roadmap';
+} from '../../datasets/company-roadmap';
 
-export default function EventTimelinePremiumDragAndDrop() {
+export default function AreEventsResizable() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
-    <div style={{ height: '500px', width: '100%' }}>
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
       <EventTimelinePremium
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsDraggable
         areEventsResizable
       />
     </div>

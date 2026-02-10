@@ -5,24 +5,10 @@ import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/personal-agenda';
+} from '../../datasets/personal-agenda';
 
-const enhancedInitialEvents: SchedulerEvent[] = [
-  ...initialEvents,
-  {
-    id: 'additional-event-1',
-    start: new Date('2025-07-01T12:00:00'),
-    end: new Date('2025-07-01T14:00:00'),
-    title: 'Lunch',
-    resource: 'personal',
-    draggable: true,
-    resizable: true,
-  },
-];
-
-export default function DragAndDropSomeEvents() {
-  const [events, setEvents] =
-    React.useState<SchedulerEvent[]>(enhancedInitialEvents);
+export default function BasicDragAndDrop() {
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '100%' }}>
@@ -31,6 +17,8 @@ export default function DragAndDropSomeEvents() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
+        areEventsDraggable
+        areEventsResizable
         defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>

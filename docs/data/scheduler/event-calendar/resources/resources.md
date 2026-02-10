@@ -58,7 +58,7 @@ return (
 
 :::
 
-## Basic properties
+## Resource properties
 
 ### Color
 
@@ -95,7 +95,7 @@ The effective color resolves in the following order:
 
 ### Drag interactions
 
-Use the `areEventsDraggable` property to mark a resource's events as draggable to another point in time:
+Use the `areEventsDraggable` property to allow dragging a resource's events to another point in time:
 
 ```ts
 const resource = {
@@ -104,7 +104,7 @@ const resource = {
 };
 ```
 
-Use the `areEventsResizable` property to mark a resource's events as resizable by dragging it's start or end edge:
+Use the `areEventsResizable` property to allow resizing a resource's events by dragging their start or end edge:
 
 ```ts
 const resource = {
@@ -116,7 +116,7 @@ const resource = {
 ```
 
 :::success
-Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/drag-interactions/).
+Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-calendar/drag-interactions/).
 :::
 
 ## Store data in custom properties

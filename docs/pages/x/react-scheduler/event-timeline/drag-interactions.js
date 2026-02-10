@@ -1,5 +1,5 @@
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import * as pageProps from 'docsx/data/scheduler/event-properties/event-properties.md?muiMarkdown';
+import * as pageProps from 'docsx/data/scheduler/event-timeline/drag-interactions/drag-interactions.md?muiMarkdown';
 
 export default function Page() {
   return <MarkdownDocs {...pageProps} />;

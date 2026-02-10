@@ -22,9 +22,7 @@ This package is not published yet.
 
 ## Main features
 
-- [Event properties](/x/react-scheduler/event-properties/) (TODO: Split for Event Calendar and Event Timeline)
 - [Recurring events](/x/react-scheduler/recurring-events/)
-- [Drag interactions](/x/react-scheduler/drag-interactions/) (TODO: Probably split between Event Calendar and Event Timeline)
 - [Timezone support](/x/react-scheduler/timezone/)
 
 ## Event Calendar
@@ -33,6 +31,7 @@ This package is not published yet.
 - [Events](/x/react-scheduler/event-calendar/events/)
 - [Resources](/x/react-scheduler/event-calendar/resources/)
 - [Navigation](/x/react-scheduler/event-calendar/navigation/)
+- [Drag interactions](/x/react-scheduler/event-calendar/drag-interactions/)
 - [Views](/x/react-scheduler/event-calendar/views/)
 - [Week View](/x/react-scheduler/event-calendar/week-view/)
 - [Day View](/x/react-scheduler/event-calendar/day-view/)
@@ -49,4 +48,5 @@ This package is not published yet.
 - Events (TODO)
 - Resources (TODO)
 - Navigation (TODO)
+- [Drag interactions](/x/react-scheduler/event-timeline/drag-interactions/)
 - Localization (TODO)
