@@ -252,17 +252,17 @@ By default, columns are assumed to hold strings, so the default column string ty
 
 The following are the native column types with their required value types:
 
-| Column type          | Value type                            |
-| :------------------- | :------------------------------------ |
-| `'string'` (default) | `string`                              |
-| `'longText'`         | `string`                              |
-| `'number'`           | `number`                              |
-| `'date'`             | `Date() object`                       |
-| `'dateTime'`         | `Date() object`                       |
-| `'boolean'`          | `boolean`                             |
-| `'singleSelect'`     | A value in `.valueOptions`            |
-| `'multiSelect'`      | An array of values in `.valueOptions` |
-| `'actions'`          | Not applicable                        |
+| Column type                                                                                      | Value type                            |
+| :----------------------------------------------------------------------------------------------- | :------------------------------------ |
+| `'string'` (default)                                                                             | `string`                              |
+| `'longText'`                                                                                     | `string`                              |
+| `'number'`                                                                                       | `number`                              |
+| `'date'`                                                                                         | `Date() object`                       |
+| `'dateTime'`                                                                                     | `Date() object`                       |
+| `'boolean'`                                                                                      | `boolean`                             |
+| `'singleSelect'`                                                                                 | A value in `.valueOptions`            |
+| `'multiSelect'` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') | An array of values in `.valueOptions` |
+| `'actions'`                                                                                      | Not applicable                        |
 
 {{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
 
@@ -281,7 +281,7 @@ Edit mode (textarea focused):
 - <kbd class="key">Enter</kbd> – Commit changes
 - <kbd class="key">Escape</kbd> – Cancel editing
 
-### Multi-select keyboard interactions
+### Multi-select keyboard interactions [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The `'multiSelect'` column type supports keyboard interactions to expand overflow chips and edit values when the cell is focused via click or keyboard navigation.
 
@@ -298,6 +298,8 @@ Edit mode (autocomplete focused):
 - <kbd class="key">Enter</kbd> – Commit changes and exit edit mode
 - <kbd class="key">Escape</kbd> – Cancel editing and close dropdown
 - <kbd class="key">Backspace</kbd> (empty input) – Remove last selected chip
+
+{{"demo": "MultiSelectKeyboard.js", "bg": "inline"}}
 
 ### Converting types
 

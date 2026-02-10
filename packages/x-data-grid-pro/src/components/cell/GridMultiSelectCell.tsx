@@ -131,31 +131,6 @@ export interface GridMultiSelectCellProps extends GridRenderCellParams {
   };
 }
 
-function resolveChipSlotProps(
-  slotProps: GridMultiSelectCellProps['slotProps'],
-  value: any,
-  index: number,
-): Partial<GridSlotProps['baseChip']> | undefined {
-  const chip = slotProps?.chip;
-  if (typeof chip === 'function') {
-    return chip(value, index);
-  }
-  return chip;
-}
-
-function getOptionLabel(
-  colDef: GridMultiSelectColDef,
-  value: any,
-  valueOptions: Array<ValueOptions> | undefined,
-): string {
-  if (!valueOptions) {
-    return colDef.getOptionLabel!(value);
-  }
-
-  const valueOption = valueOptions.find((option) => colDef.getOptionValue!(option) === value);
-  return valueOption ? colDef.getOptionLabel!(valueOption) : String(value);
-}
-
 function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const { id, value, colDef, hasFocus, row, slotProps } = props;
   const popupId = `${id}-${colDef.field}-multiselect-popup`;
@@ -178,6 +153,14 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const overflowChipRef = React.useRef<HTMLDivElement>(null);
 
   const valueOptions = isMultiSelectColDef(colDef) ? getValueOptions(colDef, { id, row }) : [];
+  const getOptionValue = (colDef as GridMultiSelectColDef).getOptionValue!;
+  const getOptionLabelFn = (colDef as GridMultiSelectColDef).getOptionLabel!;
+  const optionByValue = new Map<any, ValueOptions>();
+  if (valueOptions) {
+    for (const opt of valueOptions) {
+      optionByValue.set(getOptionValue(opt), opt);
+    }
+  }
 
   // Reorder array to show filtered value first (improves UX when filtering)
   const arrayValue = React.useMemo(() => {
@@ -324,7 +307,8 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
       className={clsx(classes.root, hasFocus && 'Mui-focused', slotProps?.root?.className)}
     >
       {arrayValue.map((v, index) => {
-        const chipProps = resolveChipSlotProps(slotProps, v, index);
+        const option = optionByValue.get(v) ?? v;
+        const chipProps = typeof slotProps?.chip === 'function' ? slotProps.chip(option, index) : slotProps?.chip;
         return (
           <GridMultiSelectCellChip
             key={index}
@@ -337,8 +321,9 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
                 chipsRef.current.delete(index);
               }
             }}
-            label={getOptionLabel(colDef as GridMultiSelectColDef, v, valueOptions)}
+            label={getOptionLabelFn(option)}
             size="small"
+            variant="outlined"
             {...chipProps}
             className={clsx(
               classes.chip,
@@ -362,7 +347,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
           aria-keyshortcuts="Space"
           aria-controls={popupOpen ? popupId : undefined}
           aria-expanded={popupOpen}
-          material={{ tabIndex: 0, component: 'button' }}
+          material={{ tabIndex: -1, component: 'button' }}
           {...slotProps?.overflowChip}
           className={clsx(classes.overflow, slotProps?.overflowChip?.className)}
         />
@@ -411,12 +396,14 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
             }
           >
             {arrayValue.map((v, index) => {
-              const chipProps = resolveChipSlotProps(slotProps, v, index);
+              const option = optionByValue.get(v) ?? v;
+              const chipProps = typeof slotProps?.chip === 'function' ? slotProps.chip(option, index) : slotProps?.chip;
               return (
                 <rootProps.slots.baseChip
                   key={index}
-                  label={getOptionLabel(colDef as GridMultiSelectColDef, v, valueOptions)}
+                  label={getOptionLabelFn(option)}
                   size="small"
+                  variant="outlined"
                   {...chipProps}
                   className={clsx(classes.chip, chipProps?.className)}
                 />

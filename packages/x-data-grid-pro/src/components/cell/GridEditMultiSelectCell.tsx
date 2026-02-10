@@ -104,7 +104,7 @@ const GridEditMultiSelectCellAutocomplete = styled(
   '& + .MuiAutocomplete-popper': {
     '& .MuiAutocomplete-listbox': {
       boxSizing: 'border-box',
-      maxHeight: 52 * 3, // 3 items max height
+      maxHeight: 52 * 4,
     },
     '& .MuiAutocomplete-option': {
       ...theme.typography.body2,
@@ -187,9 +187,14 @@ function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
 
   const currentValue = Array.isArray(valueProp) ? valueProp : [];
 
+  const optionByValue = new Map<any, ValueOptions>();
+  for (const opt of valueOptions) {
+    optionByValue.set(getOptionValue(opt), opt);
+  }
+
   // Convert values to options for Autocomplete
   const selectedOptions = currentValue
-    .map((val: any) => valueOptions.find((option) => getOptionValue(option) === val))
+    .map((val: any) => optionByValue.get(val))
     .filter((option): option is ValueOptions => option !== undefined);
 
   return (
@@ -206,15 +211,15 @@ function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
         className={clsx(classes.value, slotProps?.value?.className)}
       >
         {currentValue.map((val: any, index: number) => {
+          const option = optionByValue.get(val) ?? val;
           const chipSlotProps =
-            typeof slotProps?.chip === 'function' ? slotProps.chip(val, index) : slotProps?.chip;
+            typeof slotProps?.chip === 'function' ? slotProps.chip(option, index) : slotProps?.chip;
           return (
             <rootProps.slots.baseChip
               key={index}
-              label={getOptionLabel(
-                valueOptions.find((option) => getOptionValue(option) === val) ?? val,
-              )}
+              label={getOptionLabel(option)}
               size="small"
+              variant="outlined"
               {...chipSlotProps}
               className={clsx(classes.chip, chipSlotProps?.className)}
             />

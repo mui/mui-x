@@ -10,6 +10,10 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
   renderEditMultiSelectCell,
+  GridMultiSelectCell,
+  type GridMultiSelectCellProps,
+  GridEditMultiSelectCell,
+  type GridEditMultiSelectCellProps,
 } from '@mui/x-data-grid-pro';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, spyApi, sleep } from 'test/utils/helperFn';
@@ -884,6 +888,104 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.click(option1);
 
       expect(spiedSetEditCellValue.lastCall.args[0].value).to.deep.equal(['Option 2']);
+    });
+
+    describe('slotProps.chip as function', () => {
+      it('should pass string option to chip function for string valueOptions in view mode', () => {
+        const chipFn = spy(() => ({ color: 'primary' as const }));
+
+        defaultData.rows = [{ id: 0, tags: ['Option 1', 'Option 2'] }];
+        defaultData.columns = [
+          {
+            field: 'tags',
+            type: 'multiSelect',
+            valueOptions,
+            renderCell: (params) => (
+              <GridMultiSelectCell
+                {...(params as GridMultiSelectCellProps)}
+                slotProps={{ chip: chipFn }}
+              />
+            ),
+          },
+        ];
+
+        render(<TestCase />);
+
+        // callCount may be >2 due to measurement renders
+        expect(chipFn.callCount).to.be.greaterThanOrEqual(2);
+        // For string options, the value option IS the string itself
+        const calls = chipFn.getCalls();
+        const args = calls.map((c: any) => c.args);
+        expect(args).to.deep.include(['Option 1', 0]);
+        expect(args).to.deep.include(['Option 2', 1]);
+      });
+
+      it('should pass resolved option object to chip function for object valueOptions in view mode', () => {
+        const objectOptions = [
+          { value: 1, label: 'One' },
+          { value: 2, label: 'Two' },
+          { value: 3, label: 'Three' },
+        ];
+        const chipFn = spy(() => ({}));
+
+        defaultData.rows = [{ id: 0, tags: [1, 3] }];
+        defaultData.columns = [
+          {
+            field: 'tags',
+            type: 'multiSelect',
+            valueOptions: objectOptions,
+            renderCell: (params) => (
+              <GridMultiSelectCell
+                {...(params as GridMultiSelectCellProps)}
+                slotProps={{ chip: chipFn }}
+              />
+            ),
+          },
+        ];
+
+        render(<TestCase />);
+
+        expect(chipFn.callCount).to.be.greaterThanOrEqual(2);
+        const calls = chipFn.getCalls();
+        const firstArgs = calls.map((c: any) => c.args[0]);
+        expect(firstArgs).to.deep.include({ value: 1, label: 'One' });
+        expect(firstArgs).to.deep.include({ value: 3, label: 'Three' });
+      });
+
+      it('should pass resolved option object to chip function for object valueOptions in edit mode', async () => {
+        const objectOptions = [
+          { value: 1, label: 'One' },
+          { value: 2, label: 'Two' },
+        ];
+        const chipFn = spy(() => ({}));
+
+        defaultData.rows = [{ id: 0, tags: [1, 2] }];
+        defaultData.columns = [
+          {
+            field: 'tags',
+            type: 'multiSelect',
+            editable: true,
+            valueOptions: objectOptions,
+            renderEditCell: (params) => (
+              <GridEditMultiSelectCell
+                {...(params as GridEditMultiSelectCellProps)}
+                slotProps={{ chip: chipFn }}
+              />
+            ),
+          },
+        ];
+
+        const { user } = render(<TestCase />);
+
+        const cell = getCell(0, 0);
+        await user.dblClick(cell);
+
+        expect(chipFn.callCount).to.be.greaterThanOrEqual(2);
+        const calls = chipFn.getCalls();
+        const firstArgs = calls.map((c: any) => c.args[0]);
+        expect(firstArgs).to.deep.include({ value: 1, label: 'One' });
+        expect(firstArgs).to.deep.include({ value: 2, label: 'Two' });
+      });
     });
   });
 });
