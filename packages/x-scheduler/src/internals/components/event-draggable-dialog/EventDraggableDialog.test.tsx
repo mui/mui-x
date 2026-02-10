@@ -74,9 +74,9 @@ describe('<EventDraggableDialogContent open />', () => {
     expect(screen.getByLabelText(/end date/i)).to.have.value('2025-05-26');
     expect(screen.getByLabelText(/start time/i)).to.have.value('07:30');
     expect(screen.getByLabelText(/end time/i)).to.have.value('08:15');
-    expect(
-      (screen.getByRole('switch', { name: /all day/i }) as HTMLInputElement).checked,
-    ).to.equal(false);
+    expect((screen.getByRole('switch', { name: /all day/i }) as HTMLInputElement).checked).to.equal(
+      false,
+    );
     expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
     // Verify recurrence tab is clickable (recurrence value tested in other tests)
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
@@ -277,9 +277,9 @@ describe('<EventDraggableDialogContent open />', () => {
     const dialogs = screen.getAllByRole('dialog');
     const currentDialog = dialogs[dialogs.length - 1];
 
-    expect(
-      within(currentDialog).getByRole('combobox', { name: /resource/i }).textContent,
-    ).to.match(/NoColor/i);
+    expect(within(currentDialog).getByRole('combobox', { name: /resource/i }).textContent).to.match(
+      /NoColor/i,
+    );
     expect(
       currentDialog.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
     ).to.have.attribute('data-palette', 'teal');
@@ -317,9 +317,9 @@ describe('<EventDraggableDialogContent open />', () => {
     const dialogs = screen.getAllByRole('dialog');
     const currentDialog = dialogs[dialogs.length - 1];
 
-    expect(
-      within(currentDialog).getByRole('combobox', { name: /resource/i }).textContent,
-    ).to.match(/no resource/i);
+    expect(within(currentDialog).getByRole('combobox', { name: /resource/i }).textContent).to.match(
+      /no resource/i,
+    );
 
     expect(
       currentDialog.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
