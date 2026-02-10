@@ -3,6 +3,8 @@ import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router';
 import TestViewer from './TestViewer';
 
+(globalThis as any).MUI_TEST_ENV = true;
+
 interface Fixture {
   path: string;
   suite: string;
