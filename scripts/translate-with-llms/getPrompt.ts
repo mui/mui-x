@@ -46,7 +46,7 @@ Task:
 - Translate each English source string into the listed missing locales.
 - Keep package names and translation keys exactly as provided.
 - Preserve placeholders and formatting exactly (examples: {0}, {value}, %s, \\n, punctuation).
-- Return ONLY valid compact JSON (no markdown, no explanation).
+- Return ONLY valid JSON (no markdown, no explanation).
 - Include ONLY keys/locales that you actually translated.
 
 Expected output format example:

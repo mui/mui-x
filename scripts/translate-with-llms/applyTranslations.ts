@@ -42,7 +42,7 @@ function parsePayload(rawInput: string): TranslationPayload {
     parsed = JSON.parse(rawInput.replace(/^\uFEFF/, ''));
   } catch (error) {
     const parseErrorDetail = error instanceof Error ? error.message : String(error);
-    throw new Error(`Invalid compact JSON input. ${parseErrorDetail}`);
+    throw new Error(`Invalid JSON input. ${parseErrorDetail}`);
   }
 
   const parseResult = translationPayloadSchema.safeParse(parsed);
