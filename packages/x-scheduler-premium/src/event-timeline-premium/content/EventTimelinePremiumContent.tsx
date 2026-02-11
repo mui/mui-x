@@ -6,11 +6,7 @@ import { useStore } from '@base-ui/utils/store';
 import { EventTimelinePremium as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import {
-  EventDraggableDialogProvider,
-  EventDraggableDialogTrigger,
-  useTranslations,
-} from '@mui/x-scheduler/internals';
+import { EventDialogProvider, EventDialogTrigger, useTranslations } from '@mui/x-scheduler/internals';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
@@ -167,7 +163,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   return (
     <EventTimelinePremiumContentRoot ref={handleRef} className={classes.content} {...props}>
-      <EventDraggableDialogProvider>
+      <EventDialogProvider>
         <EventTimelinePremiumGrid
           className={classes.grid}
           style={{ '--unit-width': `var(--${view}-cell-width)` } as React.CSSProperties}
@@ -200,13 +196,13 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                   {({ occurrences, placeholder }) => (
                     <React.Fragment>
                       {occurrences.map((occurrence) => (
-                        <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+                        <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
                           <EventTimelinePremiumEvent
                             occurrence={occurrence}
                             ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
                             variant="regular"
                           />
-                        </EventDraggableDialogTrigger>
+                        </EventDialogTrigger>
                       ))}
                       {placeholder != null && (
                         <EventTimelinePremiumEvent
@@ -222,7 +218,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             </EventTimelinePremiumEventsSubGrid>
           </EventTimelinePremiumEventsSubGridWrapper>
         </EventTimelinePremiumGrid>
-      </EventDraggableDialogProvider>
+      </EventDialogProvider>
     </EventTimelinePremiumContentRoot>
   );
 });
