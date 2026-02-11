@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
@@ -68,6 +69,8 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
 ) {
   const adapter = usePickerAdapter();
   const isRtl = useRtl();
+  const clockRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, clockRef);
 
   const props = useThemeProps({
     props: inProps,
@@ -436,7 +439,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
 
   return (
     <MultiSectionDigitalClockRoot
-      ref={ref}
+      ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       role="group"
@@ -455,6 +458,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           slotProps={slotProps}
           skipDisabled={skipDisabled}
           aria-label={translations.selectViewText(timeView)}
+          clockContainerRef={clockRef}
         />
       ))}
     </MultiSectionDigitalClockRoot>

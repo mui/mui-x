@@ -41,6 +41,7 @@ export interface MultiSectionDigitalClockSectionProps<TSectionValue extends numb
   active?: boolean;
   skipDisabled?: boolean;
   role?: string;
+  clockContainerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
@@ -158,6 +159,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       slots,
       slotProps,
       skipDisabled,
+      clockContainerRef,
       ...other
     } = props;
 
@@ -182,7 +184,8 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
 
-      const hasFocus = containerRef.current.contains(getActiveElement(containerRef.current));
+      const containerElem = clockContainerRef?.current ?? containerRef.current;
+      const hasFocus = containerElem.contains(getActiveElement(containerRef.current));
       const focusedChanged =
         previousAutoFocus.current !== autoFocus || previousActiveState.current !== active;
 
