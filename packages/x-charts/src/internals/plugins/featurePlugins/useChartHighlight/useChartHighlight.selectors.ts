@@ -1,10 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import type {
-  ChartSeriesType,
-  HighlightScope,
-  HighlightItemIdentifier,
-} from '../../../../models/seriesType';
+import type { HighlightItemIdentifier } from '../../../../models/seriesType';
+import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type UseChartHighlightSignature } from './useChartHighlight.types';
 import {

@@ -6,7 +6,8 @@ import {
   selectorChartsIsHighlighted,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
-import type { SeriesItemIdentifier, ChartSeriesType } from '../models/seriesType';
+import type { SeriesItemIdentifier } from '../models/seriesType';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 type UseItemHighlightedReturnType = {
   /**

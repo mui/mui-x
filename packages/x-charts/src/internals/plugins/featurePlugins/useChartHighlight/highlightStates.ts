@@ -1,10 +1,9 @@
+import type { HighlightItemIdentifier, SeriesId } from '../../../../models/seriesType';
 import type {
+  ChartsSeriesConfig,
   ChartSeriesType,
-  HighlightItemIdentifier,
   HighlightScope,
-  SeriesId,
-} from '../../../../models/seriesType';
-import type { ChartsSeriesConfig } from '../../../../models/seriesType/config';
+} from '../../../../models/seriesType/config';
 
 const batchRenderingSeries = new Set<SeriesTypeWithBatchRendering>([
   'bar',

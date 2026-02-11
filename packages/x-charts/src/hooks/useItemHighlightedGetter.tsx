@@ -5,7 +5,7 @@ import {
   selectorChartsIsHighlightedCallback,
 } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.selectors';
 import { type UseChartHighlightSignature } from '../plugins';
-import { type ChartSeriesType } from '../models';
+import { type ChartSeriesType } from '../models/seriesType/config';
 
 /**
  * A hook to check the highlighted state of multiple items.
