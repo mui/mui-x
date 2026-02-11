@@ -179,4 +179,43 @@ describe('<MultiSectionDigitalClock />', () => {
       expect(document.activeElement).to.equal(lastElement);
     });
   });
+
+  describe('focus behavior', () => {
+    it('should not steal focus from external input on value re-render', async () => {
+      function ControlledMultiSectionClock() {
+        const [value, setValue] = React.useState(adapterToUse.date('2018-01-01T12:30:00'));
+        const [inputValue, setInputValue] = React.useState('');
+
+        return (
+          <React.Fragment>
+            <input
+              aria-label="decoy"
+              value={inputValue}
+              onChange={(event) => {
+                setInputValue(event.target.value);
+                setValue(
+                  adapterToUse.setHours(
+                    value!,
+                    Math.min(
+                      23,
+                      Number.isNaN(Number(event.target.value)) ? 0 : Number(event.target.value),
+                    ),
+                  ),
+                );
+              }}
+            />
+            <MultiSectionDigitalClock autoFocus value={value} onChange={setValue} />
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<ControlledMultiSectionClock />);
+      const input = screen.getByRole('textbox', { name: 'decoy' });
+
+      await user.click(input);
+      await user.keyboard('1');
+
+      expect(document.activeElement).to.equal(input);
+    });
+  });
 });
