@@ -466,8 +466,8 @@ export class SchedulerStore<
   ) => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const duplicatedEvent = createEventFromRecurringEvent(original, {
-      start: (start as Date).toISOString(),
-      end: (end as Date).toISOString(),
+      start: start.toISOString(),
+      end: end.toISOString(),
     });
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
@@ -502,9 +502,7 @@ export class SchedulerStore<
     }
 
     const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
-    const cleanChanges: SchedulerEventPasteProperties & { end?: TemporalSupportedObject } = {
-      ...changes,
-    };
+    const cleanChanges: Partial<SchedulerEventUpdatedProperties> = { ...changes };
     if (cleanChanges.start != null) {
       cleanChanges.end = adapter.addMilliseconds(
         cleanChanges.start,
@@ -513,11 +511,7 @@ export class SchedulerStore<
     }
 
     if (copiedEvent.action === 'cut') {
-      const updatedEvent: SchedulerEventUpdatedProperties = {
-        id: copiedEvent.id,
-        ...cleanChanges,
-      };
-      return this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      return this.updateEvents({ updated: [{ id: copiedEvent.id, ...cleanChanges }] }).updated[0];
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
