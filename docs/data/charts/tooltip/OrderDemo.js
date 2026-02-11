@@ -33,7 +33,12 @@ export default function OrderDemo() {
         ))}
       </TextField>
       <LineChart
-        xAxis={[{ data: ['page A', 'page B', 'page C', 'page D', 'page E'] }]}
+        xAxis={[
+          {
+            scaleType: 'point',
+            data: ['page A', 'page B', 'page C', 'page D', 'page E'],
+          },
+        ]}
         series={[
           { data: [2, 5, 3, 4, 1], label: 'Series x' },
           { data: [5, 3, 1, null, 10], label: 'Series y' },
