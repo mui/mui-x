@@ -113,10 +113,8 @@ describe('<EventDraggableDialogContent open />', () => {
       id: DEFAULT_EVENT.id,
       title: 'Running test',
       description: DEFAULT_EVENT.description,
-      start: (
-        adapter.startOfDay(adapter.date(DEFAULT_EVENT.start, 'default')) as Date
-      ).toISOString(),
-      end: (adapter.endOfDay(adapter.date(DEFAULT_EVENT.end, 'default')) as Date).toISOString(),
+      start: adapter.startOfDay(adapter.date(DEFAULT_EVENT.start, 'default')).toISOString(),
+      end: adapter.endOfDay(adapter.date(DEFAULT_EVENT.end, 'default')).toISOString(),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',
@@ -321,7 +319,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span('2025-05-26T07:30:00Z', '2025-05-26T08:30:00Z')
+        .span(start.toISOString(), end.toISOString())
         .toOccurrence();
 
       const { user } = render(
@@ -364,7 +362,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span('2025-05-26T07:30:00Z', '2025-05-26T08:30:00Z')
+        .span(start.toISOString(), end.toISOString())
         .allDay(true)
         .toOccurrence();
 
@@ -408,7 +406,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span('2025-05-26T07:30:00Z', '2025-05-26T08:30:00Z')
+        .span(start.toISOString(), end.toISOString())
         .toOccurrence();
 
       const { user } = render(
@@ -461,7 +459,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('placeholder-id')
-        .span('2025-06-10T09:00:00Z', '2025-06-10T09:30:00Z')
+        .span(start.toISOString(), end.toISOString())
         .title('')
         .description('')
         .toOccurrence();
@@ -525,7 +523,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('placeholder-id')
-        .span('2025-06-10T09:00:00Z', '2025-06-10T09:30:00Z')
+        .span(start.toISOString(), end.toISOString())
         .title('')
         .toOccurrence();
 
