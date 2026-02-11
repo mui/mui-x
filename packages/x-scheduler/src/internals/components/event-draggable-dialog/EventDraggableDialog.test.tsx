@@ -74,10 +74,10 @@ describe('<EventDraggableDialogContent open />', () => {
     expect(screen.getByLabelText(/end date/i)).to.have.value('2025-05-26');
     expect(screen.getByLabelText(/start time/i)).to.have.value('07:30');
     expect(screen.getByLabelText(/end time/i)).to.have.value('08:15');
-    expect(
-      (screen.getByRole('checkbox', { name: /all day/i }) as HTMLInputElement).checked,
-    ).to.equal(false);
-    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/personal/i);
+    expect((screen.getByRole('switch', { name: /all day/i }) as HTMLInputElement).checked).to.equal(
+      false,
+    );
+    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
     // Verify recurrence tab is clickable (recurrence value tested in other tests)
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     expect(screen.getByRole('combobox', { name: /recurrence/i })).to.not.equal(null);
@@ -95,15 +95,14 @@ describe('<EventDraggableDialogContent open />', () => {
       </EventCalendarProvider>,
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
-    await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+    await user.click(screen.getByRole('switch', { name: /all day/i }));
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
     await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
-    await user.click(screen.getByRole('button', { name: /resource/i }));
-    await user.click(await screen.findByRole('menuitem', { name: /work/i }));
-    // Menu closes after resource selection, re-open for color
-    await user.click(screen.getByRole('button', { name: /resource/i }));
-    await user.click(await screen.findByRole('button', { name: /pink/i }));
+    await user.click(screen.getByRole('tab', { name: /general/i }));
+    await user.click(screen.getByRole('combobox', { name: /resource/i }));
+    await user.click(await screen.findByRole('option', { name: /work/i }));
+    await user.click(screen.getByRole('radio', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -126,7 +125,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]}>
+      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
         <EventDraggableDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
@@ -144,7 +143,11 @@ describe('<EventDraggableDialogContent open />', () => {
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]} onEventsChange={onEventsChange}>
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+      >
         <EventDraggableDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
@@ -169,26 +172,30 @@ describe('<EventDraggableDialogContent open />', () => {
         <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
+
+    const dialogs = screen.getAllByRole('dialog');
+    const dialog = within(dialogs[dialogs.length - 1]);
+
     // Should display title as text, not in an input
-    expect(screen.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
-    expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+    expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
+    expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
 
     // Should display description as text, not in an input
-    expect(screen.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
-    expect(screen.queryByLabelText(/description/i)).to.equal(null);
+    expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
+    expect(dialog.queryByLabelText(/description/i)).to.equal(null);
 
     // Should not have date/time inputs
-    expect(screen.queryByLabelText(/start date/i)).to.equal(null);
-    expect(screen.queryByLabelText(/end date/i)).to.equal(null);
-    expect(screen.queryByLabelText(/start time/i)).to.equal(null);
-    expect(screen.queryByLabelText(/end time/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
 
     // Should not have all-day checkbox
-    expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
+    expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
-    expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+    expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
   it('should handle read-only events if EventCalendar is read-only', () => {
@@ -205,26 +212,30 @@ describe('<EventDraggableDialogContent open />', () => {
         <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
+
+    const dialogs = screen.getAllByRole('dialog');
+    const dialog = within(dialogs[dialogs.length - 1]);
+
     // Should display title as text, not in an input
-    expect(screen.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
-    expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+    expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
+    expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
 
     // Should display description as text, not in an input
-    expect(screen.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
-    expect(screen.queryByLabelText(/description/i)).to.equal(null);
+    expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
+    expect(dialog.queryByLabelText(/description/i)).to.equal(null);
 
     // Should not have date/time inputs
-    expect(screen.queryByLabelText(/start date/i)).to.equal(null);
-    expect(screen.queryByLabelText(/end date/i)).to.equal(null);
-    expect(screen.queryByLabelText(/start time/i)).to.equal(null);
-    expect(screen.queryByLabelText(/end time/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
 
     // Should not have all-day checkbox
-    expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
+    expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
-    expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+    expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
   it('should handle a resource without an eventColor (fallback to default)', async () => {
@@ -263,9 +274,14 @@ describe('<EventDraggableDialogContent open />', () => {
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/NoColor/i);
+    const dialogs = screen.getAllByRole('dialog');
+    const currentDialog = dialogs[dialogs.length - 1];
+
+    expect(within(currentDialog).getByRole('combobox', { name: /resource/i }).textContent).to.match(
+      /NoColor/i,
+    );
     expect(
-      document.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
+      currentDialog.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
     ).to.have.attribute('data-palette', 'teal');
   });
 
@@ -298,10 +314,15 @@ describe('<EventDraggableDialogContent open />', () => {
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/no resource/i);
+    const dialogs = screen.getAllByRole('dialog');
+    const currentDialog = dialogs[dialogs.length - 1];
+
+    expect(within(currentDialog).getByRole('combobox', { name: /resource/i }).textContent).to.match(
+      /no resource/i,
+    );
 
     expect(
-      document.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
+      currentDialog.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
     ).to.have.attribute('data-palette', 'teal');
 
     await user.click(screen.getByRole('button', { name: /save changes/i }));
@@ -350,7 +371,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
 
-      await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('day-grid');
     });
@@ -394,7 +415,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('day-grid');
 
-      await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
     });
@@ -440,7 +461,7 @@ describe('<EventDraggableDialogContent open />', () => {
       );
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
 
-      await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
     });
@@ -487,8 +508,8 @@ describe('<EventDraggableDialogContent open />', () => {
 
       await user.type(screen.getByLabelText(/event title/i), ' New title ');
       await user.type(screen.getByLabelText(/description/i), ' Some details ');
-      await user.click(screen.getByRole('button', { name: /resource/i }));
-      await user.click(await screen.findByRole('menuitem', { name: /work/i }));
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
       await user.click(screen.getByRole('tab', { name: /recurrence/i }));
       await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
       await user.click(await screen.findByRole('option', { name: /daily/i }));
@@ -1186,8 +1207,8 @@ describe('<EventDraggableDialogContent open />', () => {
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
         await user.clear(screen.getByLabelText(/description/i));
         await user.type(screen.getByLabelText(/description/i), '  new description  ');
-        await user.click(screen.getByRole('button', { name: /resource/i }));
-        await user.click(await screen.findByRole('menuitem', { name: /work/i }));
+        await user.click(screen.getByRole('combobox', { name: /resource/i }));
+        await user.click(await screen.findByRole('option', { name: /work/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         expect(updateEventSpy?.calledOnce).to.equal(true);
@@ -1250,11 +1271,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       expect(document.querySelector('.MuiEventCalendar-eventDialog')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogCloseButton')).not.to.equal(null);
-      expect(document.querySelector('.MuiEventCalendar-eventDialogDragHandle')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogHeader')).not.to.equal(null);
-      expect(document.querySelector('.MuiEventCalendar-eventDialogHeaderContent')).not.to.equal(
-        null,
-      );
       expect(document.querySelector('.MuiEventCalendar-eventDialogContent')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogGeneralTabContent')).not.to.equal(
         null,
