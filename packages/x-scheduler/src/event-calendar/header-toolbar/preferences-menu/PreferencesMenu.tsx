@@ -28,7 +28,7 @@ import { useEventCalendarClasses } from '../../EventCalendarClassesContext';
 
 const PreferencesMenuRoot = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'PreferencesMenuRoot',
+  slot: 'PreferencesMenu',
 })({});
 
 const PreferencesListSubheader = styled(ListSubheader, {
