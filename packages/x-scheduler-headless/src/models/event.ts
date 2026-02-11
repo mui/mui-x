@@ -457,10 +457,6 @@ export type SchedulerEventModelStructure<TEvent extends object> = {
     /**
      * Setter for the event property.
      * If not provided, the property won't be editable.
-     *
-     * Date fields (`start`, `end`, `exDates`) are always passed as strings
-     * using the same semantics as `SchedulerEvent`: Z-strings for instants,
-     * non-Z strings for wall-time.
      */
     setter?: (
       event: TEvent | Partial<TEvent>,
