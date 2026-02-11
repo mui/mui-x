@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
+import { useThemeProps } from '@mui/material/styles';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
@@ -11,10 +12,10 @@ import {
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-headless/use-draggable-dialog';
 import {
-  EventDraggableDialogProps,
-  EventDraggableDialogProviderProps,
-  EventDraggableDialogTriggerProps,
-} from './EventDraggableDialog.types';
+  EventDialogProps,
+  EventDialogProviderProps,
+  EventDialogTriggerProps,
+} from './EventDialog.types';
 import { createModal } from '../create-modal';
 import { FormContent } from './FormContent';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
@@ -91,17 +92,19 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   );
 } as any as DialogProps['PaperComponent'];
 
-const EventDraggableDialog = createModal<SchedulerRenderableEventOccurrence>({
-  contextName: 'EventDraggableDialogContext',
+const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
+  contextName: 'EventDialogContext',
 });
 
-export const EventDraggableDialogContext = EventDraggableDialog.Context;
-export const useEventDraggableDialogContext = EventDraggableDialog.useContext;
+export const EventDialogContext = EventDialog.Context;
+export const useEventDialogContext = EventDialog.useContext;
 
-export const EventDraggableDialogContent = React.forwardRef(function EventDraggableDialogContent(
-  props: EventDraggableDialogProps,
+export const EventDialogContent = React.forwardRef(function EventDialogContent(
+  inProps: EventDialogProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventDialog' });
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
@@ -119,7 +122,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
       open={open}
       onClose={onClose}
       PaperComponent={PaperComponent}
-      aria-labelledby="draggable-dialog-title"
+      aria-labelledby="event-dialog-title"
       aria-modal="false"
       className={classes.eventDialog}
       slotProps={{
@@ -148,15 +151,15 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   );
 });
 
-export function EventDraggableDialogProvider(props: EventDraggableDialogProviderProps) {
+export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, ...other } = props;
   const store = useSchedulerStoreContext();
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
   return (
-    <EventDraggableDialog.Provider
+    <EventDialog.Provider
       render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
-        <EventDraggableDialogContent
+        <EventDialogContent
           open={isOpen}
           anchorRef={anchorRef}
           occurrence={occurrence}
@@ -170,13 +173,13 @@ export function EventDraggableDialogProvider(props: EventDraggableDialogProvider
     >
       {children}
       {isScopeDialogOpen && <RecurringScopeDialog />}
-    </EventDraggableDialog.Provider>
+    </EventDialog.Provider>
   );
 }
 
-export function EventDraggableDialogTrigger(props: EventDraggableDialogTriggerProps) {
+export function EventDialogTrigger(props: EventDialogTriggerProps) {
   const { occurrence, ...other } = props;
   const ref = React.useRef<HTMLElement | null>(null);
 
-  return <EventDraggableDialog.Trigger ref={ref} data={occurrence} {...other} />;
+  return <EventDialog.Trigger ref={ref} data={occurrence} {...other} />;
 }

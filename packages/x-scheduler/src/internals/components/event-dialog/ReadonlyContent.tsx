@@ -13,7 +13,7 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import EventDraggableDialogHeader from './EventDraggableDialogHeader';
+import EventDialogHeader from './EventDialogHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
@@ -21,14 +21,14 @@ import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const ReadonlyContentDragContainer = styled('section', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'ReadonlyContentDragContainer',
 })({
   cursor: 'move',
 });
 
 const ReadonlyContentRoot = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'ReadonlyContent',
 })(({ theme }) => ({
   display: 'flex',
@@ -38,15 +38,15 @@ const ReadonlyContentRoot = styled('div', {
 }));
 
 const RecurrenceLabelContainer = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'RecurrenceLabelContainer',
 })(({ theme }) => ({
   display: 'flex',
   gap: theme.spacing(1),
 }));
 
-const EventDraggableDialogActions = styled('div', {
-  name: 'MuiEventDraggableDialog',
+const EventDialogActions = styled('div', {
+  name: 'MuiEventDialog',
   slot: 'Actions',
 })(({ theme }) => ({
   display: 'flex',
@@ -54,8 +54,8 @@ const EventDraggableDialogActions = styled('div', {
   padding: theme.spacing(3),
 }));
 
-const EventDraggableDialogDateTimeContainer = styled('div', {
-  name: 'MuiEventDraggableDialog',
+const EventDialogDateTimeContainer = styled('div', {
+  name: 'MuiEventDialog',
   slot: 'DateTimeContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -63,16 +63,16 @@ const EventDraggableDialogDateTimeContainer = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const EventDraggableDialogTitle = styled(Typography, {
-  name: 'MuiEventDraggableDialog',
+const EventDialogTitle = styled(Typography, {
+  name: 'MuiEventDialog',
   slot: 'Title',
 })({
   margin: 0,
   color: 'var(--event-on-surface-subtle-primary)',
 });
 
-const EventDraggableDialogResourceContainer = styled('div', {
-  name: 'MuiEventDraggableDialog',
+const EventDialogResourceContainer = styled('div', {
+  name: 'MuiEventDialog',
   slot: 'ResourceContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -80,8 +80,8 @@ const EventDraggableDialogResourceContainer = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const EventDraggableDialogResourceLegendContainer = styled('div', {
-  name: 'MuiEventDraggableDialog',
+const EventDialogResourceLegendContainer = styled('div', {
+  name: 'MuiEventDialog',
   slot: 'ResourceLegendContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -90,7 +90,7 @@ const EventDraggableDialogResourceLegendContainer = styled('div', {
 }));
 
 const ResourceLegendColorDot = styled('span', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'ResourceLegendColor',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   width: 14,
@@ -102,8 +102,8 @@ const ResourceLegendColorDot = styled('span', {
   variants: getPaletteVariants(theme),
 }));
 
-const EventDraggableDialogResourceTitle = styled(Typography, {
-  name: 'MuiEventDraggableDialog',
+const EventDialogResourceTitle = styled(Typography, {
+  name: 'MuiEventDialog',
   slot: 'ResourceTitle',
 })(({ theme }) => ({
   margin: 0,
@@ -154,18 +154,18 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   return (
     <ReadonlyContentDragContainer ref={dragHandlerRef}>
-      <EventDraggableDialogHeader onClose={onClose}>
-        <EventDraggableDialogTitle
+      <EventDialogHeader onClose={onClose}>
+        <EventDialogTitle
           variant="h6"
           id="draggable-dialog-title"
           className={classes.eventDialogTitle}
         >
           {occurrence.title}
-        </EventDraggableDialogTitle>
-      </EventDraggableDialogHeader>
+        </EventDialogTitle>
+      </EventDialogHeader>
       <ReadonlyContentRoot className={classes.eventDialogReadonlyContent}>
-        <EventDraggableDialogResourceContainer className={classes.eventDialogResourceContainer}>
-          <EventDraggableDialogResourceLegendContainer
+        <EventDialogResourceContainer className={classes.eventDialogResourceContainer}>
+          <EventDialogResourceLegendContainer
             className={classes.eventDialogResourceLegendContainer}
           >
             {resource?.eventColor && resource.eventColor !== color && (
@@ -179,12 +179,12 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
               className={classes.eventDialogResourceLegendColor}
               data-palette={color}
             />
-          </EventDraggableDialogResourceLegendContainer>
-          <EventDraggableDialogResourceTitle className={classes.eventDialogResourceTitle}>
+          </EventDialogResourceLegendContainer>
+          <EventDialogResourceTitle className={classes.eventDialogResourceTitle}>
             {resource?.title || translations.noResourceAriaLabel}
-          </EventDraggableDialogResourceTitle>
-        </EventDraggableDialogResourceContainer>
-        <EventDraggableDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
+          </EventDialogResourceTitle>
+        </EventDialogResourceContainer>
+        <EventDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
           <CalendarMonthRounded fontSize="small" />
           <Typography variant="body2" component="p" noWrap>
             <time
@@ -210,7 +210,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
               </time>
             )}
           </Typography>
-        </EventDraggableDialogDateTimeContainer>
+        </EventDialogDateTimeContainer>
         <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
           <RepeatRoundedIcon fontSize="small" />
           <Typography variant="body2" color="text.secondary" component="em">
@@ -221,11 +221,11 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
           <Typography variant="body2">{occurrence.description}</Typography>
         ) : null}
       </ReadonlyContentRoot>
-      <EventDraggableDialogActions className={classes.eventDialogActions}>
+      <EventDialogActions className={classes.eventDialogActions}>
         <Button variant="contained" type="button" onClick={onClose}>
           {translations.closeButtonLabel}
         </Button>
-      </EventDraggableDialogActions>
+      </EventDialogActions>
     </ReadonlyContentDragContainer>
   );
 }

@@ -27,13 +27,13 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
-import EventDraggableDialogHeader from './EventDraggableDialogHeader';
+import EventDialogHeader from './EventDialogHeader';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const FormActions = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'FormActions',
 })(({ theme }) => ({
   display: 'flex',
@@ -43,7 +43,7 @@ const FormActions = styled('div', {
 }));
 
 const DialogContent = styled(MuiDialogContent, {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
   cursor: 'default',
@@ -53,8 +53,8 @@ const DialogContent = styled(MuiDialogContent, {
   width: 450,
 });
 
-const EventDraggableDialogTitleTextField = styled(TextField, {
-  name: 'MuiEventDraggableDialog',
+const EventDialogTitleTextField = styled(TextField, {
+  name: 'MuiEventDialog',
   slot: 'TitleTextField',
 })(({ theme }) => ({
   flex: 1,
@@ -65,8 +65,8 @@ const EventDraggableDialogTitleTextField = styled(TextField, {
   },
 }));
 
-const EventDraggableDialogTabs = styled(Tabs, {
-  name: 'MuiEventDraggableDialog',
+const EventDialogTabs = styled(Tabs, {
+  name: 'MuiEventDialog',
   slot: 'Tabs',
 })(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -216,14 +216,14 @@ export function FormContent(props: FormContentProps) {
   return (
     <DialogContent className={classes.eventDialogContent}>
       <form onSubmit={handleSubmit}>
-        <EventDraggableDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+        <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
           <span
-            id="draggable-dialog-title"
+            id="event-dialog-title"
             style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
           >
             {occurrence.title}
           </span>
-          <EventDraggableDialogTitleTextField
+          <EventDialogTitleTextField
             name="title"
             defaultValue={occurrence.title}
             required
@@ -238,12 +238,12 @@ export function FormContent(props: FormContentProps) {
             fullWidth
             size="small"
           />
-        </EventDraggableDialogHeader>
+        </EventDialogHeader>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <EventDraggableDialogTabs value={tabValue} onChange={handleTabChange}>
+          <EventDialogTabs value={tabValue} onChange={handleTabChange}>
             <Tab label={translations.generalTabLabel} value="general" />
             <Tab label={translations.recurrenceTabLabel} value="recurrence" />
-          </EventDraggableDialogTabs>
+          </EventDialogTabs>
         </Box>
         <GeneralTab
           occurrence={occurrence}
