@@ -8,8 +8,8 @@ import { defaultVisibleDate } from '../datasets/personal-agenda';
 
 interface CustomEvent {
   id: string;
-  begins: string;
-  finishes: string;
+  start: string;
+  end: string;
   title: string;
   rrule: RecurringEventRecurrenceRule;
 }
@@ -17,15 +17,15 @@ interface CustomEvent {
 const initialEvents: CustomEvent[] = [
   {
     id: 'work-daily-standup',
-    begins: '2025-07-02T09:00:00',
-    finishes: '2025-07-02T09:30:00',
+    start: '2025-07-02T09:00:00',
+    end: '2025-07-02T09:30:00',
     title: 'Daily Standup',
     rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
   },
   {
     id: 'work-retro',
-    begins: '2025-07-02T16:00:00',
-    finishes: '2025-07-02T17:00:00',
+    start: '2025-07-02T16:00:00',
+    end: '2025-07-02T17:00:00',
     title: 'Team Retrospective',
     rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
   },
@@ -33,16 +33,16 @@ const initialEvents: CustomEvent[] = [
 
 const eventModelStructure: SchedulerEventModelStructure<CustomEvent> = {
   start: {
-    getter: (event) => event.begins,
+    getter: (event) => event.start,
     setter: (event, newValue) => {
-      event.begins = newValue;
+      event.start = newValue;
       return event;
     },
   },
   end: {
-    getter: (event) => event.finishes,
+    getter: (event) => event.end,
     setter: (event, newValue) => {
-      event.finishes = newValue;
+      event.end = newValue;
       return event;
     },
   },
