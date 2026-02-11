@@ -1,7 +1,4 @@
-import {
-  SchedulerEventCreationProperties,
-  SchedulerProcessedEvent,
-} from '../../../models';
+import { SchedulerEventCreationProperties, SchedulerProcessedEvent } from '../../../models';
 
 /**
  * Generates the property to pass to `store.updateEvents()` to create an event extracted from a potentially recurring event.
