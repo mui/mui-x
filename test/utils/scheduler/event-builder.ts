@@ -34,9 +34,9 @@ function toISOString(date: TemporalSupportedObject): string {
  * Minimal event builder for tests.
  *
  * Scope:
- * - Builds a valid SchedulerEvent.
- * - Uses the provided (or default) adapter for all date ops.
- * - Can optionally derive a SchedulerEventOccurrence via .buildOccurrence().
+ * - Builds a valid SchedulerEvent with string dates (instant or wall-time).
+ * - Uses the provided (or default) adapter for date computations.
+ * - Can optionally derive a SchedulerEventOccurrence via .toOccurrence().
  */
 export class EventBuilder {
   protected event: SchedulerEvent;
@@ -104,20 +104,8 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set exception dates for recurrence (instant-based, must end with Z). */
+  /** Set exception dates for recurrence. */
   exDates(dates?: string[]) {
-    dates?.forEach((date) => {
-      if (!date.endsWith('Z')) {
-        throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-      }
-    });
-
-    this.event.exDates = dates;
-    return this;
-  }
-
-  /** Set exception dates as raw strings (instant or wall-time). */
-  exDatesStrings(dates: string[]) {
     this.event.exDates = dates;
     return this;
   }
@@ -166,74 +154,27 @@ export class EventBuilder {
   // Time setters
   // ─────────────────────────────────────────────
 
-  /**
-   * Sets the start as a raw string (instant or wall-time).
-   * No conversion is performed — the string is stored as-is.
-   */
-  startAtString(start: string) {
+  /** Sets the start date/time as a string (instant or wall-time). */
+  startAt(start: string) {
     this.event.start = start;
     return this;
   }
 
-  /**
-   * Sets the end as a raw string (instant or wall-time).
-   * No conversion is performed — the string is stored as-is.
-   */
-  endAtString(end: string) {
+  /** Sets the end date/time as a string (instant or wall-time). */
+  endAt(end: string) {
     this.event.end = end;
-    return this;
-  }
-
-  /**
-   * Sets both start and end as raw strings (instant or wall-time).
-   * No conversion is performed — the strings are stored as-is.
-   */
-  spanStrings(start: string, end: string, opts?: { allDay?: boolean }) {
-    this.event.start = start;
-    this.event.end = end;
-    if (opts?.allDay !== undefined) {
-      this.event.allDay = opts.allDay;
-    }
-    return this;
-  }
-
-  /**
-   * Manually sets the start date/time using an ISO Z-string or date object.
-   * Date objects are converted to ISO Z-strings.
-   */
-  startAt(start: string | TemporalSupportedObject) {
-    if (typeof start === 'string' && !start.endsWith('Z')) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    this.event.start = typeof start === 'string' ? start : toISOString(start);
-    return this;
-  }
-
-  /**
-   * Manually sets the end date/time using an ISO Z-string or date object.
-   * Date objects are converted to ISO Z-strings.
-   */
-  endAt(end: string | TemporalSupportedObject) {
-    if (typeof end === 'string' && !end.endsWith('Z')) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    this.event.end = typeof end === 'string' ? end : toISOString(end);
     return this;
   }
 
   /**
    * Create a single-day timed event starting at `start` with the given duration (minutes).
+   * Computes the end from the start using the adapter.
    */
-  singleDay(start: string | TemporalSupportedObject, durationMinutes = 60) {
-    if (typeof start === 'string' && !start.endsWith('Z')) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    const startDate = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
+  singleDay(start: string, durationMinutes = 60) {
+    const dataTimezone = this.event.timezone ?? 'default';
+    const startDate = resolveEventDate(start, dataTimezone, this.adapter);
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
-    this.event.start = toISOString(startDate);
+    this.event.start = start;
     this.event.end = toISOString(endDate);
     return this;
   }
@@ -243,11 +184,8 @@ export class EventBuilder {
    * Sets `allDay=true`.
    */
   fullDay(date: string) {
-    if (typeof date === 'string' && !date.endsWith('Z')) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    const d = this.adapter.date(date, 'default');
+    const dataTimezone = this.event.timezone ?? 'default';
+    const d = resolveEventDate(date, dataTimezone, this.adapter);
     this.event.start = toISOString(this.adapter.startOfDay(d));
     this.event.end = toISOString(this.adapter.endOfDay(d));
     this.event.allDay = true;
@@ -255,23 +193,12 @@ export class EventBuilder {
   }
 
   /**
-   * Create an event spanning a start and end.
+   * Sets start and end as strings (instant or wall-time).
    * Optionally override `allDay`.
    */
-  span(
-    start: string | TemporalSupportedObject,
-    end: string | TemporalSupportedObject,
-    opts?: { allDay?: boolean },
-  ) {
-    if (
-      (typeof start === 'string' && !start.endsWith('Z')) ||
-      (typeof end === 'string' && !end.endsWith('Z'))
-    ) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    this.event.start = typeof start === 'string' ? start : toISOString(start);
-    this.event.end = typeof end === 'string' ? end : toISOString(end);
+  span(start: string, end: string, opts?: { allDay?: boolean }) {
+    this.event.start = start;
+    this.event.end = end;
     if (opts?.allDay !== undefined) {
       this.event.allDay = opts.allDay;
     }

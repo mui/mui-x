@@ -321,7 +321,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span(start, end)
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:30:00Z')
         .toOccurrence();
 
       const { user } = render(
@@ -364,7 +364,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span(start, end)
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:30:00Z')
         .allDay(true)
         .toOccurrence();
 
@@ -408,7 +408,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span(start, end)
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:30:00Z')
         .toOccurrence();
 
       const { user } = render(
@@ -461,7 +461,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('placeholder-id')
-        .span(start, end)
+        .span('2025-06-10T09:00:00Z', '2025-06-10T09:30:00Z')
         .title('')
         .description('')
         .toOccurrence();
@@ -525,7 +525,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('placeholder-id')
-        .span(start, end)
+        .span('2025-06-10T09:00:00Z', '2025-06-10T09:30:00Z')
         .title('')
         .toOccurrence();
 

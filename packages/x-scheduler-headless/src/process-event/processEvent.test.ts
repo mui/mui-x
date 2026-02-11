@@ -97,7 +97,7 @@ describe('processEvent', () => {
   describe('string date resolution', () => {
     it('should resolve Z-strings to the same timestamps as equivalent date objects', () => {
       const eventWithStrings = EventBuilder.new(adapter)
-        .spanStrings('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z')
+        .span('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z')
         .build();
 
       const eventWithDates = EventBuilder.new(adapter)
@@ -118,7 +118,7 @@ describe('processEvent', () => {
     it('should resolve wall-time strings in the event timezone', () => {
       // "2025-01-01T09:00:00" in America/New_York → 09:00 local → 14:00 UTC (EST = UTC-5)
       const event = EventBuilder.new(adapter)
-        .spanStrings('2025-01-01T09:00:00', '2025-01-01T10:00:00')
+        .span('2025-01-01T09:00:00', '2025-01-01T10:00:00')
         .withDataTimezone('America/New_York')
         .build();
 
@@ -132,12 +132,12 @@ describe('processEvent', () => {
 
     it('should produce different UTC instants for same wall-time string in different timezones', () => {
       const eventNY = EventBuilder.new(adapter)
-        .spanStrings('2025-01-01T09:00:00', '2025-01-01T10:00:00')
+        .span('2025-01-01T09:00:00', '2025-01-01T10:00:00')
         .withDataTimezone('America/New_York')
         .build();
 
       const eventTokyo = EventBuilder.new(adapter)
-        .spanStrings('2025-01-01T09:00:00', '2025-01-01T10:00:00')
+        .span('2025-01-01T09:00:00', '2025-01-01T10:00:00')
         .withDataTimezone('Asia/Tokyo')
         .build();
 
@@ -158,9 +158,9 @@ describe('processEvent', () => {
 
     it('should resolve wall-time exDates to date objects in dataTimezone', () => {
       const event = EventBuilder.new(adapter)
-        .spanStrings('2025-01-01T09:00:00', '2025-01-01T10:00:00')
+        .span('2025-01-01T09:00:00', '2025-01-01T10:00:00')
         .withDataTimezone('America/New_York')
-        .exDatesStrings(['2025-01-05T09:00:00'])
+        .exDates(['2025-01-05T09:00:00'])
         .recurrent('DAILY')
         .build();
 
@@ -178,12 +178,12 @@ describe('processEvent', () => {
       // Before DST (Jan 1): 09:00 NY = UTC-5 → 14:00 UTC
       // After DST (Mar 10): 09:00 NY = UTC-4 → 13:00 UTC
       const eventBefore = EventBuilder.new(adapter)
-        .spanStrings('2025-01-01T09:00:00', '2025-01-01T10:00:00')
+        .span('2025-01-01T09:00:00', '2025-01-01T10:00:00')
         .withDataTimezone('America/New_York')
         .build();
 
       const eventAfter = EventBuilder.new(adapter)
-        .spanStrings('2025-03-10T09:00:00', '2025-03-10T10:00:00')
+        .span('2025-03-10T09:00:00', '2025-03-10T10:00:00')
         .withDataTimezone('America/New_York')
         .build();
 
@@ -219,7 +219,7 @@ describe('processEvent', () => {
 
     it('should preserve original string values in modelInBuiltInFormat', () => {
       const event = EventBuilder.new(adapter)
-        .spanStrings('2025-01-01T09:00:00', '2025-01-01T10:00:00')
+        .span('2025-01-01T09:00:00', '2025-01-01T10:00:00')
         .withDataTimezone('America/New_York')
         .build();
 
