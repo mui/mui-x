@@ -220,7 +220,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.created).to.deep.equal([
         {
           ...defaultEvent.modelInBuiltInFormat,
-          ...changes,
+          title: 'Edited Event',
           start: changes.start!.toISOString(),
           end: changes.end!.toISOString(),
           id: `${defaultEvent.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
@@ -302,7 +302,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.created).to.deep.equal([
         {
           ...original.modelInBuiltInFormat,
-          ...changes,
+          title: 'Edited First',
           start: changes.start!.toISOString(),
           end: changes.end!.toISOString(),
           id: `${original.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
@@ -347,7 +347,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       // Original: daily from Jan 01
       const occurrenceStart = adapter.date('2025-01-04T09:00:00Z', 'default');
 
-      const changes: SchedulerEventUpdatedProperties & { rrule: undefined } = {
+      const changes = {
         id: defaultEvent.id,
         start: adapter.date('2025-01-04T12:00:00Z', 'default'),
         end: adapter.date('2025-01-04T13:00:00Z', 'default'),
