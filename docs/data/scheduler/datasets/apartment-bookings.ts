@@ -10,8 +10,8 @@ import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
 // Helper to create dates relative to the start
-const date = (dayOffset: number): Date => {
-  return addDays(defaultVisibleDate, dayOffset);
+const date = (dayOffset: number): string => {
+  return addDays(defaultVisibleDate, dayOffset).toISOString();
 };
 
 export const resources: SchedulerResource[] = [
