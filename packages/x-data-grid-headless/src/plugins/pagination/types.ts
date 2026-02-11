@@ -41,12 +41,6 @@ export interface PaginationOptions {
      * Estimated total row count when rowCount is unknown (-1).
      */
     estimatedRowCount?: number;
-
-    /**
-     * Callback fired when the paginated row IDs are recomputed.
-     * @param {GridRowId[]} paginatedRowIds The paginated row IDs.
-     */
-    onPaginatedRowsSet?: (paginatedRowIds: GridRowId[]) => void;
   };
 }
 
