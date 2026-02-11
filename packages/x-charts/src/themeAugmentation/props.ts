@@ -22,6 +22,9 @@ export interface ChartsComponentsPropsList {
 
   MuiChartsDataProvider: ChartsDataProviderProps;
 
+  /** @deprecated Use `MuiChartsDataProvider` instead. */
+  MuiChartDataProvider: ChartsDataProviderProps;
+
   // BarChart components
   MuiBarChart: BarChartProps;
   MuiBarLabel: BarLabelProps;

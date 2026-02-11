@@ -37,6 +37,10 @@ export interface ChartsComponents<Theme = unknown> {
   MuiChartsDataProvider?: {
     defaultProps?: ComponentsProps['MuiChartsDataProvider'];
   };
+  /** @deprecated Use `MuiChartsDataProvider` instead. */
+  MuiChartDataProvider?: {
+    defaultProps?: ComponentsProps['MuiChartDataProvider'];
+  };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
   };
