@@ -1,5 +1,5 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
-import { HighlightItemIdentifier, type ChartSeriesType } from '../../../../models/seriesType';
+import { type HighlightItemIdentifier, type ChartSeriesType } from '../../../../models/seriesType';
 import { type ChartPluginSignature } from '../../models';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
