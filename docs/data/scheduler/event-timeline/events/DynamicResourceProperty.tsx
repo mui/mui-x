@@ -10,7 +10,7 @@ import {
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { defaultVisibleDate } from '../../datasets/personal-agenda';
+import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 interface CustomEvent {
   id: string;

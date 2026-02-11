@@ -2,7 +2,7 @@ import * as React from 'react';
 import { addDays } from 'date-fns/addDays';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { defaultVisibleDate } from '../../datasets/personal-agenda';
+import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const initialEvents = [
   {

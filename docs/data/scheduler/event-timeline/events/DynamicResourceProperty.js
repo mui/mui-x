@@ -7,7 +7,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import capitalize from '@mui/utils/capitalize';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { defaultVisibleDate } from '../../datasets/personal-agenda';
+import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 const initialEvents = [
   // July 1, 2025 (defaultVisibleDate) - Tuesday schedule
