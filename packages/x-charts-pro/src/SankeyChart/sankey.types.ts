@@ -1,9 +1,13 @@
 'use client';
 
-import type { HighlightScope, SeriesId } from '@mui/x-charts/internals';
+import type { SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 import type { SankeyLink as D3SankeyLink, SankeyNode as D3SankeyNode } from './d3Sankey';
-import type { SankeyLinkHighlightScope, SankeyNodeHighlightScope } from './sankey.highlight.types';
+import type {
+  SankeyHighlightScope,
+  SankeyLinkHighlightScope,
+  SankeyNodeHighlightScope,
+} from './sankey.highlight.types';
 
 export type SankeyNodeId = string | number;
 
@@ -276,8 +280,10 @@ export interface DefaultizedSankeySeriesType extends DefaultizedProps<
   //   links: readonly SankeyLink[];
   // };
   data: SankeyLayout<false>;
-  // TODO: Implement, currently here so types don't break.
-  highlightScope?: HighlightScope;
+  /**
+   * Highlight scope for the series derived from nodeOptions and linksOptions
+   */
+  highlightScope: SankeyHighlightScope;
 }
 
 type SankeyNodeIdentifierBase = {

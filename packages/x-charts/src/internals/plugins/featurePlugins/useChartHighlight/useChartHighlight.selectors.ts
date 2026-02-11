@@ -1,14 +1,13 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import { type ChartSeriesType, type HighlightScope } from '../../../../models/seriesType/config';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type HighlightItemData, type UseChartHighlightSignature } from './useChartHighlight.types';
-import { type HighlightScope } from './highlightConfig.types';
 import { createIsHighlighted } from './createIsHighlighted';
 import { createIsFaded } from './createIsFaded';
 import {
-  getSeriesHighlightedItem,
-  getSeriesUnfadedItem,
+  getSeriesHighlightedDataIndex,
+  getSeriesUnfadedDataIndex,
   isSeriesFaded,
   isSeriesHighlighted,
 } from './highlightStates';
@@ -17,10 +16,10 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/u
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) => state.highlight;
 
-export const selectorChartsHighlightScopePerSeriesId = createSelector(
+export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
   selectorChartSeriesProcessed,
-  (processedSeries): Map<SeriesId, Partial<HighlightScope> | undefined> => {
-    const map = new Map<SeriesId, Partial<HighlightScope> | undefined>();
+  (processedSeries): Map<SeriesId, Partial<HighlightScope<any>> | undefined> => {
+    const map = new Map<SeriesId, Partial<HighlightScope<any>> | undefined>();
 
     Object.keys(processedSeries).forEach((seriesType) => {
       const seriesData = processedSeries[seriesType as ChartSeriesType];
@@ -99,13 +98,13 @@ export const selectorChartIsSeriesFaded = createSelector(
 export const selectorChartSeriesUnfadedItem = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  getSeriesUnfadedItem,
+  getSeriesUnfadedDataIndex,
 );
 
 export const selectorChartSeriesHighlightedItem = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  getSeriesHighlightedItem,
+  getSeriesHighlightedDataIndex,
 );
 
 export const selectorChartsIsFaded = createSelector(
