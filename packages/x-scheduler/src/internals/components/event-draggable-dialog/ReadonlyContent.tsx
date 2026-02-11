@@ -1,5 +1,6 @@
 import * as React from 'react';
 import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
+import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -19,14 +20,29 @@ import { useFormatTime } from '../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 import { useEventDialogClasses } from './EventDialogClassesContext';
 
+const ReadonlyContentDragContainer = styled('section', {
+  name: 'MuiEventDraggableDialog',
+  slot: 'ReadonlyContentDragContainer',
+})({
+  cursor: 'move',
+});
+
 const ReadonlyContentRoot = styled('div', {
   name: 'MuiEventDraggableDialog',
   slot: 'ReadonlyContent',
 })(({ theme }) => ({
-  padding: theme.spacing(3),
   display: 'flex',
+  padding: theme.spacing(0, 3),
   flexDirection: 'column',
   gap: theme.spacing(2),
+}));
+
+const RecurrenceLabelContainer = styled('div', {
+  name: 'MuiEventDraggableDialog',
+  slot: 'RecurrenceLabelContainer',
+})(({ theme }) => ({
+  display: 'flex',
+  gap: theme.spacing(1),
 }));
 
 const EventDraggableDialogActions = styled('div', {
@@ -35,7 +51,7 @@ const EventDraggableDialogActions = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
-  padding: theme.spacing(2),
+  padding: theme.spacing(3),
 }));
 
 const EventDraggableDialogDateTimeContainer = styled('div', {
@@ -47,15 +63,13 @@ const EventDraggableDialogDateTimeContainer = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const EventDraggableDialogTitle = styled('p', {
+const EventDraggableDialogTitle = styled(Typography, {
   name: 'MuiEventDraggableDialog',
   slot: 'Title',
-})(({ theme }) => ({
+})({
   margin: 0,
-  fontSize: theme.typography.body1.fontSize,
-  fontWeight: theme.typography.fontWeightMedium,
   color: 'var(--event-on-surface-subtle-primary)',
-}));
+});
 
 const EventDraggableDialogResourceContainer = styled('div', {
   name: 'MuiEventDraggableDialog',
@@ -72,22 +86,23 @@ const EventDraggableDialogResourceLegendContainer = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.5),
+  gap: theme.spacing(1),
 }));
 
 const ResourceLegendColorDot = styled('span', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceLegendColor',
 })<{ palette?: PaletteName }>(({ theme }) => ({
-  width: 8,
-  height: 8,
-  borderRadius: '50%',
+  width: 14,
+  height: 14,
+  margin: theme.spacing(0, 0.2),
+  borderRadius: 2,
   flexShrink: 0,
   backgroundColor: 'var(--event-main)',
   variants: getPaletteVariants(theme),
 }));
 
-const EventDraggableDialogResourceTitle = styled('p', {
+const EventDraggableDialogResourceTitle = styled(Typography, {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceTitle',
 })(({ theme }) => ({
@@ -138,12 +153,17 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
   );
 
   return (
-    <React.Fragment>
-      <EventDraggableDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
-        <EventDraggableDialogTitle id="draggable-dialog-title" className={classes.eventDialogTitle}>
+    <ReadonlyContentDragContainer ref={dragHandlerRef}>
+      <EventDraggableDialogHeader onClose={onClose}>
+        <EventDraggableDialogTitle
+          variant="h6"
+          id="draggable-dialog-title"
+          className={classes.eventDialogTitle}
+        >
           {occurrence.title}
         </EventDraggableDialogTitle>
-
+      </EventDraggableDialogHeader>
+      <ReadonlyContentRoot className={classes.eventDialogReadonlyContent}>
         <EventDraggableDialogResourceContainer className={classes.eventDialogResourceContainer}>
           <EventDraggableDialogResourceLegendContainer
             className={classes.eventDialogResourceLegendContainer}
@@ -164,8 +184,6 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             {resource?.title || translations.noResourceAriaLabel}
           </EventDraggableDialogResourceTitle>
         </EventDraggableDialogResourceContainer>
-      </EventDraggableDialogHeader>
-      <ReadonlyContentRoot className={classes.eventDialogReadonlyContent}>
         <EventDraggableDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
           <CalendarMonthRounded fontSize="small" />
           <Typography variant="body2" component="p" noWrap>
@@ -193,9 +211,12 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             )}
           </Typography>
         </EventDraggableDialogDateTimeContainer>
-        <Typography variant="body2" color="text.secondary">
-          {recurrenceLabel}
-        </Typography>
+        <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
+          <RepeatRoundedIcon fontSize="small" />
+          <Typography variant="body2" color="text.secondary" component="em">
+            {recurrenceLabel}
+          </Typography>
+        </RecurrenceLabelContainer>
         {hasProp(occurrence, 'description') && !!occurrence.description ? (
           <Typography variant="body2">{occurrence.description}</Typography>
         ) : null}
@@ -205,6 +226,6 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
           {translations.closeButtonLabel}
         </Button>
       </EventDraggableDialogActions>
-    </React.Fragment>
+    </ReadonlyContentDragContainer>
   );
 }

@@ -10,7 +10,7 @@ const EventDraggableDialogHeaderRoot = styled('header', {
   slot: 'Header',
 })(({ theme }) => ({
   display: 'flex',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   justifyContent: 'space-between',
   gap: theme.spacing(1.5),
   padding: theme.spacing(3),
