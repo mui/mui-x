@@ -37,13 +37,14 @@ export const initialEvents: SchedulerEvent[] = [
     timezone: 'Asia/Tokyo',
     resource: 'tokyo',
   },
-  // This event crosses the US DST spring-forward (March 9, 2025)
-  // The wall-time string ensures 09:00 local is preserved
+  // Same wall-time as ny-morning but BEFORE US DST spring-forward (March 9, 2025).
+  // NY is still EST (UTC-5) → 09:00 NY = 15:00 Paris,
+  // while ny-morning on March 10 is EDT (UTC-4) → 09:00 NY = 14:00 Paris.
   {
-    id: 'ny-post-dst',
-    title: 'NY Post-DST Standup',
-    start: '2025-03-10T09:00:00',
-    end: '2025-03-10T09:30:00',
+    id: 'ny-pre-dst',
+    title: 'NY Pre-DST Standup',
+    start: '2025-03-07T09:00:00',
+    end: '2025-03-07T09:30:00',
     timezone: 'America/New_York',
     resource: 'ny',
   },
