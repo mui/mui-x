@@ -147,16 +147,31 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
       setModel({ page: 0, pageSize });
     };
 
-    // TODO: remove once virutalization plugin is merged and processed rows are recalculated from there
-    // Track previous source row IDs for change detection
-    const prevSourceRowIdsRef = React.useRef<GridRowId[]>(getSourceRowIds());
+    // TODO: remove once virtualization plugin is merged and processed rows are recalculated from there
+    // Subscribe to store changes to detect when source rows change (e.g., after sorting)
     React.useEffect(() => {
-      const currentSourceRowIds = getSourceRowIds();
-      if (prevSourceRowIdsRef.current !== currentSourceRowIds) {
-        prevSourceRowIdsRef.current = currentSourceRowIds;
-        recomputePaginationFromSource(currentSourceRowIds, store.state.pagination.model);
-      }
-    });
+      let prevSourceRowIds: GridRowId[] = (() => {
+        const sortingState = (store.state as Record<string, any>).sorting as
+          | { sortedRowIds: GridRowId[] }
+          | undefined;
+        return sortingState?.sortedRowIds ?? store.state.rows.dataRowIds;
+      })();
+
+      const unsubscribe = store.subscribe(() => {
+        const sortingState = (store.state as Record<string, any>).sorting as
+          | { sortedRowIds: GridRowId[] }
+          | undefined;
+        const currentSourceRowIds: GridRowId[] =
+          sortingState?.sortedRowIds ?? store.state.rows.dataRowIds;
+
+        if (prevSourceRowIds !== currentSourceRowIds) {
+          prevSourceRowIds = currentSourceRowIds;
+          recomputePaginationFromSource(currentSourceRowIds, store.state.pagination.model);
+        }
+      });
+
+      return unsubscribe;
+    }, [store, recomputePaginationFromSource]);
 
     // Handle controlled pagination.model prop changes
     const prevModelRef = React.useRef<PaginationModel | undefined>(params.pagination?.model);
