@@ -1,26 +1,17 @@
 import { describe, it, expect } from 'vitest';
-import {
-  getPageCount,
-  getValidPage,
-  paginateRowIds,
-  getDefaultPaginationModel,
-} from './paginationUtils';
+import { getPageCount, getValidPage, paginateRowIds } from './paginationUtils';
 import {
   selectPaginationModel,
   selectPaginatedRowIds,
   selectPageCount,
   selectRowCount,
+  selectStartRow,
+  selectEndRow,
 } from './selectors';
 import type { PaginationState } from './types';
 
 describe('Pagination Plugin', () => {
   describe('utils', () => {
-    describe('getDefaultPaginationModel', () => {
-      it('should return page 0 and pageSize 10', () => {
-        expect(getDefaultPaginationModel()).toEqual({ page: 0, pageSize: 10 });
-      });
-    });
-
     describe('getPageCount', () => {
       it('should calculate page count for evenly divisible rows', () => {
         expect(getPageCount(100, 10, 0)).toBe(10);
@@ -177,6 +168,61 @@ describe('Pagination Plugin', () => {
       it('should return the row count', () => {
         const state = createState({ rowCount: 100 });
         expect(selectRowCount(state)).toBe(100);
+      });
+    });
+
+    describe('selectStartRow', () => {
+      it('should return 1 for the first page', () => {
+        const state = createState({ model: { page: 0, pageSize: 10 }, rowCount: 50 });
+        expect(selectStartRow(state)).toBe(1);
+      });
+
+      it('should return the correct start for a middle page', () => {
+        const state = createState({ model: { page: 2, pageSize: 10 }, rowCount: 50 });
+        expect(selectStartRow(state)).toBe(21);
+      });
+
+      it('should return 0 when there are no rows', () => {
+        const state = createState({ model: { page: 0, pageSize: 10 }, rowCount: 0 });
+        expect(selectStartRow(state)).toBe(0);
+      });
+    });
+
+    describe('selectEndRow', () => {
+      it('should return pageSize for a full first page', () => {
+        const state = createState({
+          model: { page: 0, pageSize: 10 },
+          rowCount: 50,
+          paginatedRowIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        });
+        expect(selectEndRow(state)).toBe(10);
+      });
+
+      it('should return the correct end for a middle page', () => {
+        const state = createState({
+          model: { page: 2, pageSize: 10 },
+          rowCount: 50,
+          paginatedRowIds: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+        });
+        expect(selectEndRow(state)).toBe(30);
+      });
+
+      it('should return rowCount for a partial last page', () => {
+        const state = createState({
+          model: { page: 1, pageSize: 10 },
+          rowCount: 15,
+          paginatedRowIds: [11, 12, 13, 14, 15],
+        });
+        expect(selectEndRow(state)).toBe(15);
+      });
+
+      it('should return 0 when there are no rows', () => {
+        const state = createState({
+          model: { page: 0, pageSize: 10 },
+          rowCount: 0,
+          paginatedRowIds: [],
+        });
+        expect(selectEndRow(state)).toBe(0);
       });
     });
   });

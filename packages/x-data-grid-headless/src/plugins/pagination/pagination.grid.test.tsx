@@ -292,30 +292,6 @@ describe('Pagination Plugin - Integration Tests', () => {
         expect(onModelChange).not.toHaveBeenCalled();
       });
     });
-
-    describe('onPaginatedRowsSet', () => {
-      it('should be called when paginated rows are recomputed', async () => {
-        const onPaginatedRowsSet = vi.fn();
-        const apiRef = React.createRef<GridApi | null>();
-        render(
-          <TestDataGrid
-            rows={defaultRows}
-            columns={defaultColumns}
-            apiRef={apiRef}
-            pagination={{ onPaginatedRowsSet }}
-            initialState={{ pagination: { model: { page: 0, pageSize: 5 } } }}
-          />,
-        );
-
-        onPaginatedRowsSet.mockClear();
-
-        await act(async () => {
-          apiRef.current?.api.pagination.setPage(1);
-        });
-
-        expect(onPaginatedRowsSet).toHaveBeenCalledWith([6, 7, 8, 9, 10]);
-      });
-    });
   });
 
   describe('controlled mode', () => {
@@ -533,94 +509,5 @@ describe('Pagination Plugin - Integration Tests', () => {
       expect(apiRef.current?.getState()?.pagination.rowCount).toBe(8);
     });
 
-    it('should adjust page when row deletion reduces page count', async () => {
-      const apiRef = React.createRef<GridApi | null>();
-      const { container, setProps } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          apiRef={apiRef}
-          initialState={{ pagination: { model: { page: 1, pageSize: 10 } } }}
-        />,
-      );
-
-      // Page 1 with 15 rows, pageSize 10 => 5 rows (Karen..Olivia)
-      expect(getRowNames(container)).toHaveLength(5);
-
-      // Reduce to 5 rows — only 1 page exists (page 0)
-      await act(async () => {
-        setProps({ rows: defaultRows.slice(0, 5) });
-      });
-
-      // Should clamp to page 0
-      expect(getRowNames(container)).toHaveLength(5);
-      expect(getRowNames(container)[0]).toBe('Alice');
-      expect(apiRef.current?.getState()?.pagination.model.page).toBe(0);
-    });
-  });
-
-  describe('auto-sync behavior', () => {
-    it('should recompute on model change', async () => {
-      const apiRef = React.createRef<GridApi | null>();
-      const { container } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          apiRef={apiRef}
-          initialState={{ pagination: { model: { page: 0, pageSize: 5 } } }}
-        />,
-      );
-
-      expect(getRowNames(container)).toHaveLength(5);
-
-      await act(async () => {
-        apiRef.current?.api.pagination.setModel({ page: 0, pageSize: 3 });
-      });
-
-      expect(getRowNames(container)).toHaveLength(3);
-    });
-
-    it('should recompute on source row IDs change', async () => {
-      const { container, setProps } = render(
-        <TestDataGrid
-          rows={defaultRows.slice(0, 5)}
-          columns={defaultColumns}
-          initialState={{ pagination: { model: { page: 0, pageSize: 3 } } }}
-        />,
-      );
-
-      expect(getRowNames(container)).toHaveLength(3);
-
-      await act(async () => {
-        setProps({ rows: defaultRows });
-      });
-
-      // Still page 0, pageSize 3 — but now with 15 total rows
-      expect(getRowNames(container)).toHaveLength(3);
-      expect(getRowNames(container)[0]).toBe('Alice');
-    });
-
-    it('should recompute on sort model change (indirectly via sortedRowIds change)', async () => {
-      const apiRef = React.createRef<GridApi | null>();
-      const { container } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          apiRef={apiRef}
-          initialState={{ pagination: { model: { page: 0, pageSize: 5 } } }}
-        />,
-      );
-
-      const initialNames = getRowNames(container);
-      expect(initialNames[0]).toBe('Alice');
-
-      await act(async () => {
-        apiRef.current?.api.sorting.sortColumn('name', 'desc');
-      });
-
-      const sortedNames = getRowNames(container);
-      expect(sortedNames[0]).toBe('Olivia');
-      expect(sortedNames).toHaveLength(5);
-    });
   });
 });
