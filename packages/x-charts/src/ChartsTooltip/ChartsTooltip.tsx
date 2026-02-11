@@ -13,11 +13,11 @@ export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> e
 > {
   /**
    * The order in which series items are displayed in the axis tooltip.
-   * Series items are sorted by their value.
+   * When set to `none`, series are ordered as they are provided in the series property. Otherwise they are ordered by their value.
    * Only applies when `trigger='axis'`.
    * @default 'none'
    */
-  order?: 'none' | 'asc' | 'desc';
+  order?: T extends 'axis' ? 'none' | 'asc' | 'desc' : never;
 }
 
 /**
@@ -29,7 +29,7 @@ export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> e
  *
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
-function ChartsTooltip(props: ChartsTooltipProps) {
+function ChartsTooltip<T extends TriggerOptions>(props: ChartsTooltipProps<T>) {
   const { classes: propClasses, trigger = 'axis', order, ...containerProps } = props;
 
   const classes = useUtilityClasses(propClasses);
@@ -166,7 +166,7 @@ ChartsTooltip.propTypes = {
   open: PropTypes.bool,
   /**
    * The order in which series items are displayed in the axis tooltip.
-   * Series items are sorted by their value.
+   * When set to `none`, series are ordered as they are provided in the series property. Otherwise they are ordered by their value.
    * Only applies when `trigger='axis'`.
    * @default 'none'
    */

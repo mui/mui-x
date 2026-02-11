@@ -24,7 +24,7 @@ export interface ChartsAxisTooltipContentProps {
   sx?: SxProps<Theme>;
   /**
    * The order in which series items are displayed in the tooltip.
-   * Series items are sorted by their value.
+   * When set to `none`, series are ordered as they are provided in the series property. Otherwise they are ordered by their value.
    * @default 'none'
    */
   order?: 'none' | 'asc' | 'desc';
@@ -114,7 +114,7 @@ ChartsAxisTooltipContent.propTypes = {
   ]),
   /**
    * The order in which series items are displayed in the tooltip.
-   * Series items are sorted by their value.
+   * When set to `none`, series are ordered as they are provided in the series property. Otherwise they are ordered by their value.
    * @default 'none'
    */
   order: PropTypes.oneOf(['none', 'asc', 'desc']),
