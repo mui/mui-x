@@ -569,64 +569,93 @@
 }
 
 /* ===========================================
-   Grid with Filters Layout
+   Grid Toolbar
    =========================================== */
 
-.grid-with-filters {
-  flex: 1 1 auto;
-  min-width: 0;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  overflow: hidden;
-}
-
-.grid-with-filters > .grid-wrapper {
-  min-height: 0;
-}
-
-/* ===========================================
-   Filter Panel
-   =========================================== */
-
-.filter-panel {
-  background-color: var(--color-background);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
-  flex-shrink: 0;
-}
-
-.filter-panel__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--gray-100);
-}
-
-.filter-panel__title {
+.grid-toolbar {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  flex-shrink: 0;
+}
+
+.grid-toolbar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 5px 10px;
+  font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-text-secondary);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  outline: none;
+}
+
+.grid-toolbar__btn:hover {
+  background-color: var(--gray-50);
+  border-color: var(--gray-300);
   color: var(--color-text);
 }
 
-.filter-panel__count {
+.grid-toolbar__btn:focus-visible {
+  outline: 2px solid var(--blue-800);
+  outline-offset: 1px;
+}
+
+.grid-toolbar__btn--active {
+  background-color: var(--gray-100);
+  border-color: var(--gray-300);
+  color: var(--color-text);
+}
+
+.grid-toolbar__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.grid-toolbar__badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
   border-radius: var(--radius-full);
-  background-color: var(--gray-100);
+  background-color: var(--gray-900);
+  color: white;
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-text-secondary);
+  line-height: 1;
+}
+
+/* ===========================================
+   Filter Panel (inside grid)
+   =========================================== */
+
+.grid-filter-panel-container {
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--gray-50);
+  flex-shrink: 0;
+}
+
+.filter-panel__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-panel__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--space-3) var(--space-2);
 }
 
 .filter-panel__empty {

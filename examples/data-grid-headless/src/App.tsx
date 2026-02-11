@@ -13,6 +13,7 @@ import { paginationPlugin } from '@mui/x-data-grid-headless/plugins/pagination';
 
 import { ConfigPanel, type PluginConfig } from './ConfigPanel';
 import { FilterPanel, type FilterColumnInfo } from './FilterPanel';
+import { FilterIcon } from './icons';
 
 interface RowData {
   id: number;
@@ -126,11 +127,15 @@ interface DataGridProps {
   config: PluginConfig;
   filterModel: FilterModel;
   onFilterModelChange: (model: FilterModel) => void;
+  filterColumns: FilterColumnInfo[];
   ref?: React.Ref<DataGridHandle>;
 }
 
 function DataGrid(props: DataGridProps) {
-  const { config, filterModel, onFilterModelChange, ref } = props;
+  const { config, filterModel, onFilterModelChange, filterColumns, ref } = props;
+  const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
+
+  const isFilteringEnabled = config.filtering?.enabled ?? true;
 
   const grid = useDataGrid<
     [typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin],
@@ -152,7 +157,7 @@ function DataGrid(props: DataGridProps) {
     },
     // Filtering options from config
     filtering: {
-      model: filterModel,
+      model: isFilteringEnabled ? filterModel : { logicOperator: 'and', conditions: [] },
       mode: config.filtering?.mode,
       disableEval: config.filtering?.disableEval,
       onModelChange: (model) => {
@@ -173,6 +178,8 @@ function DataGrid(props: DataGridProps) {
   const sortModel = grid.use(sortingPlugin.selectors.model);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
+
+  const activeFilterCount = filterModel.conditions.length;
 
   const handleColumnHeaderClick = (field: string, event: React.MouseEvent) => {
     if (!config.sorting?.enabled) {
@@ -200,8 +207,43 @@ function DataGrid(props: DataGridProps) {
     );
   };
 
+  const toolbarBtnClassName = [
+    'grid-toolbar__btn',
+    filterPanelOpen && 'grid-toolbar__btn--active',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <div className="grid-wrapper">
+      {/* Toolbar */}
+      <div className="grid-toolbar">
+        <button
+          type="button"
+          className={toolbarBtnClassName}
+          onClick={() => setFilterPanelOpen(!filterPanelOpen)}
+          disabled={!isFilteringEnabled}
+        >
+          <FilterIcon />
+          <span>Filters</span>
+          {isFilteringEnabled && activeFilterCount > 0 && (
+            <span className="grid-toolbar__badge">{activeFilterCount}</span>
+          )}
+        </button>
+      </div>
+
+      {/* Filter Panel (collapsible) */}
+      {filterPanelOpen && isFilteringEnabled && (
+        <div className="grid-filter-panel-container">
+          <FilterPanel
+            filterModel={filterModel}
+            onFilterModelChange={onFilterModelChange}
+            columns={filterColumns}
+          />
+        </div>
+      )}
+
+      {/* Table */}
       <div className="grid-scroll-container">
         <table className="grid-table">
           <thead className="grid-thead">
@@ -319,27 +361,17 @@ function App() {
     gridRef.current?.applyFiltering();
   };
 
-  const isFilteringEnabled = config.filtering?.enabled ?? true;
-
   return (
     <div className="test-grid-container">
-      <div className="grid-with-filters">
-        {isFilteringEnabled && (
-          <FilterPanel
-            filterModel={filterModel}
-            onFilterModelChange={setFilterModel}
-            columns={filterColumns}
-          />
-        )}
-        <DataGrid
-          ref={gridRef}
-          rows={rows}
-          columns={columns}
-          config={config}
-          filterModel={isFilteringEnabled ? filterModel : { logicOperator: 'and', conditions: [] }}
-          onFilterModelChange={setFilterModel}
-        />
-      </div>
+      <DataGrid
+        ref={gridRef}
+        rows={rows}
+        columns={columns}
+        config={config}
+        filterModel={filterModel}
+        onFilterModelChange={setFilterModel}
+        filterColumns={filterColumns}
+      />
       <ConfigPanel
         config={config}
         onConfigChange={setConfig}

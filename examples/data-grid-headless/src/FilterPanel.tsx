@@ -10,7 +10,7 @@ import {
   isFilterGroup,
   isFilterCondition,
 } from '@mui/x-data-grid-headless/plugins/filtering';
-import { FilterIcon, PlusIcon, TrashIcon, GroupIcon } from './icons';
+import { PlusIcon, TrashIcon, GroupIcon } from './icons';
 
 export interface FilterColumnInfo {
   id: string;
@@ -334,36 +334,26 @@ export function FilterPanel(props: FilterPanelProps) {
 
   return (
     <div className="filter-panel">
-      <div className="filter-panel__header">
-        <div className="filter-panel__title">
-          <FilterIcon />
-          <span>Filters</span>
-          {hasConditions && (
-            <span className="filter-panel__count">
-              {countConditions(filterModel)}
-            </span>
-          )}
-        </div>
-        {hasConditions && (
-          <button
-            type="button"
-            className="filter-btn filter-btn--clear"
-            onClick={handleClearAll}
-            disabled={disabled}
-          >
-            Clear all
-          </button>
-        )}
-      </div>
-
       {hasConditions ? (
-        <FilterGroupComponent
-          group={filterModel}
-          columns={columns}
-          onChange={onFilterModelChange}
-          disabled={disabled}
-          depth={0}
-        />
+        <div className="filter-panel__body">
+          <FilterGroupComponent
+            group={filterModel}
+            columns={columns}
+            onChange={onFilterModelChange}
+            disabled={disabled}
+            depth={0}
+          />
+          <div className="filter-panel__footer">
+            <button
+              type="button"
+              className="filter-btn filter-btn--clear"
+              onClick={handleClearAll}
+              disabled={disabled}
+            >
+              Clear all
+            </button>
+          </div>
+        </div>
       ) : (
         <div className="filter-panel__empty">
           <button
@@ -379,16 +369,4 @@ export function FilterPanel(props: FilterPanelProps) {
       )}
     </div>
   );
-}
-
-function countConditions(group: FilterGroup): number {
-  let count = 0;
-  for (const expr of group.conditions) {
-    if (isFilterCondition(expr)) {
-      count += 1;
-    } else if (isFilterGroup(expr)) {
-      count += countConditions(expr);
-    }
-  }
-  return count;
 }
