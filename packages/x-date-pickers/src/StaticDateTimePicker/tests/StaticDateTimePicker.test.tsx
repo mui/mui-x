@@ -100,5 +100,15 @@ describe('<StaticDateTimePicker />', () => {
     // arrow down to previous day
     await user.keyboard('{ArrowDown}');
     expect(document.activeElement).to.equal(dayInput);
+
+    // arrow right x2 to the hours spinbutton
+    await user.keyboard('{ArrowRight}{ArrowRight}');
+
+    const hoursInput = screen.getByRole('spinbutton', { name: 'Hours' });
+    expect(document.activeElement).to.equal(hoursInput);
+
+    // arrow up 1 hour
+    await user.keyboard('{ArrowUp}');
+    expect(document.activeElement).to.equal(hoursInput);
   });
 });
