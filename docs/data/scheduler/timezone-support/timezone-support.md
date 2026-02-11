@@ -21,8 +21,8 @@ TODO: Issue #20394 - Create documentation and demos
 
 The Scheduler accepts event dates (`start` and `end`) as **strings** and supports two semantics depending on the format:
 
-- **Instant strings** end with `"Z"` and represent a fixed moment in UTC (e.g. `"2024-01-10T13:00:00Z"`).
-- **Wall-time strings** have no `"Z"` suffix and represent a local date/time that is interpreted in the event's `timezone` (e.g. `"2024-01-10T09:00:00"`).
+- **Instant strings** end with `"Z"` and represent a fixed moment in UTC, for example `"2024-01-10T13:00:00Z"`.
+- **Wall-time strings** have no `"Z"` suffix and represent a local date/time that is interpreted in the event's `timezone`, for example `"2024-01-10T09:00:00"`.
 
 All events are rendered in the timezone defined by the `displayTimezone` prop.
 
