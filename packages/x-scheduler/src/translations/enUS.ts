@@ -49,7 +49,7 @@ export const enUS: SchedulerTranslations = {
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,
 
-  // EventDraggableDialog
+  // EventDialog
   colorPickerLabel: 'Event color',
   dateTimeSectionLabel: 'Date & time',
   resourceColorSectionLabel: 'Resource & color',

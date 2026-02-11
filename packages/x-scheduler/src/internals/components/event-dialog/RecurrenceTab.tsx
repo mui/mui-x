@@ -33,7 +33,7 @@ import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const RecurrenceTabContent = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'RecurrenceTabContent',
 })(({ theme }) => ({
   padding: theme.spacing(3),
