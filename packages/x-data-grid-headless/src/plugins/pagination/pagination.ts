@@ -147,6 +147,17 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
       setModel({ page: 0, pageSize });
     };
 
+    // TODO: remove once virutalization plugin is merged and processed rows are recalculated from there
+    // Track previous source row IDs for change detection
+    const prevSourceRowIdsRef = React.useRef<GridRowId[]>(getSourceRowIds());
+    React.useEffect(() => {
+      const currentSourceRowIds = getSourceRowIds();
+      if (prevSourceRowIdsRef.current !== currentSourceRowIds) {
+        prevSourceRowIdsRef.current = currentSourceRowIds;
+        recomputePaginationFromSource(currentSourceRowIds, store.state.pagination.model);
+      }
+    });
+
     // Handle controlled pagination.model prop changes
     const prevModelRef = React.useRef<PaginationModel | undefined>(params.pagination?.model);
 
