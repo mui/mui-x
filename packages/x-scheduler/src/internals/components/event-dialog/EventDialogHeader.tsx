@@ -5,8 +5,8 @@ import CloseRounded from '@mui/icons-material/CloseRounded';
 import { useEventDialogClasses } from './EventDialogClassesContext';
 import { useTranslations } from '../../utils/TranslationsContext';
 
-const EventDraggableDialogHeaderRoot = styled('header', {
-  name: 'MuiEventDraggableDialog',
+const EventDialogHeaderRoot = styled('header', {
+  name: 'MuiEventDialog',
   slot: 'Header',
 })(({ theme }) => ({
   display: 'flex',
@@ -17,19 +17,19 @@ const EventDraggableDialogHeaderRoot = styled('header', {
   cursor: 'move',
 }));
 
-interface EventDraggableDialogHeaderProps {
+interface EventDialogHeaderProps {
   onClose: () => void;
   dragHandlerRef?: React.RefObject<HTMLElement | null>;
   children?: React.ReactNode;
 }
 
-export default function EventDraggableDialogHeader(props: EventDraggableDialogHeaderProps) {
+export default function EventDialogHeader(props: EventDialogHeaderProps) {
   const { children, onClose, dragHandlerRef } = props;
   const classes = useEventDialogClasses();
   const translations = useTranslations();
 
   return (
-    <EventDraggableDialogHeaderRoot ref={dragHandlerRef} className={classes.eventDialogHeader}>
+    <EventDialogHeaderRoot ref={dragHandlerRef} className={classes.eventDialogHeader}>
       {children}
       <IconButton
         className={classes.eventDialogCloseButton}
@@ -38,6 +38,6 @@ export default function EventDraggableDialogHeader(props: EventDraggableDialogHe
       >
         <CloseRounded />
       </IconButton>
-    </EventDraggableDialogHeaderRoot>
+    </EventDialogHeaderRoot>
   );
 }

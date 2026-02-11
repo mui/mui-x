@@ -25,7 +25,7 @@ import { useEventDialogClasses } from './EventDialogClassesContext';
 const NO_RESOURCE_VALUE = '';
 
 const ResourceMenuColorDot = styled('span', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'ResourceMenuColorDot',
 })(({ theme }) => ({
   width: 14,
@@ -41,7 +41,7 @@ const ResourceMenuColorDot = styled('span', {
 }));
 
 const ColorSelectionContainer = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'ColorSelectionContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -51,7 +51,7 @@ const ColorSelectionContainer = styled('div', {
 }));
 
 const ResourceMenuColorRadioButton = styled('button', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'ResourceMenuColorRadioButton',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   width: 24,

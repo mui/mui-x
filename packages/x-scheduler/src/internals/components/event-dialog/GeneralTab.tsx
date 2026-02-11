@@ -26,7 +26,7 @@ import { useEventDialogClasses } from './EventDialogClassesContext';
 import ResourceAndColorSection from './ResourceAndColorSection';
 
 const GeneralTabContent = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'GeneralTabContent',
 })(({ theme }) => ({
   padding: theme.spacing(3),
@@ -39,7 +39,7 @@ const GeneralTabContent = styled('div', {
 }));
 
 const SectionHeaderTitle = styled(Typography, {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'SectionHeaderTitle',
 })(({ theme }) => ({
   textTransform: 'uppercase',
@@ -47,7 +47,7 @@ const SectionHeaderTitle = styled(Typography, {
 }));
 
 const DateTimeFieldsContainer = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'DateTimeFieldsContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -56,7 +56,7 @@ const DateTimeFieldsContainer = styled('div', {
 }));
 
 const DateTimeFieldsRow = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'DateTimeFieldsRow',
 })(({ theme }) => ({
   display: 'flex',
