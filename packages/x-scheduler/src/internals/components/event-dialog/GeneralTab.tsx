@@ -3,11 +3,16 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
+import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
+import Typography from '@mui/material/Typography';
+import {
+  SchedulerEventColor,
+  SchedulerResourceId,
+  SchedulerRenderableEventOccurrence,
+} from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
@@ -18,28 +23,40 @@ import {
 import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
 import { useEventDialogClasses } from './EventDialogClassesContext';
+import ResourceAndColorSection from './ResourceAndColorSection';
 
 const GeneralTabContent = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'GeneralTabContent',
 })(({ theme }) => ({
   padding: theme.spacing(3),
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2.5),
+  height: 450,
+  overflow: 'auto',
+  scrollbarWidth: 'thin',
+}));
+
+const SectionHeaderTitle = styled(Typography, {
+  name: 'MuiEventDialog',
+  slot: 'SectionHeaderTitle',
+})(({ theme }) => ({
+  textTransform: 'uppercase',
+  color: theme.palette.text.secondary,
 }));
 
 const DateTimeFieldsContainer = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'DateTimeFieldsContainer',
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(1),
+  gap: theme.spacing(3),
 }));
 
 const DateTimeFieldsRow = styled('div', {
-  name: 'MuiEventDraggableDialog',
+  name: 'MuiEventDialog',
   slot: 'DateTimeFieldsRow',
 })(({ theme }) => ({
   display: 'flex',
@@ -114,6 +131,22 @@ export function GeneralTab(props: GeneralTabProps) {
     setControlled(newState);
   };
 
+  const handleResourceChange = (newResource: SchedulerResourceId | null) => {
+    const newState = { ...controlled, resourceId: newResource };
+    pushPlaceholder(newState);
+    setControlled(newState);
+  };
+
+  const handleColorChange = (newColor: SchedulerEventColor) => {
+    if (!newColor) {
+      return;
+    }
+
+    const newState = { ...controlled, color: newColor === controlled.color ? null : newColor };
+    pushPlaceholder(newState);
+    setControlled(newState);
+  };
+
   return (
     <Box
       role="tabpanel"
@@ -122,6 +155,9 @@ export function GeneralTab(props: GeneralTabProps) {
       hidden={value !== 'general'}
     >
       <GeneralTabContent className={classes.eventDialogGeneralTabContent}>
+        <SectionHeaderTitle variant="subtitle2">
+          {translations.dateTimeSectionLabel}
+        </SectionHeaderTitle>
         <DateTimeFieldsContainer className={classes.eventDialogDateTimeFieldsContainer}>
           <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
             <TextField
@@ -187,16 +223,29 @@ export function GeneralTab(props: GeneralTabProps) {
           </DateTimeFieldsRow>
           <FormControlLabel
             control={
-              <Checkbox
-                id="enable-all-day-checkbox"
+              <Switch
+                id="enable-all-day-switch"
                 checked={controlled.allDay}
                 onChange={(event) => handleToggleAllDay(event.target.checked)}
                 disabled={isPropertyReadOnly('allDay')}
               />
             }
             label={translations.allDayLabel}
+            labelPlacement="start"
+            sx={{ width: '100%', justifyContent: 'space-between', ml: 0 }}
           />
         </DateTimeFieldsContainer>
+        <Divider />
+        <SectionHeaderTitle variant="subtitle2">
+          {translations.resourceColorSectionLabel}
+        </SectionHeaderTitle>
+        <ResourceAndColorSection
+          readOnly={isPropertyReadOnly('resource')}
+          resourceId={controlled.resourceId}
+          onResourceChange={handleResourceChange}
+          onColorChange={handleColorChange}
+          color={controlled.color}
+        />
         <Divider />
         <TextField
           name="description"
