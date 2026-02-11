@@ -119,4 +119,3 @@ to happen at 09:00 local time in Europe/Paris.
 
 The Scheduler uses the event's `timezone` to interpret and expand
 the recurrence pattern correctly across DST boundaries.
-
