@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { EventCalendarProvider as HeadlessEventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventCalendarClassesContext } from '../../event-calendar/EventCalendarClassesContext';
-import { EventDialogClassesContext } from './event-draggable-dialog/EventDialogClassesContext';
+import { EventDialogClassesContext } from './event-dialog/EventDialogClassesContext';
 import { schedulerTokens } from '../utils/tokens';
 
 /**
