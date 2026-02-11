@@ -5,9 +5,9 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Event Calendar - Localization
+# Scheduler - Localization
 
-<p class="description">The Event Calendar support translations between languages.</p>
+<p class="description">The Event Calendar and Event Timeline support translations between languages.</p>
 
 :::warning
 This package is not published yet.
@@ -25,10 +25,13 @@ The default locale of MUI X is English (United States). If you want to use othe
 import { frFR } from '@mui/x-scheduler/translations';
 
 <EventCalendar translations={frFR} />;
+<EventTimelinePremium translations={frFR} />;
 ```
 
-{{"demo": "Translations.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "TranslationsCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "TranslationsTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-TODO: Unify DX with the Data Grid and the Date and Time Pickers
+TODO: Unify DX with the Data Grid and the Date and Time Pickers.
+And decide if we split this page between the Event Calendar and the Event Timeline.
 :::

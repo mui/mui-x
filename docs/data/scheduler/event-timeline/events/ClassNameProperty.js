@@ -1,52 +1,65 @@
 import * as React from 'react';
-import { setHours } from 'date-fns/setHours';
-import { setMinutes } from 'date-fns/setMinutes';
 import { addDays } from 'date-fns/addDays';
 
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { defaultVisibleDate } from '../../datasets/personal-agenda';
 
 const initialEvents = [
   {
     id: 'event-1',
-    start: setMinutes(setHours(defaultVisibleDate, 9), 0),
-    end: setMinutes(setHours(defaultVisibleDate, 10), 0),
+    start: addDays(defaultVisibleDate, 1),
+    end: addDays(defaultVisibleDate, 1),
+    allDay: true,
     title: 'Regular Meeting',
+    resource: 'room-1',
   },
   {
     id: 'event-2',
-    start: setMinutes(setHours(defaultVisibleDate, 11), 0),
-    end: setMinutes(setHours(defaultVisibleDate, 12), 0),
+    start: addDays(defaultVisibleDate, 1),
+    end: addDays(defaultVisibleDate, 1),
+    allDay: true,
     title: 'Important Meeting',
     className: 'highlighted-event',
+    resource: 'room-2',
   },
   {
     id: 'event-3',
-    start: setMinutes(setHours(defaultVisibleDate, 14), 0),
-    end: setMinutes(setHours(defaultVisibleDate, 15), 30),
+    start: addDays(defaultVisibleDate, 2),
+    end: addDays(defaultVisibleDate, 2),
+    allDay: true,
     title: 'Project Review',
     className: 'striped-event',
+    resource: 'room-1',
   },
   {
     id: 'event-4',
-    start: setMinutes(setHours(addDays(defaultVisibleDate, 1), 10), 0),
-    end: setMinutes(setHours(addDays(defaultVisibleDate, 1), 11), 0),
+    start: addDays(defaultVisibleDate, 2),
+    end: addDays(defaultVisibleDate, 2),
+    allDay: true,
     title: 'Team Standup',
+    resource: 'room-2',
   },
   {
     id: 'event-5',
-    start: setMinutes(setHours(addDays(defaultVisibleDate, 1), 13), 0),
-    end: setMinutes(setHours(addDays(defaultVisibleDate, 1), 14), 0),
+    start: addDays(defaultVisibleDate, 3),
+    end: addDays(defaultVisibleDate, 3),
+    allDay: true,
     title: 'Urgent Task',
     className: 'highlighted-event',
+    resource: 'room-1',
   },
+];
+
+const resources = [
+  { id: 'room-1', title: 'Room 1' },
+  { id: 'room-2', title: 'Room 2' },
 ];
 
 export default function ClassNameProperty() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '600px', width: '100%' }}>
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
       <style>
         {`
           .highlighted-event {
@@ -64,11 +77,12 @@ export default function ClassNameProperty() {
           }
         `}
       </style>
-      <EventCalendar
+      <EventTimelinePremium
         events={events}
+        resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultPreferences={{ isSidePanelOpen: false }}
+        defaultView="days"
       />
     </div>
   );

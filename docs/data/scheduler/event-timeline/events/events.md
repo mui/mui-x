@@ -185,16 +185,6 @@ function Timeline() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### String dates
-
-A common use case is to convert your dates from a string to a valid date object:
-
-{{"demo": "StartEndProperties.js", "bg": "inline", "defaultCodeOpen": false}}
-
-:::warning
-TODO: Remove once start and end dates are always strings
-:::
-
 ## Event creation
 
 Use the `eventCreation` prop to customize how newly created events are defined:
@@ -204,7 +194,7 @@ Use the `eventCreation` prop to customize how newly created events are defined:
 Pass `eventCreation={false}` to disable the event creation:
 
 ```tsx
-<EventCreation eventCreation={false} />
+<EventTimelinePremium eventCreation={false} />
 ```
 
 ### Custom default duration
@@ -212,7 +202,7 @@ Pass `eventCreation={false}` to disable the event creation:
 Pass a custom value to `eventCreation.duration` to change the default duration of newly created event:
 
 ```tsx
-<EventCreation eventCreation={{ duration: 60 }} />
+<EventTimelinePremium eventCreation={{ duration: 60 }} />
 ```
 
 {{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -222,7 +212,7 @@ Pass a custom value to `eventCreation.duration` to change the default duration o
 Set `eventCreation.interaction` to `"click"` to open the creation form when clicking a cell instead of double-clicking:
 
 ```tsx
-<EventCreation eventCreation={{ interaction: 'click' }} />
+<EventTimelinePremium eventCreation={{ interaction: 'click' }} />
 ```
 
 {{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}

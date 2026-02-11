@@ -12,7 +12,7 @@ interface CustomResource {
   eventColor: SchedulerEventColor;
 }
 
-export const resources: CustomResource[] = [
+const resources: CustomResource[] = [
   { name: 'Work', id: 'work', eventColor: 'purple' },
   { name: 'Holidays', id: 'holidays', eventColor: 'red' },
   { name: 'Workout', id: 'workout', eventColor: 'teal' },

@@ -9,6 +9,7 @@ import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-pre
 import {
   EventDraggableDialogProvider,
   EventDraggableDialogTrigger,
+  useTranslations,
 } from '@mui/x-scheduler/internals';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
@@ -133,6 +134,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const classes = useEventTimelinePremiumClasses();
+  const translations = useTranslations();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -175,7 +177,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               <EventTimelinePremiumTitleSubGridHeaderCell
                 className={classes.titleSubGridHeaderCell}
               >
-                Resource title
+                {translations.timelineResourceTitleHeader}
               </EventTimelinePremiumTitleSubGridHeaderCell>
             </EventTimelinePremiumTitleSubGridHeaderRow>
             <EventTimelinePremiumTitleSubGrid className={classes.titleSubGrid}>

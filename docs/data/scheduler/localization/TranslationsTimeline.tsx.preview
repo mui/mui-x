@@ -3,6 +3,6 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
+  translations={frFR}
   defaultView="months"
-  eventCreation={{ interaction: 'click' }}
 />

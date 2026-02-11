@@ -23,7 +23,8 @@ This package is not published yet.
 ## Main features
 
 - [Recurring events](/x/react-scheduler/recurring-events/)
-- [Timezone support](/x/react-scheduler/timezone/)
+- [Timezones](/x/react-scheduler/timezone/)
+- [Localization](/x/react-scheduler/localization/)
 
 ## Event Calendar
 
@@ -39,14 +40,12 @@ This package is not published yet.
 - [Agenda View](/x/react-scheduler/event-calendar/agenda-view/)
 - [Lazy Loading](/x/react-scheduler/event-calendar/lazy-loading/)
 - [Preferences](/x/react-scheduler/event-calendar/preferences/)
-- [Localization](/x/react-scheduler/event-calendar/localization/)
 
 ## Event Timeline
 
 - [Main page](/x/react-scheduler/event-timeline-premium/) (TODO: Remove once all the content is in feature pages)
 - [Full screen demo](/x/react-scheduler/full-screen-event-timeline-premium/) (TODO: Remove once we have the overview page)
 - [Events](/x/react-scheduler/event-timeline/events/)
-- Resources (TODO)
-- Navigation (TODO)
+- [Resources](/x/react-scheduler/event-timeline/resources/)
+- [Navigation](/x/react-scheduler/event-timeline/navigation/)
 - [Drag interactions](/x/react-scheduler/event-timeline/drag-interactions/)
-- Localization (TODO)

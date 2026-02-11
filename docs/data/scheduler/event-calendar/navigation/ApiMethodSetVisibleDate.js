@@ -15,8 +15,9 @@ export default function ApiMethodSetVisibleDate() {
   const apiRef = useEventCalendarApiRef();
 
   return (
-    <Stack spacing={2} sx={{ width: '100%' }}>
+    <Stack spacing={2} sx={{ width: '100%', alignItems: 'flex-start' }}>
       <Button
+        variant="contained"
         onClick={(event) =>
           apiRef.current?.setVisibleDate({ visibleDate: new Date(), event })
         }

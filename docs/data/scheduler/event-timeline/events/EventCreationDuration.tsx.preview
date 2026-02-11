@@ -1,8 +1,8 @@
-<EventCalendar
+<EventTimelinePremium
   events={events}
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  defaultPreferences={{ isSidePanelOpen: false }}
-  eventCreation={{ duration: 60 }}
+  defaultView="months"
+  eventCreation={{ duration: 60 * 24 * 7 }} // 1 week in minutes
 />

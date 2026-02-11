@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { setHours } from 'date-fns/setHours';
-import { setMinutes } from 'date-fns/setMinutes';
 import { addDays } from 'date-fns/addDays';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -9,16 +7,16 @@ import { defaultVisibleDate } from '../../datasets/personal-agenda';
 const initialEvents: SchedulerEvent[] = [
   {
     id: 'event-1',
-    start: defaultVisibleDate,
-    end: defaultVisibleDate,
+    start: addDays(defaultVisibleDate, 1),
+    end: addDays(defaultVisibleDate, 1),
     allDay: true,
     title: 'Regular Meeting',
     resource: 'room-1',
   },
   {
     id: 'event-2',
-    start: defaultVisibleDate,
-    end: defaultVisibleDate,
+    start: addDays(defaultVisibleDate, 1),
+    end: addDays(defaultVisibleDate, 1),
     allDay: true,
     title: 'Important Meeting',
     className: 'highlighted-event',
@@ -43,8 +41,8 @@ const initialEvents: SchedulerEvent[] = [
   },
   {
     id: 'event-5',
-    start: addDays(defaultVisibleDate, 4),
-    end: addDays(defaultVisibleDate, 4),
+    start: addDays(defaultVisibleDate, 3),
+    end: addDays(defaultVisibleDate, 3),
     allDay: true,
     title: 'Urgent Task',
     className: 'highlighted-event',

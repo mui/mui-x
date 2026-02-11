@@ -1,7 +1,8 @@
-<EventCalendar
+<EventTimelinePremium
   events={events}
+  resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
   eventModelStructure={eventModelStructure}
-  defaultPreferences={{ isSidePanelOpen: false }}
+  defaultView="days"
 />

@@ -1,23 +1,23 @@
 import * as React from 'react';
 
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../../datasets/personal-agenda';
+} from '../../datasets/company-roadmap';
 
 export default function EventCreationInteraction() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '650px', width: '100%' }}>
-      <EventCalendar
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+      <EventTimelinePremium
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultPreferences={{ isSidePanelOpen: false }}
+        defaultView="months"
         eventCreation={{ interaction: 'click' }}
       />
     </div>

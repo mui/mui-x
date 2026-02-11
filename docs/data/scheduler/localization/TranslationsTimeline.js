@@ -1,23 +1,25 @@
 import * as React from 'react';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { frFR } from '@mui/x-scheduler/translations';
 import {
-  initialEventsWithoutResources,
+  initialEvents,
   defaultVisibleDate,
-  resourcesWithoutColors,
-} from '../../datasets/timeline-palette-demo';
+  resources,
+} from '../datasets/company-roadmap';
 
-export default function ColorPalettes() {
-  const [events, setEvents] = React.useState(initialEventsWithoutResources);
+export default function TranslationsTimeline() {
+  const [events, setEvents] = React.useState(initialEvents);
 
   return (
     <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
       <EventTimelinePremium
         events={events}
-        resources={resourcesWithoutColors}
+        resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="days"
+        translations={frFR}
+        defaultView="months"
       />
     </div>
   );

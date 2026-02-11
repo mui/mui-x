@@ -1,4 +1,4 @@
-// Fake data of an agenda with lots of different resources
+// One event per color with and without resource
 import { startOfWeek } from 'date-fns/startOfWeek';
 import { setDay } from 'date-fns/setDay';
 import { setHours } from 'date-fns/setHours';
