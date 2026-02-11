@@ -1,8 +1,6 @@
 import type { DefaultizedProps, MakeOptional } from '@mui/x-internals/types';
 import { type ChartSeriesType, type ChartsSeriesConfig } from './config';
 
-export type { ChartSeriesType, HighlightScope } from './config';
-
 // Series definition
 
 type AllSeriesType<T extends ChartSeriesType = ChartSeriesType> =
@@ -25,8 +23,7 @@ export type SeriesItemIdentifierWithData<T extends ChartSeriesType> = T extends 
 // If we get more different behaviors, we can move to a pattern similar to `SeriesItemIdentifierWithData` and `SeriesItemIdentifier`.
 
 /**
- * The identifier of an highlighted item.
- * Compared to `SeriesItemIdentifier`, the `dataIndex` is optional, allowing to highlight a series without specifying a given point.
+ * Identifies an highlighted item or series.
  */
 export type HighlightItemIdentifier<T extends ChartSeriesType> = T extends ChartSeriesType
   ? ChartsSeriesConfig[T]['itemIdentifier'] extends { dataIndex: number }

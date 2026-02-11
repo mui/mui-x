@@ -380,9 +380,9 @@ The `HighlightScope` is now a generic and require its argument the same way `Ser
 
 #### Replace `HighlightItemData` by `HighlightItemIdentifier<SeriesType>`
 
-The `HighlightItemData` type got replaced by `HighlightItemIdentifier<SeriesType>`.
+The `HighlightItemData` type was replaced by `HighlightItemIdentifier<SeriesType>`.
 
-The main difference with `SeriesItemIdentifier` is the `dataIndex`.
+The main difference from the `SeriesItemIdentifier` is the ability to identify a whole series.
 
-- `SeriesItemIdentifier<'bar'>` has `dataIndex` as required. It identifies an item of the series.
-- `HighlightItemIdentifier<'bar'>` has `dataIndex` as optional. In such case the identifier represent the entire series.
+For example, in a `SeriesItemIdentifier<'bar'>` the `dataIndex` is required since it identifies an item of the series. 
+A `HighlightItemIdentifier<'bar'>` can identify a data point, which requires a `dataIndex`, but also an entire series, in which case the `dataIndex` is optional. 
