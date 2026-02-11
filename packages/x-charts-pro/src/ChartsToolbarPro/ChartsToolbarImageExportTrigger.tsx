@@ -51,7 +51,7 @@ const ChartsToolbarImageExportTrigger = forwardRef<
     ref,
   });
 
-  return <React.Fragment>{element}</React.Fragment>;
+  return element;
 });
 
 ChartsToolbarImageExportTrigger.propTypes = {

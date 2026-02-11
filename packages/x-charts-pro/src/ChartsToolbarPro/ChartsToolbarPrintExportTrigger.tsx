@@ -56,7 +56,7 @@ const ChartsToolbarPrintExportTrigger = forwardRef<
     ref,
   });
 
-  return <React.Fragment>{element}</React.Fragment>;
+  return element;
 });
 
 ChartsToolbarPrintExportTrigger.propTypes = {

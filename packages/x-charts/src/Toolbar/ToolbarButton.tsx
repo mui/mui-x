@@ -31,7 +31,7 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
       ref: handleRef,
     });
 
-    return <React.Fragment>{element}</React.Fragment>;
+    return element;
   },
 );
 

@@ -42,7 +42,7 @@ const ChartsToolbarZoomOutTrigger = React.forwardRef<
     ref,
   });
 
-  return <React.Fragment>{element}</React.Fragment>;
+  return element;
 });
 
 ChartsToolbarZoomOutTrigger.propTypes = {
