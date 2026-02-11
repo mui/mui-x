@@ -1,14 +1,14 @@
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 
-describe('<ChartDataProvider />', () => {
+describe('<ChartsDataProvider />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<ChartDataProvider height={100} width={100} series={[]} />, () => ({
+  describeConformance(<ChartsDataProvider height={100} width={100} series={[]} />, () => ({
     classes: {} as any,
     inheritComponent: 'svg',
     render,
-    muiName: 'MuiChartDataProvider',
+    muiName: 'MuiChartsDataProvider',
     testComponentPropWith: 'div',
     refInstanceof: window.SVGSVGElement,
     skip: [

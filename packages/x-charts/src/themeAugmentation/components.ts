@@ -34,8 +34,8 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChartsSurface'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsSurface'];
   };
-  MuiChartDataProvider?: {
-    defaultProps?: ComponentsProps['MuiChartDataProvider'];
+  MuiChartsDataProvider?: {
+    defaultProps?: ComponentsProps['MuiChartsDataProvider'];
   };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];

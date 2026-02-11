@@ -123,13 +123,13 @@ export default function FeaturesHighlight() {
               <HighlightedCode
                 language="jsx"
                 copyButtonHidden
-                code={`<ChartDataProvider>
+                code={`<ChartsDataProvider>
   <CustomLegend />
   <ChartSurface>
     <BarPlot />
     <ChartsXAxis />
   </ChartSurface>
-</ChartDataProvider>`}
+</ChartsDataProvider>`}
               />
             </Stack>
             <Box flexBasis={{ xs: '50%', xl: '65%' }} p={2}>
