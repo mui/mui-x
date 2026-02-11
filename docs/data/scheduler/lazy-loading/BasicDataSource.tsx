@@ -106,32 +106,27 @@ function generateRandomEventsInRange(
 
     const id = `event-${eventStart.getTime()}-${i}`;
 
+    let eventStartStr = str(eventStart);
+    let eventEndStr = str(clampedEnd);
+
     if (allDay) {
       const allDayStart = new Date(eventStart);
       allDayStart.setHours(0, 0, 0, 0);
       const allDayEnd = new Date(allDayStart);
       allDayEnd.setHours(23, 59, 59, 999);
-
-      events.push({
-        id,
-        start: str(allDayStart),
-        end: str(allDayEnd),
-        title: randomChoice(TITLES),
-        resource: resource.id,
-        allDay,
-        readOnly,
-      });
-    } else {
-      events.push({
-        id,
-        start: str(eventStart),
-        end: str(clampedEnd),
-        title: randomChoice(TITLES),
-        resource: resource.id,
-        allDay,
-        readOnly,
-      });
+      eventStartStr = str(allDayStart);
+      eventEndStr = str(allDayEnd);
     }
+
+    events.push({
+      id,
+      start: eventStartStr,
+      end: eventEndStr,
+      title: randomChoice(TITLES),
+      resource: resource.id,
+      allDay,
+      readOnly,
+    });
   }
 
   return events;
