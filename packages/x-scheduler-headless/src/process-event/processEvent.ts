@@ -2,13 +2,21 @@ import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
 import { parseRRule, projectRRuleToTimezone } from '../internals/utils/recurring-events';
-import { TemporalTimezone } from '../base-ui-copy/types';
+import { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
 
 export function processEvent(
   model: SchedulerEvent,
   displayTimezone: TemporalTimezone,
   adapter: Adapter,
 ): SchedulerProcessedEvent {
+  const applyAllDay = (date: TemporalSupportedObject, side: 'start' | 'end') => {
+    if (model.allDay) {
+      return side === 'start' ? adapter.startOfDay(date) : adapter.endOfDay(date);
+    }
+
+    return date;
+  };
+
   const dataTimezone = model.timezone ?? 'default';
 
   // TODO: Support wall-time events by reinterpreting instants in `dataTimezone`.
@@ -32,15 +40,15 @@ export function processEvent(
     title: model.title,
     description: model.description,
     dataTimezone: {
-      start: processDate(startInstant, adapter),
-      end: processDate(endInstant, adapter),
+      start: processDate(applyAllDay(startInstant, 'start'), adapter),
+      end: processDate(applyAllDay(endInstant, 'end'), adapter),
       timezone: dataTimezone,
       rrule: parsedDataRRule,
       exDates: model.exDates,
     },
     displayTimezone: {
-      start: processDate(startInDisplayTz, adapter),
-      end: processDate(endInDisplayTz, adapter),
+      start: processDate(applyAllDay(startInDisplayTz, 'start'), adapter),
+      end: processDate(applyAllDay(endInDisplayTz, 'end'), adapter),
       timezone: displayTimezone,
       rrule: displayTimezoneRRule,
       exDates: exDatesInDisplayTz,
