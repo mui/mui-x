@@ -113,17 +113,10 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ): TEvent {
-  const { start, end, exDates, ...rest } = changes;
-  const stringified: Record<string, any> = { ...rest };
-  if (start != null) {
-    stringified.start = (start as Date).toISOString();
-  }
-  if (end != null) {
-    stringified.end = (end as Date).toISOString();
-  }
-  if (exDates != null) {
-    stringified.exDates = exDates.map((d) => (d as Date).toISOString());
-  }
+  const stringified: Record<string, any> = { ...changes };
+  if (changes.start != null) stringified.start = changes.start.toISOString();
+  if (changes.end != null) stringified.end = changes.end.toISOString();
+  if (changes.exDates != null) stringified.exDates = changes.exDates.map((d) => d.toISOString());
 
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
@@ -140,17 +133,12 @@ export function createEventModel<TEvent extends object>(
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ) {
   const id = crypto.randomUUID();
-  const { start, end, exDates, ...eventRest } = event;
   const builtInEvent: SchedulerEvent = {
-    ...eventRest,
+    ...event,
     id,
-    start: typeof start === 'string' ? start : (start as Date).toISOString(),
-    end: typeof end === 'string' ? end : (end as Date).toISOString(),
-    ...(exDates != null
-      ? {
-          exDates: exDates.map((d) => (typeof d === 'string' ? d : (d as Date).toISOString())),
-        }
-      : {}),
+    start: typeof event.start === 'string' ? event.start : event.start.toISOString(),
+    end: typeof event.end === 'string' ? event.end : event.end.toISOString(),
+    exDates: event.exDates?.map((d) => (typeof d === 'string' ? d : d.toISOString())),
   };
 
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(
