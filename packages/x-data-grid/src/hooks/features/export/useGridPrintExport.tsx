@@ -238,8 +238,7 @@ export const useGridPrintExport = (
 
       // Trigger print
       if (
-        process.env.NODE_ENV !== 'production' &&
-        !(globalThis as any).MUI_TEST_ENV &&
+        !(process.env.NODE_ENV !== 'production' && (globalThis as any).MUI_TEST_ENV) &&
         !DEBUG_MODE
       ) {
         // wait for remote stylesheets to load
