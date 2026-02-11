@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Timezone Support
+# Scheduler - Timezone
 
 <p class="description">Display events correctly across different timezones.</p>
 

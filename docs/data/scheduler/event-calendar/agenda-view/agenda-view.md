@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Agenda View
+# Event Calendar - Agenda View
 
 <p class="description">The Agenda View component lets users manage events in a list layout.</p>
 

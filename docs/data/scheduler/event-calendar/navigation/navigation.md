@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Event Calendar
+# Event Calendar - Navigation
 
 <p class="description">Navigate in time to find the events you are looking for.</p>
 

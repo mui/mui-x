@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Drag Interaction
+# Event Calendar - Drag Interaction
 
 <p class="description">Re-scheduler or resize your events using drag and drop.</p>
 

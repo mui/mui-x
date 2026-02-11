@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Event Calendar
+# Event Calendar - Views
 
 <p class="description">Choose which views are available in the Event Calendar.</p>
 

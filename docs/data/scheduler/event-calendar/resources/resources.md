@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Resource properties
+# Event Calendar - Resources
 
 <p class="description">Define the properties of your events.</p>
 

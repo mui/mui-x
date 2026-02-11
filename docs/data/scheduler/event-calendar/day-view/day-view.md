@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Day View
+# Event Calendar - Day View
 
 <p class="description">The Day View component lets users manage events for a single day.</p>
 

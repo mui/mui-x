@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Week View
+# Event Calendar - Week View
 
 <p class="description">The Week View component lets users manage events for an entire week.</p>
 

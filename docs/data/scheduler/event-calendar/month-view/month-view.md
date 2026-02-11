@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Month View
+# Event Calendar - Month View
 
 <p class="description">The Month View component lets users manage events for an entire month.</p>
 

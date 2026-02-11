@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Overview
+# Event Calendar - Preferences
 
 <p class="description">Let your user customize the component to their needs.</p>
 

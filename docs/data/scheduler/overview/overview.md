@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Overview
+# Event Calendar - Overview
 
 <p class="description">A collection of React UI components to schedule your events.</p>
 

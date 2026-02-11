@@ -1,13 +1,13 @@
 ---
 productId: x-scheduler
 title: React Scheduler component
-packageName: '@mui/x-scheduler'
+packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Event Calendar
+# Event Timeline - Events
 
-<p class="description">Define events for your Event Calendar.</p>
+<p class="description">Define events for your Event Timeline.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
@@ -95,19 +95,21 @@ The effective color resolves in the following order:
 1. The `color` property assigned to the event
 
 ```tsx
-<EventCalendar events={[{ id: '1', title: 'Event 1', color: 'pink' }]} />
+<EventTimelinePremium events={[{ id: '1', title: 'Event 1', color: 'pink' }]} />
 ```
 
 2. The `eventColor` property assigned to the event's resource
 
 ```tsx
-<EventCalendar resources={[{ id: '1', title: 'Resource 1', eventColor: 'pink' }]} />
+<EventTimelinePremium
+  resources={[{ id: '1', title: 'Resource 1', eventColor: 'pink' }]}
+/>
 ```
 
-3. The `eventColor` prop assigned to the Event Calendar
+3. The `eventColor` prop assigned to the Event Timeline
 
 ```tsx
-<EventCalendar eventColor="pink" />
+<EventTimelinePremium eventColor="pink" />
 ```
 
 4. The default color palette, `"teal"`
@@ -154,7 +156,7 @@ const event = {
 ```
 
 :::success
-Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-calendar/drag-interactions/).
+Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-timeline/drag-interactions/).
 :::
 
 ## Store data in custom properties
@@ -171,9 +173,9 @@ const eventModelStructure = {
   },
 };
 
-function Calendar() {
+function Timeline() {
   return (
-    <EventCalendar
+    <EventTimelinePremium
       events={[{ name: 'Event 1' /** ... */ }]}
       eventModelStructure={eventModelStructure}
     />
