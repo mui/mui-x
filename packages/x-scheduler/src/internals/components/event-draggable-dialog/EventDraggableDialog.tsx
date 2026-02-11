@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
+import { useThemeProps } from '@mui/material/styles';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
@@ -99,9 +100,11 @@ export const EventDraggableDialogContext = EventDraggableDialog.Context;
 export const useEventDraggableDialogContext = EventDraggableDialog.useContext;
 
 export const EventDraggableDialogContent = React.forwardRef(function EventDraggableDialogContent(
-  props: EventDraggableDialogProps,
+  inProps: EventDraggableDialogProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventDraggableDialog' });
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
