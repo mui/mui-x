@@ -152,15 +152,15 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       }
 
       if (!isAutoMode) {
-        const unregister = api.rows.registerProcessor(
+        const unregister = api.rows.rowIdsPipeline.register(
           'sorting',
           SORTING_PIPELINE_PRIORITY,
           sortingProcessor,
         );
-        api.rows.recompute();
+        api.rows.rowIdsPipeline.recompute();
         unregister();
       } else {
-        api.rows.recompute();
+        api.rows.rowIdsPipeline.recompute();
       }
     };
 
@@ -233,7 +233,11 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       if (!isAutoMode) {
         return undefined;
       }
-      return api.rows.registerProcessor('sorting', SORTING_PIPELINE_PRIORITY, sortingProcessor);
+      return api.rows.rowIdsPipeline.register(
+        'sorting',
+        SORTING_PIPELINE_PRIORITY,
+        sortingProcessor,
+      );
     }, [api, sortingProcessor, isAutoMode]);
 
     // Initialize to current row IDs since initial sorting is done in initialize

@@ -2,21 +2,15 @@
 import * as React from 'react';
 import { createSelector } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../../core/plugin';
+import { Pipeline } from '../../core/pipeline';
 import {
   type RowsState,
   type RowsApi,
   type RowsOptions,
-  type RowProcessor,
   createRowsState,
   createRowsApi,
   type GridRowId,
 } from './rowUtils';
-
-interface RegisteredProcessor {
-  name: string;
-  priority: number;
-  processor: RowProcessor;
-}
 
 export interface RowsPluginState {
   rows: RowsState;
@@ -88,50 +82,22 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       rowCount: params.rowCount,
     });
 
-    // Store registered processors in a ref (not in state, since they're functions)
-    const processorsRef = React.useRef<Map<string, RegisteredProcessor>>(new Map());
-
-    const runPipeline = React.useCallback((): GridRowId[] => {
-      const dataRowIds = store.state.rows.dataRowIds;
-
-      // Sort processors by priority
-      const sortedProcessors = Array.from(processorsRef.current.values()).sort(
-        (a, b) => a.priority - b.priority,
-      );
-
-      // Run pipeline: each processor receives output of the previous one
-      let currentIds = dataRowIds;
-      for (const { processor } of sortedProcessors) {
-        currentIds = processor(currentIds);
-      }
-
-      return currentIds;
-    }, [store]);
-
-    const recompute = React.useCallback(() => {
-      const processedRowIds = runPipeline();
-      store.setState({
-        ...store.state,
-        rows: {
-          ...store.state.rows,
-          processedRowIds,
-        },
-      });
-    }, [runPipeline, store]);
-
-    const registerProcessor = React.useCallback(
-      (name: string, priority: number, processor: RowProcessor) => {
-        processorsRef.current.set(name, { name, priority, processor });
-        return () => {
-          processorsRef.current.delete(name);
-        };
-      },
-      [],
+    const rowIdsPipeline = React.useMemo(
+      () =>
+        new Pipeline<GridRowId[]>({
+          getInitialValue: () => store.state.rows.dataRowIds,
+          onRecompute: (processedRowIds) => {
+            store.setState({
+              ...store.state,
+              rows: {
+                ...store.state.rows,
+                processedRowIds,
+              },
+            });
+          },
+        }),
+      [store],
     );
-
-    const getProcessedRowIds = React.useCallback(() => {
-      return store.state.rows.processedRowIds;
-    }, [store]);
 
     const prevDataRef = React.useRef(params.rows);
     const prevLoadingRef = React.useRef(params.loading);
@@ -141,8 +107,9 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       if (prevDataRef.current !== params.rows) {
         prevDataRef.current = params.rows;
         rowsApi.setRows(params.rows);
+        rowIdsPipeline.recompute();
       }
-    }, [params.rows, rowsApi]);
+    }, [params.rows, rowsApi, rowIdsPipeline]);
 
     React.useEffect(() => {
       if (prevLoadingRef.current !== params.loading) {
@@ -170,25 +137,10 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       }
     }, [params.rowCount, store]);
 
-    // Recompute when raw row IDs change
-    const recomputeRef = React.useRef(recompute);
-    recomputeRef.current = recompute;
-
-    const prevRowIdsRef = React.useRef<GridRowId[]>(store.state.rows.dataRowIds);
-    React.useEffect(() => {
-      const currentRowIds = store.state.rows.dataRowIds;
-      if (prevRowIdsRef.current !== currentRowIds) {
-        prevRowIdsRef.current = currentRowIds;
-        recomputeRef.current();
-      }
-    });
-
     return {
       rows: {
         ...rowsApi,
-        registerProcessor,
-        recompute,
-        getProcessedRowIds,
+        rowIdsPipeline,
       },
     };
   },
