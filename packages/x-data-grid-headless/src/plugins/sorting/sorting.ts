@@ -31,6 +31,7 @@ const DEFAULT_SORTING_ORDER: readonly GridSortDirection[] = ['asc', 'desc', null
 
 // TODO: Set priority on the whole plugin instead of the processor?
 const SORTING_PIPELINE_PRIORITY = 100;
+const SORTING_PIPELINE_PROCESSOR_NAME = 'sorting';
 
 const sortingPlugin = createPlugin<SortingPlugin>()({
   name: 'sorting',
@@ -153,14 +154,14 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
 
       if (!isAutoMode) {
         const unregister = api.rows.rowIdsPipeline.register(
-          'sorting',
+          SORTING_PIPELINE_PROCESSOR_NAME,
           SORTING_PIPELINE_PRIORITY,
           sortingProcessor,
         );
-        api.rows.rowIdsPipeline.recompute();
+        api.rows.rowIdsPipeline.recompute(SORTING_PIPELINE_PROCESSOR_NAME);
         unregister();
       } else {
-        api.rows.rowIdsPipeline.recompute();
+        api.rows.rowIdsPipeline.recompute(SORTING_PIPELINE_PROCESSOR_NAME);
       }
     };
 
@@ -234,7 +235,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         return undefined;
       }
       return api.rows.rowIdsPipeline.register(
-        'sorting',
+        SORTING_PIPELINE_PROCESSOR_NAME,
         SORTING_PIPELINE_PRIORITY,
         sortingProcessor,
       );
