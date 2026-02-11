@@ -1,24 +1,23 @@
 import * as React from 'react';
 
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { initialEvents, resources } from '../../datasets/personal-agenda';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { initialEvents, resources } from '../../datasets/company-roadmap';
 
 const defaultPreferences = {
   ampm: false,
-  showWeekends: false,
-  isSidePanelOpen: false,
 };
 
 export default function DefaultPreferences() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '600px', width: '100%' }}>
-      <EventCalendar
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+      <EventTimelinePremium
         events={events}
         resources={resources}
         defaultPreferences={defaultPreferences}
         onEventsChange={setEvents}
+        defaultView="months"
       />
     </div>
   );

@@ -52,24 +52,3 @@ return (
 ```
 
 :::
-
-## Preferences menu
-
-The preferences menu lets the users change their preferences to customize the component to their needs.
-
-You can customize which preferences are available in the preferences menu using the `preferencesMenuConfig` prop:
-
-Available properties:
-
-- `toggleAmpm`: Show/hide the menu item that toggles 12/24‑hour time format.
-
-```ts
-// hides the menu
-preferencesMenuConfig={false}
-
-// hides the menu item responsible for toggling the weekend visibility
-// the other preferences remain visible
-preferencesMenuConfig={{ toggleAmpm: false }}
-```
-
-{{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}
