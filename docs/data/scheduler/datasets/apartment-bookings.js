@@ -10,7 +10,7 @@ export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
 // Helper to create dates relative to the start
 const date = (dayOffset) => {
-  return addDays(defaultVisibleDate, dayOffset);
+  return addDays(defaultVisibleDate, dayOffset).toISOString();
 };
 
 export const resources = [
