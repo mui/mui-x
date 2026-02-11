@@ -142,8 +142,9 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
           params.rowCount,
         );
         store.setState({ ...store.state, rows: newRowsState });
+        rowIdsPipeline.recompute();
       },
-      [params.getRowId, params.rowCount, store],
+      [params.getRowId, params.rowCount, store, rowIdsPipeline],
     );
 
     const updateRows = React.useCallback(
@@ -209,8 +210,9 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
             totalTopLevelRowCount: totalRowCount,
           },
         });
+        rowIdsPipeline.recompute();
       },
-      [params.getRowId, params.rowCount, store],
+      [params.getRowId, params.rowCount, store, rowIdsPipeline],
     );
 
     const getRowNode = React.useCallback(
