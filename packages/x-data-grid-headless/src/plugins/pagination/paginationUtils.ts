@@ -1,3 +1,4 @@
+import { clamp } from '@mui/x-internals/math';
 import type { GridRowId } from '../internal/rows/rowUtils';
 import type { PaginationModel } from './types';
 
@@ -39,7 +40,7 @@ export function getValidPage(page: number, pageCount: number): number {
     return 0;
   }
 
-  return Math.max(0, Math.min(page, pageCount - 1));
+  return clamp(page, 0, pageCount - 1);
 }
 
 /**

@@ -79,9 +79,9 @@ describe('Pagination Plugin', () => {
         expect(getValidPage(-1, 5)).toBe(0);
       });
 
-      it('should return page as-is when pageCount is 0', () => {
+      it('should return 0 when pageCount is 0', () => {
         expect(getValidPage(0, 0)).toBe(0);
-        expect(getValidPage(3, 0)).toBe(3);
+        expect(getValidPage(3, 0)).toBe(0);
       });
 
       it('should return 0 for first page', () => {

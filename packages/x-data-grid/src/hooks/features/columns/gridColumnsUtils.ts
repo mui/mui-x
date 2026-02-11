@@ -1,4 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
+import { clamp } from '@mui/x-internals/math';
 import resolveProps from '@mui/utils/resolveProps';
 import type {
   GridColumnLookup,
@@ -17,7 +18,6 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
-import { clamp } from '../../../utils/utils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 import type { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
