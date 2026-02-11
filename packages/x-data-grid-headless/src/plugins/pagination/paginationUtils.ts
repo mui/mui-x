@@ -1,12 +1,7 @@
 import type { GridRowId } from '../internal/rows/rowUtils';
 import type { PaginationModel } from './types';
 
-/**
- * Returns the default pagination model.
- */
-export function getDefaultPaginationModel(): PaginationModel {
-  return { page: 0, pageSize: 10 };
-}
+export const DEFAULT_PAGINATION_MODEL: PaginationModel = { page: 0, pageSize: 10 };
 
 /**
  * Calculate the total number of pages.
@@ -16,22 +11,18 @@ export function getDefaultPaginationModel(): PaginationModel {
  * @returns {number} The total number of pages.
  */
 export function getPageCount(rowCount: number, pageSize: number, page: number): number {
-  if (pageSize <= 0) {
-    return 0;
-  }
-
-  if (rowCount === -1) {
-    // Unknown row count: assume at least one more page exists
-    return page + 2;
-  }
-
-  if (rowCount === 0) {
+  if (rowCount === 0 || pageSize <= 0) {
     return 0;
   }
 
   // Infinite pageSize means all rows fit on a single page
   if (!Number.isFinite(pageSize)) {
     return 1;
+  }
+
+  if (rowCount === -1) {
+    // Unknown row count: assume at least one more page exists
+    return page + 2;
   }
 
   return Math.ceil(rowCount / pageSize);
@@ -45,7 +36,7 @@ export function getPageCount(rowCount: number, pageSize: number, page: number): 
  */
 export function getValidPage(page: number, pageCount: number): number {
   if (pageCount === 0) {
-    return page;
+    return 0;
   }
 
   return Math.max(0, Math.min(page, pageCount - 1));
