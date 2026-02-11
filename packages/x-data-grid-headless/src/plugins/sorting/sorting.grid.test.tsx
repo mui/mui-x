@@ -4,6 +4,7 @@ import { createRenderer, act, screen } from '@mui/internal-test-utils';
 import { useDataGrid, type ColumnDef } from '../..';
 import rowsPlugin from '../internal/rows/rows';
 import { paginationPlugin } from '../pagination';
+import type { filteringPlugin } from '../filtering';
 import { sortingPlugin, type SortingColumnMeta, type GridSortDirection } from '.';
 import { TestDataGrid } from '../../test/TestDataGrid';
 
@@ -21,7 +22,7 @@ const defaultColumns: ColumnDef<TestRow>[] = [
 ];
 
 type GridApi = ReturnType<
-  typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TestRow>
+  typeof useDataGrid<[typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin], TestRow>
 >;
 
 describe('Sorting Plugin - Integration Tests', () => {

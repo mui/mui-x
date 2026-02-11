@@ -47,6 +47,9 @@ type PaginationPlugin = Plugin<
   PaginationOptions
 >;
 
+// TODO: Pagination should depend on filtering in the pipeline:
+// rawRows → sorting → sortedRowIds → filtering → filteredRowIds → pagination → paginatedRowIds
+// When pagination is fully implemented, it should use filteredRowIds as its input.
 const paginationPlugin = createPlugin<PaginationPlugin>()({
   name: 'pagination',
   selectors: paginationSelectors,

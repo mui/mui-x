@@ -4,11 +4,12 @@ import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import type { useDataGrid, ColumnDef } from '../../..';
 import type { sortingPlugin } from '../../sorting';
+import type { filteringPlugin } from '../../filtering';
 import type { paginationPlugin } from '../../pagination';
 import { TestDataGrid } from '../../../test/TestDataGrid';
 
 type GridApi<TRow extends object> = ReturnType<
-  typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>
+  typeof useDataGrid<[typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin], TRow>
 >;
 
 describe('<DataGrid /> - Rows', () => {
