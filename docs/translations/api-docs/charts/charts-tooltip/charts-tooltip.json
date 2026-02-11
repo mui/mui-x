@@ -28,6 +28,9 @@
       "description": "Popper.js is based on a &quot;plugin-like&quot; architecture, most of its features are fully encapsulated &quot;modifiers&quot;.<br>A modifier is a function that is called each time Popper.js needs to compute the position of the popper. For this reason, modifiers should be very performant to avoid bottlenecks. To learn how to create a modifier, <a href=\"https://popper.js.org/docs/v2/modifiers/\">read the modifiers documentation</a>."
     },
     "open": { "description": "If <code>true</code>, the component is shown." },
+    "order": {
+      "description": "The order in which series items are displayed in the axis tooltip. Series items are sorted by their value. Only applies when <code>trigger=&#39;axis&#39;</code>."
+    },
     "placement": { "description": "Popper placement." },
     "popperOptions": {
       "description": "Options provided to the <a href=\"https://popper.js.org/docs/v2/constructors/#options\"><code>Popper.js</code></a> instance."

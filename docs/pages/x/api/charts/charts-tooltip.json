@@ -39,6 +39,13 @@
       }
     },
     "open": { "type": { "name": "bool" } },
+    "order": {
+      "type": {
+        "name": "enum",
+        "description": "'none'<br>&#124;&nbsp;'asc'<br>&#124;&nbsp;'desc'"
+      },
+      "default": "'none'"
+    },
     "placement": {
       "type": {
         "name": "enum",
