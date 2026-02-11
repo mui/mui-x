@@ -1,10 +1,18 @@
 import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '@mui/x-data-grid-headless';
 import { rowsPlugin, columnsPlugin } from '@mui/x-data-grid-headless';
-import { sortingPlugin } from '@mui/x-data-grid-headless/plugins/sorting';
+import { sortingPlugin, type SortingColumnMeta } from '@mui/x-data-grid-headless/plugins/sorting';
+import {
+  filteringPlugin,
+  type FilteringColumnMeta,
+  type FilterModel,
+  getStringFilterOperators,
+  getNumericFilterOperators,
+} from '@mui/x-data-grid-headless/plugins/filtering';
 import { paginationPlugin } from '@mui/x-data-grid-headless/plugins/pagination';
 
 import { ConfigPanel, type PluginConfig } from './ConfigPanel';
+import { FilterPanel, type FilterColumnInfo } from './FilterPanel';
 
 interface RowData {
   id: number;
@@ -13,6 +21,8 @@ interface RowData {
   age: number;
   department: string;
 }
+
+type ColumnMeta = SortingColumnMeta & FilteringColumnMeta;
 
 // Utility function to shuffle an array randomly
 function shuffleArray<T>(array: T[]): T[] {
@@ -82,14 +92,23 @@ function generateSampleData(count: number): RowData[] {
   return shuffleArray(allCombinations);
 }
 
-// Generate sample columns with random order
+const stringOperators = getStringFilterOperators();
+const numericOperators = getNumericFilterOperators();
+
+// Generate sample columns with filter operators
 function generateColumns() {
-  const allColumns: ColumnDef<RowData>[] = [
-    { id: 'id', field: 'id' as keyof RowData, header: 'ID', size: 80 },
-    { id: 'name', field: 'name' as keyof RowData, header: 'Name', size: 200 },
-    { id: 'email', field: 'email' as keyof RowData, header: 'Email', size: 250 },
-    { id: 'age', field: 'age' as keyof RowData, header: 'Age', size: 100 },
-    { id: 'department', field: 'department' as keyof RowData, header: 'Department', size: 150 },
+  const allColumns: ColumnDef<RowData, ColumnMeta>[] = [
+    { id: 'id', field: 'id', header: 'ID', size: 80, filterOperators: numericOperators },
+    { id: 'name', field: 'name', header: 'Name', size: 200, filterOperators: stringOperators },
+    { id: 'email', field: 'email', header: 'Email', size: 250, filterOperators: stringOperators },
+    { id: 'age', field: 'age', header: 'Age', size: 100, filterOperators: numericOperators },
+    {
+      id: 'department',
+      field: 'department',
+      header: 'Department',
+      size: 150,
+      filterOperators: stringOperators,
+    },
   ];
 
   // Shuffle columns to randomize order
@@ -98,22 +117,28 @@ function generateColumns() {
 
 interface DataGridHandle {
   applySorting: () => void;
+  applyFiltering: () => void;
 }
 
 interface DataGridProps {
   rows: RowData[];
-  columns: ColumnDef<RowData>[];
+  columns: ColumnDef<RowData, ColumnMeta>[];
   config: PluginConfig;
+  filterModel: FilterModel;
+  onFilterModelChange: (model: FilterModel) => void;
   ref?: React.Ref<DataGridHandle>;
 }
 
 function DataGrid(props: DataGridProps) {
-  const { config, ref } = props;
+  const { config, filterModel, onFilterModelChange, ref } = props;
 
-  const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], RowData>({
+  const grid = useDataGrid<
+    [typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin],
+    RowData
+  >({
     rows: props.rows,
     columns: props.columns,
-    plugins: [sortingPlugin, paginationPlugin],
+    plugins: [sortingPlugin, filteringPlugin, paginationPlugin],
     // Sorting options from config
     sorting: {
       multiSort: config.sorting?.multiSort,
@@ -125,14 +150,26 @@ function DataGrid(props: DataGridProps) {
         console.log('Sort model changed:', model);
       },
     },
+    // Filtering options from config
+    filtering: {
+      model: filterModel,
+      mode: config.filtering?.mode,
+      disableEval: config.filtering?.disableEval,
+      onModelChange: (model) => {
+        onFilterModelChange(model);
+        // eslint-disable-next-line no-console
+        console.log('Filter model changed:', model);
+      },
+    },
   });
 
   React.useImperativeHandle(ref, () => ({
     applySorting: () => grid.api.sorting.apply(),
+    applyFiltering: () => grid.api.filtering.apply(),
   }));
 
-  // Use sorted row IDs from sorting plugin
-  const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+  // Use filtered row IDs (filtering sits after sorting in the pipeline)
+  const filteredRowIds = grid.use(filteringPlugin.selectors.filteredRowIds);
   const sortModel = grid.use(sortingPlugin.selectors.model);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
@@ -193,7 +230,7 @@ function DataGrid(props: DataGridProps) {
             </tr>
           </thead>
           <tbody>
-            {sortedRowIds.map((rowId: (typeof sortedRowIds)[0]) => {
+            {filteredRowIds.map((rowId: (typeof filteredRowIds)[0]) => {
               const row = rowsData[rowId] as RowData | undefined;
               if (!row) {
                 return null;
@@ -220,6 +257,17 @@ function DataGrid(props: DataGridProps) {
                 </tr>
               );
             })}
+            {filteredRowIds.length === 0 && (
+              <tr>
+                <td
+                  colSpan={visibleColumns.length}
+                  className="grid-td"
+                  style={{ textAlign: 'center', padding: '24px', color: 'var(--color-text-muted)' }}
+                >
+                  No rows match the current filters
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -227,9 +275,23 @@ function DataGrid(props: DataGridProps) {
   );
 }
 
+// Build filter column info from ColumnDef for the FilterPanel
+function buildFilterColumns(columns: ColumnDef<RowData, ColumnMeta>[]): FilterColumnInfo[] {
+  return columns.map((col) => ({
+    id: col.id,
+    field: col.field as string,
+    header: col.header,
+    filterOperators: col.filterOperators,
+  }));
+}
+
 function App() {
   const [rows] = React.useState<RowData[]>(() => generateSampleData(30));
   const [columns] = React.useState(() => generateColumns());
+  const [filterModel, setFilterModel] = React.useState<FilterModel>({
+    logicOperator: 'and',
+    conditions: [],
+  });
   const [config, setConfig] = React.useState<PluginConfig>({
     sorting: {
       enabled: true,
@@ -239,18 +301,51 @@ function App() {
       stableSort: false,
       order: ['asc', 'desc', null],
     },
+    filtering: {
+      enabled: true,
+      mode: 'auto',
+      disableEval: false,
+    },
   });
 
   const gridRef = React.useRef<DataGridHandle>(null);
+  const filterColumns = React.useMemo(() => buildFilterColumns(columns), [columns]);
 
   const handleApplySorting = () => {
     gridRef.current?.applySorting();
   };
 
+  const handleApplyFiltering = () => {
+    gridRef.current?.applyFiltering();
+  };
+
+  const isFilteringEnabled = config.filtering?.enabled ?? true;
+
   return (
     <div className="test-grid-container">
-      <DataGrid ref={gridRef} rows={rows} columns={columns} config={config} />
-      <ConfigPanel config={config} onConfigChange={setConfig} onApplySorting={handleApplySorting} />
+      <div className="grid-with-filters">
+        {isFilteringEnabled && (
+          <FilterPanel
+            filterModel={filterModel}
+            onFilterModelChange={setFilterModel}
+            columns={filterColumns}
+          />
+        )}
+        <DataGrid
+          ref={gridRef}
+          rows={rows}
+          columns={columns}
+          config={config}
+          filterModel={isFilteringEnabled ? filterModel : { logicOperator: 'and', conditions: [] }}
+          onFilterModelChange={setFilterModel}
+        />
+      </div>
+      <ConfigPanel
+        config={config}
+        onConfigChange={setConfig}
+        onApplySorting={handleApplySorting}
+        onApplyFiltering={handleApplyFiltering}
+      />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import type { SortingOptions, GridSortDirection } from '@mui/x-data-grid-headless/plugins/sorting';
-import { SettingsIcon, SortIcon, ChevronIcon, CollapseIcon, ArrowIcon } from './icons';
+import type { FilteringOptions } from '@mui/x-data-grid-headless/plugins/filtering';
+import { SettingsIcon, SortIcon, ChevronIcon, CollapseIcon, ArrowIcon, FilterIcon } from './icons';
 
 export interface PluginConfig {
   sorting?: NonNullable<SortingOptions['sorting']> & {
@@ -9,16 +10,21 @@ export interface PluginConfig {
     /** If true, shift key is required for multi-sort. @default true */
     multiSortWithShiftKey?: boolean;
   };
+  filtering?: NonNullable<FilteringOptions['filtering']> & {
+    enabled?: boolean;
+  };
 }
 
 interface SectionState {
   sorting: boolean;
+  filtering: boolean;
 }
 
 interface ConfigPanelProps {
   config: PluginConfig;
   onConfigChange: (config: PluginConfig) => void;
   onApplySorting?: () => void;
+  onApplyFiltering?: () => void;
   defaultWidth?: number;
   minWidth?: number;
   maxWidth?: number;
@@ -100,6 +106,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
     config,
     onConfigChange,
     onApplySorting,
+    onApplyFiltering,
     defaultWidth = 320,
     minWidth = 240,
     maxWidth = 500,
@@ -110,6 +117,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [sections, setSections] = React.useState<SectionState>({
     sorting: true,
+    filtering: true,
   });
 
   const toggleSection = (section: keyof SectionState) => {
@@ -121,6 +129,16 @@ export function ConfigPanel(props: ConfigPanelProps) {
       ...config,
       sorting: {
         ...config.sorting,
+        ...updates,
+      },
+    });
+  };
+
+  const updateFilteringConfig = (updates: Partial<PluginConfig['filtering']>) => {
+    onConfigChange({
+      ...config,
+      filtering: {
+        ...config.filtering,
         ...updates,
       },
     });
@@ -180,6 +198,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const isManualMode = config.sorting?.mode === 'manual';
   const isSortingEnabled = config.sorting?.enabled ?? true;
   const isMultiSortEnabled = config.sorting?.multiSort ?? true;
+
+  const isFilteringEnabled = config.filtering?.enabled ?? true;
+  const isFilterManualMode = config.filtering?.mode === 'manual';
 
   const resizeHandleClassName = [
     'config-panel__resize-handle',
@@ -341,6 +362,78 @@ export function ConfigPanel(props: ConfigPanelProps) {
                       }}
                       options={sortingOrderOptions}
                       disabled={!isSortingEnabled}
+                    />
+                  </OptionRow>
+                </div>
+              )}
+            </div>
+
+            {/* Filtering Section */}
+            <div className="config-section" style={{ marginTop: 'var(--space-3)' }}>
+              {/* Section Header */}
+              <button
+                type="button"
+                onClick={() => toggleSection('filtering')}
+                className={`config-section__header ${sections.filtering ? 'config-section__header--expanded' : ''}`}
+              >
+                <div className="config-section__header-title">
+                  <span className="config-section__header-icon">
+                    <FilterIcon />
+                  </span>
+                  <span className="config-section__header-text">Filtering</span>
+                </div>
+                <ChevronIcon expanded={sections.filtering} className="config-section__chevron" />
+              </button>
+
+              {/* Section Content */}
+              {sections.filtering && (
+                <div className="config-section__content">
+                  <OptionRow label="Enable Filtering" description="Filter rows by column values">
+                    <Toggle
+                      checked={isFilteringEnabled}
+                      onChange={(checked) => updateFilteringConfig({ enabled: checked })}
+                    />
+                  </OptionRow>
+
+                  <OptionRow
+                    label="Mode"
+                    description="Auto applies immediately, manual requires explicit apply"
+                    disabled={!isFilteringEnabled}
+                  >
+                    <Select
+                      value={config.filtering?.mode ?? 'auto'}
+                      onChange={(val) =>
+                        updateFilteringConfig({ mode: val as 'auto' | 'manual' })
+                      }
+                      options={[
+                        { value: 'auto', label: 'Auto' },
+                        { value: 'manual', label: 'Manual' },
+                      ]}
+                      disabled={!isFilteringEnabled}
+                    />
+                    {isFilterManualMode && isFilteringEnabled && (
+                      <div className="divider">
+                        <button
+                          type="button"
+                          onClick={onApplyFiltering}
+                          className="btn btn--primary btn--block"
+                        >
+                          <ArrowIcon />
+                          Apply Filtering
+                        </button>
+                      </div>
+                    )}
+                  </OptionRow>
+
+                  <OptionRow
+                    label="Disable Eval"
+                    description="Use loop-based filtering instead of eval optimization"
+                    disabled={!isFilteringEnabled}
+                  >
+                    <Toggle
+                      checked={config.filtering?.disableEval ?? false}
+                      onChange={(checked) => updateFilteringConfig({ disableEval: checked })}
+                      disabled={!isFilteringEnabled}
                     />
                   </OptionRow>
                 </div>

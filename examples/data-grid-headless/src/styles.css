@@ -567,3 +567,314 @@
   border-top: 1px solid var(--gray-100);
   margin-top: var(--space-1);
 }
+
+/* ===========================================
+   Grid with Filters Layout
+   =========================================== */
+
+.grid-with-filters {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow: hidden;
+}
+
+.grid-with-filters > .grid-wrapper {
+  min-height: 0;
+}
+
+/* ===========================================
+   Filter Panel
+   =========================================== */
+
+.filter-panel {
+  background-color: var(--color-background);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.filter-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.filter-panel__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.filter-panel__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  background-color: var(--gray-100);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.filter-panel__empty {
+  padding: var(--space-3);
+  display: flex;
+  justify-content: center;
+}
+
+/* ===========================================
+   Filter Group
+   =========================================== */
+
+.filter-group {
+  padding: var(--space-2) var(--space-3);
+}
+
+.filter-group--nested {
+  margin: var(--space-2) 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background-color: var(--gray-50);
+}
+
+.filter-group__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.filter-group__conditions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.filter-group__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.filter-group__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--gray-100);
+}
+
+/* ===========================================
+   Filter Condition Row
+   =========================================== */
+
+.filter-condition {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.filter-select {
+  padding: 5px 28px 5px 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%2371717a' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.filter-select:hover {
+  border-color: var(--gray-300);
+}
+
+.filter-select:focus {
+  border-color: var(--gray-900);
+  box-shadow: 0 0 0 1px var(--gray-900);
+}
+
+.filter-select--field {
+  min-width: 110px;
+}
+
+.filter-select--operator {
+  min-width: 120px;
+}
+
+.filter-input {
+  flex: 1;
+  min-width: 80px;
+  padding: 5px 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.filter-input:hover {
+  border-color: var(--gray-300);
+}
+
+.filter-input:focus {
+  border-color: var(--gray-900);
+  box-shadow: 0 0 0 1px var(--gray-900);
+}
+
+.filter-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* ===========================================
+   Filter Logic Toggle
+   =========================================== */
+
+.filter-logic-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+}
+
+.filter-logic-toggle:hover {
+  border-color: var(--gray-300);
+  background-color: var(--gray-50);
+}
+
+.filter-logic-toggle--and {
+  color: var(--blue-600);
+  border-color: var(--blue-500);
+  background-color: #eff6ff;
+}
+
+.filter-logic-toggle--and:hover {
+  background-color: #dbeafe;
+}
+
+.filter-logic-toggle--or {
+  color: #9333ea;
+  border-color: #a855f7;
+  background-color: #faf5ff;
+}
+
+.filter-logic-toggle--or:hover {
+  background-color: #f3e8ff;
+}
+
+.filter-logic-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* ===========================================
+   Filter Buttons
+   =========================================== */
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: 4px 10px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+  transition: all var(--duration-fast) var(--ease-out);
+  outline: none;
+}
+
+.filter-btn:hover {
+  background-color: var(--gray-50);
+  border-color: var(--gray-300);
+  color: var(--color-text);
+}
+
+.filter-btn:focus-visible {
+  outline: 2px solid var(--blue-800);
+  outline-offset: 1px;
+}
+
+.filter-btn--remove,
+.filter-btn--remove-group {
+  padding: 4px 6px;
+  border: none;
+  color: var(--color-text-muted);
+}
+
+.filter-btn--remove:hover,
+.filter-btn--remove-group:hover {
+  color: #ef4444;
+  background-color: #fef2f2;
+  border: none;
+}
+
+.filter-btn--add {
+  border-style: dashed;
+}
+
+.filter-btn--add:hover {
+  border-style: solid;
+}
+
+.filter-btn--clear {
+  border: none;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  padding: 2px 6px;
+}
+
+.filter-btn--clear:hover {
+  color: #ef4444;
+  background-color: transparent;
+  border: none;
+}
