@@ -29,7 +29,7 @@
     },
     "open": { "description": "If <code>true</code>, the component is shown." },
     "order": {
-      "description": "The order in which series items are displayed in the axis tooltip. Series items are sorted by their value. Only applies when <code>trigger=&#39;axis&#39;</code>."
+      "description": "The order in which series items are displayed in the axis tooltip. When set to <code>none</code>, series are ordered as they are provided in the series property. Otherwise they are ordered by their value. Only applies when <code>trigger=&#39;axis&#39;</code>."
     },
     "placement": { "description": "Popper placement." },
     "popperOptions": {
