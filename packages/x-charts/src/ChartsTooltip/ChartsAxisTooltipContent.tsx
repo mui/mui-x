@@ -22,9 +22,16 @@ export interface ChartsAxisTooltipContentProps {
    */
   classes?: Partial<ChartsTooltipClasses>;
   sx?: SxProps<Theme>;
+  /**
+   * The order in which series items are displayed in the tooltip.
+   * Series items are sorted by their value.
+   * @default 'none'
+   */
+  order?: 'none' | 'asc' | 'desc';
 }
 
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
+  const { order } = props;
   const classes = useUtilityClasses(props.classes);
 
   const tooltipData = useAxesTooltip();
@@ -36,6 +43,22 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   return (
     <ChartsTooltipPaper sx={props.sx} className={classes.paper}>
       {tooltipData.map(({ axisId, mainAxis, axisValue, axisFormattedValue, seriesItems }) => {
+        const sortedItems =
+          order && order !== 'none'
+            ? [...seriesItems].sort((a, b) => {
+                const aValue = a.value?.valueOf();
+                const bValue = b.value?.valueOf();
+                if (typeof aValue !== 'number') {
+                  return 1;
+                }
+                if (typeof bValue !== 'number') {
+                  return -1;
+                }
+
+                return order === 'asc' ? aValue - bValue : bValue - aValue;
+              })
+            : seriesItems;
+
         return (
           <ChartsTooltipTable className={classes.table} key={axisId}>
             {axisValue != null && !mainAxis.hideTooltip && (
@@ -43,7 +66,7 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
             )}
 
             <tbody>
-              {seriesItems.map(({ seriesId, color, formattedValue, formattedLabel, markType }) => {
+              {sortedItems.map(({ seriesId, color, formattedValue, formattedLabel, markType }) => {
                 if (formattedValue == null) {
                   return null;
                 }
@@ -89,6 +112,12 @@ ChartsAxisTooltipContent.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The order in which series items are displayed in the tooltip.
+   * Series items are sorted by their value.
+   * @default 'none'
+   */
+  order: PropTypes.oneOf(['none', 'asc', 'desc']),
 } as any;
 
 export { ChartsAxisTooltipContent };

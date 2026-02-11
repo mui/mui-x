@@ -10,7 +10,15 @@ import { type TriggerOptions } from './utils';
 export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> extends Omit<
   ChartsTooltipContainerProps<T>,
   'children'
-> {}
+> {
+  /**
+   * The order in which series items are displayed in the axis tooltip.
+   * Series items are sorted by their value.
+   * Only applies when `trigger='axis'`.
+   * @default 'none'
+   */
+  order?: 'none' | 'asc' | 'desc';
+}
 
 /**
  * Demos:
@@ -22,14 +30,14 @@ export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> e
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
 function ChartsTooltip(props: ChartsTooltipProps) {
-  const { classes: propClasses, trigger = 'axis' } = props;
+  const { classes: propClasses, trigger = 'axis', order, ...containerProps } = props;
 
   const classes = useUtilityClasses(propClasses);
 
   return (
-    <ChartsTooltipContainer {...props} classes={propClasses}>
+    <ChartsTooltipContainer {...containerProps} trigger={trigger} classes={propClasses}>
       {trigger === 'axis' ? (
-        <ChartsAxisTooltipContent classes={classes} />
+        <ChartsAxisTooltipContent classes={classes} order={order} />
       ) : (
         <ChartsItemTooltipContent classes={classes} />
       )}
@@ -156,6 +164,13 @@ ChartsTooltip.propTypes = {
    * If `true`, the component is shown.
    */
   open: PropTypes.bool,
+  /**
+   * The order in which series items are displayed in the axis tooltip.
+   * Series items are sorted by their value.
+   * Only applies when `trigger='axis'`.
+   * @default 'none'
+   */
+  order: PropTypes.oneOf(['none', 'asc', 'desc']),
   /**
    * Popper placement.
    * @default 'bottom'
