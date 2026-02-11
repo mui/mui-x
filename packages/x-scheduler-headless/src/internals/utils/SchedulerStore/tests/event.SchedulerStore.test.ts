@@ -296,8 +296,8 @@ storeClasses.forEach((storeClass) => {
         // Keep the event conceptual timezone
         expect(updated.timezone).to.equal(dataTimezone);
         // Persist the new instants as strings
-        expect(updated.start).to.equal((newStart as Date).toISOString());
-        expect(updated.end).to.equal((newEnd as Date).toISOString());
+        expect(updated.start).to.equal(newStart.toISOString());
+        expect(updated.end).to.equal(newEnd.toISOString());
       });
     });
 
@@ -379,8 +379,8 @@ storeClasses.forEach((storeClass) => {
             ...event,
             id: duplicatedId,
             extractedFromId: event.id,
-            start: (start as Date).toISOString(),
-            end: (end as Date).toISOString(),
+            start: start.toISOString(),
+            end: end.toISOString(),
           },
         ]);
       });
@@ -406,8 +406,8 @@ storeClasses.forEach((storeClass) => {
             ...originalEventWithoutRecurrence,
             id: duplicatedId,
             extractedFromId: event.id,
-            start: (start as Date).toISOString(),
-            end: (end as Date).toISOString(),
+            start: start.toISOString(),
+            end: end.toISOString(),
           },
         ]);
       });
