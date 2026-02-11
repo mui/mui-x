@@ -275,13 +275,16 @@ export class SchedulerStore<
     this.eventManager.on(eventName, handler);
   };
 
-  protected setVisibleDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+  protected setVisibleDate = (
+    visibleDate: TemporalSupportedObject,
+    event: React.UIEvent | null = null,
+  ) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
     const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
 
     if (hasChange) {
-      const eventDetails = createChangeEventDetails('none', event.nativeEvent);
+      const eventDetails = createChangeEventDetails('none', event?.nativeEvent);
       onVisibleDateChange?.(visibleDate, eventDetails);
 
       if (!eventDetails.isCanceled && visibleDateProp === undefined) {
@@ -547,4 +550,13 @@ export class SchedulerStore<
       this.set('occurrencePlaceholder', newPlaceholder);
     }
   };
+
+  /**
+   * Builds an object containing the methods that should be exposed publicly by the Scheduler components.
+   */
+  public buildPublicAPI() {
+    return {
+      setVisibleDate: this.setVisibleDate,
+    };
+  }
 }

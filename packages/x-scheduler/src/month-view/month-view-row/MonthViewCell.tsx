@@ -34,7 +34,7 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   display: 'grid',
   gridTemplateRows: 'repeat(var(--row-count), minmax(auto, 18px))',
   gap: theme.spacing(0.5),
-  padding: theme.spacing(0.5),
+  padding: theme.spacing(0.7, 0.5),
   fontSize: theme.typography.body2.fontSize,
   lineHeight: '18px',
   color: theme.palette.text.secondary,
@@ -71,6 +71,7 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}`]: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
+    marginTop: 1,
   },
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}:hover`]: {
     backgroundColor: theme.palette.primary.dark,
