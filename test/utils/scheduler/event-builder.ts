@@ -2,7 +2,6 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
@@ -22,13 +21,6 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   'default',
 );
-
-/**
- * Converts a TemporalSupportedObject to an ISO Z-string.
- */
-function toISOString(date: TemporalSupportedObject): string {
-  return (date as Date).toISOString();
-}
 
 /**
  * Minimal event builder for tests.
@@ -51,8 +43,8 @@ export class EventBuilder {
     this.event = {
       id,
       title: `Event ${id}`,
-      start: toISOString(start),
-      end: toISOString(end),
+      start: start.toISOString(),
+      end: end.toISOString(),
       description: `Event ${id} description`,
     };
   }
@@ -175,7 +167,7 @@ export class EventBuilder {
     const startDate = resolveEventDate(start, dataTimezone, this.adapter);
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
     this.event.start = start;
-    this.event.end = toISOString(endDate);
+    this.event.end = endDate.toISOString();
     return this;
   }
 
@@ -186,8 +178,8 @@ export class EventBuilder {
   fullDay(date: string) {
     const dataTimezone = this.event.timezone ?? 'default';
     const d = resolveEventDate(date, dataTimezone, this.adapter);
-    this.event.start = toISOString(this.adapter.startOfDay(d));
-    this.event.end = toISOString(this.adapter.endOfDay(d));
+    this.event.start = this.adapter.startOfDay(d).toISOString();
+    this.event.end = this.adapter.endOfDay(d).toISOString();
     this.event.allDay = true;
     return this;
   }
@@ -262,8 +254,8 @@ export class EventBuilder {
 
     const occurrenceModel: SchedulerEvent = {
       ...this.event,
-      start: toISOString(rawStart),
-      end: toISOString(rawEnd),
+      start: rawStart.toISOString(),
+      end: rawEnd.toISOString(),
     };
 
     const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter);
