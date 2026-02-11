@@ -50,6 +50,9 @@ export interface SchedulerTranslations {
   eventItemMultiDayLabel: (endDate: string) => string;
 
   // EventDraggableDialog
+  colorPickerLabel: string;
+  dateTimeSectionLabel: string;
+  resourceColorSectionLabel: string;
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;

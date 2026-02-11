@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/prevent-unhandled';
 import { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/types';
 
 const getDeltas = (location: DragLocationHistory) => {
@@ -34,8 +35,16 @@ export function useDraggableDialog(
     return draggable({
       element,
       dragHandle: handleRef.current || undefined,
+      canDrag: ({ input }) => {
+        const target = document.elementFromPoint(input.clientX, input.clientY);
+        return !target?.closest('input, textarea, select, [contenteditable="true"]');
+      },
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
+      },
+      onDragStart: () => {
+        preventUnhandled.start();
+        element.setAttribute('data-dragging', 'true');
       },
       onDrag: ({ location }) => {
         const { deltaX, deltaY } = getDeltas(location);
@@ -50,6 +59,9 @@ export function useDraggableDialog(
         }
       },
       onDrop: ({ location }) => {
+        preventUnhandled.stop();
+        element.removeAttribute('data-dragging');
+
         const { deltaX, deltaY } = getDeltas(location);
 
         offset.current.x += deltaX;

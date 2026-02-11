@@ -40,6 +40,8 @@ const RecurrenceTabContent = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2.5),
+  height: 450,
+  overflow: 'auto',
 }));
 
 interface RecurrenceTabProps {
