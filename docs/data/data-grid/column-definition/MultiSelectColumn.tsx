@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 const rows = [
   {
@@ -63,7 +63,7 @@ const columns: GridColDef[] = [
 export default function MultiSelectColumn() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} />
+      <DataGridPro rows={rows} columns={columns} />
     </div>
   );
 }

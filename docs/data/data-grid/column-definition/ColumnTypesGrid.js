@@ -16,7 +16,6 @@ const initialRows = [
     country: 'Spain',
     discount: '',
     bio: 'Damien is a software engineer with 5 years of experience in web development. He specializes in React and Node.js.',
-    skills: ['React', 'Node.js', 'TypeScript'],
   },
   {
     id: 2,
@@ -28,7 +27,6 @@ const initialRows = [
     country: 'France',
     discount: '',
     bio: 'Nicolas is a product manager who loves building user-centric products. He has led multiple successful product launches.',
-    skills: ['Product Management', 'Agile'],
   },
   {
     id: 3,
@@ -40,7 +38,6 @@ const initialRows = [
     country: 'Brazil',
     discount: 'junior',
     bio: 'Kate is a junior developer passionate about learning new technologies. She is currently focused on frontend development.',
-    skills: ['React', 'CSS', 'JavaScript'],
   },
 ];
 
@@ -119,23 +116,6 @@ const columns = [
       }
       return options;
     },
-  },
-  {
-    field: 'skills',
-    type: 'multiSelect',
-    width: 200,
-    editable: true,
-    valueOptions: [
-      'React',
-      'Node.js',
-      'TypeScript',
-      'JavaScript',
-      'CSS',
-      'Product Management',
-      'Agile',
-      'Python',
-      'Design',
-    ],
   },
   {
     field: 'actions',

@@ -358,7 +358,11 @@ However, you can customize which attribute is used as value and label by using `
 
 :::
 
-#### Multi select
+#### Multi select [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::info
+The `'multiSelect'` column type is available in the Pro and Premium plans. In the Community plan, it falls back to the `'string'` column type.
+:::
 
 If the column type is `'multiSelect'`, you need to set the `valueOptions` property similar to `singleSelect`. The cell value should be an array of values from the options.
 
@@ -373,31 +377,6 @@ If the column type is `'multiSelect'`, you need to set the `valueOptions` proper
 The multiSelect column displays values as chips, with overflow handling when the column is narrow. Users can edit cells using a multi-select autocomplete dropdown.
 
 {{"demo": "MultiSelectColumn.js", "bg": "inline"}}
-
-Like `singleSelect`, you can use object values with `getOptionValue` and `getOptionLabel`:
-
-```tsx
-{
-  field: 'categories',
-  type: 'multiSelect',
-  valueOptions: [
-    { value: 'fe', label: 'Frontend' },
-    { value: 'be', label: 'Backend' },
-    { value: 'db', label: 'Database' }
-  ]
-}
-```
-
-You can customize the separator used in the formatted output (for exports and copy/paste) with the `separator` property:
-
-```tsx
-{
-  field: 'tags',
-  type: 'multiSelect',
-  separator: ' | ', // Default is ', '
-  valueOptions: ['React', 'TypeScript']
-}
-```
 
 #### Actions
 
