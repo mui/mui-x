@@ -1,14 +1,10 @@
 <BarChart
   {...barChartsProps}
   highlightedItem={barHighlightedItem}
-  onHighlightChange={(item) =>
-    setHighLightedIndex(item?.dataIndex == null ? null : item.dataIndex)
-  }
+  onHighlightChange={(item) => setHighlightedIndex(item?.dataIndex ?? null)}
 />
 <PieChart
   {...pieChartProps}
   highlightedItem={pieHighlightedItem}
-  onHighlightChange={(item) =>
-    setHighLightedIndex(item?.dataIndex == null ? null : item.dataIndex)
-  }
+  onHighlightChange={(item) => setHighlightedIndex(item?.dataIndex ?? null)}
 />

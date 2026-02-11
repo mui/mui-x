@@ -4,7 +4,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function SyncHighlight() {
-  const [highlightedIndex, setHighLightedIndex] = React.useState(null);
+  const [highlightedIndex, setHighlightedIndex] = React.useState(null);
 
   const pieHighlightedItem =
     highlightedIndex !== null
@@ -25,16 +25,12 @@ export default function SyncHighlight() {
       <BarChart
         {...barChartsProps}
         highlightedItem={barHighlightedItem}
-        onHighlightChange={(item) =>
-          setHighLightedIndex(item?.dataIndex == null ? null : item.dataIndex)
-        }
+        onHighlightChange={(item) => setHighlightedIndex(item?.dataIndex ?? null)}
       />
       <PieChart
         {...pieChartProps}
         highlightedItem={pieHighlightedItem}
-        onHighlightChange={(item) =>
-          setHighLightedIndex(item?.dataIndex == null ? null : item.dataIndex)
-        }
+        onHighlightChange={(item) => setHighlightedIndex(item?.dataIndex ?? null)}
       />
     </Stack>
   );
