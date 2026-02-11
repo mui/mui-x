@@ -47,7 +47,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
-  const { children, className, ...other } = themeProps;
+  const { children, className, sx, ...other } = themeProps;
 
   const classes = useUtilityClasses();
 
@@ -64,6 +64,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
         alignItems: 'center',
         justifyContent: 'center',
         gridArea: 'chart',
+        ...sx,
       }}
     >
       {children}
