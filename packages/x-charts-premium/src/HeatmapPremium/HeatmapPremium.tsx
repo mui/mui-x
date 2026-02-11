@@ -18,7 +18,7 @@ import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
-import { ChartsWebGLSurface } from '@mui/x-charts/ChartsWebGLSurface';
+import { ChartsWebGlLayer } from '@mui/x-charts/ChartsWebGlLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
@@ -69,9 +69,9 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
         {!hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsLayerContainer>
           {renderer === 'webgl' && (
-            <ChartsWebGLSurface>
+            <ChartsWebGlLayer>
               <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
-            </ChartsWebGLSurface>
+            </ChartsWebGlLayer>
           )}
           <ChartsSurface ref={ref} sx={sx}>
             <g {...clipPathGroupProps}>
