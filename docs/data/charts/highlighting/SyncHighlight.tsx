@@ -2,13 +2,22 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { PieChart, PieChartProps } from '@mui/x-charts/PieChart';
-
-// Common type for syncing highlights between different chart types
-type SyncHighlightItem = { seriesId: string; dataIndex: number } | null;
+import { HighlightItemIdentifier } from '@mui/x-charts/models';
 
 export default function SyncHighlight() {
-  const [highlightedItem, setHighLightedItem] =
-    React.useState<SyncHighlightItem>(null);
+  const [highlightedIndex, setHighLightedIndex] = React.useState<number | null>(
+    null,
+  );
+
+  const pieHighlightedItem: HighlightItemIdentifier<'pie'> | null =
+    highlightedIndex !== null
+      ? { type: 'pie', seriesId: 'sync', dataIndex: highlightedIndex }
+      : null;
+
+  const barHighlightedItem: HighlightItemIdentifier<'bar'> | null =
+    highlightedIndex !== null
+      ? { type: 'bar', seriesId: 'sync', dataIndex: highlightedIndex }
+      : null;
 
   return (
     <Stack
@@ -18,13 +27,17 @@ export default function SyncHighlight() {
     >
       <BarChart
         {...barChartsProps}
-        highlightedItem={highlightedItem as any}
-        onHighlightChange={setHighLightedItem as any}
+        highlightedItem={barHighlightedItem}
+        onHighlightChange={(item) =>
+          setHighLightedIndex(item?.dataIndex == null ? null : item.dataIndex)
+        }
       />
       <PieChart
         {...pieChartProps}
-        highlightedItem={highlightedItem as any}
-        onHighlightChange={setHighLightedItem as any}
+        highlightedItem={pieHighlightedItem}
+        onHighlightChange={(item) =>
+          setHighLightedIndex(item?.dataIndex == null ? null : item.dataIndex)
+        }
       />
     </Stack>
   );

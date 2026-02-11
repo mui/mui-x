@@ -7,7 +7,7 @@ import {
   useSankeyNodeHighlightState,
   useSankeySeries,
 } from '@mui/x-charts-pro/SankeyChart';
-import { SeriesId } from '@mui/x-charts/models';
+import { SeriesId } from '@mui/x-charts-pro/models';
 
 export function CustomNodeLabelPlot() {
   const sankeySeries = useSankeySeries()[0];
