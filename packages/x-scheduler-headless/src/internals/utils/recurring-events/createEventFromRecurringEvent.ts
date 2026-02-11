@@ -9,7 +9,7 @@ import {
  */
 export function createEventFromRecurringEvent(
   originalEvent: SchedulerProcessedEvent,
-  changes: Partial<SchedulerEvent>,
+  changes: Partial<SchedulerEventCreationProperties>,
 ): SchedulerEventCreationProperties {
   const createdEvent: SchedulerEventCreationProperties = {
     ...originalEvent.modelInBuiltInFormat,
