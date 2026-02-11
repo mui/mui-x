@@ -48,3 +48,4 @@ This package is not published yet.
 - [Resources](/x/react-scheduler/event-timeline/resources/)
 - [Navigation](/x/react-scheduler/event-timeline/navigation/)
 - [Drag interactions](/x/react-scheduler/event-timeline/drag-interactions/)
+- [Preferences](/x/react-scheduler/event-timeline/preferences/)
