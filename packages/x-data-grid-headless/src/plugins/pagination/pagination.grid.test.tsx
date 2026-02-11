@@ -508,6 +508,5 @@ describe('Pagination Plugin - Integration Tests', () => {
       expect(getRowNames(container)).toHaveLength(5);
       expect(apiRef.current?.getState()?.pagination.rowCount).toBe(8);
     });
-
   });
 });
