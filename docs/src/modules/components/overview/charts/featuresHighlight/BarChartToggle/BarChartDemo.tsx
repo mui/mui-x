@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BarChart, BarSeries } from '@mui/x-charts/BarChart';
-import { HighlightItemIdentifier, HighlightScope } from '@mui/x-charts/models';
+import { HighlightItemIdentifier } from '@mui/x-charts/models';
+import { HighlightScope } from '@mui/x-charts/context';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { SelectOptions } from './types';
 
