@@ -5,6 +5,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
+
 const config: Partial<BarChartProps> = {
   dataset: [
     { x: 'A', v1: 4, v2: 2 },
