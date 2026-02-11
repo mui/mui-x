@@ -4,7 +4,7 @@ import { type Plugin, createPlugin } from '../core/plugin';
 import type { GridRowId } from '../internal/rows/rowUtils';
 import { paginationSelectors } from './selectors';
 import {
-  getDefaultPaginationModel,
+  DEFAULT_PAGINATION_MODEL,
   getPageCount,
   getValidPage,
   paginateRowIds,
@@ -37,7 +37,7 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
     const initialModel =
       params.pagination?.model ??
       params.initialState?.pagination?.model ??
-      getDefaultPaginationModel();
+      DEFAULT_PAGINATION_MODEL;
 
     const isExternal = params.pagination?.external === true;
 
@@ -74,11 +74,7 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
   },
 
   use: (store, params, api) => {
-    const isExternal = (): boolean => {
-      return params.pagination?.external === true;
-    };
-
-    const getSourceRowIds = (): GridRowId[] => {
+    const getSourceRowIds = React.useCallback((): GridRowId[] => {
       // Check if sorting plugin state exists (optional dependency)
       const sortingState = (store.state as Record<string, any>).sorting as
         | { sortedRowIds: GridRowId[] }
@@ -87,43 +83,44 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
         return sortingState.sortedRowIds;
       }
       return api.rows.getAllRowIds();
-    };
+    }, [store.state, api.rows]);
 
-    const recomputePaginationFromSource = (
-      sourceRowIds: GridRowId[],
-      model: PaginationModel,
-    ): void => {
-      const external = isExternal();
+    const recomputePaginationFromSource = React.useCallback(
+      (sourceRowIds: GridRowId[], model: PaginationModel): void => {
+        const isExternal = params.pagination?.external === true;
 
-      const rowCount = external
-        ? (params.pagination?.rowCount ?? sourceRowIds.length)
-        : sourceRowIds.length;
+        const rowCount = isExternal
+          ? (params.pagination?.rowCount ?? sourceRowIds.length)
+          : sourceRowIds.length;
 
-      const pageCount = getPageCount(rowCount, model.pageSize, model.page);
-      const validPage = getValidPage(model.page, pageCount);
-      const validatedModel: PaginationModel =
-        validPage !== model.page ? { ...model, page: validPage } : model;
+        const pageCount = getPageCount(rowCount, model.pageSize, model.page);
+        const validPage = getValidPage(model.page, pageCount);
+        const validatedModel: PaginationModel =
+          validPage !== model.page ? { ...model, page: validPage } : model;
 
-      const paginatedRowIds = external
-        ? sourceRowIds
-        : paginateRowIds(sourceRowIds, validatedModel);
+        const paginatedRowIds = isExternal
+          ? sourceRowIds
+          : paginateRowIds(sourceRowIds, validatedModel);
 
-      store.setState({
-        ...store.state,
-        pagination: {
-          model: validatedModel,
-          rowCount,
-          pageCount,
-          paginatedRowIds,
-        },
-      });
+        store.setState({
+          ...store.state,
+          pagination: {
+            model: validatedModel,
+            rowCount,
+            pageCount,
+            paginatedRowIds,
+          },
+        });
+      },
+      [params.pagination?.external, params.pagination?.rowCount, store],
+    );
 
-      params.pagination?.onPaginatedRowsSet?.(paginatedRowIds);
-    };
-
-    const recomputePagination = (model: PaginationModel): void => {
-      recomputePaginationFromSource(getSourceRowIds(), model);
-    };
+    const recomputePagination = React.useCallback(
+      (model: PaginationModel): void => {
+        recomputePaginationFromSource(getSourceRowIds(), model);
+      },
+      [getSourceRowIds, recomputePaginationFromSource],
+    );
 
     const getModel = (): PaginationModel => {
       return store.state.pagination.model;
@@ -150,24 +147,6 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
       setModel({ page: 0, pageSize });
     };
 
-    // Subscribe to store changes to detect when source row IDs change.
-    // This is needed because sorting or rows may update the store outside
-    // of React's render cycle, and we need to react synchronously.
-    const prevSourceRowIdsRef = React.useRef<GridRowId[]>(getSourceRowIds());
-
-    React.useEffect(() => {
-      const unsubscribe = store.subscribe(() => {
-        const currentSourceRowIds = getSourceRowIds();
-
-        if (prevSourceRowIdsRef.current !== currentSourceRowIds) {
-          prevSourceRowIdsRef.current = currentSourceRowIds;
-          recomputePaginationFromSource(currentSourceRowIds, store.state.pagination.model);
-        }
-      });
-      return unsubscribe;
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- subscribe once on mount
-    }, []);
-
     // Handle controlled pagination.model prop changes
     const prevModelRef = React.useRef<PaginationModel | undefined>(params.pagination?.model);
 
@@ -182,8 +161,7 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
           recomputePagination(params.pagination.model);
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only reacting to pagination.model prop changes
-    }, [params.pagination?.model]);
+    }, [params.pagination?.model, store.state.pagination.model, recomputePagination]);
 
     return {
       pagination: {
