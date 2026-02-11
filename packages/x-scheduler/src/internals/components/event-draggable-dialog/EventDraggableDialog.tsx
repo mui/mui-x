@@ -105,7 +105,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   inProps: EventDraggableDialogProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventDraggableDialog' });
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
