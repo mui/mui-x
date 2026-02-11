@@ -114,9 +114,15 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ): TEvent {
   const stringified: Record<string, any> = { ...changes };
-  if (changes.start != null) stringified.start = changes.start.toISOString();
-  if (changes.end != null) stringified.end = changes.end.toISOString();
-  if (changes.exDates != null) stringified.exDates = changes.exDates.map((d) => d.toISOString());
+  if (changes.start != null) {
+    stringified.start = changes.start.toISOString();
+  }
+  if (changes.end != null) {
+    stringified.end = changes.end.toISOString();
+  }
+  if (changes.exDates != null) {
+    stringified.exDates = changes.exDates.map((d) => d.toISOString());
+  }
 
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,

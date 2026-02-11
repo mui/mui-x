@@ -1,7 +1,6 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import {
   SchedulerEventUpdatedProperties,
-  SchedulerEvent,
   RecurringEventByDayValue,
   RecurringEventRecurrenceRule,
   TemporalSupportedObject,

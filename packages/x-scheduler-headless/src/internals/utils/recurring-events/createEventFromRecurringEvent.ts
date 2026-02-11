@@ -1,5 +1,4 @@
 import {
-  SchedulerEvent,
   SchedulerEventCreationProperties,
   SchedulerProcessedEvent,
 } from '../../../models';

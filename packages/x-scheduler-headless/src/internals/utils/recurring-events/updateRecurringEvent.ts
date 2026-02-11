@@ -5,7 +5,6 @@ import {
   RecurringEventUpdateScope,
   RecurringEventWeekDayCode,
   SchedulerEvent,
-  SchedulerEventCreationProperties,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
@@ -83,9 +82,15 @@ export function applyRecurringUpdateFollowing(
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
   const stringified: Record<string, any> = { ...changes };
-  if (changes.start != null) stringified.start = changes.start.toISOString();
-  if (changes.end != null) stringified.end = changes.end.toISOString();
-  if (changes.exDates != null) stringified.exDates = changes.exDates.map((d) => d.toISOString());
+  if (changes.start != null) {
+    stringified.start = changes.start.toISOString();
+  }
+  if (changes.end != null) {
+    stringified.end = changes.end.toISOString();
+  }
+  if (changes.exDates != null) {
+    stringified.exDates = changes.exDates.map((d) => d.toISOString());
+  }
 
   const newEvent: SchedulerEvent = {
     ...originalEvent.modelInBuiltInFormat,

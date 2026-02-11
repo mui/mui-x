@@ -159,10 +159,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
       // Take the full week (Mon–Sun) and set DTSTART on Wednesday
       const visibleStart = adapter.date('2025-01-05T00:00:00Z', 'default');
-      const weekStart = adapter.addDays(adapter.startOfWeek(visibleStart), 1); // Monday
 
       // DTSTART on Wednesday of that same week
-      const start = adapter.addDays(weekStart, 2); // Wednesday = Jan 8
       const event = EventBuilder.new()
         .singleDay('2025-01-08T00:00:00Z')
         .rrule({ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] })
@@ -206,7 +204,6 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
   describe('daily frequency', () => {
     it('does not generate occurrences before series start', () => {
-      const eventStart = adapter.date('2025-01-10T09:00:00Z', 'default');
       const visibleStart = adapter.date('2025-01-05T00:00:00Z', 'default'); // before event start
       const event = EventBuilder.new()
         .singleDay('2025-01-10T09:00:00Z')
@@ -322,7 +319,6 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
     it('does not go backwards when BYDAY includes SU + another day with enUS week start and COUNT', () => {
       // DTSTART: Sunday Mar 2, 2025
-      const dtstart = adapter.date('2025-03-02T09:00:00Z', 'default'); // SU
       const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
       const visibleEnd = adapter.addDays(visibleStart, 20);
 
@@ -486,7 +482,6 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     it('does not generate ordinal occurrence that falls before DTSTART within the same month', () => {
       // DTSTART: July 20. 2nd Tuesday in July is July 8 (before DTSTART)
       const visibleStart = adapter.date('2025-07-01T00:00:00Z', 'default');
-      const eventStart = adapter.date('2025-07-20T09:00:00Z', 'default');
       const event = EventBuilder.new()
         .singleDay('2025-07-20T09:00:00Z')
         .rrule({ freq: 'MONTHLY', interval: 1, byDay: ['2TU'] })

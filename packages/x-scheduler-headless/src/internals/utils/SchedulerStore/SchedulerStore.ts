@@ -13,7 +13,6 @@ import {
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
-  SchedulerEvent,
 } from '../../../models';
 import {
   SchedulerState,
