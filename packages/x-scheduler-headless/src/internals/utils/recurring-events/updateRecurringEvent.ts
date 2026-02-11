@@ -5,6 +5,7 @@ import {
   RecurringEventUpdateScope,
   RecurringEventWeekDayCode,
   SchedulerEvent,
+  SchedulerEventCreationProperties,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
@@ -81,16 +82,14 @@ export function applyRecurringUpdateFollowing(
   );
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
-  const { start: changesStart, end: changesEnd, exDates: changesExDates, ...changesRest } = changes;
+  const stringified: Record<string, any> = { ...changes };
+  if (changes.start != null) stringified.start = changes.start.toISOString();
+  if (changes.end != null) stringified.end = changes.end.toISOString();
+  if (changes.exDates != null) stringified.exDates = changes.exDates.map((d) => d.toISOString());
 
   const newEvent: SchedulerEvent = {
     ...originalEvent.modelInBuiltInFormat,
-    ...changesRest,
-    ...(changesStart != null ? { start: (changesStart as Date).toISOString() } : {}),
-    ...(changesEnd != null ? { end: (changesEnd as Date).toISOString() } : {}),
-    ...(changesExDates != null
-      ? { exDates: changesExDates.map((d) => (d as Date).toISOString()) }
-      : {}),
+    ...stringified,
     id: newEventId,
     rrule: newRRule,
     extractedFromId: originalEvent.modelInBuiltInFormat.id,
@@ -217,24 +216,8 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const {
-    start: onlyThisStart,
-    end: onlyThisEnd,
-    exDates: onlyThisExDates,
-    ...onlyThisRest
-  } = changes;
-
   return {
-    created: [
-      createEventFromRecurringEvent(originalEvent, {
-        ...onlyThisRest,
-        ...(onlyThisStart != null ? { start: (onlyThisStart as Date).toISOString() } : {}),
-        ...(onlyThisEnd != null ? { end: (onlyThisEnd as Date).toISOString() } : {}),
-        ...(onlyThisExDates != null
-          ? { exDates: onlyThisExDates.map((d) => (d as Date).toISOString()) }
-          : {}),
-      }),
-    ],
+    created: [createEventFromRecurringEvent(originalEvent, changes)],
     updated: [
       {
         id: originalEvent.id,

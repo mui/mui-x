@@ -651,8 +651,6 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.created).to.deep.equal([
         {
           ...changesWithoutId,
-          start: (changesWithoutId.start as Date).toISOString(),
-          end: (changesWithoutId.end as Date).toISOString(),
           extractedFromId: defaultEvent.id,
           description: defaultEvent.description,
         },
@@ -717,8 +715,6 @@ describe('recurring-events/updateRecurringEvent', () => {
           extractedFromId: defaultEvent.id,
           description: defaultEvent.description,
           ...changesWithoutId,
-          start: (changesWithoutId.start as Date).toISOString(),
-          end: (changesWithoutId.end as Date).toISOString(),
         },
       ]);
       expect(updatedEvents.updated).to.deep.equal([
