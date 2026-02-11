@@ -23,10 +23,7 @@ import { EventCalendarProvider } from '../internals/components/EventCalendarProv
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import { useEventCalendarClasses } from '../event-calendar/EventCalendarClassesContext';
-import {
-  EventDialogProvider,
-  EventDialogTrigger,
-} from '../internals/components/event-dialog';
+import { EventDialogProvider, EventDialogTrigger } from '../internals/components/event-dialog';
 
 const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',

@@ -11,10 +11,7 @@ import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
-import {
-  EventDialogTrigger,
-  useEventDialogContext,
-} from '../event-dialog';
+import { EventDialogTrigger, useEventDialogContext } from '../event-dialog';
 
 const MoreEventsPopoverHeader = styled('div')(({ theme }) => ({
   display: 'flex',

@@ -12,10 +12,7 @@ import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headle
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
-import {
-  EventDialogTrigger,
-  useEventDialogContext,
-} from '../event-dialog/EventDialog';
+import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {

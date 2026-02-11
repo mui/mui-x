@@ -306,11 +306,7 @@ describe('<EventDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
       >
-        <EventDialogContent
-          open
-          {...defaultProps}
-          occurrence={eventWithoutResourceOccurrence}
-        />
+        <EventDialogContent open {...defaultProps} occurrence={eventWithoutResourceOccurrence} />
       </EventCalendarProvider>,
     );
 
@@ -446,11 +442,7 @@ describe('<EventDialogContent open />', () => {
             }
           />
 
-          <EventDialogContent
-            open
-            {...defaultProps}
-            occurrence={creationOccurrence as any}
-          />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence as any} />
 
           <StateWatcher
             Context={SchedulerStoreContext}
@@ -1197,11 +1189,7 @@ describe('<EventDialogContent open />', () => {
               }}
             />
 
-            <EventDialogContent
-              open
-              {...defaultProps}
-              occurrence={nonRecurringEventOccurrence}
-            />
+            <EventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
           </EventCalendarProvider>,
         );
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
@@ -1237,11 +1225,7 @@ describe('<EventDialogContent open />', () => {
               }}
             />
 
-            <EventDialogContent
-              open
-              {...defaultProps}
-              occurrence={nonRecurringEventOccurrence}
-            />
+            <EventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
           </EventCalendarProvider>,
         );
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
