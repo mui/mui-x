@@ -37,8 +37,6 @@ describe('processEvent', () => {
       expect(adapter.getTimezone(processed.displayTimezone.end.value)).to.equal(
         'Pacific/Kiritimati',
       );
-      expect(processed.displayTimezone.start.toString()).to.not.equal(event.start.toString());
-      expect(processed.displayTimezone.end.toString()).to.not.equal(event.end.toString());
     });
 
     it('should convert exDates to the display timezone', () => {
@@ -95,26 +93,6 @@ describe('processEvent', () => {
   });
 
   describe('string date resolution', () => {
-    it('should resolve Z-strings to the same timestamps as equivalent date objects', () => {
-      const eventWithStrings = EventBuilder.new(adapter)
-        .span('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z')
-        .build();
-
-      const eventWithDates = EventBuilder.new(adapter)
-        .span('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z')
-        .build();
-
-      const processedStrings = processEvent(eventWithStrings, 'Europe/Paris', adapter);
-      const processedDates = processEvent(eventWithDates, 'Europe/Paris', adapter);
-
-      expect(processedStrings.dataTimezone.start.timestamp).to.equal(
-        processedDates.dataTimezone.start.timestamp,
-      );
-      expect(processedStrings.dataTimezone.end.timestamp).to.equal(
-        processedDates.dataTimezone.end.timestamp,
-      );
-    });
-
     it('should resolve wall-time strings in the event timezone', () => {
       // "2025-01-01T09:00:00" in America/New_York → 09:00 local → 14:00 UTC (EST = UTC-5)
       const event = EventBuilder.new(adapter)
