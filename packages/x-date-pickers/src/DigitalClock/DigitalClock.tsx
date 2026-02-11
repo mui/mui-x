@@ -155,6 +155,9 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     ...other
   } = props;
 
+  const previousAutoFocus = React.useRef<boolean | undefined>(undefined);
+  const previousFocusedView = React.useRef<typeof focusedView | undefined>(undefined);
+
   const {
     value,
     handleValueChange: handleRawValueChange,
@@ -226,9 +229,18 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
       return;
     }
     const offsetTop = activeItem.offsetTop;
-    if (autoFocus || !!focusedView) {
+
+    // Only focus when autoFocus or focusedView changes
+    const shouldFocus =
+      (autoFocus || !!focusedView) &&
+      (previousAutoFocus.current !== autoFocus || previousFocusedView.current !== focusedView);
+
+    if (shouldFocus) {
       activeItem.focus();
     }
+
+    previousAutoFocus.current = autoFocus;
+    previousFocusedView.current = focusedView;
 
     // Subtracting the 4px of extra margin intended for the first visible section item
     containerRef.current.scrollTop = offsetTop - 4;

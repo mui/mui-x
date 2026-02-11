@@ -161,6 +161,9 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       ...other
     } = props;
 
+    const previousAutoFocus = React.useRef<boolean | undefined>(undefined);
+    const previousActiveState = React.useRef<boolean | undefined>(undefined);
+
     const { ownerState: pickerOwnerState } = usePickerPrivateContext();
     const ownerState: MultiSectionDigitalClockSectionOwnerState = {
       ...pickerOwnerState,
@@ -178,9 +181,21 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       const activeItem = containerRef.current.querySelector<HTMLElement>(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
-      if (active && autoFocus && activeItem) {
+
+      // Only focus when autoFocus or active section changes
+      const shouldFocus =
+        active &&
+        autoFocus &&
+        activeItem &&
+        (previousAutoFocus.current !== autoFocus || previousActiveState.current !== active);
+
+      if (shouldFocus) {
         activeItem.focus();
       }
+
+      previousAutoFocus.current = autoFocus;
+      previousActiveState.current = active;
+
       if (!activeItem || previousActive.current === activeItem) {
         return;
       }
