@@ -57,15 +57,17 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
       {...other}
       ref={handleRef}
-      sx={{
-        display: 'flex',
-        position: 'relative',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gridArea: 'chart',
-        ...sx,
-      }}
+      sx={[
+        {
+          display: 'flex',
+          position: 'relative',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gridArea: 'chart',
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       {children}
     </ChartsSvgLayer>
