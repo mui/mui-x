@@ -1,6 +1,5 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, storeClasses } from 'test/utils/scheduler';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
-import { storeClasses } from '../internals/utils/SchedulerStore/tests/utils';
 
 storeClasses.forEach((storeClass) => {
   describe(`schedulerResourceSelectors - ${storeClass.name}`, () => {
@@ -438,10 +437,10 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should return resource eventColor when resource has eventColor', () => {
-        const resources = [{ id: 'resource-1', title: 'Resource 1', eventColor: 'ruby' }];
+        const resources = [{ id: 'resource-1', title: 'Resource 1', eventColor: 'purple' }];
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
         const result = schedulerResourceSelectors.defaultEventColor(state, 'resource-1');
-        expect(result).to.equal('ruby');
+        expect(result).to.equal('purple');
       });
 
       it('should return state eventColor when resourceId does not exist', () => {

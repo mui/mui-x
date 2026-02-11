@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import refType from '@mui/utils/refType';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { TextFieldProps } from '../../../models/gridBaseSlots';
-import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
+import type { TextFieldProps } from '../../../models/gridBaseSlots';
+import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
 export type GridFilterInputBooleanProps = GridFilterInputValueProps<TextFieldProps>;
 

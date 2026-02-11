@@ -1,7 +1,13 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import composeClasses from '@mui/utils/composeClasses';
+import {
+  EventDialogClasses,
+  eventDialogClassKeys,
+  eventDialogSlots,
+} from '../internals/components/event-draggable-dialog/eventDialogClasses';
 
-export interface EventCalendarClasses {
+export interface EventCalendarClasses extends EventDialogClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the side panel element. */
@@ -10,8 +16,26 @@ export interface EventCalendarClasses {
   mainPanel: string;
   /** Styles applied to the content section element. */
   content: string;
-  /** Styles applied to the month calendar placeholder element. */
-  monthCalendarPlaceholder: string;
+  /** Styles applied to the mini calendar root element. */
+  miniCalendar: string;
+  /** Styles applied to the mini calendar header element. */
+  miniCalendarHeader: string;
+  /** Styles applied to the mini calendar header navigation container. */
+  miniCalendarNavigation: string;
+  /** Styles applied to the mini calendar month label. */
+  miniCalendarMonthLabel: string;
+  /** Styles applied to the mini calendar weekday header row. */
+  miniCalendarWeekdayHeader: string;
+  /** Styles applied to individual mini calendar weekday header cells. */
+  miniCalendarWeekdayCell: string;
+  /** Styles applied to the mini calendar grid (body). */
+  miniCalendarGrid: string;
+  /** Styles applied to mini calendar week rows. */
+  miniCalendarWeekRow: string;
+  /** Styles applied to mini calendar day cells. */
+  miniCalendarDayCell: string;
+  /** Styles applied to mini calendar day buttons. */
+  miniCalendarDayButton: string;
   /** Styles applied to the error container element. */
   errorContainer: string;
   /** Styles applied to the header toolbar element. */
@@ -30,12 +54,14 @@ export interface EventCalendarClasses {
   preferencesMenu: string;
   /** Styles applied to the resources legend root element. */
   resourcesLegend: string;
+  /** Styles applied to the resources legend label element. */
+  resourcesLegendLabel: string;
   /** Styles applied to resources legend item elements. */
   resourcesLegendItem: string;
-  /** Styles applied to resources legend item color dot elements. */
-  resourcesLegendItemColorDot: string;
   /** Styles applied to resources legend item name elements. */
   resourcesLegendItemName: string;
+  /** Styles applied to resources legend item checkbox elements. */
+  resourcesLegendItemCheckbox: string;
   /** Styles applied to the agenda view element. */
   agendaView: string;
   /** Styles applied to agenda view row elements. */
@@ -201,7 +227,16 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'sidePanel',
     'mainPanel',
     'content',
-    'monthCalendarPlaceholder',
+    'miniCalendar',
+    'miniCalendarHeader',
+    'miniCalendarNavigation',
+    'miniCalendarMonthLabel',
+    'miniCalendarWeekdayHeader',
+    'miniCalendarWeekdayCell',
+    'miniCalendarGrid',
+    'miniCalendarWeekRow',
+    'miniCalendarDayCell',
+    'miniCalendarDayButton',
     'errorContainer',
     'headerToolbar',
     'headerToolbarActions',
@@ -211,9 +246,10 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'viewSwitcher',
     'preferencesMenu',
     'resourcesLegend',
+    'resourcesLegendLabel',
     'resourcesLegendItem',
-    'resourcesLegendItemColorDot',
     'resourcesLegendItemName',
+    'resourcesLegendItemCheckbox',
     'agendaView',
     'agendaViewRow',
     'agendaViewDayHeaderCell',
@@ -289,5 +325,122 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'resourceLegendColor',
     'eventItemCardContent',
     'eventItemLinesClamp',
+    ...eventDialogClassKeys,
   ],
 );
+
+const slots = {
+  root: ['root'],
+  sidePanel: ['sidePanel'],
+  mainPanel: ['mainPanel'],
+  content: ['content'],
+  miniCalendar: ['miniCalendar'],
+  miniCalendarHeader: ['miniCalendarHeader'],
+  miniCalendarNavigation: ['miniCalendarNavigation'],
+  miniCalendarMonthLabel: ['miniCalendarMonthLabel'],
+  miniCalendarWeekdayHeader: ['miniCalendarWeekdayHeader'],
+  miniCalendarWeekdayCell: ['miniCalendarWeekdayCell'],
+  miniCalendarGrid: ['miniCalendarGrid'],
+  miniCalendarWeekRow: ['miniCalendarWeekRow'],
+  miniCalendarDayCell: ['miniCalendarDayCell'],
+  miniCalendarDayButton: ['miniCalendarDayButton'],
+  errorContainer: ['errorContainer'],
+  headerToolbar: ['headerToolbar'],
+  headerToolbarActions: ['headerToolbarActions'],
+  headerToolbarLeftElement: ['headerToolbarLeftElement'],
+  headerToolbarLabel: ['headerToolbarLabel'],
+  headerToolbarDateNavigator: ['headerToolbarDateNavigator'],
+  viewSwitcher: ['viewSwitcher'],
+  preferencesMenu: ['preferencesMenu'],
+  resourcesLegend: ['resourcesLegend'],
+  resourcesLegendLabel: ['resourcesLegendLabel'],
+  resourcesLegendItem: ['resourcesLegendItem'],
+  resourcesLegendItemName: ['resourcesLegendItemName'],
+  resourcesLegendItemCheckbox: ['resourcesLegendItemCheckbox'],
+  agendaView: ['agendaView'],
+  agendaViewRow: ['agendaViewRow'],
+  agendaViewDayHeaderCell: ['agendaViewDayHeaderCell'],
+  agendaViewDayNumberCell: ['agendaViewDayNumberCell'],
+  agendaViewWeekDayCell: ['agendaViewWeekDayCell'],
+  agendaViewWeekDayNameLabel: ['agendaViewWeekDayNameLabel'],
+  agendaViewYearAndMonthLabel: ['agendaViewYearAndMonthLabel'],
+  agendaViewEventsList: ['agendaViewEventsList'],
+  agendaViewLoadingOverlay: ['agendaViewLoadingOverlay'],
+  monthView: ['monthView'],
+  monthViewGrid: ['monthViewGrid'],
+  monthViewHeader: ['monthViewHeader'],
+  monthViewHeaderCell: ['monthViewHeaderCell'],
+  monthViewWeekHeaderCell: ['monthViewWeekHeaderCell'],
+  monthViewBody: ['monthViewBody'],
+  monthViewLoadingOverlay: ['monthViewLoadingOverlay'],
+  monthViewRow: ['monthViewRow'],
+  monthViewWeekNumberCell: ['monthViewWeekNumberCell'],
+  monthViewCell: ['monthViewCell'],
+  monthViewCellNumber: ['monthViewCellNumber'],
+  monthViewCellNumberButton: ['monthViewCellNumberButton'],
+  monthViewCellEvents: ['monthViewCellEvents'],
+  monthViewMoreEvents: ['monthViewMoreEvents'],
+  monthViewPlaceholderContainer: ['monthViewPlaceholderContainer'],
+  dayTimeGridContainer: ['dayTimeGridContainer'],
+  dayTimeGrid: ['dayTimeGrid'],
+  dayTimeGridHeader: ['dayTimeGridHeader'],
+  dayTimeGridHeaderRow: ['dayTimeGridHeaderRow'],
+  dayTimeGridAllDayEventsGrid: ['dayTimeGridAllDayEventsGrid'],
+  dayTimeGridAllDayEventsRow: ['dayTimeGridAllDayEventsRow'],
+  dayTimeGridAllDayEventsCell: ['dayTimeGridAllDayEventsCell'],
+  dayTimeGridAllDayEventsHeaderCell: ['dayTimeGridAllDayEventsHeaderCell'],
+  dayTimeGridHeaderContent: ['dayTimeGridHeaderContent'],
+  dayTimeGridHeaderButton: ['dayTimeGridHeaderButton'],
+  dayTimeGridHeaderDayName: ['dayTimeGridHeaderDayName'],
+  dayTimeGridHeaderDayNumber: ['dayTimeGridHeaderDayNumber'],
+  dayTimeGridBody: ['dayTimeGridBody'],
+  dayTimeGridScrollableContent: ['dayTimeGridScrollableContent'],
+  dayTimeGridTimeAxis: ['dayTimeGridTimeAxis'],
+  dayTimeGridTimeAxisCell: ['dayTimeGridTimeAxisCell'],
+  dayTimeGridTimeAxisText: ['dayTimeGridTimeAxisText'],
+  dayTimeGridGrid: ['dayTimeGridGrid'],
+  dayTimeGridLoadingOverlay: ['dayTimeGridLoadingOverlay'],
+  dayTimeGridColumn: ['dayTimeGridColumn'],
+  dayTimeGridColumnInteractiveLayer: ['dayTimeGridColumnInteractiveLayer'],
+  dayTimeGridCurrentTimeIndicator: ['dayTimeGridCurrentTimeIndicator'],
+  dayTimeGridCurrentTimeIndicatorCircle: ['dayTimeGridCurrentTimeIndicatorCircle'],
+  dayTimeGridCurrentTimeLabel: ['dayTimeGridCurrentTimeLabel'],
+  dayTimeGridAllDayEventsCellEvents: ['dayTimeGridAllDayEventsCellEvents'],
+  dayTimeGridAllDayEventContainer: ['dayTimeGridAllDayEventContainer'],
+  dayTimeGridScrollablePlaceholder: ['dayTimeGridScrollablePlaceholder'],
+  dayGridEvent: ['dayGridEvent'],
+  dayGridEventPlaceholder: ['dayGridEventPlaceholder'],
+  dayGridEventTitle: ['dayGridEventTitle'],
+  dayGridEventTime: ['dayGridEventTime'],
+  dayGridEventRecurringIcon: ['dayGridEventRecurringIcon'],
+  dayGridEventResizeHandler: ['dayGridEventResizeHandler'],
+  dayGridEventCardWrapper: ['dayGridEventCardWrapper'],
+  dayGridEventCardContent: ['dayGridEventCardContent'],
+  dayGridEventLinesClamp: ['dayGridEventLinesClamp'],
+  eventColorIndicator: ['eventColorIndicator'],
+  timeGridEvent: ['timeGridEvent'],
+  timeGridEventPlaceholder: ['timeGridEventPlaceholder'],
+  timeGridEventTitle: ['timeGridEventTitle'],
+  timeGridEventTime: ['timeGridEventTime'],
+  timeGridEventRecurringIcon: ['timeGridEventRecurringIcon'],
+  timeGridEventResizeHandler: ['timeGridEventResizeHandler'],
+  eventItemCard: ['eventItemCard'],
+  eventItemCardWrapper: ['eventItemCardWrapper'],
+  eventItemTitle: ['eventItemTitle'],
+  eventItemTime: ['eventItemTime'],
+  eventItemRecurringIcon: ['eventItemRecurringIcon'],
+  resourceLegendColor: ['resourceLegendColor'],
+  eventItemCardContent: ['eventItemCardContent'],
+  eventItemLinesClamp: ['eventItemLinesClamp'],
+  ...eventDialogSlots,
+};
+
+/**
+ * Computes the utility classes for EventCalendar components.
+ * Exported so both EventCalendar and EventCalendarPremium can use it.
+ */
+export const useEventCalendarUtilityClasses = (
+  classes: Partial<EventCalendarClasses> | undefined,
+): EventCalendarClasses => {
+  return composeClasses(slots, getEventCalendarUtilityClass, classes);
+};

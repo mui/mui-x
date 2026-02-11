@@ -1,15 +1,15 @@
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  DataGridProProps,
+  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
   gridClasses,
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
-  GridApi,
-  GridAutosizeOptions,
+  type GridApi,
+  type GridAutosizeOptions,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';

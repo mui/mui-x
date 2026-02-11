@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';

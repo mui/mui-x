@@ -9,12 +9,12 @@ import {
   useVirtualizer,
   Dimensions,
   LayoutDataGridLegacy,
-  VirtualizerParams,
+  type VirtualizerParams,
   Virtualization,
   EMPTY_RENDER_CONTEXT,
 } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
-import { GridStateColDef } from '../../models/colDef/gridColDef';
+import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
 import {

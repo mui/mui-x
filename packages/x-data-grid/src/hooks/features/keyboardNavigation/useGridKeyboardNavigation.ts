@@ -1,34 +1,34 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
   GRID_TREE_DATA_GROUPING_FIELD,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '../../../internals/constants';
 import { isGroupingColumn } from '../../../internals/utils/gridRowGroupingUtils';
-import { GridEventListener } from '../../../models/events';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridCellParams } from '../../../models/params/gridCellParams';
+import type { GridEventListener } from '../../../models/events';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridEvent } from '../../utils/useGridEvent';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
-import { GridRowId } from '../../../models';
+import type { GridRowId } from '../../../models';
 import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
 } from '../headerFiltering/gridHeaderFilteringSelectors';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
 import { getLeftColumnIndex, getRightColumnIndex, findNonRowSpannedCell } from './utils';
 import { createSelectorMemoized } from '../../../utils/createSelector';

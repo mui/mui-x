@@ -16,16 +16,16 @@ const date = (monthOffset: number, day: number): Date => {
 };
 
 export const resources: SchedulerResource[] = [
-  { title: 'Product', id: 'product', eventColor: 'violet' },
+  { title: 'Product', id: 'product', eventColor: 'purple' },
   { title: 'Design', id: 'design', eventColor: 'pink' },
   { title: 'Engineering', id: 'engineering', eventColor: 'blue' },
-  { title: 'QA', id: 'qa', eventColor: 'jade' },
-  { title: 'DevOps', id: 'devops', eventColor: 'cyan' },
+  { title: 'QA', id: 'qa', eventColor: 'teal' },
+  { title: 'DevOps', id: 'devops', eventColor: 'green' },
   { title: 'Marketing', id: 'marketing', eventColor: 'orange' },
   { title: 'Sales', id: 'sales', eventColor: 'lime' },
   { title: 'Customer Success', id: 'customer-success', eventColor: 'indigo' },
   { title: 'HR', id: 'hr', eventColor: 'red' },
-  { title: 'Finance', id: 'finance', eventColor: 'mauve' },
+  { title: 'Finance', id: 'finance', eventColor: 'grey' },
 ];
 
 export const initialEvents: SchedulerEvent[] = [
