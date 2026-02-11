@@ -27,6 +27,29 @@ export type FocusedItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
     ? DefaultizedProps<ChartsSeriesConfig[T]['itemIdentifier'], 'xIndex' | 'yIndex'>
     : ChartsSeriesConfig[T]['itemIdentifier'];
 
+export type FocusedItemValues<T extends ChartSeriesType = ChartSeriesType> = T extends
+  | 'line'
+  | 'bar'
+  | 'radar'
+  ? {
+      axisLabel?: string;
+      axisValue?: { toString(): string };
+      seriesLabel?: string;
+      seriesValue?: ChartsSeriesConfig[T]['valueType'];
+    }
+  : T extends 'scatter'
+    ? {
+        xLabel?: string;
+        xValue?: ChartsSeriesConfig['scatter']['valueType']['x'];
+        yLabel?: string;
+        yValue?: ChartsSeriesConfig['scatter']['valueType']['y'];
+        zLabel?: string;
+        zValue?: ChartsSeriesConfig['scatter']['valueType']['z'];
+        seriesLabel?: string;
+        seriesValue?: { toString(): string };
+      }
+    : null;
+
 export { type SeriesId } from './common';
 export type { CartesianChartSeriesType, StackableChartSeriesType } from './config';
 export * from './line';

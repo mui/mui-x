@@ -18,6 +18,7 @@ import {
   ChartsLocalizationProvider,
   type ChartsLocalizationProviderProps,
 } from '../ChartsLocalizationProvider';
+import { ChartsVoiceover } from '../ChartsVoiceover';
 
 export interface ChartDataProviderSlots extends ChartsSlots {}
 
@@ -84,6 +85,7 @@ function ChartDataProvider<
           defaultSlots={defaultSlotsMaterial}
         >
           {children}
+          <ChartsVoiceover />
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>
     </ChartProvider>
