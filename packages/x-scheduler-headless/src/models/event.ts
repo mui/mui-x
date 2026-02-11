@@ -30,12 +30,10 @@ interface SchedulerProcessedEventBase {
   displayTimezone: {
     /**
      * The start date and time of the event.
-     * For all day events, this value is normalized to the start of the day in the display timezone.
      */
     start: SchedulerProcessedDate;
     /**
      * The end date and time of the event.
-     * For all day events, this value is normalized to the end of the day in the display timezone.
      */
     end: SchedulerProcessedDate;
     /**
