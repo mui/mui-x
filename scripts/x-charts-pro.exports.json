@@ -128,7 +128,6 @@
   { "name": "ChartsContainerProProps", "kind": "TypeAlias" },
   { "name": "ChartsContainerProSlotProps", "kind": "Interface" },
   { "name": "ChartsContainerProSlots", "kind": "Interface" },
-  { "name": "ChartSeriesType", "kind": "TypeAlias" },
   { "name": "ChartsGrid", "kind": "Function" },
   { "name": "chartsGridClasses", "kind": "Variable" },
   { "name": "ChartsGridClasses", "kind": "Interface" },
