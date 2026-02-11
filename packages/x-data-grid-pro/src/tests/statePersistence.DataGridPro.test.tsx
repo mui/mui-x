@@ -317,7 +317,7 @@ describe('<DataGridPro /> - State persistence', () => {
         );
       }
 
-      function Grid2({ savedState }: { savedState: GridInitialState }) {
+      function Grid2() {
         const ref = useGridApiRef();
         apiRef = ref;
         return (
@@ -333,7 +333,7 @@ describe('<DataGridPro /> - State persistence', () => {
       unmount();
 
       // Render Grid2 and restore Grid1's state
-      render(<Grid2 savedState={exportedState} />);
+      render(<Grid2 />);
       act(() => apiRef.current!.restoreState(exportedState));
 
       // Column 'a' should be pinned to the right, meaning it should be last in orderedFields
