@@ -20,7 +20,7 @@ import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '../internals/constants/dimensions';
-import { getFocusedListItemIndex } from '../internals/utils/utils';
+import { getActiveElement, getFocusedListItemIndex } from '../internals/utils/utils';
 import { FormProps } from '../internals/models/formProps';
 import { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
@@ -182,12 +182,12 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
 
-      // Only focus when autoFocus or active section changes
-      const shouldFocus =
-        active &&
-        autoFocus &&
-        activeItem &&
-        (previousAutoFocus.current !== autoFocus || previousActiveState.current !== active);
+      const hasFocus = containerRef.current.contains(getActiveElement(containerRef.current));
+      const focusedChanged =
+        previousAutoFocus.current !== autoFocus || previousActiveState.current !== active;
+
+      // Only focus when autoFocus/active props change or when focus is already inside the container
+      const shouldFocus = active && autoFocus && activeItem && (focusedChanged || hasFocus);
 
       if (shouldFocus) {
         activeItem.focus();

@@ -22,7 +22,7 @@ import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
-import { getFocusedListItemIndex } from '../internals/utils/utils';
+import { getActiveElement, getFocusedListItemIndex } from '../internals/utils/utils';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 const useUtilityClasses = (classes: Partial<DigitalClockClasses> | undefined) => {
@@ -230,10 +230,12 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     }
     const offsetTop = activeItem.offsetTop;
 
-    // Only focus when autoFocus or focusedView changes
-    const shouldFocus =
-      (autoFocus || !!focusedView) &&
-      (previousAutoFocus.current !== autoFocus || previousFocusedView.current !== focusedView);
+    const hasFocus = containerRef.current.contains(getActiveElement(containerRef.current));
+    const focusedChanged =
+      previousAutoFocus.current !== autoFocus || previousFocusedView.current !== focusedView;
+
+    // Only focus when autoFocus/focusedView props change or when focus is already inside the container
+    const shouldFocus = (autoFocus || !!focusedView) && (focusedChanged || hasFocus);
 
     if (shouldFocus) {
       activeItem.focus();
