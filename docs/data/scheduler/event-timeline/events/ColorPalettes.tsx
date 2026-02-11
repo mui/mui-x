@@ -1,24 +1,27 @@
 import * as React from 'react';
-
 import { SchedulerEvent } from '@mui/x-scheduler/models';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   initialEventsWithoutResources,
   defaultVisibleDate,
-} from '../../datasets/calendar-palette-demo';
+  resourcesWithoutColors,
+} from '../../datasets/timeline-palette-demo';
 
 export default function ColorPalettes() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(
     initialEventsWithoutResources,
   );
 
+  console.log(events);
+
   return (
-    <div style={{ height: '600px', width: '100%' }}>
-      <EventCalendar
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+      <EventTimelinePremium
         events={events}
+        resources={resourcesWithoutColors}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultPreferences={{ showWeekends: false, isSidePanelOpen: false }}
+        defaultView="days"
       />
     </div>
   );

@@ -2,22 +2,23 @@ import * as React from 'react';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
-  initialEventsWithResources,
+  initialEvents,
   defaultVisibleDate,
   resources,
-} from '../../datasets/calendar-palette-demo';
+} from '../../datasets/personal-agenda';
 
-export default function ColorPalettes() {
-  const [events, setEvents] = React.useState(initialEventsWithResources);
+export default function EventCreationInteraction() {
+  const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '600px', width: '100%' }}>
+    <div style={{ height: '650px', width: '100%' }}>
       <EventCalendar
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultPreferences={{ showWeekends: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
+        eventCreation={{ interaction: 'click' }}
       />
     </div>
   );
