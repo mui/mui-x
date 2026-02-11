@@ -184,10 +184,10 @@ export const AgendaView = React.memo(
     const daysWithOccurrences = React.useMemo(
       () =>
         days.map((date) => {
-          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || [], adapter);
+          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
           return { date, occurrences };
         }),
-      [days, occurrencesMap, adapter],
+      [days, occurrencesMap],
     );
 
     return (
