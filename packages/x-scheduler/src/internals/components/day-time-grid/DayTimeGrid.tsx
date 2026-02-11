@@ -126,8 +126,8 @@ const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
   gridRow: 1,
   width: '100%',
   height: '100%',
-  '& > *:not(:last-child)': {
-    borderInlineEnd: `1px solid ${theme.palette.divider}`,
+  '& > *': {
+    borderInlineStart: `1px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -272,14 +272,11 @@ const DayTimeGridTimeAxisText = styled('time', {
 const DayTimeGridGrid = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridGrid',
-})(({ theme }) => ({
+})({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
-  '& > *:not(:last-child)': {
-    borderInlineEnd: `1px solid ${theme.palette.divider}`,
-  },
-}));
+});
 
 // TODO: Replace with a proper loading overlay component that is shared across views
 const DayTimeGridLoadingOverlay = styled(Typography, {
