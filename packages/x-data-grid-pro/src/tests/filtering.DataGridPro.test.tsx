@@ -1479,6 +1479,28 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     describe('filtering operators', () => {
+      it('should filter with operator "contains"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: 'React' }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
+      });
+
+      it('should filter with operator "doesNotContain"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'doesNotContain', value: 'React' }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['VueJavaScript', '', '']);
+      });
+
       it('should filter with operator "isEmpty"', () => {
         render(
           <TestCaseMultiSelect
@@ -1488,6 +1510,33 @@ describe('<DataGridPro /> - Filter', () => {
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['', '']);
+      });
+
+      it('should filter with operator "contains" and object valueOptions', () => {
+        render(
+          <TestCaseMultiSelect
+            rows={[
+              { id: 1, tags: ['fe', 'be'] },
+              { id: 2, tags: ['be'] },
+              { id: 3, tags: [] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 250,
+                valueOptions: [
+                  { value: 'fe', label: 'Frontend' },
+                  { value: 'be', label: 'Backend' },
+                ],
+              },
+            ]}
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: 'fe' }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['FrontendBackend']);
       });
 
       it('should filter with operator "isNotEmpty"', () => {
@@ -1505,6 +1554,36 @@ describe('<DataGridPro /> - Filter', () => {
           'ReactJavaScript',
         ]);
       });
+    });
+
+    it('should format values with custom separator in CSV export', () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['React', 'TypeScript'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript'],
+              separator: ' | ',
+            },
+          ]}
+        />,
+      );
+      const csv = apiRef.current!.getDataAsCsv({ includeHeaders: false });
+      expect(csv).to.equal('React | TypeScript');
+    });
+
+    it('should quick filter by formatted value', () => {
+      render(
+        <TestCaseMultiSelect
+          filterModel={{
+            items: [],
+            quickFilterValues: ['React'],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
     });
   });
 });

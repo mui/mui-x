@@ -874,6 +874,21 @@ describe('<DataGridPro /> - Edit components', () => {
       expect(onValueChange.lastCall.args[1]).to.deep.equal(['Option 1', 'Option 2']);
     });
 
+    it('should work with null initial value', async () => {
+      defaultData.rows = [{ id: 0, tags: null }];
+
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      await user.click(within(listbox).getByRole('option', { name: 'Option 1' }));
+
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.deep.equal(['Option 1']);
+    });
+
     it('should deselect option when clicking selected option', async () => {
       defaultData.rows = [{ id: 0, tags: ['Option 1', 'Option 2'] }];
 
@@ -890,9 +905,32 @@ describe('<DataGridPro /> - Edit components', () => {
       expect(spiedSetEditCellValue.lastCall.args[0].value).to.deep.equal(['Option 2']);
     });
 
+    it('should commit value when clicking outside', async () => {
+      const processRowUpdate = spy((newRow: any) => newRow);
+      const { user } = render(
+        <div>
+          <TestCase processRowUpdate={processRowUpdate} />
+          <div id="outside-grid" />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      await user.click(within(listbox).getByRole('option', { name: 'Option 2' }));
+
+      await user.click(document.getElementById('outside-grid')!);
+
+      await waitFor(() => {
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      });
+      expect(processRowUpdate.lastCall.args[0].tags).to.deep.equal(['Option 1', 'Option 2']);
+    });
+
     describe('slotProps.chip as function', () => {
-      it('should pass string option to chip function for string valueOptions in view mode', () => {
-        const chipFn = spy(() => ({ color: 'primary' as const }));
+      it('should apply chip props from function for string valueOptions in view mode', () => {
+        const chipFn = (option: string) => ({ className: `chip-${option.replace(/\s/g, '-')}` });
 
         defaultData.rows = [{ id: 0, tags: ['Option 1', 'Option 2'] }];
         defaultData.columns = [
@@ -911,29 +949,26 @@ describe('<DataGridPro /> - Edit components', () => {
 
         render(<TestCase />);
 
-        // callCount may be >2 due to measurement renders
-        expect(chipFn.callCount).to.be.greaterThanOrEqual(2);
-        // For string options, the value option IS the string itself
-        const calls = chipFn.getCalls();
-        const args = calls.map((c: any) => c.args);
-        expect(args).to.deep.include(['Option 1', 0]);
-        expect(args).to.deep.include(['Option 2', 1]);
+        const cell = getCell(0, 0);
+        expect(cell.querySelector('.chip-Option-1')).not.to.equal(null);
+        expect(cell.querySelector('.chip-Option-2')).not.to.equal(null);
       });
 
-      it('should pass resolved option object to chip function for object valueOptions in view mode', () => {
-        const objectOptions = [
-          { value: 1, label: 'One' },
-          { value: 2, label: 'Two' },
-          { value: 3, label: 'Three' },
-        ];
-        const chipFn = spy(() => ({}));
+      it('should apply chip props from function for object valueOptions in view mode', () => {
+        const chipFn = (option: { value: number; label: string }) => ({
+          className: `chip-${option.label}`,
+        });
 
         defaultData.rows = [{ id: 0, tags: [1, 3] }];
         defaultData.columns = [
           {
             field: 'tags',
             type: 'multiSelect',
-            valueOptions: objectOptions,
+            valueOptions: [
+              { value: 1, label: 'One' },
+              { value: 2, label: 'Two' },
+              { value: 3, label: 'Three' },
+            ],
             renderCell: (params) => (
               <GridMultiSelectCell
                 {...(params as GridMultiSelectCellProps)}
@@ -945,19 +980,15 @@ describe('<DataGridPro /> - Edit components', () => {
 
         render(<TestCase />);
 
-        expect(chipFn.callCount).to.be.greaterThanOrEqual(2);
-        const calls = chipFn.getCalls();
-        const firstArgs = calls.map((c: any) => c.args[0]);
-        expect(firstArgs).to.deep.include({ value: 1, label: 'One' });
-        expect(firstArgs).to.deep.include({ value: 3, label: 'Three' });
+        const cell = getCell(0, 0);
+        expect(cell.querySelector('.chip-One')).not.to.equal(null);
+        expect(cell.querySelector('.chip-Three')).not.to.equal(null);
       });
 
-      it('should pass resolved option object to chip function for object valueOptions in edit mode', async () => {
-        const objectOptions = [
-          { value: 1, label: 'One' },
-          { value: 2, label: 'Two' },
-        ];
-        const chipFn = spy(() => ({}));
+      it('should apply chip props from function for object valueOptions in edit mode', async () => {
+        const chipFn = (option: { value: number; label: string }) => ({
+          className: `chip-${option.label}`,
+        });
 
         defaultData.rows = [{ id: 0, tags: [1, 2] }];
         defaultData.columns = [
@@ -965,7 +996,10 @@ describe('<DataGridPro /> - Edit components', () => {
             field: 'tags',
             type: 'multiSelect',
             editable: true,
-            valueOptions: objectOptions,
+            valueOptions: [
+              { value: 1, label: 'One' },
+              { value: 2, label: 'Two' },
+            ],
             renderEditCell: (params) => (
               <GridEditMultiSelectCell
                 {...(params as GridEditMultiSelectCellProps)}
@@ -980,11 +1014,9 @@ describe('<DataGridPro /> - Edit components', () => {
         const cell = getCell(0, 0);
         await user.dblClick(cell);
 
-        expect(chipFn.callCount).to.be.greaterThanOrEqual(2);
-        const calls = chipFn.getCalls();
-        const firstArgs = calls.map((c: any) => c.args[0]);
-        expect(firstArgs).to.deep.include({ value: 1, label: 'One' });
-        expect(firstArgs).to.deep.include({ value: 2, label: 'Two' });
+        const editRoot = cell.querySelector('.MuiDataGrid-editMultiSelectCell')!;
+        expect(editRoot.querySelector('.chip-One')).not.to.equal(null);
+        expect(editRoot.querySelector('.chip-Two')).not.to.equal(null);
       });
     });
   });

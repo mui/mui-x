@@ -8,7 +8,6 @@ import {
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, act, screen, within } from '@mui/internal-test-utils';
-import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -86,16 +85,5 @@ describe('<DataGrid /> - Filter panel', () => {
       expect(options).to.have.length(6);
     });
 
-    it('should filter correctly with "isEmpty" operator', () => {
-      render(
-        <TestCase
-          {...multiSelectBaselineProps}
-          filterModel={{
-            items: [{ field: 'tags', operator: 'isEmpty' }],
-          }}
-        />,
-      );
-      expect(getColumnValues(0)).to.deep.equal(['']);
-    });
   });
 });
