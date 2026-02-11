@@ -161,6 +161,8 @@ function DataGrid(props: DataGridProps) {
   const paginationModel = grid.use(paginationPlugin.selectors.model);
   const pageCount = grid.use(paginationPlugin.selectors.pageCount);
   const rowCount = grid.use(paginationPlugin.selectors.rowCount);
+  const startRow = grid.use(paginationPlugin.selectors.startRow);
+  const endRow = grid.use(paginationPlugin.selectors.endRow);
   const sortModel = grid.use(sortingPlugin.selectors.model);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
@@ -196,10 +198,6 @@ function DataGrid(props: DataGridProps) {
   React.useEffect(() => {
     scrollContainerRef.current?.scrollTo({ top: 0 });
   }, [paginationModel.page]);
-
-  // Pagination display
-  const startRow = paginationModel.page * paginationModel.pageSize + 1;
-  const endRow = Math.min(startRow + paginatedRowIds.length - 1, rowCount);
 
   return (
     <div className="grid-wrapper">
