@@ -11,7 +11,7 @@ import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
 import { type FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro';
 
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
@@ -147,7 +147,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     ? valueAxisConfig
     : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
 
-  const chartContainerProps: ChartsContainerProProps<'funnel', FunnelChartPluginSignatures> = {
+  const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginSignatures> = {
     ...other,
     series: series.map((s) => ({
       type: 'funnel' as const,

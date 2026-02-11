@@ -16,9 +16,9 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { FunnelPlot, type FunnelPlotProps } from './FunnelPlot';
 import { type FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro';
 import { funnelSeriesConfig } from './seriesConfig';
-import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { type FunnelChartSlotExtension } from './funnelSlots.types';
 import { type CategoryAxis } from './categoryAxis.types';
@@ -29,7 +29,7 @@ export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
   extends
     Omit<
-      ChartsContainerProProps<'funnel', FunnelChartPluginSignatures>,
+      ChartContainerProProps<'funnel', FunnelChartPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'zAxis'
@@ -91,7 +91,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     axisHighlightProps,
     children,
   } = useFunnelChartProps(themedProps);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps(
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
     chartContainerProps,
     ref,
   );

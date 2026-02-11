@@ -31,7 +31,6 @@ export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
   (processedSeries): HighlightLookUp<ChartSeriesType> => {
     const map: HighlightLookUp<ChartSeriesType> = {};
 
-    map.bar = new Map<SeriesId, HighlightScope<'bar'>>();
     (Object.keys(processedSeries) as ChartSeriesType[]).forEach(
       <T extends ChartSeriesType>(seriesType: T) => {
         map[seriesType] = new Map();
