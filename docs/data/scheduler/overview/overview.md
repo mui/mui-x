@@ -43,7 +43,6 @@ This package is not published yet.
 
 ## Event Timeline
 
-- [Main page](/x/react-scheduler/event-timeline-premium/) (TODO: Remove once all the content is in feature pages)
 - [Full screen demo](/x/react-scheduler/full-screen-event-timeline-premium/) (TODO: Remove once we have the overview page)
 - [Events](/x/react-scheduler/event-timeline/events/)
 - [Resources](/x/react-scheduler/event-timeline/resources/)
