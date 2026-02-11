@@ -3,21 +3,23 @@ import {
   createGetPreviousIndexFocusedItem,
   createGetNextSeriesFocusedItem,
   createGetPreviousSeriesFocusedItem,
+  type ComposableCartesianChartSeriesType,
+  composableCartesianSeriesTypes,
 } from '../../../internals/commonNextFocusItem';
 import type { KeyboardFocusHandler } from '../../../internals/plugins/featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 
-const outSeriesTypes: Set<'bar' | 'line' | 'scatter'> = new Set(['bar', 'line', 'scatter']);
-
-const keyboardFocusHandler: KeyboardFocusHandler<'bar', 'bar' | 'line' | 'scatter'> = (event) => {
+const keyboardFocusHandler: KeyboardFocusHandler<'bar', ComposableCartesianChartSeriesType> = (
+  event,
+) => {
   switch (event.key) {
     case 'ArrowRight':
-      return createGetNextIndexFocusedItem(outSeriesTypes);
+      return createGetNextIndexFocusedItem(composableCartesianSeriesTypes);
     case 'ArrowLeft':
-      return createGetPreviousIndexFocusedItem(outSeriesTypes);
+      return createGetPreviousIndexFocusedItem(composableCartesianSeriesTypes);
     case 'ArrowDown':
-      return createGetPreviousSeriesFocusedItem(outSeriesTypes);
+      return createGetPreviousSeriesFocusedItem(composableCartesianSeriesTypes);
     case 'ArrowUp':
-      return createGetNextSeriesFocusedItem(outSeriesTypes);
+      return createGetNextSeriesFocusedItem(composableCartesianSeriesTypes);
     default:
       return null;
   }

@@ -5,7 +5,11 @@ import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboard
 import type { ChartState } from './plugins/models/chart';
 import { seriesHasData } from './seriesHasData';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { FocusedItemIdentifier, SeriesId, SeriesItemIdentifier } from '../models/seriesType';
+import type {
+  FocusedItemIdentifier,
+  SeriesId,
+  SeriesItemIdentifier,
+} from '../models/seriesType';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 
 type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
@@ -207,3 +211,15 @@ export function createGetPreviousSeriesFocusedItem<
     };
   };
 }
+
+export type ComposableCartesianChartSeriesType =
+  | 'bar'
+  | 'line'
+  | 'scatter'
+  | ('rangeBar' extends ChartSeriesType ? 'rangeBar' : never);
+export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesType> = new Set([
+  'bar',
+  'line',
+  'scatter',
+  'rangeBar',
+] as ComposableCartesianChartSeriesType[]);

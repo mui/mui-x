@@ -4,28 +4,22 @@ import {
   createGetNextSeriesFocusedItem,
   createGetPreviousSeriesFocusedItem,
   type KeyboardFocusHandler,
+  type ComposableCartesianChartSeriesType,
+  composableCartesianSeriesTypes,
 } from '@mui/x-charts/internals';
 
-const outSeriesTypes: Set<'rangeBar' | 'bar' | 'line' | 'scatter'> = new Set([
-  'rangeBar',
-  'bar',
-  'line',
-  'scatter',
-]);
-
-const keyboardFocusHandler: KeyboardFocusHandler<
-  'rangeBar',
-  'rangeBar' | 'bar' | 'line' | 'scatter'
-> = (event) => {
+const keyboardFocusHandler: KeyboardFocusHandler<'rangeBar', ComposableCartesianChartSeriesType> = (
+  event,
+) => {
   switch (event.key) {
     case 'ArrowRight':
-      return createGetNextIndexFocusedItem(outSeriesTypes);
+      return createGetNextIndexFocusedItem(composableCartesianSeriesTypes);
     case 'ArrowLeft':
-      return createGetPreviousIndexFocusedItem(outSeriesTypes);
+      return createGetPreviousIndexFocusedItem(composableCartesianSeriesTypes);
     case 'ArrowDown':
-      return createGetPreviousSeriesFocusedItem(outSeriesTypes);
+      return createGetPreviousSeriesFocusedItem(composableCartesianSeriesTypes);
     case 'ArrowUp':
-      return createGetNextSeriesFocusedItem(outSeriesTypes);
+      return createGetNextSeriesFocusedItem(composableCartesianSeriesTypes);
     default:
       return null;
   }
