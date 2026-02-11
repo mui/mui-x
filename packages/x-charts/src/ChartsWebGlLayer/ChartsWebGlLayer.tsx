@@ -14,7 +14,7 @@ export function useWebGLContext(): WebGL2RenderingContext | null {
   return React.useContext(ChartsWebGLContext);
 }
 
-export const ChartsWebGLSurface = React.forwardRef<
+export const ChartsWebGlLayer = React.forwardRef<
   HTMLCanvasElement,
   React.PropsWithChildren<React.ComponentProps<'canvas'>>
 >(function WebGLProvider({ children, ...props }, ref) {

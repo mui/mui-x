@@ -1,5 +1,0 @@
-{
-  "componentDescription": "A layer that provides the drawing area SVG the chart elements.\nMust be wrapped in a `<ChartsLayerContainer>`.",
-  "propDescriptions": {},
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
-}

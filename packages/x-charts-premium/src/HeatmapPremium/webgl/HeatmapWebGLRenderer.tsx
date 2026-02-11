@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useRegisterPointerInteractions, ChartsWebGLSurface } from '@mui/x-charts/internals';
+import { useRegisterPointerInteractions, ChartsWebGlLayer } from '@mui/x-charts/internals';
 import {
   type HeatmapRendererPlotProps,
   selectorHeatmapItemAtPosition,
@@ -11,8 +11,8 @@ export function HeatmapWebGLRenderer({ borderRadius }: HeatmapRendererPlotProps)
   useRegisterPointerInteractions(selectorHeatmapItemAtPosition);
 
   return (
-    <ChartsWebGLSurface>
+    <ChartsWebGlLayer>
       <HeatmapWebGLPlot borderRadius={borderRadius} />
-    </ChartsWebGLSurface>
+    </ChartsWebGlLayer>
   );
 }

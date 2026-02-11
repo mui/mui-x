@@ -3,7 +3,7 @@ import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { ChartsWebGLSurface, useWebGLContext } from './ChartsWebGLSurface';
+import { ChartsWebGlLayer, useWebGLContext } from './ChartsWebGlLayer';
 
 describe('<WebGLProvider />', () => {
   const { render } = createRenderer();
@@ -29,9 +29,9 @@ describe('<WebGLProvider />', () => {
         xAxis={[{ id: 'x', data: [1, 2, 3] }]}
       >
         <ChartsWrapper>
-          <ChartsWebGLSurface data-testid="webgl-canvas">
+          <ChartsWebGlLayer data-testid="webgl-canvas">
             <TestComponent />
-          </ChartsWebGLSurface>
+          </ChartsWebGlLayer>
         </ChartsWrapper>
       </ChartDataProvider>,
     );

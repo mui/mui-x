@@ -180,7 +180,6 @@
   { "name": "ChartsTooltipSlots", "kind": "Interface" },
   { "name": "ChartsTooltipTable", "kind": "Variable" },
   { "name": "ChartsTypeFeatureFlags", "kind": "Interface" },
-  { "name": "ChartsWebGLSurface", "kind": "Variable" },
   { "name": "ChartsWrapper", "kind": "Function" },
   { "name": "ChartsWrapperProps", "kind": "Interface" },
   { "name": "ChartsXAxis", "kind": "Function" },

@@ -100,10 +100,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsItemTooltipContent',
   },
   {
-    pathname: '/x/api/charts/charts-layer-container',
-    title: 'ChartsLayerContainer',
-  },
-  {
     pathname: '/x/api/charts/charts-legend',
     title: 'ChartsLegend',
   },
@@ -118,10 +114,6 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-surface',
     title: 'ChartsSurface',
-  },
-  {
-    pathname: '/x/api/charts/charts-svg-layer',
-    title: 'ChartsSvgLayer',
   },
   {
     pathname: '/x/api/charts/charts-text',
