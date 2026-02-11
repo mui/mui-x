@@ -37,7 +37,7 @@ export function usePlaceholderInRow(
     const endProcessed = processDate(rawPlaceholder.end, adapter);
     const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedProperties = {
-      id: 'occurrence-placeholder',
+      id: originalEventId ?? 'occurrence-placeholder',
       key: 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
       displayTimezone: {
@@ -79,7 +79,7 @@ export function usePlaceholderInRow(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, adapter, originalEvent, occurrences, maxIndex]);
+  }, [rawPlaceholder, adapter, originalEvent, originalEventId, occurrences, maxIndex]);
 }
 
 export namespace usePlaceholderInRow {

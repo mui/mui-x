@@ -51,7 +51,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
   });
 
   const setTooltipItem = useEventCallback(function setTooltipItem(
-    newItem: SeriesItemIdentifier<ChartSeriesType>,
+    newItem: SeriesItemIdentifier<SeriesType>,
   ) {
     if (!fastObjectShallowCompare(store.state.tooltip.item, newItem)) {
       params.onTooltipItemChange?.(newItem);

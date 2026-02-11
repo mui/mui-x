@@ -15,7 +15,7 @@ export type ContextValue<TData> = {
   isOpen: boolean;
   /**
    * A component can subscribe to a modal close event and react to it
-   * e.g. Closing the `MoreEventsPopover` when an `EventDraggableDialog` closes
+   * e.g. Closing the `MoreEventsPopover` when an `EventDialog` closes
    */
   subscribeCloseHandler: (handler: () => void) => () => void;
 };

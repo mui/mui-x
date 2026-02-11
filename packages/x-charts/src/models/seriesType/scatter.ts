@@ -17,7 +17,7 @@ export type ScatterValueType = {
 };
 
 export interface ScatterSeriesType
-  extends CommonSeriesType<ScatterValueType | null>, CartesianSeriesType {
+  extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
   type: 'scatter';
   data?: readonly ScatterValueType[];
   /**

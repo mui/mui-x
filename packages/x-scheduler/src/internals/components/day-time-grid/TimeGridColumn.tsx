@@ -12,27 +12,24 @@ import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headle
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
-import {
-  EventDraggableDialogTrigger,
-  useEventDraggableDialogContext,
-} from '../event-draggable-dialog/EventDraggableDialog';
+import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridColumn',
 })(({ theme }) => ({
-  borderRight: `1px solid ${theme.palette.divider}`,
+  borderInlineStart: `1px solid ${theme.palette.divider}`,
   flexGrow: 1,
   flexShrink: 0,
   flexBasis: 0,
   minWidth: 0,
   position: 'relative',
-  '&:first-of-type': {
-    borderLeft: `1px solid ${theme.palette.divider}`,
-  },
   '&[data-weekend]': {
     backgroundColor: theme.palette.action.hover,
+  },
+  ':last-of-type': {
+    borderInlineEnd: `1px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -125,7 +122,7 @@ function ColumnInteractiveLayer({
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventDraggableDialogContext();
+  const { onOpen: startEditing } = useEventDialogContext();
   const classes = useEventCalendarClasses();
 
   // Ref hooks
@@ -176,9 +173,9 @@ function ColumnInteractiveLayer({
       {...eventCreationProps}
     >
       {occurrences.map((occurrence) => (
-        <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+        <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
           <TimeGridEvent occurrence={occurrence} variant="regular" />
-        </EventDraggableDialogTrigger>
+        </EventDialogTrigger>
       ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (

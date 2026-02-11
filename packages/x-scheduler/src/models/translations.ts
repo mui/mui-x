@@ -3,6 +3,7 @@ import { CalendarView } from '@mui/x-scheduler-headless/models';
 export interface SchedulerTranslations {
   // ResourcesLegend
   hideEventsLabel: (resourceName: string) => string;
+  resourcesLabel: string;
   resourcesLegendSectionLabel: string;
   showEventsLabel: (resourceName: string) => string;
 
@@ -48,7 +49,10 @@ export interface SchedulerTranslations {
   // EventItem
   eventItemMultiDayLabel: (endDate: string) => string;
 
-  // EventDraggableDialog
+  // EventDialog
+  colorPickerLabel: string;
+  dateTimeSectionLabel: string;
+  resourceColorSectionLabel: string;
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;
@@ -104,4 +108,9 @@ export interface SchedulerTranslations {
 
   // General
   loading: string;
+
+  // MiniCalendar
+  miniCalendarLabel: string;
+  miniCalendarGoToPreviousMonth: string;
+  miniCalendarGoToNextMonth: string;
 }

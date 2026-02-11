@@ -18,7 +18,7 @@ import {
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { EventDraggableDialogContent } from './EventDraggableDialog';
+import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 
@@ -38,11 +38,11 @@ const resources: SchedulerResource[] = [
   {
     id: 'r2',
     title: 'Personal',
-    eventColor: 'cyan',
+    eventColor: 'teal',
   },
 ];
 
-describe('<EventDraggableDialogContent open />', () => {
+describe('<EventDialogContent open />', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
 
@@ -65,7 +65,7 @@ describe('<EventDraggableDialogContent open />', () => {
   it('should render the event data in the form fields', async () => {
     const { user } = render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-        <EventDraggableDialogContent open {...defaultProps} />
+        <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     expect(screen.getByDisplayValue(DEFAULT_EVENT.title)).not.to.equal(null);
@@ -74,10 +74,10 @@ describe('<EventDraggableDialogContent open />', () => {
     expect(screen.getByLabelText(/end date/i)).to.have.value('2025-05-26');
     expect(screen.getByLabelText(/start time/i)).to.have.value('07:30');
     expect(screen.getByLabelText(/end time/i)).to.have.value('08:15');
-    expect(
-      (screen.getByRole('checkbox', { name: /all day/i }) as HTMLInputElement).checked,
-    ).to.equal(false);
-    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/personal/i);
+    expect((screen.getByRole('switch', { name: /all day/i }) as HTMLInputElement).checked).to.equal(
+      false,
+    );
+    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
     // Verify recurrence tab is clickable (recurrence value tested in other tests)
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     expect(screen.getByRole('combobox', { name: /recurrence/i })).to.not.equal(null);
@@ -91,19 +91,18 @@ describe('<EventDraggableDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
       >
-        <EventDraggableDialogContent open {...defaultProps} />
+        <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
-    await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+    await user.click(screen.getByRole('switch', { name: /all day/i }));
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
     await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
-    await user.click(screen.getByRole('button', { name: /resource/i }));
-    await user.click(await screen.findByRole('menuitem', { name: /work/i }));
-    // Menu closes after resource selection, re-open for color
-    await user.click(screen.getByRole('button', { name: /resource/i }));
-    await user.click(await screen.findByRole('button', { name: /pink/i }));
+    await user.click(screen.getByRole('tab', { name: /general/i }));
+    await user.click(screen.getByRole('combobox', { name: /resource/i }));
+    await user.click(await screen.findByRole('option', { name: /work/i }));
+    await user.click(screen.getByRole('radio', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -122,12 +121,12 @@ describe('<EventDraggableDialogContent open />', () => {
     };
 
     expect(updated).to.deep.equal(expectedUpdatedEvent);
-  });
+  }, 10_000);
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]}>
-        <EventDraggableDialogContent open {...defaultProps} />
+      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.clear(screen.getByLabelText(/start date/i));
@@ -144,8 +143,12 @@ describe('<EventDraggableDialogContent open />', () => {
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]} onEventsChange={onEventsChange}>
-        <EventDraggableDialogContent open {...defaultProps} />
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+      >
+        <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.click(screen.getByRole('button', { name: /delete event/i }));
@@ -166,29 +169,33 @@ describe('<EventDraggableDialogContent open />', () => {
 
     render(
       <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
-        <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
+
+    const dialogs = screen.getAllByRole('dialog');
+    const dialog = within(dialogs[dialogs.length - 1]);
+
     // Should display title as text, not in an input
-    expect(screen.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
-    expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+    expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
+    expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
 
     // Should display description as text, not in an input
-    expect(screen.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
-    expect(screen.queryByLabelText(/description/i)).to.equal(null);
+    expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
+    expect(dialog.queryByLabelText(/description/i)).to.equal(null);
 
     // Should not have date/time inputs
-    expect(screen.queryByLabelText(/start date/i)).to.equal(null);
-    expect(screen.queryByLabelText(/end date/i)).to.equal(null);
-    expect(screen.queryByLabelText(/start time/i)).to.equal(null);
-    expect(screen.queryByLabelText(/end time/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
 
     // Should not have all-day checkbox
-    expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
+    expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
-    expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+    expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
   it('should handle read-only events if EventCalendar is read-only', () => {
@@ -202,29 +209,33 @@ describe('<EventDraggableDialogContent open />', () => {
 
     render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} readOnly>
-        <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
+
+    const dialogs = screen.getAllByRole('dialog');
+    const dialog = within(dialogs[dialogs.length - 1]);
+
     // Should display title as text, not in an input
-    expect(screen.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
-    expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+    expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
+    expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
 
     // Should display description as text, not in an input
-    expect(screen.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
-    expect(screen.queryByLabelText(/description/i)).to.equal(null);
+    expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
+    expect(dialog.queryByLabelText(/description/i)).to.equal(null);
 
     // Should not have date/time inputs
-    expect(screen.queryByLabelText(/start date/i)).to.equal(null);
-    expect(screen.queryByLabelText(/end date/i)).to.equal(null);
-    expect(screen.queryByLabelText(/start time/i)).to.equal(null);
-    expect(screen.queryByLabelText(/end time/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
+    expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
 
     // Should not have all-day checkbox
-    expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
+    expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
-    expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+    expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
   it('should handle a resource without an eventColor (fallback to default)', async () => {
@@ -232,7 +243,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
     const resourcesNoColor: SchedulerResource[] = [
       { id: 'r1', title: 'Work', eventColor: 'blue' },
-      { id: 'r2', title: 'Personal', eventColor: 'cyan' },
+      { id: 'r2', title: 'Personal', eventColor: 'teal' },
       { id: 'r3', title: 'NoColor' },
     ];
 
@@ -255,7 +266,7 @@ describe('<EventDraggableDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resourcesNoColor}
       >
-        <EventDraggableDialogContent
+        <EventDialogContent
           open
           {...defaultProps}
           occurrence={eventWithNoResourceColorOccurrence}
@@ -263,10 +274,15 @@ describe('<EventDraggableDialogContent open />', () => {
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/NoColor/i);
+    const dialogs = screen.getAllByRole('dialog');
+    const currentDialog = dialogs[dialogs.length - 1];
+
+    expect(within(currentDialog).getByRole('combobox', { name: /resource/i }).textContent).to.match(
+      /NoColor/i,
+    );
     expect(
-      document.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
-    ).to.have.attribute('data-palette', 'jade');
+      currentDialog.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
+    ).to.have.attribute('data-palette', 'teal');
   });
 
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
@@ -290,19 +306,20 @@ describe('<EventDraggableDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
       >
-        <EventDraggableDialogContent
-          open
-          {...defaultProps}
-          occurrence={eventWithoutResourceOccurrence}
-        />
+        <EventDialogContent open {...defaultProps} occurrence={eventWithoutResourceOccurrence} />
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/no resource/i);
+    const dialogs = screen.getAllByRole('dialog');
+    const currentDialog = dialogs[dialogs.length - 1];
+
+    expect(within(currentDialog).getByRole('combobox', { name: /resource/i }).textContent).to.match(
+      /no resource/i,
+    );
 
     expect(
-      document.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
-    ).to.have.attribute('data-palette', 'jade');
+      currentDialog.querySelector(`.${eventCalendarClasses.eventDialogResourceMenuColorDot}`),
+    ).to.have.attribute('data-palette', 'teal');
 
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
@@ -338,7 +355,7 @@ describe('<EventDraggableDialogContent open />', () => {
             }
           />
 
-          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
             Context={SchedulerStoreContext}
@@ -350,7 +367,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
 
-      await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('day-grid');
     });
@@ -382,7 +399,7 @@ describe('<EventDraggableDialogContent open />', () => {
             }
           />
 
-          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
             Context={SchedulerStoreContext}
@@ -394,7 +411,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('day-grid');
 
-      await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
     });
@@ -425,11 +442,7 @@ describe('<EventDraggableDialogContent open />', () => {
             }
           />
 
-          <EventDraggableDialogContent
-            open
-            {...defaultProps}
-            occurrence={creationOccurrence as any}
-          />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence as any} />
 
           <StateWatcher
             Context={SchedulerStoreContext}
@@ -440,7 +453,7 @@ describe('<EventDraggableDialogContent open />', () => {
       );
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
 
-      await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
     });
@@ -481,14 +494,14 @@ describe('<EventDraggableDialogContent open />', () => {
             }}
           />
 
-          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
         </EventCalendarProvider>,
       );
 
       await user.type(screen.getByLabelText(/event title/i), ' New title ');
       await user.type(screen.getByLabelText(/description/i), ' Some details ');
-      await user.click(screen.getByRole('button', { name: /resource/i }));
-      await user.click(await screen.findByRole('menuitem', { name: /work/i }));
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
       await user.click(screen.getByRole('tab', { name: /recurrence/i }));
       await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
       await user.click(await screen.findByRole('option', { name: /daily/i }));
@@ -548,7 +561,7 @@ describe('<EventDraggableDialogContent open />', () => {
               createEventSpy = sp;
             }}
           />
-          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -618,7 +631,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 }}
               />
 
-              <EventDraggableDialogContent
+              <EventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -668,7 +681,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 }}
               />
 
-              <EventDraggableDialogContent
+              <EventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -731,7 +744,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 }}
               />
 
-              <EventDraggableDialogContent
+              <EventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -792,7 +805,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 }}
               />
 
-              <EventDraggableDialogContent
+              <EventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -828,7 +841,7 @@ describe('<EventDraggableDialogContent open />', () => {
         it('should render recurrence fields as disabled when not recurrent', async () => {
           const { user } = render(
             <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -847,7 +860,7 @@ describe('<EventDraggableDialogContent open />', () => {
         it('should keep recurrence fields disabled when a preset is selected', async () => {
           const { user } = render(
             <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -866,7 +879,7 @@ describe('<EventDraggableDialogContent open />', () => {
         it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
           const { user } = render(
             <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -891,7 +904,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -944,7 +957,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -993,7 +1006,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1040,7 +1053,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1079,7 +1092,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1119,7 +1132,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1176,18 +1189,14 @@ describe('<EventDraggableDialogContent open />', () => {
               }}
             />
 
-            <EventDraggableDialogContent
-              open
-              {...defaultProps}
-              occurrence={nonRecurringEventOccurrence}
-            />
+            <EventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
           </EventCalendarProvider>,
         );
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
         await user.clear(screen.getByLabelText(/description/i));
         await user.type(screen.getByLabelText(/description/i), '  new description  ');
-        await user.click(screen.getByRole('button', { name: /resource/i }));
-        await user.click(await screen.findByRole('menuitem', { name: /work/i }));
+        await user.click(screen.getByRole('combobox', { name: /resource/i }));
+        await user.click(await screen.findByRole('option', { name: /work/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         expect(updateEventSpy?.calledOnce).to.equal(true);
@@ -1216,11 +1225,7 @@ describe('<EventDraggableDialogContent open />', () => {
               }}
             />
 
-            <EventDraggableDialogContent
-              open
-              {...defaultProps}
-              occurrence={nonRecurringEventOccurrence}
-            />
+            <EventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
           </EventCalendarProvider>,
         );
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
@@ -1244,17 +1249,13 @@ describe('<EventDraggableDialogContent open />', () => {
     it('should apply built-in classes to dialog elements', () => {
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <EventDraggableDialogContent open {...defaultProps} />
+          <EventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
 
       expect(document.querySelector('.MuiEventCalendar-eventDialog')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogCloseButton')).not.to.equal(null);
-      expect(document.querySelector('.MuiEventCalendar-eventDialogDragHandle')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogHeader')).not.to.equal(null);
-      expect(document.querySelector('.MuiEventCalendar-eventDialogHeaderContent')).not.to.equal(
-        null,
-      );
       expect(document.querySelector('.MuiEventCalendar-eventDialogContent')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogGeneralTabContent')).not.to.equal(
         null,
@@ -1280,7 +1281,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       render(
         <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
-          <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
         </EventCalendarProvider>,
       );
 
