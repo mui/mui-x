@@ -279,8 +279,6 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       });
     });
 
-
-
     it('should put undefined values at the end with ascending order', async () => {
       const { user, container } = render(
         <BarChart
