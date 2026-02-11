@@ -13,9 +13,9 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-he
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 import {
-  EventDraggableDialogTrigger,
-  useEventDraggableDialogContext,
-} from '../event-draggable-dialog/EventDraggableDialog';
+  EventDialogTrigger,
+  useEventDialogContext,
+} from '../event-dialog/EventDialog';
 import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
@@ -125,7 +125,7 @@ function ColumnInteractiveLayer({
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventDraggableDialogContext();
+  const { onOpen: startEditing } = useEventDialogContext();
   const classes = useEventCalendarClasses();
 
   // Ref hooks
@@ -176,9 +176,9 @@ function ColumnInteractiveLayer({
       {...eventCreationProps}
     >
       {occurrences.map((occurrence) => (
-        <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+        <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
           <TimeGridEvent occurrence={occurrence} variant="regular" />
-        </EventDraggableDialogTrigger>
+        </EventDialogTrigger>
       ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (

@@ -18,7 +18,7 @@ import {
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { EventDraggableDialogContent } from './EventDraggableDialog';
+import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 
@@ -42,7 +42,7 @@ const resources: SchedulerResource[] = [
   },
 ];
 
-describe('<EventDraggableDialogContent open />', () => {
+describe('<EventDialogContent open />', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
 
@@ -65,7 +65,7 @@ describe('<EventDraggableDialogContent open />', () => {
   it('should render the event data in the form fields', async () => {
     const { user } = render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-        <EventDraggableDialogContent open {...defaultProps} />
+        <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     expect(screen.getByDisplayValue(DEFAULT_EVENT.title)).not.to.equal(null);
@@ -91,7 +91,7 @@ describe('<EventDraggableDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
       >
-        <EventDraggableDialogContent open {...defaultProps} />
+        <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
@@ -126,7 +126,7 @@ describe('<EventDraggableDialogContent open />', () => {
   it('should show error if start date is after end date', async () => {
     const { user } = render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-        <EventDraggableDialogContent open {...defaultProps} />
+        <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.clear(screen.getByLabelText(/start date/i));
@@ -148,7 +148,7 @@ describe('<EventDraggableDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
       >
-        <EventDraggableDialogContent open {...defaultProps} />
+        <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.click(screen.getByRole('button', { name: /delete event/i }));
@@ -169,7 +169,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
     render(
       <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
-        <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
 
@@ -209,7 +209,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
     render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} readOnly>
-        <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
 
@@ -266,7 +266,7 @@ describe('<EventDraggableDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resourcesNoColor}
       >
-        <EventDraggableDialogContent
+        <EventDialogContent
           open
           {...defaultProps}
           occurrence={eventWithNoResourceColorOccurrence}
@@ -306,7 +306,7 @@ describe('<EventDraggableDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
       >
-        <EventDraggableDialogContent
+        <EventDialogContent
           open
           {...defaultProps}
           occurrence={eventWithoutResourceOccurrence}
@@ -359,7 +359,7 @@ describe('<EventDraggableDialogContent open />', () => {
             }
           />
 
-          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
             Context={SchedulerStoreContext}
@@ -403,7 +403,7 @@ describe('<EventDraggableDialogContent open />', () => {
             }
           />
 
-          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
             Context={SchedulerStoreContext}
@@ -446,7 +446,7 @@ describe('<EventDraggableDialogContent open />', () => {
             }
           />
 
-          <EventDraggableDialogContent
+          <EventDialogContent
             open
             {...defaultProps}
             occurrence={creationOccurrence as any}
@@ -502,7 +502,7 @@ describe('<EventDraggableDialogContent open />', () => {
             }}
           />
 
-          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -569,7 +569,7 @@ describe('<EventDraggableDialogContent open />', () => {
               createEventSpy = sp;
             }}
           />
-          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -639,7 +639,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 }}
               />
 
-              <EventDraggableDialogContent
+              <EventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -689,7 +689,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 }}
               />
 
-              <EventDraggableDialogContent
+              <EventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -752,7 +752,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 }}
               />
 
-              <EventDraggableDialogContent
+              <EventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -813,7 +813,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 }}
               />
 
-              <EventDraggableDialogContent
+              <EventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -849,7 +849,7 @@ describe('<EventDraggableDialogContent open />', () => {
         it('should render recurrence fields as disabled when not recurrent', async () => {
           const { user } = render(
             <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -868,7 +868,7 @@ describe('<EventDraggableDialogContent open />', () => {
         it('should keep recurrence fields disabled when a preset is selected', async () => {
           const { user } = render(
             <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -887,7 +887,7 @@ describe('<EventDraggableDialogContent open />', () => {
         it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
           const { user } = render(
             <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -912,7 +912,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -965,7 +965,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1014,7 +1014,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1061,7 +1061,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1100,7 +1100,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1140,7 +1140,7 @@ describe('<EventDraggableDialogContent open />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <EventDraggableDialogContent open {...defaultProps} />
+              <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1197,7 +1197,7 @@ describe('<EventDraggableDialogContent open />', () => {
               }}
             />
 
-            <EventDraggableDialogContent
+            <EventDialogContent
               open
               {...defaultProps}
               occurrence={nonRecurringEventOccurrence}
@@ -1237,7 +1237,7 @@ describe('<EventDraggableDialogContent open />', () => {
               }}
             />
 
-            <EventDraggableDialogContent
+            <EventDialogContent
               open
               {...defaultProps}
               occurrence={nonRecurringEventOccurrence}
@@ -1265,7 +1265,7 @@ describe('<EventDraggableDialogContent open />', () => {
     it('should apply built-in classes to dialog elements', () => {
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <EventDraggableDialogContent open {...defaultProps} />
+          <EventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
 
@@ -1297,7 +1297,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       render(
         <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
-          <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
         </EventCalendarProvider>,
       );
 

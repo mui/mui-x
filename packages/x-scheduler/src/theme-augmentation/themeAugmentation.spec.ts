@@ -22,17 +22,17 @@ createTheme({
         },
       },
     },
-    MuiEventDraggableDialog: {
+    MuiEventDialog: {
       defaultProps: {
         className: 'custom-class',
-        // @ts-expect-error invalid MuiEventDraggableDialog prop
+        // @ts-expect-error invalid MuiEventDialog prop
         someRandomProp: true,
       },
       styleOverrides: {
         eventDialog: {
           backgroundColor: 'red',
         },
-        // @ts-expect-error invalid MuiEventDraggableDialog class key
+        // @ts-expect-error invalid MuiEventDialog class key
         invalidClassKey: {
           backgroundColor: 'blue',
         },
