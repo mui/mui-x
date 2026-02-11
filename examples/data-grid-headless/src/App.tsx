@@ -137,10 +137,7 @@ function DataGrid(props: DataGridProps) {
 
   const isFilteringEnabled = config.filtering?.enabled ?? true;
 
-  const grid = useDataGrid<
-    [typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin],
-    RowData
-  >({
+  const grid = useDataGrid({
     rows: props.rows,
     columns: props.columns,
     plugins: [sortingPlugin, filteringPlugin, paginationPlugin],

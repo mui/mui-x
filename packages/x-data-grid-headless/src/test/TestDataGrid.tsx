@@ -11,12 +11,9 @@ import { paginationPlugin } from '../plugins/pagination';
 import rowsPlugin from '../plugins/internal/rows/rows';
 import columnsPlugin from '../plugins/internal/columns/columns';
 
-type GridApi = ReturnType<
-  typeof useDataGrid<
-    [typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin],
-    any
-  >
->;
+const plugins = [sortingPlugin, filteringPlugin, paginationPlugin] as const;
+
+type GridApi = ReturnType<typeof useDataGrid<typeof plugins, any>>;
 
 interface TestDataGridProps<TRow extends Record<string, any>> {
   rows: TRow[];
@@ -31,14 +28,11 @@ interface TestDataGridProps<TRow extends Record<string, any>> {
 export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGridProps<TRow>) {
   const { rows, columns, getRowId, apiRef, sorting, filtering, initialState } = props;
 
-  const grid = useDataGrid<
-    [typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin],
-    TRow
-  >({
+  const grid = useDataGrid({
     rows,
     columns,
     getRowId,
-    plugins: [sortingPlugin, filteringPlugin, paginationPlugin],
+    plugins,
     sorting,
     filtering,
     initialState,
