@@ -5,7 +5,7 @@ import {
   EventDialogClasses,
   eventDialogClassKeys,
   eventDialogSlots,
-} from '../internals/components/event-draggable-dialog/eventDialogClasses';
+} from '../internals/components/event-dialog/eventDialogClasses';
 
 export interface EventCalendarClasses extends EventDialogClasses {
   /** Styles applied to the root element. */

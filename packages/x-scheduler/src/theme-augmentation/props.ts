@@ -1,9 +1,9 @@
 import { EventCalendarProps } from '../event-calendar/EventCalendar.types';
-import { EventDraggableDialogProps } from '../internals/components/event-draggable-dialog/EventDraggableDialog.types';
+import { EventDialogProps } from '../internals/components/event-dialog/EventDialog.types';
 
 export interface SchedulerComponentsPropsList {
   MuiEventCalendar: EventCalendarProps<any, any>;
-  MuiEventDraggableDialog: EventDraggableDialogProps;
+  MuiEventDialog: EventDialogProps;
 }
 
 declare module '@mui/material/styles' {

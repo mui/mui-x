@@ -8,9 +8,9 @@ export interface SchedulerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiEventCalendar'];
     styleOverrides?: MuiComponentsOverrides<Theme>['MuiEventCalendar'];
   };
-  MuiEventDraggableDialog?: {
-    defaultProps?: ComponentsProps['MuiEventDraggableDialog'];
-    styleOverrides?: MuiComponentsOverrides<Theme>['MuiEventDraggableDialog'];
+  MuiEventDialog?: {
+    defaultProps?: ComponentsProps['MuiEventDialog'];
+    styleOverrides?: MuiComponentsOverrides<Theme>['MuiEventDialog'];
   };
 }
 
