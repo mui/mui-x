@@ -6,12 +6,13 @@ import {
   useExtractEventCalendarParameters,
 } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import { EventCalendarProps } from './EventCalendar.types';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
+import { EventDialogProvider } from '../internals/components/event-dialog';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
 import { EventCalendarClassesContext } from './EventCalendarClassesContext';
-import { EventDialogClassesContext } from '../internals/components/event-draggable-dialog/EventDialogClassesContext';
+import { EventDialogClassesContext } from '../internals/components/event-dialog/EventDialogClassesContext';
 import { EventCalendarRoot } from './EventCalendarRoot';
 
 export const EventCalendar = React.forwardRef(function EventCalendar<
@@ -30,16 +31,17 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const store = useEventCalendar(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { translations, ...other } = forwardedProps;
+  const { translations, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <TranslationsProvider translations={translations}>
         <EventCalendarClassesContext.Provider value={classes}>
           <EventDialogClassesContext.Provider value={classes}>
-            <EventDraggableDialogProvider>
+            <EventDialogProvider>
               <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-            </EventDraggableDialogProvider>
+            </EventDialogProvider>
           </EventDialogClassesContext.Provider>
         </EventCalendarClassesContext.Provider>
       </TranslationsProvider>
