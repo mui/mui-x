@@ -1,22 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { isFilterGroup, isFilterCondition, EMPTY_FILTER_MODEL } from './types';
-import type {
-  FilterCondition,
-  FilterGroup,
-  FilterModel,
-  FilterOperator,
-} from './types';
+import type { FilterCondition, FilterGroup, FilterModel, FilterOperator } from './types';
 import type { GridRowId } from '../internal/rows/rowUtils';
 import { getStringFilterOperators } from './filterOperators/stringOperators';
 import { getNumericFilterOperators } from './filterOperators/numericOperators';
 import { getDateFilterOperators } from './filterOperators/dateOperators';
 import { getBooleanFilterOperators } from './filterOperators/booleanOperators';
 import { getSingleSelectFilterOperators } from './filterOperators/singleSelectOperators';
-import { buildFilterApplier } from './filteringUtils';
-
-// ================================
-// Type Guards
-// ================================
+import { buildFilterApplier, cleanFilterModel, removeDiacritics } from './filteringUtils';
 
 describe('Type Guards', () => {
   describe('isFilterGroup', () => {
@@ -51,23 +42,11 @@ describe('Type Guards', () => {
   });
 });
 
-// ================================
-// Helper: get operator applier
-// ================================
-
-function getOperatorApplier(
-  operators: FilterOperator[],
-  operatorValue: string,
-  filterValue?: any,
-) {
+function getOperatorApplier(operators: FilterOperator[], operatorValue: string, filterValue?: any) {
   const operator = operators.find((op) => op.value === operatorValue)!;
   expect(operator).toBeDefined();
   return operator.getApplyFilterFn({ field: 'test', operator: operatorValue, value: filterValue });
 }
-
-// ================================
-// String Operators
-// ================================
 
 describe('String Filter Operators', () => {
   const operators = getStringFilterOperators();
@@ -178,11 +157,89 @@ describe('String Filter Operators', () => {
       expect(getOperatorApplier(operators, 'isAnyOf', [])).toBe(null);
     });
   });
-});
 
-// ================================
-// Numeric Operators
-// ================================
+  describe('number cell values', () => {
+    it('should convert numeric cell values to string for contains', () => {
+      const fn = getOperatorApplier(operators, 'contains', '0')!;
+      expect(fn(0, {})).toBe(true);
+      expect(fn(1, {})).toBe(false);
+      expect(fn(10, {})).toBe(true); // '10' contains '0'
+    });
+
+    it('should convert numeric cell values to string for equals', () => {
+      const fn = getOperatorApplier(operators, 'equals', '0')!;
+      expect(fn(0, {})).toBe(true);
+      expect(fn(1, {})).toBe(false);
+    });
+
+    it('should convert numeric cell values to string for startsWith', () => {
+      const fn = getOperatorApplier(operators, 'startsWith', '1')!;
+      expect(fn(1, {})).toBe(true);
+      expect(fn(10, {})).toBe(true);
+      expect(fn(0, {})).toBe(false);
+    });
+
+    it('should convert numeric cell values to string for endsWith', () => {
+      const fn = getOperatorApplier(operators, 'endsWith', '0')!;
+      expect(fn(0, {})).toBe(true);
+      expect(fn(10, {})).toBe(true);
+      expect(fn(1, {})).toBe(false);
+    });
+  });
+
+  describe('regex special characters', () => {
+    it('should escape regex special chars in contains', () => {
+      const fn = getOperatorApplier(operators, 'contains', '(fr)')!;
+      expect(fn('France (fr)', {})).toBe(true);
+      expect(fn('France fr', {})).toBe(false);
+    });
+
+    it('should return no matches for complex regex patterns', () => {
+      const fn = getOperatorApplier(operators, 'contains', '[-[]{}()*+?.,\\^$|#s]')!;
+      expect(fn('anything', {})).toBe(false);
+    });
+
+    it('should escape regex special chars in startsWith', () => {
+      const fn = getOperatorApplier(operators, 'startsWith', 'France (')!;
+      expect(fn('France (fr)', {})).toBe(true);
+      expect(fn('France fr', {})).toBe(false);
+    });
+
+    it('should escape regex special chars in endsWith', () => {
+      const fn = getOperatorApplier(operators, 'endsWith', '(fr)')!;
+      expect(fn('France (fr)', {})).toBe(true);
+      expect(fn('Francefr)', {})).toBe(false);
+    });
+  });
+
+  describe('trimming', () => {
+    it('should trim filter value for contains', () => {
+      const fn = getOperatorApplier(operators, 'contains', ' Fra ')!;
+      expect(fn('France', {})).toBe(true);
+    });
+
+    it('should trim filter value for equals', () => {
+      const fn = getOperatorApplier(operators, 'equals', ' France ')!;
+      expect(fn('France', {})).toBe(true);
+    });
+
+    it('should trim filter value for startsWith', () => {
+      const fn = getOperatorApplier(operators, 'startsWith', ' Fra ')!;
+      expect(fn('France', {})).toBe(true);
+    });
+
+    it('should trim filter value for endsWith', () => {
+      const fn = getOperatorApplier(operators, 'endsWith', ' nce ')!;
+      expect(fn('France', {})).toBe(true);
+    });
+
+    it('should trim isAnyOf values', () => {
+      const fn = getOperatorApplier(operators, 'isAnyOf', [' France ', 'Germany '])!;
+      expect(fn('France', {})).toBe(true);
+      expect(fn('Germany', {})).toBe(true);
+    });
+  });
+});
 
 describe('Numeric Filter Operators', () => {
   const operators = getNumericFilterOperators();
@@ -275,11 +332,36 @@ describe('Numeric Filter Operators', () => {
       expect(fn(35, {})).toBe(false);
     });
   });
-});
 
-// ================================
-// Boolean Operators
-// ================================
+  describe('empty string value', () => {
+    it('should return null for value: "" (all operators)', () => {
+      expect(getOperatorApplier(operators, '=', '')).toBe(null);
+      expect(getOperatorApplier(operators, '!=', '')).toBe(null);
+      expect(getOperatorApplier(operators, '>', '')).toBe(null);
+      expect(getOperatorApplier(operators, '>=', '')).toBe(null);
+      expect(getOperatorApplier(operators, '<', '')).toBe(null);
+      expect(getOperatorApplier(operators, '<=', '')).toBe(null);
+    });
+  });
+
+  describe('undefined value', () => {
+    it('should return null for value: undefined (all operators)', () => {
+      expect(getOperatorApplier(operators, '=', undefined)).toBe(null);
+      expect(getOperatorApplier(operators, '!=', undefined)).toBe(null);
+      expect(getOperatorApplier(operators, '>', undefined)).toBe(null);
+      expect(getOperatorApplier(operators, '>=', undefined)).toBe(null);
+      expect(getOperatorApplier(operators, '<', undefined)).toBe(null);
+      expect(getOperatorApplier(operators, '<=', undefined)).toBe(null);
+    });
+  });
+
+  describe('non-numeric string value', () => {
+    it('should return null for non-numeric string values', () => {
+      expect(getOperatorApplier(operators, '=', 'abc')).toBe(null);
+      expect(getOperatorApplier(operators, '>', 'xyz')).toBe(null);
+    });
+  });
+});
 
 describe('Boolean Filter Operators', () => {
   const operators = getBooleanFilterOperators();
@@ -314,11 +396,57 @@ describe('Boolean Filter Operators', () => {
       expect(getOperatorApplier(operators, 'is', null)).toBe(null);
     });
   });
-});
 
-// ================================
-// Date Operators
-// ================================
+  describe('case-insensitive string values', () => {
+    it('should handle "TRUE" (uppercase)', () => {
+      const fn = getOperatorApplier(operators, 'is', 'TRUE')!;
+      expect(fn(true, {})).toBe(true);
+      expect(fn(false, {})).toBe(false);
+    });
+
+    it('should handle "True" (title case)', () => {
+      const fn = getOperatorApplier(operators, 'is', 'True')!;
+      expect(fn(true, {})).toBe(true);
+      expect(fn(false, {})).toBe(false);
+    });
+
+    it('should handle "FALSE" (uppercase)', () => {
+      const fn = getOperatorApplier(operators, 'is', 'FALSE')!;
+      expect(fn(false, {})).toBe(true);
+      expect(fn(true, {})).toBe(false);
+    });
+
+    it('should handle "False" (title case)', () => {
+      const fn = getOperatorApplier(operators, 'is', 'False')!;
+      expect(fn(false, {})).toBe(true);
+      expect(fn(true, {})).toBe(false);
+    });
+  });
+
+  describe('invalid values', () => {
+    it('should return null for invalid string values', () => {
+      expect(getOperatorApplier(operators, 'is', 'test')).toBe(null);
+      expect(getOperatorApplier(operators, 'is', 'yes')).toBe(null);
+      expect(getOperatorApplier(operators, 'is', '1')).toBe(null);
+    });
+  });
+
+  describe('null and undefined cell values', () => {
+    it('should treat null as false', () => {
+      const fnTrue = getOperatorApplier(operators, 'is', true)!;
+      const fnFalse = getOperatorApplier(operators, 'is', false)!;
+      expect(fnTrue(null, {})).toBe(false);
+      expect(fnFalse(null, {})).toBe(true);
+    });
+
+    it('should treat undefined as false', () => {
+      const fnTrue = getOperatorApplier(operators, 'is', true)!;
+      const fnFalse = getOperatorApplier(operators, 'is', false)!;
+      expect(fnTrue(undefined, {})).toBe(false);
+      expect(fnFalse(undefined, {})).toBe(true);
+    });
+  });
+});
 
 describe('Date Filter Operators', () => {
   const operators = getDateFilterOperators();
@@ -399,11 +527,111 @@ describe('Date Filter Operators', () => {
       expect(fn(new Date(), {})).toBe(true);
     });
   });
-});
 
-// ================================
-// Single Select Operators
-// ================================
+  describe('dateTime (showTime=true)', () => {
+    const dateTimeOperators = getDateFilterOperators(true);
+
+    describe('is', () => {
+      it('should match same dateTime', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'is', '2001-01-01T07:30')!;
+        expect(fn(new Date(2001, 0, 1, 7, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 8, 30), {})).toBe(false);
+      });
+
+      it('should accept Date object as filter value', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'is', new Date(2001, 0, 1, 7, 30))!;
+        expect(fn(new Date(2001, 0, 1, 7, 30), {})).toBe(true);
+      });
+    });
+
+    describe('not', () => {
+      it('should not match same dateTime', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'not', '2001-01-01T07:30')!;
+        expect(fn(new Date(2001, 0, 1, 6, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 7, 30), {})).toBe(false);
+      });
+    });
+
+    describe('after', () => {
+      it('should match dateTimes after', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'after', '2001-01-01T07:30')!;
+        expect(fn(new Date(2001, 0, 1, 8, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 7, 30), {})).toBe(false);
+        expect(fn(new Date(2001, 0, 1, 6, 30), {})).toBe(false);
+      });
+    });
+
+    describe('onOrAfter', () => {
+      it('should match dateTimes on or after', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'onOrAfter', '2001-01-01T07:30')!;
+        expect(fn(new Date(2001, 0, 1, 8, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 7, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 6, 30), {})).toBe(false);
+      });
+    });
+
+    describe('before', () => {
+      it('should match dateTimes before', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'before', '2001-01-01T07:30')!;
+        expect(fn(new Date(2001, 0, 1, 6, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 7, 30), {})).toBe(false);
+        expect(fn(new Date(2001, 0, 1, 8, 30), {})).toBe(false);
+      });
+    });
+
+    describe('onOrBefore', () => {
+      it('should match dateTimes on or before', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'onOrBefore', '2001-01-01T07:30')!;
+        expect(fn(new Date(2001, 0, 1, 6, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 7, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 8, 30), {})).toBe(false);
+      });
+    });
+
+    describe('seconds handling', () => {
+      it('should zero out seconds for comparison', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'after', '2001-01-01T07:30')!;
+        // 7:30:30 has seconds but filter is at 7:30:00 — both zeroed to 7:30
+        expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(false);
+        expect(fn(new Date(2001, 0, 1, 7, 31, 0), {})).toBe(true);
+      });
+
+      it('should match onOrAfter with same minute different seconds', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'onOrAfter', '2001-01-01T07:30')!;
+        expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 7, 29, 30), {})).toBe(false);
+      });
+
+      it('should match before with same minute different seconds', () => {
+        const fn = getOperatorApplier(dateTimeOperators, 'before', '2001-01-01T07:30')!;
+        expect(fn(new Date(2001, 0, 1, 7, 29, 30), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(false);
+        expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(false);
+      });
+    });
+  });
+
+  describe('filter value types', () => {
+    it('should accept string date as filter value', () => {
+      const fn = getOperatorApplier(operators, 'is', '2001-01-01')!;
+      expect(fn(new Date(2001, 0, 1), {})).toBe(true);
+    });
+
+    it('should accept Date object as filter value', () => {
+      const fn = getOperatorApplier(operators, 'is', new Date('2001-01-01'))!;
+      expect(fn(new Date(2001, 0, 1), {})).toBe(true);
+    });
+
+    it('should return null for empty string', () => {
+      expect(getOperatorApplier(operators, 'is', '')).toBe(null);
+    });
+
+    it('should return null for undefined', () => {
+      expect(getOperatorApplier(operators, 'is', undefined)).toBe(null);
+    });
+  });
+});
 
 describe('SingleSelect Filter Operators', () => {
   const operators = getSingleSelectFilterOperators();
@@ -442,10 +670,6 @@ describe('SingleSelect Filter Operators', () => {
     });
   });
 });
-
-// ================================
-// buildFilterApplier
-// ================================
 
 describe('buildFilterApplier', () => {
   const rows = [
@@ -694,5 +918,169 @@ describe('buildFilterApplier', () => {
 
       expect(applierWithEval(rowIds)).toEqual(applierWithoutEval(rowIds));
     });
+  });
+
+  describe('incomplete items skipped', () => {
+    it('should skip incomplete items with AND and apply valid ones', () => {
+      const model: FilterModel = {
+        logicOperator: 'and',
+        conditions: [
+          { field: 'name', operator: 'contains', value: 'li' },
+          { field: 'name', operator: 'contains' }, // no value — incomplete
+        ],
+      };
+      const applier = buildFilterApplier({ model, getColumn, getRow })!;
+      // Incomplete condition skipped, only 'contains li' applies
+      expect(applier(rowIds)).toEqual([1, 3]); // Alice, Charlie
+    });
+
+    it('should skip incomplete items with OR and apply valid ones', () => {
+      const model: FilterModel = {
+        logicOperator: 'or',
+        conditions: [
+          { field: 'name', operator: 'equals', value: 'Bob' },
+          { field: 'name', operator: 'contains' }, // no value — incomplete
+        ],
+      };
+      const applier = buildFilterApplier({ model, getColumn, getRow })!;
+      expect(applier(rowIds)).toEqual([2]); // Bob only
+    });
+  });
+
+  describe('ignoreDiacritics', () => {
+    const diacriticsRows = [
+      { id: 1, name: 'Apă' },
+      { id: 2, name: 'Bob' },
+    ];
+    const diacriticsGetRow = (id: GridRowId) => diacriticsRows.find((r) => r.id === id)!;
+    const diacriticsRowIds = diacriticsRows.map((r) => r.id);
+
+    it('should not match diacritics by default', () => {
+      const model: FilterModel = {
+        logicOperator: 'and',
+        conditions: [{ field: 'name', operator: 'contains', value: 'apa' }],
+      };
+      const applier = buildFilterApplier({ model, getColumn, getRow: diacriticsGetRow })!;
+      expect(applier(diacriticsRowIds)).toEqual([]);
+    });
+
+    it('should match when ignoreDiacritics is enabled', () => {
+      const model: FilterModel = {
+        logicOperator: 'and',
+        conditions: [{ field: 'name', operator: 'contains', value: 'apa' }],
+      };
+      const applier = buildFilterApplier({
+        model,
+        getColumn,
+        getRow: diacriticsGetRow,
+        ignoreDiacritics: true,
+      })!;
+      expect(applier(diacriticsRowIds)).toEqual([1]); // Apă matches apa
+    });
+
+    it('should match diacritics filter value against diacritics cell value', () => {
+      const model: FilterModel = {
+        logicOperator: 'and',
+        conditions: [{ field: 'name', operator: 'contains', value: 'apă' }],
+      };
+      const applier = buildFilterApplier({
+        model,
+        getColumn,
+        getRow: diacriticsGetRow,
+        ignoreDiacritics: true,
+      })!;
+      expect(applier(diacriticsRowIds)).toEqual([1]); // Apă matches apă
+    });
+  });
+});
+
+
+describe('cleanFilterModel', () => {
+  it('should return same model when all fields are valid', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [
+        { field: 'name', operator: 'contains', value: 'test' },
+        { field: 'age', operator: '>', value: 25 },
+      ],
+    };
+    const result = cleanFilterModel(model, () => true);
+    expect(result).toBe(model); // Same reference
+  });
+
+  it('should remove conditions with invalid fields', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [
+        { field: 'name', operator: 'contains', value: 'test' },
+        { field: 'removed', operator: '>', value: 25 },
+      ],
+    };
+    const validFields = new Set(['name']);
+    const result = cleanFilterModel(model, (f) => validFields.has(f));
+    expect(result.conditions).toHaveLength(1);
+    expect((result.conditions[0] as FilterCondition).field).toBe('name');
+  });
+
+  it('should return empty conditions when all fields are invalid', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [{ field: 'removed', operator: 'contains', value: 'test' }],
+    };
+    const result = cleanFilterModel(model, () => false);
+    expect(result.conditions).toHaveLength(0);
+  });
+
+  it('should clean nested groups recursively', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [
+        { field: 'name', operator: 'contains', value: 'test' },
+        {
+          logicOperator: 'or',
+          conditions: [
+            { field: 'age', operator: '>', value: 25 },
+            { field: 'removed', operator: '=', value: 10 },
+          ],
+        },
+      ],
+    };
+    const validFields = new Set(['name', 'age']);
+    const result = cleanFilterModel(model, (f) => validFields.has(f));
+    expect(result.conditions).toHaveLength(2);
+    const nestedGroup = result.conditions[1] as FilterGroup;
+    expect(nestedGroup.conditions).toHaveLength(1);
+    expect((nestedGroup.conditions[0] as FilterCondition).field).toBe('age');
+  });
+
+  it('should remove empty nested groups', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [
+        { field: 'name', operator: 'contains', value: 'test' },
+        {
+          logicOperator: 'or',
+          conditions: [{ field: 'removed', operator: '=', value: 10 }],
+        },
+      ],
+    };
+    const validFields = new Set(['name']);
+    const result = cleanFilterModel(model, (f) => validFields.has(f));
+    expect(result.conditions).toHaveLength(1);
+    expect((result.conditions[0] as FilterCondition).field).toBe('name');
+  });
+});
+
+describe('removeDiacritics', () => {
+  it('should remove accents from characters', () => {
+    expect(removeDiacritics('Apă')).toBe('Apa');
+    expect(removeDiacritics('café')).toBe('cafe');
+    expect(removeDiacritics('naïve')).toBe('naive');
+    expect(removeDiacritics('résumé')).toBe('resume');
+  });
+
+  it('should not modify strings without diacritics', () => {
+    expect(removeDiacritics('hello')).toBe('hello');
+    expect(removeDiacritics('ABC123')).toBe('ABC123');
   });
 });

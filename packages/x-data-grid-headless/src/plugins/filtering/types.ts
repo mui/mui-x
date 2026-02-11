@@ -119,6 +119,12 @@ export interface FilteringOptions {
      * @default false
      */
     disableEval?: boolean;
+
+    /**
+     * If true, removes diacritics (accents) from string values before filtering.
+     * @default false
+     */
+    ignoreDiacritics?: boolean;
   };
 }
 

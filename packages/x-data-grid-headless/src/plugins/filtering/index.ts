@@ -14,7 +14,7 @@ export type {
 } from './types';
 export { EMPTY_FILTER_MODEL, isFilterGroup, isFilterCondition } from './types';
 export { filteringSelectors } from './selectors';
-export { buildFilterApplier } from './filteringUtils';
+export { buildFilterApplier, cleanFilterModel, removeDiacritics } from './filteringUtils';
 export {
   getStringFilterOperators,
   getNumericFilterOperators,

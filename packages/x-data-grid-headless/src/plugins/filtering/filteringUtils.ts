@@ -10,9 +10,57 @@ import {
   isFilterGroup,
 } from './types';
 
-// ================================
-// Eval Detection
-// ================================
+export function removeDiacritics(value: string): string {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/**
+ * Remove filter conditions that reference fields not present in the valid fields set.
+ * Returns the same model reference if no changes were needed.
+ */
+export function cleanFilterModel(
+  model: FilterModel,
+  isFieldValid: (field: string) => boolean,
+): FilterModel {
+  const cleaned = cleanConditions(model.conditions, isFieldValid);
+  if (cleaned === model.conditions) {
+    return model;
+  }
+  return { ...model, conditions: cleaned };
+}
+
+function cleanConditions(
+  conditions: FilterExpression[],
+  isFieldValid: (field: string) => boolean,
+): FilterExpression[] {
+  let changed = false;
+  const result: FilterExpression[] = [];
+
+  for (const expr of conditions) {
+    if (isFilterCondition(expr)) {
+      if (isFieldValid(expr.field)) {
+        result.push(expr);
+      } else {
+        changed = true;
+      }
+    } else if (isFilterGroup(expr)) {
+      const cleanedGroup = cleanFilterModel(expr, isFieldValid);
+      if (cleanedGroup.conditions.length === 0) {
+        changed = true;
+      } else {
+        if (cleanedGroup !== expr) {
+          changed = true;
+        }
+        result.push(cleanedGroup);
+      }
+    }
+  }
+
+  if (!changed) {
+    return conditions;
+  }
+  return result;
+}
 
 let hasEval: boolean;
 
@@ -31,10 +79,6 @@ function getHasEval() {
   return hasEval;
 }
 
-// ================================
-// Condition Applier
-// ================================
-
 interface ConditionApplier {
   fn: (row: any) => boolean;
 }
@@ -51,6 +95,7 @@ function getConditionApplier(
   condition: FilterCondition,
   getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined,
   _getRow: (id: GridRowId) => any,
+  ignoreDiacritics: boolean,
 ): ConditionApplier | null {
   if (!condition.field || !condition.operator) {
     return null;
@@ -75,7 +120,13 @@ function getConditionApplier(
     return null;
   }
 
-  const applyFilterOnRow = filterOperator.getApplyFilterFn(condition);
+  // Normalize condition value for diacritics if needed
+  const effectiveCondition =
+    ignoreDiacritics && typeof condition.value === 'string'
+      ? { ...condition, value: removeDiacritics(condition.value) }
+      : condition;
+
+  const applyFilterOnRow = filterOperator.getApplyFilterFn(effectiveCondition);
   if (typeof applyFilterOnRow !== 'function') {
     return null;
   }
@@ -90,14 +141,14 @@ function getConditionApplier(
       } else {
         value = fieldKey ? row[fieldKey as string] : undefined;
       }
+      // Normalize cell value for diacritics if needed
+      if (ignoreDiacritics && typeof value === 'string') {
+        value = removeDiacritics(value);
+      }
       return applyFilterOnRow(value, row);
     },
   };
 }
-
-// ================================
-// Group Applier (Recursive)
-// ================================
 
 type GroupApplierFn = (row: any) => boolean;
 
@@ -106,17 +157,24 @@ function buildGroupApplier(
   getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined,
   getRow: (id: GridRowId) => any,
   disableEval: boolean,
+  ignoreDiacritics: boolean,
 ): GroupApplierFn | null {
   const appliers: GroupApplierFn[] = [];
 
   for (const child of group.conditions) {
     if (isFilterCondition(child)) {
-      const conditionApplier = getConditionApplier(child, getColumn, getRow);
+      const conditionApplier = getConditionApplier(child, getColumn, getRow, ignoreDiacritics);
       if (conditionApplier) {
         appliers.push(conditionApplier.fn);
       }
     } else if (isFilterGroup(child)) {
-      const nestedApplier = buildGroupApplier(child, getColumn, getRow, disableEval);
+      const nestedApplier = buildGroupApplier(
+        child,
+        getColumn,
+        getRow,
+        disableEval,
+        ignoreDiacritics,
+      );
       if (nestedApplier) {
         appliers.push(nestedApplier);
       }
@@ -128,9 +186,7 @@ function buildGroupApplier(
   }
 
   // Check if this is a flat group (all children are conditions, no nested groups)
-  const isFlatGroup = group.conditions.every(
-    (child: FilterExpression) => isFilterCondition(child),
-  );
+  const isFlatGroup = group.conditions.every((child: FilterExpression) => isFilterCondition(child));
 
   // Use eval optimization for flat groups when eval is available and not disabled
   if (isFlatGroup && !disableEval && getHasEval()) {
@@ -165,15 +221,12 @@ return ${appliers.map((_, i) => `appliers[${i}](row)`).join(` ${operator} `)};`,
   return (row: any) => filterFn(appliers, row);
 }
 
-// ================================
-// Top-Level Entry Point
-// ================================
-
 interface BuildFilterApplierParams {
   model: FilterModel;
   getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined;
   getRow: (id: GridRowId) => any;
   disableEval?: boolean;
+  ignoreDiacritics?: boolean;
 }
 
 /**
@@ -185,12 +238,13 @@ export const buildFilterApplier = ({
   getColumn,
   getRow,
   disableEval = false,
+  ignoreDiacritics = false,
 }: BuildFilterApplierParams): ((rowIds: GridRowId[]) => GridRowId[]) | null => {
   if (!model.conditions || model.conditions.length === 0) {
     return null;
   }
 
-  const groupApplier = buildGroupApplier(model, getColumn, getRow, disableEval);
+  const groupApplier = buildGroupApplier(model, getColumn, getRow, disableEval, ignoreDiacritics);
   if (!groupApplier) {
     return null;
   }

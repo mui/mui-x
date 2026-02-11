@@ -100,10 +100,12 @@ function TestDataGridWithFilter<TRow extends Record<string, any>>(
 describe('Filtering Plugin - Integration Tests', () => {
   const { render } = createRenderer();
 
-  const getRowNames = (container: HTMLElement): string[] => {
+  const getRowAttr = (container: HTMLElement, attr: string): string[] => {
     const rows = container.querySelectorAll('[data-testid="row"]');
-    return Array.from(rows).map((row) => row.getAttribute('data-name') || '');
+    return Array.from(rows).map((row) => row.getAttribute(attr) || '');
   };
+
+  const getRowNames = (container: HTMLElement): string[] => getRowAttr(container, 'data-name');
 
   describe('initial state', () => {
     it('should show all rows when no filter is applied', () => {
@@ -655,6 +657,173 @@ describe('Filtering Plugin - Integration Tests', () => {
       });
 
       expect(getRowNames(container)).toEqual(['Bob', 'Robin']);
+    });
+  });
+
+  describe('row prop changes with active filter', () => {
+    it('should re-apply filter when rows prop changes completely', async () => {
+      const { container, setProps } = render(
+        <TestDataGridWithFilter
+          rows={defaultRows}
+          columns={defaultColumns}
+          filtering={{
+            model: {
+              logicOperator: 'and',
+              conditions: [{ field: 'name', operator: 'contains', value: 'a' }],
+            },
+          }}
+        />,
+      );
+
+      // Charlie and Alice contain 'a'
+      expect(getRowNames(container)).toEqual(['Charlie', 'Alice']);
+
+      // Replace all rows
+      await act(async () => {
+        setProps({
+          rows: [
+            { id: 10, name: 'Asics', age: 20 },
+            { id: 11, name: 'RedBull', age: 30 },
+            { id: 12, name: 'Hugo', age: 40 },
+          ],
+        });
+      });
+
+      // Only Asics contains 'a'
+      expect(getRowNames(container)).toEqual(['Asics']);
+    });
+  });
+
+  describe('getRowId with active filter', () => {
+    it('should work with custom getRowId', () => {
+      type BrandRow = { brand: string; age: number };
+      const brandColumns: ColumnDef<BrandRow, ColumnMeta>[] = [
+        { id: 'brand', field: 'brand', filterOperators: getStringFilterOperators() },
+        { id: 'age', field: 'age', filterOperators: getNumericFilterOperators() },
+      ];
+
+      const { container } = render(
+        <TestDataGridWithFilter
+          rows={[
+            { brand: 'Nike', age: 10 },
+            { brand: 'Adidas', age: 20 },
+            { brand: 'Puma', age: 30 },
+          ]}
+          columns={brandColumns}
+          getRowId={(row: BrandRow) => row.brand}
+          filtering={{
+            model: {
+              logicOperator: 'and',
+              conditions: [{ field: 'brand', operator: 'contains', value: 'a' }],
+            },
+          }}
+        />,
+      );
+
+      expect(getRowAttr(container, 'data-brand')).toEqual(['Adidas', 'Puma']);
+    });
+  });
+
+  describe('ignoreDiacritics', () => {
+    it('should not ignore diacritics by default', () => {
+      const { container } = render(
+        <TestDataGridWithFilter
+          rows={[
+            { id: 1, name: 'Apă', age: 25 },
+            { id: 2, name: 'Bob', age: 30 },
+          ]}
+          columns={defaultColumns}
+          filtering={{
+            model: {
+              logicOperator: 'and',
+              conditions: [{ field: 'name', operator: 'contains', value: 'apa' }],
+            },
+          }}
+        />,
+      );
+
+      expect(getRowNames(container)).toEqual([]);
+    });
+
+    it('should match when ignoreDiacritics is enabled', () => {
+      const { container } = render(
+        <TestDataGridWithFilter
+          rows={[
+            { id: 1, name: 'Apă', age: 25 },
+            { id: 2, name: 'Bob', age: 30 },
+          ]}
+          columns={defaultColumns}
+          filtering={{
+            model: {
+              logicOperator: 'and',
+              conditions: [{ field: 'name', operator: 'contains', value: 'apa' }],
+            },
+            ignoreDiacritics: true,
+          }}
+        />,
+      );
+
+      expect(getRowNames(container)).toEqual(['Apă']);
+    });
+
+    it('should match diacritics in both filter and cell values', () => {
+      const { container } = render(
+        <TestDataGridWithFilter
+          rows={[
+            { id: 1, name: 'Apă', age: 25 },
+            { id: 2, name: 'Bob', age: 30 },
+          ]}
+          columns={defaultColumns}
+          filtering={{
+            model: {
+              logicOperator: 'and',
+              conditions: [{ field: 'name', operator: 'contains', value: 'apă' }],
+            },
+            ignoreDiacritics: true,
+          }}
+        />,
+      );
+
+      expect(getRowNames(container)).toEqual(['Apă']);
+    });
+  });
+
+  describe('column removal filter model cleanup', () => {
+    it('should clean up filter model when filtered column is removed', async () => {
+      const onModelChange = vi.fn();
+
+      const { container, setProps } = render(
+        <TestDataGridWithFilter
+          rows={defaultRows}
+          columns={defaultColumns}
+          filtering={{
+            model: {
+              logicOperator: 'and',
+              conditions: [{ field: 'name', operator: 'equals', value: 'Alice' }],
+            },
+            onModelChange,
+          }}
+        />,
+      );
+
+      expect(getRowNames(container)).toEqual(['Alice']);
+
+      // Remove 'name' column, keep only 'age'
+      await act(async () => {
+        setProps({
+          columns: [
+            { id: 'age', field: 'age', filterOperators: getNumericFilterOperators() },
+          ] as ColumnDef<TestRow, ColumnMeta>[],
+        });
+      });
+
+      // Filter condition for 'name' should be removed
+      expect(onModelChange).toHaveBeenCalled();
+      const cleanedModel = onModelChange.mock.calls[onModelChange.mock.calls.length - 1][0];
+      expect(cleanedModel.conditions).toHaveLength(0);
+
+      // All rows should be visible now
+      expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
     });
   });
 });

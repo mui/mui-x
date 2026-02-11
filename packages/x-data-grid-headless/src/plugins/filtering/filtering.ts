@@ -3,7 +3,7 @@ import * as React from 'react';
 import { type Plugin, createPlugin } from '../core/plugin';
 import type { GridRowId } from '../internal/rows/rowUtils';
 import { filteringSelectors } from './selectors';
-import { buildFilterApplier } from './filteringUtils';
+import { buildFilterApplier, cleanFilterModel } from './filteringUtils';
 import type {
   FilterModel,
   FilteringState,
@@ -60,6 +60,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         getColumn,
         getRow,
         disableEval: params.filtering?.disableEval,
+        ignoreDiacritics: params.filtering?.ignoreDiacritics,
       });
       filteredRowIds = filterApplier ? filterApplier(inputRowIds) : inputRowIds;
     }
@@ -111,6 +112,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         getColumn,
         getRow: api.rows.getRow,
         disableEval: params.filtering?.disableEval,
+        ignoreDiacritics: params.filtering?.ignoreDiacritics,
       });
 
       return filterApplier ? filterApplier(originalRowIds) : originalRowIds;
@@ -163,17 +165,39 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
     const prevInputRowIdsRef = React.useRef<GridRowId[]>(getInputRowIds());
     const prevFilterModelRef = React.useRef<FilterModel>(store.state.filtering.model);
 
-    // Subscribe to store changes to detect when input rows change (sorted or raw).
+    // Track previous column lookup to detect column changes
+    const prevColumnsLookupRef = React.useRef<Record<string, any> | undefined>(
+      (store.state as any).columns?.lookup,
+    );
+
+    // Use a ref for onModelChange to avoid stale closure in subscription
+    const onModelChangeRef = React.useRef(params.filtering?.onModelChange);
+    onModelChangeRef.current = params.filtering?.onModelChange;
+
+    // Refs for functions used in effects, updated each render to avoid stale closures
+    const getInputRowIdsRef = React.useRef(getInputRowIds);
+    getInputRowIdsRef.current = getInputRowIds;
+
+    const isExternalFilteringRef = React.useRef(isExternalFiltering);
+    isExternalFilteringRef.current = isExternalFiltering;
+
+    const isAutoModeRef = React.useRef(isAutoMode);
+    isAutoModeRef.current = isAutoMode;
+
+    const applyFilteringRef = React.useRef(applyFiltering);
+    applyFilteringRef.current = applyFiltering;
+
+    // Subscribe to store changes to detect when input rows or columns change.
     // We use store.subscribe instead of a React effect because the component may not
     // re-render when sortedRowIds change (it subscribes to filteredRowIds, not sortedRowIds).
     React.useEffect(() => {
       const unsubscribe = store.subscribe(() => {
-        const currentInputRowIds = getInputRowIds();
+        const currentInputRowIds = getInputRowIdsRef.current();
 
         if (prevInputRowIdsRef.current !== currentInputRowIds) {
           prevInputRowIdsRef.current = currentInputRowIds;
 
-          if (isExternalFiltering()) {
+          if (isExternalFilteringRef.current()) {
             store.setState({
               ...store.state,
               filtering: {
@@ -181,14 +205,41 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
                 filteredRowIds: currentInputRowIds,
               },
             });
-          } else if (isAutoMode()) {
-            applyFiltering();
+          } else if (isAutoModeRef.current()) {
+            applyFilteringRef.current();
+          }
+        }
+
+        // Detect column changes and clean up filter model
+        const currentColumnsLookup = (store.state as any).columns?.lookup;
+        if (
+          currentColumnsLookup &&
+          prevColumnsLookupRef.current !== currentColumnsLookup
+        ) {
+          prevColumnsLookupRef.current = currentColumnsLookup;
+
+          const model = store.state.filtering.model;
+          const cleaned = cleanFilterModel(
+            model,
+            (field) => field in currentColumnsLookup,
+          );
+          if (cleaned !== model) {
+            store.setState({
+              ...store.state,
+              filtering: {
+                ...store.state.filtering,
+                model: cleaned,
+              },
+            });
+            onModelChangeRef.current?.(cleaned);
+            if (isAutoModeRef.current() && !isExternalFilteringRef.current()) {
+              applyFilteringRef.current();
+            }
           }
         }
       });
       return unsubscribe;
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- subscribe once on mount
-    }, []);
+    }, [store]);
 
     // Handle controlled filtering.model prop changes
     React.useEffect(() => {
@@ -207,13 +258,12 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
             },
           });
 
-          if (isAutoMode() && !isExternalFiltering()) {
-            applyFiltering();
+          if (isAutoModeRef.current() && !isExternalFilteringRef.current()) {
+            applyFilteringRef.current();
           }
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only reacting to filtering.model prop changes
-    }, [params.filtering?.model]);
+    }, [params.filtering?.model, store]);
 
     return {
       filtering: {

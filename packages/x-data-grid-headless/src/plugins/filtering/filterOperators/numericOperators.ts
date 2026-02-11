@@ -11,7 +11,7 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
   {
     value: '=',
     getApplyFilterFn: (condition) => {
-      if (condition.value == null || Number.isNaN(condition.value)) {
+      if (condition.value == null || condition.value === '' || Number.isNaN(Number(condition.value))) {
         return null;
       }
       return (value): boolean => {
@@ -22,7 +22,7 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
   {
     value: '!=',
     getApplyFilterFn: (condition) => {
-      if (condition.value == null || Number.isNaN(condition.value)) {
+      if (condition.value == null || condition.value === '' || Number.isNaN(Number(condition.value))) {
         return null;
       }
       return (value): boolean => {
@@ -33,7 +33,7 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
   {
     value: '>',
     getApplyFilterFn: (condition) => {
-      if (condition.value == null || Number.isNaN(condition.value)) {
+      if (condition.value == null || condition.value === '' || Number.isNaN(Number(condition.value))) {
         return null;
       }
       return (value): boolean => {
@@ -47,7 +47,7 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
   {
     value: '>=',
     getApplyFilterFn: (condition) => {
-      if (condition.value == null || Number.isNaN(condition.value)) {
+      if (condition.value == null || condition.value === '' || Number.isNaN(Number(condition.value))) {
         return null;
       }
       return (value): boolean => {
@@ -61,7 +61,7 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
   {
     value: '<',
     getApplyFilterFn: (condition) => {
-      if (condition.value == null || Number.isNaN(condition.value)) {
+      if (condition.value == null || condition.value === '' || Number.isNaN(Number(condition.value))) {
         return null;
       }
       return (value): boolean => {
@@ -75,7 +75,7 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
   {
     value: '<=',
     getApplyFilterFn: (condition) => {
-      if (condition.value == null || Number.isNaN(condition.value)) {
+      if (condition.value == null || condition.value === '' || Number.isNaN(Number(condition.value))) {
         return null;
       }
       return (value): boolean => {
