@@ -75,11 +75,11 @@ const EventDraggableDialogTabs = styled(Tabs, {
 interface FormContentProps {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
-  handleRef?: React.RefObject<HTMLElement | null>;
+  dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
 export function FormContent(props: FormContentProps) {
-  const { occurrence, onClose, handleRef } = props;
+  const { occurrence, onClose, dragHandlerRef } = props;
 
   // Context hooks
   const adapter = useAdapter();
@@ -216,7 +216,13 @@ export function FormContent(props: FormContentProps) {
   return (
     <DialogContent className={classes.eventDialogContent}>
       <form onSubmit={handleSubmit}>
-        <EventDraggableDialogHeader onClose={onClose} handleRef={handleRef}>
+        <EventDraggableDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+          <span
+            id="draggable-dialog-title"
+            style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
+          >
+            {occurrence.title}
+          </span>
           <EventDraggableDialogTitleTextField
             name="title"
             defaultValue={occurrence.title}

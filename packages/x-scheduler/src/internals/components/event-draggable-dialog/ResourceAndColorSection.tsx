@@ -24,15 +24,6 @@ import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const NO_RESOURCE_VALUE = '';
 
-const ResourceMenuLegendContainer = styled('div', {
-  name: 'MuiEventDraggableDialog',
-  slot: 'ResourceMenuLegendContainer',
-})(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-}));
-
 const ResourceMenuColorDot = styled('span', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuColorDot',
@@ -43,6 +34,10 @@ const ResourceMenuColorDot = styled('span', {
   flexShrink: 0,
   backgroundColor: 'var(--event-main)',
   variants: getPaletteVariants(theme),
+  [`&[data-no-resource="true"]`]: {
+    backgroundColor: 'var(--event-surface-subtle)',
+    border: '1.2px dashed var(--event-main)',
+  },
 }));
 
 const ColorSelectionContainer = styled('div', {
@@ -86,7 +81,6 @@ interface ResourceSelectProps {
 
 interface ResourceSelectAdornmentProps {
   resource: ResourceOptionType | null;
-  color: SchedulerEventColor | null;
 }
 
 interface ResourceOptionType {
@@ -96,7 +90,7 @@ interface ResourceOptionType {
 }
 
 function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
-  const { resource, color } = props;
+  const { resource } = props;
 
   const store = useSchedulerStoreContext();
   const classes = useEventDialogClasses();
@@ -107,19 +101,11 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   );
 
   return (
-    <ResourceMenuLegendContainer className={classes.eventDialogResourceMenuLegendContainer}>
-      <ResourceMenuColorDot
-        className={classes.eventDialogResourceMenuColorDot}
-        data-palette={resourceColor}
-      />
-
-      {color && resourceColor !== color && (
-        <ResourceMenuColorDot
-          className={classes.eventDialogResourceMenuColorDot}
-          data-palette={color}
-        />
-      )}
-    </ResourceMenuLegendContainer>
+    <ResourceMenuColorDot
+      className={classes.eventDialogResourceMenuColorDot}
+      data-palette={resourceColor}
+      data-no-resource={Boolean(resource?.value === null)}
+    />
   );
 }
 
@@ -172,7 +158,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           readOnly={readOnly}
           startAdornment={
             <InputAdornment position="start">
-              <ResourceSelectAdornment resource={resource} color={color} />
+              <ResourceSelectAdornment resource={resource} />
             </InputAdornment>
           }
           renderValue={() => (resource ? resource.label : translations.labelInvalidResource)}
@@ -187,6 +173,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
                 <ResourceMenuColorDot
                   className={classes.eventDialogResourceMenuColorDot}
                   data-palette={resourceOption.eventColor}
+                  data-no-resource={Boolean(resourceOption.value === null)}
                 />
               </ListItemIcon>
               <ListItemText>{resourceOption.label}</ListItemText>
@@ -203,7 +190,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
             aria-checked={color === colorOption}
             disabled={readOnly}
             onClick={() => onColorChange(colorOption)}
-            aria-label={colorOption}
+            aria-label={`Select ${colorOption} as event color`}
             data-palette={colorOption}
             className={classes.eventDialogResourceMenuColorRadioButton}
           >

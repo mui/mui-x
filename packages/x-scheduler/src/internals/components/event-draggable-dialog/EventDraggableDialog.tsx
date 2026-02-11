@@ -24,7 +24,7 @@ import { useEventDialogClasses } from './EventDialogClassesContext';
 
 interface PaperComponentProps extends PaperProps {
   anchorRef: React.RefObject<HTMLElement>;
-  handleRef: React.RefObject<HTMLElement>;
+  dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
 // 1. Setup the Draggable Paper Logic
@@ -40,8 +40,8 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     [nodeRef],
   );
 
-  const { anchorRef, handleRef, ...other } = props;
-  const resetDrag = useDraggableDialog(nodeRef, handleRef, mutateStyle);
+  const { anchorRef, dragHandlerRef, ...other } = props;
+  const resetDrag = useDraggableDialog(nodeRef, dragHandlerRef, mutateStyle);
 
   const updatePosition = React.useCallback(
     (shouldResetDrag = false) => {
@@ -111,7 +111,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   // Ref hooks
-  const handleRef = React.useRef<HTMLElement>(null);
+  const dragHandlerRef = React.useRef<HTMLElement>(null);
 
   return (
     <Dialog
@@ -131,14 +131,18 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
         container: {
           sx: { width: '100%', justifyContent: 'unset', alignItems: 'unset' },
         },
-        paper: { sx: { m: 0 }, anchorRef, handleRef } as PaperProps,
+        paper: { sx: { m: 0 }, anchorRef, dragHandlerRef } as PaperProps,
       }}
       {...other}
     >
       {isEventReadOnly ? (
-        <ReadonlyContent occurrence={occurrence} onClose={onClose} handleRef={handleRef} />
+        <ReadonlyContent
+          occurrence={occurrence}
+          onClose={onClose}
+          dragHandlerRef={dragHandlerRef}
+        />
       ) : (
-        <FormContent occurrence={occurrence} onClose={onClose} handleRef={handleRef} />
+        <FormContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
       )}
     </Dialog>
   );

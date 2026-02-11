@@ -33,8 +33,6 @@ export interface EventDialogClasses {
   eventDialogDateTimeFieldsRow: string;
   /** Styles applied to the event dialog recurrence tab content element. */
   eventDialogRecurrenceTabContent: string;
-  /** Styles applied to the event dialog resource menu legend container element. */
-  eventDialogResourceMenuLegendContainer: string;
   /** Styles applied to the event dialog resource menu color dot element. */
   eventDialogResourceMenuColorDot: string;
   /** Styles applied to the event dialog resource menu color radio button element. */
@@ -61,7 +59,6 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogDateTimeFieldsContainer',
   'eventDialogDateTimeFieldsRow',
   'eventDialogRecurrenceTabContent',
-  'eventDialogResourceMenuLegendContainer',
   'eventDialogResourceMenuColorDot',
   'eventDialogResourceMenuColorRadioButton',
 ];
@@ -85,7 +82,6 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogDateTimeFieldsContainer: ['eventDialogDateTimeFieldsContainer'],
   eventDialogDateTimeFieldsRow: ['eventDialogDateTimeFieldsRow'],
   eventDialogRecurrenceTabContent: ['eventDialogRecurrenceTabContent'],
-  eventDialogResourceMenuLegendContainer: ['eventDialogResourceMenuLegendContainer'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
   eventDialogResourceMenuColorRadioButton: ['eventDialogResourceMenuColorRadioButton'],
 };

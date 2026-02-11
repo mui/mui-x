@@ -35,6 +35,10 @@ export function useDraggableDialog(
     return draggable({
       element,
       dragHandle: handleRef.current || undefined,
+      canDrag: ({ input }) => {
+        const target = document.elementFromPoint(input.clientX, input.clientY);
+        return !target?.closest('input, textarea, select, [contenteditable="true"]');
+      },
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
