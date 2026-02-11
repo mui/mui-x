@@ -50,6 +50,9 @@ export const enUS: SchedulerTranslations = {
   eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,
 
   // EventDraggableDialog
+  colorPickerLabel: 'Event color',
+  dateTimeSectionLabel: 'Date & time',
+  resourceColorSectionLabel: 'Resource & color',
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close modal',
   closeButtonLabel: 'Close',

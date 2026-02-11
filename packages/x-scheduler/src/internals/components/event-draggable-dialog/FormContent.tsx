@@ -11,10 +11,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import {
-  SchedulerEventColor,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
-  SchedulerResourceId,
   RecurringEventFrequency,
   RecurringEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
@@ -30,7 +28,6 @@ import {
 import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
 import EventDraggableDialogHeader from './EventDraggableDialogHeader';
-import ResourceMenu from './ResourceMenu';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 import { useEventDialogClasses } from './EventDialogClassesContext';
@@ -41,7 +38,8 @@ const FormActions = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
-  padding: theme.spacing(2),
+  padding: theme.spacing(3),
+  gap: theme.spacing(2),
 }));
 
 const DialogContent = styled(MuiDialogContent, {
@@ -50,15 +48,38 @@ const DialogContent = styled(MuiDialogContent, {
 })({
   cursor: 'default',
   userSelect: 'text',
+  padding: 0,
+  minWidth: 360,
+  width: 450,
 });
+
+const EventDraggableDialogTitleTextField = styled(TextField, {
+  name: 'MuiEventDraggableDialog',
+  slot: 'TitleTextField',
+})(({ theme }) => ({
+  flex: 1,
+  ['& .MuiInputBase-root']: {
+    fontSize: theme.typography.h6.fontSize,
+    lineHeight: theme.typography.h6.lineHeight,
+    fontWeight: theme.typography.h6.fontWeight,
+  },
+}));
+
+const EventDraggableDialogTabs = styled(Tabs, {
+  name: 'MuiEventDraggableDialog',
+  slot: 'Tabs',
+})(({ theme }) => ({
+  padding: theme.spacing(0, 3),
+}));
 
 interface FormContentProps {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
+  dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
 export function FormContent(props: FormContentProps) {
-  const { occurrence, onClose } = props;
+  const { occurrence, onClose, dragHandlerRef } = props;
 
   // Context hooks
   const adapter = useAdapter();
@@ -115,41 +136,6 @@ export function FormContent(props: FormContentProps) {
       },
     };
   });
-
-  function pushPlaceholder(next: ControlledValue) {
-    if (rawPlaceholder?.type !== 'creation') {
-      return;
-    }
-
-    const { start, end, surfaceType } = computeRange(adapter, next, displayTimezone);
-    const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
-      ? rawPlaceholder.surfaceType
-      : surfaceType;
-
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      surfaceType: surfaceTypeToUse,
-      resourceId: next.resourceId,
-      start,
-      end,
-      lockSurfaceType: rawPlaceholder.lockSurfaceType,
-    });
-  }
-
-  const handleResourceChange = (value: SchedulerResourceId | null) => {
-    const newState = { ...controlled, resourceId: value };
-    pushPlaceholder(newState);
-    setControlled(newState);
-  };
-  const handleColorChange = (value: SchedulerEventColor) => {
-    if (!value) {
-      return;
-    }
-
-    const newState = { ...controlled, color: value === controlled.color ? null : value };
-    pushPlaceholder(newState);
-    setControlled(newState);
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -230,8 +216,14 @@ export function FormContent(props: FormContentProps) {
   return (
     <DialogContent className={classes.eventDialogContent}>
       <form onSubmit={handleSubmit}>
-        <EventDraggableDialogHeader onClose={onClose}>
-          <TextField
+        <EventDraggableDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+          <span
+            id="draggable-dialog-title"
+            style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
+          >
+            {occurrence.title}
+          </span>
+          <EventDraggableDialogTitleTextField
             name="title"
             defaultValue={occurrence.title}
             required
@@ -246,19 +238,12 @@ export function FormContent(props: FormContentProps) {
             fullWidth
             size="small"
           />
-          <ResourceMenu
-            readOnly={isPropertyReadOnly('resource')}
-            resourceId={controlled.resourceId}
-            onResourceChange={handleResourceChange}
-            onColorChange={handleColorChange}
-            color={controlled.color}
-          />
         </EventDraggableDialogHeader>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tabValue} onChange={handleTabChange}>
+          <EventDraggableDialogTabs value={tabValue} onChange={handleTabChange}>
             <Tab label={translations.generalTabLabel} value="general" />
             <Tab label={translations.recurrenceTabLabel} value="recurrence" />
-          </Tabs>
+          </EventDraggableDialogTabs>
         </Box>
         <GeneralTab
           occurrence={occurrence}

@@ -1,11 +1,9 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
+import { useThemeProps } from '@mui/material/styles';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
@@ -27,7 +25,7 @@ import { useEventDialogClasses } from './EventDialogClassesContext';
 
 interface PaperComponentProps extends PaperProps {
   anchorRef: React.RefObject<HTMLElement>;
-  handleRef: React.RefObject<HTMLDivElement>;
+  dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
 // 1. Setup the Draggable Paper Logic
@@ -43,8 +41,8 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     [nodeRef],
   );
 
-  const { anchorRef, handleRef, ...other } = props;
-  const resetDrag = useDraggableDialog(nodeRef, handleRef, mutateStyle);
+  const { anchorRef, dragHandlerRef, ...other } = props;
+  const resetDrag = useDraggableDialog(nodeRef, dragHandlerRef, mutateStyle);
 
   const updatePosition = React.useCallback(
     (shouldResetDrag = false) => {
@@ -81,14 +79,15 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     <Paper
       {...other}
       ref={nodeRef}
-      sx={{
-        p: 2,
+      sx={(theme) => ({
         borderWidth: 0,
         borderTopWidth: 1,
         height: 'fit-content',
         m: 0,
-        cursor: 'move',
-      }}
+        '&[data-dragging]': {
+          outline: `1px solid ${theme.palette.primary.light}`,
+        },
+      })}
     />
   );
 } as any as DialogProps['PaperComponent'];
@@ -101,9 +100,11 @@ export const EventDraggableDialogContext = EventDraggableDialog.Context;
 export const useEventDraggableDialogContext = EventDraggableDialog.useContext;
 
 export const EventDraggableDialogContent = React.forwardRef(function EventDraggableDialogContent(
-  props: EventDraggableDialogProps,
+  inProps: EventDraggableDialogProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventDraggableDialog' });
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
@@ -113,7 +114,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   // Ref hooks
-  const handleRef = React.useRef<HTMLButtonElement>(null);
+  const dragHandlerRef = React.useRef<HTMLElement>(null);
 
   return (
     <Dialog
@@ -133,24 +134,18 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
         container: {
           sx: { width: '100%', justifyContent: 'unset', alignItems: 'unset' },
         },
-        paper: { sx: { m: 0 }, anchorRef, handleRef } as PaperProps,
+        paper: { sx: { m: 0 }, anchorRef, dragHandlerRef } as PaperProps,
       }}
       {...other}
     >
-      <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <IconButton
-          size="small"
-          aria-label="drag-handle"
-          ref={handleRef}
-          className={classes.eventDialogDragHandle}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-      </Box>
       {isEventReadOnly ? (
-        <ReadonlyContent occurrence={occurrence} onClose={onClose} />
+        <ReadonlyContent
+          occurrence={occurrence}
+          onClose={onClose}
+          dragHandlerRef={dragHandlerRef}
+        />
       ) : (
-        <FormContent occurrence={occurrence} onClose={onClose} />
+        <FormContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
       )}
     </Dialog>
   );

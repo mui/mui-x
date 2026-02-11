@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
@@ -60,8 +60,8 @@ const DayHeaderCell = styled('header', {
   padding: theme.spacing(2),
   gap: theme.spacing(0.5),
   '&[data-current]': {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: alpha(theme.palette.primary.light, 0.05),
+    color: theme.palette.primary.main,
   },
 }));
 
@@ -75,6 +75,9 @@ const DayNumberCell = styled('span', {
   minWidth: '4ch',
   textAlign: 'center',
   color: theme.palette.text.primary,
+  '&[data-current]': {
+    color: theme.palette.primary.main,
+  },
 }));
 
 const WeekDayCell = styled('div', {
@@ -184,10 +187,10 @@ export const AgendaView = React.memo(
     const daysWithOccurrences = React.useMemo(
       () =>
         days.map((date) => {
-          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || [], adapter);
+          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
           return { date, occurrences };
         }),
-      [days, occurrencesMap, adapter],
+      [days, occurrencesMap],
     );
 
     return (
@@ -215,7 +218,10 @@ export const AgendaView = React.memo(
               aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
               data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
             >
-              <DayNumberCell className={classes.agendaViewDayNumberCell}>
+              <DayNumberCell
+                className={classes.agendaViewDayNumberCell}
+                data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
+              >
                 {adapter.format(date.value, 'dayOfMonth')}
               </DayNumberCell>
               <WeekDayCell className={classes.agendaViewWeekDayCell}>
