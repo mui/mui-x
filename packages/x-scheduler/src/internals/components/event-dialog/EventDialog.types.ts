@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { DialogProps } from '@mui/material/Dialog';
 
-export interface EventDraggableDialogProps extends DialogProps {
+export interface EventDialogProps extends DialogProps {
   /**
    * The event occurrence to display in the popover.
    */
@@ -17,11 +17,11 @@ export interface EventDraggableDialogProps extends DialogProps {
   onClose: () => void;
 }
 
-export interface EventDraggableDialogProviderProps {
+export interface EventDialogProviderProps {
   children: React.ReactNode;
 }
 
-export interface EventDraggableDialogTriggerProps extends React.HTMLAttributes<HTMLElement> {
+export interface EventDialogTriggerProps extends React.HTMLAttributes<HTMLElement> {
   occurrence: SchedulerRenderableEventOccurrence;
   children: React.ReactNode;
 }
