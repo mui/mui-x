@@ -180,7 +180,7 @@ const DayTimeGridHeaderButton = styled('button', {
   cursor: 'pointer',
   font: 'inherit',
   color: 'inherit',
-  padding: 0,
+  padding: theme.spacing(0.25),
   '&:focus-visible': {
     outline: `2px solid ${theme.palette.primary.main}`,
     outlineOffset: -2,
@@ -195,6 +195,9 @@ const DayTimeGridHeaderDayName = styled('span', {
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.text.secondary,
   lineHeight: 1,
+  '[data-current] &': {
+    color: theme.palette.primary.main,
+  },
 }));
 
 const DayTimeGridHeaderDayNumber = styled('span', {
@@ -202,12 +205,22 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   slot: 'DayTimeGridHeaderDayNumber',
 })(({ theme }) => ({
   fontSize: theme.typography.h5.fontSize,
-  fontWeight: theme.typography.fontWeightMedium,
   lineHeight: 1,
-  padding: theme.spacing(0, 0.5),
-  borderRadius: theme.shape.borderRadius,
+  width: 46,
+  height: 46,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '50%',
+  'button:hover &': {
+    backgroundColor: theme.palette.action.hover,
+  },
   '[data-current] &': {
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+  '[data-current] button:hover &': {
+    backgroundColor: theme.palette.primary.dark,
   },
 }));
 
