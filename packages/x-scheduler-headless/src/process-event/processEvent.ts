@@ -39,8 +39,12 @@ export function processEvent(
       exDates: model.exDates,
     },
     displayTimezone: {
-      start: processDate(startInDisplayTz, adapter),
-      end: processDate(endInDisplayTz, adapter),
+      start: model.allDay
+        ? processDate(adapter.startOfDay(startInDisplayTz), adapter)
+        : processDate(startInDisplayTz, adapter),
+      end: model.allDay
+        ? processDate(adapter.endOfDay(endInDisplayTz), adapter)
+        : processDate(endInDisplayTz, adapter),
       timezone: displayTimezone,
       rrule: displayTimezoneRRule,
       exDates: exDatesInDisplayTz,

@@ -22,8 +22,8 @@ import { MoreEventsPopoverTrigger } from '../../internals/components/more-events
 import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
-import { EventDraggableDialogTrigger } from '../../internals/components/event-draggable-dialog';
-import { useEventDraggableDialogContext } from '../../internals/components/event-draggable-dialog/EventDraggableDialog';
+import { EventDialogTrigger } from '../../internals/components/event-dialog';
+import { useEventDialogContext } from '../../internals/components/event-dialog/EventDialog';
 import { useEventCalendarClasses } from '../../event-calendar/EventCalendarClassesContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 
@@ -34,7 +34,7 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   display: 'grid',
   gridTemplateRows: 'repeat(var(--row-count), minmax(auto, 18px))',
   gap: theme.spacing(0.5),
-  padding: theme.spacing(0.5),
+  padding: theme.spacing(0.7, 0.5),
   fontSize: theme.typography.body2.fontSize,
   lineHeight: '18px',
   color: theme.palette.text.secondary,
@@ -71,6 +71,7 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}`]: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
+    marginTop: 1,
   },
   [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}:hover`]: {
     backgroundColor: theme.palette.primary.dark,
@@ -168,7 +169,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const { onOpen: startEditing } = useEventDraggableDialogContext();
+  const { onOpen: startEditing } = useEventDialogContext();
   const classes = useEventCalendarClasses();
 
   // Selector hooks
@@ -260,14 +261,14 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           }
 
           return (
-            <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
               <DayGridEvent
                 occurrence={occurrence}
                 variant={
                   isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
                 }
               />
-            </EventDraggableDialogTrigger>
+            </EventDialogTrigger>
           );
         })}
         {hiddenCount > 0 && (
