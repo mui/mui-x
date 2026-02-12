@@ -637,6 +637,38 @@
   line-height: 1;
 }
 
+.grid-toolbar__quick-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--gray-50);
+  color: var(--color-text-muted);
+}
+
+.grid-toolbar__quick-filter:focus-within {
+  border-color: var(--blue-800);
+  outline: 1px solid var(--blue-800);
+  color: var(--color-text);
+}
+
+.grid-toolbar__quick-filter-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--color-text);
+  width: 160px;
+}
+
+.grid-toolbar__quick-filter-input::placeholder {
+  color: var(--color-text-muted);
+}
+
 /* ===========================================
    Filter Panel (inside grid)
    =========================================== */

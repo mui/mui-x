@@ -10,7 +10,7 @@ import { paginationPlugin } from '@mui/x-data-grid-headless/plugins/pagination';
 
 import { ConfigPanel, type PluginConfig } from './ConfigPanel';
 import { FilterPanel } from './FilterPanel';
-import { FilterIcon } from './icons';
+import { FilterIcon, SearchIcon } from './icons';
 
 interface RowData {
   id: number;
@@ -129,6 +129,7 @@ function DataGrid(props: DataGridProps) {
   const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
 
   const isFilteringEnabled = config.filtering?.enabled ?? true;
+  const showQuickFilter = config.filtering?.showQuickFilter ?? true;
 
   const grid = useDataGrid({
     rows: props.rows,
@@ -164,11 +165,19 @@ function DataGrid(props: DataGridProps) {
   // Use filtered row IDs (filtering sits after sorting in the pipeline)
   const filteredRowIds = grid.use(filteringPlugin.selectors.filteredRowIds);
   const filterModel = grid.use(filteringPlugin.selectors.model);
+  const quickFilterValues = grid.use(filteringPlugin.selectors.quickFilterValues);
   const sortModel = grid.use(sortingPlugin.selectors.model);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
   const activeFilterCount = filterModel.conditions.length;
+  const quickFilterText = quickFilterValues.join(' ');
+
+  const handleQuickFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const values = value ? value.split(' ').filter(Boolean) : [];
+    grid.api.filtering.setQuickFilterValues(values);
+  };
 
   const handleFilterModelChange = (model: typeof filterModel) => {
     grid.api.filtering.setModel(model);
@@ -220,6 +229,18 @@ function DataGrid(props: DataGridProps) {
             <span className="grid-toolbar__badge">{activeFilterCount}</span>
           )}
         </button>
+        {isFilteringEnabled && showQuickFilter && (
+          <div className="grid-toolbar__quick-filter">
+            <SearchIcon />
+            <input
+              className="grid-toolbar__quick-filter-input"
+              type="text"
+              value={quickFilterText}
+              onChange={handleQuickFilterChange}
+              placeholder="Search..."
+            />
+          </div>
+        )}
       </div>
 
       {/* Filter Panel (collapsible) */}
@@ -323,6 +344,7 @@ function App() {
       enabled: true,
       mode: 'auto',
       disableEval: false,
+      showQuickFilter: true,
     },
   });
 

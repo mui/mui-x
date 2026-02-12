@@ -12,6 +12,7 @@ export interface PluginConfig {
   };
   filtering?: NonNullable<FilteringOptions['filtering']> & {
     enabled?: boolean;
+    showQuickFilter?: boolean;
   };
 }
 
@@ -421,6 +422,18 @@ export function ConfigPanel(props: ConfigPanelProps) {
                         </button>
                       </div>
                     )}
+                  </OptionRow>
+
+                  <OptionRow
+                    label="Quick Filter"
+                    description="Show search input in toolbar"
+                    disabled={!isFilteringEnabled}
+                  >
+                    <Toggle
+                      checked={config.filtering?.showQuickFilter ?? true}
+                      onChange={(checked) => updateFilteringConfig({ showQuickFilter: checked })}
+                      disabled={!isFilteringEnabled}
+                    />
                   </OptionRow>
 
                   <OptionRow
