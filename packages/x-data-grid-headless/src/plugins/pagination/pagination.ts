@@ -6,7 +6,7 @@ export interface PaginationModel {
   pageSize: number;
 }
 
-interface PaginationOptions {
+export interface PaginationOptions {
   paginationModel?: PaginationModel;
   onPaginationModelChange?: (model: PaginationModel) => void;
   pageSizeOptions?: number[];
@@ -17,7 +17,7 @@ interface PaginationOptions {
   };
 }
 
-interface PaginationState {
+export interface PaginationState {
   pagination: {
     paginationModel: PaginationModel;
   };
@@ -31,7 +31,7 @@ const paginationSelectors = {
   paginationModel: selectPaginationModel,
 };
 
-interface PaginationApi {
+export interface PaginationApi {
   pagination: {
     setPage: (page: number) => void;
     setPageSize: (pageSize: number) => void;
