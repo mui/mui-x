@@ -1,6 +1,5 @@
 import type { GridFilterOperator } from '@mui/x-data-grid';
 import { isObject } from '@mui/x-data-grid/internals';
-import { GridFilterInputMultiSelect } from '../components/panel/filterPanel/GridFilterInputMultiSelect';
 import { GridFilterInputMultipleMultiSelect } from '../components/panel/filterPanel/GridFilterInputMultipleMultiSelect';
 
 const parseObjectValue = (value: unknown) => {
@@ -12,41 +11,9 @@ const parseObjectValue = (value: unknown) => {
 
 /**
  * Returns filter operators for the `multiSelect` column type.
- * Operators: is, isNot, contains, doesNotContain, isEmpty, isNotEmpty
+ * Operators: contains, doesNotContain, isEmpty, isNotEmpty
  */
 export const getGridMultiSelectOperators = (): GridFilterOperator[] => [
-  {
-    value: 'is',
-    getApplyFilterFn: (filterItem) => {
-      if (filterItem.value == null || filterItem.value === '') {
-        return null;
-      }
-      const filterValue = parseObjectValue(filterItem.value);
-      return (cellValue): boolean => {
-        if (!Array.isArray(cellValue)) {
-          return false;
-        }
-        return cellValue.some((val) => parseObjectValue(val) === filterValue);
-      };
-    },
-    InputComponent: GridFilterInputMultiSelect,
-  },
-  {
-    value: 'isNot',
-    getApplyFilterFn: (filterItem) => {
-      if (filterItem.value == null || filterItem.value === '') {
-        return null;
-      }
-      const filterValue = parseObjectValue(filterItem.value);
-      return (cellValue): boolean => {
-        if (!Array.isArray(cellValue)) {
-          return true;
-        }
-        return !cellValue.some((val) => parseObjectValue(val) === filterValue);
-      };
-    },
-    InputComponent: GridFilterInputMultiSelect,
-  },
   {
     value: 'contains',
     getApplyFilterFn: (filterItem) => {
