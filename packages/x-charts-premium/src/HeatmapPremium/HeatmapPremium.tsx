@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   FocusedHeatmapCell,
   HeatmapTooltip,
@@ -19,7 +18,7 @@ import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsWebGlLayer } from '@mui/x-charts/ChartsWebGlLayer';
-import { ChartsSvgLayer } from '@mui/x-charts';
+import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
