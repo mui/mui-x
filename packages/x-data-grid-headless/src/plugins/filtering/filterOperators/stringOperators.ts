@@ -4,39 +4,35 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-const createContainsFilterFn =
-  (negate: boolean) =>
-  (condition: FilterCondition) => {
-    if (!condition.value) {
-      return null;
+const createContainsFilterFn = (negate: boolean) => (condition: FilterCondition) => {
+  if (!condition.value) {
+    return null;
+  }
+  const trimmedValue = String(condition.value).trim();
+  const filterRegex = new RegExp(escapeRegExp(trimmedValue), 'i');
+  return (value: any): boolean => {
+    if (value == null) {
+      return negate;
     }
-    const trimmedValue = String(condition.value).trim();
-    const filterRegex = new RegExp(escapeRegExp(trimmedValue), 'i');
-    return (value: any): boolean => {
-      if (value == null) {
-        return negate;
-      }
-      const matches = filterRegex.test(String(value));
-      return negate ? !matches : matches;
-    };
+    const matches = filterRegex.test(String(value));
+    return negate ? !matches : matches;
   };
+};
 
-const createEqualityFilterFn =
-  (negate: boolean) =>
-  (condition: FilterCondition) => {
-    if (!condition.value) {
-      return null;
+const createEqualityFilterFn = (negate: boolean) => (condition: FilterCondition) => {
+  if (!condition.value) {
+    return null;
+  }
+  const trimmedValue = String(condition.value).trim();
+  const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
+  return (value: any): boolean => {
+    if (value == null) {
+      return negate;
     }
-    const trimmedValue = String(condition.value).trim();
-    const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
-    return (value: any): boolean => {
-      if (value == null) {
-        return negate;
-      }
-      const isEqual = collator.compare(trimmedValue, value.toString()) === 0;
-      return negate ? !isEqual : isEqual;
-    };
+    const isEqual = collator.compare(trimmedValue, value.toString()) === 0;
+    return negate ? !isEqual : isEqual;
   };
+};
 
 const createEmptyFilterFn = (negate: boolean) => () => {
   return (value: any): boolean => {

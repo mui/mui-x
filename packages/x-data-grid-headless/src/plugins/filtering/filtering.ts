@@ -34,13 +34,10 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
   initialize: (state, params) => {
     // Prefer controlled model over initialState
     const initialModel =
-      params.filtering?.model ??
-      params.initialState?.filtering?.model ??
-      EMPTY_FILTER_MODEL;
+      params.filtering?.model ?? params.initialState?.filtering?.model ?? EMPTY_FILTER_MODEL;
 
     // Determine input rows: use sorted row IDs if sorting plugin has already initialized
-    const inputRowIds =
-      (state as any).sorting?.sortedRowIds ?? state.rows.dataRowIds;
+    const inputRowIds = (state as any).sorting?.sortedRowIds ?? state.rows.dataRowIds;
 
     let filteredRowIds: GridRowId[];
 
@@ -212,17 +209,11 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
 
         // Detect column changes and clean up filter model
         const currentColumnsLookup = (store.state as any).columns?.lookup;
-        if (
-          currentColumnsLookup &&
-          prevColumnsLookupRef.current !== currentColumnsLookup
-        ) {
+        if (currentColumnsLookup && prevColumnsLookupRef.current !== currentColumnsLookup) {
           prevColumnsLookupRef.current = currentColumnsLookup;
 
           const model = store.state.filtering.model;
-          const cleaned = cleanFilterModel(
-            model,
-            (field) => field in currentColumnsLookup,
-          );
+          const cleaned = cleanFilterModel(model, (field) => field in currentColumnsLookup);
           if (cleaned !== model) {
             store.setState({
               ...store.state,

@@ -22,7 +22,10 @@ const defaultColumns: ColumnDef<TestRow>[] = [
 ];
 
 type GridApi = ReturnType<
-  typeof useDataGrid<[typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin], TestRow>
+  typeof useDataGrid<
+    [typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin],
+    TestRow
+  >
 >;
 
 describe('Sorting Plugin - Integration Tests', () => {

@@ -204,10 +204,7 @@ function DataGrid(props: DataGridProps) {
     );
   };
 
-  const toolbarBtnClassName = [
-    'grid-toolbar__btn',
-    filterPanelOpen && 'grid-toolbar__btn--active',
-  ]
+  const toolbarBtnClassName = ['grid-toolbar__btn', filterPanelOpen && 'grid-toolbar__btn--active']
     .filter(Boolean)
     .join(' ');
 

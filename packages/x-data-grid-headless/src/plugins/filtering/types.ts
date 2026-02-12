@@ -43,9 +43,7 @@ export function isFilterCondition(expr: FilterExpression): expr is FilterConditi
 export interface FilterOperator<V = any> {
   value: string;
   label?: string;
-  getApplyFilterFn: (
-    condition: FilterCondition,
-  ) => null | ((cellValue: V, row: any) => boolean);
+  getApplyFilterFn: (condition: FilterCondition) => null | ((cellValue: V, row: any) => boolean);
   /**
    * If `false`, the operator does not require a filter value (e.g. isEmpty, isNotEmpty).
    * @default true

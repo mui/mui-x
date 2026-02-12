@@ -994,7 +994,6 @@ describe('buildFilterApplier', () => {
   });
 });
 
-
 describe('cleanFilterModel', () => {
   it('should return same model when all fields are valid', () => {
     const model: FilterModel = {

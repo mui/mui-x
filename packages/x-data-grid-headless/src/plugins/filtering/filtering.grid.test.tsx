@@ -180,11 +180,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       it('should update model and apply filtering', async () => {
         const apiRef = React.createRef<GridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter
-            rows={defaultRows}
-            columns={defaultColumns}
-            apiRef={apiRef}
-          />,
+          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
         );
 
         await act(async () => {
@@ -254,11 +250,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       it('should compute filtered rows without updating state', () => {
         const apiRef = React.createRef<GridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter
-            rows={defaultRows}
-            columns={defaultColumns}
-            apiRef={apiRef}
-          />,
+          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
         );
 
         const computed = apiRef.current?.api.filtering.computeFilteredRowIds(undefined, {
@@ -306,11 +298,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       it('should re-filter when model changes', async () => {
         const apiRef = React.createRef<GridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter
-            rows={defaultRows}
-            columns={defaultColumns}
-            apiRef={apiRef}
-          />,
+          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
         );
 
         await act(async () => {
@@ -507,11 +495,7 @@ describe('Filtering Plugin - Integration Tests', () => {
     it('should support nested AND/OR groups', async () => {
       const apiRef = React.createRef<GridApi | null>();
       const { container } = render(
-        <TestDataGridWithFilter
-          rows={defaultRows}
-          columns={defaultColumns}
-          apiRef={apiRef}
-        />,
+        <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
       );
 
       // (name contains 'li') AND (age = 25 OR age = 35)

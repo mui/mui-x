@@ -402,9 +402,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <Select
                       value={config.filtering?.mode ?? 'auto'}
-                      onChange={(val) =>
-                        updateFilteringConfig({ mode: val as 'auto' | 'manual' })
-                      }
+                      onChange={(val) => updateFilteringConfig({ mode: val as 'auto' | 'manual' })}
                       options={[
                         { value: 'auto', label: 'Auto' },
                         { value: 'manual', label: 'Manual' },

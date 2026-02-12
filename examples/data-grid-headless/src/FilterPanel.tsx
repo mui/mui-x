@@ -6,10 +6,7 @@ import type {
   FilterExpression,
   FilterOperator,
 } from '@mui/x-data-grid-headless/plugins/filtering';
-import {
-  isFilterGroup,
-  isFilterCondition,
-} from '@mui/x-data-grid-headless/plugins/filtering';
+import { isFilterGroup, isFilterCondition } from '@mui/x-data-grid-headless/plugins/filtering';
 import { PlusIcon, TrashIcon, GroupIcon } from './icons';
 
 export interface FilterColumnInfo {
@@ -35,10 +32,7 @@ function getDefaultOperator(column: FilterColumnInfo): string {
 }
 
 // Helper to check if an operator requires a value
-function operatorRequiresValue(
-  column: FilterColumnInfo,
-  operatorValue: string,
-): boolean {
+function operatorRequiresValue(column: FilterColumnInfo, operatorValue: string): boolean {
   const operator = column.filterOperators?.find((op) => op.value === operatorValue);
   return operator?.requiresFilterValue !== false;
 }
@@ -96,7 +90,7 @@ function ConditionRow(props: ConditionRowProps) {
       <select
         className="filter-select filter-select--field"
         value={condition.field}
-        onChange={(e) => handleFieldChange(e.target.value)}
+        onChange={(event) => handleFieldChange(event.target.value)}
         disabled={disabled}
       >
         {columns.map((col) => (
@@ -109,7 +103,7 @@ function ConditionRow(props: ConditionRowProps) {
       <select
         className="filter-select filter-select--operator"
         value={condition.operator}
-        onChange={(e) => handleOperatorChange(e.target.value)}
+        onChange={(event) => handleOperatorChange(event.target.value)}
         disabled={disabled}
       >
         {operators.map((op) => (
@@ -124,7 +118,7 @@ function ConditionRow(props: ConditionRowProps) {
           className="filter-input"
           type="text"
           value={condition.value ?? ''}
-          onChange={(e) => handleValueChange(e.target.value)}
+          onChange={(event) => handleValueChange(event.target.value)}
           placeholder="Value..."
           disabled={disabled}
         />
@@ -202,10 +196,7 @@ function FilterGroupComponent(props: FilterGroupComponentProps) {
     onChange({ ...group, conditions: [...group.conditions, newGroup] });
   };
 
-  const groupClassName = [
-    'filter-group',
-    depth > 0 && 'filter-group--nested',
-  ]
+  const groupClassName = ['filter-group', depth > 0 && 'filter-group--nested']
     .filter(Boolean)
     .join(' ');
 
@@ -240,9 +231,7 @@ function FilterGroupComponent(props: FilterGroupComponentProps) {
             return (
               <div key={index} className="filter-group__row">
                 {index > 0 && (
-                  <span className="filter-logic-label">
-                    {group.logicOperator.toUpperCase()}
-                  </span>
+                  <span className="filter-logic-label">{group.logicOperator.toUpperCase()}</span>
                 )}
                 <ConditionRow
                   condition={expr}
@@ -259,9 +248,7 @@ function FilterGroupComponent(props: FilterGroupComponentProps) {
             return (
               <div key={index} className="filter-group__row">
                 {index > 0 && (
-                  <span className="filter-logic-label">
-                    {group.logicOperator.toUpperCase()}
-                  </span>
+                  <span className="filter-logic-label">{group.logicOperator.toUpperCase()}</span>
                 )}
                 <FilterGroupComponent
                   group={expr}
