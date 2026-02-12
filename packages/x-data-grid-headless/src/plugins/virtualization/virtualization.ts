@@ -238,8 +238,8 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
     }, [params.disableVirtualization, setVirtualization]);
 
     React.useEffect(() => {
-      setColumnVirtualization(!params.disableColumnVirtualization);
-    }, [params.disableColumnVirtualization, setColumnVirtualization]);
+      setColumnVirtualization(!params.disableVirtualization && !params.disableColumnVirtualization);
+    }, [params.disableVirtualization, params.disableColumnVirtualization, setColumnVirtualization]);
 
     const useScrollPositionHook = (): { top: number; left: number } => {
       const scrollPositionState = useStore(
