@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { type Plugin, createPlugin } from '../core/plugin';
 import type { GridRowId } from '../internal/rows/rowUtils';
 import { sortingSelectors } from './selectors';
@@ -29,8 +30,6 @@ type SortingPlugin = Plugin<
 
 const DEFAULT_SORTING_ORDER: readonly GridSortDirection[] = ['asc', 'desc', null];
 
-// TODO: Set priority on the whole plugin instead of the processor?
-const SORTING_PIPELINE_PRIORITY = 100;
 const SORTING_PIPELINE_PROCESSOR_NAME = 'sorting';
 
 const sortingPlugin = createPlugin<SortingPlugin>()({
@@ -130,40 +129,32 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       return sortingApplier ? sortingApplier(idsToSort) : idsToSort;
     };
 
-    const sortingProcessor = React.useCallback(
-      (inputIds: GridRowId[]): GridRowId[] => {
-        if (isExternalSorting) {
-          return inputIds;
-        }
-        return computeSortedRowIds(inputIds, store.state.sorting.model, {
-          stableSort: params.sorting?.stableSort ?? false,
-        });
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- functions access store.state at call time
-      [params.sorting?.stableSort],
-    );
+    const sortingProcessor = useStableCallback((inputIds: GridRowId[]): GridRowId[] => {
+      if (isExternalSorting) {
+        return inputIds;
+      }
+      return computeSortedRowIds(inputIds, store.state.sorting.model, {
+        stableSort: params.sorting?.stableSort ?? false,
+      });
+    });
 
     /**
      * Apply sorting and update state.
      * Uses computeSortedRowIds internally.
      */
     const applySorting = (): void => {
-      // Skip if external sorting is enabled
       if (isExternalSorting) {
         return;
       }
 
       if (!isAutoMode) {
-        const unregister = api.rows.rowIdsPipeline.register(
-          SORTING_PIPELINE_PROCESSOR_NAME,
-          SORTING_PIPELINE_PRIORITY,
-          sortingProcessor,
-        );
+        api.rows.rowIdsPipeline.enable(SORTING_PIPELINE_PROCESSOR_NAME);
         api.rows.rowIdsPipeline.recompute(SORTING_PIPELINE_PROCESSOR_NAME);
-        unregister();
-      } else {
-        api.rows.rowIdsPipeline.recompute(SORTING_PIPELINE_PROCESSOR_NAME);
+        api.rows.rowIdsPipeline.disable(SORTING_PIPELINE_PROCESSOR_NAME);
+        return;
       }
+
+      api.rows.rowIdsPipeline.recompute(SORTING_PIPELINE_PROCESSOR_NAME);
     };
 
     const setSortModel = (model: GridSortModel): void => {
@@ -232,15 +223,10 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     };
 
     React.useEffect(() => {
-      if (!isAutoMode) {
-        return undefined;
-      }
-      return api.rows.rowIdsPipeline.register(
-        SORTING_PIPELINE_PROCESSOR_NAME,
-        SORTING_PIPELINE_PRIORITY,
-        sortingProcessor,
-      );
-    }, [api, sortingProcessor, isAutoMode]);
+      return api.rows.rowIdsPipeline.register(SORTING_PIPELINE_PROCESSOR_NAME, sortingProcessor, {
+        disabled: !isAutoMode || isExternalSorting,
+      });
+    }, [api, isAutoMode, isExternalSorting, sortingProcessor]);
 
     // Initialize to current row IDs since initial sorting is done in initialize
     const prevSortModelRef = React.useRef<GridSortModel>(store.state.sorting.model);

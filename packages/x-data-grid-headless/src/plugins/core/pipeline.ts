@@ -4,8 +4,8 @@ export interface PipelineProcessor<TValue> {
 
 interface RegisteredPipelineProcessor<TValue> {
   name: string;
-  priority: number;
   processor: PipelineProcessor<TValue>;
+  enabled: boolean;
 }
 
 export interface PipelineOptions<TValue> {
@@ -24,21 +24,34 @@ export class Pipeline<TValue> {
 
   constructor(private readonly options: PipelineOptions<TValue>) {}
 
-  register(name: string, priority: number, processor: PipelineProcessor<TValue>): () => void {
-    const hadProcessor = this.processors.has(name);
-    this.processors.set(name, { name, priority, processor });
+  register(
+    name: string,
+    processor: PipelineProcessor<TValue>,
+    options?: { disabled?: boolean },
+  ): () => void {
+    const existingProcessor = this.processors.get(name);
+    const isEnabled =
+      options?.disabled !== undefined ? !options.disabled : (existingProcessor?.enabled ?? true);
 
-    if (!hadProcessor) {
-      // Topology changed (new processor added): invalidate the whole cache.
-      this.previousRun = undefined;
-    } else if (this.previousRun) {
-      // Processor was replaced: keep upstream cache and invalidate this processor + downstream.
-      const processorIndex = this.previousRun.processorNames.indexOf(name);
-      if (processorIndex !== -1) {
-        for (let i = processorIndex; i < this.previousRun.processorNames.length; i += 1) {
-          this.previousRun.outputsByProcessor.delete(this.previousRun.processorNames[i]);
-        }
+    this.processors.set(name, {
+      name,
+      processor,
+      enabled: isEnabled,
+    });
+
+    if (!existingProcessor) {
+      if (isEnabled) {
+        // Topology changed with a new enabled processor: invalidate the whole cache.
+        this.previousRun = undefined;
+      } else {
+        // Keep cache compatibility by tracking disabled processors in the topology.
+        this.previousRun?.processorNames.push(name);
       }
+    } else if (
+      existingProcessor.enabled !== isEnabled ||
+      (isEnabled && existingProcessor.processor !== processor)
+    ) {
+      this.invalidateFromProcessor(name);
     }
 
     return () => {
@@ -47,19 +60,59 @@ export class Pipeline<TValue> {
     };
   }
 
-  private getSortedProcessors(): RegisteredPipelineProcessor<TValue>[] {
-    return Array.from(this.processors.values()).sort((a, b) => a.priority - b.priority);
+  enable(name: string): void {
+    const processor = this.processors.get(name);
+    if (!processor || processor.enabled) {
+      return;
+    }
+
+    processor.enabled = true;
+    this.invalidateFromProcessor(name);
+  }
+
+  disable(name: string): void {
+    const processor = this.processors.get(name);
+    if (!processor || !processor.enabled) {
+      return;
+    }
+
+    processor.enabled = false;
+    this.invalidateFromProcessor(name);
+  }
+
+  private invalidateFromProcessor(name: string): void {
+    if (!this.previousRun) {
+      return;
+    }
+
+    const processorIndex = this.previousRun.processorNames.indexOf(name);
+    if (processorIndex === -1) {
+      this.previousRun = undefined;
+      return;
+    }
+
+    for (let i = processorIndex; i < this.previousRun.processorNames.length; i += 1) {
+      this.previousRun.outputsByProcessor.delete(this.previousRun.processorNames[i]);
+    }
+  }
+
+  private getOrderedProcessors(): RegisteredPipelineProcessor<TValue>[] {
+    return Array.from(this.processors.values());
   }
 
   private runFrom(
     input: TValue,
-    sortedProcessors: RegisteredPipelineProcessor<TValue>[],
+    orderedProcessors: RegisteredPipelineProcessor<TValue>[],
     startIndex: number,
     outputsByProcessor: Map<string, TValue>,
   ): TValue {
     let currentValue = input;
-    for (let i = startIndex; i < sortedProcessors.length; i += 1) {
-      const { name, processor } = sortedProcessors[i];
+    for (let i = startIndex; i < orderedProcessors.length; i += 1) {
+      const { name, processor, enabled } = orderedProcessors[i];
+      if (!enabled) {
+        continue;
+      }
+
       currentValue = processor(currentValue);
       outputsByProcessor.set(name, currentValue);
     }
@@ -67,9 +120,22 @@ export class Pipeline<TValue> {
     return currentValue;
   }
 
+  private findPreviousEnabledProcessorIndex(
+    orderedProcessors: RegisteredPipelineProcessor<TValue>[],
+    fromIndex: number,
+  ): number {
+    for (let i = fromIndex - 1; i >= 0; i -= 1) {
+      if (orderedProcessors[i].enabled) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
   recompute(fromProcessor?: string): TValue {
-    const sortedProcessors = this.getSortedProcessors();
-    const processorNames = sortedProcessors.map((processor) => processor.name);
+    const orderedProcessors = this.getOrderedProcessors();
+    const processorNames = orderedProcessors.map((processor) => processor.name);
 
     const previousRun = this.previousRun;
     const hasCompatiblePreviousRun =
@@ -83,26 +149,35 @@ export class Pipeline<TValue> {
 
     if (fromProcessor !== undefined && hasCompatiblePreviousRun) {
       const targetIndex = processorNames.indexOf(fromProcessor);
-      if (targetIndex > 0) {
-        const previousProcessorName = processorNames[targetIndex - 1];
-        const previousOutput = previousRun.outputsByProcessor.get(previousProcessorName);
+      if (targetIndex !== -1) {
+        const previousEnabledIndex = this.findPreviousEnabledProcessorIndex(
+          orderedProcessors,
+          targetIndex,
+        );
 
-        if (previousOutput !== undefined) {
-          startIndex = targetIndex;
-          input = previousOutput;
+        if (previousEnabledIndex !== -1) {
+          const previousProcessorName = processorNames[previousEnabledIndex];
+          const previousOutput = previousRun.outputsByProcessor.get(previousProcessorName);
 
-          for (let i = 0; i < targetIndex; i += 1) {
-            const processorName = processorNames[i];
-            const cachedOutput = previousRun.outputsByProcessor.get(processorName);
-            if (cachedOutput !== undefined) {
-              outputsByProcessor.set(processorName, cachedOutput);
+          if (previousOutput !== undefined) {
+            startIndex = targetIndex;
+            input = previousOutput;
+
+            for (let i = 0; i < targetIndex; i += 1) {
+              const processorName = processorNames[i];
+              const cachedOutput = previousRun.outputsByProcessor.get(processorName);
+              if (cachedOutput !== undefined) {
+                outputsByProcessor.set(processorName, cachedOutput);
+              }
             }
           }
+        } else {
+          startIndex = targetIndex;
         }
       }
     }
 
-    const output = this.runFrom(input, sortedProcessors, startIndex, outputsByProcessor);
+    const output = this.runFrom(input, orderedProcessors, startIndex, outputsByProcessor);
     this.previousRun = {
       processorNames,
       outputsByProcessor,
