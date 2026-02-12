@@ -219,7 +219,7 @@ function GridRow({
   return (
     <div key={row.id} className="grid-row" {...rowProps} style={{ height: ROW_HEIGHT }}>
       {columnsToRender.map((column) => (
-        <GridCell column={column} row={row}></GridCell>
+        <GridCell column={column} row={row} key={column.id}></GridCell>
       ))}
     </div>
   );
@@ -248,7 +248,7 @@ function DataGridRenderZone() {
         if (!row) {
           return null;
         }
-        return <GridRow row={row} columnsToRender={columnsToRender} />;
+        return <GridRow key={row.id} row={row} columnsToRender={columnsToRender} />;
       })}
     </div>
   );
