@@ -3,12 +3,12 @@ import {
   createGetPreviousIndexFocusedItem,
   createGetNextSeriesFocusedItem,
   createGetPreviousSeriesFocusedItem,
+  type KeyboardFocusHandler,
   type ComposableCartesianChartSeriesType,
   composableCartesianSeriesTypes,
-} from '../../../internals/commonNextFocusItem';
-import type { KeyboardFocusHandler } from '../../../internals/plugins/featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
+} from '@mui/x-charts/internals';
 
-const keyboardFocusHandler: KeyboardFocusHandler<'bar', ComposableCartesianChartSeriesType> = (
+const keyboardFocusHandler: KeyboardFocusHandler<'rangeBar', ComposableCartesianChartSeriesType> = (
   event,
 ) => {
   switch (event.key) {
