@@ -3,12 +3,8 @@ export interface EventDialogClasses {
   eventDialog: string;
   /** Styles applied to the event dialog close button element. */
   eventDialogCloseButton: string;
-  /** Styles applied to the event dialog drag handle element. */
-  eventDialogDragHandle: string;
   /** Styles applied to the event dialog header element. */
   eventDialogHeader: string;
-  /** Styles applied to the event dialog header content element. */
-  eventDialogHeaderContent: string;
   /** Styles applied to the event dialog readonly content element. */
   eventDialogReadonlyContent: string;
   /** Styles applied to the event dialog actions element. */
@@ -37,8 +33,6 @@ export interface EventDialogClasses {
   eventDialogDateTimeFieldsRow: string;
   /** Styles applied to the event dialog recurrence tab content element. */
   eventDialogRecurrenceTabContent: string;
-  /** Styles applied to the event dialog resource menu legend container element. */
-  eventDialogResourceMenuLegendContainer: string;
   /** Styles applied to the event dialog resource menu color dot element. */
   eventDialogResourceMenuColorDot: string;
   /** Styles applied to the event dialog resource menu color radio button element. */
@@ -50,9 +44,7 @@ export type EventDialogClassKey = keyof EventDialogClasses;
 export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialog',
   'eventDialogCloseButton',
-  'eventDialogDragHandle',
   'eventDialogHeader',
-  'eventDialogHeaderContent',
   'eventDialogReadonlyContent',
   'eventDialogActions',
   'eventDialogDateTimeContainer',
@@ -67,7 +59,6 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogDateTimeFieldsContainer',
   'eventDialogDateTimeFieldsRow',
   'eventDialogRecurrenceTabContent',
-  'eventDialogResourceMenuLegendContainer',
   'eventDialogResourceMenuColorDot',
   'eventDialogResourceMenuColorRadioButton',
 ];
@@ -76,9 +67,7 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
 export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]> = {
   eventDialog: ['eventDialog'],
   eventDialogCloseButton: ['eventDialogCloseButton'],
-  eventDialogDragHandle: ['eventDialogDragHandle'],
   eventDialogHeader: ['eventDialogHeader'],
-  eventDialogHeaderContent: ['eventDialogHeaderContent'],
   eventDialogReadonlyContent: ['eventDialogReadonlyContent'],
   eventDialogActions: ['eventDialogActions'],
   eventDialogDateTimeContainer: ['eventDialogDateTimeContainer'],
@@ -93,7 +82,6 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogDateTimeFieldsContainer: ['eventDialogDateTimeFieldsContainer'],
   eventDialogDateTimeFieldsRow: ['eventDialogDateTimeFieldsRow'],
   eventDialogRecurrenceTabContent: ['eventDialogRecurrenceTabContent'],
-  eventDialogResourceMenuLegendContainer: ['eventDialogResourceMenuLegendContainer'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
   eventDialogResourceMenuColorRadioButton: ['eventDialogResourceMenuColorRadioButton'],
 };
