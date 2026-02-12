@@ -189,13 +189,3 @@ Event colors can be set at two levels. The effective color resolves in the follo
 The following demo shows one event for each palette:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Translations
-
-```tsx
-import { frFR } from '@mui/x-scheduler/translations';
-
-<EventCalendar translations={frFR} />;
-```
-
-{{"demo": "Translations.js", "bg": "inline", "defaultCodeOpen": false}}

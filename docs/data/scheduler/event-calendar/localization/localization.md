@@ -15,7 +15,7 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
-The default locale of MUI X is English (United States).
+The default locale of MUI X is English (United States).
 To use other locales, follow the instructions below.
 
 ## Translation keys
@@ -29,7 +29,7 @@ In the following example, the labels of the view switcher buttons are customized
 
 ## Locale text
 
-The default locale of MUI X is English (United States).
+The default locale of MUI X is English (United States).
 
 You can use the theme to configure the locale text:
 
