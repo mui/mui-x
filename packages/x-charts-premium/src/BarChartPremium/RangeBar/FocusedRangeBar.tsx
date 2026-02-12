@@ -1,23 +1,23 @@
 'use client';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { useFocusedItem } from '../hooks/useFocusedItem';
-import { useBarSeriesContext, useXAxes, useYAxes } from '../hooks';
-import { createGetBarDimensions } from '../internals/createGetBarDimensions';
+import { useFocusedItem, useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { createGetRangeBarDimensions } from './createGetRangeBarDimensions';
+import { useRangeBarSeriesContext } from '../../hooks/useRangeBarSeries';
 
-export function FocusedBar(props: React.SVGAttributes<SVGRectElement>) {
+export function FocusedRangeBar(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
   const focusedItem = useFocusedItem();
 
-  const barSeries = useBarSeriesContext();
+  const rangeBarSeries = useRangeBarSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  if (focusedItem === null || focusedItem.type !== 'bar' || !barSeries) {
+  if (focusedItem === null || focusedItem.type !== 'rangeBar' || !rangeBarSeries) {
     return null;
   }
 
-  const series = barSeries.series[focusedItem.seriesId];
+  const series = rangeBarSeries.series[focusedItem.seriesId];
 
   if (series.data[focusedItem.dataIndex] == null) {
     // Handle missing data
@@ -30,18 +30,18 @@ export function FocusedBar(props: React.SVGAttributes<SVGRectElement>) {
   const xAxisConfig = xAxis[xAxisId];
   const yAxisConfig = yAxis[yAxisId];
 
-  const verticalLayout = barSeries.series[focusedItem.seriesId].layout === 'vertical';
+  const verticalLayout = rangeBarSeries.series[focusedItem.seriesId].layout === 'vertical';
 
-  const groupIndex = barSeries.stackingGroups.findIndex((group) =>
-    group.ids.includes(focusedItem.seriesId),
+  const groupIndex = rangeBarSeries.seriesOrder.findIndex(
+    (seriesId) => seriesId === focusedItem.seriesId,
   );
 
-  const barDimensions = createGetBarDimensions({
+  const barDimensions = createGetRangeBarDimensions({
     verticalLayout,
     xAxisConfig,
     yAxisConfig,
     series,
-    numberOfGroups: barSeries.stackingGroups.length,
+    numberOfGroups: rangeBarSeries.seriesOrder.length,
   })(focusedItem.dataIndex, groupIndex);
 
   if (barDimensions === null) {
