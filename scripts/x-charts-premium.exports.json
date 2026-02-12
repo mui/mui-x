@@ -261,6 +261,7 @@
   { "name": "FocusedLineMark", "kind": "Function" },
   { "name": "FocusedPieArc", "kind": "Function" },
   { "name": "FocusedRadarMark", "kind": "Function" },
+  { "name": "FocusedRangeBar", "kind": "Function" },
   { "name": "FocusedScatterMark", "kind": "Function" },
   { "name": "FUNNEL_CHART_PLUGINS", "kind": "Variable" },
   { "name": "FunnelChart", "kind": "Variable" },
