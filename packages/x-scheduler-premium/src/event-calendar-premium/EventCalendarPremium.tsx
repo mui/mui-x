@@ -12,6 +12,7 @@ import {
 import {
   TranslationsProvider,
   EventDialogProvider,
+  EventDialogClassesContext,
   EventCalendarRoot,
 } from '@mui/x-scheduler/internals';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
@@ -47,9 +48,11 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
     <SchedulerStoreContext.Provider value={store as any}>
       <TranslationsProvider translations={translations}>
         <EventCalendarClassesContext.Provider value={classes}>
-          <EventDialogProvider>
-            <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-          </EventDialogProvider>
+          <EventDialogClassesContext.Provider value={classes}>
+            <EventDialogProvider>
+              <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+            </EventDialogProvider>
+          </EventDialogClassesContext.Provider>
         </EventCalendarClassesContext.Provider>
       </TranslationsProvider>
     </SchedulerStoreContext.Provider>
