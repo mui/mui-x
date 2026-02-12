@@ -13,13 +13,13 @@ import columnsPlugin from '../plugins/internal/columns/columns';
 
 const plugins = [sortingPlugin, filteringPlugin, paginationPlugin] as const;
 
-type GridApi = ReturnType<typeof useDataGrid<typeof plugins, any>>;
+export type TestGridApi = ReturnType<typeof useDataGrid<typeof plugins, any>>;
 
 interface TestDataGridProps<TRow extends Record<string, any>> {
   rows: TRow[];
   columns: ColumnDef<TRow, SortingColumnMeta & FilteringColumnMeta>[];
   getRowId?: (row: TRow) => string;
-  apiRef?: React.RefObject<GridApi | null>;
+  apiRef?: React.RefObject<TestGridApi | null>;
   sorting?: SortingOptions['sorting'];
   filtering?: FilteringOptions['filtering'];
   initialState?: Parameters<typeof useDataGrid>[0]['initialState'];
@@ -40,7 +40,7 @@ export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGr
 
   React.useEffect(() => {
     if (apiRef) {
-      (apiRef as React.RefObject<GridApi | null>).current = grid;
+      (apiRef as React.RefObject<TestGridApi | null>).current = grid;
     }
   }, [grid, apiRef]);
 
