@@ -8,6 +8,7 @@ import {
 } from './useChartVisibilityManager.types';
 import { EMPTY_VISIBILITY_MAP } from './useChartVisibilityManager.selectors';
 import { visibilityParamToMap } from './visibilityParamToMap';
+import { createIdentifierWithType } from '../../corePlugins/useChartSeries/useChartSeries';
 
 export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature<any>> = ({
   store,
@@ -33,13 +34,13 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     }
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
-      visibilityMap: visibilityParamToMap(params.hiddenItems, store.state.seriesConfig.config),
+      visibilityMap: visibilityParamToMap(params.hiddenItems.map(item => instance.identifierWithType(item)), store.state.seriesConfig.config),
     });
-  }, [store, params.hiddenItems]);
+  }, [store, instance, params.hiddenItems]);
 
   const hideItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = instance.serializeIdentifier(identifier);
+    const id = instance.serializeIdentifier(instance.identifierWithType(identifier));
 
     if (visibilityMap.has(id)) {
       return;
@@ -58,7 +59,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 
   const showItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = instance.serializeIdentifier(identifier);
+    const id = instance.serializeIdentifier(instance.identifierWithType(identifier));
 
     if (!visibilityMap.has(id)) {
       return;
@@ -77,7 +78,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 
   const toggleItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = instance.serializeIdentifier(identifier);
+    const id = instance.serializeIdentifier(instance.identifierWithType(identifier));
 
     if (visibilityMap.has(id)) {
       showItem(identifier);
@@ -101,7 +102,7 @@ useChartVisibilityManager.getInitialState = (params, currentState) => {
   return {
     visibilityManager: {
       visibilityMap: initialItems
-        ? visibilityParamToMap(initialItems, seriesConfig)
+        ? visibilityParamToMap(initialItems.map(item => createIdentifierWithType(currentState)(item)), seriesConfig)
         : EMPTY_VISIBILITY_MAP,
       isControlled: params.hiddenItems !== undefined,
     },
