@@ -6,8 +6,6 @@ import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useChartContext } from '../context/ChartProvider';
 import {
-  selectorChartPropsHeight,
-  selectorChartPropsWidth,
   selectorChartSvgWidth,
   selectorChartSvgHeight,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
@@ -64,9 +62,6 @@ const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
     const svgWidth = store.use(selectorChartSvgWidth);
     const svgHeight = store.use(selectorChartSvgHeight);
 
-    const propsWidth = store.use(selectorChartPropsWidth);
-    const propsHeight = store.use(selectorChartPropsHeight);
-
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSvgLayer' });
 
     const { children, className, title, desc, ...other } = themeProps;
@@ -76,7 +71,6 @@ const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
 
     return (
       <ChartsSvgLayerStyles
-        ownerState={{ width: propsWidth, height: propsHeight }}
         viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
         className={clsx(classes.root, className)}
         {...other}
