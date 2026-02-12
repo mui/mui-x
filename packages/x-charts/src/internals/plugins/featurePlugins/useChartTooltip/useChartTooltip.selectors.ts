@@ -1,5 +1,8 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type { SeriesItemIdentifier, SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import type {
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type ProcessedSeries,

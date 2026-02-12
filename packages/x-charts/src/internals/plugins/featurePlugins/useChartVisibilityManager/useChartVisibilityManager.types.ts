@@ -7,10 +7,12 @@ export type VisibilityIdentifier<T extends ChartSeriesType = ChartSeriesType> = 
   SeriesItemIdentifier<T>
 > &
   // Only type is required. If type has subTypes, subType is required too.
-  (SeriesItemIdentifier<T> extends { subType?: infer U } ? { subType: U; seriesId: SeriesId } : { seriesId: SeriesId });
+  (SeriesItemIdentifier<T> extends { subType?: infer U }
+    ? { subType: U; seriesId: SeriesId }
+    : { seriesId: SeriesId });
 
-
-export type VisibilityIdentifierWithType<T extends ChartSeriesType = ChartSeriesType> = T extends any ? VisibilityIdentifier<T> & { type: T } : never
+export type VisibilityIdentifierWithType<T extends ChartSeriesType = ChartSeriesType> =
+  T extends any ? VisibilityIdentifier<T> & { type: T } : never;
 
 export type VisibilityMap = Map<string, VisibilityIdentifier>;
 

@@ -4,7 +4,10 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartPlugin, ChartPluginOptions } from '../../models';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
-import type { SeriesItemIdentifier, SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import type {
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import { createIdentifierWithType } from '../../corePlugins/useChartSeries/useChartSeries';
 
@@ -13,7 +16,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
 >({
   store,
   params,
-  instance
+  instance,
 }: ChartPluginOptions<UseChartTooltipSignature<SeriesType>>) => {
   useAssertModelConsistency({
     warningPrefix: 'MUI X Charts',
@@ -25,7 +28,11 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
 
   useEnhancedEffect(() => {
     if (store.state.tooltip.item !== params.tooltipItem) {
-      const newItem = params.tooltipItem ? instance.identifierWithType(params.tooltipItem) as SeriesItemIdentifierWithType<SeriesType> : null
+      const newItem = params.tooltipItem
+        ? (instance.identifierWithType(
+            params.tooltipItem,
+          ) as SeriesItemIdentifierWithType<SeriesType>)
+        : null;
 
       store.set('tooltip', { ...store.state.tooltip, item: newItem });
     }
@@ -77,7 +84,12 @@ useChartTooltip.getInitialState = (params, currentState) => ({
   tooltip: {
     itemIsControlled: params.tooltipItem !== undefined,
     // Need some as because the generic SeriesType can't be propagated to plugins methods.
-    item: params.tooltipItem == null ? null : createIdentifierWithType(currentState)(params.tooltipItem as SeriesItemIdentifier<ChartSeriesType>) as SeriesItemIdentifierWithType<ChartSeriesType>,
+    item:
+      params.tooltipItem == null
+        ? null
+        : (createIdentifierWithType(currentState)(
+            params.tooltipItem as SeriesItemIdentifier<ChartSeriesType>,
+          ) as SeriesItemIdentifierWithType<ChartSeriesType>),
   },
 });
 

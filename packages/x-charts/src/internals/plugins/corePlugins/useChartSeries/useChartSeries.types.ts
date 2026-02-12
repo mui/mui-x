@@ -67,14 +67,18 @@ export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType
   };
 }
 
-
 interface UseChartSeriesInstance {
   /**
    * Utils top add series type when developers do not provide it.
    * @param {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'>} identifier The series identifier without its type
    * @returns {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'> & Pick<SeriesItemIdentifier<SeriesType>, 'type'>}The identifier with the type.
    */
-  identifierWithType: <SeriesType extends ChartSeriesType, Item extends { seriesId: SeriesId; type?: SeriesType }>(identifier: Item) => Item & { type: SeriesType };
+  identifierWithType: <
+    SeriesType extends ChartSeriesType,
+    Item extends { seriesId: SeriesId; type?: SeriesType },
+  >(
+    identifier: Item,
+  ) => Item & { type: SeriesType };
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
@@ -82,6 +86,6 @@ export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSe
     params: UseChartSeriesParameters;
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
-    instance: UseChartSeriesInstance
+    instance: UseChartSeriesInstance;
     dependencies: [UseChartSeriesConfigSignature<SeriesType>];
   }>;

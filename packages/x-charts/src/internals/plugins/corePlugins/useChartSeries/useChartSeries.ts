@@ -7,14 +7,13 @@ import { defaultizeSeries } from './processSeries';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type SeriesId } from '../../../../models/seriesType';
 
-
-
-
 export function createIdentifierWithType(state: UseChartSeriesState) {
-
-  function identifierWithType<SeriesType extends ChartSeriesType, Item extends { seriesId: SeriesId; type?: SeriesType }>(identifier: Item): Item & { type: SeriesType } {
+  function identifierWithType<
+    SeriesType extends ChartSeriesType,
+    Item extends { seriesId: SeriesId; type?: SeriesType },
+  >(identifier: Item): Item & { type: SeriesType } {
     if (identifier.type !== undefined) {
-      return identifier as Item & { type: SeriesType }
+      return identifier as Item & { type: SeriesType };
     }
     const type = state.series.idToType.get(identifier.seriesId);
 
@@ -24,8 +23,8 @@ export function createIdentifierWithType(state: UseChartSeriesState) {
     return { ...identifier, type };
   }
 
-  return identifierWithType
-};
+  return identifierWithType;
+}
 
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, store }) => {
   const { series, dataset, theme, colors } = params;
@@ -46,10 +45,10 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
     });
   }, [colors, dataset, series, theme, store]);
 
-  const identifierWithType = createIdentifierWithType(store.state)
+  const identifierWithType = createIdentifierWithType(store.state);
 
-  return { instance: { identifierWithType } }
-}
+  return { instance: { identifierWithType } };
+};
 
 useChartSeries.params = {
   dataset: true,

@@ -34,7 +34,10 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     }
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
-      visibilityMap: visibilityParamToMap(params.hiddenItems.map(item => instance.identifierWithType(item)), store.state.seriesConfig.config),
+      visibilityMap: visibilityParamToMap(
+        params.hiddenItems.map((item) => instance.identifierWithType(item)),
+        store.state.seriesConfig.config,
+      ),
     });
   }, [store, instance, params.hiddenItems]);
 
@@ -102,7 +105,10 @@ useChartVisibilityManager.getInitialState = (params, currentState) => {
   return {
     visibilityManager: {
       visibilityMap: initialItems
-        ? visibilityParamToMap(initialItems.map(item => createIdentifierWithType(currentState)(item)), seriesConfig)
+        ? visibilityParamToMap(
+            initialItems.map((item) => createIdentifierWithType(currentState)(item)),
+            seriesConfig,
+          )
         : EMPTY_VISIBILITY_MAP,
       isControlled: params.hiddenItems !== undefined,
     },
