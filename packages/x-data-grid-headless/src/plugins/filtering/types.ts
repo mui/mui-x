@@ -63,6 +63,7 @@ export interface FilteringColumnMeta<V = any> {
   filterable?: boolean;
   /**
    * The filter operators available for this column.
+   * If not provided, default operators are determined by the column `type`.
    */
   filterOperators?: FilterOperator<V>[];
   /**
@@ -71,6 +72,10 @@ export interface FilteringColumnMeta<V = any> {
    * @returns {V} The value to filter by.
    */
   filterValueGetter?: (row: any) => V;
+  /**
+   * The value options for singleSelect columns.
+   */
+  valueOptions?: Array<string | { value: any; label: string }>;
 }
 
 // ================================

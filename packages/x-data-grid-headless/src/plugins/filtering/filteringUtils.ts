@@ -1,3 +1,4 @@
+import type { ColumnType } from '../../columnDef/columnDef';
 import type { GridRowId } from '../internal/rows/rowUtils';
 import {
   type FilterCondition,
@@ -9,6 +10,31 @@ import {
   isFilterCondition,
   isFilterGroup,
 } from './types';
+import { getStringFilterOperators } from './filterOperators/stringOperators';
+import { getNumericFilterOperators } from './filterOperators/numericOperators';
+import { getDateFilterOperators } from './filterOperators/dateOperators';
+import { getBooleanFilterOperators } from './filterOperators/booleanOperators';
+import { getSingleSelectFilterOperators } from './filterOperators/singleSelectOperators';
+
+/**
+ * Returns the default filter operators for the given column type.
+ */
+export function getDefaultFilterOperators(type: ColumnType = 'string'): FilterOperator[] {
+  switch (type) {
+    case 'number':
+      return getNumericFilterOperators();
+    case 'date':
+    case 'dateTime':
+      return getDateFilterOperators();
+    case 'boolean':
+      return getBooleanFilterOperators();
+    case 'singleSelect':
+      return getSingleSelectFilterOperators();
+    case 'string':
+    default:
+      return getStringFilterOperators();
+  }
+}
 
 export function removeDiacritics(value: string): string {
   return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -86,6 +112,7 @@ interface ConditionApplier {
 interface ColumnInfo {
   field?: string | number | symbol;
   id?: string;
+  type?: ColumnType;
   filterable?: boolean;
   filterOperators?: FilterOperator[];
   filterValueGetter?: (row: any) => any;
@@ -110,7 +137,7 @@ function getConditionApplier(
     return null;
   }
 
-  const filterOperators = column.filterOperators;
+  const filterOperators = column.filterOperators ?? getDefaultFilterOperators(column.type);
   if (!filterOperators?.length) {
     return null;
   }
