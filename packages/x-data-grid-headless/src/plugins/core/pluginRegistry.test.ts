@@ -60,7 +60,7 @@ describe('PluginRegistry', () => {
     });
 
     expect(() => {
-      new PluginRegistry([], [plugin]);
+      return new PluginRegistry([], [plugin]);
     }).toThrow(
       'Plugin order/dependency conflict: "plugin" (order: 10) depends on "dep" (order: 20)',
     );
