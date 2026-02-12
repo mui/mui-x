@@ -311,7 +311,7 @@ Heatmap.propTypes = {
    * The callback fired when an item is clicked.
    *
    * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
-   * @param {SeriesItemIdentifier<SeriesType>} item The clicked item.
+   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,
   /**
@@ -365,7 +365,7 @@ Heatmap.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['heatmap']).isRequired,
+    type: PropTypes.oneOf(['heatmap']),
     xIndex: PropTypes.number.isRequired,
     yIndex: PropTypes.number.isRequired,
   }),
