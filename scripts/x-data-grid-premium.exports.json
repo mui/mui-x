@@ -400,6 +400,8 @@
   { "name": "GridFilterInputBooleanProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputDate", "kind": "Function" },
   { "name": "GridFilterInputDateProps", "kind": "TypeAlias" },
+  { "name": "GridFilterInputMultipleMultiSelect", "kind": "Function" },
+  { "name": "GridFilterInputMultipleMultiSelectProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputMultipleSingleSelect", "kind": "Function" },
   { "name": "GridFilterInputMultipleSingleSelectProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputMultipleValue", "kind": "Function" },

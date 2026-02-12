@@ -1564,9 +1564,7 @@ describe('<DataGridPro /> - Filter', () => {
         render(
           <TestCaseMultiSelect
             filterModel={{
-              items: [
-                { field: 'tags', operator: 'doesNotContain', value: ['React', 'Vue'] },
-              ],
+              items: [{ field: 'tags', operator: 'doesNotContain', value: ['React', 'Vue'] }],
             }}
           />,
         );
