@@ -53,10 +53,6 @@ function operatorRequiresValue(column: FilterColumnInfo, operatorValue: string):
   return operator?.requiresFilterValue !== false;
 }
 
-// ================================
-// Condition Row
-// ================================
-
 interface ConditionRowProps {
   condition: FilterCondition;
   columns: FilterColumnInfo[];
@@ -152,10 +148,6 @@ function ConditionRow(props: ConditionRowProps) {
     </div>
   );
 }
-
-// ================================
-// Filter Group
-// ================================
 
 interface FilterGroupComponentProps {
   group: FilterGroup;
@@ -307,10 +299,6 @@ function FilterGroupComponent(props: FilterGroupComponentProps) {
     </div>
   );
 }
-
-// ================================
-// Filter Panel (Top-Level)
-// ================================
 
 export function FilterPanel(props: FilterPanelProps) {
   const { filterModel, onFilterModelChange, columns, disabled } = props;

@@ -1,9 +1,5 @@
 import type { GridRowId } from '../internal/rows/rowUtils';
 
-// ================================
-// Filter Model Types (Recursive Groups)
-// ================================
-
 export interface FilterCondition {
   field: string;
   operator: string;
@@ -24,10 +20,6 @@ export type FilterModel = FilterGroup;
 
 export const EMPTY_FILTER_MODEL: FilterModel = { logicOperator: 'and', conditions: [] };
 
-// ================================
-// Type Guards
-// ================================
-
 export function isFilterGroup(expr: FilterExpression): expr is FilterGroup {
   return 'logicOperator' in expr && 'conditions' in expr;
 }
@@ -35,10 +27,6 @@ export function isFilterGroup(expr: FilterExpression): expr is FilterGroup {
 export function isFilterCondition(expr: FilterExpression): expr is FilterCondition {
   return 'field' in expr && 'operator' in expr;
 }
-
-// ================================
-// Filter Operators
-// ================================
 
 export interface FilterOperator<V = any> {
   value: string;
@@ -50,10 +38,6 @@ export interface FilterOperator<V = any> {
    */
   requiresFilterValue?: boolean;
 }
-
-// ================================
-// Column Metadata
-// ================================
 
 export interface FilteringColumnMeta<V = any> {
   /**
@@ -78,20 +62,12 @@ export interface FilteringColumnMeta<V = any> {
   valueOptions?: Array<string | { value: any; label: string }>;
 }
 
-// ================================
-// Plugin State
-// ================================
-
 export interface FilteringState {
   filtering: {
     model: FilterModel;
     filteredRowIds: GridRowId[];
   };
 }
-
-// ================================
-// Plugin Options
-// ================================
 
 export interface FilteringOptions {
   initialState?: {
@@ -141,18 +117,10 @@ export interface FilteringInternalOptions {
   };
 }
 
-// ================================
-// Selectors
-// ================================
-
 export type FilteringSelectors = {
   model: (state: FilteringState) => FilterModel;
   filteredRowIds: (state: FilteringState) => GridRowId[];
 };
-
-// ================================
-// API
-// ================================
 
 export interface FilteringApi {
   filtering: {
