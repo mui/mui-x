@@ -16,7 +16,7 @@ export interface ChartsSlotsContextValue<
 export const ChartsSlotsContext = React.createContext<ChartsSlotsContextValue | null>(null);
 
 /**
- * Get the slots and slotProps from the nearest `ChartDataProvider` or `ChartDataProviderPro`.
+ * Get the slots and slotProps from the nearest `ChartsDataProvider` or `ChartsDataProviderPro`.
  * @returns {ChartsSlotsContextValue} The slots and slotProps from the context.
  */
 export function useChartsSlots<
@@ -28,7 +28,7 @@ export function useChartsSlots<
     throw new Error(
       [
         'MUI X Charts: Could not find the Charts Slots context.',
-        'It looks like you rendered your component outside of a ChartDataProvider.',
+        'It looks like you rendered your component outside of a ChartsDataProvider.',
         'This can also happen if you are bundling multiple versions of the library.',
       ].join('\n'),
     );

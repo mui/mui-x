@@ -74,7 +74,7 @@ export default chartsApiPages;
   translationLanguages: LANGUAGES,
   skipComponent(filename) {
     if (filename.includes('/context/')) {
-      if (filename.endsWith('ChartDataProvider.tsx')) {
+      if (filename.endsWith('ChartsDataProvider.tsx')) {
         return false;
       }
       return true;
@@ -115,6 +115,9 @@ export default chartsApiPages;
       'x-charts/src/ChartContainer/ChartContainer.tsx',
       'x-charts-pro/src/ChartContainerPro/ChartContainerPro.tsx',
       'x-charts-premium/src/ChartContainerPremium/ChartContainerPremium.tsx',
+      'x-charts/src/ChartsDataProvider/ChartsDataProvider.tsx',
+      'x-charts-pro/src/ChartsDataProviderPro/ChartsDataProviderPro.tsx',
+      'x-charts-premium/src/ChartsDataProviderPremium/ChartsDataProviderPremium.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

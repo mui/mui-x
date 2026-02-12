@@ -36,6 +36,7 @@ export type {
   ChartContainerSlots,
   ChartContainerSlotProps,
 } from './ChartContainer';
+export * from './ChartsDataProvider';
 export * from './ChartDataProvider';
 export * from './Toolbar';
 export * from './ChartsWrapper';

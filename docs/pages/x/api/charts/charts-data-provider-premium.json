@@ -23,10 +23,10 @@
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "width": { "type": { "name": "number" } }
   },
-  "name": "ChartDataProviderPro",
+  "name": "ChartsDataProviderPremium",
   "imports": [
-    "import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';",
-    "import { ChartDataProviderPro } from '@mui/x-charts-pro';"
+    "import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';",
+    "import { ChartsDataProviderPremium } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
@@ -56,11 +56,8 @@
     }
   ],
   "classes": [],
-  "spread": false,
-  "themeDefaultProps": false,
-  "muiName": "MuiChartDataProviderPro",
-  "forwardsRefTo": "SVGSVGElement",
-  "filename": "/packages/x-charts-pro/src/ChartDataProviderPro/ChartDataProviderPro.tsx",
+  "muiName": "MuiChartsDataProviderPremium",
+  "filename": "/packages/x-charts-premium/src/ChartsDataProviderPremium/ChartsDataProviderPremium.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
   "cssComponent": false

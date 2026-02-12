@@ -1,5 +1,5 @@
 {
-  "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartDataProvider` and `ChartsSurface` components.",
+  "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartsDataProvider` and `ChartsSurface` components.",
   "propDescriptions": {
     "axesGap": {
       "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
