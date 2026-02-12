@@ -2222,6 +2222,12 @@
       "isGlobal": false
     },
     {
+      "key": "editMultiSelectCellValue",
+      "className": "MuiDataGridPremium-editMultiSelectCellValue",
+      "description": "Styles applied to the edit multi-select cell value display element.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGridPremium-filterForm",
       "description": "Styles applied to the root of the filter form component.",

@@ -1433,6 +1433,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the edit multi-select cell root element"
     },
+    "editMultiSelectCellValue": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell value display element"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"

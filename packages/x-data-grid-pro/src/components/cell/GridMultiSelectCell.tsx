@@ -25,6 +25,7 @@ import {
   getValueOptions,
 } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { calculateVisibleCount } from '../../utils/multiSelectCellUtils';
 
 type OwnerState = DataGridProProcessedProps;
@@ -136,9 +137,11 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const popupId = `${id}-${colDef.field}-multiselect-popup`;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
+  const privateApiRef = useGridPrivateApiContext();
   const classes = useUtilityClasses(rootProps as OwnerState);
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+  const isAutoHeight = privateApiRef.current.rowHasAutoHeight(id);
 
   const [popupOpen, setPopupOpen] = React.useState(false);
   // Track how many chips have been measured
@@ -197,6 +200,9 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
 
   // Clear chip width cache when array values change
   React.useEffect(() => {
+    if (isAutoHeight) {
+      return;
+    }
     // Skip on initial mount - state is already fresh
     // Only reset when arrayKey actually changes
     if (prevArrayKeyRef.current !== null && prevArrayKeyRef.current !== arrayKey) {
@@ -205,19 +211,25 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
       setContainerWidth(null);
     }
     prevArrayKeyRef.current = arrayKey;
-  }, [arrayKey]);
+  }, [arrayKey, isAutoHeight]);
 
   // Update container width when column is resized
   React.useEffect(() => {
+    if (isAutoHeight) {
+      return;
+    }
     if (containerWidth !== null && prevComputedWidthRef.current !== colDef.computedWidth) {
       const delta = colDef.computedWidth - prevComputedWidthRef.current;
       setContainerWidth((prev) => (prev !== null ? prev + delta : null));
     }
     prevComputedWidthRef.current = colDef.computedWidth;
-  }, [colDef.computedWidth, containerWidth]);
+  }, [colDef.computedWidth, containerWidth, isAutoHeight]);
 
   // Measure chips and container width after render (synchronous to avoid flicker)
   React.useLayoutEffect(() => {
+    if (isAutoHeight) {
+      return;
+    }
     // Measure container width once
     if (containerWidth === null && cellRef.current) {
       setContainerWidth(cellRef.current.clientWidth);
@@ -233,7 +245,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
     if (newMeasurements > 0) {
       setMeasuredCount(chipWidthsRef.current.size);
     }
-  }, [containerWidth]);
+  }, [containerWidth, isAutoHeight]);
 
   // Calculate visible count based on container width and cached chip widths
   // This recalculates when:
@@ -241,8 +253,8 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   // - Array values change (arrayValue.length)
   // - More chips are measured (measuredCount)
   const visibleCount = React.useMemo(() => {
-    if (arrayValue.length === 0) {
-      return 0;
+    if (isAutoHeight || arrayValue.length === 0) {
+      return arrayValue.length;
     }
 
     // Container or chips not measured yet - show all chips so they can be measured
@@ -254,12 +266,15 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
 
     // All measurements complete, calculate based on container width
     return calculateVisibleCount(arrayValue.length, containerWidth, chipWidthsRef.current);
-  }, [arrayValue.length, measuredCount, containerWidth]);
+  }, [arrayValue.length, measuredCount, containerWidth, isAutoHeight]);
 
   const hiddenCount = arrayValue.length - visibleCount;
 
   // Focus overflow chip when cell receives focus
   React.useEffect(() => {
+    if (isAutoHeight) {
+      return;
+    }
     if (hasFocus && !popupOpen && hiddenCount > 0) {
       if (overflowChipRef.current && overflowChipRef.current !== document.activeElement) {
         overflowChipRef.current.focus();
@@ -268,7 +283,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
     if (!hasFocus) {
       setPopupOpen(false);
     }
-  }, [hasFocus, popupOpen, hiddenCount]);
+  }, [hasFocus, popupOpen, hiddenCount, isAutoHeight]);
 
   const handleOverflowClick = (event: React.MouseEvent) => {
     // event.detail === 0 means keyboard-triggered click (Enter keyup on focused button)

@@ -673,6 +673,11 @@ export const GridRootStyles = styled('div', {
       whiteSpace: 'initial',
       lineHeight: 'inherit',
     },
+    [`& .${c['row--dynamicHeight']}`]: {
+      [`& .${c.multiSelectCell}, .${c.editMultiSelectCellValue}`]: {
+        flexWrap: 'wrap',
+      },
+    },
     [`& .${c.cellEmpty}`]: {
       flex: 1,
       padding: 0,

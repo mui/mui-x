@@ -1628,5 +1628,27 @@ describe('<DataGridPro /> - Filter', () => {
       );
       expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
     });
+
+    it('should render all chips without overflow when row has auto height', () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              width: 100,
+              valueOptions: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'],
+            },
+          ]}
+          getRowHeight={() => 'auto'}
+        />,
+      );
+      expect(document.querySelectorAll(`.${gridClasses.multiSelectCellChip}`)).to.have.length(5);
+      expect(
+        document.querySelectorAll(`.${gridClasses['multiSelectCellChip--hidden']}`),
+      ).to.have.length(0);
+      expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).to.equal(null);
+    });
   });
 });
