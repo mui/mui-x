@@ -54,6 +54,7 @@ export {
   useGridColumnMenu,
   columnMenuStateInitializer,
 } from '../hooks/features/columnMenu/useGridColumnMenu';
+export type { GridColumnMenuComponent } from '../components/menu/columnMenu/GridColumnMenuProps';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
 export * from '../hooks/features/columns/gridColumnsUtils';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
