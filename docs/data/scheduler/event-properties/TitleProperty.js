@@ -1,32 +1,20 @@
 import * as React from 'react';
-import { startOfWeek } from 'date-fns/startOfWeek';
-import { setDay } from 'date-fns/setDay';
-import { setHours } from 'date-fns/setHours';
-import { setMinutes } from 'date-fns/setMinutes';
-import { format } from 'date-fns/format';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../datasets/personal-agenda';
 
-const START_OF_FIRST_WEEK = startOfWeek(defaultVisibleDate);
-
-/**
- * Converts a Date to a wall-time ISO string (no trailing Z).
- */
-const str = (date) => format(date, "yyyy-MM-dd'T'HH:mm:ss");
-
 const initialEvents = [
   {
     id: 'work-daily-standup',
-    start: str(setMinutes(setHours(setDay(START_OF_FIRST_WEEK, 3), 9), 0)),
-    end: str(setMinutes(setHours(setDay(START_OF_FIRST_WEEK, 3), 9), 30)),
+    start: '2025-07-02T09:00:00',
+    end: '2025-07-02T09:30:00',
     name: 'Daily Standup',
     rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
   },
   {
     id: 'work-retro',
-    start: str(setHours(setDay(START_OF_FIRST_WEEK, 2), 16)),
-    end: str(setHours(setDay(START_OF_FIRST_WEEK, 2), 17)),
+    start: '2025-07-01T16:00:00',
+    end: '2025-07-01T17:00:00',
     name: 'Team Retrospective',
     rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
   },

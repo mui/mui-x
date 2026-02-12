@@ -1,7 +1,4 @@
 import * as React from 'react';
-import { setHours } from 'date-fns/setHours';
-import { setMinutes } from 'date-fns/setMinutes';
-import { format } from 'date-fns/format';
 import capitalize from '@mui/utils/capitalize';
 import {
   SchedulerResource,
@@ -9,8 +6,6 @@ import {
 } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../datasets/personal-agenda';
-
-const str = (date: Date): string => format(date, "yyyy-MM-dd'T'HH:mm:ss");
 
 interface CustomEvent {
   id: string;
@@ -20,28 +15,26 @@ interface CustomEvent {
   teacher: string;
 }
 
-const D = defaultVisibleDate;
-
 const initialEvents: CustomEvent[] = [
   // 8:00-9:30 AM slots
   {
     id: 'math-1-room-a',
-    start: str(setHours(D, 8)),
-    end: str(setMinutes(setHours(D, 9), 30)),
+    start: '2025-07-01T08:00:00',
+    end: '2025-07-01T09:30:00',
     room: 'Room A',
     teacher: 'french',
   },
   {
     id: 'science-1-room-b',
-    start: str(setHours(D, 8)),
-    end: str(setMinutes(setHours(D, 9), 30)),
+    start: '2025-07-01T08:00:00',
+    end: '2025-07-01T09:30:00',
     room: 'Room B',
     teacher: 'science',
   },
   {
     id: 'english-1-room-c',
-    start: str(setHours(D, 8)),
-    end: str(setMinutes(setHours(D, 9), 30)),
+    start: '2025-07-01T08:00:00',
+    end: '2025-07-01T09:30:00',
     room: 'Room C',
     teacher: 'english',
   },
@@ -49,22 +42,22 @@ const initialEvents: CustomEvent[] = [
   // 10:00-11:30 AM slots
   {
     id: 'history-1-room-a',
-    start: str(setHours(D, 10)),
-    end: str(setMinutes(setHours(D, 11), 30)),
+    start: '2025-07-01T10:00:00',
+    end: '2025-07-01T11:30:00',
     room: 'Room A',
     teacher: 'history',
   },
   {
     id: 'math-2-room-b',
-    start: str(setHours(D, 10)),
-    end: str(setMinutes(setHours(D, 11), 30)),
+    start: '2025-07-01T10:00:00',
+    end: '2025-07-01T11:30:00',
     room: 'Room B',
     teacher: 'french',
   },
   {
     id: 'science-2-room-c',
-    start: str(setHours(D, 10)),
-    end: str(setMinutes(setHours(D, 11), 30)),
+    start: '2025-07-01T10:00:00',
+    end: '2025-07-01T11:30:00',
     room: 'Room C',
     teacher: 'science',
   },
@@ -72,22 +65,22 @@ const initialEvents: CustomEvent[] = [
   // 12:00-1:30 PM slots
   {
     id: 'english-2-room-a',
-    start: str(setHours(D, 12)),
-    end: str(setMinutes(setHours(D, 13), 30)),
+    start: '2025-07-01T12:00:00',
+    end: '2025-07-01T13:30:00',
     room: 'Room A',
     teacher: 'english',
   },
   {
     id: 'history-2-room-b',
-    start: str(setHours(D, 12)),
-    end: str(setMinutes(setHours(D, 13), 30)),
+    start: '2025-07-01T12:00:00',
+    end: '2025-07-01T13:30:00',
     room: 'Room B',
     teacher: 'history',
   },
   {
     id: 'math-3-room-c',
-    start: str(setHours(D, 12)),
-    end: str(setMinutes(setHours(D, 13), 30)),
+    start: '2025-07-01T12:00:00',
+    end: '2025-07-01T13:30:00',
     room: 'Room C',
     teacher: 'french',
   },
@@ -95,22 +88,22 @@ const initialEvents: CustomEvent[] = [
   // 2:00-3:30 PM slots
   {
     id: 'science-3-room-a',
-    start: str(setHours(D, 14)),
-    end: str(setMinutes(setHours(D, 15), 30)),
+    start: '2025-07-01T14:00:00',
+    end: '2025-07-01T15:30:00',
     room: 'Room A',
     teacher: 'science',
   },
   {
     id: 'english-3-room-b',
-    start: str(setHours(D, 14)),
-    end: str(setMinutes(setHours(D, 15), 30)),
+    start: '2025-07-01T14:00:00',
+    end: '2025-07-01T15:30:00',
     room: 'Room B',
     teacher: 'english',
   },
   {
     id: 'history-3-room-c',
-    start: str(setHours(D, 14)),
-    end: str(setMinutes(setHours(D, 15), 30)),
+    start: '2025-07-01T14:00:00',
+    end: '2025-07-01T15:30:00',
     room: 'Room C',
     teacher: 'history',
   },

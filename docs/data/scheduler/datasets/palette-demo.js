@@ -1,73 +1,68 @@
 // Fake data of an agenda with lots of different resources
-import { startOfWeek } from 'date-fns/startOfWeek';
-import { setDay } from 'date-fns/setDay';
-import { setHours } from 'date-fns/setHours';
 
 export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
-
-const START_OF_FIRST_WEEK = startOfWeek(defaultVisibleDate);
 
 export const initialEvents = [
   {
     id: 'purple',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 1), 2).toISOString(),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 1), 4).toISOString(),
+    start: '2025-06-30T02:00:00',
+    end: '2025-06-30T04:00:00',
     title: 'purple',
     resource: 'purple',
   },
   {
     id: 'teal',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 1), 5).toISOString(),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 1), 7).toISOString(),
+    start: '2025-06-30T05:00:00',
+    end: '2025-06-30T07:00:00',
     title: 'teal',
     resource: 'teal',
   },
   {
     id: 'lime',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 2), 2).toISOString(),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 2), 4).toISOString(),
+    start: '2025-07-01T02:00:00',
+    end: '2025-07-01T04:00:00',
     title: 'lime',
     resource: 'lime',
   },
   {
     id: 'orange',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 2), 5).toISOString(),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 2), 7).toISOString(),
+    start: '2025-07-01T05:00:00',
+    end: '2025-07-01T07:00:00',
     title: 'orange',
     resource: 'orange',
   },
   {
     id: 'green',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 3), 2).toISOString(),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 3), 4).toISOString(),
+    start: '2025-07-02T02:00:00',
+    end: '2025-07-02T04:00:00',
     title: 'green',
     resource: 'green',
   },
   {
     id: 'pink',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 3), 5).toISOString(),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 3), 7).toISOString(),
+    start: '2025-07-02T05:00:00',
+    end: '2025-07-02T07:00:00',
     title: 'pink',
     resource: 'pink',
   },
   {
     id: 'indigo',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 4), 2).toISOString(),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 4), 4).toISOString(),
+    start: '2025-07-03T02:00:00',
+    end: '2025-07-03T04:00:00',
     title: 'indigo',
     resource: 'indigo',
   },
   {
     id: 'amber',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 4), 5).toISOString(),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 4), 7).toISOString(),
+    start: '2025-07-03T05:00:00',
+    end: '2025-07-03T07:00:00',
     title: 'amber',
     resource: 'amber',
   },
   {
     id: 'blue',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 5), 2).toISOString(),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 5), 4).toISOString(),
+    start: '2025-07-04T02:00:00',
+    end: '2025-07-04T04:00:00',
     title: 'blue',
     resource: 'blue',
   },

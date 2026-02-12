@@ -1,45 +1,39 @@
 import * as React from 'react';
-import { setHours } from 'date-fns/setHours';
-import { setMinutes } from 'date-fns/setMinutes';
-import { addDays } from 'date-fns/addDays';
-import { format } from 'date-fns/format';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../datasets/personal-agenda';
 
-const str = (date: Date): string => format(date, "yyyy-MM-dd'T'HH:mm:ss");
-
 const initialEvents: SchedulerEvent[] = [
   {
     id: 'event-1',
-    start: str(setHours(defaultVisibleDate, 9)),
-    end: str(setHours(defaultVisibleDate, 10)),
+    start: '2025-07-01T09:00:00',
+    end: '2025-07-01T10:00:00',
     title: 'Regular Meeting',
   },
   {
     id: 'event-2',
-    start: str(setHours(defaultVisibleDate, 11)),
-    end: str(setHours(defaultVisibleDate, 12)),
+    start: '2025-07-01T11:00:00',
+    end: '2025-07-01T12:00:00',
     title: 'Important Meeting',
     className: 'highlighted-event',
   },
   {
     id: 'event-3',
-    start: str(setHours(defaultVisibleDate, 14)),
-    end: str(setMinutes(setHours(defaultVisibleDate, 15), 30)),
+    start: '2025-07-01T14:00:00',
+    end: '2025-07-01T15:30:00',
     title: 'Project Review',
     className: 'striped-event',
   },
   {
     id: 'event-4',
-    start: str(setHours(addDays(defaultVisibleDate, 1), 10)),
-    end: str(setHours(addDays(defaultVisibleDate, 1), 11)),
+    start: '2025-07-02T10:00:00',
+    end: '2025-07-02T11:00:00',
     title: 'Team Standup',
   },
   {
     id: 'event-5',
-    start: str(setHours(addDays(defaultVisibleDate, 1), 13)),
-    end: str(setHours(addDays(defaultVisibleDate, 1), 14)),
+    start: '2025-07-02T13:00:00',
+    end: '2025-07-02T14:00:00',
     title: 'Urgent Task',
     className: 'highlighted-event',
   },
