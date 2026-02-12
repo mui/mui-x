@@ -183,16 +183,6 @@ function Calendar() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### String dates
-
-A common use case is to convert your dates from a string to a valid date object:
-
-{{"demo": "StartEndProperties.js", "bg": "inline", "defaultCodeOpen": false}}
-
-:::warning
-TODO: Remove once start and end dates are always strings
-:::
-
 ## Event creation
 
 Use the `eventCreation` prop to customize how newly created events are defined:
