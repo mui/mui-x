@@ -2,13 +2,10 @@
 import { type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import clsx from 'clsx';
-import { useSvgRef } from '../hooks/useSvgRef';
-import { useChartContext } from '../context/ChartProvider';
-import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import { ChartsSvgLayer } from '../ChartsSvgLayer';
+import { ChartsLayerContainer } from '../ChartsLayerContainer';
 
 export interface ChartsSurfaceProps extends Omit<
   React.SVGProps<SVGSVGElement>,
@@ -39,38 +36,18 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { store } = useChartContext();
-
-  const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
-
-  const svgRef = useSvgRef();
-  const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
-  const { children, className, sx, ...other } = themeProps;
+  const { children, className, ...other } = themeProps;
 
   const classes = useUtilityClasses();
 
   return (
-    <ChartsSvgLayer
-      className={clsx(classes.root, className)}
-      tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
-      {...other}
-      ref={handleRef}
-      sx={[
-        {
-          display: 'flex',
-          position: 'relative',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gridArea: 'chart',
-        },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-    >
-      {children}
-    </ChartsSvgLayer>
+    <ChartsLayerContainer className={clsx(classes.root, className)}>
+      <ChartsSvgLayer {...other} ref={ref}>
+        {children}
+      </ChartsSvgLayer>
+    </ChartsLayerContainer>
   );
 });
 
