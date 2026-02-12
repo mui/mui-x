@@ -10,7 +10,7 @@ productId: x-charts
 ## Available hooks
 
 Chart hooks expose series data, scales, axes, legend, and layout so you can build custom chart elements (for example, a custom legend or overlay) that stay in sync with the chart.
-The charts package provides several categories of hooks.
+This page describes the different categories of hooks available.
 
 ### Series and Data hooks
 
