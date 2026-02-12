@@ -245,8 +245,9 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   }
 
   const anchorElem =
-    svgRef.current instanceof HTMLElement ? (
+    svgRef.current && svgRef.current instanceof HTMLElement ? (
       <div
+        // @ts-expect-error
         ref={anchorRef}
         style={{
           position: 'absolute',
@@ -263,6 +264,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       />
     ) : (
       <rect
+        // @ts-expect-error
         ref={anchorRef}
         {...itemPosition}
         display="hidden"
