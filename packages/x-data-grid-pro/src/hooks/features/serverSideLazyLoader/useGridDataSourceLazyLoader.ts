@@ -554,6 +554,13 @@ export const useGridDataSourceLazyLoader = (
     };
   }, [throttledHandleRenderedRowsIntervalChange, debouncedRevalidate, stopPolling]);
 
+  // Stop polling when lazyLoadingRevalidateMs is set to 0
+  React.useEffect(() => {
+    if (props.lazyLoadingRevalidateMs <= 0) {
+      stopPolling();
+    }
+  }, [props.lazyLoadingRevalidateMs, stopPolling]);
+
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       rowsStale.current = true;
