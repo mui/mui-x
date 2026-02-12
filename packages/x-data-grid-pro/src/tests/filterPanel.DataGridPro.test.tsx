@@ -84,6 +84,5 @@ describe('<DataGrid /> - Filter panel', () => {
       // 5 options + 1 empty option
       expect(options).to.have.length(6);
     });
-
   });
 });
