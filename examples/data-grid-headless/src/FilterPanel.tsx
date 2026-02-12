@@ -20,6 +20,7 @@ export interface FilterColumnInfo {
   header?: string;
   type?: ColumnType;
   filterOperators?: FilterOperator[];
+  valueOptions?: Array<string | { value: any; label: string }>;
 }
 
 interface FilterPanelProps {
@@ -97,6 +98,42 @@ function ConditionRow(props: ConditionRowProps) {
     });
   };
 
+  const isSingleSelect = currentColumn.type === 'singleSelect' && currentColumn.valueOptions;
+
+  let valueEditor: React.ReactNode = null;
+  if (needsValue && isSingleSelect) {
+    valueEditor = (
+      <select
+        className="filter-select filter-select--value"
+        value={condition.value ?? ''}
+        onChange={(event) => handleValueChange(event.target.value)}
+        disabled={disabled}
+      >
+        <option value="">—</option>
+        {currentColumn.valueOptions!.map((opt) => {
+          const optValue = typeof opt === 'string' ? opt : opt.value;
+          const optLabel = typeof opt === 'string' ? opt : opt.label;
+          return (
+            <option key={optValue} value={optValue}>
+              {optLabel}
+            </option>
+          );
+        })}
+      </select>
+    );
+  } else if (needsValue) {
+    valueEditor = (
+      <input
+        className="filter-input"
+        type="text"
+        value={condition.value ?? ''}
+        onChange={(event) => handleValueChange(event.target.value)}
+        placeholder="Value..."
+        disabled={disabled}
+      />
+    );
+  }
+
   return (
     <div className="filter-condition">
       <select
@@ -125,16 +162,7 @@ function ConditionRow(props: ConditionRowProps) {
         ))}
       </select>
 
-      {needsValue && (
-        <input
-          className="filter-input"
-          type="text"
-          value={condition.value ?? ''}
-          onChange={(event) => handleValueChange(event.target.value)}
-          placeholder="Value..."
-          disabled={disabled}
-        />
-      )}
+      {valueEditor}
 
       <button
         type="button"
@@ -238,8 +266,12 @@ function FilterGroupComponent(props: FilterGroupComponentProps) {
           if (isFilterCondition(expr)) {
             return (
               <div key={index} className="filter-group__row">
-                {index > 0 && (
-                  <span className="filter-logic-label">{group.logicOperator.toUpperCase()}</span>
+                {group.conditions.length > 1 && (
+                  <span
+                    className={`filter-logic-label${index === 0 ? ' filter-logic-label--hidden' : ''}`}
+                  >
+                    {group.logicOperator.toUpperCase()}
+                  </span>
                 )}
                 <ConditionRow
                   condition={expr}
@@ -255,8 +287,12 @@ function FilterGroupComponent(props: FilterGroupComponentProps) {
           if (isFilterGroup(expr)) {
             return (
               <div key={index} className="filter-group__row">
-                {index > 0 && (
-                  <span className="filter-logic-label">{group.logicOperator.toUpperCase()}</span>
+                {group.conditions.length > 1 && (
+                  <span
+                    className={`filter-logic-label${index === 0 ? ' filter-logic-label--hidden' : ''}`}
+                  >
+                    {group.logicOperator.toUpperCase()}
+                  </span>
                 )}
                 <FilterGroupComponent
                   group={expr}

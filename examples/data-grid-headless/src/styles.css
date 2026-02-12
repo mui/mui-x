@@ -786,6 +786,11 @@
   min-width: 120px;
 }
 
+.filter-select--value {
+  flex: 1;
+  min-width: 80px;
+}
+
 .filter-input {
   flex: 1;
   min-width: 80px;
@@ -870,6 +875,10 @@
   letter-spacing: 0.02em;
   color: var(--color-text-muted);
   text-align: center;
+}
+
+.filter-logic-label--hidden {
+  visibility: hidden;
 }
 
 /* ===========================================
