@@ -112,6 +112,7 @@ function CanvasPositioner({ children }: React.PropsWithChildren) {
         maxHeight: svgHeight,
         width: '100%',
         height: '100%',
+        margin: 'auto',
       }}
     >
       {children}

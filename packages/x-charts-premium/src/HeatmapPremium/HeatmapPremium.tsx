@@ -19,6 +19,7 @@ import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsWebGlLayer } from '@mui/x-charts/ChartsWebGlLayer';
+import { ChartsSvgLayer } from '@mui/x-charts';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
@@ -73,7 +74,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
               <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
             </ChartsWebGlLayer>
           )}
-          <ChartsSurface ref={ref} sx={sx}>
+          <ChartsSvgLayer ref={ref} sx={sx}>
             <g {...clipPathGroupProps}>
               {renderer === 'svg-single' && <HeatmapPlotPremium {...heatmapPlotPremiumProps} />}
               <FocusedHeatmapCell />
@@ -83,7 +84,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
             <ChartsClipPath {...clipPathProps} />
             <ChartsBrushOverlay />
             {children}
-          </ChartsSurface>
+          </ChartsSvgLayer>
         </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
