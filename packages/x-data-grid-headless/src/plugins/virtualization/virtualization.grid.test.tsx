@@ -208,7 +208,7 @@ describe('Virtualization', () => {
       const state = apiRef.current!.getState();
       expect(state.virtualization.enabled).to.equal(false);
       expect(state.virtualization.enabledForRows).to.equal(false);
-      // Note: enabledForColumns is controlled by disableColumnVirtualization prop
+      expect(state.virtualization.enabledForColumns).to.equal(false);
     });
 
     it('should disable row virtualization when autoHeight is true', () => {
