@@ -1,4 +1,5 @@
 'use client';
+import type { ColumnType } from '@mui/x-data-grid-headless';
 import type {
   FilterModel,
   FilterGroup,
@@ -6,13 +7,18 @@ import type {
   FilterExpression,
   FilterOperator,
 } from '@mui/x-data-grid-headless/plugins/filtering';
-import { isFilterGroup, isFilterCondition } from '@mui/x-data-grid-headless/plugins/filtering';
+import {
+  isFilterGroup,
+  isFilterCondition,
+  getDefaultFilterOperators,
+} from '@mui/x-data-grid-headless/plugins/filtering';
 import { PlusIcon, TrashIcon, GroupIcon } from './icons';
 
 export interface FilterColumnInfo {
   id: string;
-  field: string;
+  field?: string | number | symbol;
   header?: string;
+  type?: ColumnType;
   filterOperators?: FilterOperator[];
 }
 
@@ -23,17 +29,27 @@ interface FilterPanelProps {
   disabled?: boolean;
 }
 
+function getColumnField(column: FilterColumnInfo): string {
+  return String(column.field ?? column.id);
+}
+
+function getColumnOperators(column: FilterColumnInfo): FilterOperator[] {
+  return column.filterOperators ?? getDefaultFilterOperators(column.type);
+}
+
 // Helper to get the default operator for a column
 function getDefaultOperator(column: FilterColumnInfo): string {
-  if (column.filterOperators && column.filterOperators.length > 0) {
-    return column.filterOperators[0].value;
+  const operators = getColumnOperators(column);
+  if (operators.length > 0) {
+    return operators[0].value;
   }
   return 'contains';
 }
 
 // Helper to check if an operator requires a value
 function operatorRequiresValue(column: FilterColumnInfo, operatorValue: string): boolean {
-  const operator = column.filterOperators?.find((op) => op.value === operatorValue);
+  const operators = getColumnOperators(column);
+  const operator = operators.find((op) => op.value === operatorValue);
   return operator?.requiresFilterValue !== false;
 }
 
@@ -52,12 +68,12 @@ interface ConditionRowProps {
 function ConditionRow(props: ConditionRowProps) {
   const { condition, columns, onChange, onRemove, disabled } = props;
 
-  const currentColumn = columns.find((c) => c.field === condition.field) || columns[0];
-  const operators = currentColumn?.filterOperators || [];
+  const currentColumn = columns.find((c) => getColumnField(c) === condition.field) || columns[0];
+  const operators = getColumnOperators(currentColumn);
   const needsValue = operatorRequiresValue(currentColumn, condition.operator);
 
   const handleFieldChange = (field: string) => {
-    const newColumn = columns.find((c) => c.field === field) || columns[0];
+    const newColumn = columns.find((c) => getColumnField(c) === field) || columns[0];
     onChange({
       ...condition,
       field,
@@ -94,7 +110,7 @@ function ConditionRow(props: ConditionRowProps) {
         disabled={disabled}
       >
         {columns.map((col) => (
-          <option key={col.id} value={col.field}>
+          <option key={col.id} value={getColumnField(col)}>
             {col.header || col.id}
           </option>
         ))}
@@ -174,7 +190,7 @@ function FilterGroupComponent(props: FilterGroupComponentProps) {
   const handleAddCondition = () => {
     const firstColumn = columns[0];
     const newCondition: FilterCondition = {
-      field: firstColumn.field,
+      field: getColumnField(firstColumn),
       operator: getDefaultOperator(firstColumn),
       value: '',
     };
@@ -187,7 +203,7 @@ function FilterGroupComponent(props: FilterGroupComponentProps) {
       logicOperator: group.logicOperator === 'and' ? 'or' : 'and',
       conditions: [
         {
-          field: firstColumn.field,
+          field: getColumnField(firstColumn),
           operator: getDefaultOperator(firstColumn),
           value: '',
         },
@@ -311,7 +327,7 @@ export function FilterPanel(props: FilterPanelProps) {
       ...filterModel,
       conditions: [
         {
-          field: firstColumn.field,
+          field: getColumnField(firstColumn),
           operator: getDefaultOperator(firstColumn),
           value: '',
         },
