@@ -22,7 +22,10 @@ export const getSingleSelectQuickFilterFn = (
       return false;
     }
     // Check against the string representation (label) of the value
-    const label = typeof value === 'object' && value !== null ? (value as { label: string }).label : String(value);
+    const label =
+      typeof value === 'object' && value !== null
+        ? (value as { label: string }).label
+        : String(value);
     return label.toLowerCase().includes(trimmedValue);
   };
 };

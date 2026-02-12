@@ -2,12 +2,26 @@ import { describe, it, expect } from 'vitest';
 import { isFilterGroup, isFilterCondition, EMPTY_FILTER_MODEL } from './types';
 import type { FilterCondition, FilterGroup, FilterModel, FilterOperator } from './types';
 import type { GridRowId } from '../internal/rows/rowUtils';
-import { getStringFilterOperators, getStringQuickFilterFn } from './filterOperators/stringOperators';
-import { getNumericFilterOperators, getNumericQuickFilterFn } from './filterOperators/numericOperators';
+import {
+  getStringFilterOperators,
+  getStringQuickFilterFn,
+} from './filterOperators/stringOperators';
+import {
+  getNumericFilterOperators,
+  getNumericQuickFilterFn,
+} from './filterOperators/numericOperators';
 import { getDateFilterOperators } from './filterOperators/dateOperators';
 import { getBooleanFilterOperators } from './filterOperators/booleanOperators';
-import { getSingleSelectFilterOperators, getSingleSelectQuickFilterFn } from './filterOperators/singleSelectOperators';
-import { buildFilterApplier, cleanFilterModel, removeDiacritics, getDefaultFilterOperators } from './filteringUtils';
+import {
+  getSingleSelectFilterOperators,
+  getSingleSelectQuickFilterFn,
+} from './filterOperators/singleSelectOperators';
+import {
+  buildFilterApplier,
+  cleanFilterModel,
+  removeDiacritics,
+  getDefaultFilterOperators,
+} from './filteringUtils';
 
 describe('Type Guards', () => {
   describe('isFilterGroup', () => {
@@ -1264,7 +1278,10 @@ describe('Quick Filter (buildFilterApplier)', () => {
 
   it('should return null when no quick filter columns have quick filter fn', () => {
     const columnWithoutQuickFilter: Record<string, any> = {
-      name: { field: 'name', filterOperators: [{ value: 'contains', getApplyFilterFn: () => null }] },
+      name: {
+        field: 'name',
+        filterOperators: [{ value: 'contains', getApplyFilterFn: () => null }],
+      },
     };
     const model: FilterModel = {
       logicOperator: 'and',

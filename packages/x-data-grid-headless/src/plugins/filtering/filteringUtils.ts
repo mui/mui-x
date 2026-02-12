@@ -159,7 +159,10 @@ function getConditionApplier(
 
   // Normalize condition value for diacritics if needed
   if (ignoreDiacritics && typeof effectiveCondition.value === 'string') {
-    effectiveCondition = { ...effectiveCondition, value: removeDiacritics(effectiveCondition.value) };
+    effectiveCondition = {
+      ...effectiveCondition,
+      value: removeDiacritics(effectiveCondition.value),
+    };
   }
 
   const applyFilterOnRow = filterOperator.getApplyFilterFn(effectiveCondition);
@@ -284,7 +287,9 @@ function buildQuickFilterApplier(
   }
 
   // For each column, resolve the quick filter function
-  type ColumnQuickFilterFn = (quickFilterValue: any) => null | ((cellValue: any, row: any) => boolean);
+  type ColumnQuickFilterFn = (
+    quickFilterValue: any,
+  ) => null | ((cellValue: any, row: any) => boolean);
 
   const columnQuickFilterFns: Array<{
     field: string;
@@ -322,10 +327,12 @@ function buildQuickFilterApplier(
   const quickFilterLogicOperator = model.quickFilterLogicOperator ?? 'and';
 
   // Pre-compute the filter functions for each value/column combination
-  const valueFilters: Array<Array<{
-    filterFn: (cellValue: any, row: any) => boolean;
-    column: ColumnInfo & FilteringColumnMeta;
-  }>> = [];
+  const valueFilters: Array<
+    Array<{
+      filterFn: (cellValue: any, row: any) => boolean;
+      column: ColumnInfo & FilteringColumnMeta;
+    }>
+  > = [];
 
   for (const quickFilterValue of quickFilterValues) {
     const columnFilters: Array<{
@@ -407,7 +414,13 @@ export const buildFilterApplier = ({
     : null;
 
   const quickFilterApplier = hasQuickFilter
-    ? buildQuickFilterApplier(model, getColumn, ignoreDiacritics, getAllColumnFields, getVisibleColumnFields)
+    ? buildQuickFilterApplier(
+        model,
+        getColumn,
+        ignoreDiacritics,
+        getAllColumnFields,
+        getVisibleColumnFields,
+      )
     : null;
 
   if (!groupApplier && !quickFilterApplier) {

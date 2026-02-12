@@ -1099,6 +1099,5 @@ describe('Filtering Plugin - Integration Tests', () => {
       const values = selectQuickFilterValues(state as any);
       expect(values).toEqual([]);
     });
-
-});
+  });
 });

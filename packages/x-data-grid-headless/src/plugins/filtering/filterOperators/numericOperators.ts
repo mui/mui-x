@@ -10,7 +10,11 @@ const parseNumericValue = (value: unknown) => {
 export const getNumericQuickFilterFn = (
   quickFilterValue: any,
 ): ((cellValue: number | string | null, row: any) => boolean) | null => {
-  if (quickFilterValue == null || quickFilterValue === '' || Number.isNaN(Number(quickFilterValue))) {
+  if (
+    quickFilterValue == null ||
+    quickFilterValue === '' ||
+    Number.isNaN(Number(quickFilterValue))
+  ) {
     return null;
   }
   const numValue = Number(quickFilterValue);
