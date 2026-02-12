@@ -78,14 +78,55 @@ export const schedulerResourceSelectors = {
     },
   ),
   idList: createSelector((state: State) => state.resourceIdList),
-  visibleMap: createSelector((state: State) => state.visibleResources),
-  visibleIdList: createSelectorMemoized(
-    (state: State) => state.resourceIdList,
+  visibleMap: createSelectorMemoized(
     (state: State) => state.visibleResources,
-    (resources, visibleResources) =>
-      resources
-        .filter((resourceId) => visibleResources[resourceId] !== false)
-        .map((resourceId) => resourceId),
+    (state: State) => state.resourceChildrenIdLookup,
+    (state: State) => state.processedResourceLookup,
+    (visibleResources, resourceChildrenIdLookup, processedResourceLookup) => {
+      // Fast path: no parent-child relationships means no ancestor visibility to check
+      if (resourceChildrenIdLookup.size === 0) {
+        return visibleResources;
+      }
+
+      // Build parent lookup from children lookup
+      const parentLookup = new Map<string, string>();
+      for (const [parentId, childrenIds] of resourceChildrenIdLookup) {
+        for (const childId of childrenIds) {
+          parentLookup.set(childId, parentId);
+        }
+      }
+
+      const cache = new Map<string, boolean>();
+
+      const checkVisibility = (resourceId: string): boolean => {
+        const cached = cache.get(resourceId);
+        if (cached !== undefined) {
+          return cached;
+        }
+
+        const isDirectlyVisible = visibleResources[resourceId] !== false;
+        let result: boolean;
+
+        if (!isDirectlyVisible) {
+          result = false;
+        } else {
+          const parentId = parentLookup.get(resourceId);
+          result = parentId ? checkVisibility(parentId) : true;
+        }
+
+        cache.set(resourceId, result);
+        return result;
+      };
+
+      const curatedMap: Record<string, boolean> = {};
+      for (const resourceId of processedResourceLookup.keys()) {
+        if (!checkVisibility(resourceId)) {
+          curatedMap[resourceId] = false;
+        }
+      }
+
+      return curatedMap;
+    },
   ),
   /**
    * Gets the default event color used when no color is specified on the event.
