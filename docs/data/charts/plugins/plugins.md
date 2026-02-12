@@ -6,7 +6,7 @@ components: ChartsContainer, ChartDataProvider
 
 # Charts - Plugins
 
-<p class="description">Extend charts with plugins that add features, process data, and handle events.</p>
+<p class="description">Cherry pick charts features with plugins that handle state, events, and process data.</p>
 
 :::warning
 This information is for advanced use cases.
