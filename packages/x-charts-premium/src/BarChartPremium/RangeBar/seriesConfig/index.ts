@@ -9,6 +9,7 @@ import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import legendGetter from './legend';
+import keyboardFocusHandler from './keyboardFocusHandler';
 import tooltipItemPositionGetter from './tooltipPosition';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 
@@ -22,6 +23,7 @@ export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };
