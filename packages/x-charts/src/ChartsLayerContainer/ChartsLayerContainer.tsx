@@ -53,7 +53,7 @@ export const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayer
 
     const classes = useUtilityClasses();
 
-    const svgRef = useSvgRef<HTMLDivElement>();
+    const svgRef = useSvgRef();
     const handleRef = useForkRef(svgRef, ref);
 
     return (
