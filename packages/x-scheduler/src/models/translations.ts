@@ -115,12 +115,9 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   miniCalendarLabel: string;
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
-<<<<<<< Updated upstream
-=======
 }
 
 export interface EventTimelineLocaleText extends EventDialogLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
->>>>>>> Stashed changes
 }

@@ -13,15 +13,11 @@ import {
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-<<<<<<< Updated upstream
-import { eventDialogSlots, EventDialogClassesContext } from '@mui/x-scheduler/internals';
-=======
 import {
   eventDialogSlots,
   EventDialogStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
->>>>>>> Stashed changes
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
 import {
@@ -129,16 +125,6 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
     store.setView(event.target.value as EventTimelinePremiumView, event as Event);
   };
 
-<<<<<<< Updated upstream
-  return (
-    <SchedulerStoreContext.Provider value={store as any}>
-      <EventTimelinePremiumClassesContext.Provider value={classes}>
-        <EventDialogClassesContext.Provider value={classes}>
-          <EventTimelinePremiumRoot
-            ref={forwardedRef}
-            className={clsx(classes.root, className)}
-            {...forwardedProps}
-=======
   const { localeText, ...other } = forwardedProps;
 
   const mergedLocaleText = React.useMemo(
@@ -164,7 +150,6 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
             ref={forwardedRef}
             className={clsx(classes.root, className)}
             {...other}
->>>>>>> Stashed changes
           >
             <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
               <Select value={view} onChange={handleViewChange} size="small">
@@ -177,13 +162,8 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
             </EventTimelinePremiumHeaderToolbar>
             <EventTimelinePremiumContent />
           </EventTimelinePremiumRoot>
-<<<<<<< Updated upstream
-        </EventDialogClassesContext.Provider>
-      </EventTimelinePremiumClassesContext.Provider>
-=======
         </EventDialogStyledContext.Provider>
       </EventTimelinePremiumStyledContext.Provider>
->>>>>>> Stashed changes
     </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;
