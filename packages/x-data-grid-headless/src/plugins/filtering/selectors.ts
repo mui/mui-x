@@ -1,6 +1,5 @@
 import { createSelector } from '@base-ui/utils/store';
-import type { FilteringSelectors, FilteringState, FilterModel } from './types';
-import type { GridRowId } from '../internal/rows/rowUtils';
+import type { FilteringSelectors, FilteringState } from './types';
 
 export const selectFilterModel = createSelector((state: FilteringState) => state.filtering.model);
 
@@ -9,6 +8,6 @@ export const selectFilteredRowIds = createSelector(
 );
 
 export const filteringSelectors: FilteringSelectors = {
-  model: selectFilterModel as (state: FilteringState) => FilterModel,
-  filteredRowIds: selectFilteredRowIds as (state: FilteringState) => GridRowId[],
+  model: selectFilterModel,
+  filteredRowIds: selectFilteredRowIds,
 };
