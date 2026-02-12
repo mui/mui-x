@@ -77,64 +77,72 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
   },
 
   use: (store, params, api) => {
-    const isExternalFiltering = (): boolean => {
-      return params.filtering?.external === true;
-    };
+    const isExternalFiltering = params.filtering?.external === true;
+    const isAutoMode = params.filtering?.mode !== 'manual';
 
-    const isAutoMode = (): boolean => {
-      return params.filtering?.mode !== 'manual';
-    };
+    const getColumn = React.useCallback(
+      (field: string) => {
+        return api.columns.get(field) as
+          | (ReturnType<typeof api.columns.get> & FilteringColumnMeta)
+          | undefined;
+      },
+      [api],
+    );
 
-    const getColumn = (field: string) => {
-      return api.columns.get(field) as
-        | (ReturnType<typeof api.columns.get> & FilteringColumnMeta)
-        | undefined;
-    };
-
-    const getAllColumnFields = (): string[] => {
+    const getAllColumnFields = React.useCallback((): string[] => {
       return api.columns.getAll().map((col) => col.id);
-    };
+    }, [api]);
 
-    const getVisibleColumnFields = (): string[] => {
+    const getVisibleColumnFields = React.useCallback((): string[] => {
       return api.columns.getVisible().map((col) => col.id);
-    };
+    }, [api]);
 
     /**
      * Get the input row IDs to filter.
      * Uses sorted row IDs if sorting plugin is present, otherwise raw row IDs.
      */
-    const getInputRowIds = (): GridRowId[] => {
+    const getInputRowIds = React.useCallback((): GridRowId[] => {
       if (api.pluginRegistry.hasPlugin<typeof sortingPlugin>(api, 'sorting')) {
         return (store.state as any).sorting.sortedRowIds;
       }
       return api.rows.getAllRowIds();
-    };
+    }, [api, store]);
 
-    const computeFilteredRowIds: FilteringApi['filtering']['computeFilteredRowIds'] = (
-      rowIds,
-      filterModel,
-    ) => {
-      const originalRowIds = rowIds ?? getInputRowIds();
-      const modelToUse = filterModel ?? store.state.filtering.model;
+    const computeFilteredRowIds: FilteringApi['filtering']['computeFilteredRowIds'] =
+      React.useCallback(
+        (rowIds, filterModel) => {
+          const originalRowIds = rowIds ?? getInputRowIds();
+          const modelToUse = filterModel ?? store.state.filtering.model;
 
-      const filterApplier = buildFilterApplier({
-        model: modelToUse,
-        getColumn,
-        getRow: api.rows.getRow,
-        disableEval: params.filtering?.disableEval,
-        ignoreDiacritics: params.filtering?.ignoreDiacritics,
-        getAllColumnFields,
-        getVisibleColumnFields,
-      });
+          const filterApplier = buildFilterApplier({
+            model: modelToUse,
+            getColumn,
+            getRow: api.rows.getRow,
+            disableEval: params.filtering?.disableEval,
+            ignoreDiacritics: params.filtering?.ignoreDiacritics,
+            getAllColumnFields,
+            getVisibleColumnFields,
+          });
 
-      return filterApplier ? filterApplier(originalRowIds) : originalRowIds;
-    };
+          return filterApplier ? filterApplier(originalRowIds) : originalRowIds;
+        },
+        [
+          store.state.filtering.model,
+          params.filtering?.disableEval,
+          params.filtering?.ignoreDiacritics,
+          api.rows,
+          getColumn,
+          getAllColumnFields,
+          getVisibleColumnFields,
+          getInputRowIds,
+        ],
+      );
 
     /**
      * Apply filtering and update state.
      */
-    const applyFiltering = (): void => {
-      if (isExternalFiltering()) {
+    const applyFiltering = React.useCallback((): void => {
+      if (isExternalFiltering) {
         return;
       }
 
@@ -147,7 +155,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
           filteredRowIds: newFilteredRowIds,
         },
       });
-    };
+    }, [isExternalFiltering, store, computeFilteredRowIds]);
 
     const setModel = (model: FilterModel): void => {
       const prevModel = store.state.filtering.model;
@@ -164,7 +172,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         params.filtering?.onModelChange?.(model);
       }
 
-      if (isAutoMode() && !isExternalFiltering()) {
+      if (isAutoMode && !isExternalFiltering) {
         applyFiltering();
       }
     };
@@ -219,48 +227,24 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
       }
     };
 
-    // Track previous input row IDs to detect changes
-    const prevInputRowIdsRef = React.useRef<GridRowId[]>(getInputRowIds());
+    // Track previous model prop for controlled mode
     const prevFilterModelRef = React.useRef<FilterModel>(store.state.filtering.model);
-
-    // Track previous column lookup to detect column changes
-    const prevColumnsLookupRef = React.useRef<Record<string, any> | undefined>(
-      (store.state as any).columns?.lookup,
-    );
-
-    // Track previous column visibility model
-    const prevColumnVisibilityModelRef = React.useRef<Record<string, boolean> | undefined>(
-      (store.state.columns as any).columnVisibilityModel,
-    );
-
-    // Use a ref for onModelChange to avoid stale closure in subscription
-    const onModelChangeRef = React.useRef(params.filtering?.onModelChange);
-    onModelChangeRef.current = params.filtering?.onModelChange;
-
-    // Refs for functions used in effects, updated each render to avoid stale closures
-    const getInputRowIdsRef = React.useRef(getInputRowIds);
-    getInputRowIdsRef.current = getInputRowIds;
-
-    const isExternalFilteringRef = React.useRef(isExternalFiltering);
-    isExternalFilteringRef.current = isExternalFiltering;
-
-    const isAutoModeRef = React.useRef(isAutoMode);
-    isAutoModeRef.current = isAutoMode;
-
-    const applyFilteringRef = React.useRef(applyFiltering);
-    applyFilteringRef.current = applyFiltering;
 
     // Subscribe to store changes to detect when input rows or columns change.
     // We use store.subscribe instead of a React effect because the component may not
     // re-render when sortedRowIds change (it subscribes to filteredRowIds, not sortedRowIds).
     React.useEffect(() => {
+      let prevInputRowIds = getInputRowIds();
+      let prevColumnsLookup = (store.state as any).columns?.lookup;
+      let prevColumnVisibilityModel = (store.state.columns as any).columnVisibilityModel;
+
       const unsubscribe = store.subscribe(() => {
-        const currentInputRowIds = getInputRowIdsRef.current();
+        const currentInputRowIds = getInputRowIds();
 
-        if (prevInputRowIdsRef.current !== currentInputRowIds) {
-          prevInputRowIdsRef.current = currentInputRowIds;
+        if (prevInputRowIds !== currentInputRowIds) {
+          prevInputRowIds = currentInputRowIds;
 
-          if (isExternalFilteringRef.current()) {
+          if (isExternalFiltering) {
             store.setState({
               ...store.state,
               filtering: {
@@ -268,15 +252,15 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
                 filteredRowIds: currentInputRowIds,
               },
             });
-          } else if (isAutoModeRef.current()) {
-            applyFilteringRef.current();
+          } else if (isAutoMode) {
+            applyFiltering();
           }
         }
 
         // Detect column changes and clean up filter model
         const currentColumnsLookup = (store.state as any).columns?.lookup;
-        if (currentColumnsLookup && prevColumnsLookupRef.current !== currentColumnsLookup) {
-          prevColumnsLookupRef.current = currentColumnsLookup;
+        if (currentColumnsLookup && prevColumnsLookup !== currentColumnsLookup) {
+          prevColumnsLookup = currentColumnsLookup;
 
           const model = store.state.filtering.model;
           const cleaned = cleanFilterModel(model, (field) => field in currentColumnsLookup);
@@ -288,20 +272,17 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
                 model: cleaned,
               },
             });
-            onModelChangeRef.current?.(cleaned);
-            if (isAutoModeRef.current() && !isExternalFilteringRef.current()) {
-              applyFilteringRef.current();
+            params.filtering?.onModelChange?.(cleaned);
+            if (isAutoMode && !isExternalFiltering) {
+              applyFiltering();
             }
           }
         }
 
         // Detect column visibility changes for quick filter re-application
         const currentVisibilityModel = (store.state.columns as any).columnVisibilityModel;
-        if (
-          currentVisibilityModel &&
-          prevColumnVisibilityModelRef.current !== currentVisibilityModel
-        ) {
-          prevColumnVisibilityModelRef.current = currentVisibilityModel;
+        if (currentVisibilityModel && prevColumnVisibilityModel !== currentVisibilityModel) {
+          prevColumnVisibilityModel = currentVisibilityModel;
 
           const model = store.state.filtering.model;
           const hasQuickFilter =
@@ -309,13 +290,13 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
             model.quickFilterValues.length > 0 &&
             model.quickFilterExcludeHiddenColumns !== false;
 
-          if (hasQuickFilter && isAutoModeRef.current() && !isExternalFilteringRef.current()) {
-            applyFilteringRef.current();
+          if (hasQuickFilter && isAutoMode && !isExternalFiltering) {
+            applyFiltering();
           }
         }
       });
       return unsubscribe;
-    }, [store]);
+    }, [store, getInputRowIds, applyFiltering, isExternalFiltering, isAutoMode, params.filtering]);
 
     // Handle controlled filtering.model prop changes
     React.useEffect(() => {
@@ -334,12 +315,12 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
             },
           });
 
-          if (isAutoModeRef.current() && !isExternalFilteringRef.current()) {
-            applyFilteringRef.current();
+          if (isAutoMode && !isExternalFiltering) {
+            applyFiltering();
           }
         }
       }
-    }, [params.filtering?.model, store]);
+    }, [params.filtering?.model, store, applyFiltering, isAutoMode, isExternalFiltering]);
 
     return {
       filtering: {
