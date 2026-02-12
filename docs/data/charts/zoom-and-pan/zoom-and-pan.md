@@ -27,9 +27,8 @@ The following actions are enabled by default:
 - **Drag**: Pan the chart by dragging the mouse
 - **Pinch**: Zoom in/out by pinching the chart
 
-You can enable additional zoom interactions through configuration:
-
-- **Tap and drag**: Zoom in/out by tapping twice and then dragging vertically
+You can enable additional zoom interactions through configuration.
+See [Interactions](#interactions) for the full list.
 
 {{"demo": "ZoomScatterChart.js"}}
 {{"demo": "ZoomBarChart.js"}}
@@ -123,7 +122,7 @@ Customize it by setting the `zoom.slider.preview.markerSize` property on the ser
 
 ### External zoom management
 
-Manage the zoom state in two ways:
+There are two ways to manage the zoom state:
 
 1. Define an initial state with the `initialZoom` prop
 2. Imperatively set a zoom value with the `setZoomData()` method of the public API
@@ -163,7 +162,7 @@ The `zoomInteractionConfig` prop lets you specify which interactions are enabled
 />
 ```
 
-**Zoom** interactions:
+#### Zoom interactions
 
 - `wheel` (default): Zoom in/out by scrolling the mouse wheel
 - `pinch` (default): Zoom in/out by pinching on touch devices
@@ -172,7 +171,7 @@ The `zoomInteractionConfig` prop lets you specify which interactions are enabled
 - `brush`: Zoom into a selected area by clicking and dragging to create a selection rectangle
 - `doubleTapReset`: Reset the zoom level to the original state when double-tapping
 
-**Pan** interactions:
+#### Pan interactions
 
 - `wheel` (default\*): Pan the chart by scrolling the mouse wheel.
   On a desktop trackpad, it enables pan using two fingers.
