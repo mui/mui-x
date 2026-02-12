@@ -5,6 +5,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v8.27.1
+
+<!-- generated comparing v8.27.0..v8.x -->
+
+_Feb 13, 2026_
+
+We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 📝 CSS bundler support is not longer needed for the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to these community members for their valuable contributions:
+@sai6855
+
+The following team members contributed to this release:
+@arminmeh, @cherniavskii, @flaviendelangle, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.27.1`
+
+- [DataGrid] Hide column menu icon when there are no items (#21303) @MBilalShafi
+- [DataGrid] Migrate styled imports and remove `index.css` (#21176) @MBilalShafi
+- [DataGrid] Optimize `GridRootStyles` overrides resolver (#21251) @sai6855
+
+#### `@mui/x-data-grid-pro@8.27.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.27.1`, plus:
+
+- [DataGridPro] Fix column pinning issue with `restoreState` (#21305) @MBilalShafi
+- [DataGridPro] Fix lazy loading params for page with one row (#21238) @MBilalShafi
+- [DataGridPro] Properly extract parent path (#21301) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.27.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.27.1`, plus:
+
+- [DataGridPremium] Fix aggregation display when `initialState` has both `sortModel` and `pinnedColumns` (#21152) @mj12albert
+
+### Tree View
+
+#### `@mui/x-tree-view@8.27.1`
+
+- [tree view] Fix `apiRef.current.setItemExpansion()` (#21095) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.27.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.27.1`.
+
+### Core
+
+- [internal] Add CLI for translation using LLM (#21299) @cherniavskii
+
 ## v8.27.0
 
 _Feb 2, 2026_
