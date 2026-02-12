@@ -29,9 +29,9 @@ export interface ChartsSvgLayerProps extends Omit<
 const ChartsSvgLayerStyles = styled('svg', {
   name: 'MuiChartsSvgLayer',
   slot: 'Root',
-})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
-  width: ownerState.width ?? '100%',
-  height: ownerState.height ?? '100%',
+})({
+  width: '100%',
+  height: '100%',
   position: 'absolute',
   inset: 0,
   overflow: 'hidden',
@@ -40,7 +40,7 @@ const ChartsSvgLayerStyles = styled('svg', {
   '&:focus': {
     outline: 'none', // By default don't show focus on the SVG container
   },
-}));
+});
 
 /**
  * A layer that provides the drawing area SVG the chart elements.
