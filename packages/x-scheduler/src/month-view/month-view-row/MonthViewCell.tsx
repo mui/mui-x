@@ -26,6 +26,7 @@ import { EventDialogTrigger } from '../../internals/components/event-dialog';
 import { useEventDialogContext } from '../../internals/components/event-dialog/EventDialog';
 import { useEventCalendarClasses } from '../../event-calendar/EventCalendarClassesContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
+import { EventSkeleton } from '../../internals/components/event-skeleton';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
@@ -181,6 +182,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     day.value,
   );
   const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
   // Ref hooks
@@ -250,24 +252,26 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         cellNumberContent
       )}
       <MonthViewCellEvents className={classes.monthViewCellEvents}>
-        {visibleOccurrences.map((occurrence) => {
-          if (occurrence.position.isInvisible) {
-            return (
-              <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
-            );
-          }
+        {isLoading && <EventSkeleton data-variant="day-grid" />}
+        {!isLoading &&
+          visibleOccurrences.map((occurrence) => {
+            if (occurrence.position.isInvisible) {
+              return (
+                <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
+              );
+            }
 
-          return (
-            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-              <DayGridEvent
-                occurrence={occurrence}
-                variant={
-                  isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
-                }
-              />
-            </EventDialogTrigger>
-          );
-        })}
+            return (
+              <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+                <DayGridEvent
+                  occurrence={occurrence}
+                  variant={
+                    isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
+                  }
+                />
+              </EventDialogTrigger>
+            );
+          })}
         {hiddenCount > 0 && (
           <MoreEventsPopoverTrigger occurrences={day.withPosition} day={day}>
             <MonthViewMoreEvents

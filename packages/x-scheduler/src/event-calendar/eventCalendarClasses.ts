@@ -78,8 +78,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   agendaViewYearAndMonthLabel: string;
   /** Styles applied to the agenda view events list element. */
   agendaViewEventsList: string;
-  /** Styles applied to the agenda view loading overlay element. */
-  agendaViewLoadingOverlay: string;
+  /** Styles applied to event skeleton elements. */
+  eventSkeleton: string;
   /** Styles applied to the month view root element. */
   monthView: string;
   /** Styles applied to the month view grid element. */
@@ -92,8 +92,6 @@ export interface EventCalendarClasses extends EventDialogClasses {
   monthViewWeekHeaderCell: string;
   /** Styles applied to the month view body element. */
   monthViewBody: string;
-  /** Styles applied to the month view loading overlay element. */
-  monthViewLoadingOverlay: string;
   /** Styles applied to month view row elements. */
   monthViewRow: string;
   /** Styles applied to month view week number cell elements. */
@@ -146,8 +144,6 @@ export interface EventCalendarClasses extends EventDialogClasses {
   dayTimeGridTimeAxisText: string;
   /** Styles applied to the day time grid grid element. */
   dayTimeGridGrid: string;
-  /** Styles applied to the day time grid loading overlay element. */
-  dayTimeGridLoadingOverlay: string;
   /** Styles applied to day time grid column elements. */
   dayTimeGridColumn: string;
   /** Styles applied to day time grid column interactive layer elements. */
@@ -188,6 +184,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   timeGridEvent: string;
   /** Styles applied to time grid event placeholder elements. */
   timeGridEventPlaceholder: string;
+  /** Styles applied to time grid event skeleton elements. */
+  timeGridEventSkeleton: string;
   /** Styles applied to time grid event title elements. */
   timeGridEventTitle: string;
   /** Styles applied to time grid event time elements. */
@@ -258,14 +256,13 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'agendaViewWeekDayNameLabel',
     'agendaViewYearAndMonthLabel',
     'agendaViewEventsList',
-    'agendaViewLoadingOverlay',
+    'eventSkeleton',
     'monthView',
     'monthViewGrid',
     'monthViewHeader',
     'monthViewHeaderCell',
     'monthViewWeekHeaderCell',
     'monthViewBody',
-    'monthViewLoadingOverlay',
     'monthViewRow',
     'monthViewWeekNumberCell',
     'monthViewCell',
@@ -292,7 +289,6 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayTimeGridTimeAxisCell',
     'dayTimeGridTimeAxisText',
     'dayTimeGridGrid',
-    'dayTimeGridLoadingOverlay',
     'dayTimeGridColumn',
     'dayTimeGridColumnInteractiveLayer',
     'dayTimeGridCurrentTimeIndicator',
@@ -313,6 +309,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'eventColorIndicator',
     'timeGridEvent',
     'timeGridEventPlaceholder',
+    'timeGridEventSkeleton',
     'timeGridEventTitle',
     'timeGridEventTime',
     'timeGridEventRecurringIcon',
@@ -365,14 +362,13 @@ const slots = {
   agendaViewWeekDayNameLabel: ['agendaViewWeekDayNameLabel'],
   agendaViewYearAndMonthLabel: ['agendaViewYearAndMonthLabel'],
   agendaViewEventsList: ['agendaViewEventsList'],
-  agendaViewLoadingOverlay: ['agendaViewLoadingOverlay'],
+  eventSkeleton: ['eventSkeleton'],
   monthView: ['monthView'],
   monthViewGrid: ['monthViewGrid'],
   monthViewHeader: ['monthViewHeader'],
   monthViewHeaderCell: ['monthViewHeaderCell'],
   monthViewWeekHeaderCell: ['monthViewWeekHeaderCell'],
   monthViewBody: ['monthViewBody'],
-  monthViewLoadingOverlay: ['monthViewLoadingOverlay'],
   monthViewRow: ['monthViewRow'],
   monthViewWeekNumberCell: ['monthViewWeekNumberCell'],
   monthViewCell: ['monthViewCell'],
@@ -399,7 +395,6 @@ const slots = {
   dayTimeGridTimeAxisCell: ['dayTimeGridTimeAxisCell'],
   dayTimeGridTimeAxisText: ['dayTimeGridTimeAxisText'],
   dayTimeGridGrid: ['dayTimeGridGrid'],
-  dayTimeGridLoadingOverlay: ['dayTimeGridLoadingOverlay'],
   dayTimeGridColumn: ['dayTimeGridColumn'],
   dayTimeGridColumnInteractiveLayer: ['dayTimeGridColumnInteractiveLayer'],
   dayTimeGridCurrentTimeIndicator: ['dayTimeGridCurrentTimeIndicator'],
@@ -420,6 +415,7 @@ const slots = {
   eventColorIndicator: ['eventColorIndicator'],
   timeGridEvent: ['timeGridEvent'],
   timeGridEventPlaceholder: ['timeGridEventPlaceholder'],
+  timeGridEventSkeleton: ['timeGridEventSkeleton'],
   timeGridEventTitle: ['timeGridEventTitle'],
   timeGridEventTime: ['timeGridEventTime'],
   timeGridEventRecurringIcon: ['timeGridEventRecurringIcon'],

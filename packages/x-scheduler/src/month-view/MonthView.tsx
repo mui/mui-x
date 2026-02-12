@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
@@ -100,19 +99,8 @@ const MonthViewBody = styled('div', {
   display: 'grid',
   gridAutoRows: '1fr',
   maxHeight: '100%',
+  position: 'relative',
 });
-
-// TODO: Replace with a proper loading overlay component that is shared across views
-const MonthViewLoadingOverlay = styled(Typography, {
-  name: 'MuiEventCalendar',
-  slot: 'MonthViewLoadingOverlay',
-})(({ theme }) => ({
-  position: 'absolute',
-  fontSize: theme.typography.body1.fontSize,
-  padding: 2,
-  color: theme.palette.text.secondary,
-  zIndex: 1,
-}));
 
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
@@ -160,7 +148,6 @@ export const MonthView = React.memo(
 
     // Selector hooks
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-    const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
@@ -225,12 +212,6 @@ export const MonthView = React.memo(
               ))}
             </MonthViewHeader>
             <MonthViewBody className={classes.monthViewBody}>
-              {isLoading && (
-                <MonthViewLoadingOverlay className={classes.monthViewLoadingOverlay}>
-                  {translations.loading}
-                </MonthViewLoadingOverlay>
-              )}
-
               {weeks.map((week, weekIdx) => (
                 <MonthViewWeekRow
                   key={weekIdx}
