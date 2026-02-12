@@ -262,9 +262,6 @@ return ${appliers.map((_, i) => `appliers[${i}](row)`).join(` ${operator} `)};`,
 
 type QuickFilterApplierFn = (row: any) => boolean;
 
-/**
- * Build a function that applies quick filter values across columns.
- */
 function buildQuickFilterApplier(
   model: FilterModel,
   getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined,
