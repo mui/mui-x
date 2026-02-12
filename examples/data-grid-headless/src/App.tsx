@@ -165,13 +165,12 @@ function DataGrid(props: DataGridProps) {
   // Use filtered row IDs (filtering sits after sorting in the pipeline)
   const filteredRowIds = grid.use(filteringPlugin.selectors.filteredRowIds);
   const filterModel = grid.use(filteringPlugin.selectors.model);
-  const quickFilterValues = grid.use(filteringPlugin.selectors.quickFilterValues);
   const sortModel = grid.use(sortingPlugin.selectors.model);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
   const activeFilterCount = filterModel.conditions.length;
-  const quickFilterText = quickFilterValues.join(' ');
+  const quickFilterText = (filterModel.quickFilterValues ?? []).join(' ');
 
   const handleQuickFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
