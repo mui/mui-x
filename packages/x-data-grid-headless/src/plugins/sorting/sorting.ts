@@ -142,7 +142,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
      * Apply sorting and update state.
      * Uses computeSortedRowIds internally.
      */
-    const applySorting = (): void => {
+    const applySorting = useStableCallback((): void => {
       if (isExternalSorting) {
         return;
       }
@@ -155,7 +155,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       }
 
       api.rows.rowIdsPipeline.recompute(SORTING_PIPELINE_PROCESSOR_NAME);
-    };
+    });
 
     const setSortModel = (model: GridSortModel): void => {
       const prevModel = store.state.sorting.model;
@@ -254,8 +254,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
           }
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only reacting to sorting.model prop changes
-    }, [params.sorting?.model]);
+    }, [params.sorting?.model, isAutoMode, isExternalSorting, applySorting, store]);
 
     return {
       sorting: {
