@@ -82,7 +82,6 @@ export interface GridLocaleText {
   filterOperatorStartsWith: string;
   filterOperatorEndsWith: string;
   filterOperatorIs: string;
-  filterOperatorIsNot: string;
   filterOperatorNot: string;
   filterOperatorAfter: string;
   filterOperatorOnOrAfter: string;
@@ -106,7 +105,6 @@ export interface GridLocaleText {
   headerFilterOperatorStartsWith: string;
   headerFilterOperatorEndsWith: string;
   headerFilterOperatorIs: string;
-  headerFilterOperatorIsNot: string;
   headerFilterOperatorNot: string;
   headerFilterOperatorAfter: string;
   headerFilterOperatorOnOrAfter: string;
