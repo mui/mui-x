@@ -9,7 +9,12 @@ import {
   useChartCartesianAxis,
   useChartVisibilityManager,
 } from '@mui/x-charts/internals';
-import { useChartProZoom, type UseChartProZoomSignature } from '@mui/x-charts-pro/plugins';
+import {
+  useChartProExport,
+  type UseChartProExportSignature,
+  useChartProZoom,
+  type UseChartProZoomSignature,
+} from '@mui/x-charts-pro/plugins';
 
 export type CandlestickChartPluginSignatures = [
   UseChartTooltipSignature<'ohlc'>,
@@ -17,6 +22,7 @@ export type CandlestickChartPluginSignatures = [
   UseChartCartesianAxisSignature<'ohlc'>,
   UseChartProZoomSignature,
   UseChartVisibilityManagerSignature<'ohlc'>,
+  UseChartProExportSignature,
 ];
 
 export const CANDLESTICK_CHART_PLUGINS: ConvertSignaturesIntoPlugins<CandlestickChartPluginSignatures> =
@@ -26,4 +32,5 @@ export const CANDLESTICK_CHART_PLUGINS: ConvertSignaturesIntoPlugins<Candlestick
     useChartCartesianAxis,
     useChartProZoom,
     useChartVisibilityManager,
+    useChartProExport,
   ];

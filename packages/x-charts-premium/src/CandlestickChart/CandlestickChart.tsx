@@ -30,6 +30,11 @@ import {
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsWebGlLayer } from '@mui/x-charts/ChartsWebGlLayer';
+import {
+  ChartsToolbarPro,
+  type ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
+} from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type OHLCSeriesType } from '../models';
 import { type CandlestickChartPluginSignatures } from './CandlestickChart.plugins';
@@ -39,12 +44,18 @@ import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useCha
 import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 
 export interface CandlestickChartSlots
-  extends ChartsAxisSlots, ChartsOverlaySlots, ChartsTooltipSlots, Partial<ChartsSlots> {}
+  extends
+    ChartsAxisSlots,
+    ChartsOverlaySlots,
+    ChartsTooltipSlots,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlots> {}
 export interface CandlestickChartSlotProps
   extends
     ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
+    ChartsToolbarProSlotProps,
     Partial<ChartsSlotProps> {}
 
 export type OHLCSeries = MakeOptional<OHLCSeriesType, 'type'>;
@@ -74,6 +85,11 @@ export interface CandlestickChartProps
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -99,6 +115,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiCandlestickChart' });
+  const { showToolbar = false } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -117,12 +134,14 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPremium<'ohlc', CandlestickChartPluginSignatures>
       {...chartDataProviderPremiumProps}
     >
       <ChartsWrapper {...chartsWrapperProps}>
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         <ChartsLayerContainer>
           <ChartsWebGlLayer>
             <CandlestickPlot {...candlestickPlotProps} />
