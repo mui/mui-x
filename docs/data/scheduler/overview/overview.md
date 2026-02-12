@@ -22,9 +22,9 @@ This package is not published yet.
 
 ## Main features
 
-- [Recurring events](/x/react-scheduler/recurring-events/)
 - [Timezones](/x/react-scheduler/timezone/)
 - [Localization](/x/react-scheduler/localization/)
+- [Recurring events](/x/react-scheduler/recurring-events/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 ## Event Calendar
 
@@ -38,10 +38,10 @@ This package is not published yet.
 - [Day View](/x/react-scheduler/event-calendar/day-view/)
 - [Month View](/x/react-scheduler/event-calendar/month-view/)
 - [Agenda View](/x/react-scheduler/event-calendar/agenda-view/)
-- [Lazy Loading](/x/react-scheduler/event-calendar/lazy-loading/)
+- [Lazy Loading](/x/react-scheduler/event-calendar/lazy-loading/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 - [Preferences](/x/react-scheduler/event-calendar/preferences/)
 
-## Event Timeline
+## Event Timeline [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 - [Full screen demo](/x/react-scheduler/full-screen-event-timeline-premium/) (TODO: Remove once we have the overview page)
 - [Events](/x/react-scheduler/event-timeline/events/)

@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Recurring Events
+# Scheduler - Recurring Events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Define recurring events.</p>
 
