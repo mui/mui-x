@@ -9,7 +9,7 @@ import {
   SchedulerResource,
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler/models';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
 interface CustomEvent {
@@ -170,15 +170,13 @@ export default function DynamicResourceProperty() {
         <ToggleButton value="room">Group by Room</ToggleButton>
         <ToggleButton value="teacher">Group by Teacher</ToggleButton>
       </ToggleButtonGroup>
-      <div style={{ height: '600px', width: '100%' }}>
-        <EventCalendar
+      <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+        <EventTimelinePremium
           events={events}
           eventModelStructure={eventModelStructure}
           resources={resourceProperty === 'room' ? rooms : classes}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          view="day"
-          views={['day']}
         />
       </div>
     </Stack>
