@@ -35,6 +35,7 @@ const SORTING_PIPELINE_PROCESSOR_NAME = 'sorting';
 
 const sortingPlugin = createPlugin<SortingPlugin>()({
   name: 'sorting',
+  order: 40,
   selectors: sortingSelectors,
 
   initialize: (state, params) => {

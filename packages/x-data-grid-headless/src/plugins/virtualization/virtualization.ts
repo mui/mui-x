@@ -116,6 +116,7 @@ function renderRow() {
 
 const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
   name: 'virtualization',
+  order: 60,
   initialize: (state, params) => ({
     ...state,
     ...getInitialVirtualizationState(params),

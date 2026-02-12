@@ -86,6 +86,7 @@ type RowsPlugin = Plugin<
 
 const rowsPlugin = createPlugin<RowsPlugin>()({
   name: 'rows',
+  order: 10,
   selectors: rowsSelectors,
   initialize: (state, params) => ({
     ...state,

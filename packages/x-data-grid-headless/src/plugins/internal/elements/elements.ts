@@ -134,6 +134,7 @@ type ElementsPlugin = Plugin<
 
 const elementsPlugin = createPlugin<ElementsPlugin>()({
   name: 'elements',
+  order: 30,
   initialize: (state, _params) => state,
   use: (store, _params, api) => {
     const rowIds = useStore(store, rowsPlugin.selectors.processedRowIds);

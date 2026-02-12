@@ -75,12 +75,8 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
     const registry = new PluginRegistry(internalPlugins, options.plugins);
 
     let accumulatedState: Record<string, any> = { ...options.initialState };
-    internalPlugins.forEach((plugin) => {
+    registry.forEachPlugin((plugin) => {
       accumulatedState = plugin.initialize(accumulatedState as any, options as any);
-    });
-
-    registry.forEachUserPlugin((plugin) => {
-      accumulatedState = plugin.initialize(accumulatedState, options as any);
     });
 
     const store = new Store<DataGridState<TPlugins>>(accumulatedState as DataGridState<TPlugins>);
@@ -97,14 +93,9 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
     } as DataGridApi<TPlugins, TRow>;
   }).current;
 
-  internalPlugins.forEach((plugin: AnyPlugin) => {
-    const pluginApi = plugin.use(stateStore, options as any, api);
-    Object.assign(api, pluginApi);
-  });
-
   // Pass the accumulating api object so dependencies' APIs are available
-  pluginRegistry.forEachUserPlugin((plugin) => {
-    const pluginApi = plugin.use(stateStore, options, api);
+  pluginRegistry.forEachPlugin((plugin) => {
+    const pluginApi = plugin.use(stateStore, options as any, api);
     Object.assign(api, pluginApi);
   });
 
