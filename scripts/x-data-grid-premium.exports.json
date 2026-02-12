@@ -406,8 +406,6 @@
   { "name": "GridFilterInputMultipleSingleSelectProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputMultipleValue", "kind": "Function" },
   { "name": "GridFilterInputMultipleValueProps", "kind": "TypeAlias" },
-  { "name": "GridFilterInputMultiSelect", "kind": "Function" },
-  { "name": "GridFilterInputMultiSelectProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputSingleSelect", "kind": "Function" },
   { "name": "GridFilterInputSingleSelectProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputValue", "kind": "Function" },
