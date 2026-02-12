@@ -12,12 +12,12 @@ export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> e
   'children'
 > {
   /**
-   * The order in which series items are displayed in the axis tooltip.
-   * When set to `none`, series are ordered as they are provided in the series property. Otherwise they are ordered by their value.
+   * The sort in which series items are displayed in the axis tooltip.
+   * When set to `none`, series are sorted as they are provided in the series property. Otherwise they are sorted by their value.
    * Only applies when `trigger='axis'`.
    * @default 'none'
    */
-  order?: T extends 'axis' ? 'none' | 'asc' | 'desc' : never;
+  sort?: T extends 'axis' ? 'none' | 'asc' | 'desc' : never;
 }
 
 /**
@@ -30,14 +30,14 @@ export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> e
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
 function ChartsTooltip<T extends TriggerOptions>(props: ChartsTooltipProps<T>) {
-  const { classes: propClasses, trigger = 'axis', order, ...containerProps } = props;
+  const { classes: propClasses, trigger = 'axis', sort, ...containerProps } = props;
 
   const classes = useUtilityClasses(propClasses);
 
   return (
     <ChartsTooltipContainer {...containerProps} trigger={trigger} classes={propClasses}>
       {trigger === 'axis' ? (
-        <ChartsAxisTooltipContent classes={classes} order={order} />
+        <ChartsAxisTooltipContent classes={classes} sort={sort} />
       ) : (
         <ChartsItemTooltipContent classes={classes} />
       )}
@@ -165,12 +165,12 @@ ChartsTooltip.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * The order in which series items are displayed in the axis tooltip.
-   * When set to `none`, series are ordered as they are provided in the series property. Otherwise they are ordered by their value.
+   * The sort in which series items are displayed in the axis tooltip.
+   * When set to `none`, series are sorted as they are provided in the series property. Otherwise they are sorted by their value.
    * Only applies when `trigger='axis'`.
    * @default 'none'
    */
-  order: PropTypes.oneOf(['none', 'asc', 'desc']),
+  sort: PropTypes.oneOf(['none', 'asc', 'desc']),
   /**
    * Popper placement.
    * @default 'bottom'

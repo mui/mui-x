@@ -100,14 +100,14 @@ To display the series with a blank space, return an empty string.
 
 ## Sorting values
 
-Use the `order` prop to modify the series order in the axis tooltip.
+Use the `sort` prop to modify the series order in the axis tooltip.
 This prop accepts the following values:
 
 - `'none'` (default): Shows series according to the order they are defined.
 - `'asc'`: Sort series by ascending order.
 - `'desc'`: Sort series by descending order.
 
-{{"demo": "OrderDemo.js"}}
+{{"demo": "SortDemo.js"}}
 
 ## Position
 

@@ -5,28 +5,28 @@ import MenuItem from '@mui/material/MenuItem';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
-const orderOptions = ['none', 'asc', 'desc'];
+const sortOptions = ['none', 'asc', 'desc'];
 
-function getExample(order) {
+function getExample(sort) {
   return `<LineChart
-  slotProps={{ tooltip: { trigger: 'axis', order: '${order}' } }}
+  slotProps={{ tooltip: { trigger: 'axis', sort: '${sort}' } }}
   {/* ... */}
 />`;
 }
 
-export default function OrderDemo() {
-  const [order, setOrder] = React.useState('none');
+export default function SortDemo() {
+  const [sort, setSort] = React.useState('none');
 
   return (
     <Box sx={{ p: 2, width: 1, maxWidth: 600 }}>
       <TextField
         select
-        label="order"
-        value={order}
+        label="sort"
+        value={sort}
         sx={{ minWidth: 200, mb: 2 }}
-        onChange={(event) => setOrder(event.target.value)}
+        onChange={(event) => setSort(event.target.value)}
       >
-        {orderOptions.map((option) => (
+        {sortOptions.map((option) => (
           <MenuItem key={option} value={option}>
             {option}
           </MenuItem>
@@ -44,12 +44,12 @@ export default function OrderDemo() {
           { data: [5, 3, 1, null, 10], label: 'Series y' },
           { data: [10, 4, 6, 2, 8], label: 'Series z' },
         ]}
-        slotProps={{ tooltip: { trigger: 'axis', order } }}
+        slotProps={{ tooltip: { trigger: 'axis', sort } }}
         height={300}
         hideLegend
         margin={{ top: 20, right: 10 }}
       />
-      <HighlightedCode code={getExample(order)} language="tsx" />
+      <HighlightedCode code={getExample(sort)} language="tsx" />
     </Box>
   );
 }
