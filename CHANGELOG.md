@@ -11,16 +11,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 13, 2026_
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 📝 CSS bundler support is not longer needed for the Data Grid
+- 📝 CSS bundler support is no longer needed for the Data Grid
 - 🐞 Bugfixes
 
 Special thanks go out to these community members for their valuable contributions:
 @sai6855
 
 The following team members contributed to this release:
-@arminmeh, @cherniavskii, @flaviendelangle, @MBilalShafi
+@arminmeh, @cherniavskii, @flaviendelangle, @mj12albert, @MBilalShafi
 
 ### Data Grid
 
