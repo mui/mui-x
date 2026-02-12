@@ -1,54 +1,6 @@
 import { CalendarView } from '@mui/x-scheduler-headless/models';
 
-export interface SchedulerTranslations {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName: string) => string;
-  resourcesLabel: string;
-  resourcesLegendSectionLabel: string;
-  showEventsLabel: (resourceName: string) => string;
-
-  // ViewSwitcher
-  agenda: string;
-  day: string;
-  month: string;
-  other: string;
-  today: string;
-  week: string;
-  time: string;
-  days: string;
-  months: string;
-  weeks: string;
-  years: string;
-
-  // DateNavigator
-  closeSidePanel: string;
-  openSidePanel: string;
-
-  // PreferencesMenu
-  amPm12h: string;
-  hour24h: string;
-  preferencesMenu: string;
-  showEmptyDaysInAgenda: string;
-  showWeekends: string;
-  showWeekNumber: string;
-  timeFormat: string;
-  viewSpecificOptions: (view: CalendarView) => string;
-
-  // WeekView
-  allDay: string;
-
-  // MonthView
-  hiddenEvents: (hiddenEventsCount: number) => string;
-  nextTimeSpan: (view: CalendarView) => string;
-  noResourceAriaLabel: string;
-  previousTimeSpan: (view: CalendarView) => string;
-  resourceAriaLabel: (resourceName: string) => string;
-  weekAbbreviation: string;
-  weekNumberAriaLabel: (weekNumber: number) => string;
-
-  // EventItem
-  eventItemMultiDayLabel: (endDate: string) => string;
-
+export interface EventDialogLocaleText {
   // EventDialog
   colorPickerLabel: string;
   dateTimeSectionLabel: string;
@@ -91,6 +43,7 @@ export interface SchedulerTranslations {
   recurrenceWeeklyMonthlySpecificInputsLabel: string;
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
+  noResourceAriaLabel: string;
   resourceLabel: string;
   saveChanges: string;
   startDateAfterEndDateError: string;
@@ -108,9 +61,66 @@ export interface SchedulerTranslations {
 
   // General
   loading: string;
+}
+
+export interface EventCalendarLocaleText extends EventDialogLocaleText {
+  // ResourcesLegend
+  hideEventsLabel: (resourceName: string) => string;
+  resourcesLabel: string;
+  resourcesLegendSectionLabel: string;
+  showEventsLabel: (resourceName: string) => string;
+
+  // ViewSwitcher
+  agenda: string;
+  day: string;
+  month: string;
+  other: string;
+  today: string;
+  week: string;
+  time: string;
+  days: string;
+  months: string;
+  weeks: string;
+  years: string;
+
+  // DateNavigator
+  closeSidePanel: string;
+  openSidePanel: string;
+
+  // PreferencesMenu
+  amPm12h: string;
+  hour24h: string;
+  preferencesMenu: string;
+  showEmptyDaysInAgenda: string;
+  showWeekends: string;
+  showWeekNumber: string;
+  timeFormat: string;
+  viewSpecificOptions: (view: CalendarView) => string;
+
+  // WeekView
+  allDay: string;
+
+  // MonthView
+  hiddenEvents: (hiddenEventsCount: number) => string;
+  nextTimeSpan: (view: CalendarView) => string;
+  previousTimeSpan: (view: CalendarView) => string;
+  resourceAriaLabel: (resourceName: string) => string;
+  weekAbbreviation: string;
+  weekNumberAriaLabel: (weekNumber: number) => string;
+
+  // EventItem
+  eventItemMultiDayLabel: (endDate: string) => string;
 
   // MiniCalendar
   miniCalendarLabel: string;
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
+<<<<<<< Updated upstream
+=======
+}
+
+export interface EventTimelineLocaleText extends EventDialogLocaleText {
+  // Timeline title sub grid
+  timelineResourceTitleHeader: string;
+>>>>>>> Stashed changes
 }

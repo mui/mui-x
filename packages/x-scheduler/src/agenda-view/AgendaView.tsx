@@ -21,8 +21,7 @@ import clsx from 'clsx';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
-import { useTranslations } from '../internals/utils/TranslationsContext';
-import { useEventCalendarClasses } from '../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
 import { EventDialogProvider, EventDialogTrigger } from '../internals/components/event-dialog';
 
 const AgendaViewRoot = styled('div', {
@@ -163,9 +162,8 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapter();
-    const translations = useTranslations();
+    const { classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
-    const classes = useEventCalendarClasses();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
@@ -198,7 +196,7 @@ export const AgendaView = React.memo(
       >
         {isLoading && (
           <AgendaViewLoadingOverlay className={classes.agendaViewLoadingOverlay}>
-            {translations.loading}
+            {localeText.loading}
           </AgendaViewLoadingOverlay>
         )}
 
