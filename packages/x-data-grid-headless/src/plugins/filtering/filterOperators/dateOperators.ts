@@ -4,6 +4,7 @@ function buildApplyDateFilterFn(
   condition: FilterCondition,
   compareFn: (value1: number, value2: number) => boolean,
   showTime?: boolean,
+  keepRawComparison?: boolean,
 ): ((value: Date) => boolean) | null {
   if (!condition.value) {
     return null;
@@ -11,7 +12,9 @@ function buildApplyDateFilterFn(
 
   const date = new Date(condition.value);
   if (showTime) {
-    date.setSeconds(0, 0);
+    if (!keepRawComparison) {
+      date.setSeconds(0, 0);
+    }
   } else {
     date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
     date.setHours(0, 0, 0, 0);
@@ -25,7 +28,9 @@ function buildApplyDateFilterFn(
 
     const dateCopy = new Date(value);
     if (showTime) {
-      dateCopy.setSeconds(0, 0);
+      if (!keepRawComparison) {
+        dateCopy.setSeconds(0, 0);
+      }
     } else {
       dateCopy.setHours(0, 0, 0, 0);
     }
@@ -47,22 +52,22 @@ export const getDateFilterOperators = (showTime?: boolean): FilterOperator<Date>
   {
     value: 'after',
     getApplyFilterFn: (condition) =>
-      buildApplyDateFilterFn(condition, (v1, v2) => v1 > v2, showTime),
+      buildApplyDateFilterFn(condition, (v1, v2) => v1 > v2, showTime, showTime),
   },
   {
     value: 'onOrAfter',
     getApplyFilterFn: (condition) =>
-      buildApplyDateFilterFn(condition, (v1, v2) => v1 >= v2, showTime),
+      buildApplyDateFilterFn(condition, (v1, v2) => v1 >= v2, showTime, showTime),
   },
   {
     value: 'before',
     getApplyFilterFn: (condition) =>
-      buildApplyDateFilterFn(condition, (v1, v2) => v1 < v2, showTime),
+      buildApplyDateFilterFn(condition, (v1, v2) => v1 < v2, showTime, true),
   },
   {
     value: 'onOrBefore',
     getApplyFilterFn: (condition) =>
-      buildApplyDateFilterFn(condition, (v1, v2) => v1 <= v2, showTime),
+      buildApplyDateFilterFn(condition, (v1, v2) => v1 <= v2, showTime, showTime),
   },
   {
     value: 'isEmpty',

@@ -12,6 +12,7 @@ import {
   getStringFilterOperators,
   getNumericFilterOperators,
   EMPTY_FILTER_MODEL,
+  selectQuickFilterValues,
 } from '.';
 import type { FilteringOptions } from './types';
 
@@ -810,4 +811,294 @@ describe('Filtering Plugin - Integration Tests', () => {
       expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
     });
   });
+
+  describe('quick filter integration', () => {
+    it('should filter across visible columns with setQuickFilterValues', async () => {
+      const apiRef = React.createRef<GridApi | null>();
+      const { container } = render(
+        <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+      );
+
+      await act(async () => {
+        apiRef.current?.api.filtering.setQuickFilterValues(['li']);
+      });
+
+      // Alice and Charlie contain 'li'
+      expect(getRowNames(container)).toEqual(['Charlie', 'Alice']);
+    });
+
+    it('should combine quick filter with regular filter (both must pass)', async () => {
+      const apiRef = React.createRef<GridApi | null>();
+      const { container } = render(
+        <TestDataGridWithFilter
+          rows={defaultRows}
+          columns={defaultColumns}
+          apiRef={apiRef}
+          initialState={{
+            filtering: {
+              model: {
+                logicOperator: 'and',
+                conditions: [{ field: 'age', operator: '>', value: 25 }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
+
+      await act(async () => {
+        apiRef.current?.api.filtering.setQuickFilterValues(['li']);
+      });
+
+      // Quick filter 'li' matches Alice, Charlie. Regular filter age > 25 keeps Charlie, Bob.
+      // Combined: only Charlie passes both.
+      expect(getRowNames(container)).toEqual(['Charlie']);
+    });
+
+    it('should work with controlled model with quickFilterValues', () => {
+      const { container } = render(
+        <TestDataGridWithFilter
+          rows={defaultRows}
+          columns={defaultColumns}
+          filtering={{
+            model: {
+              logicOperator: 'and',
+              conditions: [],
+              quickFilterValues: ['Bob'],
+            },
+          }}
+        />,
+      );
+
+      expect(getRowNames(container)).toEqual(['Bob']);
+    });
+
+    it('should clear quick filter and restore all rows', async () => {
+      const apiRef = React.createRef<GridApi | null>();
+      const { container } = render(
+        <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+      );
+
+      await act(async () => {
+        apiRef.current?.api.filtering.setQuickFilterValues(['Alice']);
+      });
+
+      expect(getRowNames(container)).toEqual(['Alice']);
+
+      await act(async () => {
+        apiRef.current?.api.filtering.setQuickFilterValues([]);
+      });
+
+      expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
+    });
+  });
+
+  describe('new API methods', () => {
+    describe('upsertCondition', () => {
+      it('should add new condition', async () => {
+        const apiRef = React.createRef<GridApi | null>();
+        const { container } = render(
+          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        );
+
+        await act(async () => {
+          apiRef.current?.api.filtering.upsertCondition({
+            field: 'name',
+            operator: 'equals',
+            value: 'Alice',
+          });
+        });
+
+        expect(getRowNames(container)).toEqual(['Alice']);
+      });
+
+      it('should update existing condition with same field and operator', async () => {
+        const apiRef = React.createRef<GridApi | null>();
+        const { container } = render(
+          <TestDataGridWithFilter
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            initialState={{
+              filtering: {
+                model: {
+                  logicOperator: 'and',
+                  conditions: [{ field: 'name', operator: 'equals', value: 'Alice' }],
+                },
+              },
+            }}
+          />,
+        );
+
+        expect(getRowNames(container)).toEqual(['Alice']);
+
+        await act(async () => {
+          apiRef.current?.api.filtering.upsertCondition({
+            field: 'name',
+            operator: 'equals',
+            value: 'Bob',
+          });
+        });
+
+        expect(getRowNames(container)).toEqual(['Bob']);
+        // Should still have only one condition (updated, not appended)
+        expect(apiRef.current?.api.filtering.getModel().conditions).toHaveLength(1);
+      });
+    });
+
+    describe('deleteCondition', () => {
+      it('should remove a condition', async () => {
+        const apiRef = React.createRef<GridApi | null>();
+        const { container } = render(
+          <TestDataGridWithFilter
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            initialState={{
+              filtering: {
+                model: {
+                  logicOperator: 'and',
+                  conditions: [
+                    { field: 'name', operator: 'contains', value: 'li' },
+                    { field: 'age', operator: '>=', value: 30 },
+                  ],
+                },
+              },
+            }}
+          />,
+        );
+
+        // Both conditions active: contains 'li' AND age >= 30 = Charlie(30, contains 'li')
+        expect(getRowNames(container)).toEqual(['Charlie']);
+
+        await act(async () => {
+          apiRef.current?.api.filtering.deleteCondition({
+            field: 'age',
+            operator: '>=',
+            value: 30,
+          });
+        });
+
+        // Only 'contains li' remains: Charlie, Alice
+        expect(getRowNames(container)).toEqual(['Charlie', 'Alice']);
+      });
+    });
+
+    describe('setLogicOperator', () => {
+      it('should change root logic operator', async () => {
+        const apiRef = React.createRef<GridApi | null>();
+        const { container } = render(
+          <TestDataGridWithFilter
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            initialState={{
+              filtering: {
+                model: {
+                  logicOperator: 'and',
+                  conditions: [
+                    { field: 'name', operator: 'equals', value: 'Alice' },
+                    { field: 'name', operator: 'equals', value: 'Bob' },
+                  ],
+                },
+              },
+            }}
+          />,
+        );
+
+        // AND: name=Alice AND name=Bob => impossible, no results
+        expect(getRowNames(container)).toEqual([]);
+
+        await act(async () => {
+          apiRef.current?.api.filtering.setLogicOperator('or');
+        });
+
+        // OR: name=Alice OR name=Bob => both
+        expect(getRowNames(container)).toEqual(['Alice', 'Bob']);
+      });
+    });
+
+    describe('setQuickFilterValues', () => {
+      it('should set quick filter values on the model', async () => {
+        const apiRef = React.createRef<GridApi | null>();
+        render(
+          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        );
+
+        await act(async () => {
+          apiRef.current?.api.filtering.setQuickFilterValues(['test']);
+        });
+
+        const model = apiRef.current?.api.filtering.getModel()!;
+        expect(model.quickFilterValues).toEqual(['test']);
+      });
+    });
+  });
+
+  describe('valueParser integration', () => {
+    it('should transform filter values before applying', () => {
+      const columns: ColumnDef<TestRow, ColumnMeta>[] = [
+        { id: 'name', field: 'name', filterOperators: getStringFilterOperators() },
+        {
+          id: 'age',
+          field: 'age',
+          filterOperators: getNumericFilterOperators(),
+          valueParser: (value: any) => Number(value) * 2,
+        },
+      ];
+
+      const { container } = render(
+        <TestDataGridWithFilter
+          rows={defaultRows}
+          columns={columns}
+          filtering={{
+            model: {
+              logicOperator: 'and',
+              conditions: [{ field: 'age', operator: '=', value: 15 }],
+            },
+          }}
+        />,
+      );
+
+      // valueParser(15) = 30, so it matches Charlie (age 30)
+      expect(getRowNames(container)).toEqual(['Charlie']);
+    });
+  });
+
+  describe('new selectors', () => {
+    it('selectQuickFilterValues should return quick filter values', () => {
+      const apiRef = React.createRef<GridApi | null>();
+      render(
+        <TestDataGridWithFilter
+          rows={defaultRows}
+          columns={defaultColumns}
+          apiRef={apiRef}
+          filtering={{
+            model: {
+              logicOperator: 'and',
+              conditions: [],
+              quickFilterValues: ['test', 'hello'],
+            },
+          }}
+        />,
+      );
+
+      const state = apiRef.current?.getState();
+      const values = selectQuickFilterValues(state as any);
+      expect(values).toEqual(['test', 'hello']);
+    });
+
+    it('selectQuickFilterValues should return empty array when no quick filter', () => {
+      const apiRef = React.createRef<GridApi | null>();
+      render(
+        <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+      );
+
+      const state = apiRef.current?.getState();
+      const values = selectQuickFilterValues(state as any);
+      expect(values).toEqual([]);
+    });
+
+});
 });

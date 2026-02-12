@@ -41,10 +41,30 @@ const createEmptyFilterFn = (negate: boolean) => () => {
   };
 };
 
+export const getStringQuickFilterFn = (
+  quickFilterValue: any,
+): ((cellValue: string | number | null, row: any) => boolean) | null => {
+  if (!quickFilterValue) {
+    return null;
+  }
+  const trimmedValue = String(quickFilterValue).trim();
+  if (!trimmedValue) {
+    return null;
+  }
+  const filterRegex = new RegExp(escapeRegExp(trimmedValue), 'i');
+  return (value): boolean => {
+    if (value == null) {
+      return false;
+    }
+    return filterRegex.test(String(value));
+  };
+};
+
 export const getStringFilterOperators = (): FilterOperator<string | number | null>[] => [
   {
     value: 'contains',
     getApplyFilterFn: createContainsFilterFn(false),
+    getApplyQuickFilterFn: getStringQuickFilterFn,
   },
   {
     value: 'doesNotContain',

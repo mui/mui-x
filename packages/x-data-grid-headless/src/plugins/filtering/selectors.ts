@@ -7,7 +7,13 @@ export const selectFilteredRowIds = createSelector(
   (state: FilteringState) => state.filtering.filteredRowIds,
 );
 
+export const selectQuickFilterValues = createSelector(
+  selectFilterModel,
+  (model) => model.quickFilterValues ?? [],
+);
+
 export const filteringSelectors: FilteringSelectors = {
   model: selectFilterModel,
   filteredRowIds: selectFilteredRowIds,
+  quickFilterValues: selectQuickFilterValues,
 };

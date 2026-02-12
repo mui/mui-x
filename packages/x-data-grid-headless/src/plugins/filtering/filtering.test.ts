@@ -2,12 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { isFilterGroup, isFilterCondition, EMPTY_FILTER_MODEL } from './types';
 import type { FilterCondition, FilterGroup, FilterModel, FilterOperator } from './types';
 import type { GridRowId } from '../internal/rows/rowUtils';
-import { getStringFilterOperators } from './filterOperators/stringOperators';
-import { getNumericFilterOperators } from './filterOperators/numericOperators';
+import { getStringFilterOperators, getStringQuickFilterFn } from './filterOperators/stringOperators';
+import { getNumericFilterOperators, getNumericQuickFilterFn } from './filterOperators/numericOperators';
 import { getDateFilterOperators } from './filterOperators/dateOperators';
 import { getBooleanFilterOperators } from './filterOperators/booleanOperators';
-import { getSingleSelectFilterOperators } from './filterOperators/singleSelectOperators';
-import { buildFilterApplier, cleanFilterModel, removeDiacritics } from './filteringUtils';
+import { getSingleSelectFilterOperators, getSingleSelectQuickFilterFn } from './filterOperators/singleSelectOperators';
+import { buildFilterApplier, cleanFilterModel, removeDiacritics, getDefaultFilterOperators } from './filteringUtils';
 
 describe('Type Guards', () => {
   describe('isFilterGroup', () => {
@@ -589,21 +589,22 @@ describe('Date Filter Operators', () => {
     });
 
     describe('seconds handling', () => {
-      it('should zero out seconds for comparison', () => {
+      it('after should use raw comparison with seconds when showTime is true', () => {
         const fn = getOperatorApplier(dateTimeOperators, 'after', '2001-01-01T07:30')!;
-        // 7:30:30 has seconds but filter is at 7:30:00 — both zeroed to 7:30
-        expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(false);
+        // With keepRawComparison, 7:30:30 > 7:30:00 is true
+        expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(true);
         expect(fn(new Date(2001, 0, 1, 7, 31, 0), {})).toBe(true);
+        expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(false);
       });
 
-      it('should match onOrAfter with same minute different seconds', () => {
+      it('should match onOrAfter with raw comparison for seconds', () => {
         const fn = getOperatorApplier(dateTimeOperators, 'onOrAfter', '2001-01-01T07:30')!;
         expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(true);
         expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(true);
         expect(fn(new Date(2001, 0, 1, 7, 29, 30), {})).toBe(false);
       });
 
-      it('should match before with same minute different seconds', () => {
+      it('should match before with raw comparison for seconds', () => {
         const fn = getOperatorApplier(dateTimeOperators, 'before', '2001-01-01T07:30')!;
         expect(fn(new Date(2001, 0, 1, 7, 29, 30), {})).toBe(true);
         expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(false);
@@ -1081,5 +1082,380 @@ describe('removeDiacritics', () => {
   it('should not modify strings without diacritics', () => {
     expect(removeDiacritics('hello')).toBe('hello');
     expect(removeDiacritics('ABC123')).toBe('ABC123');
+  });
+});
+
+describe('Quick Filter Functions', () => {
+  describe('getStringQuickFilterFn', () => {
+    it('should return a function for non-empty value', () => {
+      const fn = getStringQuickFilterFn('test')!;
+      expect(fn).toBeDefined();
+      expect(fn('testing', {})).toBe(true);
+      expect(fn('hello', {})).toBe(false);
+    });
+
+    it('should return null for empty value', () => {
+      expect(getStringQuickFilterFn('')).toBe(null);
+      expect(getStringQuickFilterFn(null)).toBe(null);
+      expect(getStringQuickFilterFn(undefined)).toBe(null);
+    });
+
+    it('should be case insensitive', () => {
+      const fn = getStringQuickFilterFn('TEST')!;
+      expect(fn('testing', {})).toBe(true);
+    });
+
+    it('should return false for null cell values', () => {
+      const fn = getStringQuickFilterFn('test')!;
+      expect(fn(null, {})).toBe(false);
+    });
+  });
+
+  describe('getNumericQuickFilterFn', () => {
+    it('should return a function for valid numeric value', () => {
+      const fn = getNumericQuickFilterFn(25)!;
+      expect(fn).toBeDefined();
+      expect(fn(25, {})).toBe(true);
+      expect(fn(30, {})).toBe(false);
+    });
+
+    it('should return null for non-numeric values', () => {
+      expect(getNumericQuickFilterFn('')).toBe(null);
+      expect(getNumericQuickFilterFn(null)).toBe(null);
+      expect(getNumericQuickFilterFn('abc')).toBe(null);
+    });
+  });
+
+  describe('getSingleSelectQuickFilterFn', () => {
+    it('should match against string representation', () => {
+      const fn = getSingleSelectQuickFilterFn('cat')!;
+      expect(fn).toBeDefined();
+      expect(fn('cat', {})).toBe(true);
+      expect(fn('category', {})).toBe(true); // contains
+      expect(fn('dog', {})).toBe(false);
+    });
+
+    it('should return null for empty value', () => {
+      expect(getSingleSelectQuickFilterFn('')).toBe(null);
+      expect(getSingleSelectQuickFilterFn(null)).toBe(null);
+    });
+
+    it('should be case insensitive', () => {
+      const fn = getSingleSelectQuickFilterFn('CAT')!;
+      expect(fn('cat', {})).toBe(true);
+    });
+  });
+});
+
+describe('Quick Filter (buildFilterApplier)', () => {
+  const rows = [
+    { id: 1, name: 'Alice', age: 25 },
+    { id: 2, name: 'Bob', age: 30 },
+    { id: 3, name: 'Charlie', age: 35 },
+    { id: 4, name: 'Diana', age: 25 },
+  ];
+
+  const stringOperators = getStringFilterOperators();
+  const numericOperators = getNumericFilterOperators();
+
+  const columnLookup: Record<string, any> = {
+    name: { field: 'name', filterOperators: stringOperators },
+    age: { field: 'age', filterOperators: numericOperators },
+  };
+
+  const getColumn = (field: string) => columnLookup[field];
+  const getRow = (id: GridRowId) => rows.find((r) => r.id === id)!;
+  const rowIds = rows.map((r) => r.id);
+  const getAllColumnFields = () => ['name', 'age'];
+  const getVisibleColumnFields = () => ['name', 'age'];
+
+  it('should filter by single quick filter value across string columns', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [],
+      quickFilterValues: ['li'],
+    };
+    const applier = buildFilterApplier({
+      model,
+      getColumn,
+      getRow,
+      getAllColumnFields,
+      getVisibleColumnFields,
+    })!;
+    // Alice and Charlie contain 'li'
+    expect(applier(rowIds)).toEqual([1, 3]);
+  });
+
+  it('should filter by multiple quick filter values with AND logic', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [],
+      quickFilterValues: ['li', 'Bob'],
+      quickFilterLogicOperator: 'and',
+    };
+    const applier = buildFilterApplier({
+      model,
+      getColumn,
+      getRow,
+      getAllColumnFields,
+      getVisibleColumnFields,
+    })!;
+    // 'li' matches Alice and Charlie. 'Bob' matches Bob only.
+    // AND means row must match ALL values, so no row matches both.
+    expect(applier(rowIds)).toEqual([]);
+  });
+
+  it('should filter by multiple quick filter values with OR logic', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [],
+      quickFilterValues: ['Alice', 'Bob'],
+      quickFilterLogicOperator: 'or',
+    };
+    const applier = buildFilterApplier({
+      model,
+      getColumn,
+      getRow,
+      getAllColumnFields,
+      getVisibleColumnFields,
+    })!;
+    // Alice matches 'Alice', Bob matches 'Bob'
+    expect(applier(rowIds)).toEqual([1, 2]);
+  });
+
+  it('should combine quick filter with regular filter conditions', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [{ field: 'age', operator: '>', value: 25 }],
+      quickFilterValues: ['li'],
+    };
+    const applier = buildFilterApplier({
+      model,
+      getColumn,
+      getRow,
+      getAllColumnFields,
+      getVisibleColumnFields,
+    })!;
+    // 'li' matches Alice(25) and Charlie(35). age > 25 filters out Alice.
+    expect(applier(rowIds)).toEqual([3]);
+  });
+
+  it('should respect quickFilterExcludeHiddenColumns', () => {
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [],
+      quickFilterValues: ['25'],
+      quickFilterExcludeHiddenColumns: false,
+    };
+    const getAllFields = () => ['name', 'age'];
+    const getVisibleFields = () => ['name']; // age is hidden
+
+    const applier = buildFilterApplier({
+      model,
+      getColumn,
+      getRow,
+      getAllColumnFields: getAllFields,
+      getVisibleColumnFields: getVisibleFields,
+    })!;
+    // quickFilterExcludeHiddenColumns=false => search ALL columns including hidden 'age'
+    // 25 matches age column for Alice and Diana
+    expect(applier(rowIds)).toEqual([1, 4]);
+  });
+
+  it('should return null when no quick filter columns have quick filter fn', () => {
+    const columnWithoutQuickFilter: Record<string, any> = {
+      name: { field: 'name', filterOperators: [{ value: 'contains', getApplyFilterFn: () => null }] },
+    };
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [],
+      quickFilterValues: ['test'],
+    };
+    const applier = buildFilterApplier({
+      model,
+      getColumn: (f) => columnWithoutQuickFilter[f],
+      getRow,
+      getAllColumnFields: () => ['name'],
+      getVisibleColumnFields: () => ['name'],
+    });
+    expect(applier).toBe(null);
+  });
+});
+
+describe('valueParser', () => {
+  const rows = [
+    { id: 1, name: 'Alice', age: 25 },
+    { id: 2, name: 'Bob', age: 30 },
+  ];
+
+  const stringOperators = getStringFilterOperators();
+  const numericOperators = getNumericFilterOperators();
+
+  const getRow = (id: GridRowId) => rows.find((r) => r.id === id)!;
+  const rowIds = rows.map((r) => r.id);
+
+  it('should apply valueParser to condition value before filtering', () => {
+    const columnLookup: Record<string, any> = {
+      age: {
+        field: 'age',
+        filterOperators: numericOperators,
+        valueParser: (value: any) => Number(value) * 2,
+      },
+    };
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [{ field: 'age', operator: '=', value: 15 }],
+    };
+    // valueParser(15) = 30, so it should match Bob (age 30)
+    const applier = buildFilterApplier({
+      model,
+      getColumn: (f) => columnLookup[f],
+      getRow,
+    })!;
+    expect(applier(rowIds)).toEqual([2]);
+  });
+
+  it('should apply valueParser to array values (isAnyOf)', () => {
+    const columnLookup: Record<string, any> = {
+      name: {
+        field: 'name',
+        filterOperators: stringOperators,
+        valueParser: (value: any) => String(value).toUpperCase(),
+      },
+    };
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [{ field: 'name', operator: 'isAnyOf', value: ['alice', 'bob'] }],
+    };
+    // valueParser maps each to uppercase: ['ALICE', 'BOB']
+    const applier = buildFilterApplier({
+      model,
+      getColumn: (f) => columnLookup[f],
+      getRow,
+    })!;
+    // isAnyOf uses collator with sensitivity: 'base', so ALICE matches Alice
+    expect(applier(rowIds)).toEqual([1, 2]);
+  });
+
+  it('should not modify value when no valueParser', () => {
+    const columnLookup: Record<string, any> = {
+      name: { field: 'name', filterOperators: stringOperators },
+    };
+    const model: FilterModel = {
+      logicOperator: 'and',
+      conditions: [{ field: 'name', operator: 'contains', value: 'Ali' }],
+    };
+    const applier = buildFilterApplier({
+      model,
+      getColumn: (f) => columnLookup[f],
+      getRow,
+    })!;
+    expect(applier(rowIds)).toEqual([1]);
+  });
+});
+
+describe('dateTime seconds handling', () => {
+  const dateTimeOperators = getDateFilterOperators(true);
+
+  it('after should consider seconds when showTime is true', () => {
+    const fn = getOperatorApplier(dateTimeOperators, 'after', '2001-01-01T07:30:00')!;
+    // 7:30:30 > 7:30:00 (raw comparison, seconds matter)
+    expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(true);
+    expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(false);
+  });
+
+  it('before should consider seconds', () => {
+    const fn = getOperatorApplier(dateTimeOperators, 'before', '2001-01-01T07:30:30')!;
+    // 7:30:00 < 7:30:30 (raw comparison)
+    expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(true);
+    expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(false);
+  });
+
+  it('onOrAfter should consider seconds when showTime is true', () => {
+    const fn = getOperatorApplier(dateTimeOperators, 'onOrAfter', '2001-01-01T07:30:30')!;
+    expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(true);
+    expect(fn(new Date(2001, 0, 1, 7, 30, 29), {})).toBe(false);
+  });
+
+  it('onOrBefore should consider seconds when showTime is true', () => {
+    const fn = getOperatorApplier(dateTimeOperators, 'onOrBefore', '2001-01-01T07:30:30')!;
+    expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(true);
+    expect(fn(new Date(2001, 0, 1, 7, 30, 31), {})).toBe(false);
+  });
+
+  it('is should still zero seconds for equality', () => {
+    const fn = getOperatorApplier(dateTimeOperators, 'is', '2001-01-01T07:30')!;
+    // Both zeroed to 7:30:00
+    expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(true);
+    expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(true);
+  });
+
+  it('not should still zero seconds for equality', () => {
+    const fn = getOperatorApplier(dateTimeOperators, 'not', '2001-01-01T07:30')!;
+    // Both zeroed to 7:30:00
+    expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(false);
+    expect(fn(new Date(2001, 0, 1, 7, 31, 0), {})).toBe(true);
+  });
+});
+
+describe('dateTime default operators', () => {
+  it('should return showTime operators for dateTime type', () => {
+    const operators = getDefaultFilterOperators('dateTime');
+    const afterOp = operators.find((op) => op.value === 'after')!;
+    // With showTime=true and keepRawComparison, seconds should matter for 'after'
+    const fn = afterOp.getApplyFilterFn({
+      field: 'test',
+      operator: 'after',
+      value: '2001-01-01T07:30:00',
+    })!;
+    // 7:30:30 > 7:30:00 should be true with showTime
+    expect(fn(new Date(2001, 0, 1, 7, 30, 30) as any, {})).toBe(true);
+  });
+});
+
+describe('Numeric edge cases', () => {
+  const operators = getNumericFilterOperators();
+
+  it('= 0 should match empty string (Number("") === 0)', () => {
+    const fn = getOperatorApplier(operators, '=', 0)!;
+    expect(fn('', {})).toBe(true);
+  });
+
+  it('= 0 should not match null', () => {
+    const fn = getOperatorApplier(operators, '=', 0)!;
+    expect(fn(null, {})).toBe(false);
+  });
+
+  it('= 0 should not match undefined', () => {
+    const fn = getOperatorApplier(operators, '=', 0)!;
+    expect(fn(undefined, {})).toBe(false);
+  });
+
+  it('!= 0 should not match empty string', () => {
+    const fn = getOperatorApplier(operators, '!=', 0)!;
+    expect(fn('', {})).toBe(false);
+  });
+
+  it('!= 0 should match null (null !== 0)', () => {
+    const fn = getOperatorApplier(operators, '!=', 0)!;
+    expect(fn(null, {})).toBe(true);
+  });
+});
+
+describe('getValueAsString', () => {
+  it('singleSelect "is" operator should have getValueAsString', () => {
+    const operators = getSingleSelectFilterOperators();
+    const isOp = operators.find((op) => op.value === 'is')!;
+    expect(isOp.getValueAsString).toBeDefined();
+    expect(isOp.getValueAsString!('cat')).toBe('cat');
+    expect(isOp.getValueAsString!(null)).toBe('');
+    expect(isOp.getValueAsString!(undefined)).toBe('');
+  });
+
+  it('singleSelect "not" operator should have getValueAsString', () => {
+    const operators = getSingleSelectFilterOperators();
+    const notOp = operators.find((op) => op.value === 'not')!;
+    expect(notOp.getValueAsString).toBeDefined();
+    expect(notOp.getValueAsString!('dog')).toBe('dog');
   });
 });

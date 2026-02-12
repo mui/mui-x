@@ -7,6 +7,18 @@ const parseNumericValue = (value: unknown) => {
   return Number(value);
 };
 
+export const getNumericQuickFilterFn = (
+  quickFilterValue: any,
+): ((cellValue: number | string | null, row: any) => boolean) | null => {
+  if (quickFilterValue == null || quickFilterValue === '' || Number.isNaN(Number(quickFilterValue))) {
+    return null;
+  }
+  const numValue = Number(quickFilterValue);
+  return (value): boolean => {
+    return parseNumericValue(value) === numValue;
+  };
+};
+
 export const getNumericFilterOperators = (): FilterOperator<number | string | null>[] => [
   {
     value: '=',
@@ -22,6 +34,7 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
         return parseNumericValue(value) === condition.value;
       };
     },
+    getApplyQuickFilterFn: getNumericQuickFilterFn,
   },
   {
     value: '!=',

@@ -14,9 +14,13 @@ export interface FilterGroup {
 export type FilterExpression = FilterCondition | FilterGroup;
 
 /**
- * The root filter model is always a group.
+ * The root filter model is always a group, with optional quick filter fields.
  */
-export type FilterModel = FilterGroup;
+export type FilterModel = FilterGroup & {
+  quickFilterValues?: any[];
+  quickFilterLogicOperator?: 'and' | 'or';
+  quickFilterExcludeHiddenColumns?: boolean;
+};
 
 export const EMPTY_FILTER_MODEL: FilterModel = { logicOperator: 'and', conditions: [] };
 
@@ -32,6 +36,18 @@ export interface FilterOperator<V = any> {
   value: string;
   label?: string;
   getApplyFilterFn: (condition: FilterCondition) => null | ((cellValue: V, row: any) => boolean);
+  /**
+   * A function that returns a filter function for quick filter matching.
+   * @param {any} quickFilterValue The quick filter value to match against.
+   * @returns {null | ((cellValue: V, row: any) => boolean)} The filter function or null if not applicable.
+   */
+  getApplyQuickFilterFn?: (quickFilterValue: any) => null | ((cellValue: V, row: any) => boolean);
+  /**
+   * A function that returns a string representation of the filter value.
+   * @param {any} value The filter value.
+   * @returns {string} The string representation.
+   */
+  getValueAsString?: (value: any) => string;
   /**
    * If `false`, the operator does not require a filter value (e.g. isEmpty, isNotEmpty).
    * @default true
@@ -60,6 +76,19 @@ export interface FilteringColumnMeta<V = any> {
    * The value options for singleSelect columns.
    */
   valueOptions?: Array<string | { value: any; label: string }>;
+  /**
+   * A function to parse the filter value before applying the filter.
+   * @param {any} value The raw filter value.
+   * @returns {any} The parsed filter value.
+   */
+  valueParser?: (value: any) => any;
+  /**
+   * A function that returns a filter function for quick filter matching at the column level.
+   * Takes precedence over the operator-level `getApplyQuickFilterFn`.
+   * @param {any} quickFilterValue The quick filter value to match against.
+   * @returns {null | ((cellValue: V, row: any) => boolean)} The filter function or null if not applicable.
+   */
+  getApplyQuickFilterFn?: (quickFilterValue: any) => null | ((cellValue: V, row: any) => boolean);
 }
 
 export interface FilteringState {
@@ -120,6 +149,7 @@ export interface FilteringInternalOptions {
 export type FilteringSelectors = {
   model: (state: FilteringState) => FilterModel;
   filteredRowIds: (state: FilteringState) => GridRowId[];
+  quickFilterValues: (state: FilteringState) => any[];
 };
 
 export interface FilteringApi {
@@ -148,5 +178,32 @@ export interface FilteringApi {
      * @returns {GridRowId[]} The filtered row IDs.
      */
     computeFilteredRowIds: (rowIds?: GridRowId[], filterModel?: FilterModel) => GridRowId[];
+
+    /**
+     * Upsert a filter condition in the root group.
+     * If a condition with the same field and operator exists, its value is updated.
+     * Otherwise, the condition is appended.
+     * @param {FilterCondition} condition The condition to upsert.
+     */
+    upsertCondition: (condition: FilterCondition) => void;
+
+    /**
+     * Delete a filter condition from the root group.
+     * Matches by field and operator.
+     * @param {FilterCondition} condition The condition to delete.
+     */
+    deleteCondition: (condition: FilterCondition) => void;
+
+    /**
+     * Set the quick filter values.
+     * @param {any[]} values The quick filter values.
+     */
+    setQuickFilterValues: (values: any[]) => void;
+
+    /**
+     * Set the root logic operator.
+     * @param {'and' | 'or'} operator The logic operator.
+     */
+    setLogicOperator: (operator: 'and' | 'or') => void;
   };
 }

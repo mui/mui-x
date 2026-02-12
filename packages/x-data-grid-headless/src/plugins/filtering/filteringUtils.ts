@@ -24,8 +24,9 @@ export function getDefaultFilterOperators(type: ColumnType = 'string'): FilterOp
     case 'number':
       return getNumericFilterOperators();
     case 'date':
-    case 'dateTime':
       return getDateFilterOperators();
+    case 'dateTime':
+      return getDateFilterOperators(true);
     case 'boolean':
       return getBooleanFilterOperators();
     case 'singleSelect':
@@ -147,11 +148,19 @@ function getConditionApplier(
     return null;
   }
 
+  // Apply valueParser if present
+  let effectiveCondition = condition;
+  if (column.valueParser && condition.value !== undefined) {
+    const parsedValue = Array.isArray(condition.value)
+      ? condition.value.map(column.valueParser)
+      : column.valueParser(condition.value);
+    effectiveCondition = { ...condition, value: parsedValue };
+  }
+
   // Normalize condition value for diacritics if needed
-  const effectiveCondition =
-    ignoreDiacritics && typeof condition.value === 'string'
-      ? { ...condition, value: removeDiacritics(condition.value) }
-      : condition;
+  if (ignoreDiacritics && typeof effectiveCondition.value === 'string') {
+    effectiveCondition = { ...effectiveCondition, value: removeDiacritics(effectiveCondition.value) };
+  }
 
   const applyFilterOnRow = filterOperator.getApplyFilterFn(effectiveCondition);
   if (typeof applyFilterOnRow !== 'function') {
@@ -248,12 +257,129 @@ return ${appliers.map((_, i) => `appliers[${i}](row)`).join(` ${operator} `)};`,
   return (row: any) => filterFn(appliers, row);
 }
 
+type QuickFilterApplierFn = (row: any) => boolean;
+
+/**
+ * Build a function that applies quick filter values across columns.
+ */
+function buildQuickFilterApplier(
+  model: FilterModel,
+  getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined,
+  ignoreDiacritics: boolean,
+  getAllColumnFields?: () => string[],
+  getVisibleColumnFields?: () => string[],
+): QuickFilterApplierFn | null {
+  const quickFilterValues = model.quickFilterValues;
+  if (!quickFilterValues || quickFilterValues.length === 0) {
+    return null;
+  }
+
+  const excludeHidden = model.quickFilterExcludeHiddenColumns !== false;
+  const columnFields = excludeHidden
+    ? (getVisibleColumnFields?.() ?? getAllColumnFields?.() ?? [])
+    : (getAllColumnFields?.() ?? []);
+
+  if (columnFields.length === 0) {
+    return null;
+  }
+
+  // For each column, resolve the quick filter function
+  type ColumnQuickFilterFn = (quickFilterValue: any) => null | ((cellValue: any, row: any) => boolean);
+
+  const columnQuickFilterFns: Array<{
+    field: string;
+    getQuickFilterFn: ColumnQuickFilterFn;
+    column: ColumnInfo & FilteringColumnMeta;
+  }> = [];
+
+  for (const field of columnFields) {
+    const column = getColumn(field);
+    if (!column || column.filterable === false) {
+      continue;
+    }
+
+    // Column-level getApplyQuickFilterFn takes precedence
+    let getQuickFilterFn: ColumnQuickFilterFn | undefined = column.getApplyQuickFilterFn;
+
+    if (!getQuickFilterFn) {
+      // Fall back to first operator with getApplyQuickFilterFn
+      const filterOperators = column.filterOperators ?? getDefaultFilterOperators(column.type);
+      const operatorWithQuickFilter = filterOperators?.find((op) => op.getApplyQuickFilterFn);
+      if (operatorWithQuickFilter) {
+        getQuickFilterFn = operatorWithQuickFilter.getApplyQuickFilterFn;
+      }
+    }
+
+    if (getQuickFilterFn) {
+      columnQuickFilterFns.push({ field, getQuickFilterFn, column });
+    }
+  }
+
+  if (columnQuickFilterFns.length === 0) {
+    return null;
+  }
+
+  const quickFilterLogicOperator = model.quickFilterLogicOperator ?? 'and';
+
+  // Pre-compute the filter functions for each value/column combination
+  const valueFilters: Array<Array<{
+    filterFn: (cellValue: any, row: any) => boolean;
+    column: ColumnInfo & FilteringColumnMeta;
+  }>> = [];
+
+  for (const quickFilterValue of quickFilterValues) {
+    const columnFilters: Array<{
+      filterFn: (cellValue: any, row: any) => boolean;
+      column: ColumnInfo & FilteringColumnMeta;
+    }> = [];
+
+    for (const { getQuickFilterFn, column } of columnQuickFilterFns) {
+      const filterFn = getQuickFilterFn(quickFilterValue);
+      if (filterFn) {
+        columnFilters.push({ filterFn, column });
+      }
+    }
+
+    valueFilters.push(columnFilters);
+  }
+
+  return (row: any): boolean => {
+    // For each quick filter value, check if ANY column matches
+    const valueResults = valueFilters.map((columnFilters) => {
+      if (columnFilters.length === 0) {
+        return false;
+      }
+      return columnFilters.some(({ filterFn, column }) => {
+        const fieldKey = column.field ?? column.id;
+        let value;
+        if (column.filterValueGetter) {
+          value = column.filterValueGetter(row);
+        } else {
+          value = fieldKey ? row[fieldKey as string] : undefined;
+        }
+        if (ignoreDiacritics && typeof value === 'string') {
+          value = removeDiacritics(value);
+        }
+        return filterFn(value, row);
+      });
+    });
+
+    // Combine value results with logic operator
+    if (quickFilterLogicOperator === 'and') {
+      return valueResults.every(Boolean);
+    }
+    return valueResults.some(Boolean);
+  };
+}
+
 interface BuildFilterApplierParams {
   model: FilterModel;
   getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined;
   getRow: (id: GridRowId) => any;
   disableEval?: boolean;
   ignoreDiacritics?: boolean;
+  getAllColumnFields?: () => string[];
+  getVisibleColumnFields?: () => string[];
 }
 
 /**
@@ -266,20 +392,38 @@ export const buildFilterApplier = ({
   getRow,
   disableEval = false,
   ignoreDiacritics = false,
+  getAllColumnFields,
+  getVisibleColumnFields,
 }: BuildFilterApplierParams): ((rowIds: GridRowId[]) => GridRowId[]) | null => {
-  if (!model.conditions || model.conditions.length === 0) {
+  const hasConditions = model.conditions && model.conditions.length > 0;
+  const hasQuickFilter = model.quickFilterValues && model.quickFilterValues.length > 0;
+
+  if (!hasConditions && !hasQuickFilter) {
     return null;
   }
 
-  const groupApplier = buildGroupApplier(model, getColumn, getRow, disableEval, ignoreDiacritics);
-  if (!groupApplier) {
+  const groupApplier = hasConditions
+    ? buildGroupApplier(model, getColumn, getRow, disableEval, ignoreDiacritics)
+    : null;
+
+  const quickFilterApplier = hasQuickFilter
+    ? buildQuickFilterApplier(model, getColumn, ignoreDiacritics, getAllColumnFields, getVisibleColumnFields)
+    : null;
+
+  if (!groupApplier && !quickFilterApplier) {
     return null;
   }
 
   return (rowIds: GridRowId[]) => {
     return rowIds.filter((id) => {
       const row = getRow(id);
-      return groupApplier(row);
+      if (groupApplier && !groupApplier(row)) {
+        return false;
+      }
+      if (quickFilterApplier && !quickFilterApplier(row)) {
+        return false;
+      }
+      return true;
     });
   };
 };

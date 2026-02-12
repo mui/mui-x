@@ -7,6 +7,26 @@ const parseObjectValue = (value: unknown) => {
   return (value as { value: unknown }).value;
 };
 
+export const getSingleSelectQuickFilterFn = (
+  quickFilterValue: any,
+): ((cellValue: any, row: any) => boolean) | null => {
+  if (quickFilterValue == null || quickFilterValue === '') {
+    return null;
+  }
+  const trimmedValue = String(quickFilterValue).trim().toLowerCase();
+  if (!trimmedValue) {
+    return null;
+  }
+  return (value): boolean => {
+    if (value == null) {
+      return false;
+    }
+    // Check against the string representation (label) of the value
+    const label = typeof value === 'object' && value !== null ? (value as { label: string }).label : String(value);
+    return label.toLowerCase().includes(trimmedValue);
+  };
+};
+
 export const getSingleSelectFilterOperators = (): FilterOperator[] => [
   {
     value: 'is',
@@ -16,6 +36,8 @@ export const getSingleSelectFilterOperators = (): FilterOperator[] => [
       }
       return (value): boolean => parseObjectValue(value) === parseObjectValue(condition.value);
     },
+    getApplyQuickFilterFn: getSingleSelectQuickFilterFn,
+    getValueAsString: (value: any) => String(value ?? ''),
   },
   {
     value: 'not',
@@ -25,6 +47,7 @@ export const getSingleSelectFilterOperators = (): FilterOperator[] => [
       }
       return (value): boolean => parseObjectValue(value) !== parseObjectValue(condition.value);
     },
+    getValueAsString: (value: any) => String(value ?? ''),
   },
   {
     value: 'isAnyOf',

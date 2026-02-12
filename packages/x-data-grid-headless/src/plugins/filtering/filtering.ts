@@ -5,6 +5,7 @@ import type { GridRowId } from '../internal/rows/rowUtils';
 import { filteringSelectors } from './selectors';
 import { buildFilterApplier, cleanFilterModel } from './filteringUtils';
 import type {
+  FilterCondition,
   FilterModel,
   FilteringState,
   FilteringOptions,
@@ -13,7 +14,7 @@ import type {
   FilteringColumnMeta,
   FilteringSelectors,
 } from './types';
-import { EMPTY_FILTER_MODEL } from './types';
+import { EMPTY_FILTER_MODEL, isFilterCondition } from './types';
 import type sortingPlugin from '../sorting/sorting';
 
 type FilteringPluginOptions = FilteringOptions & FilteringInternalOptions;
@@ -51,6 +52,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
           | ((typeof state.columns.lookup)[string] & FilteringColumnMeta)
           | undefined;
       const getRow = (id: GridRowId) => state.rows.dataRowIdToModelLookup[id];
+      const { orderedFields, columnVisibilityModel } = state.columns;
 
       const filterApplier = buildFilterApplier({
         model: initialModel,
@@ -58,6 +60,9 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         getRow,
         disableEval: params.filtering?.disableEval,
         ignoreDiacritics: params.filtering?.ignoreDiacritics,
+        getAllColumnFields: () => orderedFields as string[],
+        getVisibleColumnFields: () =>
+          (orderedFields as string[]).filter((field) => columnVisibilityModel[field] !== false),
       });
       filteredRowIds = filterApplier ? filterApplier(inputRowIds) : inputRowIds;
     }
@@ -86,6 +91,14 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         | undefined;
     };
 
+    const getAllColumnFields = (): string[] => {
+      return api.columns.getAll().map((col) => col.id);
+    };
+
+    const getVisibleColumnFields = (): string[] => {
+      return api.columns.getVisible().map((col) => col.id);
+    };
+
     /**
      * Get the input row IDs to filter.
      * Uses sorted row IDs if sorting plugin is present, otherwise raw row IDs.
@@ -94,7 +107,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
       if (api.pluginRegistry.hasPlugin<typeof sortingPlugin>(api, 'sorting')) {
         return (store.state as any).sorting.sortedRowIds;
       }
-      return store.state.rows.dataRowIds;
+      return api.rows.getAllRowIds();
     };
 
     const computeFilteredRowIds: FilteringApi['filtering']['computeFilteredRowIds'] = (
@@ -110,6 +123,8 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         getRow: api.rows.getRow,
         disableEval: params.filtering?.disableEval,
         ignoreDiacritics: params.filtering?.ignoreDiacritics,
+        getAllColumnFields,
+        getVisibleColumnFields,
       });
 
       return filterApplier ? filterApplier(originalRowIds) : originalRowIds;
@@ -158,6 +173,52 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
       return filteringSelectors.model(store.state);
     };
 
+    const upsertCondition = (condition: FilterCondition): void => {
+      const model = getModel();
+      const existingIndex = model.conditions.findIndex(
+        (c) =>
+          isFilterCondition(c) && c.field === condition.field && c.operator === condition.operator,
+      );
+
+      let newConditions;
+      if (existingIndex >= 0) {
+        newConditions = [...model.conditions];
+        newConditions[existingIndex] = condition;
+      } else {
+        newConditions = [...model.conditions, condition];
+      }
+
+      setModel({ ...model, conditions: newConditions });
+    };
+
+    const deleteCondition = (condition: FilterCondition): void => {
+      const model = getModel();
+      const newConditions = model.conditions.filter(
+        (c) =>
+          !(
+            isFilterCondition(c) &&
+            c.field === condition.field &&
+            c.operator === condition.operator
+          ),
+      );
+
+      if (newConditions.length !== model.conditions.length) {
+        setModel({ ...model, conditions: newConditions });
+      }
+    };
+
+    const setQuickFilterValues = (values: any[]): void => {
+      const model = getModel();
+      setModel({ ...model, quickFilterValues: values });
+    };
+
+    const setLogicOperator = (operator: 'and' | 'or'): void => {
+      const model = getModel();
+      if (model.logicOperator !== operator) {
+        setModel({ ...model, logicOperator: operator });
+      }
+    };
+
     // Track previous input row IDs to detect changes
     const prevInputRowIdsRef = React.useRef<GridRowId[]>(getInputRowIds());
     const prevFilterModelRef = React.useRef<FilterModel>(store.state.filtering.model);
@@ -165,6 +226,11 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
     // Track previous column lookup to detect column changes
     const prevColumnsLookupRef = React.useRef<Record<string, any> | undefined>(
       (store.state as any).columns?.lookup,
+    );
+
+    // Track previous column visibility model
+    const prevColumnVisibilityModelRef = React.useRef<Record<string, boolean> | undefined>(
+      (store.state.columns as any).columnVisibilityModel,
     );
 
     // Use a ref for onModelChange to avoid stale closure in subscription
@@ -228,6 +294,25 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
             }
           }
         }
+
+        // Detect column visibility changes for quick filter re-application
+        const currentVisibilityModel = (store.state.columns as any).columnVisibilityModel;
+        if (
+          currentVisibilityModel &&
+          prevColumnVisibilityModelRef.current !== currentVisibilityModel
+        ) {
+          prevColumnVisibilityModelRef.current = currentVisibilityModel;
+
+          const model = store.state.filtering.model;
+          const hasQuickFilter =
+            model.quickFilterValues &&
+            model.quickFilterValues.length > 0 &&
+            model.quickFilterExcludeHiddenColumns !== false;
+
+          if (hasQuickFilter && isAutoModeRef.current() && !isExternalFilteringRef.current()) {
+            applyFilteringRef.current();
+          }
+        }
       });
       return unsubscribe;
     }, [store]);
@@ -262,6 +347,10 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         setModel,
         apply: applyFiltering,
         computeFilteredRowIds,
+        upsertCondition,
+        deleteCondition,
+        setQuickFilterValues,
+        setLogicOperator,
       },
     };
   },
