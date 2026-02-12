@@ -1479,37 +1479,147 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     describe('filtering operators', () => {
-      it('should filter with operator "contains"', () => {
+      it('should filter with operator "is"', () => {
         render(
           <TestCaseMultiSelect
             filterModel={{
-              items: [{ field: 'tags', operator: 'contains', value: 'React' }],
+              items: [{ field: 'tags', operator: 'is', value: 'React' }],
             }}
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
       });
 
-      it('should filter with operator "doesNotContain"', () => {
+      it('should filter with operator "is" with undefined value', () => {
         render(
           <TestCaseMultiSelect
             filterModel={{
-              items: [{ field: 'tags', operator: 'doesNotContain', value: 'React' }],
+              items: [{ field: 'tags', operator: 'is', value: undefined }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+          '',
+          '',
+        ]);
+      });
+
+      it('should filter with operator "is" with empty value', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'is', value: '' }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+          '',
+          '',
+        ]);
+      });
+
+      it('should filter with operator "is" and object valueOptions', () => {
+        render(
+          <TestCaseMultiSelect
+            rows={[
+              { id: 1, tags: ['fe', 'be'] },
+              { id: 2, tags: ['be'] },
+              { id: 3, tags: [] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 250,
+                valueOptions: [
+                  { value: 'fe', label: 'Frontend' },
+                  { value: 'be', label: 'Backend' },
+                ],
+              },
+            ]}
+            filterModel={{
+              items: [{ field: 'tags', operator: 'is', value: 'fe' }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['FrontendBackend']);
+      });
+
+      it('should filter with operator "isNot"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'isNot', value: 'React' }],
             }}
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['VueJavaScript', '', '']);
       });
 
-      it('should filter with operator "isEmpty"', () => {
+      it('should filter with operator "isNot" with undefined value', () => {
         render(
           <TestCaseMultiSelect
             filterModel={{
-              items: [{ field: 'tags', operator: 'isEmpty' }],
+              items: [{ field: 'tags', operator: 'isNot', value: undefined }],
             }}
           />,
         );
-        expect(getColumnValues(0)).to.deep.equal(['', '']);
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+          '',
+          '',
+        ]);
+      });
+
+      it('should filter with operator "contains"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: ['React'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
+      });
+
+      it('should filter with operator "contains" with multiple values', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: ['React', 'Vue'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+        ]);
+      });
+
+      it('should filter with operator "contains" with empty array', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: [] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+          '',
+          '',
+        ]);
       });
 
       it('should filter with operator "contains" and object valueOptions', () => {
@@ -1532,11 +1642,46 @@ describe('<DataGridPro /> - Filter', () => {
               },
             ]}
             filterModel={{
-              items: [{ field: 'tags', operator: 'contains', value: 'fe' }],
+              items: [{ field: 'tags', operator: 'contains', value: ['fe'] }],
             }}
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['FrontendBackend']);
+      });
+
+      it('should filter with operator "doesNotContain"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'doesNotContain', value: ['React'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['VueJavaScript', '', '']);
+      });
+
+      it('should filter with operator "doesNotContain" with multiple values', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [
+                { field: 'tags', operator: 'doesNotContain', value: ['React', 'Vue'] },
+              ],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['', '']);
+      });
+
+      it('should filter with operator "isEmpty"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'isEmpty' }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['', '']);
       });
 
       it('should filter with operator "isNotEmpty"', () => {

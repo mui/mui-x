@@ -58,7 +58,34 @@ describe('<DataGrid /> - Filter panel', () => {
       ],
     };
 
-    it('should show dropdown for "contains" operator', async () => {
+    it('should show dropdown for "is" operator', async () => {
+      const { user } = render(
+        <TestCase
+          {...multiSelectBaselineProps}
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                items: [{ field: 'tags', operator: 'is' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      const filterValueCombobox = screen.getByRole('combobox', { name: 'Value' });
+      await user.click(filterValueCombobox);
+
+      const listbox = screen.getByRole('listbox');
+      const options = within(listbox).getAllByRole('option');
+      // 5 options + 1 empty option
+      expect(options).to.have.length(6);
+    });
+
+    it('should show autocomplete for "contains" operator', async () => {
       const { user } = render(
         <TestCase
           {...multiSelectBaselineProps}
@@ -76,13 +103,12 @@ describe('<DataGrid /> - Filter panel', () => {
         />,
       );
 
-      const filterValueCombobox = screen.getByRole('combobox', { name: 'Value' });
-      await user.click(filterValueCombobox);
+      const autocomplete = screen.getByRole('combobox', { name: 'Value' });
+      await user.click(autocomplete);
 
       const listbox = screen.getByRole('listbox');
       const options = within(listbox).getAllByRole('option');
-      // 5 options + 1 empty option
-      expect(options).to.have.length(6);
+      expect(options).to.have.length(5);
     });
   });
 });
