@@ -31,7 +31,7 @@ const renderMultiSelectOptions = ({
     const value = getOptionValue ? getOptionValue(option) : String(option);
     let label = getOptionLabel ? getOptionLabel(option) : String(option);
     if (label === '') {
-      label = ' '; // To force the height of the empty option
+      label = ' '; // To force the height of the empty option
     }
 
     return (

@@ -105,6 +105,7 @@ export interface GridLocaleText {
   headerFilterOperatorStartsWith: string;
   headerFilterOperatorEndsWith: string;
   headerFilterOperatorIs: string;
+  headerFilterOperatorIsNot: string;
   headerFilterOperatorNot: string;
   headerFilterOperatorAfter: string;
   headerFilterOperatorOnOrAfter: string;

@@ -102,6 +102,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   headerFilterOperatorStartsWith: 'Starts with',
   headerFilterOperatorEndsWith: 'Ends with',
   headerFilterOperatorIs: 'Is',
+  headerFilterOperatorIsNot: 'Is not',
   headerFilterOperatorNot: 'Is not',
   headerFilterOperatorAfter: 'Is after',
   headerFilterOperatorOnOrAfter: 'Is on or after',
