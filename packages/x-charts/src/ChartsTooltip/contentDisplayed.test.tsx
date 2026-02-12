@@ -163,7 +163,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
     });
   });
 
-  describe('axis trigger with order', () => {
+  describe('axis trigger with sort', () => {
     it('should sort series items in ascending order', async () => {
       const { user, container } = render(
         <BarChart
@@ -173,7 +173,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
             { dataKey: 'v2', id: 's2', label: 'S2' },
           ]}
           xAxis={[{ dataKey: 'x', position: 'none' }]}
-          slotProps={{ tooltip: { trigger: 'axis', order: 'asc' } }}
+          slotProps={{ tooltip: { trigger: 'axis', sort: 'asc' } }}
         />,
         { wrapper },
       );
@@ -210,7 +210,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
             { dataKey: 'v2', id: 's2', label: 'S2' },
           ]}
           xAxis={[{ dataKey: 'x', position: 'none' }]}
-          slotProps={{ tooltip: { trigger: 'axis', order: 'desc' } }}
+          slotProps={{ tooltip: { trigger: 'axis', sort: 'desc' } }}
         />,
         { wrapper },
       );
@@ -251,7 +251,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
             { dataKey: 'v2', id: 's2', label: 'S2' },
           ]}
           xAxis={[{ dataKey: 'x', position: 'none' }]}
-          slotProps={{ tooltip: { trigger: 'axis', order: 'desc' } }}
+          slotProps={{ tooltip: { trigger: 'axis', sort: 'desc' } }}
         />,
         { wrapper },
       );
@@ -292,7 +292,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
             { dataKey: 'v2', id: 's2', label: 'S2' },
           ]}
           xAxis={[{ dataKey: 'x', position: 'none' }]}
-          slotProps={{ tooltip: { trigger: 'axis', order: 'asc' } }}
+          slotProps={{ tooltip: { trigger: 'axis', sort: 'asc' } }}
         />,
         { wrapper },
       );
