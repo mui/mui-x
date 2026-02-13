@@ -422,8 +422,8 @@ describe('Virtualization', () => {
         </div>,
       );
 
-      const virtualScroller = document.querySelector('[data-testid="virtual-scroller"]')!;
-      const renderingZone = document.querySelector('[data-testid="virtual-scroller-render-zone"]')!;
+      const virtualScroller = $('[data-testid="virtual-scroller"]')!;
+      const renderingZone = $('[data-testid="virtual-scroller-render-zone"]')!;
 
       await waitFor(() => {
         expect(virtualScroller.scrollHeight).to.be.greaterThan(0);
@@ -435,7 +435,7 @@ describe('Virtualization', () => {
       });
 
       await waitFor(() => {
-        const lastCell = document.querySelector('[role="row"]:last-child [role="gridcell"]');
+        const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
         expect(lastCell).to.have.text('col-0-995');
       });
 
@@ -470,10 +470,8 @@ describe('Virtualization', () => {
           </div>,
         );
 
-        const virtualScroller = document.querySelector('[data-testid="virtual-scroller"]')!;
-        const renderingZone = document.querySelector(
-          '[data-testid="virtual-scroller-render-zone"]',
-        )!;
+        const virtualScroller = $('[data-testid="virtual-scroller"]')!;
+        const renderingZone = $('[data-testid="virtual-scroller-render-zone"]')!;
         expect(renderingZone.firstElementChild).to.have.attr('data-rowindex', '0');
         await act(async () => virtualScroller.scrollTo({ top: rowThresholdPx }));
         await waitFor(() => {
