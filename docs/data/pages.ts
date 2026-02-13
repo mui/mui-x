@@ -43,8 +43,8 @@ const pages: MuiPage[] = [
         title: 'Demos',
         children: [
           { pathname: '/x/react-data-grid/demos/real-time-data', title: 'Real-time data' },
-          { pathname: '/x/react-data-grid/demos/time-off-calendar', title: 'Time off calendar' },
-          { pathname: '/x/react-data-grid/demos/inventory', title: 'Inventory' },
+          { pathname: '/x/react-data-grid/demos/time-off-calendar' },
+          { pathname: '/x/react-data-grid/demos/inventory' },
         ],
       },
       {
@@ -180,7 +180,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/scrolling' },
           {
             pathname: '/x/react-data-grid/list-view',
-            title: 'List view',
             plan: 'pro',
           },
           {
@@ -236,9 +235,9 @@ const pages: MuiPage[] = [
         subheader: 'Components',
         newFeature: true,
         children: [
-          { pathname: '/x/react-data-grid/components/usage', title: 'Usage' },
-          { pathname: '/x/react-data-grid/components/toolbar', title: 'Toolbar' },
-          { pathname: '/x/react-data-grid/components/export', title: 'Export' },
+          { pathname: '/x/react-data-grid/components/usage' },
+          { pathname: '/x/react-data-grid/components/toolbar' },
+          { pathname: '/x/react-data-grid/components/export' },
           { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
           {
             pathname: '/x/react-data-grid/components/columns-panel',
@@ -281,7 +280,7 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
           { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
-          { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
+          { pathname: '/x/react-data-grid/overlays' },
           { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
         ],
       },
@@ -582,13 +581,11 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-charts/sparkline',
-            title: 'Sparkline',
           },
           { pathname: '/x/react-charts/gauge' },
           { pathname: '/x/react-charts/radar' },
           {
             pathname: '/x/react-charts/heatmap',
-            title: 'Heatmap',
             plan: 'pro',
           },
           {
@@ -623,7 +620,6 @@ const pages: MuiPage[] = [
               },
               {
                 pathname: '/x/react-charts/export',
-                title: 'Export',
                 plan: 'pro',
               },
               { pathname: '/x/react-charts/highlighting' },
@@ -632,7 +628,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/localization' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
-              { pathname: '/x/react-charts/toolbar', title: 'Toolbar' },
+              { pathname: '/x/react-charts/toolbar' },
               { pathname: '/x/react-charts/tooltip' },
               {
                 pathname: '/x/react-charts/zoom-and-pan',
