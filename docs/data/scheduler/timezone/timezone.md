@@ -31,7 +31,6 @@ All events are rendered in the timezone defined by the `displayTimezone` prop.
 ### Instant strings (with `Z`)
 
 A string ending with `"Z"` represents a fixed moment in time.
-Changing `displayTimezone` shifts the displayed hour, but the event still refers to the same instant.
 
 ```ts
 const event = {
@@ -76,7 +75,9 @@ The `timezone` field on an event determines:
 For instant strings (ending with `"Z"`), the `timezone` field does not affect how the start/end are resolved — they are already absolute points in time.
 However, it is still used for recurring event calculations.
 
-If no `timezone` is set, the Scheduler uses `"default"`.
+:::success
+If no `timezone` is set, the component uses the default timezone of your date library.
+:::
 
 ## Rendering behavior
 
