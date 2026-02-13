@@ -6,7 +6,7 @@ import { useId } from '@base-ui/utils/useId';
 import { EventTimelinePremium } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
+import { getPaletteVariants, EventDragPreview } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
@@ -16,8 +16,8 @@ const EventTimelinePremiumEventRoot = styled('div', {
   slot: 'Event',
 })(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-3)',
-  color: 'var(--event-color-12)',
+  backgroundColor: 'var(--event-surface-subtle)',
+  color: 'var(--event-on-surface-subtle-primary)',
   padding: theme.spacing(0.5, 1),
   position: 'relative',
   width: 'var(--width)',
@@ -33,14 +33,15 @@ const EventTimelinePremiumEventRoot = styled('div', {
   '&::before': {
     content: '""',
     position: 'absolute',
-    top: theme.spacing(0.5),
-    bottom: theme.spacing(0.5),
+    top: 0,
+    bottom: 0,
     left: 0,
     width: 3,
-    borderRadius: 2,
-    background: 'var(--event-color-9)',
+    borderRadius: '4px 0 0 4px',
+    background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
+  variants: getPaletteVariants(theme),
 }));
 
 const EventTimelinePremiumEventLinesClamp = styled('span', {
@@ -110,7 +111,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       '--number-of-lines': 1,
       '--row-index': occurrence.position.firstIndex,
     } as React.CSSProperties,
-    ...getDataPaletteProps(color),
+    'data-palette': color,
     ...other,
   };
 

@@ -4,7 +4,7 @@ import { EventTimelinePremium as TimelinePrimitive } from '@mui/x-scheduler-head
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { getDataPaletteProps } from '@mui/x-scheduler/internals';
+import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
 const EventTimelinePremiumTitleCellRow = styled(TimelinePrimitive.Row, {
@@ -31,13 +31,14 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelinePrimitive.Cell, {
 const ResourceLegendColor = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'TitleCellLegendColor',
-})({
+})(({ theme }) => ({
   width: 10,
   height: 10,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
-});
+  backgroundColor: 'var(--event-surface-accent)',
+  variants: getPaletteVariants(theme),
+}));
 
 export default function EventTimelinePremiumTitleCell(props: { resourceId: SchedulerResourceId }) {
   const { resourceId } = props;
@@ -58,7 +59,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       >
         <ResourceLegendColor
           className={classes.titleCellLegendColor}
-          {...getDataPaletteProps(eventColor)}
+          data-palette={eventColor}
         />
         {resource!.title}
       </EventTimelinePremiumTitleCellRoot>
