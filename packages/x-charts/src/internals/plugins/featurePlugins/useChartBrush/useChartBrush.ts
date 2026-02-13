@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { PanEvent } from '@mui/x-internal-gestures/core';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { getSVGPoint } from '../../../getSVGPoint';
+import { getLayerRelativePoint } from '../../../getLayerRelativePoint';
 import { type ChartPlugin } from '../../models';
 import { type UseChartBrushSignature, type Point } from './useChartBrush.types';
 import { selectorIsBrushEnabled } from './useChartBrush.selectors';
@@ -63,7 +63,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, inst
         return;
       }
 
-      const point = getSVGPoint(element, {
+      const point = getLayerRelativePoint(element, {
         clientX: event.detail.initialCentroid.x,
         clientY: event.detail.initialCentroid.y,
       });
@@ -72,7 +72,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, inst
     };
 
     const handleBrush = (event: PanEvent) => {
-      const currentPoint = getSVGPoint(element, {
+      const currentPoint = getLayerRelativePoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
       });
