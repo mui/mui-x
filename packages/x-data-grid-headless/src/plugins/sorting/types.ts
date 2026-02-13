@@ -134,10 +134,6 @@ export interface SortingInternalOptions {
   };
 }
 
-export type SortingSelectors = {
-  model: (state: SortingState) => GridSortModel;
-};
-
 export interface ComputeSortedRowIdsOptions {
   /** Use stable sort - build on current sorted order instead of starting fresh. */
   stableSort?: boolean;

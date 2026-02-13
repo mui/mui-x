@@ -54,25 +54,6 @@ export interface PaginationInternalOptions {
   };
 }
 
-export type PaginationSelectors = {
-  model: (state: PaginationState) => PaginationModel;
-  paginatedRowIds: (state: PaginationState) => GridRowId[];
-  pageCount: (state: PaginationState) => number;
-  rowCount: (state: PaginationState) => number;
-  /**
-   * The 1-based index of the first row on the current page. 0 when there are no rows.
-   * @param {PaginationState} state The state of the pagination plugin.
-   * @returns {number} The 1-based index of the first row on the current page.
-   */
-  startRow: (state: PaginationState) => number;
-  /**
-   * The 1-based index of the last row on the current page. 0 when there are no rows.
-   * @param {PaginationState} state The state of the pagination plugin.
-   * @returns {number} The 1-based index of the last row on the current page.
-   */
-  endRow: (state: PaginationState) => number;
-};
-
 export interface PaginationApi {
   pagination: {
     /**

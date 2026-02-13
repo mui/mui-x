@@ -14,7 +14,6 @@ import type {
   SortingInternalOptions,
   SortingApi,
   SortingColumnMeta,
-  SortingSelectors,
 } from './types';
 
 type SortingPluginOptions = SortingOptions & SortingInternalOptions;
@@ -22,7 +21,7 @@ type SortingPluginOptions = SortingOptions & SortingInternalOptions;
 type SortingPlugin = Plugin<
   'sorting',
   SortingState,
-  SortingSelectors,
+  typeof sortingSelectors,
   SortingApi,
   SortingPluginOptions,
   SortingColumnMeta

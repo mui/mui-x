@@ -16,7 +16,6 @@ import type {
   PaginationOptions,
   PaginationInternalOptions,
   PaginationApi,
-  PaginationSelectors,
 } from './types';
 
 type PaginationPluginOptions = PaginationOptions & PaginationInternalOptions;
@@ -24,7 +23,7 @@ type PaginationPluginOptions = PaginationOptions & PaginationInternalOptions;
 type PaginationPlugin = Plugin<
   'pagination',
   PaginationState,
-  PaginationSelectors,
+  typeof paginationSelectors,
   PaginationApi,
   PaginationPluginOptions
 >;

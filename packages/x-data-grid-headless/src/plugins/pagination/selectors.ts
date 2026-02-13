@@ -1,5 +1,5 @@
 import { createSelector } from '@base-ui/utils/store';
-import type { PaginationSelectors, PaginationState } from './types';
+import type { PaginationState } from './types';
 
 export const selectPaginationModel = createSelector(
   (state: PaginationState) => state.pagination.model,
@@ -32,11 +32,17 @@ export const selectEndRow = createSelector((state: PaginationState) => {
   return Math.min(start + paginatedRowIds.length - 1, rowCount);
 });
 
-export const paginationSelectors: PaginationSelectors = {
+export const paginationSelectors = {
   model: selectPaginationModel,
   paginatedRowIds: selectPaginatedRowIds,
   pageCount: selectPageCount,
   rowCount: selectRowCount,
+  /**
+   * The 1-based index of the first row on the current page. 0 when there are no rows.
+   */
   startRow: selectStartRow,
+  /**
+   * The 1-based index of the last row on the current page. 0 when there are no rows.
+   */
   endRow: selectEndRow,
 };
