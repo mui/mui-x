@@ -85,57 +85,48 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     const isExternalSorting = params.sorting?.external === true;
     const isAutoMode = params.sorting?.mode !== 'manual';
 
-    const getColumn = React.useCallback(
-      (field: string) => {
-        // Cast to include SortingColumnMeta since we're in the sorting plugin
-        return api.columns.get(field) as
-          | (ReturnType<typeof api.columns.get> & SortingColumnMeta)
-          | undefined;
-      },
-      [api],
-    );
+    const getColumn = (field: string) => {
+      // Cast to include SortingColumnMeta since we're in the sorting plugin
+      return api.columns.get(field) as
+        | (ReturnType<typeof api.columns.get> & SortingColumnMeta)
+        | undefined;
+    };
 
-    const computeSortedRowIds: SortingApi['sorting']['computeSortedRowIds'] = React.useCallback(
-      (rowIds, sortModel, options) => {
-        const originalRowIds = rowIds ?? api.rows.getAllRowIds();
-        const modelToUse = sortModel ?? store.state.sorting.model;
-        const useStableSort = options?.stableSort ?? false;
-        const currentSortedRowIds =
-          options?.currentSortedRowIds ?? store.state.rows.processedRowIds;
+    const computeSortedRowIds: SortingApi['sorting']['computeSortedRowIds'] = (
+      rowIds,
+      sortModel,
+      options,
+    ) => {
+      const originalRowIds = rowIds ?? api.rows.getAllRowIds();
+      const modelToUse = sortModel ?? store.state.sorting.model;
+      const useStableSort = options?.stableSort ?? false;
+      const currentSortedRowIds = options?.currentSortedRowIds ?? store.state.rows.processedRowIds;
 
-        const sortingApplier = buildSortingApplier({
-          model: modelToUse,
-          getColumn,
-          getRow: api.rows.getRow,
-          locale: params.intl?.locale,
-        });
-
-        if (!useStableSort || !currentSortedRowIds) {
-          return sortingApplier ? sortingApplier(originalRowIds) : originalRowIds;
-        }
-
-        // Stable sort: use the current sorted order as the base,
-        // filtering to only include IDs that still exist, and appending any new IDs.
-        const rowIdSet = new Set(originalRowIds);
-        const idsToSort = currentSortedRowIds.filter((id) => rowIdSet.has(id));
-
-        const currentIdSet = new Set(currentSortedRowIds);
-        originalRowIds.forEach((id) => {
-          if (!currentIdSet.has(id)) {
-            idsToSort.push(id);
-          }
-        });
-
-        return sortingApplier ? sortingApplier(idsToSort) : idsToSort;
-      },
-      [
-        store.state.sorting.model,
-        params.intl?.locale,
-        api.rows,
+      const sortingApplier = buildSortingApplier({
+        model: modelToUse,
         getColumn,
-        store.state.rows.processedRowIds,
-      ],
-    );
+        getRow: api.rows.getRow,
+        locale: params.intl?.locale,
+      });
+
+      if (!useStableSort || !currentSortedRowIds) {
+        return sortingApplier ? sortingApplier(originalRowIds) : originalRowIds;
+      }
+
+      // Stable sort: use the current sorted order as the base,
+      // filtering to only include IDs that still exist, and appending any new IDs.
+      const rowIdSet = new Set(originalRowIds);
+      const idsToSort = currentSortedRowIds.filter((id) => rowIdSet.has(id));
+
+      const currentIdSet = new Set(currentSortedRowIds);
+      originalRowIds.forEach((id) => {
+        if (!currentIdSet.has(id)) {
+          idsToSort.push(id);
+        }
+      });
+
+      return sortingApplier ? sortingApplier(idsToSort) : idsToSort;
+    };
 
     const sortingProcessor = useStableCallback((inputIds: GridRowId[]): GridRowId[] => {
       if (isExternalSorting) {
