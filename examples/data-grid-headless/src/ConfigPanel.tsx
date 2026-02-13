@@ -129,9 +129,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const [isResizing, setIsResizing] = React.useState(false);
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [sections, setSections] = React.useState<SectionState>({
-    rows: true,
-    sorting: true,
-    pagination: true,
+    rows: false,
+    sorting: false,
+    pagination: false,
   });
 
   const toggleSection = (section: keyof SectionState) => {

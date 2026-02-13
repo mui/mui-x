@@ -424,7 +424,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
 
   // Sync page size with config changes (including disabling pagination)
   const effectivePageSize = config.pagination?.enabled
-    ? (config.pagination?.pageSize ?? 10)
+    ? (config.pagination?.pageSize ?? 100)
     : Infinity;
 
   React.useEffect(() => {
