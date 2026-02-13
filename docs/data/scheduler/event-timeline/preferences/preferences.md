@@ -22,8 +22,6 @@ Use the `defaultPreferences` prop to initialize the preferences:
 ```tsx
 const defaultPreferences = {
   ampm: false,
-  showWeekends: false,
-  isSidePanelOpen: false,
 }
 
 <EventTimelinePremium defaultPreferences={defaultPreferences} />;
