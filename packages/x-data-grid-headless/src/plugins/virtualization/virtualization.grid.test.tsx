@@ -1,10 +1,11 @@
 'use client';
 import * as React from 'react';
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { type ColumnDef, useDataGrid } from '../../';
 import virtualizationPlugin, { type VirtualizationOptions } from './virtualization';
 import { sortingPlugin } from '../sorting';
 import { paginationPlugin } from '../pagination';
+import { isJSDOM } from 'test/utils/skipIf';
 
 type TestRow = { id: number; brand: string };
 
@@ -25,6 +26,37 @@ const testColumns: ColumnDef<TestRow>[] = [
   { id: 'id', field: 'id' },
   { id: 'brand', field: 'brand', size: 100 },
 ];
+
+type VirtualizationBehaviorTestRow = {
+  id: number;
+} & Record<string, string | number>;
+
+function buildVirtualizationBehaviorTestData(
+  nbRows: number,
+  nbCols: number,
+): {
+  rows: VirtualizationBehaviorTestRow[];
+  columns: ColumnDef<VirtualizationBehaviorTestRow>[];
+} {
+  const columns: ColumnDef<VirtualizationBehaviorTestRow>[] = Array.from(
+    { length: nbCols },
+    (_, index) => ({
+      id: `col-${index}`,
+      field: `col-${index}`,
+      size: 100,
+    }),
+  );
+
+  const rows: VirtualizationBehaviorTestRow[] = Array.from({ length: nbRows }, (_, rowIndex) => {
+    const row: VirtualizationBehaviorTestRow = { id: rowIndex };
+    columns.forEach((column) => {
+      row[column.field] = `${column.field}-${rowIndex}`;
+    });
+    return row;
+  });
+
+  return { rows, columns };
+}
 
 type GridInstance<TRow extends object> = ReturnType<
   typeof useDataGrid<
@@ -110,6 +142,8 @@ function TestDataGrid<TRow extends object>(props: TestDataGridProps<TRow>) {
           overflow: 'auto',
           width: '100%',
           height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <div
@@ -362,6 +396,63 @@ describe('Virtualization', () => {
 
       const rows = document.querySelectorAll('[role="row"][data-rowindex]');
       expect(rows).to.have.length(testRows.length);
+    });
+
+    it.skipIf(isJSDOM)('should render last row when scrolling to the bottom', async () => {
+      const n = 4;
+      const rowHeight = 50;
+      const rowBufferPx = n * rowHeight;
+      const nbRows = 996;
+      const height = 600;
+      const { rows, columns } = buildVirtualizationBehaviorTestData(nbRows, 2);
+      const apiRef = React.createRef<GridInstance<VirtualizationBehaviorTestRow> | null>();
+
+      render(
+        <div style={{ width: 300, height }}>
+          <TestDataGrid
+            rows={rows}
+            columns={columns}
+            apiRef={apiRef}
+            rowHeight={rowHeight}
+            rowBufferPx={rowBufferPx}
+            height={height}
+          />
+        </div>,
+      );
+
+      const virtualScroller = document.querySelector('[data-testid="virtual-scroller"]')!;
+      const renderingZone = document.querySelector('[data-testid="virtual-scroller-render-zone"]')!;
+
+      await waitFor(() => {
+        expect(virtualScroller.scrollHeight).to.be.greaterThan(0);
+      });
+
+      await act(async () => {
+        virtualScroller.scrollTop = virtualScroller.scrollHeight;
+        virtualScroller.dispatchEvent(new Event('scroll'));
+      });
+
+      await waitFor(() => {
+        const lastCell = document.querySelector('[role="row"]:last-child [role="gridcell"]');
+        expect(lastCell).to.have.text('col-0-995');
+      });
+
+      await waitFor(() => {
+        expect(renderingZone.children.length).to.equal(
+          Math.floor(height / rowHeight) + n,
+          'children should have the correct length',
+        );
+      });
+
+      const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
+      expect(apiRef.current!.api.virtualization.getOffsetTop()).to.equal(
+        distanceToFirstRow,
+        'gridOffsetTop should be correct',
+      );
+      expect(virtualScroller.scrollHeight).to.equal(
+        nbRows * rowHeight,
+        'scrollHeight should be correct',
+      );
     });
   });
 
