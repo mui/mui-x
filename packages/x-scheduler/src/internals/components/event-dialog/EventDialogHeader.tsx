@@ -2,8 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
-import { useEventDialogClasses } from './EventDialogClassesContext';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
 const EventDialogHeaderRoot = styled('header', {
   name: 'MuiEventDialog',
@@ -25,15 +24,14 @@ interface EventDialogHeaderProps {
 
 export default function EventDialogHeader(props: EventDialogHeaderProps) {
   const { children, onClose, dragHandlerRef } = props;
-  const classes = useEventDialogClasses();
-  const translations = useTranslations();
+  const { classes, localeText } = useEventDialogStyledContext();
 
   return (
     <EventDialogHeaderRoot ref={dragHandlerRef} className={classes.eventDialogHeader}>
       {children}
       <IconButton
         className={classes.eventDialogCloseButton}
-        aria-label={translations.closeButtonAriaLabel}
+        aria-label={localeText.closeButtonAriaLabel}
         onClick={onClose}
       >
         <CloseRounded />

@@ -6,7 +6,7 @@ import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-schedule
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
 const MonthsHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -49,7 +49,7 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventTimelinePremiumStoreContext();
-  const classes = useEventTimelinePremiumClasses();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);

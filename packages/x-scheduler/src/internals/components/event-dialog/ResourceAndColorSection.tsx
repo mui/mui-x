@@ -18,9 +18,8 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { useStore } from '@base-ui/utils/store';
-import { useTranslations } from '../../utils/TranslationsContext';
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
-import { useEventDialogClasses } from './EventDialogClassesContext';
+import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
 const NO_RESOURCE_VALUE = '';
 
@@ -93,7 +92,7 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
   const { resource } = props;
 
   const store = useSchedulerStoreContext();
-  const classes = useEventDialogClasses();
+  const { classes } = useEventDialogStyledContext();
   const resourceColor = useStore(
     store,
     schedulerResourceSelectors.defaultEventColor,
@@ -113,9 +112,8 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   const { readOnly, resourceId, onResourceChange, onColorChange, color } = props;
 
   // Context hooks
-  const translations = useTranslations();
+  const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
-  const classes = useEventDialogClasses();
 
   // Selector hooks
   const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
@@ -123,14 +121,14 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     return [
-      { label: translations.labelNoResource, value: null, eventColor: eventDefaultColor },
+      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor },
       ...resources.map((resource) => ({
         label: resource.title,
         value: resource.id,
         eventColor: resource.eventColor ?? eventDefaultColor,
       })),
     ];
-  }, [resources, translations.labelNoResource, eventDefaultColor]);
+  }, [resources, localeText.labelNoResource, eventDefaultColor]);
 
   const resource = React.useMemo(
     () =>
@@ -148,10 +146,10 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   return (
     <React.Fragment>
       <FormControl size="small" fullWidth>
-        <InputLabel id="resource-select-label">{translations.resourceLabel}</InputLabel>
+        <InputLabel id="resource-select-label">{localeText.resourceLabel}</InputLabel>
         <Select
           labelId="resource-select-label"
-          label={translations.resourceLabel}
+          label={localeText.resourceLabel}
           value={resourceId ?? NO_RESOURCE_VALUE}
           displayEmpty
           onChange={handleChange}
@@ -161,7 +159,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
               <ResourceSelectAdornment resource={resource} />
             </InputAdornment>
           }
-          renderValue={() => (resource ? resource.label : translations.labelInvalidResource)}
+          renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
         >
           {resourcesOptions.map((resourceOption) => (
             <MenuItem
@@ -181,7 +179,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           ))}
         </Select>
       </FormControl>
-      <ColorSelectionContainer role="radiogroup" aria-label={translations.colorPickerLabel}>
+      <ColorSelectionContainer role="radiogroup" aria-label={localeText.colorPickerLabel}>
         {EVENT_COLORS.map((colorOption) => (
           <ResourceMenuColorRadioButton
             key={colorOption}
