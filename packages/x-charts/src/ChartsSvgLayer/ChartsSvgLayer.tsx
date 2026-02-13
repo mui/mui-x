@@ -32,12 +32,6 @@ const ChartsSvgLayerStyles = styled('svg', {
   height: '100%',
   position: 'absolute',
   inset: 0,
-  overflow: 'hidden',
-  touchAction: 'pan-y',
-  userSelect: 'none',
-  '&:focus': {
-    outline: 'none', // By default don't show focus on the SVG container
-  },
 });
 
 /**
