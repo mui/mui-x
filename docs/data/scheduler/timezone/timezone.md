@@ -19,7 +19,7 @@ TODO: Issue #20394 - Create documentation and demos
 
 ## Overview
 
-The Scheduler accepts event dates (`start` and `end`) as **strings** and supports two semantics depending on the format:
+The Event Calendar and Event Timeline accepts event dates (`start` and `end`) as **strings** and supports two semantics depending on the format:
 
 - **Instant strings** end with `"Z"` and represent a fixed moment in UTC, for example `"2024-01-10T13:00:00Z"`.
 - **Wall-time strings** have no `"Z"` suffix and represent a local date/time that is interpreted in the event's `timezone`, for example `"2024-01-10T09:00:00"`.
