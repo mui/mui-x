@@ -8,11 +8,7 @@ import {
 } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsGrid, type ChartsGridProps } from '@mui/x-charts/ChartsGrid';
-import {
-  ChartsTooltip,
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
-} from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import {
   ChartsOverlay,
@@ -42,21 +38,24 @@ import { CandlestickPlot, type CandlestickPlotProps } from './CandlestickPlot';
 import { useCandlestickChartProps } from './useCandlestickChartProps';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
 import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
+import { type CandlestickTooltipProps } from './CandlestickTooltip';
 
 export interface CandlestickChartSlots
-  extends
-    ChartsAxisSlots,
-    ChartsOverlaySlots,
-    ChartsTooltipSlots,
-    ChartsToolbarProSlots,
-    Partial<ChartsSlots> {}
+  extends ChartsAxisSlots, ChartsOverlaySlots, ChartsToolbarProSlots, Partial<ChartsSlots> {
+  /**
+   * Custom component for the tooltip.
+   * @default ChartsTooltipRoot
+   */
+  tooltip?: React.ElementType<CandlestickTooltipProps>;
+}
 export interface CandlestickChartSlotProps
   extends
     ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
-    ChartsTooltipSlotProps,
     ChartsToolbarProSlotProps,
-    Partial<ChartsSlotProps> {}
+    Partial<ChartsSlotProps> {
+  tooltip?: Partial<CandlestickTooltipProps>;
+}
 
 export type OHLCSeries = MakeOptional<OHLCSeriesType, 'type'>;
 
