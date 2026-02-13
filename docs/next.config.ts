@@ -185,13 +185,6 @@ export default withDeploymentConfig({
         if (page.pathname.includes('/experiments/') && process.env.DEPLOY_ENV === 'production') {
           return;
         }
-        // The scheduler pages should not leak to production (the package is not published yet).
-        if (
-          page.pathname.includes('/react-scheduler') &&
-          process.env.DEPLOY_ENV === 'production'
-        ) {
-          return;
-        }
 
         if (!page.children) {
           // @ts-ignore
