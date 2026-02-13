@@ -612,22 +612,29 @@ describe('Virtualization', () => {
       );
     });
 
-    it('should accept initial scroll state', () => {
-      const apiRef = React.createRef<GridInstance<TestRow> | null>();
+    it.skipIf(isJSDOM)('should accept initial scroll state', () => {
+      const apiRef = React.createRef<GridInstance<VirtualizationBehaviorTestRow> | null>();
+
+      const { rows, columns } = buildVirtualizationBehaviorTestData(100, 10);
 
       render(
         <div style={{ width: 300, height: 300 }}>
           <TestDataGrid
-            rows={testRows}
-            columns={testColumns}
+            rows={rows}
+            columns={columns}
             apiRef={apiRef}
             initialState={{ scroll: { top: 100, left: 50 } }}
           />
         </div>,
       );
 
-      // Verify the API is available
-      expect(apiRef.current!.api.virtualization.getScrollPosition).to.be.a('function');
+      expect(apiRef.current!.api.virtualization.getScrollPosition()).to.deep.equal({
+        top: 100,
+        left: 50,
+      });
+
+      expect($('[data-testid="virtual-scroller"]')!.scrollTop).to.equal(100);
+      expect($('[data-testid="virtual-scroller"]')!.scrollLeft).to.equal(50);
     });
   });
 
