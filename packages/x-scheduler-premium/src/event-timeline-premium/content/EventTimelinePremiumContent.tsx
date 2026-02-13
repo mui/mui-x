@@ -6,7 +6,11 @@ import { useStore } from '@base-ui/utils/store';
 import { EventTimelinePremium as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { EventDialogProvider, EventDialogTrigger } from '@mui/x-scheduler/internals';
+import {
+  EventDialogProvider,
+  EventDialogTrigger,
+  useTranslations,
+} from '@mui/x-scheduler/internals';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
@@ -130,6 +134,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const classes = useEventTimelinePremiumClasses();
+  const translations = useTranslations();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -172,7 +177,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               <EventTimelinePremiumTitleSubGridHeaderCell
                 className={classes.titleSubGridHeaderCell}
               >
-                Resource title
+                {translations.timelineResourceTitleHeader}
               </EventTimelinePremiumTitleSubGridHeaderCell>
             </EventTimelinePremiumTitleSubGridHeaderRow>
             <EventTimelinePremiumTitleSubGrid className={classes.titleSubGrid}>

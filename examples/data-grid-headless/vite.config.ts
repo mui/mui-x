@@ -19,6 +19,7 @@ export default defineConfig({
         __dirname,
         '../../packages/x-data-grid-headless-premium/src',
       ),
+      '@mui/x-virtualizer': path.resolve(__dirname, '../../packages/x-virtualizer/src'),
     },
   },
   server: {
