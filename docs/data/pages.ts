@@ -11,7 +11,8 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
       {
         pathname: '/x/react-scheduler-group',
         title: 'Scheduler',
-        newFeature: true,
+        // newFeature: true,
+        unstable: true,
         children: [
           { pathname: '/x/react-scheduler', title: 'Overview' },
           { pathname: '/x/react-scheduler/quickstart' },
