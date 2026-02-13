@@ -1,4 +1,4 @@
-import type { GridRowId } from '../internal/rows/rowUtils';
+import type { GridRowId } from '../internal/rows/types';
 
 export type GridSortDirection = 'asc' | 'desc' | null;
 

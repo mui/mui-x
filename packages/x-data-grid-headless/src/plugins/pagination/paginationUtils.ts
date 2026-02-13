@@ -1,5 +1,5 @@
 import { clamp } from '@mui/x-internals/math';
-import type { GridRowId } from '../internal/rows/rowUtils';
+import type { GridRowId } from '../internal/rows/types';
 import type { PaginationModel } from './types';
 
 export const DEFAULT_PAGINATION_MODEL: PaginationModel = { page: 0, pageSize: 10 };

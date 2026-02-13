@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { type Plugin, createPlugin } from '../core/plugin';
-import type { GridRowId } from '../internal/rows/rowUtils';
+import type { GridRowId } from '../internal/rows/types';
 import { sortingSelectors } from './selectors';
 import { getNextGridSortDirection, upsertSortModel, buildSortingApplier } from './sortingUtils';
 import type {
