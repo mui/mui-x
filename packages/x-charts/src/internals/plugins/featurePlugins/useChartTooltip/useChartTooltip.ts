@@ -34,7 +34,15 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
           ) as SeriesItemIdentifierWithType<SeriesType>)
         : null;
 
-      store.set('tooltip', { ...store.state.tooltip, item: newItem });
+      if (
+        store.state.tooltip.item === null || newItem === null
+          ? newItem !== store.state.tooltip.item
+          : Object.entries(store.state.tooltip.item).some(
+              ([key, value]) => value !== newItem[key as keyof typeof newItem],
+            )
+      ) {
+        store.set('tooltip', { ...store.state.tooltip, item: newItem });
+      }
     }
   }, [store, instance, params.tooltipItem]);
 
