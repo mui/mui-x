@@ -35,6 +35,7 @@ import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
+  dateToEventString,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
@@ -479,8 +480,14 @@ export class SchedulerStore<
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
+    const { adapter } = this.state;
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
-    const duplicatedEvent = createEventFromRecurringEvent(original, { start, end });
+    const originalModel = original.modelInBuiltInFormat;
+    const dataTimezone = originalModel.timezone ?? 'default';
+    const duplicatedEvent = createEventFromRecurringEvent(original, {
+      start: dateToEventString(adapter, start, originalModel.start, dataTimezone),
+      end: dateToEventString(adapter, end, originalModel.end, dataTimezone),
+    });
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 
@@ -528,9 +535,27 @@ export class SchedulerStore<
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
+    const dataTimezone = original.modelInBuiltInFormat.timezone ?? 'default';
+    const stringifiedChanges: Record<string, any> = { ...cleanChanges };
+    if (cleanChanges.start != null) {
+      stringifiedChanges.start = dateToEventString(
+        adapter,
+        cleanChanges.start,
+        original.modelInBuiltInFormat.start,
+        dataTimezone,
+      );
+    }
+    if (stringifiedChanges.end != null) {
+      stringifiedChanges.end = dateToEventString(
+        adapter,
+        stringifiedChanges.end,
+        original.modelInBuiltInFormat.end,
+        dataTimezone,
+      );
+    }
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
-      ...cleanChanges,
+      ...stringifiedChanges,
       extractedFromId: id,
     };
     return this.updateEvents({ created: [createdEvent] }).created[0];

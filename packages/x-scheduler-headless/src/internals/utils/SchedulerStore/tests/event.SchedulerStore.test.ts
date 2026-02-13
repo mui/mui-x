@@ -373,7 +373,6 @@ storeClasses.forEach((storeClass) => {
         const end = adapter.date('2025-07-01T10:00:00Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
-        // Newly created events from TemporalSupportedObject dates default to wall-time format (no Z)
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           event,
@@ -381,8 +380,8 @@ storeClasses.forEach((storeClass) => {
             ...event,
             id: duplicatedId,
             extractedFromId: event.id,
-            start: '2025-07-01T09:00:00',
-            end: '2025-07-01T10:00:00',
+            start: start.toISOString(),
+            end: end.toISOString(),
           },
         ]);
       });
@@ -401,7 +400,6 @@ storeClasses.forEach((storeClass) => {
         delete originalEventWithoutRecurrence.rrule;
         delete originalEventWithoutRecurrence.exDates;
 
-        // Newly created events from TemporalSupportedObject dates default to wall-time format (no Z)
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           event,
@@ -409,8 +407,8 @@ storeClasses.forEach((storeClass) => {
             ...originalEventWithoutRecurrence,
             id: duplicatedId,
             extractedFromId: event.id,
-            start: '2025-07-01T09:00:00',
-            end: '2025-07-01T10:00:00',
+            start: start.toISOString(),
+            end: end.toISOString(),
           },
         ]);
       });
@@ -462,15 +460,14 @@ storeClasses.forEach((storeClass) => {
           start: adapter.date('2025-07-01T09:00:00Z', 'default'),
         });
 
-        // Newly created events from TemporalSupportedObject dates default to wall-time format (no Z)
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           event,
           {
             ...event,
             id: createdEventId,
-            start: '2025-07-01T09:00:00',
-            end: '2025-07-01T10:00:00',
+            start: '2025-07-01T09:00:00.000Z',
+            end: '2025-07-01T10:00:00.000Z',
             extractedFromId: event.id,
           },
         ]);

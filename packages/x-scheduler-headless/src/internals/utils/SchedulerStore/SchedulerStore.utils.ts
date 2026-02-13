@@ -141,7 +141,7 @@ function getWallTimeIsoFormat(adapter: Adapter): string {
  * strings, while wall-time strings (no `Z`) are formatted in the event's
  * data timezone without the `Z` suffix.
  */
-function dateToEventString(
+export function dateToEventString(
   adapter: Adapter,
   date: TemporalSupportedObject,
   originalString: string,
