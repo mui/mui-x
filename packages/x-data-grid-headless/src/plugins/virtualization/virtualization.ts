@@ -53,6 +53,7 @@ interface VirtualizationHooks {
   useOffsetLeft: () => number;
   useDimensions: () => Dimensions.State['dimensions'] & {
     rowsMeta: Dimensions.State['rowsMeta'];
+    scrollbarSizeRaw: number;
   };
   useColumnsTotalWidth: () => ReturnType<typeof Dimensions.selectors.columnsTotalWidth>;
   useRowsToRender: <TRow = GridRowModel>() => RowToRender<TRow>[];
@@ -93,6 +94,7 @@ export type VirtualizationPlugin = Plugin<
 
 const DEFAULT_ROW_HEIGHT = 52;
 const DEFAULT_COLUMN_WIDTH = 100;
+const MIN_OVERLAY_SCROLLBAR_SIZE = 14;
 
 function getInitialVirtualizationState(params: VirtualizationOptions): VirtualizationState {
   const { disableVirtualization, disableColumnVirtualization, autoHeight } = params;
@@ -282,6 +284,10 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
       return React.useMemo(
         () => ({
           ...dimensionsState,
+          // Overlay scrollbars can measure as 0px. Expose a visual size by default while
+          // preserving the measured value for layout-sensitive consumers.
+          scrollbarSizeRaw: dimensionsState.scrollbarSize,
+          scrollbarSize: Math.max(dimensionsState.scrollbarSize, MIN_OVERLAY_SCROLLBAR_SIZE),
           rowsMeta: rowsMetaValue,
         }),
         [dimensionsState, rowsMetaValue],
