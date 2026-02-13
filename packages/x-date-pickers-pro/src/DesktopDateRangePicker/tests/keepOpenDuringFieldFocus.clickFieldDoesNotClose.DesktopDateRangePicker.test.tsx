@@ -59,7 +59,7 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
     });
 
     // Pick a start date in the calendar (January 15th for the default test date)
-    const dayCell = screen.getByRole('gridcell', { name: '15' });
+    const dayCell = screen.getAllByRole('gridcell', { name: '15' })[0];
     await user.click(dayCell);
 
     const textbox = getFieldSectionsContainer();
