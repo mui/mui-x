@@ -88,9 +88,9 @@ It does not modify the event data or change when an event occurs.
 
 ```tsx
 <EventCalendar
-// ...other props
-displayTimezone = "Europe/Paris"
->
+  // ...other props
+  displayTimezone="Europe/Paris"
+/>
 ```
 
 {{"demo": "TimezoneDatasetInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
