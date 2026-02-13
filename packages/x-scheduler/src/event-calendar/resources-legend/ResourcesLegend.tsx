@@ -11,9 +11,8 @@ import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 import clsx from 'clsx';
 import { ResourcesLegendProps } from './ResourcesLegend.types';
-import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { getPaletteVariants } from '../../internals/utils/tokens';
-import { useEventCalendarClasses } from '../EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 
 const ResourcesLegendRoot = styled('section', {
   name: 'MuiEventCalendar',
@@ -66,9 +65,8 @@ interface ResourcesLegendItemProps {
 
 function ResourcesLegendItem(props: ResourcesLegendItemProps) {
   const { resource, isVisible, onToggle } = props;
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resource.id);
 
   return (
@@ -84,8 +82,8 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
           slotProps={{
             input: {
               'aria-label': isVisible
-                ? translations.hideEventsLabel(resource.title)
-                : translations.showEventsLabel(resource.title),
+                ? localeText.hideEventsLabel(resource.title)
+                : localeText.showEventsLabel(resource.title),
             },
           }}
         />
@@ -103,9 +101,8 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   props: ResourcesLegendProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
 
@@ -130,12 +127,12 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   return (
     <ResourcesLegendRoot
       ref={forwardedRef}
-      aria-label={translations.resourcesLegendSectionLabel}
+      aria-label={localeText.resourcesLegendSectionLabel}
       {...props}
       className={clsx(props.className, classes.resourcesLegend)}
     >
       <ResourcesLegendLabel className={classes.resourcesLegendLabel}>
-        {translations.resourcesLabel}
+        {localeText.resourcesLabel}
       </ResourcesLegendLabel>
       {resources.map((resource) => (
         <ResourcesLegendItem

@@ -21,7 +21,7 @@
     "./month-view": "./src/month-view/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
     "./theme-augmentation": "./src/theme-augmentation/index.ts",
-    "./translations": "./src/translations/index.ts",
+    "./locales": "./src/locales/index.ts",
     "./internals": "./src/internals/index.ts",
     "./week-view": "./src/week-view/index.ts",
     "./use-event-calendar-api-ref": "./src/use-event-calendar-api-ref/index.ts"

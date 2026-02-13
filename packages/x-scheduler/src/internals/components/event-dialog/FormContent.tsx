@@ -25,12 +25,11 @@ import {
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
 import EventDialogHeader from './EventDialogHeader';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
-import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const FormActions = styled('div', {
   name: 'MuiEventDialog',
@@ -83,9 +82,8 @@ export function FormContent(props: FormContentProps) {
 
   // Context hooks
   const adapter = useAdapter();
-  const translations = useTranslations();
+  const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
-  const classes = useEventDialogClasses();
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
@@ -146,7 +144,7 @@ export function FormContent(props: FormContentProps) {
     setErrors({});
     const err = validateRange(adapter, start, end, controlled.allDay);
     if (err) {
-      setErrors({ [err.field]: translations.startDateAfterEndDateError });
+      setErrors({ [err.field]: localeText.startDateAfterEndDateError });
       return;
     }
 
@@ -230,7 +228,7 @@ export function FormContent(props: FormContentProps) {
             slotProps={{
               input: {
                 readOnly: isPropertyReadOnly('title'),
-                'aria-label': translations.eventTitleAriaLabel,
+                'aria-label': localeText.eventTitleAriaLabel,
               },
             }}
             error={!!errors.title}
@@ -241,8 +239,8 @@ export function FormContent(props: FormContentProps) {
         </EventDialogHeader>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <EventDialogTabs value={tabValue} onChange={handleTabChange}>
-            <Tab label={translations.generalTabLabel} value="general" />
-            <Tab label={translations.recurrenceTabLabel} value="recurrence" />
+            <Tab label={localeText.generalTabLabel} value="general" />
+            <Tab label={localeText.recurrenceTabLabel} value="recurrence" />
           </EventDialogTabs>
         </Box>
         <GeneralTab
@@ -263,10 +261,10 @@ export function FormContent(props: FormContentProps) {
         <DialogActions>
           <FormActions className={classes.eventDialogFormActions}>
             <Button color="error" type="button" onClick={handleDelete}>
-              {translations.deleteEvent}
+              {localeText.deleteEvent}
             </Button>
             <Button variant="contained" type="submit">
-              {translations.saveChanges}
+              {localeText.saveChanges}
             </Button>
           </FormActions>
         </DialogActions>
