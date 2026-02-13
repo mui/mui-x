@@ -1,5 +1,6 @@
 import * as React from 'react';
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
+import { teal } from '@mui/material/colors';
 import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -12,7 +13,37 @@ import {
   initialEvents,
   resources,
 } from '../../datasets/company-roadmap';
-import classes from './ExternalDragAndDrop.module.css';
+
+const Container = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 16,
+  width: '100%',
+});
+
+const ExternalEventsContainer = styled('div')({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gap: 12,
+  minHeight: 34,
+});
+
+const externalEventStyles = {
+  padding: '4px 8px',
+  borderRadius: 4,
+  border: `1px solid ${teal[700]}`,
+  backgroundColor: teal[100],
+  '&[data-placeholder]': {
+    opacity: 0.5,
+  },
+  '&[data-dragging]': {
+    opacity: 0.5,
+  },
+};
+
+const StyledStandaloneEvent = styled(StandaloneEvent)(externalEventStyles);
+
+const ExternalEventPlaceholder = styled('div')(externalEventStyles);
 
 const isValidDropTarget = buildIsValidDropTarget(['EventTimelinePremiumEvent']);
 
@@ -96,27 +127,23 @@ export default function ExternalDragAndDrop() {
   });
 
   return (
-    <div className={clsx(classes.Container, 'mui-x-scheduler')}>
-      <div
-        className={classes.ExternalEventsContainer}
-        ref={externalEventsContainerRef}
-      >
+    <Container className="mui-x-scheduler">
+      <ExternalEventsContainer ref={externalEventsContainerRef}>
         {externalEvents.map((event) => (
-          <StandaloneEvent
+          <StyledStandaloneEvent
             key={event.id}
             data={event}
             onEventDrop={() => handleEventDropInsideEventCalendar(event)}
-            className={classes.ExternalEvent}
           >
             {event.title} ({event.duration} mins)
-          </StandaloneEvent>
+          </StyledStandaloneEvent>
         ))}
         {placeholder != null && (
-          <div className={classes.ExternalEvent} data-placeholder>
+          <ExternalEventPlaceholder data-placeholder>
             {placeholder.title} ({placeholder.duration} mins)
-          </div>
+          </ExternalEventPlaceholder>
         )}
-      </div>
+      </ExternalEventsContainer>
       <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
         <EventTimelinePremium
           events={events}
@@ -128,6 +155,6 @@ export default function ExternalDragAndDrop() {
           canDropEventsToTheOutside
         />
       </div>
-    </div>
+    </Container>
   );
 }
