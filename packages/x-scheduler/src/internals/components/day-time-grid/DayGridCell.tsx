@@ -11,7 +11,7 @@ import { DayGridEvent } from '../event';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 import { EventDialogTrigger } from '../event-dialog';
 import { useEventDialogContext } from '../event-dialog/EventDialog';
-import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const EVENT_HEIGHT = 22;
 
@@ -55,7 +55,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
-  const classes = useEventCalendarClasses();
+  const { classes } = useEventCalendarStyledContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
