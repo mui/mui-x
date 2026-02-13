@@ -611,6 +611,74 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
+  it.skipIf(isJSDOM)(
+    'should automatically calculate row count when hasNextPage becomes false',
+    async () => {
+      function TestComponent(props: { hasNextPage: boolean }) {
+        const [rows, setRows] = React.useState<GridRowsProp>([]);
+        const [paginationModel, setPaginationModel] = React.useState({ page: 0, pageSize: 1 });
+        apiRef = useGridApiRef();
+
+        React.useEffect(() => {
+          let active = true;
+          (async () => {
+            const newRows = [{ id: paginationModel.page }];
+            if (!active) {
+              return;
+            }
+            setRows(newRows);
+          })();
+          return () => {
+            active = false;
+          };
+        }, [paginationModel.page]);
+
+        return (
+          <div style={{ height: 300, width: 300 }}>
+            <DataGrid
+              apiRef={apiRef}
+              columns={[{ field: 'id' }]}
+              rows={rows}
+              paginationMeta={{ hasNextPage: props.hasNextPage }}
+              paginationModel={paginationModel}
+              pageSizeOptions={[1]}
+              paginationMode="server"
+              onPaginationModelChange={setPaginationModel}
+            />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<TestComponent hasNextPage />);
+
+      // start at page 0
+      expect(getColumnValues(0)).to.deep.equal(['0']);
+      expect(apiRef.current?.state.pagination.rowCount).to.equal(undefined);
+      expect(screen.getByText('1–1 of more than 1')).not.to.equal(null);
+
+      // go to page 1
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(apiRef.current?.state.pagination.rowCount).to.equal(undefined);
+      expect(screen.getByText('2–2 of more than 2')).not.to.equal(null);
+
+      // go to page 2
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.deep.equal(['2']);
+      expect(apiRef.current?.state.pagination.rowCount).to.equal(undefined);
+      expect(screen.getByText('3–3 of more than 3')).not.to.equal(null);
+
+      // reached last page
+      setProps({ hasNextPage: false });
+
+      // Expected rowCount: pageSize * page + visibleRowCount = 1 * 2 + 1 = 3
+      await waitFor(() => {
+        expect(apiRef.current?.state.pagination.rowCount).to.equal(3);
+      });
+      expect(screen.getByText('3–3 of 3')).not.to.equal(null);
+    },
+  );
+
   it('should reset page to 0 and scroll to top if sort or filter is applied', async () => {
     render(
       <BaselineTestCase

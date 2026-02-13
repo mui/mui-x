@@ -1,5 +1,3 @@
-import { type Store } from '@base-ui/utils/store';
-
 // ================================
 // Types
 // ================================
@@ -54,6 +52,7 @@ export interface RowsState {
   totalTopLevelRowCount: number;
   loading: boolean;
   groupingName: string;
+  processedRowIds: GridRowId[];
 }
 
 export interface RowsOptions<TRow> {
@@ -67,16 +66,12 @@ export interface RowsOptions<TRow> {
 // API
 // ================================
 
-export interface RowsApi<TRow = any> {
-  getRow: (id: GridRowId) => TRow | null;
-  getRowId: (row: TRow) => GridRowId;
-  getRowModels: () => Map<GridRowId, TRow>;
-  getRowsCount: () => number;
-  getAllRowIds: () => GridRowId[];
-  setRows: (rows: TRow[]) => void;
-  updateRows: (updates: Partial<TRow>[]) => void;
-  getRowNode: (id: GridRowId) => GridTreeNode | null;
-  setLoading: (loading: boolean) => void;
+export interface RowIdsPipelineProcessor {
+  /**
+   * Transform the row IDs. Receives the output of the previous processor
+   * (or raw dataRowIds for the first processor).
+   */
+  (inputIds: GridRowId[]): GridRowId[];
 }
 
 // ================================
@@ -189,144 +184,6 @@ export function createRowsState<TRow extends GridRowModel>(
     totalTopLevelRowCount: totalRowCount,
     loading,
     groupingName: 'flat',
-  };
-}
-
-// ================================
-// API Creation
-// ================================
-
-interface CoreState {
-  rows: RowsState;
-}
-
-/**
- * Create the rows API methods.
- */
-export function createRowsApi<TRow extends GridRowModel>(
-  store: Store<CoreState>,
-  options: RowsOptions<TRow>,
-): RowsApi {
-  const getRow = (id: GridRowId): GridRowModel | null => {
-    const lookup = store.state.rows.dataRowIdToModelLookup;
-    return lookup[id] ?? null;
-  };
-
-  const getRowId = <T extends GridRowModel>(row: T): GridRowId => {
-    return getRowIdFromRowModel(row, options.getRowId as ((row: T) => GridRowId) | undefined);
-  };
-
-  const getRowModels = (): Map<GridRowId, GridRowModel> => {
-    const { dataRowIds, dataRowIdToModelLookup } = store.state.rows;
-    return new Map(dataRowIds.map((id: GridRowId) => [id, dataRowIdToModelLookup[id] ?? {}]));
-  };
-
-  const getRowsCount = (): number => {
-    return store.state.rows.totalRowCount;
-  };
-
-  const getAllRowIds = (): GridRowId[] => {
-    return store.state.rows.dataRowIds;
-  };
-
-  const setRows = (rows: GridRowModel[]): void => {
-    const newRowsState = createRowsState(
-      rows,
-      options.getRowId as ((row: GridRowModel) => GridRowId) | undefined,
-      store.state.rows.loading,
-      options.rowCount,
-    );
-    store.setState({ ...store.state, rows: newRowsState });
-  };
-
-  const updateRows = (updates: GridRowModel[]): void => {
-    const { dataRowIds, dataRowIdToModelLookup, tree, treeDepths } = store.state.rows;
-
-    const newDataRowIds = [...dataRowIds];
-    const newLookup = { ...dataRowIdToModelLookup };
-    const newTree = { ...tree };
-    const rootGroup = { ...(newTree[GRID_ROOT_GROUP_ID] as GridGroupNode) };
-    rootGroup.children = [...rootGroup.children];
-
-    for (const update of updates) {
-      const id = getRowIdFromRowModel(
-        update,
-        options.getRowId as ((row: GridRowModel) => GridRowId) | undefined,
-        'A row was provided without id when calling updateRows():',
-      );
-
-      // Check if this is a delete action
-      // eslint-disable-next-line no-underscore-dangle
-      if ('_action' in update && update._action === 'delete') {
-        // Remove the row
-        delete newLookup[id];
-        delete newTree[id];
-        const dataIndex = newDataRowIds.indexOf(id);
-        if (dataIndex > -1) {
-          newDataRowIds.splice(dataIndex, 1);
-        }
-        const childIndex = rootGroup.children.indexOf(id);
-        if (childIndex > -1) {
-          rootGroup.children.splice(childIndex, 1);
-        }
-      } else if (newLookup[id]) {
-        // Update existing row
-        newLookup[id] = { ...newLookup[id], ...update };
-      } else {
-        // Insert new row
-        newDataRowIds.push(id);
-        newLookup[id] = update;
-        rootGroup.children.push(id);
-
-        const leafNode: GridLeafNode = {
-          id,
-          type: 'leaf',
-          depth: 0,
-          parent: GRID_ROOT_GROUP_ID,
-          groupingKey: null,
-        };
-        newTree[id] = leafNode;
-      }
-    }
-
-    newTree[GRID_ROOT_GROUP_ID] = rootGroup;
-
-    const totalRowCount = Math.max(options.rowCount ?? 0, newDataRowIds.length);
-
-    store.setState({
-      ...store.state,
-      rows: {
-        ...store.state.rows,
-        dataRowIds: newDataRowIds,
-        dataRowIdToModelLookup: newLookup,
-        tree: newTree,
-        treeDepths: { ...treeDepths, 0: newDataRowIds.length },
-        totalRowCount,
-        totalTopLevelRowCount: totalRowCount,
-      },
-    });
-  };
-
-  const getRowNode = (id: GridRowId): GridTreeNode | null => {
-    return store.state.rows.tree[id] ?? null;
-  };
-
-  const setLoading = (loading: boolean): void => {
-    store.setState({
-      ...store.state,
-      rows: { ...store.state.rows, loading },
-    });
-  };
-
-  return {
-    getRow,
-    getRowId,
-    getRowModels,
-    getRowsCount,
-    getAllRowIds,
-    setRows,
-    updateRows,
-    getRowNode,
-    setLoading,
+    processedRowIds: dataRowIds,
   };
 }

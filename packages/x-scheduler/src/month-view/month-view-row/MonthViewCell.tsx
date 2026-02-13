@@ -17,14 +17,13 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
-import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 import { EventDialogTrigger } from '../../internals/components/event-dialog';
 import { useEventDialogContext } from '../../internals/components/event-dialog/EventDialog';
-import { useEventCalendarClasses } from '../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
@@ -168,9 +167,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();
-  const classes = useEventCalendarClasses();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -180,18 +178,15 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
     day.value,
   );
+  const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  // Selector hooks
-  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
-
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
-  const isToday = adapter.isSameDay(day.value, now);
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
@@ -275,10 +270,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           <MoreEventsPopoverTrigger occurrences={day.withPosition} day={day}>
             <MonthViewMoreEvents
               size="small"
-              aria-label={translations.hiddenEvents(hiddenCount)}
+              aria-label={localeText.hiddenEvents(hiddenCount)}
               className={classes.monthViewMoreEvents}
             >
-              {translations.hiddenEvents(hiddenCount)}
+              {localeText.hiddenEvents(hiddenCount)}
             </MonthViewMoreEvents>
           </MoreEventsPopoverTrigger>
         )}

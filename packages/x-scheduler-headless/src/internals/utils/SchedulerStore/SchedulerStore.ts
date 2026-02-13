@@ -275,10 +275,13 @@ export class SchedulerStore<
     this.eventManager.on(eventName, handler);
   };
 
-  protected setVisibleDate = (
-    visibleDate: TemporalSupportedObject,
-    event: React.UIEvent | null = null,
-  ) => {
+  protected setVisibleDate = ({
+    visibleDate,
+    event,
+  }: {
+    visibleDate: TemporalSupportedObject;
+    event?: React.UIEvent | null;
+  }) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
     const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
@@ -355,14 +358,17 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.displayTimezone)), event);
+    this.setVisibleDate({
+      visibleDate: adapter.startOfDay(adapter.now(this.state.displayTimezone)),
+      event,
+    });
   };
 
   /**
    * Goes to a specific date without changing the view.
    */
   public goToDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
-    this.setVisibleDate(visibleDate, event);
+    this.setVisibleDate({ visibleDate, event });
   };
 
   /**
@@ -552,7 +558,7 @@ export class SchedulerStore<
   };
 
   /**
-   * Builds an object containing the methods that should be exposed publicly by the Scheduler components.
+   * Builds an object containing the methods that should be exposed publicly by the scheduler components.
    */
   public buildPublicAPI() {
     return {
