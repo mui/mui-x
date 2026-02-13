@@ -129,14 +129,13 @@ storeClasses.forEach((storeClass) => {
         });
 
         // Should call onEventsChange with the created event using the custom model structure
-        // Newly created events from TemporalSupportedObject dates default to wall-time format (no Z)
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           {
             myId: createdId,
             myTitle: 'Event 1',
-            myStart: '2025-07-01T09:00:00',
-            myEnd: '2025-07-01T10:00:00',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
             allDay: false,
           },
         ]);

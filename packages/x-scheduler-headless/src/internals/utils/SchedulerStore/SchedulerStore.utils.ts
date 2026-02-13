@@ -210,7 +210,6 @@ export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   adapter: Adapter,
-  displayTimezone: TemporalTimezone,
 ) {
   const id = crypto.randomUUID();
 
@@ -218,9 +217,7 @@ export function createEventModel<TEvent extends object>(
     if (typeof value === 'string') {
       return value;
     }
-    // Default to wall-time format for newly created events
-    const dateInDisplayTz = adapter.setTimezone(value, displayTimezone);
-    return adapter.formatByString(dateInDisplayTz, getWallTimeIsoFormat(adapter));
+    return adapter.toJsDate(value).toISOString();
   };
 
   const builtInEvent: SchedulerEvent = {

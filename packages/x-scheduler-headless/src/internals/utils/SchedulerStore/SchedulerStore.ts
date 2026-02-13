@@ -338,7 +338,6 @@ export class SchedulerStore<
         createdEvent,
         this.state.eventModelStructure,
         this.state.adapter,
-        this.state.displayTimezone,
       );
       newEvents.push(response.model);
       createdIds.push(response.id);
