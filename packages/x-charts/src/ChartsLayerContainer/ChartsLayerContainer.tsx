@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
-import clsx from 'clsx';
+import { styled, useThemeProps, type SxProps, type Theme } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
-import { useUtilityClasses } from '../ChartsSurface/chartsSurfaceClasses';
 import {
   selectorChartPropsHeight,
   selectorChartPropsWidth,
@@ -33,7 +31,9 @@ const ChartsLayerContainerDiv = styled('div', {
   },
 }));
 
-export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {}
+export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {
+  sx?: SxProps<Theme>;
+}
 
 /**
  * A component that contains the chart layers, such as `<ChartsSvgLayer>`, and `<ChartsWebGlLayer>`.
@@ -50,9 +50,7 @@ export const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayer
     const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
 
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
-    const { children, className, ...other } = themeProps;
-
-    const classes = useUtilityClasses();
+    const { children, ...other } = themeProps;
 
     const svgRef = useSvgRef();
     const handleRef = useForkRef(svgRef, ref);
@@ -62,7 +60,6 @@ export const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayer
         ref={handleRef}
         ownerState={{ width: propsWidth, height: propsHeight }}
         tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
-        className={clsx(classes.root, className)}
         {...other}
       >
         {children}

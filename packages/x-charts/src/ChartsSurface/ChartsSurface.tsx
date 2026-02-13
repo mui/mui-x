@@ -2,7 +2,6 @@
 import { type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import clsx from 'clsx';
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import { ChartsSvgLayer } from '../ChartsSvgLayer';
 import { ChartsLayerContainer } from '../ChartsLayerContainer';
