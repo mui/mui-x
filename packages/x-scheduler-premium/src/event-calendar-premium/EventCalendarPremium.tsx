@@ -7,13 +7,13 @@ import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import { useEventCalendarPremium } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
 import {
   useEventCalendarUtilityClasses,
-  EventCalendarClassesContext,
+  EventCalendarStyledContext,
 } from '@mui/x-scheduler/event-calendar';
 import {
-  TranslationsProvider,
+  EventDialogStyledContext,
   EventDialogProvider,
-  EventDialogClassesContext,
   EventCalendarRoot,
+  EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
@@ -41,20 +41,33 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   const store = useEventCalendarPremium(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { translations, apiRef, ...other } = forwardedProps;
+  const { localeText, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
+
+  const mergedLocaleText = React.useMemo(
+    () => ({ ...EVENT_CALENDAR_DEFAULT_LOCALE_TEXT, ...localeText }),
+    [localeText],
+  );
+
+  const calendarStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
+
+  const dialogStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
-      <TranslationsProvider translations={translations}>
-        <EventCalendarClassesContext.Provider value={classes}>
-          <EventDialogClassesContext.Provider value={classes}>
-            <EventDialogProvider>
-              <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-            </EventDialogProvider>
-          </EventDialogClassesContext.Provider>
-        </EventCalendarClassesContext.Provider>
-      </TranslationsProvider>
+      <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
+        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
+          <EventDialogProvider>
+            <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+          </EventDialogProvider>
+        </EventDialogStyledContext.Provider>
+      </EventCalendarStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarPremiumComponent;

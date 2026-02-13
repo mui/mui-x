@@ -20,10 +20,9 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import clsx from 'clsx';
 import { MonthViewProps, StandaloneMonthViewProps } from './MonthView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
-import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
-import { useEventCalendarClasses } from '../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 
 const FIXED_CELL_WIDTH = 28;
@@ -137,9 +136,8 @@ export const MonthView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapter();
-    const translations = useTranslations();
+    const { classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
-    const classes = useEventCalendarClasses();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
@@ -197,7 +195,7 @@ export const MonthView = React.memo(
             <MonthViewHeader className={classes.monthViewHeader} ownerState={{ showWeekNumber }}>
               {showWeekNumber && (
                 <MonthViewWeekHeaderCell className={classes.monthViewWeekHeaderCell}>
-                  {translations.weekAbbreviation}
+                  {localeText.weekAbbreviation}
                 </MonthViewWeekHeaderCell>
               )}
               {weeks[0].map((weekDay) => (

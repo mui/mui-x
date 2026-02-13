@@ -71,6 +71,8 @@ export interface PluginRegistryApi {
     _api: BaseApi,
     pluginName: TPlugin['name'],
   ): _api is BaseApi & ExtractPluginApi<TPlugin>;
+  forEachPlugin(callback: (plugin: AnyPlugin) => void): void;
+  getPluginsChain(): readonly AnyPlugin[];
 }
 
 export interface Plugin<
@@ -84,6 +86,7 @@ export interface Plugin<
   TDeps extends readonly AnyPlugin[] = readonly AnyPlugin[],
 > {
   name: TName;
+  order?: number;
   dependencies?: TDeps;
   selectors: TSelectors;
   initialize: (

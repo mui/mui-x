@@ -15,7 +15,7 @@ import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventSkeleton } from '../event-skeleton';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
-import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -77,7 +77,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
-  const classes = useEventCalendarClasses();
+  const { classes } = useEventCalendarStyledContext();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
@@ -125,7 +125,7 @@ function ColumnInteractiveLayer({
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
-  const classes = useEventCalendarClasses();
+  const { classes } = useEventCalendarStyledContext();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);

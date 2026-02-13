@@ -20,8 +20,8 @@ import clsx from 'clsx';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
-import { useEventCalendarClasses } from '../event-calendar/EventCalendarClassesContext';
 import { EventSkeleton } from '../internals/components/event-skeleton';
+import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
 import { EventDialogProvider, EventDialogTrigger } from '../internals/components/event-dialog';
 
 const AgendaViewRoot = styled('div', {
@@ -151,8 +151,8 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapter();
+    const { classes } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
-    const classes = useEventCalendarClasses();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);

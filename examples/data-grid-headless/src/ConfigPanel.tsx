@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { SortingOptions, GridSortDirection } from '@mui/x-data-grid-headless/plugins/sorting';
-import { SettingsIcon, SortIcon, ChevronIcon, CollapseIcon, ArrowIcon } from './icons';
+import { SettingsIcon, SortIcon, ChevronIcon, CollapseIcon, ArrowIcon, RowsIcon } from './icons';
 
 export interface PluginConfig {
   sorting?: NonNullable<SortingOptions['sorting']> & {
@@ -12,6 +12,7 @@ export interface PluginConfig {
 }
 
 interface SectionState {
+  rows: boolean;
   sorting: boolean;
 }
 
@@ -19,6 +20,9 @@ interface ConfigPanelProps {
   config: PluginConfig;
   onConfigChange: (config: PluginConfig) => void;
   onApplySorting?: () => void;
+  onRerender?: () => void;
+  onRefreshRows?: () => void;
+  onShuffleColumns?: () => void;
   defaultWidth?: number;
   minWidth?: number;
   maxWidth?: number;
@@ -100,6 +104,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
     config,
     onConfigChange,
     onApplySorting,
+    onRerender,
+    onRefreshRows,
+    onShuffleColumns,
     defaultWidth = 320,
     minWidth = 240,
     maxWidth = 500,
@@ -109,6 +116,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const [isResizing, setIsResizing] = React.useState(false);
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [sections, setSections] = React.useState<SectionState>({
+    rows: true,
     sorting: true,
   });
 
@@ -240,6 +248,53 @@ export function ConfigPanel(props: ConfigPanelProps) {
         {/* Scrollable Content */}
         {!isCollapsed && (
           <div className="config-panel__body">
+            {/* Rows Section */}
+            <div className="config-section">
+              {/* Section Header */}
+              <button
+                type="button"
+                onClick={() => toggleSection('rows')}
+                className={`config-section__header ${sections.rows ? 'config-section__header--expanded' : ''}`}
+              >
+                <div className="config-section__header-title">
+                  <span className="config-section__header-icon">
+                    <RowsIcon />
+                  </span>
+                  <span className="config-section__header-text">Rows</span>
+                </div>
+                <ChevronIcon expanded={sections.rows} className="config-section__chevron" />
+              </button>
+
+              {/* Section Content */}
+              {sections.rows && (
+                <div className="config-section__content">
+                  <div className="config-section__buttons">
+                    <button
+                      type="button"
+                      onClick={onRerender}
+                      className="btn btn--secondary btn--block"
+                    >
+                      Rerender
+                    </button>
+                    <button
+                      type="button"
+                      onClick={onRefreshRows}
+                      className="btn btn--secondary btn--block"
+                    >
+                      Refresh Rows
+                    </button>
+                    <button
+                      type="button"
+                      onClick={onShuffleColumns}
+                      className="btn btn--secondary btn--block"
+                    >
+                      Shuffle Columns
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Sorting Section */}
             <div className="config-section">
               {/* Section Header */}
