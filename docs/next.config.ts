@@ -79,6 +79,7 @@ export default withDeploymentConfig({
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
     // docs-infra
+    DEPLOY_ENV: process.env.DEPLOY_ENV,
     LIB_VERSION: pkg.version,
     SOURCE_CODE_REPO,
     SOURCE_GITHUB_BRANCH,
@@ -182,6 +183,13 @@ export default withDeploymentConfig({
       pages2.forEach((page) => {
         // The experiments pages are only meant for experiments, they shouldn't leak to production.
         if (page.pathname.includes('/experiments/') && process.env.DEPLOY_ENV === 'production') {
+          return;
+        }
+        // The scheduler pages should not leak to production (the package is not published yet).
+        if (
+          page.pathname.includes('/react-scheduler') &&
+          process.env.DEPLOY_ENV === 'production'
+        ) {
           return;
         }
 
