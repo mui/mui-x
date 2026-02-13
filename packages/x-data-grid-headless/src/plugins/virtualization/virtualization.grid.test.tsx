@@ -576,31 +576,40 @@ describe('Virtualization', () => {
   });
 
   describe('options', () => {
-    it('should use default rowHeight of 52', () => {
-      const apiRef = React.createRef<GridInstance<TestRow> | null>();
-
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <TestDataGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
+    it.skipIf(isJSDOM)('should take rowHeight into account', () => {
+      const { rows, columns } = buildVirtualizationBehaviorTestData(100, 2);
+      const rowBufferPx = 150;
+      const gridHeight = 300;
+      const defaultRowHeight = 52;
+      const { rerender } = render(
+        <div style={{ width: 300, height: gridHeight }}>
+          <TestDataGrid rows={rows} columns={columns} rowBufferPx={rowBufferPx} />
         </div>,
       );
 
-      const dimensions = apiRef.current!.api.virtualization.hooks.useDimensions;
-      expect(dimensions).to.be.a('function');
-    });
+      const renderedRowsWithDefaultHeight = $$(
+        '[data-testid="virtual-scroller-render-zone"] [role="row"]',
+      ).length;
 
-    it('should use custom rowHeight when provided', () => {
-      const apiRef = React.createRef<GridInstance<TestRow> | null>();
+      expect(renderedRowsWithDefaultHeight).to.equal(
+        Math.ceil((gridHeight + rowBufferPx) / defaultRowHeight),
+      );
 
-      render(
+      const customRowHeight = 40;
+
+      rerender(
         <div style={{ width: 300, height: 300 }}>
-          <TestDataGrid rows={testRows} columns={testColumns} apiRef={apiRef} rowHeight={40} />
+          <TestDataGrid rows={rows} columns={columns} rowHeight={customRowHeight} />
         </div>,
       );
 
-      // Verify the hook exists and can be used
-      const dimensions = apiRef.current!.api.virtualization.hooks.useDimensions;
-      expect(dimensions).to.be.a('function');
+      const renderedRowsWithCustomHeight = $$(
+        '[data-testid="virtual-scroller-render-zone"] [role="row"]',
+      ).length;
+
+      expect(renderedRowsWithCustomHeight).to.equal(
+        Math.ceil((gridHeight + rowBufferPx) / customRowHeight),
+      );
     });
 
     it('should accept initial scroll state', () => {
