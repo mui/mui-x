@@ -5,16 +5,14 @@ productId: x-charts
 
 # useScale
 
-<p class="description">Access D3 scale functions for coordinate transformations.</p>
+<p class="description">Convert data values to pixel coordinates with D3 scale functions in custom chart components.</p>
 
-The scale hooks provide access to D3 scale functions that can be used to convert data values to pixel coordinates within the chart.
-Scale hooks accept an axis id as a parameter.
-If provided, the hook returns the scale of the associated axis.
-Otherwise it returns the scale of the default axis.
+The scale hooks expose D3 scale functions that convert data values to pixel coordinates within the chart.
+You can pass an axis ID to get that axis's scale; otherwise, the hook returns the default axis scale.
 
 ## Cartesian charts
 
-Access the x-axis and y-axis scale function.
+Use `useXScale()` and `useYScale()` to get the x-axis and y-axis scale functions.
 
 ```js
 import { useXScale, useYScale } from '@mui/x-charts/hooks';
@@ -33,7 +31,7 @@ function CustomComponent() {
 
 ## Polar charts
 
-Access the rotation and radius scale functions for polar charts.
+Use `useRotationScale()` and `useRadiusScale()` to get the rotation and radius scale functions for polar charts.
 
 ```js
 import { useRotationScale, useRadiusScale } from '@mui/x-charts/hooks';
@@ -48,9 +46,9 @@ function CustomComponent() {
 
 ## Utility function
 
-### getValueToPositionMapper
+### Convert values to positions
 
-A utility function that returns a mapper function for converting values to positions, with special handling for band scales.
+`getValueToPositionMapper()` returns a mapper function that converts values to positions, with special handling for band scales.
 
 ```js
 import { getValueToPositionMapper } from '@mui/x-charts/hooks';
@@ -66,10 +64,11 @@ function CustomComponent() {
 
 ## Usage example
 
-This example shows how to use scale functions to position custom elements:
+The example below shows how to use scale functions to position custom elements:
 
 {{"demo": "UseScale.js"}}
 
 ## Caveats
 
-These hooks must be used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
+You can only use these hooks within a chart context.
+See the [hooks overview](/x/react-charts/hooks/) for usage requirements.
