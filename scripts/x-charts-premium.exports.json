@@ -572,6 +572,7 @@
   { "name": "SeriesItemIdentifierWithData", "kind": "TypeAlias" },
   { "name": "SeriesItemIdentifierWithType", "kind": "TypeAlias" },
   { "name": "SeriesLegendItemContext", "kind": "Interface" },
+  { "name": "SeriesLegendItemParams", "kind": "Interface" },
   { "name": "ShowMarkParams", "kind": "Interface" },
   { "name": "SparkLineChart", "kind": "Variable" },
   { "name": "SparkLineChartProps", "kind": "Interface" },
