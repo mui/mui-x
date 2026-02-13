@@ -113,4 +113,7 @@ export interface SchedulerTranslations {
   miniCalendarLabel: string;
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
+
+  // Timeline title sub grid
+  timelineResourceTitleHeader: string;
 }

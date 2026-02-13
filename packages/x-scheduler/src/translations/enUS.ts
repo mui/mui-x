@@ -113,4 +113,7 @@ export const enUS: SchedulerTranslations = {
   miniCalendarLabel: 'Calendar',
   miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   miniCalendarGoToNextMonth: 'Show next month in calendar',
+
+  // Timeline title sub grid
+  timelineResourceTitleHeader: 'Resource title',
 };
