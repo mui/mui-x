@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled, useThemeProps, type SxProps, type Theme } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import {
@@ -39,7 +40,7 @@ export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {
  * A component that contains the chart layers, such as `<ChartsSvgLayer>`, and `<ChartsWebGlLayer>`.
  * It is responsible for positioning itself and providing the dimensions and interaction context to its children layers.
  */
-export const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(
+const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(
   function ChartsLayerContainer(inProps, ref) {
     const { store } = useChartContext<
       [],
@@ -67,3 +68,17 @@ export const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayer
     );
   },
 );
+
+ChartsLayerContainer.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { ChartsLayerContainer };
