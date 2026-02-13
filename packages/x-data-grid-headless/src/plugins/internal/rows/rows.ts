@@ -197,7 +197,8 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
 
         newTree[GRID_ROOT_GROUP_ID] = rootGroup;
 
-        const totalRowCount = Math.max(params.rowCount ?? 0, newDataRowIds.length);
+        const totalRowCount =
+          params.rowCount === -1 ? -1 : Math.max(params.rowCount ?? 0, newDataRowIds.length);
 
         store.setState({
           ...store.state,
@@ -249,9 +250,9 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       if (prevRowCountRef.current !== params.rowCount) {
         prevRowCountRef.current = params.rowCount;
         // Update totalRowCount in state when rowCount prop changes
-        // We need to recalculate totalRowCount = Math.max(rowCount ?? 0, currentDataRowCount)
         const currentDataRowCount = store.state.rows.dataRowIds.length;
-        const newTotalRowCount = Math.max(params.rowCount ?? 0, currentDataRowCount);
+        const newTotalRowCount =
+          params.rowCount === -1 ? -1 : Math.max(params.rowCount ?? 0, currentDataRowCount);
 
         store.setState({
           ...store.state,
@@ -261,8 +262,10 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
             totalTopLevelRowCount: newTotalRowCount,
           },
         });
+
+        rowIdsPipeline.recompute();
       }
-    }, [params.rowCount, store]);
+    }, [params.rowCount, store, rowIdsPipeline]);
 
     return {
       rows: {

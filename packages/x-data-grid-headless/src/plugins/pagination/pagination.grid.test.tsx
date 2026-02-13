@@ -435,7 +435,8 @@ describe('Pagination Plugin - Integration Tests', () => {
         <TestDataGrid
           rows={pageRows}
           columns={defaultColumns}
-          pagination={{ model: { page: 0, pageSize: 5 }, rowCount: 15 }}
+          rowCount={15}
+          pagination={{ model: { page: 0, pageSize: 5 } }}
           initialState={{ pagination: { model: { page: 0, pageSize: 5 } } }}
         />,
       );

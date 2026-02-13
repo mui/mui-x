@@ -47,10 +47,8 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
     // Use processedRowIds which may already be sorted by an upstream plugin
     const sourceRowIds: GridRowId[] = state.rows.processedRowIds;
 
-    // Determine row count
-    const rowCount = isExternal
-      ? (params.pagination?.rowCount ?? sourceRowIds.length)
-      : sourceRowIds.length;
+    // Determine row count: in external mode, use the total from the rows plugin
+    const rowCount = isExternal ? state.rows.totalRowCount : sourceRowIds.length;
 
     const pageCount = getPageCount(rowCount, initialModel.pageSize, initialModel.page);
     const validPage = getValidPage(initialModel.page, pageCount);
@@ -82,6 +80,22 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
 
     const paginationProcessor = useStableCallback((inputIds: GridRowId[]): GridRowId[] => {
       if (isExternalPagination) {
+        // In external mode, rows are already the current page — don't slice.
+        // Sync derived pagination state from the rows plugin.
+        const model = store.state.pagination.model;
+        const rowCount = store.state.rows.totalRowCount;
+        const pageCount = getPageCount(rowCount, model.pageSize, model.page);
+
+        store.setState({
+          ...store.state,
+          pagination: {
+            model,
+            rowCount,
+            pageCount,
+            paginatedRowIds: inputIds,
+          },
+        });
+
         return inputIds;
       }
 
@@ -117,14 +131,14 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
     });
 
     React.useEffect(() => {
+      // Unlike sorting, the processor is not disabled in external mode
+      // because pagination has derived state (rowCount, pageCount, paginatedRowIds)
+      // that must stay in sync when rows or rowCount change via the pipeline.
       return api.rows.rowIdsPipeline.register(
         PAGINATION_PIPELINE_PROCESSOR_NAME,
         paginationProcessor,
-        {
-          disabled: isExternalPagination,
-        },
       );
-    }, [api, isExternalPagination, paginationProcessor]);
+    }, [api, paginationProcessor]);
 
     const getModel = (): PaginationModel => {
       return store.state.pagination.model;

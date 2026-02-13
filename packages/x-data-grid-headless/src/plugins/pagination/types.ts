@@ -30,17 +30,6 @@ export interface PaginationOptions {
      * @param {PaginationModel} model The new pagination model.
      */
     onModelChange?: (model: PaginationModel) => void;
-
-    /**
-     * The total number of rows. Set to -1 for unknown row count.
-     * Used in external pagination mode.
-     */
-    rowCount?: number;
-
-    /**
-     * Estimated total row count when rowCount is unknown (-1).
-     */
-    estimatedRowCount?: number;
   };
 }
 

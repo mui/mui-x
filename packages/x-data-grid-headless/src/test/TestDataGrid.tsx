@@ -12,6 +12,7 @@ interface TestDataGridProps<TRow extends Record<string, any>> {
   rows: TRow[];
   columns: ColumnDef<TRow, SortingColumnMeta>[];
   getRowId?: (row: TRow) => string;
+  rowCount?: number;
   apiRef?: React.RefObject<GridApi | null>;
   sorting?: SortingOptions['sorting'];
   pagination?: PaginationOptions['pagination'];
@@ -19,12 +20,13 @@ interface TestDataGridProps<TRow extends Record<string, any>> {
 }
 
 export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGridProps<TRow>) {
-  const { rows, columns, getRowId, apiRef, sorting, pagination, initialState } = props;
+  const { rows, columns, getRowId, rowCount, apiRef, sorting, pagination, initialState } = props;
 
   const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>({
     rows,
     columns,
     getRowId,
+    rowCount,
     plugins: [sortingPlugin, paginationPlugin],
     sorting,
     pagination,
