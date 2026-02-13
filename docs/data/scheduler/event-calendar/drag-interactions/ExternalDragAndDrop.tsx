@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
 import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
@@ -28,22 +28,30 @@ const ExternalEventsContainer = styled('div')({
   minHeight: 34,
 });
 
-const externalEventStyles = {
+const externalEventStyles = (theme: Theme) => ({
   padding: '4px 8px',
   borderRadius: 4,
   border: `1px solid ${teal[700]}`,
   backgroundColor: teal[100],
+  ...theme.applyStyles('dark', {
+    border: `1px solid ${teal[300]}`,
+    backgroundColor: '#044036',
+  }),
   '&[data-placeholder]': {
     opacity: 0.5,
   },
   '&[data-dragging]': {
     opacity: 0.5,
   },
-} as const;
+});
 
-const StyledStandaloneEvent = styled(StandaloneEvent)(externalEventStyles);
+const StyledStandaloneEvent = styled(StandaloneEvent)(({ theme }) =>
+  externalEventStyles(theme),
+);
 
-const ExternalEventPlaceholder = styled('div')(externalEventStyles);
+const ExternalEventPlaceholder = styled('div')(({ theme }) =>
+  externalEventStyles(theme),
+);
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
