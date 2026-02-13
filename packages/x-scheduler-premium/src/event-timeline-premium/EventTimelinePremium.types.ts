@@ -1,4 +1,5 @@
 import { EventTimelinePremiumParameters } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
+import { SchedulerTranslations } from '@mui/x-scheduler/models';
 import { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 
 // TODO: Add translations
@@ -8,4 +9,8 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<EventTimelinePremiumClasses>;
+  /**
+   * Translation overrides for the component's texts.
+   */
+  translations?: Partial<SchedulerTranslations>;
 }
