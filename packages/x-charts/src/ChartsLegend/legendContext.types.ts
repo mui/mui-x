@@ -26,6 +26,21 @@ export interface LegendItemParams
   markType: ChartsLabelMarkProps['type'];
 }
 
+export interface SeriesLegendItemParams
+  extends
+    Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
+    LegendItemContextBase {
+  /**
+   * The identifier of the series
+   */
+  seriesId: SeriesId;
+  /**
+   * The type of the series
+   */
+  type: ChartSeriesType;
+  markType: ChartsLabelMarkProps['type'];
+}
+
 export interface SeriesLegendItemContext extends LegendItemContextBase {
   /**
    * The type of the legend item

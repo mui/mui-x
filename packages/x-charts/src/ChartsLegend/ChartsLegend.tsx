@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useLegend } from '../hooks/useLegend';
 import type { Direction } from './direction';
-import { type SeriesLegendItemContext, type LegendItemParams } from './legendContext.types';
+import { type SeriesLegendItemContext, type SeriesLegendItemParams } from './legendContext.types';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
@@ -113,17 +113,16 @@ const ChartsLegend = consumeSlots(
     const isItemVisible = store.use(selectorIsItemVisibleGetter);
     const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;
 
-    const isButton = (item: LegendItemParams) =>
-      Boolean(onItemClick || (toggleVisibilityOnClick && item.seriesId));
+    const isButton = Boolean(onItemClick || toggleVisibilityOnClick);
 
     const handleClick = useEventCallback(
-      (item: LegendItemParams, i: number) =>
+      (item: SeriesLegendItemParams, i: number) =>
         (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
           if (onItemClick && item) {
             onItemClick(event, seriesContextBuilder(item), i);
           }
 
-          if (toggleVisibilityOnClick && item.seriesId !== undefined) {
+          if (toggleVisibilityOnClick) {
             instance.toggleItemVisibility({
               type: item.type,
               seriesId: item.seriesId,
@@ -157,7 +156,7 @@ const ChartsLegend = consumeSlots(
               data-series={item.seriesId}
               data-index={item.dataIndex}
             >
-              {isButton(item) ? (
+              {isButton ? (
                 <button
                   className={clsx(classes?.series, !isVisible && classes?.hidden)}
                   onClick={handleClick(item, i)}
