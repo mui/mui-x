@@ -102,8 +102,6 @@ When creating events from the UI, the entered date/time is interpreted in the cu
 The created event does not include an explicit `timezone` field.
 As a result, when the event is processed, its original timezone is treated as `"default"`.
 
-This may evolve in future releases to allow setting the event's original timezone explicitly (for example through the UI), while still rendering all events in the selected `displayTimezone`.
-
 ## Recurring events and timezones
 
 Recurring events define a pattern that is evaluated in a specific timezone.
