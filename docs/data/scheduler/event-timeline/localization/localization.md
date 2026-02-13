@@ -29,9 +29,7 @@ In the following example, the resource column header and loading text are custom
 
 ## Locale text
 
-The default locale of MUI X is English (United States).
-
-You can use the theme to configure the locale text:
+You can use the theme to configure the locale text and replace the default locale:
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
