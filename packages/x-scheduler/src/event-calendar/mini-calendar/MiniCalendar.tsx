@@ -15,8 +15,7 @@ import {
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { MiniCalendarProps } from './MiniCalendar.types';
-import { useTranslations } from '../../internals/utils/TranslationsContext';
-import { useEventCalendarClasses } from '../EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 import { formatMonthFullLetterAndYear } from '../../internals/utils/date-utils';
 
 const MiniCalendarRoot = styled('div', {
@@ -155,8 +154,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
 
     const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
-    const translations = useTranslations();
-    const classes = useEventCalendarClasses();
+    const { classes, localeText } = useEventCalendarStyledContext();
 
     const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
@@ -205,7 +203,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
       <MiniCalendarRoot
         ref={forwardedRef}
         role="grid"
-        aria-label={translations.miniCalendarLabel}
+        aria-label={localeText.miniCalendarLabel}
         className={clsx(classes.miniCalendar, className)}
         {...other}
       >
@@ -216,14 +214,14 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
           <MiniCalendarNavigation className={classes.miniCalendarNavigation}>
             <IconButton
               size="small"
-              aria-label={translations.miniCalendarGoToPreviousMonth}
+              aria-label={localeText.miniCalendarGoToPreviousMonth}
               onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, -1))}
             >
               <ChevronLeftIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
-              aria-label={translations.miniCalendarGoToNextMonth}
+              aria-label={localeText.miniCalendarGoToNextMonth}
               onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, 1))}
             >
               <ChevronRightIcon fontSize="small" />

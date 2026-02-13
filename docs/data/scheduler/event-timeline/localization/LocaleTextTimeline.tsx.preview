@@ -3,6 +3,6 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  translations={frFR}
+  localeText={frFR.components.MuiEventTimeline.defaultProps.localeText}
   defaultView="months"
 />

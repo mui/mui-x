@@ -1,54 +1,14 @@
-import { SchedulerTranslations } from '../models/translations';
+import type {
+  EventDialogLocaleText,
+  EventCalendarLocaleText,
+  EventTimelineLocaleText,
+} from '../models/translations';
+import {
+  getSchedulerLocalization,
+  type SchedulerLocalization,
+} from '../utils/getSchedulerLocalization';
 
-export const enUS: SchedulerTranslations = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Hide events for ${resourceName}`,
-  resourcesLabel: 'Resources',
-  resourcesLegendSectionLabel: 'Resource legend',
-  showEventsLabel: (resourceName) => `Show events for ${resourceName}`,
-
-  // ViewSwitcher
-  agenda: 'Agenda',
-  day: 'Day',
-  month: 'Month',
-  other: 'Other',
-  today: 'Today',
-  week: 'Week',
-  time: 'Time',
-  days: 'Days',
-  months: 'Months',
-  weeks: 'Weeks',
-  years: 'Years',
-
-  // DateNavigator
-  closeSidePanel: 'Close side panel',
-  openSidePanel: 'Open side panel',
-
-  // Preferences menu
-  amPm12h: '12-hour (1:00PM)',
-  hour24h: '24-hour (13:00)',
-  preferencesMenu: 'Settings',
-  showWeekends: 'Show weekends',
-  showEmptyDaysInAgenda: 'Show empty days',
-  showWeekNumber: 'Show week number',
-  timeFormat: 'Time format',
-  viewSpecificOptions: (view) => `${view} view options`,
-
-  // WeekView
-  allDay: 'All day',
-
-  // MonthView
-  hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
-  nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
-  noResourceAriaLabel: 'No specific resource',
-  previousTimeSpan: (timeSpan) => `Previous ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
-  weekAbbreviation: 'W',
-  weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
-
-  // EventItem
-  eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,
-
+const enUSDialog: EventDialogLocaleText = {
   // EventDialog
   colorPickerLabel: 'Event color',
   dateTimeSectionLabel: 'Date & time',
@@ -91,6 +51,7 @@ export const enUS: SchedulerTranslations = {
   recurrenceWeeklyMonthlySpecificInputsLabel: 'On',
   recurrenceYearlyFrequencyLabel: 'years',
   recurrenceYearlyPresetLabel: (date) => `Repeats annually on ${date}`,
+  noResourceAriaLabel: 'No specific resource',
   resourceLabel: 'Resource',
   saveChanges: 'Save changes',
   startDateAfterEndDateError: 'Start date/time must be before end date/time.',
@@ -108,6 +69,55 @@ export const enUS: SchedulerTranslations = {
 
   // General
   loading: 'Loading...',
+};
+
+const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {
+  // ResourcesLegend
+  hideEventsLabel: (resourceName) => `Hide events for ${resourceName}`,
+  resourcesLabel: 'Resources',
+  resourcesLegendSectionLabel: 'Resource legend',
+  showEventsLabel: (resourceName) => `Show events for ${resourceName}`,
+
+  // ViewSwitcher
+  agenda: 'Agenda',
+  day: 'Day',
+  month: 'Month',
+  other: 'Other',
+  today: 'Today',
+  week: 'Week',
+  time: 'Time',
+  days: 'Days',
+  months: 'Months',
+  weeks: 'Weeks',
+  years: 'Years',
+
+  // DateNavigator
+  closeSidePanel: 'Close side panel',
+  openSidePanel: 'Open side panel',
+
+  // Preferences menu
+  amPm12h: '12-hour (1:00PM)',
+  hour24h: '24-hour (13:00)',
+  preferencesMenu: 'Settings',
+  showWeekends: 'Show weekends',
+  showEmptyDaysInAgenda: 'Show empty days',
+  showWeekNumber: 'Show week number',
+  timeFormat: 'Time format',
+  viewSpecificOptions: (view) => `${view} view options`,
+
+  // WeekView
+  allDay: 'All day',
+
+  // MonthView
+  hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
+  nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
+  previousTimeSpan: (timeSpan) => `Previous ${timeSpan}`,
+  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
+  weekAbbreviation: 'W',
+  weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
+
+  // EventItem
+  eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,
 
   // MiniCalendar
   miniCalendarLabel: 'Calendar',
@@ -117,3 +127,14 @@ export const enUS: SchedulerTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',
 };
+
+const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventDialogLocaleText> = {
+  // Timeline title sub grid
+  timelineResourceTitleHeader: 'Resource title',
+};
+
+export const enUS: SchedulerLocalization = getSchedulerLocalization({
+  dialog: enUSDialog,
+  calendar: enUSCalendar,
+  timeline: enUSTimeline,
+});
