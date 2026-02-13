@@ -306,7 +306,7 @@ If you're not using the axis highlight or the tooltip, consider disabling this f
 ## Layering
 
 Use `ChartsLayerContainer`, `ChartsSvgLayer` and `ChartsWebGlLayer` to create multiple layers of elements that share the same coordinate system.
-This is useful for managing the vertical stacking of alternating HTML, SVG and canvas (WebGL) elements.
+This is useful for managing the vertical stacking of alternating SVG and WebGL elements.
 
 In the example below, we create three layers:
 1. An SVG layer that displays the chart's grid;
@@ -314,6 +314,8 @@ In the example below, we create three layers:
 3. An SVG layer that renders the axes and crosshair
 
 {{"demo": "Layering.js"}}
+
+Since all layers are absolutely positioned, they stack on top of each other in the order they are defined.
 
 ## Examples
 

@@ -27,3 +27,5 @@ Similar to other chart types, candlestick charts can be composed using multiple 
 In this example, we demonstrate how to create a candlestick chart that displays the volume of trades as a bar chart, as well as the 20-day moving average, shown as a line chart.
 
 {{"demo": "CandlestickComposition.js"}}
+
+Since the candlestick plot is a WebGL canvas, you need to render it inside a `ChartsWebGlLayer`. You can read more about layering in the [Layering](/x/react-charts/composition/#layering) documentation.
