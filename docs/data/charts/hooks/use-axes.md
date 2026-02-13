@@ -5,17 +5,17 @@ productId: x-charts
 
 # useAxes
 
-<p class="description">Access axis configuration and properties for cartesian and polar charts.</p>
+<p class="description">Read axis configuration and computed properties for cartesian and polar charts in custom components.</p>
 
-The `use*Axes` and `use*Axis` hooks provide access to axis configurations and computed properties for both cartesian (x/y) and polar (rotation/radius) charts.
+The axis hooks expose axis configurations and computed properties for both cartesian (x/y) and polar (rotation/radius) charts.
 
 ## Cartesian charts
 
-For cartesian charts, you can use `useXAxes`, `useYAxes`, `useXAxis`, and `useYAxis` hooks to access x-axis and y-axis configurations.
+Use `useXAxes()`, `useYAxes()`, `useXAxis()`, and `useYAxis()` to read x-axis and y-axis configurations.
 
-### useXAxes / useYAxes
+### Get all axes
 
-Use these hooks to access all axes of a given direction:
+Use `useXAxes()` and `useYAxes()` to get all axes of a given direction:
 
 ```js
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
@@ -28,9 +28,10 @@ function CustomComponent() {
 }
 ```
 
-### useXAxis / useYAxis
+### Get a specific axis
 
-Use these hooks to access a specific axis by ID. If no ID is provided, the default axis is returned:
+Use `useXAxis()` and `useYAxis()` to get a specific axis by ID.
+If you omit the ID, the hook returns the default axis.
 
 ```js
 import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
@@ -50,9 +51,11 @@ function CustomComponent() {
 
 ## Polar charts
 
-For polar charts (such as radar charts), you can use `useRotationAxes`, `useRadiusAxes`, `useRotationAxis`, and `useRadiusAxis` hooks.
+Use `useRotationAxes()`, `useRadiusAxes()`, `useRotationAxis()`, and `useRadiusAxis()` for polar charts (such as radar charts).
 
-### useRotationAxes / useRadiusAxes
+### Get all rotation and radius axes
+
+Use `useRotationAxes()` and `useRadiusAxes()` to get all rotation and radius axes.
 
 ```js
 import { useRotationAxes, useRadiusAxes } from '@mui/x-charts/hooks';
@@ -63,7 +66,9 @@ function CustomComponent() {
 }
 ```
 
-### useRotationAxis / useRadiusAxis
+### Get a specific axis
+
+Use `useRotationAxis()` and `useRadiusAxis()` to get a specific axis by ID or index.
 
 ```js
 import { useRotationAxis, useRadiusAxis } from '@mui/x-charts/hooks';
@@ -83,11 +88,12 @@ function CustomComponent() {
 
 ## Usage example
 
-The following example demonstrates the use of `useXAxes` and `useYAxes` to access all axes in a chart with dual y-axes.
-The custom components use these hooks to draw visual indicators showing the axis ranges and display axis metadata:
+The example below shows `useXAxes()` and `useYAxes()` reading all axes in a chart with dual y-axes.
+The custom components use these hooks to draw visual indicators for axis ranges and to display axis metadata.
 
 {{"demo": "UseAxes.js"}}
 
 ## Caveats
 
-These hooks must be used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
+You can only use these hooks within a chart context.
+See the [hooks overview](/x/react-charts/hooks/) for usage requirements.
