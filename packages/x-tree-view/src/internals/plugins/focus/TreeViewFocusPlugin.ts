@@ -33,13 +33,8 @@ export class TreeViewFocusPlugin {
         return;
       }
 
-      const checkItemInNewTree = (itemId: TreeViewItemId | null) => {
-        if (itemId == null || !itemsSelectors.itemMeta(newState, itemId)) {
-          return null;
-        }
-
-        return itemId;
-      };
+      const checkItemInNewTree = (itemId: TreeViewItemId | null) =>
+        itemId == null || !itemsSelectors.itemMeta(newState, itemId) ? null : itemId;
 
       const itemToFocusId =
         checkItemInNewTree(getNextNavigableItem(previousState, focusedItemId)) ??
