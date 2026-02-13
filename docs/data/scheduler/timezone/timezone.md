@@ -86,6 +86,13 @@ The `displayTimezone` prop controls how all events are rendered in the UI.
 Changing `displayTimezone` only affects the visual representation.
 It does not modify the event data or change when an event occurs.
 
+```tsx
+<EventCalendar
+// ...other props
+displayTimezone = "Europe/Paris"
+>
+```
+
 {{"demo": "TimezoneDatasetInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Creating an event
