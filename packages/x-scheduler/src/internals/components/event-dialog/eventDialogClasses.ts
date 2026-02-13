@@ -33,6 +33,8 @@ export interface EventDialogClasses {
   eventDialogDateTimeFieldsRow: string;
   /** Styles applied to the event dialog recurrence tab content element. */
   eventDialogRecurrenceTabContent: string;
+  /** Styles applied to the event dialog recurrence label container element in the readonly content. */
+  eventDialogRecurrenceLabelContainer: string;
   /** Styles applied to the event dialog resource menu color dot element. */
   eventDialogResourceMenuColorDot: string;
   /** Styles applied to the event dialog resource menu color radio button element. */
@@ -61,6 +63,7 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogRecurrenceTabContent',
   'eventDialogResourceMenuColorDot',
   'eventDialogResourceMenuColorRadioButton',
+  'eventDialogRecurrenceLabelContainer',
 ];
 
 // Create a slots object for reuse in useUtilityClasses (avoids duplication in EventCalendar.tsx and EventTimelinePremium.tsx)
@@ -84,4 +87,5 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogRecurrenceTabContent: ['eventDialogRecurrenceTabContent'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
   eventDialogResourceMenuColorRadioButton: ['eventDialogResourceMenuColorRadioButton'],
+  eventDialogRecurrenceLabelContainer: ['eventDialogRecurrenceLabelContainer'],
 };
