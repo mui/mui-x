@@ -3,12 +3,18 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
+import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { EventTimelinePremium as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
+import {
+  eventTimelinePremiumViewSelectors,
+  timelineOccurrencePlaceholderSelectors,
+} from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
+import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import {
   EventDialogProvider,
   EventDialogTrigger,
+  useEventDialogContext,
   useTranslations,
 } from '@mui/x-scheduler/internals';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
@@ -127,6 +133,54 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelinePrimitive.EventRow, 
   },
 }));
 
+function EventRowContent({
+  resourceId,
+  occurrences,
+  placeholder,
+}: {
+  resourceId: SchedulerResourceId;
+  occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
+  placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
+}) {
+  const store = useEventTimelinePremiumStoreContext();
+  const { onOpen: startEditing } = useEventDialogContext();
+  const rowRef = React.useRef<HTMLDivElement | null>(null);
+
+  const isCreatingAnEvent = useStore(
+    store,
+    timelineOccurrencePlaceholderSelectors.isCreatingInResource,
+    resourceId,
+  );
+
+  React.useEffect(() => {
+    if (!isCreatingAnEvent || !placeholder || !rowRef.current) {
+      return;
+    }
+    startEditing(rowRef, placeholder);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
+
+  return (
+    <div ref={rowRef} style={{ display: 'contents' }}>
+      {occurrences.map((occurrence) => (
+        <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+          <EventTimelinePremiumEvent
+            occurrence={occurrence}
+            ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
+            variant="regular"
+          />
+        </EventDialogTrigger>
+      ))}
+      {placeholder != null && (
+        <EventTimelinePremiumEvent
+          occurrence={placeholder}
+          ariaLabelledBy={`EventTimelinePremiumTitleCell-${placeholder.resource}`}
+          variant="placeholder"
+        />
+      )}
+    </div>
+  );
+}
+
 export const EventTimelinePremiumContent = React.forwardRef(function EventTimelinePremiumContent(
   props: EventTimelinePremiumContentProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -198,24 +252,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                   className={classes.eventsSubGridRow}
                 >
                   {({ occurrences, placeholder }) => (
-                    <React.Fragment>
-                      {occurrences.map((occurrence) => (
-                        <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-                          <EventTimelinePremiumEvent
-                            occurrence={occurrence}
-                            ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
-                            variant="regular"
-                          />
-                        </EventDialogTrigger>
-                      ))}
-                      {placeholder != null && (
-                        <EventTimelinePremiumEvent
-                          occurrence={placeholder}
-                          ariaLabelledBy={`EventTimelinePremiumTitleCell-${placeholder.resource}`}
-                          variant="placeholder"
-                        />
-                      )}
-                    </React.Fragment>
+                    <EventRowContent
+                      resourceId={resourceId}
+                      occurrences={occurrences}
+                      placeholder={placeholder}
+                    />
                   )}
                 </EventTimelinePremiumEventsSubGridRow>
               )}
