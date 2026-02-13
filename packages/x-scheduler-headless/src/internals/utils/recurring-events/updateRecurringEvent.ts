@@ -21,7 +21,7 @@ import {
 } from './internal-utils';
 import { createEventFromRecurringEvent } from './createEventFromRecurringEvent';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
-import { dateToEventString } from '../SchedulerStore/SchedulerStore.utils';
+import { dateToEventString } from '../date-utils';
 
 /**
  * Generates the update to apply in order to update a recurring event according to the given `scope`.

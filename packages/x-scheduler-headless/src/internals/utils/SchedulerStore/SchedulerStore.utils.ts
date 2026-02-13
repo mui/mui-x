@@ -15,7 +15,7 @@ import {
 import { processEvent } from '../../../process-event';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
-import { getWallTimeIsoFormat } from '../date-utils';
+import { dateToEventString } from '../date-utils';
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
@@ -101,25 +101,6 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
   // 2. Convert the default event model to a processed event
   return processEvent(modelInDefaultFormat, displayTimezone, adapter);
-}
-
-/**
- * Converts a `TemporalSupportedObject` back to a string, respecting the
- * original date format: instant strings (ending with `Z`) stay as UTC ISO
- * strings, while wall-time strings (no `Z`) are formatted in the event's
- * data timezone without the `Z` suffix.
- */
-export function dateToEventString(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  originalString: string,
-  dataTimezone: TemporalTimezone,
-): string {
-  if (originalString.endsWith('Z')) {
-    return adapter.toJsDate(date).toISOString();
-  }
-  const dateInDataTz = adapter.setTimezone(date, dataTimezone);
-  return adapter.formatByString(dateInDataTz, getWallTimeIsoFormat(adapter));
 }
 
 /**
