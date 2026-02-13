@@ -21,7 +21,7 @@ import { FormContent } from './FormContent';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
-import { useEventDialogClasses } from './EventDialogClassesContext';
+import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
 interface PaperComponentProps extends PaperProps {
   anchorRef: React.RefObject<HTMLElement>;
@@ -108,7 +108,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
-  const classes = useEventDialogClasses();
+  const { classes } = useEventDialogStyledContext();
 
   // Selector hooks
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);

@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { frFR } from '@mui/x-scheduler/translations';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/company-roadmap';
+} from '../../datasets/company-roadmap';
 
-export default function TranslationsTimeline() {
-  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
+export default function CustomLocaleTextTimeline() {
+  const [events, setEvents] = React.useState(initialEvents);
 
   return (
     <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
@@ -18,7 +17,10 @@ export default function TranslationsTimeline() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        translations={frFR}
+        localeText={{
+          timelineResourceTitleHeader: 'Team member',
+          loading: 'Fetching data...',
+        }}
         defaultView="months"
       />
     </div>

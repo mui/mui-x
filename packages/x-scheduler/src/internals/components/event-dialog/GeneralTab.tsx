@@ -20,9 +20,8 @@ import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
-import { useEventDialogClasses } from './EventDialogClassesContext';
 import ResourceAndColorSection from './ResourceAndColorSection';
 
 const GeneralTabContent = styled('div', {
@@ -83,9 +82,8 @@ export function GeneralTab(props: GeneralTabProps) {
 
   // Context hooks
   const adapter = useAdapter();
-  const translations = useTranslations();
+  const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
-  const classes = useEventDialogClasses();
 
   // Selector hooks
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
@@ -156,13 +154,13 @@ export function GeneralTab(props: GeneralTabProps) {
     >
       <GeneralTabContent className={classes.eventDialogGeneralTabContent}>
         <SectionHeaderTitle variant="subtitle2">
-          {translations.dateTimeSectionLabel}
+          {localeText.dateTimeSectionLabel}
         </SectionHeaderTitle>
         <DateTimeFieldsContainer className={classes.eventDialogDateTimeFieldsContainer}>
           <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
             <TextField
               name="startDate"
-              label={translations.startDateLabel}
+              label={localeText.startDateLabel}
               type="date"
               value={controlled.startDate}
               onChange={createHandleChangeDateOrTimeField('startDate')}
@@ -178,7 +176,7 @@ export function GeneralTab(props: GeneralTabProps) {
             {!controlled.allDay && (
               <TextField
                 name="startTime"
-                label={translations.startTimeLabel}
+                label={localeText.startTimeLabel}
                 type="time"
                 value={controlled.startTime}
                 onChange={createHandleChangeDateOrTimeField('startTime')}
@@ -194,7 +192,7 @@ export function GeneralTab(props: GeneralTabProps) {
           <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
             <TextField
               name="endDate"
-              label={translations.endDateLabel}
+              label={localeText.endDateLabel}
               type="date"
               value={controlled.endDate}
               onChange={createHandleChangeDateOrTimeField('endDate')}
@@ -208,7 +206,7 @@ export function GeneralTab(props: GeneralTabProps) {
             {!controlled.allDay && (
               <TextField
                 name="endTime"
-                label={translations.endTimeLabel}
+                label={localeText.endTimeLabel}
                 type="time"
                 value={controlled.endTime}
                 onChange={createHandleChangeDateOrTimeField('endTime')}
@@ -230,14 +228,14 @@ export function GeneralTab(props: GeneralTabProps) {
                 disabled={isPropertyReadOnly('allDay')}
               />
             }
-            label={translations.allDayLabel}
+            label={localeText.allDayLabel}
             labelPlacement="start"
             sx={{ width: '100%', justifyContent: 'space-between', ml: 0 }}
           />
         </DateTimeFieldsContainer>
         <Divider />
         <SectionHeaderTitle variant="subtitle2">
-          {translations.resourceColorSectionLabel}
+          {localeText.resourceColorSectionLabel}
         </SectionHeaderTitle>
         <ResourceAndColorSection
           readOnly={isPropertyReadOnly('resource')}
@@ -249,7 +247,7 @@ export function GeneralTab(props: GeneralTabProps) {
         <Divider />
         <TextField
           name="description"
-          label={translations.descriptionLabel}
+          label={localeText.descriptionLabel}
           defaultValue={hasProp(occurrence, 'description') ? occurrence.description : ''}
           multiline
           rows={5}
