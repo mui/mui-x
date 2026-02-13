@@ -11,7 +11,7 @@ import {
   TemporalSupportedObject,
 } from '../../../models';
 import type { UpdateEventsParameters } from '../SchedulerStore';
-import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
+import { dateToEventString, getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
   getRemainingOccurrences,
   getAdapterCache,
@@ -21,7 +21,6 @@ import {
 } from './internal-utils';
 import { createEventFromRecurringEvent } from './createEventFromRecurringEvent';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
-import { dateToEventString } from '../date-utils';
 
 /**
  * Generates the update to apply in order to update a recurring event according to the given `scope`.
