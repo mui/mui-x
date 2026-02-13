@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { SortingOptions, GridSortDirection } from '@mui/x-data-grid-headless/plugins/sorting';
+import type { VirtualizationOptions } from '@mui/x-data-grid-headless/plugins/virtualization';
 import { SettingsIcon, SortIcon, ChevronIcon, CollapseIcon, ArrowIcon, RowsIcon } from './icons';
 
 export interface PluginConfig {
@@ -9,11 +10,13 @@ export interface PluginConfig {
     /** If true, shift key is required for multi-sort. @default true */
     multiSortWithShiftKey?: boolean;
   };
+  virtualization?: NonNullable<VirtualizationOptions['virtualization']>;
 }
 
 interface SectionState {
   rows: boolean;
   sorting: boolean;
+  virtualization: boolean;
 }
 
 interface ConfigPanelProps {
@@ -79,6 +82,37 @@ function Select(props: {
   );
 }
 
+function NumberInput(props: {
+  value: number;
+  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  disabled?: boolean;
+}) {
+  const { value, onChange, min = 0, max = 5000, step = 10, disabled } = props;
+  const className = ['number-input', disabled && 'number-input--disabled'].filter(Boolean).join(' ');
+
+  return (
+    <input
+      type="number"
+      value={value}
+      min={min}
+      max={max}
+      step={step}
+      disabled={disabled}
+      className={className}
+      onChange={(event) => {
+        const nextValue = Number(event.target.value);
+        if (!Number.isFinite(nextValue)) {
+          return;
+        }
+        onChange(Math.max(min, Math.min(max, nextValue)));
+      }}
+    />
+  );
+}
+
 function OptionRow(props: {
   label: string;
   description?: string;
@@ -117,7 +151,8 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [sections, setSections] = React.useState<SectionState>({
     rows: true,
-    sorting: true,
+    sorting: false,
+    virtualization: false,
   });
 
   const toggleSection = (section: keyof SectionState) => {
@@ -129,6 +164,16 @@ export function ConfigPanel(props: ConfigPanelProps) {
       ...config,
       sorting: {
         ...config.sorting,
+        ...updates,
+      },
+    });
+  };
+
+  const updateVirtualizationConfig = (updates: Partial<PluginConfig['virtualization']>) => {
+    onConfigChange({
+      ...config,
+      virtualization: {
+        ...config.virtualization,
         ...updates,
       },
     });
@@ -188,6 +233,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const isManualMode = config.sorting?.mode === 'manual';
   const isSortingEnabled = config.sorting?.enabled ?? true;
   const isMultiSortEnabled = config.sorting?.multiSort ?? true;
+  const isVirtualizationEnabled = !(config.virtualization?.disable ?? false);
 
   const resizeHandleClassName = [
     'config-panel__resize-handle',
@@ -396,6 +442,96 @@ export function ConfigPanel(props: ConfigPanelProps) {
                       }}
                       options={sortingOrderOptions}
                       disabled={!isSortingEnabled}
+                    />
+                  </OptionRow>
+                </div>
+              )}
+            </div>
+
+            {/* Virtualization Section */}
+            <div className="config-section">
+              <button
+                type="button"
+                onClick={() => toggleSection('virtualization')}
+                className={`config-section__header ${sections.virtualization ? 'config-section__header--expanded' : ''}`}
+              >
+                <div className="config-section__header-title">
+                  <span className="config-section__header-icon">
+                    <RowsIcon />
+                  </span>
+                  <span className="config-section__header-text">Virtualization</span>
+                </div>
+                <ChevronIcon
+                  expanded={sections.virtualization}
+                  className="config-section__chevron"
+                />
+              </button>
+
+              {sections.virtualization && (
+                <div className="config-section__content">
+                  <OptionRow
+                    label="Enable Virtualization"
+                    description="Toggle row and column virtualization"
+                  >
+                    <Toggle
+                      checked={isVirtualizationEnabled}
+                      onChange={(checked) => updateVirtualizationConfig({ disable: !checked })}
+                    />
+                  </OptionRow>
+
+                  <OptionRow
+                    label="Column Virtualization"
+                    description="Virtualize off-screen columns"
+                    disabled={!isVirtualizationEnabled}
+                  >
+                    <Toggle
+                      checked={!(config.virtualization?.disableForColumns ?? false)}
+                      onChange={(checked) =>
+                        updateVirtualizationConfig({ disableForColumns: !checked })
+                      }
+                      disabled={!isVirtualizationEnabled}
+                    />
+                  </OptionRow>
+
+                  <OptionRow
+                    label="Auto Height"
+                    description="Disables row virtualization"
+                    disabled={!isVirtualizationEnabled}
+                  >
+                    <Toggle
+                      checked={config.virtualization?.autoHeight ?? false}
+                      onChange={(checked) => updateVirtualizationConfig({ autoHeight: checked })}
+                      disabled={!isVirtualizationEnabled}
+                    />
+                  </OptionRow>
+
+                  <OptionRow
+                    label="Row Buffer (px)"
+                    description="Extra pixels rendered above and below viewport"
+                    disabled={!isVirtualizationEnabled}
+                  >
+                    <NumberInput
+                      value={config.virtualization?.rowBufferPx ?? 150}
+                      onChange={(value) => updateVirtualizationConfig({ rowBufferPx: value })}
+                      min={0}
+                      max={2000}
+                      step={10}
+                      disabled={!isVirtualizationEnabled}
+                    />
+                  </OptionRow>
+
+                  <OptionRow
+                    label="Column Buffer (px)"
+                    description="Extra pixels rendered left and right of viewport"
+                    disabled={!isVirtualizationEnabled}
+                  >
+                    <NumberInput
+                      value={config.virtualization?.columnBufferPx ?? 150}
+                      onChange={(value) => updateVirtualizationConfig({ columnBufferPx: value })}
+                      min={0}
+                      max={2000}
+                      step={10}
+                      disabled={!isVirtualizationEnabled}
                     />
                   </OptionRow>
                 </div>
