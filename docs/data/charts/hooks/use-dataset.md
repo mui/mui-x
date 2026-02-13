@@ -5,11 +5,16 @@ productId: x-charts
 
 # useDataset
 
-<p class="description">Access the dataset used to populate series and axes data.</p>
+<p class="description">Read the dataset array used to populate series and axes in custom components.</p>
 
-The `useDataset` hook provides access to the dataset array that was passed to the chart. This is useful when you need to access the raw data for custom components or calculations.
+The `useDataset()` hook returns the dataset array passed to the chart.
+This is useful when:
 
-To access the computed series and axes data, use the [useSeries](/x/react-charts/hooks/use-series/) and `useAxes` hooks instead.
+- Creating custom components that need access to the raw data
+- Building data tables or summaries alongside your charts
+- Performing calculations on the full dataset
+
+Use [`useSeries()`](/x/react-charts/hooks/use-series/) and [`useAxes()`](/x/react-charts/hooks/use-axes/) for computed series and axes data instead.
 
 ## Usage
 
@@ -22,23 +27,23 @@ function CustomComponent() {
 }
 ```
 
-The hook returns the dataset array that was passed to the `dataset` prop of the chart, or `undefined` if no dataset was provided.
+`useDataset()` returns the dataset array passed to the chart's `dataset` prop, or `undefined` if no dataset was provided.
 
 ## Basic example
 
-This example demonstrates using the `useDataset` hook to display dataset statistics above a chart:
+The example below shows `useDataset()` used to display dataset statistics above a chart:
 
 {{"demo": "UseDataset.js"}}
 
 ## Advanced example
 
-This example shows how to use the dataset to create a custom data table that synchronizes with the chart:
+The example below shows how to use the dataset to create a custom data table that stays in sync with the chart:
 
 {{"demo": "UseDatasetAdvanced.js"}}
 
 ## Return value
 
-The hook returns:
+`useDataset()` returns:
 
 | Type                                 | Description                                                                       |
 | :----------------------------------- | :-------------------------------------------------------------------------------- |
@@ -55,17 +60,11 @@ const dataset = [
 ```
 
 :::info
-The `useDataset` hook only works when using the `dataset` prop. If you're passing data directly to series via the `data` prop, this hook will return `undefined`.
+`useDataset()` returns a value only when the chart uses the `dataset` prop.
+If you pass data via the `data` prop on series, it returns `undefined`.
 :::
-
-## When to use
-
-The `useDataset` hook is particularly useful when:
-
-- Creating custom components that need access to the raw data
-- Building data tables or summaries alongside your charts
-- Performing calculations on the full dataset
 
 ## Caveats
 
-This hook must be used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
+You can only use this hook within a chart context.
+See the [hooks overview](/x/react-charts/hooks/) for usage requirements.
