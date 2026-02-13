@@ -4,9 +4,9 @@ import {
   defaultVisibleDate,
   initialEvents,
   resources,
-} from '../datasets/timezone-instant-based-events';
+} from '../datasets/timezone-wall-time-events';
 
-export default function TimezoneDatasetInstantBased() {
+export default function TimezoneDatasetWallTime() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
