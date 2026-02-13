@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import { type ColumnDef, useDataGrid } from '../../';
 import virtualizationPlugin, { type VirtualizationOptions } from './virtualization';
 import { sortingPlugin } from '../sorting';
 import { paginationPlugin } from '../pagination';
-import { isJSDOM } from 'test/utils/skipIf';
 
 type TestRow = { id: number; brand: string };
 
@@ -50,7 +50,7 @@ function buildVirtualizationBehaviorTestData(
   const rows: VirtualizationBehaviorTestRow[] = Array.from({ length: nbRows }, (_, rowIndex) => {
     const row: VirtualizationBehaviorTestRow = { id: rowIndex };
     columns.forEach((column) => {
-      row[column.field] = `${column.field}-${rowIndex}`;
+      row[column.field!] = `${column.field}-${rowIndex}`;
     });
     return row;
   });
@@ -454,6 +454,31 @@ describe('Virtualization', () => {
         'scrollHeight should be correct',
       );
     });
+
+    it.skipIf(isJSDOM)(
+      'should render new rows when scrolling past the threshold value',
+      async () => {
+        const { rows, columns } = buildVirtualizationBehaviorTestData(100, 2);
+        const rowHeight = 50;
+        const rowThresholdPx = rowHeight;
+
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <TestDataGrid rows={rows} columns={columns} rowHeight={rowHeight} rowBufferPx={0} />
+          </div>,
+        );
+
+        const virtualScroller = document.querySelector('[data-testid="virtual-scroller"]')!;
+        const renderingZone = document.querySelector(
+          '[data-testid="virtual-scroller-render-zone"]',
+        )!;
+        expect(renderingZone.firstElementChild).to.have.attr('data-rowindex', '0');
+        await act(async () => virtualScroller.scrollTo({ top: rowThresholdPx }));
+        await waitFor(() => {
+          expect(renderingZone.firstElementChild).to.have.attr('data-rowindex', '1');
+        });
+      },
+    );
   });
 
   describe('columns to render', () => {
