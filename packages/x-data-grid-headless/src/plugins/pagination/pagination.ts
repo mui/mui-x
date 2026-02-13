@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { type Plugin, createPlugin } from '../core/plugin';
 import type { GridRowId } from '../internal/rows/rowUtils';
 import { paginationSelectors } from './selectors';
@@ -28,6 +29,8 @@ type PaginationPlugin = Plugin<
   PaginationPluginOptions
 >;
 
+const PAGINATION_PIPELINE_PROCESSOR_NAME = 'pagination';
+
 const paginationPlugin = createPlugin<PaginationPlugin>()({
   name: 'pagination',
   order: 50,
@@ -42,11 +45,8 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
 
     const isExternal = params.pagination?.external === true;
 
-    // Check if sorting plugin has run and produced sortedRowIds
-    const sortingState = (state as Record<string, any>).sorting as
-      | { sortedRowIds: GridRowId[] }
-      | undefined;
-    const sourceRowIds: GridRowId[] = sortingState?.sortedRowIds ?? state.rows.dataRowIds;
+    // Use processedRowIds which may already be sorted by an upstream plugin
+    const sourceRowIds: GridRowId[] = state.rows.processedRowIds;
 
     // Determine row count
     const rowCount = isExternal
@@ -65,6 +65,10 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
 
     return {
       ...state,
+      rows: {
+        ...state.rows,
+        processedRowIds: paginatedRowIds,
+      },
       pagination: {
         model: validatedModel,
         rowCount,
@@ -75,53 +79,53 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
   },
 
   use: (store, params, api) => {
-    const getSourceRowIds = React.useCallback((): GridRowId[] => {
-      // Check if sorting plugin state exists (optional dependency)
-      const sortingState = (store.state as Record<string, any>).sorting as
-        | { sortedRowIds: GridRowId[] }
-        | undefined;
-      if (sortingState?.sortedRowIds) {
-        return sortingState.sortedRowIds;
+    const isExternalPagination = params.pagination?.external === true;
+
+    const paginationProcessor = useStableCallback((inputIds: GridRowId[]): GridRowId[] => {
+      if (isExternalPagination) {
+        return inputIds;
       }
-      return api.rows.getAllRowIds();
-    }, [store.state, api.rows]);
 
-    const recomputePaginationFromSource = React.useCallback(
-      (sourceRowIds: GridRowId[], model: PaginationModel): void => {
-        const isExternal = params.pagination?.external === true;
+      const model = store.state.pagination.model;
+      const rowCount = inputIds.length;
+      const pageCount = getPageCount(rowCount, model.pageSize, model.page);
+      const validPage = getValidPage(model.page, pageCount);
+      const validatedModel: PaginationModel =
+        validPage !== model.page ? { ...model, page: validPage } : model;
 
-        const rowCount = isExternal
-          ? (params.pagination?.rowCount ?? sourceRowIds.length)
-          : sourceRowIds.length;
+      const paginatedRowIds = paginateRowIds(inputIds, validatedModel);
 
-        const pageCount = getPageCount(rowCount, model.pageSize, model.page);
-        const validPage = getValidPage(model.page, pageCount);
-        const validatedModel: PaginationModel =
-          validPage !== model.page ? { ...model, page: validPage } : model;
+      // Update pagination-specific state
+      store.setState({
+        ...store.state,
+        pagination: {
+          model: validatedModel,
+          rowCount,
+          pageCount,
+          paginatedRowIds,
+        },
+      });
 
-        const paginatedRowIds = isExternal
-          ? sourceRowIds
-          : paginateRowIds(sourceRowIds, validatedModel);
+      return paginatedRowIds;
+    });
 
-        store.setState({
-          ...store.state,
-          pagination: {
-            model: validatedModel,
-            rowCount,
-            pageCount,
-            paginatedRowIds,
-          },
-        });
-      },
-      [params.pagination?.external, params.pagination?.rowCount, store],
-    );
+    const applyPagination = useStableCallback((): void => {
+      if (isExternalPagination) {
+        return;
+      }
 
-    const recomputePagination = React.useCallback(
-      (model: PaginationModel): void => {
-        recomputePaginationFromSource(getSourceRowIds(), model);
-      },
-      [getSourceRowIds, recomputePaginationFromSource],
-    );
+      api.rows.rowIdsPipeline.recompute(PAGINATION_PIPELINE_PROCESSOR_NAME);
+    });
+
+    React.useEffect(() => {
+      return api.rows.rowIdsPipeline.register(
+        PAGINATION_PIPELINE_PROCESSOR_NAME,
+        paginationProcessor,
+        {
+          disabled: isExternalPagination,
+        },
+      );
+    }, [api, isExternalPagination, paginationProcessor]);
 
     const getModel = (): PaginationModel => {
       return store.state.pagination.model;
@@ -130,12 +134,23 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
     const setModel = (model: PaginationModel): void => {
       const prevModel = store.state.pagination.model;
 
-      recomputePagination(model);
+      // Update model in state
+      store.setState({
+        ...store.state,
+        pagination: {
+          ...store.state.pagination,
+          model,
+        },
+      });
 
       // Call callback if model changed
-      const currentModel = store.state.pagination.model;
-      if (prevModel !== currentModel) {
-        params.pagination?.onModelChange?.(currentModel);
+      if (prevModel !== model) {
+        params.pagination?.onModelChange?.(model);
+      }
+
+      // Apply pagination through the pipeline
+      if (!isExternalPagination) {
+        applyPagination();
       }
     };
 
@@ -148,32 +163,6 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
       setModel({ page: 0, pageSize });
     };
 
-    // TODO: remove once virtualization plugin is merged and processed rows are recalculated from there
-    // Subscribe to store changes to detect when source rows change (e.g., after sorting)
-    React.useEffect(() => {
-      let prevSourceRowIds: GridRowId[] = (() => {
-        const sortingState = (store.state as Record<string, any>).sorting as
-          | { sortedRowIds: GridRowId[] }
-          | undefined;
-        return sortingState?.sortedRowIds ?? store.state.rows.dataRowIds;
-      })();
-
-      const unsubscribe = store.subscribe(() => {
-        const sortingState = (store.state as Record<string, any>).sorting as
-          | { sortedRowIds: GridRowId[] }
-          | undefined;
-        const currentSourceRowIds: GridRowId[] =
-          sortingState?.sortedRowIds ?? store.state.rows.dataRowIds;
-
-        if (prevSourceRowIds !== currentSourceRowIds) {
-          prevSourceRowIds = currentSourceRowIds;
-          recomputePaginationFromSource(currentSourceRowIds, store.state.pagination.model);
-        }
-      });
-
-      return unsubscribe;
-    }, [store, recomputePaginationFromSource]);
-
     // Handle controlled pagination.model prop changes
     const prevModelRef = React.useRef<PaginationModel | undefined>(params.pagination?.model);
 
@@ -185,10 +174,21 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
           params.pagination.model !== prevModelRef.current
         ) {
           prevModelRef.current = params.pagination.model;
-          recomputePagination(params.pagination.model);
+          // Update model in state without triggering callback (it's controlled)
+          store.setState({
+            ...store.state,
+            pagination: {
+              ...store.state.pagination,
+              model: params.pagination.model,
+            },
+          });
+
+          if (!isExternalPagination) {
+            applyPagination();
+          }
         }
       }
-    }, [params.pagination?.model, store.state.pagination.model, recomputePagination]);
+    }, [params.pagination?.model, store, isExternalPagination, applyPagination]);
 
     return {
       pagination: {
