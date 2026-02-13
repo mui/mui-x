@@ -37,13 +37,13 @@ export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGr
     }
   }, [grid, apiRef]);
 
-  const paginatedRowIds = grid.use(paginationPlugin.selectors.paginatedRowIds);
+  const visibleRowIds = grid.use(rowsPlugin.selectors.processedRowIds);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
   return (
     <div data-testid="grid">
-      {paginatedRowIds.map((rowId) => {
+      {visibleRowIds.map((rowId) => {
         const row = rowsData[rowId] as TRow | undefined;
         if (!row) {
           return null;

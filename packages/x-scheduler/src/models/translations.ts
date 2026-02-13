@@ -49,7 +49,10 @@ export interface SchedulerTranslations {
   // EventItem
   eventItemMultiDayLabel: (endDate: string) => string;
 
-  // EventDraggableDialog
+  // EventDialog
+  colorPickerLabel: string;
+  dateTimeSectionLabel: string;
+  resourceColorSectionLabel: string;
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;
@@ -110,4 +113,7 @@ export interface SchedulerTranslations {
   miniCalendarLabel: string;
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
+
+  // Timeline title sub grid
+  timelineResourceTitleHeader: string;
 }

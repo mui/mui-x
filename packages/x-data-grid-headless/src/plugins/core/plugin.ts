@@ -71,6 +71,8 @@ export interface PluginRegistryApi {
     _api: BaseApi,
     pluginName: TPlugin['name'],
   ): _api is BaseApi & ExtractPluginApi<TPlugin>;
+  forEachPlugin(callback: (plugin: AnyPlugin) => void): void;
+  getPluginsChain(): readonly AnyPlugin[];
 }
 
 export interface Plugin<
@@ -85,6 +87,7 @@ export interface Plugin<
   /** @internal Phantom property to carry TColumnMeta for type extraction. */
   readonly __columnMeta?: TColumnMeta;
   name: TName;
+  order?: number;
   dependencies?: TDeps;
   selectors: TSelectors;
   initialize: (
