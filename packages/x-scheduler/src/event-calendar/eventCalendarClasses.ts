@@ -38,6 +38,10 @@ export interface EventCalendarClasses extends EventDialogClasses {
   miniCalendarDayButton: string;
   /** Styles applied to the error container element. */
   errorContainer: string;
+  /** Styles applied to the error alert element. */
+  errorAlert: string;
+  /** Styles applied to the error message element. */
+  errorMessage: string;
   /** Styles applied to the header toolbar element. */
   headerToolbar: string;
   /** Styles applied to the header toolbar actions element. */
@@ -236,6 +240,8 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'miniCalendarDayCell',
     'miniCalendarDayButton',
     'errorContainer',
+    'errorAlert',
+    'errorMessage',
     'headerToolbar',
     'headerToolbarActions',
     'headerToolbarLeftElement',
@@ -342,6 +348,8 @@ const slots = {
   miniCalendarDayCell: ['miniCalendarDayCell'],
   miniCalendarDayButton: ['miniCalendarDayButton'],
   errorContainer: ['errorContainer'],
+  errorAlert: ['errorAlert'],
+  errorMessage: ['errorMessage'],
   headerToolbar: ['headerToolbar'],
   headerToolbarActions: ['headerToolbarActions'],
   headerToolbarLeftElement: ['headerToolbarLeftElement'],
