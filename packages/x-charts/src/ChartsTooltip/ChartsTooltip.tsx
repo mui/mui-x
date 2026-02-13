@@ -12,8 +12,8 @@ export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> e
   'children'
 > {
   /**
-   * The sort in which series items are displayed in the axis tooltip.
-   * When set to `none`, series are sorted as they are provided in the series property. Otherwise they are sorted by their value.
+   * Defines the sort order in which series items are displayed in the axis tooltip.
+   * When set to `none`, series are displayed in the same order they are provided in the series property. Otherwise they are sorted by their value.
    * Only applies when `trigger='axis'`.
    * @default 'none'
    */

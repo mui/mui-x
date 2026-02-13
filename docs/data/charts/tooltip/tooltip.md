@@ -104,8 +104,10 @@ Use the `sort` prop to modify the series order in the axis tooltip.
 This prop accepts the following values:
 
 - `'none'` (default): Shows series according to the order they are defined.
-- `'asc'`: Sort series by ascending order.
-- `'desc'`: Sort series by descending order.
+- `'asc'`: Sort series by ascending values.
+- `'desc'`: Sort series by descending values.
+
+Regardless of the `sort` prop being `'asc'` or `'desc'`, series whose value is `null` are always sorted last. 
 
 {{"demo": "SortDemo.js"}}
 
