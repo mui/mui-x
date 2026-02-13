@@ -578,12 +578,10 @@ describe('Virtualization', () => {
   describe('options', () => {
     it.skipIf(isJSDOM)('should take rowHeight into account', () => {
       const { rows, columns } = buildVirtualizationBehaviorTestData(100, 2);
-      const rowBufferPx = 150;
-      const gridHeight = 300;
-      const defaultRowHeight = 52;
-      const { rerender } = render(
-        <div style={{ width: 300, height: gridHeight }}>
-          <TestDataGrid rows={rows} columns={columns} rowBufferPx={rowBufferPx} />
+
+      const { unmount } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <TestDataGrid rows={rows} columns={columns} rowBufferPx={150} />
         </div>,
       );
 
@@ -592,14 +590,13 @@ describe('Virtualization', () => {
       ).length;
 
       expect(renderedRowsWithDefaultHeight).to.equal(
-        Math.ceil((gridHeight + rowBufferPx) / defaultRowHeight),
+        9, // Math.ceil((300 + 150) / 52)
       );
+      unmount();
 
-      const customRowHeight = 40;
-
-      rerender(
+      render(
         <div style={{ width: 300, height: 300 }}>
-          <TestDataGrid rows={rows} columns={columns} rowHeight={customRowHeight} />
+          <TestDataGrid rows={rows} columns={columns} rowHeight={40} />
         </div>,
       );
 
@@ -608,7 +605,48 @@ describe('Virtualization', () => {
       ).length;
 
       expect(renderedRowsWithCustomHeight).to.equal(
-        Math.ceil((gridHeight + rowBufferPx) / customRowHeight),
+        12, // Math.ceil((300 + 150) / 40)
+      );
+    });
+
+    it.skipIf(isJSDOM)('should take rowBufferPx into account', async () => {
+      const { rows, columns } = buildVirtualizationBehaviorTestData(100, 2);
+      const gridHeight = 300;
+      const rowHeight = 52;
+
+      {
+        const { unmount } = render(
+          <div style={{ width: 300, height: gridHeight }}>
+            <TestDataGrid rows={rows} columns={columns} rowHeight={rowHeight} rowBufferPx={0} />
+          </div>,
+        );
+        expect($$('[data-testid="virtual-scroller-render-zone"] [role="row"]').length).to.equal(
+          6, // Math.ceil(300 / 52)
+        );
+        unmount();
+      }
+
+      {
+        const { unmount } = render(
+          <div style={{ width: 300, height: gridHeight }}>
+            <TestDataGrid rows={rows} columns={columns} rowHeight={rowHeight} rowBufferPx={150} />
+          </div>,
+        );
+
+        expect($$('[data-testid="virtual-scroller-render-zone"] [role="row"]').length).to.equal(
+          9, // Math.ceil((300 + 150) / 52)
+        );
+        unmount();
+      }
+
+      render(
+        <div style={{ width: 300, height: gridHeight }}>
+          <TestDataGrid rows={rows} columns={columns} rowHeight={rowHeight} rowBufferPx={300} />
+        </div>,
+      );
+
+      expect($$('[data-testid="virtual-scroller-render-zone"] [role="row"]').length).to.equal(
+        12, // Math.ceil((300 + 300) / 52)
       );
     });
 
