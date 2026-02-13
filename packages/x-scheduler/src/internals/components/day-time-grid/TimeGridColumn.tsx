@@ -12,11 +12,8 @@ import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headle
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
-import {
-  EventDraggableDialogTrigger,
-  useEventDraggableDialogContext,
-} from '../event-draggable-dialog/EventDraggableDialog';
-import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -78,7 +75,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
-  const classes = useEventCalendarClasses();
+  const { classes } = useEventCalendarStyledContext();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
@@ -125,8 +122,8 @@ function ColumnInteractiveLayer({
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventDraggableDialogContext();
-  const classes = useEventCalendarClasses();
+  const { onOpen: startEditing } = useEventDialogContext();
+  const { classes } = useEventCalendarStyledContext();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
@@ -176,9 +173,9 @@ function ColumnInteractiveLayer({
       {...eventCreationProps}
     >
       {occurrences.map((occurrence) => (
-        <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+        <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
           <TimeGridEvent occurrence={occurrence} variant="regular" />
-        </EventDraggableDialogTrigger>
+        </EventDialogTrigger>
       ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (

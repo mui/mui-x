@@ -8,7 +8,7 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
-import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
 
 const EventTimelinePremiumEventRoot = styled('div', {
@@ -83,7 +83,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const classes = useEventTimelinePremiumClasses();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
@@ -105,7 +105,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     'aria-labelledby': `${ariaLabelledBy} ${id}`,
-    className: clsx(classes.event, className),
+    className: clsx(className, occurrence.className),
     style: {
       '--number-of-lines': 1,
       '--row-index': occurrence.position.firstIndex,
@@ -120,6 +120,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         render={<EventTimelinePremiumEventRoot />}
         aria-hidden={true}
         {...sharedProps}
+        className={clsx(sharedProps.className, classes.eventPlaceholder)}
       >
         <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
           {occurrence.title}
@@ -136,6 +137,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
+      className={clsx(sharedProps.className, classes.event)}
     >
       {isStartResizable && (
         <EventTimelinePremiumEventResizeHandler
