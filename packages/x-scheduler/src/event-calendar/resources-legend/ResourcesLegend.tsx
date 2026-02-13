@@ -104,16 +104,14 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
-  const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
-
-  const visibleSet = React.useMemo(() => new Set(visibleResourcesList), [visibleResourcesList]);
+  const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
 
   const handleToggle = useStableCallback(
     (resourceId: string, event: React.ChangeEvent<HTMLInputElement>) => {
       const newVisibleResources = Object.fromEntries(
         resources.map((res) => [
           res.id,
-          res.id === resourceId ? event.target.checked : visibleSet.has(res.id),
+          res.id === resourceId ? event.target.checked : visibleResources[res.id] !== false,
         ]),
       );
       store.setVisibleResources(newVisibleResources, event.nativeEvent);
@@ -138,7 +136,7 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
         <ResourcesLegendItem
           key={resource.id}
           resource={resource}
-          isVisible={visibleSet.has(resource.id)}
+          isVisible={visibleResources[resource.id] !== false}
           onToggle={handleToggle}
         />
       ))}
