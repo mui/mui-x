@@ -561,7 +561,7 @@ export function SelectorsExample() {
   });
 
   // Selectors - accessed via static plugin properties
-  rowsPlugin.selectors.rowIds;
+  rowsPlugin.selectors.processedRowIds;
   rowsPlugin.selectors.tree;
   rowsPlugin.selectors.loading;
   columnsPlugin.selectors.orderedFields;
@@ -572,11 +572,11 @@ export function SelectorsExample() {
   paginationPlugin.selectors.paginationModel;
 
   // Should be able to call selectors imperatively
-  rowsPlugin.selectors.rowIds(grid1.getState());
+  rowsPlugin.selectors.processedRowIds(grid1.getState());
 
   // Should be able to use with grid.use()
   grid1.use(sortingPlugin.selectors.model);
-  grid1.use(rowsPlugin.selectors.rowIds);
+  grid1.use(rowsPlugin.selectors.processedRowIds);
 
   // @ts-expect-error paginationPlugin is not added
   grid1.use(paginationPlugin.selectors.paginationModel);
