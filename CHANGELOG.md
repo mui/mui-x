@@ -5,18 +5,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-> @8.25.0 release:changelog /Users/siriwatknp/Personal-Repos/material-ui-x
-> node scripts/releaseChangelog.mjs --lastRelease v8.27.0
-
-## **VERSION**
-
-<!-- generated comparing v8.27.0..master -->
+## 9.0.0-alpha.0
 
 _Feb 13, 2026_
 
 We'd like to extend a big thank you to the 21 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- [DataGrid][Pickers] Add `thTH` translations (#21116) @siriwatknp
+- [pickers] Add `AdapterDayjsBuddhist` adapter (#20984) @siriwatknp
 
 Special thanks go out to these community members for their valuable contributions:
 @Copilot, @jhe-iqbis
@@ -26,51 +22,37 @@ The following team members contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@__VERSION__`
+#### `@mui/x-data-grid@9.0.0-alpha.0`
 
-- [data grid] Fix virtualization crash by preventing out-of-bounds focusedVirtualCell indices (#20927) @Copilot
-- [data grid][docs] Add high-level competitor comparison to Overview doc (DX-117) (#20870) @mapache-salvaje
-- [DataGrid] Add `onMenuOpen()` and `onMenuClose()` event handlers in `GridActionsCell` (#20924) @jhe-iqbis
-- [DataGrid] Fix focus steal issue with `<Dialog />` (#21100) @MBilalShafi
-- [DataGrid] Fix: update scrollbar when virtualization is disabled (#20929) @romgrk
-- [DataGrid] Hide column menu icon when there are no items (#20920) @MBilalShafi
-- [DataGrid] Migrate styled imports and remove `index.css` (#21166) @MBilalShafi
-- [DataGrid] Optimize `GridRootStyles` overrides resolver (#21211) @sai6855
+- [DataGrid][docs] Add high-level competitor comparison to Overview doc (DX-117) (#20870) @mapache-salvaje
 - [DataGrid] Update default `logicOperator` behavior in filtering docs (#21098) @michelengelen
 - [DataGrid][docs] Remove Bundling section from quickstart (#21177) @MBilalShafi
 - [DataGrid][Pickers] Add `thTH` translations (#21116) @siriwatknp
+- [DataGrid] Fix initial filter value state in CustomMultiValueOperator demo (#21217) @sai6855
 
-#### `@mui/x-data-grid-pro@__VERSION__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@9.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@__VERSION__`, plus:
+Same changes as in `@mui/x-data-grid@9.0.0-alpha.0`, plus:
 
 - [DataGridPro] Cleanup outdated rows on `dataSource` reference update (#21138) @MBilalShafi
-- [DataGridPro] Fix column pinning issue with `restoreState` (#21297) @MBilalShafi
-- [DataGridPro] Fix lazy loading params for page with one row (#21139) @MBilalShafi
-- [DataGridPro] Properly extract parent path (#21274) @arminmeh
 
-#### `@mui/x-data-grid-premium@__VERSION__` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@9.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@__VERSION__`, plus:
-
-- [DataGridPremium] Fix aggregation display when `initialState` has both `sortModel` and `pinnedColumns` (#21146) @mj12albert
-- [DataGridPremium] Fix focus retention when undo/redo operations are done on the same cell (#21108) @arminmeh
-- [DataGridPremium] Fix type import (#21031) @arminmeh
-- [DataGridPremium] Undo and redo (#20594) @arminmeh
+Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@__VERSION__`
+#### `@mui/x-date-pickers@9.0.0-alpha.0`
 
 - [pickers] Add `AdapterDayjsBuddhist` adapter (#20984) @siriwatknp
 
-#### `@mui/x-date-pickers-pro@__VERSION__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@9.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@__VERSION__`.
+Same changes as in `@mui/x-date-pickers@9.0.0-alpha.0`.
 
 ### Charts
 
-#### `@mui/x-charts@__VERSION__`
+#### `@mui/x-charts@9.0.0-alpha.0`
 
 - [charts] Add Legend actions (#20404) @JCQuintas
 - [charts] Add `Chart` suffix to MUI Classes (#21042) @JCQuintas
@@ -113,23 +95,11 @@ Same changes as in `@mui/x-date-pickers@__VERSION__`.
 - [charts] Revert `touch-action: pan-y` removal when zoom is disabled (#20852) @bernardobelchior
 - [charts] The `useXxxSeries([])` return empty array (#21001) @alexfauquette
 - [charts] Use `NumberValue` in domain limit function (#21054) @JCQuintas
-- [charts][docs] Revise the Charts CSP doc (#20906) @mapache-salvaje
-- [charts][docs] Revise the Charts Composition doc (#20032) @mapache-salvaje
-- [charts][docs] Revise the Charts Hooks Overview doc (#20921) @mapache-salvaje
-- [charts][docs] Revise the Charts Legend doc (#20821) @mapache-salvaje
-- [charts][docs] Revise the Charts Localization doc (#20800) @mapache-salvaje
-- [charts][docs] Revise the Charts Plugins doc (#20933) @mapache-salvaje
-- [charts][docs] Revise the Charts Stacking doc (#20830) @mapache-salvaje
-- [charts][docs] Revise the Charts Styling doc (#20835) @mapache-salvaje
-- [charts][docs] Revise the Charts Toolbar doc (#20867) @mapache-salvaje
-- [charts][docs] Revise the Charts Tooltip doc (#20869) @mapache-salvaje
-- [charts][docs] Revise the Charts Zoom and Pan doc (#20893) @mapache-salvaje
 
-#### `@mui/x-charts-pro@__VERSION__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@9.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@__VERSION__`, plus:
+Same changes as in `@mui/x-charts@9.0.0-alpha.0`, plus:
 
-- [charts-pro] Add `onItemClick` to the heatmap (#20817) @alexfauquette
 - [charts-pro] Add border radius to Heatmap (#20931) @bernardobelchior
 - [charts-pro] Add keyboard navigation to funnel (#20766) @alexfauquette
 - [charts-pro] Add keyboard navigation to heatmap (#20786) @alexfauquette
@@ -142,9 +112,9 @@ Same changes as in `@mui/x-charts@__VERSION__`, plus:
 - [charts-pro] Update Heatmap identifier (#21124) @alexfauquette
 - [charts-pro] Update default value of `hideLegend` prop in `Heatmap` (#20961) @Copilot
 
-#### `@mui/x-charts-premium@__VERSION__` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@9.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@__VERSION__`, plus:
+Same changes as in `@mui/x-charts-pro@9.0.0-alpha.0`, plus:
 
 - [charts-premium] Add WebGL renderer to Heatmap (#20756) @bernardobelchior
 - [charts-premium] Add `ChartContainerPremium` (#20910) @bernardobelchior
@@ -153,25 +123,22 @@ Same changes as in `@mui/x-charts-pro@__VERSION__`, plus:
 - [charts-premium] Extract `HeatmapSVGPlot` from `HeatmapPlot` component (#21015) @bernardobelchior
 - [charts-premium] Fix `ChartDataProviderPremium` tests (#20868) @bernardobelchior
 - [charts-premium] Fix links in comments for chart containers and data providers (#21105) @bernardobelchior
-- [charts-premium] Fix wrong `defaultSlots` in premium charts (#21034) @bernardobelchior
 
 ### Tree View
 
-#### `@mui/x-tree-view@__VERSION__`
+#### `@mui/x-tree-view@9.0.0-alpha.0`
 
-- [tree view] Fix `apiRef.current.setItemExpansion()` (#21049) @flaviendelangle
-- [tree view] Fix `props.id` not passed to the root element (#20891) @flaviendelangle
+_No changes._
 
-#### `@mui/x-tree-view-pro@__VERSION__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@9.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@__VERSION__`, plus:
+Same changes as in `@mui/x-tree-view@9.0.0-alpha.0`, plus:
 
 - [RichTreeViewPro] Add support for virtualization (#20780) @flaviendelangle
-- [RichTreeViewPro] Do not export `useSimpleTreeViewApiRef()` and `useRichTreeViewApiRef()` from pro package (#21047) @flaviendelangle
 
 ### Codemod
 
-#### `@mui/x-codemod@__VERSION__`
+#### `@mui/x-codemod@9.0.0-alpha.0`
 
 - [codemod] Document and Clean the codemod utils (#21014) @alexfauquette
 
@@ -179,26 +146,33 @@ Same changes as in `@mui/x-tree-view@__VERSION__`, plus:
 
 - [docs] Add focus highlight in composition snipets (#20614) @alexfauquette
 - [docs] Add simple candlestick chart demo (#20912) @bernardobelchior
-- [docs] Fix DataGrid's cell edit renderers (#21032) @arminmeh
 - [docs] Fix Waterfall Chart documentation badge from Pro to Premium (#20888) @Copilot
 - [docs] Fix broken links on Data Grid Editing sub-pages (#20911) @arminmeh
 - [docs] Fix docs API for HeatmapPremium (#21137) @alexfauquette
 - [docs] Fix horizontal overflow in heatmap docs (#20968) @bernardobelchior
 - [docs] Move Range Bar Chart to existing charts (#21120) @bernardobelchior
 - [docs] Prepare the scheduler doc for the alpha (#21268) @flaviendelangle
-- [docs] Recipe for lazy loading DataGrid's detail panels with auto height (#20979) @arminmeh
 - [docs] Rewording of the heatmap item click (#20987) @alexfauquette
 - [scheduler][docs] Create the Quickstart page (#20913) @flaviendelangle
+- [charts][docs] Revise the Charts CSP doc (#20906) @mapache-salvaje
+- [charts][docs] Revise the Charts Composition doc (#20032) @mapache-salvaje
+- [charts][docs] Revise the Charts Hooks Overview doc (#20921) @mapache-salvaje
+- [charts][docs] Revise the Charts Legend doc (#20821) @mapache-salvaje
+- [charts][docs] Revise the Charts Localization doc (#20800) @mapache-salvaje
+- [charts][docs] Revise the Charts Plugins doc (#20933) @mapache-salvaje
+- [charts][docs] Revise the Charts Stacking doc (#20830) @mapache-salvaje
+- [charts][docs] Revise the Charts Styling doc (#20835) @mapache-salvaje
+- [charts][docs] Revise the Charts Toolbar doc (#20867) @mapache-salvaje
+- [charts][docs] Revise the Charts Tooltip doc (#20869) @mapache-salvaje
+- [charts][docs] Revise the Charts Zoom and Pan doc (#20893) @mapache-salvaje
+- [DataGrid][docs] Add a recipe for handling long text cell (#20754) @siriwatknp
 
 ### Core
 
 - [code-infra] Add `MUI_TEST_ENV` global (#21187) @Janpot
-- [code-infra] Add `consistent-type-imports` rule to the grid packages (#21109) @arminmeh
-- [code-infra] Allow user to select target branch if it exists for current major (#20992) @JCQuintas
 - [code-infra] Fix `material-ui/disallow-react-api-in-server-components` (#20909) @JCQuintas
 - [code-infra] Fix `renameImports` codemod not preserving comments (#20977) @JCQuintas
 - [code-infra] Fix the label comparison to use lower case (#20934) @brijeshb42
-- [code-infra] Fix the target branch condition in the release script (#21046) @arminmeh
 - [code-infra] Github action to sync title and label (#20922) @brijeshb42
 - [code-infra] Ignore scheduler demo with random data (#20982) @JCQuintas
 - [code-infra] Improve `codemod` testing setup (#20981) @JCQuintas
@@ -213,20 +187,14 @@ Same changes as in `@mui/x-tree-view@__VERSION__`, plus:
 - [docs-infra] Fix missing slots section on API page (#20915) @Janpot
 - [docs-infra] Fix two broken links (#20914) @Janpot
 - [docs-infra] Port demo changes (#20971) @Janpot
-- [internal] Add CLI for translation using LLM (#21260) @cherniavskii
 - [internal] Add information about codemods to AGENTS.md (#21011) @bernardobelchior
 - [internal] Fix codemod versioning instructions in `AGENTS.md` (#21024) @bernardobelchior
 - [internal] Fix missing generated props in master (#21142) @bernardobelchior
 - [internal] Headless sorting plugin (#21089) @arminmeh
 - [internal] Remove duplicate code (#20896) @oliviertassinari
-- [internal] Set up shared instructions for coding agents (#20932) @cherniavskii
 
 ### Miscellaneous
 
 - Bump next to ^15.5.11 (#21171) @Copilot
 - [core] Fix CI (#21223) @flaviendelangle
-- [Data Grid] Add a recipe for handling long text cell (#20754) @siriwatknp
-- [Data Grid] Add new `longText` column type (#20980) @siriwatknp
-- [data-grid] Fix initial filter value state in CustomMultiValueOperator demo (#21217) @sai6855
 - [PoC] Headless data grid (#20645) @cherniavskii
-- [release] v8.25.0 (#20917) @cherniavskii
