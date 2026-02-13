@@ -429,8 +429,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
 
   React.useEffect(() => {
     grid.api.pagination.setPageSize(effectivePageSize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- grid.api is stable by identity but not by reference
-  }, [effectivePageSize]);
+  }, [effectivePageSize, grid.api]);
 
   // Use paginated row IDs from pagination plugin
   const paginationModel = grid.use(paginationPlugin.selectors.model);
