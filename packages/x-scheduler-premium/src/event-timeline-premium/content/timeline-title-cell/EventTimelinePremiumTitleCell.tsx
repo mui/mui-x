@@ -58,9 +58,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
         className={classes.titleCell}
         data-palette={eventColor}
       >
-        <ResourceLegendColor
-          className={classes.titleCellLegendColor}
-        />
+        <ResourceLegendColor className={classes.titleCellLegendColor} />
         {resource!.title}
       </EventTimelinePremiumTitleCellRoot>
     </EventTimelinePremiumTitleCellRow>
