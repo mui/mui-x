@@ -21,20 +21,17 @@ export class TreeViewFocusPlugin {
         // If no item is focused or the focused item is still present, we don't need to do anything.
         const focusedItemId = focusSelectors.focusedItemId(store.state);
         if (focusedItemId == null || itemsSelectors.itemMeta(store.state, focusedItemId)) {
-          return undefined;
+          return;
         }
 
-        const itemToFocusId = getNextNavigableItem(previous, focusedItemId);
-        // We reached the end of the tree, check from the beginning
-        if (itemToFocusId === null) {
-          return getFirstNavigableItem(this.store.state);
-        }
+        const itemToFocusId =
+          getNextNavigableItem(previous, focusedItemId) ?? getFirstNavigableItem(this.store.state);
 
         if (itemToFocusId == null) {
-          return this.setFocusedItemId(null);
+          this.setFocusedItemId(null);
+        } else {
+          this.applyItemFocus(null, itemToFocusId);
         }
-
-        this.applyItemFocus(null, itemToFocusId);
       },
     );
   }
