@@ -1,10 +1,5 @@
 # Changelog
 
-> For full v8 changelog, please refer to the [v.8x branch](https://github.com/mui/mui-x/blob/v8.x/CHANGELOG.md).
-
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
-
 ## 9.0.0-alpha.0
 
 _Feb 13, 2026_
@@ -198,3 +193,7 @@ Same changes as in `@mui/x-tree-view@9.0.0-alpha.0`, plus:
 - Bump next to ^15.5.11 (#21171) @Copilot
 - [core] Fix CI (#21223) @flaviendelangle
 - [PoC] Headless data grid (#20645) @cherniavskii
+
+## Older versions
+
+Changes before 9.x are listed in our [changelog for older versions](https://github.com/mui/mui-x/blob/HEAD/changelogOld/).
