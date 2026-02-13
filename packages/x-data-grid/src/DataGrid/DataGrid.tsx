@@ -137,6 +137,10 @@ DataGridRaw.propTypes = {
    */
   checkboxSelection: PropTypes.bool,
   /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   */
+  checkboxColDef: PropTypes.object,
+  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,

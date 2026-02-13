@@ -382,6 +382,16 @@ export type GridListViewColDef<R extends GridValidRowModel = any, V = any, F = V
   'field' | 'renderCell' | 'align' | 'cellClassName' | 'display'
 >;
 
+/**
+ * Column Definition interface used for the checkbox selection column.
+ * @demos
+ *   - [Row selection](/x/react-data-grid/row-selection/)
+ */
+export type GridCheckboxSelectionColDef<R extends GridValidRowModel = any, V = any, F = V> = Omit<
+  GridColDef<R, V, F>,
+  'field' | 'type'
+>;
+
 export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'>;
 
 export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridColDef<
