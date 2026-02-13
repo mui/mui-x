@@ -7,9 +7,9 @@ import { ChartProvider } from '../context/ChartProvider';
 function UseSvgRef() {
   const ref = useSvgRef();
   return (
-    <svg ref={ref} id="test-id">
+    <div ref={ref} id="test-id">
       {ref.current?.id}
-    </svg>
+    </div>
   );
 }
 

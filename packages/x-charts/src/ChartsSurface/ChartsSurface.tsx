@@ -41,8 +41,8 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const classes = useUtilityClasses();
 
   return (
-    <ChartsLayerContainer className={clsx(classes.root, className)}>
-      <ChartsSvgLayer {...other} ref={ref}>
+    <ChartsLayerContainer className={classes.root}>
+      <ChartsSvgLayer className={className} {...other} ref={ref}>
         {children}
       </ChartsSvgLayer>
     </ChartsLayerContainer>
