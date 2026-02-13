@@ -2,7 +2,6 @@
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
 import type { RefObject } from '@mui/x-internals/types';
-import { clamp } from '@mui/x-internals/math';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { gridClasses } from '../../../constants/gridClasses';
@@ -23,6 +22,7 @@ import { doesSupportPreventScroll } from '../../../utils/doesSupportPreventScrol
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
+import { clamp } from '../../../utils/utils';
 import type { GridCellCoordinates } from '../../../models/gridCell';
 import type { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';

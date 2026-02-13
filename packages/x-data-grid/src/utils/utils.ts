@@ -29,6 +29,13 @@ export function escapeRegExp(value: string): string {
 }
 
 /**
+ * Follows the CSS specification behavior for min and max.
+ * If min > max, then min has priority.
+ */
+export const clamp = (value: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, value));
+
+/**
  * Create an array containing the range [from, to[
  */
 export function range(from: number, to: number) {

@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { clamp } from '@mui/x-internals/math';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -46,6 +45,7 @@ import {
   createControllablePromise,
 } from '../../../utils/createControllablePromise';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
 import { gridColumnsStateSelector } from '../columns';
