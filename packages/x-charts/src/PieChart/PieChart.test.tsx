@@ -1,4 +1,4 @@
-import { createRenderer, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/describeConformance';
 import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
 import { isJSDOM } from 'test/utils/skipIf';
