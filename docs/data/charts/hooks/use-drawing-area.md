@@ -45,5 +45,5 @@ The demo below shows:
 
 ## Caveats
 
-You can only use these hooks within a chart context.
+You can only use this hook within a chart context.
 See the [hooks overview](/x/react-charts/hooks/) for usage requirements.
