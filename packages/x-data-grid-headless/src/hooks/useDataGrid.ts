@@ -100,10 +100,18 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
 
   const publicStore = React.useMemo(() => createPublicStore(stateStore), [stateStore]);
 
-  return {
-    getState: publicStore.getState,
-    use: publicStore.use as DataGridInstance<TPlugins, TRow>['use'],
-    api,
-    options,
-  };
+  const instance = useRefWithInit(() => {
+    return {
+      getState: publicStore.getState,
+      use: publicStore.use as DataGridInstance<TPlugins, TRow>['use'],
+      api,
+      options,
+    };
+  }).current;
+
+  React.useEffect(() => {
+    instance.options = options;
+  }, [instance, options]);
+
+  return instance;
 };
