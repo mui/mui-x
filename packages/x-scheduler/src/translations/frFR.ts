@@ -11,4 +11,7 @@ export const frFR: Partial<SchedulerTranslations> = {
 
   // WeekView
   allDay: 'Toute la journée',
+
+  // Timeline title sub grid
+  timelineResourceTitleHeader: 'Titre de la ressource',
 };
