@@ -3,7 +3,11 @@ import { expansionSelectors } from '../expansion';
 import { focusSelectors } from './selectors';
 import { itemsSelectors } from '../items';
 import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
-import { getFirstNavigableItem, getNextNavigableItem } from '../../utils/tree';
+import {
+  getFirstNavigableItem,
+  getNextNavigableItem,
+  getPreviousNavigableItem,
+} from '../../utils/tree';
 
 export class TreeViewFocusPlugin {
   private store: MinimalTreeViewStore<any, any>;
@@ -15,25 +19,41 @@ export class TreeViewFocusPlugin {
 
     // Whenever the items change, we need to ensure the focused item is still present.
     // If the focused item was removed, focus the closest neighbor instead of the first item.
-    this.store.registerStoreEffect(
-      (state) => state,
-      (previous) => {
-        // If no item is focused or the focused item is still present, we don't need to do anything.
-        const focusedItemId = focusSelectors.focusedItemId(store.state);
-        if (focusedItemId == null || itemsSelectors.itemMeta(store.state, focusedItemId)) {
-          return;
+    let previousState = store.state;
+    this.store.subscribe((newState) => {
+      // Only run when items actually changed.
+      if (newState.itemMetaLookup === previousState.itemMetaLookup) {
+        previousState = newState;
+        return;
+      }
+
+      const focusedItemId = focusSelectors.focusedItemId(newState);
+      if (focusedItemId == null || itemsSelectors.itemMeta(newState, focusedItemId)) {
+        previousState = newState;
+        return;
+      }
+
+      const checkItemInNewTree = (itemId: TreeViewItemId | null) => {
+        if (itemId == null || !itemsSelectors.itemMeta(newState, itemId)) {
+          return null;
         }
 
-        const itemToFocusId =
-          getNextNavigableItem(previous, focusedItemId) ?? getFirstNavigableItem(this.store.state);
+        return itemId;
+      };
 
-        if (itemToFocusId == null) {
-          this.setFocusedItemId(null);
-        } else {
-          this.applyItemFocus(null, itemToFocusId);
-        }
-      },
-    );
+      const itemToFocusId =
+        checkItemInNewTree(getNextNavigableItem(previousState, focusedItemId)) ??
+        checkItemInNewTree(getPreviousNavigableItem(previousState, focusedItemId)) ??
+        getFirstNavigableItem(newState);
+
+      if (itemToFocusId == null) {
+        this.setFocusedItemId(null);
+      } else {
+        this.applyItemFocus(null, itemToFocusId);
+      }
+
+      previousState = newState;
+    });
   }
 
   private setFocusedItemId = (itemId: TreeViewItemId | null) => {
