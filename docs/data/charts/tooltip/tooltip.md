@@ -107,7 +107,7 @@ This prop accepts the following values:
 - `'asc'`: Sort series by ascending values.
 - `'desc'`: Sort series by descending values.
 
-Regardless of the `sort` prop being `'asc'` or `'desc'`, series whose value is `null` are always sorted last. 
+Regardless of the `sort` prop being `'asc'` or `'desc'`, series whose value is `null` are always sorted last.
 
 {{"demo": "SortDemo.js"}}
 
