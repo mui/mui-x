@@ -44,6 +44,8 @@ const ChartsSvgLayerStyles = styled('svg', {
  * A layer that provides the drawing area SVG the chart elements.
  * Must be wrapped in a `<ChartsLayerContainer>`.
  *
+ * It provides the `title` and `desc` elements for the chart.
+ *
  * Demos:
  *
  * - [Composition](https://mui.com/x/api/charts/composition/)

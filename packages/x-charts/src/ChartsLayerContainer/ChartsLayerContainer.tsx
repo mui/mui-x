@@ -36,7 +36,8 @@ const ChartsLayerContainerDiv = styled('div', {
 export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {}
 
 /**
- * TODO: add docs
+ * A component that contains the chart layers, such as `<ChartsSvgLayer>`, and `<ChartsWebGlLayer>`.
+ * It is responsible for positioning itself and providing the dimensions and interaction context to its children layers.
  */
 export const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(
   function ChartsLayerContainer(inProps, ref) {

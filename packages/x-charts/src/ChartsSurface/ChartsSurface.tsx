@@ -19,10 +19,8 @@ export interface ChartsSurfaceProps extends Omit<
 }
 
 /**
- * It provides the drawing area for the chart elements.
- * It is the root `<svg>` of all the chart elements.
- *
- * It also provides the `title` and `desc` elements for the chart.
+ * A helper component that combines `<ChartsLayerContainer>` and `<ChartsSvgLayer>` to provide a surface for drawing charts.
+ * If you need more control over the layers, you can use `<ChartsLayerContainer>` and `<ChartsSvgLayer>` separately.
  *
  * Demos:
  *

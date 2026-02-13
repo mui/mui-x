@@ -356,6 +356,11 @@ const focusedItem = useFocusedItem();
 const hasFocusedItem = focusedItem !== null;
 ```
 
+### Theme style override removal
+
+The `ChartsSurface` component is now comprised of `ChartsLayerContainer` and `ChartsSvgLayer`. As a consequence, it is no longer possible to style the component using the `MuiChartsSurface` theme key.
+If you want to style the layer container, you can use `MuiChartsLayerContainer` instead, and for the SVG layer, use `MuiChartsSvgLayer`.
+
 ## Typescript
 
 ### Remove default generic of `SeriesItemIdentifier`
