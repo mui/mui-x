@@ -4,7 +4,7 @@ import dataGridComponentApi from './dataGridApiPages';
 import pickersComponentApi from './datePickersApiPages';
 import treeViewComponentApi from './treeViewApiPages';
 
-const isSchedulerVisible = process.env.DEPLOY_ENV !== 'production';
+const isSchedulerVisible = process.env.SHOW_SCHEDULER === '1';
 
 const schedulerPages: MuiPage[] = isSchedulerVisible
   ? [
