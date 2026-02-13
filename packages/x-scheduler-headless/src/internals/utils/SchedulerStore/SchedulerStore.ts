@@ -558,7 +558,7 @@ export class SchedulerStore<
   };
 
   /**
-   * Builds an object containing the methods that should be exposed publicly by the Scheduler components.
+   * Builds an object containing the methods that should be exposed publicly by the scheduler components.
    */
   public buildPublicAPI() {
     return {
