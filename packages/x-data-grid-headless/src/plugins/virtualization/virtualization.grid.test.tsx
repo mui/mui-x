@@ -73,7 +73,14 @@ type TestDataGridProps<TRow extends object> = {
   apiRef?: React.RefObject<GridInstance<TRow> | null>;
   height?: number;
   width?: number;
-} & VirtualizationOptions;
+  disableVirtualization?: boolean;
+  disableColumnVirtualization?: boolean;
+  autoHeight?: boolean;
+  rowBufferPx?: number;
+  columnBufferPx?: number;
+  rowHeight?: VirtualizationOptions['rowHeight'];
+  initialState?: VirtualizationOptions['initialState'];
+};
 
 function TestDataGrid<TRow extends object>(props: TestDataGridProps<TRow>) {
   const {
@@ -100,11 +107,13 @@ function TestDataGrid<TRow extends object>(props: TestDataGridProps<TRow>) {
     getRowId,
     columns,
     plugins: [virtualizationPlugin, sortingPlugin, paginationPlugin],
-    disableVirtualization,
-    disableColumnVirtualization,
-    autoHeight,
-    rowBufferPx,
-    columnBufferPx,
+    virtualization: {
+      disable: disableVirtualization,
+      disableForColumns: disableColumnVirtualization,
+      autoHeight,
+      rowBufferPx,
+      columnBufferPx,
+    },
     rowHeight,
     initialState,
   });

@@ -26,11 +26,13 @@ export interface ColumnToRender extends ColumnState {
 }
 
 export interface VirtualizationOptions {
-  disableVirtualization?: boolean;
-  disableColumnVirtualization?: boolean;
-  autoHeight?: boolean;
-  rowBufferPx?: number;
-  columnBufferPx?: number;
+  virtualization?: {
+    disable?: boolean;
+    disableForColumns?: boolean;
+    autoHeight?: boolean;
+    rowBufferPx?: number;
+    columnBufferPx?: number;
+  };
   rowHeight?: number;
   initialState?: {
     scroll?: { top: number; left: number };
@@ -97,11 +99,13 @@ const DEFAULT_COLUMN_WIDTH = 100;
 const MIN_OVERLAY_SCROLLBAR_SIZE = 14;
 
 function getInitialVirtualizationState(params: VirtualizationOptions): VirtualizationState {
-  const { disableVirtualization, disableColumnVirtualization, autoHeight } = params;
+  const disable = params.virtualization?.disable ?? false;
+  const disableForColumns = params.virtualization?.disableForColumns ?? false;
+  const autoHeight = params.virtualization?.autoHeight ?? false;
 
-  const enabled = !disableVirtualization;
-  const enabledForColumns = !disableVirtualization && !disableColumnVirtualization;
-  const enabledForRows = !disableVirtualization && !autoHeight;
+  const enabled = !disable;
+  const enabledForColumns = !disable && !disableForColumns;
+  const enabledForRows = !disable && !autoHeight;
 
   return {
     virtualization: {
@@ -125,9 +129,9 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
   }),
   use: (store, params) => {
     const rowHeight = params.rowHeight ?? DEFAULT_ROW_HEIGHT;
-    const rowBufferPx = params.rowBufferPx ?? 150;
-    const columnBufferPx = params.columnBufferPx ?? 150;
-    const autoHeight = params.autoHeight ?? false;
+    const rowBufferPx = params.virtualization?.rowBufferPx ?? 150;
+    const columnBufferPx = params.virtualization?.columnBufferPx ?? 150;
+    const autoHeight = params.virtualization?.autoHeight ?? false;
 
     const rowIds = rowsPlugin.selectors.processedRowIds(store.state);
     const rowLookup = rowsPlugin.selectors.rowIdToModelLookup(store.state);
@@ -199,11 +203,11 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
             ...store.state.virtualization,
             enabled,
             enabledForColumns: enabled,
-            enabledForRows: enabled && !params.autoHeight,
+            enabledForRows: enabled && !(params.virtualization?.autoHeight ?? false),
           },
         });
       },
-      [store, params.autoHeight],
+      [store, params.virtualization?.autoHeight],
     );
 
     const setColumnVirtualization = React.useCallback(
@@ -236,12 +240,19 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
     }, [virtualizerApi]);
 
     React.useEffect(() => {
-      setVirtualization(!params.disableVirtualization);
-    }, [params.disableVirtualization, setVirtualization]);
+      setVirtualization(!(params.virtualization?.disable ?? false));
+    }, [params.virtualization?.disable, setVirtualization]);
 
     React.useEffect(() => {
-      setColumnVirtualization(!params.disableVirtualization && !params.disableColumnVirtualization);
-    }, [params.disableVirtualization, params.disableColumnVirtualization, setColumnVirtualization]);
+      setColumnVirtualization(
+        !(params.virtualization?.disable ?? false) &&
+          !(params.virtualization?.disableForColumns ?? false),
+      );
+    }, [
+      params.virtualization?.disable,
+      params.virtualization?.disableForColumns,
+      setColumnVirtualization,
+    ]);
 
     const useScrollPositionHook = (): { top: number; left: number } => {
       const scrollPositionState = useStore(
