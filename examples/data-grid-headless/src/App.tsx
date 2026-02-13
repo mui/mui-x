@@ -414,7 +414,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
       pagination: {
         model: {
           page: 0,
-          pageSize: config.pagination?.pageSize ?? 10,
+          pageSize: config.pagination?.pageSize ?? 100,
         },
       },
     },
@@ -573,7 +573,7 @@ function App() {
     },
     pagination: {
       enabled: true,
-      pageSize: 10,
+      pageSize: 100,
     },
   });
 
