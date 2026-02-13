@@ -115,6 +115,9 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   miniCalendarLabel: string;
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
+
+  // Timeline title sub grid
+  timelineResourceTitleHeader: string;
 }
 
 export interface EventTimelineLocaleText extends EventDialogLocaleText {

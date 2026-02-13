@@ -44,6 +44,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     titleCell: ['titleCell'],
     titleCellLegendColor: ['titleCellLegendColor'],
     event: ['event'],
+    eventPlaceholder: ['eventPlaceholder'],
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     timeHeader: ['timeHeader'],

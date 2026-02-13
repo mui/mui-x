@@ -123,6 +123,9 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   miniCalendarLabel: 'Calendar',
   miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   miniCalendarGoToNextMonth: 'Show next month in calendar',
+
+  // Timeline title sub grid
+  timelineResourceTitleHeader: 'Resource title',
 };
 
 const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventDialogLocaleText> = {
