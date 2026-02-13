@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
+import { $, $$ } from 'test/utils/helperFn';
 import { type ColumnDef, useDataGrid } from '../../';
 import virtualizationPlugin, { type VirtualizationOptions } from './virtualization';
 import { sortingPlugin } from '../sorting';
@@ -139,7 +140,8 @@ function TestDataGrid<TRow extends object>(props: TestDataGridProps<TRow>) {
         className="MuiDataGrid-virtualScroller"
         style={{
           ...scrollerProps.style,
-          overflow: 'auto',
+          overflowX: 'auto',
+          overflowY: 'auto',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -510,6 +512,69 @@ describe('Virtualization', () => {
       const cells = firstRow?.querySelectorAll('[role="gridcell"]');
       expect(cells).to.have.length(manyColumns.length);
     });
+
+    it.skipIf(isJSDOM)(
+      'should render extra columns when the columnBuffer prop is present',
+      async () => {
+        const width = 300;
+        const n = 2;
+        const columnWidth = 100;
+        const columnBufferPx = n * columnWidth;
+        const { rows, columns } = buildVirtualizationBehaviorTestData(1, 10);
+
+        render(
+          <TestDataGrid
+            width={width}
+            height={300}
+            rows={rows}
+            columns={columns}
+            columnBufferPx={columnBufferPx}
+          />,
+        );
+
+        const firstRow = $('[role="row"][data-rowindex="0"]')!;
+        expect($$(firstRow, '[role="gridcell"]')).to.have.length(
+          Math.floor(width / columnWidth) + n,
+        );
+        const virtualScroller = $('[data-testid="virtual-scroller"]')!;
+        await act(async () => virtualScroller.scrollTo({ left: 301 }));
+        await waitFor(() => {
+          expect($$(firstRow, '[role="gridcell"]')).to.have.length(
+            n + 1 + Math.floor(width / columnWidth) + n,
+          );
+        });
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should render new columns when scrolling past the threshold value',
+      async () => {
+        const columnWidth = 100;
+        const columnThresholdPx = columnWidth;
+        const { rows, columns } = buildVirtualizationBehaviorTestData(1, 10);
+
+        render(
+          <TestDataGrid
+            width={300}
+            height={300}
+            rows={rows}
+            columns={columns}
+            columnBufferPx={0}
+          />,
+        );
+
+        const virtualScroller = $('[data-testid="virtual-scroller"]')!;
+        const renderingZone = $('[data-testid="virtual-scroller-render-zone"]')!;
+        const firstRow = $(renderingZone, '[role="row"]:first-child')!;
+        let firstColumn = $$(firstRow, '[role="gridcell"]')[0];
+        expect(firstColumn).to.have.attr('data-colindex', '0');
+        await act(async () => virtualScroller.scrollTo({ left: columnThresholdPx }));
+        await waitFor(() => {
+          firstColumn = $(renderingZone, '[role="row"] > [role="gridcell"]')!;
+          expect(firstColumn).to.have.attr('data-colindex', '1');
+        });
+      },
+    );
   });
 
   describe('options', () => {
