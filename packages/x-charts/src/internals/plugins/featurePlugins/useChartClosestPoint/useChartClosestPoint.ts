@@ -6,7 +6,7 @@ import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { type ChartPlugin } from '../../models';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { type UseChartClosestPointSignature } from './useChartClosestPoint.types';
-import { getSVGPoint } from '../../../getSVGPoint';
+import { getSurfacePoint } from '../../../getSurfacePoint';
 import {
   selectorChartAxisZoomData,
   selectorChartSeriesEmptyFlatbushMap,
@@ -56,7 +56,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       | 'outside-voronoi-max-radius'
       | 'no-point-found' {
       // Get mouse coordinate in global SVG space
-      const svgPoint = getSVGPoint(element, event);
+      const svgPoint = getSurfacePoint(element, event);
 
       if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
         return 'outside-chart';

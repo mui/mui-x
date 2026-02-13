@@ -5,7 +5,7 @@ export interface UseChartElementRefInstance {
   /**
    * Reference to the main svg element.
    */
-  svgRef: React.RefObject<SVGSVGElement | null>;
+  svgRef: React.RefObject<HTMLDivElement | null>;
   /**
    * Reference to the chart root element.
    */

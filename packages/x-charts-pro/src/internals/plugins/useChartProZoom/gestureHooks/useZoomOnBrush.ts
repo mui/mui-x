@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getSVGPoint,
+  getSurfacePoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -27,7 +27,9 @@ export const useZoomOnBrush = (
   const isZoomOnBrushEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
-    instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
+    if ('setZoomBrushEnabled' in instance) {
+      instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
+    }
   }, [isZoomOnBrushEnabled, instance]);
 
   // Zoom on brush
@@ -40,11 +42,11 @@ export const useZoomOnBrush = (
     const handleBrushEnd = (event: PanEvent) => {
       // Convert the brush rectangle to zoom percentages for each axis
       setZoomDataCallback((prev) => {
-        const startPoint = getSVGPoint(element, {
+        const startPoint = getSurfacePoint(element, {
           clientX: event.detail.initialCentroid.x,
           clientY: event.detail.initialCentroid.y,
         });
-        const endPoint = getSVGPoint(element, {
+        const endPoint = getSurfacePoint(element, {
           clientX: event.detail.centroid.x,
           clientY: event.detail.centroid.y,
         });

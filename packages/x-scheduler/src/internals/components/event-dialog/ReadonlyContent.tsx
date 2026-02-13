@@ -26,6 +26,13 @@ const ReadonlyContentDragContainer = styled('section', {
   cursor: 'move',
 });
 
+const ReadonlyContentDragContainer = styled('section', {
+  name: 'MuiEventDialog',
+  slot: 'ReadonlyContentDragContainer',
+})({
+  cursor: 'move',
+});
+
 const ReadonlyContentRoot = styled('div', {
   name: 'MuiEventDialog',
   slot: 'ReadonlyContent',

@@ -65,6 +65,11 @@ function getComponents() {
       href: '/x/react-charts/range-bar/',
       premium: true,
     },
+    {
+      title: 'Candlestick Chart',
+      href: '/x/react-charts/candlestick/',
+      premium: true,
+    },
   ];
 }
 

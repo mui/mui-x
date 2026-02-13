@@ -45,9 +45,3 @@ components: BarChart, BarElement, BarPlot
 The following demo shows a waterfall chart built using a [range bar chart](/x/react-charts/range-bar/).
 
 {{"demo": "WaterfallChart.js"}}
-
-## Candlestick Chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
-
-The following demo shows a simplified candlestick chart built using a [range bar chart](/x/react-charts/range-bar/).
-
-{{"demo": "RangeBarCandlestick.js"}}

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getSVGPoint,
+  getSurfacePoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -65,7 +65,7 @@ export const useZoomOnPinch = (
           const isZoomIn = event.detail.direction > 0;
           const scaleRatio = 1 + event.detail.deltaScale;
 
-          const point = getSVGPoint(element, {
+          const point = getSurfacePoint(element, {
             clientX: event.detail.centroid.x,
             clientY: event.detail.centroid.y,
           });

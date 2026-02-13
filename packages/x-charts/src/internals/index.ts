@@ -4,7 +4,7 @@ export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 export * from '../BarChart/BarLabel/BarLabelPlot';
 export * from '../BarChart/BarClipPath';
-export * from './components/WebGLContext';
+export * from '../ChartsWebGlLayer/ChartsWebGlLayer';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -60,7 +60,7 @@ export * from '../PieChart/PieChart.plugins';
 // utils
 export * from './configInit';
 export * from './getLabel';
-export * from './getSVGPoint';
+export * from './getSurfacePoint';
 export * from './isDefined';
 export * from './getScale';
 export * from './stacking';

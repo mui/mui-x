@@ -17,7 +17,7 @@ import {
   compileShader,
   logWebGLErrors,
   uploadQuadBuffer,
-} from './utils';
+} from '../../utils/webgl/utils';
 import { useHeatmapPlotData } from './useHeatmapPlotData';
 
 export function HeatmapWebGLPlot({

@@ -22,14 +22,12 @@ Structural components are used to define a chart's dimensions, surfaces, and dat
 - Basics
   - `ChartDataProvider` provides data to descendants.
   - `ChartsSurface` renders the SVG element.
+- Advanced
+  - `ChartsLayerContainer` allows you to create multiple layers of elements that share the same coordinate system.
+  - `ChartsSvgLayer` renders a layer of SVG elements
 - Helpers
   - `ChartsContainer` combines the Data Provider and Surface components.
-  - `ChartsWrapper` styled div that positions surface, tooltip, and legend on a grid.
-
-:::info
-Demos in this doc use the `ChartsContainer` component.
-For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/x/react-charts/components/#html-components).
-:::
+  - `ChartsWrapper` positions the surface, tooltip, and legend on a grid.
 
 ### Chart Data Provider and Surface usage
 
@@ -73,13 +71,13 @@ You can't render HTML elements such as `ChartsLegend` as shown in the previous e
   // Ref is forwarded internally to ChartsSurface
   ref={mySvgRef}
 >
-  {children} // Only SVG component here
+  {children} // Only SVG components here
 </ChartsContainer>
 ```
 
 ### Chart Wrapper usage
 
-Charts are often constructed of a graphic with a legend.
+Charts often consist of a graphic and a legend.
 `ChartsWrapper` helps position those elements in a grid structure.
 
 The children should have a CSS `gridArea` property set to `'chart'`, `'legend'`, or `'toolbar'`.
@@ -304,6 +302,20 @@ If you're not using the axis highlight or the tooltip, consider disabling this f
 ```
 
 :::
+
+## Layering
+
+Use `ChartsLayerContainer`, `ChartsSvgLayer` and `ChartsWebGlLayer` to create multiple layers of elements that share the same coordinate system.
+This is useful for managing the vertical stacking of alternating SVG and WebGL elements.
+
+In the example below, we create three layers:
+1. An SVG layer that displays the chart's grid;
+2. A WebGL layer for rendering with `CandlestickPlot`;
+3. An SVG layer that renders the axes and crosshair
+
+{{"demo": "Layering.js"}}
+
+Since all layers are absolutely positioned, they stack on top of each other in the order they are defined.
 
 ## Examples
 

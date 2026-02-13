@@ -26,6 +26,7 @@ import {
   type ChartsLegendSlots,
 } from '@mui/x-charts/ChartsLegend';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
+import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { type ChartContainerProProps } from '../ChartContainerPro';
 import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
@@ -176,17 +177,19 @@ const Heatmap = React.forwardRef(function Heatmap(
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface ref={ref} sx={sx}>
-          <g {...clipPathGroupProps}>
-            <HeatmapPlot {...heatmapPlotProps} />
-            <FocusedHeatmapCell />
-            <ChartsOverlay {...overlayProps} />
-          </g>
-          <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} />
-          <ChartsBrushOverlay />
-          {children}
-        </ChartsSurface>
+        <ChartsLayerContainer>
+          <ChartsSurface ref={ref} sx={sx}>
+            <g {...clipPathGroupProps}>
+              <HeatmapPlot {...heatmapPlotProps} />
+              <FocusedHeatmapCell />
+              <ChartsOverlay {...overlayProps} />
+            </g>
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsClipPath {...clipPathProps} />
+            <ChartsBrushOverlay />
+            {children}
+          </ChartsSurface>
+        </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>

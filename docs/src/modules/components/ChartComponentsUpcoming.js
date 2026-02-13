@@ -52,11 +52,6 @@ function getComponents() {
       premium: true,
     },
     {
-      title: 'Candlestick Chart',
-      href: 'https://github.com/mui/mui-x/issues/13044',
-      premium: true,
-    },
-    {
       title: 'Boxplot Chart',
       href: 'https://github.com/mui/mui-x/issues/15025',
       premium: true,
