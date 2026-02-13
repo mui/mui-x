@@ -80,6 +80,20 @@ In v9, only `string` is accepted.
 
 This type modification impacts the objects in the `series` props, as well as the `highlightedItem` and `tooltipItem` objects.
 
+### Series' id should be unique
+
+In v8 series `id` properties was enforced to be unique per series type.
+In v9 series `id` properties must be unique regarding all series type.
+
+The following code was valid in v8. But in v9 one of the ids need to be modified.
+
+```jsx
+series={[
+  { type: 'line', id: 'series-a' },
+  { type: 'bar', id: 'series-a' },
+]}
+```
+
 ## Renaming `id` to `seriesId` ✅
 
 Some components used for composition got their prop `id` renamed `seriesId` to improve clarity.
