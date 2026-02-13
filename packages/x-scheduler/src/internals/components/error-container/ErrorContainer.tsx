@@ -7,7 +7,7 @@ import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 export interface ErrorContainerProps {
   className?: string;
@@ -50,7 +50,7 @@ const ErrorMessage = styled(Typography, {
 export function ErrorContainer(props: ErrorContainerProps) {
   const { className } = props;
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
+  const { classes } = useEventCalendarStyledContext();
   const errors = useStore(store, schedulerOtherSelectors.errors);
 
   const [dismissedErrors, setDismissedErrors] = React.useState<Set<Error>>(new Set());

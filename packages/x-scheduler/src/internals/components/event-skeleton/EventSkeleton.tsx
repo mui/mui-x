@@ -2,7 +2,7 @@
 import Skeleton from '@mui/material/Skeleton';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 export interface EventSkeletonProps {
   'data-variant': 'time-column' | 'day-grid' | 'agenda';
@@ -31,7 +31,7 @@ const EventSkeletonRoot = styled(Skeleton, {
 });
 
 export function EventSkeleton(props: EventSkeletonProps) {
-  const classes = useEventCalendarClasses();
+  const { classes } = useEventCalendarStyledContext();
 
   return (
     <EventSkeletonRoot

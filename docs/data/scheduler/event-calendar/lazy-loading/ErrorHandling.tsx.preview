@@ -1,0 +1,16 @@
+<Button
+  onClick={() => setFailRequests((prev) => !prev)}
+  variant="outlined"
+  sx={{ alignSelf: 'flex-start' }}
+>
+  {failRequests ? 'Resolve requests' : 'Fail requests'}
+</Button>
+<div style={{ height: '700px', width: '100%' }}>
+  <EventCalendarPremium
+    events={[]}
+    dataSource={{ getEvents: fetchData, updateEvents: resolveUpdate }}
+    resources={flatResources}
+    defaultVisibleDate={defaultVisibleDate}
+    defaultPreferences={{ isSidePanelOpen: false }}
+  />
+</div>
