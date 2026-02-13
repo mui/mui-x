@@ -5,6 +5,7 @@ import {
   RecurringEventUpdateScope,
   RecurringEventWeekDayCode,
   SchedulerEvent,
+  SchedulerEventCreationProperties,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
@@ -20,6 +21,7 @@ import {
 } from './internal-utils';
 import { createEventFromRecurringEvent } from './createEventFromRecurringEvent';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
+import { dateToEventString } from '../SchedulerStore/SchedulerStore.utils';
 
 /**
  * Generates the update to apply in order to update a recurring event according to the given `scope`.
@@ -81,15 +83,28 @@ export function applyRecurringUpdateFollowing(
   );
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
+  const originalModel = originalEvent.modelInBuiltInFormat;
+  const dataTimezone = originalModel.timezone ?? 'default';
   const stringified: Record<string, any> = { ...changes };
   if (changes.start != null) {
-    stringified.start = changes.start.toISOString();
+    stringified.start = dateToEventString(
+      adapter,
+      changes.start,
+      originalModel.start,
+      dataTimezone,
+    );
   }
   if (changes.end != null) {
-    stringified.end = changes.end.toISOString();
+    stringified.end = dateToEventString(adapter, changes.end, originalModel.end, dataTimezone);
   }
   if (changes.exDates != null) {
-    stringified.exDates = changes.exDates.map((d) => d.toISOString());
+    stringified.exDates = changes.exDates.map((d, i) => {
+      const originalExDate = originalModel.exDates?.[i];
+      if (originalExDate) {
+        return dateToEventString(adapter, d, originalExDate, dataTimezone);
+      }
+      return dateToEventString(adapter, d, originalModel.start, dataTimezone);
+    });
   }
 
   const newEvent: SchedulerEvent = {
@@ -221,8 +236,28 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const originalModel = originalEvent.modelInBuiltInFormat;
+  const dataTimezone = originalModel.timezone ?? 'default';
+  const stringifiedChanges: Partial<SchedulerEventCreationProperties> = { ...changes };
+  if (changes.start != null) {
+    stringifiedChanges.start = dateToEventString(
+      adapter,
+      changes.start,
+      originalModel.start,
+      dataTimezone,
+    );
+  }
+  if (changes.end != null) {
+    stringifiedChanges.end = dateToEventString(
+      adapter,
+      changes.end,
+      originalModel.end,
+      dataTimezone,
+    );
+  }
+
   return {
-    created: [createEventFromRecurringEvent(originalEvent, changes)],
+    created: [createEventFromRecurringEvent(originalEvent, stringifiedChanges)],
     updated: [
       {
         id: originalEvent.id,

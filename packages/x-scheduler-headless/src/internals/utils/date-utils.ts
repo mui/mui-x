@@ -1,6 +1,39 @@
 import { SchedulerProcessedEvent, TemporalSupportedObject } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
+/**
+ * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
+ * **without** the trailing `Z` (wall-time representation).
+ * Produces e.g. `yyyy'-'MM'-'dd'T'HH':'mm':'ss` for date-fns.
+ */
+export function getWallTimeIsoFormat(adapter: Adapter): string {
+  const f = adapter.formats;
+  const esc = adapter.escapedCharacters;
+  return [
+    f.yearPadded,
+    esc.start,
+    '-',
+    esc.end,
+    f.monthPadded,
+    esc.start,
+    '-',
+    esc.end,
+    f.dayOfMonthPadded,
+    esc.start,
+    'T',
+    esc.end,
+    f.hours24hPadded,
+    esc.start,
+    ':',
+    esc.end,
+    f.minutesPadded,
+    esc.start,
+    ':',
+    esc.end,
+    f.secondsPadded,
+  ].join('');
+}
+
 export function mergeDateAndTime(
   adapter: Adapter,
   dateParam: TemporalSupportedObject,

@@ -364,6 +364,32 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updated.created![0].rrule).to.equal(undefined);
     });
 
+    it('should preserve wall-time format (no Z suffix) in start/end of created event', () => {
+      const wallTimeEvent = EventBuilder.new(adapter)
+        .span('2025-01-01T09:00:00', '2025-01-01T10:00:00')
+        .withDataTimezone('America/New_York')
+        .rrule({ freq: 'DAILY', interval: 1 })
+        .toProcessed();
+
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00', 'America/New_York');
+      const changes: SchedulerEventUpdatedProperties = {
+        id: wallTimeEvent.id,
+        start: adapter.date('2025-01-05T11:00:00', 'America/New_York'),
+        end: adapter.date('2025-01-05T12:00:00', 'America/New_York'),
+      };
+
+      const updatedEvents = applyRecurringUpdateFollowing(
+        adapter,
+        wallTimeEvent,
+        occurrenceStart,
+        changes,
+      );
+
+      const createdEvent = updatedEvents.created![0];
+      expect(createdEvent.start).not.to.include('Z');
+      expect(createdEvent.end).not.to.include('Z');
+    });
+
     it('should inherit the original rule when changes.rrule is omitted', () => {
       // Original: daily from Jan 01
       const original = EventBuilder.new()
@@ -650,6 +676,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.created).to.deep.equal([
         {
           ...changesWithoutId,
+          start: changesWithoutId.start.toISOString(),
+          end: changesWithoutId.end.toISOString(),
           extractedFromId: defaultEvent.id,
           description: defaultEvent.description,
         },
@@ -714,11 +742,40 @@ describe('recurring-events/updateRecurringEvent', () => {
           extractedFromId: defaultEvent.id,
           description: defaultEvent.description,
           ...changesWithoutId,
+          start: changesWithoutId.start.toISOString(),
+          end: changesWithoutId.end.toISOString(),
         },
       ]);
       expect(updatedEvents.updated).to.deep.equal([
         { id: defaultEvent.id, exDates: [adapter.startOfDay(occurrenceStart)] },
       ]);
+    });
+
+    it('should preserve wall-time format (no Z suffix) in start/end of created event', () => {
+      const wallTimeEvent = EventBuilder.new(adapter)
+        .span('2025-01-01T09:00:00', '2025-01-01T10:00:00')
+        .withDataTimezone('America/New_York')
+        .rrule({ freq: 'DAILY', interval: 1 })
+        .toProcessed();
+
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00', 'America/New_York');
+      const changes: SchedulerEventUpdatedProperties = {
+        id: wallTimeEvent.id,
+        title: 'Only-this wall-time',
+        start: adapter.date('2025-01-05T11:00:00', 'America/New_York'),
+        end: adapter.date('2025-01-05T12:00:00', 'America/New_York'),
+      };
+
+      const updatedEvents = applyRecurringUpdateOnlyThis(
+        adapter,
+        wallTimeEvent,
+        occurrenceStart,
+        changes,
+      );
+
+      const createdEvent = updatedEvents.created![0];
+      expect(createdEvent.start).not.to.include('Z');
+      expect(createdEvent.end).not.to.include('Z');
     });
 
     it('should add EXDATE based on the original event timezone, not the display timezone shifted day', () => {
