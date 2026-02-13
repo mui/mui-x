@@ -1,5 +1,5 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import { TemporalTimezone } from '../../../base-ui-copy/types';
+import { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
 import {
   SchedulerProcessedEvent,
   SchedulerEventId,
@@ -103,25 +103,97 @@ export function getProcessedEventFromModel<TEvent extends object>(
 }
 
 /**
+ * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
+ * **without** the trailing `Z` (wall-time representation).
+ * Produces e.g. `yyyy'-'MM'-'dd'T'HH':'mm':'ss` for date-fns.
+ */
+function getWallTimeIsoFormat(adapter: Adapter): string {
+  const f = adapter.formats;
+  const esc = adapter.escapedCharacters;
+  return [
+    f.yearPadded,
+    esc.start,
+    '-',
+    esc.end,
+    f.monthPadded,
+    esc.start,
+    '-',
+    esc.end,
+    f.dayOfMonthPadded,
+    esc.start,
+    'T',
+    esc.end,
+    f.hours24hPadded,
+    esc.start,
+    ':',
+    esc.end,
+    f.minutesPadded,
+    esc.start,
+    ':',
+    esc.end,
+    f.secondsPadded,
+  ].join('');
+}
+
+/**
+ * Converts a `TemporalSupportedObject` back to a string, respecting the
+ * original date format: instant strings (ending with `Z`) stay as UTC ISO
+ * strings, while wall-time strings (no `Z`) are formatted in the event's
+ * data timezone without the `Z` suffix.
+ */
+function dateToEventString(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  originalString: string,
+  dataTimezone: TemporalTimezone,
+): string {
+  if (originalString.endsWith('Z')) {
+    return adapter.toJsDate(date).toISOString();
+  }
+  const dateInDataTz = adapter.setTimezone(date, dataTimezone);
+  return adapter.formatByString(dateInDataTz, getWallTimeIsoFormat(adapter));
+}
+
+/**
  * Updates an event model based on the provided changes and model structure.
  * Converts internal date objects (`TemporalSupportedObject`) to strings
  * before applying them to the user's model, because `SchedulerEvent` date
- * fields are strings.
+ * fields are strings. Respects the original string format (instant vs wall-time).
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+  adapter: Adapter,
+  originalBuiltInModel: SchedulerEvent,
 ): TEvent {
+  const dataTimezone = originalBuiltInModel.timezone ?? 'default';
   const stringified: Record<string, any> = { ...changes };
   if (changes.start != null) {
-    stringified.start = changes.start.toISOString();
+    stringified.start = dateToEventString(
+      adapter,
+      changes.start,
+      originalBuiltInModel.start,
+      dataTimezone,
+    );
   }
   if (changes.end != null) {
-    stringified.end = changes.end.toISOString();
+    stringified.end = dateToEventString(
+      adapter,
+      changes.end,
+      originalBuiltInModel.end,
+      dataTimezone,
+    );
   }
   if (changes.exDates != null) {
-    stringified.exDates = changes.exDates.map((d) => d.toISOString());
+    stringified.exDates = changes.exDates.map((d, i) => {
+      const originalExDate = originalBuiltInModel.exDates?.[i];
+      if (originalExDate) {
+        return dateToEventString(adapter, d, originalExDate, dataTimezone);
+      }
+      // New exDate — match the format of start
+      return dateToEventString(adapter, d, originalBuiltInModel.start, dataTimezone);
+    });
   }
 
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
@@ -137,14 +209,26 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+  adapter: Adapter,
+  displayTimezone: TemporalTimezone,
 ) {
   const id = crypto.randomUUID();
+
+  const formatNewDate = (value: string | TemporalSupportedObject): string => {
+    if (typeof value === 'string') {
+      return value;
+    }
+    // Default to wall-time format for newly created events
+    const dateInDisplayTz = adapter.setTimezone(value, displayTimezone);
+    return adapter.formatByString(dateInDisplayTz, getWallTimeIsoFormat(adapter));
+  };
+
   const builtInEvent: SchedulerEvent = {
     ...event,
     id,
-    start: typeof event.start === 'string' ? event.start : event.start.toISOString(),
-    end: typeof event.end === 'string' ? event.end : event.end.toISOString(),
-    exDates: event.exDates?.map((d) => (typeof d === 'string' ? d : d.toISOString())),
+    start: formatNewDate(event.start),
+    end: formatNewDate(event.end),
+    exDates: event.exDates?.map(formatNewDate),
   };
 
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(

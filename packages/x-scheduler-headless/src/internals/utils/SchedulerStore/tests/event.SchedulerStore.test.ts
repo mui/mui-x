@@ -129,13 +129,14 @@ storeClasses.forEach((storeClass) => {
         });
 
         // Should call onEventsChange with the created event using the custom model structure
+        // Newly created events from TemporalSupportedObject dates default to wall-time format (no Z)
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           {
             myId: createdId,
             myTitle: 'Event 1',
-            myStart: '2025-07-01T09:00:00.000Z',
-            myEnd: '2025-07-01T10:00:00.000Z',
+            myStart: '2025-07-01T09:00:00',
+            myEnd: '2025-07-01T10:00:00',
             allDay: false,
           },
         ]);
@@ -372,6 +373,7 @@ storeClasses.forEach((storeClass) => {
         const end = adapter.date('2025-07-01T10:00:00Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
+        // Newly created events from TemporalSupportedObject dates default to wall-time format (no Z)
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           event,
@@ -379,8 +381,8 @@ storeClasses.forEach((storeClass) => {
             ...event,
             id: duplicatedId,
             extractedFromId: event.id,
-            start: start.toISOString(),
-            end: end.toISOString(),
+            start: '2025-07-01T09:00:00',
+            end: '2025-07-01T10:00:00',
           },
         ]);
       });
@@ -399,6 +401,7 @@ storeClasses.forEach((storeClass) => {
         delete originalEventWithoutRecurrence.rrule;
         delete originalEventWithoutRecurrence.exDates;
 
+        // Newly created events from TemporalSupportedObject dates default to wall-time format (no Z)
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           event,
@@ -406,8 +409,8 @@ storeClasses.forEach((storeClass) => {
             ...originalEventWithoutRecurrence,
             id: duplicatedId,
             extractedFromId: event.id,
-            start: start.toISOString(),
-            end: end.toISOString(),
+            start: '2025-07-01T09:00:00',
+            end: '2025-07-01T10:00:00',
           },
         ]);
       });
@@ -459,14 +462,15 @@ storeClasses.forEach((storeClass) => {
           start: adapter.date('2025-07-01T09:00:00Z', 'default'),
         });
 
+        // Newly created events from TemporalSupportedObject dates default to wall-time format (no Z)
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           event,
           {
             ...event,
             id: createdEventId,
-            start: '2025-07-01T09:00:00.000Z',
-            end: '2025-07-01T10:00:00.000Z',
+            start: '2025-07-01T09:00:00',
+            end: '2025-07-01T10:00:00',
             extractedFromId: event.id,
           },
         ]);

@@ -313,11 +313,16 @@ export class SchedulerStore<
         if (deleted.has(eventId)) {
           continue;
         }
+        const processedEvent = updated.has(eventId)
+          ? this.state.processedEventLookup.get(eventId)
+          : undefined;
         const newEvent = updated.has(eventId)
           ? getUpdatedEventModelFromChanges<TEvent>(
               originalEventModelLookup.get(eventId),
               updated.get(eventId)!,
               this.state.eventModelStructure,
+              this.state.adapter,
+              processedEvent!.modelInBuiltInFormat,
             )
           : originalEventModelLookup.get(eventId);
         newEvents.push(newEvent);
@@ -328,7 +333,12 @@ export class SchedulerStore<
 
     const createdIds: SchedulerEventId[] = [];
     for (const createdEvent of created) {
-      const response = createEventModel(createdEvent, this.state.eventModelStructure);
+      const response = createEventModel(
+        createdEvent,
+        this.state.eventModelStructure,
+        this.state.adapter,
+        this.state.displayTimezone,
+      );
       newEvents.push(response.model);
       createdIds.push(response.id);
     }
