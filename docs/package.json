@@ -96,7 +96,7 @@
     "rifm": "0.12.1",
     "rimraf": "catalog:",
     "rxjs": "^7.8.2",
-    "styled-components": "^6.1.19",
+    "styled-components": "^6.3.9",
     "stylis": "catalog:",
     "webpack-bundle-analyzer": "^5.1.1"
   },
