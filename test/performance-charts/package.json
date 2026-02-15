@@ -9,7 +9,7 @@
     "test:performance:browser": "vitest bench --browser"
   },
   "devDependencies": {
-    "@codspeed/vitest-plugin": "5.0.1",
+    "@codspeed/vitest-plugin": "5.2.0",
     "@emotion/react": "catalog:",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
