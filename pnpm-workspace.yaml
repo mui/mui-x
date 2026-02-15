@@ -34,7 +34,7 @@ catalog:
   '@types/moment-hijri': ^2.1.4
   '@types/moment-jalaali': ^0.7.9
   '@types/prop-types': ^15.7.15
-  '@types/react': 19.2.9
+  '@types/react': 19.2.14
   '@types/react-dom': 19.2.3
   '@types/react-router': ^5.1.20
   '@types/react-transition-group': ^4.4.12
@@ -67,8 +67,8 @@ catalog:
   motion: ^12.29.2
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
-  react: 19.2.3
-  react-dom: 19.2.3
+  react: 19.2.4
+  react-dom: 19.2.4
   react-router: ^7.13.0
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
