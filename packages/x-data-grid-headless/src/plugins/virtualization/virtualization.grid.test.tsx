@@ -6,7 +6,6 @@ import { $, $$ } from 'test/utils/helperFn';
 import { type ColumnDef, useDataGrid } from '../../';
 import virtualizationPlugin, { type VirtualizationOptions } from './virtualization';
 import { sortingPlugin } from '../sorting';
-import { paginationPlugin } from '../pagination';
 
 type TestRow = { id: number; brand: string };
 
@@ -60,10 +59,7 @@ function buildVirtualizationBehaviorTestData(
 }
 
 type GridInstance<TRow extends object> = ReturnType<
-  typeof useDataGrid<
-    [typeof virtualizationPlugin, typeof sortingPlugin, typeof paginationPlugin],
-    TRow
-  >
+  typeof useDataGrid<[typeof virtualizationPlugin, typeof sortingPlugin], TRow>
 >;
 
 type TestDataGridProps<TRow extends object> = {
@@ -100,13 +96,13 @@ function TestDataGrid<TRow extends object>(props: TestDataGridProps<TRow>) {
   } = props;
 
   const grid = useDataGrid<
-    [typeof virtualizationPlugin, typeof sortingPlugin, typeof paginationPlugin],
+    [typeof virtualizationPlugin, typeof sortingPlugin],
     TRow
   >({
     rows,
     getRowId,
     columns,
-    plugins: [virtualizationPlugin, sortingPlugin, paginationPlugin],
+    plugins: [virtualizationPlugin, sortingPlugin],
     virtualization: {
       disable: disableVirtualization,
       disableForColumns: disableColumnVirtualization,
