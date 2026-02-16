@@ -95,10 +95,7 @@ function TestDataGrid<TRow extends object>(props: TestDataGridProps<TRow>) {
     initialState,
   } = props;
 
-  const grid = useDataGrid<
-    [typeof virtualizationPlugin, typeof sortingPlugin],
-    TRow
-  >({
+  const grid = useDataGrid<[typeof virtualizationPlugin, typeof sortingPlugin], TRow>({
     rows,
     getRowId,
     columns,
