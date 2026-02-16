@@ -3,7 +3,7 @@ import type { ChartPlugin } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartItemClickSignature } from './useChartItemClick.types';
 import type { SeriesItemIdentifier } from '../../../../models/seriesType';
-import { getLayerRelativePoint } from '../../../getLayerRelativePoint';
+import { getChartPoint } from '../../../getChartPoint';
 
 export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
   params,
@@ -17,7 +17,7 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
   }
 
   const getItemPosition = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-    const svgPoint = getLayerRelativePoint(event?.currentTarget, event);
+    const svgPoint = getChartPoint(event?.currentTarget, event);
 
     if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
       return undefined;

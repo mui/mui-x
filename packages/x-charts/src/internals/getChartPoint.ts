@@ -4,10 +4,7 @@
  * @param element The the layer container
  * @param event The mouseEvent to transform
  */
-export function getLayerRelativePoint(
-  element: Element,
-  event: Pick<MouseEvent, 'clientX' | 'clientY'>,
-) {
+export function getChartPoint(element: Element, event: Pick<MouseEvent, 'clientX' | 'clientY'>) {
   const rect = element.getBoundingClientRect();
   const style = getComputedStyle(element);
   const transform = new DOMMatrix(style.transform);
