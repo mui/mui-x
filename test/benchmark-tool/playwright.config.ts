@@ -5,6 +5,7 @@ export default defineConfig({
   testMatch: '**/_bench.ts',
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  // Run benchmarks sequentially to avoid cross-test interference; parallel workers would skew results.
   workers: 1,
   reporter: 'html',
   use: {
