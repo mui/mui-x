@@ -1,4 +1,4 @@
-import type { ColumnType } from '../../columnDef/columnDef';
+import type { ColumnType, ColumnDef } from '../../columnDef/columnDef';
 import type { GridRowId } from '../internal/rows/types';
 import {
   type FilterCondition,
@@ -7,14 +7,22 @@ import {
   type FilterModel,
   type FilterOperator,
   type FilteringColumnMeta,
-  isFilterCondition,
-  isFilterGroup,
 } from './types';
 import { getStringFilterOperators } from './filterOperators/stringOperators';
 import { getNumericFilterOperators } from './filterOperators/numericOperators';
 import { getDateFilterOperators } from './filterOperators/dateOperators';
 import { getBooleanFilterOperators } from './filterOperators/booleanOperators';
 import { getSingleSelectFilterOperators } from './filterOperators/singleSelectOperators';
+
+export const EMPTY_FILTER_MODEL: FilterModel = { logicOperator: 'and', conditions: [] };
+
+export function isFilterGroup(expr: FilterExpression): expr is FilterGroup {
+  return 'logicOperator' in expr && 'conditions' in expr;
+}
+
+export function isFilterCondition(expr: FilterExpression): expr is FilterCondition {
+  return 'field' in expr && 'operator' in expr;
+}
 
 /**
  * Returns the default filter operators for the given column type.
@@ -110,18 +118,9 @@ interface ConditionApplier {
   fn: (row: any) => boolean;
 }
 
-interface ColumnInfo {
-  field?: string | number | symbol;
-  id?: string;
-  type?: ColumnType;
-  filterable?: boolean;
-  filterOperators?: FilterOperator[];
-  filterValueGetter?: (row: any) => any;
-}
-
 function getConditionApplier(
   condition: FilterCondition,
-  getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined,
+  getColumn: (field: string) => ColumnDef<any, FilteringColumnMeta> | undefined,
   _getRow: (id: GridRowId) => any,
   ignoreDiacritics: boolean,
 ): ConditionApplier | null {
@@ -193,7 +192,7 @@ type GroupApplierFn = (row: any) => boolean;
 
 function buildGroupApplier(
   group: FilterGroup,
-  getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined,
+  getColumn: (field: string) => ColumnDef<any, FilteringColumnMeta> | undefined,
   getRow: (id: GridRowId) => any,
   disableEval: boolean,
   ignoreDiacritics: boolean,
@@ -264,7 +263,7 @@ type QuickFilterApplierFn = (row: any) => boolean;
 
 function buildQuickFilterApplier(
   model: FilterModel,
-  getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined,
+  getColumn: (field: string) => ColumnDef<any, FilteringColumnMeta> | undefined,
   ignoreDiacritics: boolean,
   getAllColumnFields?: () => string[],
   getVisibleColumnFields?: () => string[],
@@ -291,7 +290,7 @@ function buildQuickFilterApplier(
   const columnQuickFilterFns: Array<{
     field: string;
     getQuickFilterFn: ColumnQuickFilterFn;
-    column: ColumnInfo & FilteringColumnMeta;
+    column: ColumnDef<any, FilteringColumnMeta>;
   }> = [];
 
   for (const field of columnFields) {
@@ -327,14 +326,14 @@ function buildQuickFilterApplier(
   const valueFilters: Array<
     Array<{
       filterFn: (cellValue: any, row: any) => boolean;
-      column: ColumnInfo & FilteringColumnMeta;
+      column: ColumnDef<any, FilteringColumnMeta>;
     }>
   > = [];
 
   for (const quickFilterValue of quickFilterValues) {
     const columnFilters: Array<{
       filterFn: (cellValue: any, row: any) => boolean;
-      column: ColumnInfo & FilteringColumnMeta;
+      column: ColumnDef<any, FilteringColumnMeta>;
     }> = [];
 
     for (const { getQuickFilterFn, column } of columnQuickFilterFns) {
@@ -378,7 +377,7 @@ function buildQuickFilterApplier(
 
 interface BuildFilterApplierParams {
   model: FilterModel;
-  getColumn: (field: string) => (ColumnInfo & FilteringColumnMeta) | undefined;
+  getColumn: (field: string) => ColumnDef<any, FilteringColumnMeta> | undefined;
   getRow: (id: GridRowId) => any;
   disableEval?: boolean;
   ignoreDiacritics?: boolean;

@@ -4,7 +4,12 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { type Plugin, createPlugin } from '../core/plugin';
 import type { GridRowId } from '../internal/rows/types';
 import { filteringSelectors } from './selectors';
-import { buildFilterApplier, cleanFilterModel } from './filteringUtils';
+import {
+  buildFilterApplier,
+  cleanFilterModel,
+  EMPTY_FILTER_MODEL,
+  isFilterCondition,
+} from './filteringUtils';
 import type {
   FilterCondition,
   FilterModel,
@@ -14,7 +19,6 @@ import type {
   FilteringApi,
   FilteringColumnMeta,
 } from './types';
-import { EMPTY_FILTER_MODEL, isFilterCondition } from './types';
 
 type FilteringPluginOptions = FilteringOptions & FilteringInternalOptions;
 

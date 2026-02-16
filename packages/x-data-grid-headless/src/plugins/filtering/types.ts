@@ -25,17 +25,6 @@ type QuickFilter = {
 export type FilterModel = FilterGroup & {
   quickFilter?: QuickFilter;
 };
-
-export const EMPTY_FILTER_MODEL: FilterModel = { logicOperator: 'and', conditions: [] };
-
-export function isFilterGroup(expr: FilterExpression): expr is FilterGroup {
-  return 'logicOperator' in expr && 'conditions' in expr;
-}
-
-export function isFilterCondition(expr: FilterExpression): expr is FilterCondition {
-  return 'field' in expr && 'operator' in expr;
-}
-
 export interface FilterOperator<V = any> {
   value: string;
   label?: string;

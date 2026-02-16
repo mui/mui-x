@@ -8,7 +8,6 @@ import {
   type FilterModel,
   getStringFilterOperators,
   getNumericFilterOperators,
-  EMPTY_FILTER_MODEL,
 } from '.';
 
 type TestRow = { id: number; name: string; age: number };
@@ -353,7 +352,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       await act(async () => {
         setProps({
           filtering: {
-            model: EMPTY_FILTER_MODEL,
+            model: { logicOperator: 'and', conditions: [] },
           },
         });
       });

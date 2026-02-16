@@ -10,9 +10,8 @@ export type {
   FilteringOptions,
   FilteringApi,
 } from './types';
-export { EMPTY_FILTER_MODEL, isFilterGroup, isFilterCondition } from './types';
 export { getDefaultFilterOperators } from './filteringUtils';
-export { filteringSelectors, selectFilterModel } from './selectors';
+export { filteringSelectors } from './selectors';
 export { buildFilterApplier, cleanFilterModel, removeDiacritics } from './filteringUtils';
 export {
   getStringFilterOperators,
