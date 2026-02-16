@@ -81,13 +81,6 @@
         "describedArgs": ["event", "funnelItemIdentifier"]
       }
     },
-    "onTooltipAxisChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
-        "describedArgs": ["axisItems"]
-      }
-    },
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
@@ -101,12 +94,6 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "tooltipAxis": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
-      }
     },
     "tooltipItem": {
       "type": {
