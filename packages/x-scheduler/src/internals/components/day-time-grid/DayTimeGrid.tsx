@@ -18,12 +18,11 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import clsx from 'clsx';
 import { DayTimeGridProps } from './DayTimeGrid.types';
-import { useTranslations } from '../../utils/TranslationsContext';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
-import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const FIXED_CELL_WIDTH = 68;
@@ -311,9 +310,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   // Context hooks
   const adapter = useAdapter();
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
 
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -429,7 +427,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           id="DayTimeGridAllDayEventsHeaderCell"
           role="columnheader"
         >
-          {translations.allDay}
+          {localeText.allDay}
         </DayTimeGridAllDayEventsHeaderCell>
         <DayTimeGridAllDayEventsRow
           as={CalendarGrid.DayRow}
@@ -468,7 +466,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             <DayTimeGridGrid className={classes.dayTimeGridGrid}>
               {isLoading && (
                 <DayTimeGridLoadingOverlay className={classes.dayTimeGridLoadingOverlay}>
-                  {translations.loading}
+                  {localeText.loading}
                 </DayTimeGridLoadingOverlay>
               )}
 

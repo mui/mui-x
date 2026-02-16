@@ -21,7 +21,7 @@ import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
 import { MiniCalendar } from './mini-calendar';
 import { schedulerTokens } from '../internals/utils/tokens';
-import { useEventCalendarClasses } from './EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
 export interface EventCalendarRootProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
@@ -111,7 +111,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     const { className, ...other } = props;
 
     const store = useEventCalendarStoreContext();
-    const classes = useEventCalendarClasses();
+    const { classes } = useEventCalendarStyledContext();
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
