@@ -91,7 +91,9 @@ function NumberInput(props: {
   disabled?: boolean;
 }) {
   const { value, onChange, min = 0, max = 5000, step = 10, disabled } = props;
-  const className = ['number-input', disabled && 'number-input--disabled'].filter(Boolean).join(' ');
+  const className = ['number-input', disabled && 'number-input--disabled']
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <input
