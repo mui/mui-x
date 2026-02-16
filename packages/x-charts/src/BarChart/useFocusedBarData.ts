@@ -4,8 +4,9 @@ import { useBarSeriesContext, useXAxes, useYAxes } from '../hooks';
 import type { BarSeriesType, FocusedItemIdentifier } from '../models/seriesType';
 import type { ChartsAxisProps } from '../models/axis';
 
-
-export interface UseFocusedBarDataReturn<AxisValue extends { toString(): string } = { toString(): string }> {
+export interface UseFocusedBarDataReturn<
+  AxisValue extends { toString(): string } = { toString(): string },
+> {
   /**
    * The identifier of the focused item.
    */
@@ -19,7 +20,7 @@ export interface UseFocusedBarDataReturn<AxisValue extends { toString(): string 
    */
   series: Pick<BarSeriesType, 'label'> & {
     value: number | null;
-  }
+  };
 }
 
 /**
@@ -67,6 +68,6 @@ export function useFocusedBarData(): UseFocusedBarDataReturn | null {
     series: {
       value: seriesValue,
       label: series.label,
-    }
+    },
   };
 }
