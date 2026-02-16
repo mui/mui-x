@@ -7,10 +7,6 @@ export interface Trace {
   traceEvents: TraceEvent[];
 }
 
-export interface Metadata {
-  files: string[];
-}
-
 export interface FailedBenchmark {
   name: string;
   diff: string;

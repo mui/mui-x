@@ -1,62 +1,70 @@
-import type { Metadata, Trace } from './types';
-import { extractTotalDuration } from './extractTotalDuration';
+const DATA_REPO_BASE =
+  'https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/benchmarks/monthly';
+
+function getMonthStrings(): [string, string] {
+  const now = new Date();
+  const current = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+  const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const previous = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}`;
+
+  return [current, previous];
+}
+
+async function fetchLastDuration(benchmarkName: string): Promise<number | null> {
+  const [currentMonth, previousMonth] = getMonthStrings();
+
+  for (const month of [currentMonth, previousMonth]) {
+    const url = `${DATA_REPO_BASE}/${benchmarkName}/${month}.jsonl`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      continue;
+    }
+
+    const text = (await response.text()).trim();
+    if (!text) {
+      continue;
+    }
+
+    const lines = text.split('\n');
+    const lastLine = lines[lines.length - 1];
+    const entry = JSON.parse(lastLine) as { duration: number };
+    return entry.duration;
+  }
+
+  return null;
+}
 
 export async function fetchMasterMetrics(): Promise<Record<string, number>> {
   const masterMetricsByFile: Record<string, number> = {};
 
+  // Discover benchmark names from the PR results directory
+  const fs = await import('node:fs/promises');
+  const path = await import('node:path');
+  const benchmarksDir = process.env.BENCHMARKS_DIR || './benchmarks';
+
+  let jsonFiles: string[];
   try {
-    const contentsResponse = await fetch(
-      'https://api.github.com/repos/mnajdova/performance-benchmark-data/contents/mui-x',
-    );
-    if (!contentsResponse.ok) {
-      return masterMetricsByFile;
+    const allFiles = await fs.readdir(benchmarksDir);
+    jsonFiles = allFiles.filter((f) => f.endsWith('.json'));
+  } catch {
+    console.warn('Could not read benchmarks directory to discover benchmark names');
+    return masterMetricsByFile;
+  }
+
+  const results = await Promise.all(
+    jsonFiles.map(async (file) => {
+      const benchmarkName = path.basename(file, '.json');
+      const duration = await fetchLastDuration(benchmarkName);
+      return { file, duration };
+    }),
+  );
+
+  for (const result of results) {
+    if (result.duration !== null) {
+      masterMetricsByFile[result.file] = result.duration;
     }
-
-    const contents = (await contentsResponse.json()) as { type: string; name: string }[];
-    const folders = contents
-      .filter((item) => item.type === 'dir')
-      .map((item) => item.name)
-      .sort()
-      .reverse();
-
-    if (folders.length === 0) {
-      return masterMetricsByFile;
-    }
-
-    const latestFolder = folders[0];
-
-    console.warn(`Using latest benchmark folder: ${latestFolder}`);
-
-    const metadataResponse = await fetch(
-      `https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/metadata.json`,
-    );
-    if (!metadataResponse.ok) {
-      return masterMetricsByFile;
-    }
-
-    const metadata = (await metadataResponse.json()) as Metadata;
-
-    const results = await Promise.all(
-      metadata.files.map(async (filePath) => {
-        const fileName = filePath.split('/').pop()!;
-        const fileResponse = await fetch(
-          `https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/${fileName}`,
-        );
-        if (fileResponse.ok) {
-          const trace = (await fileResponse.json()) as Trace;
-          return { fileName, duration: extractTotalDuration(trace) };
-        }
-        return null;
-      }),
-    );
-
-    for (const result of results) {
-      if (result) {
-        masterMetricsByFile[result.fileName] = result.duration;
-      }
-    }
-  } catch (error) {
-    console.error(error);
   }
 
   return masterMetricsByFile;

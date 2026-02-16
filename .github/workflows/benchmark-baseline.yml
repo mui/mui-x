@@ -4,16 +4,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-  pull_request_target:
-    types:
-      - opened
-      - synchronize
-      - reopened
 
 permissions:
   contents: read
@@ -35,7 +25,7 @@ jobs:
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: 22.18.0
-          cache: "pnpm"
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -44,73 +34,54 @@ jobs:
         run: pnpm --filter @mui/x-charts-premium... build
 
       - name: Install Playwright browsers
-        run: pnpm --filter benchmark-tool exec playwright install chromium --with-deps
+        run: npx playwright install chromium --with-deps
 
       - name: Run performance benchmarks
-        working-directory: test/benchmark-tool
-        run: pnpm test
-
-      - name: Generate timestamp folder name
-        id: timestamp
-        run: echo "folder=$(date -u '+%Y-%m-%d-%H-%M-%S')" >> $GITHUB_OUTPUT
-
-      - name: List benchmark output files
-        id: files
-        working-directory: test/benchmark-tool
-        run: |
-          # List all JSON files in benchmarks directory
-          FILES=$(find benchmarks -name "*.json" -type f | sort | jq -R -s -c 'split("\n") | map(select(length > 0))')
-          echo "list=$FILES" >> $GITHUB_OUTPUT
-
-      - name: Prepare metadata
-        id: prepare-metadata
-        working-directory: test/benchmark-tool
-        env:
-          FILES: ${{ steps.files.outputs.list }}
-          COMMIT_SHA: ${{ github.sha }}
-          REPO_NAME: ${{ github.repository }}
-        run: |
-          METADATA=$(pnpm --silent ci:metadata)
-          echo "data<<EOF" >> $GITHUB_OUTPUT
-          echo "$METADATA" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+        run: pnpm -r run benchmark
 
       - name: Checkout data repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: mnajdova/performance-benchmark-data
-          path: benchmark-data
+          path: data-repo
           token: ${{ secrets.BENCHMARK_DATA_TOKEN }}
 
-      - name: Create benchmark folder and copy files
+      - name: Get commit month
+        id: meta
+        run: echo "month=$(git log -1 --format=%cd --date=format:%Y-%m ${{ github.sha }})" >> $GITHUB_OUTPUT
+
+      - name: Store results
         env:
-          METADATA: ${{ steps.prepare-metadata.outputs.data }}
-          REPO_NAME: ${{ github.repository }}
-          TIMESTAMP_FOLDER: ${{ steps.timestamp.outputs.folder }}
+          SHA: ${{ github.sha }}
+          MONTH: ${{ steps.meta.outputs.month }}
         run: |
-          # Extract just the repository name (after the /)
-          REPO_DIR=$(echo "$REPO_NAME" | cut -d'/' -f2)
+          RESULTS_DIR=test/benchmark-tool/benchmarks
+          COMMITS_DIR=data-repo/benchmarks/commits/$SHA
 
-          # Create timestamped directory
-          BENCHMARK_DIR="benchmark-data/$REPO_DIR/$TIMESTAMP_FOLDER"
-          mkdir -p "$BENCHMARK_DIR"
+          # Copy per-SHA files (one file per benchmark, unmodified)
+          mkdir -p "$COMMITS_DIR"
+          cp $RESULTS_DIR/*.json "$COMMITS_DIR/"
 
-          # Copy all benchmark output files to the new folder
-          cp -r test/benchmark-tool/benchmarks/* "$BENCHMARK_DIR/"
+          # Append to monthly JSONL (one file per benchmark type)
+          for f in $RESULTS_DIR/*.json; do
+            NAME=$(basename "$f" .json)
+            MONTHLY_DIR="data-repo/benchmarks/monthly/$NAME"
+            mkdir -p "$MONTHLY_DIR"
 
-          # Write metadata.json
-          echo "$METADATA" > "$BENCHMARK_DIR/metadata.json"
+            # Extract total duration and append as JSONL line
+            DUR=$(node -e "
+              const t = require('./$f');
+              let d=0; for(const e of t.traceEvents||[]){if(e.ph==='X')d+=e.dur||0;}
+              process.stdout.write(String(d));
+            ")
+            echo "{\"commit\":\"$SHA\",\"date\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"duration\":$DUR}" >> "$MONTHLY_DIR/$MONTH.jsonl"
+          done
 
-      - name: Commit and push benchmark data
-        working-directory: benchmark-data
-        env:
-          REPO_NAME: ${{ github.repository }}
-          TIMESTAMP_FOLDER: ${{ steps.timestamp.outputs.folder }}
+      - name: Commit and push
+        working-directory: data-repo
         run: |
-          # Extract just the repository name (after the /)
-          REPO_DIR=$(echo "$REPO_NAME" | cut -d'/' -f2)
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "$REPO_DIR/$TIMESTAMP_FOLDER"
-          git commit -m "Add benchmark data for ${{ github.repository }}@${{ github.sha }}"
+          git add benchmarks/
+          git commit -m "Add benchmarks for ${{ github.sha }}"
           git push
