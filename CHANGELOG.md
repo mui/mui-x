@@ -208,7 +208,6 @@ Same changes as in `@mui/x-tree-view@9.0.0-alpha.0`, plus:
 
 ## v8.27.1
 
-
 _Feb 13, 2026_
 
 We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
