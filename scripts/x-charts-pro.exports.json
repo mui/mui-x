@@ -660,6 +660,8 @@
   { "name": "UseChartZAxisSignature", "kind": "TypeAlias" },
   { "name": "useDataset", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
+  { "name": "useFocusedBarData", "kind": "Function" },
+  { "name": "UseFocusedBarDataReturn", "kind": "Interface" },
   { "name": "useFocusedItem", "kind": "Function" },
   { "name": "useFunnelSeries", "kind": "Function" },
   { "name": "useFunnelSeriesContext", "kind": "Function" },
