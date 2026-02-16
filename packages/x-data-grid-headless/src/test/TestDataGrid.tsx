@@ -45,7 +45,7 @@ export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGr
     columns,
     getRowId,
     rowCount,
-    plugins: [sortingPlugin, paginationPlugin],
+    plugins,
     sorting,
     filtering,
     pagination,
