@@ -1,5 +1,5 @@
 import type { ColumnType } from '../../columnDef/columnDef';
-import type { GridRowId } from '../internal/rows/rowUtils';
+import type { GridRowId } from '../internal/rows/types';
 import {
   type FilterCondition,
   type FilterExpression,

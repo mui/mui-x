@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { type Plugin, createPlugin } from '../core/plugin';
-import type { GridRowId } from '../internal/rows/rowUtils';
+import type { GridRowId } from '../internal/rows/types';
 import { filteringSelectors } from './selectors';
 import { buildFilterApplier, cleanFilterModel } from './filteringUtils';
 import type {
@@ -15,7 +16,6 @@ import type {
   FilteringSelectors,
 } from './types';
 import { EMPTY_FILTER_MODEL, isFilterCondition } from './types';
-import type sortingPlugin from '../sorting/sorting';
 
 type FilteringPluginOptions = FilteringOptions & FilteringInternalOptions;
 
@@ -28,8 +28,11 @@ type FilteringPlugin = Plugin<
   FilteringColumnMeta
 >;
 
+const FILTERING_PIPELINE_PROCESSOR_NAME = 'filtering';
+
 const filteringPlugin = createPlugin<FilteringPlugin>()({
   name: 'filtering',
+  order: 50,
   selectors: filteringSelectors,
 
   initialize: (state, params) => {
@@ -37,8 +40,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
     const initialModel =
       params.filtering?.model ?? params.initialState?.filtering?.model ?? EMPTY_FILTER_MODEL;
 
-    // Determine input rows: use sorted row IDs if sorting plugin has already initialized
-    const inputRowIds = (state as any).sorting?.sortedRowIds ?? state.rows.dataRowIds;
+    const inputRowIds: GridRowId[] = state.rows.processedRowIds;
 
     let filteredRowIds: GridRowId[];
 
@@ -69,6 +71,10 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
 
     return {
       ...state,
+      rows: {
+        ...state.rows,
+        processedRowIds: filteredRowIds,
+      },
       filtering: {
         model: initialModel,
         filteredRowIds,
@@ -97,21 +103,10 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
       return api.columns.getVisible().map((col) => col.id);
     }, [api]);
 
-    /**
-     * Get the input row IDs to filter.
-     * Uses sorted row IDs if sorting plugin is present, otherwise raw row IDs.
-     */
-    const getInputRowIds = React.useCallback((): GridRowId[] => {
-      if (api.pluginRegistry.hasPlugin<typeof sortingPlugin>(api, 'sorting')) {
-        return (store.state as any).sorting.sortedRowIds;
-      }
-      return api.rows.getAllRowIds();
-    }, [api, store]);
-
     const computeFilteredRowIds: FilteringApi['filtering']['computeFilteredRowIds'] =
       React.useCallback(
         (rowIds, filterModel) => {
-          const originalRowIds = rowIds ?? getInputRowIds();
+          const originalRowIds = rowIds ?? api.rows.getAllRowIds();
           const modelToUse = filterModel ?? store.state.filtering.model;
 
           const filterApplier = buildFilterApplier({
@@ -134,28 +129,58 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
           getColumn,
           getAllColumnFields,
           getVisibleColumnFields,
-          getInputRowIds,
         ],
       );
 
-    /**
-     * Apply filtering and update state.
-     */
-    const applyFiltering = React.useCallback((): void => {
+    const filteringProcessor = useStableCallback((inputIds: GridRowId[]): GridRowId[] => {
       if (isExternalFiltering) {
-        return;
+        // In external mode, rows are already filtered — don't filter.
+        // Sync derived filtering state.
+        store.setState({
+          ...store.state,
+          filtering: {
+            ...store.state.filtering,
+            filteredRowIds: inputIds,
+          },
+        });
+        return inputIds;
       }
 
-      const newFilteredRowIds = computeFilteredRowIds();
+      const filteredRowIds = computeFilteredRowIds(inputIds);
 
       store.setState({
         ...store.state,
         filtering: {
           ...store.state.filtering,
-          filteredRowIds: newFilteredRowIds,
+          filteredRowIds,
         },
       });
-    }, [isExternalFiltering, store, computeFilteredRowIds]);
+
+      return filteredRowIds;
+    });
+
+    const applyFiltering = useStableCallback((): void => {
+      if (isExternalFiltering) {
+        return;
+      }
+
+      if (!isAutoMode) {
+        api.rows.rowIdsPipeline.enable(FILTERING_PIPELINE_PROCESSOR_NAME);
+        api.rows.rowIdsPipeline.recompute(FILTERING_PIPELINE_PROCESSOR_NAME);
+        api.rows.rowIdsPipeline.disable(FILTERING_PIPELINE_PROCESSOR_NAME);
+        return;
+      }
+
+      api.rows.rowIdsPipeline.recompute(FILTERING_PIPELINE_PROCESSOR_NAME);
+    });
+
+    React.useEffect(() => {
+      return api.rows.rowIdsPipeline.register(
+        FILTERING_PIPELINE_PROCESSOR_NAME,
+        filteringProcessor,
+        { disabled: !isAutoMode || isExternalFiltering },
+      );
+    }, [api, isAutoMode, isExternalFiltering, filteringProcessor]);
 
     const setModel = (model: FilterModel): void => {
       const prevModel = store.state.filtering.model;
@@ -230,33 +255,13 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
     // Track previous model prop for controlled mode
     const prevFilterModelRef = React.useRef<FilterModel>(store.state.filtering.model);
 
-    // Subscribe to store changes to detect when input rows or columns change.
-    // We use store.subscribe instead of a React effect because the component may not
-    // re-render when sortedRowIds change (it subscribes to filteredRowIds, not sortedRowIds).
+    // Subscribe to store changes to detect column and visibility changes.
+    // Row ID changes are handled automatically by the pipeline.
     React.useEffect(() => {
-      let prevInputRowIds = getInputRowIds();
       let prevColumnsLookup = (store.state as any).columns?.lookup;
       let prevColumnVisibilityModel = (store.state.columns as any).columnVisibilityModel;
 
       const unsubscribe = store.subscribe(() => {
-        const currentInputRowIds = getInputRowIds();
-
-        if (prevInputRowIds !== currentInputRowIds) {
-          prevInputRowIds = currentInputRowIds;
-
-          if (isExternalFiltering) {
-            store.setState({
-              ...store.state,
-              filtering: {
-                ...store.state.filtering,
-                filteredRowIds: currentInputRowIds,
-              },
-            });
-          } else if (isAutoMode) {
-            applyFiltering();
-          }
-        }
-
         // Detect column changes and clean up filter model
         const currentColumnsLookup = (store.state as any).columns?.lookup;
         if (currentColumnsLookup && prevColumnsLookup !== currentColumnsLookup) {
@@ -296,7 +301,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         }
       });
       return unsubscribe;
-    }, [store, getInputRowIds, applyFiltering, isExternalFiltering, isAutoMode, params.filtering]);
+    }, [store, applyFiltering, isExternalFiltering, isAutoMode, params.filtering]);
 
     // Handle controlled filtering.model prop changes
     React.useEffect(() => {
