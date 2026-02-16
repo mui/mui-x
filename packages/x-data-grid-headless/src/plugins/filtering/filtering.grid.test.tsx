@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { createRenderer, act } from '@mui/internal-test-utils';
-import { useDataGrid, type ColumnDef } from '../..';
-import rowsPlugin from '../internal/rows/rows';
-import { paginationPlugin } from '../pagination';
-import { sortingPlugin, type SortingColumnMeta } from '../sorting';
+import type { ColumnDef } from '../..';
+import { TestDataGrid, type TestGridApi } from '../../test/TestDataGrid';
 import {
-  filteringPlugin,
   type FilteringColumnMeta,
   type FilterModel,
   getStringFilterOperators,
@@ -14,7 +11,6 @@ import {
   EMPTY_FILTER_MODEL,
   selectQuickFilterValues,
 } from '.';
-import type { FilteringOptions } from './types';
 
 type TestRow = { id: number; name: string; age: number };
 
@@ -24,79 +20,10 @@ const defaultRows: TestRow[] = [
   { id: 3, name: 'Bob', age: 35 },
 ];
 
-type ColumnMeta = SortingColumnMeta & FilteringColumnMeta;
-
-const defaultColumns: ColumnDef<TestRow, ColumnMeta>[] = [
+const defaultColumns: ColumnDef<TestRow, FilteringColumnMeta>[] = [
   { id: 'name', field: 'name', filterOperators: getStringFilterOperators() },
   { id: 'age', field: 'age', filterOperators: getNumericFilterOperators() },
 ];
-
-type GridApi = ReturnType<
-  typeof useDataGrid<
-    [typeof sortingPlugin, typeof filteringPlugin, typeof paginationPlugin],
-    TestRow
-  >
->;
-
-interface TestDataGridWithFilterProps<TRow extends Record<string, any>> {
-  rows: TRow[];
-  columns: ColumnDef<TRow, ColumnMeta>[];
-  getRowId?: (row: TRow) => string;
-  apiRef?: React.RefObject<GridApi | null>;
-  sorting?: Parameters<typeof useDataGrid>[0]['sorting'];
-  filtering?: FilteringOptions['filtering'];
-  initialState?: Parameters<typeof useDataGrid>[0]['initialState'];
-}
-
-function TestDataGridWithFilter<TRow extends Record<string, any>>(
-  props: TestDataGridWithFilterProps<TRow>,
-) {
-  const { rows, columns, getRowId, apiRef, sorting, filtering, initialState } = props;
-
-  const grid = useDataGrid({
-    rows,
-    columns,
-    getRowId,
-    plugins: [sortingPlugin, filteringPlugin, paginationPlugin],
-    sorting,
-    filtering,
-    initialState,
-  });
-
-  React.useEffect(() => {
-    if (apiRef) {
-      (apiRef as React.RefObject<GridApi | null>).current = grid as any;
-    }
-  }, [grid, apiRef]);
-
-  const filteredRowIds = grid.use(rowsPlugin.selectors.processedRowIds);
-  const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
-
-  return (
-    <div data-testid="grid">
-      {filteredRowIds.map((rowId) => {
-        const row = rowsData[rowId] as TRow | undefined;
-        if (!row) {
-          return null;
-        }
-        return (
-          <div
-            key={rowId}
-            data-testid="row"
-            {...Object.fromEntries(
-              Object.entries(row).map(([key, value]) => [
-                `data-${key.toLowerCase()}`,
-                String(value),
-              ]),
-            )}
-          >
-            {(row as any).name ?? ''}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 describe('Filtering Plugin - Integration Tests', () => {
   const { render } = createRenderer();
@@ -111,14 +38,14 @@ describe('Filtering Plugin - Integration Tests', () => {
   describe('initial state', () => {
     it('should show all rows when no filter is applied', () => {
       const { container } = render(
-        <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} />,
+        <TestDataGrid rows={defaultRows} columns={defaultColumns} />,
       );
       expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
     });
 
     it('should apply filter from initialState', () => {
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           initialState={{
@@ -137,7 +64,7 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     it('should apply filter from filtering.model prop', () => {
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           filtering={{
@@ -153,7 +80,7 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     it('should prefer filtering.model prop over initialState', () => {
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           filtering={{
@@ -179,9 +106,9 @@ describe('Filtering Plugin - Integration Tests', () => {
   describe('API methods', () => {
     describe('setModel', () => {
       it('should update model and apply filtering', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
         );
 
         await act(async () => {
@@ -197,13 +124,13 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     describe('getModel', () => {
       it('should return current model', () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const model: FilterModel = {
           logicOperator: 'and',
           conditions: [{ field: 'name', operator: 'contains', value: 'li' }],
         };
         render(
-          <TestDataGridWithFilter
+          <TestDataGrid
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
@@ -217,9 +144,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     describe('apply', () => {
       it('should recompute filtered rows in manual mode', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter
+          <TestDataGrid
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
@@ -249,9 +176,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     describe('computeFilteredRowIds', () => {
       it('should compute filtered rows without updating state', () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
         );
 
         const computed = apiRef.current?.api.filtering.computeFilteredRowIds(undefined, {
@@ -270,9 +197,9 @@ describe('Filtering Plugin - Integration Tests', () => {
     describe('onModelChange', () => {
       it('should be called when model changes via setModel', async () => {
         const onModelChange = vi.fn();
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         render(
-          <TestDataGridWithFilter
+          <TestDataGrid
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
@@ -297,9 +224,9 @@ describe('Filtering Plugin - Integration Tests', () => {
   describe('filtering modes', () => {
     describe('auto mode (default)', () => {
       it('should re-filter when model changes', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
         );
 
         await act(async () => {
@@ -313,9 +240,9 @@ describe('Filtering Plugin - Integration Tests', () => {
       });
 
       it('should re-filter when rows change', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter
+          <TestDataGrid
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
@@ -343,9 +270,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     describe('manual mode', () => {
       it('should NOT re-filter automatically when model changes', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter
+          <TestDataGrid
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
@@ -382,7 +309,7 @@ describe('Filtering Plugin - Integration Tests', () => {
   describe('controlled model', () => {
     it('should update when controlled filtering.model prop changes', async () => {
       const { container, setProps } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           filtering={{
@@ -412,7 +339,7 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     it('should clear filtering when model becomes empty', async () => {
       const { container, setProps } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           filtering={{
@@ -441,7 +368,7 @@ describe('Filtering Plugin - Integration Tests', () => {
   describe('sorting interaction', () => {
     it('should preserve sort order in filtered results', () => {
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           initialState={{
@@ -462,9 +389,9 @@ describe('Filtering Plugin - Integration Tests', () => {
     });
 
     it('should re-filter when sort order changes', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
@@ -494,9 +421,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
   describe('nested filter groups', () => {
     it('should support nested AND/OR groups', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
-        <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
       );
 
       // (name contains 'li') AND (age = 25 OR age = 35)
@@ -535,7 +462,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       };
 
       const { container: container1 } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           filtering={{ model, disableEval: false }}
@@ -543,7 +470,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       );
 
       const { container: container2 } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           filtering={{ model, disableEval: true }}
@@ -556,8 +483,8 @@ describe('Filtering Plugin - Integration Tests', () => {
 
   describe('non-filterable columns', () => {
     it('should skip conditions on non-filterable columns', async () => {
-      const apiRef = React.createRef<GridApi | null>();
-      const columns: ColumnDef<TestRow, ColumnMeta>[] = [
+      const apiRef = React.createRef<TestGridApi | null>();
+      const columns: ColumnDef<TestRow, FilteringColumnMeta>[] = [
         {
           id: 'name',
           field: 'name',
@@ -568,7 +495,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       ];
 
       const { container } = render(
-        <TestDataGridWithFilter rows={defaultRows} columns={columns} apiRef={apiRef} />,
+        <TestDataGrid rows={defaultRows} columns={columns} apiRef={apiRef} />,
       );
 
       await act(async () => {
@@ -588,9 +515,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
   describe('row updates with active filter', () => {
     it('should maintain filter when rows are updated via API', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
@@ -617,9 +544,9 @@ describe('Filtering Plugin - Integration Tests', () => {
     });
 
     it('should maintain filter when adding new rows', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
@@ -648,7 +575,7 @@ describe('Filtering Plugin - Integration Tests', () => {
   describe('row prop changes with active filter', () => {
     it('should re-apply filter when rows prop changes completely', async () => {
       const { container, setProps } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           filtering={{
@@ -682,13 +609,13 @@ describe('Filtering Plugin - Integration Tests', () => {
   describe('getRowId with active filter', () => {
     it('should work with custom getRowId', () => {
       type BrandRow = { brand: string; age: number };
-      const brandColumns: ColumnDef<BrandRow, ColumnMeta>[] = [
+      const brandColumns: ColumnDef<BrandRow, FilteringColumnMeta>[] = [
         { id: 'brand', field: 'brand', filterOperators: getStringFilterOperators() },
         { id: 'age', field: 'age', filterOperators: getNumericFilterOperators() },
       ];
 
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={[
             { brand: 'Nike', age: 10 },
             { brand: 'Adidas', age: 20 },
@@ -712,7 +639,7 @@ describe('Filtering Plugin - Integration Tests', () => {
   describe('ignoreDiacritics', () => {
     it('should not ignore diacritics by default', () => {
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={[
             { id: 1, name: 'Apă', age: 25 },
             { id: 2, name: 'Bob', age: 30 },
@@ -732,7 +659,7 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     it('should match when ignoreDiacritics is enabled', () => {
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={[
             { id: 1, name: 'Apă', age: 25 },
             { id: 2, name: 'Bob', age: 30 },
@@ -753,7 +680,7 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     it('should match diacritics in both filter and cell values', () => {
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={[
             { id: 1, name: 'Apă', age: 25 },
             { id: 2, name: 'Bob', age: 30 },
@@ -778,7 +705,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       const onModelChange = vi.fn();
 
       const { container, setProps } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           filtering={{
@@ -798,7 +725,7 @@ describe('Filtering Plugin - Integration Tests', () => {
         setProps({
           columns: [
             { id: 'age', field: 'age', filterOperators: getNumericFilterOperators() },
-          ] as ColumnDef<TestRow, ColumnMeta>[],
+          ] as ColumnDef<TestRow, FilteringColumnMeta>[],
         });
       });
 
@@ -814,9 +741,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
   describe('quick filter integration', () => {
     it('should filter across visible columns with setQuickFilterValues', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
-        <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
       );
 
       await act(async () => {
@@ -828,9 +755,9 @@ describe('Filtering Plugin - Integration Tests', () => {
     });
 
     it('should combine quick filter with regular filter (both must pass)', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
@@ -858,7 +785,7 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     it('should work with controlled model with quickFilterValues', () => {
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           filtering={{
@@ -875,9 +802,9 @@ describe('Filtering Plugin - Integration Tests', () => {
     });
 
     it('should clear quick filter and restore all rows', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
-        <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
       );
 
       await act(async () => {
@@ -897,9 +824,9 @@ describe('Filtering Plugin - Integration Tests', () => {
   describe('new API methods', () => {
     describe('upsertCondition', () => {
       it('should add new condition', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
         );
 
         await act(async () => {
@@ -914,9 +841,9 @@ describe('Filtering Plugin - Integration Tests', () => {
       });
 
       it('should update existing condition with same field and operator', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter
+          <TestDataGrid
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
@@ -949,9 +876,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     describe('deleteCondition', () => {
       it('should remove a condition', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter
+          <TestDataGrid
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
@@ -987,9 +914,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     describe('setLogicOperator', () => {
       it('should change root logic operator', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
-          <TestDataGridWithFilter
+          <TestDataGrid
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
@@ -1021,9 +948,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     describe('setQuickFilterValues', () => {
       it('should set quick filter values on the model', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         render(
-          <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
         );
 
         await act(async () => {
@@ -1038,7 +965,7 @@ describe('Filtering Plugin - Integration Tests', () => {
 
   describe('valueParser integration', () => {
     it('should transform filter values before applying', () => {
-      const columns: ColumnDef<TestRow, ColumnMeta>[] = [
+      const columns: ColumnDef<TestRow, FilteringColumnMeta>[] = [
         { id: 'name', field: 'name', filterOperators: getStringFilterOperators() },
         {
           id: 'age',
@@ -1049,7 +976,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       ];
 
       const { container } = render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={columns}
           filtering={{
@@ -1068,9 +995,9 @@ describe('Filtering Plugin - Integration Tests', () => {
 
   describe('new selectors', () => {
     it('selectQuickFilterValues should return quick filter values', () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       render(
-        <TestDataGridWithFilter
+        <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
@@ -1090,9 +1017,9 @@ describe('Filtering Plugin - Integration Tests', () => {
     });
 
     it('selectQuickFilterValues should return empty array when no quick filter', () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       render(
-        <TestDataGridWithFilter rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
       );
 
       const state = apiRef.current?.getState();
