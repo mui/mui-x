@@ -33,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm --filter @mui/x-charts-premium... build
+        run: pnpm release:build
 
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
