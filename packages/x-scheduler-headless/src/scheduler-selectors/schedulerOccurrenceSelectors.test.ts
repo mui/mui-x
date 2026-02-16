@@ -209,7 +209,7 @@ describe('schedulerOccurrenceSelectors', () => {
       expect(response[2].occurrences[0].id).to.equal(event.id);
     });
 
-    it('should return an empty occurrences list when visibleResources marks the resource as false', () => {
+    it('should not include a resource in the list when visibleResources marks it as false', () => {
       const R1 = makeResource('R1', 'Resource 1');
 
       const event = EventBuilder.new()
@@ -225,7 +225,7 @@ describe('schedulerOccurrenceSelectors', () => {
       state.visibleResources = { [R1.id]: false };
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
-      expect(response[0].occurrences).to.have.length(0);
+      expect(response).to.have.length(0);
     });
 
     it('should handle deep nested resource trees', () => {
