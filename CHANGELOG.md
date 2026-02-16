@@ -6,8 +6,14 @@ _Feb 16, 2026_
 
 We'd like to extend a big thank you to the 21 contributors who made this release possible. Here are some highlights ✨:
 
-- [DataGrid][Pickers] Add `thTH` translations (#21116) @siriwatknp
-- [pickers] Add `AdapterDayjsBuddhist` adapter (#20984) @siriwatknp
+- Add support for virtualized items on `<RichTreeViewPro />`:
+
+  ```tsx
+  <RichTreeViewPro items={ITEMS} virtualization itemHeight={48} />
+  ```
+
+- Add Thai (`thTH`) locale on the Data Grid and the Date and Time Pickers (#21116) @siriwatknp
+- Add a new `AdapterDayjsBuddhist` adapter for Date and Time Pickers (#20984) @siriwatknp
 
 Special thanks go out to these community members for their valuable contributions:
 @jhe-iqbis
@@ -19,10 +25,8 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.0.0-alpha.0`
 
-- [DataGrid][docs] Add high-level competitor comparison to Overview doc (DX-117) (#20870) @mapache-salvaje
 - [DataGrid] Update default `logicOperator` behavior in filtering docs (#21098) @michelengelen
-- [DataGrid][docs] Remove Bundling section from quickstart (#21177) @MBilalShafi
-- [DataGrid][Pickers] Add `thTH` translations (#21116) @siriwatknp
+- [DataGrid] Add `thTH` locale (#21116) @siriwatknp
 - [DataGrid] Fix initial filter value state in CustomMultiValueOperator demo (#21217) @sai6855
 
 #### `@mui/x-data-grid-pro@9.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -40,6 +44,7 @@ Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.0`.
 #### `@mui/x-date-pickers@9.0.0-alpha.0`
 
 - [pickers] Add `AdapterDayjsBuddhist` adapter (#20984) @siriwatknp
+- [pickers] Add `thTH` locale (#21116) @siriwatknp
 
 #### `@mui/x-date-pickers-pro@9.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -161,6 +166,8 @@ Same changes as in `@mui/x-tree-view@9.0.0-alpha.0`, plus:
 - [charts][docs] Revise the Charts Tooltip doc (#20869) @mapache-salvaje
 - [charts][docs] Revise the Charts Zoom and Pan doc (#20893) @mapache-salvaje
 - [DataGrid][docs] Add a recipe for handling long text cell (#20754) @siriwatknp
+- [DataGrid][docs] Add high-level competitor comparison to Overview doc (DX-117) (#20870) @mapache-salvaje
+- [DataGrid][docs] Remove Bundling section from quickstart (#21177) @MBilalShafi
 
 ### Core
 
