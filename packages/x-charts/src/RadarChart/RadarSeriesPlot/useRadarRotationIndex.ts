@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { selectorChartPolarCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { getLayerRelativePoint } from '../../internals/getLayerRelativePoint';
+import { getChartPoint } from '../../internals/getChartPoint';
 import { generateSvg2rotation } from '../../internals/plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
 import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
 import { useStore } from '../../internals/store/useStore';
@@ -29,7 +29,7 @@ export function useRadarRotationIndex() {
         );
       }
 
-      const svgPoint = getLayerRelativePoint(element, event);
+      const svgPoint = getChartPoint(element, event);
       const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
       const rotationIndex = getAxisIndex(rotationAxis, rotation);
 

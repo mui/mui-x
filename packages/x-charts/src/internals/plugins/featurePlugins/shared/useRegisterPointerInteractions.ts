@@ -10,7 +10,7 @@ import { type UseChartHighlightSignature } from '../useChartHighlight';
 import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 import { useStore } from '../../../store/useStore';
 import { useChartContext } from '../../../../context/ChartProvider';
-import { getLayerRelativePoint } from '../../../getLayerRelativePoint';
+import { getChartPoint } from '../../../getChartPoint';
 import { type ChartState } from '../../models';
 
 /**
@@ -64,7 +64,7 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
     }
 
     const onPointerMove = function onPointerMove(event: PointerEvent) {
-      const svgPoint = getLayerRelativePoint(svg, event);
+      const svgPoint = getChartPoint(svg, event);
 
       if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
         reset();
