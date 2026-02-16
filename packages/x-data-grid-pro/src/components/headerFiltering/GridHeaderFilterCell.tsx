@@ -69,6 +69,40 @@ type OwnerState = DataGridProProcessedProps & {
   showLeftBorder: boolean;
 };
 
+const StyledInputComponent = styled(GridFilterInputValue, {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderFilterInput',
+})({
+  flex: 1,
+  marginRight: vars.spacing(0.5),
+  marginBottom: vars.spacing(-0.25),
+  '& input[type="date"], & input[type="datetime-local"]': {
+    '&[value=""]:not(:focus)': {
+      color: 'transparent',
+    },
+  },
+  [`& .${inputBaseClasses.input}`]: {
+    fontSize: '14px',
+  },
+  [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
+    paddingTop: vars.spacing(0.25),
+    paddingBottom: vars.spacing(0.25),
+    height: 20,
+  },
+});
+
+const OperatorLabel = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderFilterOperatorLabel',
+})({
+  flex: 1,
+  marginRight: vars.spacing(0.5),
+  color: vars.colors.foreground.muted,
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+});
+
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition } = ownerState;
 
