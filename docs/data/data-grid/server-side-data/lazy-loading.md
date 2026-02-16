@@ -145,6 +145,11 @@ The demo below uses data batch numbers to identify the data set and replace the 
 
 {{"demo": "ServerSideLazyLoadingFullyReplaced.js", "bg": "inline"}}
 
+:::info
+The sorting and filtering are disabled in the demos above to keep the dummy server's code simple and easy to relate.
+In real applications, you should enable sorting and filtering to keep the Data Grid in sync with the server-side data.
+:::
+
 ## Error handling
 
 To handle errors, use the `onDataSourceError()` prop as described in [Server-side data overview—Error handling](/x/react-data-grid/server-side-data/#error-handling).
