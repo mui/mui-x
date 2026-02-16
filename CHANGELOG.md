@@ -14,6 +14,8 @@ We'd like to extend a big thank you to the 21 contributors who made this release
 
 - Add Thai (`thTH`) locale on the Data Grid and the Date and Time Pickers (#21116) @siriwatknp
 - Add a new `AdapterDayjsBuddhist` adapter for Date and Time Pickers (#20984) @siriwatknp
+- Add support for virtualization in the rich tree view (#20780) @flaviendelangle
+- Add WebGL renderer to Heatmap (#20756) @bernardobelchior
 
 Special thanks go out to these community members for their valuable contributions:
 @jhe-iqbis
@@ -68,6 +70,8 @@ Same changes as in `@mui/x-date-pickers@9.0.0-alpha.0`.
 - [charts] Export `CartesianChartSeriesType` and `StackableChartSeriesType` (#21012) @bernardobelchior
 - [charts] Export plugins from premium (#20866) @JCQuintas
 - [charts] Filter hidden series from axis tooltip (#21273) @Copilot
+- [charts] Filter hidden series from axis tooltip (#21273) @Copilot
+- [charts] Fix rename `getSVGPoint` to `getChartPoint` (#21335) @bernardobelchior
 - [charts] Fix cleanup function in useChartInteractionListener to correctly remove event listeners with options (#21218) @sai6855
 - [charts] Fix import rename in codemod (#21112) @JCQuintas
 - [charts] Fix multiple exports of `HighlightScope` (#21270) @bernardobelchior
@@ -78,7 +82,7 @@ Same changes as in `@mui/x-date-pickers@9.0.0-alpha.0`.
 - [charts] Make `seriesId` a string only (#20997) @alexfauquette
 - [charts] Make the `useChartRootRef` support typing parameter (#21023) @alexfauquette
 - [charts] Memoize HeatmapItem to avoid re-render when fading/highlighting (#20865) @bernardobelchior
-- [charts] Move AxisId to `data-axis-id` attribute instead of class (#21037) @JCQuintas
+- [charts] Move axis id to `data-axis-id` attribute instead of class (#21037) @JCQuintas
 - [charts] Move `cleanIdentifier` and `serializeIdentifier` instance methods to `useChartSeriesConfig` plugin (#21025) @JCQuintas
 - [charts] Move `seriesConfig` to `useChartSeriesConfig` plugin (#21004) @JCQuintas
 - [charts] Move element refs to `useChartElementRef` plugin (#21099) @JCQuintas
@@ -90,6 +94,7 @@ Same changes as in `@mui/x-date-pickers@9.0.0-alpha.0`.
 - [charts] Remove deprecated `useAxisTooltip` in favor of `useAxesTooltip` (#20962) @Copilot
 - [charts] Remove deprecated series type helpers and functions (#20998) @alexfauquette
 - [charts] Rename `ChartContainer` to `ChartsContainer` (#21173) @JCQuintas
+- [charts] Rename `getSVGPoint` to `getChartPoint` (#21322) @bernardobelchior
 - [charts] Rename `TickItemType` to `TickItem` (#21008) @bernardobelchior
 - [charts] Replace props `id` by `seriesId` when necessary (#21057) @alexfauquette
 - [charts] Revert `touch-action: pan-y` removal when zoom is disabled (#20852) @bernardobelchior
@@ -100,7 +105,7 @@ Same changes as in `@mui/x-date-pickers@9.0.0-alpha.0`.
 
 Same changes as in `@mui/x-charts@9.0.0-alpha.0`, plus:
 
-- [charts-pro] Add border radius to Heatmap (#20931) @bernardobelchior
+- [charts-pro] Add border radius to heatmap (#20931) @bernardobelchior
 - [charts-pro] Add keyboard navigation to funnel (#20766) @alexfauquette
 - [charts-pro] Add keyboard navigation to heatmap (#20786) @alexfauquette
 - [charts-pro] Add keyboard navigation to sankey (#20777) @alexfauquette
@@ -203,7 +208,6 @@ Same changes as in `@mui/x-tree-view@9.0.0-alpha.0`, plus:
 
 ## v8.27.1
 
-<!-- generated comparing v8.27.0..v8.x -->
 
 _Feb 13, 2026_
 
