@@ -293,7 +293,7 @@ describe('Pipeline', () => {
 
     // Manual apply for "first": enable → recompute → disable
     pipeline.enable('first');
-    pipeline.recompute('first');
+    expect(pipeline.recompute('first')).toBe(6);
     pipeline.disable('first');
 
     // first ran, second was still disabled
