@@ -83,9 +83,9 @@ This type modification impacts the objects in the `series` props, as well as the
 ### Series' id should be unique
 
 In v8 series `id` properties was enforced to be unique per series type.
-In v9 series `id` properties must be unique regarding all series type.
+In v9 series `id` properties must be unique among all series, regardless of their type.
 
-The following code was valid in v8. But in v9 one of the ids need to be modified.
+The following code was valid in v8, but in v9 one of the IDs need to be modified.
 
 ```jsx
 series={[
