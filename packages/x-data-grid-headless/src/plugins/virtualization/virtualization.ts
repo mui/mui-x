@@ -10,7 +10,7 @@ import {
   type BaseState,
 } from '@mui/x-virtualizer';
 import { type Plugin, createPlugin } from '../core/plugin';
-import type { GridRowId, GridRowModel } from '../internal/rows/rowUtils';
+import type { GridRowId, GridRowModel } from '../internal/rows/types';
 import type { ColumnState } from '../internal/columns/columnUtils';
 import rowsPlugin from '../internal/rows/rows';
 import columnsPlugin from '../internal/columns/columns';

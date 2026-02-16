@@ -1,4 +1,4 @@
-import type { RowsPluginApi, RowsPluginState, RowsPluginOptions } from './rows/rows';
+import type { RowsPluginApi, RowsPluginState, RowsPluginOptions } from './rows/types';
 import type { ColumnsPluginApi, ColumnsPluginState, ColumnsPluginOptions } from './columns/columns';
 import type { ElementsPluginApi, ElementsPluginState } from './elements/elements';
 

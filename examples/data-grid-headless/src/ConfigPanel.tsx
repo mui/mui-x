@@ -1,7 +1,15 @@
 'use client';
 import * as React from 'react';
 import type { SortingOptions, GridSortDirection } from '@mui/x-data-grid-headless/plugins/sorting';
-import { SettingsIcon, SortIcon, ChevronIcon, CollapseIcon, ArrowIcon, RowsIcon } from './icons';
+import {
+  SettingsIcon,
+  SortIcon,
+  PaginationIcon,
+  ChevronIcon,
+  CollapseIcon,
+  ArrowIcon,
+  RowsIcon,
+} from './icons';
 
 export interface PluginConfig {
   sorting?: NonNullable<SortingOptions['sorting']> & {
@@ -9,11 +17,16 @@ export interface PluginConfig {
     /** If true, shift key is required for multi-sort. @default true */
     multiSortWithShiftKey?: boolean;
   };
+  pagination?: {
+    enabled?: boolean;
+    pageSize?: number;
+  };
 }
 
 interface SectionState {
   rows: boolean;
   sorting: boolean;
+  pagination: boolean;
 }
 
 interface ConfigPanelProps {
@@ -116,8 +129,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const [isResizing, setIsResizing] = React.useState(false);
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [sections, setSections] = React.useState<SectionState>({
-    rows: true,
-    sorting: true,
+    rows: false,
+    sorting: false,
+    pagination: false,
   });
 
   const toggleSection = (section: keyof SectionState) => {
@@ -129,6 +143,16 @@ export function ConfigPanel(props: ConfigPanelProps) {
       ...config,
       sorting: {
         ...config.sorting,
+        ...updates,
+      },
+    });
+  };
+
+  const updatePaginationConfig = (updates: Partial<NonNullable<PluginConfig['pagination']>>) => {
+    onConfigChange({
+      ...config,
+      pagination: {
+        ...config.pagination,
         ...updates,
       },
     });
@@ -188,6 +212,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
   const isManualMode = config.sorting?.mode === 'manual';
   const isSortingEnabled = config.sorting?.enabled ?? true;
   const isMultiSortEnabled = config.sorting?.multiSort ?? true;
+  const isPaginationEnabled = config.pagination?.enabled ?? true;
 
   const resizeHandleClassName = [
     'config-panel__resize-handle',
@@ -396,6 +421,55 @@ export function ConfigPanel(props: ConfigPanelProps) {
                       }}
                       options={sortingOrderOptions}
                       disabled={!isSortingEnabled}
+                    />
+                  </OptionRow>
+                </div>
+              )}
+            </div>
+
+            {/* Pagination Section */}
+            <div className="config-section" style={{ marginTop: 'var(--space-3)' }}>
+              {/* Section Header */}
+              <button
+                type="button"
+                onClick={() => toggleSection('pagination')}
+                className={`config-section__header ${sections.pagination ? 'config-section__header--expanded' : ''}`}
+              >
+                <div className="config-section__header-title">
+                  <span className="config-section__header-icon">
+                    <PaginationIcon />
+                  </span>
+                  <span className="config-section__header-text">Pagination</span>
+                </div>
+                <ChevronIcon expanded={sections.pagination} className="config-section__chevron" />
+              </button>
+
+              {/* Section Content */}
+              {sections.pagination && (
+                <div className="config-section__content">
+                  <OptionRow label="Enable Pagination" description="Show rows in pages">
+                    <Toggle
+                      checked={isPaginationEnabled}
+                      onChange={(checked) => updatePaginationConfig({ enabled: checked })}
+                    />
+                  </OptionRow>
+
+                  <OptionRow
+                    label="Page Size"
+                    description="Rows per page"
+                    disabled={!isPaginationEnabled}
+                  >
+                    <Select
+                      value={String(config.pagination?.pageSize ?? 100)}
+                      onChange={(val) => updatePaginationConfig({ pageSize: Number(val) })}
+                      options={[
+                        { value: '10', label: '10' },
+                        { value: '25', label: '25' },
+                        { value: '50', label: '50' },
+                        { value: '100', label: '100' },
+                        { value: '200', label: '200' },
+                      ]}
+                      disabled={!isPaginationEnabled}
                     />
                   </OptionRow>
                 </div>

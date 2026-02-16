@@ -21,7 +21,6 @@ type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = Plu
   PluginsColumnMeta<TPlugins>
 > & {
   plugins: TPlugins;
-  initialState?: Partial<PluginsState<TPlugins>>;
 };
 
 type DataGridState<TPlugins extends readonly AnyPlugin[]> = PluginsState<TPlugins>;
@@ -101,10 +100,18 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
 
   const publicStore = React.useMemo(() => createPublicStore(stateStore), [stateStore]);
 
-  return {
-    getState: publicStore.getState,
-    use: publicStore.use as DataGridInstance<TPlugins, TRow>['use'],
-    api,
-    options,
-  };
+  const instance = useRefWithInit(() => {
+    return {
+      getState: publicStore.getState,
+      use: publicStore.use as DataGridInstance<TPlugins, TRow>['use'],
+      api,
+      options,
+    };
+  }).current;
+
+  React.useEffect(() => {
+    instance.options = options;
+  }, [instance, options]);
+
+  return instance;
 };
