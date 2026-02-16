@@ -19,7 +19,7 @@ export default function ChartsCommunityOrPro() {
           caption={'Community, Pro and Premium'}
           title={'Three packages for every growing need'}
           description={
-            "Start with the free-forever Community version, then upgrade to Pro or Premium as your needs grow."
+            'Start with the free-forever Community version, then upgrade to Pro or Premium as your needs grow.'
           }
           communityDescription={
             'Free forever under an MIT license. Includes core chart types and building blocks like axes, legends, theming, tooltips, and highlights.'
