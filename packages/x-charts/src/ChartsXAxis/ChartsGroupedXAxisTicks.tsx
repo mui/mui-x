@@ -112,6 +112,7 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
                   ...groupConfig.tickLabelStyle,
                 }}
                 text={tickLabel}
+                 aria-hidden
               />
             )}
           </g>
