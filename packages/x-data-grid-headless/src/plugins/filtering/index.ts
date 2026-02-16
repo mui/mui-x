@@ -8,12 +8,11 @@ export type {
   FilteringColumnMeta,
   FilteringState,
   FilteringOptions,
-  FilteringInternalOptions,
   FilteringApi,
 } from './types';
 export { EMPTY_FILTER_MODEL, isFilterGroup, isFilterCondition } from './types';
 export { getDefaultFilterOperators } from './filteringUtils';
-export { filteringSelectors, selectFilterModel, selectQuickFilterValues } from './selectors';
+export { filteringSelectors, selectFilterModel } from './selectors';
 export { buildFilterApplier, cleanFilterModel, removeDiacritics } from './filteringUtils';
 export {
   getStringFilterOperators,

@@ -222,7 +222,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
 
     const setQuickFilterValues = (values: any[]): void => {
       const model = getModel();
-      setModel({ ...model, quickFilterValues: values });
+      setModel({ ...model, quickFilter: { values } });
     };
 
     const setLogicOperator = (operator: 'and' | 'or'): void => {
@@ -271,9 +271,10 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
 
           const model = store.state.filtering.model;
           const hasQuickFilter =
-            model.quickFilterValues &&
-            model.quickFilterValues.length > 0 &&
-            model.quickFilterExcludeHiddenColumns !== false;
+            model.quickFilter &&
+            model.quickFilter.values &&
+            model.quickFilter.values.length > 0 &&
+            model.quickFilter.excludeHiddenColumns !== false;
 
           if (hasQuickFilter && isAutoMode && !isExternalFiltering) {
             applyFiltering();

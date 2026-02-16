@@ -9,7 +9,6 @@ import {
   getStringFilterOperators,
   getNumericFilterOperators,
   EMPTY_FILTER_MODEL,
-  selectQuickFilterValues,
 } from '.';
 
 type TestRow = { id: number; name: string; age: number };
@@ -37,9 +36,7 @@ describe('Filtering Plugin - Integration Tests', () => {
 
   describe('initial state', () => {
     it('should show all rows when no filter is applied', () => {
-      const { container } = render(
-        <TestDataGrid rows={defaultRows} columns={defaultColumns} />,
-      );
+      const { container } = render(<TestDataGrid rows={defaultRows} columns={defaultColumns} />);
       expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
     });
 
@@ -783,7 +780,7 @@ describe('Filtering Plugin - Integration Tests', () => {
       expect(getRowNames(container)).toEqual(['Charlie']);
     });
 
-    it('should work with controlled model with quickFilterValues', () => {
+    it('should work with controlled model with quickFilter.values', () => {
       const { container } = render(
         <TestDataGrid
           rows={defaultRows}
@@ -792,7 +789,7 @@ describe('Filtering Plugin - Integration Tests', () => {
             model: {
               logicOperator: 'and',
               conditions: [],
-              quickFilterValues: ['Bob'],
+              quickFilter: { values: ['Bob'] },
             },
           }}
         />,
@@ -949,16 +946,14 @@ describe('Filtering Plugin - Integration Tests', () => {
     describe('setQuickFilterValues', () => {
       it('should set quick filter values on the model', async () => {
         const apiRef = React.createRef<TestGridApi | null>();
-        render(
-          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
-        );
+        render(<TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />);
 
         await act(async () => {
           apiRef.current?.api.filtering.setQuickFilterValues(['test']);
         });
 
         const model = apiRef.current?.api.filtering.getModel()!;
-        expect(model.quickFilterValues).toEqual(['test']);
+        expect(model.quickFilter?.values).toEqual(['test']);
       });
     });
   });
@@ -990,41 +985,6 @@ describe('Filtering Plugin - Integration Tests', () => {
 
       // valueParser(15) = 30, so it matches Charlie (age 30)
       expect(getRowNames(container)).toEqual(['Charlie']);
-    });
-  });
-
-  describe('new selectors', () => {
-    it('selectQuickFilterValues should return quick filter values', () => {
-      const apiRef = React.createRef<TestGridApi | null>();
-      render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          apiRef={apiRef}
-          filtering={{
-            model: {
-              logicOperator: 'and',
-              conditions: [],
-              quickFilterValues: ['test', 'hello'],
-            },
-          }}
-        />,
-      );
-
-      const state = apiRef.current?.getState();
-      const values = selectQuickFilterValues(state as any);
-      expect(values).toEqual(['test', 'hello']);
-    });
-
-    it('selectQuickFilterValues should return empty array when no quick filter', () => {
-      const apiRef = React.createRef<TestGridApi | null>();
-      render(
-        <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
-      );
-
-      const state = apiRef.current?.getState();
-      const values = selectQuickFilterValues(state as any);
-      expect(values).toEqual([]);
     });
   });
 });

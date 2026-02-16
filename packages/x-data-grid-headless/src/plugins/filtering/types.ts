@@ -13,13 +13,17 @@ export interface FilterGroup {
 
 export type FilterExpression = FilterCondition | FilterGroup;
 
+type QuickFilter = {
+  values?: any[];
+  logicOperator?: 'and' | 'or';
+  excludeHiddenColumns?: boolean;
+};
+
 /**
  * The root filter model is always a group, with optional quick filter fields.
  */
 export type FilterModel = FilterGroup & {
-  quickFilterValues?: any[];
-  quickFilterLogicOperator?: 'and' | 'or';
-  quickFilterExcludeHiddenColumns?: boolean;
+  quickFilter?: QuickFilter;
 };
 
 export const EMPTY_FILTER_MODEL: FilterModel = { logicOperator: 'and', conditions: [] };

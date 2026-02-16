@@ -1187,7 +1187,7 @@ describe('Quick Filter (buildFilterApplier)', () => {
     const model: FilterModel = {
       logicOperator: 'and',
       conditions: [],
-      quickFilterValues: ['li'],
+      quickFilter: { values: ['li'] },
     };
     const applier = buildFilterApplier({
       model,
@@ -1204,8 +1204,7 @@ describe('Quick Filter (buildFilterApplier)', () => {
     const model: FilterModel = {
       logicOperator: 'and',
       conditions: [],
-      quickFilterValues: ['li', 'Bob'],
-      quickFilterLogicOperator: 'and',
+      quickFilter: { values: ['li', 'Bob'], logicOperator: 'and' },
     };
     const applier = buildFilterApplier({
       model,
@@ -1223,8 +1222,7 @@ describe('Quick Filter (buildFilterApplier)', () => {
     const model: FilterModel = {
       logicOperator: 'and',
       conditions: [],
-      quickFilterValues: ['Alice', 'Bob'],
-      quickFilterLogicOperator: 'or',
+      quickFilter: { values: ['Alice', 'Bob'], logicOperator: 'or' },
     };
     const applier = buildFilterApplier({
       model,
@@ -1241,7 +1239,7 @@ describe('Quick Filter (buildFilterApplier)', () => {
     const model: FilterModel = {
       logicOperator: 'and',
       conditions: [{ field: 'age', operator: '>', value: 25 }],
-      quickFilterValues: ['li'],
+      quickFilter: { values: ['li'] },
     };
     const applier = buildFilterApplier({
       model,
@@ -1258,8 +1256,7 @@ describe('Quick Filter (buildFilterApplier)', () => {
     const model: FilterModel = {
       logicOperator: 'and',
       conditions: [],
-      quickFilterValues: ['25'],
-      quickFilterExcludeHiddenColumns: false,
+      quickFilter: { values: ['25'], excludeHiddenColumns: false },
     };
     const getAllFields = () => ['name', 'age'];
     const getVisibleFields = () => ['name']; // age is hidden
@@ -1286,7 +1283,7 @@ describe('Quick Filter (buildFilterApplier)', () => {
     const model: FilterModel = {
       logicOperator: 'and',
       conditions: [],
-      quickFilterValues: ['test'],
+      quickFilter: { values: ['test'] },
     };
     const applier = buildFilterApplier({
       model,

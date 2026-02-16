@@ -269,12 +269,12 @@ function buildQuickFilterApplier(
   getAllColumnFields?: () => string[],
   getVisibleColumnFields?: () => string[],
 ): QuickFilterApplierFn | null {
-  const quickFilterValues = model.quickFilterValues;
+  const quickFilterValues = model.quickFilter?.values;
   if (!quickFilterValues || quickFilterValues.length === 0) {
     return null;
   }
 
-  const excludeHidden = model.quickFilterExcludeHiddenColumns !== false;
+  const excludeHidden = model.quickFilter?.excludeHiddenColumns !== false;
   const columnFields = excludeHidden
     ? (getVisibleColumnFields?.() ?? getAllColumnFields?.() ?? [])
     : (getAllColumnFields?.() ?? []);
@@ -321,7 +321,7 @@ function buildQuickFilterApplier(
     return null;
   }
 
-  const quickFilterLogicOperator = model.quickFilterLogicOperator ?? 'and';
+  const quickFilterLogicOperator = model.quickFilter?.logicOperator ?? 'and';
 
   // Pre-compute the filter functions for each value/column combination
   const valueFilters: Array<
@@ -400,7 +400,8 @@ export const buildFilterApplier = ({
   getVisibleColumnFields,
 }: BuildFilterApplierParams): ((rowIds: GridRowId[]) => GridRowId[]) | null => {
   const hasConditions = model.conditions && model.conditions.length > 0;
-  const hasQuickFilter = model.quickFilterValues && model.quickFilterValues.length > 0;
+  const hasQuickFilter =
+    model.quickFilter && model.quickFilter.values && model.quickFilter.values.length > 0;
 
   if (!hasConditions && !hasQuickFilter) {
     return null;

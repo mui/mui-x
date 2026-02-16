@@ -408,7 +408,7 @@ function DataGridToolbar() {
 
   const filterModel = grid.use(filteringPlugin.selectors.model);
   const activeFilterCount = filterModel.conditions.length;
-  const quickFilterText = (filterModel.quickFilterValues ?? []).join(' ');
+  const quickFilterText = (filterModel.quickFilter?.values ?? []).join(' ');
 
   const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
 
