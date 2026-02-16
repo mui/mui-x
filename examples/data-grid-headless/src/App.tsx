@@ -14,7 +14,14 @@ import {
 
 import { ConfigPanel, type PluginConfig } from './ConfigPanel';
 import { FilterPanel } from './FilterPanel';
-import { FilterIcon, SearchIcon } from './icons';
+import {
+  FilterIcon,
+  SearchIcon,
+  ChevronsLeftIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsRightIcon,
+} from './icons';
 import './styles.css';
 
 interface RowData {
@@ -417,6 +424,10 @@ function DataGridToolbar() {
 
   const visibleColumns = grid.api.columns.getVisible();
 
+  if (!isFilteringEnabled) {
+    return null;
+  }
+
   const toolbarBtnClassName = ['grid-toolbar__btn', filterPanelOpen && 'grid-toolbar__btn--active']
     .filter(Boolean)
     .join(' ');
@@ -428,15 +439,14 @@ function DataGridToolbar() {
           type="button"
           className={toolbarBtnClassName}
           onClick={() => setFilterPanelOpen(!filterPanelOpen)}
-          disabled={!isFilteringEnabled}
         >
           <FilterIcon />
           <span>Filters</span>
-          {isFilteringEnabled && activeFilterCount > 0 && (
+          {activeFilterCount > 0 && (
             <span className="grid-toolbar__badge">{activeFilterCount}</span>
           )}
         </button>
-        {isFilteringEnabled && showQuickFilter && (
+        {showQuickFilter && (
           <div className="grid-toolbar__quick-filter">
             <SearchIcon />
             <input
@@ -450,7 +460,7 @@ function DataGridToolbar() {
         )}
       </div>
 
-      {filterPanelOpen && isFilteringEnabled && (
+      {filterPanelOpen && (
         <div className="grid-filter-panel-container">
           <FilterPanel
             filterModel={filterModel}
@@ -611,7 +621,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
                 onClick={() => grid.api.pagination.setPage(0)}
                 aria-label="First page"
               >
-                \u27E8\u27E8
+                <ChevronsLeftIcon />
               </button>
               <button
                 type="button"
@@ -620,7 +630,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
                 onClick={() => grid.api.pagination.setPage(paginationModel.page - 1)}
                 aria-label="Previous page"
               >
-                \u27E8
+                <ChevronLeftIcon />
               </button>
               <span className="grid-footer__page-info">
                 Page {paginationModel.page + 1} of {pageCount}
@@ -632,7 +642,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
                 onClick={() => grid.api.pagination.setPage(paginationModel.page + 1)}
                 aria-label="Next page"
               >
-                \u27E9
+                <ChevronRightIcon />
               </button>
               <button
                 type="button"
@@ -641,7 +651,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
                 onClick={() => grid.api.pagination.setPage(pageCount - 1)}
                 aria-label="Last page"
               >
-                \u27E9\u27E9
+                <ChevronsRightIcon />
               </button>
             </div>
           </div>

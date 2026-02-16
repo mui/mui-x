@@ -681,9 +681,23 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--color-border);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   background-color: var(--color-background);
+  box-shadow: var(--shadow-md);
   flex-shrink: 0;
+}
+
+.grid-toolbar + .grid-filter-panel-container {
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.grid-toolbar ~ .grid-root {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .grid-toolbar__btn {
@@ -781,6 +795,7 @@
   border-bottom: 1px solid var(--color-border);
   background-color: var(--gray-50);
   flex-shrink: 0;
+  clip-path: inset(0 0 0 0);
 }
 
 .filter-panel__body {
