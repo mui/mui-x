@@ -19,10 +19,8 @@ import {
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
-import {
-  selectorChartsInteractionAxisTooltip,
-  type UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { selectorChartsInteractionAxisTooltip } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianTooltip.selectors';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';

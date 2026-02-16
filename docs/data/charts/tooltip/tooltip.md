@@ -190,6 +190,8 @@ The item tooltip control can be used to sync tooltips between multiple charts.
 
 {{"demo": "SyncTooltip.js"}}
 
+{{"demo": "ControlledAxisTooltip.js"}}
+
 ## Creating a tooltip
 
 To aid in creating a custom tooltip, the library exports helpers which are explained in the sections that follow:
