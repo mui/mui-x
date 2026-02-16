@@ -7,7 +7,7 @@ import {
   type FilteringColumnMeta,
   type FilteringOptions,
 } from '../plugins/filtering';
-import { paginationPlugin } from '../plugins/pagination';
+import { paginationPlugin, type PaginationOptions } from '../plugins/pagination';
 import rowsPlugin from '../plugins/internal/rows/rows';
 import columnsPlugin from '../plugins/internal/columns/columns';
 
@@ -22,19 +22,33 @@ interface TestDataGridProps<TRow extends Record<string, any>> {
   apiRef?: React.RefObject<TestGridApi | null>;
   sorting?: SortingOptions['sorting'];
   filtering?: FilteringOptions['filtering'];
+  rowCount?: number;
+  pagination?: PaginationOptions['pagination'];
   initialState?: Parameters<typeof useDataGrid>[0]['initialState'];
 }
 
 export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGridProps<TRow>) {
-  const { rows, columns, getRowId, apiRef, sorting, filtering, initialState } = props;
+  const {
+    rows,
+    columns,
+    getRowId,
+    rowCount,
+    apiRef,
+    sorting,
+    filtering,
+    pagination,
+    initialState,
+  } = props;
 
   const grid = useDataGrid({
     rows,
     columns,
     getRowId,
-    plugins,
+    rowCount,
+    plugins: [sortingPlugin, paginationPlugin],
     sorting,
     filtering,
+    pagination,
     initialState,
   });
 
@@ -44,13 +58,13 @@ export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGr
     }
   }, [grid, apiRef]);
 
-  const filteredRowIds = grid.use(filteringPlugin.selectors.filteredRowIds);
+  const visibleRowIds = grid.use(rowsPlugin.selectors.processedRowIds);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
   return (
     <div data-testid="grid">
-      {filteredRowIds.map((rowId) => {
+      {visibleRowIds.map((rowId) => {
         const row = rowsData[rowId] as TRow | undefined;
         if (!row) {
           return null;
