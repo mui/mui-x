@@ -111,7 +111,7 @@ describe('Pipeline', () => {
     expect(onRecompute).toHaveBeenNthCalledWith(2, 15);
   });
 
-  it('disable() should skip the processor and invalidate downstream cache', () => {
+  it('disable() should skip the processor while preserving its cached output', () => {
     const pipeline = new Pipeline<number>({
       getInitialValue: () => 5,
       onRecompute: () => {},
@@ -258,5 +258,56 @@ describe('Pipeline', () => {
     expect(firstCalls).toBe(1);
     expect(secondCalls).toBe(1);
     expect(thirdCalls).toBe(1);
+  });
+
+  it('manual mode pattern: downstream processor should use upstream cached output after enable→recompute→disable', () => {
+    const pipeline = new Pipeline<number>({
+      getInitialValue: () => 5,
+      onRecompute: () => {},
+    });
+
+    let firstCalls = 0;
+    let secondCalls = 0;
+
+    pipeline.register(
+      'first',
+      (value) => {
+        firstCalls += 1;
+        return value + 1;
+      },
+      { disabled: true },
+    );
+    pipeline.register(
+      'second',
+      (value) => {
+        secondCalls += 1;
+        return value * 2;
+      },
+      { disabled: true },
+    );
+
+    // Initial full recompute — both disabled, nothing runs
+    expect(pipeline.recompute()).toBe(5);
+    expect(firstCalls).toBe(0);
+    expect(secondCalls).toBe(0);
+
+    // Manual apply for "first": enable → recompute → disable
+    pipeline.enable('first');
+    pipeline.recompute('first');
+    pipeline.disable('first');
+
+    // first ran, second was still disabled
+    expect(firstCalls).toBe(1);
+    expect(secondCalls).toBe(0);
+
+    // Manual apply for "second": enable → recompute → disable
+    pipeline.enable('second');
+    const result = pipeline.recompute('second');
+    pipeline.disable('second');
+
+    // second should have received first's cached output (6), not the initial value (5)
+    expect(result).toBe(12); // (5 + 1) * 2 = 12
+    expect(firstCalls).toBe(1); // first was NOT re-run
+    expect(secondCalls).toBe(1);
   });
 });
