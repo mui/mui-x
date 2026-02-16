@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { addDays } from 'date-fns/addDays';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
@@ -7,24 +6,24 @@ import { defaultVisibleDate } from '../../datasets/company-roadmap';
 const initialEvents = [
   {
     id: '1',
-    start: defaultVisibleDate,
-    end: defaultVisibleDate,
+    start: '2025-07-01T00:00:00',
+    end: '2025-07-01T00:00:00',
     allDay: true,
     name: 'Booking Bob',
     resource: 'appartment-a',
   },
   {
     id: '2',
-    start: addDays(defaultVisibleDate, 1),
-    end: addDays(defaultVisibleDate, 2),
+    start: '2025-07-02T00:00:00',
+    end: '2025-07-03T00:00:00',
     allDay: true,
     name: 'Booking Alice',
     resource: 'appartment-a',
   },
   {
     id: '3',
-    start: addDays(defaultVisibleDate, 1),
-    end: addDays(defaultVisibleDate, 4),
+    start: '2025-07-02T00:00:00',
+    end: '2025-07-05T00:00:00',
     allDay: true,
     name: 'Booking Carol',
     resource: 'appartment-b',

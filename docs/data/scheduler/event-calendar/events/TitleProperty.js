@@ -1,26 +1,20 @@
 import * as React from 'react';
-import { startOfWeek } from 'date-fns/startOfWeek';
-import { setDay } from 'date-fns/setDay';
-import { setHours } from 'date-fns/setHours';
-import { setMinutes } from 'date-fns/setMinutes';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../../datasets/personal-agenda';
 
-const START_OF_FIRST_WEEK = startOfWeek(defaultVisibleDate);
-
 const initialEvents = [
   {
     id: 'work-daily-standup',
-    start: setMinutes(setHours(setDay(START_OF_FIRST_WEEK, 3), 9), 0),
-    end: setMinutes(setHours(setDay(START_OF_FIRST_WEEK, 3), 9), 30),
+    start: '2025-07-02T09:00:00',
+    end: '2025-07-02T09:30:00',
     name: 'Daily Standup',
     rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
   },
   {
     id: 'work-retro',
-    start: setHours(setDay(START_OF_FIRST_WEEK, 2), 16),
-    end: setHours(setDay(START_OF_FIRST_WEEK, 2), 17),
+    start: '2025-07-01T16:00:00',
+    end: '2025-07-01T17:00:00',
     name: 'Team Retrospective',
     rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
   },
