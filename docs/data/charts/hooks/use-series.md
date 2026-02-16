@@ -5,9 +5,10 @@ productId: x-charts
 
 # useSeries
 
-<p class="description">Access raw series data for all chart types.</p>
+<p class="description">Get raw series data for custom components, by chart type or all at once.</p>
 
-The `use[Type]Series` hooks provide access to specific series data for a particular chart type.
+The series hooks return raw series data for a given chart type.
+Use the hook that matches your chart (for example, `useBarSeries()` for bar charts, `useLineSeries()` for line charts).
 
 ## Usage
 
@@ -20,7 +21,7 @@ function CustomComponent() {
 }
 ```
 
-You can also pick specific series by either providing the series id as a parameter, or an array of series ids to get.
+You can get specific series by passing a series ID, or an array of series IDs.
 
 ```js
 const barSeries = useBarSeries('id1');
@@ -28,33 +29,34 @@ const barSeries = useBarSeries('id1');
 const barSeries = useBarSeries(['id1', 'id2']);
 ```
 
-The following hooks exist to access series data specific to each chart type:
+The series hooks for each chart type are:
 
-- `useBarSeries`
-- `useLineSeries`
-- `useScatterSeries`
-- `usePieSeries`
-- `useRadarSeries`
-- `useHeatmapSeries`
-- `useFunnelSeries`
-- `useSankeySeries`
+- `useBarSeries()`
+- `useLineSeries()`
+- `useScatterSeries()`
+- `usePieSeries()`
+- `useRadarSeries()`
+- `useHeatmapSeries()`
+- `useFunnelSeries()`
+- `useSankeySeries()`
 
-This example demonstrates using the `useBarSeries` hook to access specific bar chart series data:
+The example below shows `useBarSeries()` returning bar chart series data:
 
 {{"demo": "UseBarSeries.js"}}
 
 ## Advanced usage
 
-The `useSeries` hook can be used to access all series data at once.
-In the example below, the `useSeries` hook is used to create a custom component that displays a line over each series max value.
+`useSeries()` returns all series data at once.
+The example below uses it to build a custom component that draws a line over each series max value.
 
 :::warning
-It is generally recommended to use the specific series hooks (for example, `useBarSeries`, `useLineSeries`) when working with a specific chart type, as their API is easier to use.
-The `useSeries` hook is more suitable for advanced use cases where you need to work with multiple unknown chart types at once.
+It's preferable to use type-specific series hooks (for example, `useBarSeries()`, `useLineSeries()`) when you work with a single chart type, since their API is simpler.
+Use `useSeries()` when you need to handle multiple or unknown chart types at once.
 :::
 
 {{"demo": "UseSeries.js"}}
 
 ## Caveats
 
-This hook must be used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
+You can only use these hooks within a chart context.
+See the [hooks overview](/x/react-charts/hooks/) for usage requirements.
