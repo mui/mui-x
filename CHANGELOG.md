@@ -2,7 +2,7 @@
 
 ## 9.0.0-alpha.0
 
-_Feb 13, 2026_
+_Feb 16, 2026_
 
 We'd like to extend a big thank you to the 21 contributors who made this release possible. Here are some highlights ✨:
 
@@ -691,8 +691,8 @@ Same changes as in `@mui/x-date-pickers@8.22.0`.
 - [charts] Use `store.state` over `store.getSnapshot()` (#20616) @bernardobelchior
 - [charts] Vendor flatqueue (#20610) @bernardobelchior
 - [charts] Extract pie layout computation (#20611) @alexfauquette
-- [charts][infra] Enable `@typescript-eslint/consistent-type-imports` ESLint rules (#20560) @JCQuintas
-- [charts][infra] Enable `import/no-cycle` ESLint rules (#20554) @JCQuintas
+- [charts][infra] Enable `@typescript-eslint/consistent-type-imports` eslint rules (#20560) @JCQuintas
+- [charts][infra] Enable `import/no-cycle` eslint rules (#20554) @JCQuintas
 
 #### `@mui/x-charts-pro@8.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -838,7 +838,7 @@ Internal changes.
 
 ### Core
 
-- [code-infra] Enable vitest ESLint plugin (#20530) @Janpot
+- [code-infra] Enable vitest eslint plugin (#20530) @Janpot
 - [code-infra] Fix missing font loading for local fonts (#20480) @Janpot
 - [internal] Performance: use raw `useSyncExternalStore` (#20447) @romgrk
 - [code-infra] Enable `vitest/expect-expect` and `vitest/no-standalone-expect` rules for x-charts packages (#20535) @Copilot
@@ -851,7 +851,7 @@ Internal changes.
 - Bump Vite & Vitest to ^4.0.14 (#20500) @renovate[bot]
 - Bump csstype to ^3.2.3 (#20493) @renovate[bot]
 - Bump es-toolkit to ^1.42.0 (#20494) @renovate[bot]
-- Bump ESLint to ^8.48.0 (#20495) @renovate[bot]
+- Bump eslint to ^8.48.0 (#20495) @renovate[bot]
 - Bump lerna to ^9.0.3 (#20496) @renovate[bot]
 - Bump lucide-react to ^0.555.0 (#20502) @renovate[bot]
 - Bump playwright monorepo (#20503) @renovate[bot]
@@ -1019,7 +1019,7 @@ Internal changes.
 
 ### Docs
 
-- [docs] Add minimum TypeScript version to migration guide (#20320) @siriwatknp
+- [docs] Add minimum Typescript version to migration guide (#20320) @siriwatknp
 - [docs] Fix Autosizing documentation (#20348) @siriwatknp
 - [docs] Fix separator opacity in demo (#20293) @sai6855
 - [docs] Replace deprecated `LoadingButton` with `Button` component (#20208) @Janpot
@@ -1335,7 +1335,7 @@ Internal changes.
 
 ### Core
 
-- [code-infra] Setup ESLint compat plugin (#20105) @brijeshb42
+- [code-infra] Setup eslint compat plugin (#20105) @brijeshb42
 - [code-infra] Improve store types (#20129) @JCQuintas
 - [docs] Update the callout in `rows` prop documentation (#20127) @MBilalShafi
 - [docs-infra] Refine changelog contributor acknowledgment messages (#20123) @mbrookes
@@ -1354,7 +1354,7 @@ We'd like to extend a big thank you to the 14 contributors who made this release
   ![brush visualization example](https://github.com/user-attachments/assets/60c382a1-e418-4736-8dcb-1567c4e361e3)
 - ⚡️ Performance improvements for large bar charts
 - 🤖 Data Grid AI assistant can now [visualize the query results](https://mui.com/x/react-data-grid/ai-assistant/#data-visualization) by controlling the chart integration settings
-- 📦 DataGrid uses an internal MUI fork of ExcelJS that does not depend on vulnerable versions of npm packages
+- 📦 DataGrid uses an internal MUI fork of ExcelJS that does not depend on vulnerable versions of NPM packages
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -1448,7 +1448,7 @@ Internal changes.
 - [code-infra] Remove @mui/monorepo usage for react versioning (#19894) @Janpot
 - [code-infra] Remove invalid `environment: 'browser'` from vitest browser config (#19993) @bernardobelchior
 - [code-infra] Remove unused babel aliases (#19987) @Janpot
-- [code-infra] Turn on all testing-library ESLint rules (#19946) @brijeshb42
+- [code-infra] Turn on all testing-library eslint rules (#19946) @brijeshb42
 - [docs-infra] Fix broken hash link (#20062) @Janpot
 
 ## 8.14.1
@@ -1543,7 +1543,7 @@ Internal changes.
 ### Core
 
 - [code-infra] Disable Netlify cache plugin (#19950) @Janpot
-- [code-infra] Lint json through ESLint (#19890) @Janpot
+- [code-infra] Lint json through eslint (#19890) @Janpot
 - [docs-infra] Use published netlify cache plugin package (#19929) @brijeshb42
 
 ## 8.14.0
@@ -4443,7 +4443,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.3`.
 - [docs] Add "Usage with Material UI v5/v6" guide (#17164) @cherniavskii
 - [docs] Fix 301 link @oliviertassinari
 - [docs] Fix redirection getting-started (#17200) @oliviertassinari
-- [docs] Sync Stack Overflow docs with reality (#17198) @oliviertassinari
+- [docs] Sync Stack Overflow docs with reality (#17198) @oliviertassinari
 - [docs] Update Localization Provider JSDoc link (#17207) @LukasTy
 
 ### Core
@@ -5473,7 +5473,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.11`, plus:
 #### `@mui/x-charts@8.0.0-alpha.11`
 
 - [charts] Add `color` prop to `Sparkline` and deprecate `colors` (#16477) @bernardobelchior
-- [charts] Make TypeScript more flexible about plugins and their params (#16478) @alexfauquette
+- [charts] Make typescript more flexible about plugins and their params (#16478) @alexfauquette
 - [charts] Remove component for axis event listener (#16314) @alexfauquette
 
 #### `@mui/x-charts-pro@8.0.0-alpha.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -5879,7 +5879,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix select all checkbox state reset with server side data (#16034) @MBilalShafi
 - [DataGrid] Refactor: create base button props (#15930) @romgrk
 - [DataGrid] Refactor: create tooltip props (#16086) @romgrk
-- [DataGrid] Fix TypeScript error (#16046) @cherniavskii
+- [DataGrid] Fix TS error (#16046) @cherniavskii
 
 #### `@mui/x-data-grid-pro@8.0.0-alpha.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
