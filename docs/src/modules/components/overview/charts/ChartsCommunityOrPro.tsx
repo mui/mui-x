@@ -27,9 +27,9 @@ export default function ChartsCommunityOrPro() {
           proDescription={
             'Requires a commercial license. Includes advanced charts and features such as zooming, panning, and exporting. Ideal for data-rich and enterprise applications.'
           }
-          // premiumDescription={
-          //   'Requires a commercial license. Includes the most advanced features such as... [complete this when ready to launch]'
-          // }
+          premiumDescription={
+            'Requires a commercial license. Includes the most advanced features such as WebGL render.'
+          }
         />
       </Stack>
     </React.Fragment>
