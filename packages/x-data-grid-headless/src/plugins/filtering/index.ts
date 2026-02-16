@@ -10,7 +10,7 @@ export type {
   FilteringOptions,
   FilteringApi,
 } from './types';
-export { getDefaultFilterOperators } from './filteringUtils';
+export { getDefaultFilterOperators, isFilterGroup, isFilterCondition } from './filteringUtils';
 export { filteringSelectors } from './selectors';
 export { buildFilterApplier, cleanFilterModel, removeDiacritics } from './filteringUtils';
 export {
