@@ -10,7 +10,7 @@ We'd like to extend a big thank you to the 21 contributors who made this release
 - [pickers] Add `AdapterDayjsBuddhist` adapter (#20984) @siriwatknp
 
 Special thanks go out to these community members for their valuable contributions:
-@Copilot, @jhe-iqbis
+@jhe-iqbis
 
 The following team members contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @dav-is, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @michelengelen, @mj12albert, @noraleonte, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
