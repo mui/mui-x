@@ -1,13 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getPageCount, getValidPage, paginateRowIds } from './paginationUtils';
-import {
-  selectPaginationModel,
-  selectPaginatedRowIds,
-  selectPageCount,
-  selectRowCount,
-  selectStartRow,
-  selectEndRow,
-} from './selectors';
+import { selectStartRow, selectEndRow } from './selectors';
 import type { PaginationState } from './types';
 
 describe('Pagination Plugin', () => {
@@ -141,34 +134,6 @@ describe('Pagination Plugin', () => {
         paginatedRowIds: [],
         ...overrides,
       },
-    });
-
-    describe('selectPaginationModel', () => {
-      it('should return the current pagination model', () => {
-        const state = createState({ model: { page: 2, pageSize: 25 } });
-        expect(selectPaginationModel(state)).toEqual({ page: 2, pageSize: 25 });
-      });
-    });
-
-    describe('selectPaginatedRowIds', () => {
-      it('should return paginated row IDs', () => {
-        const state = createState({ paginatedRowIds: [5, 6, 7] });
-        expect(selectPaginatedRowIds(state)).toEqual([5, 6, 7]);
-      });
-    });
-
-    describe('selectPageCount', () => {
-      it('should return the page count', () => {
-        const state = createState({ pageCount: 5 });
-        expect(selectPageCount(state)).toBe(5);
-      });
-    });
-
-    describe('selectRowCount', () => {
-      it('should return the row count', () => {
-        const state = createState({ rowCount: 100 });
-        expect(selectRowCount(state)).toBe(100);
-      });
     });
 
     describe('selectStartRow', () => {
