@@ -194,6 +194,243 @@ Same changes as in `@mui/x-tree-view@9.0.0-alpha.0`, plus:
 - [core] Fix CI (#21223) @flaviendelangle
 - [PoC] Headless data grid (#20645) @cherniavskii
 
+## v8.27.1
+
+<!-- generated comparing v8.27.0..v8.x -->
+
+_Feb 13, 2026_
+
+We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 📝 CSS bundler support is no longer needed for the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to these community members for their valuable contributions:
+@sai6855
+
+The following team members contributed to this release:
+@arminmeh, @cherniavskii, @flaviendelangle, @mj12albert, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.27.1`
+
+- [DataGrid] Hide column menu icon when there are no items (#21303) @MBilalShafi
+- [DataGrid] Migrate styled imports and remove `index.css` (#21176) @MBilalShafi
+- [DataGrid] Optimize `GridRootStyles` overrides resolver (#21251) @sai6855
+
+#### `@mui/x-data-grid-pro@8.27.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.27.1`, plus:
+
+- [DataGridPro] Fix column pinning issue with `restoreState` (#21305) @MBilalShafi
+- [DataGridPro] Fix lazy loading params for page with one row (#21238) @MBilalShafi
+- [DataGridPro] Properly extract parent path (#21301) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.27.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.27.1`, plus:
+
+- [DataGridPremium] Fix aggregation display when `initialState` has both `sortModel` and `pinnedColumns` (#21152) @mj12albert
+
+### Tree View
+
+#### `@mui/x-tree-view@8.27.1`
+
+- [tree view] Fix `apiRef.current.setItemExpansion()` (#21095) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.27.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.27.1`.
+
+### Core
+
+- [internal] Add CLI for translation using LLM (#21299) @cherniavskii
+
+## v8.27.0
+
+_Feb 2, 2026_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 📝 Data Grid supports new `longText` [column type](https://mui.com/x/react-data-grid/column-definition/#column-types)
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.27.0`
+
+- [DataGrid] Fix virtualization crash by preventing out-of-bounds `focusedVirtualCell` indices (#21123) @cherniavskii
+- [DataGrid] Fix focus steal issue with `<Dialog />` (#21106) @MBilalShafi
+- [DataGrid] Add new `longText` column type (#21103) @siriwatknp
+
+#### `@mui/x-data-grid-pro@8.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.27.0`.
+
+#### `@mui/x-data-grid-premium@8.27.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.27.0`, plus:
+
+- [DataGridPremium] Fix focus retention when undo/redo operations are done on the same cell (#21110) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.27.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.27.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.27.0`
+
+- [charts] Deprecate `AxisId` class in favour of to `data-axis-id` attribute (#21048) @JCQuintas
+
+#### `@mui/x-charts-pro@8.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.27.0`, plus:
+
+- [charts-pro] Add `onItemClick` to the heatmap (#20817) (#21030) @alexfauquette
+
+#### `@mui/x-charts-premium@8.27.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.27.0`, plus:
+
+- [charts-premium] Fix wrong `defaultSlots` in premium charts (#21052) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.27.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.27.0`, plus:
+
+- [RichTreeViewPro] Do not export `useSimpleTreeViewApiRef()` and `useRichTreeViewApiRef()` from pro package (#21145) @flaviendelangle
+
+### Codemod
+
+#### `@mui/x-codemod@8.27.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix DataGrid's cell edit renderers (@arminmeh) (#21041) @github-actions[bot]
+
+### Core
+
+- [code-infra] Add `consistent-type-imports` rule to the grid packages (#21119) @arminmeh
+- [code-infra] Allow user to select target branch if it exists for current major (#21005) @JCQuintas
+- [code-infra] Fix the target branch condition in the release script (#21051) @arminmeh
+- [code-infra] Update docs deploy script to fetch from `v8.x` (#21013) @arminmeh
+
+## 8.26.1
+
+_Jan 23, 2026_
+
+Release highlight ✨:
+
+- 🐞 Hotfix for Data Grid Premium type imports
+
+### Data Grid
+
+#### `@mui/x-data-grid-premium@8.26.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+- [DataGridPremium] Fix type import (#21033) @arminmeh
+
+## 8.26.0
+
+_Jan 22, 2026_
+
+We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔄 Data Grid now supports undo and redo actions. See the [Undo and redo](https://mui.com/x/react-data-grid/undo-redo/) page for details about out-of-the-box support and customization options.
+- 🐞 Bugfixes
+
+Special thanks go out to these community members for their valuable contributions:
+@jhe-iqbis
+
+The following team members contributed to this release:
+@arminmeh, @cherniavskii, @flaviendelangle, @JCQuintas, @romgrk
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.26.0`
+
+- [DataGrid] Add `onMenuOpen()` and `onMenuClose()` event handlers in `GridActionsCell` (#20994) @jhe-iqbis
+- [DataGrid] Fix scroll position when virtualization is disabled (#20958) @romgrk
+
+#### `@mui/x-data-grid-pro@8.26.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.26.0`.
+
+#### `@mui/x-data-grid-premium@8.26.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.26.0`, plus:
+
+- [DataGridPremium] Undo and redo (#20993) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.26.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.26.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.26.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.26.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.26.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.26.0`.
+
+#### `@mui/x-charts-premium@8.26.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.26.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.26.0`
+
+- [tree view] Fix `props.id` not passed to the root element (#20976) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.26.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.26.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.26.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Recipe for lazy loading DataGrid's detail panels with auto height (#20995) @arminmeh
+
+### Core
+
+- [code-infra] Update `master` to `v8` references (#20864) @JCQuintas
+- [code-infra] Update v8 branch tags (#20926) @JCQuintas
+- [code-infra] V8 changes in master (#20919) @JCQuintas
+- [code-infra] Allow user to select target branch if it exists for current major (#21005) @JCQuintas
+- [internal] Set up shared instructions for coding agents (#21000) @cherniavskii
+
 ## 8.25.0
 
 <!-- generated comparing v8.24.0..master -->
