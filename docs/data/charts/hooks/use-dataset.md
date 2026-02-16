@@ -15,7 +15,7 @@ This is useful when:
 - Performing calculations on the full dataset
 
 :::success
-Use [`useSeries()`](/x/react-charts/hooks/use-series/) and [`useAxes()`](/x/react-charts/hooks/use-axes/) for computed series and axes data instead.
+Use [series hooks](/x/react-charts/hooks/use-series/) and [axis hooks](/x/react-charts/hooks/use-axes/) for computed series and axes data instead.
 :::
 
 ## Usage
