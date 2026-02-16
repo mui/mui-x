@@ -1,80 +1,18 @@
 'use client';
 import * as React from 'react';
-import { createSelector } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../../core/plugin';
 import { Pipeline } from '../../core/pipeline';
-import {
-  type RowsState,
-  type RowsOptions,
-  createRowsState,
-  type GridRowId,
-  type GridRowModel,
-  type GridGroupNode,
-  type GridLeafNode,
-  GRID_ROOT_GROUP_ID,
-  getRowIdFromRowModel,
-  type GridTreeNode,
-} from './rowUtils';
-
-interface RowsApi<TRow = any> {
-  getRow: (id: GridRowId) => TRow | null;
-  getRowId: (row: TRow) => GridRowId;
-  getRowModels: () => Map<GridRowId, TRow>;
-  getRowsCount: () => number;
-  getAllRowIds: () => GridRowId[];
-  setRows: (rows: TRow[]) => void;
-  updateRows: (updates: Partial<TRow>[]) => void;
-  getRowNode: (id: GridRowId) => GridTreeNode | null;
-  setLoading: (loading: boolean) => void;
-  rowIdsPipeline: Pipeline<GridRowId[]>;
-}
-
-export interface RowsPluginState {
-  rows: RowsState;
-}
-
-export interface RowsPluginOptions<TRow = any> extends RowsOptions<TRow> {
-  initialState?: {
-    rows?: Partial<RowsState>;
-  };
-}
-
-const selectRowIdToModelLookup = createSelector(
-  (state: RowsPluginState) => state.rows.dataRowIdToModelLookup,
-);
-const selectTree = createSelector((state: RowsPluginState) => state.rows.tree);
-const selectTreeDepths = createSelector((state: RowsPluginState) => state.rows.treeDepths);
-const selectTotalRowCount = createSelector((state: RowsPluginState) => state.rows.totalRowCount);
-const selectTotalTopLevelRowCount = createSelector(
-  (state: RowsPluginState) => state.rows.totalTopLevelRowCount,
-);
-const selectLoading = createSelector((state: RowsPluginState) => state.rows.loading);
-const selectGroupingName = createSelector((state: RowsPluginState) => state.rows.groupingName);
-const selectRow = createSelector(
-  selectRowIdToModelLookup,
-  (lookup, id: GridRowId) => lookup[id] ?? null,
-);
-const selectRowNode = createSelector(selectTree, (tree, id: GridRowId) => tree[id] ?? null);
-const selectProcessedRowIds = createSelector(
-  (state: RowsPluginState) => state.rows.processedRowIds,
-);
-
-const rowsSelectors = {
-  rowIdToModelLookup: selectRowIdToModelLookup,
-  tree: selectTree,
-  treeDepths: selectTreeDepths,
-  totalRowCount: selectTotalRowCount,
-  totalTopLevelRowCount: selectTotalTopLevelRowCount,
-  loading: selectLoading,
-  groupingName: selectGroupingName,
-  row: selectRow,
-  rowNode: selectRowNode,
-  processedRowIds: selectProcessedRowIds,
-};
-
-export interface RowsPluginApi<TRow = any> {
-  rows: RowsApi<TRow>;
-}
+import { rowsSelectors } from './selectors';
+import { createRowsState, GRID_ROOT_GROUP_ID, getRowIdFromRowModel } from './rowUtils';
+import type {
+  GridRowId,
+  GridRowModel,
+  GridGroupNode,
+  GridLeafNode,
+  RowsPluginState,
+  RowsPluginOptions,
+  RowsPluginApi,
+} from './types';
 
 type RowsPlugin = Plugin<
   'rows',
@@ -197,7 +135,8 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
 
         newTree[GRID_ROOT_GROUP_ID] = rootGroup;
 
-        const totalRowCount = Math.max(params.rowCount ?? 0, newDataRowIds.length);
+        const totalRowCount =
+          params.rowCount === -1 ? -1 : Math.max(params.rowCount ?? 0, newDataRowIds.length);
 
         store.setState({
           ...store.state,
@@ -249,9 +188,9 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       if (prevRowCountRef.current !== params.rowCount) {
         prevRowCountRef.current = params.rowCount;
         // Update totalRowCount in state when rowCount prop changes
-        // We need to recalculate totalRowCount = Math.max(rowCount ?? 0, currentDataRowCount)
         const currentDataRowCount = store.state.rows.dataRowIds.length;
-        const newTotalRowCount = Math.max(params.rowCount ?? 0, currentDataRowCount);
+        const newTotalRowCount =
+          params.rowCount === -1 ? -1 : Math.max(params.rowCount ?? 0, currentDataRowCount);
 
         store.setState({
           ...store.state,
@@ -261,8 +200,10 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
             totalTopLevelRowCount: newTotalRowCount,
           },
         });
+
+        rowIdsPipeline.recompute();
       }
-    }, [params.rowCount, store]);
+    }, [params.rowCount, store, rowIdsPipeline]);
 
     return {
       rows: {

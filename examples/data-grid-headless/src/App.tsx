@@ -403,9 +403,40 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
         console.log('Sort model changed:', model);
       },
     },
+    // Pagination options from config
+    pagination: {
+      onModelChange: (model) => {
+        // eslint-disable-next-line no-console
+        console.log('Pagination model changed:', model);
+      },
+    },
+    initialState: {
+      pagination: {
+        model: {
+          page: 0,
+          pageSize: config.pagination?.pageSize ?? 100,
+        },
+      },
+    },
   });
 
   React.useImperativeHandle(ref, () => grid);
+
+  // Sync page size with config changes (including disabling pagination)
+  const effectivePageSize = config.pagination?.enabled
+    ? (config.pagination?.pageSize ?? 100)
+    : Infinity;
+
+  React.useEffect(() => {
+    grid.api.pagination.setPageSize(effectivePageSize);
+  }, [effectivePageSize, grid]);
+
+  // Use paginated row IDs from pagination plugin
+  const paginationModel = grid.use(paginationPlugin.selectors.model);
+  const pageCount = grid.use(paginationPlugin.selectors.pageCount);
+  const rowCount = grid.use(paginationPlugin.selectors.rowCount);
+  const startRow = grid.use(paginationPlugin.selectors.startRow);
+  const endRow = grid.use(paginationPlugin.selectors.endRow);
 
   const virtualization = grid.api.virtualization;
   const elements = grid.api.elements;
@@ -420,6 +451,25 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
   const hasScrollX = dimensions.hasScrollX;
   const scrollbarSize = dimensions.scrollbarSize;
 
+  // Scroll to top when page changes
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const mergedScrollerRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      scrollContainerRef.current = node;
+      const origRef = scrollerProps.ref;
+      if (typeof origRef === 'function') {
+        origRef(node);
+      } else if (origRef) {
+        (origRef as React.RefObject<HTMLDivElement | null>).current = node;
+      }
+    },
+    [scrollerProps.ref],
+  );
+
+  React.useEffect(() => {
+    scrollContainerRef.current?.scrollTo({ top: 0 });
+  }, [paginationModel.page]);
+
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).grid = grid;
@@ -433,7 +483,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
       <div className="grid-wrapper">
         <div className="grid-root" {...gridProps}>
           <div className="grid-mainContent" {...containerProps}>
-            <div className="grid-virtualScroller" {...scrollerProps}>
+            <div className="grid-virtualScroller" {...scrollerProps} ref={mergedScrollerRef}>
               <DataGridColumnHeaders />
               <div className="grid-virtualScrollerContent" {...contentProps}>
                 <DataGridRenderZone />
@@ -453,6 +503,55 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
             <DataGridVirtualScrollbar position="horizontal" hasOppositeScrollbar={hasScrollY} />
           )}
         </div>
+        {/* Pagination Footer */}
+        {config.pagination?.enabled && (
+          <div className="grid-footer">
+            <div className="grid-footer__info">
+              {rowCount > 0 ? `${startRow}–${endRow} of ${rowCount}` : 'No rows'}
+            </div>
+            <div className="grid-footer__controls">
+              <button
+                type="button"
+                className="grid-footer__btn"
+                disabled={paginationModel.page === 0}
+                onClick={() => grid.api.pagination.setPage(0)}
+                aria-label="First page"
+              >
+                ⟨⟨
+              </button>
+              <button
+                type="button"
+                className="grid-footer__btn"
+                disabled={paginationModel.page === 0}
+                onClick={() => grid.api.pagination.setPage(paginationModel.page - 1)}
+                aria-label="Previous page"
+              >
+                ⟨
+              </button>
+              <span className="grid-footer__page-info">
+                Page {paginationModel.page + 1} of {pageCount}
+              </span>
+              <button
+                type="button"
+                className="grid-footer__btn"
+                disabled={paginationModel.page >= pageCount - 1}
+                onClick={() => grid.api.pagination.setPage(paginationModel.page + 1)}
+                aria-label="Next page"
+              >
+                ⟩
+              </button>
+              <button
+                type="button"
+                className="grid-footer__btn"
+                disabled={paginationModel.page >= pageCount - 1}
+                onClick={() => grid.api.pagination.setPage(pageCount - 1)}
+                aria-label="Last page"
+              >
+                ⟩⟩
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </DataGridContext.Provider>
   );
@@ -470,6 +569,10 @@ function App() {
       mode: 'auto',
       stableSort: false,
       order: ['asc', 'desc', null],
+    },
+    pagination: {
+      enabled: true,
+      pageSize: 100,
     },
   });
 
