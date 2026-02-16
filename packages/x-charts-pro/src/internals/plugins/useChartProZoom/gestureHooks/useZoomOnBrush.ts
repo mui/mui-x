@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getLayerRelativePoint,
+  getChartPoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -40,11 +40,11 @@ export const useZoomOnBrush = (
     const handleBrushEnd = (event: PanEvent) => {
       // Convert the brush rectangle to zoom percentages for each axis
       setZoomDataCallback((prev) => {
-        const startPoint = getLayerRelativePoint(element, {
+        const startPoint = getChartPoint(element, {
           clientX: event.detail.initialCentroid.x,
           clientY: event.detail.initialCentroid.y,
         });
-        const endPoint = getLayerRelativePoint(element, {
+        const endPoint = getChartPoint(element, {
           clientX: event.detail.centroid.x,
           clientY: event.detail.centroid.y,
         });
