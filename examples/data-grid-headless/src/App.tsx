@@ -393,6 +393,14 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
     rows,
     columns,
     plugins,
+    virtualization: {
+      disable: config.virtualization?.disable ?? false,
+      disableForColumns: config.virtualization?.disableForColumns ?? false,
+      autoHeight: config.virtualization?.autoHeight ?? false,
+      rowBufferPx: config.virtualization?.rowBufferPx ?? 150,
+      columnBufferPx: config.virtualization?.columnBufferPx ?? 150,
+    },
+    rowHeight: ROW_HEIGHT,
     sorting: {
       multiSort: config.sorting?.multiSort,
       mode: config.sorting?.mode,
@@ -573,6 +581,13 @@ function App() {
     pagination: {
       enabled: true,
       pageSize: 100,
+    },
+    virtualization: {
+      disable: false,
+      disableForColumns: false,
+      autoHeight: false,
+      rowBufferPx: 150,
+      columnBufferPx: 150,
     },
   });
 
