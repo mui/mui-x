@@ -69,7 +69,7 @@ function TestDataGridWithFilter<TRow extends Record<string, any>>(
     }
   }, [grid, apiRef]);
 
-  const filteredRowIds = grid.use(filteringPlugin.selectors.filteredRowIds);
+  const filteredRowIds = grid.use(rowsPlugin.selectors.processedRowIds);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
 
   return (

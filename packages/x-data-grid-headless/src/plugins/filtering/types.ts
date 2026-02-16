@@ -94,7 +94,6 @@ export interface FilteringColumnMeta<V = any> {
 export interface FilteringState {
   filtering: {
     model: FilterModel;
-    filteredRowIds: GridRowId[];
   };
 }
 
@@ -145,12 +144,6 @@ export interface FilteringInternalOptions {
     external?: boolean;
   };
 }
-
-export type FilteringSelectors = {
-  model: (state: FilteringState) => FilterModel;
-  filteredRowIds: (state: FilteringState) => GridRowId[];
-  quickFilterValues: (state: FilteringState) => any[];
-};
 
 export interface FilteringApi {
   filtering: {

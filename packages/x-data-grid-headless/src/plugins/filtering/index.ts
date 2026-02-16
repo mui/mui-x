@@ -10,14 +10,12 @@ export type {
   FilteringOptions,
   FilteringInternalOptions,
   FilteringApi,
-  FilteringSelectors,
 } from './types';
 export { EMPTY_FILTER_MODEL, isFilterGroup, isFilterCondition } from './types';
 export { getDefaultFilterOperators } from './filteringUtils';
 export {
   filteringSelectors,
   selectFilterModel,
-  selectFilteredRowIds,
   selectQuickFilterValues,
 } from './selectors';
 export { buildFilterApplier, cleanFilterModel, removeDiacritics } from './filteringUtils';

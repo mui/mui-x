@@ -1,11 +1,7 @@
 import { createSelector } from '@base-ui/utils/store';
-import type { FilteringSelectors, FilteringState } from './types';
+import type { FilteringState } from './types';
 
 export const selectFilterModel = createSelector((state: FilteringState) => state.filtering.model);
-
-export const selectFilteredRowIds = createSelector(
-  (state: FilteringState) => state.filtering.filteredRowIds,
-);
 
 const EMPTY_QUICK_FILTER_VALUES: any[] = [];
 
@@ -14,8 +10,7 @@ export const selectQuickFilterValues = createSelector(
   (model) => model.quickFilterValues ?? EMPTY_QUICK_FILTER_VALUES,
 );
 
-export const filteringSelectors: FilteringSelectors = {
+export const filteringSelectors = {
   model: selectFilterModel,
-  filteredRowIds: selectFilteredRowIds,
   quickFilterValues: selectQuickFilterValues,
 };

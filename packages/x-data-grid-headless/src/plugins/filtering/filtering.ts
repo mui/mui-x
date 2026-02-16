@@ -13,7 +13,6 @@ import type {
   FilteringInternalOptions,
   FilteringApi,
   FilteringColumnMeta,
-  FilteringSelectors,
 } from './types';
 import { EMPTY_FILTER_MODEL, isFilterCondition } from './types';
 
@@ -22,7 +21,7 @@ type FilteringPluginOptions = FilteringOptions & FilteringInternalOptions;
 type FilteringPlugin = Plugin<
   'filtering',
   FilteringState,
-  FilteringSelectors,
+  typeof filteringSelectors,
   FilteringApi,
   FilteringPluginOptions,
   FilteringColumnMeta
@@ -77,7 +76,6 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
       },
       filtering: {
         model: initialModel,
-        filteredRowIds,
       },
     };
   },
@@ -135,28 +133,10 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
     const filteringProcessor = useStableCallback((inputIds: GridRowId[]): GridRowId[] => {
       if (isExternalFiltering) {
         // In external mode, rows are already filtered — don't filter.
-        // Sync derived filtering state.
-        store.setState({
-          ...store.state,
-          filtering: {
-            ...store.state.filtering,
-            filteredRowIds: inputIds,
-          },
-        });
         return inputIds;
       }
 
-      const filteredRowIds = computeFilteredRowIds(inputIds);
-
-      store.setState({
-        ...store.state,
-        filtering: {
-          ...store.state.filtering,
-          filteredRowIds,
-        },
-      });
-
-      return filteredRowIds;
+      return computeFilteredRowIds(inputIds);
     });
 
     const applyFiltering = useStableCallback((): void => {
