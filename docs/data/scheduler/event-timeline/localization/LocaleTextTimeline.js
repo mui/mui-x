@@ -1,14 +1,14 @@
 import * as React from 'react';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { frFR } from '@mui/x-scheduler/translations';
+import { frFR } from '@mui/x-scheduler/locales';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/company-roadmap';
+} from '../../datasets/company-roadmap';
 
-export default function TranslationsTimeline() {
+export default function LocaleTextTimeline() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
@@ -18,7 +18,7 @@ export default function TranslationsTimeline() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        translations={frFR}
+        localeText={frFR.components.MuiEventTimeline.defaultProps.localeText}
         defaultView="months"
       />
     </div>
