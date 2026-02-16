@@ -3,6 +3,12 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  translations={frFR}
+  localeText={{
+    today: 'Now',
+    week: 'Weekly',
+    month: 'Monthly',
+    day: 'Daily',
+    agenda: 'Schedule',
+  }}
   defaultPreferences={{ isSidePanelOpen: false }}
 />

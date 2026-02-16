@@ -5,7 +5,7 @@ import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { getDataPaletteProps } from '@mui/x-scheduler/internals';
-import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
 const EventTimelinePremiumTitleCellRow = styled(TimelinePrimitive.Row, {
   name: 'MuiEventTimeline',
@@ -44,7 +44,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const classes = useEventTimelinePremiumClasses();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);

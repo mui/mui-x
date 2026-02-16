@@ -20,7 +20,6 @@ export const eventCalendarAgendaSelectors = {
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
     schedulerEventSelectors.processedEventList,
     schedulerResourceSelectors.visibleMap,
-    schedulerResourceSelectors.resourceParentIdLookup,
     (
       adapter,
       visibleDate,
@@ -29,7 +28,6 @@ export const eventCalendarAgendaSelectors = {
       showEmptyDaysInAgenda,
       events,
       visibleResources,
-      resourceParentIds,
     ) => {
       const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
@@ -47,7 +45,6 @@ export const eventCalendarAgendaSelectors = {
         days: accumulatedDays,
         events,
         visibleResources,
-        resourceParentIds,
         displayTimezone,
       });
 
@@ -94,7 +91,6 @@ export const eventCalendarAgendaSelectors = {
           days: accumulatedDays,
           events,
           visibleResources,
-          resourceParentIds,
           displayTimezone,
         });
 

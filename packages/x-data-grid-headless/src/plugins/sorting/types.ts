@@ -77,7 +77,6 @@ export interface SortingColumnMeta<V = any> {
 export interface SortingState {
   sorting: {
     model: GridSortModel;
-    sortedRowIds: GridRowId[];
   };
 }
 
@@ -122,12 +121,6 @@ export interface SortingOptions {
      * @default ['asc', 'desc', null]
      */
     order?: readonly GridSortDirection[];
-
-    /**
-     * Callback fired when sorted row IDs are recomputed.
-     * @param {GridRowId[]} sortedRowIds The sorted row IDs.
-     */
-    onSortedRowsSet?: (sortedRowIds: GridRowId[]) => void;
   };
 }
 
@@ -143,7 +136,6 @@ export interface SortingInternalOptions {
 
 export type SortingSelectors = {
   model: (state: SortingState) => GridSortModel;
-  sortedRowIds: (state: SortingState) => GridRowId[];
 };
 
 export interface ComputeSortedRowIdsOptions {

@@ -17,7 +17,6 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         events,
         displayTimezone: 'default',
         visibleResources: {},
-        resourceParentIds: new Map(),
       });
       return useEventOccurrencesWithTimelinePosition({ occurrences, maxSpan });
     });

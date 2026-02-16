@@ -49,6 +49,7 @@ type PaginationPlugin = Plugin<
 
 const paginationPlugin = createPlugin<PaginationPlugin>()({
   name: 'pagination',
+  order: 50,
   selectors: paginationSelectors,
   initialize: (state, params) => ({
     ...state,
