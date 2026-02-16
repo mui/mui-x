@@ -163,6 +163,164 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
     });
   });
 
+  describe('axis trigger with sort', () => {
+    it('should sort series items in ascending order', async () => {
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis', sort: 'asc' } }}
+        />,
+        { wrapper },
+      );
+      const svg = container.querySelector('svg')!;
+
+      // Trigger the tooltip on A where v1=4, v2=2
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        // Ascending: S2 (2) before S1 (4)
+        const firstRow = ['S2', '2'];
+        const secondRow = ['S1', '4'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+    });
+
+    it('should sort series items in descending order', async () => {
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis', sort: 'desc' } }}
+        />,
+        { wrapper },
+      );
+      const svg = container.querySelector('svg')!;
+
+      // Trigger the tooltip on A where v1=4, v2=2
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        // Descending: S1 (4) before S2 (2)
+        const firstRow = ['S1', '4'];
+        const secondRow = ['S2', '2'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+    });
+
+    it('should put undefined values at the end with descending order', async () => {
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          dataset={[
+            { x: 'A', v1: 4, v2: null },
+            { x: 'B', v1: 1, v2: 1 },
+          ]}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis', sort: 'desc' } }}
+        />,
+        { wrapper },
+      );
+      const svg = container.querySelector('svg')!;
+
+      // Trigger the tooltip on A where v1=4, v2=null
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        // Descending: S1 (4) before S2 (null)
+        const firstRow = ['S1', '4'];
+        const secondRow = ['S2', ''];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+    });
+
+    it('should put undefined values at the end with ascending order', async () => {
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          dataset={[
+            { x: 'A', v1: 4, v2: null },
+            { x: 'B', v1: 1, v2: 1 },
+          ]}
+          series={[
+            { dataKey: 'v1', id: 's1', label: 'S1' },
+            { dataKey: 'v2', id: 's2', label: 'S2' },
+          ]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis', sort: 'asc' } }}
+        />,
+        { wrapper },
+      );
+      const svg = container.querySelector('svg')!;
+
+      // Trigger the tooltip on A where v1=4, v2=null
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        // Descending: S1 (4) before S2 (null)
+        const firstRow = ['S1', '4'];
+        const secondRow = ['S2', ''];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+    });
+  });
+
   describe('item trigger', () => {
     it('should show right values with vertical layout on item', async () => {
       const { user } = render(
