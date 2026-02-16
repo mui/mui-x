@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { createRenderer, act } from '@mui/internal-test-utils';
-import type { ColumnDef, useDataGrid } from '../..';
-import type { sortingPlugin } from '../sorting';
-import type { paginationPlugin } from '.';
-import { TestDataGrid } from '../../test/TestDataGrid';
+import type { ColumnDef } from '../..';
+import { TestDataGrid, type TestGridApi } from '../../test/TestDataGrid';
 
 type TestRow = { id: number; name: string; age: number };
 
@@ -31,10 +29,6 @@ const defaultRows: TestRow[] = [
   { id: 14, name: 'Nate', age: 36 },
   { id: 15, name: 'Olivia', age: 32 },
 ];
-
-type GridApi = ReturnType<
-  typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TestRow>
->;
 
 describe('Pagination Plugin - Integration Tests', () => {
   const { render } = createRenderer();
@@ -137,7 +131,7 @@ describe('Pagination Plugin - Integration Tests', () => {
   describe('API methods', () => {
     describe('setPage', () => {
       it('should navigate to a specific page', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
           <TestDataGrid
             rows={defaultRows}
@@ -160,7 +154,7 @@ describe('Pagination Plugin - Integration Tests', () => {
 
     describe('setPageSize', () => {
       it('should update page size and reset to page 0', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
           <TestDataGrid
             rows={defaultRows}
@@ -185,7 +179,7 @@ describe('Pagination Plugin - Integration Tests', () => {
 
     describe('setModel', () => {
       it('should update both page and pageSize atomically', async () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
           <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
         );
@@ -203,7 +197,7 @@ describe('Pagination Plugin - Integration Tests', () => {
 
     describe('getModel', () => {
       it('should return the current model', () => {
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         render(
           <TestDataGrid
             rows={defaultRows}
@@ -222,7 +216,7 @@ describe('Pagination Plugin - Integration Tests', () => {
     describe('onModelChange', () => {
       it('should be called on setPage', async () => {
         const onModelChange = vi.fn();
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         render(
           <TestDataGrid
             rows={defaultRows}
@@ -242,7 +236,7 @@ describe('Pagination Plugin - Integration Tests', () => {
 
       it('should be called on setPageSize', async () => {
         const onModelChange = vi.fn();
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         render(
           <TestDataGrid
             rows={defaultRows}
@@ -261,7 +255,7 @@ describe('Pagination Plugin - Integration Tests', () => {
 
       it('should be called on setModel', async () => {
         const onModelChange = vi.fn();
-        const apiRef = React.createRef<GridApi | null>();
+        const apiRef = React.createRef<TestGridApi | null>();
         render(
           <TestDataGrid
             rows={defaultRows}
@@ -340,7 +334,7 @@ describe('Pagination Plugin - Integration Tests', () => {
     });
 
     it('should adjust page when pageSize increases', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
         <TestDataGrid
           rows={defaultRows}
@@ -382,7 +376,7 @@ describe('Pagination Plugin - Integration Tests', () => {
     });
 
     it('should recompute pagination when sort changes', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
         <TestDataGrid
           rows={defaultRows}
@@ -406,7 +400,7 @@ describe('Pagination Plugin - Integration Tests', () => {
     });
 
     it('should show correct rows on page 2 after sorting', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
         <TestDataGrid
           rows={defaultRows}
@@ -447,7 +441,7 @@ describe('Pagination Plugin - Integration Tests', () => {
     });
 
     it('should compute pageCount from actual row count', () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const pageRows = defaultRows.slice(0, 5);
       render(
         <TestDataGrid
@@ -466,7 +460,7 @@ describe('Pagination Plugin - Integration Tests', () => {
 
   describe('edge cases', () => {
     it('should handle empty rows', () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       render(<TestDataGrid rows={[] as TestRow[]} columns={defaultColumns} apiRef={apiRef} />);
 
       const state = apiRef.current?.getState();
@@ -490,7 +484,7 @@ describe('Pagination Plugin - Integration Tests', () => {
     });
 
     it('should recompute when new rows are added via props', async () => {
-      const apiRef = React.createRef<GridApi | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       const { container, setProps } = render(
         <TestDataGrid
           rows={defaultRows.slice(0, 3)}

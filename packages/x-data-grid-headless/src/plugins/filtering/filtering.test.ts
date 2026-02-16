@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { isFilterGroup, isFilterCondition, EMPTY_FILTER_MODEL } from './types';
 import type { FilterCondition, FilterGroup, FilterModel, FilterOperator } from './types';
-import type { GridRowId } from '../internal/rows/rowUtils';
+import type { GridRowId } from '../internal/rows/types';
 import {
   getStringFilterOperators,
   getStringQuickFilterFn,
