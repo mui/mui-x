@@ -2,8 +2,8 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -20,10 +20,8 @@ export default function FullEventTimelinePremium() {
   const [visibleDate, setVisibleDate] = React.useState(defaultVisibleDate);
   const apiRef = useEventTimelinePremiumApiRef();
 
-  const handleViewChange = (_, newView) => {
-    if (newView) {
-      setView(newView);
-    }
+  const handleViewChange = (event) => {
+    setView(event.target.value);
   };
 
   return (
@@ -47,13 +45,13 @@ export default function FullEventTimelinePremium() {
         <IconButton onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
           <ChevronRightIcon />
         </IconButton>
-        <ToggleButtonGroup value={view} exclusive onChange={handleViewChange} size="small">
+        <Select value={view} onChange={handleViewChange} size="small">
           {['time', 'days', 'weeks', 'months', 'years'].map((value) => (
-            <ToggleButton key={value} value={value}>
+            <MenuItem key={value} value={value}>
               {value}
-            </ToggleButton>
+            </MenuItem>
           ))}
-        </ToggleButtonGroup>
+        </Select>
       </Stack>
       <div style={{ flex: 1, overflow: 'auto' }}>
         <EventTimelinePremium
