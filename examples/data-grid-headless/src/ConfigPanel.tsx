@@ -185,41 +185,14 @@ export function ConfigPanel(props: ConfigPanelProps) {
     setSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  const updateSortingConfig = (updates: Partial<PluginConfig['sorting']>) => {
+  const updateConfig = (
+    namespace: keyof PluginConfig,
+    updates: Partial<PluginConfig[typeof namespace]>,
+  ) => {
     onConfigChange({
       ...config,
-      sorting: {
-        ...config.sorting,
-        ...updates,
-      },
-    });
-  };
-
-  const updateFilteringConfig = (updates: Partial<PluginConfig['filtering']>) => {
-    onConfigChange({
-      ...config,
-      filtering: {
-        ...config.filtering,
-        ...updates,
-      },
-    });
-  };
-
-  const updateVirtualizationConfig = (updates: Partial<PluginConfig['virtualization']>) => {
-    onConfigChange({
-      ...config,
-      virtualization: {
-        ...config.virtualization,
-        ...updates,
-      },
-    });
-  };
-
-  const updatePaginationConfig = (updates: Partial<NonNullable<PluginConfig['pagination']>>) => {
-    onConfigChange({
-      ...config,
-      pagination: {
-        ...config.pagination,
+      [namespace]: {
+        ...config[namespace as keyof PluginConfig],
         ...updates,
       },
     });
@@ -413,7 +386,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   <OptionRow label="Enable Sorting" description="Click headers to sort">
                     <Toggle
                       checked={isSortingEnabled}
-                      onChange={(checked) => updateSortingConfig({ enabled: checked })}
+                      onChange={(checked) => updateConfig('sorting', { enabled: checked })}
                     />
                   </OptionRow>
 
@@ -424,7 +397,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <Toggle
                       checked={config.sorting?.multiSort ?? true}
-                      onChange={(checked) => updateSortingConfig({ multiSort: checked })}
+                      onChange={(checked) => updateConfig('sorting', { multiSort: checked })}
                       disabled={!isSortingEnabled}
                     />
                   </OptionRow>
@@ -437,7 +410,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                     <Toggle
                       checked={config.sorting?.multiSortWithShiftKey ?? true}
                       onChange={(checked) =>
-                        updateSortingConfig({ multiSortWithShiftKey: checked })
+                        updateConfig('sorting', { multiSortWithShiftKey: checked })
                       }
                       disabled={!isSortingEnabled || !isMultiSortEnabled}
                     />
@@ -450,7 +423,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <Toggle
                       checked={config.sorting?.stableSort ?? false}
-                      onChange={(checked) => updateSortingConfig({ stableSort: checked })}
+                      onChange={(checked) => updateConfig('sorting', { stableSort: checked })}
                       disabled={!isSortingEnabled}
                     />
                   </OptionRow>
@@ -458,7 +431,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   <OptionRow label="Mode" disabled={!isSortingEnabled}>
                     <Select
                       value={config.sorting?.mode ?? 'auto'}
-                      onChange={(val) => updateSortingConfig({ mode: val as 'auto' | 'manual' })}
+                      onChange={(val) =>
+                        updateConfig('sorting', { mode: val as 'auto' | 'manual' })
+                      }
                       options={[
                         { value: 'auto', label: 'Auto' },
                         { value: 'manual', label: 'Manual' },
@@ -486,7 +461,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                       onChange={(val) => {
                         const order = sortingOrderMap[val];
                         if (order) {
-                          updateSortingConfig({ order });
+                          updateConfig('sorting', { order });
                         }
                       }}
                       options={sortingOrderOptions}
@@ -520,7 +495,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   <OptionRow label="Enable Filtering" description="Filter rows by column values">
                     <Toggle
                       checked={isFilteringEnabled}
-                      onChange={(checked) => updateFilteringConfig({ enabled: checked })}
+                      onChange={(checked) => updateConfig('filtering', { enabled: checked })}
                     />
                   </OptionRow>
 
@@ -531,7 +506,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <Select
                       value={config.filtering?.mode ?? 'auto'}
-                      onChange={(val) => updateFilteringConfig({ mode: val as 'auto' | 'manual' })}
+                      onChange={(val) =>
+                        updateConfig('filtering', { mode: val as 'auto' | 'manual' })
+                      }
                       options={[
                         { value: 'auto', label: 'Auto' },
                         { value: 'manual', label: 'Manual' },
@@ -559,7 +536,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <Toggle
                       checked={config.filtering?.showQuickFilter ?? true}
-                      onChange={(checked) => updateFilteringConfig({ showQuickFilter: checked })}
+                      onChange={(checked) =>
+                        updateConfig('filtering', { showQuickFilter: checked })
+                      }
                       disabled={!isFilteringEnabled}
                     />
                   </OptionRow>
@@ -571,7 +550,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <Toggle
                       checked={config.filtering?.disableEval ?? false}
-                      onChange={(checked) => updateFilteringConfig({ disableEval: checked })}
+                      onChange={(checked) => updateConfig('filtering', { disableEval: checked })}
                       disabled={!isFilteringEnabled}
                     />
                   </OptionRow>
@@ -606,7 +585,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <Toggle
                       checked={isVirtualizationEnabled}
-                      onChange={(checked) => updateVirtualizationConfig({ disable: !checked })}
+                      onChange={(checked) => updateConfig('virtualization', { disable: !checked })}
                     />
                   </OptionRow>
 
@@ -618,7 +597,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                     <Toggle
                       checked={!(config.virtualization?.disableForColumns ?? false)}
                       onChange={(checked) =>
-                        updateVirtualizationConfig({ disableForColumns: !checked })
+                        updateConfig('virtualization', { disableForColumns: !checked })
                       }
                       disabled={!isVirtualizationEnabled}
                     />
@@ -631,7 +610,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <Toggle
                       checked={config.virtualization?.autoHeight ?? false}
-                      onChange={(checked) => updateVirtualizationConfig({ autoHeight: checked })}
+                      onChange={(checked) =>
+                        updateConfig('virtualization', { autoHeight: checked })
+                      }
                       disabled={!isVirtualizationEnabled}
                     />
                   </OptionRow>
@@ -643,7 +624,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <NumberInput
                       value={config.virtualization?.rowBufferPx ?? 150}
-                      onChange={(value) => updateVirtualizationConfig({ rowBufferPx: value })}
+                      onChange={(value) => updateConfig('virtualization', { rowBufferPx: value })}
                       min={0}
                       max={2000}
                       step={10}
@@ -658,7 +639,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <NumberInput
                       value={config.virtualization?.columnBufferPx ?? 150}
-                      onChange={(value) => updateVirtualizationConfig({ columnBufferPx: value })}
+                      onChange={(value) =>
+                        updateConfig('virtualization', { columnBufferPx: value })
+                      }
                       min={0}
                       max={2000}
                       step={10}
@@ -692,7 +675,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   <OptionRow label="Enable Pagination" description="Show rows in pages">
                     <Toggle
                       checked={isPaginationEnabled}
-                      onChange={(checked) => updatePaginationConfig({ enabled: checked })}
+                      onChange={(checked) => updateConfig('pagination', { enabled: checked })}
                     />
                   </OptionRow>
 
@@ -703,7 +686,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   >
                     <Select
                       value={String(config.pagination?.pageSize ?? 100)}
-                      onChange={(val) => updatePaginationConfig({ pageSize: Number(val) })}
+                      onChange={(val) => updateConfig('pagination', { pageSize: Number(val) })}
                       options={[
                         { value: '10', label: '10' },
                         { value: '25', label: '25' },
