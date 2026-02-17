@@ -28,10 +28,6 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
             pathname: '/x/react-scheduler/event-calendar-group',
             subheader: 'Event Calendar',
             children: [
-              {
-                pathname: '/x/react-scheduler/full-screen-event-calendar',
-                title: 'Full screen demo', // TODO: Remove before launch?
-              },
               { pathname: '/x/react-scheduler/event-calendar/events' },
               { pathname: '/x/react-scheduler/event-calendar/resources' },
               { pathname: '/x/react-scheduler/event-calendar/navigation' },
@@ -51,10 +47,6 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
             subheader: 'Event Timeline',
             plan: 'premium',
             children: [
-              {
-                pathname: '/x/react-scheduler/full-screen-event-timeline-premium',
-                title: 'Full screen demo', // TODO: Remove before launch?
-              },
               { pathname: '/x/react-scheduler/event-timeline/events' },
               { pathname: '/x/react-scheduler/event-timeline/resources' },
               { pathname: '/x/react-scheduler/event-timeline/navigation' },
