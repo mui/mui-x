@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '../';
 import { sortingPlugin, type SortingColumnMeta, type SortingOptions } from '../plugins/sorting';
-import { paginationPlugin } from '../plugins/pagination';
+import { paginationPlugin, type PaginationOptions } from '../plugins/pagination';
 import rowsPlugin from '../plugins/internal/rows/rows';
 import columnsPlugin from '../plugins/internal/columns/columns';
 
@@ -12,20 +12,24 @@ interface TestDataGridProps<TRow extends Record<string, any>> {
   rows: TRow[];
   columns: ColumnDef<TRow, SortingColumnMeta>[];
   getRowId?: (row: TRow) => string;
+  rowCount?: number;
   apiRef?: React.RefObject<GridApi | null>;
   sorting?: SortingOptions['sorting'];
+  pagination?: PaginationOptions['pagination'];
   initialState?: Parameters<typeof useDataGrid>[0]['initialState'];
 }
 
 export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGridProps<TRow>) {
-  const { rows, columns, getRowId, apiRef, sorting, initialState } = props;
+  const { rows, columns, getRowId, rowCount, apiRef, sorting, pagination, initialState } = props;
 
   const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>({
     rows,
     columns,
     getRowId,
+    rowCount,
     plugins: [sortingPlugin, paginationPlugin],
     sorting,
+    pagination,
     initialState,
   });
 
@@ -35,13 +39,13 @@ export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGr
     }
   }, [grid, apiRef]);
 
-  const sortedRowIds = grid.use(rowsPlugin.selectors.processedRowIds);
+  const visibleRowIds = grid.use(rowsPlugin.selectors.processedRowIds);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
   return (
     <div data-testid="grid">
-      {sortedRowIds.map((rowId) => {
+      {visibleRowIds.map((rowId) => {
         const row = rowsData[rowId] as TRow | undefined;
         if (!row) {
           return null;

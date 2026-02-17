@@ -6,6 +6,7 @@ import { type ChartSeriesConfig, type SeriesProcessorParams } from '../useChartS
 import {
   type DefaultizedSeriesGroups,
   type ProcessedSeries,
+  type SeriesIdToType,
   type SeriesLayout,
 } from './useChartSeries.types';
 import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';
@@ -25,9 +26,13 @@ export const defaultizeSeries = <TSeriesType extends ChartSeriesType>({
   series: Readonly<AllSeriesType<TSeriesType>[]>;
   colors: readonly string[];
   seriesConfig: ChartSeriesConfig<TSeriesType>;
-}): DefaultizedSeriesGroups<TSeriesType> => {
+}): {
+  defaultizedSeries: DefaultizedSeriesGroups<TSeriesType>;
+  idToType: SeriesIdToType;
+} => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: SeriesProcessorParams<type> | undefined } = {};
+  const idToType = new Map<SeriesId, ChartSeriesType>();
 
   series.forEach(<T extends TSeriesType>(seriesData: AllSeriesType<T>, seriesIndex: number) => {
     const seriesWithDefaultValues = seriesConfig[seriesData.type as T].getSeriesWithDefaultValues(
@@ -48,9 +53,13 @@ export const defaultizeSeries = <TSeriesType extends ChartSeriesType>({
 
     seriesGroups[seriesData.type]!.series[id] = seriesWithDefaultValues;
     seriesGroups[seriesData.type]!.seriesOrder.push(id);
+    if (idToType.has(id)) {
+      throw new Error(`MUI X Charts: series' id "${id}" is not unique.`);
+    }
+    idToType.set(id, seriesData.type);
   });
 
-  return seriesGroups;
+  return { defaultizedSeries: seriesGroups, idToType };
 };
 
 /**
