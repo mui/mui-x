@@ -214,7 +214,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     [disableFuture, disablePast, maxDate, minDate, now, shouldDisableYear, adapter],
   );
 
-  const handleYearSelection = useEventCallback((event: React.MouseEvent, year: number) => {
+  const handleYearSelection = useEventCallback((_event: React.UIEvent, year: number) => {
     if (readOnly) {
       return;
     }

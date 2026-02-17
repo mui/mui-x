@@ -214,7 +214,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, adapter],
   );
 
-  const handleMonthSelection = useEventCallback((event: React.MouseEvent, month: number) => {
+  const handleMonthSelection = useEventCallback((_event: React.UIEvent, month: number) => {
     if (readOnly) {
       return;
     }
