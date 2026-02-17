@@ -42,6 +42,21 @@ export class SchedulerLazyLoadingPlugin<
     immediate = false,
   ) => {
     if (this.dataManager) {
+      const { adapter } = this.store.state;
+
+      // Set loading state immediately (before the debounce delay) when the
+      // requested range isn't already cached. This prevents a brief flash of
+      // stale content / empty calendar before the skeleton appears.
+      if (
+        this.cache &&
+        !this.cache.hasCoverage(
+          adapter.getTime(range.start),
+          adapter.getTime(adapter.endOfDay(range.end)),
+        )
+      ) {
+        this.store.set('isLoading', true);
+      }
+
       if (immediate) {
         await this.dataManager.queueImmediate([range]);
       } else {
@@ -88,8 +103,6 @@ export class SchedulerLazyLoadingPlugin<
     }
 
     try {
-      // Set loading state
-      this.store.set('isLoading', true);
       this.store.set('errors', []);
       const events = await dataSource.getEvents(range.start, range.end);
       this.cache!.setRange(
