@@ -53,7 +53,9 @@ export default function ControlledAxisTooltip() {
         </Stack>
         <BarChart
           {...barChartsProps}
-          slotProps={{ tooltip: { trigger: 'axis' } }}
+          slotProps={{
+            tooltip: { trigger: 'axis', anchor: 'chart', position: 'bottom' },
+          }}
           tooltipAxis={tooltipAxis}
           onTooltipAxisChange={setTooltipAxis}
         />
@@ -78,5 +80,5 @@ const barChartsProps: BarChartProps = {
     },
   ],
   xAxis: [{ id: 'x-axis', scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }],
-  height: 400,
+  height: 250,
 };

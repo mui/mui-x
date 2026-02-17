@@ -10,6 +10,7 @@ import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.typ
 import type { ChartState } from '../../models/chart';
 import type { AxisItemIdentifier, ChartsAxisProps, ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
 import type { ComputeResult } from './computeAxisValue';
+import { getValueToPositionMapper } from '../../../../hooks/useScale';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 
@@ -124,7 +125,7 @@ function getCoordinatesFromAxis(
   if (value == null) {
     return null;
   }
-  const coordinate = axis.scale(value);
+  const coordinate = getValueToPositionMapper(axis.scale)(value);
   if (coordinate === undefined) {
     return null;
   }

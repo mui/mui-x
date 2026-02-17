@@ -80,59 +80,46 @@ export interface ChartsTooltipContainerSlotProps extends PopperSlotProps {}
 
 export interface ChartsTooltipContainerClasses extends ChartsTooltipClasses {}
 
-export type ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions> = T extends any
-  ? Partial<PopperProps> & {
-      /**
-       * Select the kind of tooltip to display
-       * - 'item': Shows data about the item below the mouse;
-       * - 'axis': Shows values associated with the hovered x value;
-       * - 'none': Does not display tooltip.
-       * @default 'axis'
-       */
-      trigger?: T;
-      /**
-       * Override or extend the styles applied to the component.
-       */
-      classes?: Partial<ChartsTooltipContainerClasses>;
-      /**
-       * Overridable component slots.
-       * @default {}
-       */
-      slots?: ChartsTooltipContainerSlots;
-      /**
-       * The props used for each component slot.
-       * @default {}
-       */
-      slotProps?: ChartsTooltipContainerSlotProps;
-      /**
-       * Determine if the tooltip should be placed on the pointer location or on the node.
-       * @default 'pointer'
-       */
-      anchor?: 'pointer';
-      /**
-       * Determines the tooltip position relatively to the anchor.
-       */
-      position?: 'top' | 'bottom' | 'left' | 'right';
-      children?: React.ReactNode;
-    } & (T extends 'item'
-        ? {
-            /**
-             * Determine if the tooltip should be placed on the pointer location or on the node.
-             * @default 'pointer'
-             */
-            anchor?: 'pointer' | 'node';
-          }
-        : {}) &
-      (T extends 'axis'
-        ? {
-            /**
-             * Determine if the tooltip should be placed on the pointer location or on the node.
-             * @default 'pointer'
-             */
-            anchor?: 'pointer' | 'chart';
-          }
-        : {})
-  : never;
+export interface ChartsTooltipContainerProps<
+  T extends TriggerOptions = TriggerOptions,
+> extends Partial<PopperProps> {
+  /**
+   * Select the kind of tooltip to display
+   * - 'item': Shows data about the item below the mouse;
+   * - 'axis': Shows values associated with the hovered x value;
+   * - 'none': Does not display tooltip.
+   * @default 'axis'
+   */
+  trigger?: T;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsTooltipContainerClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: ChartsTooltipContainerSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: ChartsTooltipContainerSlotProps;
+  /**
+   * Determine if the tooltip should be placed on the pointer location or on the node.
+   * @default 'pointer'
+   */
+  anchor?: T extends 'item'
+    ? 'pointer' | 'node'
+    : T extends 'axis'
+      ? 'pointer' | 'chart'
+      : 'pointer';
+  /**
+   * Determines the tooltip position relatively to the anchor.
+   */
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  children?: React.ReactNode;
+}
 
 const ChartsTooltipRoot = styled(Popper, {
   name: 'MuiChartsTooltip',
