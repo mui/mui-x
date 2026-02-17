@@ -19,7 +19,7 @@ import type {
   ChartsYAxisProps,
 } from '../../../../models/axis';
 import type { ComputeResult } from './computeAxisValue';
-import { getValueToPositionMapper } from '../../../../hooks/useScale';
+import { getValueToPositionMapper } from '../../../../hooks/getValueToPositionMapper';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 
