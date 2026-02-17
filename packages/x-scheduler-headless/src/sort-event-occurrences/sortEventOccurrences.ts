@@ -1,5 +1,4 @@
 import { SchedulerEventOccurrence } from '../models';
-import { Adapter } from '../use-adapter/useAdapter.types';
 
 /**
  * Sorts event occurrences by their start date (earliest first).
@@ -7,18 +6,13 @@ import { Adapter } from '../use-adapter/useAdapter.types';
  */
 export function sortEventOccurrences(
   occurrences: readonly SchedulerEventOccurrence[],
-  adapter: Adapter,
 ): SchedulerEventOccurrence[] {
   return occurrences
     .map((occurrence) => {
       return {
         occurrence,
-        start: occurrence.allDay
-          ? adapter.getTime(adapter.startOfDay(occurrence.displayTimezone.start.value))
-          : occurrence.displayTimezone.start.timestamp,
-        end: occurrence.allDay
-          ? adapter.getTime(adapter.endOfDay(occurrence.displayTimezone.end.value))
-          : occurrence.displayTimezone.end.timestamp,
+        start: occurrence.displayTimezone.start.timestamp,
+        end: occurrence.displayTimezone.end.timestamp,
       };
     })
     .sort((a, b) => a.start - b.start || b.end - a.end)

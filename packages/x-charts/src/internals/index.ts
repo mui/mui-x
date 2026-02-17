@@ -19,6 +19,7 @@ export { useLinePlotData } from '../LineChart/useLinePlotData';
 export * from '../BarChart/useBarChartProps';
 export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
+export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';
@@ -59,7 +60,7 @@ export * from '../PieChart/PieChart.plugins';
 // utils
 export * from './configInit';
 export * from './getLabel';
-export * from './getSVGPoint';
+export * from './getChartPoint';
 export * from './isDefined';
 export * from './getScale';
 export * from './stacking';

@@ -3,15 +3,17 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import { useEventCalendarPremium } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
 import {
   useEventCalendarUtilityClasses,
-  EventCalendarClassesContext,
+  EventCalendarStyledContext,
 } from '@mui/x-scheduler/event-calendar';
 import {
-  TranslationsProvider,
-  EventDraggableDialogProvider,
+  EventDialogStyledContext,
+  EventDialogProvider,
   EventCalendarRoot,
+  EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
@@ -27,7 +29,7 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // Use the same theme name to share theme customizations with base EventCalendar
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
 
   const {
@@ -39,17 +41,33 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   const store = useEventCalendarPremium(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { translations, ...other } = forwardedProps;
+  const { localeText, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
+
+  const mergedLocaleText = React.useMemo(
+    () => ({ ...EVENT_CALENDAR_DEFAULT_LOCALE_TEXT, ...localeText }),
+    [localeText],
+  );
+
+  const calendarStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
+
+  const dialogStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
-      <TranslationsProvider translations={translations}>
-        <EventCalendarClassesContext.Provider value={classes}>
-          <EventDraggableDialogProvider>
+      <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
+        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
+          <EventDialogProvider>
             <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-          </EventDraggableDialogProvider>
-        </EventCalendarClassesContext.Provider>
-      </TranslationsProvider>
+          </EventDialogProvider>
+        </EventDialogStyledContext.Provider>
+      </EventCalendarStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarPremiumComponent;

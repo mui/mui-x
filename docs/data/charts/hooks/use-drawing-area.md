@@ -5,9 +5,10 @@ productId: x-charts
 
 # useDrawingArea
 
-<p class="description">Access the chart's drawing area dimensions and coordinates.</p>
+<p class="description">Get the chart's drawing area dimensions and coordinates for positioning custom content.</p>
 
-The `useDrawingArea` hook provides access to the chart's drawing area dimensions and positioning, which is useful for positioning custom elements within the chart area.
+`useDrawingArea()` returns the chart's drawing area dimensions and position.
+You can use it to position custom elements inside the chart area.
 
 ## Usage
 
@@ -20,7 +21,7 @@ function CustomOverlay() {
 }
 ```
 
-This demo displays:
+The demo below shows:
 
 - A red dashed border showing the exact drawing area boundaries
 - Corner markers at each corner of the drawing area
@@ -31,7 +32,7 @@ This demo displays:
 
 ## Return value
 
-The hook returns an object with the following properties:
+`useDrawingArea()` returns an object with the following properties:
 
 | Property | Type     | Description                                                        |
 | :------- | :------- | :----------------------------------------------------------------- |
@@ -44,4 +45,5 @@ The hook returns an object with the following properties:
 
 ## Caveats
 
-This hook must be used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
+You can only use this hook within a chart context.
+See the [hooks overview](/x/react-charts/hooks/) for usage requirements.
