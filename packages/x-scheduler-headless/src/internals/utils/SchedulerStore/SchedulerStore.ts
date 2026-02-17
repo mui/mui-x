@@ -30,11 +30,15 @@ import {
 } from '../../models/events';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
-import { schedulerEventSelectors } from '../../../scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '../../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
+  getSchedulerPlan,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
@@ -92,6 +96,7 @@ export class SchedulerStore<
         ? MOCK_EVENT_STATE
         : buildEventsState(parameters, adapter, stateFromParameters.displayTimezone)),
       ...buildResourcesState(parameters),
+      plan: getSchedulerPlan(instanceName),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
@@ -384,7 +389,11 @@ export class SchedulerStore<
    * Creates a new event in the calendar.
    */
   public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {
-    return this.updateEvents({ created: [calendarEvent] }).created[0];
+    const eventToCreate =
+      !schedulerOtherSelectors.areRecurringEventsAvailable(this.state) && calendarEvent.rrule
+        ? { ...calendarEvent, rrule: undefined }
+        : calendarEvent;
+    return this.updateEvents({ created: [eventToCreate] }).created[0];
   };
 
   /**
@@ -392,7 +401,10 @@ export class SchedulerStore<
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
-    if (original.dataTimezone.rrule) {
+    if (
+      schedulerOtherSelectors.areRecurringEventsAvailable(this.state) &&
+      original.dataTimezone.rrule
+    ) {
       throw new Error('MUI: this event is recurring. Use updateRecurringEvent(...) instead.');
     }
 
@@ -405,6 +417,15 @@ export class SchedulerStore<
    * Updates a recurring event in the calendar.
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
+    if (!schedulerOtherSelectors.areRecurringEventsAvailable(this.state)) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X: Recurring event updates are a premium feature.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
+      return;
+    }
     this.set('pendingUpdateRecurringEventParameters', params);
   };
 
@@ -413,6 +434,9 @@ export class SchedulerStore<
    * @param scope The selected update scope, or null if canceled.
    */
   public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
+    if (!schedulerOtherSelectors.areRecurringEventsAvailable(this.state)) {
+      return;
+    }
     const { pendingUpdateRecurringEventParameters, adapter } = this.state;
     if (pendingUpdateRecurringEventParameters == null) {
       return;
