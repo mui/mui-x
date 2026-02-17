@@ -226,7 +226,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
 
     const setQuickFilterValues = (values: any[]): void => {
       const model = getModel();
-      setModel({ ...model, quickFilter: { values } });
+      setModel({ ...model, quickFilter: { ...model.quickFilter, values } });
     };
 
     // Track previous model prop for controlled mode
