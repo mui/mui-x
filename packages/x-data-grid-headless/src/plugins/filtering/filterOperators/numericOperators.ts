@@ -34,8 +34,9 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
       ) {
         return null;
       }
+      const filterValue = Number(condition.value);
       return (value): boolean => {
-        return parseNumericValue(value) === condition.value;
+        return parseNumericValue(value) === filterValue;
       };
     },
     getApplyQuickFilterFn: getNumericQuickFilterFn,
@@ -50,8 +51,9 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
       ) {
         return null;
       }
+      const filterValue = Number(condition.value);
       return (value): boolean => {
-        return parseNumericValue(value) !== condition.value;
+        return parseNumericValue(value) !== filterValue;
       };
     },
   },
@@ -65,11 +67,12 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
       ) {
         return null;
       }
+      const filterValue = Number(condition.value);
       return (value): boolean => {
         if (value == null) {
           return false;
         }
-        return parseNumericValue(value)! > condition.value;
+        return parseNumericValue(value)! > filterValue;
       };
     },
   },
@@ -83,11 +86,12 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
       ) {
         return null;
       }
+      const filterValue = Number(condition.value);
       return (value): boolean => {
         if (value == null) {
           return false;
         }
-        return parseNumericValue(value)! >= condition.value;
+        return parseNumericValue(value)! >= filterValue;
       };
     },
   },
@@ -101,11 +105,12 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
       ) {
         return null;
       }
+      const filterValue = Number(condition.value);
       return (value): boolean => {
         if (value == null) {
           return false;
         }
-        return parseNumericValue(value)! < condition.value;
+        return parseNumericValue(value)! < filterValue;
       };
     },
   },
@@ -119,11 +124,12 @@ export const getNumericFilterOperators = (): FilterOperator<number | string | nu
       ) {
         return null;
       }
+      const filterValue = Number(condition.value);
       return (value): boolean => {
         if (value == null) {
           return false;
         }
-        return parseNumericValue(value)! <= condition.value;
+        return parseNumericValue(value)! <= filterValue;
       };
     },
   },

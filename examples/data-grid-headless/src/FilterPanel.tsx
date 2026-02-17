@@ -89,12 +89,9 @@ function ConditionRow(props: ConditionRowProps) {
   };
 
   const handleValueChange = (value: string) => {
-    // Try to parse as number if the operator is numeric
-    const numericOps = ['=', '!=', '>', '>=', '<', '<='];
-    const isNumeric = numericOps.includes(condition.operator);
     onChange({
       ...condition,
-      value: isNumeric && value !== '' ? Number(value) : value,
+      value,
     });
   };
 
