@@ -11,7 +11,7 @@ import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
 
 declare global {
   interface MUIEnv {
-    DEPLOY_ENV?: string;
+    SHOW_SCHEDULER?: '1';
     DOCS_STATS_ENABLED?: string;
     PULL_REQUEST?: string;
     PICKERS_ADAPTERS_DEPS?: string;
@@ -91,6 +91,7 @@ export default withDeploymentConfig({
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
     MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
+    ...(process.env.DEPLOY_ENV === 'production' ? {} : { SHOW_SCHEDULER: '1' }),
   },
   // @ts-ignore
   webpack: (config, options) => {

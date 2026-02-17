@@ -1,5 +1,5 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import { TemporalTimezone } from '../../../base-ui-copy/types';
+import { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
 import {
   SchedulerProcessedEvent,
   SchedulerEventId,
@@ -15,6 +15,7 @@ import {
 import { processEvent } from '../../../process-event';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
+import { dateToEventString } from '../date-utils';
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
@@ -104,15 +105,49 @@ export function getProcessedEventFromModel<TEvent extends object>(
 
 /**
  * Updates an event model based on the provided changes and model structure.
+ * Converts internal date objects (`TemporalSupportedObject`) to strings
+ * before applying them to the user's model, because `SchedulerEvent` date
+ * fields are strings. Respects the original string format (instant vs wall-time).
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
   changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+  adapter: Adapter,
+  originalBuiltInModel: SchedulerEvent,
 ): TEvent {
+  const dataTimezone = originalBuiltInModel.timezone ?? 'default';
+  const stringified: Record<string, any> = { ...changes };
+  if (changes.start != null) {
+    stringified.start = dateToEventString(
+      adapter,
+      changes.start,
+      originalBuiltInModel.start,
+      dataTimezone,
+    );
+  }
+  if (changes.end != null) {
+    stringified.end = dateToEventString(
+      adapter,
+      changes.end,
+      originalBuiltInModel.end,
+      dataTimezone,
+    );
+  }
+  if (changes.exDates != null) {
+    stringified.exDates = changes.exDates.map((d, i) => {
+      const originalExDate = originalBuiltInModel.exDates?.[i];
+      if (originalExDate) {
+        return dateToEventString(adapter, d, originalExDate, dataTimezone);
+      }
+      // New exDate — match the format of start
+      return dateToEventString(adapter, d, originalBuiltInModel.start, dataTimezone);
+    });
+  }
+
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
-    changes,
+    stringified as SchedulerEventUpdatedProperties,
     eventModelStructure,
   );
 }
@@ -123,11 +158,28 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+  adapter: Adapter,
 ) {
   const id = crypto.randomUUID();
+
+  const formatNewDate = (value: string | TemporalSupportedObject): string => {
+    if (typeof value === 'string') {
+      return value;
+    }
+    return adapter.toJsDate(value).toISOString();
+  };
+
+  const builtInEvent: SchedulerEvent = {
+    ...event,
+    id,
+    start: formatNewDate(event.start),
+    end: formatNewDate(event.end),
+    exDates: event.exDates?.map(formatNewDate),
+  };
+
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(
     null,
-    { ...event, id },
+    builtInEvent,
     eventModelStructure,
   );
 

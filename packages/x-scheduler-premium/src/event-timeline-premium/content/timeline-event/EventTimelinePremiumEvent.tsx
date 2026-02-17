@@ -6,7 +6,7 @@ import { useId } from '@base-ui/utils/useId';
 import { EventTimelinePremium } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { getPaletteVariants, EventDragPreview } from '@mui/x-scheduler/internals';
+import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
@@ -27,6 +27,9 @@ const EventTimelinePremiumEventRoot = styled('div', {
   gridColumn: 1,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
+  },
+  '&:hover': {
+    backgroundColor: 'var(--event-surface-subtle-hover)',
   },
   [`&:hover .${eventTimelinePremiumClasses.eventResizeHandler}`]: {
     opacity: 1,

@@ -26,19 +26,19 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelinePrimitive.Cell, {
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
+  variants: getPaletteVariants(theme),
 }));
 
 const ResourceLegendColor = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'TitleCellLegendColor',
-})(({ theme }) => ({
+})({
   width: 10,
   height: 10,
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-surface-accent)',
-  variants: getPaletteVariants(theme),
-}));
+});
 
 export default function EventTimelinePremiumTitleCell(props: { resourceId: SchedulerResourceId }) {
   const { resourceId } = props;
@@ -56,11 +56,9 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       <EventTimelinePremiumTitleCellRoot
         id={`EventTimelinePremiumTitleCell-${resourceId}`}
         className={classes.titleCell}
+        data-palette={eventColor}
       >
-        <ResourceLegendColor
-          className={classes.titleCellLegendColor}
-          data-palette={eventColor}
-        />
+        <ResourceLegendColor className={classes.titleCellLegendColor} />
         {resource!.title}
       </EventTimelinePremiumTitleCellRoot>
     </EventTimelinePremiumTitleCellRow>
