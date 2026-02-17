@@ -185,11 +185,5 @@ export interface FilteringApi {
      * @param {any[]} values The quick filter values.
      */
     setQuickFilterValues: (values: any[]) => void;
-
-    /**
-     * Set the root logic operator.
-     * @param {'and' | 'or'} operator The logic operator.
-     */
-    setLogicOperator: (operator: 'and' | 'or') => void;
   };
 }

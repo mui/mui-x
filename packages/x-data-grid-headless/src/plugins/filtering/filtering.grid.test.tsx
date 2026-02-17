@@ -908,40 +908,6 @@ describe('Filtering Plugin - Integration Tests', () => {
       });
     });
 
-    describe('setLogicOperator', () => {
-      it('should change root logic operator', async () => {
-        const apiRef = React.createRef<TestGridApi | null>();
-        const { container } = render(
-          <TestDataGrid
-            rows={defaultRows}
-            columns={defaultColumns}
-            apiRef={apiRef}
-            initialState={{
-              filtering: {
-                model: {
-                  logicOperator: 'and',
-                  conditions: [
-                    { field: 'name', operator: 'equals', value: 'Alice' },
-                    { field: 'name', operator: 'equals', value: 'Bob' },
-                  ],
-                },
-              },
-            }}
-          />,
-        );
-
-        // AND: name=Alice AND name=Bob => impossible, no results
-        expect(getRowNames(container)).toEqual([]);
-
-        await act(async () => {
-          apiRef.current?.api.filtering.setLogicOperator('or');
-        });
-
-        // OR: name=Alice OR name=Bob => both
-        expect(getRowNames(container)).toEqual(['Alice', 'Bob']);
-      });
-    });
-
     describe('setQuickFilterValues', () => {
       it('should set quick filter values on the model', async () => {
         const apiRef = React.createRef<TestGridApi | null>();

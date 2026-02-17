@@ -229,13 +229,6 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
       setModel({ ...model, quickFilter: { values } });
     };
 
-    const setLogicOperator = (operator: 'and' | 'or'): void => {
-      const model = getModel();
-      if (model.logicOperator !== operator) {
-        setModel({ ...model, logicOperator: operator });
-      }
-    };
-
     // Track previous model prop for controlled mode
     const prevFilterModelRef = React.useRef<FilterModel>(store.state.filtering.model);
 
@@ -321,7 +314,6 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         upsertCondition,
         deleteCondition,
         setQuickFilterValues,
-        setLogicOperator,
       },
     };
   },
