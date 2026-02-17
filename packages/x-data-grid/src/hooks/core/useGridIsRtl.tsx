@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
-import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { GridStateCommunity } from '../../models/gridStateCommunity';
+import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import type { GridStateCommunity } from '../../models/gridStateCommunity';
 
 export const useGridIsRtl = (apiRef: RefObject<GridPrivateApiCommon>): void => {
   const isRtl = useRtl();

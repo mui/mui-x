@@ -1,4 +1,4 @@
-import { GridRowId, GridPinnedColumnFields } from '@mui/x-data-grid';
+import type { GridRowId, GridPinnedColumnFields } from '@mui/x-data-grid';
 import type {
   GridRowScrollEndParams,
   GridRowOrderChangeParams,
@@ -7,7 +7,7 @@ import type {
 import type { GridRenderHeaderFilterProps } from '../components/headerFiltering/GridHeaderFilterCell';
 import type { GridColumnPinningInternalCache } from '../hooks/features/columnPinning/gridColumnPinningInterface';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
-import { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
+import type { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
 
 export interface GridColDefPro {
   /**

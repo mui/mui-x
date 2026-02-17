@@ -7,7 +7,11 @@ import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenuColumnsItem } from './menuItems/GridColumnMenuColumnsItem';
 import { GridColumnMenuFilterItem } from './menuItems/GridColumnMenuFilterItem';
 import { GridColumnMenuSortItem } from './menuItems/GridColumnMenuSortItem';
-import { GridColumnMenuProps, GridGenericColumnMenuProps } from './GridColumnMenuProps';
+import type {
+  GridColumnMenuProps,
+  GridGenericColumnMenuProps,
+  GridColumnMenuComponent,
+} from './GridColumnMenuProps';
 
 export const GRID_COLUMN_MENU_SLOTS = {
   columnMenuSortItem: GridColumnMenuSortItem,
@@ -87,7 +91,10 @@ const GridColumnMenu = forwardRef<HTMLUListElement, GridColumnMenuProps>(
       />
     );
   },
-);
+) as GridColumnMenuComponent;
+
+GridColumnMenu.defaultSlots = GRID_COLUMN_MENU_SLOTS;
+GridColumnMenu.defaultSlotProps = GRID_COLUMN_MENU_SLOT_PROPS;
 
 GridColumnMenu.propTypes = {
   // ----------------------------- Warning --------------------------------

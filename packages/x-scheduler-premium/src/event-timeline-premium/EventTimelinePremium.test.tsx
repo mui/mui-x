@@ -12,7 +12,7 @@ import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/mode
 
 const baseResources: SchedulerResource[] = [
   { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
-  { id: 'resource-2', title: 'Design', eventColor: 'jade' },
+  { id: 'resource-2', title: 'Design', eventColor: 'teal' },
 ];
 
 const event1 = EventBuilder.new().singleDay('2025-07-03T09:00:00Z').resource('resource-1').build();
@@ -145,7 +145,10 @@ describe('<EventTimelinePremium />', () => {
     it('should render events correctly in the weeks view', () => {
       const totalWidth = 64 * 7 * 12; // 64px * 7 days * 12 weeks
       const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
-      const weekDayNumber = adapter.differenceInDays(baseEvents[0].start, startOfWeek);
+      const weekDayNumber = adapter.differenceInDays(
+        adapter.date(baseEvents[0].start, 'default'),
+        startOfWeek,
+      );
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
       renderTimeline({ view: 'weeks' });

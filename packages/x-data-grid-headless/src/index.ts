@@ -1,10 +1,34 @@
 // Hooks
 export { useDataGrid } from './hooks/useDataGrid';
 
-export { createPlugin } from './plugins/core/plugin';
-export type { Plugin, AnyPlugin, ExtractPluginApi } from './plugins/core/plugin';
-export type { PluginsApi, PluginsOptions, PluginsState } from './plugins/core/helpers';
-export { PluginRegistry } from './plugins/core/pluginRegistry';
-
 // Column definition types
 export type { ColumnDef } from './columnDef/columnDef';
+
+// Core plugin infrastructure
+export { createPlugin, PluginRegistry } from './plugins/core';
+export type {
+  Plugin,
+  AnyPlugin,
+  BaseApi,
+  ExtractPluginApi,
+  ExtractPluginSelectors,
+  PluginsApi,
+  PluginsColumnMeta,
+  PluginsOptions,
+  PluginsState,
+} from './plugins/core';
+
+// Internal plugins (rows, columns) and their types - exported to allow import from the root path
+export { default as rowsPlugin } from './plugins/internal/rows/rows';
+export { default as columnsPlugin } from './plugins/internal/columns/columns';
+export type {
+  RowsPluginApi,
+  RowsPluginState,
+  RowsPluginOptions,
+} from './plugins/internal/rows/types';
+export type {
+  ColumnsPluginApi,
+  ColumnsPluginState,
+  ColumnsPluginOptions,
+} from './plugins/internal/columns/columns';
+export type { IntlOptions } from './plugins/internal';

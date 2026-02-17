@@ -5,13 +5,13 @@ import { type ColumnDef } from '../../../columnDef/columnDef';
 // Types
 // ================================
 
-export interface ColumnState extends ColumnDef<any> {
+export type ColumnState<TColumnMeta = {}> = ColumnDef<any, TColumnMeta> & {
   hasBeenResized?: boolean;
   computedSize?: number;
-}
+};
 
-export type ColumnLookup = {
-  [field: string]: ColumnState;
+export type ColumnLookup<TColumnMeta = {}> = {
+  [field: string]: ColumnState<TColumnMeta>;
 };
 
 export type ColumnVisibilityModel = Record<string, boolean>;
@@ -41,10 +41,10 @@ export interface ColumnsOptions<TData = any, TColumnMeta = {}> {
 // API
 // ================================
 
-export interface ColumnsApi {
-  get: (field: string) => ColumnState | undefined;
-  getAll: () => ColumnState[];
-  getVisible: () => ColumnState[];
+export interface ColumnsApi<TColumnMeta = {}> {
+  get: (field: string) => ColumnState<TColumnMeta> | undefined;
+  getAll: () => ColumnState<TColumnMeta>[];
+  getVisible: () => ColumnState<TColumnMeta>[];
   getIndex: (field: string, useVisibleColumns?: boolean) => number;
   update: (columns: ColumnDef<any>[]) => void;
   setVisibilityModel: (model: ColumnVisibilityModel) => void;

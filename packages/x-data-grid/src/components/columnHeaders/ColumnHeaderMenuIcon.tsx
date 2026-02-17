@@ -2,10 +2,10 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridStateColDef } from '../../models/colDef/gridColDef';
+import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export interface ColumnHeaderMenuIconProps {
   colDef: GridStateColDef;

@@ -1,4 +1,4 @@
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridSignature } from '../../../constants/signature';
 
 const MAX_PAGE_SIZE = 100;
@@ -10,7 +10,7 @@ export const getPageCount = (rowCount: number, pageSize: number, page: number): 
     return Math.ceil(rowCount / pageSize);
   }
 
-  if (rowCount === -1) {
+  if (rowCount === -1 || rowCount == null) {
     // With unknown row-count, we can assume a page after the current one
     return page + 2;
   }
