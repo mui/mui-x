@@ -5,11 +5,12 @@ import {
   getFieldSectionsContainer,
   openPickerAsync,
 } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('DesktopDatePicker keepOpenDuringFieldFocus - clicking field should not close', () => {
   const { render } = createPickerRenderer();
 
-  it('keeps popper open when clicking back into the field while open', async () => {
+  it.skipIf(isJSDOM)('keeps popper open when clicking back into the field while open', async () => {
     const { user } = render(<DesktopDatePicker keepOpenDuringFieldFocus />);
 
     await openPickerAsync(user, { type: 'date' });

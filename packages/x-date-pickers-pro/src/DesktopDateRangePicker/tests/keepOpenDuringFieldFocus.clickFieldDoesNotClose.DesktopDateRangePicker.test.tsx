@@ -71,7 +71,8 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
     expect(popper).toBeVisible();
 
     // And the field should receive focus (or contain the focused element)
-    expect(textbox === document.activeElement || textbox.contains(document.activeElement!)).to
-      .equal(true);
+    expect(
+      textbox === document.activeElement || textbox.contains(document.activeElement!),
+    ).to.equal(true);
   });
 });
