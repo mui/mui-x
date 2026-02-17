@@ -20,6 +20,12 @@ export default function FullEventTimelinePremium() {
   const [visibleDate, setVisibleDate] = React.useState(defaultVisibleDate);
   const apiRef = useEventTimelinePremiumApiRef();
 
+  const handleViewChange = (_, newView) => {
+    if (newView) {
+      setView(newView);
+    }
+  };
+
   return (
     <div
       style={{
@@ -44,16 +50,12 @@ export default function FullEventTimelinePremium() {
         <ToggleButtonGroup
           value={view}
           exclusive
-          onChange={(_, newView) => {
-            if (newView) {
-              setView(newView);
-            }
-          }}
+          onChange={handleViewChange}
           size="small"
         >
-          {['time', 'days', 'weeks', 'months', 'years'].map((v) => (
-            <ToggleButton key={v} value={v}>
-              {v}
+          {['time', 'days', 'weeks', 'months', 'years'].map((value) => (
+            <ToggleButton key={value} value={value}>
+              {value}
             </ToggleButton>
           ))}
         </ToggleButtonGroup>

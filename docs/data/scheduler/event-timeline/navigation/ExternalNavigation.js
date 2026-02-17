@@ -6,7 +6,6 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
 
@@ -17,15 +16,18 @@ import {
 } from '../../datasets/company-roadmap';
 
 const resources = allResources.slice(0, 5);
-const resourceIds = new Set(resources.map((r) => r.id));
 
 export default function ExternalNavigation() {
-  const [events, setEvents] = React.useState(() =>
-    initialEvents.filter((e) => resourceIds.has(e.resource)),
-  );
+  const [events, setEvents] = React.useState(initialEvents);
   const [view, setView] = React.useState('weeks');
   const [visibleDate, setVisibleDate] = React.useState(defaultVisibleDate);
   const apiRef = useEventTimelinePremiumApiRef();
+
+  const handleViewChange = (_, newView) => {
+    if (newView) {
+      setView(newView);
+    }
+  };
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
@@ -49,16 +51,12 @@ export default function ExternalNavigation() {
         <ToggleButtonGroup
           value={view}
           exclusive
-          onChange={(_, newView) => {
-            if (newView) {
-              setView(newView);
-            }
-          }}
+          onChange={handleViewChange}
           size="small"
         >
-          {['time', 'days', 'weeks', 'months', 'years'].map((v) => (
-            <ToggleButton key={v} value={v}>
-              {v}
+          {['time', 'days', 'weeks', 'months', 'years'].map((value) => (
+            <ToggleButton key={value} value={value}>
+              {value}
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
