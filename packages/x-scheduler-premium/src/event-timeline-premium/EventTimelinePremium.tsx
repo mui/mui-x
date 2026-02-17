@@ -85,7 +85,8 @@ const EventTimelinePremiumRoot = styled('div', {
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
   '--weeks-cell-width': 'calc(64px * 7)',
-  '--months-cell-width': '180px',
+  // Months view uses per-day units instead of per-month, so each column width = days in month × 6px
+  '--months-cell-width': '6px',
   '--years-cell-width': '200px',
   display: 'flex',
   flexDirection: 'column',

@@ -48,7 +48,7 @@ const WeekDaysRow = styled('div', {
   slot: 'WeeksHeaderDaysRow',
 })({
   display: 'grid',
-  gridTemplateColumns: 'repeat(7, 1fr)',
+  gridTemplateColumns: 'repeat(7, var(--time-cell-width))',
 });
 
 const WeekDayCell = styled('time', {
