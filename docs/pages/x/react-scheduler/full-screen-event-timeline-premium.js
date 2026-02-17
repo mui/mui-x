@@ -47,12 +47,7 @@ export default function FullEventTimelinePremium() {
         <IconButton onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
           <ChevronRightIcon />
         </IconButton>
-        <ToggleButtonGroup
-          value={view}
-          exclusive
-          onChange={handleViewChange}
-          size="small"
-        >
+        <ToggleButtonGroup value={view} exclusive onChange={handleViewChange} size="small">
           {['time', 'days', 'weeks', 'months', 'years'].map((value) => (
             <ToggleButton key={value} value={value}>
               {value}

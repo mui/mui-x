@@ -23,7 +23,10 @@ export default function ExternalNavigation() {
   const [visibleDate, setVisibleDate] = React.useState<Date>(defaultVisibleDate);
   const apiRef = useEventTimelinePremiumApiRef();
 
-  const handleViewChange = (_: React.MouseEvent, newView: EventTimelinePremiumView | null) => {
+  const handleViewChange = (
+    _: React.MouseEvent,
+    newView: EventTimelinePremiumView | null,
+  ) => {
     if (newView) {
       setView(newView);
     }
