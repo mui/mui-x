@@ -226,17 +226,13 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Рядків на сторінці:',
-  paginationDisplayedRows: ({
-    from,
-    to,
-    count,
-    estimated
-  }) => {
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
     const unknownRowCount = count == null || count === -1;
     if (!estimated) {
       return `${from}–${to} з ${!unknownRowCount ? count : `більше ніж ${to}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `близько ${estimated}` : `більше ніж ${to}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `близько ${estimated}` : `більше ніж ${to}`;
     return `${from}–${to} з ${!unknownRowCount ? count : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
