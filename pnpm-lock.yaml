@@ -60,9 +60,6 @@ catalogs:
     '@mui/x-internal-exceljs-fork':
       specifier: 4.4.4
       version: 4.4.4
-    '@playwright/test':
-      specifier: ^1.57.0
-      version: 1.58.1
     '@react-spring/web':
       specifier: ^10.0.3
       version: 10.0.3
@@ -171,9 +168,6 @@ catalogs:
     motion:
       specifier: ^12.29.2
       version: 12.29.2
-    playwright:
-      specifier: ^1.57.0
-      version: 1.58.1
     prop-types:
       specifier: ^15.8.1
       version: 15.8.1
@@ -291,7 +285,7 @@ importers:
         specifier: 22.0.1
         version: 22.0.1
       '@playwright/test':
-        specifier: 'catalog:'
+        specifier: ^1.57.0
         version: 1.58.1
       '@types/babel__core':
         specifier: 7.20.5
@@ -417,7 +411,7 @@ importers:
         specifier: 'catalog:'
         version: 0.6.0
       playwright:
-        specifier: 'catalog:'
+        specifier: ^1.57.0
         version: 1.58.1
       prettier:
         specifier: 3.7.4
@@ -2290,9 +2284,6 @@ importers:
       '@mui/x-charts-pro':
         specifier: workspace:*
         version: link:../../packages/x-charts-pro/build
-      '@playwright/test':
-        specifier: 'catalog:'
-        version: 1.58.1
       next:
         specifier: ^16.0.0
         version: 16.1.6(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)

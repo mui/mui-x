@@ -16,7 +16,6 @@
     "@mui/material-nextjs": "^7.1.0",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
-    "@playwright/test": "catalog:",
     "next": "^16.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
