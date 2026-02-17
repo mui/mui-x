@@ -219,23 +219,24 @@ export const AgendaView = React.memo(
               </WeekDayCell>
             </DayHeaderCell>
             <EventsList className={classes.agendaViewEventsList}>
-              {isLoading && occurrences.length === 0 && (
+              {isLoading && (
                 <li>
                   <EventSkeleton data-variant="agenda" />
                 </li>
               )}
-              {occurrences.map((occurrence) => (
-                <li key={occurrence.key}>
-                  <EventDialogTrigger occurrence={occurrence}>
-                    <EventItem
-                      occurrence={occurrence}
-                      date={date}
-                      variant="regular"
-                      ariaLabelledBy={`DayHeaderCell-${date.key}`}
-                    />
-                  </EventDialogTrigger>
-                </li>
-              ))}
+              {!isLoading &&
+                occurrences.map((occurrence) => (
+                  <li key={occurrence.key}>
+                    <EventDialogTrigger occurrence={occurrence}>
+                      <EventItem
+                        occurrence={occurrence}
+                        date={date}
+                        variant="regular"
+                        ariaLabelledBy={`DayHeaderCell-${date.key}`}
+                      />
+                    </EventDialogTrigger>
+                  </li>
+                ))}
             </EventsList>
           </AgendaViewRow>
         ))}

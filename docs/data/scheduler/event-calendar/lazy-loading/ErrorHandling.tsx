@@ -1,6 +1,7 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import {
   SchedulerEvent,
@@ -138,13 +139,15 @@ export default function ErrorHandling() {
 
   return (
     <Stack spacing={2} width="100%">
-      <Button
-        onClick={() => setFailRequests((prev) => !prev)}
-        variant="outlined"
-        sx={{ alignSelf: 'flex-start' }}
-      >
-        {failRequests ? 'Resolve requests' : 'Fail requests'}
-      </Button>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={failRequests}
+            onChange={(event) => setFailRequests(event.target.checked)}
+          />
+        }
+        label="Fail requests"
+      />
       <div style={{ height: '700px', width: '100%' }}>
         <EventCalendarPremium
           events={[]}

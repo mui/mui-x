@@ -44,9 +44,8 @@ export class SchedulerLazyLoadingPlugin<
     if (this.dataManager) {
       const { adapter } = this.store.state;
 
-      // Set loading state immediately (before the debounce delay) when the
-      // requested range isn't already cached. This prevents a brief flash of
-      // stale content / empty calendar before the skeleton appears.
+      // Set loading state immediately (before the debounce delay)
+
       if (
         this.cache &&
         !this.cache.hasCoverage(
@@ -118,6 +117,7 @@ export class SchedulerLazyLoadingPlugin<
       this.store.update({
         ...this.store.state,
         ...eventsState,
+        errors: [],
       });
       // Mark request as settled
       await this.dataManager.setRequestSettled(range);
