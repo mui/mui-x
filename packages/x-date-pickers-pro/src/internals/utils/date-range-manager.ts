@@ -79,7 +79,12 @@ export function calculateRangeChange({
   // If we're selecting the same day as the start, but the time would make the range invalid,
   // set the end to the end of the day instead
   let adjustedEndDate = newSelectedDate;
-  if (start && newSelectedDate && adapter.isSameDay(start, newSelectedDate) && adapter.isBefore(newSelectedDate, start)) {
+  if (
+    start &&
+    newSelectedDate &&
+    adapter.isSameDay(start, newSelectedDate) &&
+    adapter.isBefore(newSelectedDate, start)
+  ) {
     adjustedEndDate = adapter.endOfDay(newSelectedDate);
   }
 

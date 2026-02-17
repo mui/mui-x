@@ -48,7 +48,10 @@ describe('<DateRangeCalendar /> - Timezone', () => {
                 calendars={1}
                 value={value}
                 onChange={(newValue) => setValue(newValue)}
-                defaultValue={[adapter.date('2025-11-11', 'UTC'), adapter.date('2025-11-11', 'UTC')]}
+                defaultValue={[
+                  adapter.date('2025-11-11', 'UTC'),
+                  adapter.date('2025-11-11', 'UTC'),
+                ]}
               />
               <button onClick={() => setTimezone('America/Los_Angeles')}>
                 Switch to Los Angeles
