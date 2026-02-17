@@ -111,6 +111,7 @@ export default defineConfig(
   createBaseConfig({
     baseDirectory: dirname,
     enableReactCompiler: isAnyReactCompilerPluginEnabled,
+    materialUi: true,
   }),
   {
     name: 'MUI X Overrides',
@@ -129,7 +130,7 @@ export default defineConfig(
     },
     rules: {
       '@typescript-eslint/no-redeclare': 'error',
-      'material-ui/straight-quotes': 'error',
+      'mui/straight-quotes': 'error',
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
       'react/react-in-jsx-scope': 'off',
@@ -194,7 +195,7 @@ export default defineConfig(
       'react-hooks/static-components': 'off',
 
       // TODO(@Janpot) Fix issues and turn back on
-      'material-ui/consistent-production-guard': 'off',
+      'mui/consistent-production-guard': 'off',
     },
   },
   // Test start
@@ -292,7 +293,7 @@ export default defineConfig(
     files: [`packages/*/src/**/*${EXTENSION_TS}`],
     ignores: ['**/*.d.ts', `**/*.spec${EXTENSION_TS}`, `**/*.test${EXTENSION_TS}`],
     rules: {
-      'material-ui/mui-name-matches-component-name': [
+      'mui/material-ui-name-matches-component-name': [
         'error',
         {
           customHooks: [
@@ -310,7 +311,7 @@ export default defineConfig(
           ],
         },
       ],
-      'material-ui/disallow-react-api-in-server-components': 'error',
+      'mui/disallow-react-api-in-server-components': 'error',
     },
   },
 
@@ -424,7 +425,7 @@ export default defineConfig(
       // Base UI lint rules
       '@typescript-eslint/no-redeclare': 'off',
       'import/export': 'off',
-      'material-ui/straight-quotes': 'off',
+      'mui/straight-quotes': 'off',
       'jsdoc/require-param': 'off',
       'jsdoc/require-returns': 'off',
     },

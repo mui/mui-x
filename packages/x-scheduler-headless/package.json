@@ -2,7 +2,7 @@
   "name": "@mui/x-scheduler-headless",
   "version": "0.0.1-alpha.0",
   "private": true,
-  "description": "The community edition of the headless version of the Scheduler component (MUI X).",
+  "description": "The community edition of the headless version of the scheduler components (MUI X).",
   "author": "MUI Team",
   "license": "MIT",
   "bugs": {
@@ -36,7 +36,8 @@
     "./use-event-occurrences-with-day-grid-position": "./src/use-event-occurrences-with-day-grid-position/index.ts",
     "./use-event-occurrences-with-timeline-position": "./src/use-event-occurrences-with-timeline-position/index.ts",
     "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts",
-    "./use-draggable-dialog": "./src/use-draggable-dialog/index.ts"
+    "./use-draggable-dialog": "./src/use-draggable-dialog/index.ts",
+    "./use-event-calendar-api-ref": "./src/use-event-calendar-api-ref/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {

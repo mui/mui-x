@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Event Timeline Premium
+# Event Calendar - Overview (TODO: Remove)
 
 <p class="description">The `EventTimelinePremium` component lets users manage events in a timeline layout.</p>
 

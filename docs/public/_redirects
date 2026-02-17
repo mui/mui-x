@@ -72,5 +72,8 @@
 /x/api/charts/line-series-type/ /x/api/charts/line-series/ 301
 /x/api/charts/pie-series-type/ /x/api/charts/pie-series/ 301
 /x/api/charts/scatter-series-type/ /x/api/charts/scatter-series/ 301
-
+# 2026
+/x/api/charts/chart-container/ /x/api/charts/charts-container/ 301
+/x/api/charts/chart-container-pro/ /x/api/charts/charts-container-pro/ 301
+/x/api/charts/chart-container-premium/ /x/api/charts/charts-container-premium/ 301
 # Proxies

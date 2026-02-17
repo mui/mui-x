@@ -63,7 +63,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
   ) {
     const themeProps = useThemeProps({
       props,
-      // eslint-disable-next-line material-ui/mui-name-matches-component-name
+      // eslint-disable-next-line mui/material-ui-name-matches-component-name
       name,
     });
 
