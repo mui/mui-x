@@ -162,7 +162,10 @@ export class ExtendableEventCalendarStore<
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter({ delta, state: this.state }), event);
+    this.setVisibleDate({
+      visibleDate: siblingVisibleDateGetter({ delta, state: this.state }),
+      event,
+    });
   };
 
   /**
@@ -226,6 +229,12 @@ export class ExtendableEventCalendarStore<
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
   };
+
+  public buildPublicAPI() {
+    return {
+      ...super.buildPublicAPI(),
+    };
+  }
 }
 
 /**

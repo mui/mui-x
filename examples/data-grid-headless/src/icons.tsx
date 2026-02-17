@@ -81,6 +81,26 @@ export function CollapseIcon(props: { collapsed: boolean; className?: string }) 
   );
 }
 
+export function PaginationIcon() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#10b981"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="3" width="20" height="18" rx="2" />
+      <line x1="2" y1="15" x2="22" y2="15" />
+      <path d="M12 19l-2-2 2-2" />
+      <path d="M16 19l2-2-2-2" />
+    </svg>
+  );
+}
+
 export function ArrowIcon() {
   return (
     <svg
@@ -94,6 +114,23 @@ export function ArrowIcon() {
       strokeLinejoin="round"
     >
       <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
+  );
+}
+
+export function RowsIcon() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#3b82f6"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 6h18M3 12h18M3 18h18" />
     </svg>
   );
 }

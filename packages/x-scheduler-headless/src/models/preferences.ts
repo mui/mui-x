@@ -23,7 +23,7 @@ export interface EventCalendarPreferences extends SchedulerPreferences {
    */
   isSidePanelOpen: boolean;
   /**
-   * Whether empty days are shown in the agenda view.
+   * Whether days with no event are shown in the agenda view.
    * @default true
    */
   showEmptyDaysInAgenda: boolean;
