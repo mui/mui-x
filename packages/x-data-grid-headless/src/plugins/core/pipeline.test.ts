@@ -111,7 +111,7 @@ describe('Pipeline', () => {
     expect(onRecompute).toHaveBeenNthCalledWith(2, 15);
   });
 
-  it('disable() should skip the processor while preserving its cached output', () => {
+  it('disable() should replay cached output instead of passthrough', () => {
     const pipeline = new Pipeline<number>({
       getInitialValue: () => 5,
       onRecompute: () => {},
@@ -134,12 +134,14 @@ describe('Pipeline', () => {
       return value - 3;
     });
 
+    // first: 5+1=6, second: 6*2=12, third: 12-3=9
     expect(pipeline.recompute()).toBe(9);
 
     pipeline.disable('second');
 
+    // second is disabled but replays its cached output (12), so third: 12-3=9
     const recomputed = pipeline.recompute('second');
-    expect(recomputed).toBe(3);
+    expect(recomputed).toBe(9);
     expect(firstCalls).toBe(1);
     expect(secondCalls).toBe(1);
     expect(thirdCalls).toBe(2);
@@ -171,7 +173,8 @@ describe('Pipeline', () => {
     expect(pipeline.recompute()).toBe(9);
 
     pipeline.disable('second');
-    expect(pipeline.recompute('second')).toBe(3);
+    // Disabled replays cached output, so result is still 9
+    expect(pipeline.recompute('second')).toBe(9);
 
     pipeline.enable('second');
     const recomputed = pipeline.recompute('second');
@@ -180,6 +183,31 @@ describe('Pipeline', () => {
     expect(firstCalls).toBe(1);
     expect(secondCalls).toBe(2);
     expect(thirdCalls).toBe(3);
+  });
+
+  it('disable() should passthrough when there is no cached output to replay', () => {
+    const pipeline = new Pipeline<number>({
+      getInitialValue: () => 5,
+      onRecompute: () => {},
+    });
+
+    let secondCalls = 0;
+
+    pipeline.register('first', (value) => value + 1);
+    pipeline.register(
+      'second',
+      (value) => {
+        secondCalls += 1;
+        return value * 2;
+      },
+      { disabled: true },
+    );
+    pipeline.register('third', (value) => value - 3);
+
+    // second is disabled with no prior cached output → passthrough
+    // first: 5+1=6, second: skipped (no cache), third: 6-3=3
+    expect(pipeline.recompute()).toBe(3);
+    expect(secondCalls).toBe(0);
   });
 
   it('registering a disabled processor should preserve upstream cache', () => {

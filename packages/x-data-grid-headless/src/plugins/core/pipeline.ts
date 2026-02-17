@@ -109,6 +109,14 @@ export class Pipeline<TValue> {
     for (let i = startIndex; i < orderedProcessors.length; i += 1) {
       const { name, processor, enabled } = orderedProcessors[i];
       if (!enabled) {
+        // Replay the cached output from the previous run if available,
+        // instead of just ignoring them.
+        // This is needed to keep the processed results while the resulting visiblerows are updated.
+        const cachedOutput = this.previousRun?.outputsByProcessor.get(name);
+        if (cachedOutput !== undefined) {
+          currentValue = cachedOutput;
+          outputsByProcessor.set(name, cachedOutput);
+        }
         continue;
       }
 
