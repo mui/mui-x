@@ -18,6 +18,7 @@ import {
   eventDialogSlots,
   EventDialogStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+  schedulerTokens,
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
@@ -81,6 +82,7 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
+  ...schedulerTokens,
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
   '--weeks-cell-width': '64px',
@@ -91,6 +93,7 @@ const EventTimelinePremiumRoot = styled('div', {
   padding: theme.spacing(2),
   gap: theme.spacing(2),
   height: '100%',
+  fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
 }));
 
