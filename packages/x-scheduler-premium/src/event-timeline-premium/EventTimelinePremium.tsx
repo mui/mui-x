@@ -26,7 +26,6 @@ import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledC
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
     root: ['root'],
-    headerToolbar: ['headerToolbar'],
     content: ['content'],
     grid: ['grid'],
     titleSubGridWrapper: ['titleSubGridWrapper'],
