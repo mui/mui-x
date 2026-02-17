@@ -17,25 +17,22 @@ import {
   EventTimelinePremiumParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
+import { EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS } from '../event-timeline-premium-selectors/eventTimelinePremiumViewSelectors';
 
 // TODO: In the future, this config should become a prop so users can customize step sizes per view.
-// For now it's a constant, but it's extracted into a standalone object to make this transition easy.
 const VIEW_NAVIGATION_STEP: Record<
   EventTimelinePremiumView,
-  {
-    navigate: (
-      adapter: TemporalAdapter,
-      date: TemporalSupportedObject,
-      amount: number,
-    ) => TemporalSupportedObject;
-    unitCount: number;
-  }
+  (
+    adapter: TemporalAdapter,
+    date: TemporalSupportedObject,
+    amount: number,
+  ) => TemporalSupportedObject
 > = {
-  time: { navigate: (a, d, n) => a.addDays(d, n), unitCount: 3 },
-  days: { navigate: (a, d, n) => a.addDays(d, n), unitCount: 21 },
-  weeks: { navigate: (a, d, n) => a.addWeeks(d, n), unitCount: 12 },
-  months: { navigate: (a, d, n) => a.addMonths(d, n), unitCount: 24 },
-  years: { navigate: (a, d, n) => a.addYears(d, n), unitCount: 15 },
+  time: (a, d, n) => a.addDays(d, n),
+  days: (a, d, n) => a.addDays(d, n),
+  weeks: (a, d, n) => a.addWeeks(d, n),
+  months: (a, d, n) => a.addMonths(d, n),
+  years: (a, d, n) => a.addYears(d, n),
 };
 
 export const DEFAULT_VIEWS: EventTimelinePremiumView[] = [
@@ -121,31 +118,33 @@ export class EventTimelinePremiumStore<
   public buildPublicAPI() {
     return {
       ...super.buildPublicAPI(),
-      goNext: this.goNext,
-      goPrev: this.goPrev,
+      goToNextVisibleDate: this.goToNextVisibleDate,
+      goToPreviousVisibleDate: this.goToPreviousVisibleDate,
     };
   }
 
   /**
-   * Navigates to the next date range based on the current view's step.
+   * Goes to the next visible date span based on the current view.
    */
-  public goNext = (event: React.UIEvent) => {
+  public goToNextVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, view } = this.state;
-    const step = VIEW_NAVIGATION_STEP[view];
+    const { unitCount } = EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS[view];
+    const navigate = VIEW_NAVIGATION_STEP[view];
     this.setVisibleDate({
-      visibleDate: step.navigate(adapter, visibleDate, step.unitCount),
+      visibleDate: navigate(adapter, visibleDate, unitCount),
       event,
     });
   };
 
   /**
-   * Navigates to the previous date range based on the current view's step.
+   * Goes to the previous visible date span based on the current view.
    */
-  public goPrev = (event: React.UIEvent) => {
+  public goToPreviousVisibleDate = (event: React.UIEvent) => {
     const { adapter, visibleDate, view } = this.state;
-    const step = VIEW_NAVIGATION_STEP[view];
+    const { unitCount } = EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS[view];
+    const navigate = VIEW_NAVIGATION_STEP[view];
     this.setVisibleDate({
-      visibleDate: step.navigate(adapter, visibleDate, -step.unitCount),
+      visibleDate: navigate(adapter, visibleDate, -unitCount),
       event,
     });
   };

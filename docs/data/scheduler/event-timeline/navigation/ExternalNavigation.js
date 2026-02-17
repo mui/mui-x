@@ -30,7 +30,9 @@ export default function ExternalNavigation() {
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Stack direction="row" spacing={1} alignItems="center">
-        <IconButton onClick={(event) => apiRef.current?.goPrev(event)}>
+        <IconButton
+          onClick={(event) => apiRef.current?.goToPreviousVisibleDate(event)}
+        >
           <ChevronLeftIcon />
         </IconButton>
         <Button
@@ -41,7 +43,7 @@ export default function ExternalNavigation() {
         >
           Today
         </Button>
-        <IconButton onClick={(event) => apiRef.current?.goNext(event)}>
+        <IconButton onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
           <ChevronRightIcon />
         </IconButton>
         <ToggleButtonGroup

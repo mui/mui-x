@@ -29,7 +29,7 @@ export default function FullEventTimelinePremium() {
       }}
     >
       <Stack direction="row" spacing={1} alignItems="center" sx={{ p: 2, flexShrink: 0 }}>
-        <IconButton onClick={(event) => apiRef.current?.goPrev(event)}>
+        <IconButton onClick={(event) => apiRef.current?.goToPreviousVisibleDate(event)}>
           <ChevronLeftIcon />
         </IconButton>
         <Button
@@ -38,7 +38,7 @@ export default function FullEventTimelinePremium() {
         >
           Today
         </Button>
-        <IconButton onClick={(event) => apiRef.current?.goNext(event)}>
+        <IconButton onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
           <ChevronRightIcon />
         </IconButton>
         <ToggleButtonGroup
