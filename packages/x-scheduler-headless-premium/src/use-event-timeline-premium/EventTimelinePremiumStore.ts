@@ -93,6 +93,12 @@ export class EventTimelinePremiumStore<
     }
   }
 
+  public buildPublicAPI() {
+    return {
+      ...super.buildPublicAPI(),
+    };
+  }
+
   /**
    * Sets the view of the timeline.
    */
