@@ -852,6 +852,13 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/migration-v9',
+        subheader: 'Upgrade to v9',
+        children: [
+          { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
+        ],
+      },
+      {
         pathname: '/x/migration-v8',
         subheader: 'Upgrade to v8',
         children: [

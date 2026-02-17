@@ -1,5 +1,9 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization, buildLocaleFormat } from '../utils/getGridLocalization';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('id-ID');
 
