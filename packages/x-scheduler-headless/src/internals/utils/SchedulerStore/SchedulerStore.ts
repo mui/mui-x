@@ -30,10 +30,7 @@ import {
 } from '../../models/events';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-} from '../../../scheduler-selectors';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
