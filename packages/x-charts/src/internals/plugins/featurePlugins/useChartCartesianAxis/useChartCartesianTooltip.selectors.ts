@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {
@@ -8,7 +8,10 @@ import {
 import { getAxisIndex } from './getAxisValue';
 import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import type { ChartState } from '../../models/chart';
-import type { AxisItemIdentifier } from '../../../../models/axis';
+import type { AxisItemIdentifier, ChartsAxisProps, ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
+import type { ComputeResult } from './computeAxisValue';
+import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 const selectorChartControlledCartesianAxisTooltip = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
@@ -105,4 +108,83 @@ export const selectorChartsInteractionAxisTooltip = createSelector(
   selectorChartsInteractionTooltipXAxes,
   selectorChartsInteractionTooltipYAxes,
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
+);
+
+
+function getCoordinatesFromAxis(
+  identifier: AxisItemIdentifier,
+  axes: ComputeResult<ChartsAxisProps>,
+): number | null {
+
+  const axis = axes.axis[identifier.axisId];
+  if (!axis) {
+    return null;
+  }
+  const value = axis.data?.[identifier.dataIndex];
+  if (value == null) {
+    return null;
+  }
+  const coordinate = axis.scale(value);
+  if (coordinate === undefined) {
+    return null;
+  }
+  return coordinate;
+}
+
+
+export const selectorChartsTooltipAxisPosition = createSelectorMemoized(
+  selectorChartsInteractionTooltipXAxes,
+  selectorChartsInteractionTooltipYAxes,
+  selectorChartXAxis,
+  selectorChartYAxis,
+  selectorChartDrawingArea,
+
+  function selectorChartsTooltipItemPosition(
+    xAxesIdentifiers: AxisItemIdentifier[],
+    yAxesIdentifiers: AxisItemIdentifier[],
+    xAxes: ComputeResult<ChartsXAxisProps>,
+    yAxes: ComputeResult<ChartsYAxisProps>,
+    drawingArea: ChartDrawingArea,
+    placement?: 'top' | 'bottom' | 'left' | 'right',
+  ) {
+    if (xAxesIdentifiers.length === 0 && yAxesIdentifiers.length === 0) {
+      return null;
+    }
+
+    if (xAxesIdentifiers.length > 0) {
+      const x = getCoordinatesFromAxis(xAxesIdentifiers[0], xAxes);
+      if (x === null) {
+        return null;
+      }
+      switch (placement) {
+        case 'left':
+        case 'right':
+          return { x, y: drawingArea.top + drawingArea.height / 2 };
+        case 'bottom':
+          return { x, y: drawingArea.top + drawingArea.height };
+        case 'top':
+        default:
+          return { x, y: drawingArea.top };
+      }
+    }
+
+    if (yAxesIdentifiers.length > 0) {
+      const y = getCoordinatesFromAxis(yAxesIdentifiers[0], yAxes);
+      if (y === null) {
+        return null;
+      }
+
+      switch (placement) {
+        case 'right':
+          return { x: drawingArea.left + drawingArea.width / 2, y };
+        case 'bottom':
+        case 'top':
+          return { x: drawingArea.left + drawingArea.width / 2, y };
+        case 'left':
+        default:
+          return { x: drawingArea.left + drawingArea.width / 2, y };
+      }
+    }
+    return null;
+  }
 );

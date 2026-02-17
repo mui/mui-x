@@ -20,7 +20,10 @@ import {
   selectorChartsTooltipItemPosition,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { selectorChartsInteractionAxisTooltip } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianTooltip.selectors';
+import {
+  selectorChartsInteractionAxisTooltip,
+  selectorChartsTooltipAxisPosition,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianTooltip.selectors';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
@@ -50,6 +53,23 @@ function getIsOpenSelector(
   return selectorReturnFalse;
 }
 
+const defaultAnchorByTrigger = {
+  item: 'node',
+  axis: 'chart',
+  none: 'pointer',
+} as const;
+
+const getPositionSelectorByAnchor = (anchor: 'pointer' | 'node' | 'chart') => {
+  switch (anchor) {
+    case 'node':
+      return selectorChartsTooltipItemPosition;
+    case 'chart':
+      return selectorChartsTooltipAxisPosition;
+    default:
+      return selectorReturnNull;
+  }
+};
+
 type PopperSlots = NonNullable<PopperProps['slots']>;
 
 type PopperSlotProps = NonNullable<PopperProps['slotProps']>;
@@ -60,42 +80,59 @@ export interface ChartsTooltipContainerSlotProps extends PopperSlotProps {}
 
 export interface ChartsTooltipContainerClasses extends ChartsTooltipClasses {}
 
-export interface ChartsTooltipContainerProps<
-  T extends TriggerOptions = TriggerOptions,
-> extends Partial<PopperProps> {
-  /**
-   * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse;
-   * - 'axis': Shows values associated with the hovered x value;
-   * - 'none': Does not display tooltip.
-   * @default 'axis'
-   */
-  trigger?: T;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<ChartsTooltipContainerClasses>;
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: ChartsTooltipContainerSlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: ChartsTooltipContainerSlotProps;
-  /**
-   * Determine if the tooltip should be placed on the pointer location or on the node.
-   * @default 'pointer'
-   */
-  anchor?: 'pointer' | 'node';
-  /**
-   * Determines the tooltip position relatively to the anchor.
-   */
-  position?: 'top' | 'bottom' | 'left' | 'right';
-  children?: React.ReactNode;
-}
+export type ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions> = T extends any
+  ? Partial<PopperProps> & {
+      /**
+       * Select the kind of tooltip to display
+       * - 'item': Shows data about the item below the mouse;
+       * - 'axis': Shows values associated with the hovered x value;
+       * - 'none': Does not display tooltip.
+       * @default 'axis'
+       */
+      trigger?: T;
+      /**
+       * Override or extend the styles applied to the component.
+       */
+      classes?: Partial<ChartsTooltipContainerClasses>;
+      /**
+       * Overridable component slots.
+       * @default {}
+       */
+      slots?: ChartsTooltipContainerSlots;
+      /**
+       * The props used for each component slot.
+       * @default {}
+       */
+      slotProps?: ChartsTooltipContainerSlotProps;
+      /**
+       * Determine if the tooltip should be placed on the pointer location or on the node.
+       * @default 'pointer'
+       */
+      anchor?: 'pointer';
+      /**
+       * Determines the tooltip position relatively to the anchor.
+       */
+      position?: 'top' | 'bottom' | 'left' | 'right';
+      children?: React.ReactNode;
+    } & (T extends 'item'
+        ? {
+            /**
+             * Determine if the tooltip should be placed on the pointer location or on the node.
+             * @default 'pointer'
+             */
+            anchor?: 'pointer' | 'node';
+          }
+        : {}) &
+      (T extends 'axis'
+        ? {
+            /**
+             * Determine if the tooltip should be placed on the pointer location or on the node.
+             * @default 'pointer'
+             */
+            anchor?: 'pointer' | 'chart';
+          }
+        : {})
+  : never;
 
 const ChartsTooltipRoot = styled(Popper, {
   name: 'MuiChartsTooltip',
@@ -147,14 +184,11 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const isOpen = store.use(getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush));
 
   const lastInteraction = store.use(selectorChartsLastInteraction);
-  const computedAnchor = lastInteraction === 'keyboard' || pointerType === null ? 'node' : anchor;
 
-  const itemPosition = store.use(
-    trigger === 'item' && computedAnchor === 'node'
-      ? selectorChartsTooltipItemPosition
-      : selectorReturnNull,
-    position,
-  );
+  const pointerAnchorUnavailable = lastInteraction === 'keyboard' || pointerType === null;
+  const computedAnchor = pointerAnchorUnavailable ? defaultAnchorByTrigger[trigger] : anchor;
+
+  const itemPosition = store.use(getPositionSelectorByAnchor(computedAnchor), props.position);
 
   const isTooltipNodeAnchored = itemPosition !== null;
 
