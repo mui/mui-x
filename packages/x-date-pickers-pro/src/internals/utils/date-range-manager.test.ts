@@ -106,7 +106,6 @@ describe('date-range-manager', () => {
       expectedRange: [start2018At4PM, start2018EndOfDay],
       allowRangeFlip: false,
       expectedNextSelection: 'start' as const,
-      referenceDate: start2018EndOfDay,
     },
   ].forEach(
     ({
