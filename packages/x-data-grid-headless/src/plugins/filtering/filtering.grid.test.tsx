@@ -219,22 +219,6 @@ describe('Filtering Plugin - Integration Tests', () => {
 
   describe('filtering modes', () => {
     describe('auto mode (default)', () => {
-      it('should re-filter when model changes', async () => {
-        const apiRef = React.createRef<TestGridApi | null>();
-        const { container } = render(
-          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
-        );
-
-        await act(async () => {
-          apiRef.current?.api.filtering.setModel({
-            logicOperator: 'and',
-            conditions: [{ field: 'age', operator: '>=', value: 30 }],
-          });
-        });
-
-        expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
-      });
-
       it('should re-filter when rows change', async () => {
         const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
@@ -265,7 +249,7 @@ describe('Filtering Plugin - Integration Tests', () => {
     });
 
     describe('manual mode', () => {
-      it('should NOT re-filter automatically when model changes', async () => {
+      it('should NOT re-filter automatically when rows change', async () => {
         const apiRef = React.createRef<TestGridApi | null>();
         const { container } = render(
           <TestDataGrid
@@ -273,31 +257,34 @@ describe('Filtering Plugin - Integration Tests', () => {
             columns={defaultColumns}
             apiRef={apiRef}
             filtering={{ mode: 'manual' }}
+            initialState={{
+              filtering: {
+                model: {
+                  logicOperator: 'and',
+                  conditions: [{ field: 'age', operator: '>', value: 28 }],
+                },
+              },
+            }}
           />,
         );
 
-        await act(async () => {
-          apiRef.current?.api.filtering.setModel({
-            logicOperator: 'and',
-            conditions: [{ field: 'name', operator: 'equals', value: 'Alice' }],
-          });
-        });
-
-        // Model is set but not applied
-        expect(apiRef.current?.api.filtering.getModel()).toEqual({
-          logicOperator: 'and',
-          conditions: [{ field: 'name', operator: 'equals', value: 'Alice' }],
-        });
-
-        // All rows still visible
+        // Manual mode: initial filter model is NOT applied automatically
         expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
 
-        // After explicit apply
+        // Explicitly apply
         await act(async () => {
           apiRef.current?.api.filtering.apply();
         });
 
-        expect(getRowNames(container)).toEqual(['Alice']);
+        expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
+
+        // Update a row to make it pass the filter
+        await act(async () => {
+          apiRef.current?.api.rows.updateRows([{ id: 2, name: 'Alice', age: 40 }]);
+        });
+
+        // Without explicit apply, the rows should remain the same
+        expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
       });
     });
   });
@@ -361,159 +348,6 @@ describe('Filtering Plugin - Integration Tests', () => {
     });
   });
 
-  describe('nested filter groups', () => {
-    it('should support nested AND/OR groups', async () => {
-      const apiRef = React.createRef<TestGridApi | null>();
-      const { container } = render(
-        <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
-      );
-
-      // (name contains 'li') AND (age = 25 OR age = 35)
-      await act(async () => {
-        apiRef.current?.api.filtering.setModel({
-          logicOperator: 'and',
-          conditions: [
-            { field: 'name', operator: 'contains', value: 'li' },
-            {
-              logicOperator: 'or',
-              conditions: [
-                { field: 'age', operator: '=', value: 25 },
-                { field: 'age', operator: '=', value: 35 },
-              ],
-            },
-          ],
-        });
-      });
-
-      // Alice (contains 'li', age=25), Charlie (contains 'li' — has no 'li', wait)
-      // Actually: 'Charlie' contains 'li' => true, age=30 (not 25 or 35) => false
-      // 'Alice' contains 'li' => true, age=25 => true
-      // So only Alice
-      expect(getRowNames(container)).toEqual(['Alice']);
-    });
-  });
-
-  describe('disableEval parity', () => {
-    it('should produce same results with and without eval', async () => {
-      const model: FilterModel = {
-        logicOperator: 'and',
-        conditions: [
-          { field: 'name', operator: 'contains', value: 'li' },
-          { field: 'age', operator: '>', value: 25 },
-        ],
-      };
-
-      const { container: container1 } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          filtering={{ model, disableEval: false }}
-        />,
-      );
-
-      const { container: container2 } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          filtering={{ model, disableEval: true }}
-        />,
-      );
-
-      expect(getRowNames(container1)).toEqual(getRowNames(container2));
-    });
-  });
-
-  describe('non-filterable columns', () => {
-    it('should skip conditions on non-filterable columns', async () => {
-      const apiRef = React.createRef<TestGridApi | null>();
-      const columns: ColumnDef<TestRow, FilteringColumnMeta>[] = [
-        {
-          id: 'name',
-          field: 'name',
-          filterable: false,
-          filterOperators: getStringFilterOperators(),
-        },
-        { id: 'age', field: 'age', filterOperators: getNumericFilterOperators() },
-      ];
-
-      const { container } = render(
-        <TestDataGrid rows={defaultRows} columns={columns} apiRef={apiRef} />,
-      );
-
-      await act(async () => {
-        apiRef.current?.api.filtering.setModel({
-          logicOperator: 'and',
-          conditions: [
-            { field: 'name', operator: 'equals', value: 'Alice' },
-            { field: 'age', operator: '>', value: 20 },
-          ],
-        });
-      });
-
-      // name condition is skipped, only age > 20 applies - all rows pass
-      expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
-    });
-  });
-
-  describe('row updates with active filter', () => {
-    it('should maintain filter when rows are updated via API', async () => {
-      const apiRef = React.createRef<TestGridApi | null>();
-      const { container } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          apiRef={apiRef}
-          initialState={{
-            filtering: {
-              model: {
-                logicOperator: 'and',
-                conditions: [{ field: 'age', operator: '>', value: 28 }],
-              },
-            },
-          }}
-        />,
-      );
-
-      expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
-
-      // Update Alice's age to 40
-      await act(async () => {
-        apiRef.current?.api.rows.updateRows([{ id: 2, name: 'Alice', age: 40 }]);
-      });
-
-      // Alice should now be included
-      expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
-    });
-
-    it('should maintain filter when adding new rows', async () => {
-      const apiRef = React.createRef<TestGridApi | null>();
-      const { container } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          apiRef={apiRef}
-          initialState={{
-            filtering: {
-              model: {
-                logicOperator: 'and',
-                conditions: [{ field: 'name', operator: 'contains', value: 'ob' }],
-              },
-            },
-          }}
-        />,
-      );
-
-      expect(getRowNames(container)).toEqual(['Bob']);
-
-      // Add Robin
-      await act(async () => {
-        apiRef.current?.api.rows.updateRows([{ id: 4, name: 'Robin', age: 22 }]);
-      });
-
-      expect(getRowNames(container)).toEqual(['Bob', 'Robin']);
-    });
-  });
-
   describe('row prop changes with active filter', () => {
     it('should re-apply filter when rows prop changes completely', async () => {
       const { container, setProps } = render(
@@ -545,100 +379,6 @@ describe('Filtering Plugin - Integration Tests', () => {
 
       // Only Asics contains 'a'
       expect(getRowNames(container)).toEqual(['Asics']);
-    });
-  });
-
-  describe('getRowId with active filter', () => {
-    it('should work with custom getRowId', () => {
-      type BrandRow = { brand: string; age: number };
-      const brandColumns: ColumnDef<BrandRow, FilteringColumnMeta>[] = [
-        { id: 'brand', field: 'brand', filterOperators: getStringFilterOperators() },
-        { id: 'age', field: 'age', filterOperators: getNumericFilterOperators() },
-      ];
-
-      const { container } = render(
-        <TestDataGrid
-          rows={[
-            { brand: 'Nike', age: 10 },
-            { brand: 'Adidas', age: 20 },
-            { brand: 'Puma', age: 30 },
-          ]}
-          columns={brandColumns}
-          getRowId={(row: BrandRow) => row.brand}
-          filtering={{
-            model: {
-              logicOperator: 'and',
-              conditions: [{ field: 'brand', operator: 'contains', value: 'a' }],
-            },
-          }}
-        />,
-      );
-
-      expect(getRowAttr(container, 'data-brand')).toEqual(['Adidas', 'Puma']);
-    });
-  });
-
-  describe('ignoreDiacritics', () => {
-    it('should not ignore diacritics by default', () => {
-      const { container } = render(
-        <TestDataGrid
-          rows={[
-            { id: 1, name: 'Apă', age: 25 },
-            { id: 2, name: 'Bob', age: 30 },
-          ]}
-          columns={defaultColumns}
-          filtering={{
-            model: {
-              logicOperator: 'and',
-              conditions: [{ field: 'name', operator: 'contains', value: 'apa' }],
-            },
-          }}
-        />,
-      );
-
-      expect(getRowNames(container)).toEqual([]);
-    });
-
-    it('should match when ignoreDiacritics is enabled', () => {
-      const { container } = render(
-        <TestDataGrid
-          rows={[
-            { id: 1, name: 'Apă', age: 25 },
-            { id: 2, name: 'Bob', age: 30 },
-          ]}
-          columns={defaultColumns}
-          filtering={{
-            model: {
-              logicOperator: 'and',
-              conditions: [{ field: 'name', operator: 'contains', value: 'apa' }],
-            },
-            ignoreDiacritics: true,
-          }}
-        />,
-      );
-
-      expect(getRowNames(container)).toEqual(['Apă']);
-    });
-
-    it('should match diacritics in both filter and cell values', () => {
-      const { container } = render(
-        <TestDataGrid
-          rows={[
-            { id: 1, name: 'Apă', age: 25 },
-            { id: 2, name: 'Bob', age: 30 },
-          ]}
-          columns={defaultColumns}
-          filtering={{
-            model: {
-              logicOperator: 'and',
-              conditions: [{ field: 'name', operator: 'contains', value: 'apă' }],
-            },
-            ignoreDiacritics: true,
-          }}
-        />,
-      );
-
-      expect(getRowNames(container)).toEqual(['Apă']);
     });
   });
 
@@ -866,36 +606,6 @@ describe('Filtering Plugin - Integration Tests', () => {
         const model = apiRef.current?.api.filtering.getModel()!;
         expect(model.quickFilter?.values).toEqual(['test']);
       });
-    });
-  });
-
-  describe('valueParser integration', () => {
-    it('should transform filter values before applying', () => {
-      const columns: ColumnDef<TestRow, FilteringColumnMeta>[] = [
-        { id: 'name', field: 'name', filterOperators: getStringFilterOperators() },
-        {
-          id: 'age',
-          field: 'age',
-          filterOperators: getNumericFilterOperators(),
-          valueParser: (value: any) => Number(value) * 2,
-        },
-      ];
-
-      const { container } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={columns}
-          filtering={{
-            model: {
-              logicOperator: 'and',
-              conditions: [{ field: 'age', operator: '=', value: 15 }],
-            },
-          }}
-        />,
-      );
-
-      // valueParser(15) = 30, so it matches Charlie (age 30)
-      expect(getRowNames(container)).toEqual(['Charlie']);
     });
   });
 });

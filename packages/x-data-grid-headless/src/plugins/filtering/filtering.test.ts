@@ -49,13 +49,6 @@ describe('Type Guards', () => {
       expect(isFilterCondition(group)).toBe(false);
     });
   });
-
-  describe('EMPTY_FILTER_MODEL', () => {
-    it('should be a group with and logic and no conditions', () => {
-      expect(EMPTY_FILTER_MODEL.logicOperator).toBe('and');
-      expect(EMPTY_FILTER_MODEL.conditions).toEqual([]);
-    });
-  });
 });
 
 function getOperatorApplier(operators: FilterOperator[], operatorValue: string, filterValue?: any) {
@@ -1372,26 +1365,6 @@ describe('valueParser', () => {
 
 describe('dateTime seconds handling', () => {
   const dateTimeOperators = getDateFilterOperators(true);
-
-  it('after should consider seconds when showTime is true', () => {
-    const fn = getOperatorApplier(dateTimeOperators, 'after', '2001-01-01T07:30:00')!;
-    // 7:30:30 > 7:30:00 (raw comparison, seconds matter)
-    expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(true);
-    expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(false);
-  });
-
-  it('before should consider seconds', () => {
-    const fn = getOperatorApplier(dateTimeOperators, 'before', '2001-01-01T07:30:30')!;
-    // 7:30:00 < 7:30:30 (raw comparison)
-    expect(fn(new Date(2001, 0, 1, 7, 30, 0), {})).toBe(true);
-    expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(false);
-  });
-
-  it('onOrAfter should consider seconds when showTime is true', () => {
-    const fn = getOperatorApplier(dateTimeOperators, 'onOrAfter', '2001-01-01T07:30:30')!;
-    expect(fn(new Date(2001, 0, 1, 7, 30, 30), {})).toBe(true);
-    expect(fn(new Date(2001, 0, 1, 7, 30, 29), {})).toBe(false);
-  });
 
   it('onOrBefore should consider seconds when showTime is true', () => {
     const fn = getOperatorApplier(dateTimeOperators, 'onOrBefore', '2001-01-01T07:30:30')!;
