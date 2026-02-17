@@ -28,11 +28,11 @@ const VIEW_NAVIGATION_STEP: Record<
     amount: number,
   ) => TemporalSupportedObject
 > = {
-  time: (a, d, n) => a.addDays(d, n),
-  days: (a, d, n) => a.addDays(d, n),
-  weeks: (a, d, n) => a.addWeeks(d, n),
-  months: (a, d, n) => a.addMonths(d, n),
-  years: (a, d, n) => a.addYears(d, n),
+  time: (adapter, date, amount) => adapter.addDays(date, amount),
+  days: (adapter, date, amount) => adapter.addDays(date, amount),
+  weeks: (adapter, date, amount) => adapter.addWeeks(date, amount),
+  months: (adapter, date, amount) => adapter.addMonths(date, amount),
+  years: (adapter, date, amount) => adapter.addYears(date, amount),
 };
 
 export const DEFAULT_VIEWS: EventTimelinePremiumView[] = [
