@@ -361,60 +361,6 @@ describe('Filtering Plugin - Integration Tests', () => {
     });
   });
 
-  describe('sorting interaction', () => {
-    it('should preserve sort order in filtered results', () => {
-      const { container } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          initialState={{
-            sorting: { model: [{ field: 'name', direction: 'asc' }] },
-            filtering: {
-              model: {
-                logicOperator: 'and',
-                conditions: [{ field: 'age', operator: '>=', value: 30 }],
-              },
-            },
-          }}
-        />,
-      );
-
-      // Sorted alphabetically, then filtered to age >= 30
-      // Alice(25) filtered out, Bob(35) and Charlie(30) remain in alphabetical order
-      expect(getRowNames(container)).toEqual(['Bob', 'Charlie']);
-    });
-
-    it('should re-filter when sort order changes', async () => {
-      const apiRef = React.createRef<TestGridApi | null>();
-      const { container } = render(
-        <TestDataGrid
-          rows={defaultRows}
-          columns={defaultColumns}
-          apiRef={apiRef}
-          initialState={{
-            sorting: { model: [{ field: 'name', direction: 'asc' }] },
-            filtering: {
-              model: {
-                logicOperator: 'and',
-                conditions: [{ field: 'age', operator: '>=', value: 30 }],
-              },
-            },
-          }}
-        />,
-      );
-
-      expect(getRowNames(container)).toEqual(['Bob', 'Charlie']);
-
-      // Change sort order
-      await act(async () => {
-        apiRef.current?.api.sorting.setModel([{ field: 'name', direction: 'desc' }]);
-      });
-
-      // Same filtered rows, reversed order
-      expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
-    });
-  });
-
   describe('nested filter groups', () => {
     it('should support nested AND/OR groups', async () => {
       const apiRef = React.createRef<TestGridApi | null>();

@@ -5,6 +5,11 @@ import { useDataGrid, type ColumnDef } from '../..';
 import rowsPlugin from '../internal/rows/rows';
 import { sortingPlugin, type SortingColumnMeta, type GridSortDirection } from '.';
 import { TestDataGrid, type TestGridApi } from '../../test/TestDataGrid';
+import {
+  type FilteringColumnMeta,
+  getStringFilterOperators,
+  getNumericFilterOperators,
+} from '../filtering';
 
 type TestRow = { id: number; name: string; age: number };
 
@@ -936,6 +941,64 @@ describe('Sorting Plugin - Integration Tests', () => {
       // Sorted by lastName: Adams (Charlie), Brown (Bob), Zimmerman (Alice)
       const rowNames = screen.getAllByTestId('row').map((row) => row.getAttribute('data-name'));
       expect(rowNames).toEqual(['Charlie', 'Bob', 'Alice']);
+    });
+  });
+
+  describe('filtering interaction', () => {
+    const filterableColumns: ColumnDef<TestRow, FilteringColumnMeta>[] = [
+      { id: 'name', field: 'name', filterOperators: getStringFilterOperators() },
+      { id: 'age', field: 'age', filterOperators: getNumericFilterOperators() },
+    ];
+
+    it('should preserve sort order in filtered results', () => {
+      const { container } = render(
+        <TestDataGrid
+          rows={defaultRows}
+          columns={filterableColumns}
+          initialState={{
+            sorting: { model: [{ field: 'name', direction: 'asc' }] },
+            filtering: {
+              model: {
+                logicOperator: 'and',
+                conditions: [{ field: 'age', operator: '>=', value: 30 }],
+              },
+            },
+          }}
+        />,
+      );
+
+      // Filtered to age >= 30 (Bob, Charlie), then sorted alphabetically
+      expect(getRowNames(container)).toEqual(['Bob', 'Charlie']);
+    });
+
+    it('should maintain filtering when sort order changes', async () => {
+      const apiRef = React.createRef<TestGridApi | null>();
+      const { container } = render(
+        <TestDataGrid
+          rows={defaultRows}
+          columns={filterableColumns}
+          apiRef={apiRef}
+          initialState={{
+            sorting: { model: [{ field: 'name', direction: 'asc' }] },
+            filtering: {
+              model: {
+                logicOperator: 'and',
+                conditions: [{ field: 'age', operator: '>=', value: 30 }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getRowNames(container)).toEqual(['Bob', 'Charlie']);
+
+      // Change sort order
+      await act(async () => {
+        apiRef.current?.api.sorting.setModel([{ field: 'name', direction: 'desc' }]);
+      });
+
+      // Same filtered rows, reversed order
+      expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
     });
   });
 });

@@ -35,7 +35,7 @@ const FILTERING_PIPELINE_PROCESSOR_NAME = 'filtering';
 
 const filteringPlugin = createPlugin<FilteringPlugin>()({
   name: 'filtering',
-  order: 50,
+  order: 40,
   selectors: filteringSelectors,
 
   initialize: (state, params) => {
