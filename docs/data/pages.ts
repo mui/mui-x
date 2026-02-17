@@ -59,6 +59,7 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
               { pathname: '/x/react-scheduler/event-timeline/resources' },
               { pathname: '/x/react-scheduler/event-timeline/navigation' },
               { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
+              { pathname: '/x/react-scheduler/event-timeline/views' },
               { pathname: '/x/react-scheduler/event-timeline/preferences' },
               { pathname: '/x/react-scheduler/event-timeline/localization' },
             ],
