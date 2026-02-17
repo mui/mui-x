@@ -19,7 +19,7 @@ import {
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
 import { EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS } from '../event-timeline-premium-selectors/eventTimelinePremiumViewSelectors';
 
-// TODO: In the future, this config should become a prop so users can customize step sizes per view.
+// TODO(#21359): In the future, this config should become a prop so users can customize step sizes per view.
 const VIEW_NAVIGATION_STEP: Record<
   EventTimelinePremiumView,
   (
