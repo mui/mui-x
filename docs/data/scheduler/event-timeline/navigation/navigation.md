@@ -70,3 +70,26 @@ apiRef.current.setVisibleDate({
 ```
 
 {{"demo": "ApiMethodSetVisibleDate.js", "defaultCodeOpen": false}}
+
+### Navigate to the next/previous range
+
+Use the `goNext()` and `goPrev()` API methods to navigate forward and backward in time.
+The step size is automatically determined by the current view:
+
+| View     | Step                |
+| :------- | :------------------ |
+| `time`   | 3 days              |
+| `days`   | 21 days (3 weeks)   |
+| `weeks`  | 12 weeks            |
+| `months` | 24 months (2 years) |
+| `years`  | 15 years            |
+
+```ts
+// Navigate to the next date range
+apiRef.current.goNext(event);
+
+// Navigate to the previous date range
+apiRef.current.goPrev(event);
+```
+
+{{"demo": "ExternalNavigation.js", "bg": "inline", "defaultCodeOpen": false}}

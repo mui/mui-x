@@ -6,35 +6,38 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
+
 import {
   initialEvents,
+  resources as allResources,
   defaultVisibleDate,
-  resources,
-} from '../../../data/scheduler/datasets/company-roadmap';
+} from '../../datasets/company-roadmap';
 
-export default function FullEventTimelinePremium() {
-  const [events, setEvents] = React.useState(initialEvents);
-  const [view, setView] = React.useState('months');
+const resources = allResources.slice(0, 5);
+const resourceIds = new Set(resources.map((r) => r.id));
+
+export default function ExternalNavigation() {
+  const [events, setEvents] = React.useState(() =>
+    initialEvents.filter((e) => resourceIds.has(e.resource)),
+  );
+  const [view, setView] = React.useState('weeks');
   const [visibleDate, setVisibleDate] = React.useState(defaultVisibleDate);
   const apiRef = useEventTimelinePremiumApiRef();
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100vh',
-      }}
-    >
-      <Stack direction="row" spacing={1} alignItems="center" sx={{ p: 2, flexShrink: 0 }}>
+    <Stack spacing={2} sx={{ width: '100%' }}>
+      <Stack direction="row" spacing={1} alignItems="center">
         <IconButton onClick={(event) => apiRef.current?.goPrev(event)}>
           <ChevronLeftIcon />
         </IconButton>
         <Button
           variant="outlined"
-          onClick={(event) => apiRef.current?.setVisibleDate({ visibleDate: new Date(), event })}
+          onClick={(event) =>
+            apiRef.current?.setVisibleDate({ visibleDate: new Date(), event })
+          }
         >
           Today
         </Button>
@@ -58,7 +61,7 @@ export default function FullEventTimelinePremium() {
           ))}
         </ToggleButtonGroup>
       </Stack>
-      <div style={{ flex: 1, overflow: 'auto' }}>
+      <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
         <EventTimelinePremium
           apiRef={apiRef}
           events={events}
@@ -67,12 +70,9 @@ export default function FullEventTimelinePremium() {
           onViewChange={setView}
           visibleDate={visibleDate}
           onVisibleDateChange={setVisibleDate}
-          defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          areEventsDraggable
-          areEventsResizable
         />
       </div>
-    </div>
+    </Stack>
   );
 }
