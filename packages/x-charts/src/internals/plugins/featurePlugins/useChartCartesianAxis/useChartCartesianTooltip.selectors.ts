@@ -1,4 +1,8 @@
-import { createSelector, createSelectorMemoized, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
+import {
+  createSelector,
+  createSelectorMemoized,
+  createSelectorMemoizedWithOptions,
+} from '@mui/x-internals/store';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {
@@ -8,7 +12,12 @@ import {
 import { getAxisIndex } from './getAxisValue';
 import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import type { ChartState } from '../../models/chart';
-import type { AxisItemIdentifier, ChartsAxisProps, ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
+import type {
+  AxisItemIdentifier,
+  ChartsAxisProps,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+} from '../../../../models/axis';
 import type { ComputeResult } from './computeAxisValue';
 import { getValueToPositionMapper } from '../../../../hooks/useScale';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
@@ -111,12 +120,10 @@ export const selectorChartsInteractionAxisTooltip = createSelector(
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );
 
-
 function getCoordinatesFromAxis(
   identifier: AxisItemIdentifier,
   axes: ComputeResult<ChartsAxisProps>,
 ): number | null {
-
   const axis = axes.axis[identifier.axisId];
   if (!axis) {
     return null;
@@ -131,7 +138,6 @@ function getCoordinatesFromAxis(
   }
   return coordinate;
 }
-
 
 export const selectorChartsTooltipAxisPosition = createSelectorMemoized(
   selectorChartsInteractionTooltipXAxes,
@@ -187,5 +193,5 @@ export const selectorChartsTooltipAxisPosition = createSelectorMemoized(
       }
     }
     return null;
-  }
+  },
 );

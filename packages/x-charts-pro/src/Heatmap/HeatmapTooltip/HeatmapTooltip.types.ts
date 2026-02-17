@@ -3,12 +3,11 @@ import {
   type ChartsTooltipClasses,
 } from '@mui/x-charts/ChartsTooltip';
 
-
 export interface HeatmapTooltipSlots {
   /**
-    * Custom component for the tooltip popper.
-    * @default ChartsTooltipRoot
-    */
+   * Custom component for the tooltip popper.
+   * @default ChartsTooltipRoot
+   */
   tooltip?: React.ElementType<HeatmapTooltipProps>;
 }
 
@@ -20,9 +19,9 @@ export interface HeatmapTooltipSlotProps {
   tooltip?: Partial<HeatmapTooltipProps>;
 }
 
-export interface HeatmapTooltipClasses extends ChartsTooltipClasses { }
+export interface HeatmapTooltipClasses extends ChartsTooltipClasses {}
 
-export interface HeatmapTooltipContentClasses extends ChartsTooltipClasses { }
+export interface HeatmapTooltipContentClasses extends ChartsTooltipClasses {}
 
 export interface HeatmapTooltipProps extends Omit<
   ChartsTooltipContainerProps<'item' | 'none'>,
