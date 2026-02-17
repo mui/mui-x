@@ -226,19 +226,19 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Рядків на сторінці:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   const unknownRowCount = count == null || count === -1;
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${!unknownRowCount ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${!unknownRowCount ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({
+    from,
+    to,
+    count,
+    estimated
+  }) => {
+    const unknownRowCount = count == null || count === -1;
+    if (!estimated) {
+      return `${from}–${to} з ${!unknownRowCount ? count : `більше ніж ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `близько ${estimated}` : `більше ніж ${to}`;
+    return `${from}–${to} з ${!unknownRowCount ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Перейти на першу сторінку';
