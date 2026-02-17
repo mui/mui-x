@@ -82,7 +82,7 @@ const EventTimelinePremiumRoot = styled('div', {
 })(({ theme }) => ({
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
-  '--weeks-cell-width': '64px',
+  '--weeks-cell-width': 'calc(64px * 7)',
   '--months-cell-width': '180px',
   '--years-cell-width': '200px',
   display: 'flex',

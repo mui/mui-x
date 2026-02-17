@@ -116,7 +116,7 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelinePrimitive.EventRow, 
   gridTemplateRows: 'repeat(var(--lane-count, 1), auto)',
   rowGap: theme.spacing(0.5),
   position: 'relative',
-  padding: theme.spacing(2),
+  padding: theme.spacing(2, 0),
   alignContent: 'start',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${theme.palette.divider}`,

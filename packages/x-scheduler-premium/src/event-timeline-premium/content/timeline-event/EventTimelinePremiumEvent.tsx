@@ -20,6 +20,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
   color: 'var(--event-on-surface-subtle-primary)',
   padding: theme.spacing(0.5, 1),
   position: 'relative',
+  boxSizing: 'border-box',
   width: 'var(--width)',
   marginLeft: 'var(--x-position)',
   gridRow: 'var(--row-index, 1)',
