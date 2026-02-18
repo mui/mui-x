@@ -197,14 +197,13 @@ describe('<DateField /> - Editing', () => {
   });
 
   describeAdapters('Digit editing', DateField, ({ adapter, testFieldChange, renderWithProps }) => {
-    it('should set the day to the digit pressed when no digit no value is provided', () => {
+    it('should set the day to the digit pressed when no digit no value is provided', () =>
       testFieldChange({
         format: adapter.formats.dayOfMonth,
         keyStrokes: [{ value: '1', expected: '01' }],
-      });
-    });
+      }));
 
-    it('should concatenate the digit pressed to the current section value if the output is valid (digit format)', () => {
+    it('should concatenate the digit pressed to the current section value if the output is valid (digit format)', () =>
       testFieldChange({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date('2022-06-01'),
@@ -212,18 +211,16 @@ describe('<DateField /> - Editing', () => {
           { value: '1', expected: '01' },
           { value: '1', expected: '11' },
         ],
-      });
-    });
+      }));
 
-    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (digit format)', () => {
+    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (digit format)', () =>
       testFieldChange({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date('2022-06-04'),
         keyStrokes: [{ value: '1', expected: '01' }],
-      });
-    });
+      }));
 
-    it('should concatenate the digit pressed to the current section value if the output is valid (letter format)', () => {
+    it('should concatenate the digit pressed to the current section value if the output is valid (letter format)', () =>
       testFieldChange({
         format: adapter.formats.month,
         defaultValue: adapter.date('2022-02-01'),
@@ -231,18 +228,16 @@ describe('<DateField /> - Editing', () => {
           { value: '1', expected: 'January' },
           { value: '1', expected: 'November' },
         ],
-      });
-    });
+      }));
 
-    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (letter format)', () => {
+    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (letter format)', () =>
       testFieldChange({
         format: adapter.formats.month,
         defaultValue: adapter.date('2022-06-01'),
         keyStrokes: [{ value: '1', expected: 'January' }],
-      });
-    });
+      }));
 
-    it('should support 2-digits year format', () => {
+    it('should support 2-digits year format', () =>
       testFieldChange({
         // This format is not present in any of the adapter formats
         format: adapter.lib.includes('moment') || adapter.lib.includes('dayjs') ? 'YY' : 'yy',
@@ -256,10 +251,9 @@ describe('<DateField /> - Editing', () => {
           // 3rd year: 00
           { value: '0', expected: '00' },
         ],
-      });
-    });
+      }));
 
-    it('should support 2-digits year format when a value is provided', () => {
+    it('should support 2-digits year format when a value is provided', () =>
       testFieldChange({
         // This format is not present in any of the adapter formats
         format: adapter.lib.includes('moment') || adapter.lib.includes('dayjs') ? 'YY' : 'yy',
@@ -269,10 +263,9 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '22' },
           { value: '3', expected: '03' },
         ],
-      });
-    });
+      }));
 
-    it('should support 4-digits year format', () => {
+    it('should support 4-digits year format', () =>
       testFieldChange({
         format: adapter.formats.year,
         keyStrokes: [
@@ -285,10 +278,9 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '0202' },
           { value: '3', expected: '2023' },
         ],
-      });
-    });
+      }));
 
-    it('should support 4-digits year format when a value is provided', () => {
+    it('should support 4-digits year format when a value is provided', () =>
       testFieldChange({
         format: adapter.formats.year,
         defaultValue: adapter.date('2022-06-04'),
@@ -302,10 +294,9 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '0202' },
           { value: '3', expected: '2023' },
         ],
-      });
-    });
+      }));
 
-    it('should support month without trailing zeros format', () => {
+    it('should support month without trailing zeros format', () =>
       testFieldChange({
         format: 'M', // This format is not present in any of the adapter formats
         keyStrokes: [
@@ -314,11 +305,10 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '2' },
         ],
         shouldRespectLeadingZeros: true,
-      });
-    });
+      }));
 
     // Luxon doesn't have any day format with a letter suffix
-    it.skipIf(adapter.lib === 'luxon')('should support day with letter suffix', () => {
+    it.skipIf(adapter.lib === 'luxon')('should support day with letter suffix', () =>
       testFieldChange({
         format: adapter.lib === 'date-fns' ? 'do' : 'Do',
         keyStrokes: [
@@ -326,10 +316,9 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '12th' },
           { value: '2', expected: '2nd' },
         ],
-      });
-    });
+      }));
 
-    it('should respect leading zeros when shouldRespectLeadingZeros = true', () => {
+    it('should respect leading zeros when shouldRespectLeadingZeros = true', () =>
       testFieldChange({
         format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: true,
@@ -338,10 +327,9 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '12' },
           { value: '2', expected: '2' },
         ],
-      });
-    });
+      }));
 
-    it('should not respect leading zeros when shouldRespectLeadingZeros = false', () => {
+    it('should not respect leading zeros when shouldRespectLeadingZeros = false', () =>
       testFieldChange({
         format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: false,
@@ -350,8 +338,7 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '12' },
           { value: '2', expected: '02' },
         ],
-      });
-    });
+      }));
 
     it('should allow to type the date 29th of February for leap years', async () => {
       // Test with accessible DOM structure
@@ -416,22 +403,20 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, '02/29/1988');
     });
 
-    it('should not edit when props.readOnly = true and no value is provided', () => {
+    it('should not edit when props.readOnly = true and no value is provided', () =>
       testFieldChange({
         format: adapter.formats.year,
         readOnly: true,
         keyStrokes: [{ value: '1', expected: 'YYYY' }],
-      });
-    });
+      }));
 
-    it('should not edit value when props.readOnly = true and a value is provided', () => {
+    it('should not edit value when props.readOnly = true and a value is provided', () =>
       testFieldChange({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         readOnly: true,
         keyStrokes: [{ value: '1', expected: '2022' }],
-      });
-    });
+      }));
 
     it('should reset the select "all" state when typing a digit', async () => {
       // Test with accessible DOM structure
@@ -513,22 +498,20 @@ describe('<DateField /> - Editing', () => {
     'Letter editing',
     DateField,
     ({ adapter, testFieldChange, testFieldKeyPress, renderWithProps }) => {
-      it('should select the first matching month with no previous query and no value is provided (letter format)', () => {
+      it('should select the first matching month with no previous query and no value is provided (letter format)', () =>
         testFieldChange({
           format: adapter.formats.month,
           keyStrokes: [{ value: 'm', expected: 'March' }],
-        });
-      });
+        }));
 
-      it('should select the first matching month with no previous query and a value is provided (letter format)', () => {
+      it('should select the first matching month with no previous query and a value is provided (letter format)', () =>
         testFieldChange({
           format: adapter.formats.month,
           defaultValue: adapter.date(),
           keyStrokes: [{ value: 'm', expected: 'March' }],
-        });
-      });
+        }));
 
-      it('should use the previously typed letters as long as it matches at least one month (letter format)', () => {
+      it('should use the previously typed letters as long as it matches at least one month (letter format)', () =>
         testFieldChange({
           format: adapter.formats.month,
           keyStrokes: [
@@ -541,25 +524,22 @@ describe('<DateField /> - Editing', () => {
             // Current query: "JULO" => 0 match => fallback set the query to "O"
             { value: 'o', expected: 'October' },
           ],
-        });
-      });
+        }));
 
-      it('should select the first matching month with no previous query and no value is provided (digit format)', () => {
+      it('should select the first matching month with no previous query and no value is provided (digit format)', () =>
         testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
           keyStrokes: [{ value: 'm', expected: '03' }],
-        });
-      });
+        }));
 
-      it('should select the first matching month with no previous query and a value is provided (digit format)', () => {
+      it('should select the first matching month with no previous query and a value is provided (digit format)', () =>
         testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
           defaultValue: adapter.date(),
           keyStrokes: [{ value: 'm', expected: '03' }],
-        });
-      });
+        }));
 
-      it('should use the previously typed letters as long as it matches at least one month (digit format)', () => {
+      it('should use the previously typed letters as long as it matches at least one month (digit format)', () =>
         testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
           keyStrokes: [
@@ -572,27 +552,24 @@ describe('<DateField /> - Editing', () => {
             // Current query: "JULO" => 0 match => fallback set the query to "O"
             { value: 'o', expected: '10' },
           ],
-        });
-      });
+        }));
 
-      it('should not edit when props.readOnly = true and no value is provided (letter)', () => {
+      it('should not edit when props.readOnly = true and no value is provided (letter)', () =>
         testFieldKeyPress({
           format: adapter.formats.month,
           readOnly: true,
           key: '1',
           expectedValue: 'MMMM',
-        });
-      });
+        }));
 
-      it('should not edit value when props.readOnly = true and a value is provided (letter)', () => {
+      it('should not edit value when props.readOnly = true and a value is provided (letter)', () =>
         testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date(),
           readOnly: true,
           key: 'd',
           expectedValue: 'June',
-        });
-      });
+        }));
 
       it('should reset the select "all" state when typing a letter', async () => {
         // Test with accessible DOM structure
@@ -775,7 +752,7 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV6(input, 'MMMM YYYY');
       });
 
-      it('should not keep query after typing again on a cleared section (Backspace)', () => {
+      it('should not keep query after typing again on a cleared section (Backspace)', () =>
         testFieldChange({
           format: adapter.formats.year,
           keyStrokes: [
@@ -783,22 +760,20 @@ describe('<DateField /> - Editing', () => {
             { value: '', expected: 'YYYY' },
             { value: '2', expected: '0002' },
           ],
-        });
-      });
+        }));
 
-      it('should not clear the sections when props.readOnly = true (Backspace)', () => {
+      it('should not clear the sections when props.readOnly = true (Backspace)', () =>
         testFieldChange({
           format: adapter.formats.year,
           defaultValue: adapter.date(),
           readOnly: true,
           keyStrokes: [{ value: '', expected: '2022' }],
-        });
-      });
+        }));
 
-      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', () => {
+      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', async () => {
         const onChange = spy();
 
-        testFieldChange({
+        await testFieldChange({
           format: adapter.formats.year,
           onChange,
           keyStrokes: [{ value: '', expected: 'YYYY' }],
@@ -851,10 +826,10 @@ describe('<DateField /> - Editing', () => {
         expect(onChangeV6.callCount).to.equal(1);
       });
 
-      it('should not call `onChange` if the section is already empty (Backspace)', () => {
+      it('should not call `onChange` if the section is already empty (Backspace)', async () => {
         const onChange = spy();
 
-        testFieldChange({
+        await testFieldChange({
           format: adapter.formats.year,
           defaultValue: adapter.date(),
           keyStrokes: [
