@@ -40,6 +40,7 @@ export function usePlaceholderInRow(
       id: originalEventId ?? 'occurrence-placeholder',
       key: 'occurrence-placeholder',
       title: originalEvent ? originalEvent.title : '',
+      resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
       displayTimezone: {
         start: startProcessed,
         end: endProcessed,
