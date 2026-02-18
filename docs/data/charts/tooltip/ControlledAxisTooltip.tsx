@@ -1,41 +1,29 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import { BarItemIdentifier } from '@mui/x-charts/models';
+import { AxisItemIdentifier } from '@mui/x-charts/models';
 
-export default function ControlledTooltip() {
-  const [tooltipItem, setTooltipItem] = React.useState<BarItemIdentifier | null>({
-    type: 'bar',
-    seriesId: 'A',
-    dataIndex: 0,
-  });
+export default function ControlledAxisTooltip() {
+  const [tooltipAxis, setTooltipAxis] = React.useState<AxisItemIdentifier[]>([
+    {
+      axisId: 'x-axis',
+      dataIndex: 0,
+    },
+  ]);
 
-  const handleTooltipSeries = (event: any, newTooltipSeries: string) => {
-    if (newTooltipSeries !== null) {
-      setTooltipItem((prev) => ({
-        type: 'bar',
-        dataIndex: 0,
-        ...prev,
-        seriesId: newTooltipSeries,
-      }));
-    }
-  };
-
-  const handleTooltipItem = (event: any) => {
-    setTooltipItem((prev) => ({
-      type: 'bar',
-      seriesId: 'A',
-      ...prev,
-      dataIndex: Number(event.target.value),
-    }));
+  const handleTooltipAxis = (event: any) => {
+    setTooltipAxis([
+      {
+        axisId: 'x-axis',
+        dataIndex: Number(event.target.value),
+      },
+    ]);
   };
 
   return (
@@ -46,26 +34,13 @@ export default function ControlledTooltip() {
     >
       <Box sx={{ flexGrow: 1 }}>
         <Stack spacing={2} alignItems={'center'}>
-          <ToggleButtonGroup
-            value={tooltipItem?.seriesId ?? null}
-            exclusive
-            onChange={handleTooltipSeries}
-            aria-label="highlighted series"
-            fullWidth
-          >
-            {['A', 'B'].map((type) => (
-              <ToggleButton key={type} value={type}>
-                Series {type}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
           <FormControl>
             <FormLabel id="item-id-radio-group">Item ID</FormLabel>
             <RadioGroup
               aria-labelledby="item-id-radio-group"
               name="radio-buttons-group"
-              value={tooltipItem?.dataIndex ?? null}
-              onChange={handleTooltipItem}
+              value={tooltipAxis?.[0]?.dataIndex ?? null}
+              onChange={handleTooltipAxis}
               row
             >
               <FormControlLabel value="0" control={<Radio />} label="0" />
@@ -78,9 +53,11 @@ export default function ControlledTooltip() {
         </Stack>
         <BarChart
           {...barChartsProps}
-          slotProps={{ tooltip: { trigger: 'item' } }}
-          tooltipItem={tooltipItem}
-          onTooltipItemChange={setTooltipItem}
+          slotProps={{
+            tooltip: { trigger: 'axis', anchor: 'chart', position: 'bottom' },
+          }}
+          tooltipAxis={tooltipAxis}
+          onTooltipAxisChange={setTooltipAxis}
         />
       </Box>
     </Stack>
@@ -102,5 +79,6 @@ const barChartsProps: BarChartProps = {
       highlightScope: { highlight: 'item', fade: 'global' },
     },
   ],
+  xAxis: [{ id: 'x-axis', scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }],
   height: 250,
 };
