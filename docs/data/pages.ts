@@ -836,7 +836,7 @@ const pages: MuiPage[] = [
         pathname: '/x/migration-v9',
         subheader: 'Upgrade to v9',
         children: [
-          // { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
+          { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
           // {
           //   pathname: '/x/migration/migration-pickers-v8',
           //   title: 'Breaking changes: Date and Time Pickers',
@@ -849,13 +849,6 @@ const pages: MuiPage[] = [
           //   pathname: '/x/migration/migration-tree-view-v8',
           //   title: 'Breaking changes: Tree View',
           // },
-        ],
-      },
-      {
-        pathname: '/x/migration-v9',
-        subheader: 'Upgrade to v9',
-        children: [
-          { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
         ],
       },
       {
