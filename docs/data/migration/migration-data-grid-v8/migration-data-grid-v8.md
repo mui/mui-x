@@ -39,7 +39,7 @@ In `package.json`, change the version of the Data Grid package to `next`.
   To disable the pagination formatting, provide the key and value to `localeText` prop:
 
   ```diff
-  <DataGrid
+   <DataGrid
   +  localeText={{
   +    paginationDisplayedRows: ({ from, to, count, estimated }) => {
   +      if (!estimated) {
@@ -52,5 +52,5 @@ In `package.json`, change the version of the Data Grid package to `next`.
   +      return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
   +    }
   +  }}
-  />
+   />
   ```
