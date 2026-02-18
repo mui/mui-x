@@ -144,7 +144,7 @@ function EventRowContent({
 }) {
   const store = useEventTimelinePremiumStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
-  const rowRef = React.useRef<HTMLDivElement | null>(null);
+  const placeholderRef = React.useRef<HTMLDivElement | null>(null);
 
   const isCreatingAnEvent = useStore(
     store,
@@ -153,14 +153,14 @@ function EventRowContent({
   );
 
   React.useEffect(() => {
-    if (!isCreatingAnEvent || !placeholder || !rowRef.current) {
+    if (!isCreatingAnEvent || !placeholder || !placeholderRef.current) {
       return;
     }
-    startEditing(rowRef, placeholder);
+    startEditing(placeholderRef, placeholder);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
-    <div ref={rowRef} style={{ display: 'contents' }}>
+    <React.Fragment>
       {occurrences.map((occurrence) => (
         <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
           <EventTimelinePremiumEvent
@@ -172,12 +172,13 @@ function EventRowContent({
       ))}
       {placeholder != null && (
         <EventTimelinePremiumEvent
+          ref={placeholderRef}
           occurrence={placeholder}
           ariaLabelledBy={`EventTimelinePremiumTitleCell-${placeholder.resource}`}
           variant="placeholder"
         />
       )}
-    </div>
+    </React.Fragment>
   );
 }
 
