@@ -67,7 +67,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
-  filterPanelColumns: 'Columns',
+  filterPanelColumns: 'Column',
   filterPanelInputLabel: 'Value',
   filterPanelInputPlaceholder: 'Filter value',
 
