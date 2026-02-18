@@ -5,9 +5,10 @@ import { readPrMetrics } from './readPrMetrics';
 async function main() {
   const benchmarksDir = process.env.BENCHMARKS_DIR || './benchmarks';
   const failThreshold = parseFloat(process.env.FAIL_THRESHOLD || '5');
+  const baseSha = process.env.BASE_SHA || undefined;
 
   const prMetricsByFile = await readPrMetrics(benchmarksDir);
-  const masterMetricsByFile = await fetchMasterMetrics();
+  const masterMetricsByFile = await fetchMasterMetrics(baseSha);
   const { body, failedBenchmarks } = generateComparisonBody(
     prMetricsByFile,
     masterMetricsByFile,

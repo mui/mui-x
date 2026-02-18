@@ -1,11 +1,9 @@
-import type { Trace } from './types';
+import type { BenchmarkReport } from './types';
 
-export function extractTotalDuration(trace: Trace): number {
+export function extractTotalDuration(report: BenchmarkReport): number {
   let totalDuration = 0;
-  for (const event of trace.traceEvents) {
-    if (event.ph === 'X') {
-      totalDuration += event.dur ?? 0;
-    }
+  for (const render of report.renders) {
+    totalDuration += render.actualDuration;
   }
   return totalDuration;
 }

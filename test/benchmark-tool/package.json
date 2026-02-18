@@ -5,7 +5,8 @@
     "build": "next build",
     "start": "next start -p 5002",
     "benchmark": "playwright test",
-    "ci:compare": "tsx ci-scripts/compare-benchmarks.ts"
+    "ci:compare": "tsx ci-scripts/compare-benchmarks.ts",
+    "ci:aggregate": "tsx ci-scripts/aggregate-benchmarks.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",

@@ -25,40 +25,37 @@ function getEmoji(diffPercent: number, failThreshold: number): string {
   return '➖';
 }
 
-function formatMs(microseconds: number): string {
-  const ms = microseconds / 1000;
+function formatMs(ms: number): string {
   return `${ms.toFixed(2)} ms`;
 }
 
 export function generateComparisonBody(
-  prMetricsByFile: Record<string, number>,
-  masterMetricsByFile: Record<string, number>,
+  prMetrics: Record<string, number>,
+  masterMetrics: Record<string, number>,
   failThreshold: number,
 ): ComparisonResult {
-  const allFiles = [
-    ...new Set([...Object.keys(prMetricsByFile), ...Object.keys(masterMetricsByFile)]),
+  const allBenchmarks = [
+    ...new Set([...Object.keys(prMetrics), ...Object.keys(masterMetrics)]),
   ].sort();
-  const hasMasterMetrics = Object.keys(masterMetricsByFile).length > 0;
+  const hasMasterMetrics = Object.keys(masterMetrics).length > 0;
   const failedBenchmarks: FailedBenchmark[] = [];
 
   let body: string;
 
   if (hasMasterMetrics) {
-    const fileRows = allFiles
-      .map((file) => {
-        const prDuration = prMetricsByFile[file] || 0;
-        const masterDuration = masterMetricsByFile[file] || 0;
+    const rows = allBenchmarks
+      .map((name) => {
+        const prDuration = prMetrics[name] || 0;
+        const masterDuration = masterMetrics[name] || 0;
         const diff = prDuration - masterDuration;
         const diffPercent = calculateDiffPercent(diff, masterDuration, prDuration);
         const emoji = getEmoji(diffPercent.num, failThreshold);
-        const benchmarkName = file.replace('.json', '');
 
         if (diffPercent.num > failThreshold) {
-          failedBenchmarks.push({ name: benchmarkName, diff: diffPercent.str });
+          failedBenchmarks.push({ name, diff: diffPercent.str });
         }
 
-        const diffMs = diff / 1000;
-        return `| ${benchmarkName} | ${formatMs(masterDuration)} | ${formatMs(prDuration)} | ${emoji} ${diffMs > 0 ? '+' : ''}${diffMs.toFixed(2)} ms (${diffPercent.str}%) |`;
+        return `| ${name} | ${formatMs(masterDuration)} | ${formatMs(prDuration)} | ${emoji} ${diff > 0 ? '+' : ''}${diff.toFixed(2)} ms (${diffPercent.str}%) |`;
       })
       .join('\n');
 
@@ -75,16 +72,15 @@ export function generateComparisonBody(
 ${statusSection}
 | Benchmark | Master | PR | Diff |
 |-----------|--------|-----|------|
-${fileRows}
+${rows}
 
 > Fail threshold: **${failThreshold}%**
 `;
   } else {
-    const fileRows = allFiles
-      .map((file) => {
-        const prDuration = prMetricsByFile[file] || 0;
-        const benchmarkName = file.replace('.json', '');
-        return `| ${benchmarkName} | ${formatMs(prDuration)} |`;
+    const rows = allBenchmarks
+      .map((name) => {
+        const prDuration = prMetrics[name] || 0;
+        return `| ${name} | ${formatMs(prDuration)} |`;
       })
       .join('\n');
 
@@ -94,7 +90,7 @@ ${fileRows}
 
 | Benchmark | PR |
 |-----------|-----|
-${fileRows}
+${rows}
 `;
   }
 

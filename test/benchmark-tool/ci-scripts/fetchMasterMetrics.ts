@@ -1,71 +1,26 @@
+import type { AggregatedResults } from './types';
+
 const DATA_REPO_BASE =
-  'https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/benchmarks/monthly';
+  'https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/benchmarks';
 
-function getMonthStrings(): [string, string] {
-  const now = new Date();
-  const current = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-
-  const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-  const previous = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}`;
-
-  return [current, previous];
-}
-
-async function fetchLastDuration(benchmarkName: string): Promise<number | null> {
-  const [currentMonth, previousMonth] = getMonthStrings();
-
-  for (const month of [currentMonth, previousMonth]) {
-    const url = `${DATA_REPO_BASE}/${benchmarkName}/${month}.jsonl`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      continue;
-    }
-
-    const text = (await response.text()).trim();
-    if (!text) {
-      continue;
-    }
-
-    const lines = text.split('\n');
-    const lastLine = lines[lines.length - 1];
-    const entry = JSON.parse(lastLine) as { duration: number };
-    return entry.duration;
+export async function fetchMasterMetrics(baseSha?: string): Promise<Record<string, number>> {
+  if (!baseSha) {
+    console.warn('No base SHA provided, skipping baseline fetch');
+    return {};
   }
 
-  return null;
-}
+  const url = `${DATA_REPO_BASE}/commits/${baseSha}/results.json`;
+  const response = await fetch(url);
 
-export async function fetchMasterMetrics(): Promise<Record<string, number>> {
-  const masterMetricsByFile: Record<string, number> = {};
-
-  // Discover benchmark names from the PR results directory
-  const fs = await import('node:fs/promises');
-  const path = await import('node:path');
-  const benchmarksDir = process.env.BENCHMARKS_DIR || './benchmarks';
-
-  let jsonFiles: string[];
-  try {
-    const allFiles = await fs.readdir(benchmarksDir);
-    jsonFiles = allFiles.filter((f) => f.endsWith('.json'));
-  } catch {
-    console.warn('Could not read benchmarks directory to discover benchmark names');
-    return masterMetricsByFile;
+  if (!response.ok) {
+    console.warn(`No baseline data found for commit ${baseSha}`);
+    return {};
   }
 
-  const results = await Promise.all(
-    jsonFiles.map(async (file) => {
-      const benchmarkName = path.basename(file, '.json');
-      const duration = await fetchLastDuration(benchmarkName);
-      return { file, duration };
-    }),
-  );
-
-  for (const result of results) {
-    if (result.duration !== null) {
-      masterMetricsByFile[result.file] = result.duration;
-    }
+  const results = (await response.json()) as AggregatedResults;
+  const metrics: Record<string, number> = {};
+  for (const [name, benchmark] of Object.entries(results.benchmarks)) {
+    metrics[name] = benchmark.duration;
   }
-
-  return masterMetricsByFile;
+  return metrics;
 }

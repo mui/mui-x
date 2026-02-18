@@ -44,15 +44,18 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Read PR number
+      - name: Read PR metadata
         id: pr
-        run: echo "number=$(cat ./pr-benchmarks/pr-number.txt)" >> $GITHUB_OUTPUT
+        run: |
+          echo "number=$(node -e "process.stdout.write(String(require('./pr-benchmarks/pr-metadata.json').prNumber))")" >> $GITHUB_OUTPUT
+          echo "base_sha=$(node -e "process.stdout.write(require('./pr-benchmarks/pr-metadata.json').mergeBaseSha)")" >> $GITHUB_OUTPUT
 
       - name: Compare benchmarks
         working-directory: test/benchmark-tool
         env:
           BENCHMARKS_DIR: ${{ github.workspace }}/pr-benchmarks
           FAIL_THRESHOLD: ${{ env.BENCHMARK_FAIL_THRESHOLD }}
+          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
         run: pnpm --silent ci:compare > comparison-result.json
 
       - name: Post comparison comment

@@ -1,10 +1,18 @@
-export interface TraceEvent {
-  ph: string;
-  dur?: number;
+export interface BenchmarkReport {
+  metadata?: { iterations: number };
+  renders: Array<{ actualDuration: number }>;
 }
 
-export interface Trace {
-  traceEvents: TraceEvent[];
+export interface BenchmarkResult {
+  duration: number;
+  renderCount: number;
+  iterations: number;
+}
+
+export interface AggregatedResults {
+  commit: string;
+  timestamp: number;
+  benchmarks: Record<string, BenchmarkResult>;
 }
 
 export interface FailedBenchmark {

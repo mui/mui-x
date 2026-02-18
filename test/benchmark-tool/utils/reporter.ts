@@ -1,12 +1,26 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
-import type { TraceEvent, TraceFileObjectFormat } from './reporter-types';
 import type { RenderEvent } from './Profiler';
 import { routeToFileName } from './utils';
 
 const benchmarksDir = path.resolve(__dirname, '../benchmarks');
 
-export async function saveReport(report: TraceFileObjectFormat, route: string) {
+export interface BenchmarkRender {
+  id: string;
+  name?: string;
+  phase: string;
+  actualDuration: number;
+  startTime: number;
+  stdDev?: number;
+  coefficientOfVariation?: number;
+}
+
+export interface BenchmarkReport {
+  metadata?: { iterations: number };
+  renders: BenchmarkRender[];
+}
+
+export async function saveReport(report: BenchmarkReport, route: string) {
   // Ensure benchmarks directory exists
   await fs.mkdir(benchmarksDir, { recursive: true });
 
@@ -32,9 +46,9 @@ function calculateStdDev(values: number[], mean: number): number {
   return Math.sqrt(squaredDiffs.reduce((sum, v) => sum + v, 0) / values.length);
 }
 
-export function generateReportFromIterations(iterations: RenderEvent[][]): TraceFileObjectFormat {
+export function generateReportFromIterations(iterations: RenderEvent[][]): BenchmarkReport {
   if (iterations.length === 0) {
-    return { traceEvents: [] };
+    return { renders: [] };
   }
 
   const iterationCount = iterations.length;
@@ -66,7 +80,7 @@ export function generateReportFromIterations(iterations: RenderEvent[][]): Trace
 
   // Merge events by calculating mean duration and standard deviation
   // Calculate mean relative start times to preserve gaps between events
-  const mergedEvents: RenderEvent[] = firstIteration.map((event, index) => {
+  const mergedRenders: BenchmarkRender[] = firstIteration.map((event, index) => {
     const durations = iterations.map((iteration) => iteration[index].actualDuration);
     const meanDuration = calculateMean(durations);
     const stdDev = calculateStdDev(durations, meanDuration);
@@ -88,7 +102,9 @@ export function generateReportFromIterations(iterations: RenderEvent[][]): Trace
     }
 
     return {
-      ...event,
+      id: event.id,
+      name: event.name,
+      phase: event.phase,
       actualDuration: meanDuration,
       startTime: meanStartTime,
       stdDev,
@@ -100,49 +116,24 @@ export function generateReportFromIterations(iterations: RenderEvent[][]): Trace
     metadata: {
       iterations: iterationCount,
     },
-    traceEvents: mergedEvents.map(mapRenderEventToTraceEvent),
+    renders: mergedRenders,
   };
 }
 
-export function generateReport(events: RenderEvent[]): TraceFileObjectFormat {
+export function generateReport(events: RenderEvent[]): BenchmarkReport {
   if (events.length === 0) {
-    return { traceEvents: [] };
+    return { renders: [] };
   }
 
   // Make timestamps relative to the first event's start time
   const firstStartTime = events[0].startTime;
   return {
-    traceEvents: events.map((event) =>
-      mapRenderEventToTraceEvent({
-        ...event,
-        startTime: event.startTime - firstStartTime,
-      }),
-    ),
-  };
-}
-
-function mapRenderEventToTraceEvent(
-  event: RenderEvent & {
-    stdDev?: number;
-    coefficientOfVariation?: number;
-  },
-): TraceEvent {
-  return {
-    name: 'React Render',
-    cat: 'react',
-    ph: 'X',
-    ts: Math.round(event.startTime * 1000), // Convert ms to µs
-    dur: Math.round(event.actualDuration * 1000), // Convert ms to µs
-    pid: 0,
-    tid: 0,
-    args: {
+    renders: events.map((event) => ({
       id: event.id,
       name: event.name,
       phase: event.phase,
-      ...(event.stdDev !== undefined && { stdDev: event.stdDev }),
-      ...(event.coefficientOfVariation !== undefined && {
-        coefficientOfVariation: event.coefficientOfVariation,
-      }),
-    },
+      actualDuration: event.actualDuration,
+      startTime: event.startTime - firstStartTime,
+    })),
   };
 }

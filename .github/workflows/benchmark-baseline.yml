@@ -39,6 +39,11 @@ jobs:
       - name: Run performance benchmarks
         run: pnpm -r run benchmark
 
+      - name: Aggregate benchmark results
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: pnpm -F benchmark-tool ci:aggregate
+
       - name: Checkout data repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -58,24 +63,23 @@ jobs:
           RESULTS_DIR=test/benchmark-tool/benchmarks
           COMMITS_DIR=data-repo/benchmarks/commits/$SHA
 
-          # Copy per-SHA files (one file per benchmark, unmodified)
-          mkdir -p "$COMMITS_DIR"
-          cp $RESULTS_DIR/*.json "$COMMITS_DIR/"
+          # Copy aggregated results
+          mkdir -p "$COMMITS_DIR/data"
+          cp "$RESULTS_DIR/results.json" "$COMMITS_DIR/results.json"
 
-          # Append to monthly JSONL (one file per benchmark type)
+          # Copy raw benchmark data files
           for f in $RESULTS_DIR/*.json; do
-            NAME=$(basename "$f" .json)
-            MONTHLY_DIR="data-repo/benchmarks/monthly/$NAME"
-            mkdir -p "$MONTHLY_DIR"
-
-            # Extract total duration and append as JSONL line
-            DUR=$(node -e "
-              const t = require('./$f');
-              let d=0; for(const e of t.traceEvents||[]){if(e.ph==='X')d+=e.dur||0;}
-              process.stdout.write(String(d));
-            ")
-            echo "{\"commit\":\"$SHA\",\"date\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"duration\":$DUR}" >> "$MONTHLY_DIR/$MONTH.jsonl"
+            NAME=$(basename "$f")
+            if [ "$NAME" != "results.json" ]; then
+              cp "$f" "$COMMITS_DIR/data/$NAME"
+            fi
           done
+
+          # Append to monthly JSONL
+          MONTHLY_DIR="data-repo/benchmarks/monthly"
+          mkdir -p "$MONTHLY_DIR"
+          cat "$RESULTS_DIR/results.json" | tr -d '\n' >> "$MONTHLY_DIR/$MONTH.jsonl"
+          echo "" >> "$MONTHLY_DIR/$MONTH.jsonl"
 
       - name: Commit and push
         working-directory: data-repo
