@@ -13,7 +13,7 @@
     "./models": "./src/models/index.ts",
     "./use-event-calendar-premium": "./src/use-event-calendar-premium/index.ts",
     "./use-event-calendar-premium-store-context": "./src/use-event-calendar-premium-store-context/index.ts",
-    "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
+    "./timeline-grid": "./src/timeline-grid/index.ts",
     "./event-timeline-premium-provider": "./src/event-timeline-premium-provider/index.ts",
     "./event-timeline-premium-selectors": "./src/event-timeline-premium-selectors/index.ts",
     "./use-event-timeline-premium": "./src/use-event-timeline-premium/index.ts",

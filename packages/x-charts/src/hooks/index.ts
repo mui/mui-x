@@ -33,3 +33,4 @@ export {
 } from './useAxisCoordinates';
 export * from './useAxisTicks';
 export { type TickItem } from './useTicks';
+export * from './getValueToPositionMapper';
