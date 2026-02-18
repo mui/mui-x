@@ -80,7 +80,9 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
             )}
             <MonthLabel
               className={classes.monthsHeaderMonthLabel}
-              style={{ '--days-in-month': adapter.getDaysInMonth(month.value) } as React.CSSProperties}
+              style={
+                { '--days-in-month': adapter.getDaysInMonth(month.value) } as React.CSSProperties
+              }
             >
               {adapter.format(month.value, 'month3Letters')}
             </MonthLabel>
