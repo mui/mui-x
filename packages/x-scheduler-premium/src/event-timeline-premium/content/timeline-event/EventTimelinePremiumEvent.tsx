@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
-import { EventTimelinePremium } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
+import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
@@ -20,6 +20,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
   color: 'var(--event-on-surface-subtle-primary)',
   padding: theme.spacing(0.5, 1),
   position: 'relative',
+  boxSizing: 'border-box',
   width: 'var(--width)',
   marginLeft: 'var(--x-position)',
   gridRow: 'var(--row-index, 1)',
@@ -36,11 +37,11 @@ const EventTimelinePremiumEventRoot = styled('div', {
   '&::before': {
     content: '""',
     position: 'absolute',
-    top: theme.spacing(0.5),
-    bottom: theme.spacing(0.5),
+    top: 0,
+    bottom: 0,
     left: 0,
     width: 3,
-    borderRadius: 2,
+    borderRadius: '4px 0 0 4px',
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
@@ -60,7 +61,7 @@ const EventTimelinePremiumEventLinesClamp = styled('span', {
   overflowWrap: 'break-word',
 });
 
-const EventTimelinePremiumEventResizeHandler = styled(EventTimelinePremium.EventResizeHandler, {
+const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHandler, {
   name: 'MuiEventTimeline',
   slot: 'EventResizeHandler',
 })({
@@ -120,7 +121,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   if (variant === 'placeholder') {
     return (
-      <EventTimelinePremium.EventPlaceholder
+      <TimelineGrid.EventPlaceholder
         render={<EventTimelinePremiumEventRoot />}
         aria-hidden={true}
         {...sharedProps}
@@ -129,12 +130,12 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
           {occurrence.title}
         </EventTimelinePremiumEventLinesClamp>
-      </EventTimelinePremium.EventPlaceholder>
+      </TimelineGrid.EventPlaceholder>
     );
   }
 
   return (
-    <EventTimelinePremium.Event
+    <TimelineGrid.Event
       render={<EventTimelinePremiumEventRoot />}
       isDraggable={isDraggable}
       eventId={occurrence.id}
@@ -155,6 +156,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       {isEndResizable && (
         <EventTimelinePremiumEventResizeHandler side="end" className={classes.eventResizeHandler} />
       )}
-    </EventTimelinePremium.Event>
+    </TimelineGrid.Event>
   );
 });
