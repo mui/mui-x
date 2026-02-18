@@ -105,13 +105,9 @@ describe('<DataGrid /> - Rows', () => {
           <TestDataGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
         </div>,
       );
-      await act(async () =>
-        apiRef.current?.api.rows.updateRows([{ id: 1, _action: 'delete' } as any]),
-      );
+      await act(async () => apiRef.current?.api.rows.updateRows([{ id: 1, _action: 'delete' }]));
       await act(async () => apiRef.current?.api.rows.updateRows([{ id: 0, brand: 'Apple' }]));
-      await act(async () =>
-        apiRef.current?.api.rows.updateRows([{ id: 2, _action: 'delete' } as any]),
-      );
+      await act(async () => apiRef.current?.api.rows.updateRows([{ id: 2, _action: 'delete' }]));
       await act(async () => apiRef.current?.api.rows.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });

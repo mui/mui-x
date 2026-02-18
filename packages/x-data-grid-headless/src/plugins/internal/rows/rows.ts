@@ -12,6 +12,7 @@ import type {
   RowsPluginState,
   RowsPluginOptions,
   RowsPluginApi,
+  RowsApi,
 } from './types';
 
 type RowsPlugin = Plugin<
@@ -86,8 +87,8 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       [params.getRowId, params.rowCount, store, rowIdsPipeline],
     );
 
-    const updateRows = React.useCallback(
-      (updates: Partial<GridRowModel>[]) => {
+    const updateRows = React.useCallback<RowsApi['updateRows']>(
+      (updates) => {
         const { dataRowIds, dataRowIdToModelLookup, tree, treeDepths } = store.state.rows;
 
         const newDataRowIds = [...dataRowIds];
