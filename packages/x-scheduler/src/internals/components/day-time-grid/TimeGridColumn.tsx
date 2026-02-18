@@ -3,7 +3,6 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
@@ -13,7 +12,6 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-he
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventSkeleton } from '../event-skeleton';
-import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
@@ -122,7 +120,6 @@ function ColumnInteractiveLayer({
   maxIndex: number;
 }) {
   // Context hooks
-  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const { classes } = useEventCalendarStyledContext();
@@ -140,28 +137,6 @@ function ColumnInteractiveLayer({
   const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
-  // Feature hooks
-  const getDateFromPosition = CalendarGrid.useGetDateFromPositionInColumn({
-    elementRef: columnRef,
-    snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
-  });
-
-  const eventCreationProps = useEventCreationProps(({ event, creationConfig }) => {
-    const startDateFromPosition = getDateFromPosition(event.clientY);
-    const draftRange = {
-      start: startDateFromPosition,
-      end: adapter.addMinutes(startDateFromPosition, creationConfig.duration),
-    };
-
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      surfaceType: 'time-grid',
-      start: draftRange.start,
-      end: draftRange.end,
-      resourceId: null,
-    });
-  });
-
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
       return;
@@ -173,7 +148,6 @@ function ColumnInteractiveLayer({
     <DayTimeGridColumnInteractiveLayer
       className={classes.dayTimeGridColumnInteractiveLayer}
       ref={columnRef}
-      {...eventCreationProps}
     >
       {isLoading && <EventSkeleton data-variant="time-column" />}
       {!isLoading &&

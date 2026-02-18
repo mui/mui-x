@@ -9,7 +9,6 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayGridEvent } from '../event';
-import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 import { EventDialogTrigger } from '../event-dialog';
 import { useEventDialogContext } from '../event-dialog/EventDialog';
 import { EventSkeleton } from '../event-skeleton';
@@ -71,17 +70,6 @@ export function DayGridCell(props: DayGridCellProps) {
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
-  // Feature hooks
-  const eventCreationProps = useEventCreationProps(() => {
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      surfaceType: 'day-grid',
-      start: adapter.startOfDay(day.value),
-      end: adapter.endOfDay(day.value),
-      resourceId: null,
-    });
-  });
-
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
@@ -103,7 +91,6 @@ export function DayGridCell(props: DayGridCellProps) {
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) || undefined}
-      {...eventCreationProps}
     >
       <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
         {isLoading && <EventSkeleton data-variant="day-grid" />}

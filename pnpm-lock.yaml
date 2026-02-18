@@ -1277,9 +1277,6 @@ importers:
       '@base-ui/utils':
         specifier: 0.2.4
         version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@mui/x-internals':
-        specifier: workspace:*
-        version: link:../x-internals/build
       '@mui/x-virtualizer':
         specifier: workspace:*
         version: link:../x-virtualizer/build

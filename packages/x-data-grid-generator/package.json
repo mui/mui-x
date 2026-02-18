@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "8.25.0",
+  "version": "9.0.0-alpha.0",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
   "license": "UNLICENSED",
