@@ -102,7 +102,6 @@ export class SchedulerLazyLoadingPlugin<
     }
 
     try {
-      this.store.set('errors', []);
       const events = await dataSource.getEvents(range.start, range.end);
       this.cache!.setRange(
         adapter.getTime(range.start),
