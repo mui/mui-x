@@ -73,6 +73,54 @@ export function isGroupedAxisAutoSizeResult(
 }
 
 /**
+ * The maximum number of labels to measure for band/point scales.
+ * We only need the widest label to determine auto-size, so we pick a small set of
+ * candidates using label length as a proxy for visual width instead of measuring all.
+ */
+const MAX_AUTO_SIZE_CANDIDATES = 5;
+
+/**
+ * From a list of rendered label strings, returns a small subset of candidates
+ * that are most likely to be the visually widest.
+ * Uses character count as a proxy for visual width, which works well in practice.
+ */
+function selectWidestCandidates(labels: string[]): string[] {
+  if (labels.length <= MAX_AUTO_SIZE_CANDIDATES) {
+    return labels;
+  }
+
+  const getMaxLineLength = (label: string): number => {
+    if (!label.includes('\n')) {
+      return label.length;
+    }
+    let max = 0;
+    for (const line of label.split('\n')) {
+      if (line.length > max) {
+        max = line.length;
+      }
+    }
+    return max;
+  };
+
+  // Single pass: collect labels with the maximum line length
+  let maxLength = 0;
+  const candidates: string[] = [];
+
+  for (const label of labels) {
+    const len = getMaxLineLength(label);
+    if (len > maxLength) {
+      maxLength = len;
+      candidates.length = 0;
+      candidates.push(label);
+    } else if (len === maxLength && candidates.length < MAX_AUTO_SIZE_CANDIDATES) {
+      candidates.push(label);
+    }
+  }
+
+  return candidates;
+}
+
+/**
  * Gets tick labels that would be displayed for the axis.
  * For ordinal scales (band/point), use axis.data.
  * For continuous scales, generate estimated tick values from axis min/max configuration.
@@ -86,7 +134,9 @@ function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis): string[] {
     if (!data || data.length === 0) {
       return [];
     }
-    return data.map((value) => {
+
+    // Map all values to their rendered label strings
+    const labels = data.map((value) => {
       if (valueFormatter) {
         return valueFormatter(value, {
           location: 'auto-size',
@@ -94,6 +144,11 @@ function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis): string[] {
       }
       return `${value}`;
     });
+
+    // We only need the widest label to determine axis size.
+    // Measuring all labels is O(n) DOM operations — instead, pick a small set of
+    // candidates using label length as a proxy for visual width.
+    return selectWidestCandidates(labels);
   }
 
   // For continuous scales, we measure the min and max values to estimate axis size.
