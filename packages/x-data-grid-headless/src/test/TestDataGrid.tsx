@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '../';
+import type { ColumnVisibilityModel } from '../plugins/internal/columns/columnUtils';
 import { sortingPlugin, type SortingColumnMeta, type SortingOptions } from '../plugins/sorting';
 import {
   filteringPlugin,
@@ -23,6 +24,7 @@ interface TestDataGridProps<TRow extends Record<string, any>> {
   sorting?: SortingOptions['sorting'];
   filtering?: FilteringOptions['filtering'];
   rowCount?: number;
+  columnVisibilityModel?: ColumnVisibilityModel;
   pagination?: PaginationOptions['pagination'];
   initialState?: Parameters<typeof useDataGrid>[0]['initialState'];
 }
@@ -33,6 +35,7 @@ export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGr
     columns,
     getRowId,
     rowCount,
+    columnVisibilityModel,
     apiRef,
     sorting,
     filtering,
@@ -45,6 +48,7 @@ export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGr
     columns,
     getRowId,
     rowCount,
+    columnVisibilityModel,
     plugins,
     sorting,
     filtering,

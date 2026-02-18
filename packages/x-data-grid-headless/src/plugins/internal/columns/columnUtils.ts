@@ -14,7 +14,9 @@ export type ColumnLookup<TColumnMeta = {}> = {
   [field: string]: ColumnState<TColumnMeta>;
 };
 
-export type ColumnVisibilityModel = Record<string, boolean>;
+export type ColumnVisibilityState = 'visible' | 'collapsed' | 'hidden';
+
+export type ColumnVisibilityModel = Record<string, ColumnVisibilityState>;
 
 export interface ColumnsState {
   orderedFields: string[];
@@ -44,11 +46,11 @@ export interface ColumnsOptions<TData = any, TColumnMeta = {}> {
 export interface ColumnsApi<TColumnMeta = {}> {
   get: (field: string) => ColumnState<TColumnMeta> | undefined;
   getAll: () => ColumnState<TColumnMeta>[];
-  getVisible: () => ColumnState<TColumnMeta>[];
+  getVisible: (includeCollapsed?: boolean) => ColumnState<TColumnMeta>[];
   getIndex: (field: string, useVisibleColumns?: boolean) => number;
   update: (columns: ColumnDef<any>[]) => void;
   setVisibilityModel: (model: ColumnVisibilityModel) => void;
-  setVisibility: (field: string, isVisible: boolean) => void;
+  setVisibility: (field: string, state: ColumnVisibilityState) => void;
   setSize: (field: string, size: number) => void;
   setIndex: (field: string, targetIndex: number) => void;
 }
@@ -157,10 +159,19 @@ export function createColumnsApi<TData>(
     return orderedFields.map((field) => lookup[field]).filter(Boolean);
   };
 
-  const getVisibleColumns = (): ColumnState[] => {
+  const getVisibleColumns = (includeCollapsed: boolean = true): ColumnState[] => {
     const { orderedFields, lookup, columnVisibilityModel } = store.state.columns;
     return orderedFields
-      .filter((field) => columnVisibilityModel[field] !== false)
+      .filter((field) => {
+        const state = columnVisibilityModel[field];
+        if (state === 'hidden') {
+          return false;
+        }
+        if (!includeCollapsed && state === 'collapsed') {
+          return false;
+        }
+        return true;
+      })
       .map((field) => lookup[field])
       .filter(Boolean);
   };
@@ -199,13 +210,13 @@ export function createColumnsApi<TData>(
     }
   };
 
-  const setColumnVisibility = (field: string, isVisible: boolean): void => {
+  const setColumnVisibility = (field: string, state: ColumnVisibilityState): void => {
     const columnVisibilityModel = store.state.columns.columnVisibilityModel;
-    const isCurrentlyVisible: boolean = columnVisibilityModel[field] ?? true;
-    if (isVisible !== isCurrentlyVisible) {
+    const currentState: ColumnVisibilityState = columnVisibilityModel[field] ?? 'visible';
+    if (state !== currentState) {
       const newModel: ColumnVisibilityModel = {
         ...columnVisibilityModel,
-        [field]: isVisible,
+        [field]: state,
       };
       setColumnVisibilityModel(newModel);
     }

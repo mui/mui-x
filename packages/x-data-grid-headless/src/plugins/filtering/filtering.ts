@@ -61,7 +61,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         ignoreDiacritics: params.filtering?.ignoreDiacritics,
         getAllColumnFields: () => orderedFields as string[],
         getVisibleColumnFields: () =>
-          (orderedFields as string[]).filter((field) => columnVisibilityModel[field] !== false),
+          (orderedFields as string[]).filter((field) => columnVisibilityModel[field] !== 'hidden'),
       });
       filteredRowIds = filterApplier ? filterApplier(inputRowIds) : inputRowIds;
     }

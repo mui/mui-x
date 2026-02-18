@@ -47,9 +47,18 @@ const selectVisibleColumns = createSelectorMemoized(
   selectOrderedFields,
   selectLookup,
   selectColumnVisibilityModel,
-  (orderedFields, lookup, columnVisibilityModel) =>
+  (orderedFields, lookup, columnVisibilityModel, includeCollapsed: boolean = true) =>
     orderedFields
-      .filter((field) => columnVisibilityModel[field] !== false)
+      .filter((field) => {
+        const state = columnVisibilityModel[field];
+        if (state === 'hidden') {
+          return false;
+        }
+        if (!includeCollapsed && state === 'collapsed') {
+          return false;
+        }
+        return true;
+      })
       .map((field) => lookup[field])
       .filter(Boolean),
 );
