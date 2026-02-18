@@ -15,26 +15,6 @@ export type OpenPickerParams =
       fieldType: 'single-input' | 'multi-input';
     };
 
-/**
- * @deprecated use `openPickerAsync` instead
- */
-export const openPicker = (params: OpenPickerParams) => {
-  const isRangeType =
-    params.type === 'date-range' ||
-    params.type === 'date-time-range' ||
-    params.type === 'time-range';
-  if (isRangeType && params.fieldType === 'multi-input') {
-    const fieldSectionsContainer = getFieldSectionsContainer(params.initialFocus === 'end' ? 1 : 0);
-    fireEvent.click(fieldSectionsContainer);
-    return true;
-  }
-
-  const target = screen.getByLabelText(/(choose date)|(choose time)|(choose range)/i);
-
-  fireEvent.click(target);
-  return true;
-};
-
 export const openPickerAsync = async (user: MuiRenderResult['user'], params: OpenPickerParams) => {
   const isRangeType =
     params.type === 'date-range' ||

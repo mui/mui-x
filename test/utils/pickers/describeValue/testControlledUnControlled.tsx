@@ -115,7 +115,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         assertRenderedValue(values[0]);
       });
 
-      it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
+      it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', async () => {
         const onChange = spy();
 
         const v7Response = renderWithProps({
@@ -123,9 +123,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           defaultValue: values[0],
           onChange,
         });
-        const newValue = setNewValue(values[0], {
+        const newValue = await setNewValue(values[0], {
           selectSection: v7Response.selectSection,
           pressKey: v7Response.pressKey,
+          user: v7Response.user,
           closeMobilePicker: true,
         });
 
@@ -141,7 +142,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         // }
       });
 
-      it('should call onChange when updating a value defined with `props.value`', () => {
+      it('should call onChange when updating a value defined with `props.value`', async () => {
         const onChange = spy();
 
         const useControlledElement = (props: any) => {
@@ -160,9 +161,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           { enableAccessibleFieldDOMStructure: true, value: values[0], onChange },
           { hook: useControlledElement },
         );
-        const newValue = setNewValue(values[0], {
+        const newValue = await setNewValue(values[0], {
           selectSection: v7Response.selectSection,
           pressKey: v7Response.pressKey,
+          user: v7Response.user,
           closeMobilePicker: true,
         });
 

@@ -6,7 +6,7 @@ import {
   expectFieldValueV7,
   describeValue,
   getFieldSectionsContainer,
-  openPicker,
+  openPickerAsync,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
@@ -53,9 +53,9 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false, user }) => {
       if (!isOpened) {
-        openPicker({
+        await openPickerAsync(user, {
           type: 'date-time-range',
           initialFocus: setEndDate ? 'end' : 'start',
           fieldType: 'multi-input',
@@ -108,8 +108,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
       }
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('[Escape]');
       } else {
         // return to the start date view in case we'd like to repeat the selection process
         fireEvent.click(

@@ -3,7 +3,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectFieldValueV7,
-  openPicker,
+  openPickerAsync,
   getClockTouchEvent,
   describeValue,
   formatFullTimeValue,
@@ -35,9 +35,9 @@ describe('<MobileTimePicker /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue, user }) => {
       if (!isOpened) {
-        openPicker({ type: 'time' });
+        await openPickerAsync(user, { type: 'time' });
       }
 
       const newValue = applySameValue
@@ -64,8 +64,7 @@ describe('<MobileTimePicker /> - Describe Value', () => {
 
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('[Escape]');
       } else {
         // return to the hours view in case we'd like to repeat the selection process
         fireEvent.click(screen.getByRole('button', { name: 'Open previous view' }));

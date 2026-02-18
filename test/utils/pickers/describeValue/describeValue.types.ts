@@ -33,18 +33,23 @@ export type DescribeValueOptions<
           options: {
             selectSection: FieldSectionSelector;
             pressKey: FieldPressCharacter;
+            user: MuiRenderResult['user'];
             isOpened?: boolean;
             applySameValue?: boolean;
             setEndDate?: boolean;
             closeMobilePicker?: boolean;
           },
-        ) => InferNonNullablePickerValue<TValue>;
+        ) => Promise<InferNonNullablePickerValue<TValue>>;
       }
     : {
         setNewValue: (
           value: TValue,
-          options: { selectSection: FieldSectionSelector; pressKey: FieldPressCharacter },
-        ) => TValue;
+          options: {
+            selectSection: FieldSectionSelector;
+            pressKey: FieldPressCharacter;
+            user: MuiRenderResult['user'];
+          },
+        ) => Promise<TValue>;
       });
 
 export type DescribeValueTestSuite<

@@ -3,7 +3,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectFieldValueV7,
-  openPicker,
+  openPickerAsync,
   describeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
@@ -29,9 +29,9 @@ describe('<MobileDatePicker /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue, user }) => {
       if (!isOpened) {
-        openPicker({ type: 'date' });
+        await openPickerAsync(user, { type: 'date' });
       }
 
       const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
@@ -41,8 +41,7 @@ describe('<MobileDatePicker /> - Describe Value', () => {
 
       // Close the Picker to return to the initial state
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('[Escape]');
       }
 
       return newValue;
