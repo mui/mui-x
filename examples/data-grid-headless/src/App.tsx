@@ -16,7 +16,9 @@ import { ConfigPanel, type PluginConfig } from './ConfigPanel';
 import { FilterPanel } from './FilterPanel';
 import {
   FilterIcon,
+  PlusIcon,
   SearchIcon,
+  TrashIcon,
   ChevronsLeftIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -60,6 +62,47 @@ const departments = [
   'Product',
 ];
 
+const firstNames = [
+  'John',
+  'Jane',
+  'Bob',
+  'Alice',
+  'Charlie',
+  'Diana',
+  'Eve',
+  'Frank',
+  'Grace',
+  'Henry',
+];
+const surnames = [
+  'Doe',
+  'Smith',
+  'Johnson',
+  'Williams',
+  'Brown',
+  'Jones',
+  'Garcia',
+  'Miller',
+  'Davis',
+  'Wilson',
+];
+const cities = [
+  'New York',
+  'Los Angeles',
+  'Chicago',
+  'Houston',
+  'Phoenix',
+  'Seattle',
+  'Boston',
+  'Denver',
+];
+const countries = ['USA', 'Canada', 'UK', 'Germany', 'France', 'Australia'];
+const statuses = ['Active', 'On Leave', 'Remote', 'Hybrid'];
+const roles = ['Junior', 'Mid-Level', 'Senior', 'Lead', 'Manager', 'Director'];
+const teams = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'];
+const offices = ['HQ', 'Branch A', 'Branch B', 'Remote', 'Satellite'];
+const skillsList = ['React', 'Python', 'Java', 'SQL', 'AWS', 'TypeScript', 'Node.js', 'Docker'];
+
 // Utility function to shuffle an array randomly
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -70,83 +113,40 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
+function generateRow(id: number): RowData {
+  const nameIndex = Math.floor(Math.random() * firstNames.length);
+  const surnameIndex = Math.floor(Math.random() * surnames.length);
+  const managerNameIndex = Math.floor(Math.random() * firstNames.length);
+  const managerSurnameIndex = Math.floor(Math.random() * surnames.length);
+  const skillsCount = Math.floor(Math.random() * 4) + 2;
+
+  return {
+    id,
+    name: `${firstNames[nameIndex]} ${surnames[surnameIndex]}`,
+    email: `${firstNames[nameIndex].toLowerCase()}.${surnames[surnameIndex].toLowerCase()}@example.com`,
+    age: 20 + Math.floor(Math.random() * 40),
+    department: departments[Math.floor(Math.random() * departments.length)],
+    phone: `+1-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+    address: `${Math.floor(Math.random() * 9999) + 1} Main St`,
+    city: cities[Math.floor(Math.random() * cities.length)],
+    country: countries[Math.floor(Math.random() * countries.length)],
+    salary: Math.floor(Math.random() * 150000) + 50000,
+    hireDate: `${2015 + Math.floor(Math.random() * 10)}-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
+    status: statuses[Math.floor(Math.random() * statuses.length)],
+    role: roles[Math.floor(Math.random() * roles.length)],
+    manager: `${firstNames[managerNameIndex]} ${surnames[managerSurnameIndex]}`,
+    team: teams[Math.floor(Math.random() * teams.length)],
+    office: offices[Math.floor(Math.random() * offices.length)],
+    yearsExperience: Math.floor(Math.random() * 20) + 1,
+    rating: Math.round((Math.random() * 4 + 1) * 10) / 10,
+    projects: Math.floor(Math.random() * 15) + 1,
+    skills: shuffleArray(skillsList).slice(0, skillsCount).join(', '),
+  };
+}
+
 // Generate sample data with random order
 function generateSampleData(count: number): RowData[] {
-  const names = [
-    'John',
-    'Jane',
-    'Bob',
-    'Alice',
-    'Charlie',
-    'Diana',
-    'Eve',
-    'Frank',
-    'Grace',
-    'Henry',
-  ];
-  const surnames = [
-    'Doe',
-    'Smith',
-    'Johnson',
-    'Williams',
-    'Brown',
-    'Jones',
-    'Garcia',
-    'Miller',
-    'Davis',
-    'Wilson',
-  ];
-  const cities = [
-    'New York',
-    'Los Angeles',
-    'Chicago',
-    'Houston',
-    'Phoenix',
-    'Seattle',
-    'Boston',
-    'Denver',
-  ];
-  const countries = ['USA', 'Canada', 'UK', 'Germany', 'France', 'Australia'];
-  const statuses = ['Active', 'On Leave', 'Remote', 'Hybrid'];
-  const roles = ['Junior', 'Mid-Level', 'Senior', 'Lead', 'Manager', 'Director'];
-  const teams = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'];
-  const offices = ['HQ', 'Branch A', 'Branch B', 'Remote', 'Satellite'];
-  const skillsList = ['React', 'Python', 'Java', 'SQL', 'AWS', 'TypeScript', 'Node.js', 'Docker'];
-
-  const allCombinations: RowData[] = [];
-  for (let i = 0; i < count; i += 1) {
-    const nameIndex = Math.floor(Math.random() * names.length);
-    const surnameIndex = Math.floor(Math.random() * surnames.length);
-    const departmentIndex = Math.floor(Math.random() * departments.length);
-    const age = 20 + Math.floor(Math.random() * 40);
-    const managerNameIndex = Math.floor(Math.random() * names.length);
-    const managerSurnameIndex = Math.floor(Math.random() * surnames.length);
-
-    allCombinations.push({
-      id: i + 1,
-      name: `${names[nameIndex]} ${surnames[surnameIndex]}`,
-      email: `${names[nameIndex].toLowerCase()}.${surnames[surnameIndex].toLowerCase()}@example.com`,
-      age,
-      department: departments[departmentIndex],
-      phone: `+1-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
-      address: `${Math.floor(Math.random() * 9999) + 1} Main St`,
-      city: cities[Math.floor(Math.random() * cities.length)],
-      country: countries[Math.floor(Math.random() * countries.length)],
-      salary: Math.floor(Math.random() * 150000) + 50000,
-      hireDate: `${2015 + Math.floor(Math.random() * 10)}-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
-      status: statuses[Math.floor(Math.random() * statuses.length)],
-      role: roles[Math.floor(Math.random() * roles.length)],
-      manager: `${names[managerNameIndex]} ${surnames[managerSurnameIndex]}`,
-      team: teams[Math.floor(Math.random() * teams.length)],
-      office: offices[Math.floor(Math.random() * offices.length)],
-      yearsExperience: Math.floor(Math.random() * 20) + 1,
-      rating: Math.round((Math.random() * 4 + 1) * 10) / 10,
-      projects: Math.floor(Math.random() * 15) + 1,
-      skills: skillsList.slice(0, Math.floor(Math.random() * 4) + 2).join(', '),
-    });
-  }
-
-  return allCombinations;
+  return Array.from({ length: count }, (_, index) => generateRow(index + 1));
 }
 
 // Generate sample columns
@@ -185,6 +185,7 @@ function generateColumns(): ColumnDef<RowData, ColumnMeta>[] {
     { id: 'rating', field: 'rating', header: 'Rating', size: 80, type: 'number' },
     { id: 'projects', field: 'projects', header: 'Projects', size: 90, type: 'number' },
     { id: 'skills', field: 'skills', header: 'Skills', size: 200 },
+    { id: 'actions', field: 'actions' as keyof RowData, header: 'Actions', size: 90 },
   ];
 }
 
@@ -198,6 +199,7 @@ type GridInstance = ReturnType<typeof useDataGrid<GridPlugins, RowData>>;
 interface DataGridContextValue {
   grid: GridInstance;
   config: PluginConfig;
+  getNextRowId: () => number;
 }
 
 const DataGridContext = React.createContext<DataGridContextValue | null>(null);
@@ -217,6 +219,7 @@ function GridCell({ column, row }: { column: ColumnToRender; row: RowToRender<Ro
     field: column.id,
     colIndex: column.index,
   });
+  const isActionsColumn = column.field === 'actions';
 
   return (
     <div
@@ -225,7 +228,21 @@ function GridCell({ column, row }: { column: ColumnToRender; row: RowToRender<Ro
       {...cellProps}
       style={{ width: column.size || 150, minWidth: column.size || 150 }}
     >
-      {value != null ? String(value) : ''}
+      {!isActionsColumn && (value != null ? String(value) : '')}
+      {isActionsColumn && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            grid.api.rows.updateRows([{ ...row.model, _action: 'delete' }]);
+          }}
+          className="grid-footer__btn"
+          style={{ margin: '0 auto' }}
+          aria-label={`Delete row ${row.model.id}`}
+        >
+          <TrashIcon />
+        </button>
+      )}
     </div>
   );
 }
@@ -287,7 +304,7 @@ function DataGridColumnHeaders() {
   const sortModel = grid.use(sortingPlugin.selectors.model);
 
   const sortColumn = (field: string, shiftKey: boolean) => {
-    if (!config.sorting?.enabled) {
+    if (!config.sorting?.enabled || field === 'actions') {
       return;
     }
     const requireShiftKey = config.sorting?.multiSortWithShiftKey ?? true;
@@ -402,7 +419,7 @@ function DataGridVirtualScrollbar({
 }
 
 function DataGridToolbar() {
-  const { grid, config } = useDataGridContext();
+  const { grid, config, getNextRowId } = useDataGridContext();
   const isFilteringEnabled = config.filtering?.enabled ?? true;
   const showQuickFilter = config.filtering?.showQuickFilter ?? true;
 
@@ -446,6 +463,16 @@ function DataGridToolbar() {
             <span className="grid-toolbar__badge">{activeFilterCount}</span>
           )}
         </button>
+        <button
+          type="button"
+          className="grid-toolbar__btn"
+          onClick={() => {
+            grid.api.rows.updateRows([{ ...generateRow(getNextRowId()) }]);
+          }}
+        >
+          <PlusIcon />
+          <span>Add new row</span>
+        </button>
         {showQuickFilter && (
           <div className="grid-toolbar__quick-filter">
             <SearchIcon />
@@ -485,6 +512,13 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
   { rows, columns, config },
   ref,
 ) {
+  const nextRowIdRef = React.useRef(rows.length + 1);
+  const getNextRowId = React.useCallback(() => {
+    const nextId = nextRowIdRef.current;
+    nextRowIdRef.current += 1;
+    return nextId;
+  }, []);
+
   const grid = useDataGrid({
     rows,
     columns,
@@ -587,7 +621,10 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
     }
   }, [grid]);
 
-  const contextValue = React.useMemo(() => ({ grid, config }), [grid, config]);
+  const contextValue = React.useMemo(
+    () => ({ grid, config, getNextRowId }),
+    [grid, config, getNextRowId],
+  );
 
   return (
     <DataGridContext.Provider value={contextValue}>
@@ -712,7 +749,7 @@ function App() {
   };
 
   const handleRefreshRows = () => {
-    setRows(generateSampleData(rows.length));
+    setRows((prevRows) => generateSampleData(prevRows.length));
   };
 
   const handleRefreshColumns = () => {
