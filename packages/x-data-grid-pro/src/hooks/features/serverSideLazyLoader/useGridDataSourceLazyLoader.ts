@@ -83,9 +83,6 @@ export const useGridDataSourceLazyLoader = (
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
 
-  // SWR: Background revalidation for stale data.
-  // Checks the data source cache first — if data is still cached and fresh, skips entirely.
-  // Only triggers a background fetchRows when the cache entry has expired.
   const revalidate = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
       if (rowsStale.current) {
@@ -101,12 +98,10 @@ export const useGridDataSourceLazyLoader = (
       }
 
       // Cache is stale/expired — fetch in background (no loading indicator)
-      fetchRows(params);
+      debouncedFetchRows(params);
     },
-    [privateApiRef, fetchRows],
+    [privateApiRef, debouncedFetchRows],
   );
-
-  const debouncedRevalidate = React.useMemo(() => debounce(revalidate, 500), [revalidate]);
 
   const stopPolling = React.useCallback(() => {
     if (pollingIntervalRef.current !== null) {
@@ -522,7 +517,7 @@ export const useGridDataSourceLazyLoader = (
             pageSize: paginationModel.pageSize,
             rowCount: privateApiRef.current.state.pagination.rowCount,
           });
-          debouncedRevalidate(adjustedParams);
+          revalidate(adjustedParams);
           startPolling(adjustedParams);
         }
         return;
@@ -538,7 +533,7 @@ export const useGridDataSourceLazyLoader = (
         }),
       );
     },
-    [privateApiRef, fetchRows, debouncedRevalidate, startPolling],
+    [privateApiRef, fetchRows, revalidate, startPolling],
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
@@ -549,10 +544,9 @@ export const useGridDataSourceLazyLoader = (
   React.useEffect(() => {
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
-      debouncedRevalidate.clear();
       stopPolling();
     };
-  }, [throttledHandleRenderedRowsIntervalChange, debouncedRevalidate, stopPolling]);
+  }, [throttledHandleRenderedRowsIntervalChange, revalidate, stopPolling]);
 
   // Stop polling when dataSourceRevalidateMs is set to 0
   React.useEffect(() => {
@@ -565,7 +559,6 @@ export const useGridDataSourceLazyLoader = (
     (newSortModel) => {
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
-      debouncedRevalidate.clear();
       stopPolling();
       previousLastRowIndex.current = 0;
       const paginationModel = gridPaginationModelSelector(privateApiRef);
@@ -581,20 +574,13 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [
-      privateApiRef,
-      debouncedFetchRows,
-      throttledHandleRenderedRowsIntervalChange,
-      debouncedRevalidate,
-      stopPolling,
-    ],
+    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, stopPolling],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
-      debouncedRevalidate.clear();
       stopPolling();
       previousLastRowIndex.current = 0;
 
@@ -610,13 +596,7 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [
-      privateApiRef,
-      debouncedFetchRows,
-      throttledHandleRenderedRowsIntervalChange,
-      debouncedRevalidate,
-      stopPolling,
-    ],
+    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, stopPolling],
   );
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {
