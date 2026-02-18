@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -6,6 +7,7 @@ import { Store, createSelectorMemoized } from '@mui/x-internals/store';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
+import useRefCallback from '../../utils/useRefCallback';
 
 /* eslint-disable react-hooks/rules-of-hooks */
 
@@ -65,8 +67,16 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
   ) {
     const { scrollerRef, containerRef } = layoutParams;
 
-    const scrollbarVerticalRef = useEventCallback(this.refSetter('scrollbarVertical'));
-    const scrollbarHorizontalRef = useEventCallback(this.refSetter('scrollbarHorizontal'));
+    const scrollbarVerticalRef = useScrollbarRefCallback(
+      this.refs.scroller,
+      this.refSetter('scrollbarVertical'),
+      'scrollTop',
+    );
+    const scrollbarHorizontalRef = useScrollbarRefCallback(
+      this.refs.scroller,
+      this.refSetter('scrollbarHorizontal'),
+      'scrollLeft',
+    );
 
     store.state.virtualization.context = {
       scrollerRef,
@@ -88,8 +98,10 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       (context, autoHeight, needsHorizontalScrollbar) => ({
         ref: context.scrollerRef,
         style: {
+          // TODO: fall back to overflow: 'auto' if no overflowX or overflowY is set?
           overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
           overflowY: autoHeight ? 'hidden' : undefined,
+          // TODO: should include display: 'flex', flexDirection: 'column' since the Content has flexBasis and flexShrink?
         },
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
@@ -240,4 +252,72 @@ export class LayoutList extends Layout<ListElements> {
       } as React.CSSProperties,
     })),
   };
+}
+
+type ScrollProperty = 'scrollTop' | 'scrollLeft';
+
+function useScrollbarRefCallback(
+  scrollerRef: React.RefObject<HTMLElement | null>,
+  refSetter: (node: HTMLDivElement | null) => void,
+  scrollProperty: ScrollProperty,
+) {
+  const isLocked = React.useRef(false);
+  const lastPosition = React.useRef(0);
+
+  const handleScrollerScroll = useEventCallback((scrollbar: HTMLElement) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return;
+    }
+
+    const scrollerPosition = scroller[scrollProperty];
+    if (scrollerPosition === lastPosition.current) {
+      return;
+    }
+    lastPosition.current = scrollerPosition;
+
+    if (isLocked.current) {
+      isLocked.current = false;
+      return;
+    }
+    isLocked.current = true;
+
+    scrollbar[scrollProperty] = scrollerPosition;
+  });
+
+  const handleScrollbarScroll = useEventCallback((scrollbar: HTMLElement) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return;
+    }
+
+    if (isLocked.current) {
+      isLocked.current = false;
+      return;
+    }
+    isLocked.current = true;
+
+    scroller[scrollProperty] = scrollbar[scrollProperty];
+  });
+
+  return useRefCallback((scrollbar) => {
+    refSetter(scrollbar);
+
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return undefined;
+    }
+
+    const onScrollerScroll = () => handleScrollerScroll(scrollbar);
+    const onScrollbarScroll = () => handleScrollbarScroll(scrollbar);
+
+    const options: AddEventListenerOptions = { passive: true };
+    scroller.addEventListener('scroll', onScrollerScroll, options);
+    scrollbar.addEventListener('scroll', onScrollbarScroll, options);
+
+    return () => {
+      scroller.removeEventListener('scroll', onScrollerScroll);
+      scrollbar.removeEventListener('scroll', onScrollbarScroll);
+    };
+  });
 }

@@ -1,5 +1,5 @@
 {
-  "version": "8.25.0",
+  "version": "9.0.0-alpha.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -21,6 +21,7 @@
     "deduplicate": "pnpm dedupe",
     "dataset:file-tree": "tsx ./scripts/treeDataFromFileTree.ts",
     "l10n": "tsx ./scripts/l10n.ts",
+    "l10n:llm": "tsx ./scripts/translateWithLLMs/cli.ts",
     "eslint": "eslint . --cache --report-unused-disable-directives --max-warnings 0",
     "eslint:fix": "pnpm eslint --fix",
     "eslint:ci": "eslint . --report-unused-disable-directives --max-warnings 0",
@@ -71,9 +72,9 @@
     "@inquirer/prompts": "8.1.0",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.11",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.60",
-    "@mui/internal-code-infra": "0.0.3-canary.87",
-    "@mui/internal-markdown": "2.0.14",
-    "@mui/internal-netlify-cache": "0.0.2-canary.1",
+    "@mui/internal-code-infra": "0.0.3-canary.90",
+    "@mui/internal-markdown": "2.0.15",
+    "@mui/internal-netlify-cache": "0.0.3-canary.0",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/monorepo": "github:mui/material-ui#7ae667c5229d9143e4ecafb9e18b0b89609cff84",
@@ -134,7 +135,7 @@
     "serve": "catalog:",
     "sinon": "21.0.1",
     "string-replace-loader": "3.3.0",
-    "stylelint": "16.26.1",
+    "stylelint": "17.1.1",
     "terser-webpack-plugin": "5.3.16",
     "tsx": "catalog:",
     "typescript": "5.9.3",
@@ -142,7 +143,8 @@
     "util": "0.12.5",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "yargs": "catalog:"
+    "yargs": "catalog:",
+    "zod": "^4.3.6"
   },
   "resolutions": {
     "ast-types": "^0.14.2"
