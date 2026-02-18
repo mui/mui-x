@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
-import { EventTimelinePremium as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
+import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumViewSelectors,
@@ -32,7 +32,7 @@ const EventTimelinePremiumContentRoot = styled('section', {
   width: '100%',
 }));
 
-const EventTimelinePremiumGrid = styled(TimelinePrimitive.Root, {
+const EventTimelinePremiumGrid = styled(TimelineGrid.Root, {
   name: 'MuiEventTimeline',
   slot: 'Grid',
 })({
@@ -54,7 +54,7 @@ const EventTimelinePremiumTitleSubGridWrapper = styled('div', {
   gridRow: '1 / -1',
 }));
 
-const EventTimelinePremiumTitleSubGrid = styled(TimelinePrimitive.SubGrid, {
+const EventTimelinePremiumTitleSubGrid = styled(TimelineGrid.SubGrid, {
   name: 'MuiEventTimeline',
   slot: 'TitleSubGrid',
 })({
@@ -64,7 +64,7 @@ const EventTimelinePremiumTitleSubGrid = styled(TimelinePrimitive.SubGrid, {
   gridRow: '2 / -1',
 });
 
-const EventTimelinePremiumTitleSubGridHeaderRow = styled(TimelinePrimitive.Row, {
+const EventTimelinePremiumTitleSubGridHeaderRow = styled(TimelineGrid.Row, {
   name: 'MuiEventTimeline',
   slot: 'TitleSubGridHeaderRow',
 })(({ theme }) => ({
@@ -73,7 +73,7 @@ const EventTimelinePremiumTitleSubGridHeaderRow = styled(TimelinePrimitive.Row, 
   gridColumn: 1,
 }));
 
-const EventTimelinePremiumTitleSubGridHeaderCell = styled(TimelinePrimitive.Cell, {
+const EventTimelinePremiumTitleSubGridHeaderCell = styled(TimelineGrid.Cell, {
   name: 'MuiEventTimeline',
   slot: 'TitleSubGridHeaderCell',
 })(({ theme }) => ({
@@ -97,7 +97,7 @@ const EventTimelinePremiumEventsSubGridWrapper = styled('div', {
   gridRow: '1 / -1',
 });
 
-const EventTimelinePremiumEventsSubGrid = styled(TimelinePrimitive.SubGrid, {
+const EventTimelinePremiumEventsSubGrid = styled(TimelineGrid.SubGrid, {
   name: 'MuiEventTimeline',
   slot: 'EventsSubGrid',
 })({
@@ -106,7 +106,7 @@ const EventTimelinePremiumEventsSubGrid = styled(TimelinePrimitive.SubGrid, {
   gridRow: '2 / -1',
 });
 
-const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelinePrimitive.Row, {
+const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelineGrid.Row, {
   name: 'MuiEventTimeline',
   slot: 'EventsSubGridHeaderRow',
 })(({ theme }) => ({
@@ -114,7 +114,7 @@ const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelinePrimitive.Row,
   gridRow: 1,
 }));
 
-const EventTimelinePremiumEventsSubGridRow = styled(TimelinePrimitive.EventRow, {
+const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
   name: 'MuiEventTimeline',
   slot: 'EventsSubGridRow',
 })(({ theme }) => ({
@@ -241,7 +241,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           </EventTimelinePremiumTitleSubGridWrapper>
           <EventTimelinePremiumEventsSubGridWrapper className={classes.eventsSubGridWrapper}>
             <EventTimelinePremiumEventsSubGridHeaderRow className={classes.eventsSubGridHeaderRow}>
-              <TimelinePrimitive.Cell>{header}</TimelinePrimitive.Cell>
+              <TimelineGrid.Cell>{header}</TimelineGrid.Cell>
             </EventTimelinePremiumEventsSubGridHeaderRow>
             <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid}>
               {(resourceId) => (
