@@ -28,11 +28,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
 
   useEnhancedEffect(() => {
     if (store.state.tooltip.item !== params.tooltipItem) {
-      const newItem = params.tooltipItem
-        ? (instance.identifierWithType(
-            params.tooltipItem,
-          ) as SeriesItemIdentifierWithType<SeriesType>)
-        : null;
+      const newItem = params.tooltipItem ? instance.identifierWithType(params.tooltipItem) : null;
 
       if (
         store.state.tooltip.item === null || newItem === null
@@ -91,13 +87,13 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
 useChartTooltip.getInitialState = (params, currentState) => ({
   tooltip: {
     itemIsControlled: params.tooltipItem !== undefined,
-    // Need some as because the generic SeriesType can't be propagated to plugins methods.
     item:
       params.tooltipItem == null
         ? null
-        : (createIdentifierWithType(currentState)(
+        : createIdentifierWithType(currentState)(
+            // Need some as because the generic SeriesType can't be propagated to plugins methods.
             params.tooltipItem as SeriesItemIdentifier<ChartSeriesType>,
-          ) as SeriesItemIdentifierWithType<ChartSeriesType>),
+          ),
   },
 });
 

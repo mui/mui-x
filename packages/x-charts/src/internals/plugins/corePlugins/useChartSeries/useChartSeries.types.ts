@@ -1,4 +1,8 @@
-import type { AllSeriesType } from '../../../../models/seriesType';
+import type {
+  AllSeriesType,
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
 import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
@@ -78,7 +82,9 @@ interface UseChartSeriesInstance {
     Item extends { seriesId: SeriesId; type?: SeriesType },
   >(
     identifier: Item,
-  ) => Item & { type: SeriesType };
+  ) => Item extends SeriesItemIdentifier<SeriesType>
+    ? SeriesItemIdentifierWithType<SeriesType>
+    : Item & { type: SeriesType };
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =

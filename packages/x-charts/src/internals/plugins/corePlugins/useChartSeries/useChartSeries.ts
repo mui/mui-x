@@ -5,22 +5,35 @@ import type { UseChartSeriesState, UseChartSeriesSignature } from './useChartSer
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { defaultizeSeries } from './processSeries';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type SeriesId } from '../../../../models/seriesType';
+import type {
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+  SeriesId,
+} from '../../../../models/seriesType';
+
+type RetrunedType<
+  SeriesType extends ChartSeriesType,
+  Item,
+> = Item extends SeriesItemIdentifier<SeriesType>
+  ? SeriesItemIdentifierWithType<SeriesType>
+  : Item & { type: SeriesType }
 
 export function createIdentifierWithType(state: UseChartSeriesState) {
   function identifierWithType<
     SeriesType extends ChartSeriesType,
     Item extends { seriesId: SeriesId; type?: SeriesType },
-  >(identifier: Item): Item & { type: SeriesType } {
+  >(
+    identifier: Item,
+  ): RetrunedType<SeriesType, Item> {
     if (identifier.type !== undefined) {
-      return identifier as Item & { type: SeriesType };
+      return identifier as RetrunedType<SeriesType, Item>;
     }
     const type = state.series.idToType.get(identifier.seriesId);
 
     if (type === undefined) {
       throw new Error(`MUI X Charts: id "${identifier.seriesId}" is not a series id.`);
     }
-    return { ...identifier, type };
+    return { ...identifier, type } as RetrunedType<SeriesType, Item>;
   }
 
   return identifierWithType;
