@@ -48,6 +48,10 @@ export const openPickerAsync = async (user: MuiRenderResult['user'], params: Ope
 
   const target = screen.getByLabelText(/(choose date)|(choose time)|(choose range)/i);
 
-  await user.click(target);
+  await user
+    .setup({
+      pointerEventsCheck: 0,
+    })
+    .click(target);
   return true;
 };
