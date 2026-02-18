@@ -33,7 +33,7 @@ describe('<DesktopTimePicker /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
         ? value!
         : adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);

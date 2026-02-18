@@ -50,7 +50,7 @@ describe('<DesktopTimeRangePicker /> - Describe Value Single Input', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {

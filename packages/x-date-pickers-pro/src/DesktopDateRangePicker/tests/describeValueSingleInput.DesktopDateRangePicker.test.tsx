@@ -42,7 +42,7 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
