@@ -1,9 +1,9 @@
 ---
-title: Charts - useAxes
+title: Charts - Axis hooks
 productId: x-charts
 ---
 
-# useAxes
+# Axis hooks
 
 <p class="description">Read axis configuration and computed properties for cartesian and polar charts in custom components.</p>
 
