@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { warnOnce } from '@mui/x-internals/warning';
 import { styled, useThemeProps, type SxProps, type Theme } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import {
@@ -11,6 +12,8 @@ import { type UseChartItemClickSignature } from '../internals/plugins/featurePlu
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartContext } from '../context/ChartProvider';
 import { useSvgRef } from '../hooks';
+// eslint-disable-next-line import/no-cycle
+import { ChartsSurface } from '../ChartsSurface';
 
 const ChartsLayerContainerDiv = styled('div', {
   name: 'MuiChartsLayerContainer',
@@ -56,6 +59,21 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     const svgRef = useSvgRef();
     const handleRef = useForkRef(svgRef, ref);
 
+    if (process.env.NODE_ENV !== 'production') {
+      React.Children.forEach(children, (child) => {
+        if (
+          typeof child === 'object' &&
+          child != null &&
+          'type' in child &&
+          child.type === ChartsSurface
+        ) {
+          warnOnce(
+            'MUI X Charts: ChartsSurface should not be used inside ChartsLayerContainer. Render a ChartsSvgLayer instead.',
+            'error',
+          );
+        }
+      });
+    }
     return (
       <ChartsLayerContainerDiv
         ref={handleRef}

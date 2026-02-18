@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import { ChartsSvgLayer } from '../ChartsSvgLayer';
+// eslint-disable-next-line import/no-cycle
 import { ChartsLayerContainer } from '../ChartsLayerContainer';
 
 export interface ChartsSurfaceProps extends Omit<
