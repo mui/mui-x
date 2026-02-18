@@ -13,10 +13,12 @@ import {
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import {
   eventDialogSlots,
   EventDialogStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+  schedulerTokens,
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
@@ -80,6 +82,7 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
+  ...schedulerTokens,
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
   '--weeks-cell-width': '64px',
@@ -90,6 +93,7 @@ const EventTimelinePremiumRoot = styled('div', {
   padding: theme.spacing(2),
   gap: theme.spacing(2),
   height: '100%',
+  fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
 }));
 
@@ -126,7 +130,8 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
     store.setView(event.target.value as EventTimelinePremiumView, event as Event);
   };
 
-  const { localeText, ...other } = forwardedProps;
+  const { localeText, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
 
   const mergedLocaleText = React.useMemo(
     () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),

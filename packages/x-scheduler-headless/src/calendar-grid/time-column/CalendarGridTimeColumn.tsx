@@ -5,7 +5,10 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
+import { useAdapter } from '../../use-adapter';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
+import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
+import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useTimeDropTarget } from './useTimeDropTarget';
 
@@ -25,6 +28,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     ...elementProps
   } = componentProps;
 
+  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
   const { ref: listItemRef, index } = useCompositeListItem();
@@ -33,6 +37,24 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     start,
     end,
     addPropertiesToDroppedEvent,
+  });
+
+  const eventCreationProps = useEventCreation(({ event, creationConfig }) => {
+    const offsetMs = getCursorPositionInElementMs({
+      input: { clientY: event.clientY },
+      elementRef: dropTargetRef,
+    });
+    const anchor = adapter.addMilliseconds(start, offsetMs);
+    const startDate = adapter.addMinutes(
+      anchor,
+      -(adapter.getMinutes(anchor) % EVENT_CREATION_PRECISION_MINUTE),
+    );
+    return {
+      surfaceType: 'time-grid' as const,
+      start: startDate,
+      end: adapter.addMinutes(startDate, creationConfig.duration),
+      resourceId: null,
+    };
   });
 
   const state: CalendarGridTimeColumn.State = React.useMemo(
@@ -57,7 +79,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, dropTargetRef, listItemRef],
-    props: [props, elementProps],
+    props: [props, eventCreationProps, elementProps],
   });
 
   return (
