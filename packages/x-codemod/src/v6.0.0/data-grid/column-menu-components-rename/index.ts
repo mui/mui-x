@@ -32,8 +32,10 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // + import { GridColumnMenuFilterItem } from '@mui/x-data-grid'
   matchingImports
     .find(j.ImportSpecifier)
-    .filter((path) => VARIABLES.hasOwnProperty(path.node.imported.name))
-    .replaceWith((path) => j.importSpecifier(j.identifier(VARIABLES[path.node.imported.name])));
+    .filter((path) => VARIABLES.hasOwnProperty(path.node.imported.name.toString()))
+    .replaceWith((path) =>
+      j.importSpecifier(j.identifier(VARIABLES[path.node.imported.name.toString()])),
+    );
 
   // Rename the import usage
   // - <GridFilterMenuItem />
