@@ -33,9 +33,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
       if (
         store.state.tooltip.item === null || newItem === null
           ? newItem !== store.state.tooltip.item
-          : Object.entries(store.state.tooltip.item).some(
-              ([key, value]) => value !== newItem[key as keyof typeof newItem],
-            )
+          : instance.serializeIdentifier(store.state.tooltip.item) !== instance.serializeIdentifier(newItem)
       ) {
         store.set('tooltip', { ...store.state.tooltip, item: newItem });
       }
@@ -91,9 +89,9 @@ useChartTooltip.getInitialState = (params, currentState) => ({
       params.tooltipItem == null
         ? null
         : createIdentifierWithType(currentState)(
-            // Need some as because the generic SeriesType can't be propagated to plugins methods.
-            params.tooltipItem as SeriesItemIdentifier<ChartSeriesType>,
-          ),
+          // Need some as because the generic SeriesType can't be propagated to plugins methods.
+          params.tooltipItem as SeriesItemIdentifier<ChartSeriesType>,
+        ),
   },
 });
 
