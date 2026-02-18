@@ -4,12 +4,7 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { type Plugin, createPlugin } from '../core/plugin';
 import type { GridRowId } from '../internal/rows/types';
 import { filteringSelectors } from './selectors';
-import {
-  buildFilterApplier,
-  cleanFilterModel,
-  EMPTY_FILTER_MODEL,
-  isFilterCondition,
-} from './filteringUtils';
+import { buildFilterApplier, cleanFilterModel, isFilterCondition } from './filteringUtils';
 import type {
   FilterCondition,
   FilterModel,
@@ -31,6 +26,7 @@ type FilteringPlugin = Plugin<
   FilteringColumnMeta
 >;
 
+const EMPTY_FILTER_MODEL: FilterModel = { logicOperator: 'and', conditions: [] };
 const FILTERING_PIPELINE_PROCESSOR_NAME = 'filtering';
 
 const filteringPlugin = createPlugin<FilteringPlugin>()({
@@ -39,19 +35,17 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
   selectors: filteringSelectors,
 
   initialize: (state, params) => {
-    // Prefer controlled model over initialState
     const initialModel =
-      params.filtering?.model ?? params.initialState?.filtering?.model ?? EMPTY_FILTER_MODEL;
+      params.filtering?.model ?? params.initialState?.filtering?.model ?? undefined;
 
     const inputRowIds: GridRowId[] = state.rows.processedRowIds;
 
     let filteredRowIds: GridRowId[];
 
-    if (params.filtering?.external || params.filtering?.mode === 'manual') {
-      // For external/manual filtering, just mirror the input row order
+    if (!initialModel || params.filtering?.external || params.filtering?.mode === 'manual') {
+      // For empty filtering model or external/manual filtering, just mirror the input row order
       filteredRowIds = inputRowIds;
     } else {
-      // Auto mode: compute filtered row IDs synchronously to avoid a flash of unfiltered content
       const getColumn = (field: string) =>
         state.columns.lookup[field] as
           | ((typeof state.columns.lookup)[string] & FilteringColumnMeta)
@@ -79,7 +73,7 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         processedRowIds: filteredRowIds,
       },
       filtering: {
-        model: initialModel,
+        model: initialModel ?? EMPTY_FILTER_MODEL,
       },
     };
   },

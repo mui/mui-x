@@ -14,8 +14,6 @@ import { getDateFilterOperators } from './filterOperators/dateOperators';
 import { getBooleanFilterOperators } from './filterOperators/booleanOperators';
 import { getSingleSelectFilterOperators } from './filterOperators/singleSelectOperators';
 
-export const EMPTY_FILTER_MODEL: FilterModel = { logicOperator: 'and', conditions: [] };
-
 export function isFilterGroup(expr: FilterExpression): expr is FilterGroup {
   return 'logicOperator' in expr && 'conditions' in expr;
 }

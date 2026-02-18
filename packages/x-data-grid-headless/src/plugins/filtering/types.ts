@@ -25,6 +25,7 @@ type QuickFilter = {
 export type FilterModel = FilterGroup & {
   quickFilter?: QuickFilter;
 };
+
 export interface FilterOperator<V = any> {
   value: string;
   label?: string;
