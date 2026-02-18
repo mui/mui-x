@@ -22,7 +22,6 @@ import {
   getDefaultFilterOperators,
   isFilterGroup,
   isFilterCondition,
-  EMPTY_FILTER_MODEL,
 } from './filteringUtils';
 
 describe('Type Guards', () => {
@@ -704,7 +703,7 @@ describe('buildFilterApplier', () => {
   describe('empty model', () => {
     it('should return null for empty model', () => {
       const applier = buildFilterApplier({
-        model: EMPTY_FILTER_MODEL,
+        model: { logicOperator: 'and', conditions: [] },
         getColumn,
         getRow,
       });
