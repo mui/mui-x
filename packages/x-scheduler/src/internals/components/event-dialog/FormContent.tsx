@@ -31,12 +31,10 @@ import EventDialogHeader from './EventDialogHeader';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 
-const FormActions = styled('div', {
+const FormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
 })(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
   padding: theme.spacing(3),
   gap: theme.spacing(2),
 }));
@@ -271,16 +269,14 @@ export function FormContent(props: FormContentProps) {
           value={tabValue}
         />
         <Divider />
-        <DialogActions>
-          <FormActions className={classes.eventDialogFormActions}>
-            <Button color="error" type="button" onClick={handleDelete}>
-              {localeText.deleteEvent}
-            </Button>
-            <Button variant="contained" type="submit">
-              {localeText.saveChanges}
-            </Button>
-          </FormActions>
-        </DialogActions>
+        <FormActions className={classes.eventDialogFormActions}>
+          <Button color="error" type="button" onClick={handleDelete}>
+            {localeText.deleteEvent}
+          </Button>
+          <Button variant="contained" type="submit">
+            {localeText.saveChanges}
+          </Button>
+        </FormActions>
       </EventDialogForm>
     </DialogContent>
   );

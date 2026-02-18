@@ -31,6 +31,20 @@ import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
+const EventDialogTabPanel = styled('div', {
+  name: 'MuiEventDialog',
+  slot: 'TabPanel',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  minHeight: 0,
+  overflow: 'hidden',
+  '&[hidden]': {
+    display: 'none',
+  },
+});
+
 const RecurrenceTabContent = styled('div', {
   name: 'MuiEventDialog',
   slot: 'RecurrenceTabContent',
@@ -303,17 +317,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     : 'byMonthDay';
 
   return (
-    <Box
+    <EventDialogTabPanel
       role="tabpanel"
       id="recurrence-tabpanel"
       aria-labelledby="recurrence-tab"
-      sx={{
-        display: tabValue !== 'recurrence' ? 'none' : 'flex',
-        flexDirection: 'column',
-        flex: 1,
-        minHeight: 0,
-        overflow: 'hidden',
-      }}
+      hidden={tabValue !== 'recurrence'}
     >
       <RecurrenceTabContent className={classes.eventDialogRecurrenceTabContent}>
         <FormControl fullWidth size="small">
@@ -462,6 +470,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           </RadioGroup>
         </FormControl>
       </RecurrenceTabContent>
-    </Box>
+    </EventDialogTabPanel>
   );
 }

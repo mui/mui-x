@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import {
   SchedulerEventColor,
@@ -23,6 +22,20 @@ import {
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
 import ResourceAndColorSection from './ResourceAndColorSection';
+
+const EventDialogTabPanel = styled('div', {
+  name: 'MuiEventDialog',
+  slot: 'TabPanel',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  minHeight: 0,
+  overflow: 'hidden',
+  '&[hidden]': {
+    display: 'none',
+  },
+});
 
 const GeneralTabContent = styled('div', {
   name: 'MuiEventDialog',
@@ -146,17 +159,11 @@ export function GeneralTab(props: GeneralTabProps) {
   };
 
   return (
-    <Box
+    <EventDialogTabPanel
       role="tabpanel"
       id="general-tabpanel"
       aria-labelledby="general-tab"
-      sx={{
-        display: value !== 'general' ? 'none' : 'flex',
-        flexDirection: 'column',
-        flex: 1,
-        minHeight: 0,
-        overflow: 'hidden',
-      }}
+      hidden={value !== 'general'}
     >
       <GeneralTabContent className={classes.eventDialogGeneralTabContent}>
         <SectionHeaderTitle variant="subtitle2">
@@ -263,6 +270,6 @@ export function GeneralTab(props: GeneralTabProps) {
           }}
         />
       </GeneralTabContent>
-    </Box>
+    </EventDialogTabPanel>
   );
 }
