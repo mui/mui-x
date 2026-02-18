@@ -224,7 +224,7 @@ export function FormContent(props: FormContentProps) {
 
   return (
     <DialogContent className={classes.eventDialogContent}>
-      <EventDialogForm onSubmit={handleSubmit}>
+      <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
         <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
           <span
             id="event-dialog-title"
