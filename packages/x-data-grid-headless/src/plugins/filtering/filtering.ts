@@ -206,11 +206,6 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
       }
     };
 
-    const setQuickFilterValues = (values: any[]): void => {
-      const model = getModel();
-      setModel({ ...model, quickFilter: { ...model.quickFilter, values } });
-    };
-
     // Track previous model prop for controlled mode
     const prevFilterModelRef = React.useRef<FilterModel>(store.state.filtering.model);
 
@@ -295,7 +290,6 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
         computeFilteredRowIds,
         upsertCondition,
         deleteCondition,
-        setQuickFilterValues,
       },
     };
   },

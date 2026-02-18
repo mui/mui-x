@@ -180,11 +180,5 @@ export interface FilteringApi {
      * @param {FilterCondition} condition The condition to delete.
      */
     deleteCondition: (condition: FilterCondition) => void;
-
-    /**
-     * Set the quick filter values.
-     * @param {any[]} values The quick filter values.
-     */
-    setQuickFilterValues: (values: any[]) => void;
   };
 }
