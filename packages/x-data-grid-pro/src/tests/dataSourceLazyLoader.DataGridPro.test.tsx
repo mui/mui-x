@@ -36,10 +36,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     columnHeaderHeight +
     // border
     2;
-  const sleep = (ms: number) =>
-    new Promise<void>((resolve) => {
-      setTimeout(resolve, ms);
-    });
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -262,6 +258,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       render(<TestDataSourceLazyLoader mockServerRowCount={20} disableVirtualization={false} />);
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
+      vi.useFakeTimers();
       fetchRowsSpy.resetHistory();
 
       await act(async () => {
@@ -271,10 +268,11 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           firstColumnIndex: 0,
           lastColumnIndex: 0,
         });
-        await sleep(700);
+        await vi.advanceTimersByTimeAsync(700);
       });
 
       expect(fetchRowsSpy.callCount).to.equal(0);
+      vi.useRealTimers();
     });
 
     it('should not refetch during polling when cache entry is still valid', async () => {
@@ -287,13 +285,21 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       );
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
+      vi.useFakeTimers();
       fetchRowsSpy.resetHistory();
 
       await act(async () => {
-        await sleep(450);
+        apiRef.current?.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 0,
+          lastRowIndex: 3,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+        await vi.advanceTimersByTimeAsync(450);
       });
 
       expect(fetchRowsSpy.callCount).to.equal(0);
+      vi.useRealTimers();
     });
 
     it('should periodically revalidate the current range when dataSourceRevalidateMs is set', async () => {
