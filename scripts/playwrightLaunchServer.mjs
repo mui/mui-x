@@ -15,6 +15,7 @@ import { chromium } from '@playwright/test';
     // Some grid layout tests require scrollbars to be visible
     ignoreDefaultArgs: ['--hide-scrollbars'],
   });
+  browserServer.process().stderr.pipe(process.stderr);
   // eslint-disable-next-line no-console
   console.log(browserServer.wsEndpoint());
 })();

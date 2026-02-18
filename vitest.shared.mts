@@ -66,17 +66,18 @@ export default defineConfig({
     },
     browser: {
       provider: playwright({
-        launchOptions: {
-          // Required for tests which use scrollbars.
-          ignoreDefaultArgs: ['--hide-scrollbars'],
-        },
         ...(process.env.PLAYWRIGHT_SERVER_WS
           ? {
               connectOptions: {
                 wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
               },
             }
-          : {}),
+          : {
+              launchOptions: {
+                // Required for tests which use scrollbars.
+                ignoreDefaultArgs: ['--hide-scrollbars'],
+              },
+            }),
       }),
       viewport: { width: 1280, height: 800 },
       headless: true,
