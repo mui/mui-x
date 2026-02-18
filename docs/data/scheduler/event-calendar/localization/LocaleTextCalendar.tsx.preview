@@ -1,0 +1,8 @@
+<EventCalendar
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  localeText={frFR.components.MuiEventCalendar.defaultProps.localeText}
+  defaultPreferences={{ isSidePanelOpen: false }}
+/>

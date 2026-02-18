@@ -231,14 +231,16 @@ describe('EventCalendar', () => {
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
@@ -252,14 +254,16 @@ describe('EventCalendar', () => {
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
@@ -273,14 +277,16 @@ describe('EventCalendar', () => {
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });

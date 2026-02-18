@@ -6,15 +6,13 @@ import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-schedule
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
 const MonthsHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'MonthsHeader',
 })({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(var(--months-cell-width), 1fr))',
-  minWidth: 'calc(var(--unit-count) * var(--months-cell-width))',
   gridTemplateRows: 'auto auto',
 });
 
@@ -38,6 +36,7 @@ const MonthLabel = styled('div', {
   slot: 'MonthsHeaderMonthLabel',
 })(({ theme }) => ({
   gridRow: 2,
+  width: 'calc(var(--days-in-month) * var(--months-cell-width))',
   padding: theme.spacing(1),
   textAlign: 'center',
   borderRight: `1px solid ${theme.palette.divider}`,
@@ -49,7 +48,7 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventTimelinePremiumStoreContext();
-  const classes = useEventTimelinePremiumClasses();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
@@ -72,14 +71,19 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
                 className={classes.monthsHeaderYearLabel}
                 style={
                   {
-                    gridColumn: `${index + 1} / span ${Math.min(12, months.length - index - 1) - monthNumber + 1}`,
+                    gridColumn: `${index + 1} / span ${Math.min(12 - monthNumber, months.length - index)}`,
                   } as React.CSSProperties
                 }
               >
                 {adapter.getYear(month.value)}
               </YearLabel>
             )}
-            <MonthLabel className={classes.monthsHeaderMonthLabel}>
+            <MonthLabel
+              className={classes.monthsHeaderMonthLabel}
+              style={
+                { '--days-in-month': adapter.getDaysInMonth(month.value) } as React.CSSProperties
+              }
+            >
               {adapter.format(month.value, 'month3Letters')}
             </MonthLabel>
           </React.Fragment>
