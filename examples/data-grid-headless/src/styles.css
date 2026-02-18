@@ -61,10 +61,6 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ===========================================
-   Layout
-   =========================================== */
-
 .test-grid-container {
   display: flex;
   align-items: flex-start;
@@ -83,21 +79,79 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ===========================================
-   Grid Wrapper
-   =========================================== */
-
 .grid-wrapper {
   flex: 1 1 auto;
   min-width: 0;
-  max-height: 100%;
+  max-height: calc(100% - 2 * var(--space-4));
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.grid-root {
   background-color: var(--color-background);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.grid-root:has(+ .grid-footer) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+
+.grid-mainContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.grid-virtualScroller {
+  overflow: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+}
+
+.grid-virtualScrollerContent {
+  position: relative;
+}
+
+.grid-column-headers-container {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background-color: var(--color-background);
+}
+
+.grid-column-headers {
+  position: relative;
+  background-color: var(--color-background);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.grid-column-headers-content {
+  display: flex;
+  position: absolute;
+  top: 0;
+}
+
+.grid-column-header-cell {
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  user-select: none;
 }
 
 .grid-scroll-container {
@@ -106,42 +160,27 @@
   overflow: auto;
 }
 
-/* ===========================================
-   Table Styles
-   =========================================== */
-
-.grid-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 100%;
+.grid-row {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  box-sizing: border-box;
 }
 
-.grid-thead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
+.grid-cell {
+  padding: 12px 16px;
+  font-size: 14px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
 
-.grid-th {
-  padding: var(--space-3) var(--space-4);
-  text-align: left;
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: -0.01em;
-  color: var(--color-text-secondary);
-  background-color: var(--gray-50);
-  border-bottom: 1px solid var(--color-border);
-  user-select: none;
-  white-space: nowrap;
-}
-
-.grid-th--sortable {
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
-}
-
-.grid-th--sortable:hover {
-  background-color: var(--gray-100);
+.grid-scrollbar-corner {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  overflow: scroll;
 }
 
 .grid-sort-icon {
@@ -151,23 +190,66 @@
   font-weight: 600;
 }
 
-.grid-tr {
+/* ===========================================
+   Grid Footer (Pagination)
+   =========================================== */
+
+.grid-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+  background-color: var(--gray-50);
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
+.grid-footer__info {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.grid-footer__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.grid-footer__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-background);
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--color-text);
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 
-.grid-tr:hover {
-  background-color: var(--gray-50);
+.grid-footer__btn:hover:not(:disabled) {
+  background-color: var(--gray-100);
 }
 
-.grid-td {
-  padding: var(--space-3) var(--space-4);
-  font-size: 14px;
-  color: var(--color-text);
-  border-bottom: 1px solid var(--gray-100);
+.grid-footer__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
-.grid-tr:last-child .grid-td {
-  border-bottom: none;
+.grid-footer__page-info {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  padding: 0 var(--space-2);
+  white-space: nowrap;
 }
 
 /* ===========================================
@@ -309,6 +391,10 @@
   overflow: hidden;
 }
 
+.config-section + .config-section {
+  margin-top: var(--space-3);
+}
+
 .config-section__header {
   width: 100%;
   padding: var(--space-2) var(--space-3);
@@ -359,6 +445,13 @@
 
 .config-section__content {
   padding: var(--space-1) var(--space-3) var(--space-3);
+}
+
+.config-section__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
 }
 
 /* ===========================================
@@ -509,6 +602,38 @@
   cursor: not-allowed;
 }
 
+.number-input {
+  width: 92px;
+  padding: 6px 10px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.number-input:hover {
+  border-color: var(--gray-300);
+}
+
+.number-input:focus {
+  border-color: var(--gray-900);
+  box-shadow: 0 0 0 1px var(--gray-900);
+}
+
+.number-input--disabled {
+  background-color: var(--gray-50);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
 /* ===========================================
    Button
    =========================================== */
@@ -548,6 +673,17 @@
 
 .btn--primary:hover {
   background-color: var(--gray-800);
+}
+
+.btn--secondary {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn--secondary:hover {
+  background-color: var(--gray-50);
+  border-color: var(--gray-300);
 }
 
 .btn--block {

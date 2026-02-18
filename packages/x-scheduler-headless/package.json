@@ -2,7 +2,7 @@
   "name": "@mui/x-scheduler-headless",
   "version": "0.0.1-alpha.0",
   "private": true,
-  "description": "The community edition of the headless version of the Scheduler component (MUI X).",
+  "description": "The community edition of the headless version of the scheduler components (MUI X).",
   "author": "MUI Team",
   "license": "MIT",
   "bugs": {
