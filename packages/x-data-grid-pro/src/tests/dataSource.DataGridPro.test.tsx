@@ -88,4 +88,22 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       expect(testCache.size()).to.equal(1); // 1 chunk of 200 rows
     });
   });
+
+  describe('Revalidation', () => {
+    it('should periodically revalidate the current query when dataSourceRevalidateMs is set', async () => {
+      render(<TestDataSource dataSourceCache={null} dataSourceRevalidateMs={100} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      });
+
+      fetchRowsSpy.resetHistory();
+
+      await waitFor(
+        () => {
+          expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+        },
+        { timeout: 1_500 },
+      );
+    });
+  });
 });

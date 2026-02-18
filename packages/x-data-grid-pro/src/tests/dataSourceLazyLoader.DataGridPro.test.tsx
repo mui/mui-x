@@ -282,7 +282,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         <TestDataSourceLazyLoader
           mockServerRowCount={20}
           disableVirtualization={false}
-          lazyLoadingRevalidateMs={100}
+          dataSourceRevalidateMs={100}
         />,
       );
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
@@ -296,13 +296,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(fetchRowsSpy.callCount).to.equal(0);
     });
 
-    it('should periodically revalidate the current range when lazyLoadingRevalidateMs is set', async () => {
+    it('should periodically revalidate the current range when dataSourceRevalidateMs is set', async () => {
       render(
         <TestDataSourceLazyLoader
           mockServerRowCount={20}
           disableVirtualization={false}
           dataSourceCache={null}
-          lazyLoadingRevalidateMs={100}
+          dataSourceRevalidateMs={100}
         />,
       );
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);

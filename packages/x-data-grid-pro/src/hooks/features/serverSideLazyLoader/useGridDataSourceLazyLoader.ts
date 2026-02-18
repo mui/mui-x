@@ -54,7 +54,7 @@ export const useGridDataSourceLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs' | 'lazyLoadingRevalidateMs'
+    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs' | 'dataSourceRevalidateMs'
   >,
 ): void => {
   const setStrategyAvailability = React.useCallback(() => {
@@ -119,15 +119,15 @@ export const useGridDataSourceLazyLoader = (
     (params: Partial<GridGetRowsParams>) => {
       stopPolling();
 
-      if (props.lazyLoadingRevalidateMs <= 0) {
+      if (props.dataSourceRevalidateMs <= 0) {
         return;
       }
 
       pollingIntervalRef.current = setInterval(() => {
         revalidate(params);
-      }, props.lazyLoadingRevalidateMs);
+      }, props.dataSourceRevalidateMs);
     },
-    [props.lazyLoadingRevalidateMs, stopPolling, revalidate],
+    [props.dataSourceRevalidateMs, stopPolling, revalidate],
   );
 
   const resetGrid = React.useCallback(() => {
@@ -554,12 +554,12 @@ export const useGridDataSourceLazyLoader = (
     };
   }, [throttledHandleRenderedRowsIntervalChange, debouncedRevalidate, stopPolling]);
 
-  // Stop polling when lazyLoadingRevalidateMs is set to 0
+  // Stop polling when dataSourceRevalidateMs is set to 0
   React.useEffect(() => {
-    if (props.lazyLoadingRevalidateMs <= 0) {
+    if (props.dataSourceRevalidateMs <= 0) {
       stopPolling();
     }
-  }, [props.lazyLoadingRevalidateMs, stopPolling]);
+  }, [props.dataSourceRevalidateMs, stopPolling]);
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {

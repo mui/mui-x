@@ -12,6 +12,10 @@ import type { GridDataSourceCacheDefaultConfig } from './cache';
  */
 export type GridDataSourceFetchRowsParams<T> = Partial<T> & GridGetRowsOptions;
 
+export interface GridDataSourceFetchRowChildrenOptions {
+  showChildrenLoading?: boolean;
+}
+
 export interface GridDataSourceApi {
   /**
    * The data source API.
@@ -50,7 +54,10 @@ export interface GridDataSourceApiBase {
 
 export interface GridDataSourceBaseOptions {
   cacheOptions?: GridDataSourceCacheDefaultConfig;
-  fetchRowChildren?: (parents: GridRowId[]) => void;
+  fetchRowChildren?: (
+    parents: GridRowId[],
+    options?: GridDataSourceFetchRowChildrenOptions,
+  ) => void;
   clearDataSourceState?: () => void;
   handleEditRow?: (params: GridUpdateRowParams, updatedRow: GridRowModel) => void;
 }

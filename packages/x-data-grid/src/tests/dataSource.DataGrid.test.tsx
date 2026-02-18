@@ -304,6 +304,24 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     });
   });
 
+  describe('Revalidation', () => {
+    it('should periodically revalidate the current query when dataSourceRevalidateMs is set', async () => {
+      render(<TestDataSource dataSourceCache={null} dataSourceRevalidateMs={100} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      });
+
+      fetchRowsSpy.resetHistory();
+
+      await waitFor(
+        () => {
+          expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+        },
+        { timeout: 1_500 },
+      );
+    });
+  });
+
   describe('Error handling', () => {
     it('should call `onDataSourceError` when the data source returns an error', async () => {
       const onDataSourceError = spy();

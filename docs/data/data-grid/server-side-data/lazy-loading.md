@@ -124,12 +124,13 @@ Check the [server-side data recipes](/x/react-data-grid/server-side-data/recipes
 
 When users scroll back to an already fetched range, the Data Grid performs a revalidation for that range. It checks the cache, if the cache entry is outdated (or the cache is disabled), it refetches the data from the server, diffs against current rows, and updates only if the subset is _actually changed_ minimizing the actual row replacements in the Data Grid.
 
-For highly dynamic use cases, where the revalidation is required for the current viewport too, you can add polling with `lazyLoadingRevalidateMs` to trigger revalidation based on the `setInterval()` timer every "X" milliseconds.
+For highly dynamic use cases, where the revalidation is required for the current viewport too, you can add polling with `dataSourceRevalidateMs` to trigger revalidation based on the `setInterval()` timer every "X" milliseconds.
 This is useful for dashboards such as stock tickers, where values can change every few seconds.
+This prop also works for non-lazy data source modes like pagination, tree data, and row grouping.
 
 ### Dynamically updated datasets
 
-The following demo uses `lazyLoadingRevalidateMs="3_000"` (3 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
+The following demo uses `dataSourceRevalidateMs="3_000"` (3 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
 
 Note that the row IDs stay stable but the row values change over time.
 This is useful for dashboards such as stock trackers, where rows represent the same entities while values are updated continuously.
@@ -141,7 +142,7 @@ This is useful for dashboards such as stock trackers, where rows represent the s
 In this scenario, the backend can replace the data set with entirely new rows, including new row IDs.
 On each revalidation, only the visible range is replaced with the latest rows, and scrolling loads new ranges from the current data set.
 
-The demo below uses data batch numbers to identify the data set and replace the current viewport with the latest data set. It uses `lazyLoadingRevalidateMs="2_000"` (2 seconds) to revalidate the current viewport and get the latest data set. But the actual update only happens if the data batch is different from the previous one, which is only regenerated on the backend server every 10 seconds.
+The demo below uses data batch numbers to identify the data set and replace the current viewport with the latest data set. It uses `dataSourceRevalidateMs="2_000"` (2 seconds) to revalidate the current viewport and get the latest data set. But the actual update only happens if the data batch is different from the previous one, which is only regenerated on the backend server every 10 seconds.
 
 {{"demo": "ServerSideLazyLoadingFullyReplaced.js", "bg": "inline"}}
 

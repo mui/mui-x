@@ -83,6 +83,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     debouncedFetchRows,
     strategyProcessor: flatTreeStrategyProcessor,
     events,
+    startPolling,
     cacheChunkManager,
     cache,
   } = useGridDataSourceBase(apiRef, props, {
@@ -371,8 +372,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         { params: params.fetchParams, response },
         true,
       );
+      startPolling();
     },
-    [apiRef],
+    [apiRef, startPolling],
   );
 
   const dataSourceApi: GridDataSourceApiPro = {

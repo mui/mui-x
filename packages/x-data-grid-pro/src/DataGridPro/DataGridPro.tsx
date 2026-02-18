@@ -211,6 +211,13 @@ DataGridProRaw.propTypes = {
     set: PropTypes.func.isRequired,
   }),
   /**
+   * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
+   * If the refetched rows are different from the current rows, the grid will update the rows.
+   * Set to `0` to disable polling.
+   * @default 0
+   */
+  dataSourceRevalidateMs: PropTypes.number,
+  /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
    * @default 0
@@ -547,14 +554,6 @@ DataGridProRaw.propTypes = {
    * @default 500
    */
   lazyLoadingRequestThrottleMs: PropTypes.number,
-  /**
-   * If positive, the Data Grid will periodically revalidate the visible rows by
-   * re-fetching them from the server when the cache entry has expired.
-   * The timer resets whenever the viewport changes.
-   * Set to `0` to disable polling.
-   * @default 0
-   */
-  lazyLoadingRevalidateMs: PropTypes.number,
   /**
    * If `true`, displays the data in a list view.
    * Use in combination with `listViewColumn`.

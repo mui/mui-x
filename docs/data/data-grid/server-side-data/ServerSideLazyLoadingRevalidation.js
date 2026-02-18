@@ -104,7 +104,7 @@ function FlashOnChange({ children, changeId, align = 'left', fontWeight, sx }) {
       paddingRight="10px"
       paddingLeft="10px"
       width="100%"
-      fontWeight={fontWeight === 'bold' ? 'bold' : undefined}
+      fontWeight={fontWeight}
       sx={[
         (theme) => ({
           position: 'relative',
@@ -133,7 +133,7 @@ const columns = [
     width: 110,
     renderCell: (params) => (
       <FlashOnChange
-        changeId={params.row.priceChangeId}
+        changeId={params.value ?? 0}
         align="right"
         fontWeight="bold"
         sx={{
@@ -153,7 +153,7 @@ const columns = [
       const value = params.value ?? 0;
       return (
         <FlashOnChange
-          changeId={params.row.changeValueChangeId}
+          changeId={value}
           align="right"
           sx={{ color: value >= 0 ? 'success.main' : 'error.main' }}
         >
@@ -172,7 +172,7 @@ const columns = [
       const value = params.value ?? 0;
       return (
         <FlashOnChange
-          changeId={params.row.changePercentChangeId}
+          changeId={value}
           align="right"
           sx={{ color: value >= 0 ? 'success.main' : 'error.main' }}
         >
@@ -188,7 +188,7 @@ const columns = [
     type: 'number',
     width: 130,
     renderCell: (params) => (
-      <FlashOnChange changeId={params.row.volumeChangeId} align="right">
+      <FlashOnChange changeId={params.value ?? 0} align="right">
         {params.value?.toLocaleString()}
       </FlashOnChange>
     ),
@@ -198,55 +198,14 @@ const columns = [
 function ServerSideLazyLoadingRevalidation() {
   const apiRef = useGridApiRef();
   const [useCache, setUseCache] = React.useState(false);
-  const previousRowsById = React.useRef(new Map());
-  const changeIdCounter = React.useRef(1);
 
   const dataSource = React.useMemo(
     () => ({
       getRows: async (params) => {
         const response = await fakeStockServer(params);
-        const rows = response.rows.map((row) => {
-          const previousRow = previousRowsById.current.get(row.id);
-          let priceChangeId = 0;
-          let changeValueChangeId = 0;
-          let changePercentChangeId = 0;
-          let volumeChangeId = 0;
-
-          if (previousRow && previousRow.price !== row.price) {
-            priceChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-          if (previousRow && previousRow.change !== row.change) {
-            changeValueChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-          if (previousRow && previousRow.changePercent !== row.changePercent) {
-            changePercentChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-          if (previousRow && previousRow.volume !== row.volume) {
-            volumeChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-
-          previousRowsById.current.set(row.id, {
-            price: row.price,
-            change: row.change,
-            changePercent: row.changePercent,
-            volume: row.volume,
-          });
-
-          return {
-            ...row,
-            priceChangeId,
-            changeValueChangeId,
-            changePercentChangeId,
-            volumeChangeId,
-          };
-        });
 
         return {
-          rows,
+          rows: response.rows,
           rowCount: response.rowCount,
         };
       },
@@ -290,7 +249,7 @@ function ServerSideLazyLoadingRevalidation() {
           dataSource={dataSource}
           dataSourceCache={useCache ? undefined : null}
           lazyLoading
-          lazyLoadingRevalidateMs={3_000}
+          dataSourceRevalidateMs={3_000}
           paginationModel={{ page: 0, pageSize: 10 }}
           disableColumnSorting
           disableColumnFilter

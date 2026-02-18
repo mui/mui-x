@@ -36,16 +36,6 @@ interface ReplacedStockRow {
   name: string;
   price: number;
   batch: number;
-  priceChangeId: number;
-  batchChangeId: number;
-}
-
-interface ServerReplacedStockRow {
-  id: string;
-  symbol: string;
-  name: string;
-  price: number;
-  batch: number;
 }
 
 const getDatasetVersion = () => Math.floor(Date.now() / BACKEND_REPLACEMENT_MS);
@@ -60,7 +50,7 @@ function fakeReplacingServer(params: GridGetRowsParams) {
   const end = typeof params.end === 'number' ? params.end : start + 14;
   const version = getDatasetVersion();
 
-  const rows: ServerReplacedStockRow[] = [];
+  const rows: ReplacedStockRow[] = [];
   for (let i = start; i <= end && i < ROW_COUNT; i += 1) {
     const company = COMPANIES[i % COMPANIES.length];
     rows.push({
@@ -72,11 +62,9 @@ function fakeReplacingServer(params: GridGetRowsParams) {
     });
   }
 
-  return new Promise<{ rows: ServerReplacedStockRow[]; rowCount: number }>(
-    (resolve) => {
-      setTimeout(() => resolve({ rows, rowCount: ROW_COUNT }), 50);
-    },
-  );
+  return new Promise<{ rows: ReplacedStockRow[]; rowCount: number }>((resolve) => {
+    setTimeout(() => resolve({ rows, rowCount: ROW_COUNT }), 50);
+  });
 }
 
 function FlashOnChange({
@@ -137,9 +125,7 @@ const columns: GridColDef<ReplacedStockRow>[] = [
     headerName: 'Data batch',
     width: 140,
     renderCell: (params: GridRenderCellParams<ReplacedStockRow, number>) => (
-      <FlashOnChange changeId={params.row.batchChangeId}>
-        #{params.value}
-      </FlashOnChange>
+      <FlashOnChange changeId={params.value ?? 0}>#{params.value}</FlashOnChange>
     ),
   },
   {
@@ -148,11 +134,7 @@ const columns: GridColDef<ReplacedStockRow>[] = [
     type: 'number',
     width: 140,
     renderCell: (params: GridRenderCellParams<ReplacedStockRow, number>) => (
-      <FlashOnChange
-        changeId={params.row.priceChangeId}
-        align="right"
-        fontWeight="bold"
-      >
+      <FlashOnChange changeId={params.value ?? 0} align="right" fontWeight="bold">
         ${params.value?.toFixed(2)}
       </FlashOnChange>
     ),
@@ -162,47 +144,14 @@ const columns: GridColDef<ReplacedStockRow>[] = [
 function ServerSideLazyLoadingFullyReplaced() {
   const apiRef = useGridApiRef();
   const [useCache, setUseCache] = React.useState(false);
-  const previousRowsByIndex = React.useRef<
-    Map<number, Pick<ReplacedStockRow, 'price' | 'batch'>>
-  >(new Map());
-  const changeIdCounter = React.useRef(1);
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
       getRows: async (params: GridGetRowsParams) => {
         const response = await fakeReplacingServer(params);
-        const start = typeof params.start === 'number' ? params.start : 0;
-
-        const rows: ReplacedStockRow[] = response.rows.map((row, indexOffset) => {
-          const absoluteIndex = start + indexOffset;
-          const previousRow = previousRowsByIndex.current.get(absoluteIndex);
-          let priceChangeId = 0;
-          let batchChangeId = 0;
-
-          if (previousRow && previousRow.price !== row.price) {
-            priceChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-
-          if (previousRow && previousRow.batch !== row.batch) {
-            batchChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-
-          previousRowsByIndex.current.set(absoluteIndex, {
-            price: row.price,
-            batch: row.batch,
-          });
-
-          return {
-            ...row,
-            priceChangeId,
-            batchChangeId,
-          };
-        });
 
         return {
-          rows,
+          rows: response.rows,
           rowCount: response.rowCount,
         };
       },
@@ -246,7 +195,7 @@ function ServerSideLazyLoadingFullyReplaced() {
           dataSource={dataSource}
           dataSourceCache={useCache ? undefined : null}
           lazyLoading
-          lazyLoadingRevalidateMs={2_000}
+          dataSourceRevalidateMs={2_000}
           paginationModel={{ page: 0, pageSize: 10 }}
           disableColumnSorting
           disableColumnFilter

@@ -59,13 +59,6 @@ interface StockRow {
   volume: number;
 }
 
-interface StockRowWithChange extends StockRow {
-  priceChangeId: number;
-  changeValueChangeId: number;
-  changePercentChangeId: number;
-  volumeChangeId: number;
-}
-
 // Generate base prices for each stock (deterministic)
 const basePrices: Record<string, number> = {};
 STOCKS.forEach((stock, i) => {
@@ -115,7 +108,7 @@ function FlashOnChange({
   children: React.ReactNode;
   changeId: number;
   align?: 'left' | 'right';
-  fontWeight?: 'regular' | 'bold';
+  fontWeight?: React.CSSProperties['fontWeight'];
   sx?: SxProps<Theme>;
 }) {
   const [flash, setFlash] = React.useState(false);
@@ -140,7 +133,7 @@ function FlashOnChange({
       paddingRight="10px"
       paddingLeft="10px"
       width="100%"
-      fontWeight={fontWeight === 'bold' ? 'bold' : undefined}
+      fontWeight={fontWeight}
       sx={[
         (theme) => ({
           position: 'relative',
@@ -159,7 +152,7 @@ function FlashOnChange({
   );
 }
 
-const columns: GridColDef<StockRowWithChange>[] = [
+const columns: GridColDef<StockRow>[] = [
   { field: 'symbol', headerName: 'Symbol', width: 100 },
   { field: 'name', headerName: 'Company', flex: 1, minWidth: 180 },
   {
@@ -167,9 +160,9 @@ const columns: GridColDef<StockRowWithChange>[] = [
     headerName: 'Price',
     type: 'number',
     width: 110,
-    renderCell: (params: GridRenderCellParams<StockRowWithChange, number>) => (
+    renderCell: (params: GridRenderCellParams<StockRow, number>) => (
       <FlashOnChange
-        changeId={params.row.priceChangeId}
+        changeId={params.value ?? 0}
         align="right"
         fontWeight="bold"
         sx={{
@@ -185,11 +178,11 @@ const columns: GridColDef<StockRowWithChange>[] = [
     headerName: 'Change',
     type: 'number',
     width: 100,
-    renderCell: (params: GridRenderCellParams<StockRowWithChange, number>) => {
+    renderCell: (params: GridRenderCellParams<StockRow, number>) => {
       const value = params.value ?? 0;
       return (
         <FlashOnChange
-          changeId={params.row.changeValueChangeId}
+          changeId={value}
           align="right"
           sx={{ color: value >= 0 ? 'success.main' : 'error.main' }}
         >
@@ -204,11 +197,11 @@ const columns: GridColDef<StockRowWithChange>[] = [
     headerName: '% Change',
     type: 'number',
     width: 110,
-    renderCell: (params: GridRenderCellParams<StockRowWithChange, number>) => {
+    renderCell: (params: GridRenderCellParams<StockRow, number>) => {
       const value = params.value ?? 0;
       return (
         <FlashOnChange
-          changeId={params.row.changePercentChangeId}
+          changeId={value}
           align="right"
           sx={{ color: value >= 0 ? 'success.main' : 'error.main' }}
         >
@@ -223,8 +216,8 @@ const columns: GridColDef<StockRowWithChange>[] = [
     headerName: 'Volume',
     type: 'number',
     width: 130,
-    renderCell: (params: GridRenderCellParams<StockRowWithChange, number>) => (
-      <FlashOnChange changeId={params.row.volumeChangeId} align="right">
+    renderCell: (params: GridRenderCellParams<StockRow, number>) => (
+      <FlashOnChange changeId={params.value ?? 0} align="right">
         {params.value?.toLocaleString()}
       </FlashOnChange>
     ),
@@ -234,57 +227,14 @@ const columns: GridColDef<StockRowWithChange>[] = [
 function ServerSideLazyLoadingRevalidation() {
   const apiRef = useGridApiRef();
   const [useCache, setUseCache] = React.useState(false);
-  const previousRowsById = React.useRef<
-    Map<number, Pick<StockRow, 'price' | 'change' | 'changePercent' | 'volume'>>
-  >(new Map());
-  const changeIdCounter = React.useRef(1);
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
       getRows: async (params: GridGetRowsParams) => {
         const response = await fakeStockServer(params);
-        const rows: StockRowWithChange[] = response.rows.map((row) => {
-          const previousRow = previousRowsById.current.get(row.id);
-          let priceChangeId = 0;
-          let changeValueChangeId = 0;
-          let changePercentChangeId = 0;
-          let volumeChangeId = 0;
-
-          if (previousRow && previousRow.price !== row.price) {
-            priceChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-          if (previousRow && previousRow.change !== row.change) {
-            changeValueChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-          if (previousRow && previousRow.changePercent !== row.changePercent) {
-            changePercentChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-          if (previousRow && previousRow.volume !== row.volume) {
-            volumeChangeId = changeIdCounter.current;
-            changeIdCounter.current += 1;
-          }
-
-          previousRowsById.current.set(row.id, {
-            price: row.price,
-            change: row.change,
-            changePercent: row.changePercent,
-            volume: row.volume,
-          });
-
-          return {
-            ...row,
-            priceChangeId,
-            changeValueChangeId,
-            changePercentChangeId,
-            volumeChangeId,
-          };
-        });
 
         return {
-          rows,
+          rows: response.rows,
           rowCount: response.rowCount,
         };
       },
@@ -328,7 +278,7 @@ function ServerSideLazyLoadingRevalidation() {
           dataSource={dataSource}
           dataSourceCache={useCache ? undefined : null}
           lazyLoading
-          lazyLoadingRevalidateMs={3_000}
+          dataSourceRevalidateMs={3_000}
           paginationModel={{ page: 0, pageSize: 10 }}
           disableColumnSorting
           disableColumnFilter

@@ -49,11 +49,15 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     },
   ) {
     apiRef = useGridApiRef();
-    mockServer = useMockServer(dataSetOptions, serverOptions, props.shouldRequestsFail ?? false);
+    const {
+      shouldRequestsFail = false,
+      transformGetRowsResponse: transformGetRowsResponseProp = (rows) => rows,
+      ...otherProps
+    } = props;
+    mockServer = useMockServer(dataSetOptions, serverOptions, shouldRequestsFail);
     const { columns } = mockServer;
 
     const { fetchRows } = mockServer;
-    const { transformGetRowsResponse: transformGetRowsResponseProp = (rows) => rows } = props;
 
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
@@ -95,7 +99,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
           treeData
           pageSizeOptions={pageSizeOptions}
           disableVirtualization
-          {...props}
+          {...otherProps}
         />
       </div>
     );
@@ -139,6 +143,94 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
+  });
+
+  it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
+    render(<TestDataSource dataSourceCache={null} dataSourceRevalidateMs={100} />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+    });
+
+    fetchRowsSpy.resetHistory();
+
+    await waitFor(
+      () => {
+        expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      },
+      { timeout: 1_500 },
+    );
+  });
+
+  it('should periodically revalidate expanded nested rows when dataSourceRevalidateMs is set', async () => {
+    const { user } = render(<TestDataSource dataSourceCache={null} dataSourceRevalidateMs={100} />);
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    fetchRowsSpy.resetHistory();
+
+    await waitFor(
+      () => {
+        expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      },
+      { timeout: 1_500 },
+    );
+
+    const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
+      const url = new URL(call.firstArg as string);
+      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+      return groupKeys.length > 0;
+    });
+
+    expect(hasNestedGroupRequest).to.equal(true);
+  });
+
+  it('should not set children loading state during background nested revalidation', async () => {
+    const { user } = render(<TestDataSource dataSourceCache={null} dataSourceRevalidateMs={100} />);
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+      .children[0];
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
+
+    fetchRowsSpy.resetHistory();
+    setChildrenLoadingSpy.resetHistory();
+
+    await waitFor(
+      () => {
+        const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
+          const url = new URL(call.firstArg as string);
+          const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+          return groupKeys.length > 0;
+        });
+        expect(hasNestedGroupRequest).to.equal(true);
+      },
+      { timeout: 2_500 },
+    );
+
+    const hasLoadingTrueCall = setChildrenLoadingSpy
+      .getCalls()
+      .some((call) => call.args[0] === expandedRowId && call.args[1] === true);
+    setChildrenLoadingSpy.restore();
+    expect(hasLoadingTrueCall).to.equal(false);
   });
 
   it('should fetch nested data when clicking on a dropdown', async () => {

@@ -163,14 +163,6 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    */
   lazyLoadingRequestThrottleMs: number;
   /**
-   * If positive, the Data Grid will periodically revalidate the visible rows by
-   * re-fetching them from the server when the cache entry has expired.
-   * The timer resets whenever the viewport changes.
-   * Set to `0` to disable polling.
-   * @default 0
-   */
-  lazyLoadingRevalidateMs: number;
-  /**
    * If `true`, displays the data in a list view.
    * Use in combination with `listViewColumn`.
    */
