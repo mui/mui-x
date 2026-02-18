@@ -22,33 +22,7 @@ import {
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
 import ResourceAndColorSection from './ResourceAndColorSection';
-
-const EventDialogTabPanel = styled('div', {
-  name: 'MuiEventDialog',
-  slot: 'TabPanel',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-  minHeight: 0,
-  overflow: 'hidden',
-  '&[hidden]': {
-    display: 'none',
-  },
-});
-
-const GeneralTabContent = styled('div', {
-  name: 'MuiEventDialog',
-  slot: 'GeneralTabContent',
-})(({ theme }) => ({
-  padding: theme.spacing(3),
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(2.5),
-  flex: 1,
-  overflow: 'auto',
-  scrollbarWidth: 'thin',
-}));
+import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
 const SectionHeaderTitle = styled(Typography, {
   name: 'MuiEventDialog',
@@ -166,7 +140,7 @@ export function GeneralTab(props: GeneralTabProps) {
       className={classes.eventDialogTabPanel}
       hidden={value !== 'general'}
     >
-      <GeneralTabContent className={classes.eventDialogGeneralTabContent}>
+      <EventDialogTabContent className={classes.eventDialogTabContent}>
         <SectionHeaderTitle variant="subtitle2">
           {localeText.dateTimeSectionLabel}
         </SectionHeaderTitle>
@@ -270,7 +244,7 @@ export function GeneralTab(props: GeneralTabProps) {
             input: { readOnly: isPropertyReadOnly('description') },
           }}
         />
-      </GeneralTabContent>
+      </EventDialogTabContent>
     </EventDialogTabPanel>
   );
 }
