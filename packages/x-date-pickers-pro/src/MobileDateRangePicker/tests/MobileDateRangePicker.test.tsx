@@ -172,7 +172,11 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'end',
+        fieldType: 'multi-input',
+      });
 
       // Change the end date
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -202,7 +206,11 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
 
       // Change the start date (already tested)
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -234,7 +242,11 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
 
       // Change the start date (already tested)
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -267,7 +279,11 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
@@ -293,7 +309,11 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));

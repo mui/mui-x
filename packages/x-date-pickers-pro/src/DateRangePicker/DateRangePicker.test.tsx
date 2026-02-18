@@ -22,14 +22,22 @@ describe('<DateRangePicker />', () => {
     stubMatchMedia(true);
     // Test with accessible DOM structure
     const { unmount, user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
-    await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    await openPickerAsync(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
 
     unmount();
 
     // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
-    await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    await openPickerAsync(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
   });
 
@@ -37,14 +45,22 @@ describe('<DateRangePicker />', () => {
     stubMatchMedia(false);
     // Test with accessible DOM structure
     const { unmount, user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
-    await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    await openPickerAsync(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
 
     unmount();
 
     // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
-    await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    await openPickerAsync(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
   });
 
