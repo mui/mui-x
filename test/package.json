@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/utils": "0.2.3",
+    "@base-ui/utils": "0.2.4",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@mui/material": "catalog:",
@@ -40,7 +40,7 @@
     "react-dom": "catalog:",
     "react-router": "catalog:",
     "react-transition-group": "catalog:",
-    "semver": "7.7.3",
+    "semver": "7.7.4",
     "stylis": "catalog:"
   }
 }
