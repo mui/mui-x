@@ -35,7 +35,7 @@ export interface PieChartSlots
     PiePlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'item' | 'none'>,
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 
@@ -44,7 +44,7 @@ export interface PieChartSlotProps
     PiePlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'item' | 'none'>,
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 

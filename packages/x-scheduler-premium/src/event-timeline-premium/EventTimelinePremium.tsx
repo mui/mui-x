@@ -13,6 +13,7 @@ import {
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import {
   eventDialogSlots,
   EventDialogStyledContext,
@@ -84,8 +85,9 @@ const EventTimelinePremiumRoot = styled('div', {
   ...schedulerTokens,
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
-  '--weeks-cell-width': '64px',
-  '--months-cell-width': '180px',
+  '--weeks-cell-width': 'calc(64px * 7)',
+  // Months view uses per-day units instead of per-month, so each column width = days in month × 6px
+  '--months-cell-width': '6px',
   '--years-cell-width': '200px',
   display: 'flex',
   flexDirection: 'column',
@@ -129,7 +131,8 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
     store.setView(event.target.value as EventTimelinePremiumView, event as Event);
   };
 
-  const { localeText, ...other } = forwardedProps;
+  const { localeText, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
 
   const mergedLocaleText = React.useMemo(
     () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),
