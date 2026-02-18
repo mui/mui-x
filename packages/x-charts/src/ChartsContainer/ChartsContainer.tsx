@@ -142,8 +142,8 @@ ChartsContainer.propTypes = {
    */
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
-      dataIndex: PropTypes.any,
-      seriesId: PropTypes.object,
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
       type: PropTypes.object.isRequired,
     }),
   ),
@@ -193,8 +193,8 @@ ChartsContainer.propTypes = {
    */
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
-      dataIndex: PropTypes.any,
-      seriesId: PropTypes.object,
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
       type: PropTypes.object.isRequired,
     }),
   ),

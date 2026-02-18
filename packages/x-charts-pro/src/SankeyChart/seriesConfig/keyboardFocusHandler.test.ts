@@ -5,6 +5,7 @@ import keyboardFocusHandler from './keyboardFocusHandler';
 const state = (align: 'left' | 'justify') => ({
   series: {
     seriesConfig: { sankey: {} as any },
+    idToType: new Map([['sankey-1', 'sankey' as const]]),
     defaultizedSeries: {
       sankey: {
         seriesOrder: ['sankey-1'],

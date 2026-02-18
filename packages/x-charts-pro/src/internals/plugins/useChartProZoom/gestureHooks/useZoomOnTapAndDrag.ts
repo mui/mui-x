@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getSVGPoint,
+  getChartPoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -71,7 +71,7 @@ export const useZoomOnTapAndDrag = (
           const isZoomIn = event.detail.deltaY > 0;
           const scaleRatio = 1 + event.detail.deltaY / 100;
 
-          const point = getSVGPoint(element, {
+          const point = getChartPoint(element, {
             clientX: event.detail.initialCentroid.x,
             clientY: event.detail.initialCentroid.y,
           });
