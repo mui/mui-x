@@ -1,6 +1,10 @@
 import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
+import {
+  selectorChartDrawingArea,
+  selectorChartSvgWidth,
+  selectorChartSvgHeight,
+} from '../../corePlugins/useChartDimensions';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
 import {
@@ -97,16 +101,16 @@ export const selectorChartAxisZoomOptionsLookup = createSelector(
 );
 
 export const selectorDefaultXAxisTickNumber = createSelector(
-  selectorChartDrawingArea,
-  function selectorDefaultXAxisTickNumber(drawingArea) {
-    return getDefaultTickNumber(drawingArea.width);
+  selectorChartSvgWidth,
+  function selectorDefaultXAxisTickNumber(svgWidth) {
+    return getDefaultTickNumber(svgWidth);
   },
 );
 
 export const selectorDefaultYAxisTickNumber = createSelector(
-  selectorChartDrawingArea,
-  function selectorDefaultYAxisTickNumber(drawingArea) {
-    return getDefaultTickNumber(drawingArea.height);
+  selectorChartSvgHeight,
+  function selectorDefaultYAxisTickNumber(svgHeight) {
+    return getDefaultTickNumber(svgHeight);
   },
 );
 
