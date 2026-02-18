@@ -261,14 +261,14 @@ importers:
         specifier: 1.0.9-canary.60
         version: 1.0.9-canary.60(@types/node@22.19.3)(rollup@4.52.5)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: 0.0.3-canary.87
-        version: 0.0.3-canary.87(@next/eslint-plugin-next@15.5.12)(@types/node@22.19.3)(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(postcss@8.5.6)(prettier@3.7.4)(stylelint@17.1.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)
+        specifier: 0.0.3-canary.90
+        version: 0.0.3-canary.90(@next/eslint-plugin-next@15.5.12)(@types/node@22.19.3)(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(postcss@8.5.6)(prettier@3.7.4)(stylelint@17.1.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)
       '@mui/internal-markdown':
-        specifier: 2.0.14
-        version: 2.0.14
+        specifier: 2.0.15
+        version: 2.0.15
       '@mui/internal-netlify-cache':
-        specifier: 0.0.2-canary.1
-        version: 0.0.2-canary.1
+        specifier: 0.0.3-canary.0
+        version: 0.0.3-canary.0
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.6(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@22.19.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
@@ -510,8 +510,8 @@ importers:
         specifier: 'catalog:'
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
       '@mui/docs':
-        specifier: 7.3.7
-        version: 7.3.7(08686a6d65762dccb52c3980e384be8f)
+        specifier: 7.3.8
+        version: 7.3.8(08686a6d65762dccb52c3980e384be8f)
       '@mui/icons-material':
         specifier: 'catalog:'
         version: 7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
@@ -736,8 +736,8 @@ importers:
         specifier: 2.0.6
         version: 2.0.6
       '@mui/internal-scripts':
-        specifier: 2.0.17
-        version: 2.0.17
+        specifier: 2.0.18
+        version: 2.0.18
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.7
@@ -1277,9 +1277,6 @@ importers:
       '@base-ui/utils':
         specifier: 0.2.4
         version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@mui/x-internals':
-        specifier: workspace:*
-        version: link:../x-internals/build
       '@mui/x-virtualizer':
         specifier: workspace:*
         version: link:../x-virtualizer/build
@@ -4431,7 +4428,7 @@ packages:
   '@mui/base@5.0.0-beta.40-1':
     resolution: {integrity: sha512-agKXuNNy0bHUmeU7pNmoZwNFr7Hiyhojkb9+2PVyDG5+6RafYuyMgbrav8CndsB7KUc/U51JAw9vKNDLYBzaUA==}
     engines: {node: '>=12.0.0'}
-    deprecated: This package has been replaced by @base-ui-components/react
+    deprecated: This package has been replaced by @base-ui/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4446,8 +4443,8 @@ packages:
   '@mui/core-downloads-tracker@7.3.7':
     resolution: {integrity: sha512-8jWwS6FweMkpyRkrJooamUGe1CQfO1yJ+lM43IyUJbrhHW/ObES+6ry4vfGi8EKaldHL3t3BG1bcLcERuJPcjg==}
 
-  '@mui/docs@7.3.7':
-    resolution: {integrity: sha512-aICU+t95pfPrxVMo9IE74TMuS8ysskr963XLg1VnfOsBGYQ5mIYhKt9cw4doNkFrkqymnQLXHWpvw2CAULj2JQ==}
+  '@mui/docs@7.3.8':
+    resolution: {integrity: sha512-XpB5vwV78SiEmcvGm0rEKZtZnNYplquPhQlEL9w9MuVN51reWxMU7KUCLuIeODxIiysTHZf43vYcUGSg2nVQvA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/base': ^5.0.0 || ^5.0.0-beta || ^7.0.0 || ^7.0.0-beta
@@ -4495,8 +4492,8 @@ packages:
     resolution: {integrity: sha512-R77CJIXuKiKIfrKFVBEbKi2x+fA+fhf+HV907eLLBY9jN6zRB+9Cgyhsfi5mlYS62YEqZldqqY9jvIi+QLQweg==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.87':
-    resolution: {integrity: sha512-5P9Be5z30Vm/OWnBUxvdnbI7g6VKKYR4vVyKY+e4Hn6p8fSMRNhy7ME7tqgNY0ok1wOxKZU5H9N5ZPBlovg2Hw==}
+  '@mui/internal-code-infra@0.0.3-canary.90':
+    resolution: {integrity: sha512-1k3HX8uEai13Y9FPX0twRZCbAxsTrqINCqokzXEt9CWufdxthgRSAMM8e4/xd0xrS84tcC9iuvlTReqrrAGlSA==}
     hasBin: true
     peerDependencies:
       '@next/eslint-plugin-next': '*'
@@ -4524,14 +4521,14 @@ packages:
   '@mui/internal-docs-utils@2.0.6':
     resolution: {integrity: sha512-IeLb3ItTXl1DrAYKdI/LlmjlAGbUd3RaWvzs9yOipIestyvkmw0jxjarUQSSjVXJgcoDjzd+drr2k1ucH9Amkw==}
 
-  '@mui/internal-markdown@2.0.14':
-    resolution: {integrity: sha512-MkOliRzbdfrsa4MBMKKaSxst70BLlvprbCmHKwM/7GCPbrtsYDR6TUUpWnxxlv9o2y1wzzQfRuKscZkEa46kSQ==}
+  '@mui/internal-markdown@2.0.15':
+    resolution: {integrity: sha512-9X9NP87aMg/92ZYaPOBfdRkm+jhr+hnr5HCxpKHQut2x+jQzBrGkL14pqoBxx0bee7i10HAmfdCY+RrPoXAMRg==}
 
-  '@mui/internal-netlify-cache@0.0.2-canary.1':
-    resolution: {integrity: sha512-d161tpMN7WJF2qxIoXt4hqNWVNAFjOJKj5xQNKOfap93YYtGXiDgHWcH76CJaSPK2PCzKDbsq7pkz5DyMo2IdQ==}
+  '@mui/internal-netlify-cache@0.0.3-canary.0':
+    resolution: {integrity: sha512-5QPmAEpzgMTNe6djyApxiczzDUDy71iRk19w0EFfzknDo3hzz4DmFvaSFXUrEDk2KUDlVwdZ7qhODMbHB88hcw==}
 
-  '@mui/internal-scripts@2.0.17':
-    resolution: {integrity: sha512-gMbbsBqK691xZAVO/rveJCyzeOwyvJYZ7dOtZS1aQA7YDsm0a7OSJOUwwgtGo8Lzu5m01RvrqL8XokrLzS2g2g==}
+  '@mui/internal-scripts@2.0.18':
+    resolution: {integrity: sha512-xDow/qZCWRsq8HwCLFatZ8V61iQmyMmnxCwXgPpzkKChn6LpjydVA2vQRgKskAThqvkJaO4jUrmzIHxASNw0JA==}
 
   '@mui/internal-test-utils@2.0.18-canary.6':
     resolution: {integrity: sha512-Cw9yryfpQCubqbOTYR2YkZFzYcKXAmpkB9QJvw7o9qqWyP18Nw+R54WLc4PbTkRhlSefLJv/5eBsRAb9m4BwBw==}
@@ -14757,12 +14754,12 @@ snapshots:
 
   '@mui/core-downloads-tracker@7.3.7': {}
 
-  '@mui/docs@7.3.7(08686a6d65762dccb52c3980e384be8f)':
+  '@mui/docs@7.3.8(08686a6d65762dccb52c3980e384be8f)':
     dependencies:
       '@babel/runtime': 7.28.6
       '@mui/base': 5.0.0-beta.40-1(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/icons-material': 7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
-      '@mui/internal-markdown': 2.0.14
+      '@mui/internal-markdown': 2.0.15
       '@mui/material': 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/system': 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
       chai: 6.2.1
@@ -14836,7 +14833,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.87(@next/eslint-plugin-next@15.5.12)(@types/node@22.19.3)(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(postcss@8.5.6)(prettier@3.7.4)(stylelint@17.1.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)':
+  '@mui/internal-code-infra@0.0.3-canary.90(@next/eslint-plugin-next@15.5.12)(@types/node@22.19.3)(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(postcss@8.5.6)(prettier@3.7.4)(stylelint@17.1.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)':
     dependencies:
       '@argos-ci/core': 4.5.0
       '@babel/cli': 7.28.6(@babel/core@7.29.0)
@@ -14959,16 +14956,16 @@ snapshots:
       rimraf: 6.1.2
       typescript: 5.9.3
 
-  '@mui/internal-markdown@2.0.14':
+  '@mui/internal-markdown@2.0.15':
     dependencies:
       '@babel/runtime': 7.28.6
       es-toolkit: 1.44.0
       marked: 17.0.1
       prismjs: 1.30.0
 
-  '@mui/internal-netlify-cache@0.0.2-canary.1': {}
+  '@mui/internal-netlify-cache@0.0.3-canary.0': {}
 
-  '@mui/internal-scripts@2.0.17':
+  '@mui/internal-scripts@2.0.18':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.29.0)

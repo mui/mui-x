@@ -4,6 +4,67 @@ import dataGridComponentApi from './dataGridApiPages';
 import pickersComponentApi from './datePickersApiPages';
 import treeViewComponentApi from './treeViewApiPages';
 
+const isSchedulerVisible = process.env.SHOW_SCHEDULER === '1';
+
+const schedulerPages: MuiPage[] = isSchedulerVisible
+  ? [
+      {
+        pathname: '/x/react-scheduler-group',
+        title: 'Scheduler',
+        // newFeature: true,
+        unstable: true,
+        children: [
+          { pathname: '/x/react-scheduler', title: 'Overview' },
+          { pathname: '/x/react-scheduler/quickstart' },
+          {
+            pathname: '/x/react-scheduler/main-features',
+            subheader: 'Main features',
+            children: [
+              { pathname: '/x/react-scheduler/timezone', title: 'Timezones' },
+              { pathname: '/x/react-scheduler/recurring-events', plan: 'premium' },
+            ],
+          },
+          {
+            pathname: '/x/react-scheduler/event-calendar-group',
+            subheader: 'Event Calendar',
+            children: [
+              {
+                pathname: '/x/react-scheduler/full-screen-event-calendar',
+                title: 'Full screen demo', // TODO: Remove before launch?
+              },
+              { pathname: '/x/react-scheduler/event-calendar/events' },
+              { pathname: '/x/react-scheduler/event-calendar/resources' },
+              { pathname: '/x/react-scheduler/event-calendar/navigation' },
+              { pathname: '/x/react-scheduler/event-calendar/drag-interactions' },
+              { pathname: '/x/react-scheduler/event-calendar/views' },
+              { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
+              { pathname: '/x/react-scheduler/event-calendar/preferences' },
+              { pathname: '/x/react-scheduler/event-calendar/localization' },
+            ],
+          },
+          {
+            pathname: '/x/react-scheduler/event-timeline-group',
+            subheader: 'Event Timeline',
+            plan: 'premium',
+            children: [
+              {
+                pathname: '/x/react-scheduler/full-screen-event-timeline-premium',
+                title: 'Full screen demo', // TODO: Remove before launch?
+              },
+              { pathname: '/x/react-scheduler/event-timeline/events' },
+              { pathname: '/x/react-scheduler/event-timeline/resources' },
+              { pathname: '/x/react-scheduler/event-timeline/navigation' },
+              { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
+              { pathname: '/x/react-scheduler/event-timeline/views' },
+              { pathname: '/x/react-scheduler/event-timeline/preferences' },
+              { pathname: '/x/react-scheduler/event-timeline/localization' },
+            ],
+          },
+        ],
+      },
+    ]
+  : [];
+
 const pages: MuiPage[] = [
   {
     pathname: 'https://mui.com/x/whats-new/',
@@ -763,6 +824,7 @@ const pages: MuiPage[] = [
       },
     ],
   },
+  ...schedulerPages,
   {
     pathname: '/x/migration-group',
     title: 'Migration',
