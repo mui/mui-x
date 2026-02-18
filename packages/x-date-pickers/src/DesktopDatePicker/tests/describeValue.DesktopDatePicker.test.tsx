@@ -36,7 +36,7 @@ describe('<DesktopDatePicker /> - Describe Value', () => {
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
-        selectSection('day');
+        await selectSection('day');
         pressKey(undefined, 'ArrowUp');
       }
 

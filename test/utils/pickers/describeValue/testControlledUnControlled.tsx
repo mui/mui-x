@@ -214,7 +214,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     describe('Accessibility and field editing', () => {
-      it('should allow editing in field on single input mobile pickers', () => {
+      it('should allow editing in field on single input mobile pickers', async () => {
         if (componentFamily !== 'picker' || params.variant !== 'mobile') {
           return;
         }
@@ -226,7 +226,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           onChange: handleChange,
           defaultValue: values[0],
         });
-        v7Response.selectSection(undefined);
+        await v7Response.selectSection(undefined);
         fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
         expect(handleChange.callCount).to.equal(isPickerSingleInput(params) ? 1 : 0);
       });
@@ -262,11 +262,11 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           ...(isPickerSingleInput(params)
             ? { label: 'test relationship' }
             : {
-                localeText: {
-                  start: 'test',
-                  end: 'relationship',
-                },
-              }),
+              localeText: {
+                start: 'test',
+                end: 'relationship',
+              },
+            }),
         });
 
         expect(screen.getByRole('dialog', { name: 'test relationship' })).not.to.equal(null);

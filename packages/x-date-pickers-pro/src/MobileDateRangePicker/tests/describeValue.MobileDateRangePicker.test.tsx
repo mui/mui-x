@@ -128,7 +128,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
           })[0],
         );
       } else {
-        selectSection('day');
+        await selectSection('day');
         pressKey(undefined, 'ArrowUp');
       }
 

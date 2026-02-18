@@ -195,7 +195,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
 
         view.pressKey(2, 'ArrowUp');
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
@@ -214,7 +214,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV6,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
 
         const input = getTextbox();
         fireUserEvent.keyPress(input, { key: 'ArrowUp' });
@@ -234,7 +234,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
 
         view.pressKey(2, 'ArrowUp');
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2023 – 06/05/2022');
@@ -253,7 +253,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV6,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
 
         const input = getTextbox();
         fireUserEvent.keyPress(input, { key: 'ArrowUp' });
@@ -274,7 +274,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
         });
 
-        await view.selectSectionAsync('day');
+        await view.selectSection('day');
 
         view.pressKey(0, '4');
         expect(onChangeV7.callCount).to.equal(0);
@@ -300,7 +300,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
         });
 
-        await view.selectSectionAsync('day');
+        await view.selectSection('day');
 
         const input = getTextbox();
 
@@ -329,7 +329,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -351,7 +351,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -367,7 +367,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Set a value for the "month" section
       fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
@@ -392,7 +392,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Set a value for the "month" section
       fireEvent.change(input, {
@@ -417,7 +417,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -441,7 +441,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -460,7 +460,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Start date
       fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
@@ -503,7 +503,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Start date
       fireEvent.keyDown(input, { key: 'Delete' });
@@ -546,7 +546,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
@@ -567,7 +567,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
@@ -589,7 +589,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
@@ -611,7 +611,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Select all sections
         fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -627,7 +627,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Set a value for the "month" section
         fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
@@ -652,7 +652,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Set a value for the "month" section
         fireEvent.change(input, {
@@ -677,7 +677,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
@@ -701,7 +701,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Select all sections
         fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -720,7 +720,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Start date
         view.pressKey(0, '');
@@ -765,7 +765,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Start date
         fireEvent.change(input, { target: { value: '/15/2022 – 06/15/2023' } });
@@ -810,7 +810,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(1);
@@ -831,7 +831,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         fireEvent.change(input, { target: { value: ' 2022 – June 2023' } });
         expect(onChangeV6.callCount).to.equal(1);

@@ -4,7 +4,7 @@ import { InferNonNullablePickerValue, PickerValidValue } from '@mui/x-date-picke
 import {
   BuildFieldInteractionsResponse,
   FieldPressCharacter,
-  FieldSectionSelector,
+  FieldSectionSelectorAsync,
   OpenPickerParams,
 } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
@@ -31,7 +31,7 @@ export type DescribeValueOptions<
         setNewValue: (
           value: InferNonNullablePickerValue<TValue>,
           options: {
-            selectSection: FieldSectionSelector;
+            selectSection: FieldSectionSelectorAsync;
             pressKey: FieldPressCharacter;
             user: MuiRenderResult['user'];
             isOpened?: boolean;
@@ -45,7 +45,7 @@ export type DescribeValueOptions<
         setNewValue: (
           value: TValue,
           options: {
-            selectSection: FieldSectionSelector;
+            selectSection: FieldSectionSelectorAsync;
             pressKey: FieldPressCharacter;
             user: MuiRenderResult['user'];
           },

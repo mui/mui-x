@@ -90,15 +90,15 @@ describe('<DesktopTimeRangePicker /> - Describe Value Multi Input', () => {
           fireEvent.click(screen.getByRole('tab', { name: 'Start' }));
         }
       } else {
-        selectSection('hours');
+        await selectSection('hours');
         pressKey(undefined, 'ArrowUp');
 
-        selectSection('minutes');
+        await selectSection('minutes');
         pressKey(undefined, 'PageUp'); // increment by 5 minutes
 
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
-          selectSection('meridiem');
+          await selectSection('meridiem');
           const previousHours = adapterToUse.getHours(value[setEndDate ? 1 : 0]);
           const newHours = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
           // update meridiem section if it changed

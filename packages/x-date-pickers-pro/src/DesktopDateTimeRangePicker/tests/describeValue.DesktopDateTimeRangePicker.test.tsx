@@ -42,18 +42,18 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
       const startSectionsContainer = getFieldSectionsContainer(0);
       const expectedStartValueStr = expectedValues[0]
         ? adapterToUse.format(
-            expectedValues[0],
-            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-          )
+          expectedValues[0],
+          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+        )
         : expectedPlaceholder;
       expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
 
       const endSectionsContainer = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
         ? adapterToUse.format(
-            expectedValues[1],
-            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-          )
+          expectedValues[1],
+          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+        )
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
@@ -111,18 +111,18 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
           }
         }
       } else {
-        selectSection('day');
+        await selectSection('day');
         pressKey(undefined, 'ArrowUp');
 
-        selectSection('hours');
+        await selectSection('hours');
         pressKey(undefined, 'ArrowUp');
 
-        selectSection('minutes');
+        await selectSection('minutes');
         pressKey(undefined, 'PageUp'); // increment by 5 minutes
 
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
-          selectSection('meridiem');
+          await selectSection('meridiem');
           const previousHours = adapterToUse.getHours(value[setEndDate ? 1 : 0]);
           const newHours = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
           // update meridiem section if it changed

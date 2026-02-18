@@ -62,7 +62,7 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
           })[0],
         );
       } else {
-        selectSection('day');
+        await selectSection('day');
         pressKey(undefined, 'ArrowUp');
       }
 

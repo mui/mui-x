@@ -262,8 +262,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       if (isRangeType) {
         expect(onChange.callCount).to.equal(
           initialChangeCount +
-            getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
-            (pickerParams.type === 'date-time-range' || pickerParams.type === 'time-range' ? 1 : 0),
+          getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
+          (pickerParams.type === 'date-time-range' || pickerParams.type === 'time-range' ? 1 : 0),
         );
         newValueBis = await setNewValue(newValueBis, {
           isOpened: true,
@@ -278,9 +278,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       } else {
         expect(onChange.callCount).to.equal(
           initialChangeCount +
-            getExpectedOnChangeCount(componentFamily, pickerParams) -
-            // meridiem does not change this time in case of multi section digital clock
-            (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
+          getExpectedOnChangeCount(componentFamily, pickerParams) -
+          // meridiem does not change this time in case of multi section digital clock
+          (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
         );
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
       }
@@ -433,7 +433,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
   it.skipIf(
     !['date-range', 'time-range', 'date-time-range'].includes(pickerParams.type) ||
-      (pickerParams as any).fieldType !== 'single-input',
+    (pickerParams as any).fieldType !== 'single-input',
   )('should return back to start range position after reopening a range picker', async () => {
     const pickerType = pickerParams.type as PickerRangeComponentType;
     // If transitions are disabled, the `onExited` event is not triggered
@@ -478,8 +478,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
 
   it.skipIf(
     componentFamily !== 'picker' ||
-      (pickerParams as any).fieldType === 'multi-input' ||
-      pickerParams.variant === 'mobile',
+    (pickerParams as any).fieldType === 'multi-input' ||
+    pickerParams.variant === 'mobile',
   )(
     'should close a Desktop Picker when clicking outside of the picker after selecting a value with "Enter" key',
     async () => {
