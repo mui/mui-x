@@ -15,7 +15,33 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
-## Available views
+## All views
+
+### Week view
+
+The `week` view lets users manage events for an entire week.
+
+{{"demo": "BasicWeekView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Day view
+
+The `day` view lets users manage events for a single day.
+
+{{"demo": "BasicDayView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Month view
+
+The `month` view lets users manage events for an entire month.
+
+{{"demo": "BasicMonthView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Agenda view
+
+The `agenda` view lets users manage events in a list layout.
+
+{{"demo": "BasicAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Limit available views
 
 Use the `views` prop to define which views can be accessed in the Event Calendar:
 
