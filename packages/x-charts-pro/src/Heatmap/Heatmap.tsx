@@ -315,6 +315,14 @@ Heatmap.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onTooltipAxisChange: PropTypes.func,
+  /**
    * The callback fired when the tooltip item changes.
    *
    * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
@@ -358,6 +366,16 @@ Heatmap.propTypes = {
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
   tooltip: PropTypes.object,
+  /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * The tooltip item.
    * Used when the tooltip is controlled.
