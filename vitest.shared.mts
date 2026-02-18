@@ -82,6 +82,13 @@ export default defineConfig({
       viewport: { width: 1280, height: 800 },
       headless: true,
       screenshotFailures: false,
+      commands: {
+        async setupCrashHandler(ctx) {
+          ctx.page.on('crash', (page) => {
+            console.error(`Browser page crashed! URL: ${page.url()}`);
+          });
+        },
+      },
       orchestratorScripts: [
         {
           id: 'vitest-reload-on-error',

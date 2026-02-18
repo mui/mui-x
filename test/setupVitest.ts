@@ -21,8 +21,13 @@ configure({
 
 let licenseKey: string = '';
 
-beforeAll(() => {
+beforeAll(async () => {
   licenseKey = generateTestLicenseKey();
+
+  if (!isJsdom()) {
+    const { server } = await import('vitest/browser');
+    await server.commands.setupCrashHandler();
+  }
 });
 
 beforeEach(() => {
