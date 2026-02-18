@@ -8,7 +8,6 @@ import {
   getFieldInputRoot,
   isPickerRangeType,
   isPickerSingleInput,
-  openPicker,
   openPickerAsync,
   PickerRangeComponentType,
 } from 'test/utils/pickers';
@@ -40,19 +39,19 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(screen.queryByRole(viewWrapperRole)).toBeVisible();
     });
 
-    it('should not open when `prop.disabled` is true ', () => {
+    it('should not open when `prop.disabled` is true ', async () => {
       const onOpen = spy();
-      render(<ElementToTest disabled onOpen={onOpen} />);
+      const { user } = render(<ElementToTest disabled onOpen={onOpen} />);
 
-      openPicker(pickerParams);
+      await openPickerAsync(user, pickerParams);
       expect(onOpen.callCount).to.equal(0);
     });
 
-    it('should not open when `prop.readOnly` is true ', () => {
+    it('should not open when `prop.readOnly` is true ', async () => {
       const onOpen = spy();
-      render(<ElementToTest readOnly onOpen={onOpen} />);
+      const { user } = render(<ElementToTest readOnly onOpen={onOpen} />);
 
-      openPicker(pickerParams);
+      await openPickerAsync(user, pickerParams);
       expect(onOpen.callCount).to.equal(0);
     });
 

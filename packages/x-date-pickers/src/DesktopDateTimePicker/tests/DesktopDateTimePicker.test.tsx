@@ -4,7 +4,6 @@ import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker
 import {
   adapterToUse,
   createPickerRenderer,
-  openPicker,
   openPickerAsync,
   getFieldSectionsContainer,
   expectFieldValueV7,
@@ -40,7 +39,7 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-time' });
+      await openPickerAsync(user, { type: 'date-time' });
 
       // Select year
       await user.click(screen.getByRole('radio', { name: '2025' }));
@@ -86,7 +85,7 @@ describe('<DesktopDateTimePicker />', () => {
       />,
     );
 
-    openPicker({ type: 'date-time' });
+    await openPickerAsync(user, { type: 'date-time' });
 
     // Change the date multiple times to check that Picker doesn't close after cycling through all views internally
     await user.click(screen.getByRole('gridcell', { name: '2' }));

@@ -9,7 +9,7 @@ import {
   adapterToUse,
   expectFieldValueV7,
   buildFieldInteractions,
-  openPicker,
+  openPickerAsync,
 } from 'test/utils/pickers';
 
 describe('<MobileDatePicker />', () => {
@@ -129,7 +129,7 @@ describe('<MobileDatePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should call `onAccept` even if controlled', () => {
+    it('should call `onAccept` even if controlled', async () => {
       const onAccept = spy();
 
       function ControlledMobileDatePicker(props) {
@@ -138,9 +138,9 @@ describe('<MobileDatePicker />', () => {
         return <MobileDatePicker {...props} value={value} onChange={setValue} />;
       }
 
-      render(<ControlledMobileDatePicker onAccept={onAccept} />);
+      const { user } = render(<ControlledMobileDatePicker onAccept={onAccept} />);
 
-      openPicker({ type: 'date' });
+      await openPickerAsync(user, { type: 'date' });
 
       fireEvent.click(screen.getByText('15', { selector: 'button' }));
       fireEvent.click(screen.getByText('OK', { selector: 'button' }));
@@ -162,7 +162,7 @@ describe('<MobileDatePicker />', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       // Open and Dismiss the picker
-      openPicker({ type: 'date' });
+      await openPickerAsync(view.user, { type: 'date' });
       await view.user.keyboard('[Escape]');
 
       // Verify it's still a clean value

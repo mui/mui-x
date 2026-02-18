@@ -4,7 +4,6 @@ import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePi
 import {
   createPickerRenderer,
   adapterToUse,
-  openPicker,
   openPickerAsync,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
@@ -155,7 +154,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true (multi input field)', () => {
+    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true (multi input field)', async () => {
       const onAccept = spy();
       const onClose = spy();
       const defaultValue: DateRange<PickerValidDate> = [
@@ -163,7 +162,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           onAccept={onAccept}
           onClose={onClose}
@@ -173,7 +172,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
+      await openPickerAsync(user, { type: 'date-range', initialFocus: 'end', fieldType: 'multi-input' });
 
       // Change the end date
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -184,7 +183,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onChange with the initial value when clicking "Cancel" button', () => {
+    it('should call onClose and onChange with the initial value when clicking "Cancel" button', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -193,7 +192,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -203,7 +202,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
 
       // Change the start date (already tested)
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -217,7 +216,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', () => {
+    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -226,7 +225,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -235,7 +234,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
 
       // Change the start date (already tested)
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
@@ -249,7 +248,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -258,7 +257,7 @@ describe('<MobileDateRangePicker />', () => {
         adapterToUse.date('2018-01-06'),
       ];
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -268,7 +267,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
@@ -279,12 +278,12 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <MobileDateRangePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -294,7 +293,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, { type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
