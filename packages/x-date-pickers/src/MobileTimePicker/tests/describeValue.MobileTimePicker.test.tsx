@@ -3,7 +3,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectFieldValueV7,
-  openPickerAsync,
+  openPickers,
   getClockTouchEvent,
   describeValue,
   formatFullTimeValue,
@@ -37,7 +37,7 @@ describe('<MobileTimePicker /> - Describe Value', () => {
     },
     setNewValue: async (value, { isOpened, applySameValue, user }) => {
       if (!isOpened) {
-        await openPickerAsync(user, { type: 'time' });
+        await openPickers(user, { type: 'time' });
       }
 
       const newValue = applySameValue

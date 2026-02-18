@@ -3,7 +3,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectFieldValueV7,
-  openPickerAsync,
+  openPickers,
   describeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
@@ -38,7 +38,7 @@ describe('<MobileDateTimePicker /> - Describe Value', () => {
     },
     setNewValue: async (value, { isOpened, applySameValue, user }) => {
       if (!isOpened) {
-        await openPickerAsync(user, { type: 'date-time' });
+        await openPickers(user, { type: 'date-time' });
       }
 
       const newValue = applySameValue

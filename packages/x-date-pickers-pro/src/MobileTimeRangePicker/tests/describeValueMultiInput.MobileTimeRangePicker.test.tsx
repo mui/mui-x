@@ -6,7 +6,7 @@ import {
   expectFieldValueV7,
   describeValue,
   getFieldSectionsContainer,
-  openPickerAsync,
+  openPickers,
 } from 'test/utils/pickers';
 import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
 import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
@@ -49,7 +49,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
     },
     setNewValue: async (value, { isOpened, applySameValue, setEndDate = false, user }) => {
       if (!isOpened) {
-        await openPickerAsync(user, {
+        await openPickers(user, {
           type: 'time-range',
           initialFocus: setEndDate ? 'end' : 'start',
           fieldType: 'multi-input',

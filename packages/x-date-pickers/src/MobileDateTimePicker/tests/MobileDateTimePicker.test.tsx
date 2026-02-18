@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import { adapterToUse, createPickerRenderer, openPickerAsync } from 'test/utils/pickers';
+import { adapterToUse, createPickerRenderer, openPickers } from 'test/utils/pickers';
 import { hasTouchSupport } from 'test/utils/skipIf';
 
 describe('<MobileDateTimePicker />', () => {
@@ -92,7 +92,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date-time' });
+      await openPickers(user, { type: 'date-time' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);

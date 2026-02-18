@@ -4,7 +4,7 @@ import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePi
 import {
   createPickerRenderer,
   adapterToUse,
-  openPickerAsync,
+  openPickers,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
@@ -45,7 +45,7 @@ describe('<MobileDateRangePicker />', () => {
         <MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'multi-input',
@@ -62,7 +62,7 @@ describe('<MobileDateRangePicker />', () => {
         <MobileDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'end',
         fieldType: 'multi-input',
@@ -91,7 +91,7 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -136,7 +136,7 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'end',
         fieldType: 'multi-input',
@@ -172,7 +172,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'end',
         fieldType: 'multi-input',
@@ -206,7 +206,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -242,7 +242,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -279,7 +279,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -309,7 +309,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',

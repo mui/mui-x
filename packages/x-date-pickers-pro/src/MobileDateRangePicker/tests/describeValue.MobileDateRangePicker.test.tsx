@@ -4,7 +4,7 @@ import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-picke
 import {
   adapterToUse,
   createPickerRenderer,
-  openPickerAsync,
+  openPickers,
   expectFieldValueV7,
   describeValue,
   getFieldSectionsContainer,
@@ -56,7 +56,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       if (!isOpened) {
-        await openPickerAsync(user, {
+        await openPickers(user, {
           type: 'date-range',
           initialFocus: 'start',
           fieldType: 'multi-input',

@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import {
   buildFieldInteractions,
   createPickerRenderer,
-  openPickerAsync,
+  openPickers,
   stubMatchMedia,
 } from 'test/utils/pickers';
 import { pickerPopperClasses } from '@mui/x-date-pickers/internals';
@@ -22,7 +22,7 @@ describe('<DateRangePicker />', () => {
     stubMatchMedia(true);
     // Test with accessible DOM structure
     const { unmount, user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: 'date-range',
       initialFocus: 'start',
       fieldType: 'single-input',
@@ -33,7 +33,7 @@ describe('<DateRangePicker />', () => {
 
     // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: 'date-range',
       initialFocus: 'start',
       fieldType: 'single-input',
@@ -45,7 +45,7 @@ describe('<DateRangePicker />', () => {
     stubMatchMedia(false);
     // Test with accessible DOM structure
     const { unmount, user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: 'date-range',
       initialFocus: 'start',
       fieldType: 'single-input',
@@ -56,7 +56,7 @@ describe('<DateRangePicker />', () => {
 
     // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: 'date-range',
       initialFocus: 'start',
       fieldType: 'single-input',

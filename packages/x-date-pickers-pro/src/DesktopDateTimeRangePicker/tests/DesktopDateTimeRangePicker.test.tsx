@@ -2,7 +2,7 @@ import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  openPickerAsync,
+  openPickers,
   getFieldSectionsContainer,
   expectFieldValueV7,
 } from 'test/utils/pickers';
@@ -24,7 +24,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
     it('should allow to select range within the same day', async () => {
       const { user } = render(<DesktopDateTimeRangePicker />);
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-time-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -52,7 +52,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
         <DesktopDateTimeRangePicker referenceDate={adapterToUse.date('2022-04-14T14:15:00')} />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-time-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -70,7 +70,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
     it('should cycle focused views among the visible step after selection', async () => {
       const { user } = render(<DesktopDateTimeRangePicker />);
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-time-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -104,7 +104,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-time-range',
         initialFocus: 'start',
         fieldType: 'single-input',

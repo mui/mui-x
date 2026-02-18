@@ -8,7 +8,7 @@ import {
   getFieldInputRoot,
   isPickerRangeType,
   isPickerSingleInput,
-  openPickerAsync,
+  openPickers,
   PickerRangeComponentType,
 } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
@@ -43,7 +43,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       const onOpen = spy();
       const { user } = render(<ElementToTest disabled onOpen={onOpen} />);
 
-      await openPickerAsync(user, pickerParams);
+      await openPickers(user, pickerParams);
       expect(onOpen.callCount).to.equal(0);
     });
 
@@ -51,7 +51,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       const onOpen = spy();
       const { user } = render(<ElementToTest readOnly onOpen={onOpen} />);
 
-      await openPickerAsync(user, pickerParams);
+      await openPickers(user, pickerParams);
       expect(onOpen.callCount).to.equal(0);
     });
 
@@ -440,7 +440,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     config.disabled = false;
     const { user } = render(<ElementToTest slotProps={{ toolbar: { hidden: false } }} />);
 
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: pickerType,
       fieldType: 'single-input',
       initialFocus: 'start',
@@ -461,7 +461,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     await waitFor(() => expect(screen.queryByRole(viewWrapperRole)).to.equal(null));
 
     // open the picker again
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: pickerType,
       fieldType: 'single-input',
       initialFocus: 'start',
@@ -498,7 +498,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
         { componentFamily },
       );
 
-      await openPickerAsync(user, pickerParams);
+      await openPickers(user, pickerParams);
 
       await user.keyboard('{Enter}');
 

@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { createPickerRenderer, adapterToUse, openPickerAsync } from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse, openPickers } from 'test/utils/pickers';
 import { vi } from 'vitest';
 import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
 
@@ -25,7 +25,7 @@ describe('<DesktopTimeRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'time-range',
         initialFocus: 'start',
         fieldType: 'single-input',

@@ -5,7 +5,7 @@ import {
   adapterToUse,
   expectFieldValueV7,
   describeValue,
-  openPickerAsync,
+  openPickers,
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
@@ -55,7 +55,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
       { isOpened, applySameValue, setEndDate = false, closeMobilePicker, user },
     ) => {
       if (!isOpened) {
-        await openPickerAsync(user, {
+        await openPickers(user, {
           type: 'date-time-range',
           initialFocus: setEndDate ? 'end' : 'start',
           fieldType: 'single-input',
