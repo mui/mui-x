@@ -1,0 +1,6 @@
+<EventCalendar
+  events={events}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  defaultPreferences={{ showWeekends: false, isSidePanelOpen: false }}
+/>

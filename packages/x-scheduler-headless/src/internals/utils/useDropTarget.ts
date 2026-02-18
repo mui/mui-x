@@ -248,7 +248,7 @@ function applyExternalDragOccurrencePlaceholder(
   placeholder: SchedulerOccurrencePlaceholderExternalDrag,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
-  const event: SchedulerEvent = {
+  const event = {
     start: placeholder.start,
     end: placeholder.end,
     ...placeholder.eventData,

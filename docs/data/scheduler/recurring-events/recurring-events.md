@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Recurring Events
+# Scheduler - Recurring Events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Define recurring events.</p>
 
@@ -19,7 +19,7 @@ You can use the `rrule` property on your event model to define its repeating pat
 
 ```ts
 const event = {
-  // ...other event properties
+  // ...other properties
   rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
 };
 ```
