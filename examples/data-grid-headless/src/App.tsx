@@ -425,12 +425,21 @@ function DataGridToolbar() {
 
   const filterModel = grid.use(filteringPlugin.selectors.model);
   const activeFilterCount = filterModel.conditions.length;
-  const quickFilterText = (filterModel.quickFilter?.values ?? []).join(' ');
+  const quickFilterModelText = (filterModel.quickFilter?.values ?? []).join(' ');
 
   const [filterPanelOpen, setFilterPanelOpen] = React.useState(false);
+  const [quickFilterInput, setQuickFilterInput] = React.useState(quickFilterModelText);
+
+  React.useEffect(() => {
+    setQuickFilterInput((prev) => {
+      const normalizedPrev = prev.split(' ').filter(Boolean).join(' ');
+      return normalizedPrev === quickFilterModelText ? prev : quickFilterModelText;
+    });
+  }, [quickFilterModelText]);
 
   const handleQuickFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+    setQuickFilterInput(value);
     const values = value ? value.split(' ').filter(Boolean) : [];
     grid.api.filtering.setQuickFilterValues(values);
   };
@@ -479,7 +488,7 @@ function DataGridToolbar() {
             <input
               className="grid-toolbar__quick-filter-input"
               type="text"
-              value={quickFilterText}
+              value={quickFilterInput}
               onChange={handleQuickFilterChange}
               placeholder="Search..."
             />
