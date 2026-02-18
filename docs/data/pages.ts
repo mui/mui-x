@@ -744,11 +744,11 @@ const pages: MuiPage[] = [
                 title: 'Hooks',
                 children: [
                   { pathname: '/x/react-charts/hooks', title: 'Overview' },
-                  { pathname: '/x/react-charts/hooks/use-series', title: 'useSeries' },
+                  { pathname: '/x/react-charts/hooks/use-series', title: 'Series' },
                   { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
                   { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
                   { pathname: '/x/react-charts/hooks/use-scale', title: 'Scale' },
-                  { pathname: '/x/react-charts/hooks/use-axes', title: 'useAxes' },
+                  { pathname: '/x/react-charts/hooks/use-axes', title: 'Axis' },
                   { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
                 ],
               },
