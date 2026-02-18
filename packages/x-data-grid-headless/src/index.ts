@@ -25,7 +25,7 @@ export type {
   RowsPluginApi,
   RowsPluginState,
   RowsPluginOptions,
-} from './plugins/internal/rows/rows';
+} from './plugins/internal/rows/types';
 export type {
   ColumnsPluginApi,
   ColumnsPluginState,

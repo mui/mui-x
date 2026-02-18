@@ -13,14 +13,20 @@ import {
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { eventDialogSlots, EventDialogClassesContext } from '@mui/x-scheduler/internals';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
+import {
+  eventDialogSlots,
+  EventDialogStyledContext,
+  EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+  schedulerTokens,
+} from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
 import {
   EventTimelinePremiumClasses,
   getEventTimelinePremiumUtilityClass,
 } from './eventTimelinePremiumClasses';
-import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
+import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
@@ -40,6 +46,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     titleCell: ['titleCell'],
     titleCellLegendColor: ['titleCellLegendColor'],
     event: ['event'],
+    eventPlaceholder: ['eventPlaceholder'],
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     timeHeader: ['timeHeader'],
@@ -75,6 +82,7 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
+  ...schedulerTokens,
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
   '--weeks-cell-width': '64px',
@@ -85,6 +93,7 @@ const EventTimelinePremiumRoot = styled('div', {
   padding: theme.spacing(2),
   gap: theme.spacing(2),
   height: '100%',
+  fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
 }));
 
@@ -121,14 +130,32 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
     store.setView(event.target.value as EventTimelinePremiumView, event as Event);
   };
 
+  const { localeText, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
+
+  const mergedLocaleText = React.useMemo(
+    () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),
+    [localeText],
+  );
+
+  const timelineStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
+
+  const dialogStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
+
   return (
     <SchedulerStoreContext.Provider value={store as any}>
-      <EventTimelinePremiumClassesContext.Provider value={classes}>
-        <EventDialogClassesContext.Provider value={classes}>
+      <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
+        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
           <EventTimelinePremiumRoot
             ref={forwardedRef}
             className={clsx(classes.root, className)}
-            {...forwardedProps}
+            {...other}
           >
             <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
               <Select value={view} onChange={handleViewChange} size="small">
@@ -141,8 +168,8 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
             </EventTimelinePremiumHeaderToolbar>
             <EventTimelinePremiumContent />
           </EventTimelinePremiumRoot>
-        </EventDialogClassesContext.Provider>
-      </EventTimelinePremiumClassesContext.Provider>
+        </EventDialogStyledContext.Provider>
+      </EventTimelinePremiumStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;
