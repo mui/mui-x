@@ -1,9 +1,9 @@
 ---
-title: Charts - useScale
+title: Charts - Scale hooks
 productId: x-charts
 ---
 
-# useScale
+# Scale hooks
 
 <p class="description">Convert data values to pixel coordinates with D3 scale functions in custom chart components.</p>
 
