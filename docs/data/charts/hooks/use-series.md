@@ -1,9 +1,9 @@
 ---
-title: Charts - useSeries
+title: Charts - Series hooks
 productId: x-charts
 ---
 
-# useSeries
+# Series hooks
 
 <p class="description">Get raw series data for custom components, by chart type or all at once.</p>
 
