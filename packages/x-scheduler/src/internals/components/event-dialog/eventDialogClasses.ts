@@ -25,6 +25,8 @@ export interface EventDialogClasses {
   eventDialogFormActions: string;
   /** Styles applied to the event dialog content element. */
   eventDialogContent: string;
+  /** Styles applied to the event dialog tab panel element. */
+  eventDialogTabPanel: string;
   /** Styles applied to the event dialog general tab content element. */
   eventDialogGeneralTabContent: string;
   /** Styles applied to the event dialog date time fields container element. */
@@ -57,6 +59,7 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogResourceTitle',
   'eventDialogFormActions',
   'eventDialogContent',
+  'eventDialogTabPanel',
   'eventDialogGeneralTabContent',
   'eventDialogDateTimeFieldsContainer',
   'eventDialogDateTimeFieldsRow',
@@ -81,6 +84,7 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogResourceTitle: ['eventDialogResourceTitle'],
   eventDialogFormActions: ['eventDialogFormActions'],
   eventDialogContent: ['eventDialogContent'],
+  eventDialogTabPanel: ['eventDialogTabPanel'],
   eventDialogGeneralTabContent: ['eventDialogGeneralTabContent'],
   eventDialogDateTimeFieldsContainer: ['eventDialogDateTimeFieldsContainer'],
   eventDialogDateTimeFieldsRow: ['eventDialogDateTimeFieldsRow'],

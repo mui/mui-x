@@ -163,6 +163,7 @@ export function GeneralTab(props: GeneralTabProps) {
       role="tabpanel"
       id="general-tabpanel"
       aria-labelledby="general-tab"
+      className={classes.eventDialogTabPanel}
       hidden={value !== 'general'}
     >
       <GeneralTabContent className={classes.eventDialogGeneralTabContent}>

@@ -321,6 +321,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       role="tabpanel"
       id="recurrence-tabpanel"
       aria-labelledby="recurrence-tab"
+      className={classes.eventDialogTabPanel}
       hidden={tabValue !== 'recurrence'}
     >
       <RecurrenceTabContent className={classes.eventDialogRecurrenceTabContent}>
