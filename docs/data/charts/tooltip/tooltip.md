@@ -118,8 +118,9 @@ If the pointer is not available, it's placed relative to the node instead (for e
 
 You can modify this behavior with the `anchor`, `position`, and `placement` props.
 
-- `anchor: 'pointer' | 'node' | 'chart'`: Indicates whether the tooltip should be placed relative to the pointer, the node, or the charts area.
-  Values `'node'` and `'chart'` are available if `trigger` is set respectively to `'item'` or `'node'`.
+- `anchor: 'pointer' | 'node' | 'chart'`: Indicates the element used to anchor the tooltip.
+  - The `anchor: 'node'` is only available for tooltip with `trigger: 'item'`
+  - The `anchor: 'chart'` is only available for tooltip with `trigger: 'axis'`
 - `position: 'top' | 'right' | 'bottom' | 'left'`: Defines the anchor position compared to the node or chart. This prop has no effect if the anchor is the pointer
 - `placement`: The tooltip placement from [PopperJS](https://popper.js.org/docs/v2/constructors/#options). It specifies the tooltip position in relation to the anchor position. By default, it uses the same value as `position` if defined
 
