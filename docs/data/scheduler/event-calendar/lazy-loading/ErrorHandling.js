@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { format } from 'date-fns/format';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
@@ -28,6 +29,11 @@ const TITLES = [
   'Dinner with Friends',
   'Shopping',
 ];
+
+/**
+ * Converts a Date to a wall-time ISO string (no trailing Z).
+ */
+const str = (date) => format(date, "yyyy-MM-dd'T'HH:mm:ss");
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -86,10 +92,22 @@ function generateRandomEventsInRange(rangeStart, rangeEnd, resources) {
 
     const id = `event-${eventStart.getTime()}-${i}`;
 
+    let eventStartStr = str(eventStart);
+    let eventEndStr = str(clampedEnd);
+
+    if (allDay) {
+      const allDayStart = new Date(eventStart);
+      allDayStart.setHours(0, 0, 0, 0);
+      const allDayEnd = new Date(allDayStart);
+      allDayEnd.setHours(23, 59, 59, 999);
+      eventStartStr = str(allDayStart);
+      eventEndStr = str(allDayEnd);
+    }
+
     events.push({
       id,
-      start: allDay ? new Date(eventStart.setHours(0, 0, 0, 0)) : eventStart,
-      end: allDay ? new Date(eventStart.setHours(23, 59, 59, 999)) : clampedEnd,
+      start: eventStartStr,
+      end: eventEndStr,
       title: randomChoice(TITLES),
       resource: resource.id,
       allDay,
