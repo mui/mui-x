@@ -1,6 +1,8 @@
-import { createPlugin, type Plugin } from '../plugins/core/plugin';
-import paginationPlugin, { type PaginationModel } from '../plugins/pagination';
-import sortingPlugin, { type SortModel } from '../plugins/sorting';
+import { createPlugin, type Plugin } from '../plugins/core';
+import { sortingPlugin, type GridSortModel } from '../plugins/sorting';
+import { paginationPlugin, type PaginationModel } from '../plugins/pagination';
+import rowsPlugin from '../plugins/internal/rows/rows';
+import columnsPlugin from '../plugins/internal/columns/columns';
 import { useDataGrid } from './useDataGrid';
 
 interface User {
@@ -29,12 +31,13 @@ export function Example() {
     plugins: [sortingPlugin],
 
     // ✓ These properties are available (from sortingPlugin)
-    sortModel: [{ field: 'name', sort: 'asc' }],
-    onSortModelChange: (_model: SortModel) => {
-      // Handle sort model change
+    sorting: {
+      model: [{ field: 'name', direction: 'asc' }],
+      onModelChange: (_model: GridSortModel) => {
+        // Handle sort model change
+      },
+      multiSort: false,
     },
-    enableSorting: true,
-    enableMultiSort: false,
 
     // @ts-expect-error Property 'paginationModel' does not exist
     paginationModel: { page: 0, pageSize: 10 },
@@ -53,28 +56,13 @@ export function Example() {
 
   // Sorting API is available
   grid1.api.sorting.sortColumn('name', 'asc');
-  grid1.api.sorting.setSortModel([]);
+  grid1.api.sorting.setModel([]);
 
   // @ts-expect-error pagination API does not exist
   grid1.api.pagination.setPage(1);
 
   // Internal plugins state is available
   grid1.getState().rows.tree;
-
-  // Selectors - Internal plugins (rows, columns)
-  grid1.api.rows.selectors.rowIds;
-  grid1.api.rows.selectors.tree;
-  grid1.api.rows.selectors.loading;
-  grid1.api.columns.selectors.orderedFields;
-  grid1.api.columns.selectors.visibleColumns;
-  grid1.api.columns.selectors.allColumns;
-
-  grid1.api.sorting.selectors.sortModel;
-  // @ts-expect-error pagination selectors do not exist
-  grid1.api.pagination.selectors.paginationModel;
-
-  // Should be able to call selectors imperatively
-  grid1.api.rows.selectors.rowIds(grid1.getState());
 
   // With both sorting and pagination plugins
   const grid2 = useDataGrid({
@@ -86,13 +74,17 @@ export function Example() {
     plugins: [sortingPlugin, paginationPlugin],
 
     // ✓ All properties available
-    sortModel: [{ field: 'name', sort: 'asc' }],
-    onSortModelChange: (_model: SortModel) => {
-      // Handle sort model change
+    sorting: {
+      model: [{ field: 'name', direction: 'asc' }],
+      onModelChange: (_model: GridSortModel) => {
+        // Handle sort model change
+      },
     },
-    paginationModel: { page: 0, pageSize: 10 },
-    onPaginationModelChange: (_model: PaginationModel) => {
-      // Handle pagination model change
+    pagination: {
+      model: { page: 0, pageSize: 10 },
+      onModelChange: (_model: PaginationModel) => {
+        // Handle pagination model change
+      },
     },
   });
 
@@ -102,17 +94,6 @@ export function Example() {
   // ✓ Both APIs available
   grid2.api.sorting.sortColumn('name', 'asc');
   grid2.api.pagination.setPage(1);
-
-  // Selectors - Internal plugins (rows, columns)
-  grid2.api.rows.selectors.rowIds;
-  grid2.api.rows.selectors.tree;
-  grid2.api.rows.selectors.rowIdToModelLookup;
-  grid2.api.columns.selectors.orderedFields;
-  grid2.api.columns.selectors.visibleColumns;
-  grid2.api.columns.selectors.lookup;
-
-  grid2.api.sorting.selectors.sortModel;
-  grid2.api.pagination.selectors.paginationModel;
 
   // Extract grid options type
   const plugins = [sortingPlugin, paginationPlugin] as const;
@@ -194,6 +175,7 @@ export function ColumnMetadataTypingExample() {
 type PluginWithColumnMeta = Plugin<
   'pluginWithColumnMeta',
   { pluginWithColumnMeta: { value: string } },
+  Record<string, never>, // no selectors
   { pluginWithColumnMeta: { getValue: () => string } },
   { enable?: boolean },
   { highlight?: boolean; priority?: number } // column metadata
@@ -201,13 +183,14 @@ type PluginWithColumnMeta = Plugin<
 
 const pluginWithColumnMeta = createPlugin<PluginWithColumnMeta>()({
   name: 'pluginWithColumnMeta',
-  getInitialState: (state) => ({ ...state, pluginWithColumnMeta: { value: 'test' } }),
+  initialize: (state) => ({ ...state, pluginWithColumnMeta: { value: 'test' } }),
   use: () => ({ pluginWithColumnMeta: { getValue: () => 'test' } }),
 });
 
 type PluginDependsOnPluginWithColumnMeta = Plugin<
   'pluginDependsOnPluginWithColumnMeta',
   { pluginDependsOnPluginWithColumnMeta: { derived: string } },
+  Record<string, never>, // no selectors
   { pluginDependsOnPluginWithColumnMeta: { getDerived: () => string } },
   { enable?: boolean },
   { moreMeta?: boolean }, // column metadata
@@ -217,7 +200,7 @@ type PluginDependsOnPluginWithColumnMeta = Plugin<
 const pluginDependsOnPluginWithColumnMeta = createPlugin<PluginDependsOnPluginWithColumnMeta>()({
   name: 'pluginDependsOnPluginWithColumnMeta',
   dependencies: [pluginWithColumnMeta],
-  getInitialState: (state) => ({
+  initialize: (state) => ({
     ...state,
     pluginDependsOnPluginWithColumnMeta: { derived: 'derived' },
   }),
@@ -285,13 +268,14 @@ export function ColumnMetadataWithDependenciesExample() {
 type PluginA = Plugin<
   'pluginA',
   { pluginA: { a: string } },
+  Record<string, never>,
   { pluginA: { getA: () => string } },
   { enableA?: boolean; aValue?: string; onAChange?: (value: string) => void }
 >;
 
 const pluginA = createPlugin<PluginA>()({
   name: 'pluginA',
-  getInitialState: (state, params) => {
+  initialize: (state, params) => {
     // @ts-expect-error Not initialized yet
     state.pluginA;
 
@@ -308,13 +292,14 @@ const pluginA = createPlugin<PluginA>()({
 type PluginB = Plugin<
   'pluginB',
   { pluginB: { b: string } },
+  Record<string, never>,
   { pluginB: { getB: () => string } },
   { bMode?: 'fast' | 'slow'; onBEvent?: () => void }
 >;
 
 const pluginB = createPlugin<PluginB>()({
   name: 'pluginB',
-  getInitialState: (state) => {
+  initialize: (state) => {
     // Can access internal plugins state here
     state.rows.tree;
     state.columns.orderedFields;
@@ -331,6 +316,7 @@ const pluginB = createPlugin<PluginB>()({
 type PluginC = Plugin<
   'pluginC',
   { pluginC: { c: string } },
+  Record<string, never>,
   { pluginC: { getC: () => string; getCombined: () => string } },
   { cPrefix?: string; enableCombined?: boolean }
 >;
@@ -339,7 +325,7 @@ type PluginC = Plugin<
 const pluginC = createPlugin<PluginC>()({
   name: 'pluginC',
   dependencies: [pluginA, pluginB],
-  getInitialState: (state, params) => {
+  initialize: (state, params) => {
     // Can access internal plugins state here
     state.rows.tree;
     state.columns.orderedFields;
@@ -371,6 +357,7 @@ const pluginC = createPlugin<PluginC>()({
 type PluginD = Plugin<
   'pluginD',
   { pluginD: { d: string } },
+  Record<string, never>,
   { pluginD: { getD: () => string; getDWithA: () => string } },
   { dFallback?: string }
 >;
@@ -379,7 +366,7 @@ type PluginD = Plugin<
 // Use `import type` for optional plugins - type-only imports don't affect bundle
 const pluginD = createPlugin<PluginD>()({
   name: 'pluginD',
-  getInitialState: (state) => {
+  initialize: (state) => {
     // Can access internal plugins state here
     state.rows.tree;
     state.columns.orderedFields;
@@ -562,4 +549,37 @@ export function PluginOptionsSubsetExample() {
   grid2.api.pluginC.getC();
 
   return;
+}
+
+export function SelectorsExample() {
+  const rows: User[] = [];
+  const grid1 = useDataGrid({
+    rows,
+    columns: [
+      { id: 'name', field: 'name', sortable: true },
+      { id: 'email', field: 'email' },
+    ],
+    plugins: [sortingPlugin],
+  });
+
+  // Selectors - accessed via static plugin properties
+  rowsPlugin.selectors.processedRowIds;
+  rowsPlugin.selectors.tree;
+  rowsPlugin.selectors.loading;
+  columnsPlugin.selectors.orderedFields;
+  columnsPlugin.selectors.visibleColumns;
+  columnsPlugin.selectors.allColumns;
+
+  sortingPlugin.selectors.model;
+  paginationPlugin.selectors.model;
+
+  // Should be able to call selectors imperatively
+  rowsPlugin.selectors.processedRowIds(grid1.getState());
+
+  // Should be able to use with grid.use()
+  grid1.use(sortingPlugin.selectors.model);
+  grid1.use(rowsPlugin.selectors.processedRowIds);
+
+  // @ts-expect-error paginationPlugin is not added
+  grid1.use(paginationPlugin.selectors.model);
 }

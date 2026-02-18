@@ -2,6 +2,7 @@ import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
+import { EventManager } from '@mui/x-internals/EventManager';
 import {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
@@ -12,7 +13,6 @@ import {
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
-  SchedulerEvent,
 } from '../../../models';
 import {
   SchedulerState,
@@ -21,7 +21,13 @@ import {
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   UpdateEventsParameters,
+  SchedulerInstanceName,
 } from './SchedulerStore.types';
+import {
+  SchedulerEvents,
+  SchedulerEventListener,
+  SchedulerEventParameters,
+} from '../../models/events';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
@@ -32,9 +38,9 @@ import {
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
+import { dateToEventString } from '../date-utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
-import { SchedulerLazyLoadingPlugin } from './plugins/SchedulerLazyLoadingPlugin';
 import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -64,18 +70,18 @@ export class SchedulerStore<
 
   private initialParameters: Parameters | null = null;
 
-  public instanceName: string;
+  public instanceName: SchedulerInstanceName;
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
   protected timeoutManager = new TimeoutManager();
 
-  public lazyLoading: SchedulerLazyLoadingPlugin<TEvent, TResource, State, Parameters> | undefined;
+  private eventManager = new EventManager();
 
   public constructor(
     parameters: Parameters,
     adapter: Adapter,
-    instanceName: string,
+    instanceName: SchedulerInstanceName,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
@@ -99,7 +105,7 @@ export class SchedulerStore<
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
       errors: [],
-      ...(parameters.dataSource ? { isLoading: true } : { isLoading: false }),
+      isLoading: !!parameters.dataSource,
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -139,7 +145,7 @@ export class SchedulerStore<
       areEventsResizable: parameters.areEventsResizable ?? false,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
       canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
-      eventColor: parameters.eventColor ?? 'jade',
+      eventColor: parameters.eventColor ?? 'teal',
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
@@ -249,13 +255,39 @@ export class SchedulerStore<
     });
   };
 
-  protected setVisibleDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+  /**
+   * Publishes an event to all its subscribers.
+   */
+  public publishEvent = <E extends SchedulerEvents>(
+    name: E,
+    params: SchedulerEventParameters<E>,
+  ) => {
+    this.eventManager.emit(name, params);
+  };
+
+  /**
+   * Subscribe to an event emitted by the store.
+   */
+  public subscribeEvent = <E extends SchedulerEvents>(
+    eventName: E,
+    handler: SchedulerEventListener<E>,
+  ) => {
+    this.eventManager.on(eventName, handler);
+  };
+
+  protected setVisibleDate = ({
+    visibleDate,
+    event,
+  }: {
+    visibleDate: TemporalSupportedObject;
+    event?: React.UIEvent | null;
+  }) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
     const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
 
     if (hasChange) {
-      const eventDetails = createChangeEventDetails('none', event.nativeEvent);
+      const eventDetails = createChangeEventDetails('none', event?.nativeEvent);
       onVisibleDateChange?.(visibleDate, eventDetails);
 
       if (!eventDetails.isCanceled && visibleDateProp === undefined) {
@@ -282,11 +314,16 @@ export class SchedulerStore<
         if (deleted.has(eventId)) {
           continue;
         }
+        const processedEvent = updated.has(eventId)
+          ? this.state.processedEventLookup.get(eventId)
+          : undefined;
         const newEvent = updated.has(eventId)
           ? getUpdatedEventModelFromChanges<TEvent>(
               originalEventModelLookup.get(eventId),
               updated.get(eventId)!,
               this.state.eventModelStructure,
+              this.state.adapter,
+              processedEvent!.modelInBuiltInFormat,
             )
           : originalEventModelLookup.get(eventId);
         newEvents.push(newEvent);
@@ -297,21 +334,25 @@ export class SchedulerStore<
 
     const createdIds: SchedulerEventId[] = [];
     for (const createdEvent of created) {
-      const response = createEventModel(createdEvent, this.state.eventModelStructure);
+      const response = createEventModel(
+        createdEvent,
+        this.state.eventModelStructure,
+        this.state.adapter,
+      );
       newEvents.push(response.model);
       createdIds.push(response.id);
     }
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
+
+    // Publish event for premium plugins (e.g., lazy loading) to sync caches
     queueMicrotask(() =>
-      this.lazyLoading?.updateEventsFromDataSource(
-        {
-          deleted: deletedParam ?? [],
-          updated,
-          created: createdIds,
-        },
+      this.publishEvent('eventsUpdated', {
+        deleted: deletedParam ?? [],
+        updated,
+        created: createdIds,
         newEvents,
-      ),
+      }),
     );
 
     return {
@@ -326,7 +367,17 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.displayTimezone)), event);
+    this.setVisibleDate({
+      visibleDate: adapter.startOfDay(adapter.now(this.state.displayTimezone)),
+      event,
+    });
+  };
+
+  /**
+   * Goes to a specific date without changing the view.
+   */
+  public goToDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+    this.setVisibleDate({ visibleDate, event });
   };
 
   /**
@@ -428,8 +479,14 @@ export class SchedulerStore<
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
+    const { adapter } = this.state;
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
-    const duplicatedEvent = createEventFromRecurringEvent(original, { start, end });
+    const originalModel = original.modelInBuiltInFormat;
+    const dataTimezone = originalModel.timezone ?? 'default';
+    const duplicatedEvent = createEventFromRecurringEvent(original, {
+      start: dateToEventString(adapter, start, originalModel.start, dataTimezone),
+      end: dateToEventString(adapter, end, originalModel.end, dataTimezone),
+    });
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 
@@ -463,7 +520,7 @@ export class SchedulerStore<
     }
 
     const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
-    const cleanChanges: Partial<SchedulerEvent> = { ...changes };
+    const cleanChanges: Partial<SchedulerEventUpdatedProperties> = { ...changes };
     if (cleanChanges.start != null) {
       cleanChanges.end = adapter.addMilliseconds(
         cleanChanges.start,
@@ -477,9 +534,27 @@ export class SchedulerStore<
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
+    const dataTimezone = original.modelInBuiltInFormat.timezone ?? 'default';
+    const stringifiedChanges: Record<string, any> = { ...cleanChanges };
+    if (cleanChanges.start != null) {
+      stringifiedChanges.start = dateToEventString(
+        adapter,
+        cleanChanges.start,
+        original.modelInBuiltInFormat.start,
+        dataTimezone,
+      );
+    }
+    if (stringifiedChanges.end != null) {
+      stringifiedChanges.end = dateToEventString(
+        adapter,
+        stringifiedChanges.end,
+        original.modelInBuiltInFormat.end,
+        dataTimezone,
+      );
+    }
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
-      ...cleanChanges,
+      ...stringifiedChanges,
       extractedFromId: id,
     };
     return this.updateEvents({ created: [createdEvent] }).created[0];
@@ -514,4 +589,13 @@ export class SchedulerStore<
       this.set('occurrencePlaceholder', newPlaceholder);
     }
   };
+
+  /**
+   * Builds an object containing the methods that should be exposed publicly by the scheduler components.
+   */
+  public buildPublicAPI() {
+    return {
+      setVisibleDate: this.setVisibleDate,
+    };
+  }
 }

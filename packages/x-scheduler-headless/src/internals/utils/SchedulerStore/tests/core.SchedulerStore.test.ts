@@ -1,6 +1,5 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, storeClasses } from 'test/utils/scheduler';
 import { SchedulerEvent } from '@mui/x-scheduler-headless/models';
-import { storeClasses } from './utils';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,

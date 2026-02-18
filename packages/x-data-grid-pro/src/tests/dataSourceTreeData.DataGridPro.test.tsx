@@ -289,6 +289,68 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
   });
 
+  // https://github.com/mui/mui-x/issues/21263
+  it('should not throw an error when non-sibling leaf rows share the same `groupKey` after data source change', async () => {
+    const treeData: Record<string, any[]> = {
+      '[]': [{ id: '1', name: 'Mark', descendantCount: 2 }],
+      '["Mark"]': [
+        { id: '2-1', name: 'Ryan', descendantCount: 1 },
+        { id: '2-2', name: 'Jack', descendantCount: 1 },
+      ],
+      '["Mark","Ryan"]': [{ id: '2-1-1', name: 'John', descendantCount: 0 }],
+      '["Mark","Jack"]': [{ id: '2-2-1', name: 'John', descendantCount: 0 }],
+    };
+
+    function TestComponent(props: { version?: number }) {
+      apiRef = useGridApiRef();
+      const { version = 0 } = props;
+
+      const dataSource: GridDataSource = React.useMemo(
+        () => ({
+          getRows: async (params: GridGetRowsParams) => {
+            const groupKeysString = JSON.stringify(params.groupKeys);
+            const rows = treeData[groupKeysString] || [];
+            return { rows, rowCount: rows.length, version };
+          },
+          getGroupKey: (row) => row.name,
+          getChildrenCount: (row) => row.descendantCount,
+        }),
+        [version],
+      );
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }]}
+            dataSource={dataSource}
+            treeData
+            defaultGroupingExpansionDepth={-1}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestComponent />);
+
+    // Wait for all nodes to be loaded, including the deeply nested leaf "Jhon" nodes
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.tree['2-1-1']).not.to.equal(undefined);
+      expect(apiRef.current!.state.rows.tree['2-2-1']).not.to.equal(undefined);
+    });
+
+    // Trigger data source recomputation by changing the version prop.
+    // This creates a new dataSource object, causing a full tree rebuild.
+    setProps({ version: 1 });
+
+    // Should NOT throw
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.tree['2-1-1']).not.to.equal(undefined);
+      expect(apiRef.current!.state.rows.tree['2-2-1']).not.to.equal(undefined);
+    });
+  });
+
   it('should lazily fetch nested data when using `defaultGroupingExpansionDepth`', async () => {
     render(<TestDataSource defaultGroupingExpansionDepth={1} />);
 

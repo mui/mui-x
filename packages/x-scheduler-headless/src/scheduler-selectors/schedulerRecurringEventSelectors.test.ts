@@ -1,7 +1,6 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, storeClasses } from 'test/utils/scheduler';
 import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { storeClasses } from '../internals/utils/SchedulerStore/tests/utils';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
 import { getWeekDayCode } from '../internals/utils/recurring-events';
 
