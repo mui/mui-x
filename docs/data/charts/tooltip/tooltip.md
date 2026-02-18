@@ -98,6 +98,19 @@ This removes the header showing the x-axis value from the tooltip.
 To hide a series, set the formatted value to `null`.
 To display the series with a blank space, return an empty string.
 
+## Sorting values
+
+Use the `sort` prop to modify the series order in the axis tooltip.
+This prop accepts the following values:
+
+- `'none'` (default): Shows series according to the order they are defined.
+- `'asc'`: Sort series by ascending values.
+- `'desc'`: Sort series by descending values.
+
+Regardless of the `sort` prop being `'asc'` or `'desc'`, series whose value is `null` are always sorted last.
+
+{{"demo": "SortDemo.js"}}
+
 ## Position
 
 By default, the tooltip is placed relative to the pointer position.

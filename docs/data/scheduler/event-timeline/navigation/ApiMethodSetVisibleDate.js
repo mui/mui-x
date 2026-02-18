@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { useEventCalendarApiRef } from '@mui/x-scheduler/use-event-calendar-api-ref';
+import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
 import {
   initialEvents,
   resources,
@@ -12,7 +12,7 @@ import {
 
 export default function ApiMethodSetVisibleDate() {
   const [events, setEvents] = React.useState(initialEvents);
-  const apiRef = useEventCalendarApiRef();
+  const apiRef = useEventTimelinePremiumApiRef();
 
   return (
     <Stack spacing={2} sx={{ width: '100%', alignItems: 'flex-start' }}>
@@ -26,7 +26,7 @@ export default function ApiMethodSetVisibleDate() {
       </Button>
       <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
         <EventTimelinePremium
-          // apiRef={apiRef} TODO: Uncomment when the `apiRef` prop is added to the `EventTimelinePremium` component.
+          apiRef={apiRef}
           events={events}
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}

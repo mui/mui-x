@@ -81,7 +81,7 @@ const StyledInputComponent = styled(GridFilterInputValue, {
   flex: 1,
   marginRight: vars.spacing(0.5),
   marginBottom: vars.spacing(-0.25),
-  '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
+  '& input[type="date"], & input[type="datetime-local"]': {
     '&[value=""]:not(:focus)': {
       color: 'transparent',
     },
