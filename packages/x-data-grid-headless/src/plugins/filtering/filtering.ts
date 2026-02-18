@@ -82,51 +82,39 @@ const filteringPlugin = createPlugin<FilteringPlugin>()({
     const isExternalFiltering = params.filtering?.external === true;
     const isAutoMode = params.filtering?.mode !== 'manual';
 
-    const getColumn = React.useCallback(
-      (field: string) => {
-        return api.columns.get(field) as
-          | (ReturnType<typeof api.columns.get> & FilteringColumnMeta)
-          | undefined;
-      },
-      [api],
-    );
+    const getColumn = (field: string) => {
+      return api.columns.get(field) as
+        | (ReturnType<typeof api.columns.get> & FilteringColumnMeta)
+        | undefined;
+    };
 
-    const getAllColumnFields = React.useCallback((): string[] => {
+    const getAllColumnFields = (): string[] => {
       return api.columns.getAll().map((col) => col.id);
-    }, [api]);
+    };
 
-    const getVisibleColumnFields = React.useCallback((): string[] => {
+    const getVisibleColumnFields = (): string[] => {
       return api.columns.getVisible().map((col) => col.id);
-    }, [api]);
+    };
 
-    const computeFilteredRowIds: FilteringApi['filtering']['computeFilteredRowIds'] =
-      React.useCallback(
-        (rowIds, filterModel) => {
-          const originalRowIds = rowIds ?? api.rows.getAllRowIds();
-          const modelToUse = filterModel ?? store.state.filtering.model;
+    const computeFilteredRowIds: FilteringApi['filtering']['computeFilteredRowIds'] = (
+      rowIds,
+      filterModel,
+    ) => {
+      const originalRowIds = rowIds ?? api.rows.getAllRowIds();
+      const modelToUse = filterModel ?? store.state.filtering.model;
 
-          const filterApplier = buildFilterApplier({
-            model: modelToUse,
-            getColumn,
-            getRow: api.rows.getRow,
-            disableEval: params.filtering?.disableEval,
-            ignoreDiacritics: params.filtering?.ignoreDiacritics,
-            getAllColumnFields,
-            getVisibleColumnFields,
-          });
+      const filterApplier = buildFilterApplier({
+        model: modelToUse,
+        getColumn,
+        getRow: api.rows.getRow,
+        disableEval: params.filtering?.disableEval,
+        ignoreDiacritics: params.filtering?.ignoreDiacritics,
+        getAllColumnFields,
+        getVisibleColumnFields,
+      });
 
-          return filterApplier ? filterApplier(originalRowIds) : originalRowIds;
-        },
-        [
-          store.state.filtering.model,
-          params.filtering?.disableEval,
-          params.filtering?.ignoreDiacritics,
-          api.rows,
-          getColumn,
-          getAllColumnFields,
-          getVisibleColumnFields,
-        ],
-      );
+      return filterApplier ? filterApplier(originalRowIds) : originalRowIds;
+    };
 
     const filteringProcessor = useStableCallback((inputIds: GridRowId[]): GridRowId[] => {
       if (isExternalFiltering) {
