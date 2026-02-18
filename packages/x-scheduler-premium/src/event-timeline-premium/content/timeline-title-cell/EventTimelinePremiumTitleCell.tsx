@@ -4,8 +4,8 @@ import { EventTimelinePremium as TimelinePrimitive } from '@mui/x-scheduler-head
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { getDataPaletteProps } from '@mui/x-scheduler/internals';
-import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+import { getPaletteVariants } from '@mui/x-scheduler/internals';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
 const EventTimelinePremiumTitleCellRow = styled(TimelinePrimitive.Row, {
   name: 'MuiEventTimeline',
@@ -26,6 +26,7 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelinePrimitive.Cell, {
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
+  variants: getPaletteVariants(theme),
 }));
 
 const ResourceLegendColor = styled('span', {
@@ -36,7 +37,7 @@ const ResourceLegendColor = styled('span', {
   height: 10,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-main)',
 });
 
 export default function EventTimelinePremiumTitleCell(props: { resourceId: SchedulerResourceId }) {
@@ -44,7 +45,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const classes = useEventTimelinePremiumClasses();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
@@ -55,11 +56,9 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       <EventTimelinePremiumTitleCellRoot
         id={`EventTimelinePremiumTitleCell-${resourceId}`}
         className={classes.titleCell}
+        data-palette={eventColor}
       >
-        <ResourceLegendColor
-          className={classes.titleCellLegendColor}
-          {...getDataPaletteProps(eventColor)}
-        />
+        <ResourceLegendColor className={classes.titleCellLegendColor} />
         {resource!.title}
       </EventTimelinePremiumTitleCellRoot>
     </EventTimelinePremiumTitleCellRow>

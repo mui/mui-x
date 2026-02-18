@@ -15,8 +15,9 @@ import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/mode
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
   eventDialogSlots,
-  EventDialogClassesContext,
-  TranslationsProvider,
+  EventDialogStyledContext,
+  EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+  schedulerTokens,
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
@@ -24,7 +25,7 @@ import {
   EventTimelinePremiumClasses,
   getEventTimelinePremiumUtilityClass,
 } from './eventTimelinePremiumClasses';
-import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
+import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
@@ -80,6 +81,7 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
+  ...schedulerTokens,
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
   '--weeks-cell-width': '64px',
@@ -90,6 +92,7 @@ const EventTimelinePremiumRoot = styled('div', {
   padding: theme.spacing(2),
   gap: theme.spacing(2),
   height: '100%',
+  fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
 }));
 
@@ -126,32 +129,45 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
     store.setView(event.target.value as EventTimelinePremiumView, event as Event);
   };
 
-  const { translations, ...other } = forwardedProps;
+  const { localeText, ...other } = forwardedProps;
+
+  const mergedLocaleText = React.useMemo(
+    () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),
+    [localeText],
+  );
+
+  const timelineStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
+
+  const dialogStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
-      <TranslationsProvider translations={translations}>
-        <EventTimelinePremiumClassesContext.Provider value={classes}>
-          <EventDialogClassesContext.Provider value={classes}>
-            <EventTimelinePremiumRoot
-              ref={forwardedRef}
-              className={clsx(classes.root, className)}
-              {...other}
-            >
-              <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
-                <Select value={view} onChange={handleViewChange} size="small">
-                  {views.map((viewItem) => (
-                    <MenuItem key={viewItem} value={viewItem}>
-                      {viewItem}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </EventTimelinePremiumHeaderToolbar>
-              <EventTimelinePremiumContent />
-            </EventTimelinePremiumRoot>
-          </EventDialogClassesContext.Provider>
-        </EventTimelinePremiumClassesContext.Provider>
-      </TranslationsProvider>
+      <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
+        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
+          <EventTimelinePremiumRoot
+            ref={forwardedRef}
+            className={clsx(classes.root, className)}
+            {...other}
+          >
+            <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
+              <Select value={view} onChange={handleViewChange} size="small">
+                {views.map((viewItem) => (
+                  <MenuItem key={viewItem} value={viewItem}>
+                    {viewItem}
+                  </MenuItem>
+                ))}
+              </Select>
+            </EventTimelinePremiumHeaderToolbar>
+            <EventTimelinePremiumContent />
+          </EventTimelinePremiumRoot>
+        </EventDialogStyledContext.Provider>
+      </EventTimelinePremiumStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;

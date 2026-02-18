@@ -795,6 +795,9 @@ importers:
       '@mui/x-data-grid-headless-pro':
         specifier: workspace:@mui/x-data-grid-headless-pro@*
         version: link:../../packages/x-data-grid-headless-pro/build
+      '@mui/x-virtualizer':
+        specifier: workspace:@mui/x-virtualizer@*
+        version: link:../../packages/x-virtualizer/build
       react:
         specifier: 'catalog:'
         version: 19.2.3
@@ -1274,9 +1277,9 @@ importers:
       '@base-ui/utils':
         specifier: 0.2.4
         version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@mui/x-internals':
+      '@mui/x-virtualizer':
         specifier: workspace:*
-        version: link:../x-internals/build
+        version: link:../x-virtualizer/build
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1

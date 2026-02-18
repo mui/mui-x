@@ -1,8 +1,0 @@
-<EventTimelinePremium
-  events={events}
-  resources={resources}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
-  translations={frFR}
-  defaultView="months"
-/>

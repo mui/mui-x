@@ -112,8 +112,8 @@ describe('<EventDialogContent open />', () => {
       id: DEFAULT_EVENT.id,
       title: 'Running test',
       description: DEFAULT_EVENT.description,
-      start: adapter.startOfDay(DEFAULT_EVENT.start),
-      end: adapter.endOfDay(DEFAULT_EVENT.end),
+      start: adapter.startOfDay(adapter.date(DEFAULT_EVENT.start, 'default')).toISOString(),
+      end: adapter.endOfDay(adapter.date(DEFAULT_EVENT.end, 'default')).toISOString(),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',
@@ -336,7 +336,7 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .toOccurrence();
 
       const { user } = render(
@@ -379,7 +379,7 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .allDay(true)
         .toOccurrence();
 
@@ -423,7 +423,7 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .toOccurrence();
 
       const { user } = render(
@@ -472,7 +472,7 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('placeholder-id')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .title('')
         .description('')
         .toOccurrence();
@@ -536,7 +536,7 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('placeholder-id')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .title('')
         .toOccurrence();
 
