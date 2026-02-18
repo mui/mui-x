@@ -80,44 +80,48 @@ export function isGroupedAxisAutoSizeResult(
 const MAX_AUTO_SIZE_CANDIDATES = 5;
 
 /**
- * From a list of rendered label strings, returns a small subset of candidates
- * that are most likely to be the visually widest.
- * Uses character count as a proxy for visual width, which works well in practice.
+ * From a data array, returns the indices of the values whose raw string representations
+ * are most likely to produce the widest rendered labels.
+ *
+ * Operates on raw values (before formatting) so the caller can avoid invoking
+ * `valueFormatter` for every data item — only the selected candidates are formatted.
+ * For most data types (strings, numbers) the raw string length is a reliable proxy
+ * for the formatted label's visual width.
  */
-function selectWidestCandidates(labels: string[]): string[] {
-  if (labels.length <= MAX_AUTO_SIZE_CANDIDATES) {
-    return labels;
+function selectWidestCandidateIndices(data: readonly any[]): number[] {
+  if (data.length <= MAX_AUTO_SIZE_CANDIDATES) {
+    return Array.from({ length: data.length }, (_, i) => i);
   }
 
-  const getMaxLineLength = (label: string): number => {
-    if (!label.includes('\n')) {
-      return label.length;
-    }
-    let max = 0;
-    for (const line of label.split('\n')) {
-      if (line.length > max) {
-        max = line.length;
+  let maxLength = 0;
+  const candidateIndices: number[] = [];
+
+  for (let i = 0; i < data.length; i += 1) {
+    const s = `${data[i]}`;
+    // For potential multi-line labels, use the longest line's character count
+    let len: number;
+    const nlIndex = s.indexOf('\n');
+    if (nlIndex === -1) {
+      len = s.length;
+    } else {
+      len = 0;
+      for (const line of s.split('\n')) {
+        if (line.length > len) {
+          len = line.length;
+        }
       }
     }
-    return max;
-  };
 
-  // Single pass: collect labels with the maximum line length
-  let maxLength = 0;
-  const candidates: string[] = [];
-
-  for (const label of labels) {
-    const len = getMaxLineLength(label);
     if (len > maxLength) {
       maxLength = len;
-      candidates.length = 0;
-      candidates.push(label);
-    } else if (len === maxLength && candidates.length < MAX_AUTO_SIZE_CANDIDATES) {
-      candidates.push(label);
+      candidateIndices.length = 0;
+      candidateIndices.push(i);
+    } else if (len === maxLength && candidateIndices.length < MAX_AUTO_SIZE_CANDIDATES) {
+      candidateIndices.push(i);
     }
   }
 
-  return candidates;
+  return candidateIndices;
 }
 
 /**
@@ -135,20 +139,17 @@ function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis): string[] {
       return [];
     }
 
-    // Map all values to their rendered label strings
-    const labels = data.map((value) => {
+    // Select candidate indices by raw value string length, then format only those.
+    // This avoids O(n) valueFormatter calls — for large datasets the formatter is
+    // invoked at most MAX_AUTO_SIZE_CANDIDATES times instead of once per item.
+    const candidateIndices = selectWidestCandidateIndices(data);
+    return candidateIndices.map((i) => {
+      const value = data[i];
       if (valueFormatter) {
-        return valueFormatter(value, {
-          location: 'auto-size',
-        });
+        return valueFormatter(value, { location: 'auto-size' });
       }
       return `${value}`;
     });
-
-    // We only need the widest label to determine axis size.
-    // Measuring all labels is O(n) DOM operations — instead, pick a small set of
-    // candidates using label length as a proxy for visual width.
-    return selectWidestCandidates(labels);
   }
 
   // For continuous scales, we measure the min and max values to estimate axis size.
