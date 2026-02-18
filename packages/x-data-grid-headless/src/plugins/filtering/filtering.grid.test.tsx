@@ -492,14 +492,18 @@ describe('Filtering Plugin - Integration Tests', () => {
   });
 
   describe('quick filter integration', () => {
-    it('should filter across visible columns with setQuickFilterValues', async () => {
+    it('should filter across visible columns with quick filter', async () => {
       const apiRef = React.createRef<TestGridApi | null>();
       const { container } = render(
         <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
       );
 
       await act(async () => {
-        apiRef.current?.api.filtering.setQuickFilterValues(['li']);
+        apiRef.current?.api.filtering.setModel({
+          logicOperator: 'and',
+          conditions: [],
+          quickFilter: { values: ['li'] },
+        });
       });
 
       // Alice and Charlie contain 'li'
@@ -508,6 +512,10 @@ describe('Filtering Plugin - Integration Tests', () => {
 
     it('should combine quick filter with regular filter (both must pass)', async () => {
       const apiRef = React.createRef<TestGridApi | null>();
+      const initialModel: FilterModel = {
+        logicOperator: 'and',
+        conditions: [{ field: 'age', operator: '>', value: 25 }],
+      };
       const { container } = render(
         <TestDataGrid
           rows={defaultRows}
@@ -515,10 +523,7 @@ describe('Filtering Plugin - Integration Tests', () => {
           apiRef={apiRef}
           initialState={{
             filtering: {
-              model: {
-                logicOperator: 'and',
-                conditions: [{ field: 'age', operator: '>', value: 25 }],
-              },
+              model: initialModel,
             },
           }}
         />,
@@ -527,7 +532,10 @@ describe('Filtering Plugin - Integration Tests', () => {
       expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
 
       await act(async () => {
-        apiRef.current?.api.filtering.setQuickFilterValues(['li']);
+        apiRef.current?.api.filtering.setModel({
+          ...initialModel,
+          quickFilter: { values: ['li'] },
+        });
       });
 
       // Quick filter 'li' matches Alice, Charlie. Regular filter age > 25 keeps Charlie, Bob.
@@ -560,13 +568,20 @@ describe('Filtering Plugin - Integration Tests', () => {
       );
 
       await act(async () => {
-        apiRef.current?.api.filtering.setQuickFilterValues(['Alice']);
+        apiRef.current?.api.filtering.setModel({
+          logicOperator: 'and',
+          conditions: [],
+          quickFilter: { values: ['Alice'] },
+        });
       });
 
       expect(getRowNames(container)).toEqual(['Alice']);
 
       await act(async () => {
-        apiRef.current?.api.filtering.setQuickFilterValues([]);
+        apiRef.current?.api.filtering.setModel({
+          logicOperator: 'and',
+          conditions: [],
+        });
       });
 
       expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
@@ -664,18 +679,5 @@ describe('Filtering Plugin - Integration Tests', () => {
       });
     });
 
-    describe('setQuickFilterValues', () => {
-      it('should set quick filter values on the model', async () => {
-        const apiRef = React.createRef<TestGridApi | null>();
-        render(<TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />);
-
-        await act(async () => {
-          apiRef.current?.api.filtering.setQuickFilterValues(['test']);
-        });
-
-        const model = apiRef.current?.api.filtering.getModel()!;
-        expect(model.quickFilter?.values).toEqual(['test']);
-      });
-    });
-  });
+});
 });
