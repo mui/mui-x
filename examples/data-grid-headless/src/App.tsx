@@ -441,7 +441,7 @@ function DataGridToolbar() {
     const value = event.target.value;
     setQuickFilterInput(value);
     const values = value ? value.split(' ').filter(Boolean) : [];
-    grid.api.filtering.setQuickFilterValues(values);
+    grid.api.filtering.setModel({ ...filterModel, quickFilter: { values, logicOperator: 'and' } });
   };
 
   const handleFilterModelChange = (model: typeof filterModel) => {
