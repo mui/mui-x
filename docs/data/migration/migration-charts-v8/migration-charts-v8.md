@@ -206,7 +206,7 @@ After running the codemod make sure to adapt the hook returned value to your nee
 
 ## Line Chart
 
-### `showMark` default value changed
+### `showMark` default value changed ✅
 
 The default value of the `showMark` prop in the line series has changed from `true` to `false` in v9.
 

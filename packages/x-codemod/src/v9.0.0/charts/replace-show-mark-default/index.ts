@@ -10,7 +10,12 @@ const PROVIDER_NAMES = [
   // With the new naming to be sure codemod order does not matter
   'ChartsDataProvider',
   'ChartsDataProviderPro',
-  'ChartsDataProviderPremium'
+  'ChartsDataProviderPremium',
+
+  // The component that includes the data provider.
+  'ChartsContainer',
+  'ChartsContainerPro',
+  'ChartsContainerPremium'
 ];
 
 /**
