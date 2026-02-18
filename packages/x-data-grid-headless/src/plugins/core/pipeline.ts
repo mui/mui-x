@@ -11,6 +11,23 @@ interface RegisteredPipelineProcessor<TValue> {
 export interface PipelineOptions<TValue> {
   getInitialValue: () => TValue;
   onRecompute: (value: TValue) => void;
+  /**
+   * Called when a disabled processor has cached output but its input has changed.
+   * Allows handling structural changes (adds/removes) while preserving
+   * the cached state for unchanged items (edits).
+   * @param {Object} params - The parameters for the reconciliation.
+   * @param {TValue} params.previousInput - The input of the previous run.
+   * @param {TValue} params.currentInput - The input of the current run.
+   * @param {TValue} params.cachedOutput - The output of the cached run.
+   * @param {PipelineProcessor<TValue>} params.processor - The processor that has changed.
+   * @returns {TValue} The output of the reconciliation.
+   */
+  reconcileDisabledProcessor?: (params: {
+    previousInput: TValue;
+    currentInput: TValue;
+    cachedOutput: TValue;
+    processor: PipelineProcessor<TValue>;
+  }) => TValue;
 }
 
 export class Pipeline<TValue> {
@@ -18,6 +35,7 @@ export class Pipeline<TValue> {
   private previousRun:
     | {
         processorNames: string[];
+        inputsByProcessor: Map<string, TValue>;
         outputsByProcessor: Map<string, TValue>;
       }
     | undefined;
@@ -91,7 +109,9 @@ export class Pipeline<TValue> {
     }
 
     for (let i = processorIndex; i < this.previousRun.processorNames.length; i += 1) {
-      this.previousRun.outputsByProcessor.delete(this.previousRun.processorNames[i]);
+      const processorName = this.previousRun.processorNames[i];
+      this.previousRun.inputsByProcessor.delete(processorName);
+      this.previousRun.outputsByProcessor.delete(processorName);
     }
   }
 
@@ -103,23 +123,39 @@ export class Pipeline<TValue> {
     input: TValue,
     orderedProcessors: RegisteredPipelineProcessor<TValue>[],
     startIndex: number,
+    inputsByProcessor: Map<string, TValue>,
     outputsByProcessor: Map<string, TValue>,
   ): TValue {
     let currentValue = input;
     for (let i = startIndex; i < orderedProcessors.length; i += 1) {
       const { name, processor, enabled } = orderedProcessors[i];
       if (!enabled) {
-        // Replay the cached output from the previous run if available,
-        // instead of just ignoring them.
-        // This is needed to keep the processed results while the resulting visiblerows are updated.
         const cachedOutput = this.previousRun?.outputsByProcessor.get(name);
         if (cachedOutput !== undefined) {
-          currentValue = cachedOutput;
-          outputsByProcessor.set(name, cachedOutput);
+          const previousInput = this.previousRun?.inputsByProcessor.get(name);
+          inputsByProcessor.set(name, currentValue);
+          if (
+            previousInput !== undefined &&
+            previousInput !== currentValue &&
+            this.options.reconcileDisabledProcessor
+          ) {
+            // Input changed and reconciliation is available — handle structural changes
+            currentValue = this.options.reconcileDisabledProcessor({
+              previousInput,
+              currentInput: currentValue,
+              cachedOutput,
+              processor,
+            });
+          } else {
+            // Same input or no reconciliation — replay cached output as-is
+            currentValue = cachedOutput;
+          }
+          outputsByProcessor.set(name, currentValue);
         }
         continue;
       }
 
+      inputsByProcessor.set(name, currentValue);
       currentValue = processor(currentValue);
       outputsByProcessor.set(name, currentValue);
     }
@@ -139,6 +175,7 @@ export class Pipeline<TValue> {
 
     let startIndex = 0;
     let input = this.options.getInitialValue();
+    const inputsByProcessor = new Map<string, TValue>();
     const outputsByProcessor = new Map<string, TValue>();
 
     if (fromProcessor !== undefined && hasCompatiblePreviousRun) {
@@ -158,6 +195,10 @@ export class Pipeline<TValue> {
 
           for (let i = 0; i < targetIndex; i += 1) {
             const processorName = processorNames[i];
+            const cachedInput = previousRun.inputsByProcessor.get(processorName);
+            if (cachedInput !== undefined) {
+              inputsByProcessor.set(processorName, cachedInput);
+            }
             const cachedOutput = previousRun.outputsByProcessor.get(processorName);
             if (cachedOutput !== undefined) {
               outputsByProcessor.set(processorName, cachedOutput);
@@ -169,9 +210,16 @@ export class Pipeline<TValue> {
       }
     }
 
-    const output = this.runFrom(input, orderedProcessors, startIndex, outputsByProcessor);
+    const output = this.runFrom(
+      input,
+      orderedProcessors,
+      startIndex,
+      inputsByProcessor,
+      outputsByProcessor,
+    );
     this.previousRun = {
       processorNames,
+      inputsByProcessor,
       outputsByProcessor,
     };
 

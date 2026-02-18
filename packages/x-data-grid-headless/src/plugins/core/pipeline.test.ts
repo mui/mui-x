@@ -338,4 +338,143 @@ describe('Pipeline', () => {
     expect(firstCalls).toBe(1); // first was NOT re-run
     expect(secondCalls).toBe(1);
   });
+
+  describe('reconcileDisabledProcessor', () => {
+    it('should call reconciliation when a disabled processor input changes', () => {
+      let items = [1, 2, 3];
+      const reconcile = vi.fn(
+        ({
+          currentInput,
+          cachedOutput,
+        }: {
+          previousInput: number[];
+          currentInput: number[];
+          cachedOutput: number[];
+        }) => {
+          const previousSet = new Set(cachedOutput);
+          const added = currentInput.filter((id) => !previousSet.has(id));
+          return [...cachedOutput, ...added];
+        },
+      );
+
+      const pipeline = new Pipeline<number[]>({
+        getInitialValue: () => items,
+        onRecompute: () => {},
+        reconcileDisabledProcessor: reconcile,
+      });
+
+      // Filter: keep only even numbers
+      pipeline.register('filter', (value) => value.filter((v) => v % 2 === 0));
+
+      // Initial run: [1,2,3] → [2]
+      expect(pipeline.recompute()).toEqual([2]);
+
+      // Disable the filter processor
+      pipeline.disable('filter');
+
+      // Add item 4 to initial value
+      items = [1, 2, 3, 4];
+      pipeline.recompute();
+
+      expect(reconcile).toHaveBeenCalledWith(
+        expect.objectContaining({
+          previousInput: [1, 2, 3],
+          currentInput: [1, 2, 3, 4],
+          cachedOutput: [2],
+        }),
+      );
+    });
+
+    it('should handle item removal via reconciliation', () => {
+      let items = [1, 2, 3];
+      const pipeline = new Pipeline<number[]>({
+        getInitialValue: () => items,
+        onRecompute: () => {},
+        reconcileDisabledProcessor: ({ previousInput, currentInput, cachedOutput }) => {
+          const previousSet = new Set(previousInput);
+          const currentSet = new Set(currentInput);
+          const added = currentInput.filter((id) => !previousSet.has(id));
+          const removedSet = new Set(previousInput.filter((id) => !currentSet.has(id)));
+
+          if (added.length === 0 && removedSet.size === 0) {
+            return cachedOutput;
+          }
+
+          let result =
+            removedSet.size > 0 ? cachedOutput.filter((id) => !removedSet.has(id)) : cachedOutput;
+          if (added.length > 0) {
+            result = [...result, ...added];
+          }
+          return result;
+        },
+      });
+
+      // Filter: keep only items > 1
+      pipeline.register('filter', (value) => value.filter((v) => v > 1));
+
+      // Initial: [1,2,3] → [2,3]
+      expect(pipeline.recompute()).toEqual([2, 3]);
+
+      pipeline.disable('filter');
+
+      // Remove item 2
+      items = [1, 3];
+      expect(pipeline.recompute()).toEqual([3]);
+    });
+
+    it('should return cached output when input contents are the same', () => {
+      let items = [1, 2, 3];
+      const reconcile = vi.fn(({ previousInput, currentInput, cachedOutput }) => {
+        const previousSet = new Set(previousInput as number[]);
+        const currentSet = new Set(currentInput as number[]);
+        const added = (currentInput as number[]).filter((id) => !previousSet.has(id));
+        const removedSet = new Set((previousInput as number[]).filter((id) => !currentSet.has(id)));
+
+        if (added.length === 0 && removedSet.size === 0) {
+          return cachedOutput;
+        }
+        return cachedOutput;
+      });
+
+      const pipeline = new Pipeline<number[]>({
+        getInitialValue: () => items,
+        onRecompute: () => {},
+        reconcileDisabledProcessor: reconcile,
+      });
+
+      pipeline.register('filter', (value) => value.filter((v) => v > 1));
+
+      // Initial: [1,2,3] → [2,3]
+      expect(pipeline.recompute()).toEqual([2, 3]);
+
+      pipeline.disable('filter');
+
+      // Same content but new array reference (like updateRows does for edits)
+      items = [1, 2, 3];
+      const result = pipeline.recompute();
+
+      // reconcile IS called (new array reference), but returns cachedOutput since no structural changes
+      expect(reconcile).toHaveBeenCalled();
+      expect(result).toEqual([2, 3]);
+    });
+
+    it('should fall back to cached replay when no reconciliation callback is provided', () => {
+      let items = [1, 2, 3];
+      const pipeline = new Pipeline<number[]>({
+        getInitialValue: () => items,
+        onRecompute: () => {},
+      });
+
+      pipeline.register('filter', (value) => value.filter((v) => v > 1));
+
+      // Initial: [1,2,3] → [2,3]
+      expect(pipeline.recompute()).toEqual([2, 3]);
+
+      pipeline.disable('filter');
+
+      // Add item — without reconciliation, cached output replays as-is
+      items = [1, 2, 3, 4];
+      expect(pipeline.recompute()).toEqual([2, 3]);
+    });
+  });
 });

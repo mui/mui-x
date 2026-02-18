@@ -286,6 +286,76 @@ describe('Filtering Plugin - Integration Tests', () => {
         // Without explicit apply, the rows should remain the same
         expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
       });
+
+      it('should show added rows immediately without calling apply()', async () => {
+        const apiRef = React.createRef<TestGridApi | null>();
+        const { container } = render(
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            filtering={{ mode: 'manual' }}
+            initialState={{
+              filtering: {
+                model: {
+                  logicOperator: 'and',
+                  conditions: [{ field: 'age', operator: '>', value: 28 }],
+                },
+              },
+            }}
+          />,
+        );
+
+        // Apply the filter
+        await act(async () => {
+          apiRef.current?.api.filtering.apply();
+        });
+
+        expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
+
+        // Add a new row (age 20 does NOT satisfy the filter, but should appear anyway)
+        await act(async () => {
+          apiRef.current?.api.rows.updateRows([{ id: 4, name: 'Diana', age: 20 }]);
+        });
+
+        // New row appears immediately without apply()
+        expect(getRowNames(container)).toEqual(['Charlie', 'Bob', 'Diana']);
+      });
+
+      it('should remove deleted rows immediately without calling apply()', async () => {
+        const apiRef = React.createRef<TestGridApi | null>();
+        const { container } = render(
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            filtering={{ mode: 'manual' }}
+            initialState={{
+              filtering: {
+                model: {
+                  logicOperator: 'and',
+                  conditions: [{ field: 'age', operator: '>', value: 28 }],
+                },
+              },
+            }}
+          />,
+        );
+
+        // Apply the filter
+        await act(async () => {
+          apiRef.current?.api.filtering.apply();
+        });
+
+        expect(getRowNames(container)).toEqual(['Charlie', 'Bob']);
+
+        // Delete Bob
+        await act(async () => {
+          apiRef.current?.api.rows.updateRows([{ id: 3, _action: 'delete' }]);
+        });
+
+        // Bob disappears immediately without apply()
+        expect(getRowNames(container)).toEqual(['Charlie']);
+      });
     });
   });
 
