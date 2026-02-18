@@ -104,7 +104,6 @@ export default function LineOverview() {
             dataKey: 'unemploymentRate',
             label: 'Unemployment rate',
             color: '#af3838',
-            showMark: false,
             yAxisId: 'unemployment-axis',
             valueFormatter: (value) => (value == null ? '' : `${value.toFixed(1)}%`),
           },
@@ -113,7 +112,6 @@ export default function LineOverview() {
             dataKey: 'gdpPerCapita',
             label: 'GDP per capita',
             color: '#4caf50',
-            showMark: false,
             yAxisId: 'gdp-axis',
             connectNulls: true,
             valueFormatter: (value) =>

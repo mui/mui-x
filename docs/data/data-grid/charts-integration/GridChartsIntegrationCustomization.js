@@ -107,7 +107,6 @@ const initialState = {
         values: [],
         chartType: 'line',
         configuration: {
-          showMark: false,
           grid: 'both',
           height: 400,
         },

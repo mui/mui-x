@@ -22,7 +22,7 @@ export default function TinyLineChart() {
     <ChartContainer
       width={500}
       height={300}
-      series={[{ type: 'line', data: pData }]}
+      series={[{ type: 'line', data: pData, showMark: true }]}
       xAxis={[{ scaleType: 'point', data: xLabels, position: 'none' }]}
       yAxis={[{ position: 'none' }]}
       sx={{
