@@ -11,20 +11,16 @@ import type {
   SeriesId,
 } from '../../../../models/seriesType';
 
-type RetrunedType<
-  SeriesType extends ChartSeriesType,
-  Item,
-> = Item extends SeriesItemIdentifier<SeriesType>
-  ? SeriesItemIdentifierWithType<SeriesType>
-  : Item & { type: SeriesType }
+type RetrunedType<SeriesType extends ChartSeriesType, Item> =
+  Item extends SeriesItemIdentifier<SeriesType>
+    ? SeriesItemIdentifierWithType<SeriesType>
+    : Item & { type: SeriesType };
 
 export function createIdentifierWithType(state: UseChartSeriesState) {
   function identifierWithType<
     SeriesType extends ChartSeriesType,
     Item extends { seriesId: SeriesId; type?: SeriesType },
-  >(
-    identifier: Item,
-  ): RetrunedType<SeriesType, Item> {
+  >(identifier: Item): RetrunedType<SeriesType, Item> {
     if (identifier.type !== undefined) {
       return identifier as RetrunedType<SeriesType, Item>;
     }
