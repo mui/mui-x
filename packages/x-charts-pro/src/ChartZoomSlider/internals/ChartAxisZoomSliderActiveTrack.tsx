@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import {
   type AxisId,
   type ComputedAxis,
-  getSurfacePoint,
+  getChartPoint,
   invertScale,
   selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
@@ -109,7 +109,7 @@ export function ChartAxisZoomSliderActiveTrack({
         return;
       }
 
-      const point = getSurfacePoint(element, event);
+      const point = getChartPoint(element, event);
       const pointerZoom = calculateZoomFromPoint(store.state, axisId, point);
 
       if (pointerZoom === null) {
@@ -139,7 +139,7 @@ export function ChartAxisZoomSliderActiveTrack({
         return;
       }
 
-      const point = getSurfacePoint(element, event);
+      const point = getChartPoint(element, event);
       const pointerDownZoom = calculateZoomFromPoint(store.state, axisId, point);
 
       if (pointerDownZoom === null) {
@@ -168,7 +168,7 @@ export function ChartAxisZoomSliderActiveTrack({
       return;
     }
 
-    const point = getSurfacePoint(element, event);
+    const point = getChartPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
       const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
@@ -199,7 +199,7 @@ export function ChartAxisZoomSliderActiveTrack({
       return;
     }
 
-    const point = getSurfacePoint(element, event);
+    const point = getChartPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
       const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);

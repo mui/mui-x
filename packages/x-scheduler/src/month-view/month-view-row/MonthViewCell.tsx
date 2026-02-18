@@ -18,7 +18,6 @@ import {
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
-import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 import { EventDialogTrigger } from '../../internals/components/event-dialog';
@@ -205,17 +204,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Day number header + max events
   const rowCount = 1 + maxEvents;
 
-  const eventCreationProps = useEventCreationProps(() => {
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      surfaceType: 'day-grid',
-      start: adapter.startOfDay(day.value),
-      end: adapter.endOfDay(day.value),
-      lockSurfaceType: true,
-      resourceId: null,
-    });
-  });
-
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
@@ -232,8 +220,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       data-current={isToday || undefined}
       data-other-month={!isCurrentMonth || undefined}
       data-weekend={isWeekend(adapter, day.value) || undefined}
+      lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
-      {...eventCreationProps}
     >
       {hasDayView ? (
         <MonthViewCellNumberButton

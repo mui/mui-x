@@ -1,5 +1,5 @@
 {
-  "version": "8.25.0",
+  "version": "9.0.0-alpha.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -72,9 +72,9 @@
     "@inquirer/prompts": "8.1.0",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.11",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.60",
-    "@mui/internal-code-infra": "0.0.3-canary.87",
-    "@mui/internal-markdown": "2.0.14",
-    "@mui/internal-netlify-cache": "0.0.2-canary.1",
+    "@mui/internal-code-infra": "0.0.3-canary.90",
+    "@mui/internal-markdown": "2.0.15",
+    "@mui/internal-netlify-cache": "0.0.3-canary.0",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/monorepo": "github:mui/material-ui#7ae667c5229d9143e4ecafb9e18b0b89609cff84",

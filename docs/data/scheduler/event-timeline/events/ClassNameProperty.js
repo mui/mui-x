@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { addDays } from 'date-fns/addDays';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
@@ -7,16 +6,16 @@ import { defaultVisibleDate } from '../../datasets/company-roadmap';
 const initialEvents = [
   {
     id: 'event-1',
-    start: addDays(defaultVisibleDate, 1),
-    end: addDays(defaultVisibleDate, 1),
+    start: '2025-07-02T00:00:00',
+    end: '2025-07-02T00:00:00',
     allDay: true,
     title: 'Regular Meeting',
     resource: 'room-1',
   },
   {
     id: 'event-2',
-    start: addDays(defaultVisibleDate, 1),
-    end: addDays(defaultVisibleDate, 1),
+    start: '2025-07-02T00:00:00',
+    end: '2025-07-02T00:00:00',
     allDay: true,
     title: 'Important Meeting',
     className: 'highlighted-event',
@@ -24,8 +23,8 @@ const initialEvents = [
   },
   {
     id: 'event-3',
-    start: addDays(defaultVisibleDate, 2),
-    end: addDays(defaultVisibleDate, 2),
+    start: '2025-07-03T00:00:00',
+    end: '2025-07-03T00:00:00',
     allDay: true,
     title: 'Project Review',
     className: 'striped-event',
@@ -33,16 +32,16 @@ const initialEvents = [
   },
   {
     id: 'event-4',
-    start: addDays(defaultVisibleDate, 2),
-    end: addDays(defaultVisibleDate, 2),
+    start: '2025-07-03T00:00:00',
+    end: '2025-07-03T00:00:00',
     allDay: true,
     title: 'Team Standup',
     resource: 'room-2',
   },
   {
     id: 'event-5',
-    start: addDays(defaultVisibleDate, 3),
-    end: addDays(defaultVisibleDate, 3),
+    start: '2025-07-04T00:00:00',
+    end: '2025-07-04T00:00:00',
     allDay: true,
     title: 'Urgent Task',
     className: 'highlighted-event',

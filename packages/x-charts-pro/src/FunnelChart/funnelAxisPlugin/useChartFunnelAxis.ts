@@ -3,7 +3,7 @@ import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   type ChartPlugin,
-  getSurfacePoint,
+  getChartPoint,
   getCartesianAxisIndex,
   selectorChartDrawingArea,
   selectorChartSeriesProcessed,
@@ -88,7 +88,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       const srvEvent = event.detail.srcEvent;
       const target = event.detail.target as SVGElement | undefined;
-      const svgPoint = getSurfacePoint(element, srvEvent);
+      const svgPoint = getChartPoint(element, srvEvent);
       // Release the pointer capture if we are panning, as this would cause the tooltip to
       // be locked to the first "section" it touches.
       if (
@@ -136,7 +136,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
 
-      const svgPoint = getSurfacePoint(element, event.detail.srcEvent);
+      const svgPoint = getChartPoint(element, event.detail.srcEvent);
 
       const xIndex = getCartesianAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
       isXAxis = xIndex !== -1;

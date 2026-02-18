@@ -77,7 +77,6 @@ export class Pipeline<TValue> {
     }
 
     processor.enabled = false;
-    this.invalidateFromProcessor(name);
   }
 
   private invalidateFromProcessor(name: string): void {
@@ -120,19 +119,6 @@ export class Pipeline<TValue> {
     return currentValue;
   }
 
-  private findPreviousEnabledProcessorIndex(
-    orderedProcessors: RegisteredPipelineProcessor<TValue>[],
-    fromIndex: number,
-  ): number {
-    for (let i = fromIndex - 1; i >= 0; i -= 1) {
-      if (orderedProcessors[i].enabled) {
-        return i;
-      }
-    }
-
-    return -1;
-  }
-
   recompute(fromProcessor?: string): TValue {
     const orderedProcessors = this.getOrderedProcessors();
     const processorNames = orderedProcessors.map((processor) => processor.name);
@@ -150,25 +136,23 @@ export class Pipeline<TValue> {
     if (fromProcessor !== undefined && hasCompatiblePreviousRun) {
       const targetIndex = processorNames.indexOf(fromProcessor);
       if (targetIndex !== -1) {
-        const previousEnabledIndex = this.findPreviousEnabledProcessorIndex(
-          orderedProcessors,
-          targetIndex,
-        );
+        let previousCachedOutput: TValue | undefined;
+        for (let i = targetIndex - 1; i >= 0; i -= 1) {
+          previousCachedOutput = previousRun.outputsByProcessor.get(processorNames[i]);
+          if (previousCachedOutput !== undefined) {
+            break;
+          }
+        }
 
-        if (previousEnabledIndex !== -1) {
-          const previousProcessorName = processorNames[previousEnabledIndex];
-          const previousOutput = previousRun.outputsByProcessor.get(previousProcessorName);
+        if (previousCachedOutput !== undefined) {
+          startIndex = targetIndex;
+          input = previousCachedOutput;
 
-          if (previousOutput !== undefined) {
-            startIndex = targetIndex;
-            input = previousOutput;
-
-            for (let i = 0; i < targetIndex; i += 1) {
-              const processorName = processorNames[i];
-              const cachedOutput = previousRun.outputsByProcessor.get(processorName);
-              if (cachedOutput !== undefined) {
-                outputsByProcessor.set(processorName, cachedOutput);
-              }
+          for (let i = 0; i < targetIndex; i += 1) {
+            const processorName = processorNames[i];
+            const cachedOutput = previousRun.outputsByProcessor.get(processorName);
+            if (cachedOutput !== undefined) {
+              outputsByProcessor.set(processorName, cachedOutput);
             }
           }
         } else {

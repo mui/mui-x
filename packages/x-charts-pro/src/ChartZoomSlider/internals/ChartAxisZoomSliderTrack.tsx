@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   type AxisId,
   useChartContext,
-  getSurfacePoint,
+  getChartPoint,
   selectorChartAxisZoomOptionsLookup,
   useStore,
 } from '@mui/x-charts/internals';
@@ -72,7 +72,7 @@ export function ChartAxisZoomSliderTrack({
       return;
     }
 
-    const pointerDownPoint = getSurfacePoint(element, event);
+    const pointerDownPoint = getChartPoint(element, event);
     const zoomFromPointerDown = calculateZoomFromPoint(store.state, axisId, pointerDownPoint);
 
     if (zoomFromPointerDown === null) {
@@ -80,7 +80,7 @@ export function ChartAxisZoomSliderTrack({
     }
 
     const onPointerMove = rafThrottle(function onPointerMove(pointerMoveEvent: PointerEvent) {
-      const pointerMovePoint = getSurfacePoint(element, pointerMoveEvent);
+      const pointerMovePoint = getChartPoint(element, pointerMoveEvent);
       const zoomFromPointerMove = calculateZoomFromPoint(store.state, axisId, pointerMovePoint);
 
       if (zoomFromPointerMove === null) {

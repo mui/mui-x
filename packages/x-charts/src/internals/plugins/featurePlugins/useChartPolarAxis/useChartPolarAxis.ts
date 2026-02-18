@@ -12,7 +12,7 @@ import {
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
 } from './useChartPolarAxis.selectors';
-import { getSurfacePoint } from '../../../getSurfacePoint';
+import { getChartPoint } from '../../../getChartPoint';
 import {
   generatePolar2svg,
   generateSvg2polar,
@@ -145,7 +145,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
           return;
         }
 
-        const svgPoint = getSurfacePoint(element, srcEvent);
+        const svgPoint = getChartPoint(element, srcEvent);
 
         mousePosition.current.isInChart = true;
         instance.setPointerCoordinate?.(svgPoint);
@@ -154,7 +154,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
 
       // On mouse, we want to restrict the interaction to the drawing area and radar circle.
 
-      const svgPoint = getSurfacePoint(element, srcEvent);
+      const svgPoint = getChartPoint(element, srcEvent);
 
       // Test if it's in the drawing area
       if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.detail.target)) {
@@ -219,7 +219,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       let dataIndex: number | null = null;
       let isRotationAxis: boolean = false;
 
-      const svgPoint = getSurfacePoint(element, event.detail.srcEvent);
+      const svgPoint = getChartPoint(element, event.detail.srcEvent);
 
       const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
       const rotationIndex = getAxisIndex(rotationAxisWithScale[usedRotationAxisId], rotation);

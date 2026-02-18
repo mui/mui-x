@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
-import { EventTimelinePremium } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
+import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
+import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
@@ -16,10 +16,11 @@ const EventTimelinePremiumEventRoot = styled('div', {
   slot: 'Event',
 })(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-3)',
-  color: 'var(--event-color-12)',
+  backgroundColor: 'var(--event-surface-subtle)',
+  color: 'var(--event-on-surface-subtle-primary)',
   padding: theme.spacing(0.5, 1),
   position: 'relative',
+  boxSizing: 'border-box',
   width: 'var(--width)',
   marginLeft: 'var(--x-position)',
   gridRow: 'var(--row-index, 1)',
@@ -27,20 +28,24 @@ const EventTimelinePremiumEventRoot = styled('div', {
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
+  '&:hover': {
+    backgroundColor: 'var(--event-surface-subtle-hover)',
+  },
   [`&:hover .${eventTimelinePremiumClasses.eventResizeHandler}`]: {
     opacity: 1,
   },
   '&::before': {
     content: '""',
     position: 'absolute',
-    top: theme.spacing(0.5),
-    bottom: theme.spacing(0.5),
+    top: 0,
+    bottom: 0,
     left: 0,
     width: 3,
-    borderRadius: 2,
-    background: 'var(--event-color-9)',
+    borderRadius: '4px 0 0 4px',
+    background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
+  variants: getPaletteVariants(theme),
 }));
 
 const EventTimelinePremiumEventLinesClamp = styled('span', {
@@ -56,7 +61,7 @@ const EventTimelinePremiumEventLinesClamp = styled('span', {
   overflowWrap: 'break-word',
 });
 
-const EventTimelinePremiumEventResizeHandler = styled(EventTimelinePremium.EventResizeHandler, {
+const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHandler, {
   name: 'MuiEventTimeline',
   slot: 'EventResizeHandler',
 })({
@@ -110,13 +115,13 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       '--number-of-lines': 1,
       '--row-index': occurrence.position.firstIndex,
     } as React.CSSProperties,
-    ...getDataPaletteProps(color),
+    'data-palette': color,
     ...other,
   };
 
   if (variant === 'placeholder') {
     return (
-      <EventTimelinePremium.EventPlaceholder
+      <TimelineGrid.EventPlaceholder
         render={<EventTimelinePremiumEventRoot />}
         aria-hidden={true}
         {...sharedProps}
@@ -125,12 +130,12 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
           {occurrence.title}
         </EventTimelinePremiumEventLinesClamp>
-      </EventTimelinePremium.EventPlaceholder>
+      </TimelineGrid.EventPlaceholder>
     );
   }
 
   return (
-    <EventTimelinePremium.Event
+    <TimelineGrid.Event
       render={<EventTimelinePremiumEventRoot />}
       isDraggable={isDraggable}
       eventId={occurrence.id}
@@ -151,6 +156,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       {isEndResizable && (
         <EventTimelinePremiumEventResizeHandler side="end" className={classes.eventResizeHandler} />
       )}
-    </EventTimelinePremium.Event>
+    </TimelineGrid.Event>
   );
 });

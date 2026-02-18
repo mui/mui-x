@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getSurfacePoint,
+  getChartPoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -54,7 +54,7 @@ export const useZoomOnWheel = (
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
     const zoomOnWheelHandler = instance.addInteractionListener('zoomTurnWheel', (event) => {
-      const point = getSurfacePoint(element, {
+      const point = getChartPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
       });
