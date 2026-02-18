@@ -15,16 +15,16 @@ const PROVIDER_NAMES = [
   // The component that includes the data provider.
   'ChartsContainer',
   'ChartsContainerPro',
-  'ChartsContainerPremium'
+  'ChartsContainerPremium',
 ];
 
 /**
  * Codemod for v9.0.0: Updates line series objects to preserve v8 behavior after the `showMark` default changes from true to false.
  *
  * If `showMark` is not defined, adds `showMark: true` to preserve v8 behavior.
- * 
+ *
  * The `showmMark: false` cases are left unchanged to stay idempotent.
- * 
+ *
  * Ths codemod applies on LineChart components and providers when series type is set to 'line'.
  */
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
@@ -71,7 +71,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         );
 
         if (!hasShowMark) {
-          element.properties.push(j.objectProperty(j.identifier('showMark'), j.booleanLiteral(true)));
+          element.properties.push(
+            j.objectProperty(j.identifier('showMark'), j.booleanLiteral(true)),
+          );
         }
       });
     });
@@ -120,7 +122,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         );
 
         if (lineSeriesType && !hasShowMark) {
-          element.properties.push(j.objectProperty(j.identifier('showMark'), j.booleanLiteral(true)));
+          element.properties.push(
+            j.objectProperty(j.identifier('showMark'), j.booleanLiteral(true)),
+          );
         }
       });
     });
