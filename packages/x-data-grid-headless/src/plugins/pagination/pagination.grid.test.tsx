@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import type { ColumnDef } from '../..';
 import { TestDataGrid, type TestGridApi } from '../../test/TestDataGrid';
+import { type FilteringColumnMeta, getNumericFilterOperators } from '../filtering';
 
 type TestRow = { id: number; name: string; age: number };
 
@@ -502,6 +503,194 @@ describe('Pagination Plugin - Integration Tests', () => {
 
       expect(getRowNames(container)).toHaveLength(5);
       expect(apiRef.current?.getState()?.pagination.rowCount).toBe(8);
+    });
+  });
+
+  describe('integration with other plugins', () => {
+    const filterableColumns: ColumnDef<TestRow, FilteringColumnMeta>[] = [
+      { id: 'name', field: 'name' },
+      { id: 'age', field: 'age', filterOperators: getNumericFilterOperators() },
+    ];
+
+    // Subset: Charlie(30), Alice(25), Bob(35)
+    const filterRows: TestRow[] = defaultRows.slice(0, 3);
+
+    it('should update row count after manual filter apply()', async () => {
+      const apiRef = React.createRef<TestGridApi | null>();
+      render(
+        <TestDataGrid
+          rows={filterRows}
+          columns={filterableColumns}
+          apiRef={apiRef}
+          filtering={{ mode: 'manual' }}
+          initialState={{
+            filtering: {
+              model: {
+                logicOperator: 'and',
+                conditions: [{ field: 'age', operator: '>', value: 28 }],
+              },
+            },
+          }}
+        />,
+      );
+
+      // Before apply: all 3 rows visible
+      expect(apiRef.current?.getState()?.pagination.rowCount).toBe(3);
+
+      // Apply the filter
+      await act(async () => {
+        apiRef.current?.api.filtering.apply();
+      });
+
+      // After apply: only 2 rows pass (Alice:25 filtered out)
+      expect(apiRef.current?.getState()?.pagination.rowCount).toBe(2);
+    });
+
+    it('should update row count after adding a row', async () => {
+      const apiRef = React.createRef<TestGridApi | null>();
+      render(
+        <TestDataGrid
+          rows={filterRows}
+          columns={filterableColumns}
+          apiRef={apiRef}
+          filtering={{ mode: 'manual' }}
+          initialState={{
+            filtering: {
+              model: {
+                logicOperator: 'and',
+                conditions: [{ field: 'age', operator: '>', value: 28 }],
+              },
+            },
+          }}
+        />,
+      );
+
+      await act(async () => {
+        apiRef.current?.api.filtering.apply();
+      });
+
+      expect(apiRef.current?.getState()?.pagination.rowCount).toBe(2);
+
+      // Add a new row (age 20 doesn't satisfy filter, but appears unconditionally)
+      await act(async () => {
+        apiRef.current?.api.rows.updateRows([{ id: 99, name: 'Diana', age: 20 }]);
+      });
+
+      expect(apiRef.current?.getState()?.pagination.rowCount).toBe(3);
+    });
+
+    it('should update row count after removing a row', async () => {
+      const apiRef = React.createRef<TestGridApi | null>();
+      render(
+        <TestDataGrid
+          rows={filterRows}
+          columns={filterableColumns}
+          apiRef={apiRef}
+          filtering={{ mode: 'manual' }}
+          initialState={{
+            filtering: {
+              model: {
+                logicOperator: 'and',
+                conditions: [{ field: 'age', operator: '>', value: 28 }],
+              },
+            },
+          }}
+        />,
+      );
+
+      await act(async () => {
+        apiRef.current?.api.filtering.apply();
+      });
+
+      // 2 rows pass: Alice(25) filtered out, Charlie(35) and Bob(30) remain
+      expect(apiRef.current?.getState()?.pagination.rowCount).toBe(2);
+
+      // Delete Bob (id: 2)
+      await act(async () => {
+        apiRef.current?.api.rows.updateRows([{ id: 2, _action: 'delete' }]);
+      });
+
+      expect(apiRef.current?.getState()?.pagination.rowCount).toBe(1);
+    });
+
+    it('should include newly added rows that pass filter after re-apply', async () => {
+      const apiRef = React.createRef<TestGridApi | null>();
+      const { container } = render(
+        <TestDataGrid
+          rows={filterRows}
+          columns={filterableColumns}
+          apiRef={apiRef}
+          filtering={{ mode: 'manual' }}
+          initialState={{
+            filtering: {
+              model: {
+                logicOperator: 'and',
+                conditions: [{ field: 'age', operator: '>', value: 28 }],
+              },
+            },
+          }}
+        />,
+      );
+
+      await act(async () => {
+        apiRef.current?.api.filtering.apply();
+      });
+
+      // Bob(30) and Charlie(35) pass; Alice(25) filtered out
+      expect(getRowNames(container)).toEqual(['Bob', 'Charlie']);
+
+      // Add a row that passes the filter (age 50 > 28)
+      await act(async () => {
+        apiRef.current?.api.rows.updateRows([{ id: 99, name: 'Diana', age: 50 }]);
+      });
+
+      // Diana appears immediately (unconditionally)
+      expect(getRowNames(container)).toEqual(['Bob', 'Charlie', 'Diana']);
+
+      // Re-apply the filter
+      await act(async () => {
+        apiRef.current?.api.filtering.apply();
+      });
+
+      // Diana still visible (passes the filter)
+      expect(getRowNames(container)).toEqual(['Bob', 'Charlie', 'Diana']);
+      expect(apiRef.current?.getState()?.pagination.rowCount).toBe(3);
+    });
+
+    it('should not show non-passing rows after removing a row', async () => {
+      const apiRef = React.createRef<TestGridApi | null>();
+      const { container } = render(
+        <TestDataGrid
+          rows={filterRows}
+          columns={filterableColumns}
+          apiRef={apiRef}
+          filtering={{ mode: 'manual' }}
+          initialState={{
+            filtering: {
+              model: {
+                logicOperator: 'and',
+                conditions: [{ field: 'age', operator: '>', value: 28 }],
+              },
+            },
+          }}
+        />,
+      );
+
+      await act(async () => {
+        apiRef.current?.api.filtering.apply();
+      });
+
+      // Bob(30) and Charlie(35) pass; Alice(25) filtered out
+      expect(getRowNames(container)).toEqual(['Bob', 'Charlie']);
+
+      // Delete Alice (id: 1, already filtered out)
+      await act(async () => {
+        apiRef.current?.api.rows.updateRows([{ id: 1, _action: 'delete' }]);
+      });
+
+      // Only Bob and Charlie remain — no filtered-out rows should appear
+      expect(getRowNames(container)).toEqual(['Bob', 'Charlie']);
+      expect(apiRef.current?.getState()?.pagination.rowCount).toBe(2);
     });
   });
 });

@@ -31,7 +31,8 @@ export interface PipelineOptions<TValue> {
 }
 
 export class Pipeline<TValue> {
-  private readonly processors = new Map<string, RegisteredPipelineProcessor<TValue>>();
+  // Values are `null` for temporarily unregistered processors
+  private readonly processors = new Map<string, RegisteredPipelineProcessor<TValue> | null>();
   private previousRun:
     | {
         processorNames: string[];
@@ -57,7 +58,7 @@ export class Pipeline<TValue> {
       enabled: isEnabled,
     });
 
-    if (!existingProcessor) {
+    if (existingProcessor === undefined) {
       if (isEnabled) {
         // Topology changed with a new enabled processor: invalidate the whole cache.
         this.previousRun = undefined;
@@ -66,6 +67,7 @@ export class Pipeline<TValue> {
         this.previousRun?.processorNames.push(name);
       }
     } else if (
+      existingProcessor === null ||
       existingProcessor.enabled !== isEnabled ||
       (isEnabled && existingProcessor.processor !== processor)
     ) {
@@ -73,7 +75,7 @@ export class Pipeline<TValue> {
     }
 
     return () => {
-      this.processors.delete(name);
+      this.processors.set(name, null);
       this.previousRun = undefined;
     };
   }
@@ -116,7 +118,7 @@ export class Pipeline<TValue> {
   }
 
   private getOrderedProcessors(): RegisteredPipelineProcessor<TValue>[] {
-    return Array.from(this.processors.values());
+    return Array.from(this.processors.values()).filter((processor) => processor !== null);
   }
 
   private runFrom(

@@ -339,6 +339,78 @@ describe('Pipeline', () => {
     expect(secondCalls).toBe(1);
   });
 
+  it('should not use stale upstream cache after unregister and re-register when initial value changed', () => {
+    let initialValue = 5;
+    const pipeline = new Pipeline<number>({
+      getInitialValue: () => initialValue,
+      onRecompute: () => {},
+    });
+
+    pipeline.register('first', (value) => value + 1);
+    const unregisterSecond = pipeline.register('second', (value) => value * 2);
+    pipeline.register('third', (value) => value - 3);
+
+    // first: 5+1=6, second: 6*2=12, third: 12-3=9
+    expect(pipeline.recompute()).toBe(9);
+
+    // Simulate React effect re-run: cleanup
+    unregisterSecond();
+
+    // Initial value changes between cleanup and re-register
+    initialValue = 100;
+
+    // Re-register second with same logic
+    pipeline.register('second', (value) => value * 2);
+
+    // Partial recompute from 'second' — must use new initial value, not stale first's cache
+    // first: 100+1=101, second: 101*2=202, third: 202-3=199
+    const result = pipeline.recompute('second');
+    expect(result).toBe(199);
+  });
+
+  it('should preserve processor order when a processor is unregistered and re-registered', () => {
+    const pipeline = new Pipeline<number>({
+      getInitialValue: () => 5,
+      onRecompute: () => {},
+    });
+
+    const calls: string[] = [];
+    const unregisterFirst = pipeline.register('first', (value) => {
+      calls.push('first');
+      return value + 1;
+    });
+    pipeline.register('second', (value) => {
+      calls.push('second');
+      return value * 2;
+    });
+    pipeline.register('third', (value) => {
+      calls.push('third');
+      return value - 3;
+    });
+
+    // first: 5+1=6, second: 6*2=12, third: 12-3=9
+    expect(pipeline.recompute()).toBe(9);
+    expect(calls).toEqual(['first', 'second', 'third']);
+
+    // Simulate React effect re-run: cleanup then re-register
+    calls.length = 0;
+    unregisterFirst();
+    pipeline.register(
+      'first',
+      (value) => {
+        calls.push('first');
+        return value + 10;
+      },
+      { disabled: true },
+    );
+
+    // 'first' was unregistered and re-registered as disabled.
+    // It should still run BEFORE 'second' and 'third', not after.
+    // first: disabled (no cache) → passthrough, second: 5*2=10, third: 10-3=7
+    expect(pipeline.recompute()).toBe(7);
+    expect(calls).toEqual(['second', 'third']);
+  });
+
   describe('reconcileDisabledProcessor', () => {
     it('should call reconciliation when a disabled processor input changes', () => {
       let items = [1, 2, 3];
