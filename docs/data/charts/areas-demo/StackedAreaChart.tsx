@@ -20,14 +20,13 @@ export default function StackedAreaChart() {
     <Box sx={{ width: '100%', height: 300 }}>
       <LineChart
         series={[
-          { data: uData, label: 'uv', area: true, stack: 'total', showMark: false },
-          { data: pData, label: 'pv', area: true, stack: 'total', showMark: false },
+          { data: uData, label: 'uv', area: true, stack: 'total' },
+          { data: pData, label: 'pv', area: true, stack: 'total' },
           {
             data: amtData,
             label: 'amt',
             area: true,
             stack: 'total',
-            showMark: false,
           },
         ]}
         xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
