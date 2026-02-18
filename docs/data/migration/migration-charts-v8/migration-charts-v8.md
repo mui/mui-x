@@ -204,6 +204,25 @@ After running the codemod make sure to adapt the hook returned value to your nee
  }
 ```
 
+## Line Chart
+
+### `showMark` default value changed
+
+The default value of the `showMark` prop in the line series has changed from `true` to `false` in v9.
+
+If you were relying on marks being visible by default, explicitly set `showMark` to `true`:
+
+```diff
+ <LineChart
+   series={[
+     {
+       data: [1, 2, 3],
++      showMark: true,
+     },
+   ]}
+ />
+```
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
