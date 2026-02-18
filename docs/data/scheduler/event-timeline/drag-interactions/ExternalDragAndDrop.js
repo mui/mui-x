@@ -53,7 +53,7 @@ const ExternalEventPlaceholder = styled('div')(({ theme }) =>
   externalEventStyles(theme),
 );
 
-const isValidDropTarget = buildIsValidDropTarget(['EventTimelinePremiumEvent']);
+const isValidDropTarget = buildIsValidDropTarget(['TimelineGridEvent']);
 
 const initialExternalEvents = [
   {
