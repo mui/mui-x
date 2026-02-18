@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
-import { EventTimelinePremium } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
+import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
@@ -60,7 +60,7 @@ const EventTimelinePremiumEventLinesClamp = styled('span', {
   overflowWrap: 'break-word',
 });
 
-const EventTimelinePremiumEventResizeHandler = styled(EventTimelinePremium.EventResizeHandler, {
+const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHandler, {
   name: 'MuiEventTimeline',
   slot: 'EventResizeHandler',
 })({
@@ -120,7 +120,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   if (variant === 'placeholder') {
     return (
-      <EventTimelinePremium.EventPlaceholder
+      <TimelineGrid.EventPlaceholder
         render={<EventTimelinePremiumEventRoot />}
         aria-hidden={true}
         {...sharedProps}
@@ -129,12 +129,12 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
           {occurrence.title}
         </EventTimelinePremiumEventLinesClamp>
-      </EventTimelinePremium.EventPlaceholder>
+      </TimelineGrid.EventPlaceholder>
     );
   }
 
   return (
-    <EventTimelinePremium.Event
+    <TimelineGrid.Event
       render={<EventTimelinePremiumEventRoot />}
       isDraggable={isDraggable}
       eventId={occurrence.id}
@@ -155,6 +155,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       {isEndResizable && (
         <EventTimelinePremiumEventResizeHandler side="end" className={classes.eventResizeHandler} />
       )}
-    </EventTimelinePremium.Event>
+    </TimelineGrid.Event>
   );
 });
