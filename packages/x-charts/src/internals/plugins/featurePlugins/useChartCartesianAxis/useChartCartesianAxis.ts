@@ -8,6 +8,7 @@ import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { type ChartPlugin } from '../../models';
 import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
+import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
@@ -45,6 +46,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
   }
 
+  const drawingArea = store.use(selectorChartDrawingArea);
   const processedSeries = store.use(selectorChartSeriesProcessed);
 
   const isInteractionEnabled = store.use(selectorChartsInteractionIsInitialized);
@@ -79,7 +81,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       x: defaultizeXAxis(xAxis, dataset, axesGap),
       y: defaultizeYAxis(yAxis, dataset, axesGap),
     });
-  }, [xAxis, yAxis, dataset, axesGap, store]);
+  }, [drawingArea, xAxis, yAxis, dataset, axesGap, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
