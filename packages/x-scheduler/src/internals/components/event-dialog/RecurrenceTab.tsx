@@ -39,8 +39,9 @@ const RecurrenceTabContent = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2.5),
-  height: 450,
+  flex: 1,
   overflow: 'auto',
+  scrollbarWidth: 'thin',
 }));
 
 interface RecurrenceTabProps {
@@ -306,7 +307,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       role="tabpanel"
       id="recurrence-tabpanel"
       aria-labelledby="recurrence-tab"
-      hidden={tabValue !== 'recurrence'}
+      sx={{
+        display: tabValue !== 'recurrence' ? 'none' : 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        minHeight: 0,
+        overflow: 'hidden',
+      }}
     >
       <RecurrenceTabContent className={classes.eventDialogRecurrenceTabContent}>
         <FormControl fullWidth size="small">

@@ -50,6 +50,9 @@ const DialogContent = styled(MuiDialogContent, {
   padding: 0,
   minWidth: 360,
   width: 450,
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
 });
 
 const EventDialogTitleTextField = styled(TextField, {
@@ -63,6 +66,16 @@ const EventDialogTitleTextField = styled(TextField, {
     fontWeight: theme.typography.h6.fontWeight,
   },
 }));
+
+const EventDialogForm = styled('form', {
+  name: 'MuiEventDialog',
+  slot: 'Form',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  minHeight: 0,
+});
 
 const EventDialogTabs = styled(Tabs, {
   name: 'MuiEventDialog',
@@ -213,7 +226,7 @@ export function FormContent(props: FormContentProps) {
 
   return (
     <DialogContent className={classes.eventDialogContent}>
-      <form onSubmit={handleSubmit}>
+      <EventDialogForm onSubmit={handleSubmit}>
         <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
           <span
             id="event-dialog-title"
@@ -268,7 +281,7 @@ export function FormContent(props: FormContentProps) {
             </Button>
           </FormActions>
         </DialogActions>
-      </form>
+      </EventDialogForm>
     </DialogContent>
   );
 }

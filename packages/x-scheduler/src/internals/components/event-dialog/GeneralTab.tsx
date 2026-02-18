@@ -32,7 +32,7 @@ const GeneralTabContent = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2.5),
-  height: 450,
+  flex: 1,
   overflow: 'auto',
   scrollbarWidth: 'thin',
 }));
@@ -150,7 +150,13 @@ export function GeneralTab(props: GeneralTabProps) {
       role="tabpanel"
       id="general-tabpanel"
       aria-labelledby="general-tab"
-      hidden={value !== 'general'}
+      sx={{
+        display: value !== 'general' ? 'none' : 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        minHeight: 0,
+        overflow: 'hidden',
+      }}
     >
       <GeneralTabContent className={classes.eventDialogGeneralTabContent}>
         <SectionHeaderTitle variant="subtitle2">
