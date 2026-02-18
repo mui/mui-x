@@ -62,7 +62,6 @@ export default function FullEventTimelinePremium() {
           onViewChange={setView}
           visibleDate={visibleDate}
           onVisibleDateChange={setVisibleDate}
-          defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
           areEventsDraggable
           areEventsResizable
