@@ -32,7 +32,7 @@ export default function LegendTooltipComposition() {
     >
       <ChartDataProvider
         height={300}
-        series={[{ type: 'line', data: pData, label: 'Sales Data' }]}
+        series={[{ type: 'line', data: pData, label: 'Sales Data', showMark: true }]}
         xAxis={[{ scaleType: 'point', data: xLabels }]}
         yAxis={[{ width: 50 }]}
         margin={{ top: 30, right: 30, bottom: 20, left: 20 }}
