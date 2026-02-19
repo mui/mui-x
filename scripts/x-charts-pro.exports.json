@@ -193,7 +193,7 @@
   { "name": "ChartsTooltipContainerSlotProps", "kind": "Interface" },
   { "name": "ChartsTooltipContainerSlots", "kind": "Interface" },
   { "name": "ChartsTooltipPaper", "kind": "Variable" },
-  { "name": "ChartsTooltipProps", "kind": "Interface" },
+  { "name": "ChartsTooltipProps", "kind": "TypeAlias" },
   { "name": "ChartsTooltipRow", "kind": "Variable" },
   { "name": "ChartsTooltipSlotProps", "kind": "Interface" },
   { "name": "ChartsTooltipSlots", "kind": "Interface" },

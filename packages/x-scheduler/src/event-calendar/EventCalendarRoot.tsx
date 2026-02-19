@@ -2,7 +2,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
-import { styled } from '@mui/material/styles';
+import { SxProps } from '@mui/system/styleFunctionSx';
+import { styled, Theme } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
@@ -26,7 +27,12 @@ import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 export interface EventCalendarRootProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
-> {}
+> {
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+}
 
 const EventCalendarRootStyled = styled('div', {
   name: 'MuiEventCalendar',
