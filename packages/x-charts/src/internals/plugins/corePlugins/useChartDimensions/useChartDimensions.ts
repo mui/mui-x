@@ -48,7 +48,6 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
         height: params.height ?? newHeight,
         propsWidth: params.width,
         propsHeight: params.height,
-        isHydrated: true,
       });
     }
     return {
@@ -81,7 +80,6 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       height,
       propsHeight: params.height,
       propsWidth: params.width,
-      isHydrated: true,
     });
   }, [
     store,
@@ -97,14 +95,6 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   React.useEffect(() => {
     // Ensure the error detection occurs after the first rendering.
     stateRef.current.displayError = true;
-
-    // Mark the chart as hydrated to trigger recomputation of auto-sized axes
-    if (!store.state.dimensions.isHydrated) {
-      store.set('dimensions', {
-        ...store.state.dimensions,
-        isHydrated: true,
-      });
-    }
   }, [store]);
 
   // This effect is used to compute the size of the container on the initial render.
@@ -232,7 +222,6 @@ useChartDimensions.getInitialState = ({ width, height, margin }) => {
       height: height ?? 0,
       propsWidth: width,
       propsHeight: height,
-      isHydrated: false,
     },
   };
 };

@@ -50,8 +50,3 @@ export const selectorChartPropsHeight = createSelector(
   selectorChartDimensionsState,
   (dimensionsState) => dimensionsState.propsHeight,
 );
-
-export const selectorChartIsHydrated = createSelector(
-  selectorChartDimensionsState,
-  (dimensionsState) => dimensionsState.isHydrated,
-);
