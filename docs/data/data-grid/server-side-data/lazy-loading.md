@@ -124,16 +124,14 @@ Check the [server-side data recipes](/x/react-data-grid/server-side-data/recipes
 
 When users scroll back to an already fetched range, the Data Grid performs a revalidation for that range. It checks the cache entry, and if it is outdated (or the cache is disabled), it refetches the data from the server, diffs against current rows, and updates only if the subset is _actually changed_ minimizing the actual row replacements in the Data Grid.
 
-For highly dynamic use cases, where the revalidation is required for the current viewport too, you can add polling with `dataSourceRevalidateMs` to trigger revalidation based on the `setInterval()` timer every "X" milliseconds.
+For highly dynamic use cases, where the revalidation is required for the current viewport too, you can add polling with `dataSourceRevalidateMs` to trigger revalidation every "X" milliseconds.
 This is useful for dashboards such as stock tickers, where values can change every few seconds.
-This prop also works for non-lazy data source modes like pagination, tree data, and row grouping.
 
 ### Dynamically updated datasets
 
 The following demo uses `dataSourceRevalidateMs="3_000"` (3 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
 
 Note that the row IDs stay stable but the row values change over time.
-This is useful for dashboards such as stock trackers, where rows represent the same entities while values are updated continuously.
 
 {{"demo": "ServerSideLazyLoadingRevalidation.js", "bg": "inline"}}
 

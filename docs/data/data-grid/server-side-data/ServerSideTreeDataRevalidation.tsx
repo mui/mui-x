@@ -399,7 +399,6 @@ const columns: GridColDef<TreeStockRow>[] = [
     field: 'symbol',
     headerName: 'Ticker',
     width: 110,
-    renderCell: (params: GridRenderCellParams<TreeStockRow, string>) => params.value,
   },
   {
     field: 'price',

@@ -347,7 +347,6 @@ const columns = [
     field: 'symbol',
     headerName: 'Ticker',
     width: 110,
-    renderCell: (params) => params.value,
   },
   {
     field: 'price',
