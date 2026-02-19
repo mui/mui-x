@@ -1,7 +1,6 @@
 import type { AggregatedResults } from './types';
 
-const DATA_REPO_BASE =
-  'https://raw.githubusercontent.com/mui/mui-x/test-results/benchmarks';
+const DATA_REPO_BASE = 'https://raw.githubusercontent.com/mui/mui-x/test-results/benchmarks';
 
 export async function fetchMasterMetrics(baseSha?: string): Promise<Record<string, number>> {
   if (!baseSha) {
