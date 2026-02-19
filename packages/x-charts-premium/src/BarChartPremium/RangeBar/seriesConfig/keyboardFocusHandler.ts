@@ -7,8 +7,8 @@ import {
 
 
 const keyboardFocusHandler: KeyboardFocusHandler<'rangeBar', ComposableCartesianChartSeriesType> =
-  createCommonKeyboardFocusHandler(
+  createCommonKeyboardFocusHandler<ComposableCartesianChartSeriesType, 'rangeBar'>(
     composableCartesianSeriesTypes,
-  ) as KeyboardFocusHandler<'rangeBar', ComposableCartesianChartSeriesType>;
+  );
 
 export default keyboardFocusHandler;

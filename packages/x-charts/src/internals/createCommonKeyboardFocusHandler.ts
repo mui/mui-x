@@ -11,17 +11,18 @@ import {
  */
 export function createCommonKeyboardFocusHandler<
   TSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
+  TInputSeriesType extends Exclude<ChartSeriesType, 'sankey'> = TSeriesType,
 >(outSeriesTypes: Set<TSeriesType>, allowCycles?: boolean) {
   const keyboardFocusHandler = (event: KeyboardEvent) => {
     switch (event.key) {
       case 'ArrowRight':
-        return createGetNextIndexFocusedItem(outSeriesTypes, allowCycles);
+        return createGetNextIndexFocusedItem<TInputSeriesType, TSeriesType>(outSeriesTypes, allowCycles);
       case 'ArrowLeft':
-        return createGetPreviousIndexFocusedItem(outSeriesTypes, allowCycles);
+        return createGetPreviousIndexFocusedItem<TInputSeriesType, TSeriesType>(outSeriesTypes, allowCycles);
       case 'ArrowDown':
-        return createGetPreviousSeriesFocusedItem(outSeriesTypes);
+        return createGetPreviousSeriesFocusedItem<TInputSeriesType, TSeriesType>(outSeriesTypes);
       case 'ArrowUp':
-        return createGetNextSeriesFocusedItem(outSeriesTypes);
+        return createGetNextSeriesFocusedItem<TInputSeriesType, TSeriesType>(outSeriesTypes);
       default:
         return null;
     }
