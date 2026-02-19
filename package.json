@@ -145,7 +145,8 @@
     "zod": "^4.3.6"
   },
   "resolutions": {
-    "ast-types": "^0.14.2"
+    "ast-types": "^0.14.2",
+    "@vitest/eslint-plugin": "1.6.9"
   },
   "packageManager": "pnpm@10.27.0",
   "engines": {
