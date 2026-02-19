@@ -1,5 +1,5 @@
 import type { RowsPluginApi, RowsPluginState, RowsPluginOptions } from './rows/types';
-import type { ColumnsPluginApi, ColumnsPluginState, ColumnsPluginOptions } from './columns/columns';
+import type { ColumnsPluginApi, ColumnsPluginState, ColumnsPluginOptions } from './columns/types';
 import type { ElementsPluginApi, ElementsPluginState } from './elements/elements';
 
 export type InternalPluginsApi<TRow = any, TColumnMeta = {}> = RowsPluginApi<TRow> &
