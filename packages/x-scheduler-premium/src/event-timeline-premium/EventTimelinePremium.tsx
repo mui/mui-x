@@ -83,11 +83,13 @@ const EventTimelinePremiumRoot = styled('div', {
   // Months view uses per-day units instead of per-month, so each column width = days in month × 6px
   '--months-cell-width': '6px',
   '--years-cell-width': '200px',
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  padding: theme.spacing(2),
   gap: theme.spacing(2),
   height: '100%',
+  minHeight: 0,
+  overflow: 'hidden',
   fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
 }));

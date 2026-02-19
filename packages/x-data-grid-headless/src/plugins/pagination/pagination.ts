@@ -32,7 +32,7 @@ const PAGINATION_PIPELINE_PROCESSOR_NAME = 'pagination';
 
 const paginationPlugin = createPlugin<PaginationPlugin>()({
   name: 'pagination',
-  order: 50,
+  order: 60,
   selectors: paginationSelectors,
 
   initialize: (state, params) => {
