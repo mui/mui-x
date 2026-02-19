@@ -330,7 +330,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerPopper' });
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
-  const { open, popupRef, reduceAnimations } = usePickerContext();
+  const { open, popupRef, reduceAnimations, keepOpenDuringFieldFocus } = usePickerContext();
   const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
   const { dismissViews, getCurrentViewMode, onPopperExited, triggerElement, viewContainerRole } =
     usePickerPrivateContext();
@@ -373,7 +373,18 @@ export function PickerPopper(inProps: PickerPopperProps) {
 
   const classes = useUtilityClasses(classesProp);
 
-  const handleClickAway: OnClickAway = useEventCallback(() => {
+  const handleClickAway: OnClickAway = useEventCallback((event) => {
+    // Do not close when clicking inside the field if keepOpenDuringFieldFocus is enabled
+    if (
+      keepOpenDuringFieldFocus &&
+      triggerElement &&
+      event &&
+      'target' in event &&
+      triggerElement.contains(event.target as Node)
+    ) {
+      return;
+    }
+
     if (viewContainerRole === 'tooltip') {
       executeInTheNextEventLoopTick(() => {
         if (
