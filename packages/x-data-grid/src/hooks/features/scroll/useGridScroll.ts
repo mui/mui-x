@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { GridCellIndexCoordinates } from '../../../models/gridCell';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -68,6 +69,26 @@ export const useGridScroll = (
       const scrollToHeader = params.rowIndex == null;
       if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
         return false;
+      }
+
+      if (params.colIndex !== undefined) {
+        if (params.colIndex < 0 || params.colIndex >= visibleColumns.length) {
+          warnOnce([
+            'MUI X: The `colIndex` provided to `scrollToIndexes` is out of range.',
+            `Index ${params.colIndex} is not within the visible columns (0 to ${visibleColumns.length - 1}).`,
+          ]);
+          return false;
+        }
+      }
+
+      if (params.rowIndex !== undefined) {
+        if (params.rowIndex < 0 || params.rowIndex >= totalRowCount) {
+          warnOnce([
+            'MUI X: The `rowIndex` provided to `scrollToIndexes` is out of range.',
+            `Index ${params.rowIndex} is not within the rows (0 to ${totalRowCount - 1}).`,
+          ]);
+          return false;
+        }
       }
 
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
