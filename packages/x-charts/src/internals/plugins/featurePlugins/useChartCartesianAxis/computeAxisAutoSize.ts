@@ -39,7 +39,6 @@ function getGroupLabels(data: readonly any[], group: AxisGroup): string[] {
 interface ComputeAxisAutoSizeOptions {
   axis: DefaultedXAxis | DefaultedYAxis;
   direction: 'x' | 'y';
-  isHydrated: boolean;
 }
 
 /**
@@ -350,12 +349,7 @@ function computeGroupedAxisAutoSize(
 export function computeAxisAutoSize(
   options: ComputeAxisAutoSizeOptions,
 ): AxisAutoSizeResult | undefined {
-  const { axis, direction, isHydrated } = options;
-
-  // During SSR or before hydration, return undefined to use fallback
-  if (!isHydrated) {
-    return undefined;
-  }
+  const { axis, direction } = options;
 
   // Handle grouped axes separately
   if (hasGroups(axis)) {

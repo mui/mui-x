@@ -36,7 +36,7 @@ export const selectorChartXAxisAutoSizeResults = createSelectorMemoized(
   function selectorChartXAxisAutoSizeResults(xAxes, isHydrated) {
     // Early return if no axes have auto-sizing - avoid expensive computations
     const hasAutoAxis = xAxes?.some((axis) => axis.height === 'auto');
-    if (!hasAutoAxis) {
+    if (!hasAutoAxis || !isHydrated) {
       return EMPTY_RESULTS;
     }
 
@@ -48,7 +48,6 @@ export const selectorChartXAxisAutoSizeResults = createSelectorMemoized(
         const computed = computeAxisAutoSize({
           axis,
           direction: 'x',
-          isHydrated,
         });
         if (computed !== undefined) {
           results[axis.id] = computed;
@@ -89,7 +88,7 @@ export const selectorChartYAxisAutoSizeResults = createSelectorMemoized(
   function selectorChartYAxisAutoSizeResults(yAxes, isHydrated) {
     // Early return if no axes have auto-sizing - avoid expensive computations
     const hasAutoAxis = yAxes?.some((axis) => axis.width === 'auto');
-    if (!hasAutoAxis) {
+    if (!hasAutoAxis || !isHydrated) {
       return EMPTY_RESULTS;
     }
 
@@ -101,7 +100,6 @@ export const selectorChartYAxisAutoSizeResults = createSelectorMemoized(
         const computed = computeAxisAutoSize({
           axis,
           direction: 'y',
-          isHydrated,
         });
         if (computed !== undefined) {
           results[axis.id] = computed;
