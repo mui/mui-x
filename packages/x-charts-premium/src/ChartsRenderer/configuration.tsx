@@ -16,27 +16,27 @@ import {
 
 const getChartSection = (localeText: ChartsLocaleText): GridChartsConfigurationSection => ({
   id: 'chart',
-  label: localeText.chartConfigurationSectionChart,
+  label: localeText.chartConfiguration.section.chart,
   controls: {
     showToolbar: {
-      label: localeText.chartConfigurationShowToolbar,
+      label: localeText.chartConfiguration.showToolbar,
       type: 'boolean',
       default: false,
     },
-    height: { label: localeText.chartConfigurationHeight, type: 'number', default: 350 },
+    height: { label: localeText.chartConfiguration.height, type: 'number', default: 350 },
     grid: {
-      label: localeText.chartConfigurationGrid,
+      label: localeText.chartConfiguration.grid,
       type: 'select',
       default: 'none',
       options: [
-        { content: localeText.chartConfigurationOptionNone, value: 'none' },
-        { content: localeText.chartConfigurationOptionHorizontal, value: 'horizontal' },
-        { content: localeText.chartConfigurationOptionVertical, value: 'vertical' },
-        { content: localeText.chartConfigurationOptionBoth, value: 'both' },
+        { content: localeText.chartConfiguration.option.none, value: 'none' },
+        { content: localeText.chartConfiguration.option.horizontal, value: 'horizontal' },
+        { content: localeText.chartConfiguration.option.vertical, value: 'vertical' },
+        { content: localeText.chartConfiguration.option.both, value: 'both' },
       ],
     },
     skipAnimation: {
-      label: localeText.chartConfigurationSkipAnimation,
+      label: localeText.chartConfiguration.skipAnimation,
       type: 'boolean',
       default: false,
     },
@@ -48,52 +48,52 @@ const getAxesSection = (
   tickOptions = true,
 ): GridChartsConfigurationSection => ({
   id: 'axes',
-  label: localeText.chartConfigurationSectionAxes,
+  label: localeText.chartConfiguration.section.axes,
   controls: {
     categoriesAxisLabel: {
-      label: localeText.chartConfigurationCategoriesAxisLabel,
+      label: localeText.chartConfiguration.categoriesAxisLabel,
       type: 'string',
       default: '',
     },
     seriesAxisLabel: {
-      label: localeText.chartConfigurationSeriesAxisLabel,
+      label: localeText.chartConfiguration.seriesAxisLabel,
       type: 'string',
       default: '',
     },
     xAxisPosition: {
-      label: localeText.chartConfigurationXAxisPosition,
+      label: localeText.chartConfiguration.xAxisPosition,
       type: 'select',
       default: 'bottom',
       options: [
-        { content: localeText.chartConfigurationOptionNone, value: 'none' },
-        { content: localeText.chartConfigurationOptionBottom, value: 'bottom' },
-        { content: localeText.chartConfigurationOptionTop, value: 'top' },
+        { content: localeText.chartConfiguration.option.none, value: 'none' },
+        { content: localeText.chartConfiguration.option.bottom, value: 'bottom' },
+        { content: localeText.chartConfiguration.option.top, value: 'top' },
       ],
     },
     yAxisPosition: {
-      label: localeText.chartConfigurationYAxisPosition,
+      label: localeText.chartConfiguration.yAxisPosition,
       type: 'select',
       default: 'left',
       options: [
-        { content: localeText.chartConfigurationOptionNone, value: 'none' },
-        { content: localeText.chartConfigurationOptionLeft, value: 'left' },
-        { content: localeText.chartConfigurationOptionRight, value: 'right' },
+        { content: localeText.chartConfiguration.option.none, value: 'none' },
+        { content: localeText.chartConfiguration.option.left, value: 'left' },
+        { content: localeText.chartConfiguration.option.right, value: 'right' },
       ],
     },
     ...(tickOptions
       ? {
           tickPlacement: {
-            label: localeText.chartConfigurationTickPlacement,
+            label: localeText.chartConfiguration.tickPlacement,
             type: 'select',
             default: 'extremities',
             options: [
-              { content: localeText.chartConfigurationOptionEnd, value: 'end' },
+              { content: localeText.chartConfiguration.option.end, value: 'end' },
               {
-                content: localeText.chartConfigurationOptionExtremities,
+                content: localeText.chartConfiguration.option.extremities,
                 value: 'extremities',
               },
-              { content: localeText.chartConfigurationOptionMiddle, value: 'middle' },
-              { content: localeText.chartConfigurationOptionStart, value: 'start' },
+              { content: localeText.chartConfiguration.option.middle, value: 'middle' },
+              { content: localeText.chartConfiguration.option.start, value: 'start' },
             ],
           },
         }
@@ -101,18 +101,18 @@ const getAxesSection = (
     ...(tickOptions
       ? {
           tickLabelPlacement: {
-            label: localeText.chartConfigurationTickLabelPlacement,
+            label: localeText.chartConfiguration.tickLabelPlacement,
             type: 'select',
             default: 'middle',
             options: [
-              { content: localeText.chartConfigurationOptionMiddle, value: 'middle' },
-              { content: localeText.chartConfigurationOptionTick, value: 'tick' },
+              { content: localeText.chartConfiguration.option.middle, value: 'middle' },
+              { content: localeText.chartConfiguration.option.tick, value: 'tick' },
             ],
           },
         }
       : {}),
     seriesAxisReverse: {
-      label: localeText.chartConfigurationSeriesAxisReverse,
+      label: localeText.chartConfiguration.axisReverse,
       type: 'boolean',
       default: false,
     },
@@ -121,28 +121,28 @@ const getAxesSection = (
 
 const getTooltipSection = (localeText: ChartsLocaleText): GridChartsConfigurationSection => ({
   id: 'tooltip',
-  label: localeText.chartConfigurationSectionTooltip,
+  label: localeText.chartConfiguration.sectionTooltip,
   controls: {
     tooltipPlacement: {
-      label: localeText.chartConfigurationTooltipPlacement,
+      label: localeText.chartConfiguration.tooltipPlacement,
       type: 'select',
       default: 'auto',
       options: [
-        { content: localeText.chartConfigurationOptionAuto, value: 'auto' },
-        { content: localeText.chartConfigurationOptionTop, value: 'top' },
-        { content: localeText.chartConfigurationOptionBottom, value: 'bottom' },
-        { content: localeText.chartConfigurationOptionLeft, value: 'left' },
-        { content: localeText.chartConfigurationOptionRight, value: 'right' },
+        { content: localeText.chartConfiguration.option.auto, value: 'auto' },
+        { content: localeText.chartConfiguration.option.top, value: 'top' },
+        { content: localeText.chartConfiguration.option.bottom, value: 'bottom' },
+        { content: localeText.chartConfiguration.option.left, value: 'left' },
+        { content: localeText.chartConfiguration.option.right, value: 'right' },
       ],
     },
     tooltipTrigger: {
-      label: localeText.chartConfigurationTooltipTrigger,
+      label: localeText.chartConfiguration.tooltipTrigger,
       type: 'select',
       default: 'axis',
       options: [
-        { content: localeText.chartConfigurationOptionNone, value: 'none' },
-        { content: localeText.chartConfigurationOptionAxis, value: 'axis' },
-        { content: localeText.chartConfigurationOptionItem, value: 'item' },
+        { content: localeText.chartConfiguration.option.none, value: 'none' },
+        { content: localeText.chartConfiguration.option.axis, value: 'axis' },
+        { content: localeText.chartConfiguration.option.item, value: 'item' },
       ],
     },
   },
@@ -154,49 +154,49 @@ const getLegendSection = (
   keyPrefix: string = 'legend',
 ): GridChartsConfigurationSection => ({
   id: 'legend',
-  label: localeText.chartConfigurationSectionLegend,
+  label: localeText.chartConfiguration.sectionLegend,
   controls: {
     [`${keyPrefix}PositionHorizontal`]: {
-      label: localeText.chartConfigurationLegendPosition,
+      label: localeText.chartConfiguration.legendPosition,
       type: 'select',
       default: 'top',
       options: [
-        { content: localeText.chartConfigurationOptionNone, value: 'none' },
-        { content: localeText.chartConfigurationOptionTopLeft, value: 'topLeft' },
-        { content: localeText.chartConfigurationOptionTop, value: 'top' },
-        { content: localeText.chartConfigurationOptionTopRight, value: 'topRight' },
-        { content: localeText.chartConfigurationOptionBottomLeft, value: 'bottomLeft' },
-        { content: localeText.chartConfigurationOptionBottom, value: 'bottom' },
-        { content: localeText.chartConfigurationOptionBottomRight, value: 'bottomRight' },
+        { content: localeText.chartConfiguration.option.none, value: 'none' },
+        { content: localeText.chartConfiguration.option.topLeft, value: 'topLeft' },
+        { content: localeText.chartConfiguration.option.top, value: 'top' },
+        { content: localeText.chartConfiguration.option.topRight, value: 'topRight' },
+        { content: localeText.chartConfiguration.option.bottomLeft, value: 'bottomLeft' },
+        { content: localeText.chartConfiguration.option.bottom, value: 'bottom' },
+        { content: localeText.chartConfiguration.option.bottomRight, value: 'bottomRight' },
       ],
       isHidden: ({ configuration }: { configuration: GridChartsConfiguration }) =>
         configuration[`${keyPrefix}Direction`] === 'vertical' ||
         (configuration[`${keyPrefix}Direction`] === undefined && defaultDirection === 'vertical'),
     },
     [`${keyPrefix}PositionVertical`]: {
-      label: localeText.chartConfigurationLegendPosition,
+      label: localeText.chartConfiguration.legendPosition,
       type: 'select',
       default: 'right',
       options: [
-        { content: localeText.chartConfigurationOptionNone, value: 'none' },
-        { content: localeText.chartConfigurationOptionTopLeft, value: 'topLeft' },
-        { content: localeText.chartConfigurationOptionLeft, value: 'left' },
-        { content: localeText.chartConfigurationOptionBottomLeft, value: 'bottomLeft' },
-        { content: localeText.chartConfigurationOptionTopRight, value: 'topRight' },
-        { content: localeText.chartConfigurationOptionRight, value: 'right' },
-        { content: localeText.chartConfigurationOptionBottomRight, value: 'bottomRight' },
+        { content: localeText.chartConfiguration.option.none, value: 'none' },
+        { content: localeText.chartConfiguration.option.topLeft, value: 'topLeft' },
+        { content: localeText.chartConfiguration.option.left, value: 'left' },
+        { content: localeText.chartConfiguration.option.bottomLeft, value: 'bottomLeft' },
+        { content: localeText.chartConfiguration.option.topRight, value: 'topRight' },
+        { content: localeText.chartConfiguration.option.right, value: 'right' },
+        { content: localeText.chartConfiguration.option.bottomRight, value: 'bottomRight' },
       ],
       isHidden: ({ configuration }: { configuration: GridChartsConfiguration }) =>
         configuration[`${keyPrefix}Direction`] === 'horizontal' ||
         (configuration[`${keyPrefix}Direction`] === undefined && defaultDirection === 'horizontal'),
     },
     [`${keyPrefix}Direction`]: {
-      label: localeText.chartConfigurationLegendDirection,
+      label: localeText.chartConfiguration.legendDirection,
       type: 'select',
       default: defaultDirection,
       options: [
-        { content: localeText.chartConfigurationOptionHorizontal, value: 'horizontal' },
-        { content: localeText.chartConfigurationOptionVertical, value: 'vertical' },
+        { content: localeText.chartConfiguration.option.horizontal, value: 'horizontal' },
+        { content: localeText.chartConfiguration.option.vertical, value: 'vertical' },
       ],
     },
   },
@@ -236,17 +236,17 @@ const getBarColumnCustomization = (
     id: 'data',
     label:
       type === 'bar'
-        ? localeText.chartConfigurationSectionBars
-        : localeText.chartConfigurationSectionColumns,
+        ? localeText.chartConfiguration.section.bars
+        : localeText.chartConfiguration.section.columns,
     controls: {
       borderRadius: {
-        label: localeText.chartConfigurationBorderRadius,
+        label: localeText.chartConfiguration.borderRadius,
         type: 'number',
         default: 0,
       },
       colors: getColorOptions(localeText),
       categoryGapRatio: {
-        label: localeText.chartConfigurationCategoryGapRatio,
+        label: localeText.chartConfiguration.categoryGapRatio,
         type: 'number',
         default: 0.2,
         htmlAttributes: {
@@ -256,7 +256,7 @@ const getBarColumnCustomization = (
         },
       },
       barGapRatio: {
-        label: localeText.chartConfigurationBarGapRatio,
+        label: localeText.chartConfiguration.barGapRatio,
         type: 'number',
         default: 0.1,
         htmlAttributes: {
@@ -266,7 +266,7 @@ const getBarColumnCustomization = (
         },
       },
       stacked: {
-        label: localeText.chartConfigurationStacked,
+        label: localeText.chartConfiguration.stacked,
         type: 'boolean',
         default: false,
         isDisabled: ({ values }: { values: any[] }) => values.length < 2,
@@ -274,13 +274,13 @@ const getBarColumnCustomization = (
       itemLabel: {
         label:
           type === 'bar'
-            ? localeText.chartConfigurationBarLabels
-            : localeText.chartConfigurationColumnLabels,
+            ? localeText.chartConfiguration.barLabels
+            : localeText.chartConfiguration.columnLabels,
         type: 'select',
         default: 'none',
         options: [
-          { content: localeText.chartConfigurationOptionNone, value: 'none' },
-          { content: localeText.chartConfigurationOptionValue, value: 'value' },
+          { content: localeText.chartConfiguration.option.none, value: 'none' },
+          { content: localeText.chartConfiguration.option.value, value: 'value' },
         ],
       },
     },
@@ -299,35 +299,35 @@ const getLineAreaCustomization = (
     id: 'data',
     label:
       type === 'line'
-        ? localeText.chartConfigurationSectionLines
-        : localeText.chartConfigurationSectionAreas,
+        ? localeText.chartConfiguration.sectionLines
+        : localeText.chartConfiguration.sectionAreas,
     controls: {
       interpolation: {
-        label: localeText.chartConfigurationInterpolation,
+        label: localeText.chartConfiguration.interpolation,
         type: 'select',
         default: 'monotoneX',
         options: [
-          { content: localeText.chartConfigurationOptionMonotoneX, value: 'monotoneX' },
-          { content: localeText.chartConfigurationOptionMonotoneY, value: 'monotoneY' },
-          { content: localeText.chartConfigurationOptionCatmullRom, value: 'catmullRom' },
-          { content: localeText.chartConfigurationOptionLinear, value: 'linear' },
-          { content: localeText.chartConfigurationOptionNatural, value: 'natural' },
-          { content: localeText.chartConfigurationOptionStep, value: 'step' },
-          { content: localeText.chartConfigurationOptionStepBefore, value: 'stepBefore' },
-          { content: localeText.chartConfigurationOptionStepAfter, value: 'stepAfter' },
-          { content: localeText.chartConfigurationOptionBumpX, value: 'bumpX' },
-          { content: localeText.chartConfigurationOptionBumpY, value: 'bumpY' },
+          { content: localeText.chartConfiguration.option.monotoneX, value: 'monotoneX' },
+          { content: localeText.chartConfiguration.option.monotoneY, value: 'monotoneY' },
+          { content: localeText.chartConfiguration.option.catmullRom, value: 'catmullRom' },
+          { content: localeText.chartConfiguration.option.linear, value: 'linear' },
+          { content: localeText.chartConfiguration.option.natural, value: 'natural' },
+          { content: localeText.chartConfiguration.option.step, value: 'step' },
+          { content: localeText.chartConfiguration.option.stepBefore, value: 'stepBefore' },
+          { content: localeText.chartConfiguration.option.stepAfter, value: 'stepAfter' },
+          { content: localeText.chartConfiguration.option.bumpX, value: 'bumpX' },
+          { content: localeText.chartConfiguration.option.bumpY, value: 'bumpY' },
         ],
       },
       colors: getColorOptions(localeText),
       stacked: {
-        label: localeText.chartConfigurationStacked,
+        label: localeText.chartConfiguration.stacked,
         type: 'boolean',
         default: false,
         isDisabled: ({ values }: { values: any[] }) => values.length < 2,
       },
       showMark: {
-        label: localeText.chartConfigurationShowMark,
+        label: localeText.chartConfiguration.showMark,
         type: 'boolean',
         default: type === 'line',
       },
@@ -375,11 +375,11 @@ export const getLocalizedConfigurationOptions = (
       customization: [
         {
           id: 'data',
-          label: localeText.chartConfigurationSectionArcs,
+          label: localeText.chartConfiguration.sectionArcs,
           controls: {
             colors: getColorOptions(localeText),
             seriesGap: {
-              label: localeText.chartConfigurationSeriesGap,
+              label: localeText.chartConfiguration.seriesGap,
               type: 'number',
               default: 10,
               isDisabled: ({ values }: { values: any[] }) => values.length < 2,
@@ -388,59 +388,59 @@ export const getLocalizedConfigurationOptions = (
               },
             },
             paddingAngle: {
-              label: localeText.chartConfigurationPaddingAngle,
+              label: localeText.chartConfiguration.paddingAngle,
               type: 'number',
               default: 0,
             },
             cornerRadius: {
-              label: localeText.chartConfigurationCornerRadius,
+              label: localeText.chartConfiguration.cornerRadius,
               type: 'number',
               default: 0,
             },
             itemLabel: {
-              label: localeText.chartConfigurationArcLabels,
+              label: localeText.chartConfiguration.arcLabels,
               type: 'select',
               default: 'none',
               options: [
-                { content: localeText.chartConfigurationOptionNone, value: 'none' },
-                { content: localeText.chartConfigurationOptionValue, value: 'value' },
+                { content: localeText.chartConfiguration.option.none, value: 'none' },
+                { content: localeText.chartConfiguration.option.value, value: 'value' },
               ],
             },
           },
         },
         {
           id: 'chart',
-          label: localeText.chartConfigurationSectionChart,
+          label: localeText.chartConfiguration.section.chart,
           controls: {
             showToolbar: {
-              label: localeText.chartConfigurationShowToolbar,
+              label: localeText.chartConfiguration.showToolbar,
               type: 'boolean',
               default: false,
             },
             innerRadius: {
-              label: localeText.chartConfigurationInnerRadius,
+              label: localeText.chartConfiguration.innerRadius,
               type: 'number',
               default: 50,
             },
             outerRadius: {
-              label: localeText.chartConfigurationOuterRadius,
+              label: localeText.chartConfiguration.outerRadius,
               type: 'number',
               default: 150,
             },
             startAngle: {
-              label: localeText.chartConfigurationStartAngle,
+              label: localeText.chartConfiguration.startAngle,
               type: 'number',
               default: 0,
             },
             endAngle: {
-              label: localeText.chartConfigurationEndAngle,
+              label: localeText.chartConfiguration.endAngle,
               type: 'number',
               default: 360,
             },
-            height: { label: localeText.chartConfigurationHeight, type: 'number', default: 350 },
-            width: { label: localeText.chartConfigurationWidth, type: 'number', default: 350 },
+            height: { label: localeText.chartConfiguration.height, type: 'number', default: 350 },
+            width: { label: localeText.chartConfiguration.width, type: 'number', default: 350 },
             skipAnimation: {
-              label: localeText.chartConfigurationSkipAnimation,
+              label: localeText.chartConfiguration.skipAnimation,
               type: 'boolean',
               default: false,
             },
@@ -448,27 +448,27 @@ export const getLocalizedConfigurationOptions = (
         },
         {
           id: 'tooltip',
-          label: localeText.chartConfigurationSectionTooltip,
+          label: localeText.chartConfiguration.sectionTooltip,
           controls: {
             tooltipPlacement: {
-              label: localeText.chartConfigurationTooltipPlacement,
+              label: localeText.chartConfiguration.tooltipPlacement,
               type: 'select',
               default: 'auto',
               options: [
-                { content: localeText.chartConfigurationOptionAuto, value: 'auto' },
-                { content: localeText.chartConfigurationOptionTop, value: 'top' },
-                { content: localeText.chartConfigurationOptionBottom, value: 'bottom' },
-                { content: localeText.chartConfigurationOptionLeft, value: 'left' },
-                { content: localeText.chartConfigurationOptionRight, value: 'right' },
+                { content: localeText.chartConfiguration.option.auto, value: 'auto' },
+                { content: localeText.chartConfiguration.option.top, value: 'top' },
+                { content: localeText.chartConfiguration.option.bottom, value: 'bottom' },
+                { content: localeText.chartConfiguration.option.left, value: 'left' },
+                { content: localeText.chartConfiguration.option.right, value: 'right' },
               ],
             },
             pieTooltipTrigger: {
-              label: localeText.chartConfigurationPieTooltipTrigger,
+              label: localeText.chartConfiguration.pieTooltipTrigger,
               type: 'select',
               default: 'item',
               options: [
-                { content: localeText.chartConfigurationOptionNone, value: 'none' },
-                { content: localeText.chartConfigurationOptionItem, value: 'item' },
+                { content: localeText.chartConfiguration.option.none, value: 'none' },
+                { content: localeText.chartConfiguration.option.item, value: 'item' },
               ],
             },
           },
