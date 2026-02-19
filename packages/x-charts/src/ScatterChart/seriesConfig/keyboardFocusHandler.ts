@@ -1,4 +1,4 @@
-import { createKeyboardFocusHandler } from '../../internals/createKeyboardFocusHandler';
+import { createCommonKeyboardFocusHandler } from '../../internals/createCommonKeyboardFocusHandler';
 import type { KeyboardFocusHandler } from '../../internals/plugins/featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import {
   type ComposableCartesianChartSeriesType,
@@ -6,6 +6,6 @@ import {
 } from '../../internals/commonNextFocusItem';
 
 const keyboardFocusHandler: KeyboardFocusHandler<'scatter', ComposableCartesianChartSeriesType> =
-  createKeyboardFocusHandler(composableCartesianSeriesTypes);
+  createCommonKeyboardFocusHandler(composableCartesianSeriesTypes);
 
 export default keyboardFocusHandler;

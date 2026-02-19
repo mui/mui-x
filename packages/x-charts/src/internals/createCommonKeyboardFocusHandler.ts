@@ -6,10 +6,12 @@ import {
   createGetPreviousSeriesFocusedItem,
 } from './commonNextFocusItem';
 
-export function createKeyboardFocusHandler<TSeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
-  outSeriesTypes: Set<TSeriesType>,
-  allowCycles?: boolean,
-) {
+/**
+ * Create a keyboard focus handler for common use cases where focused item are defined by the series is and data index.
+ */
+export function createCommonKeyboardFocusHandler<
+  TSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
+>(outSeriesTypes: Set<TSeriesType>, allowCycles?: boolean) {
   const keyboardFocusHandler = (event: KeyboardEvent) => {
     switch (event.key) {
       case 'ArrowRight':
