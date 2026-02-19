@@ -6,6 +6,7 @@ export * from './useChartCartesianInteraction.selectors';
 export * from './useChartCartesianHighlight.selectors';
 export * from './useChartCartesianAxisPreview.selectors';
 export * from './useChartAxisAutoSize.selectors';
+export * from './useChartCartesianTooltip.selectors';
 export { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 export * from './computeAxisValue';
 export * from './createZoomLookup';
