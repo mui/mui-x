@@ -678,6 +678,5 @@ describe('Filtering Plugin - Integration Tests', () => {
         expect(getRowNames(container)).toEqual(['Charlie', 'Alice']);
       });
     });
-
-});
+  });
 });
