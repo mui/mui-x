@@ -37,6 +37,7 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
     (props.paginationMode === 'server' &&
       props.rowCount == null &&
       !props.dataSource &&
+      !props.paginationMeta &&
       [
         "MUI X: The `rowCount` prop must be passed using `paginationMode='server'`",
         'For more detail, see http://mui.com/components/data-grid/pagination/#index-based-pagination',

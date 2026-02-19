@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
@@ -12,18 +11,14 @@ import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-schedul
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  schedulerNowSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import clsx from 'clsx';
 import { DayTimeGridProps } from './DayTimeGrid.types';
-import { useTranslations } from '../../utils/TranslationsContext';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
-import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const FIXED_CELL_WIDTH = 68;
@@ -180,7 +175,7 @@ const DayTimeGridHeaderButton = styled('button', {
   cursor: 'pointer',
   font: 'inherit',
   color: 'inherit',
-  padding: 0,
+  padding: theme.spacing(0.25),
   '&:focus-visible': {
     outline: `2px solid ${theme.palette.primary.main}`,
     outlineOffset: -2,
@@ -195,6 +190,9 @@ const DayTimeGridHeaderDayName = styled('span', {
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.text.secondary,
   lineHeight: 1,
+  '[data-current] &': {
+    color: theme.palette.primary.main,
+  },
 }));
 
 const DayTimeGridHeaderDayNumber = styled('span', {
@@ -202,12 +200,22 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   slot: 'DayTimeGridHeaderDayNumber',
 })(({ theme }) => ({
   fontSize: theme.typography.h5.fontSize,
-  fontWeight: theme.typography.fontWeightMedium,
   lineHeight: 1,
-  padding: theme.spacing(0, 0.5),
-  borderRadius: theme.shape.borderRadius,
+  width: 46,
+  height: 46,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '50%',
+  'button:hover &': {
+    backgroundColor: theme.palette.action.hover,
+  },
   '[data-current] &': {
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+  '[data-current] button:hover &': {
+    backgroundColor: theme.palette.primary.dark,
   },
 }));
 
@@ -276,19 +284,8 @@ const DayTimeGridGrid = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
+  position: 'relative',
 });
-
-// TODO: Replace with a proper loading overlay component that is shared across views
-const DayTimeGridLoadingOverlay = styled(Typography, {
-  name: 'MuiEventCalendar',
-  slot: 'DayTimeGridLoadingOverlay',
-})(({ theme }) => ({
-  position: 'absolute',
-  fontSize: theme.typography.body1.fontSize,
-  padding: 2,
-  color: theme.palette.text.secondary,
-  zIndex: 1,
-}));
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -298,9 +295,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   // Context hooks
   const adapter = useAdapter();
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
 
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -312,7 +308,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
-  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -416,7 +411,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           id="DayTimeGridAllDayEventsHeaderCell"
           role="columnheader"
         >
-          {translations.allDay}
+          {localeText.allDay}
         </DayTimeGridAllDayEventsHeaderCell>
         <DayTimeGridAllDayEventsRow
           as={CalendarGrid.DayRow}
@@ -453,12 +448,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             </DayTimeGridTimeAxis>
 
             <DayTimeGridGrid className={classes.dayTimeGridGrid}>
-              {isLoading && (
-                <DayTimeGridLoadingOverlay className={classes.dayTimeGridLoadingOverlay}>
-                  {translations.loading}
-                </DayTimeGridLoadingOverlay>
-              )}
-
               {occurrences.days.map((day, index) => (
                 <TimeGridColumn
                   key={day.key}
