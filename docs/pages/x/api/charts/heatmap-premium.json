@@ -70,8 +70,15 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifier<SeriesType>) => void",
+        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
         "describedArgs": ["event", "item"]
+      }
+    },
+    "onTooltipAxisChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["axisItems"]
       }
     },
     "onTooltipItemChange": {
@@ -102,10 +109,16 @@
       "type": { "name": "object" },
       "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
     },
+    "tooltipAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
+      }
+    },
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'heatmap', xIndex: number, yIndex: number }"
       }
     },
     "width": { "type": { "name": "number" } },

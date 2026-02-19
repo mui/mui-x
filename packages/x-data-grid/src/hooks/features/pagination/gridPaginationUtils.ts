@@ -10,7 +10,7 @@ export const getPageCount = (rowCount: number, pageSize: number, page: number): 
     return Math.ceil(rowCount / pageSize);
   }
 
-  if (rowCount === -1) {
+  if (rowCount === -1 || rowCount == null) {
     // With unknown row-count, we can assume a page after the current one
     return page + 2;
   }

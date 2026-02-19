@@ -14,14 +14,14 @@ import { RecurringEventUpdateScope } from '@mui/x-scheduler-headless/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { ScopePopoverProps } from './ScopeDialog.types';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useEventDialogStyledContext } from '../event-dialog/EventDialogStyledContext';
 
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
   function ScopeDialog(props, ref) {
     const { container, ...other } = props;
 
     // Context hooks
-    const translations = useTranslations();
+    const { localeText } = useEventDialogStyledContext();
     const store = useSchedulerStoreContext();
 
     // Selector hooks
@@ -54,34 +54,34 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
         {...other}
       >
         <form onSubmit={handleSubmit}>
-          <DialogTitle id="scope-dialog-title">{translations.title}</DialogTitle>
+          <DialogTitle id="scope-dialog-title">{localeText.title}</DialogTitle>
           <DialogContent>
             <FormControl>
               <RadioGroup
-                aria-label={translations.radioGroupAriaLabel}
+                aria-label={localeText.radioGroupAriaLabel}
                 defaultValue="only-this"
                 name="recurrenceScope"
               >
                 <FormControlLabel
                   value="only-this"
                   control={<Radio />}
-                  label={translations.onlyThis}
+                  label={localeText.onlyThis}
                 />
                 <FormControlLabel
                   value="this-and-following"
                   control={<Radio />}
-                  label={translations.thisAndFollowing}
+                  label={localeText.thisAndFollowing}
                 />
-                <FormControlLabel value="all" control={<Radio />} label={translations.all} />
+                <FormControlLabel value="all" control={<Radio />} label={localeText.all} />
               </RadioGroup>
             </FormControl>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => store.selectRecurringEventUpdateScope(null)} type="button">
-              {translations.cancel}
+              {localeText.cancel}
             </Button>
             <Button variant="contained" type="submit">
-              {translations.confirm}
+              {localeText.confirm}
             </Button>
           </DialogActions>
         </form>

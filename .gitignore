@@ -27,6 +27,9 @@ performance-snapshot.json
 # vale downloaded config
 .github/styles/
 test-results
+
+# Claude Code / Codex - ignore local/personal files, commit shared ones
+CLAUDE.local.md
 AGENTS.local.md
 
 # typescript
