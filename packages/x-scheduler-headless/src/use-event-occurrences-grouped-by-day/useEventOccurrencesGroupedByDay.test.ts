@@ -25,6 +25,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events,
       visibleResources: visible,
       displayTimezone: 'default',
+      plan: 'premium',
     });
   }
 
@@ -77,6 +78,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events: [visibleEvent, invisibleEvent],
       visibleResources: visibilityWithHidden,
       displayTimezone: 'default',
+      plan: 'premium',
     });
 
     const list = result.get(days[1].key)!;
@@ -127,6 +129,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events: [event],
       visibleResources: visible,
       displayTimezone: 'Europe/Paris',
+      plan: 'premium',
     });
 
     // Should NOT appear on Jan 10 in Paris
