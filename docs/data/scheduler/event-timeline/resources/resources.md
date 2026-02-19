@@ -137,7 +137,7 @@ const resource = {
 ```
 
 :::success
-Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/).
+Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/#read-only).
 :::
 
 ## Store data in custom properties
