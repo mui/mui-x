@@ -56,9 +56,7 @@ The priority order for determining if an event is read-only is:
 1. The `readOnly` property assigned to the event
 
 ```tsx
-<EventTimelinePremium
-  events={[{ id: '1', title: 'Event 1', readOnly: true }]}
-/>
+<EventTimelinePremium events={[{ id: '1', title: 'Event 1', readOnly: true }]} />
 ```
 
 2. The `areEventsReadOnly` property assigned to the event's resource

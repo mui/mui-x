@@ -595,9 +595,7 @@ describe('schedulerEventSelectors', () => {
             id: 'parent-resource',
             title: 'Parent Resource',
             areEventsReadOnly: true,
-            children: [
-              { id: 'child-resource', title: 'Child Resource', areEventsReadOnly: false },
-            ],
+            children: [{ id: 'child-resource', title: 'Child Resource', areEventsReadOnly: false }],
           },
         ],
       });
