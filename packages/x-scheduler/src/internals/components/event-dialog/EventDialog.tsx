@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
-import { useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
@@ -22,6 +22,20 @@ import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
+
+const EventDialogPaper = styled(Paper, {
+  name: 'MuiEventDialog',
+  slot: 'Paper',
+})(({ theme }) => ({
+  borderWidth: 0,
+  borderTopWidth: 1,
+  height: 'fit-content',
+  margin: 0,
+  overflow: 'hidden',
+  '&[data-dragging]': {
+    outline: `1px solid ${theme.palette.primary.light}`,
+  },
+}));
 
 interface PaperComponentProps extends PaperProps {
   anchorRef: React.RefObject<HTMLElement>;
@@ -75,22 +89,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     };
   }, [updatePosition, resetDrag]);
 
-  return (
-    <Paper
-      {...other}
-      ref={nodeRef}
-      sx={(theme) => ({
-        borderWidth: 0,
-        borderTopWidth: 1,
-        height: 'fit-content',
-        m: 0,
-        overflow: 'hidden',
-        '&[data-dragging]': {
-          outline: `1px solid ${theme.palette.primary.light}`,
-        },
-      })}
-    />
-  );
+  return <EventDialogPaper {...other} ref={nodeRef} />;
 } as any as DialogProps['PaperComponent'];
 
 const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
