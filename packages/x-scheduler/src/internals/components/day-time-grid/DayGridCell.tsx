@@ -7,9 +7,11 @@ import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayGridEvent } from '../event';
 import { EventDialogTrigger } from '../event-dialog';
 import { useEventDialogContext } from '../event-dialog/EventDialog';
+import { EventSkeleton } from '../event-skeleton';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const EVENT_HEIGHT = 22;
@@ -66,6 +68,7 @@ export function DayGridCell(props: DayGridCellProps) {
     day.value,
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
@@ -90,6 +93,7 @@ export function DayGridCell(props: DayGridCellProps) {
       data-weekend={isWeekend(adapter, day.value) || undefined}
     >
       <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
+        {isLoading && <EventSkeleton data-variant="day-grid" />}
         {day.withPosition.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (

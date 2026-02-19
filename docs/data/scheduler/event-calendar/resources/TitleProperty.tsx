@@ -14,11 +14,11 @@ interface CustomResource {
 
 const resources: CustomResource[] = [
   { name: 'Work', id: 'work', eventColor: 'purple' },
-  { name: 'Holidays', id: 'holidays', eventColor: 'red' },
-  { name: 'Workout', id: 'workout', eventColor: 'teal' },
-  { name: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
-  { name: 'Personal', id: 'personal', eventColor: 'orange' },
-  { name: 'Medical', id: 'medical', eventColor: 'indigo' },
+  { name: 'Health', id: 'health', eventColor: 'teal' },
+  { name: 'Social', id: 'social', eventColor: 'orange' },
+  { name: 'Personal', id: 'personal', eventColor: 'lime' },
+  { name: 'Travel', id: 'travel', eventColor: 'blue' },
+  { name: 'Family', id: 'family', eventColor: 'pink' },
 ];
 
 const resourceModelStructure: SchedulerResourceModelStructure<CustomResource> = {
