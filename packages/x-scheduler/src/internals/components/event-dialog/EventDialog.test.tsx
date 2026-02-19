@@ -1340,9 +1340,8 @@ describe('<EventDialogContent open />', () => {
       expect(document.querySelector('.MuiEventCalendar-eventDialogCloseButton')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogHeader')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogContent')).not.to.equal(null);
-      expect(document.querySelector('.MuiEventCalendar-eventDialogGeneralTabContent')).not.to.equal(
-        null,
-      );
+      expect(document.querySelector('.MuiEventCalendar-eventDialogTabPanel')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogTabContent')).not.to.equal(null);
       expect(
         document.querySelector('.MuiEventCalendar-eventDialogDateTimeFieldsContainer'),
       ).not.to.equal(null);
