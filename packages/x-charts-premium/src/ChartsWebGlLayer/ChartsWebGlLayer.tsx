@@ -1,12 +1,8 @@
 'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { useChartRootRef, useDrawingArea } from '../hooks';
-import {
-  selectorChartSvgHeight,
-  selectorChartSvgWidth,
-} from '../internals/plugins/corePlugins/useChartDimensions';
-import { useStore } from '../internals/store/useStore';
+import { selectorChartSvgHeight, selectorChartSvgWidth, useStore } from '@mui/x-charts/internals';
+import { useDrawingArea, useChartRootRef } from '@mui/x-charts/hooks';
 
 const ChartsWebGLContext = React.createContext<WebGL2RenderingContext | null>(null);
 
