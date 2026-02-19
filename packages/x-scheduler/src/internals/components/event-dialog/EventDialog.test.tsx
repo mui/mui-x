@@ -16,11 +16,21 @@ import {
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { ExtendableEventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
+
+/**
+ * A test store that behaves like a premium store, enabling recurring event features.
+ */
+class PremiumTestStore extends ExtendableEventCalendarStore<any, any> {
+  public constructor(parameters: any, adapterParam: any) {
+    super(parameters, adapterParam, 'EventCalendarPremiumStore');
+  }
+}
 
 const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .title('Running')
@@ -64,7 +74,11 @@ describe('<EventDialogContent open />', () => {
 
   it('should render the event data in the form fields', async () => {
     const { user } = render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
         <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
@@ -90,6 +104,7 @@ describe('<EventDialogContent open />', () => {
         events={[DEFAULT_EVENT]}
         onEventsChange={onEventsChange}
         resources={resources}
+        storeClass={PremiumTestStore}
       >
         <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
@@ -125,7 +140,11 @@ describe('<EventDialogContent open />', () => {
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
         <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
@@ -147,6 +166,7 @@ describe('<EventDialogContent open />', () => {
         events={[DEFAULT_EVENT]}
         onEventsChange={onEventsChange}
         resources={resources}
+        storeClass={PremiumTestStore}
       >
         <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
@@ -168,7 +188,11 @@ describe('<EventDialogContent open />', () => {
       .toOccurrence();
 
     render(
-      <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
+      <EventCalendarProvider
+        events={[readOnlyEvent]}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
         <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
@@ -208,7 +232,12 @@ describe('<EventDialogContent open />', () => {
       .toOccurrence();
 
     render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} readOnly>
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        readOnly
+        storeClass={PremiumTestStore}
+      >
         <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
@@ -265,6 +294,7 @@ describe('<EventDialogContent open />', () => {
         events={[eventWithNoResourceColor]}
         onEventsChange={onEventsChange}
         resources={resourcesNoColor}
+        storeClass={PremiumTestStore}
       >
         <EventDialogContent
           open
@@ -305,6 +335,7 @@ describe('<EventDialogContent open />', () => {
         events={[eventWithoutResource]}
         onEventsChange={onEventsChange}
         resources={resources}
+        storeClass={PremiumTestStore}
       >
         <EventDialogContent open {...defaultProps} occurrence={eventWithoutResourceOccurrence} />
       </EventCalendarProvider>,
@@ -340,7 +371,7 @@ describe('<EventDialogContent open />', () => {
         .toOccurrence();
 
       const { user } = render(
-        <EventCalendarProvider events={[]} resources={resources}>
+        <EventCalendarProvider events={[]} resources={resources} storeClass={PremiumTestStore}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) =>
@@ -384,7 +415,7 @@ describe('<EventDialogContent open />', () => {
         .toOccurrence();
 
       const { user } = render(
-        <EventCalendarProvider events={[]} resources={resources}>
+        <EventCalendarProvider events={[]} resources={resources} storeClass={PremiumTestStore}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) =>
@@ -427,7 +458,7 @@ describe('<EventDialogContent open />', () => {
         .toOccurrence();
 
       const { user } = render(
-        <EventCalendarProvider events={[]} resources={resources}>
+        <EventCalendarProvider events={[]} resources={resources} storeClass={PremiumTestStore}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) =>
@@ -481,7 +512,12 @@ describe('<EventDialogContent open />', () => {
       let createEventSpy;
 
       const { user } = render(
-        <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
+        <EventCalendarProvider
+          events={[]}
+          resources={resources}
+          onEventsChange={onEventsChange}
+          storeClass={PremiumTestStore}
+        >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
@@ -549,6 +585,7 @@ describe('<EventDialogContent open />', () => {
           resources={resources}
           onEventsChange={onEventsChange}
           displayTimezone={displayTimezone}
+          storeClass={PremiumTestStore}
         >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
@@ -615,7 +652,11 @@ describe('<EventDialogContent open />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <EventCalendarProvider
+              events={[originalRecurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <StoreSpy
                 Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
@@ -665,7 +706,11 @@ describe('<EventDialogContent open />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <EventCalendarProvider
+              events={[originalRecurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <StoreSpy
                 Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
@@ -728,7 +773,11 @@ describe('<EventDialogContent open />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <EventCalendarProvider
+              events={[originalRecurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <StoreSpy
                 Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
@@ -789,7 +838,11 @@ describe('<EventDialogContent open />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <EventCalendarProvider
+              events={[originalRecurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <StoreSpy
                 Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
@@ -840,7 +893,11 @@ describe('<EventDialogContent open />', () => {
       describe('Recurrence Custom behavior', () => {
         it('should render recurrence fields as disabled when not recurrent', async () => {
           const { user } = render(
-            <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
@@ -859,7 +916,11 @@ describe('<EventDialogContent open />', () => {
 
         it('should keep recurrence fields disabled when a preset is selected', async () => {
           const { user } = render(
-            <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
@@ -878,7 +939,11 @@ describe('<EventDialogContent open />', () => {
 
         it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
           const { user } = render(
-            <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
@@ -903,6 +968,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -956,6 +1022,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1005,6 +1072,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1052,6 +1120,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1091,6 +1160,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1131,6 +1201,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1180,7 +1251,11 @@ describe('<EventDialogContent open />', () => {
         let updateEventSpy;
 
         const { user } = render(
-          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
+          <EventCalendarProvider
+            events={[nonRecurringEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+          >
             <StoreSpy
               Context={SchedulerStoreContext}
               method="updateEvent"
@@ -1216,7 +1291,11 @@ describe('<EventDialogContent open />', () => {
         let updateEventSpy;
 
         const { user } = render(
-          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
+          <EventCalendarProvider
+            events={[nonRecurringEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+          >
             <StoreSpy
               Context={SchedulerStoreContext}
               method="updateEvent"
@@ -1248,7 +1327,11 @@ describe('<EventDialogContent open />', () => {
   describe('Event dialog classes', () => {
     it('should apply built-in classes to dialog elements', () => {
       render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
           <EventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
@@ -1279,7 +1362,11 @@ describe('<EventDialogContent open />', () => {
         .toOccurrence();
 
       render(
-        <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
+        <EventCalendarProvider
+          events={[readOnlyEvent]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
           <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
         </EventCalendarProvider>,
       );
