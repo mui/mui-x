@@ -71,7 +71,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     [nodeRef],
   );
 
-  const { anchorRef, dragHandlerRef, ...other } = props;
+  const { anchorRef, dragHandlerRef, className, ...other } = props;
   const resetDrag = useDraggableDialog(nodeRef, dragHandlerRef, mutateStyle);
 
   const updatePosition = React.useCallback(
@@ -105,7 +105,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     };
   }, [updatePosition, resetDrag]);
 
-  return <EventDialogPaper {...other} ref={nodeRef} />;
+  return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
 } as any as DialogProps['PaperComponent'];
 
 const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
