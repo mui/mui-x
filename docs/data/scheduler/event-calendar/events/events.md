@@ -154,7 +154,7 @@ const event = {
 ```
 
 :::success
-Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-calendar/editing/).
+Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-calendar/editing/#read-only).
 :::
 
 ### Recurring events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
