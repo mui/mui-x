@@ -114,26 +114,6 @@ DateField.propTypes = {
    */
   focused: PropTypes.bool,
   /**
-   * The index or type of the section to focus when the field is focused.
-   * If `null`, no section will be focused.
-   * If `undefined`, the first section will be focused.
-   */
-  initialFocusedSection: PropTypes.oneOfType([
-    PropTypes.oneOf([
-      'all',
-      'day',
-      'empty',
-      'hours',
-      'meridiem',
-      'minutes',
-      'month',
-      'seconds',
-      'weekDay',
-      'year',
-    ]),
-    PropTypes.number,
-  ]),
-  /**
    * Format of the date when rendered in the input(s).
    */
   format: PropTypes.string,
@@ -169,6 +149,24 @@ DateField.propTypes = {
    * Use this prop to make `label` and `helperText` accessible for screen readers.
    */
   id: PropTypes.string,
+  /**
+   * The index or type of the section to focus when the field is focused.
+   * If `undefined`/`null`, the first section will be focused.
+   */
+  initialFocusedSection: PropTypes.oneOfType([
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
+    PropTypes.number,
+  ]),
   /**
    * Props applied to the [`InputLabel`](https://mui.com/material-ui/api/input-label/) element.
    * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.

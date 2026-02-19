@@ -118,15 +118,23 @@ MultiInputTimeRangeField.propTypes = {
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
+   * Format of the date when rendered in the input(s).
+   */
+  format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
+  /**
    * The index or type of the section to focus when the field is focused.
-   * If `null`, no section will be focused.
-   * If `undefined`, the first section will be focused.
+   * If `undefined`/`null`, the first section will be focused.
    */
   initialFocusedSection: PropTypes.oneOfType([
     PropTypes.oneOf([
       'all',
       'day',
-      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -137,16 +145,6 @@ MultiInputTimeRangeField.propTypes = {
     ]),
     PropTypes.number,
   ]),
-  /**
-   * Format of the date when rendered in the input(s).
-   */
-  format: PropTypes.string,
-  /**
-   * Density of the format when rendered in the input.
-   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
-   * @default "dense"
-   */
-  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.

@@ -105,8 +105,7 @@ export interface UseFieldInternalProps<
   onSelectedSectionsChange?: (newValue: FieldSelectedSections) => void;
   /**
    * The index or type of the section to focus when the field is focused.
-   * If `null`, no section will be focused.
-   * If `undefined`, the first section will be focused.
+   * If `undefined`/`null`, the first section will be focused.
    */
   initialFocusedSection?: Exclude<FieldSelectedSections, 'empty'>;
   /**
