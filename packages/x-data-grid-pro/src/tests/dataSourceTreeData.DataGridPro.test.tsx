@@ -14,7 +14,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const dataSetOptions = {
@@ -200,6 +200,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
 
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
     const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
       .children[0];
     const cell11 = getCell(0, 0);
