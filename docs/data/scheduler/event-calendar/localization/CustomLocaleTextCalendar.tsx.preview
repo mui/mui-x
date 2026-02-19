@@ -1,0 +1,14 @@
+<EventCalendar
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  localeText={{
+    today: 'Now',
+    week: 'Weekly',
+    month: 'Monthly',
+    day: 'Daily',
+    agenda: 'Schedule',
+  }}
+  defaultPreferences={{ isSidePanelOpen: false }}
+/>

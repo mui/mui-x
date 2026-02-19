@@ -1,7 +1,5 @@
 'use client';
 import * as React from 'react';
-import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
-import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import { styled } from '@mui/material/styles';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -13,17 +11,29 @@ import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 import clsx from 'clsx';
 import { ResourcesLegendProps } from './ResourcesLegend.types';
-import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { getPaletteVariants } from '../../internals/utils/tokens';
-import { useEventCalendarClasses } from '../EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 
 const ResourcesLegendRoot = styled('section', {
   name: 'MuiEventCalendar',
   slot: 'ResourcesLegend',
-})({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-});
+  padding: theme.spacing(1),
+  overflowY: 'auto',
+  scrollbarWidth: 'thin',
+}));
+
+const ResourcesLegendLabel = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'ResourcesLegendLabel',
+})(({ theme }) => ({
+  ...theme.typography.subtitle2,
+  fontWeight: theme.typography.fontWeightMedium,
+  paddingLeft: theme.spacing(1.25),
+  paddingBottom: theme.spacing(1),
+}));
 
 const ResourcesLegendItemRoot = styled(FormControlLabel, {
   name: 'MuiEventCalendar',
@@ -31,28 +41,12 @@ const ResourcesLegendItemRoot = styled(FormControlLabel, {
 })(({ theme }) => ({
   marginLeft: 0,
   marginRight: 0,
-  padding: theme.spacing(1),
-  borderRadius: theme.shape.borderRadius,
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+  '& .MuiCheckbox-root': {
+    color: 'var(--event-main)',
+    '&.Mui-checked': {
+      color: 'var(--event-main)',
+    },
   },
-  '& .MuiFormControlLabel-label': {
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    flex: 1,
-  },
-}));
-
-const ResourcesLegendItemColorDot = styled('span', {
-  name: 'MuiEventCalendar',
-  slot: 'ResourcesLegendItemColorDot',
-})(({ theme }) => ({
-  width: 10,
-  height: 10,
-  borderRadius: '50%',
-  flexShrink: 0,
-  backgroundColor: 'var(--event-main)',
   variants: getPaletteVariants(theme),
 }));
 
@@ -61,7 +55,6 @@ const ResourcesLegendItemName = styled(Typography, {
   slot: 'ResourcesLegendItemName',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
-  color: theme.palette.text.secondary,
 }));
 
 interface ResourcesLegendItemProps {
@@ -72,46 +65,33 @@ interface ResourcesLegendItemProps {
 
 function ResourcesLegendItem(props: ResourcesLegendItemProps) {
   const { resource, isVisible, onToggle } = props;
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resource.id);
 
   return (
     <ResourcesLegendItemRoot
       className={classes.resourcesLegendItem}
-      labelPlacement="start"
+      data-palette={eventColor}
       control={
         <Checkbox
           className={classes.resourcesLegendItemCheckbox}
           checked={isVisible}
           onChange={(event) => onToggle(resource.id, event)}
-          icon={<VisibilityOffOutlined fontSize="small" />}
-          checkedIcon={<VisibilityOutlined fontSize="small" />}
           size="small"
           slotProps={{
             input: {
               'aria-label': isVisible
-                ? translations.hideEventsLabel(resource.title)
-                : translations.showEventsLabel(resource.title),
+                ? localeText.hideEventsLabel(resource.title)
+                : localeText.showEventsLabel(resource.title),
             },
-          }}
-          sx={{
-            p: 0,
-            '&.Mui-checked': { color: 'action.active' },
           }}
         />
       }
       label={
-        <React.Fragment>
-          <ResourcesLegendItemColorDot
-            className={classes.resourcesLegendItemColorDot}
-            data-palette={eventColor}
-          />
-          <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
-            {resource.title}
-          </ResourcesLegendItemName>
-        </React.Fragment>
+        <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
+          {resource.title}
+        </ResourcesLegendItemName>
       }
     />
   );
@@ -121,20 +101,17 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   props: ResourcesLegendProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
-  const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
-
-  const visibleSet = React.useMemo(() => new Set(visibleResourcesList), [visibleResourcesList]);
+  const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
 
   const handleToggle = useStableCallback(
     (resourceId: string, event: React.ChangeEvent<HTMLInputElement>) => {
       const newVisibleResources = Object.fromEntries(
         resources.map((res) => [
           res.id,
-          res.id === resourceId ? event.target.checked : visibleSet.has(res.id),
+          res.id === resourceId ? event.target.checked : visibleResources[res.id] !== false,
         ]),
       );
       store.setVisibleResources(newVisibleResources, event.nativeEvent);
@@ -148,15 +125,18 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   return (
     <ResourcesLegendRoot
       ref={forwardedRef}
-      aria-label={translations.resourcesLegendSectionLabel}
+      aria-label={localeText.resourcesLegendSectionLabel}
       {...props}
       className={clsx(props.className, classes.resourcesLegend)}
     >
+      <ResourcesLegendLabel className={classes.resourcesLegendLabel}>
+        {localeText.resourcesLabel}
+      </ResourcesLegendLabel>
       {resources.map((resource) => (
         <ResourcesLegendItem
           key={resource.id}
           resource={resource}
-          isVisible={visibleSet.has(resource.id)}
+          isVisible={visibleResources[resource.id] !== false}
           onToggle={handleToggle}
         />
       ))}

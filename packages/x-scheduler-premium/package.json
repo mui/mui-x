@@ -2,7 +2,7 @@
   "name": "@mui/x-scheduler-premium",
   "version": "0.0.1-alpha.0",
   "private": true,
-  "description": "The Premium plan edition of the Scheduler component (MUI X).",
+  "description": "The Premium plan edition of the scheduler components (MUI X).",
   "author": "MUI Team",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
@@ -11,7 +11,11 @@
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
     "./event-calendar-premium": "./src/event-calendar-premium/index.ts",
-    "./event-timeline-premium": "./src/event-timeline-premium/index.ts"
+    "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
+    "./use-event-calendar-premium-api-ref": "./src/use-event-calendar-premium-api-ref/index.ts",
+    "./use-event-timeline-premium-api-ref": "./src/use-event-timeline-premium-api-ref/index.ts",
+    "./locales": "./src/locales/index.ts",
+    "./theme-augmentation": "./src/theme-augmentation/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
