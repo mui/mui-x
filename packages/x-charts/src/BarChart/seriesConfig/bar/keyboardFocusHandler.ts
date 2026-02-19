@@ -5,9 +5,7 @@ import {
   composableCartesianSeriesTypes,
 } from '../../../internals/commonNextFocusItem';
 
-const outSeriesTypes: Set<'bar' | 'line' | 'scatter'> = new Set(['bar', 'line', 'scatter']);
-
 const keyboardFocusHandler: KeyboardFocusHandler<'bar', ComposableCartesianChartSeriesType> =
-  createKeyboardFocusHandler(outSeriesTypes);
+  createKeyboardFocusHandler(composableCartesianSeriesTypes);
 
 export default keyboardFocusHandler;
