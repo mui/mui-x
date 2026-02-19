@@ -75,7 +75,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
           )}
           <ChartsSvgLayer ref={ref} sx={sx}>
             <g {...clipPathGroupProps}>
-              {renderer === 'svg-single' && <HeatmapPlotPremium {...heatmapPlotPremiumProps} />}
+              {renderer !== 'webgl' && <HeatmapPlotPremium {...heatmapPlotPremiumProps} />}
               <FocusedHeatmapCell />
               <ChartsOverlay {...overlayProps} />
             </g>

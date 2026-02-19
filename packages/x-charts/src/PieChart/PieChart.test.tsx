@@ -117,7 +117,7 @@ describe('<PieChart />', () => {
     ).toBeTruthy();
   });
 
-  it.skipIf(isJSDOM)('should only show focus indicator for the focused series', async () => {
+  it('should only show focus indicator for the focused series', async () => {
     const { container, user } = render(
       <PieChart
         enableKeyboardNavigation

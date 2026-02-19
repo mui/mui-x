@@ -75,10 +75,10 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       }
     }
 
-    element.addEventListener('keydown', keyboardHandler as EventListener);
+    element.addEventListener('keydown', keyboardHandler);
     element.addEventListener('blur', removeFocus);
     return () => {
-      element.removeEventListener('keydown', keyboardHandler as EventListener);
+      element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('blur', removeFocus);
     };
   }, [svgRef, removeFocus, params.enableKeyboardNavigation, store]);
