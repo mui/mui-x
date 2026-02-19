@@ -52,7 +52,7 @@ export interface SankeyChartProps
  */
 const SankeyChart = React.forwardRef(function SankeyChart(
   props: SankeyChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themedProps = useThemeProps({ props, name: 'MuiSankeyChart' });
 
@@ -61,13 +61,13 @@ const SankeyChart = React.forwardRef(function SankeyChart(
   const {
     chartDataProviderProProps: { series, ...chartDataProviderProProps },
     chartsSurfaceProps,
-  } = useChartContainerProProps<'sankey', SankeyChartPluginSignatures>(chartContainerProps, ref);
+  } = useChartContainerProProps<'sankey', SankeyChartPluginSignatures>(chartContainerProps);
 
   const Tooltip = themedProps.slots?.tooltip ?? SankeyTooltip;
 
   return (
     <SankeyDataProvider series={series as SankeySeriesType[]} {...chartDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         <ChartsSurface {...chartsSurfaceProps}>
           <SankeyPlot {...sankeyPlotProps} />
           <ChartsOverlay {...overlayProps} />

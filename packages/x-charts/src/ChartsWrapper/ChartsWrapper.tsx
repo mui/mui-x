@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import useForkRef from '@mui/utils/useForkRef';
 import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { useChartRootRef } from '../hooks/useChartRootRef';
@@ -180,27 +181,30 @@ const Root = styled('div', {
  * Wrapper for the charts components.
  * Its main purpose is to position the HTML legend in the correct place.
  */
-function ChartsWrapper(props: ChartsWrapperProps) {
-  const { children, sx, extendVertically } = props;
-  const chartRootRef = useChartRootRef();
+const ChartsWrapper = React.forwardRef<HTMLDivElement, ChartsWrapperProps>(
+  function ChartsWrapper(props, ref) {
+    const { children, sx, extendVertically } = props;
+    const chartRootRef = useChartRootRef();
+    const handleRef = useForkRef(chartRootRef, ref);
 
-  const store = useStore();
+    const store = useStore();
 
-  const propsWidth = store.use(selectorChartPropsWidth);
-  const propsHeight = store.use(selectorChartPropsHeight);
+    const propsWidth = store.use(selectorChartPropsWidth);
+    const propsHeight = store.use(selectorChartPropsHeight);
 
-  return (
-    <Root
-      ref={chartRootRef}
-      ownerState={props}
-      sx={sx}
-      extendVertically={extendVertically ?? propsHeight === undefined}
-      width={propsWidth}
-    >
-      {children}
-    </Root>
-  );
-}
+    return (
+      <Root
+        ref={handleRef}
+        ownerState={props}
+        sx={sx}
+        extendVertically={extendVertically ?? propsHeight === undefined}
+        width={propsWidth}
+      >
+        {children}
+      </Root>
+    );
+  },
+);
 
 ChartsWrapper.propTypes = {
   // ----------------------------- Warning --------------------------------
