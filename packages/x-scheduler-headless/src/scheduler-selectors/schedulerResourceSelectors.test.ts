@@ -367,50 +367,179 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
-    describe('visibleIdList', () => {
-      it('should return all resource ids when visibleResources is empty', () => {
+    describe('visibleMap', () => {
+      it('should return all resources as visible when visibleResources is empty', () => {
         const resources = [
           { id: 'resource-1', title: 'Resource 1' },
           { id: 'resource-2', title: 'Resource 2' },
         ];
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.visibleIdList(state);
-        expect(result).to.deep.equal(['resource-1', 'resource-2']);
+        const result = schedulerResourceSelectors.visibleMap(state);
+        expect(result['resource-1']).to.not.equal(false);
+        expect(result['resource-2']).to.not.equal(false);
       });
 
-      it('should filter out resources that are explicitly set to false', () => {
-        const resources = [
-          { id: 'resource-1', title: 'Resource 1' },
-          { id: 'resource-2', title: 'Resource 2' },
-          { id: 'resource-3', title: 'Resource 3' },
-        ];
-        const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { 'resource-2': false } },
-          adapter,
-        ).state;
-        const result = schedulerResourceSelectors.visibleIdList(state);
-        expect(result).to.deep.equal(['resource-1', 'resource-3']);
-      });
-
-      it('should include resources explicitly set to true', () => {
+      it('should mark a resource as hidden when it is explicitly set to false', () => {
         const resources = [
           { id: 'resource-1', title: 'Resource 1' },
           { id: 'resource-2', title: 'Resource 2' },
         ];
         const state = new storeClass.Value(
-          { events: [], resources, defaultVisibleResources: { 'resource-1': true } },
+          { events: [], resources, defaultVisibleResources: { 'resource-1': false } },
           adapter,
         ).state;
-        const result = schedulerResourceSelectors.visibleIdList(state);
-        expect(result).to.deep.equal(['resource-1', 'resource-2']);
+        const result = schedulerResourceSelectors.visibleMap(state);
+        expect(result['resource-1']).to.equal(false);
+        expect(result['resource-2']).to.not.equal(false);
+      });
+
+      it('should mark a child as hidden when its parent is hidden', () => {
+        const resources = [
+          {
+            id: 'parent-1',
+            title: 'Parent 1',
+            children: [
+              { id: 'child-1', title: 'Child 1' },
+              { id: 'child-2', title: 'Child 2' },
+            ],
+          },
+        ];
+        const state = new storeClass.Value(
+          { events: [], resources, defaultVisibleResources: { 'parent-1': false } },
+          adapter,
+        ).state;
+        const result = schedulerResourceSelectors.visibleMap(state);
+        expect(result['parent-1']).to.equal(false);
+        expect(result['child-1']).to.equal(false);
+        expect(result['child-2']).to.equal(false);
+      });
+
+      it('should mark deeply nested children as hidden when an ancestor is hidden', () => {
+        const resources = [
+          {
+            id: 'grandparent',
+            title: 'Grandparent',
+            children: [
+              {
+                id: 'parent',
+                title: 'Parent',
+                children: [{ id: 'child', title: 'Child' }],
+              },
+            ],
+          },
+        ];
+        const state = new storeClass.Value(
+          { events: [], resources, defaultVisibleResources: { grandparent: false } },
+          adapter,
+        ).state;
+        const result = schedulerResourceSelectors.visibleMap(state);
+        expect(result.grandparent).to.equal(false);
+        expect(result.parent).to.equal(false);
+        expect(result.child).to.equal(false);
+      });
+
+      it('should keep siblings visible when only one child is hidden', () => {
+        const resources = [
+          {
+            id: 'parent',
+            title: 'Parent',
+            children: [
+              { id: 'child-1', title: 'Child 1' },
+              { id: 'child-2', title: 'Child 2' },
+            ],
+          },
+        ];
+        const state = new storeClass.Value(
+          { events: [], resources, defaultVisibleResources: { 'child-1': false } },
+          adapter,
+        ).state;
+        const result = schedulerResourceSelectors.visibleMap(state);
+        expect(result.parent).to.not.equal(false);
+        expect(result['child-1']).to.equal(false);
+        expect(result['child-2']).to.not.equal(false);
+      });
+
+      it('should hide a child even if explicitly true when its parent is hidden', () => {
+        const resources = [
+          {
+            id: 'parent',
+            title: 'Parent',
+            children: [{ id: 'child', title: 'Child' }],
+          },
+        ];
+        const state = new storeClass.Value(
+          {
+            events: [],
+            resources,
+            defaultVisibleResources: { parent: false, child: true },
+          },
+          adapter,
+        ).state;
+        const result = schedulerResourceSelectors.visibleMap(state);
+        expect(result.parent).to.equal(false);
+        expect(result.child).to.equal(false);
+      });
+
+      it('should hide only the target branch when a mid-level parent is hidden', () => {
+        const resources = [
+          {
+            id: 'grandparent',
+            title: 'Grandparent',
+            children: [
+              {
+                id: 'parent-a',
+                title: 'Parent A',
+                children: [{ id: 'child-a', title: 'Child A' }],
+              },
+              {
+                id: 'parent-b',
+                title: 'Parent B',
+                children: [{ id: 'child-b', title: 'Child B' }],
+              },
+            ],
+          },
+        ];
+        const state = new storeClass.Value(
+          { events: [], resources, defaultVisibleResources: { 'parent-a': false } },
+          adapter,
+        ).state;
+        const result = schedulerResourceSelectors.visibleMap(state);
+        expect(result.grandparent).to.not.equal(false);
+        expect(result['parent-a']).to.equal(false);
+        expect(result['child-a']).to.equal(false);
+        expect(result['parent-b']).to.not.equal(false);
+        expect(result['child-b']).to.not.equal(false);
       });
 
       it('should return same reference when inputs have not changed', () => {
-        const resources = [{ id: 'resource-1', title: 'Resource 1' }];
-        const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result1 = schedulerResourceSelectors.visibleIdList(state);
-        const result2 = schedulerResourceSelectors.visibleIdList(state);
+        const resources = [
+          {
+            id: 'parent',
+            title: 'Parent',
+            children: [{ id: 'child', title: 'Child' }],
+          },
+        ];
+        const state = new storeClass.Value(
+          { events: [], resources, defaultVisibleResources: { parent: false } },
+          adapter,
+        ).state;
+        const result1 = schedulerResourceSelectors.visibleMap(state);
+        const result2 = schedulerResourceSelectors.visibleMap(state);
         expect(result1).to.equal(result2);
+      });
+
+      it('should return raw visibleResources when there are no parent-child relationships', () => {
+        const resources = [
+          { id: 'resource-1', title: 'Resource 1' },
+          { id: 'resource-2', title: 'Resource 2' },
+        ];
+        const state = new storeClass.Value(
+          { events: [], resources, defaultVisibleResources: { 'resource-1': false } },
+          adapter,
+        ).state;
+        const result = schedulerResourceSelectors.visibleMap(state);
+        // Fast path should return the raw state.visibleResources reference
+        expect(result).to.equal(state.visibleResources);
       });
     });
 

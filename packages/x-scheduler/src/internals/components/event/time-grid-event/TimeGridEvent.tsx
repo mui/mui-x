@@ -12,7 +12,7 @@ import { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
-import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 
 const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   display: '-webkit-box',
@@ -134,6 +134,7 @@ const TimeGridEventTime = styled('time', {
   lineHeight: 1.43,
   '&[data-lines-clamp]': {
     ...linesClampStyles(1),
+    paddingInlineEnd: theme.spacing(1.5),
   },
   '@container (max-width: 50px & max-height: 50px)': {
     display: 'none',
@@ -194,7 +195,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
+  const { classes } = useEventCalendarStyledContext();
 
   // Selector hooks
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);

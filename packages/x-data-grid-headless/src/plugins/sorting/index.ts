@@ -10,5 +10,4 @@ export type {
   SortingOptions,
   SortingApi,
   SortingColumnMeta,
-  SortingSelectors,
 } from './types';

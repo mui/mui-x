@@ -5,6 +5,7 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Collapse from '@mui/material/Collapse';
+import Divider from '@mui/material/Divider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   eventCalendarPreferenceSelectors,
@@ -20,7 +21,7 @@ import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
 import { MiniCalendar } from './mini-calendar';
 import { schedulerTokens } from '../internals/utils/tokens';
-import { useEventCalendarClasses } from './EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
 export interface EventCalendarRootProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
@@ -46,11 +47,16 @@ const EventCalendarSidePanel = styled('aside', {
   name: 'MuiEventCalendar',
   slot: 'SidePanel',
 })(({ theme }) => ({
-  width: '100%',
-  minWidth: 300,
+  minWidth: 250,
+  width: 'fit-content',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
+  border: '1px solid',
+  borderColor: theme.palette.divider,
+  borderRadius: theme.shape.borderRadius,
+  maxHeight: '100%',
+  overflowY: 'hidden',
 }));
 
 const EventCalendarMainPanel = styled('div', {
@@ -61,6 +67,7 @@ const EventCalendarMainPanel = styled('div', {
   flexGrow: 1,
   gap: theme.spacing(2),
   minHeight: 0,
+
   '&[data-view="month"]': {
     maxHeight: '100%',
     overflow: 'hidden',
@@ -74,9 +81,11 @@ const EventCalendarContent = styled('section', {
   display: 'flex',
   flex: 1,
   overflow: 'auto',
-  maxHeight: 'fit-content',
+  height: 'fit-content',
+  maxHeight: '100%',
   '&[data-view="month"]': {
-    maxHeight: 'none',
+    height: '100%',
+    maxHeight: '100%',
   },
   '&[data-side-panel-open="false"]': {
     gridColumn: '1 / -1',
@@ -102,7 +111,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     const { className, ...other } = props;
 
     const store = useEventCalendarStoreContext();
-    const classes = useEventCalendarClasses();
+    const { classes } = useEventCalendarStyledContext();
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
@@ -142,6 +151,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
           <Collapse in={isSidePanelOpen} orientation="horizontal">
             <EventCalendarSidePanel className={classes.sidePanel}>
               <MiniCalendar />
+              <Divider />
               <ResourcesLegend />
             </EventCalendarSidePanel>
           </Collapse>

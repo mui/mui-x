@@ -2,6 +2,7 @@ import { type AllSeriesType } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
 import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
+import { type SeriesId } from '../../../../models/seriesType/common';
 import {
   type SeriesLayoutGetterResult,
   type SeriesProcessorParams,
@@ -56,9 +57,12 @@ export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = Chart
   [type in TSeriesTypes]?: SeriesProcessorParams<type>;
 };
 
+export type SeriesIdToType = ReadonlyMap<SeriesId, ChartSeriesType>;
+
 export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType> {
   series: {
     defaultizedSeries: DefaultizedSeriesGroups<T>;
+    idToType: SeriesIdToType;
     dataset?: Readonly<DatasetType>;
   };
 }
