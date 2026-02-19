@@ -7,14 +7,14 @@ import { getAreaPath } from './getAreaPath';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import type { SeriesItemIdentifier, SeriesId } from '../../models/seriesType';
+import type { HighlightItemIdentifier, SeriesId } from '../../models/seriesType';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (item: SeriesItemIdentifier<'radar'> | null) => boolean;
-  isHighlighted: (item: SeriesItemIdentifier<'radar'> | null) => boolean;
+  isFaded: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
+  isHighlighted: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
   points: { x: number; y: number }[];
   fillArea?: boolean;
   color: string;

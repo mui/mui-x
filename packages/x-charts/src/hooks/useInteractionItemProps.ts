@@ -75,7 +75,7 @@ export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
   instance: ChartInstance<
     [UseChartInteractionSignature, UseChartHighlightSignature<SeriesType>, UseChartTooltipSignature]
   >,
-  item: SeriesItemIdentifierWithType<ChartSeriesType>,
+  item: SeriesItemIdentifierWithType<SeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;

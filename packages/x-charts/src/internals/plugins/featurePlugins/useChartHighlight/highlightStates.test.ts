@@ -5,7 +5,7 @@ import {
   getSeriesHighlightedDataIndex,
   getSeriesUnfadedDataIndex,
 } from './highlightStates';
-import type { SeriesId, SeriesItemIdentifier } from '../../../../models/seriesType';
+import type { SeriesId, SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import type { CommonHighlightScope } from './highlightConfig.types';
 
 describe('highlightStates', () => {
@@ -13,7 +13,7 @@ describe('highlightStates', () => {
   const s2: SeriesId = 's2';
   const dataIndex = 5;
 
-  const itemData1: SeriesItemIdentifier<'bar'> = {
+  const itemData1: SeriesItemIdentifierWithType<'bar'> = {
     type: 'bar',
     seriesId: s1,
     dataIndex,
@@ -114,7 +114,10 @@ describe('highlightStates', () => {
       });
 
       it('should handle undefined dataIndex', () => {
-        const itemWithoutDataIndex: MakeOptional<SeriesItemIdentifier<'bar'>, 'dataIndex'> = {
+        const itemWithoutDataIndex: MakeOptional<
+          SeriesItemIdentifierWithType<'bar'>,
+          'dataIndex'
+        > = {
           type: 'bar',
           seriesId: s1,
         };
@@ -182,7 +185,10 @@ describe('highlightStates', () => {
 
       it('should handle undefined dataIndex', () => {
         const scope: Partial<CommonHighlightScope> = { fade: 'global' };
-        const itemWithoutDataIndex: MakeOptional<SeriesItemIdentifier<'bar'>, 'dataIndex'> = {
+        const itemWithoutDataIndex: MakeOptional<
+          SeriesItemIdentifierWithType<'bar'>,
+          'dataIndex'
+        > = {
           type: 'bar',
           seriesId: s1,
         };

@@ -12,7 +12,7 @@ import { HeatmapItem } from './HeatmapItem';
 import { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 import { type HeatmapRendererPlotProps } from './Heatmap.types';
-import { type SeriesItemIdentifier } from '../models';
+import { type HighlightItemIdentifier } from '../models';
 
 const MemoHeatmapItem = React.memo(HeatmapItem);
 
@@ -49,7 +49,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
             return null;
           }
 
-          const item: SeriesItemIdentifier<'heatmap'> = {
+          const item: HighlightItemIdentifier<'heatmap'> = {
             type: 'heatmap',
             seriesId: seriesToDisplay.id,
             dataIndex,

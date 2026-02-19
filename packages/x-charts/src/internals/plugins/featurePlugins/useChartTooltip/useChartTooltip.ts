@@ -50,7 +50,11 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
       return; // Already null, nothing to do
     }
 
-    if (!itemToRemove || fastObjectShallowCompare(prevItem, itemToRemove)) {
+    if (
+      !itemToRemove ||
+      instance.serializeIdentifier(prevItem) ===
+        instance.serializeIdentifier(instance.identifierWithType(itemToRemove))
+    ) {
       // Remove the item is either
       // - no item provided, so we unconditionally remove it
       // - the provided item matches the current one
