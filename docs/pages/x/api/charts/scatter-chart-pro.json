@@ -36,7 +36,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'scatter' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -47,7 +47,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'scatter' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
     "initialZoom": {
@@ -134,7 +134,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type: 'scatter' }"
+        "description": "{ dataIndex: number, seriesId: string, type?: 'scatter' }"
       }
     },
     "voronoiMaxRadius": {

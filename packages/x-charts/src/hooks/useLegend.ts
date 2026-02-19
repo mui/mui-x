@@ -6,7 +6,7 @@ import {
 } from '../internals/plugins/corePlugins/useChartSeries';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useSeries } from './useSeries';
-import type { LegendItemParams } from '../ChartsLegend';
+import type { SeriesLegendItemParams } from '../ChartsLegend';
 import { useStore } from '../internals/store/useStore';
 import { type ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
@@ -31,7 +31,7 @@ function getSeriesToDisplay(
  *
  * @returns legend data
  */
-export function useLegend(): { items: LegendItemParams[] } {
+export function useLegend(): { items: SeriesLegendItemParams[] } {
   const series = useSeries();
   const store = useStore<[UseChartSeriesSignature]>();
   const seriesConfig = store.use(selectorChartSeriesConfig);

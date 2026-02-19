@@ -304,8 +304,8 @@ LineChart.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['line']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['line']),
     }),
   ),
   /**
@@ -359,8 +359,8 @@ LineChart.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['line']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['line']),
     }),
   ),
   /**
@@ -488,7 +488,7 @@ LineChart.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['line']).isRequired,
+    type: PropTypes.oneOf(['line']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
