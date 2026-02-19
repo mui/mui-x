@@ -37,6 +37,13 @@ const resources = [
 On the Event Timeline, events without resource are not rendered at all.
 :::
 
+## Nested resources
+
+Use the `children` property to create hierarchical resource structures.
+The side panel lets users toggle entire groups at once:
+
+{{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Visible resources
 
 Use the `defaultVisibleResources` prop to initialize the visible resources.
