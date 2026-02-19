@@ -21,12 +21,8 @@ import clsx from 'clsx';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
-import { useTranslations } from '../internals/utils/TranslationsContext';
-import { useEventCalendarClasses } from '../event-calendar/EventCalendarClassesContext';
-import {
-  EventDraggableDialogProvider,
-  EventDraggableDialogTrigger,
-} from '../internals/components/event-draggable-dialog';
+import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
+import { EventDialogProvider, EventDialogTrigger } from '../internals/components/event-dialog';
 
 const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -166,9 +162,8 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapter();
-    const translations = useTranslations();
+    const { classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
-    const classes = useEventCalendarClasses();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
@@ -201,7 +196,7 @@ export const AgendaView = React.memo(
       >
         {isLoading && (
           <AgendaViewLoadingOverlay className={classes.agendaViewLoadingOverlay}>
-            {translations.loading}
+            {localeText.loading}
           </AgendaViewLoadingOverlay>
         )}
 
@@ -243,14 +238,14 @@ export const AgendaView = React.memo(
             <EventsList className={classes.agendaViewEventsList}>
               {occurrences.map((occurrence) => (
                 <li key={occurrence.key}>
-                  <EventDraggableDialogTrigger occurrence={occurrence}>
+                  <EventDialogTrigger occurrence={occurrence}>
                     <EventItem
                       occurrence={occurrence}
                       date={date}
                       variant="regular"
                       ariaLabelledBy={`DayHeaderCell-${date.key}`}
                     />
-                  </EventDraggableDialogTrigger>
+                  </EventDialogTrigger>
                 </li>
               ))}
             </EventsList>
@@ -279,9 +274,9 @@ export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaVi
 
   return (
     <EventCalendarProvider {...parameters}>
-      <EventDraggableDialogProvider>
+      <EventDialogProvider>
         <AgendaView ref={forwardedRef} {...forwardedProps} />
-      </EventDraggableDialogProvider>
+      </EventDialogProvider>
     </EventCalendarProvider>
   );
 }) as StandaloneAgendaViewComponent;

@@ -7,7 +7,7 @@ import {
   buildSortingApplier,
   upsertSortModel,
 } from './sortingUtils';
-import { selectSortModel, selectSortedRowIds } from './selectors';
+import { selectSortModel } from './selectors';
 import type { GridSortDirection, GridSortModel, SortingState } from './types';
 
 describe('Sorting Plugin', () => {
@@ -135,7 +135,6 @@ describe('Sorting Plugin', () => {
     const createState = (overrides: Partial<SortingState['sorting']> = {}): SortingState => ({
       sorting: {
         model: [],
-        sortedRowIds: [],
         ...overrides,
       },
     });
@@ -149,13 +148,6 @@ describe('Sorting Plugin', () => {
       it('should return empty array when no sorting', () => {
         const state = createState();
         expect(selectSortModel(state)).toEqual([]);
-      });
-    });
-
-    describe('selectSortedRowIds', () => {
-      it('should return sorted row IDs', () => {
-        const state = createState({ sortedRowIds: [3, 1, 2] });
-        expect(selectSortedRowIds(state)).toEqual([3, 1, 2]);
       });
     });
   });

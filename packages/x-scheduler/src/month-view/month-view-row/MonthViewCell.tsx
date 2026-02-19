@@ -17,14 +17,12 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
-import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
-import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
-import { EventDraggableDialogTrigger } from '../../internals/components/event-draggable-dialog';
-import { useEventDraggableDialogContext } from '../../internals/components/event-draggable-dialog/EventDraggableDialog';
-import { useEventCalendarClasses } from '../../event-calendar/EventCalendarClassesContext';
+import { EventDialogTrigger } from '../../internals/components/event-dialog';
+import { useEventDialogContext } from '../../internals/components/event-dialog/EventDialog';
+import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
@@ -168,9 +166,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const translations = useTranslations();
-  const { onOpen: startEditing } = useEventDraggableDialogContext();
-  const classes = useEventCalendarClasses();
+  const { classes, localeText } = useEventCalendarStyledContext();
+  const { onOpen: startEditing } = useEventDialogContext();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -180,18 +177,15 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
     day.value,
   );
+  const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  // Selector hooks
-  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
-
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
-  const isToday = adapter.isSameDay(day.value, now);
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
@@ -210,17 +204,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Day number header + max events
   const rowCount = 1 + maxEvents;
 
-  const eventCreationProps = useEventCreationProps(() => {
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      surfaceType: 'day-grid',
-      start: adapter.startOfDay(day.value),
-      end: adapter.endOfDay(day.value),
-      lockSurfaceType: true,
-      resourceId: null,
-    });
-  });
-
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
@@ -237,8 +220,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       data-current={isToday || undefined}
       data-other-month={!isCurrentMonth || undefined}
       data-weekend={isWeekend(adapter, day.value) || undefined}
+      lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
-      {...eventCreationProps}
     >
       {hasDayView ? (
         <MonthViewCellNumberButton
@@ -261,24 +244,24 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           }
 
           return (
-            <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
               <DayGridEvent
                 occurrence={occurrence}
                 variant={
                   isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
                 }
               />
-            </EventDraggableDialogTrigger>
+            </EventDialogTrigger>
           );
         })}
         {hiddenCount > 0 && (
           <MoreEventsPopoverTrigger occurrences={day.withPosition} day={day}>
             <MonthViewMoreEvents
               size="small"
-              aria-label={translations.hiddenEvents(hiddenCount)}
+              aria-label={localeText.hiddenEvents(hiddenCount)}
               className={classes.monthViewMoreEvents}
             >
-              {translations.hiddenEvents(hiddenCount)}
+              {localeText.hiddenEvents(hiddenCount)}
             </MonthViewMoreEvents>
           </MoreEventsPopoverTrigger>
         )}

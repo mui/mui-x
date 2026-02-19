@@ -87,6 +87,12 @@
     },
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
+    "onTooltipAxisChange": {
+      "description": "The function called when the pointer position corresponds to a new axis data item. This update can either be caused by a pointer movement, or an axis update. In case of multiple axes, the function is called if at least one axis is updated. The argument contains the identifier for all axes with a <code>data</code> property.",
+      "typeDescriptions": {
+        "axisItems": { "name": "axisItems", "description": "The array of axes item identifiers." }
+      }
+    },
     "onTooltipItemChange": {
       "description": "The callback fired when the tooltip item changes.",
       "typeDescriptions": {
@@ -100,6 +106,9 @@
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tooltipAxis": {
+      "description": "The controlled axis tooltip. Identified by the axis id, and data index."
+    },
     "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
