@@ -136,13 +136,11 @@ function getTickLabels(
   const { valueFormatter, scaleType, data, min, max } = axis as DefaultedXAxis &
     DefaultedYAxis & { min?: number; max?: number };
 
-  // For ordinal scales, use axis.data
   if (scaleType === 'band' || scaleType === 'point') {
     if (!data || data.length === 0) {
       return [];
     }
 
-    // Map all values to their rendered label strings
     const labels = data.map((value) => {
       if (valueFormatter) {
         return valueFormatter(value, {
@@ -158,12 +156,10 @@ function getTickLabels(
     return selectWidestCandidates(labels);
   }
 
-  // For continuous scales, we measure the min and max values to estimate axis size.
   // Use axis min/max props first, then data extrema, then defaults.
   const minVal = min ?? (extrema && Number.isFinite(extrema[0]) ? extrema[0] : 0);
   const maxVal = max ?? (extrema && Number.isFinite(extrema[1]) ? extrema[1] : 100);
 
-  // Measure both min and max values to find the widest label
   const valuesToMeasure = minVal === maxVal ? [minVal] : [minVal, maxVal];
 
   return valuesToMeasure.map((value) => {
@@ -172,7 +168,6 @@ function getTickLabels(
         location: 'auto-size',
       });
     }
-    // Format numbers reasonably
     if (Number.isInteger(value)) {
       return `${value}`;
     }
@@ -191,7 +186,6 @@ function measureTickLabels(
     return { maxWidth: 0, maxHeight: 0 };
   }
 
-  // Split labels by newlines and collect all unique lines
   const allLines = new Set<string>();
   for (const label of labels) {
     const lines = label.split('\n');
@@ -200,10 +194,8 @@ function measureTickLabels(
     }
   }
 
-  // Batch measure all lines
   const sizeMap = batchMeasureStrings(allLines, style);
 
-  // Find max dimensions across all labels (considering multi-line)
   let maxWidth = 0;
   let maxHeight = 0;
 
@@ -245,12 +237,9 @@ function getRotatedDimension(
   const sinAngle = Math.sin(radAngle);
 
   if (direction === 'x') {
-    // For x-axis, compute rotated bounding box height
     return Math.abs(width * sinAngle) + Math.abs(height * cosAngle);
   }
 
-  // For y-axis, compute rotated bounding box width
-  // This is similar to getMinXTranslation for horizontal spacing
   return getMinXTranslation(width, height, angle);
 }
 
@@ -272,49 +261,36 @@ function computeGroupedAxisAutoSize(
     return { size: AXIS_AUTO_SIZE_MIN, groupTickSizes: [] };
   }
 
-  // Compute cumulative tick sizes for each group level
-  // Each group's labels should start after the previous group's labels end
   const groupTickSizes: number[] = [];
   const labelDimensions: number[] = [];
   const defaultTickSize = baseTickSize ?? AXIS_AUTO_SIZE_TICK_SIZE;
 
   for (let groupIndex = 0; groupIndex < groups.length; groupIndex += 1) {
     const group = groups[groupIndex];
-
-    // Get labels for this group level
     const groupLabels = getGroupLabels(data, group);
 
-    // Merge axis tick label style with group-specific style
     const groupTickLabelStyle = {
       ...axisTickLabelStyle,
       ...group.tickLabelStyle,
     } as ChartsTextStyle | undefined;
 
     const angle = groupTickLabelStyle?.angle;
-
-    // Measure labels for this group
     const { maxWidth, maxHeight } = measureTickLabels(groupLabels, groupTickLabelStyle);
 
-    // Handle SSR case
     if (maxWidth === 0 && maxHeight === 0) {
       return undefined;
     }
 
-    // Get the dimension based on direction and rotation
     const labelDimension = getRotatedDimension(maxWidth, maxHeight, angle, direction);
     labelDimensions.push(labelDimension);
 
-    // If group has custom tickSize, use it directly (user-specified)
-    // Otherwise, compute cumulative position after previous group's labels
     const customTickSize = group.tickSize;
     if (customTickSize !== undefined) {
-      // User specified an exact tick size - use it directly
       groupTickSizes.push(customTickSize);
     } else if (groupIndex === 0) {
-      // First group without custom tickSize - use base
       groupTickSizes.push(defaultTickSize);
     } else {
-      // Subsequent group without custom tickSize - position after previous group's labels
+      // Position after previous group's labels
       const previousExtent =
         groupTickSizes[groupIndex - 1] +
         AXIS_AUTO_SIZE_TICK_LABEL_GAP +
@@ -325,22 +301,18 @@ function computeGroupedAxisAutoSize(
     }
   }
 
-  // Calculate total extent: last group's tickSize + gap + last group's labelDimension
   const lastGroupIndex = groups.length - 1;
   let totalExtent =
     groupTickSizes[lastGroupIndex] +
     AXIS_AUTO_SIZE_TICK_LABEL_GAP +
     labelDimensions[lastGroupIndex];
 
-  // Add axis label if present
   if (hasAxisLabel) {
     totalExtent += AXIS_LABEL_DEFAULT_HEIGHT;
   }
 
-  // Add padding
   totalExtent += AXIS_AUTO_SIZE_PADDING;
 
-  // Ensure minimum size
   const size = Math.max(Math.ceil(totalExtent), AXIS_AUTO_SIZE_MIN);
 
   return { size, groupTickSizes };
@@ -358,7 +330,6 @@ export function computeAxisAutoSize(
 ): AxisAutoSizeResult | undefined {
   const { axis, direction, extrema } = options;
 
-  // Handle grouped axes separately
   if (hasGroups(axis)) {
     return computeGroupedAxisAutoSize(axis, direction);
   }
@@ -368,44 +339,27 @@ export function computeAxisAutoSize(
   const hasLabel = Boolean(axis.label);
   const angle = tickLabelStyle?.angle;
 
-  // Get tick labels
   const labels = getTickLabels(axis, extrema);
 
   if (labels.length === 0) {
     return AXIS_AUTO_SIZE_MIN;
   }
 
-  // Measure tick labels
   const { maxWidth, maxHeight } = measureTickLabels(labels, tickLabelStyle);
 
-  // Handle SSR case where measurement returns 0
   if (maxWidth === 0 && maxHeight === 0) {
     return undefined;
   }
 
-  // Get the dimension based on direction and rotation
   const labelDimension = getRotatedDimension(maxWidth, maxHeight, angle, direction);
 
-  // Calculate total axis size
-  let totalSize = 0;
+  let totalSize = tickSize + AXIS_AUTO_SIZE_TICK_LABEL_GAP + labelDimension;
 
-  // Add tick size
-  totalSize += tickSize;
-
-  // Add gap between tick and label
-  totalSize += AXIS_AUTO_SIZE_TICK_LABEL_GAP;
-
-  // Add label dimension
-  totalSize += labelDimension;
-
-  // Add axis label if present
   if (hasLabel) {
     totalSize += AXIS_LABEL_DEFAULT_HEIGHT;
   }
 
-  // Add padding
   totalSize += AXIS_AUTO_SIZE_PADDING;
 
-  // Ensure minimum size
   return Math.max(Math.ceil(totalSize), AXIS_AUTO_SIZE_MIN);
 }

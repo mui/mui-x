@@ -47,7 +47,6 @@ function selectXAxisSize(
 
     let axisSize: number;
     if (axis.height === 'auto') {
-      // Use computed auto-size, or fall back to default
       axisSize = autoSizes[axis.id] ?? getDefaultXAxisHeight(axis);
     } else {
       axisSize = axis.height ?? 0;
@@ -76,7 +75,6 @@ function selectYAxisSize(
 
     let axisSize: number;
     if (axis.width === 'auto') {
-      // Use computed auto-size, or fall back to default
       axisSize = autoSizes[axis.id] ?? getDefaultYAxisWidth(axis);
     } else {
       axisSize = axis.width ?? 0;

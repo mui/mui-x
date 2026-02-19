@@ -61,7 +61,6 @@ function shouldIgnoreGapRatios(scale: ScaleBand<{ toString(): string }>, categor
   return paddingPx < 0.1;
 }
 
-// Helper to resolve 'auto' dimensions to numbers
 function resolveAxisSize(
   axis: DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>,
   autoSizes: Record<AxisId, number> | undefined,
@@ -69,12 +68,10 @@ function resolveAxisSize(
 ): number {
   const size = direction === 'x' ? (axis as DefaultedXAxis).height : (axis as DefaultedYAxis).width;
   if (size === 'auto') {
-    // Use computed auto-size or fall back to default
     const autoSize = autoSizes?.[axis.id];
     if (autoSize !== undefined) {
       return autoSize;
     }
-    // Fall back to default size
     const defaultSize = direction === 'x' ? DEFAULT_AXIS_SIZE_HEIGHT : DEFAULT_AXIS_SIZE_WIDTH;
     return defaultSize + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
   }
@@ -162,7 +159,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const data = axis.data ?? [];
 
     if (isOrdinalScale(scale)) {
-      // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
 
       if (isBandScale(scale) && isBandScaleConfig(axis)) {
@@ -177,8 +173,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
           barGapRatio,
           triggerTooltip,
           ...axis,
-          // Override height/width with resolved numeric value (in case 'auto' was set)
-          ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
+...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
           data,
           /* Doing this here is technically wrong, but acceptable in practice.
            * In theory, this should be done in the normalized scale selector, but then we'd need that selector to depend
@@ -200,8 +195,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
           offset: 0,
           triggerTooltip,
           ...axis,
-          // Override height/width with resolved numeric value (in case 'auto' was set)
-          ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
+...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
           data,
           scale,
           tickNumber,

@@ -44,7 +44,6 @@ export const selectorChartXAxisAutoSizeResults = createSelectorMemoized(
   selectorChartSeriesProcessed,
   selectorChartSeriesConfig,
   function selectorChartXAxisAutoSizeResults(xAxes, isHydrated, formattedSeries, seriesConfig) {
-    // Early return if no axes have auto-sizing - avoid expensive computations
     const hasAutoAxis = xAxes?.some((axis) => axis.height === 'auto');
     if (!hasAutoAxis || !isHydrated) {
       return EMPTY_RESULTS;
@@ -55,7 +54,6 @@ export const selectorChartXAxisAutoSizeResults = createSelectorMemoized(
     for (let axisIndex = 0; axisIndex < (xAxes?.length ?? 0); axisIndex += 1) {
       const axis = xAxes![axisIndex];
       if (axis.height === 'auto') {
-        // Compute data extrema for continuous scales to get accurate label measurements
         const extrema =
           !isBandScaleConfig(axis) && !isPointScaleConfig(axis)
             ? getAxisExtrema(
@@ -111,7 +109,6 @@ export const selectorChartYAxisAutoSizeResults = createSelectorMemoized(
   selectorChartSeriesProcessed,
   selectorChartSeriesConfig,
   function selectorChartYAxisAutoSizeResults(yAxes, isHydrated, formattedSeries, seriesConfig) {
-    // Early return if no axes have auto-sizing - avoid expensive computations
     const hasAutoAxis = yAxes?.some((axis) => axis.width === 'auto');
     if (!hasAutoAxis || !isHydrated) {
       return EMPTY_RESULTS;
@@ -122,7 +119,6 @@ export const selectorChartYAxisAutoSizeResults = createSelectorMemoized(
     for (let axisIndex = 0; axisIndex < (yAxes?.length ?? 0); axisIndex += 1) {
       const axis = yAxes![axisIndex];
       if (axis.width === 'auto') {
-        // Compute data extrema for continuous scales to get accurate label measurements
         const extrema =
           !isBandScaleConfig(axis) && !isPointScaleConfig(axis)
             ? getAxisExtrema(
