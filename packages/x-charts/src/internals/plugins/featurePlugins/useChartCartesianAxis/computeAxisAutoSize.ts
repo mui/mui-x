@@ -39,6 +39,11 @@ function getGroupLabels(data: readonly any[], group: AxisGroup): string[] {
 interface ComputeAxisAutoSizeOptions {
   axis: DefaultedXAxis | DefaultedYAxis;
   direction: 'x' | 'y';
+  /**
+   * The actual data extrema [min, max] for continuous scales.
+   * When provided, these are used instead of the axis min/max props to estimate tick labels.
+   */
+  extrema?: [number, number];
 }
 
 /**
@@ -124,7 +129,10 @@ function selectWidestCandidates(labels: string[]): string[] {
  * For ordinal scales (band/point), use axis.data.
  * For continuous scales, generate estimated tick values from axis min/max configuration.
  */
-function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis): string[] {
+function getTickLabels(
+  axis: DefaultedXAxis | DefaultedYAxis,
+  extrema?: [number, number],
+): string[] {
   const { valueFormatter, scaleType, data, min, max } = axis as DefaultedXAxis &
     DefaultedYAxis & { min?: number; max?: number };
 
@@ -151,10 +159,9 @@ function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis): string[] {
   }
 
   // For continuous scales, we measure the min and max values to estimate axis size.
-  // We use axis min/max configuration or defaults. This avoids depending on series data
-  // which would cause performance issues. The estimation is sufficient for auto-sizing.
-  const minVal = min ?? 0;
-  const maxVal = max ?? 100;
+  // Use axis min/max props first, then data extrema, then defaults.
+  const minVal = min ?? (extrema && Number.isFinite(extrema[0]) ? extrema[0] : 0);
+  const maxVal = max ?? (extrema && Number.isFinite(extrema[1]) ? extrema[1] : 100);
 
   // Measure both min and max values to find the widest label
   const valuesToMeasure = minVal === maxVal ? [minVal] : [minVal, maxVal];
@@ -349,7 +356,7 @@ function computeGroupedAxisAutoSize(
 export function computeAxisAutoSize(
   options: ComputeAxisAutoSizeOptions,
 ): AxisAutoSizeResult | undefined {
-  const { axis, direction } = options;
+  const { axis, direction, extrema } = options;
 
   // Handle grouped axes separately
   if (hasGroups(axis)) {
@@ -362,7 +369,7 @@ export function computeAxisAutoSize(
   const angle = tickLabelStyle?.angle;
 
   // Get tick labels
-  const labels = getTickLabels(axis);
+  const labels = getTickLabels(axis, extrema);
 
   if (labels.length === 0) {
     return AXIS_AUTO_SIZE_MIN;
