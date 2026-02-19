@@ -309,7 +309,6 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-
       await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',

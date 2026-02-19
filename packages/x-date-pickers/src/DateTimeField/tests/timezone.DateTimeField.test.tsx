@@ -16,7 +16,10 @@ describe('<DateTimeField /> - Timezone', () => {
     describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       const format = `${adapter.formats.keyboardDate} ${adapter.formats.hours24h}`;
 
-      const fillEmptyValue = async (v7Response: ReturnType<typeof renderWithProps>, timezone: string) => {
+      const fillEmptyValue = async (
+        v7Response: ReturnType<typeof renderWithProps>,
+        timezone: string,
+      ) => {
         await v7Response.selectSection('month');
 
         // Set month

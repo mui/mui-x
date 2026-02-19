@@ -42,18 +42,18 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
       const startSectionsContainer = getFieldSectionsContainer(0);
       const expectedStartValueStr = expectedValues[0]
         ? adapterToUse.format(
-          expectedValues[0],
-          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-        )
+            expectedValues[0],
+            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+          )
         : expectedPlaceholder;
       expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
 
       const endSectionsContainer = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
         ? adapterToUse.format(
-          expectedValues[1],
-          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-        )
+            expectedValues[1],
+            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+          )
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },

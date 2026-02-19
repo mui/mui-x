@@ -262,11 +262,11 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           ...(isPickerSingleInput(params)
             ? { label: 'test relationship' }
             : {
-              localeText: {
-                start: 'test',
-                end: 'relationship',
-              },
-            }),
+                localeText: {
+                  start: 'test',
+                  end: 'relationship',
+                },
+              }),
         });
 
         expect(screen.getByRole('dialog', { name: 'test relationship' })).not.to.equal(null);

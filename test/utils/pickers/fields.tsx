@@ -157,10 +157,7 @@ export const buildFieldInteractions = <P extends {}>({
         `.${pickersSectionListClasses.section}[data-sectionindex="${sectionIndex}"] .${pickersSectionListClasses.sectionContent}`,
       )!;
 
-    const selectSection: FieldSectionSelectorAsync = async (
-      selectedSection,
-      index = 'first',
-    ) => {
+    const selectSection: FieldSectionSelectorAsync = async (selectedSection, index = 'first') => {
       let sectionIndexToSelect: number;
       if (selectedSection === undefined) {
         sectionIndexToSelect = 0;

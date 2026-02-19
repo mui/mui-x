@@ -316,7 +316,8 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '12th' },
           { value: '2', expected: '2nd' },
         ],
-      }));
+      }),
+    );
 
     it('should respect leading zeros when shouldRespectLeadingZeros = true', () =>
       testFieldChange({
