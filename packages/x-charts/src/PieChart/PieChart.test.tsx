@@ -1,7 +1,6 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/describeConformance';
 import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
-import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
 
 describe('<PieChart />', () => {
@@ -77,11 +76,10 @@ describe('<PieChart />', () => {
     expect(screen.queryByRole('tooltip')).to.equal(null);
   });
 
-  it.skipIf(isJSDOM)('should show focus indicator when navigating with keyboard', async () => {
+  it('should show focus indicator when navigating with keyboard', async () => {
     const { container, user } = render(
       <PieChart
         enableKeyboardNavigation
-        data-testid="chart-keyboard-navigation"
         height={100}
         width={100}
         series={[
