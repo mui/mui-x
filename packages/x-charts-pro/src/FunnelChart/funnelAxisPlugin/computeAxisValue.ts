@@ -167,7 +167,7 @@ export function computeAxisValue({
           (axis.colorMap.type === 'ordinal'
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
-      } as ComputedAxisConfig<ChartsAxisProps>[typeof axis.id];
+      } as ComputedAxisConfig<ChartsAxisProps>[string];
 
       if (isDateData(axis.data)) {
         const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
@@ -236,7 +236,7 @@ export function computeAxisValue({
         scale: finalScale.domain(domain) as any,
         tickNumber,
         colorScale: axis.colorMap && getColorScale(axis.colorMap),
-      } as ComputedAxisConfig<ChartsAxisProps>[typeof axis.id];
+      } as ComputedAxisConfig<ChartsAxisProps>[string];
     }
   });
   return {

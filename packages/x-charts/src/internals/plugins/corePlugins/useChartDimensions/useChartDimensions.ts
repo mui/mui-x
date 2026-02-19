@@ -95,7 +95,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   React.useEffect(() => {
     // Ensure the error detection occurs after the first rendering.
     stateRef.current.displayError = true;
-  }, [store]);
+  }, []);
 
   // This effect is used to compute the size of the container on the initial render.
   // It is not bound to the raf loop to avoid an unwanted "resize" event.
