@@ -71,6 +71,13 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "sort": {
+      "type": {
+        "name": "enum",
+        "description": "'none'<br>&#124;&nbsp;'asc'<br>&#124;&nbsp;'desc'"
+      },
+      "default": "'none'"
+    },
     "sx": {
       "type": {
         "name": "union",

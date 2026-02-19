@@ -1,10 +1,5 @@
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
-import {
-  type AxisId,
-  type AxisItemIdentifier,
-  type ChartsAxisProps,
-} from '../../../../models/axis';
+import { createSelector } from '@mui/x-internals/store';
+import { type AxisId, type ChartsAxisProps } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
@@ -129,67 +124,4 @@ export const selectorChartsInteractionYAxisValue = createSelector(
     }
     return valueGetter(y, yAxes, yIndex, id);
   },
-);
-
-const EMPTY_ARRAY: AxisItemIdentifier[] = [];
-
-/**
- * Get x-axis ids and corresponding data index that should be display in the tooltip.
- */
-export const selectorChartsInteractionTooltipXAxes = createSelectorMemoizedWithOptions({
-  memoizeOptions: {
-    // Keep the same reference if array content is the same.
-    // If possible, avoid this pattern by creating selectors that
-    // uses string/number as arguments.
-    resultEqualityCheck: isDeepEqual,
-  },
-})(selectorChartsInteractionPointerX, selectorChartXAxis, (value, axes) => {
-  if (value === null) {
-    return EMPTY_ARRAY;
-  }
-
-  return axes.axisIds
-    .filter((id) => axes.axis[id].triggerTooltip)
-    .map(
-      (axisId): AxisItemIdentifier => ({
-        axisId,
-        dataIndex: getAxisIndex(axes.axis[axisId], value),
-      }),
-    )
-    .filter(({ dataIndex }) => dataIndex >= 0);
-});
-
-/**
- * Get y-axis ids and corresponding data index that should be display in the tooltip.
- */
-export const selectorChartsInteractionTooltipYAxes = createSelectorMemoizedWithOptions({
-  memoizeOptions: {
-    // Keep the same reference if array content is the same.
-    // If possible, avoid this pattern by creating selectors that
-    // uses string/number as arguments.
-    resultEqualityCheck: isDeepEqual,
-  },
-})(selectorChartsInteractionPointerY, selectorChartYAxis, (value, axes) => {
-  if (value === null) {
-    return EMPTY_ARRAY;
-  }
-
-  return axes.axisIds
-    .filter((id) => axes.axis[id].triggerTooltip)
-    .map(
-      (axisId): AxisItemIdentifier => ({
-        axisId,
-        dataIndex: getAxisIndex(axes.axis[axisId], value),
-      }),
-    )
-    .filter(({ dataIndex }) => dataIndex >= 0);
-});
-
-/**
- * Return `true` if the axis tooltip has something to display.
- */
-export const selectorChartsInteractionAxisTooltip = createSelector(
-  selectorChartsInteractionTooltipXAxes,
-  selectorChartsInteractionTooltipYAxes,
-  (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );
