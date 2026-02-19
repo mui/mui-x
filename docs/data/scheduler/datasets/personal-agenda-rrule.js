@@ -1,4 +1,4 @@
-// Personal Agenda Events Dataset
+// Personal Agenda Recurring Events Dataset
 
 export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
