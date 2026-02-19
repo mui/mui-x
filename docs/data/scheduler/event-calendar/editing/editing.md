@@ -15,6 +15,38 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
+## Event creation
+
+Use the `eventCreation` prop to customize how newly created events are defined:
+
+### Disable event creation
+
+Pass `eventCreation={false}` to disable the event creation:
+
+```tsx
+<EventCalendar eventCreation={false} />
+```
+
+### Custom default duration
+
+Pass a custom value to `eventCreation.duration` to change the default duration of newly created event:
+
+```tsx
+<EventCalendar eventCreation={{ duration: 60 }} />
+```
+
+{{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Create event on click
+
+Set `eventCreation.interaction` to `"click"` to open the creation form when clicking a cell instead of double-clicking:
+
+```tsx
+<EventCalendar eventCreation={{ interaction: 'click' }} />
+```
+
+{{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Read-only
 
 Use the `readOnly` prop to disable all editing interactions (event creation, drag and drop, resizing, and popover editing):
@@ -25,9 +57,9 @@ Use the `readOnly` prop to disable all editing interactions (event creation, dra
 
 {{"demo": "ReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Only enable on some events
+### Only set on some events
 
-### Per event
+#### Per event
 
 Use the `readOnly` property on the event model to mark an event as read-only:
 
@@ -38,7 +70,7 @@ const event = {
 };
 ```
 
-### Per resource
+#### Per resource
 
 Use the `areEventsReadOnly` property on the resource model to mark all events of a resource as read-only:
 
@@ -49,7 +81,7 @@ const resource = {
 };
 ```
 
-### Priority order
+#### Priority order
 
 The priority order for determining if an event is read-only is:
 
@@ -101,35 +133,3 @@ function App() {
   return <EventCalendar resources={resources} events={events} />;
 }
 ```
-
-## Event creation
-
-Use the `eventCreation` prop to customize how newly created events are defined:
-
-### Disable event creation
-
-Pass `eventCreation={false}` to disable the event creation:
-
-```tsx
-<EventCalendar eventCreation={false} />
-```
-
-### Custom default duration
-
-Pass a custom value to `eventCreation.duration` to change the default duration of newly created event:
-
-```tsx
-<EventCalendar eventCreation={{ duration: 60 }} />
-```
-
-{{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Create event on click
-
-Set `eventCreation.interaction` to `"click"` to open the creation form when clicking a cell instead of double-clicking:
-
-```tsx
-<EventCalendar eventCreation={{ interaction: 'click' }} />
-```
-
-{{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
