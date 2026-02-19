@@ -1,7 +1,6 @@
 'use client';
 
 import useEventCallback from '@mui/utils/useEventCallback';
-import type { SeriesItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import { type ChartPlugin } from '../../models';
 import {
@@ -12,6 +11,7 @@ import {
 import { serializeIdentifier as serializeIdentifierFn } from './utils/serializeIdentifier';
 import { cleanIdentifier as cleanIdentifierFn } from './utils/cleanIdentifier';
 import type { ChartSeriesConfig } from './types';
+import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 
 export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = ({ store }) => {
   const serializeIdentifier: SerializeIdentifierFunction = useEventCallback((identifier) =>
@@ -19,7 +19,7 @@ export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = 
   );
 
   const cleanIdentifier: CleanIdentifierFunction = useEventCallback(
-    <T extends { type: ChartSeriesType }>(identifier: T): SeriesItemIdentifier<T['type']> =>
+    <T extends { type: ChartSeriesType }>(identifier: T): SeriesItemIdentifierWithType<T['type']> =>
       cleanIdentifierFn<T['type'], T>(store.state.seriesConfig.config, identifier),
   );
 

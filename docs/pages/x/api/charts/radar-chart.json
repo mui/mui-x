@@ -21,7 +21,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'radar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -42,7 +42,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'radar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -119,7 +119,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'radar' }"
       }
     },
     "width": { "type": { "name": "number" } }

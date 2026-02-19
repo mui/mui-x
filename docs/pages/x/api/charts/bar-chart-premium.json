@@ -35,7 +35,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'bar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'bar' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -55,7 +55,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'bar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'bar' }&gt;"
       }
     },
     "initialZoom": {
@@ -111,6 +111,13 @@
         "describedArgs": ["event", "itemIdentifier"]
       }
     },
+    "onTooltipAxisChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["axisItems"]
+      }
+    },
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
@@ -137,10 +144,16 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "tooltipAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
+      }
+    },
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type: 'bar' }"
+        "description": "{ dataIndex: number, seriesId: string, type?: 'bar' }"
       }
     },
     "width": { "type": { "name": "number" } },

@@ -35,7 +35,7 @@ export interface PieChartSlots
     PiePlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'item' | 'none'>,
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 
@@ -44,7 +44,7 @@ export interface PieChartSlotProps
     PiePlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'item' | 'none'>,
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
@@ -223,8 +223,8 @@ PieChart.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['pie']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']),
     }),
   ),
   /**
@@ -269,8 +269,8 @@ PieChart.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['pie']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']),
     }),
   ),
   /**
@@ -357,7 +357,7 @@ PieChart.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number.isRequired,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['pie']).isRequired,
+    type: PropTypes.oneOf(['pie']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

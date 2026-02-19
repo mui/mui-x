@@ -6,7 +6,7 @@ import { useChartContext } from '../context/ChartProvider';
 import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { SeriesItemIdentifier } from '../models/seriesType';
+import type { SeriesItemIdentifierWithType } from '../models/seriesType';
 import type { ChartInstance } from '../internals/plugins/models';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 
@@ -75,7 +75,7 @@ export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
   instance: ChartInstance<
     [UseChartInteractionSignature, UseChartHighlightSignature<SeriesType>, UseChartTooltipSignature]
   >,
-  item: SeriesItemIdentifier<SeriesType>,
+  item: SeriesItemIdentifierWithType<ChartSeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;

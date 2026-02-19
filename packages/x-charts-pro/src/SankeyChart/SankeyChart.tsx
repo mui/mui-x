@@ -222,31 +222,11 @@ SankeyChart.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      seriesId: PropTypes.string.isRequired,
-      subType: PropTypes.oneOf([
-        /**
-         * Subtype to differentiate between node and link
-         */
-        'node',
-      ]).isRequired,
-      type: PropTypes.oneOf(['sankey']).isRequired,
-    }),
-    PropTypes.shape({
-      seriesId: PropTypes.string.isRequired,
-      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      subType: PropTypes.oneOf([
-        /**
-         * Subtype to differentiate between node and link
-         */
-        'link',
-      ]).isRequired,
-      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      type: PropTypes.oneOf(['sankey']).isRequired,
-    }),
-  ]),
+  tooltipItem: PropTypes.shape({
+    seriesId: PropTypes.string.isRequired,
+    subType: PropTypes.oneOf(['link', 'node']).isRequired,
+    type: PropTypes.oneOf(['sankey']),
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

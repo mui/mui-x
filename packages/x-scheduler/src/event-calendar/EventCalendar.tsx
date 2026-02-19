@@ -8,11 +8,11 @@ import {
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import { EventCalendarProps } from './EventCalendar.types';
-import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
-import { EventCalendarClassesContext } from './EventCalendarClassesContext';
-import { EventDialogClassesContext } from '../internals/components/event-dialog/EventDialogClassesContext';
+import { EventCalendarStyledContext } from './EventCalendarStyledContext';
+import { EventDialogStyledContext } from '../internals/components/event-dialog/EventDialogStyledContext';
+import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../internals/constants/defaultLocaleText';
 import { EventCalendarRoot } from './EventCalendarRoot';
 
 export const EventCalendar = React.forwardRef(function EventCalendar<
@@ -31,20 +31,33 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const store = useEventCalendar(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { translations, apiRef, ...other } = forwardedProps;
+  const { localeText, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
+
+  const mergedLocaleText = React.useMemo(
+    () => ({ ...EVENT_CALENDAR_DEFAULT_LOCALE_TEXT, ...localeText }),
+    [localeText],
+  );
+
+  const calendarStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
+
+  const dialogStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
-      <TranslationsProvider translations={translations}>
-        <EventCalendarClassesContext.Provider value={classes}>
-          <EventDialogClassesContext.Provider value={classes}>
-            <EventDialogProvider>
-              <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-            </EventDialogProvider>
-          </EventDialogClassesContext.Provider>
-        </EventCalendarClassesContext.Provider>
-      </TranslationsProvider>
+      <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
+        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
+          <EventDialogProvider>
+            <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+          </EventDialogProvider>
+        </EventDialogStyledContext.Provider>
+      </EventCalendarStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarComponent;

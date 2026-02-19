@@ -1,5 +1,6 @@
 import * as React from 'react';
 import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
+import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -8,25 +9,40 @@ import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/mo
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
+  schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import EventDialogHeader from './EventDialogHeader';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
-import { useEventDialogClasses } from './EventDialogClassesContext';
+
+const ReadonlyContentDragContainer = styled('section', {
+  name: 'MuiEventDialog',
+  slot: 'ReadonlyContentDragContainer',
+})({
+  cursor: 'move',
+});
 
 const ReadonlyContentRoot = styled('div', {
   name: 'MuiEventDialog',
   slot: 'ReadonlyContent',
 })(({ theme }) => ({
-  padding: theme.spacing(3),
   display: 'flex',
+  padding: theme.spacing(0, 3),
   flexDirection: 'column',
   gap: theme.spacing(2),
+}));
+
+const RecurrenceLabelContainer = styled('div', {
+  name: 'MuiEventDialog',
+  slot: 'RecurrenceLabelContainer',
+})(({ theme }) => ({
+  display: 'flex',
+  gap: theme.spacing(1),
 }));
 
 const EventDialogActions = styled('div', {
@@ -35,7 +51,7 @@ const EventDialogActions = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
-  padding: theme.spacing(2),
+  padding: theme.spacing(3),
 }));
 
 const EventDialogDateTimeContainer = styled('div', {
@@ -47,15 +63,13 @@ const EventDialogDateTimeContainer = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const EventDialogTitle = styled('p', {
+const EventDialogTitle = styled(Typography, {
   name: 'MuiEventDialog',
   slot: 'Title',
-})(({ theme }) => ({
+})({
   margin: 0,
-  fontSize: theme.typography.body1.fontSize,
-  fontWeight: theme.typography.fontWeightMedium,
   color: 'var(--event-on-surface-subtle-primary)',
-}));
+});
 
 const EventDialogResourceContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -72,22 +86,23 @@ const EventDialogResourceLegendContainer = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.5),
+  gap: theme.spacing(1),
 }));
 
 const ResourceLegendColorDot = styled('span', {
   name: 'MuiEventDialog',
   slot: 'ResourceLegendColor',
 })<{ palette?: PaletteName }>(({ theme }) => ({
-  width: 8,
-  height: 8,
-  borderRadius: '50%',
+  width: 14,
+  height: 14,
+  margin: theme.spacing(0, 0.2),
+  borderRadius: 2,
   flexShrink: 0,
   backgroundColor: 'var(--event-main)',
   variants: getPaletteVariants(theme),
 }));
 
-const EventDialogResourceTitle = styled('p', {
+const EventDialogResourceTitle = styled(Typography, {
   name: 'MuiEventDialog',
   slot: 'ResourceTitle',
 })(({ theme }) => ({
@@ -110,9 +125,8 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   // Context hooks
   const adapter = useAdapter();
-  const translations = useTranslations();
+  const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
-  const classes = useEventDialogClasses();
 
   // Selector hooks
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
@@ -127,6 +141,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     occurrence.displayTimezone.rrule,
     occurrence.displayTimezone.start,
   );
+  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   // Feature hook
   const formatTime = useFormatTime();
@@ -134,16 +149,21 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     adapter,
     occurrence.displayTimezone.start,
     defaultRecurrenceKey,
-    translations,
+    localeText,
   );
 
   return (
-    <React.Fragment>
-      <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
-        <EventDialogTitle id="event-dialog-title" className={classes.eventDialogTitle}>
+    <ReadonlyContentDragContainer ref={dragHandlerRef}>
+      <EventDialogHeader onClose={onClose}>
+        <EventDialogTitle
+          variant="h6"
+          id="draggable-dialog-title"
+          className={classes.eventDialogTitle}
+        >
           {occurrence.title}
         </EventDialogTitle>
-
+      </EventDialogHeader>
+      <ReadonlyContentRoot className={classes.eventDialogReadonlyContent}>
         <EventDialogResourceContainer className={classes.eventDialogResourceContainer}>
           <EventDialogResourceLegendContainer
             className={classes.eventDialogResourceLegendContainer}
@@ -161,11 +181,9 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             />
           </EventDialogResourceLegendContainer>
           <EventDialogResourceTitle className={classes.eventDialogResourceTitle}>
-            {resource?.title || translations.noResourceAriaLabel}
+            {resource?.title || localeText.noResourceAriaLabel}
           </EventDialogResourceTitle>
         </EventDialogResourceContainer>
-      </EventDialogHeader>
-      <ReadonlyContentRoot className={classes.eventDialogReadonlyContent}>
         <EventDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
           <CalendarMonthRounded fontSize="small" />
           <Typography variant="body2" component="p" noWrap>
@@ -184,7 +202,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
               </span>
             </time>
             {occurrence.allDay ? (
-              <span> {translations.allDayLabel}</span>
+              <span> {localeText.allDayLabel}</span>
             ) : (
               <time>
                 <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
@@ -193,18 +211,23 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             )}
           </Typography>
         </EventDialogDateTimeContainer>
-        <Typography variant="body2" color="text.secondary">
-          {recurrenceLabel}
-        </Typography>
+        {showRecurrence && (
+          <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
+            <RepeatRoundedIcon fontSize="small" />
+            <Typography variant="body2" color="text.secondary" component="em">
+              {recurrenceLabel}
+            </Typography>
+          </RecurrenceLabelContainer>
+        )}
         {hasProp(occurrence, 'description') && !!occurrence.description ? (
           <Typography variant="body2">{occurrence.description}</Typography>
         ) : null}
       </ReadonlyContentRoot>
       <EventDialogActions className={classes.eventDialogActions}>
         <Button variant="contained" type="button" onClick={onClose}>
-          {translations.closeButtonLabel}
+          {localeText.closeButtonLabel}
         </Button>
       </EventDialogActions>
-    </React.Fragment>
+    </ReadonlyContentDragContainer>
   );
 }

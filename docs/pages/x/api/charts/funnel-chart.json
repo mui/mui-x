@@ -31,7 +31,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'funnel' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'funnel' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" }, "default": "false" },
@@ -45,7 +45,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'funnel' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'funnel' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -101,7 +101,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type: 'funnel' }"
+        "description": "{ dataIndex: number, seriesId: string, type?: 'funnel' }"
       }
     },
     "width": { "type": { "name": "number" } }

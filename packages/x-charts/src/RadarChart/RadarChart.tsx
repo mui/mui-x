@@ -181,8 +181,8 @@ RadarChart.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['radar']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']),
     }),
   ),
   /**
@@ -232,8 +232,8 @@ RadarChart.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['radar']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']),
     }),
   ),
   /**
@@ -366,7 +366,7 @@ RadarChart.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['radar']).isRequired,
+    type: PropTypes.oneOf(['radar']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -27,22 +26,10 @@ import {
   schedulerEventSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
-import { useEventDialogClasses } from './EventDialogClassesContext';
-
-const RecurrenceTabContent = styled('div', {
-  name: 'MuiEventDialog',
-  slot: 'RecurrenceTabContent',
-})(({ theme }) => ({
-  padding: theme.spacing(3),
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(2.5),
-  height: 450,
-  overflow: 'auto',
-}));
+import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
 interface RecurrenceTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -56,9 +43,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   // Context hooks
   const adapter = useAdapter();
-  const translations = useTranslations();
+  const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
-  const classes = useEventDialogClasses();
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
@@ -224,22 +210,22 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     label: string;
     value: RecurringEventPresetKey | null | 'custom';
   }[] = [
-    { label: `${translations.recurrenceNoRepeat}`, value: null },
-    { label: `${translations.recurrenceDailyPresetLabel}`, value: 'DAILY' },
+    { label: `${localeText.recurrenceNoRepeat}`, value: null },
+    { label: `${localeText.recurrenceDailyPresetLabel}`, value: 'DAILY' },
     {
-      label: `${translations.recurrenceWeeklyPresetLabel(weekday)}`,
+      label: `${localeText.recurrenceWeeklyPresetLabel(weekday)}`,
       value: 'WEEKLY',
     },
     {
-      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.displayTimezone.start.value))}`,
+      label: `${localeText.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.displayTimezone.start.value))}`,
       value: 'MONTHLY',
     },
     {
-      label: `${translations.recurrenceYearlyPresetLabel(dateForYearlyOption)}`,
+      label: `${localeText.recurrenceYearlyPresetLabel(dateForYearlyOption)}`,
       value: 'YEARLY',
     },
     {
-      label: `${translations.recurrenceCustomRepeat}`,
+      label: `${localeText.recurrenceCustomRepeat}`,
       value: 'custom',
     },
   ];
@@ -248,17 +234,17 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     label: string;
     value: RecurringEventFrequency;
   }[] = [
-    { label: `${translations.recurrenceDailyFrequencyLabel}`, value: 'DAILY' },
+    { label: `${localeText.recurrenceDailyFrequencyLabel}`, value: 'DAILY' },
     {
-      label: `${translations.recurrenceWeeklyFrequencyLabel}`,
+      label: `${localeText.recurrenceWeeklyFrequencyLabel}`,
       value: 'WEEKLY',
     },
     {
-      label: `${translations.recurrenceMonthlyFrequencyLabel}`,
+      label: `${localeText.recurrenceMonthlyFrequencyLabel}`,
       value: 'MONTHLY',
     },
     {
-      label: `${translations.recurrenceYearlyFrequencyLabel}`,
+      label: `${localeText.recurrenceYearlyFrequencyLabel}`,
       value: 'YEARLY',
     },
   ];
@@ -275,15 +261,15 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const monthlyItems = React.useMemo(() => {
     const ordinal = monthlyRef.ord;
-    const dayOfMonthLabel = translations.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
+    const dayOfMonthLabel = localeText.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
     const isLast = ordinal === -1;
     const weekdayShort = adapter.formatByString(monthlyRef.date, 'ccc');
     const weekAriaLabel = isLast
-      ? translations.recurrenceMonthlyLastWeekAriaLabel(weekday)
-      : translations.recurrenceMonthlyWeekNumberAriaLabel?.(ordinal, weekday);
+      ? localeText.recurrenceMonthlyLastWeekAriaLabel(weekday)
+      : localeText.recurrenceMonthlyWeekNumberAriaLabel?.(ordinal, weekday);
     const weekLabel = isLast
-      ? translations.recurrenceMonthlyLastWeekLabel(weekdayShort)
-      : translations.recurrenceMonthlyWeekNumberLabel?.(ordinal, weekdayShort);
+      ? localeText.recurrenceMonthlyLastWeekLabel(weekdayShort)
+      : localeText.recurrenceMonthlyWeekNumberLabel?.(ordinal, weekdayShort);
 
     return [
       {
@@ -297,28 +283,29 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         label: weekLabel,
       },
     ];
-  }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, translations, weekday]);
+  }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, localeText, weekday]);
 
   const monthlyMode: 'byMonthDay' | 'byDay' = controlled.rruleDraft.byDay?.length
     ? 'byDay'
     : 'byMonthDay';
 
   return (
-    <Box
+    <EventDialogTabPanel
       role="tabpanel"
       id="recurrence-tabpanel"
       aria-labelledby="recurrence-tab"
+      className={classes.eventDialogTabPanel}
       hidden={tabValue !== 'recurrence'}
     >
-      <RecurrenceTabContent className={classes.eventDialogRecurrenceTabContent}>
+      <EventDialogTabContent className={classes.eventDialogTabContent}>
         <FormControl fullWidth size="small">
           <InputLabel id="recurrence-preset-label">
-            {translations.recurrenceMainSelectCustomLabel}
+            {localeText.recurrenceMainSelectCustomLabel}
           </InputLabel>
           <Select
             labelId="recurrence-preset-label"
             name="recurrencePreset"
-            label={translations.recurrenceMainSelectCustomLabel}
+            label={localeText.recurrenceMainSelectCustomLabel}
             value={controlled.recurrenceSelection ?? ''}
             onChange={(event) =>
               handleRecurrenceSelectionChange(
@@ -326,7 +313,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               )
             }
             readOnly={isPropertyReadOnly('rrule')}
-            aria-label={translations.recurrenceLabel}
+            aria-label={localeText.recurrenceLabel}
           >
             {recurrenceOptions.map(({ label, value: optionValue }) => (
               <MenuItem key={label} value={optionValue ?? ''}>
@@ -337,9 +324,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         </FormControl>
 
         <FormControl component="fieldset" disabled={customDisabled}>
-          <FormLabel component="legend">{translations.recurrenceRepeatLabel}</FormLabel>
+          <FormLabel component="legend">{localeText.recurrenceRepeatLabel}</FormLabel>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
-            {translations.recurrenceEveryLabel}
+            {localeText.recurrenceEveryLabel}
             <TextField
               type="number"
               slotProps={{ htmlInput: { min: 1 } }}
@@ -369,11 +356,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
         {controlled.recurrenceSelection === 'custom' && controlled.rruleDraft.freq === 'WEEKLY' && (
           <FormControl component="fieldset">
-            <FormLabel>{translations.recurrenceWeeklyMonthlySpecificInputsLabel}</FormLabel>
+            <FormLabel>{localeText.recurrenceWeeklyMonthlySpecificInputsLabel}</FormLabel>
             <ToggleButtonGroup
               value={controlled.rruleDraft.byDay}
               onChange={(_, newValue) => handleChangeWeeklyDays(newValue)}
-              aria-label={translations.recurrenceWeeklyMonthlySpecificInputsLabel}
+              aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
             >
               {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
                 <ToggleButton key={dayValue} aria-label={ariaLabel} value={dayValue}>
@@ -386,7 +373,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         {controlled.recurrenceSelection === 'custom' &&
           controlled.rruleDraft.freq === 'MONTHLY' && (
             <FormControl component="fieldset">
-              <FormLabel>{translations.recurrenceWeeklyMonthlySpecificInputsLabel}</FormLabel>
+              <FormLabel>{localeText.recurrenceWeeklyMonthlySpecificInputsLabel}</FormLabel>
               <ToggleButtonGroup
                 value={monthlyMode}
                 exclusive
@@ -395,7 +382,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                     handleChangeMonthlyGroup([newValue]);
                   }
                 }}
-                aria-label={translations.recurrenceWeeklyMonthlySpecificInputsLabel}
+                aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
               >
                 {monthlyItems.map(({ value: monthlyValue, ariaLabel, label }) => (
                   <ToggleButton key={monthlyValue} aria-label={ariaLabel} value={monthlyValue}>
@@ -407,7 +394,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           )}
 
         <FormControl component="fieldset" disabled={customDisabled}>
-          <FormLabel component="legend">{translations.recurrenceEndsLabel}</FormLabel>
+          <FormLabel component="legend">{localeText.recurrenceEndsLabel}</FormLabel>
           <RadioGroup
             value={customEndsValue}
             onChange={(event) => handleEndsChange(event.target.value as EndsSelection)}
@@ -415,13 +402,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
             <FormControlLabel
               value="never"
               control={<Radio disabled={customDisabled} />}
-              label={translations.recurrenceEndsNeverLabel}
+              label={localeText.recurrenceEndsNeverLabel}
             />
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <FormControlLabel
                 value="after"
                 control={<Radio disabled={customDisabled} />}
-                label={translations.recurrenceEndsAfterLabel}
+                label={localeText.recurrenceEndsAfterLabel}
               />
               <TextField
                 type="number"
@@ -432,13 +419,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 size="small"
                 sx={{ width: 80 }}
               />
-              {translations.recurrenceEndsTimesLabel}
+              {localeText.recurrenceEndsTimesLabel}
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <FormControlLabel
                 value="until"
                 control={<Radio disabled={customDisabled} />}
-                label={translations.recurrenceEndsUntilLabel}
+                label={localeText.recurrenceEndsUntilLabel}
               />
               <TextField
                 type="date"
@@ -456,7 +443,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
             </Box>
           </RadioGroup>
         </FormControl>
-      </RecurrenceTabContent>
-    </Box>
+      </EventDialogTabContent>
+    </EventDialogTabPanel>
   );
 }
