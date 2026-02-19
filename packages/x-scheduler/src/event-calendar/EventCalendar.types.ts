@@ -1,3 +1,5 @@
+import { SxProps } from '@mui/system/styleFunctionSx';
+import { Theme } from '@mui/material/styles';
 import {
   EventCalendarParameters,
   EventCalendarStore,
@@ -28,4 +30,8 @@ export interface EventCalendarProps<TEvent extends object, TResource extends obj
    * Can be instantiated with `useEventCalendarApiRef()`.
    */
   apiRef?: EventCalendarApiRef;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
 }
