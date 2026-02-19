@@ -174,7 +174,7 @@
   { "name": "ChartsTooltipSlots", "kind": "Interface" },
   { "name": "ChartsTooltipTable", "kind": "Variable" },
   { "name": "ChartsTypeFeatureFlags", "kind": "Interface" },
-  { "name": "ChartsWrapper", "kind": "Function" },
+  { "name": "ChartsWrapper", "kind": "Variable" },
   { "name": "ChartsWrapperProps", "kind": "Interface" },
   { "name": "ChartsXAxis", "kind": "Function" },
   { "name": "ChartsXAxisProps", "kind": "Interface" },
