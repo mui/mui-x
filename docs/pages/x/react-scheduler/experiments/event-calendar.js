@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { DatasetSwitcher } from '../../../../src/modules/components/DatasetSwitcher';
+import { ExperimentLayout } from '../../../../src/modules/components/ExperimentLayout';
 import {
   initialEvents as personalAgendaEvents,
   defaultVisibleDate as personalAgendaDate,
@@ -68,13 +69,13 @@ export default function EventCalendarExperiment() {
   const [datasetIndex, setDatasetIndex] = React.useState(0);
 
   return (
-    <div style={{ display: 'flex', padding: 12, height: '100vh' }}>
+    <ExperimentLayout>
       <SchedulerContent key={datasetIndex} dataset={datasets[datasetIndex]} />
       <DatasetSwitcher
         datasets={datasets}
         selectedIndex={datasetIndex}
         onSelectDataset={setDatasetIndex}
       />
-    </div>
+    </ExperimentLayout>
   );
 }

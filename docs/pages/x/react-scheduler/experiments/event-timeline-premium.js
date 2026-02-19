@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { DatasetSwitcher } from '../../../../src/modules/components/DatasetSwitcher';
+import { ExperimentLayout } from '../../../../src/modules/components/ExperimentLayout';
 import {
   initialEvents as companyRoadmapEvents,
   defaultVisibleDate as companyRoadmapDate,
@@ -79,13 +80,13 @@ export default function EventTimelinePremiumExperiment() {
   const [datasetIndex, setDatasetIndex] = React.useState(0);
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
+    <ExperimentLayout>
       <SchedulerContent key={datasetIndex} dataset={datasets[datasetIndex]} />
       <DatasetSwitcher
         datasets={datasets}
         selectedIndex={datasetIndex}
         onSelectDataset={setDatasetIndex}
       />
-    </div>
+    </ExperimentLayout>
   );
 }

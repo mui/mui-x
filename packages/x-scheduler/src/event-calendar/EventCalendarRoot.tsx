@@ -35,11 +35,14 @@ const EventCalendarRootStyled = styled('div', {
   // CSS variable tokens
   ...schedulerTokens,
   // Layout
+  boxSizing: 'border-box',
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
   height: '100%',
+  minHeight: 0,
+  overflow: 'hidden',
   fontFamily: theme.typography.fontFamily,
 }));
 
