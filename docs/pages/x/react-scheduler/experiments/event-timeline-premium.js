@@ -87,9 +87,7 @@ function SchedulerContent({ dataset }) {
         </IconButton>
         <Button
           variant="outlined"
-          onClick={(event) =>
-            apiRef.current?.setVisibleDate({ visibleDate: new Date(), event })
-          }
+          onClick={(event) => apiRef.current?.setVisibleDate({ visibleDate: new Date(), event })}
         >
           Today
         </Button>
