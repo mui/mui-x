@@ -122,7 +122,7 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
                 command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs 2>/tmp/playwright-server.log" "pnpm test:unit:browser"
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
@@ -133,20 +133,9 @@ jobs:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs 2>/tmp/playwright-server.log" "pnpm test:unit:browser --coverage"
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser --coverage"
             - code-infra/upload-coverage:
                 key: << parameters.react-version >>-browser
-      - run:
-          name: Truncate Playwright server log
-          when: always
-          command: |
-            if [ -f /tmp/playwright-server.log ]; then
-              tail -c 10M /tmp/playwright-server.log > /tmp/playwright-server-trimmed.log
-              mv /tmp/playwright-server-trimmed.log /tmp/playwright-server.log
-            fi
-      - store_artifacts:
-          path: /tmp/playwright-server.log
-          destination: playwright-server.log
       - store_test_results:
           path: test-results
   test_lint:

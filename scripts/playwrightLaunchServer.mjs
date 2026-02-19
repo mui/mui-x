@@ -14,7 +14,6 @@ import { chromium } from '@playwright/test';
     wsPath: process.env.WS_PATH || 'mui-browser',
     // Some grid layout tests require scrollbars to be visible
     ignoreDefaultArgs: ['--hide-scrollbars'],
-    args: ['--enable-logging=stderr', '--v=1'],
   });
   browserServer.process().stderr.pipe(process.stderr);
   // eslint-disable-next-line no-console
