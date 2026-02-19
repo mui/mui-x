@@ -14,7 +14,12 @@ import {
 } from '../../../models';
 import { processEvent } from '../../../process-event';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
-import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
+import {
+  SchedulerInstanceName,
+  SchedulerParameters,
+  SchedulerPlan,
+  SchedulerState,
+} from './SchedulerStore.types';
 import { dateToEventString } from '../date-utils';
 
 /**
@@ -262,6 +267,18 @@ type AnyEventSetter<TEvent extends object> = (
   event: TEvent | Partial<TEvent>,
   value: any,
 ) => TEvent;
+
+const PREMIUM_INSTANCE_NAMES: Set<SchedulerInstanceName> = new Set([
+  'EventCalendarPremiumStore',
+  'EventTimelinePremiumStore',
+]);
+
+/**
+ * Returns the plan of the scheduler instance based on its instance name.
+ */
+export function getSchedulerPlan(instanceName: SchedulerInstanceName): SchedulerPlan {
+  return PREMIUM_INSTANCE_NAMES.has(instanceName) ? 'premium' : 'community';
+}
 
 export function buildEventsState<TEvent extends object, TResource extends object>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
