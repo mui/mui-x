@@ -122,7 +122,7 @@ Check the [server-side data recipes](/x/react-data-grid/server-side-data/recipes
 
 ## Dynamic data and cache revalidation
 
-When users scroll back to an already fetched range, the Data Grid performs a revalidation for that range. It checks the cache, if the cache entry is outdated (or the cache is disabled), it refetches the data from the server, diffs against current rows, and updates only if the subset is _actually changed_ minimizing the actual row replacements in the Data Grid.
+When users scroll back to an already fetched range, the Data Grid performs a revalidation for that range. It checks the cache entry, and if it is outdated (or the cache is disabled), it refetches the data from the server, diffs against current rows, and updates only if the subset is _actually changed_ minimizing the actual row replacements in the Data Grid.
 
 For highly dynamic use cases, where the revalidation is required for the current viewport too, you can add polling with `dataSourceRevalidateMs` to trigger revalidation based on the `setInterval()` timer every "X" milliseconds.
 This is useful for dashboards such as stock tickers, where values can change every few seconds.
