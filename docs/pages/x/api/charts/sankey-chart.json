@@ -61,8 +61,8 @@
     },
     "tooltipItem": {
       "type": {
-        "name": "union",
-        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }"
+        "name": "shape",
+        "description": "{ seriesId: string, subType: 'link'<br>&#124;&nbsp;'node', type?: 'sankey' }"
       }
     },
     "width": { "type": { "name": "number" } }
