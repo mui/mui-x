@@ -138,7 +138,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnMenuManageColumns: 'Spravovat sloupce',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Skrýt',
-  columnMenuUnsort: 'Zrušit filtry',
+  columnMenuUnsort: 'Zrušit řazení',
   columnMenuSortAsc: 'Seřadit vzestupně',
   columnMenuSortDesc: 'Seřadit sestupně',
   // columnMenuManagePivot: 'Manage pivot',
@@ -155,7 +155,7 @@ const csCZGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Zobrazit filtry',
-  columnHeaderSortIconLabel: 'Filtrovat',
+  columnHeaderSortIconLabel: 'Řadit',
 
   // Rows selected footer text
   footerRowSelected: (count) => {
