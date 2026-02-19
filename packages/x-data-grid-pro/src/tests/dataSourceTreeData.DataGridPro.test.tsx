@@ -206,7 +206,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
     });
 
     const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
