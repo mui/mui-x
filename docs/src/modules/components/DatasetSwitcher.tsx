@@ -4,12 +4,13 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 export interface DatasetDefinition {
   label: string;
-  initialEvents: any[];
+  initialEvents: SchedulerEvent[];
   defaultVisibleDate: Date;
-  resources: any[];
+  resources: SchedulerResource[];
 }
 
 export interface DatasetSwitcherProps {
