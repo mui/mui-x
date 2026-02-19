@@ -90,7 +90,6 @@ const EventTimelinePremiumRoot = styled('div', {
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  padding: theme.spacing(2),
   gap: theme.spacing(2),
   height: '100%',
   minHeight: 0,
