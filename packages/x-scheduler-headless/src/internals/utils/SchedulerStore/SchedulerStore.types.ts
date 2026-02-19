@@ -18,7 +18,15 @@ import {
 } from '../../../models';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 
+export type SchedulerPlan = 'community' | 'premium';
+
 export interface SchedulerState<TEvent extends object = any> {
+  /**
+   * The plan of the scheduler instance.
+   * Derived from the `instanceName` of the store.
+   * Used to gate premium features like recurring events.
+   */
+  plan: SchedulerPlan;
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.

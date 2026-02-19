@@ -43,21 +43,6 @@ const event = {
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Recurring events
-
-Use the `rrule` property to define an events recurring rule:
-
-```ts
-const event = {
-  // ...other properties
-  rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
-};
-```
-
-:::success
-Learn more about _recurring events_ in the [dedicated doc page](/x/react-scheduler/recurring-events/).
-:::
-
 ### Timezone
 
 Use the `timezone` property to define in which timezone an event's dates are defined:
@@ -155,6 +140,21 @@ const event = {
 
 :::success
 Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-calendar/drag-interactions/).
+:::
+
+### Recurring events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+Use the `rrule` property to define an events recurring rule:
+
+```ts
+const event = {
+  // ...other properties
+  rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
+};
+```
+
+:::success
+Learn more about _recurring events_ in the [dedicated doc page](/x/react-scheduler/recurring-events/).
 :::
 
 ## Store data in custom properties

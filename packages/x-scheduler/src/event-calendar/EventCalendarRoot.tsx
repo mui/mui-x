@@ -2,8 +2,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
-import { styled } from '@mui/material/styles';
-import Alert from '@mui/material/Alert';
+import { SxProps } from '@mui/system/styleFunctionSx';
+import { styled, Theme } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
@@ -12,7 +12,7 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { ErrorContainer } from '../internals/components/error-container';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
@@ -26,7 +26,12 @@ import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 export interface EventCalendarRootProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
-> {}
+> {
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+}
 
 const EventCalendarRootStyled = styled('div', {
   name: 'MuiEventCalendar',
@@ -92,15 +97,6 @@ const EventCalendarContent = styled('section', {
   },
 }));
 
-const EventCalendarErrorContainer = styled(Alert, {
-  name: 'MuiEventCalendar',
-  slot: 'ErrorContainer',
-})({
-  position: 'absolute',
-  bottom: 16,
-  right: 16,
-});
-
 /**
  * Internal component that renders the EventCalendar UI.
  * Used by both EventCalendar and EventCalendarPremium.
@@ -115,8 +111,6 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
-    const errors = useStore(store, schedulerOtherSelectors.errors);
-
     let content: React.ReactNode;
 
     switch (view) {
@@ -164,17 +158,8 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
           >
             {content}
           </EventCalendarContent>
-          {errors?.length > 0 &&
-            errors.map((error, index) => (
-              <EventCalendarErrorContainer
-                className={classes.errorContainer}
-                severity="error"
-                key={index}
-              >
-                {error.message}
-              </EventCalendarErrorContainer>
-            ))}
         </EventCalendarMainPanel>
+        <ErrorContainer />
       </EventCalendarRootStyled>
     );
   },
