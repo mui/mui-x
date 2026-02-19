@@ -13,8 +13,6 @@ const MonthsHeaderRoot = styled('div', {
   slot: 'MonthsHeader',
 })({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(var(--months-cell-width), 1fr))',
-  minWidth: 'calc(var(--unit-count) * var(--months-cell-width))',
   gridTemplateRows: 'auto auto',
 });
 
@@ -38,6 +36,7 @@ const MonthLabel = styled('div', {
   slot: 'MonthsHeaderMonthLabel',
 })(({ theme }) => ({
   gridRow: 2,
+  width: 'calc(var(--days-in-month) * var(--months-cell-width))',
   padding: theme.spacing(1),
   textAlign: 'center',
   borderRight: `1px solid ${theme.palette.divider}`,
@@ -72,14 +71,19 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
                 className={classes.monthsHeaderYearLabel}
                 style={
                   {
-                    gridColumn: `${index + 1} / span ${Math.min(12, months.length - index - 1) - monthNumber + 1}`,
+                    gridColumn: `${index + 1} / span ${Math.min(12 - monthNumber, months.length - index)}`,
                   } as React.CSSProperties
                 }
               >
                 {adapter.getYear(month.value)}
               </YearLabel>
             )}
-            <MonthLabel className={classes.monthsHeaderMonthLabel}>
+            <MonthLabel
+              className={classes.monthsHeaderMonthLabel}
+              style={
+                { '--days-in-month': adapter.getDaysInMonth(month.value) } as React.CSSProperties
+              }
+            >
               {adapter.format(month.value, 'month3Letters')}
             </MonthLabel>
           </React.Fragment>
