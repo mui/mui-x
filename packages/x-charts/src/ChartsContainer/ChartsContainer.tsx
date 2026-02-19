@@ -53,11 +53,13 @@ const ChartsContainer = React.forwardRef(function ChartsContainer<
   const { chartDataProviderProps, children, chartsSurfaceProps } = useChartsContainerProps<
     TSeries,
     TSignatures
-  >(props, ref);
+  >(props);
 
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+      <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        {children}
+      </ChartsSurface>
     </ChartDataProvider>
   );
 }) as <TSeries extends ChartSeriesType>(

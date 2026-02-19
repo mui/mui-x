@@ -99,7 +99,7 @@ export interface PieChartProps
  */
 const PieChart = React.forwardRef(function PieChart(
   inProps: PieChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPieChart' });
   const {
@@ -127,22 +127,19 @@ const PieChart = React.forwardRef(function PieChart(
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
     PieChartPluginSignatures
-  >(
-    {
-      ...other,
-      series: series.map((s) => ({ type: 'pie', ...s })),
-      width,
-      height,
-      margin,
-      colors,
-      highlightedItem,
-      onHighlightChange,
-      className,
-      skipAnimation,
-      plugins: PIE_CHART_PLUGINS,
-    },
-    ref,
-  );
+  >({
+    ...other,
+    series: series.map((s) => ({ type: 'pie', ...s })),
+    width,
+    height,
+    margin,
+    colors,
+    highlightedItem,
+    onHighlightChange,
+    className,
+    skipAnimation,
+    plugins: PIE_CHART_PLUGINS,
+  });
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
   const Toolbar = slots?.toolbar;
@@ -154,6 +151,7 @@ const PieChart = React.forwardRef(function PieChart(
         legendDirection={slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
         hideLegend={hideLegend ?? false}
+        ref={ref}
       >
         {showToolbar && Toolbar ? <Toolbar {...slotProps?.toolbar} /> : null}
         {!hideLegend && (

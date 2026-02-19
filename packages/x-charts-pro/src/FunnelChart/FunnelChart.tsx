@@ -77,7 +77,7 @@ const seriesConfig = { funnel: funnelSeriesConfig };
 
 const FunnelChart = React.forwardRef(function FunnelChart(
   props: FunnelChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themedProps = useThemeProps({ props, name: 'MuiFunnelChart' });
 
@@ -91,10 +91,8 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     axisHighlightProps,
     children,
   } = useFunnelChartProps(themedProps);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    chartContainerProps,
-    ref,
-  );
+  const { chartDataProviderProProps, chartsSurfaceProps } =
+    useChartContainerProProps(chartContainerProps);
 
   const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
@@ -105,7 +103,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
       seriesConfig={seriesConfig}
       plugins={FUNNEL_CHART_PLUGINS}
     >
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <FunnelPlot {...funnelPlotProps} />
