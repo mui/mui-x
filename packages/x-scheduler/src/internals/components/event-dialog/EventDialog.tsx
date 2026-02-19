@@ -155,6 +155,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, ...other } = props;
   const store = useSchedulerStoreContext();
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   return (
     <EventDialog.Provider
@@ -172,7 +173,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
       }}
     >
       {children}
-      {isScopeDialogOpen && <RecurringScopeDialog />}
+      {showRecurrence && isScopeDialogOpen && <RecurringScopeDialog />}
     </EventDialog.Provider>
   );
 }
