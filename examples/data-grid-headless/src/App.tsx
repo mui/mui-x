@@ -17,7 +17,6 @@ import { FilterPanel } from './FilterPanel';
 import {
   CollapseIcon,
   FilterIcon,
-  PlusIcon,
   SearchIcon,
   TrashIcon,
   ChevronsLeftIcon,
@@ -201,7 +200,6 @@ type GridInstance = ReturnType<typeof useDataGrid<GridPlugins, RowData>>;
 interface DataGridContextValue {
   grid: GridInstance;
   config: PluginConfig;
-  getNextRowId: () => number;
   toggleColumnCollapse: (field: string) => void;
 }
 
@@ -371,6 +369,7 @@ function DataGridColumnHeaders() {
                   >
                     <CollapseIcon collapsed={false} />
                   </button>
+                  {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
                   <div
                     className="grid-column-header-expand-hint"
                     onClick={() => toggleColumnCollapse(column.id)}
@@ -402,8 +401,8 @@ function DataGridColumnHeaders() {
                   <button
                     type="button"
                     className="grid-column-header-collapse-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    onClick={(event) => {
+                      event.stopPropagation();
                       toggleColumnCollapse(column.id);
                     }}
                     aria-label={`Collapse ${column.header || column.id}`}
@@ -477,7 +476,7 @@ function DataGridVirtualScrollbar({
 }
 
 function DataGridToolbar() {
-  const { grid, config, getNextRowId } = useDataGridContext();
+  const { grid, config } = useDataGridContext();
   const isFilteringEnabled = config.filtering?.enabled ?? true;
   const showQuickFilter = config.filtering?.showQuickFilter ?? true;
 
@@ -530,16 +529,6 @@ function DataGridToolbar() {
             <span className="grid-toolbar__badge">{activeFilterCount}</span>
           )}
         </button>
-        <button
-          type="button"
-          className="grid-toolbar__btn"
-          onClick={() => {
-            grid.api.rows.updateRows([{ ...generateRow(getNextRowId()) }]);
-          }}
-        >
-          <PlusIcon />
-          <span>Add new row</span>
-        </button>
         {showQuickFilter && (
           <div className="grid-toolbar__quick-filter">
             <SearchIcon />
@@ -579,13 +568,6 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
   { rows, columns, config },
   ref,
 ) {
-  const nextRowIdRef = React.useRef(rows.length + 1);
-  const getNextRowId = React.useCallback(() => {
-    const nextId = nextRowIdRef.current;
-    nextRowIdRef.current += 1;
-    return nextId;
-  }, []);
-
   const originalColumnSizesRef = React.useRef<Record<string, number>>({});
 
   const grid = useDataGrid({
@@ -710,8 +692,8 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
   }, [grid]);
 
   const contextValue = React.useMemo(
-    () => ({ grid, config, getNextRowId, toggleColumnCollapse }),
-    [grid, config, getNextRowId, toggleColumnCollapse],
+    () => ({ grid, config, toggleColumnCollapse }),
+    [grid, config, toggleColumnCollapse],
   );
 
   return (
@@ -836,6 +818,13 @@ function App() {
     gridRef.current?.api.filtering.apply();
   };
 
+  const nextRowIdRef = React.useRef(rows.length + 1);
+  const handleAddRow = () => {
+    const nextId = nextRowIdRef.current;
+    nextRowIdRef.current += 1;
+    gridRef.current?.api.rows.updateRows([{ ...generateRow(nextId) }]);
+  };
+
   const handleRefreshRows = () => {
     setRows((prevRows) => generateSampleData(prevRows.length));
   };
@@ -856,6 +845,7 @@ function App() {
         onConfigChange={setConfig}
         onApplySorting={handleApplySorting}
         onApplyFiltering={handleApplyFiltering}
+        onAddRow={handleAddRow}
         onRerender={handleRerender}
         onRefreshRows={handleRefreshRows}
         onShuffleColumns={handleRefreshColumns}

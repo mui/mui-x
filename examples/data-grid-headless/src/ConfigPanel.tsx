@@ -44,6 +44,7 @@ interface ConfigPanelProps {
   onConfigChange: (config: PluginConfig) => void;
   onApplySorting?: () => void;
   onApplyFiltering?: () => void;
+  onAddRow?: () => void;
   onRerender?: () => void;
   onRefreshRows?: () => void;
   onShuffleColumns?: () => void;
@@ -162,6 +163,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
     onConfigChange,
     onApplySorting,
     onApplyFiltering,
+    onAddRow,
     onRerender,
     onRefreshRows,
     onShuffleColumns,
@@ -337,6 +339,13 @@ export function ConfigPanel(props: ConfigPanelProps) {
               {sections.rows && (
                 <div className="config-section__content">
                   <div className="config-section__buttons">
+                    <button
+                      type="button"
+                      onClick={onAddRow}
+                      className="btn btn--secondary btn--block"
+                    >
+                      Add New Row
+                    </button>
                     <button
                       type="button"
                       onClick={onRerender}
