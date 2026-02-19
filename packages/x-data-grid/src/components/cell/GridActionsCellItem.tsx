@@ -38,6 +38,9 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
       onClick?.(event);
     };
 
+    const iconButtonSize =
+      (other as any).size ?? (rootProps.slotProps?.baseIconButton as any)?.size ?? 'small';
+
     return (
       <rootProps.slots.baseIconButton
         size="small"
@@ -48,7 +51,7 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
         {...rootProps.slotProps?.baseIconButton}
         ref={ref as React.RefObject<HTMLButtonElement>}
       >
-        {React.cloneElement(icon!, { fontSize: 'small' })}
+        {React.cloneElement(icon!, { fontSize: iconButtonSize })}
       </rootProps.slots.baseIconButton>
     );
   }
