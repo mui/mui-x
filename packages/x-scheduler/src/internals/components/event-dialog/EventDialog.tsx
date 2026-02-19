@@ -23,6 +23,23 @@ import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
+const EventDialogRoot = styled(Dialog, {
+  name: 'MuiEventDialog',
+  slot: 'Root',
+})({
+  '& .MuiBackdrop-root': {
+    backgroundColor: 'transparent',
+  },
+  '& .MuiDialog-container': {
+    width: '100%',
+    justifyContent: 'unset',
+    alignItems: 'unset',
+  },
+  '& .MuiDialog-paper': {
+    margin: 0,
+  },
+});
+
 const EventDialogPaper = styled(Paper, {
   name: 'MuiEventDialog',
   slot: 'Paper',
@@ -30,7 +47,6 @@ const EventDialogPaper = styled(Paper, {
   borderWidth: 0,
   borderTopWidth: 1,
   height: 'fit-content',
-  margin: 0,
   overflow: 'hidden',
   '&[data-dragging]': {
     outline: `1px solid ${theme.palette.primary.light}`,
@@ -117,7 +133,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const dragHandlerRef = React.useRef<HTMLElement>(null);
 
   return (
-    <Dialog
+    <EventDialogRoot
       ref={forwardedRef}
       open={open}
       onClose={onClose}
@@ -126,15 +142,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       aria-modal="false"
       className={classes.eventDialog}
       slotProps={{
-        backdrop: {
-          sx: {
-            backgroundColor: 'transparent',
-          },
-        },
-        container: {
-          sx: { width: '100%', justifyContent: 'unset', alignItems: 'unset' },
-        },
-        paper: { sx: { m: 0 }, anchorRef, dragHandlerRef } as PaperProps,
+        paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,
       }}
       {...other}
     >
@@ -147,7 +155,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       ) : (
         <FormContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
       )}
-    </Dialog>
+    </EventDialogRoot>
   );
 });
 
