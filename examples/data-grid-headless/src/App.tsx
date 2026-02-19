@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type ColumnDef, useDataGrid } from '@mui/x-data-grid-headless';
+import { type ColumnDef, useDataGrid, columnsPlugin } from '@mui/x-data-grid-headless';
 import { sortingPlugin, type SortingColumnMeta } from '@mui/x-data-grid-headless/plugins/sorting';
 import {
   filteringPlugin,
@@ -15,6 +15,7 @@ import {
 import { ConfigPanel, type PluginConfig } from './ConfigPanel';
 import { FilterPanel } from './FilterPanel';
 import {
+  CollapseIcon,
   FilterIcon,
   PlusIcon,
   SearchIcon,
@@ -191,6 +192,7 @@ function generateColumns(): ColumnDef<RowData, ColumnMeta>[] {
 
 const ROW_HEIGHT = 52;
 const HEADER_HEIGHT = 48;
+const COLLAPSED_COLUMN_WIDTH = 36;
 
 const plugins = [sortingPlugin, filteringPlugin, paginationPlugin, virtualizationPlugin] as const;
 type GridPlugins = typeof plugins;
@@ -200,6 +202,7 @@ interface DataGridContextValue {
   grid: GridInstance;
   config: PluginConfig;
   getNextRowId: () => number;
+  toggleColumnCollapse: (field: string) => void;
 }
 
 const DataGridContext = React.createContext<DataGridContextValue | null>(null);
@@ -215,6 +218,8 @@ function useDataGridContext() {
 function GridCell({ column, row }: { column: ColumnToRender; row: RowToRender<RowData> }) {
   const value = row.model[column.field as keyof RowData];
   const { grid } = useDataGridContext();
+  const columnVisibilityModel = grid.use(columnsPlugin.selectors.columnVisibilityModel);
+  const isCollapsed = columnVisibilityModel[column.id] === 'collapsed';
   const cellProps = grid.api.elements.hooks.useCellProps({
     field: column.id,
     colIndex: column.index,
@@ -224,12 +229,17 @@ function GridCell({ column, row }: { column: ColumnToRender; row: RowToRender<Ro
   return (
     <div
       key={column.id}
-      className="grid-cell"
+      className={`grid-cell${isCollapsed ? ' grid-cell--collapsed' : ''}`}
       {...cellProps}
       style={{ width: column.size || 150, minWidth: column.size || 150 }}
     >
-      {!isActionsColumn && (value != null ? String(value) : '')}
-      {isActionsColumn && (
+      {isCollapsed && value != null && (
+        <div className="grid-cell-expand-hint">
+          <span>{String(value)}</span>
+        </div>
+      )}
+      {!isCollapsed && !isActionsColumn && (value != null ? String(value) : '')}
+      {!isCollapsed && isActionsColumn && (
         <button
           type="button"
           onClick={(event) => {
@@ -296,12 +306,13 @@ function DataGridRenderZone() {
 }
 
 function DataGridColumnHeaders() {
-  const { grid, config } = useDataGridContext();
+  const { grid, config, toggleColumnCollapse } = useDataGridContext();
   const virtualization = grid.api.virtualization;
   const columnsToRender = virtualization.hooks.useColumnsToRender();
   const columnsTotalWidth = virtualization.hooks.useColumnsTotalWidth();
   const offsetLeft = virtualization.hooks.useOffsetLeft();
   const sortModel = grid.use(sortingPlugin.selectors.model);
+  const columnVisibilityModel = grid.use(columnsPlugin.selectors.columnVisibilityModel);
 
   const sortColumn = (field: string, shiftKey: boolean) => {
     if (!config.sorting?.enabled || field === 'actions') {
@@ -337,6 +348,40 @@ function DataGridColumnHeaders() {
       >
         <div className="grid-column-headers-content" style={{ left: offsetLeft }}>
           {columnsToRender.map((column) => {
+            const isCollapsed = columnVisibilityModel[column.id] === 'collapsed';
+            const isActionsColumn = column.field === 'actions';
+
+            if (isCollapsed) {
+              return (
+                <div
+                  key={column.id}
+                  role="columnheader"
+                  className="grid-column-header-cell grid-column-header-cell--collapsed"
+                  style={{
+                    width: column.size || 150,
+                    minWidth: column.size || 150,
+                    height: HEADER_HEIGHT,
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="grid-column-header-collapse-btn"
+                    onClick={() => toggleColumnCollapse(column.id)}
+                    aria-label={`Expand ${column.header || column.id}`}
+                  >
+                    <CollapseIcon collapsed={false} />
+                  </button>
+                  <div
+                    className="grid-column-header-expand-hint"
+                    onClick={() => toggleColumnCollapse(column.id)}
+                  >
+                    <CollapseIcon collapsed={false} />
+                    <span>{column.header || column.id}</span>
+                  </div>
+                </div>
+              );
+            }
+
             return (
               // eslint-disable-next-line jsx-a11y/interactive-supports-focus
               <div
@@ -353,6 +398,19 @@ function DataGridColumnHeaders() {
               >
                 {column.header || column.id}
                 {config.sorting?.enabled && getSortIcon(column.field as string)}
+                {!isActionsColumn && (
+                  <button
+                    type="button"
+                    className="grid-column-header-collapse-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleColumnCollapse(column.id);
+                    }}
+                    aria-label={`Collapse ${column.header || column.id}`}
+                  >
+                    <CollapseIcon collapsed />
+                  </button>
+                )}
               </div>
             );
           })}
@@ -528,6 +586,8 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
     return nextId;
   }, []);
 
+  const originalColumnSizesRef = React.useRef<Record<string, number>>({});
+
   const grid = useDataGrid({
     rows,
     columns,
@@ -575,6 +635,25 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
   });
 
   React.useImperativeHandle(ref, () => grid);
+
+  const toggleColumnCollapse = React.useCallback(
+    (field: string) => {
+      const visibilityModel = grid.getState().columns.columnVisibilityModel;
+      const isCollapsed = visibilityModel[field] === 'collapsed';
+
+      if (isCollapsed) {
+        const originalSize = originalColumnSizesRef.current[field] ?? 150;
+        grid.api.columns.setVisibility(field, 'visible');
+        grid.api.columns.setSize(field, originalSize);
+      } else {
+        const column = grid.api.columns.get(field);
+        originalColumnSizesRef.current[field] = column?.size ?? 150;
+        grid.api.columns.setVisibility(field, 'collapsed');
+        grid.api.columns.setSize(field, COLLAPSED_COLUMN_WIDTH);
+      }
+    },
+    [grid],
+  );
 
   // Sync page size with config changes (including disabling pagination)
   const effectivePageSize = config.pagination?.enabled
@@ -631,8 +710,8 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
   }, [grid]);
 
   const contextValue = React.useMemo(
-    () => ({ grid, config, getNextRowId }),
-    [grid, config, getNextRowId],
+    () => ({ grid, config, getNextRowId, toggleColumnCollapse }),
+    [grid, config, getNextRowId, toggleColumnCollapse],
   );
 
   return (

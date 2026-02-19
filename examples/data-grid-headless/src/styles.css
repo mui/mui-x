@@ -190,6 +190,110 @@
   font-weight: 600;
 }
 
+/* Column collapse button */
+.grid-column-header-collapse-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  margin-left: auto;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.grid-column-header-cell:hover .grid-column-header-collapse-btn {
+  opacity: 1;
+}
+
+.grid-column-header-collapse-btn:hover {
+  background-color: var(--gray-200);
+  color: var(--color-text);
+}
+
+/* Collapsed column header */
+.grid-column-header-cell--collapsed {
+  justify-content: center;
+  padding: 0;
+  background-color: var(--gray-50);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 2px solid var(--color-border);
+  position: relative;
+}
+
+.grid-column-header-cell--collapsed .grid-column-header-collapse-btn {
+  opacity: 1;
+  margin-left: 0;
+}
+
+/* Collapsed column expand hint */
+.grid-column-header-expand-hint {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 32px;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  z-index: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  color: var(--color-text);
+}
+
+.grid-column-header-cell--collapsed:hover .grid-column-header-expand-hint {
+  display: flex;
+}
+
+/* Collapsed cell */
+.grid-cell--collapsed {
+  padding: 0;
+  background-color: var(--gray-50);
+  border-right: 1px solid var(--color-border);
+  position: relative;
+  overflow: visible;
+}
+
+/* Collapsed cell expand hint */
+.grid-cell-expand-hint {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 32px;
+  align-items: center;
+  padding: 0 var(--space-3);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 1;
+  box-shadow: var(--shadow-md);
+  color: var(--color-text);
+  pointer-events: none;
+}
+
+.grid-cell--collapsed:hover .grid-cell-expand-hint {
+  display: flex;
+}
+
 /* ===========================================
    Grid Footer (Pagination)
    =========================================== */
