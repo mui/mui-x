@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
@@ -9,13 +9,12 @@ import {
   type AxisAutoSizeResult,
 } from './computeAxisAutoSize';
 import type { AxisId } from '../../../../models/axis';
-import { selectorChartDimensionsState } from '../../corePlugins/useChartDimensions';
+import { type UseChartDimensionsSignature } from '../../corePlugins/useChartDimensions';
+import type { ChartState } from '../../models';
 
 // Direct state access to avoid circular dependency
-const selectorIsHydrated = createSelector(
-  selectorChartDimensionsState,
-  ({ width, height }) => width && height,
-);
+const selectorIsHydrated = (state: ChartState<[UseChartDimensionsSignature]>) =>
+  state.dimensions.width && state.dimensions.height;
 
 const EMPTY_SIZES: Record<AxisId, number> = {};
 const EMPTY_RESULTS: Record<AxisId, AxisAutoSizeResult> = {};
