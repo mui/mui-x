@@ -1,63 +1,15 @@
 import { type Store } from '@base-ui/utils/store';
-import { type ColumnDef } from '../../../columnDef/columnDef';
-
-// ================================
-// Types
-// ================================
-
-export type ColumnState<TColumnMeta = {}> = ColumnDef<any, TColumnMeta> & {
-  hasBeenResized?: boolean;
-  computedSize?: number;
-};
-
-export type ColumnLookup<TColumnMeta = {}> = {
-  [field: string]: ColumnState<TColumnMeta>;
-};
-
-export type ColumnVisibilityState = 'visible' | 'collapsed' | 'hidden';
-
-export type ColumnVisibilityModel = Record<string, ColumnVisibilityState>;
-
-export interface ColumnsState {
-  orderedFields: string[];
-  lookup: ColumnLookup;
-  columnVisibilityModel: ColumnVisibilityModel;
-  initialColumnVisibilityModel: ColumnVisibilityModel;
-}
-
-export interface ColumnsInitialState {
-  columnVisibilityModel?: ColumnVisibilityModel;
-  orderedFields?: string[];
-}
-
-// ================================
-// Options
-// ================================
-
-export interface ColumnsOptions<TData = any, TColumnMeta = {}> {
-  columns: ColumnDef<TData, TColumnMeta>[];
-  columnVisibilityModel?: ColumnVisibilityModel;
-}
-
-// ================================
-// API
-// ================================
-
-export interface ColumnsApi<TColumnMeta = {}> {
-  get: (field: string) => ColumnState<TColumnMeta> | undefined;
-  getAll: () => ColumnState<TColumnMeta>[];
-  getVisible: (includeCollapsed?: boolean) => ColumnState<TColumnMeta>[];
-  getIndex: (field: string, useVisibleColumns?: boolean) => number;
-  update: (columns: ColumnDef<any>[]) => void;
-  setVisibilityModel: (model: ColumnVisibilityModel) => void;
-  setVisibility: (field: string, state: ColumnVisibilityState) => void;
-  setSize: (field: string, size: number) => void;
-  setIndex: (field: string, targetIndex: number) => void;
-}
-
-// ================================
-// Default Column Values
-// ================================
+import type {
+  ColumnDef,
+  ColumnState,
+  ColumnVisibilityModel,
+  ColumnVisibilityState,
+  ColumnLookup,
+  ColumnsState,
+  ColumnsInitialState,
+  ColumnsOptions,
+  ColumnsApi,
+} from './types';
 
 const DEFAULT_COLUMN_SIZE = 100;
 
@@ -65,13 +17,9 @@ function getDefaultColumnState(field: string): Partial<ColumnState> {
   return {
     field,
     size: DEFAULT_COLUMN_SIZE,
-    hasBeenResized: false,
+    dirty: false,
   };
 }
-
-// ================================
-// State Initialization
-// ================================
 
 /**
  * Create the initial columns state from options.
@@ -134,10 +82,6 @@ export function createColumnsState<TData>(
 function getColumnField<TData>(column: ColumnDef<TData>): string {
   return column.id || String(column.field || '');
 }
-
-// ================================
-// API Creation
-// ================================
 
 interface CoreState {
   columns: ColumnsState;
@@ -229,7 +173,7 @@ export function createColumnsApi<TData>(
       const newColumn: ColumnState = {
         ...column,
         size,
-        hasBeenResized: true,
+        dirty: true,
       };
 
       store.setState({

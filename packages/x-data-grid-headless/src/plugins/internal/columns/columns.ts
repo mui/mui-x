@@ -1,83 +1,15 @@
 'use client';
 import * as React from 'react';
-import { type Store, createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import type { Store } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../../core/plugin';
-import {
-  type ColumnsState,
-  type ColumnsApi,
-  type ColumnsOptions,
-  createColumnsState,
-  createColumnsApi,
-} from './columnUtils';
-
-export interface ColumnsPluginState {
-  columns: ColumnsState;
-}
-
-export interface ColumnsPluginOptions<TData = any, TColumnMeta = {}> extends ColumnsOptions<
-  TData,
-  TColumnMeta
-> {
-  initialState?: {
-    columns?: Partial<ColumnsState>;
-  };
-}
-
-const selectOrderedFields = createSelector(
-  (state: ColumnsPluginState) => state.columns.orderedFields,
-);
-
-const selectLookup = createSelector((state: ColumnsPluginState) => state.columns.lookup);
-
-const selectColumnVisibilityModel = createSelector(
-  (state: ColumnsPluginState) => state.columns.columnVisibilityModel,
-);
-
-const selectInitialColumnVisibilityModel = createSelector(
-  (state: ColumnsPluginState) => state.columns.initialColumnVisibilityModel,
-);
-
-const selectAllColumns = createSelectorMemoized(
-  selectOrderedFields,
-  selectLookup,
-  (orderedFields, lookup) => orderedFields.map((field) => lookup[field]).filter(Boolean),
-);
-
-const selectVisibleColumns = createSelectorMemoized(
-  selectOrderedFields,
-  selectLookup,
-  selectColumnVisibilityModel,
-  (orderedFields, lookup, columnVisibilityModel, includeCollapsed: boolean = true) =>
-    orderedFields
-      .filter((field) => {
-        const state = columnVisibilityModel[field];
-        if (state === 'hidden') {
-          return false;
-        }
-        if (!includeCollapsed && state === 'collapsed') {
-          return false;
-        }
-        return true;
-      })
-      .map((field) => lookup[field])
-      .filter(Boolean),
-);
-
-const selectColumn = createSelector(selectLookup, (lookup, field: string) => lookup[field]);
-
-const columnsSelectors = {
-  orderedFields: selectOrderedFields,
-  lookup: selectLookup,
-  columnVisibilityModel: selectColumnVisibilityModel,
-  initialColumnVisibilityModel: selectInitialColumnVisibilityModel,
-  allColumns: selectAllColumns,
-  visibleColumns: selectVisibleColumns,
-  column: selectColumn,
-};
-
-export interface ColumnsPluginApi<TColumnMeta = {}> {
-  columns: ColumnsApi<TColumnMeta>;
-}
+import type {
+  ColumnsState,
+  ColumnsPluginState,
+  ColumnsPluginApi,
+  ColumnsPluginOptions,
+} from './types';
+import { createColumnsState, createColumnsApi } from './columnUtils';
+import { columnsSelectors } from './selectors';
 
 type ColumnsPlugin = Plugin<
   'columns',

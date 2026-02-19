@@ -1,4 +1,4 @@
-import type { ColumnType, ColumnDef } from '../../columnDef/columnDef';
+import type { ColumnType, ColumnDef } from '../internal/columns/types';
 import type { GridRowId } from '../internal/rows/types';
 import {
   type FilterCondition,

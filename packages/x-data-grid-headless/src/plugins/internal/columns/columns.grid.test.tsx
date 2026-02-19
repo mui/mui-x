@@ -30,9 +30,7 @@ describe('Column Visibility - Integration Tests', () => {
 
   describe('initial state', () => {
     it('should render all columns when no visibility model is provided', () => {
-      const { container } = render(
-        <TestDataGrid rows={defaultRows} columns={defaultColumns} />,
-      );
+      const { container } = render(<TestDataGrid rows={defaultRows} columns={defaultColumns} />);
       expect(getRenderedColumnCount(container)).toBe(3);
     });
 

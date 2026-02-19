@@ -2,7 +2,7 @@
 export { useDataGrid } from './hooks/useDataGrid';
 
 // Column definition types
-export type { ColumnDef, ColumnType } from './columnDef/columnDef';
+export type { ColumnDef, ColumnType } from './plugins/internal/columns/types';
 
 // Core plugin infrastructure
 export { createPlugin, PluginRegistry } from './plugins/core';
@@ -30,5 +30,5 @@ export type {
   ColumnsPluginApi,
   ColumnsPluginState,
   ColumnsPluginOptions,
-} from './plugins/internal/columns/columns';
+} from './plugins/internal/columns/types';
 export type { IntlOptions } from './plugins/internal';

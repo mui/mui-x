@@ -11,7 +11,7 @@ import {
 } from '@mui/x-virtualizer';
 import { type Plugin, createPlugin } from '../core/plugin';
 import type { GridRowId, GridRowModel } from '../internal/rows/types';
-import type { ColumnState } from '../internal/columns/columnUtils';
+import type { ColumnState } from '../internal/columns/types';
 import rowsPlugin from '../internal/rows/rows';
 import columnsPlugin from '../internal/columns/columns';
 

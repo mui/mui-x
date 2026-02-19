@@ -10,7 +10,7 @@ import {
   type PluginsState,
   PluginRegistry,
 } from '../plugins/core';
-import type { ColumnState, ColumnLookup } from '../plugins/internal/columns/columnUtils';
+import type { ColumnState, ColumnLookup } from '../plugins/internal/columns/types';
 import rowsPlugin from '../plugins/internal/rows/rows';
 import columnsPlugin from '../plugins/internal/columns/columns';
 import elementsPlugin from '../plugins/internal/elements';

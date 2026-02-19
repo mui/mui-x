@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '../';
-import type { ColumnVisibilityModel } from '../plugins/internal/columns/columnUtils';
+import type { ColumnVisibilityModel } from '../plugins/internal/columns/types';
 import { sortingPlugin, type SortingColumnMeta, type SortingOptions } from '../plugins/sorting';
 import {
   filteringPlugin,

@@ -1,12 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Store } from '@base-ui/utils/store';
-import type { ColumnDef } from '../../../columnDef/columnDef';
-import {
-  createColumnsState,
-  createColumnsApi,
-  type ColumnsState,
-  type ColumnVisibilityModel,
-} from './columnUtils';
+import type { ColumnDef, ColumnsState, ColumnVisibilityModel } from './types';
+import { createColumnsState, createColumnsApi } from './columnUtils';
 
 type TestRow = { id: number; name: string; age: number; email: string };
 
