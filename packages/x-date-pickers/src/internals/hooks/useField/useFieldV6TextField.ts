@@ -196,6 +196,8 @@ export const useFieldV6TextField = <
         Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length
       ) {
         setSelectedSections(internalPropsWithDefaults.initialFocusedSection ?? 'all');
+      } else if (input.selectionStart === 0 && input.selectionEnd === 0) {
+        setSelectedSections(internalPropsWithDefaults.initialFocusedSection ?? 0);
       } else {
         syncSelectionFromDOM();
       }
@@ -399,9 +401,9 @@ export const useFieldV6TextField = <
   );
 
   React.useEffect(() => {
-    // Select all the sections when focused on mount (`autoFocus = true` on the input)
+    // Select the initial focused section (or all) when focused on mount (`autoFocus = true` on the input)
     if (inputRef.current && inputRef.current === getActiveElement(inputRef.current)) {
-      setSelectedSections('all');
+      setSelectedSections(internalPropsWithDefaults.initialFocusedSection ?? 'all');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
