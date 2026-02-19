@@ -12,7 +12,7 @@ import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridPaginationModelSelector,
-  gridPaginatedVisibleSortedGridRowIdsSelector,
+  gridVisibleRowsSelector,
 } from '../pagination/gridPaginationSelector';
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
@@ -25,6 +25,7 @@ import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommuni
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import type { GridEventListener } from '../../../models/events';
+import type { GridRowId } from '../../../models/gridRows';
 
 const noopCache: GridDataSourceCache = {
   clear: () => {},
@@ -207,6 +208,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     );
   }, [apiRef]);
 
+  const fetchRowChildrenOption = options.fetchRowChildren;
+
   const revalidate = React.useCallback(async () => {
     const getRows = props.dataSource?.getRows;
     if (!getRows || !standardRowsUpdateStrategyActive) {
@@ -214,24 +217,26 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     }
 
     const revalidateExpandedGroups = () => {
-      if (
-        currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData ||
-        !options.fetchRowChildren
-      ) {
+      if (currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData || !fetchRowChildrenOption) {
         return;
       }
 
       const rowTree = gridRowTreeSelector(apiRef);
-      const paginatedRowIds = gridPaginatedVisibleSortedGridRowIdsSelector(apiRef);
-      const expandedGroupIds = paginatedRowIds.filter((id) => {
-        const node = rowTree[id];
-        return (
-          node.type === 'group' && node.id !== GRID_ROOT_GROUP_ID && node.childrenExpanded === true
-        );
-      });
+      const visibleRows = gridVisibleRowsSelector(apiRef).rows;
+      const expandedGroupIds = visibleRows.reduce((acc, row) => {
+        const node = rowTree[row.id];
+        if (
+          node.type === 'group' &&
+          node.id !== GRID_ROOT_GROUP_ID &&
+          node.childrenExpanded === true
+        ) {
+          acc.push(row.id);
+        }
+        return acc;
+      }, [] as GridRowId[]);
 
       if (expandedGroupIds.length > 0) {
-        options.fetchRowChildren(expandedGroupIds, { showChildrenLoading: false });
+        fetchRowChildrenOption(expandedGroupIds, { showChildrenLoading: false });
       }
     };
 
@@ -277,7 +282,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     currentStrategy,
     props.dataSource?.getRows,
     standardRowsUpdateStrategyActive,
-    options.fetchRowChildren,
+    fetchRowChildrenOption,
   ]);
 
   const stopPolling = React.useCallback(() => {
