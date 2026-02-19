@@ -178,8 +178,8 @@ PieChartPro.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['pie']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']),
     }),
   ),
   /**
@@ -223,8 +223,8 @@ PieChartPro.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['pie']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']),
     }),
   ),
   /**
@@ -311,7 +311,7 @@ PieChartPro.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number.isRequired,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['pie']).isRequired,
+    type: PropTypes.oneOf(['pie']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

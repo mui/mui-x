@@ -1,4 +1,8 @@
-import { type AllSeriesType } from '../../../../models/seriesType';
+import type {
+  AllSeriesType,
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
 import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
@@ -67,10 +71,27 @@ export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType
   };
 }
 
+interface UseChartSeriesInstance {
+  /**
+   * Utils top add series type when developers do not provide it.
+   * @param {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'>} identifier The series identifier without its type
+   * @returns {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'> & Pick<SeriesItemIdentifier<SeriesType>, 'type'>}The identifier with the type.
+   */
+  identifierWithType: <
+    SeriesType extends ChartSeriesType,
+    Item extends { seriesId: SeriesId; type?: SeriesType },
+  >(
+    identifier: Item,
+  ) => Item extends SeriesItemIdentifier<SeriesType>
+    ? SeriesItemIdentifierWithType<SeriesType>
+    : Item & { type: SeriesType };
+}
+
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     params: UseChartSeriesParameters;
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
+    instance: UseChartSeriesInstance;
     dependencies: [UseChartSeriesConfigSignature<SeriesType>];
   }>;
