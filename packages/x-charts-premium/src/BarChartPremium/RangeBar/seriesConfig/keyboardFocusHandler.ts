@@ -6,6 +6,8 @@ import {
 } from '@mui/x-charts/internals';
 
 const keyboardFocusHandler: KeyboardFocusHandler<'rangeBar', ComposableCartesianChartSeriesType> =
-  createCommonKeyboardFocusHandler(composableCartesianSeriesTypes);
+  createCommonKeyboardFocusHandler<ComposableCartesianChartSeriesType>(
+    composableCartesianSeriesTypes,
+  );
 
 export default keyboardFocusHandler;
