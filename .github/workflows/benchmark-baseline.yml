@@ -6,7 +6,7 @@ on:
       - master
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   benchmark:
@@ -44,12 +44,18 @@ jobs:
           COMMIT_SHA: ${{ github.sha }}
         run: pnpm -F benchmark-tool ci:aggregate
 
-      - name: Checkout data repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          repository: mnajdova/performance-benchmark-data
-          path: data-repo
-          token: ${{ secrets.BENCHMARK_DATA_TOKEN }}
+      - name: Checkout data branch
+        run: |
+          if git fetch origin test-results 2>/dev/null; then
+            git worktree add -B test-results data-repo origin/test-results
+          else
+            git worktree add --detach data-repo
+            pushd data-repo
+            git checkout --orphan test-results
+            git rm -rf . 2>/dev/null || true
+            git commit --allow-empty -m "Initialize test results branch"
+            popd
+          fi
 
       - name: Get commit month
         id: meta
@@ -88,4 +94,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add benchmarks/
           git commit -m "Add benchmarks for ${{ github.sha }}"
-          git push
+          for i in 1 2 3 4 5; do
+            git push origin test-results && break
+            echo "Push failed (attempt $i), pulling with rebase and retrying..."
+            git pull --rebase origin test-results
+          done
