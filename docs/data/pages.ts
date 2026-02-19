@@ -4,6 +4,59 @@ import dataGridComponentApi from './dataGridApiPages';
 import pickersComponentApi from './datePickersApiPages';
 import treeViewComponentApi from './treeViewApiPages';
 
+const isSchedulerVisible = process.env.SHOW_SCHEDULER === '1';
+
+const schedulerPages: MuiPage[] = isSchedulerVisible
+  ? [
+      {
+        pathname: '/x/react-scheduler-group',
+        title: 'Scheduler',
+        // newFeature: true,
+        unstable: true,
+        children: [
+          { pathname: '/x/react-scheduler', title: 'Overview' },
+          { pathname: '/x/react-scheduler/quickstart' },
+          {
+            pathname: '/x/react-scheduler/main-features',
+            subheader: 'Main features',
+            children: [
+              { pathname: '/x/react-scheduler/timezone', title: 'Timezones' },
+              { pathname: '/x/react-scheduler/recurring-events', plan: 'premium' },
+            ],
+          },
+          {
+            pathname: '/x/react-scheduler/event-calendar-group',
+            subheader: 'Event Calendar',
+            children: [
+              { pathname: '/x/react-scheduler/event-calendar/events' },
+              { pathname: '/x/react-scheduler/event-calendar/resources' },
+              { pathname: '/x/react-scheduler/event-calendar/navigation' },
+              { pathname: '/x/react-scheduler/event-calendar/drag-interactions' },
+              { pathname: '/x/react-scheduler/event-calendar/views' },
+              { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
+              { pathname: '/x/react-scheduler/event-calendar/preferences' },
+              { pathname: '/x/react-scheduler/event-calendar/localization' },
+            ],
+          },
+          {
+            pathname: '/x/react-scheduler/event-timeline-group',
+            subheader: 'Event Timeline',
+            plan: 'premium',
+            children: [
+              { pathname: '/x/react-scheduler/event-timeline/events' },
+              { pathname: '/x/react-scheduler/event-timeline/resources' },
+              { pathname: '/x/react-scheduler/event-timeline/navigation' },
+              { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
+              { pathname: '/x/react-scheduler/event-timeline/views' },
+              { pathname: '/x/react-scheduler/event-timeline/preferences' },
+              { pathname: '/x/react-scheduler/event-timeline/localization' },
+            ],
+          },
+        ],
+      },
+    ]
+  : [];
+
 const pages: MuiPage[] = [
   {
     pathname: 'https://mui.com/x/whats-new/',
@@ -43,8 +96,8 @@ const pages: MuiPage[] = [
         title: 'Demos',
         children: [
           { pathname: '/x/react-data-grid/demos/real-time-data', title: 'Real-time data' },
-          { pathname: '/x/react-data-grid/demos/time-off-calendar', title: 'Time off calendar' },
-          { pathname: '/x/react-data-grid/demos/inventory', title: 'Inventory' },
+          { pathname: '/x/react-data-grid/demos/time-off-calendar' },
+          { pathname: '/x/react-data-grid/demos/inventory' },
         ],
       },
       {
@@ -180,7 +233,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/scrolling' },
           {
             pathname: '/x/react-data-grid/list-view',
-            title: 'List view',
             plan: 'pro',
           },
           {
@@ -236,9 +288,9 @@ const pages: MuiPage[] = [
         subheader: 'Components',
         newFeature: true,
         children: [
-          { pathname: '/x/react-data-grid/components/usage', title: 'Usage' },
-          { pathname: '/x/react-data-grid/components/toolbar', title: 'Toolbar' },
-          { pathname: '/x/react-data-grid/components/export', title: 'Export' },
+          { pathname: '/x/react-data-grid/components/usage' },
+          { pathname: '/x/react-data-grid/components/toolbar' },
+          { pathname: '/x/react-data-grid/components/export' },
           { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
           {
             pathname: '/x/react-data-grid/components/columns-panel',
@@ -281,7 +333,7 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
           { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
-          { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
+          { pathname: '/x/react-data-grid/overlays' },
           { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
         ],
       },
@@ -582,13 +634,11 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-charts/sparkline',
-            title: 'Sparkline',
           },
           { pathname: '/x/react-charts/gauge' },
           { pathname: '/x/react-charts/radar' },
           {
             pathname: '/x/react-charts/heatmap',
-            title: 'Heatmap',
             plan: 'pro',
           },
           {
@@ -623,7 +673,6 @@ const pages: MuiPage[] = [
               },
               {
                 pathname: '/x/react-charts/export',
-                title: 'Export',
                 plan: 'pro',
               },
               { pathname: '/x/react-charts/highlighting' },
@@ -632,7 +681,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/localization' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
-              { pathname: '/x/react-charts/toolbar', title: 'Toolbar' },
+              { pathname: '/x/react-charts/toolbar' },
               { pathname: '/x/react-charts/tooltip' },
               {
                 pathname: '/x/react-charts/zoom-and-pan',
@@ -687,11 +736,11 @@ const pages: MuiPage[] = [
                 title: 'Hooks',
                 children: [
                   { pathname: '/x/react-charts/hooks', title: 'Overview' },
-                  { pathname: '/x/react-charts/hooks/use-series', title: 'useSeries' },
+                  { pathname: '/x/react-charts/hooks/use-series', title: 'Series' },
                   { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
                   { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
-                  { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
-                  { pathname: '/x/react-charts/hooks/use-axes', title: 'useAxes' },
+                  { pathname: '/x/react-charts/hooks/use-scale', title: 'Scale' },
+                  { pathname: '/x/react-charts/hooks/use-axes', title: 'Axis' },
                   { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
                 ],
               },
@@ -767,6 +816,7 @@ const pages: MuiPage[] = [
       },
     ],
   },
+  ...schedulerPages,
   {
     pathname: '/x/migration-group',
     title: 'Migration',

@@ -18,8 +18,8 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   schedulerResourceSelectors.visibleMap,
   schedulerResourceSelectors.processedResourceList,
   schedulerResourceSelectors.processedResourceChildrenLookup,
-  schedulerResourceSelectors.resourceParentIdLookup,
   schedulerOtherSelectors.displayTimezone,
+  (state: State) => state.plan,
 
   (
     adapter,
@@ -27,8 +27,8 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     visibleResources,
     resources,
     resourcesChildrenMap,
-    resourceParentIds,
     displayTimezone,
+    plan,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
@@ -40,8 +40,8 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
       end,
       events,
       visibleResources,
-      resourceParentIds,
       displayTimezone,
+      plan,
     });
 
     for (const occurrence of occurrences) {
@@ -63,6 +63,10 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
       }[] = [];
 
       for (const resource of sortedResources) {
+        if (visibleResources[resource.id] === false) {
+          continue;
+        }
+
         result.push({
           resource,
           occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],
@@ -93,15 +97,18 @@ const occurrencesGroupedByResourceMapSelector = createSelectorMemoized(
 );
 
 export const schedulerOccurrenceSelectors = {
-  // TODO: Pass the occurrence key instead of the start and end dates once the occurrences are stored in the state.
-  isStartedOrEnded: createSelectorMemoized(
+  isStarted: createSelector(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
-    (adapter, now, start: SchedulerProcessedDate, end: SchedulerProcessedDate) => {
-      return {
-        started: adapter.isBefore(start.value, now) || adapter.isEqual(start.value, now),
-        ended: adapter.isBefore(end.value, now),
-      };
+    (adapter, now, start: SchedulerProcessedDate) => {
+      return adapter.isBefore(start.value, now) || adapter.isEqual(start.value, now);
+    },
+  ),
+  isEnded: createSelector(
+    (state: State) => state.adapter,
+    (state: State) => state.nowUpdatedEveryMinute,
+    (adapter, now, end: SchedulerProcessedDate) => {
+      return adapter.isBefore(end.value, now);
     },
   ),
   groupedByResourceList: occurrencesGroupedByResourceListSelector,

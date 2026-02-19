@@ -2,7 +2,6 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
@@ -11,7 +10,7 @@ import {
   SchedulerEventOccurrence,
   SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
-import { processEvent } from '@mui/x-scheduler-headless/process-event';
+import { processEvent, resolveEventDate } from '@mui/x-scheduler-headless/process-event';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/internals/utils/recurring-events';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
@@ -27,9 +26,9 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
  * Minimal event builder for tests.
  *
  * Scope:
- * - Builds a valid SchedulerEvent.
- * - Uses the provided (or default) adapter for all date ops.
- * - Can optionally derive a SchedulerEventOccurrence via .buildOccurrence().
+ * - Builds a valid SchedulerEvent with string dates (instant or wall-time).
+ * - Uses the provided (or default) adapter for date computations.
+ * - Can optionally derive a SchedulerEventOccurrence via .toOccurrence().
  */
 export class EventBuilder {
   protected event: SchedulerEvent;
@@ -44,8 +43,8 @@ export class EventBuilder {
     this.event = {
       id,
       title: `Event ${id}`,
-      start,
-      end,
+      start: start.toISOString(),
+      end: end.toISOString(),
       description: `Event ${id} description`,
     };
   }
@@ -99,13 +98,7 @@ export class EventBuilder {
 
   /** Set exception dates for recurrence. */
   exDates(dates?: string[]) {
-    dates?.forEach((date) => {
-      if (!date.endsWith('Z')) {
-        throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-      }
-    });
-
-    this.event.exDates = dates?.map((date) => this.adapter.date(date, 'default'));
+    this.event.exDates = dates;
     return this;
   }
 
@@ -153,46 +146,28 @@ export class EventBuilder {
   // Time setters
   // ─────────────────────────────────────────────
 
-  /**
-   * Manually sets the start date/time using an ISO-like string.
-   * Useful for fine-grained control (e.g., pairing with `.endAt(...)`).
-   */
-  startAt(start: string | TemporalSupportedObject) {
-    if (typeof start === 'string' && !start.endsWith('Z')) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    const startDate = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
-    this.event.start = startDate;
+  /** Sets the start date/time as a string (instant or wall-time). */
+  startAt(start: string) {
+    this.event.start = start;
     return this;
   }
 
-  /**
-   * Manually sets the end date/time using an ISO-like string.
-   * Useful for fine-grained control (e.g., pairing with `.startAt(...)`).
-   */
-  endAt(end: string | TemporalSupportedObject) {
-    if (typeof end === 'string' && !end.endsWith('Z')) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    const endDate = typeof end === 'string' ? this.adapter.date(end, 'default') : end;
-    this.event.end = endDate;
+  /** Sets the end date/time as a string (instant or wall-time). */
+  endAt(end: string) {
+    this.event.end = end;
     return this;
   }
 
   /**
    * Create a single-day timed event starting at `start` with the given duration (minutes).
+   * Computes the end from the start using the adapter.
    */
-  singleDay(start: string | TemporalSupportedObject, durationMinutes = 60) {
-    if (typeof start === 'string' && !start.endsWith('Z')) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    const startDate = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
+  singleDay(start: string, durationMinutes = 60) {
+    const dataTimezone = this.event.timezone ?? 'default';
+    const startDate = resolveEventDate(start, dataTimezone, this.adapter);
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
-    this.event.start = startDate;
-    this.event.end = endDate;
+    this.event.start = start;
+    this.event.end = endDate.toISOString();
     return this;
   }
 
@@ -201,35 +176,21 @@ export class EventBuilder {
    * Sets `allDay=true`.
    */
   fullDay(date: string) {
-    if (typeof date === 'string' && !date.endsWith('Z')) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    const d = this.adapter.date(date, 'default');
-    this.event.start = this.adapter.startOfDay(d);
-    this.event.end = this.adapter.endOfDay(d);
+    const dataTimezone = this.event.timezone ?? 'default';
+    const d = resolveEventDate(date, dataTimezone, this.adapter);
+    this.event.start = this.adapter.startOfDay(d).toISOString();
+    this.event.end = this.adapter.endOfDay(d).toISOString();
     this.event.allDay = true;
     return this;
   }
 
   /**
-   * Create an event spanning a start and end.
+   * Sets start and end as strings (instant or wall-time).
    * Optionally override `allDay`.
    */
-  span(
-    start: string | TemporalSupportedObject,
-    end: string | TemporalSupportedObject,
-    opts?: { allDay?: boolean },
-  ) {
-    if (
-      (typeof start === 'string' && !start.endsWith('Z')) ||
-      (typeof end === 'string' && !end.endsWith('Z'))
-    ) {
-      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
-    }
-
-    this.event.start = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
-    this.event.end = typeof end === 'string' ? this.adapter.date(end, 'default') : end;
+  span(start: string, end: string, opts?: { allDay?: boolean }) {
+    this.event.start = start;
+    this.event.end = end;
     if (opts?.allDay !== undefined) {
       this.event.allDay = opts.allDay;
     }
@@ -246,8 +207,10 @@ export class EventBuilder {
    * - If kind + rule: merges your rrule over the preset.
    */
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
-    const anchor =
-      this.event.start ?? this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, 'default');
+    const dataTimezone = this.event.timezone ?? 'default';
+    const anchor = this.event.start
+      ? resolveEventDate(this.event.start, dataTimezone, this.adapter)
+      : this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, 'default');
 
     let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
 
@@ -279,19 +242,20 @@ export class EventBuilder {
    * Defaults to the event start date.
    */
   toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
+    const dataTimezone = this.event.timezone ?? 'default';
     const rawStart = occurrenceStartDate
       ? this.adapter.date(occurrenceStartDate, 'default')
-      : this.event.start;
+      : resolveEventDate(this.event.start, dataTimezone, this.adapter);
 
     const baseProcessed = processEvent(this.event, this.displayTimezone, this.adapter);
     const originalDurationMs =
-      baseProcessed.displayTimezone.end.timestamp - baseProcessed.displayTimezone.start.timestamp;
+      baseProcessed.dataTimezone.end.timestamp - baseProcessed.dataTimezone.start.timestamp;
     const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
 
     const occurrenceModel: SchedulerEvent = {
       ...this.event,
-      start: rawStart,
-      end: rawEnd,
+      start: rawStart.toISOString(),
+      end: rawEnd.toISOString(),
     };
 
     const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter);
