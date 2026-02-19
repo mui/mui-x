@@ -1,4 +1,4 @@
-// Personal Agenda Events Dataset
+// Personal Agenda Recurring Events Dataset
 
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
