@@ -35,8 +35,26 @@ const resources = [
 
 ## Nested resources
 
-Use the `children` property to create hierarchical resource structures.
-The side panel lets users toggle entire groups at once:
+Use the `children` property to create hierarchical resource structures:
+
+```tsx
+const resources = [
+  {
+    id: 'academics',
+    title: 'Academics',
+    children: [
+      {
+        id: 'stem',
+        title: 'STEM',
+        children: [
+          { id: 'computer-science', title: 'Computer Science' },
+          { id: 'mathematics', title: 'Mathematics' },
+        ],
+      },
+    ],
+  },
+];
+```
 
 {{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
 

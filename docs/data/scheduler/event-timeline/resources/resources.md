@@ -39,8 +39,26 @@ On the Event Timeline, events without resource are not rendered at all.
 
 ## Nested resources
 
-Use the `children` property to create hierarchical resource structures.
-The side panel lets users toggle entire groups at once:
+Use the `children` property to create hierarchical resource structures:
+
+```tsx
+const resources = [
+  {
+    id: 'engineering',
+    title: 'Engineering',
+    children: [
+      {
+        id: 'frontend',
+        title: 'Frontend',
+        children: [
+          { id: 'web-app', title: 'Web App' },
+          { id: 'mobile-app', title: 'Mobile App' },
+        ],
+      },
+    ],
+  },
+];
+```
 
 {{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
 
