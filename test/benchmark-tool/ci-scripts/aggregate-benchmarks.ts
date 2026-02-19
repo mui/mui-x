@@ -10,23 +10,29 @@ async function main() {
   const allFiles = await fs.readdir(benchmarksDir);
   const jsonFiles = allFiles.filter((f) => f.endsWith('.json') && f !== 'results.json');
 
+  const benchmarks = Object.fromEntries(
+    await Promise.all(
+      jsonFiles.map(async (file) => {
+        const content = await fs.readFile(path.join(benchmarksDir, file), 'utf-8');
+        const report = JSON.parse(content) as BenchmarkReport;
+        const benchmarkName = path.basename(file, '.json');
+        return [
+          benchmarkName,
+          {
+            duration: extractTotalDuration(report),
+            renderCount: report.renders.length,
+            iterations: report.metadata?.iterations ?? 1,
+          },
+        ] as const;
+      }),
+    ),
+  );
+
   const results: AggregatedResults = {
     commit,
     timestamp: Date.now(),
-    benchmarks: {},
+    benchmarks,
   };
-
-  for (const file of jsonFiles) {
-    const content = await fs.readFile(path.join(benchmarksDir, file), 'utf-8');
-    const report = JSON.parse(content) as BenchmarkReport;
-    const benchmarkName = path.basename(file, '.json');
-
-    results.benchmarks[benchmarkName] = {
-      duration: extractTotalDuration(report),
-      renderCount: report.renders.length,
-      iterations: report.metadata?.iterations ?? 1,
-    };
-  }
 
   const outputPath = path.join(benchmarksDir, 'results.json');
   await fs.writeFile(outputPath, JSON.stringify(results, null, 2));

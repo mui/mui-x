@@ -69,6 +69,7 @@ function RowMenu({ rowData }: RowProps) {
             {menuItems.map((item) => (
               <Menu.Item
                 key={item.index}
+                // eslint-disable-next-line no-console
                 onClick={() => console.log(`Clicked ${item.label} for ${rowData.label}`)}
                 className={menuDemoStyles.Item}
               >
