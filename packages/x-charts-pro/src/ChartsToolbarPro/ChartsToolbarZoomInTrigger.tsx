@@ -42,7 +42,7 @@ const ChartsToolbarZoomInTrigger = React.forwardRef<
     ref,
   });
 
-  return element;
+  return <React.Fragment>{element}</React.Fragment>;
 });
 
 ChartsToolbarZoomInTrigger.propTypes = {
