@@ -82,8 +82,8 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
       sx={(theme) => ({
         borderWidth: 0,
         borderTopWidth: 1,
-        height: 'fit-content',
         m: 0,
+        overflow: 'hidden',
         '&[data-dragging]': {
           outline: `1px solid ${theme.palette.primary.light}`,
         },
