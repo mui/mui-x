@@ -1,4 +1,4 @@
-import type { LegendItemParams } from '../../ChartsLegend';
+import type { SeriesLegendItemParams } from '../../ChartsLegend';
 import { getLabel } from '../../internals/getLabel';
 import { type LegendGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
@@ -19,7 +19,7 @@ const legendGetter: LegendGetter<'line'> = (params) => {
       label: formattedLabel,
     });
     return acc;
-  }, [] as LegendItemParams[]);
+  }, [] as SeriesLegendItemParams[]);
 };
 
 export default legendGetter;
