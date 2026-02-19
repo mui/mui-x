@@ -13,7 +13,8 @@ export interface HeatmapSeriesType
     CartesianSeriesType {
   type: 'heatmap';
   /**
-   * Data associated to each bar.
+   * Data associated to each cell in the heatmap.
+   * Each entry is a tuple [xIndex, yIndex, value].
    */
   data?: readonly HeatmapValueType[];
   /**
@@ -27,7 +28,7 @@ export interface HeatmapSeriesType
 }
 
 /**
- * An object that allows to identify a single bar.
+ * An object that allows to identify a single cell.
  * Used for item interaction
  */
 export type HeatmapItemIdentifier = {
@@ -54,4 +55,9 @@ export type HeatmapItemIdentifier = {
 export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
   HeatmapSeriesType,
   CommonDefaultizedProps
-> {}
+> {
+  /**
+   * Map the `xIndex` and `yIndex` to the corresponding dataIndex in the `data`.
+   */
+  dataIndexLookup: Map<number, Map<number, number>>;
+}
