@@ -212,8 +212,7 @@ function estimateRecurrenceEnd(event: SchedulerEvent): Date | null {
   const eventDuration = eventEnd.getTime() - eventStart.getTime();
 
   if (rrule.until) {
-    const untilDate = new Date(rrule.until as string | number);
-    return new Date(untilDate.getTime() + eventDuration);
+    return new Date(rrule.until.getTime() + eventDuration);
   }
 
   if (rrule.count) {
