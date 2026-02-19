@@ -8,10 +8,9 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEvent } from '../event';
-import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 import { EventDialogTrigger } from '../event-dialog';
 import { useEventDialogContext } from '../event-dialog/EventDialog';
-import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const EVENT_HEIGHT = 22;
 
@@ -55,7 +54,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
-  const classes = useEventCalendarClasses();
+  const { classes } = useEventCalendarStyledContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -67,17 +66,6 @@ export function DayGridCell(props: DayGridCellProps) {
     day.value,
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
-
-  // Feature hooks
-  const eventCreationProps = useEventCreationProps(() => {
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      surfaceType: 'day-grid',
-      start: adapter.startOfDay(day.value),
-      end: adapter.endOfDay(day.value),
-      resourceId: null,
-    });
-  });
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
@@ -100,7 +88,6 @@ export function DayGridCell(props: DayGridCellProps) {
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) || undefined}
-      {...eventCreationProps}
     >
       <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
         {day.withPosition.map((occurrence) => {
