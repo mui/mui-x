@@ -122,7 +122,7 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
                 command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser --project x-date-pickers-pro describeValidation.MobileDateTimeRangePicker.test.tsx"
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser --project x-date-pickers-pro"
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
@@ -133,7 +133,7 @@ jobs:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser --coverage --project x-date-pickers-pro describeValidation.MobileDateTimeRangePicker.test.tsx"
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser --coverage --project x-date-pickers-pro"
             - code-infra/upload-coverage:
                 key: << parameters.react-version >>-browser
       - store_test_results:
