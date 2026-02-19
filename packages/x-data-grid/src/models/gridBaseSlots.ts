@@ -1,4 +1,4 @@
-import { GridValidRowModel } from './gridRows';
+import type { GridValidRowModel } from './gridRows';
 
 type Ref<T = HTMLElement> = React.RefCallback<T | null> | React.RefObject<T | null> | null;
 
