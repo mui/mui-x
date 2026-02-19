@@ -16,9 +16,15 @@ export function createCommonKeyboardFocusHandler<
   const keyboardFocusHandler = (event: KeyboardEvent) => {
     switch (event.key) {
       case 'ArrowRight':
-        return createGetNextIndexFocusedItem<TInputSeriesType, TSeriesType>(outSeriesTypes, allowCycles);
+        return createGetNextIndexFocusedItem<TInputSeriesType, TSeriesType>(
+          outSeriesTypes,
+          allowCycles,
+        );
       case 'ArrowLeft':
-        return createGetPreviousIndexFocusedItem<TInputSeriesType, TSeriesType>(outSeriesTypes, allowCycles);
+        return createGetPreviousIndexFocusedItem<TInputSeriesType, TSeriesType>(
+          outSeriesTypes,
+          allowCycles,
+        );
       case 'ArrowDown':
         return createGetPreviousSeriesFocusedItem<TInputSeriesType, TSeriesType>(outSeriesTypes);
       case 'ArrowUp':
