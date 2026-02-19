@@ -18,13 +18,13 @@ import {
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
-import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 import { EventDialogTrigger } from '../../internals/components/event-dialog';
 import { useEventDialogContext } from '../../internals/components/event-dialog/EventDialog';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
+import { EventSkeleton } from '../../internals/components/event-skeleton';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
@@ -179,6 +179,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     day.value,
   );
   const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
   // Ref hooks
@@ -205,17 +206,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Day number header + max events
   const rowCount = 1 + maxEvents;
 
-  const eventCreationProps = useEventCreationProps(() => {
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      surfaceType: 'day-grid',
-      start: adapter.startOfDay(day.value),
-      end: adapter.endOfDay(day.value),
-      lockSurfaceType: true,
-      resourceId: null,
-    });
-  });
-
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
@@ -232,8 +222,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       data-current={isToday || undefined}
       data-other-month={!isCurrentMonth || undefined}
       data-weekend={isWeekend(adapter, day.value) || undefined}
+      lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
-      {...eventCreationProps}
     >
       {hasDayView ? (
         <MonthViewCellNumberButton
@@ -248,24 +238,26 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         cellNumberContent
       )}
       <MonthViewCellEvents className={classes.monthViewCellEvents}>
-        {visibleOccurrences.map((occurrence) => {
-          if (occurrence.position.isInvisible) {
-            return (
-              <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
-            );
-          }
+        {isLoading && <EventSkeleton data-variant="day-grid" />}
+        {!isLoading &&
+          visibleOccurrences.map((occurrence) => {
+            if (occurrence.position.isInvisible) {
+              return (
+                <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
+              );
+            }
 
-          return (
-            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-              <DayGridEvent
-                occurrence={occurrence}
-                variant={
-                  isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
-                }
-              />
-            </EventDialogTrigger>
-          );
-        })}
+            return (
+              <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+                <DayGridEvent
+                  occurrence={occurrence}
+                  variant={
+                    isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
+                  }
+                />
+              </EventDialogTrigger>
+            );
+          })}
         {hiddenCount > 0 && (
           <MoreEventsPopoverTrigger occurrences={day.withPosition} day={day}>
             <MonthViewMoreEvents

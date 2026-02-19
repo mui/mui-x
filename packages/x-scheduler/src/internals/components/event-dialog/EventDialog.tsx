@@ -82,8 +82,8 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
       sx={(theme) => ({
         borderWidth: 0,
         borderTopWidth: 1,
-        height: 'fit-content',
         m: 0,
+        overflow: 'hidden',
         '&[data-dragging]': {
           outline: `1px solid ${theme.palette.primary.light}`,
         },
@@ -155,6 +155,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, ...other } = props;
   const store = useSchedulerStoreContext();
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   return (
     <EventDialog.Provider
@@ -172,7 +173,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
       }}
     >
       {children}
-      {isScopeDialogOpen && <RecurringScopeDialog />}
+      {showRecurrence && isScopeDialogOpen && <RecurringScopeDialog />}
     </EventDialog.Provider>
   );
 }

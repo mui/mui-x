@@ -214,7 +214,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, adapter],
   );
 
-  const handleMonthSelection = useEventCallback((event: React.MouseEvent, month: number) => {
+  const handleMonthSelection = useEventCallback((_event: React.UIEvent, month: number) => {
     if (readOnly) {
       return;
     }
@@ -269,7 +269,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
         break;
       case 'ArrowRight':
         focusMonth((monthsInYear + month + (isRtl ? -1 : 1)) % monthsInYear);
-
+        event.preventDefault();
+        break;
+      case 'Enter':
+      case ' ':
+        handleMonthSelection(event, month);
         event.preventDefault();
         break;
       default:
