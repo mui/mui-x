@@ -24,4 +24,16 @@ export const timelineOccurrencePlaceholderSelectors = {
 
     return state.occurrencePlaceholder;
   }),
+  isCreatingInResource: createSelector((state: State, resourceId: SchedulerResourceId | null) => {
+    const placeholder = state.occurrencePlaceholder;
+    if (
+      placeholder === null ||
+      placeholder.surfaceType !== 'timeline' ||
+      placeholder.type !== 'creation' ||
+      placeholder.resourceId !== resourceId
+    ) {
+      return false;
+    }
+    return true;
+  }),
 };
