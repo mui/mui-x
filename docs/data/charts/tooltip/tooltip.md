@@ -98,6 +98,19 @@ This removes the header showing the x-axis value from the tooltip.
 To hide a series, set the formatted value to `null`.
 To display the series with a blank space, return an empty string.
 
+## Sorting values
+
+Use the `sort` prop to modify the series order in the axis tooltip.
+This prop accepts the following values:
+
+- `'none'` (default): Shows series according to the order they are defined.
+- `'asc'`: Sort series by ascending values.
+- `'desc'`: Sort series by descending values.
+
+Regardless of the `sort` prop being `'asc'` or `'desc'`, series whose value is `null` are always sorted last.
+
+{{"demo": "SortDemo.js"}}
+
 ## Position
 
 By default, the tooltip is placed relative to the pointer position.
@@ -105,8 +118,10 @@ If the pointer is not available, it's placed relative to the node instead (for e
 
 You can modify this behavior with the `anchor`, `position`, and `placement` props.
 
-- `anchor: 'pointer' | 'node'`: Indicates whether the tooltip should be placed relative to the pointer or the node
-- `position: 'top' | 'right' | 'bottom' | 'left'`: Defines the anchor position compared to the node. This prop has no effect if the anchor is the pointer
+- `anchor: 'pointer' | 'node' | 'chart'`: Indicates the element used to anchor the tooltip.
+  - The `anchor: 'node'` is only available for tooltip with `trigger: 'item'`
+  - The `anchor: 'chart'` is only available for tooltip with `trigger: 'axis'`
+- `position: 'top' | 'right' | 'bottom' | 'left'`: Defines the anchor position compared to the node or chart. This prop has no effect if the anchor is the pointer
 - `placement`: The tooltip placement from [PopperJS](https://popper.js.org/docs/v2/constructors/#options). It specifies the tooltip position in relation to the anchor position. By default, it uses the same value as `position` if defined
 
 For example, setting `anchor: 'node'`, `position: 'bottom'`, and `placement: 'top'` on a bar chart renders a tooltip above the bottom of a bar.
@@ -176,6 +191,20 @@ Otherwise no tooltip will be shown.
 The item tooltip control can be used to sync tooltips between multiple charts.
 
 {{"demo": "SyncTooltip.js"}}
+
+## Controlling the axis tooltip
+
+You can control the axis tooltip with `tooltipAxis` and `onTooltipAxisChange`.
+The manage an array of objects `{ axisId, dataIndex }`.
+
+When the axis tooltip is controlled, the `anchor` is set to `'chart'` if the pointer is outside of the chart.
+
+:::warning
+Make sure the tooltip `trigger` is set to `"axis"`.
+Otherwise no tooltip will be shown.
+:::
+
+{{"demo": "ControlledAxisTooltip.js"}}
 
 ## Creating a tooltip
 

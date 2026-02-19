@@ -13,7 +13,7 @@ export function useEventOccurrencesWithTimelinePosition(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const sortedOccurrences = sortEventOccurrences(occurrences, adapter);
+    const sortedOccurrences = sortEventOccurrences(occurrences);
     const conflicts = buildOccurrenceConflicts(adapter, sortedOccurrences);
 
     const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);

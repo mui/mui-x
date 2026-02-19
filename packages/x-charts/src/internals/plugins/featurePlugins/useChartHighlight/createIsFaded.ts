@@ -1,12 +1,12 @@
-import { type HighlightScope } from './highlightConfig.types';
+import { type HighlightScope, type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type HighlightItemData } from './useChartHighlight.types';
 
 function alwaysFalse(): boolean {
   return false;
 }
 
-export function createIsFaded(
-  highlightScope: HighlightScope | null | undefined,
+export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
+  highlightScope: HighlightScope<SeriesType> | null | undefined,
   highlightedItem: HighlightItemData | null,
 ) {
   if (!highlightScope || !highlightedItem) {

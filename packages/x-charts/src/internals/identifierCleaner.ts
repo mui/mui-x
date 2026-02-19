@@ -1,4 +1,4 @@
-import type { SeriesId, SeriesItemIdentifier } from '../models';
+import type { SeriesId, SeriesItemIdentifierWithType } from '../models';
 import type { ChartSeriesType } from '../models/seriesType/config';
 
 /**
@@ -9,7 +9,7 @@ export const identifierCleanerSeriesIdDataIndex = <T extends ChartSeriesType>(id
   type: T;
   seriesId: SeriesId;
   dataIndex?: number;
-}): SeriesItemIdentifier<T> => {
+}): SeriesItemIdentifierWithType<T> => {
   // @ts-expect-error we need to trust the output type here, since T is generic
   return {
     type: identifier.type,
