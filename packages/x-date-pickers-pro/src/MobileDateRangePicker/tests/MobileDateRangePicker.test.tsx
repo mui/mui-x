@@ -101,13 +101,13 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the start date
-      fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
-      fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
+      await user.click(screen.getByRole('gridcell', { name: '5' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -146,7 +146,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the end date
-      fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
@@ -179,7 +179,7 @@ describe('<MobileDateRangePicker />', () => {
       });
 
       // Change the end date
-      fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
 
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
@@ -213,10 +213,10 @@ describe('<MobileDateRangePicker />', () => {
       });
 
       // Change the start date (already tested)
-      fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
 
       // Cancel the modifications
-      fireEvent.click(screen.getByText(/cancel/i));
+      await user.click(screen.getByText(/cancel/i));
       expect(onChange.callCount).to.equal(2); // Start date change + reset
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
@@ -249,10 +249,10 @@ describe('<MobileDateRangePicker />', () => {
       });
 
       // Change the start date (already tested)
-      fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
+      await user.click(screen.getByRole('gridcell', { name: '3' }));
 
       // Accept the modifications
-      fireEvent.click(screen.getByText(/ok/i));
+      await user.click(screen.getByText(/ok/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
@@ -286,7 +286,7 @@ describe('<MobileDateRangePicker />', () => {
       });
 
       // Clear the date
-      fireEvent.click(screen.getByText(/clear/i));
+      await user.click(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
       expect(onAccept.callCount).to.equal(1);
@@ -309,6 +309,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
+
       await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
@@ -316,7 +317,7 @@ describe('<MobileDateRangePicker />', () => {
       });
 
       // Clear the date
-      fireEvent.click(screen.getByText(/clear/i));
+      await user.click(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
@@ -332,8 +333,8 @@ describe('<MobileDateRangePicker />', () => {
     });
   });
 
-  it('should ignore "currentMonthCalendarPosition" prop value and have expected selection behavior', () => {
-    render(
+  it('should ignore "currentMonthCalendarPosition" prop value and have expected selection behavior', async () => {
+    const { user } = render(
       <MobileDateRangePicker
         currentMonthCalendarPosition={2}
         open
@@ -341,8 +342,8 @@ describe('<MobileDateRangePicker />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
-    fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
+    await user.click(screen.getByRole('gridcell', { name: '3' }));
+    await user.click(screen.getByRole('gridcell', { name: '5' }));
 
     expect(screen.getByText('Apr 3')).not.to.equal(null);
     expect(screen.getByText('Apr 5')).not.to.equal(null);
