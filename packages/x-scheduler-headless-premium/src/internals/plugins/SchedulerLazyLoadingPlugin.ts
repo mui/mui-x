@@ -42,6 +42,20 @@ export class SchedulerLazyLoadingPlugin<
     immediate = false,
   ) => {
     if (this.dataManager) {
+      const { adapter } = this.store.state;
+
+      // Set loading state immediately (before the debounce delay)
+
+      if (
+        this.cache &&
+        !this.cache.hasCoverage(
+          adapter.getTime(range.start),
+          adapter.getTime(adapter.endOfDay(range.end)),
+        )
+      ) {
+        this.store.set('isLoading', true);
+      }
+
       if (immediate) {
         await this.dataManager.queueImmediate([range]);
       } else {
@@ -88,9 +102,6 @@ export class SchedulerLazyLoadingPlugin<
     }
 
     try {
-      // Set loading state
-      this.store.set('isLoading', true);
-      this.store.set('errors', []);
       const events = await dataSource.getEvents(range.start, range.end);
       this.cache!.setRange(
         adapter.getTime(range.start),
@@ -105,6 +116,7 @@ export class SchedulerLazyLoadingPlugin<
       this.store.update({
         ...this.store.state,
         ...eventsState,
+        errors: [],
       });
       // Mark request as settled
       await this.dataManager.setRequestSettled(range);

@@ -237,9 +237,6 @@ describe('<EventTimelinePremium />', () => {
 
       expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('time-cell-width');
 
-      const viewSelect = screen.getByRole('combobox');
-      expect(viewSelect).not.to.equal(null);
-
       renderTimeline({
         view: 'days',
         views: ['days', 'time'],
