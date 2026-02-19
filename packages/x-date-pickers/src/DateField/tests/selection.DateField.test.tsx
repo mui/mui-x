@@ -33,34 +33,34 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
     });
 
-    describe('focusedSectionOnFocus prop', () => {
-      it('should select the section specified in `focusedSectionOnFocus` on mount (v7 index)', () => {
+    describe('initialFocusedSection prop', () => {
+      it('should select the section specified in `initialFocusedSection` on mount (v7 index)', () => {
         const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           autoFocus: true,
-          focusedSectionOnFocus: 1,
+          initialFocusedSection: 1,
         });
         expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
         expect(getCleanedSelectedContent()).to.equal('DD');
         view.unmount();
       });
 
-      it('should select the section specified in `focusedSectionOnFocus` on mount (v7 name)', () => {
+      it('should select the section specified in `initialFocusedSection` on mount (v7 name)', () => {
         const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           autoFocus: true,
-          focusedSectionOnFocus: 'year',
+          initialFocusedSection: 'year',
         });
         expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
         expect(getCleanedSelectedContent()).to.equal('YYYY');
         view.unmount();
       });
 
-      it('should select all sections on mount if `focusedSectionOnFocus="all"` (v7)', () => {
+      it('should select all sections on mount if `initialFocusedSection="all"` (v7)', () => {
         const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           autoFocus: true,
-          focusedSectionOnFocus: 'all',
+          initialFocusedSection: 'all',
         });
         expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
         expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');

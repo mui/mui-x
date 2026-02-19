@@ -77,7 +77,7 @@ Otherwise, the section(s) might be selected on the wrong input.
 
 ### Focus a specific section on focus
 
-Use the `focusedSectionOnFocus` prop to control which section should be focused when the field is focused.
+Use the `initialFocusedSection` prop to control which section should be focused when the field is focused.
 By default, the first section is focused.
 
 If you provide a string of type `FieldSectionType`, the first section with that name will be selected.

@@ -195,7 +195,7 @@ export const useFieldV6TextField = <
         input.value.length &&
         Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length
       ) {
-        setSelectedSections(internalPropsWithDefaults.focusedSectionOnFocus ?? 'all');
+        setSelectedSections(internalPropsWithDefaults.initialFocusedSection ?? 'all');
       } else {
         syncSelectionFromDOM();
       }

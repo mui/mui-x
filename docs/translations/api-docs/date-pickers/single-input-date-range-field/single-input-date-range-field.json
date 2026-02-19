@@ -29,7 +29,7 @@
     "focused": {
       "description": "If <code>true</code>, the component is displayed in focused state."
     },
-    "focusedSectionOnFocus": {
+    "initialFocusedSection": {
       "description": "The index or type of the section to focus when the field is focused. If <code>null</code>, no section will be focused. If <code>undefined</code>, the first section will be focused."
     },
     "format": { "description": "Format of the date when rendered in the input(s)." },

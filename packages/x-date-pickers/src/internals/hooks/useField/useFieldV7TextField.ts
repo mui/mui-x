@@ -229,7 +229,7 @@ export const useFieldV7TextField = <
 
     if (autoFocus && !disabled && sectionListRef.current) {
       const newParsedSelectedSections = parseSelectedSections(
-        internalPropsWithDefaults.focusedSectionOnFocus ?? sectionOrder.startIndex,
+        internalPropsWithDefaults.initialFocusedSection ?? sectionOrder.startIndex,
         state.sections,
       );
 

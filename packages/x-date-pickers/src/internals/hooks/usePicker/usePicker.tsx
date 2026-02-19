@@ -70,7 +70,7 @@ export const usePicker = <
     enableAccessibleFieldDOMStructure,
     selectedSections,
     onSelectedSectionsChange,
-    focusedSectionOnFocus,
+    initialFocusedSection,
     format,
     label,
     // Other props
@@ -372,7 +372,7 @@ export const usePicker = <
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
-      focusedSectionOnFocus,
+      initialFocusedSection,
       fieldRef,
     }),
     [
@@ -380,7 +380,7 @@ export const usePicker = <
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
-      focusedSectionOnFocus,
+      initialFocusedSection,
       fieldRef,
     ],
   );

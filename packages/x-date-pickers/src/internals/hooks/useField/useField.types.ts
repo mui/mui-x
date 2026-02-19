@@ -108,7 +108,7 @@ export interface UseFieldInternalProps<
    * If `null`, no section will be focused.
    * If `undefined`, the first section will be focused.
    */
-  focusedSectionOnFocus?: Exclude<FieldSelectedSections, 'empty'>;
+  initialFocusedSection?: Exclude<FieldSelectedSections, 'empty'>;
   /**
    * The ref object used to imperatively interact with the field.
    */

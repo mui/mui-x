@@ -9,8 +9,8 @@ export default function FocusedSectionOnFocus() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2} sx={{ width: '300px' }}>
-        <DateField label="Focuses 'day' section" focusedSectionOnFocus="day" />
-        <DatePicker label="Focuses 'year' section" focusedSectionOnFocus="year" />
+        <DateField label="Focuses 'day' section" initialFocusedSection="day" />
+        <DatePicker label="Focuses 'year' section" initialFocusedSection="year" />
       </Stack>
     </LocalizationProvider>
   );
