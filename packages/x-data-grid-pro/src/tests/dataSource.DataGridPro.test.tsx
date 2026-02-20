@@ -22,10 +22,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const fetchRowsSpy = spy();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
-  function Reset() {
+  function Reset({ resetSpy }: { resetSpy: typeof fetchRowsSpy }) {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
-    }, []);
+      resetSpy.resetHistory();
+    }, [resetSpy]);
     return null;
   }
 
@@ -68,7 +68,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <Reset />
+        <Reset resetSpy={effectiveFetchRowsSpy} />
         <DataGridPro
           apiRef={apiRef}
           dataSource={dataSource}
