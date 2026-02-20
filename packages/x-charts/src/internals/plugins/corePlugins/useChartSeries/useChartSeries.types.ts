@@ -79,17 +79,26 @@ export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType
 
 export type IdentifierWithTypeFunction = {
   // Overloads for different identifier types
-  <SeriesType extends ChartSeriesType, Item extends SeriesItemIdentifier<SeriesType> | SeriesItemIdentifierWithType<SeriesType>>(
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends SeriesItemIdentifier<SeriesType> | SeriesItemIdentifierWithType<SeriesType>,
+  >(
     identifier: Item,
     typeOfIdentifier?: 'seriesItem',
   ): SeriesItemIdentifierWithType<SeriesType>;
 
-  <SeriesType extends ChartSeriesType, Item extends HighlightItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType>>(
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends HighlightItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType>,
+  >(
     identifier: Item,
     typeOfIdentifier?: 'highlightItem',
   ): HighlightItemIdentifierWithType<SeriesType>;
 
-  <SeriesType extends ChartSeriesType, Item extends VisibilityIdentifier<SeriesType> | VisibilityIdentifierWithType<SeriesType>>(
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends VisibilityIdentifier<SeriesType> | VisibilityIdentifierWithType<SeriesType>,
+  >(
     identifier: Item,
     typeOfIdentifier?: 'visibility',
   ): VisibilityIdentifierWithType<SeriesType>;

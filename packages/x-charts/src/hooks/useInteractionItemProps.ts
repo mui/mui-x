@@ -63,10 +63,10 @@ export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
       skip
         ? {}
         : {
-          onPointerEnter,
-          onPointerLeave,
-          onPointerDown,
-        },
+            onPointerEnter,
+            onPointerLeave,
+            onPointerDown,
+          },
     [skip, onPointerEnter, onPointerLeave],
   );
 };

@@ -76,30 +76,37 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
     });
   });
 
-  const setHighlight = useEventCallback((newItem: HighlightItemIdentifier<SeriesType> | SeriesItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType> | SeriesItemIdentifierWithType<SeriesType>
-  ) => {
-    const prevHighlight = store.state.highlight;
+  const setHighlight = useEventCallback(
+    (
+      newItem:
+        | HighlightItemIdentifier<SeriesType>
+        | SeriesItemIdentifier<SeriesType>
+        | HighlightItemIdentifierWithType<SeriesType>
+        | SeriesItemIdentifierWithType<SeriesType>,
+    ) => {
+      const prevHighlight = store.state.highlight;
 
-    const identifierWithType = instance.identifierWithType(
-      newItem,
-      'highlightItem',
-    ) satisfies HighlightItemIdentifierWithType<SeriesType>;
-    const cleanedIdentifier = instance.cleanIdentifier(identifierWithType, 'highlightItem');
-    if (fastObjectShallowCompare(prevHighlight.item, cleanedIdentifier)) {
-      return;
-    }
+      const identifierWithType = instance.identifierWithType(
+        newItem,
+        'highlightItem',
+      ) satisfies HighlightItemIdentifierWithType<SeriesType>;
+      const cleanedIdentifier = instance.cleanIdentifier(identifierWithType, 'highlightItem');
+      if (fastObjectShallowCompare(prevHighlight.item, cleanedIdentifier)) {
+        return;
+      }
 
-    params.onHighlightChange?.(cleanedIdentifier);
-    if (prevHighlight.isControlled) {
-      return;
-    }
+      params.onHighlightChange?.(cleanedIdentifier);
+      if (prevHighlight.isControlled) {
+        return;
+      }
 
-    store.set('highlight', {
-      item: cleanedIdentifier,
-      lastUpdate: 'pointer',
-      isControlled: false,
-    });
-  });
+      store.set('highlight', {
+        item: cleanedIdentifier,
+        lastUpdate: 'pointer',
+        isControlled: false,
+      });
+    },
+  );
 
   return {
     instance: {

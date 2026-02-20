@@ -21,7 +21,11 @@ export interface UseChartHighlightInstance<SeriesType extends ChartSeriesType> {
    * @param {HighlightItemIdentifier<SeriesType>} item The item to highlight.
    */
   setHighlight: (
-    item: HighlightItemIdentifier<SeriesType> | SeriesItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType> | SeriesItemIdentifierWithType<SeriesType>
+    item:
+      | HighlightItemIdentifier<SeriesType>
+      | SeriesItemIdentifier<SeriesType>
+      | HighlightItemIdentifierWithType<SeriesType>
+      | SeriesItemIdentifierWithType<SeriesType>,
   ) => void;
 }
 
