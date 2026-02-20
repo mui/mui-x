@@ -45,7 +45,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   function TestDataSource(
     props: Partial<DataGridProProps> & {
       shouldRequestsFail?: boolean;
-      transformGetRowsResponse?: (rows: GridGetRowsResponse['rows']) => GridGetRowsResponse['rows'];
+      transformGetRowsResponse?: (
+        rows: GridGetRowsResponse['rows'],
+        params: GridGetRowsParams,
+      ) => GridGetRowsResponse['rows'];
     },
   ) {
     apiRef = useGridApiRef();
@@ -74,7 +77,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
           const getRowsResponse = await fetchRows(url);
 
           return {
-            rows: transformGetRowsResponseProp(getRowsResponse.rows),
+            rows: transformGetRowsResponseProp(getRowsResponse.rows, params),
             rowCount: getRowsResponse.rowCount,
           };
         },
@@ -193,6 +196,49 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     expect(hasNestedGroupRequest).to.equal(true);
   });
 
+  it('should keep selected nested rows selected during background nested revalidation', async () => {
+    const { user } = render(<TestDataSource dataSourceCache={null} dataSourceRevalidateMs={100} />);
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+      .children[0];
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      const expandedNode = apiRef.current!.state.rows.tree[expandedRowId] as GridGroupNode;
+      expect(expandedNode.children.length).to.be.greaterThan(0);
+    });
+
+    const firstChildId = (apiRef.current!.state.rows.tree[expandedRowId] as GridGroupNode)
+      .children[0];
+    act(() => {
+      apiRef.current?.selectRow(firstChildId, true);
+    });
+    expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
+
+    fetchRowsSpy.resetHistory();
+
+    await waitFor(
+      () => {
+        const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
+          const url = new URL(call.firstArg as string);
+          const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+          return groupKeys.length > 0;
+        });
+        expect(hasNestedGroupRequest).to.equal(true);
+      },
+      { timeout: 2_500 },
+    );
+
+    expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
+  });
+
   it('should not set children loading state during background nested revalidation', async () => {
     const { user } = render(<TestDataSource dataSourceCache={null} dataSourceRevalidateMs={100} />);
 
@@ -232,6 +278,55 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       .some((call) => call.args[0] === expandedRowId && call.args[1] === true);
     setChildrenLoadingSpy.restore();
     expect(hasLoadingTrueCall).to.equal(false);
+  });
+
+  it('should remove stale rows when re-fetching expanded nested rows', async () => {
+    let hasTransformedTheNestedData = false;
+    const testRowId = 'test-nested-row-id-1';
+    const transformGetRowsResponse = (
+      rows: GridGetRowsResponse['rows'],
+      params: GridGetRowsParams,
+    ) => {
+      if (params.groupKeys?.length !== 1 || hasTransformedTheNestedData) {
+        return rows;
+      }
+
+      hasTransformedTheNestedData = true;
+      return rows.map((row, index) => {
+        if (index === 1) {
+          return { ...row, id: testRowId, name: `${row.name}-updated` };
+        }
+        return row;
+      });
+    };
+    const { user } = render(
+      <TestDataSource dataSourceCache={null} transformGetRowsResponse={transformGetRowsResponse} />,
+    );
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+      .children[0];
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
+    });
+
+    await act(async () => {
+      await apiRef.current?.dataSource.fetchRows(expandedRowId);
+    });
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(3);
+      expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
+    });
   });
 
   it('should fetch nested data when clicking on a dropdown', async () => {
