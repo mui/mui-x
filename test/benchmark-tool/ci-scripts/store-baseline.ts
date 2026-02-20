@@ -30,7 +30,7 @@ async function pushWithRetry(
       await $data`git push ${dryRunFlag} origin test-results`;
       return;
     } catch {
-      // eslint-disable-next-line no-console
+       
       console.error(`Push failed (attempt ${i}), pulling with rebase and retrying...`);
       await $data`git pull --rebase origin test-results`;
     }
@@ -79,7 +79,7 @@ async function main() {
   const monthlyDir = path.join(dataRepoDir, 'benchmarks/monthly');
   await fs.mkdir(monthlyDir, { recursive: true });
   const jsonlEntry = JSON.stringify(results);
-  await fs.appendFile(path.join(monthlyDir, `${month}.jsonl`), jsonlEntry + '\n');
+  await fs.appendFile(path.join(monthlyDir, `${month}.jsonl`), `${jsonlEntry  }\n`);
 
   // Commit and push
   const $data = $({ cwd: dataRepoDir });

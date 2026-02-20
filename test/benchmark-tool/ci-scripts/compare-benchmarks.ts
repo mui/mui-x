@@ -74,7 +74,7 @@ async function main() {
 
   if (failedBenchmarks.length > 0) {
     const names = failedBenchmarks.map((b) => b.name).join(', ');
-    // eslint-disable-next-line no-console
+     
     console.error(
       `Performance regression detected: ${names} exceeded the ${failThreshold}% threshold`,
     );
