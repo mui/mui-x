@@ -1,4 +1,4 @@
-import { type LegendItemParams } from '../../ChartsLegend/legendContext.types';
+import { type SeriesLegendItemParams } from '../../ChartsLegend/legendContext.types';
 import { getLabel } from '../../internals/getLabel';
 import { type LegendGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
@@ -19,7 +19,7 @@ const legendGetter: LegendGetter<'radar'> = (params) => {
       markType: series[seriesId].labelMarkType ?? 'square',
     });
     return acc;
-  }, [] as LegendItemParams[]);
+  }, [] as SeriesLegendItemParams[]);
 };
 
 export default legendGetter;
