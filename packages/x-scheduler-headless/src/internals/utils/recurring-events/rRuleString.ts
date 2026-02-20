@@ -1,6 +1,11 @@
 import { TemporalTimezone } from '../../../base-ui-copy/types';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
-import { RecurringEventByDayValue, RecurringEventRecurrenceRule } from '../../../models';
+import {
+  RecurringEventByDayValue,
+  RecurringEventRecurrenceRule,
+  SchedulerEventRecurrenceRule,
+} from '../../../models';
+import { resolveEventDate } from '../../../process-event/resolveEventDate';
 import { getAdapterCache, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -22,11 +27,17 @@ const SUPPORTED_RRULE_KEYS = new Set([
  */
 export function parseRRule(
   adapter: Adapter,
-  input: string | RecurringEventRecurrenceRule,
+  input: string | SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
 ): RecurringEventRecurrenceRule {
   if (typeof input === 'object') {
-    return input;
+    if (input.until != null) {
+      return {
+        ...input,
+        until: resolveEventDate(input.until, timezone, adapter),
+      };
+    }
+    return input as RecurringEventRecurrenceRule;
   }
 
   const rruleObject: Record<string, string> = {};

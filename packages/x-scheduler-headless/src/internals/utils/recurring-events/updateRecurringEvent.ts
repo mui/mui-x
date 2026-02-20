@@ -6,6 +6,7 @@ import {
   RecurringEventWeekDayCode,
   SchedulerEvent,
   SchedulerEventCreationProperties,
+  SchedulerEventRecurrenceRule,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
@@ -106,11 +107,24 @@ export function applyRecurringUpdateFollowing(
     });
   }
 
+  let newEventRRule: SchedulerEventRecurrenceRule | undefined;
+  if (newRRule != null) {
+    if (newRRule.until != null) {
+      newEventRRule = {
+        ...newRRule,
+        until: dateToEventString(adapter, newRRule.until, originalModel.start, dataTimezone),
+      };
+    } else {
+      const { until: unusedUntil, ...rest } = newRRule;
+      newEventRRule = rest;
+    }
+  }
+
   const newEvent: SchedulerEvent = {
     ...originalEvent.modelInBuiltInFormat,
     ...stringified,
     id: newEventId,
-    rrule: newRRule,
+    rrule: newEventRRule,
     extractedFromId: originalEvent.modelInBuiltInFormat.id,
   };
 

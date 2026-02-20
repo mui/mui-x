@@ -1,5 +1,5 @@
 import type { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
-import { RecurringEventRecurrenceRule } from './recurringEvent';
+import { RecurringEventRecurrenceRule, SchedulerEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
 
@@ -213,7 +213,7 @@ export interface SchedulerEvent {
    * or as a RecurringEventRecurrenceRule object.
    * If not defined, the event will have only one occurrence.
    */
-  rrule?: RecurringEventRecurrenceRule | string;
+  rrule?: SchedulerEventRecurrenceRule | string;
   /**
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
@@ -419,12 +419,13 @@ export interface SchedulerProcessedDate {
  */
 export type SchedulerEventUpdatedProperties = Omit<
   Partial<SchedulerEvent>,
-  'start' | 'end' | 'exDates'
+  'start' | 'end' | 'exDates' | 'rrule'
 > & {
   id: SchedulerEventId;
   start?: TemporalSupportedObject;
   end?: TemporalSupportedObject;
   exDates?: TemporalSupportedObject[];
+  rrule?: RecurringEventRecurrenceRule | string;
 };
 
 /**
@@ -433,11 +434,12 @@ export type SchedulerEventUpdatedProperties = Omit<
  */
 export type SchedulerEventCreationProperties = Omit<
   SchedulerEvent,
-  'id' | 'start' | 'end' | 'exDates'
+  'id' | 'start' | 'end' | 'exDates' | 'rrule'
 > & {
   start: string | TemporalSupportedObject;
   end: string | TemporalSupportedObject;
   exDates?: (string | TemporalSupportedObject)[];
+  rrule?: SchedulerEventRecurrenceRule | RecurringEventRecurrenceRule | string;
 };
 
 /**
