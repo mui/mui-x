@@ -327,7 +327,7 @@ LineChart.propTypes = {
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['line']).isRequired,
+    type: PropTypes.oneOf(['line']),
   }),
   /**
    * This prop is used to help implement the accessibility logic.

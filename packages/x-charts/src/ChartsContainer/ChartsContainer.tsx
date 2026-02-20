@@ -144,9 +144,9 @@ ChartsContainer.propTypes = {
    */
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
-      dataIndex: PropTypes.any,
-      seriesId: PropTypes.object.isRequired,
-      type: PropTypes.object,
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
     }),
   ),
   /**
@@ -166,7 +166,7 @@ ChartsContainer.propTypes = {
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -196,9 +196,9 @@ ChartsContainer.propTypes = {
    */
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
-      dataIndex: PropTypes.any,
-      seriesId: PropTypes.object.isRequired,
-      type: PropTypes.object,
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
     }),
   ),
   /**

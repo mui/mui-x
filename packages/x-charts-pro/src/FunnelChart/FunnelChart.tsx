@@ -297,7 +297,7 @@ FunnelChart.propTypes = {
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['funnel']).isRequired,
+    type: PropTypes.oneOf(['funnel']),
   }),
   /**
    * This prop is used to help implement the accessibility logic.

@@ -490,27 +490,27 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['line']).isRequired,
+      type: PropTypes.oneOf(['bar']),
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
+      type: PropTypes.oneOf(['line']),
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
+      type: PropTypes.oneOf(['scatter']),
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['scatter']).isRequired,
+      type: PropTypes.oneOf(['pie']),
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['pie']).isRequired,
+      type: PropTypes.oneOf(['radar']),
     }),
   ]),
   /**

@@ -248,7 +248,7 @@ ScatterChartPro.propTypes = {
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['scatter']).isRequired,
+    type: PropTypes.oneOf(['scatter']),
   }),
   /**
    * This prop is used to help implement the accessibility logic.

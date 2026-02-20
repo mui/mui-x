@@ -191,7 +191,7 @@ PieChartPro.propTypes = {
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['pie']).isRequired,
+    type: PropTypes.oneOf(['pie']),
   }),
   /**
    * This prop is used to help implement the accessibility logic.

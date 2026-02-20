@@ -249,9 +249,8 @@ Heatmap.propTypes = {
    * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['heatmap']).isRequired,
+    type: PropTypes.oneOf(['heatmap']),
     xIndex: PropTypes.number.isRequired,
     yIndex: PropTypes.number.isRequired,
   }),
