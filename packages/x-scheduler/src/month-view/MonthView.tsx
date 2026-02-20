@@ -101,10 +101,11 @@ const MonthViewBody = styled('div', {
   position: 'relative',
 });
 
-const CELL_PADDING = 8;
+const CELL_PADDING = 12; // theme.spacing(0.7) * 2 ≈ 11.2px, rounded up
 const DAY_NUMBER_HEADER_HEIGHT = 18;
 const EVENT_HEIGHT = 18;
-const EVENT_GAP = 5;
+const EVENT_GAP = 4; // theme.spacing(0.5) = 4px
+const CELL_GAP = 4; // theme.spacing(0.5) = 4px — gap between cell grid rows (empty rows from --row-count)
 
 const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
@@ -177,7 +178,7 @@ export const MonthView = React.memo(
         const cellHeight = cellRef.current!.clientHeight;
         const eventContainerHeight = cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT;
         const maxEventsCount = Math.floor(
-          (eventContainerHeight + EVENT_GAP) / (EVENT_HEIGHT + EVENT_GAP),
+          (eventContainerHeight + EVENT_GAP) / (EVENT_HEIGHT + EVENT_GAP + CELL_GAP),
         );
         setMaxEvents(maxEventsCount);
       },
