@@ -148,6 +148,21 @@ const resource = {
 Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-calendar/drag-interactions/).
 :::
 
+### Read-only
+
+Use the `areEventsReadOnly` property to mark all events of a resource as read-only:
+
+```ts
+const resource = {
+  // ...other properties
+  areEventsReadOnly: true,
+};
+```
+
+:::success
+Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-calendar/editing/#read-only).
+:::
+
 ## Store data in custom properties
 
 Use the `resourceModelStructure` prop to define how to read properties of the resource model when they don't match the model expected by the components:
