@@ -186,7 +186,9 @@ export function createEventModel<TEvent extends object>(
   // Internal callers (e.g. FormContent) may pass rrule.until as a TemporalSupportedObject.
   // Convert it to a string so the built-in model stays in SchedulerEvent format.
   const rrule: SchedulerEvent['rrule'] =
-    typeof event.rrule === 'object' && event.rrule.until != null && typeof event.rrule.until !== 'string'
+    typeof event.rrule === 'object' &&
+    event.rrule.until != null &&
+    typeof event.rrule.until !== 'string'
       ? { ...event.rrule, until: formatNewDate(event.rrule.until) }
       : (event.rrule as SchedulerEvent['rrule']);
 
