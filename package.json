@@ -1,5 +1,5 @@
 {
-  "version": "8.26.1",
+  "version": "8.27.1",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -21,6 +21,7 @@
     "deduplicate": "pnpm dedupe",
     "dataset:file-tree": "tsx ./scripts/treeDataFromFileTree.ts",
     "l10n": "tsx ./scripts/l10n.ts",
+    "l10n:llm": "tsx ./scripts/translateWithLLMs/cli.ts",
     "eslint": "eslint . --cache --report-unused-disable-directives --max-warnings 0",
     "eslint:fix": "pnpm eslint --fix",
     "eslint:ci": "eslint . --report-unused-disable-directives --max-warnings 0",
@@ -142,7 +143,8 @@
     "util": "0.12.5",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "yargs": "catalog:"
+    "yargs": "catalog:",
+    "zod": "^4.3.6"
   },
   "resolutions": {
     "ast-types": "^0.14.2"

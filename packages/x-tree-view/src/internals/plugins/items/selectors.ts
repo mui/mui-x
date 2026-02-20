@@ -86,7 +86,8 @@ export const itemsSelectors = {
    */
   canItemBeFocused: createSelector(
     (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
-      state.disabledItemsFocusable || !isItemDisabled(state.itemMetaLookup, itemId),
+      state.disabledItemsFocusable ||
+      (state.itemModelLookup[itemId] != null && !isItemDisabled(state.itemMetaLookup, itemId)),
   ),
   /**
    * Gets the identation between an item and its children.
