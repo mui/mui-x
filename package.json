@@ -149,9 +149,9 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.27.0",
+  "packageManager": "pnpm@10.29.3",
   "engines": {
-    "pnpm": "10.27.0",
+    "pnpm": "10.29.3",
     "node": ">=22.18"
   }
 }
