@@ -357,7 +357,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
-      {/* TODO: Add the 3 letter week day format to the adapter */}
       <DayTimeGridHeaderDayName className={classes.dayTimeGridHeaderDayName}>
         {adapter.format(day.value, 'weekday3Letters')}
       </DayTimeGridHeaderDayName>
