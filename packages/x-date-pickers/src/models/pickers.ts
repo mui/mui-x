@@ -70,4 +70,9 @@ export interface PickerOwnerState {
    * Is always equal to "portrait" if the component you are accessing the ownerState from is not wrapped with a Picker.
    */
   pickerOrientation: PickerOrientation;
+  /**
+   * `true` if the time picker should render in a single column, `false` otherwise.
+   * Is always `false` if the component you are accessing the ownerState from is not a time picker or not wrapped with a Picker.
+   */
+  shouldRenderTimeInASingleColumn?: boolean;
 }

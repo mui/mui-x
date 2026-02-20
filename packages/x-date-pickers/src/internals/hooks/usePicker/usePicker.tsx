@@ -230,6 +230,7 @@ export const usePicker = <
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
       pickerVariant: variant,
+      shouldRenderTimeInASingleColumn: props.shouldRenderTimeInASingleColumn,
     }),
     [
       adapter,
@@ -240,6 +241,7 @@ export const usePicker = <
       variant,
       props.disabled,
       props.readOnly,
+      props.shouldRenderTimeInASingleColumn,
     ],
   );
 
