@@ -130,9 +130,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // + import { DayCalendarSlots } from '@mui/x-date-pickers'
   matchingImports
     .find(j.ImportSpecifier)
-    .filter((path) => Object.keys(rename).includes(path.node.imported.name))
+    .filter((path) => Object.keys(rename).includes(path.node.imported.name.toString()))
     .replaceWith((path) =>
-      j.importSpecifier(j.identifier(rename[path.node.imported.name]), path.value.local),
+      j.importSpecifier(j.identifier(rename[path.node.imported.name.toString()]), path.value.local),
     );
 
   // Rename the import usage

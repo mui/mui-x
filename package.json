@@ -146,9 +146,6 @@
     "yargs": "catalog:",
     "zod": "^4.3.6"
   },
-  "resolutions": {
-    "ast-types": "^0.14.2"
-  },
   "packageManager": "pnpm@10.27.0",
   "engines": {
     "pnpm": "10.27.0",
