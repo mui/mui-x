@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
+import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -210,7 +211,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const fetchRowChildrenOption = options.fetchRowChildren;
 
-  const revalidate = React.useCallback(async () => {
+  const revalidate = useEventCallback(async () => {
     const getRows = props.dataSource?.getRows;
     if (!getRows || !standardRowsUpdateStrategyActive) {
       return;
@@ -275,15 +276,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     } catch {
       // Ignore background revalidation errors.
     }
-  }, [
-    apiRef,
-    cacheChunkManager,
-    cache,
-    currentStrategy,
-    props.dataSource?.getRows,
-    standardRowsUpdateStrategyActive,
-    fetchRowChildrenOption,
-  ]);
+  });
 
   const stopPolling = React.useCallback(() => {
     if (pollingIntervalRef.current !== null) {
@@ -292,13 +285,13 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     }
   }, []);
 
-  const startPolling = React.useCallback(() => {
+  const startPolling = useEventCallback(() => {
     stopPolling();
     if (revalidateMs <= 0 || !standardRowsUpdateStrategyActive) {
       return;
     }
     pollingIntervalRef.current = setInterval(revalidate, revalidateMs);
-  }, [revalidateMs, stopPolling, revalidate, standardRowsUpdateStrategyActive]);
+  });
 
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
     (params) => {

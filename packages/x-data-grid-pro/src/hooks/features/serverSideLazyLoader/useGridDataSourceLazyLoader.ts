@@ -83,25 +83,22 @@ export const useGridDataSourceLazyLoader = (
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
 
-  const revalidate = React.useCallback(
-    (params: Partial<GridGetRowsParams>) => {
-      if (rowsStale.current) {
-        return;
-      }
+  const revalidate = useEventCallback((params: Partial<GridGetRowsParams>) => {
+    if (rowsStale.current) {
+      return;
+    }
 
-      // Check cache first — if data is still cached, skip entirely
-      // (no backend call, no diffing needed)
-      const cache = privateApiRef.current.dataSource.cache;
-      const cachedResponse = cache.get(params as GridGetRowsParams);
-      if (cachedResponse !== undefined) {
-        return;
-      }
+    // Check cache first — if data is still cached, skip entirely
+    // (no backend call, no diffing needed)
+    const cache = privateApiRef.current.dataSource.cache;
+    const cachedResponse = cache.get(params as GridGetRowsParams);
+    if (cachedResponse !== undefined) {
+      return;
+    }
 
-      // Cache is stale/expired — fetch in background (no loading indicator)
-      debouncedFetchRows(params);
-    },
-    [privateApiRef, debouncedFetchRows],
-  );
+    // Cache is stale/expired — fetch in background (no loading indicator)
+    debouncedFetchRows(params);
+  });
 
   const stopPolling = React.useCallback(() => {
     if (pollingIntervalRef.current !== null) {
@@ -110,20 +107,17 @@ export const useGridDataSourceLazyLoader = (
     }
   }, []);
 
-  const startPolling = React.useCallback(
-    (params: Partial<GridGetRowsParams>) => {
-      stopPolling();
+  const startPolling = useEventCallback((params: Partial<GridGetRowsParams>) => {
+    stopPolling();
 
-      if (props.dataSourceRevalidateMs <= 0) {
-        return;
-      }
+    if (props.dataSourceRevalidateMs <= 0) {
+      return;
+    }
 
-      pollingIntervalRef.current = setInterval(() => {
-        revalidate(params);
-      }, props.dataSourceRevalidateMs);
-    },
-    [props.dataSourceRevalidateMs, stopPolling, revalidate],
-  );
+    pollingIntervalRef.current = setInterval(() => {
+      revalidate(params);
+    }, props.dataSourceRevalidateMs);
+  });
 
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setLoading(true);
@@ -546,7 +540,7 @@ export const useGridDataSourceLazyLoader = (
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
     };
-  }, [throttledHandleRenderedRowsIntervalChange, revalidate, stopPolling]);
+  }, [throttledHandleRenderedRowsIntervalChange, stopPolling]);
 
   // Stop polling when dataSourceRevalidateMs is set to 0
   React.useEffect(() => {
