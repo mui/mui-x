@@ -73,6 +73,10 @@ Same changes as in `@mui/x-tree-view@8.27.2`.
 
 Internal changes.
 
+### Core
+
+- [code-infra] Only ignore `renovate[bot]` in changelog generation script (#21188) @bernardobelchior
+
 ## v8.27.1
 
 <!-- generated comparing v8.27.0..v8.x -->
