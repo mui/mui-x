@@ -84,7 +84,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * The unique identifier of the column. Used to map with [[GridRowModel]] values.
    */
-  field: string;
+  field: keyof R | (string & {});
   /**
    * The title displayed in the column header cell.
    */
