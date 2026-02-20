@@ -1,5 +1,11 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('th-TH');
 
 const thTHGrid: Partial<GridLocaleText> = {
   // Root
@@ -192,11 +198,13 @@ const thTHGrid: Partial<GridLocaleText> = {
   // Pagination
   paginationRowsPerPage: 'แถวต่อหน้า:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    const unknownRowCount = count == null || count === -1;
     if (!estimated) {
-      return `${from}–${to} จาก ${count !== -1 ? count : `มากกว่า ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} จาก ${!unknownRowCount ? formatNumber(count) : `มากกว่า ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated > to ? `ประมาณ ${estimated}` : `มากกว่า ${to}`;
-    return `${from}–${to} จาก ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated > to ? `ประมาณ ${formatNumber(estimated)}` : `มากกว่า ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} จาก ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

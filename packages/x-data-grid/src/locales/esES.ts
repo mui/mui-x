@@ -1,5 +1,11 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('es-ES');
 
 const esESGrid: Partial<GridLocaleText> = {
   // Root
@@ -198,11 +204,13 @@ const esESGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Filas por página:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} de ${count !== -1 ? count : `más de ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} de ${count !== -1 ? formatNumber(count) : `más de ${formatNumber(to)}`}`;
     }
     const estimatedLabel =
-      estimated && estimated > to ? `alrededor de ${estimated}` : `más de ${to}`;
-    return `${from}–${to} de ${count !== -1 ? count : estimatedLabel}`;
+      estimated && estimated > to
+        ? `alrededor de ${formatNumber(estimated)}`
+        : `más de ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} de ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
