@@ -122,7 +122,7 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
                 command: |
-                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
@@ -133,7 +133,7 @@ jobs:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser --coverage"
             - code-infra/upload-coverage:
                 key: << parameters.react-version >>-browser
       - store_test_results:
