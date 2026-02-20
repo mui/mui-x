@@ -49,10 +49,11 @@ export function useAxisTicksProps(inProps: ChartsYAxisProps) {
     additionalProps: {
       style: {
         ...theme.typography.caption,
-        fontSize: tickFontSize,
         textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
+        lineHeight: 1.25,
         dominantBaseline: defaultDominantBaseline,
         ...tickLabelStyle,
+        fontSize: tickFontSize,
       },
     } as Partial<ChartsTextProps>,
     className: classes.tickLabel,
