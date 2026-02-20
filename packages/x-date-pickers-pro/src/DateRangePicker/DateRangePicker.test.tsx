@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import {
   buildFieldInteractions,
   createPickerRenderer,
-  openPicker,
+  openPickers,
   stubMatchMedia,
 } from 'test/utils/pickers';
 import { pickerPopperClasses } from '@mui/x-date-pickers/internals';
@@ -18,33 +18,49 @@ describe('<DateRangePicker />', () => {
     Component: DateRangePicker,
   });
 
-  it('should not use the mobile picker by default', () => {
+  it('should not use the mobile picker by default', async () => {
     stubMatchMedia(true);
     // Test with accessible DOM structure
-    const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
-    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    const { unmount, user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    await openPickers(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
 
     unmount();
 
     // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
-    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    await openPickers(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
   });
 
-  it('should use the mobile picker when `useMediaQuery` returns `false`', () => {
+  it('should use the mobile picker when `useMediaQuery` returns `false`', async () => {
     stubMatchMedia(false);
     // Test with accessible DOM structure
-    const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
-    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    const { unmount, user } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    await openPickers(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
 
     unmount();
 
     // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
-    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    await openPickers(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
   });
 

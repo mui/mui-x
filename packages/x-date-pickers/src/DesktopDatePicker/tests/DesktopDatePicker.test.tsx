@@ -4,7 +4,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { act, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
-import { createPickerRenderer, adapterToUse, openPickerAsync } from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse, openPickers } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -42,7 +42,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       await user.click(screen.getByLabelText(/switch to year view/i));
       expect(handleViewChange.callCount).to.equal(1);
@@ -50,7 +50,7 @@ describe('<DesktopDatePicker />', () => {
       // Dismiss the picker
       await user.keyboard('[Escape]');
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
       expect(handleViewChange.callCount).to.equal(2);
       expect(handleViewChange.lastCall.firstArg).to.equal('day');
     });
@@ -67,7 +67,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       await user.click(screen.getByLabelText(/switch to year view/i));
       expect(handleViewChange.callCount).to.equal(1);
@@ -75,7 +75,7 @@ describe('<DesktopDatePicker />', () => {
       // Dismiss the picker
       await user.keyboard('[Escape]');
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
       expect(handleViewChange.callCount).to.equal(2);
       expect(handleViewChange.lastCall.firstArg).to.equal('month');
     });
@@ -85,14 +85,14 @@ describe('<DesktopDatePicker />', () => {
         <DesktopDatePicker defaultValue={adapterToUse.date('2018-01-01')} views={['year']} />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       expect(screen.getByRole('radio', { checked: true, name: '2018' })).not.to.equal(null);
 
       // Dismiss the picker
       await user.keyboard('[Escape]');
       setProps({ views: ['month', 'year'] });
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
       // should have changed the open view
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
@@ -102,7 +102,7 @@ describe('<DesktopDatePicker />', () => {
         <DesktopDatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
       expect(document.activeElement).to.have.text('2019');
 
       await user.click(screen.getByText('2020'));
@@ -118,14 +118,14 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
 
       // Dismiss the picker
       await user.keyboard('[Escape]');
       setProps({ view: 'year' });
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
       // should have changed the open view
       expect(screen.getByRole('radio', { checked: true, name: '2018' })).not.to.equal(null);
     });
@@ -235,7 +235,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       // Select year
       await user.click(screen.getByRole('radio', { name: '2025' }));
@@ -279,7 +279,7 @@ describe('<DesktopDatePicker />', () => {
         <TestCase onChange={onChange} onAccept={onAccept} onClose={onClose} />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       // Change the day
       await user.click(screen.getByRole('gridcell', { name: '2' }));
@@ -287,7 +287,7 @@ describe('<DesktopDatePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2));
       expect(onClose.callCount).to.equal(1);
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       // Change to the initial day
       await user.click(screen.getByRole('gridcell', { name: '1' }));
@@ -307,7 +307,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
     });
@@ -320,7 +320,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
     });
@@ -333,7 +333,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
     });
@@ -346,7 +346,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
 
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
     });
@@ -391,7 +391,7 @@ describe('<DesktopDatePicker />', () => {
     await expect(async () => {
       const { user } = render(<DesktopDatePicker defaultValue={null} openTo="month" />);
 
-      await openPickerAsync(user, { type: 'date' });
+      await openPickers(user, { type: 'date' });
     }).toWarnDev('MUI X: `openTo="month"` is not a valid prop.');
   });
 

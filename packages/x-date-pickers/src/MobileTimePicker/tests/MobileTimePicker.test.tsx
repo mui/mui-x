@@ -4,7 +4,7 @@ import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
   adapterToUse,
-  openPicker,
+  openPickers,
   getClockTouchEvent,
 } from 'test/utils/pickers';
 import { hasTouchSupport } from 'test/utils/skipIf';
@@ -47,7 +47,7 @@ describe('<MobileTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time' });
+      await openPickers(user, { type: 'time' });
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');

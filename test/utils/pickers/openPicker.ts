@@ -1,4 +1,4 @@
-import { fireEvent, screen, MuiRenderResult } from '@mui/internal-test-utils';
+import { screen, MuiRenderResult } from '@mui/internal-test-utils';
 import { getFieldSectionsContainer } from 'test/utils/pickers/fields';
 
 export type PickerComponentType = 'date' | 'date-time' | 'time';
@@ -15,27 +15,7 @@ export type OpenPickerParams =
       fieldType: 'single-input' | 'multi-input';
     };
 
-/**
- * @deprecated use `openPickerAsync` instead
- */
-export const openPicker = (params: OpenPickerParams) => {
-  const isRangeType =
-    params.type === 'date-range' ||
-    params.type === 'date-time-range' ||
-    params.type === 'time-range';
-  if (isRangeType && params.fieldType === 'multi-input') {
-    const fieldSectionsContainer = getFieldSectionsContainer(params.initialFocus === 'end' ? 1 : 0);
-    fireEvent.click(fieldSectionsContainer);
-    return true;
-  }
-
-  const target = screen.getByLabelText(/(choose date)|(choose time)|(choose range)/i);
-
-  fireEvent.click(target);
-  return true;
-};
-
-export const openPickerAsync = async (user: MuiRenderResult['user'], params: OpenPickerParams) => {
+export const openPickers = async (user: MuiRenderResult['user'], params: OpenPickerParams) => {
   const isRangeType =
     params.type === 'date-range' ||
     params.type === 'date-time-range' ||
@@ -48,6 +28,10 @@ export const openPickerAsync = async (user: MuiRenderResult['user'], params: Ope
 
   const target = screen.getByLabelText(/(choose date)|(choose time)|(choose range)/i);
 
-  await user.click(target);
+  await user
+    .setup({
+      pointerEventsCheck: 0,
+    })
+    .click(target);
   return true;
 };

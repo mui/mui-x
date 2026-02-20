@@ -70,13 +70,13 @@ describe(`RTL - test arrows navigation`, () => {
 
   const { renderWithProps } = buildFieldInteractions({ render, Component: DateTimeField });
 
-  it('should move selected section to the next section respecting RTL order in empty field', () => {
+  it('should move selected section to the next section respecting RTL order in empty field', async () => {
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
 
     // Test with accessible DOM structure
     let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
 
-    view.selectSection('hours');
+    await view.selectSection('hours');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -89,7 +89,7 @@ describe(`RTL - test arrows navigation`, () => {
     view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
 
     const input = getTextbox();
-    view.selectSection('hours');
+    await view.selectSection('hours');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -97,13 +97,13 @@ describe(`RTL - test arrows navigation`, () => {
     });
   });
 
-  it('should move selected section to the previous section respecting RTL order in empty field', () => {
+  it('should move selected section to the previous section respecting RTL order in empty field', async () => {
     const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
 
     // Test with accessible DOM structure
     let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
 
-    view.selectSection('day');
+    await view.selectSection('day');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -116,7 +116,7 @@ describe(`RTL - test arrows navigation`, () => {
     view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
 
     const input = getTextbox();
-    view.selectSection('day');
+    await view.selectSection('day');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -124,7 +124,7 @@ describe(`RTL - test arrows navigation`, () => {
     });
   });
 
-  it('should move selected section to the next section respecting RTL order in non-empty field', () => {
+  it('should move selected section to the next section respecting RTL order in non-empty field', async () => {
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['11', '54', '1397', '02', '05', '05'];
 
@@ -137,7 +137,7 @@ describe(`RTL - test arrows navigation`, () => {
       { direction: 'rtl' },
     );
 
-    view.selectSection('hours');
+    await view.selectSection('hours');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -156,7 +156,7 @@ describe(`RTL - test arrows navigation`, () => {
     );
 
     const input = getTextbox();
-    view.selectSection('hours');
+    await view.selectSection('hours');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -164,7 +164,7 @@ describe(`RTL - test arrows navigation`, () => {
     });
   });
 
-  it('should move selected section to the previous section respecting RTL order in non-empty field', () => {
+  it('should move selected section to the previous section respecting RTL order in non-empty field', async () => {
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['05', '02', '1397', '54', '11', '11'];
 
@@ -177,7 +177,7 @@ describe(`RTL - test arrows navigation`, () => {
       { direction: 'rtl' },
     );
 
-    view.selectSection('day');
+    await view.selectSection('day');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -196,7 +196,7 @@ describe(`RTL - test arrows navigation`, () => {
     );
 
     const input = getTextbox();
-    view.selectSection('day');
+    await view.selectSection('day');
 
     expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
@@ -238,7 +238,7 @@ adapterToTest.forEach((adapterName) => {
       return valueStr;
     };
 
-    const testKeyPress = ({
+    const testKeyPress = async ({
       key,
       format,
       initialValue,
@@ -256,7 +256,7 @@ adapterToTest.forEach((adapterName) => {
         defaultValue: initialValue,
         format,
       });
-      view.selectSection(sectionConfig.type);
+      await view.selectSection(sectionConfig.type);
       fireEvent.keyDown(view.getActiveSection(0), { key });
 
       expectFieldValueV7(
@@ -268,11 +268,11 @@ adapterToTest.forEach((adapterName) => {
     const testKeyboardInteraction = (formatToken) => {
       const sectionConfig = getDateSectionConfigFromFormatToken(adapter, formatToken);
 
-      it(`should increase "${sectionConfig.type}" when pressing ArrowUp on "${formatToken}" token`, () => {
+      it(`should increase "${sectionConfig.type}" when pressing ArrowUp on "${formatToken}" token`, async () => {
         const initialValue = adapter.date(testDate);
         const expectedValue = updateDate(initialValue, adapter, sectionConfig.type, 1);
 
-        testKeyPress({
+        await testKeyPress({
           key: 'ArrowUp',
           initialValue,
           expectedValue,
@@ -281,11 +281,11 @@ adapterToTest.forEach((adapterName) => {
         });
       });
 
-      it(`should decrease "${sectionConfig.type}" when pressing ArrowDown on "${formatToken}" token`, () => {
+      it(`should decrease "${sectionConfig.type}" when pressing ArrowDown on "${formatToken}" token`, async () => {
         const initialValue = adapter.date(testDate);
         const expectedValue = updateDate(initialValue, adapter, sectionConfig.type, -1);
 
-        testKeyPress({
+        await testKeyPress({
           key: 'ArrowDown',
           initialValue,
           expectedValue,

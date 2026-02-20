@@ -33,7 +33,7 @@ describe('<DesktopTimePicker /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
         ? value!
         : adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
@@ -50,15 +50,15 @@ describe('<DesktopTimePicker /> - Describe Value', () => {
           fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
         }
       } else {
-        selectSection('hours');
+        await selectSection('hours');
         pressKey(undefined, 'ArrowUp');
 
-        selectSection('minutes');
+        await selectSection('minutes');
         pressKey(undefined, 'PageUp'); // increment by 5 minutes
 
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
-          selectSection('meridiem');
+          await selectSection('meridiem');
           const previousHours = adapterToUse.getHours(value!);
           const newHours = adapterToUse.getHours(newValue);
           // update meridiem section if it changed

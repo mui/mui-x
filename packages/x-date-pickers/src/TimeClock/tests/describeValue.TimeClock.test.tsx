@@ -34,7 +34,7 @@ describe('<TimeClock /> - Describe Value', () => {
         }
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
 
       timeClockHandler.setViewValue(adapterToUse, newValue, 'hours');

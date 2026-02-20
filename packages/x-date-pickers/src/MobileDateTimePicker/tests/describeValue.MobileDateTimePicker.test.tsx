@@ -3,7 +3,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectFieldValueV7,
-  openPicker,
+  openPickers,
   describeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
@@ -36,9 +36,9 @@ describe('<MobileDateTimePicker /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue, user }) => {
       if (!isOpened) {
-        openPicker({ type: 'date-time' });
+        await openPickers(user, { type: 'date-time' });
       }
 
       const newValue = applySameValue
@@ -61,8 +61,7 @@ describe('<MobileDateTimePicker /> - Describe Value', () => {
 
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('[Escape]');
       } else {
         // return to the date view in case we'd like to repeat the selection process
         fireEvent.click(screen.getByRole('tab', { name: 'pick date' }));

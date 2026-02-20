@@ -6,7 +6,7 @@ import {
   expectFieldValueV7,
   describeValue,
   getFieldSectionsContainer,
-  openPicker,
+  openPickers,
 } from 'test/utils/pickers';
 import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
 import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
@@ -47,9 +47,9 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false, user }) => {
       if (!isOpened) {
-        openPicker({
+        await openPickers(user, {
           type: 'time-range',
           initialFocus: setEndDate ? 'end' : 'start',
           fieldType: 'multi-input',
@@ -84,8 +84,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
       }
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('[Escape]');
       } else {
         const toolbarHourButtons = screen.getAllByRole('button', {
           name: adapterToUse.format(newValue[0], hasMeridiem ? 'hours12h' : 'hours24h'),

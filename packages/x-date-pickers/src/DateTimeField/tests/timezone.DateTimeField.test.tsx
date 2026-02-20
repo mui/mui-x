@@ -16,8 +16,11 @@ describe('<DateTimeField /> - Timezone', () => {
     describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       const format = `${adapter.formats.keyboardDate} ${adapter.formats.hours24h}`;
 
-      const fillEmptyValue = (v7Response: ReturnType<typeof renderWithProps>, timezone: string) => {
-        v7Response.selectSection('month');
+      const fillEmptyValue = async (
+        v7Response: ReturnType<typeof renderWithProps>,
+        timezone: string,
+      ) => {
+        await v7Response.selectSection('month');
 
         // Set month
         fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowDown' });
@@ -41,7 +44,7 @@ describe('<DateTimeField /> - Timezone', () => {
         );
       };
 
-      it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
+      it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', async () => {
         const onChange = spy();
         const view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -49,7 +52,7 @@ describe('<DateTimeField /> - Timezone', () => {
           format,
         });
 
-        const expectedDate = fillEmptyValue(view, 'default');
+        const expectedDate = await fillEmptyValue(view, 'default');
 
         // Check the rendered value (uses default timezone, for example: UTC, see TZ env variable)
         expectFieldValueV7(view.getSectionsContainer(), '12/31/2022 23');
@@ -67,7 +70,7 @@ describe('<DateTimeField /> - Timezone', () => {
 
       TIMEZONE_TO_TEST.forEach((timezone) => {
         describe(`Timezone: ${timezone}`, () => {
-          it('should use timezone prop for onChange and rendering when no value is provided', () => {
+          it('should use timezone prop for onChange and rendering when no value is provided', async () => {
             const onChange = spy();
             const view = renderWithProps({
               enableAccessibleFieldDOMStructure: true,
@@ -75,7 +78,7 @@ describe('<DateTimeField /> - Timezone', () => {
               format,
               timezone,
             });
-            const expectedDate = fillEmptyValue(view, timezone);
+            const expectedDate = await fillEmptyValue(view, timezone);
 
             // Check the rendered value (uses timezone prop)
             expectFieldValueV7(view.getSectionsContainer(), '12/31/2022 23');
@@ -86,7 +89,7 @@ describe('<DateTimeField /> - Timezone', () => {
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 
-          it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
+          it('should use timezone prop for rendering and value timezone for onChange when a value is provided', async () => {
             const onChange = spy();
             const view = renderWithProps({
               enableAccessibleFieldDOMStructure: true,
@@ -96,7 +99,7 @@ describe('<DateTimeField /> - Timezone', () => {
               timezone: 'America/Chicago',
             });
 
-            view.selectSection('month');
+            await view.selectSection('month');
             fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
             // Check the rendered value (uses America/Chicago timezone)

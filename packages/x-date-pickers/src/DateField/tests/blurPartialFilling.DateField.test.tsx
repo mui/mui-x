@@ -12,7 +12,7 @@ describeAdapters(
     it('marks field invalid on blur when only some sections are filled (accessible DOM)', async () => {
       const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await view.user.keyboard('0');
       await view.user.keyboard('1');
 
@@ -31,7 +31,7 @@ describeAdapters(
       const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
       // Focus a section then blur without typing
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await view.user.tab();
 
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
@@ -44,7 +44,7 @@ describeAdapters(
       });
 
       // Focus and blur
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await view.user.tab();
 
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
@@ -53,7 +53,7 @@ describeAdapters(
     it('marks field invalid on blur when only some sections are filled (non-accessible DOM)', async () => {
       const view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       const input = getTextbox();
 
       // Partially fill the month: "01/DD/YYYY"
