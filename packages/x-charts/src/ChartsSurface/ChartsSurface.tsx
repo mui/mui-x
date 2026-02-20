@@ -113,6 +113,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       {desc && <desc>{desc}</desc>}
       <ChartsAxesGradients />
       {hasIntrinsicSize && children}
+      
     </ChartsSurfaceStyles>
   );
 });

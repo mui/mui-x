@@ -32,6 +32,7 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { BarChartPluginSignatures } from './BarChart.plugins';
 import { FocusedBar } from './FocusedBar';
+import { BarVoiceOver } from './VoiceOver';
 
 export interface BarChartSlots
   extends
@@ -146,17 +147,20 @@ const BarChart = React.forwardRef(function BarChart(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
-          <ChartsGrid {...gridProps} />
-          <g {...clipPathGroupProps}>
-            <BarPlot {...barPlotProps} />
-            <ChartsOverlay {...overlayProps} />
-            <ChartsAxisHighlight {...axisHighlightProps} />
-            <FocusedBar />
+        <ChartsSurface {...chartsSurfaceProps} tabIndex={0}>
+          <g aria-hidden>
+            <ChartsGrid {...gridProps} />
+            <g {...clipPathGroupProps}>
+              <BarPlot {...barPlotProps} />
+              <ChartsOverlay {...overlayProps} />
+              <ChartsAxisHighlight {...axisHighlightProps} />
+              <FocusedBar />
+            </g>
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsClipPath {...clipPathProps} />
+            {children}
           </g>
-          <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} />
-          {children}
+          <BarVoiceOver />
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
