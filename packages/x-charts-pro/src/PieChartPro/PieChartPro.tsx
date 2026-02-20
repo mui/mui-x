@@ -51,7 +51,7 @@ export interface PieChartProProps
   slotProps?: PieChartProSlotProps;
 }
 
-const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
+const PieChartPro = React.forwardRef<HTMLDivElement, PieChartProProps>(
   function PieChartPro(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiPieChartPro' });
     const {
@@ -79,22 +79,19 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
     const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
       'pie',
       PieChartProPluginSignatures
-    >(
-      {
-        ...other,
-        series: series.map((s) => ({ type: 'pie', ...s })),
-        width,
-        height,
-        margin,
-        colors,
-        highlightedItem,
-        onHighlightChange,
-        className,
-        skipAnimation,
-        plugins: PIE_CHART_PRO_PLUGINS,
-      },
-      ref,
-    );
+    >({
+      ...other,
+      series: series.map((s) => ({ type: 'pie', ...s })),
+      width,
+      height,
+      margin,
+      colors,
+      highlightedItem,
+      onHighlightChange,
+      className,
+      skipAnimation,
+      plugins: PIE_CHART_PRO_PLUGINS,
+    });
 
     const Tooltip = slots?.tooltip ?? ChartsTooltip;
     const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
@@ -106,6 +103,7 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
           legendDirection={slotProps?.legend?.direction ?? 'vertical'}
           sx={sx}
           hideLegend={hideLegend ?? false}
+          ref={ref}
         >
           {showToolbar ? <Toolbar {...slotProps?.toolbar} /> : null}
           {!hideLegend && (
@@ -178,8 +176,8 @@ PieChartPro.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['pie']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']),
     }),
   ),
   /**
@@ -223,8 +221,8 @@ PieChartPro.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['pie']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']),
     }),
   ),
   /**
@@ -311,7 +309,7 @@ PieChartPro.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number.isRequired,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['pie']).isRequired,
+    type: PropTypes.oneOf(['pie']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

@@ -1,4 +1,4 @@
-import type { SeriesItemIdentifier } from '../../../../../models';
+import type { SeriesItemIdentifierWithType } from '../../../../../models';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import type { ChartSeriesConfig } from '../types';
 
@@ -14,7 +14,7 @@ import type { ChartSeriesConfig } from '../types';
 export const cleanIdentifier = <T extends ChartSeriesType, U extends { type: T }>(
   seriesConfig: ChartSeriesConfig<T>,
   identifier: U,
-): SeriesItemIdentifier<T> => {
+): SeriesItemIdentifierWithType<T> => {
   const cleaner = seriesConfig[identifier.type]?.identifierCleaner;
   if (!cleaner) {
     throw new Error(

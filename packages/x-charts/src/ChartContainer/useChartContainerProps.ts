@@ -1,5 +1,4 @@
 'use client';
-import type * as React from 'react';
 import { type ChartSeriesType } from '../models/seriesType/config';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
@@ -25,7 +24,6 @@ export const useChartContainerProps = <
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(
   props: ChartContainerProps<TSeries, TSignatures>,
-  ref: React.Ref<SVGSVGElement>,
 ): UseChartContainerPropsReturnValue<TSeries, TSignatures> => {
-  return useChartsContainerProps(props, ref);
+  return useChartsContainerProps(props);
 };
