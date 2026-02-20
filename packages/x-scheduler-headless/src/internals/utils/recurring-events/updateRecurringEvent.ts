@@ -204,7 +204,11 @@ export function applyRecurringUpdateAll(
   // 4) RRULE adjustment: only if day changed, the event is recurring, and the user did not
   // provide an explicit rrule (same hasOwnProperty guard used in decideSplitRRule).
   const hasExplicitRRule = Object.prototype.hasOwnProperty.call(changes, 'rrule');
-  if ((touchedStartDate || touchedEndDate) && originalEvent.dataTimezone.rrule && !hasExplicitRRule) {
+  if (
+    (touchedStartDate || touchedEndDate) &&
+    originalEvent.dataTimezone.rrule &&
+    !hasExplicitRRule
+  ) {
     const newOccurrenceStart = changes.start ?? occurrenceStart;
     eventUpdatedProperties.rrule = adjustRRuleForAllMove(
       adapter,
