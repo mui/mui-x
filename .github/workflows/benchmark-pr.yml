@@ -7,13 +7,12 @@ on:
       - synchronize
       - reopened
 
-permissions:
-  contents: read
-
 jobs:
   benchmark:
     name: Run Benchmarks
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -46,12 +45,8 @@ jobs:
       - name: Aggregate benchmark results
         env:
           COMMIT_SHA: ${{ github.sha }}
+          PR_NUMBER: ${{ github.event.number }}
         run: pnpm -F benchmark-tool ci:aggregate
-
-      - name: Save PR metadata
-        run: |
-          MERGE_BASE=$(git merge-base HEAD origin/master)
-          echo "{\"prNumber\":${{ github.event.number }},\"mergeBaseSha\":\"$MERGE_BASE\"}" > test/benchmark-tool/benchmarks/pr-metadata.json
 
       - name: Upload benchmark results
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

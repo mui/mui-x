@@ -6,7 +6,8 @@
     "start": "next start -p 5002",
     "benchmark": "playwright test",
     "ci:compare": "tsx ci-scripts/compare-benchmarks.ts",
-    "ci:aggregate": "tsx ci-scripts/aggregate-benchmarks.ts"
+    "ci:aggregate": "tsx ci-scripts/aggregate-benchmarks.ts",
+    "ci:store-baseline": "tsx ci-scripts/store-baseline.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
@@ -25,6 +26,7 @@
     "@types/node": "^22.15.18",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
+    "execa": "9.6.1",
     "tsx": "catalog:",
     "typescript": "^5.8.3"
   }

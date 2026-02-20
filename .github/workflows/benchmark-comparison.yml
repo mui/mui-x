@@ -6,10 +6,6 @@ on:
     types:
       - completed
 
-permissions:
-  pull-requests: write
-  actions: read
-
 env:
   BENCHMARK_FAIL_THRESHOLD: 8
 
@@ -18,6 +14,9 @@ jobs:
     name: Check Changes
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      actions: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -44,54 +43,9 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Read PR metadata
-        id: pr
-        run: |
-          echo "number=$(node -e "process.stdout.write(String(require('./pr-benchmarks/pr-metadata.json').prNumber))")" >> $GITHUB_OUTPUT
-          echo "base_sha=$(node -e "process.stdout.write(require('./pr-benchmarks/pr-metadata.json').mergeBaseSha)")" >> $GITHUB_OUTPUT
-
-      - name: Compare benchmarks
-        working-directory: test/benchmark-tool
+      - name: Compare benchmarks and post results
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BENCHMARKS_DIR: ${{ github.workspace }}/pr-benchmarks
           FAIL_THRESHOLD: ${{ env.BENCHMARK_FAIL_THRESHOLD }}
-          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
-        run: pnpm --silent ci:compare > comparison-result.json
-
-      - name: Post comparison comment
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          script: |
-            const fs = require('fs');
-            const result = JSON.parse(fs.readFileSync('./test/benchmark-tool/comparison-result.json', 'utf8'));
-            const prNumber = parseInt('${{ steps.pr.outputs.number }}', 10);
-
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-            });
-
-            const botComment = comments.find(comment =>
-              comment.user.type === 'Bot' && comment.body.includes('## Performance Comparison')
-            );
-
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: result.body,
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNumber,
-                body: result.body,
-              });
-            }
-
-            if (result.shouldFail) {
-              core.setFailed(result.failMessage);
-            }
+        run: pnpm -F ./test/benchmark-tool ci:compare

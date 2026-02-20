@@ -16,9 +16,9 @@ export async function fetchMasterMetrics(baseSha?: string): Promise<Record<strin
     return {};
   }
 
-  const results = (await response.json()) as AggregatedResults;
+  const { benchmarks } = (await response.json()) as AggregatedResults;
   const metrics: Record<string, number> = {};
-  for (const [name, benchmark] of Object.entries(results.benchmarks)) {
+  for (const [name, benchmark] of Object.entries(benchmarks)) {
     metrics[name] = benchmark.duration;
   }
   return metrics;

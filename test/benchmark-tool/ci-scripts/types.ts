@@ -10,9 +10,10 @@ export interface BenchmarkResult {
 }
 
 export interface AggregatedResults {
-  commit: string;
+  commitSha: string;
   timestamp: number;
   benchmarks: Record<string, BenchmarkResult>;
+  pr?: { number: number; mergeBaseSha: string };
 }
 
 export interface FailedBenchmark {

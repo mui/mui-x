@@ -5,13 +5,12 @@ on:
     branches:
       - master
 
-permissions:
-  contents: write
-
 jobs:
   benchmark:
     name: Store Data
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -44,58 +43,7 @@ jobs:
           COMMIT_SHA: ${{ github.sha }}
         run: pnpm -F benchmark-tool ci:aggregate
 
-      - name: Checkout data branch
-        run: |
-          if git fetch origin test-results 2>/dev/null; then
-            git worktree add -B test-results data-repo origin/test-results
-          else
-            git worktree add --detach data-repo
-            pushd data-repo
-            git checkout --orphan test-results
-            git rm -rf . 2>/dev/null || true
-            git commit --allow-empty -m "Initialize test results branch"
-            popd
-          fi
-
-      - name: Get commit month
-        id: meta
-        run: echo "month=$(git log -1 --format=%cd --date=format:%Y-%m ${{ github.sha }})" >> $GITHUB_OUTPUT
-
-      - name: Store results
+      - name: Store baseline results
         env:
-          SHA: ${{ github.sha }}
-          MONTH: ${{ steps.meta.outputs.month }}
-        run: |
-          RESULTS_DIR=test/benchmark-tool/benchmarks
-          COMMITS_DIR=data-repo/benchmarks/commits/$SHA
-
-          # Copy aggregated results
-          mkdir -p "$COMMITS_DIR/data"
-          cp "$RESULTS_DIR/results.json" "$COMMITS_DIR/results.json"
-
-          # Copy raw benchmark data files
-          for f in $RESULTS_DIR/*.json; do
-            NAME=$(basename "$f")
-            if [ "$NAME" != "results.json" ]; then
-              cp "$f" "$COMMITS_DIR/data/$NAME"
-            fi
-          done
-
-          # Append to monthly JSONL
-          MONTHLY_DIR="data-repo/benchmarks/monthly"
-          mkdir -p "$MONTHLY_DIR"
-          cat "$RESULTS_DIR/results.json" | tr -d '\n' >> "$MONTHLY_DIR/$MONTH.jsonl"
-          echo "" >> "$MONTHLY_DIR/$MONTH.jsonl"
-
-      - name: Commit and push
-        working-directory: data-repo
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add benchmarks/
-          git commit -m "Add benchmarks for ${{ github.sha }}"
-          for i in 1 2 3 4 5; do
-            git push origin test-results && break
-            echo "Push failed (attempt $i), pulling with rebase and retrying..."
-            git pull --rebase origin test-results
-          done
+          COMMIT_SHA: ${{ github.sha }}
+        run: pnpm -F ./test/benchmark-tool ci:store-baseline

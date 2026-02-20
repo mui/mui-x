@@ -1,16 +1,20 @@
+import { $ } from 'execa';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { AggregatedResults, BenchmarkReport } from './types';
+import type { AggregatedResults, BenchmarkReport, BenchmarkResult } from './types';
 import { extractTotalDuration } from './extractTotalDuration';
 
 async function main() {
   const benchmarksDir = process.env.BENCHMARKS_DIR || path.resolve(__dirname, '../benchmarks');
-  const commit = process.env.COMMIT_SHA || 'unknown';
+  const commitSha = process.env.COMMIT_SHA;
+  if (!commitSha) {
+    throw new Error('COMMIT_SHA environment variable is required');
+  }
 
   const allFiles = await fs.readdir(benchmarksDir);
   const jsonFiles = allFiles.filter((f) => f.endsWith('.json') && f !== 'results.json');
 
-  const benchmarks = Object.fromEntries(
+  const benchmarks: Record<string, BenchmarkResult> = Object.fromEntries(
     await Promise.all(
       jsonFiles.map(async (file) => {
         const content = await fs.readFile(path.join(benchmarksDir, file), 'utf-8');
@@ -29,10 +33,16 @@ async function main() {
   );
 
   const results: AggregatedResults = {
-    commit,
+    commitSha,
     timestamp: Date.now(),
     benchmarks,
   };
+
+  const prNumber = process.env.PR_NUMBER;
+  if (prNumber) {
+    const { stdout: mergeBaseSha } = await $`git merge-base HEAD origin/master`;
+    results.pr = { number: parseInt(prNumber, 10), mergeBaseSha: mergeBaseSha.trim() };
+  }
 
   const outputPath = path.join(benchmarksDir, 'results.json');
   await fs.writeFile(outputPath, JSON.stringify(results, null, 2));
