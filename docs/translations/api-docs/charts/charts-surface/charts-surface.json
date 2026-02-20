@@ -1,5 +1,5 @@
 {
-  "componentDescription": "It provides the drawing area for the chart elements.\nIt is the root `<svg>` of all the chart elements.\n\nIt also provides the `title` and `desc` elements for the chart.",
+  "componentDescription": "A helper component that combines `<ChartsLayerContainer>` and `<ChartsSvgLayer>` to provide a surface for drawing charts.\nIf you need more control over the layers, you can use `<ChartsLayerContainer>` and `<ChartsSvgLayer>` separately.",
   "propDescriptions": {},
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
 }

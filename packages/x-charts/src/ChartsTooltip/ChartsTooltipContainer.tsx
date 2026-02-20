@@ -155,7 +155,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const store = useStore<[UseChartCartesianAxisSignature, UseChartInteractionSignature]>();
 
   const svgRef = useSvgRef();
-  const anchorRef = React.useRef<SVGRectElement | null>(null);
+  const anchorRef = React.useRef<HTMLDivElement | null>(null);
 
   const classes = useUtilityClasses(propClasses);
 
@@ -267,15 +267,20 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     <React.Fragment>
       {svgRef.current &&
         ReactDOM.createPortal(
-          <rect
+          <div
             ref={anchorRef}
-            {...itemPosition}
-            display="hidden"
-            // On ios a rect with no width/height is not detectable by the popper.js
-            pointerEvents="none"
-            opacity={0}
-            width={1}
-            height={1}
+            style={{
+              position: 'absolute',
+              display: 'hidden',
+              left: itemPosition?.x ?? 0,
+              top: itemPosition?.y ?? 0,
+              pointerEvents: 'none',
+              opacity: 0,
+              // TODO: Is this true for a div as well?
+              // On ios a rect with no width/height is not detectable by the popper.js
+              width: 1,
+              height: 1,
+            }}
           />,
           svgRef.current,
         )}

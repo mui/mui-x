@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   FocusedHeatmapCell,
   HeatmapTooltip,
@@ -17,6 +16,9 @@ import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
+import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
+import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
+import { ChartsWebGlLayer } from '../ChartsWebGlLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
@@ -56,6 +58,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
 
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
   const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
+  const renderer = heatmapPlotPremiumProps.renderer;
 
   return (
     <ChartDataProviderPremium<'heatmap', HeatmapPremiumPluginSignatures>
@@ -64,17 +67,24 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface ref={ref} sx={sx}>
-          <g {...clipPathGroupProps}>
-            <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
-            <FocusedHeatmapCell />
-            <ChartsOverlay {...overlayProps} />
-          </g>
-          <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} />
-          <ChartsBrushOverlay />
-          {children}
-        </ChartsSurface>
+        <ChartsLayerContainer>
+          {renderer === 'webgl' && (
+            <ChartsWebGlLayer>
+              <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
+            </ChartsWebGlLayer>
+          )}
+          <ChartsSvgLayer ref={ref} sx={sx}>
+            <g {...clipPathGroupProps}>
+              {renderer !== 'webgl' && <HeatmapPlotPremium {...heatmapPlotPremiumProps} />}
+              <FocusedHeatmapCell />
+              <ChartsOverlay {...overlayProps} />
+            </g>
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsClipPath {...clipPathProps} />
+            <ChartsBrushOverlay />
+            {children}
+          </ChartsSvgLayer>
+        </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPremium>

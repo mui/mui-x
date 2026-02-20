@@ -5,7 +5,6 @@ import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsAxis, type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   type ChartsAxisSlots,
   type ChartsAxisSlotProps,
@@ -26,6 +25,7 @@ import {
   type ChartsLegendSlots,
 } from '@mui/x-charts/ChartsLegend';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
+import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { type ChartContainerProProps } from '../ChartContainerPro';
 import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
@@ -41,6 +41,7 @@ import {
 } from '../ChartsToolbarPro/Toolbar.types';
 import { FocusedHeatmapCell } from './FocusedHeatmapCell';
 import { useHeatmapProps } from './useHeatmapProps';
+import { ChartsSvgLayer } from '../ChartsSvgLayer';
 
 export interface HeatmapSlots
   extends
@@ -176,17 +177,19 @@ const Heatmap = React.forwardRef(function Heatmap(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface sx={sx}>
-          <g {...clipPathGroupProps}>
-            <HeatmapPlot {...heatmapPlotProps} />
-            <FocusedHeatmapCell />
-            <ChartsOverlay {...overlayProps} />
-          </g>
-          <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} />
-          <ChartsBrushOverlay />
-          {children}
-        </ChartsSurface>
+        <ChartsLayerContainer>
+          <ChartsSvgLayer sx={sx}>
+            <g {...clipPathGroupProps}>
+              <HeatmapPlot {...heatmapPlotProps} />
+              <FocusedHeatmapCell />
+              <ChartsOverlay {...overlayProps} />
+            </g>
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsClipPath {...clipPathProps} />
+            <ChartsBrushOverlay />
+            {children}
+          </ChartsSvgLayer>
+        </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>

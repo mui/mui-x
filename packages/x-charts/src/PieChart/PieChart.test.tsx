@@ -1,6 +1,7 @@
-import { createRenderer, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/describeConformance';
 import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
+import { CHART_SELECTOR } from '../tests/constants';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();
@@ -79,7 +80,6 @@ describe('<PieChart />', () => {
     const { container, user } = render(
       <PieChart
         enableKeyboardNavigation
-        data-testid="chart-keyboard-navigation"
         height={100}
         width={100}
         series={[
@@ -94,11 +94,13 @@ describe('<PieChart />', () => {
       />,
     );
 
+    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+
     // by default does not show focus indicator
     expect(container.querySelector(`.${pieArcClasses.focusIndicator}`)).not.toBeTruthy();
 
     // focus the chart
-    await act(async () => screen.getByTestId('chart-keyboard-navigation').focus());
+    await user.click(svg);
 
     // Focus the first arc
     await user.keyboard('{ArrowRight}');
@@ -117,7 +119,6 @@ describe('<PieChart />', () => {
     const { container, user } = render(
       <PieChart
         enableKeyboardNavigation
-        data-testid="chart-focus-series"
         height={400}
         width={400}
         series={[
@@ -144,8 +145,10 @@ describe('<PieChart />', () => {
       />,
     );
 
+    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+
     // focus the chart
-    await act(async () => screen.getByTestId('chart-focus-series').focus());
+    await user.click(svg);
 
     // Focus the first arc of series-1
     await user.keyboard('{ArrowRight}');

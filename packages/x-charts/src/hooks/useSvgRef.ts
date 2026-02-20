@@ -6,7 +6,7 @@ import { useChartContext } from '../context/ChartProvider';
  * Get the ref for the SVG element.
  * @returns The SVG ref.
  */
-export function useSvgRef(): React.RefObject<SVGSVGElement | null> {
+export function useSvgRef(): React.RefObject<HTMLDivElement | null> {
   const { instance } = useChartContext();
 
   return instance.svgRef;

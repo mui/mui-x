@@ -1,22 +1,11 @@
 'use client';
-import { styled, type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
+import { type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import clsx from 'clsx';
-import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useSvgRef } from '../hooks/useSvgRef';
-import { useChartContext } from '../context/ChartProvider';
-import {
-  selectorChartPropsHeight,
-  selectorChartPropsWidth,
-  selectorChartSvgWidth,
-  selectorChartSvgHeight,
-} from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
-import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
-import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
-import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
+import { ChartsSvgLayer } from '../ChartsSvgLayer';
+// eslint-disable-next-line import/no-cycle
+import { ChartsLayerContainer } from '../ChartsLayerContainer';
 
 export interface ChartsSurfaceProps extends Omit<
   React.SVGProps<SVGSVGElement>,
@@ -29,31 +18,9 @@ export interface ChartsSurfaceProps extends Omit<
   children?: React.ReactNode;
 }
 
-const ChartsSurfaceStyles = styled('svg', {
-  name: 'MuiChartsSurface',
-  slot: 'Root',
-})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
-  width: ownerState.width ?? '100%',
-  height: ownerState.height ?? '100%',
-  display: 'flex',
-  position: 'relative',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  touchAction: 'pan-y',
-  userSelect: 'none',
-  gridArea: 'chart',
-  '&:focus': {
-    outline: 'none', // By default don't show focus on the SVG container
-  },
-}));
-
 /**
- * It provides the drawing area for the chart elements.
- * It is the root `<svg>` of all the chart elements.
- *
- * It also provides the `title` and `desc` elements for the chart.
+ * A helper component that combines `<ChartsLayerContainer>` and `<ChartsSvgLayer>` to provide a surface for drawing charts.
+ * If you need more control over the layers, you can use `<ChartsLayerContainer>` and `<ChartsSvgLayer>` separately.
  *
  * Demos:
  *
@@ -67,53 +34,18 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { store, instance } = useChartContext<
-    [],
-    [UseChartInteractionSignature, UseChartItemClickSignature]
-  >();
-
-  const svgWidth = store.use(selectorChartSvgWidth);
-  const svgHeight = store.use(selectorChartSvgHeight);
-
-  const propsWidth = store.use(selectorChartPropsWidth);
-  const propsHeight = store.use(selectorChartPropsHeight);
-  const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
-
-  const svgRef = useSvgRef();
-  const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
-  const { children, className, title, desc, ...other } = themeProps;
+  const { children, className, ...other } = themeProps;
 
   const classes = useUtilityClasses();
-  const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   return (
-    <ChartsSurfaceStyles
-      ownerState={{ width: propsWidth, height: propsHeight }}
-      viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
-      className={clsx(classes.root, className)}
-      tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
-      {...other}
-      onPointerEnter={(event) => {
-        other.onPointerEnter?.(event);
-        instance.handlePointerEnter?.(event);
-      }}
-      onPointerLeave={(event) => {
-        other.onPointerLeave?.(event);
-        instance.handlePointerLeave?.(event);
-      }}
-      onClick={(event) => {
-        other.onClick?.(event);
-        instance.handleClick?.(event);
-      }}
-      ref={handleRef}
-    >
-      {title && <title>{title}</title>}
-      {desc && <desc>{desc}</desc>}
-      <ChartsAxesGradients />
-      {hasIntrinsicSize && children}
-    </ChartsSurfaceStyles>
+    <ChartsLayerContainer className={classes.root}>
+      <ChartsSvgLayer className={className} {...other} ref={ref}>
+        {children}
+      </ChartsSvgLayer>
+    </ChartsLayerContainer>
   );
 });
 
