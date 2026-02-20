@@ -56,7 +56,6 @@ async function main(argv) {
       console.log('\n\n');
       octokit = new MyOctokit({ auth: githubToken || process.env.GITHUB_TOKEN });
     }
-  }
 
   const { generateChangelog } = getChangelogUtils(octokit);
 
