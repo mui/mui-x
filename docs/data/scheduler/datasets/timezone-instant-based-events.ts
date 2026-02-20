@@ -1,7 +1,7 @@
 // Timezone Events Dataset Instant-Based
 // Non-realistic set focused on edge cases of timezone handling.
 
-import { RecurringEventRecurrenceRule, SchedulerResource } from '@mui/x-scheduler/models';
+import { SchedulerEventRecurrenceRule, SchedulerResource } from '@mui/x-scheduler/models';
 
 export const resources: SchedulerResource[] = [
   { id: 'ny', title: 'New York', eventColor: 'purple' },
@@ -20,7 +20,7 @@ export interface TimezoneEvent {
   end: string;
   timezone: string;
   resource: string;
-  rrule?: RecurringEventRecurrenceRule;
+  rrule?: SchedulerEventRecurrenceRule;
   exDates?: string[];
 }
 
@@ -89,7 +89,7 @@ export const initialEvents: TimezoneEvent[] = [
     rrule: {
       freq: 'MONTHLY',
       byMonthDay: [15],
-      until: new Date('2025-06-30T21:59:00Z'), // 23:59 Paris → 21:59Z (after DST adjust)
+      until: '2025-06-30T21:59:00Z', // 23:59 Paris → 21:59Z (after DST adjust)
     },
   },
 

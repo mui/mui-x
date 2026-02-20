@@ -151,8 +151,7 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
   }
   if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
     const originalRRule = originalBuiltInModel.rrule;
-    const originalUntilString =
-      typeof originalRRule === 'object' ? originalRRule.until : undefined;
+    const originalUntilString = typeof originalRRule === 'object' ? originalRRule.until : undefined;
     const referenceString = originalUntilString ?? originalBuiltInModel.start;
     stringified.rrule = {
       ...changes.rrule,
@@ -191,7 +190,9 @@ export function createEventModel<TEvent extends object>(
     end: formatNewDate(event.end),
     exDates: event.exDates?.map(formatNewDate),
     rrule:
-      typeof event.rrule === 'object' && event.rrule.until != null && typeof event.rrule.until !== 'string'
+      typeof event.rrule === 'object' &&
+      event.rrule.until != null &&
+      typeof event.rrule.until !== 'string'
         ? { ...event.rrule, until: formatNewDate(event.rrule.until) }
         : (event.rrule as SchedulerEvent['rrule']),
   };

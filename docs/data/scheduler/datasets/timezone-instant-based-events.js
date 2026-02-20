@@ -74,7 +74,7 @@ export const initialEvents = [
     rrule: {
       freq: 'MONTHLY',
       byMonthDay: [15],
-      until: new Date('2025-06-30T21:59:00Z'), // 23:59 Paris → 21:59Z (after DST adjust)
+      until: '2025-06-30T21:59:00Z', // 23:59 Paris → 21:59Z (after DST adjust)
     },
   },
   // Tokyo daily — 07:00 JST → always UTC+9 (Tokyo has no DST)

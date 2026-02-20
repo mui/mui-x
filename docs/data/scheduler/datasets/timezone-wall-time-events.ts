@@ -37,6 +37,18 @@ export const initialEvents: SchedulerEvent[] = [
     timezone: 'Asia/Tokyo',
     resource: 'tokyo',
   },
+  // Paris weekly recurring with wall-time UNTIL.
+  // Recurs every Tuesday, stops after March 25.
+  // The until value has no "Z", so it is interpreted in the event timezone (Europe/Paris).
+  {
+    id: 'paris-weekly-until',
+    title: 'Paris Weekly Until',
+    start: '2025-03-11T10:00:00',
+    end: '2025-03-11T11:00:00',
+    timezone: 'Europe/Paris',
+    resource: 'paris',
+    rrule: { freq: 'WEEKLY', byDay: ['TU'], until: '2025-03-25T23:59:00' },
+  },
   // Same wall-time as ny-morning but BEFORE US DST spring-forward (March 9, 2025).
   // NY is still EST (UTC-5) → 09:00 NY = 15:00 Paris,
   // while ny-morning on March 10 is EDT (UTC-4) → 09:00 NY = 14:00 Paris.
