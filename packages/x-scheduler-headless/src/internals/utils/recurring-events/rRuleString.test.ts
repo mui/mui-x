@@ -20,7 +20,8 @@ describe('recurring-events/rRuleString', () => {
         'default',
       );
       expect(result.freq).to.equal('DAILY');
-      expect(adapter.isValid(result.until!)).to.equal(true);
+      expect(typeof result.until).to.equal('object');
+      expect(result.until!).toEqualDateTime('2025-03-15T00:00:00.000Z');
     });
 
     it('should parse a simple RRULE string into an object', () => {
