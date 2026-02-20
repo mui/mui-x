@@ -3,6 +3,7 @@ import type {
   HighlightItemIdentifierWithType,
   HighlightItemIdentifier,
   SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type ChartPluginSignature } from '../../models';
@@ -20,7 +21,7 @@ export interface UseChartHighlightInstance<SeriesType extends ChartSeriesType> {
    * @param {HighlightItemIdentifier<SeriesType>} item The item to highlight.
    */
   setHighlight: (
-    item: HighlightItemIdentifier<SeriesType> | SeriesItemIdentifier<SeriesType>,
+    item: HighlightItemIdentifier<SeriesType> | SeriesItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType> | SeriesItemIdentifierWithType<SeriesType>
   ) => void;
 }
 

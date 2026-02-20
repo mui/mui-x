@@ -8,6 +8,8 @@ import type { UseChartHighlightSignature } from './useChartHighlight.types';
 import type {
   HighlightItemIdentifier,
   HighlightItemIdentifierWithType,
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
@@ -74,7 +76,8 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
     });
   });
 
-  const setHighlight = useEventCallback((newItem: HighlightItemIdentifier<SeriesType>) => {
+  const setHighlight = useEventCallback((newItem: HighlightItemIdentifier<SeriesType> | SeriesItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType> | SeriesItemIdentifierWithType<SeriesType>
+  ) => {
     const prevHighlight = store.state.highlight;
 
     const identifierWithType = instance.identifierWithType(
