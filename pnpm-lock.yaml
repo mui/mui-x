@@ -905,6 +905,96 @@ importers:
         version: 6.1.2
     publishDirectory: build
 
+  packages/x-charts-headless:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 7.3.5(@types/react@19.2.7)(react@19.2.3)
+      '@mui/x-charts':
+        specifier: workspace:^
+        version: link:../x-charts/build
+      '@mui/x-charts-vendor':
+        specifier: workspace:^
+        version: link:../x-charts-vendor
+      '@mui/x-internals':
+        specifier: workspace:^
+        version: link:../x-internals/build
+      react:
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        version: 19.2.3(react@19.2.3)
+    publishDirectory: build
+
+  packages/x-charts-headless-docs:
+    dependencies:
+      next:
+        specifier: ^15.5.7
+        version: 15.5.9(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.3
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.3(react@19.2.3)
+    devDependencies:
+      '@base-ui/react':
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@mui/x-charts-headless':
+        specifier: workspace:^
+        version: link:../x-charts-headless/build
+      '@mui/x-charts-material':
+        specifier: workspace:^
+        version: link:../x-charts-material/build
+      '@types/node':
+        specifier: ^22.18.13
+        version: 22.19.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.7
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.7)
+
+  packages/x-charts-material:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@emotion/react':
+        specifier: ^11.13.3
+        version: 11.14.0(@types/react@19.2.7)(react@19.2.3)
+      '@emotion/styled':
+        specifier: ^11.13.0
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
+      '@mui/material':
+        specifier: 'catalog:'
+        version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 7.3.5(@types/react@19.2.7)(react@19.2.3)
+      '@mui/x-charts-headless':
+        specifier: workspace:^
+        version: link:../x-charts-headless/build
+      '@mui/x-internals':
+        specifier: workspace:^
+        version: link:../x-internals/build
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      react:
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        version: 19.2.3(react@19.2.3)
+    publishDirectory: build
+
   packages/x-charts-premium:
     dependencies:
       '@babel/runtime':

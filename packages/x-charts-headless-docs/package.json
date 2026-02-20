@@ -1,0 +1,24 @@
+{
+  "name": "x-charts-headless-docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "^15.5.7",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.13",
+    "@base-ui/react": "^1.0.0",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@mui/x-charts-headless": "workspace:^",
+    "@mui/x-charts-material": "workspace:^"
+  }
+}

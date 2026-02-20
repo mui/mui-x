@@ -1,0 +1,125 @@
+.chart-wrapper {
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+}
+
+body {
+  --data-color-0: #3b82f6;
+  --data-color-1: #8b5cf6;
+  --data-color-2: #ec4899;
+  --data-color-3: #f59e0b;
+  --data-color-4: #10b981;
+}
+
+/* Can be adapted for unknown number of series with [data-index]:nth-child(xn + y) */
+/* Where x is the number of available colors and y is the index(1+) of the color */
+/* e.g., for 3 colors: [data-index]:nth-child(3n + 1), [data-index]:nth-child(3n + 2), [data-index]:nth-child(3n + 3) */
+[data-index='0'] .tooltip-color,
+[data-index='0'] .legend-color,
+path[data-index='0'] {
+  fill: var(--data-color-0);
+  background: var(--data-color-0);
+}
+
+[data-index='1'] .tooltip-color,
+[data-index='1'] .legend-color,
+path[data-index='1'] {
+  fill: var(--data-color-1);
+  background: var(--data-color-1);
+}
+
+[data-index='2'] .tooltip-color,
+[data-index='2'] .legend-color,
+path[data-index='2'] {
+  fill: var(--data-color-2);
+  background: var(--data-color-2);
+}
+
+[data-index='3'] .tooltip-color,
+[data-index='3'] .legend-color,
+path[data-index='3'] {
+  fill: var(--data-color-3);
+  background: var(--data-color-3);
+}
+
+[data-index='4'] .tooltip-color,
+[data-index='4'] .legend-color,
+path[data-index='4'] {
+  fill: var(--data-color-4);
+  background: var(--data-color-4);
+}
+
+.pie-arc {
+  stroke: #fff;
+  stroke-width: 3px;
+}
+
+.pie-arc:hover {
+  opacity: 0.85;
+}
+
+.pie-arc-label {
+  font-size: 12px;
+  font-weight: 600;
+  fill: #fff;
+}
+
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.tooltip-positioner {
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.tooltip-popup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tooltip-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.tooltip-label {
+  font-weight: 500;
+}
+
+.tooltip-value {
+  font-weight: 700;
+}
