@@ -547,13 +547,13 @@ describe('schedulerEventSelectors', () => {
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(false);
     });
 
-    it('should return true when the calendar is read-only even if resource.areEventsReadOnly is false', () => {
+    it('should use resource.areEventsReadOnly over component readOnly when both are defined', () => {
       const state = getEventCalendarStateFromParameters({
         events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
         resources: [{ id: 'resource-1', title: 'Resource 1', areEventsReadOnly: false }],
         readOnly: true,
       });
-      expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);
+      expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(false);
     });
 
     it('should use event.readOnly over resource.areEventsReadOnly when both are defined', () => {
@@ -564,10 +564,19 @@ describe('schedulerEventSelectors', () => {
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);
     });
 
-    it('should fall back to not read-only when resource has no areEventsReadOnly property', () => {
+    it('should fall back to component readOnly when resource has no areEventsReadOnly property', () => {
       const state = getEventCalendarStateFromParameters({
         events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
         resources: [{ id: 'resource-1', title: 'Resource 1' }],
+        readOnly: true,
+      });
+      expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);
+    });
+
+    it('should use event.readOnly=false over component readOnly=true', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().id('event-1').readOnly(false).build()],
+        readOnly: true,
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(false);
     });
@@ -583,6 +592,7 @@ describe('schedulerEventSelectors', () => {
             children: [{ id: 'child-resource', title: 'Child Resource' }],
           },
         ],
+        readOnly: false,
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);
     });
@@ -598,6 +608,7 @@ describe('schedulerEventSelectors', () => {
             children: [{ id: 'child-resource', title: 'Child Resource', areEventsReadOnly: false }],
           },
         ],
+        readOnly: true,
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(false);
     });
@@ -619,6 +630,7 @@ describe('schedulerEventSelectors', () => {
             ],
           },
         ],
+        readOnly: false,
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);
     });

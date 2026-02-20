@@ -11,22 +11,17 @@ const processedEventSelector = createSelector(
 );
 
 const isEventReadOnlySelector = createSelector((state: State, eventId: SchedulerEventId) => {
-  // 1. Component-level readOnly takes precedence (disables everything)
-  if (state.readOnly) {
-    return true;
-  }
-
   const processedEvent = processedEventSelector(state, eventId);
   if (!processedEvent) {
     return false;
   }
 
-  // 2. Event-level readOnly takes precedence over resource
+  // If the `readOnly` property is defined on the event, it takes precedence
   if (processedEvent.modelInBuiltInFormat?.readOnly !== undefined) {
     return processedEvent.modelInBuiltInFormat.readOnly;
   }
 
-  // 3. Walk up resource hierarchy checking areEventsReadOnly
+  // Then check if the resource or any ancestor has the `areEventsReadOnly` property defined
   const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
   let currentResourceId = processedEvent.resource;
   while (currentResourceId != null) {
@@ -37,8 +32,8 @@ const isEventReadOnlySelector = createSelector((state: State, eventId: Scheduler
     currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
   }
 
-  // 4. Default: not read-only
-  return false;
+  // Otherwise, fall back to the component-level setting
+  return state.readOnly ?? false;
 });
 
 export const schedulerEventSelectors = {
