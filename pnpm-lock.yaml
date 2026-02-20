@@ -148,8 +148,8 @@ catalogs:
       specifier: ^4.1.0-0
       version: 4.1.0-0
     dayjs:
-      specifier: ^1.11.18
-      version: 1.11.18
+      specifier: ^1.11.19
+      version: 1.11.19
     jscodeshift:
       specifier: 17.3.0
       version: 17.3.0
@@ -637,7 +637,7 @@ importers:
         version: 4.1.0-0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.19
       es-toolkit:
         specifier: ^1.44.0
         version: 1.44.0
@@ -1145,7 +1145,7 @@ importers:
         version: 17.3.0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.19
       moment-timezone:
         specifier: 'catalog:'
         version: 0.6.0
@@ -1566,7 +1566,7 @@ importers:
         version: 4.1.0-0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.19
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -1655,7 +1655,7 @@ importers:
         version: 4.1.0-0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.19
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -2238,7 +2238,7 @@ importers:
         version: 7.7.1
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.19
       moment:
         specifier: 'catalog:'
         version: 2.30.1
@@ -7452,8 +7452,8 @@ packages:
   dateformat@3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
 
-  dayjs@1.11.18:
-    resolution: {integrity: sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==}
+  dayjs@1.11.19:
+    resolution: {integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==}
 
   debounce-fn@5.1.2:
     resolution: {integrity: sha512-Sr4SdOZ4vw6eQDvPYNxHogvrxmCIld/VenC5JbNrFwMiwd7lY/Z18ZFfo+EWNG4DD9nFlAujWAo/wGuOPHmy5A==}
@@ -15251,7 +15251,7 @@ snapshots:
     dependencies:
       '@types/node': 14.18.63
       archiver: 7.0.1
-      dayjs: 1.11.18
+      dayjs: 1.11.19
       fast-csv: 5.0.5
       jszip: 3.10.1
       readable-stream: 3.6.2
@@ -18341,7 +18341,7 @@ snapshots:
 
   dateformat@3.0.3: {}
 
-  dayjs@1.11.18: {}
+  dayjs@1.11.19: {}
 
   debounce-fn@5.1.2:
     dependencies:
