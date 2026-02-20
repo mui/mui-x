@@ -1,3 +1,5 @@
+import type { GridValidRowModel } from './gridRows';
+
 type Ref<T = HTMLElement> = React.RefCallback<T | null> | React.RefObject<T | null> | null;
 
 type CommonProps<T = HTMLElement> = React.DOMAttributes<T> & {
@@ -121,6 +123,7 @@ export type CheckboxProps = CommonProps & {
   slotProps?: {
     htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
+  row?: GridValidRowModel;
   style?: React.CSSProperties;
   tabIndex?: number;
   touchRippleRef?: any; // FIXME(v8:romgrk): find a way to remove

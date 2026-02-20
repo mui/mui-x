@@ -263,7 +263,7 @@ const BaseBadge = forwardRef<any, P['baseBadge']>(function BaseBadge(props, ref)
 });
 
 const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(props, ref) {
-  const { autoFocus, label, fullWidth, slotProps, className, material, ...other } = props;
+  const { autoFocus, label, fullWidth, slotProps, className, material, row, ...other } = props;
 
   const elementRef = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(elementRef, ref);
