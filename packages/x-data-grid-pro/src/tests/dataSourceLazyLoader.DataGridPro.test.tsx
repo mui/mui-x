@@ -46,9 +46,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   }
 
   function TestDataSourceLazyLoader(
-    props: Partial<DataGridProProps> & { mockServerRowCount?: number },
+    props: Partial<DataGridProProps> & {
+      mockServerRowCount?: number;
+      onFetchRows?: typeof fetchRowsSpy;
+    },
   ) {
-    const { mockServerRowCount, ...other } = props;
+    const { mockServerRowCount, onFetchRows, ...other } = props;
+    const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
     apiRef = useGridApiRef();
     mockServer = useMockServer(
       { rowLength: mockServerRowCount ?? 100, maxColumns: 1 },
@@ -68,7 +72,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           });
 
           const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
-          fetchRowsSpy(url);
+          effectiveFetchRowsSpy(url);
           const getRowsResponse = await fetchRows(url);
 
           const response = transformGetRowsResponse(getRowsResponse);
@@ -276,17 +280,19 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     });
 
     it('should not refetch during polling when cache entry is still valid', async () => {
+      const localFetchRowsSpy = spy();
       render(
         <TestDataSourceLazyLoader
           mockServerRowCount={20}
           disableVirtualization={false}
-          dataSourceRevalidateMs={100}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
         />,
       );
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       vi.useFakeTimers();
-      fetchRowsSpy.resetHistory();
+      localFetchRowsSpy.resetHistory();
 
       await act(async () => {
         apiRef.current?.publishEvent('renderedRowsIntervalChange', {
@@ -295,34 +301,33 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           firstColumnIndex: 0,
           lastColumnIndex: 0,
         });
-        await vi.advanceTimersByTimeAsync(450);
+        await vi.advanceTimersByTimeAsync(50);
       });
 
-      expect(fetchRowsSpy.callCount).to.equal(0);
+      expect(localFetchRowsSpy.callCount).to.equal(0);
       vi.useRealTimers();
     });
 
     it('should periodically revalidate the current range when dataSourceRevalidateMs is set', async () => {
+      const localFetchRowsSpy = spy();
       render(
         <TestDataSourceLazyLoader
           mockServerRowCount={20}
           disableVirtualization={false}
           dataSourceCache={null}
-          dataSourceRevalidateMs={100}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
         />,
       );
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
       await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
       await waitFor(() => expect(getRow(19)).not.to.be.undefined);
 
-      fetchRowsSpy.resetHistory();
+      localFetchRowsSpy.resetHistory();
 
-      await waitFor(
-        () => {
-          expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
-        },
-        { timeout: 1_500 },
-      );
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      });
     });
   });
 

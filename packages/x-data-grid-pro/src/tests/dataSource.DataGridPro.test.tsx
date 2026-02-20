@@ -29,8 +29,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     return null;
   }
 
-  function TestDataSource(props: Partial<DataGridProProps>) {
+  function TestDataSource(
+    props: Partial<DataGridProProps> & { onFetchRows?: typeof fetchRowsSpy },
+  ) {
     apiRef = useGridApiRef();
+    const { onFetchRows, ...other } = props;
+    const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
     const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
       { rowLength: 200, maxColumns: 1 },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
@@ -44,7 +48,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
             sortModel: JSON.stringify(params.sortModel),
           });
 
-          fetchRowsSpy(params);
+          effectiveFetchRowsSpy(params);
 
           const getRowsResponse = await fetchRows(
             `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -70,7 +74,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
           dataSource={dataSource}
           columns={columns}
           disableVirtualization
-          {...props}
+          {...other}
         />
       </div>
     );
@@ -91,19 +95,23 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
 
   describe('Revalidation', () => {
     it('should periodically revalidate the current query when dataSourceRevalidateMs is set', async () => {
-      render(<TestDataSource dataSourceCache={null} dataSourceRevalidateMs={100} />);
+      const localFetchRowsSpy = spy();
+      render(
+        <TestDataSource
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
       });
 
-      fetchRowsSpy.resetHistory();
+      localFetchRowsSpy.resetHistory();
 
-      await waitFor(
-        () => {
-          expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
-        },
-        { timeout: 1_500 },
-      );
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      });
     });
   });
 });

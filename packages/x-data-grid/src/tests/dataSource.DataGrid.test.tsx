@@ -41,10 +41,12 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     props: Partial<DataGridProps> & {
       shouldRequestsFail?: boolean;
       dataSetOptions?: Partial<typeof dataSetOptions>;
+      onFetchRows?: typeof fetchRowsSpy;
     },
   ) {
     apiRef = useGridApiRef();
-    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, ...other } = props;
+    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, onFetchRows, ...other } = props;
+    const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
     mockServer = useMockServer(
       dataSetOptionsProp ?? dataSetOptions,
       serverOptions,
@@ -64,7 +66,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
           });
 
           const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
-          fetchRowsSpy(url);
+          effectiveFetchRowsSpy(url);
           const getRowsResponse = await fetchRows(url);
 
           return {
@@ -78,7 +80,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
           return syncedRow;
         },
       };
-    }, [fetchRows, editRow]);
+    }, [fetchRows, editRow, effectiveFetchRowsSpy]);
 
     if (!mockServer.isReady) {
       return null;
@@ -306,19 +308,23 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
 
   describe('Revalidation', () => {
     it('should periodically revalidate the current query when dataSourceRevalidateMs is set', async () => {
-      render(<TestDataSource dataSourceCache={null} dataSourceRevalidateMs={100} />);
+      const localFetchRowsSpy = spy();
+      render(
+        <TestDataSource
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
       });
 
-      fetchRowsSpy.resetHistory();
+      localFetchRowsSpy.resetHistory();
 
-      await waitFor(
-        () => {
-          expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
-        },
-        { timeout: 1_500 },
-      );
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      });
     });
   });
 

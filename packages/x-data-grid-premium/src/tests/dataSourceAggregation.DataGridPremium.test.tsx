@@ -206,7 +206,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     render(
       <TestDataSourceAggregation
         dataSourceCache={null}
-        dataSourceRevalidateMs={100}
+        dataSourceRevalidateMs={1}
         initialState={{
           rowGrouping: { model: ['company'] },
         }}
@@ -223,19 +223,16 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
 
     fetchRowsSpy.resetHistory();
 
-    await waitFor(
-      () => {
-        expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
-      },
-      { timeout: 1_500 },
-    );
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+    });
   });
 
   it('should not set children loading state during background grouped revalidation', async () => {
     const { user } = render(
       <TestDataSourceAggregation
         dataSourceCache={null}
-        dataSourceRevalidateMs={100}
+        dataSourceRevalidateMs={1}
         initialState={{
           rowGrouping: { model: ['company'] },
         }}
@@ -268,16 +265,13 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     fetchRowsSpy.resetHistory();
     setChildrenLoadingSpy.resetHistory();
 
-    await waitFor(
-      () => {
-        const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
-          const groupKeys = call.args[0].groupKeys || [];
-          return groupKeys.length > 0;
-        });
-        expect(hasNestedGroupRequest).to.equal(true);
-      },
-      { timeout: 2_500 },
-    );
+    await waitFor(() => {
+      const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
+        const groupKeys = call.args[0].groupKeys || [];
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
+    });
 
     const hasLoadingTrueCall = setChildrenLoadingSpy
       .getCalls()
