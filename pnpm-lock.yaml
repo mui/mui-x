@@ -1750,7 +1750,7 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@base-ui/utils':
-        specifier: ^0.2.3
+        specifier: ^0.2.4
         version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@emotion/react':
         specifier: ^11.9.0
@@ -1812,7 +1812,7 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@base-ui/utils':
-        specifier: ^0.2.3
+        specifier: ^0.2.4
         version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@floating-ui/react':
         specifier: ^0.27.16
@@ -1868,7 +1868,7 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@base-ui/utils':
-        specifier: ^0.2.3
+        specifier: ^0.2.4
         version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/x-internals':
         specifier: workspace:*
@@ -1915,7 +1915,7 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@base-ui/utils':
-        specifier: ^0.2.3
+        specifier: ^0.2.4
         version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@emotion/react':
         specifier: ^11.9.0
@@ -2003,7 +2003,7 @@ importers:
         specifier: 'catalog:'
         version: 7.28.6
       '@base-ui/utils':
-        specifier: ^0.2.3
+        specifier: ^0.2.4
         version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@emotion/react':
         specifier: ^11.9.0
@@ -2059,7 +2059,7 @@ importers:
         specifier: 'catalog:'
         version: 7.28.6
       '@base-ui/utils':
-        specifier: ^0.2.3
+        specifier: ^0.2.4
         version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@emotion/react':
         specifier: ^11.9.0
