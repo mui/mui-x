@@ -31,7 +31,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'funnel' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'funnel' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" }, "default": "false" },
@@ -42,7 +42,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'funnel' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'funnel' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -98,7 +98,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type: 'funnel' }"
+        "description": "{ dataIndex: number, seriesId: string, type?: 'funnel' }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -194,7 +194,7 @@
   "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiFunnelChart",
-  "forwardsRefTo": "SVGSVGElement",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts-pro/src/FunnelChart/FunnelChart.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/pyramid/\">Charts - Pyramid <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",

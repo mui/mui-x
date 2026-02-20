@@ -5,7 +5,7 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Recurring Events
+# Scheduler - Recurring Events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Define recurring events.</p>
 
@@ -19,7 +19,7 @@ You can use the `rrule` property on your event model to define its repeating pat
 
 ```ts
 const event = {
-  // ...other event properties
+  // ...other properties
   rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
 };
 ```
@@ -41,7 +41,7 @@ rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] }
 **Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**. We do not support every rule or combination yet. If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
 :::
 
-The `EventCalendar` and the `EventTimelinePremium` expand recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
+The `EventCalendarPremium` and the `EventTimelinePremium` expand recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
 
 {{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
 

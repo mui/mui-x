@@ -60,7 +60,7 @@ export * from '../PieChart/PieChart.plugins';
 // utils
 export * from './configInit';
 export * from './getLabel';
-export * from './getSVGPoint';
+export * from './getChartPoint';
 export * from './isDefined';
 export * from './getScale';
 export * from './stacking';
@@ -75,6 +75,7 @@ export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
 export * from './commonNextFocusItem';
+export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';

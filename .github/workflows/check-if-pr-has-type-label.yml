@@ -13,4 +13,4 @@ jobs:
     permissions:
       pull-requests: read
     # no need for a check if the PR is merged. That is done inside the reusable workflow
-    uses: mui/mui-public/.github/workflows/prs_check-if-pr-has-type-label.yml@master
+    uses: mui/mui-public/.github/workflows/prs_check-if-pr-has-type-label.yml@8d98527ab3be91784f2e3c272f96508f35ba7165
