@@ -125,7 +125,7 @@ export function FormContent(props: FormContentProps) {
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,
       rruleDraft: {
-        freq: (base?.freq ?? 'DAILY') as RecurringEventFrequency,
+        freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
         interval: base?.interval ?? 1,
         byDay: base?.byDay ?? [],
         byMonthDay: base?.byMonthDay ?? [],
