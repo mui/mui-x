@@ -14,6 +14,7 @@ import { type GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.ty
 import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
 import { type SeriesLayoutGetter } from './seriesLayout.types';
 import { type KeyboardFocusHandler } from '../../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
+import { type FocusedValuesGetter } from '../../../featurePlugins/useChartKeyboardNavigation/keyboardFocusValuesGetter.types';
 import { type IdentifierSerializer } from './identifierSerializer.types';
 import { type IdentifierCleaner } from './identifierCleaner.types';
 import { type GetItemAtPosition } from './getItemAtPosition.types';
@@ -38,7 +39,8 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   tooltipGetter: TooltipGetter<TSeriesType>;
   tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
-  keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
+  keyboardFocusHandler: KeyboardFocusHandler<TSeriesType>;
+  getFocusedValues?: FocusedValuesGetter<TSeriesType>;
   /**
    * A function to serialize the series item identifier into a unique string.
    * @param {SeriesItemIdentifierWithType<TSeriesType>} identifier The series item identifier.

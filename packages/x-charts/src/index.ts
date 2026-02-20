@@ -16,6 +16,7 @@ export * from './ChartsLabel';
 export * from './ChartsLegend';
 export * from './ChartsLocalizationProvider';
 export * from './ChartsAxisHighlight';
+export * from './ChartsVoiceover';
 export * from './BarChart';
 export * from './LineChart';
 export * from './PieChart';
