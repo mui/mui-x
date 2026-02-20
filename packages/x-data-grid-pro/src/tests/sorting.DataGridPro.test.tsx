@@ -337,4 +337,86 @@ describe('<DataGridPro /> - Sorting', () => {
       expect(onSortModelChange.callCount).to.equal(0);
     });
   });
+
+  describe('column type: multiSelect', () => {
+    it('should sort by array length by default', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 1, tags: ['A'] },
+              { id: 2, tags: ['A', 'B', 'C'] },
+              { id: 3, tags: ['A', 'B'] },
+              { id: 4, tags: [] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B', 'C'],
+                width: 200,
+              },
+            ]}
+            sortModel={[{ field: 'tags', sort: 'asc' }]}
+          />
+        </div>,
+      );
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal(['', 'A', 'AB', 'ABC']);
+    });
+
+    it('should sort by array length descending', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 1, tags: ['A'] },
+              { id: 2, tags: ['A', 'B', 'C'] },
+              { id: 3, tags: ['A', 'B'] },
+              { id: 4, tags: [] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B', 'C'],
+                width: 200,
+              },
+            ]}
+            sortModel={[{ field: 'tags', sort: 'desc' }]}
+          />
+        </div>,
+      );
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal(['ABC', 'AB', 'A', '']);
+    });
+
+    it('should handle null and undefined values when sorting', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 1, tags: null },
+              { id: 2, tags: undefined },
+              { id: 3, tags: ['A'] },
+              { id: 4, tags: ['B', 'C'] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B', 'C'],
+              },
+            ]}
+            sortModel={[{ field: 'tags', sort: 'asc' }]}
+          />
+        </div>,
+      );
+      // null/undefined treated as length 0
+      expect(getColumnValues(0)).to.deep.equal(['', '', 'A', 'BC']);
+    });
+  });
 });

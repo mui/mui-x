@@ -331,6 +331,12 @@ export const GridRootStyles = styled('div', {
         flex: 'none !important',
         width: 'unset !important',
       },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
+      },
     },
     [`&.${c.withSidePanel}`]: {
       flexDirection: 'row',
@@ -666,6 +672,11 @@ export const GridRootStyles = styled('div', {
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
       whiteSpace: 'initial',
       lineHeight: 'inherit',
+    },
+    [`& .${c['row--dynamicHeight']}`]: {
+      [`& .${c.multiSelectCell}, .${c.editMultiSelectCellValue}`]: {
+        flexWrap: 'wrap',
+      },
     },
     [`& .${c.cellEmpty}`]: {
       flex: 1,

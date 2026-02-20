@@ -464,6 +464,9 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
               size="small"
               label={typeof option === 'string' ? option : getOptionLabel?.(option as any)}
               {...tagProps}
+              {...(typeof slotProps?.chip === 'function'
+                ? slotProps.chip(option, index)
+                : slotProps?.chip)}
             />
           );
         })

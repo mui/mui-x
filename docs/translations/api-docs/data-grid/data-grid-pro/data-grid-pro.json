@@ -1232,6 +1232,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the edit long text cell value element"
     },
+    "editMultiSelectCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell root element"
+    },
+    "editMultiSelectCellValue": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell value display element"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1337,6 +1345,30 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the menu icon element",
       "conditions": "the menu is open"
+    },
+    "multiSelectCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell root element"
+    },
+    "multiSelectCellChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each chip in the multi-select cell"
+    },
+    "multiSelectCellChip--hidden": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "hidden chips in the multi-select cell that overflow the container"
+    },
+    "multiSelectCellOverflow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overflow &quot;+N&quot; chip in the multi-select cell"
+    },
+    "multiSelectCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell popper content"
+    },
+    "multiSelectCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell expand popup"
     },
     "overlay": {
       "description": "Styles applied to {{nodeName}}.",
