@@ -76,7 +76,7 @@ Open the Info section of your browser console to see the requests being made and
 
 ## Handle dynamic data updates
 
-To keep server-side tree data fresh automatically for dynamically updated data, use the `dataSourceRevalidateMs` prop.
+To keep retrieving new values for the dynamic server-side tree data, use the `dataSourceRevalidateMs` prop.
 This starts a polling timer that revalidates the current server-side query in the background and updates the Data Grid with the latest data.
 
 The demo below uses `dataSourceRevalidateMs={2_000}` and disables the cache to make periodic updates visible.

@@ -267,7 +267,7 @@ The response will be used to refresh the cache.
 
 ### Handle dynamic data updates
 
-To keep server-side data fresh automatically for dynamically updated data, use `dataSourceRevalidateMs` prop.
+To keep retrieving new values for the dynamic server-side data, use the `dataSourceRevalidateMs` prop.
 This starts a polling timer that revalidates the current server-side query in the background and updates the Data Grid with the latest data.
 
 The demo below uses `dataSourceRevalidateMs="2_000"` and disables the cache to make the periodic updates visible.
