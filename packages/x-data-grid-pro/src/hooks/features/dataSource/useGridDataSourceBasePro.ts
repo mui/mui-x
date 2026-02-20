@@ -83,6 +83,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     debouncedFetchRows,
     strategyProcessor: flatTreeStrategyProcessor,
     events,
+    startPolling,
     cacheChunkManager,
     cache,
   } = useGridDataSourceBase(apiRef, props, {
@@ -112,6 +113,38 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   }, [apiRef, props.dataSource, props.lazyLoading, props.treeData]);
 
   const onDataSourceErrorProp = props.onDataSourceError;
+
+  const replaceGroupRows = React.useCallback(
+    (groupId: GridRowId, groupPath: string[], rows: GridGetRowsResponsePro['rows']) => {
+      const tree = gridRowTreeSelector(apiRef);
+      const fetchedRowIds = new Set(rows.map((row) => gridRowIdSelector(apiRef, row)));
+      const currentGroupRows = getTreeNodeDescendants(tree, groupId, false, true);
+      const rowsToDelete: GridRowModelUpdate[] = [];
+
+      currentGroupRows.forEach((rowId) => {
+        if (fetchedRowIds.has(rowId)) {
+          return;
+        }
+
+        const descendants = getTreeNodeDescendants(tree, rowId, false, false);
+        for (let i = descendants.length - 1; i >= 0; i -= 1) {
+          const descendantId = descendants[i];
+          if (fetchedRowIds.has(descendantId)) {
+            continue;
+          }
+          rowsToDelete.push({ id: descendantId, _action: 'delete' });
+        }
+
+        rowsToDelete.push({ id: rowId, _action: 'delete' });
+      });
+
+      if (rowsToDelete.length > 0) {
+        apiRef.current.updateNestedRows(rowsToDelete, groupPath);
+      }
+      apiRef.current.updateNestedRows(rows, groupPath);
+    },
+    [apiRef],
+  );
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApiPro['fetchRowChildren']>(
     async (id) => {
@@ -150,7 +183,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
-        apiRef.current.updateNestedRows(rows, rowNode.path);
+        replaceGroupRows(id, rowNode.path, rows);
         if (cachedData.rowCount !== undefined) {
           apiRef.current.setRowCount(cachedData.rowCount);
         }
@@ -185,20 +218,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         if (getRowsResponse.rowCount !== undefined) {
           apiRef.current.setRowCount(getRowsResponse.rowCount);
         }
-        // Remove existing outdated rows before setting the new ones
-        const rowsToDelete: GridRowModelUpdate[] = [];
-        getRowsResponse.rows.forEach((row) => {
-          const rowId = gridRowIdSelector(apiRef, row);
-          const treeNode = gridRowNodeSelector(apiRef, rowId);
-          if (treeNode) {
-            rowsToDelete.push({ id: rowId, _action: 'delete' });
-          }
-        });
-        if (rowsToDelete.length > 0) {
-          // TODO: Make this happen in a single pass by modifying the pre-processing of the rows
-          apiRef.current.updateNestedRows(rowsToDelete, rowNode.path);
-        }
-        apiRef.current.updateNestedRows(getRowsResponse.rows, rowNode.path);
+        replaceGroupRows(id, rowNode.path, getRowsResponse.rows);
         apiRef.current.setRowChildrenExpansion(id, true);
       } catch (error) {
         const childrenFetchError = error as Error;
@@ -231,6 +251,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       cacheChunkManager,
       cache,
       onDataSourceErrorProp,
+      replaceGroupRows,
       apiRef,
       props.treeData,
       props.dataSource?.getRows,
@@ -371,8 +392,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         { params: params.fetchParams, response },
         true,
       );
+      startPolling();
     },
-    [apiRef],
+    [apiRef, startPolling],
   );
 
   const dataSourceApi: GridDataSourceApiPro = {

@@ -54,6 +54,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   treeData: false,
   lazyLoading: false,
   lazyLoadingRequestThrottleMs: 500,
+  dataSourceRevalidateMs: 0,
   listView: false,
   multipleColumnsSortingMode: 'withModifierKey',
   pinnedColumnsSectionSeparator: 'border-and-shadow',

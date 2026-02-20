@@ -22,15 +22,19 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const fetchRowsSpy = spy();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
-  function Reset() {
+  function Reset({ resetSpy }: { resetSpy: typeof fetchRowsSpy }) {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
-    }, []);
+      resetSpy.resetHistory();
+    }, [resetSpy]);
     return null;
   }
 
-  function TestDataSource(props: Partial<DataGridProProps>) {
+  function TestDataSource(
+    props: Partial<DataGridProProps> & { onFetchRows?: typeof fetchRowsSpy },
+  ) {
     apiRef = useGridApiRef();
+    const { onFetchRows, ...other } = props;
+    const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
     const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
       { rowLength: 200, maxColumns: 1 },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
@@ -44,7 +48,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
             sortModel: JSON.stringify(params.sortModel),
           });
 
-          fetchRowsSpy(params);
+          effectiveFetchRowsSpy(params);
 
           const getRowsResponse = await fetchRows(
             `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -56,7 +60,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
           };
         },
       };
-    }, [fetchRows]);
+    }, [fetchRows, effectiveFetchRowsSpy]);
 
     if (!isReady) {
       return null;
@@ -64,13 +68,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <Reset />
+        <Reset resetSpy={effectiveFetchRowsSpy} />
         <DataGridPro
           apiRef={apiRef}
           dataSource={dataSource}
           columns={columns}
           disableVirtualization
-          {...props}
+          {...other}
         />
       </div>
     );
@@ -86,6 +90,28 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(199)).not.to.be.undefined);
       expect(testCache.size()).to.equal(1); // 1 chunk of 200 rows
+    });
+  });
+
+  describe('Revalidation', () => {
+    it('should periodically revalidate the current query when dataSourceRevalidateMs is set', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestDataSource
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
+      });
+
+      localFetchRowsSpy.resetHistory();
+
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      });
     });
   });
 });
