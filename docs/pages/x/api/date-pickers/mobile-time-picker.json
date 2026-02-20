@@ -21,6 +21,7 @@
       "default": "\"dense\""
     },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
+    "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
     "localeText": { "type": { "name": "object" } },
     "maxTime": { "type": { "name": "object" } },
