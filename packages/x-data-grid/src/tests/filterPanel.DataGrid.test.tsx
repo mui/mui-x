@@ -12,7 +12,7 @@ import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getSelectByName } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
-  fireEvent.change(getSelectByName('Columns'), {
+  fireEvent.change(getSelectByName('Column'), {
     target: { value: columnValue },
   });
 }
@@ -491,7 +491,7 @@ describe('<DataGrid /> - Filter panel', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
     // check that the filter is still in the model
-    expect(getSelectByName('Columns').value).to.equal('brand');
+    expect(getSelectByName('Column').value).to.equal('brand');
     expect(getSelectByName('Operator').value).to.equal('isEmpty');
   });
 
@@ -516,7 +516,7 @@ describe('<DataGrid /> - Filter panel', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
     // check that the filter is changed to default one (`is`)
-    expect(getSelectByName('Columns').value).to.equal('country');
+    expect(getSelectByName('Column').value).to.equal('country');
     expect(getSelectByName('Operator').value).to.equal('is');
   });
 });
