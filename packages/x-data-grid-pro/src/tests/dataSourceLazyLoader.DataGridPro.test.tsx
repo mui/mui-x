@@ -82,7 +82,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           };
         },
       };
-    }, [fetchRows]);
+    }, [fetchRows, effectiveFetchRowsSpy]);
 
     if (!mockServer.isReady) {
       return null;
