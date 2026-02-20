@@ -29,9 +29,12 @@ import {
 const MONTHLY_MAX_ATTEMPTS = 12;
 
 /**
- * Max attempts to find a valid yearly occurrence (Feb 29 = leap year every 4 years)
+ * Max attempts to find a valid yearly occurrence.
+ * Normally leap years repeat every 4 years, but century years not divisible by 400 are skipped
+ * (e.g. 2100, 2200, 2300). This creates up to 8 consecutive non-leap years around such centuries
+ * (e.g. 2097–2103). Using 8 guarantees we always find the next leap year regardless of interval.
  **/
-const YEARLY_MAX_ATTEMPTS = 4;
+const YEARLY_MAX_ATTEMPTS = 8;
 
 /**
  * Expands a recurring event into concrete occurrences within a visible range.

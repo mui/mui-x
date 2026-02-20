@@ -141,7 +141,7 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 
   if (ord == null) {
     throw new Error(
-      'MUI: The byDay property must contain contain a single element with an ordinal (e.g. ["2TU"] or ["-1FR"]).',
+      'MUI: The byDay property must contain a single element with an ordinal (e.g. ["2TU"] or ["-1FR"]).',
     );
   }
 
@@ -344,7 +344,7 @@ export function getRemainingWeeklyOccurrences(
 
 /**
  * Remaining MONTHLY occurrences after `date` (inclusive).
- * Modes: BYDAY with ordinals (e.g. 2TU, -1FR; multiple allowed) OR single BYMONTHDAY (default = DTSTART day).
+ * Modes: BYDAY with a single ordinal (e.g. "2TU" or "-1FR"; only one element) OR single BYMONTHDAY (default = DTSTART day).
  * Skips months without a match. Steps by `interval`, respecting series start and target boundaries.
  * Short-circuits when count is exhausted.
  * @throws If BYDAY is combined with BYMONTHDAY, or BYMONTHDAY has >1 value.
@@ -452,7 +452,7 @@ export function getRemainingYearlyOccurrences(
   // Any use of BYMONTH, BYMONTHDAY, or BYDAY is not allowed at the moment.
   if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
     throw new Error(
-      'MUI: The yearly recurrences must have either the byMonth, the byMonthDay or the byDay property defined.',
+      'MUI: The yearly recurrences must NOT use byMonth, byMonthDay, or byDay. Only exact same date recurrence (month/day of DTSTART) is supported.',
     );
   }
 
