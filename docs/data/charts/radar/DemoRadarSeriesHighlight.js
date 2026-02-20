@@ -29,7 +29,6 @@ export default function DemoRadarSeriesHighlight() {
   const handleHighLightedSeries = (event, newHighLightedSeries) => {
     if (newHighLightedSeries !== null) {
       setHighlightedItem({
-        type: 'radar',
         seriesId: newHighLightedSeries,
       });
     }
