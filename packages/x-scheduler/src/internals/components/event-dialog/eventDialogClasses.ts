@@ -21,6 +21,8 @@ export interface EventDialogClasses {
   eventDialogResourceLegendColor: string;
   /** Styles applied to the event dialog resource title element. */
   eventDialogResourceTitle: string;
+  /** Styles applied to the event dialog paper element. */
+  eventDialogPaper: string;
   /** Styles applied to the event dialog form element. */
   eventDialogForm: string;
   /** Styles applied to the event dialog form actions element. */
@@ -57,6 +59,7 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogResourceLegendContainer',
   'eventDialogResourceLegendColor',
   'eventDialogResourceTitle',
+  'eventDialogPaper',
   'eventDialogForm',
   'eventDialogFormActions',
   'eventDialogContent',
@@ -82,6 +85,7 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogResourceLegendContainer: ['eventDialogResourceLegendContainer'],
   eventDialogResourceLegendColor: ['eventDialogResourceLegendColor'],
   eventDialogResourceTitle: ['eventDialogResourceTitle'],
+  eventDialogPaper: ['eventDialogPaper'],
   eventDialogForm: ['eventDialogForm'],
   eventDialogFormActions: ['eventDialogFormActions'],
   eventDialogContent: ['eventDialogContent'],

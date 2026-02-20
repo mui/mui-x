@@ -375,6 +375,33 @@ const hasFocusedItem = focusedItem !== null;
 The `ChartsSurface` component is now comprised of `ChartsLayerContainer` and `ChartsSvgLayer`. As a consequence, it is no longer possible to style the component using the `MuiChartsSurface` theme key.
 If you want to style the layer container, you can use `MuiChartsLayerContainer` instead, and for the SVG layer, use `MuiChartsSvgLayer`.
 
+## Props propagation
+
+The `ref` for single component charts like `<LineChart />` is now propagated to the root element instead of the SVG element.
+
+Internally this change looks like this.
+
+```diff
+ const LineCHart = React.forwardRef(function LineChart(
+   inProps: LineChartProps,
+-  ref: React.Ref<SVGSVGElement>,
++  ref: React.Ref<HTMLDivElement>,
+ ) {
+   /* ... */
+   return (
+     <ChartDataProvider>
+-      <ChartsWrapper>
++      <ChartsWrapper ref={ref}>
+         {/* ... */}
+-        <ChartsSurface ref={ref}>
++        <ChartsSurface>
+           {/* ... */}
+         </ChartsSurface>
+     </ChartDataProvider>
+   );
+ });
+```
+
 ## Typescript
 
 ### Remove default generic of `SeriesItemIdentifier`

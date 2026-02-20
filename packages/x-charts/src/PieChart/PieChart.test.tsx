@@ -20,11 +20,11 @@ describe('<PieChart />', () => {
     />,
     () => ({
       classes: {} as any,
-      inheritComponent: 'svg',
+      inheritComponent: 'div',
       render,
       muiName: 'MuiPieChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.SVGSVGElement,
+      refInstanceof: window.HTMLDivElement,
       skip: [
         'componentProp',
         'componentsProp',
