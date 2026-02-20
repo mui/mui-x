@@ -18,7 +18,12 @@ type TypeMapping = {
   line: ComposableCartesianChartSeriesType;
   scatter: ComposableCartesianChartSeriesType;
   rangeBar: ComposableCartesianChartSeriesType;
+  pie: 'pie';
+  sankey: 'sankey';
+  radar: 'radar';
+  funnel: 'funnel';
+  heatmap: 'heatmap';
 };
 
 export type ComposableChartSeriesType<SeriesType extends ChartSeriesType> =
-  SeriesType extends keyof TypeMapping ? TypeMapping[SeriesType] : SeriesType;
+  SeriesType extends keyof TypeMapping ? TypeMapping[SeriesType] : never;

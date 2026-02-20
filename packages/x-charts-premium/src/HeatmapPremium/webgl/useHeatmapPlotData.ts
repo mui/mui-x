@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
-import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
+import type {
+  HighlightItemIdentifier,
+  DefaultizedHeatmapSeriesType,
+} from '@mui/x-charts-pro/models';
 import { type ChartDrawingArea, useZColorScale } from '@mui/x-charts/hooks';
 import {
   selectorChartsIsFadedCallback,
@@ -19,8 +22,12 @@ export function useHeatmapPlotData(
   const height = yScale.bandwidth();
   const colorScale = useZColorScale()!;
   const store = useStore();
-  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
-  const isFaded = store.use(selectorChartsIsFadedCallback);
+  const isHighlighted = store.use(selectorChartsIsHighlightedCallback) as unknown as (
+    item: HighlightItemIdentifier<'heatmap'> | null,
+  ) => boolean;
+  const isFaded = store.use(selectorChartsIsFadedCallback) as unknown as (
+    item: HighlightItemIdentifier<'heatmap'> | null,
+  ) => boolean;
 
   return React.useMemo(() => {
     const centers = new Float32Array(series.data.length * 2);
