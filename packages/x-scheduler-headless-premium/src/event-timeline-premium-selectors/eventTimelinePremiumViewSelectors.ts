@@ -22,7 +22,7 @@ interface ViewConfig {
   ) => number;
 }
 
-const EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS: Record<EventTimelinePremiumView, ViewConfig> = {
+export const EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS: Record<EventTimelinePremiumView, ViewConfig> = {
   time: {
     unitCount: 4, // 4 days
     getStartDate: (adapter, visibleDate) => adapter.startOfDay(visibleDate),

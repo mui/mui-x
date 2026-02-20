@@ -71,7 +71,7 @@ export interface BarChartProProps
  */
 const BarChartPro = React.forwardRef(function BarChartPro(
   inProps: BarChartProProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
   const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
@@ -92,24 +92,21 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'bar',
     BarChartProPluginSignatures
-  >(
-    {
-      ...chartContainerProps,
-      initialZoom,
-      zoomData,
-      onZoomChange,
-      apiRef,
-      plugins: BAR_CHART_PRO_PLUGINS,
-    },
-    ref,
-  );
+  >({
+    ...chartContainerProps,
+    initialZoom,
+    zoomData,
+    onZoomChange,
+    apiRef,
+    plugins: BAR_CHART_PRO_PLUGINS,
+  });
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro<'bar', BarChartProPluginSignatures> {...chartDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -233,8 +230,8 @@ BarChartPro.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['bar']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']),
     }),
   ),
   /**
@@ -288,8 +285,8 @@ BarChartPro.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['bar']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']),
     }),
   ),
   /**
@@ -442,7 +439,7 @@ BarChartPro.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number.isRequired,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bar']).isRequired,
+    type: PropTypes.oneOf(['bar']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

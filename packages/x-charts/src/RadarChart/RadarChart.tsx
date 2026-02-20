@@ -87,7 +87,7 @@ export interface RadarChartProps
  */
 const RadarChart = React.forwardRef(function RadarChart(
   inProps: RadarChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiRadarChart' });
   const {
@@ -108,10 +108,10 @@ const RadarChart = React.forwardRef(function RadarChart(
 
   return (
     <RadarDataProvider<RadarChartPluginSignatures> {...radarDataProviderProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        <ChartsSurface {...chartsSurfaceProps}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
           <RadarSeriesArea {...radarSeriesAreaProps} />
@@ -181,8 +181,8 @@ RadarChart.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['radar']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']),
     }),
   ),
   /**
@@ -231,8 +231,8 @@ RadarChart.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['radar']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']),
     }),
   ),
   /**
@@ -365,7 +365,7 @@ RadarChart.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['radar']).isRequired,
+    type: PropTypes.oneOf(['radar']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
