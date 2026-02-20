@@ -1,0 +1,24 @@
+import type { ChartSeriesType } from './config';
+
+export type ComposableCartesianChartSeriesType =
+  | 'bar'
+  | 'line'
+  | 'scatter'
+  | ('rangeBar' extends ChartSeriesType ? 'rangeBar' : never);
+
+export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesType> = new Set([
+  'bar',
+  'line',
+  'scatter',
+  'rangeBar',
+] as ComposableCartesianChartSeriesType[]);
+
+type TypeMapping = {
+  bar: ComposableCartesianChartSeriesType | 'bar';
+  line: ComposableCartesianChartSeriesType | 'line';
+  scatter: ComposableCartesianChartSeriesType | 'scatter';
+  // rangeBar: ComposableCartesianChartSeriesType;
+};
+
+export type ComposableChartSeriesType<SeriesType extends ChartSeriesType> =
+  SeriesType extends keyof TypeMapping ? TypeMapping[SeriesType] : SeriesType;

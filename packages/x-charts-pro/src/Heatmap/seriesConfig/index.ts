@@ -3,8 +3,6 @@ import {
   type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
-  createIsHighlighted,
-  createIsFaded,
 } from '@mui/x-charts/internals';
 import { getBaseExtremum } from './extremums';
 import seriesProcessor from './seriesProcessor';
@@ -14,6 +12,7 @@ import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import getItemAtPosition from './getItemAtPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
+import { createIsFaded, createIsHighlighted } from './highlight';
 
 cartesianSeriesTypes.addType('heatmap');
 

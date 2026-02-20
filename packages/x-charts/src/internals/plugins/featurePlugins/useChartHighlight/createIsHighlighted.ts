@@ -1,3 +1,4 @@
+import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import type { HighlightItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
@@ -8,7 +9,9 @@ function alwaysFalse(): boolean {
 /**
  * The isHighlighted logic for main charts (those that are identified by an id and a dataIndex)
  */
-export function createIsHighlighted<SeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
+export function createIsHighlighted<
+  SeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+>(
   highlightScope: HighlightScope<SeriesType> | null | undefined,
   highlightedItem: HighlightItemIdentifier<SeriesType> | null,
 ) {
@@ -16,17 +19,15 @@ export function createIsHighlighted<SeriesType extends Exclude<ChartSeriesType, 
     return alwaysFalse;
   }
 
-  return function isHighlighted(item: HighlightItemIdentifier<ChartSeriesType> | null): boolean {
+  return function isHighlighted<TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
+    item: HighlightItemIdentifier<TestedSeriesType> | null,
+  ): boolean {
     if (!item) {
       return false;
     }
 
-    // @ts-ignore Sankey is only in pro package
-    if (item.type === 'sankey') {
-      return false;
-    }
-
     if (highlightScope.highlight === 'series') {
+      // @ts-expect-error
       return item.seriesId === highlightedItem.seriesId;
     }
 

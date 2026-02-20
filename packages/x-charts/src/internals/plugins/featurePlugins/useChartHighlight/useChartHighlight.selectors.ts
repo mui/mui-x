@@ -1,7 +1,11 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import type { HighlightItemIdentifier } from '../../../../models/seriesType';
+import type {
+  HighlightItemIdentifier,
+  HighlightItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
+import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type UseChartHighlightSignature } from './useChartHighlight.types';
 import {
@@ -59,7 +63,7 @@ export const selectorChartsHighlightScope = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartsHighlightScope<SeriesType extends ChartSeriesType>(
     seriesIdToHighlightScope: HighlightLookUp<ChartSeriesType>,
-    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
   ): HighlightScope<SeriesType> | null {
     if (!highlightedItem) {
       return null;
@@ -126,7 +130,7 @@ export const selectorChartsIsHighlighted = createSelector(
     /**
      * The item to test if it's highlighted or not.
      */
-    item: HighlightItemIdentifier<ChartSeriesType> | null,
+    item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;
@@ -149,7 +153,7 @@ export const selectorChartsIsFaded = createSelector(
     /**
      * The item to test if it's faded or not.
      */
-    item: HighlightItemIdentifier<ChartSeriesType> | null,
+    item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;

@@ -5,7 +5,10 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartPluginOptions, ChartResponse, ChartPlugin } from '../../models';
 import type { UseChartHighlightSignature } from './useChartHighlight.types';
-import type { HighlightItemIdentifier } from '../../../../models/seriesType';
+import type {
+  HighlightItemIdentifier,
+  HighlightItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
@@ -27,10 +30,22 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
 
   useEnhancedEffect(() => {
     if (store.state.highlight.item !== params.highlightedItem) {
+      if (params.highlightedItem === null) {
+        store.set('highlight', {
+          ...store.state.highlight,
+          item: null,
+        });
+        return;
+      }
+
+      const cleanItem = instance.identifierWithType(
+        params.highlightedItem,
+        'highlightItem',
+      ) satisfies HighlightItemIdentifierWithType<SeriesType>;
+      const item = instance.cleanIdentifier(cleanItem, 'highlightItem');
       store.set('highlight', {
         ...store.state.highlight,
-        item:
-          params.highlightedItem === null ? null : instance.cleanIdentifier(params.highlightedItem),
+        item,
       });
     }
     if (process.env.NODE_ENV !== 'production') {
@@ -62,7 +77,11 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   const setHighlight = useEventCallback((newItem: HighlightItemIdentifier<SeriesType>) => {
     const prevHighlight = store.state.highlight;
 
-    const cleanedIdentifier = instance.cleanIdentifier(newItem);
+    const identifierWithType = instance.identifierWithType(
+      newItem,
+      'highlightItem',
+    ) satisfies HighlightItemIdentifierWithType<SeriesType>;
+    const cleanedIdentifier = instance.cleanIdentifier(identifierWithType, 'highlightItem');
     if (fastObjectShallowCompare(prevHighlight.item, cleanedIdentifier)) {
       return;
     }

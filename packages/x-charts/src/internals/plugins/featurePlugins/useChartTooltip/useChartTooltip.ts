@@ -28,7 +28,9 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
 
   useEnhancedEffect(() => {
     if (store.state.tooltip.item !== params.tooltipItem) {
-      const newItem = params.tooltipItem ? instance.identifierWithType(params.tooltipItem) : null;
+      const newItem = params.tooltipItem
+        ? instance.identifierWithType(params.tooltipItem, 'seriesItem')
+        : null;
 
       if (
         store.state.tooltip.item === null || newItem === null
@@ -53,7 +55,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
     if (
       !itemToRemove ||
       instance.serializeIdentifier(prevItem) ===
-        instance.serializeIdentifier(instance.identifierWithType(itemToRemove))
+        instance.serializeIdentifier(instance.identifierWithType(itemToRemove, 'seriesItem'))
     ) {
       // Remove the item is either
       // - no item provided, so we unconditionally remove it

@@ -5,7 +5,6 @@ import type {
   SankeyLinkHighlight,
   SankeyNodeHighlight,
 } from '../sankey.highlight.types';
-import type { SankeyItemIdentifier } from '../sankey.types';
 
 const DEFAULT_NODE_HIGHLIGHT = 'links';
 const DEFAULT_LINK_HIGHLIGHT = 'links';
@@ -15,10 +14,10 @@ function alwaysFalse(): boolean {
 }
 
 function isNodeHighlighted(
-  highlightedItem: SankeyItemIdentifier,
+  highlightedItem: HighlightItemIdentifier<'sankey'>,
   nodeHighlight: SankeyNodeHighlight,
   linkHighlight: SankeyLinkHighlight,
-  item: SankeyItemIdentifier,
+  item: HighlightItemIdentifier<'sankey'>,
 ): boolean {
   if (item.subType !== 'node') {
     return false;
@@ -53,10 +52,10 @@ function isNodeHighlighted(
 }
 
 function isLinkHighlighted(
-  highlightedItem: SankeyItemIdentifier,
+  highlightedItem: HighlightItemIdentifier<'sankey'>,
   nodeHighlight: SankeyNodeHighlight,
   linkHighlight: SankeyLinkHighlight,
-  item: SankeyItemIdentifier,
+  item: HighlightItemIdentifier<'sankey'>,
 ): boolean {
   if (item.subType !== 'link') {
     return false;
@@ -96,7 +95,7 @@ function isLinkHighlighted(
 
 export function createSankeyIsHighlighted(
   highlightScope: SankeyHighlightScope | null | undefined,
-  highlightedItem: SankeyItemIdentifier | null,
+  highlightedItem: HighlightItemIdentifier<'sankey'> | null,
 ) {
   if (!highlightedItem) {
     return alwaysFalse;
@@ -110,7 +109,7 @@ export function createSankeyIsHighlighted(
       return false;
     }
 
-    const sankeyItem = item as SankeyItemIdentifier;
+    const sankeyItem = item as HighlightItemIdentifier<'sankey'>;
 
     if (sankeyItem.subType === 'node') {
       return isNodeHighlighted(highlightedItem, nodeHighlight, linkHighlight, sankeyItem);

@@ -1,5 +1,9 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
-import { type HighlightItemIdentifier } from '../../../../models/seriesType';
+import type {
+  HighlightItemIdentifierWithType,
+  HighlightItemIdentifier,
+  SeriesItemIdentifier,
+} from '../../../../models/seriesType';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type ChartPluginSignature } from '../../models';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
@@ -15,7 +19,9 @@ export interface UseChartHighlightInstance<SeriesType extends ChartSeriesType> {
    * Set the highlighted item.
    * @param {HighlightItemIdentifier<SeriesType>} item The item to highlight.
    */
-  setHighlight: (item: HighlightItemIdentifier<SeriesType>) => void;
+  setHighlight: (
+    item: HighlightItemIdentifier<SeriesType> | SeriesItemIdentifier<SeriesType>,
+  ) => void;
 }
 
 export interface UseChartHighlightParameters<SeriesType extends ChartSeriesType> {
@@ -29,7 +35,7 @@ export interface UseChartHighlightParameters<SeriesType extends ChartSeriesType>
    *
    * @param {HighlightItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
-  onHighlightChange?: (highlightedItem: HighlightItemIdentifier<SeriesType> | null) => void;
+  onHighlightChange?: (highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void;
 }
 
 export type UseChartHighlightDefaultizedParameters<SeriesType extends ChartSeriesType> =
@@ -44,7 +50,7 @@ export interface UseChartHighlightState<SeriesType extends ChartSeriesType> {
     /**
      * The item currently highlighted.
      */
-    item: HighlightItemIdentifier<SeriesType> | null;
+    item: HighlightItemIdentifierWithType<SeriesType> | null;
     /**
      * The last interaction highlight update.
      * Used to decide if highlight should be based on pointer position or keyboard navigation.

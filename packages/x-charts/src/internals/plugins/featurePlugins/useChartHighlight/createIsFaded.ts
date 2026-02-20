@@ -1,3 +1,4 @@
+import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import type { HighlightItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
@@ -8,7 +9,7 @@ function alwaysFalse(): boolean {
 /**
  * The isFade logic for main charts (those that are identified by an id and a dataIndex)
  */
-export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
+export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>>(
   highlightScope: HighlightScope<SeriesType> | null | undefined,
   highlightedItem: HighlightItemIdentifier<SeriesType> | null,
 ) {
@@ -16,13 +17,10 @@ export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sanke
     return alwaysFalse;
   }
 
-  return function isFaded(item: HighlightItemIdentifier<ChartSeriesType> | null): boolean {
+  return function isFaded<TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
+    item: HighlightItemIdentifier<TestedSeriesType> | null,
+  ): boolean {
     if (!item) {
-      return false;
-    }
-
-    // @ts-ignore Sankey is only in pro package
-    if (item.type === 'sankey') {
       return false;
     }
 

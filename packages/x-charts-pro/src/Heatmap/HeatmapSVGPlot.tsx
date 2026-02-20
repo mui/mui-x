@@ -52,7 +52,6 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
           const item: HighlightItemIdentifier<'heatmap'> = {
             type: 'heatmap',
             seriesId: seriesToDisplay.id,
-            dataIndex,
             xIndex,
             yIndex,
           };
