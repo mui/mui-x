@@ -510,6 +510,7 @@
   { "name": "referenceLineClasses", "kind": "Variable" },
   { "name": "RendererType", "kind": "TypeAlias" },
   { "name": "RotationAxis", "kind": "TypeAlias" },
+  { "name": "SankeyChart", "kind": "Variable" },
   { "name": "SankeyChartProps", "kind": "Interface" },
   { "name": "SankeyChartSlotExtension", "kind": "Interface" },
   { "name": "SankeyChartSlotProps", "kind": "Interface" },
