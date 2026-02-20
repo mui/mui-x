@@ -90,22 +90,12 @@ export interface RecurringEventRecurrenceRule {
 
 /**
  * User-facing recurrence rule type used in `SchedulerEvent`.
- *
- * Identical to `RecurringEventRecurrenceRule` except `until` is a `string`
- * instead of `TemporalSupportedObject`, matching the same string semantics
- * as `SchedulerEvent.start` / `end`:
- * strings ending with `"Z"` are instants (UTC),
- * strings without `"Z"` are wall-time.
+ * Same as `RecurringEventRecurrenceRule` but with `until` as a `string`.
  */
 export type SchedulerEventRecurrenceRule = Omit<RecurringEventRecurrenceRule, 'until'> & {
   /**
    * A date time value that bounds the recurrence rule in an inclusive manner.
-   * Must not be specified when the count property is set.
-   * Corresponds to the UNTIL property of the string-based RRULE.
-   *
-   * Same string semantics as `SchedulerEvent.start` / `end`:
-   * strings ending with `"Z"` are instants (UTC),
-   * strings without `"Z"` are wall-time.
+   * Same string semantics as `SchedulerEvent.start` / `end`.
    */
   until?: string;
 };
