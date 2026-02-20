@@ -3,10 +3,25 @@ import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsis
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { type ChartPlugin } from '../../models';
-import { type HighlightItemData, type UseChartHighlightSignature } from './useChartHighlight.types';
+import type { ChartPluginOptions, ChartResponse, ChartPlugin } from '../../models';
+import type { UseChartHighlightSignature } from './useChartHighlight.types';
+import type {
+  HighlightItemIdentifier,
+  HighlightItemIdentifierWithType,
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
-export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ store, params }) => {
+export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+>({
+  store,
+  params,
+  instance,
+}: ChartPluginOptions<UseChartHighlightSignature<SeriesType>>): ChartResponse<
+  UseChartHighlightSignature<SeriesType>
+> => {
   useAssertModelConsistency({
     warningPrefix: 'MUI X Charts',
     componentName: 'Chart',
@@ -17,7 +32,23 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
 
   useEnhancedEffect(() => {
     if (store.state.highlight.item !== params.highlightedItem) {
-      store.set('highlight', { ...store.state.highlight, item: params.highlightedItem });
+      if (params.highlightedItem === null) {
+        store.set('highlight', {
+          ...store.state.highlight,
+          item: null,
+        });
+        return;
+      }
+
+      const cleanItem = instance.identifierWithType(
+        params.highlightedItem,
+        'highlightItem',
+      ) satisfies HighlightItemIdentifierWithType<SeriesType>;
+      const item = instance.cleanIdentifier(cleanItem, 'highlightItem');
+      store.set('highlight', {
+        ...store.state.highlight,
+        item,
+      });
     }
     if (process.env.NODE_ENV !== 'production') {
       if (params.highlightedItem !== undefined && !store.state.highlight.isControlled) {
@@ -29,7 +60,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
         );
       }
     }
-  }, [store, params.highlightedItem]);
+  }, [store, params.highlightedItem, instance]);
 
   const clearHighlight = useEventCallback(() => {
     params.onHighlightChange?.(null);
@@ -45,24 +76,37 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
     });
   });
 
-  const setHighlight = useEventCallback((newItem: HighlightItemData) => {
-    const prevHighlight = store.state.highlight;
+  const setHighlight = useEventCallback(
+    (
+      newItem:
+        | HighlightItemIdentifier<SeriesType>
+        | SeriesItemIdentifier<SeriesType>
+        | HighlightItemIdentifierWithType<SeriesType>
+        | SeriesItemIdentifierWithType<SeriesType>,
+    ) => {
+      const prevHighlight = store.state.highlight;
 
-    if (fastObjectShallowCompare(prevHighlight.item, newItem)) {
-      return;
-    }
+      const identifierWithType = instance.identifierWithType(
+        newItem,
+        'highlightItem',
+      ) satisfies HighlightItemIdentifierWithType<SeriesType>;
+      const cleanedIdentifier = instance.cleanIdentifier(identifierWithType, 'highlightItem');
+      if (fastObjectShallowCompare(prevHighlight.item, cleanedIdentifier)) {
+        return;
+      }
 
-    params.onHighlightChange?.(newItem);
-    if (prevHighlight.isControlled) {
-      return;
-    }
+      params.onHighlightChange?.(cleanedIdentifier);
+      if (prevHighlight.isControlled) {
+        return;
+      }
 
-    store.set('highlight', {
-      item: newItem,
-      lastUpdate: 'pointer',
-      isControlled: false,
-    });
-  });
+      store.set('highlight', {
+        item: cleanedIdentifier,
+        lastUpdate: 'pointer',
+        isControlled: false,
+      });
+    },
+  );
 
   return {
     instance: {

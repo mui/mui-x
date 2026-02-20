@@ -1,7 +1,11 @@
 import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesConfig } from './types/seriesConfig.types';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import {
+  type HighlightItemIdentifierWithType,
+  type SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
+import { type VisibilityIdentifierWithType } from '../../featurePlugins/useChartVisibilityManager';
 
 export interface UseChartSeriesConfigParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -26,9 +30,23 @@ export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
   identifier: T,
 ) => string;
 
-export type CleanIdentifierFunction = <T extends { type: ChartSeriesType }>(
-  identifier: T,
-) => SeriesItemIdentifierWithType<T['type']>;
+export type CleanIdentifierFunction = {
+  // Overloads for different identifier types
+  <SeriesType extends ChartSeriesType, Item extends SeriesItemIdentifierWithType<SeriesType>>(
+    identifier: Item,
+    typeOfIdentifier: 'seriesItem',
+  ): Item;
+
+  <SeriesType extends ChartSeriesType, Item extends HighlightItemIdentifierWithType<SeriesType>>(
+    identifier: Item,
+    typeOfIdentifier: 'highlightItem',
+  ): Item;
+
+  <SeriesType extends ChartSeriesType, Item extends VisibilityIdentifierWithType<SeriesType>>(
+    identifier: Item,
+    typeOfIdentifier: 'visibility',
+  ): Item;
+};
 
 export interface UseChartSeriesConfigInstance {
   /**

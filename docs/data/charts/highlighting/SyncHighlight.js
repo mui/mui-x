@@ -1,11 +1,10 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-
 import { BarChart } from '@mui/x-charts/BarChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function SyncHighlight() {
-  const [highlightedItem, setHighLightedItem] = React.useState(null);
+  const [highlightedItem, setHighlightedItem] = React.useState(null);
 
   return (
     <Stack
@@ -16,12 +15,20 @@ export default function SyncHighlight() {
       <BarChart
         {...barChartsProps}
         highlightedItem={highlightedItem}
-        onHighlightChange={setHighLightedItem}
+        onHighlightChange={(item) =>
+          setHighlightedItem(
+            item ? { seriesId: item.seriesId, dataIndex: item.dataIndex } : null,
+          )
+        }
       />
       <PieChart
         {...pieChartProps}
         highlightedItem={highlightedItem}
-        onHighlightChange={setHighLightedItem}
+        onHighlightChange={(item) =>
+          setHighlightedItem(
+            item ? { seriesId: item.seriesId, dataIndex: item.dataIndex } : null,
+          )
+        }
       />
     </Stack>
   );

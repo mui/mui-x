@@ -1,19 +1,27 @@
-import { type ChartSeriesType, type HighlightScope } from '../../../../models/seriesType/config';
-import { type HighlightItemData } from './useChartHighlight.types';
+import type { HighlightItemIdentifier } from '../../../../models/seriesType';
+import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
 function alwaysFalse(): boolean {
   return false;
 }
 
-export function createIsHighlighted<SeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
+/**
+ * The isHighlighted logic for main charts (those that are identified by an id and a dataIndex)
+ */
+export function createIsHighlighted<
+  SeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+>(
   highlightScope: HighlightScope<SeriesType> | null | undefined,
-  highlightedItem: HighlightItemData | null,
+  highlightedItem: HighlightItemIdentifier<SeriesType> | null,
 ) {
   if (!highlightScope || !highlightedItem) {
     return alwaysFalse;
   }
 
-  return function isHighlighted(item: HighlightItemData | null): boolean {
+  // Exclude<ChartSeriesType, 'sankey' | 'heatmap'> should be ComposableChartSeriesType<SeriesType> to be correct.
+  return function isHighlighted<
+    TestedSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  >(item: HighlightItemIdentifier<TestedSeriesType> | null): boolean {
     if (!item) {
       return false;
     }

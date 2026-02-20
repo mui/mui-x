@@ -34,7 +34,10 @@
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
-      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
+      "type": {
+        "name": "shape",
+        "description": "{ seriesId: string, type?: 'heatmap', xIndex: number, yIndex: number }"
+      }
     },
     "id": { "type": { "name": "string" } },
     "initialZoom": {
@@ -63,7 +66,7 @@
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "type": "function(highlightedItem: HighlightItemIdentifier<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },

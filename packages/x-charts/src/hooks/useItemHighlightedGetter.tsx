@@ -5,6 +5,7 @@ import {
   selectorChartsIsHighlightedCallback,
 } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.selectors';
 import { type UseChartHighlightSignature } from '../plugins';
+import { type ChartSeriesType } from '../models/seriesType/config';
 
 /**
  * A hook to check the highlighted state of multiple items.
@@ -14,8 +15,8 @@ import { type UseChartHighlightSignature } from '../plugins';
  * We recommend to first test if item is highlighted: `const faded = !highlighted && isFaded(item)`
  * @returns {{ isHighlighted, isFaded }} callbacks to get the state of the item.
  */
-export function useItemHighlightedGetter() {
-  const store = useStore<[UseChartHighlightSignature]>();
+export function useItemHighlightedGetter<SeriesType extends ChartSeriesType>() {
+  const store = useStore<[UseChartHighlightSignature<SeriesType>]>();
 
   const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
   const isFaded = store.use(selectorChartsIsFadedCallback);

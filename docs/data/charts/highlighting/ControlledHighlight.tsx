@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import { HighlightItemData } from '@mui/x-charts/context';
+import { HighlightItemIdentifier } from '@mui/x-charts/models';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -15,7 +15,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 
 export default function ControlledHighlight() {
   const [highlightedItem, setHighLightedItem] =
-    React.useState<HighlightItemData | null>({
+    React.useState<HighlightItemIdentifier<'bar'> | null>({
       seriesId: 'A',
       dataIndex: 0,
     });
@@ -27,6 +27,7 @@ export default function ControlledHighlight() {
   const handleHighLightedSeries = (event: any, newHighLightedSeries: string) => {
     if (newHighLightedSeries !== null) {
       setHighLightedItem((prev) => ({
+        dataIndex: 0,
         ...prev,
         seriesId: newHighLightedSeries,
       }));

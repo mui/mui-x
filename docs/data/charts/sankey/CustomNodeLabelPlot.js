@@ -30,17 +30,30 @@ export function CustomNodeLabelPlot() {
   return (
     <g>
       {layout.nodes.map((node) => (
-        <CustomNodeLabel key={`label-node-${node.id}`} node={node} />
+        <CustomNodeLabel
+          key={`label-node-${node.id}`}
+          seriesId={sankeySeries.id}
+          node={node}
+        />
       ))}
     </g>
   );
 }
 
 function CustomNodeLabel(props) {
-  const { node } = props;
+  const { seriesId, node } = props;
   const theme = useTheme();
 
-  const highlightState = useSankeyNodeHighlightState(node.id);
+  const nodeIdentifier = React.useMemo(
+    () => ({
+      type: 'sankey',
+      subType: 'node',
+      seriesId,
+      nodeId: node.id,
+    }),
+    [seriesId, node.id],
+  );
+  const highlightState = useSankeyNodeHighlightState(nodeIdentifier);
 
   const x0 = node.x0 ?? 0;
   const y0 = node.y0 ?? 0;

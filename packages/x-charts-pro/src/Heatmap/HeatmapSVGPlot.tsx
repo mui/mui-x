@@ -2,17 +2,18 @@
 import * as React from 'react';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import {
-  type HighlightItemData,
   selectorChartsIsFadedCallback,
   selectorChartsIsHighlightedCallback,
   useStore,
   useRegisterPointerInteractions,
+  type HighlightCreator,
 } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks';
 import { HeatmapItem } from './HeatmapItem';
 import { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 import { type HeatmapRendererPlotProps } from './Heatmap.types';
+import { type HighlightItemIdentifier } from '../models';
 
 const MemoHeatmapItem = React.memo(HeatmapItem);
 
@@ -23,8 +24,11 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   const colorScale = useZColorScale()!;
   const series = useHeatmapSeriesContext();
 
-  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
-  const isFaded = store.use(selectorChartsIsFadedCallback);
+  const isHighlighted: ReturnType<HighlightCreator<'heatmap'>> = store.use(
+    selectorChartsIsHighlightedCallback,
+  );
+
+  const isFaded: ReturnType<HighlightCreator<'heatmap'>> = store.use(selectorChartsIsFadedCallback);
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();
@@ -49,9 +53,11 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
             return null;
           }
 
-          const item: HighlightItemData = {
+          const item: HighlightItemIdentifier<'heatmap'> = {
+            type: 'heatmap',
             seriesId: seriesToDisplay.id,
-            dataIndex,
+            xIndex,
+            yIndex,
           };
 
           return (

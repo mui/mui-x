@@ -5,10 +5,9 @@ import {
   selectorChartsIsFaded,
   selectorChartsIsHighlighted,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
-import {
-  type HighlightItemData,
-  type UseChartHighlightSignature,
-} from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
+import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
+import type { HighlightItemIdentifier } from '../models/seriesType';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 type UseItemHighlightedReturnType = {
   /**
@@ -21,7 +20,8 @@ type UseItemHighlightedReturnType = {
   isFaded: boolean;
 };
 
-type UseItemHighlightedParams = HighlightItemData | null;
+type UseItemHighlightedParams<SeriesType extends ChartSeriesType = ChartSeriesType> =
+  HighlightItemIdentifier<SeriesType> | null;
 
 /**
  * A hook to check the highlighted state of the item.
@@ -29,11 +29,13 @@ type UseItemHighlightedParams = HighlightItemData | null;
  *
  * If you need fine control over the state, use the `useItemHighlightedGetter` hook instead.
  *
- * @param {HighlightItemData | null} item is the item to check
+ * @param {SeriesItemIdentifier<SeriesType> | null} item is the item to check
  * @returns {UseItemHighlightedReturnType} the state of the item
  */
-export function useItemHighlighted(item: UseItemHighlightedParams): UseItemHighlightedReturnType {
-  const store = useStore<[UseChartHighlightSignature]>();
+export function useItemHighlighted<SeriesType extends ChartSeriesType = ChartSeriesType>(
+  item: UseItemHighlightedParams<SeriesType>,
+): UseItemHighlightedReturnType {
+  const store = useStore<[UseChartHighlightSignature<SeriesType>]>();
 
   const isHighlighted = store.use(selectorChartsIsHighlighted, item);
   const isFaded = store.use(selectorChartsIsFaded, item);

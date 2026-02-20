@@ -1,11 +1,18 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import type { SeriesId } from '@mui/x-charts/internals';
-import { useInteractionItemProps, useStore } from '@mui/x-charts/internals';
-import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.types';
-import { selectorIsNodeHighlighted } from './plugins';
-import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
+import type { SeriesId, UseChartSeriesConfigSignature } from '@mui/x-charts/internals';
+import {
+  selectorChartsIsFaded,
+  selectorChartsIsHighlighted,
+  useInteractionItemProps,
+  useStore,
+} from '@mui/x-charts/internals';
+import type {
+  SankeyItemIdentifier,
+  SankeyLayoutNode,
+  SankeyNodeIdentifierWithData,
+} from './sankey.types';
 
 export interface SankeyNodeElementProps {
   /**
@@ -33,7 +40,7 @@ export interface SankeyNodeElementProps {
 export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElementProps>(
   function SankeyNodeElement(props, ref) {
     const { node, onClick, seriesId } = props;
-    const store = useStore();
+    const store = useStore<[UseChartSeriesConfigSignature<'sankey'>]>();
 
     const x0 = node.x0 ?? 0;
     const y0 = node.y0 ?? 0;
@@ -51,11 +58,20 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
       node,
     };
 
-    const isHighlighted = store.use(selectorIsNodeHighlighted, node.id);
-    const isFaded = store.use(selectorIsSankeyItemFaded, isHighlighted);
+    const isHighlighted = store.use(
+      selectorChartsIsHighlighted as unknown as (
+        state: any,
+        identifier: SankeyItemIdentifier,
+      ) => boolean,
+      identifier,
+    );
+    const isFaded = store.use(
+      selectorChartsIsFaded as unknown as (state: any, identifier: SankeyItemIdentifier) => boolean,
+      identifier,
+    );
 
     // Add interaction props for tooltips
-    const interactionProps = useInteractionItemProps(identifier);
+    const interactionProps = useInteractionItemProps<'sankey'>(identifier);
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
       onClick?.(event, identifier);

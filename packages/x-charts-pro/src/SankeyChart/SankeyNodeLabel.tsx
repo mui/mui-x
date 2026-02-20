@@ -3,12 +3,17 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import type { SankeyLayoutNode } from './sankey.types';
 import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
+import type { SeriesId } from '../models';
 
 export interface SankeyNodeLabelProps {
   /**
    * The node data
    */
   node: SankeyLayoutNode;
+  /**
+   * The series id
+   */
+  seriesId: SeriesId;
 }
 
 /**
@@ -16,7 +21,7 @@ export interface SankeyNodeLabelProps {
  */
 export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelProps>(
   function SankeyNodeLabel(props, ref) {
-    const { node } = props;
+    const { node, seriesId } = props;
     const theme = useTheme();
 
     const x0 = node.x0 ?? 0;
@@ -33,7 +38,17 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
 
     const labelAnchor = isRightSide ? 'start' : 'end';
 
-    const highlightState = useSankeyNodeHighlightState(node.id);
+    const highlightState = useSankeyNodeHighlightState(
+      React.useMemo(
+        () => ({
+          type: 'sankey',
+          subType: 'node',
+          seriesId,
+          nodeId: node.id,
+        }),
+        [seriesId, node.id],
+      ),
+    );
 
     let opacity = 1;
     if (highlightState === 'faded') {

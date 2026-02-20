@@ -1,6 +1,5 @@
 export type {
   FadeOptions,
-  HighlightItemData,
   HighlightOptions,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 export type { HighlightScope } from '../models/seriesType/config';

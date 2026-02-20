@@ -47,7 +47,10 @@
       }
     },
     "highlightedItem": {
-      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
+      "type": {
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }"
+      }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
@@ -81,7 +84,7 @@
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "type": "function(highlightedItem: HighlightItemIdentifier<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },

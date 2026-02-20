@@ -1,69 +1,52 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
+import type {
+  HighlightItemIdentifierWithType,
+  HighlightItemIdentifier,
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type ChartPluginSignature } from '../../models';
-import { type SeriesId } from '../../../../models/seriesType/common';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-
-/**
- * The data of the highlighted item.
- * To highlight an item, you need to provide the series id and the item id.
- * If targeting the whole series, you can omit the item id.
- * To clear the highlight, set the value to an empty object.
- *
- * @example
- * // Highlight the item with the series id 'london' and the item id 0.
- * { seriesId: 'london', dataIndex: 0 }
- *
- * // Highlight the whole series with the series id 'london'.
- * { seriesId: 'london' }
- *
- * // Clear the highlight.
- * {}
- */
-export type HighlightItemData = {
-  /**
-   * The series id of the highlighted item.
-   */
-  seriesId: SeriesId;
-  /**
-   * The index of the item in series data.
-   */
-  dataIndex?: number;
-};
 
 export type HighlightUpdateSource = 'pointer' | 'keyboard';
 
-export interface UseChartHighlightInstance {
+export interface UseChartHighlightInstance<SeriesType extends ChartSeriesType> {
   /**
    * Remove all highlight.
    */
   clearHighlight: () => void;
   /**
    * Set the highlighted item.
-   * @param {HighlightItemData} item The item to highlight.
+   * @param {HighlightItemIdentifier<SeriesType>} item The item to highlight.
    */
-  setHighlight: (item: HighlightItemData) => void;
+  setHighlight: (
+    item:
+      | HighlightItemIdentifier<SeriesType>
+      | SeriesItemIdentifier<SeriesType>
+      | HighlightItemIdentifierWithType<SeriesType>
+      | SeriesItemIdentifierWithType<SeriesType>,
+  ) => void;
 }
 
-export interface UseChartHighlightParameters {
+export interface UseChartHighlightParameters<SeriesType extends ChartSeriesType> {
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem?: HighlightItemData | null;
+  highlightedItem?: HighlightItemIdentifier<SeriesType> | null;
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
-  onHighlightChange?: (highlightedItem: HighlightItemData | null) => void;
+  onHighlightChange?: (highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void;
 }
 
-export type UseChartHighlightDefaultizedParameters = DefaultizedProps<
-  UseChartHighlightParameters,
-  'highlightedItem'
->;
+export type UseChartHighlightDefaultizedParameters<SeriesType extends ChartSeriesType> =
+  DefaultizedProps<UseChartHighlightParameters<SeriesType>, 'highlightedItem'>;
 
-export interface UseChartHighlightState {
+export interface UseChartHighlightState<SeriesType extends ChartSeriesType> {
   highlight: {
     /**
      * Indicates if the highlighted item is controlled.
@@ -72,7 +55,7 @@ export interface UseChartHighlightState {
     /**
      * The item currently highlighted.
      */
-    item: HighlightItemData | null;
+    item: HighlightItemIdentifierWithType<SeriesType> | null;
     /**
      * The last interaction highlight update.
      * Used to decide if highlight should be based on pointer position or keyboard navigation.
@@ -81,11 +64,11 @@ export interface UseChartHighlightState {
   };
 }
 
-export type UseChartHighlightSignature = ChartPluginSignature<{
-  instance: UseChartHighlightInstance;
-  state: UseChartHighlightState;
-  params: UseChartHighlightParameters;
-  defaultizedParams: UseChartHighlightDefaultizedParameters;
+export type UseChartHighlightSignature<SeriesType extends ChartSeriesType> = ChartPluginSignature<{
+  instance: UseChartHighlightInstance<SeriesType>;
+  state: UseChartHighlightState<SeriesType>;
+  params: UseChartHighlightParameters<SeriesType>;
+  defaultizedParams: UseChartHighlightDefaultizedParameters<SeriesType>;
   modelNames: 'highlightedItem';
   dependencies: [UseChartSeriesSignature];
 }>;

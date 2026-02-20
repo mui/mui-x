@@ -1,5 +1,5 @@
-import type { DefaultizedProps } from '@mui/x-internals/types';
-import { type ChartSeriesType, type ChartsSeriesConfig } from './config';
+import type { DefaultizedProps, DistributiveOmit } from '@mui/x-internals/types';
+import type { ChartSeriesType, ChartsSeriesConfig } from './config';
 
 // Series definition
 
@@ -11,16 +11,30 @@ type DefaultizedSeriesType<T extends ChartSeriesType = ChartSeriesType> =
 
 // item identifier
 
-export type SeriesItemIdentifier<T extends ChartSeriesType> = T extends ChartSeriesType
-  ? Omit<ChartsSeriesConfig[T]['itemIdentifier'], 'type'> & { type?: T }
+export type SeriesItemIdentifier<T extends ChartSeriesType> = T extends any
+  ? DistributiveOmit<ChartsSeriesConfig[T]['itemIdentifier'], 'type'> & { type?: T }
   : never;
 
-export type SeriesItemIdentifierWithType<T extends ChartSeriesType> = T extends ChartSeriesType
+export type SeriesItemIdentifierWithType<T extends ChartSeriesType> = T extends any
   ? ChartsSeriesConfig[T]['itemIdentifier']
   : never;
 
-export type SeriesItemIdentifierWithData<T extends ChartSeriesType> = T extends ChartSeriesType
+export type SeriesItemIdentifierWithData<T extends ChartSeriesType> = T extends any
   ? ChartsSeriesConfig[T]['itemIdentifierWithData']
+  : never;
+
+// For now the difference between highlight-identifiers and identifiers is the optional `dataIndex` that allows highlighting a series without specifying a given point.
+// If we get more different behaviors, we can move to a pattern similar to `SeriesItemIdentifierWithData` and `SeriesItemIdentifier`.
+
+/**
+ * Identifies an highlighted item or series.
+ */
+export type HighlightItemIdentifier<T extends ChartSeriesType> = T extends any
+  ? DistributiveOmit<ChartsSeriesConfig[T]['highlightIdentifier'], 'type'> & { type?: T }
+  : never;
+
+export type HighlightItemIdentifierWithType<T extends ChartSeriesType> = T extends any
+  ? ChartsSeriesConfig[T]['highlightIdentifier']
   : never;
 
 export type FocusedItemIdentifier<T extends ChartSeriesType = ChartSeriesType> = T extends

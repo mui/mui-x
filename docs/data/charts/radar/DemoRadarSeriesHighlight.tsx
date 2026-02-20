@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { RadarChart, RadarSeries } from '@mui/x-charts/RadarChart';
-import { HighlightItemData } from '@mui/x-charts/context';
+import { HighlightItemIdentifier } from '@mui/x-charts/models';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -17,7 +17,7 @@ function valueFormatter(v: number | null) {
 
 export default function DemoRadarSeriesHighlight() {
   const [highlightedItem, setHighlightedItem] =
-    React.useState<HighlightItemData | null>(null);
+    React.useState<HighlightItemIdentifier<'radar'> | null>(null);
   const [fillArea, setFillArea] = React.useState(false);
 
   const withOptions = (series: RadarSeries[]) =>
@@ -29,10 +29,9 @@ export default function DemoRadarSeriesHighlight() {
 
   const handleHighLightedSeries = (event: any, newHighLightedSeries: string) => {
     if (newHighLightedSeries !== null) {
-      setHighlightedItem((prev) => ({
-        ...prev,
+      setHighlightedItem({
         seriesId: newHighLightedSeries,
-      }));
+      });
     }
   };
   return (

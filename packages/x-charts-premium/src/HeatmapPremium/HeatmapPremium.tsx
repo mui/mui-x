@@ -137,8 +137,10 @@ HeatmapPremium.propTypes = {
    * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['heatmap']),
+    xIndex: PropTypes.number.isRequired,
+    yIndex: PropTypes.number.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -192,7 +194,7 @@ HeatmapPremium.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**

@@ -92,6 +92,7 @@ export * from '../models/seriesType/common';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
+export * from '../models/seriesType/composition';
 
 export * from './plugins/models';
 export * from './material';
@@ -101,3 +102,5 @@ export * from './constants';
 export * from './scales';
 export * from './identifierSerializer';
 export * from './identifierCleaner';
+
+export { type HighlightCreator } from './plugins/featurePlugins/useChartHighlight/highlightCreator.types';

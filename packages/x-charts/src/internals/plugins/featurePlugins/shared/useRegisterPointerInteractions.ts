@@ -18,7 +18,7 @@ import { type ChartState } from '../../models';
  */
 export function useRegisterPointerInteractions<SeriesType extends ChartSeriesType>(
   getItemAtPosition: (
-    state: ChartState<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>,
+    state: ChartState<[UseChartCartesianAxisSignature, UseChartHighlightSignature<SeriesType>]>,
     point: { x: number; y: number },
   ) => SeriesItemIdentifierWithType<SeriesType> | undefined,
   onItemEnter?: () => void,
@@ -26,10 +26,15 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
 ) {
   const { instance } =
     useChartContext<
-      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+      [
+        UseChartInteractionSignature,
+        UseChartHighlightSignature<SeriesType>,
+        UseChartTooltipSignature,
+      ]
     >();
   const svgRef = useSvgRef();
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
+  const store =
+    useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature<SeriesType>]>();
   const interactionActive = React.useRef(false);
   const lastItemRef = React.useRef<SeriesItemIdentifierWithType<SeriesType> | undefined>(undefined);
 

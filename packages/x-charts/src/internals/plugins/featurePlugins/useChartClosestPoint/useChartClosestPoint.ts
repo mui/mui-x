@@ -172,6 +172,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       instance.setTooltipItem?.({ type: 'scatter', seriesId, dataIndex });
       instance.setLastUpdateSource?.('pointer');
       instance.setHighlight?.({
+        type: 'scatter',
         seriesId,
         dataIndex,
       });

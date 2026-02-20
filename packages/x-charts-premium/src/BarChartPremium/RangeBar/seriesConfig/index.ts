@@ -3,6 +3,8 @@ import {
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   type ChartSeriesTypeConfig,
+  createIsHighlighted,
+  createIsFaded,
 } from '@mui/x-charts/internals';
 import { getExtremumX, getExtremumY } from './extrema';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
@@ -26,6 +28,8 @@ export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  isHighlightedCreator: createIsHighlighted,
+  isFadedCreator: createIsFaded,
 };
 
 cartesianSeriesTypes.addType('rangeBar');

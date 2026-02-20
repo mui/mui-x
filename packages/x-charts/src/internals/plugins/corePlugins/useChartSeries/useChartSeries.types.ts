@@ -1,5 +1,7 @@
 import type {
   AllSeriesType,
+  HighlightItemIdentifier,
+  HighlightItemIdentifierWithType,
   SeriesItemIdentifier,
   SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
@@ -13,6 +15,10 @@ import {
   type SeriesProcessorResult,
   type UseChartSeriesConfigSignature,
 } from '../useChartSeriesConfig';
+import {
+  type VisibilityIdentifier,
+  type VisibilityIdentifierWithType,
+} from '../../featurePlugins/useChartVisibilityManager/useChartVisibilityManager.types';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -71,20 +77,40 @@ export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType
   };
 }
 
+export type IdentifierWithTypeFunction = {
+  // Overloads for different identifier types
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends SeriesItemIdentifier<SeriesType> | SeriesItemIdentifierWithType<SeriesType>,
+  >(
+    identifier: Item,
+    typeOfIdentifier?: 'seriesItem',
+  ): SeriesItemIdentifierWithType<SeriesType>;
+
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends HighlightItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType>,
+  >(
+    identifier: Item,
+    typeOfIdentifier?: 'highlightItem',
+  ): HighlightItemIdentifierWithType<SeriesType>;
+
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends VisibilityIdentifier<SeriesType> | VisibilityIdentifierWithType<SeriesType>,
+  >(
+    identifier: Item,
+    typeOfIdentifier?: 'visibility',
+  ): VisibilityIdentifierWithType<SeriesType>;
+};
+
 interface UseChartSeriesInstance {
   /**
    * Utils top add series type when developers do not provide it.
    * @param {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'>} identifier The series identifier without its type
    * @returns {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'> & Pick<SeriesItemIdentifier<SeriesType>, 'type'>}The identifier with the type.
    */
-  identifierWithType: <
-    SeriesType extends ChartSeriesType,
-    Item extends { seriesId: SeriesId; type?: SeriesType },
-  >(
-    identifier: Item,
-  ) => Item extends SeriesItemIdentifier<SeriesType>
-    ? SeriesItemIdentifierWithType<SeriesType>
-    : Item & { type: SeriesType };
+  identifierWithType: IdentifierWithTypeFunction;
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =

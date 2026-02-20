@@ -128,7 +128,7 @@ SankeyChart.propTypes = {
          */
         'node',
       ]).isRequired,
-      type: PropTypes.oneOf(['sankey']).isRequired,
+      type: PropTypes.oneOf(['sankey']),
     }),
     PropTypes.shape({
       seriesId: PropTypes.string.isRequired,
@@ -140,7 +140,7 @@ SankeyChart.propTypes = {
         'link',
       ]).isRequired,
       targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      type: PropTypes.oneOf(['sankey']).isRequired,
+      type: PropTypes.oneOf(['sankey']),
     }),
   ]),
   /**
@@ -175,7 +175,7 @@ SankeyChart.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {SankeyHighlightItemData | null} highlightedItem The newly highlighted item.
+   * @param {HighlightItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -222,11 +222,31 @@ SankeyChart.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    seriesId: PropTypes.string.isRequired,
-    subType: PropTypes.oneOf(['link', 'node']).isRequired,
-    type: PropTypes.oneOf(['sankey']),
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+      type: PropTypes.oneOf(['sankey']),
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['sankey']),
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

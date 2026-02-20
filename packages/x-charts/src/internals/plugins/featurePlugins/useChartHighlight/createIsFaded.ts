@@ -1,19 +1,25 @@
-import { type HighlightScope, type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type HighlightItemData } from './useChartHighlight.types';
+import type { HighlightItemIdentifier } from '../../../../models/seriesType';
+import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
 function alwaysFalse(): boolean {
   return false;
 }
 
-export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
+/**
+ * The isFade logic for main charts (those that are identified by an id and a dataIndex)
+ */
+export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>>(
   highlightScope: HighlightScope<SeriesType> | null | undefined,
-  highlightedItem: HighlightItemData | null,
+  highlightedItem: HighlightItemIdentifier<SeriesType> | null,
 ) {
   if (!highlightScope || !highlightedItem) {
     return alwaysFalse;
   }
 
-  return function isFaded(item: HighlightItemData | null): boolean {
+  // Exclude<ChartSeriesType, 'sankey' | 'heatmap'> should be ComposableChartSeriesType<SeriesType> to be correct.
+  return function isFaded<TestedSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>>(
+    item: HighlightItemIdentifier<TestedSeriesType> | null,
+  ): boolean {
     if (!item) {
       return false;
     }

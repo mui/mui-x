@@ -33,7 +33,10 @@
       "default": "'axis'"
     },
     "highlightedItem": {
-      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'radar' }"
+      }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
@@ -74,7 +77,7 @@
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "type": "function(highlightedItem: HighlightItemIdentifier<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },

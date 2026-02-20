@@ -7,15 +7,14 @@ import { getAreaPath } from './getAreaPath';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import { type SeriesId } from '../../models/seriesType/common';
-import { type HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import type { HighlightItemIdentifier, SeriesId } from '../../models/seriesType';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (item: HighlightItemData | null) => boolean;
-  isHighlighted: (item: HighlightItemData | null) => boolean;
+  isFaded: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
+  isHighlighted: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
   points: { x: number; y: number }[];
   fillArea?: boolean;
   color: string;
@@ -23,8 +22,8 @@ interface GetPathPropsParams {
 
 export function getPathProps(params: GetPathPropsParams): React.SVGProps<SVGPathElement> {
   const { isHighlighted, isFaded, seriesId, classes, points, fillArea, color } = params;
-  const isItemHighlighted = isHighlighted({ seriesId });
-  const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
+  const isItemHighlighted = isHighlighted({ type: 'radar', seriesId });
+  const isItemFaded = !isItemHighlighted && isFaded({ type: 'radar', seriesId });
 
   return {
     d: getAreaPath(points),

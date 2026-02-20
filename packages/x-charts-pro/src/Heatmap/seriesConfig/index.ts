@@ -12,6 +12,7 @@ import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import getItemAtPosition from './getItemAtPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
+import { createIsFaded, createIsHighlighted } from './highlight';
 
 cartesianSeriesTypes.addType('heatmap');
 
@@ -28,4 +29,6 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
   getItemAtPosition,
   keyboardFocusHandler,
+  isHighlightedCreator: createIsHighlighted,
+  isFadedCreator: createIsFaded,
 };

@@ -6,13 +6,13 @@ import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { type SeriesId } from '../../models/seriesType/common';
-import { type HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import { type HighlightItemIdentifier } from '../../models';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (item: HighlightItemData | null) => boolean;
-  isHighlighted: (item: HighlightItemData | null) => boolean;
+  isFaded: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
+  isHighlighted: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
   point: { x: number; y: number };
   fillArea?: boolean;
   color: string;
@@ -20,8 +20,8 @@ interface GetCirclePropsParams {
 
 export function getCircleProps(params: GetCirclePropsParams): React.SVGProps<SVGCircleElement> {
   const { isHighlighted, isFaded, seriesId, classes, point, fillArea, color } = params;
-  const isItemHighlighted = isHighlighted({ seriesId });
-  const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
+  const isItemHighlighted = isHighlighted({ type: 'radar', seriesId });
+  const isItemFaded = !isItemHighlighted && isFaded({ type: 'radar', seriesId });
 
   return {
     cx: point.x,

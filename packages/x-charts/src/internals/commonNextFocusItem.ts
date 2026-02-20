@@ -207,15 +207,3 @@ export function createGetPreviousSeriesFocusedItem<
     };
   };
 }
-
-export type ComposableCartesianChartSeriesType =
-  | 'bar'
-  | 'line'
-  | 'scatter'
-  | ('rangeBar' extends ChartSeriesType ? 'rangeBar' : never);
-export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesType> = new Set([
-  'bar',
-  'line',
-  'scatter',
-  'rangeBar',
-] as ComposableCartesianChartSeriesType[]);

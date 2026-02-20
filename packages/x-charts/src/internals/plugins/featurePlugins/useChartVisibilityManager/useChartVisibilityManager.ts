@@ -35,7 +35,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
       visibilityMap: visibilityParamToMap(
-        params.hiddenItems.map((item) => instance.identifierWithType(item)),
+        params.hiddenItems.map((item) => instance.identifierWithType(item, 'visibility')),
         store.state.seriesConfig.config,
       ),
     });
@@ -43,7 +43,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 
   const hideItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = instance.serializeIdentifier(instance.identifierWithType(identifier));
+    const id = instance.serializeIdentifier(instance.identifierWithType(identifier, 'visibility'));
 
     if (visibilityMap.has(id)) {
       return;
@@ -62,7 +62,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 
   const showItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = instance.serializeIdentifier(instance.identifierWithType(identifier));
+    const id = instance.serializeIdentifier(instance.identifierWithType(identifier, 'visibility'));
 
     if (!visibilityMap.has(id)) {
       return;
@@ -81,7 +81,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 
   const toggleItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = instance.serializeIdentifier(instance.identifierWithType(identifier));
+    const id = instance.serializeIdentifier(instance.identifierWithType(identifier, 'visibility'));
 
     if (visibilityMap.has(id)) {
       showItem(identifier);
