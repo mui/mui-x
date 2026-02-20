@@ -909,6 +909,16 @@ export const useGridChartsIntegration = (
 
       const currentActiveChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
       const chartsLookup = gridChartsIntegrationChartsLookupSelector(apiRef);
+      const chartsToExport = Object.fromEntries(
+        Object.entries(chartsLookup).map(([chartId, chart]) => [
+          chartId,
+          {
+            ...chart,
+            chartType: chartStateLookup[chartId]?.type,
+            configuration: chartStateLookup[chartId]?.configuration,
+          },
+        ]),
+      );
       const integrationContextToExport = Object.fromEntries(
         Object.entries(chartStateLookup).map(([chartId, chartState]) => [
           chartId,
@@ -936,7 +946,7 @@ export const useGridChartsIntegration = (
 
       const chartStateToExport = {
         activeChartId: currentActiveChartId,
-        charts: chartsLookup,
+        charts: chartsToExport,
         // add a custom prop to keep the integration context in the exported state
         integrationContext: integrationContextToExport,
       };

@@ -877,4 +877,50 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       expect(integrationContext!.chartStateLookup.test.configuration.text).to.equal('Updated');
     });
   });
+
+  describe('State persistence', () => {
+    it('should export chartType and configuration', async () => {
+      render(
+        <Test
+          initialState={{
+            chartsIntegration: {
+              charts: {
+                test: {
+                  dimensions: ['category1'],
+                  values: ['amount'],
+                  chartType: 'type1',
+                  configuration: { isTrue: true },
+                },
+              },
+            },
+          }}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.type).to.equal('type1');
+      });
+
+      const exportedState = apiRef!.current?.exportState();
+      expect(exportedState?.chartsIntegration?.charts?.test?.chartType).to.equal('type1');
+      expect(exportedState?.chartsIntegration?.charts?.test?.configuration).to.deep.equal({
+        isTrue: true,
+      });
+    });
+
+    it('should export chartType after changing it via the API', async () => {
+      render(<Test initialState={baseInitialState} />);
+
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.dimensions[0].id).to.equal('category1');
+      });
+
+      act(() => {
+        apiRef!.current?.setChartType('test', 'type2');
+      });
+
+      const exportedState = apiRef!.current?.exportState();
+      expect(exportedState?.chartsIntegration?.charts?.test?.chartType).to.equal('type2');
+    });
+  });
 });
