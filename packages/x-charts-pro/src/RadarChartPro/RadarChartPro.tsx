@@ -69,7 +69,7 @@ export interface RadarChartProProps
  */
 const RadarChartPro = React.forwardRef(function RadarChartPro(
   inProps: RadarChartProProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiRadarChartPro' });
   const {
@@ -95,10 +95,10 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
 
   return (
     <RadarDataProvider<RadarChartProPluginSignatures> {...radarDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        <ChartsSurface {...chartsSurfaceProps}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
           <RadarSeriesArea />

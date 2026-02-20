@@ -151,7 +151,7 @@ export interface HeatmapProps
 
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
@@ -173,10 +173,10 @@ const Heatmap = React.forwardRef(function Heatmap(
 
   return (
     <ChartDataProviderPro<'heatmap', HeatmapPluginSignatures> {...chartDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface ref={ref} sx={sx}>
+        <ChartsSurface sx={sx}>
           <g {...clipPathGroupProps}>
             <HeatmapPlot {...heatmapPlotProps} />
             <FocusedHeatmapCell />

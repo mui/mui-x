@@ -88,7 +88,7 @@ export interface BarChartPremiumProps extends Omit<
  */
 const BarChartPremium = React.forwardRef(function BarChartPremium(
   inProps: BarChartPremiumProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPremium' });
   const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
@@ -111,17 +111,14 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'bar' | 'rangeBar',
     BarChartPremiumPluginSignatures
-  >(
-    {
-      ...chartContainerProps,
-      initialZoom,
-      zoomData,
-      onZoomChange,
-      apiRef,
-      plugins: BAR_CHART_PREMIUM_PLUGINS,
-    },
-    ref,
-  );
+  >({
+    ...chartContainerProps,
+    initialZoom,
+    zoomData,
+    onZoomChange,
+    apiRef,
+    plugins: BAR_CHART_PREMIUM_PLUGINS,
+  });
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -130,7 +127,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
     <ChartDataProviderPremium<'bar' | 'rangeBar', BarChartPremiumPluginSignatures>
       {...chartDataProviderProProps}
     >
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
