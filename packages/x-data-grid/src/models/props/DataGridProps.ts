@@ -12,7 +12,7 @@ import type { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from
 import type { GridEventListener } from '../events';
 import type { GridCallbackDetails, GridLocaleText } from '../api';
 import type { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColDef, GridListViewColDef } from '../colDef/gridColDef';
+import type { GridColDef, GridListViewColDef, GridCheckboxSelectionColDef } from '../colDef/gridColDef';
 import type { GridClasses } from '../../constants/gridClasses';
 import type {
   GridRowHeightParams,
@@ -862,6 +862,10 @@ export interface DataGridPropsWithoutDefaultValue<
    * The options for autosize when user-initiated.
    */
   autosizeOptions?: GridAutosizeOptions;
+  /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   */
+  checkboxColDef?: GridCheckboxSelectionColDef<R>;
   /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].

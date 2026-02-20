@@ -37,6 +37,7 @@ export const useGridRowSelectionPreProcessors = (
         cellClassName: classes.cellCheckbox,
         headerClassName: classes.columnHeaderCheckbox,
         headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
+        ...props.checkboxColDef,
       };
 
       const shouldHaveSelectionColumn = props.checkboxSelection;
@@ -68,7 +69,7 @@ export const useGridRowSelectionPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, classes, props.columns, props.checkboxSelection],
+    [apiRef, classes, props.columns, props.checkboxSelection, props.checkboxColDef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);

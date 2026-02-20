@@ -254,6 +254,10 @@ DataGridPremiumRaw.propTypes = {
    */
   checkboxSelection: PropTypes.bool,
   /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   */
+  checkboxColDef: PropTypes.object,
+  /**
    * If `true`, the "Select All" header checkbox selects only the rows on the current page. To be used in combination with `checkboxSelection`.
    * It only works if the pagination is enabled.
    * @default false
