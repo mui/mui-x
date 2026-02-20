@@ -60,7 +60,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
           };
         },
       };
-    }, [fetchRows]);
+    }, [fetchRows, effectiveFetchRowsSpy]);
 
     if (!isReady) {
       return null;
