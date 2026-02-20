@@ -1,4 +1,4 @@
-<EventCalendar
+<EventCalendarPremium
   events={events}
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}

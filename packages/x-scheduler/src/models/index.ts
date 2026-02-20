@@ -7,5 +7,6 @@ export type {
   SchedulerEventModelStructure,
   SchedulerResourceModelStructure,
   RecurringEventRecurrenceRule,
+  SchedulerEventRecurrenceRule,
   SchedulerOccurrencePlaceholderExternalDragData,
 } from '@mui/x-scheduler-headless/models';

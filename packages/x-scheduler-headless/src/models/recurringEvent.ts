@@ -87,3 +87,15 @@ export interface RecurringEventRecurrenceRule {
    */
   count?: number;
 }
+
+/**
+ * User-facing recurrence rule type used in `SchedulerEvent`.
+ * Same as `RecurringEventRecurrenceRule` but with `until` as a `string`.
+ */
+export type SchedulerEventRecurrenceRule = Omit<RecurringEventRecurrenceRule, 'until'> & {
+  /**
+   * A date time value that bounds the recurrence rule in an inclusive manner.
+   * Same string semantics as `SchedulerEvent.start` / `end`.
+   */
+  until?: string;
+};

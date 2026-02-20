@@ -1109,7 +1109,7 @@ describe('<EventDialogContent open />', () => {
 
           expect(updated.rrule).to.deep.include({ freq: 'YEARLY', interval: 3 });
           expect(updated.rrule?.count ?? undefined).to.equal(undefined);
-          expect(updated.rrule?.until).toEqualDateTime('2025-07-20T00:00:00.000Z');
+          expect(updated.rrule?.until).to.equal('2025-07-20T00:00:00.000Z');
         });
 
         it('should submit custom weekly with selected weekdays', async () => {
