@@ -1,0 +1,7 @@
+<EventTimelinePremium
+  events={events}
+  onEventsChange={setEvents}
+  defaultVisibleDate={defaultVisibleDate}
+  resources={resources}
+  defaultView="weeks"
+/>
