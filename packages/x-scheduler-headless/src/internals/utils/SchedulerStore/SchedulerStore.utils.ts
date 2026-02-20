@@ -183,18 +183,20 @@ export function createEventModel<TEvent extends object>(
     return adapter.toJsDate(value).toISOString();
   };
 
+  // Internal callers (e.g. FormContent) may pass rrule.until as a TemporalSupportedObject.
+  // Convert it to a string so the built-in model stays in SchedulerEvent format.
+  const rrule: SchedulerEvent['rrule'] =
+    typeof event.rrule === 'object' && event.rrule.until != null && typeof event.rrule.until !== 'string'
+      ? { ...event.rrule, until: formatNewDate(event.rrule.until) }
+      : (event.rrule as SchedulerEvent['rrule']);
+
   const builtInEvent: SchedulerEvent = {
     ...event,
     id,
     start: formatNewDate(event.start),
     end: formatNewDate(event.end),
     exDates: event.exDates?.map(formatNewDate),
-    rrule:
-      typeof event.rrule === 'object' &&
-      event.rrule.until != null &&
-      typeof event.rrule.until !== 'string'
-        ? { ...event.rrule, until: formatNewDate(event.rrule.until) }
-        : (event.rrule as SchedulerEvent['rrule']),
+    rrule,
   };
 
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(
