@@ -14,7 +14,7 @@ catalog:
   '@babel/preset-typescript': ^7.28.5
   '@babel/runtime': ^7.28.6
   '@babel/traverse': ^7.29.0
-  '@date-fns/tz': ^1.2.0
+  '@date-fns/tz': ^1.4.1
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
