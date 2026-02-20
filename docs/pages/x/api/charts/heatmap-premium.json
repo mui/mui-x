@@ -70,7 +70,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifier<SeriesType>) => void",
+        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
         "describedArgs": ["event", "item"]
       }
     },
@@ -118,7 +118,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'heatmap', xIndex: number, yIndex: number }"
       }
     },
     "width": { "type": { "name": "number" } },

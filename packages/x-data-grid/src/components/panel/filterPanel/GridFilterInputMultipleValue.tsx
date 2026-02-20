@@ -13,7 +13,7 @@ export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
 };
 
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, slotProps } = props;
+  const { item, applyValue, type, apiRef, focusElementRef, slotProps, ...other } = props;
 
   const id = useId();
   const [options, setOptions] = React.useState<string[]>([]);
@@ -76,6 +76,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           inputRef: focusElementRef,
         },
       }}
+      {...other}
       {...slotProps?.root}
     />
   );

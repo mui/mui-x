@@ -151,7 +151,7 @@ export interface HeatmapProps
 
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
@@ -173,10 +173,10 @@ const Heatmap = React.forwardRef(function Heatmap(
 
   return (
     <ChartDataProviderPro<'heatmap', HeatmapPluginSignatures> {...chartDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface ref={ref} sx={sx}>
+        <ChartsSurface sx={sx}>
           <g {...clipPathGroupProps}>
             <HeatmapPlot {...heatmapPlotProps} />
             <FocusedHeatmapCell />
@@ -311,7 +311,7 @@ Heatmap.propTypes = {
    * The callback fired when an item is clicked.
    *
    * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
-   * @param {SeriesItemIdentifier<SeriesType>} item The clicked item.
+   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,
   /**
@@ -383,7 +383,7 @@ Heatmap.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['heatmap']).isRequired,
+    type: PropTypes.oneOf(['heatmap']),
     xIndex: PropTypes.number.isRequired,
     yIndex: PropTypes.number.isRequired,
   }),
