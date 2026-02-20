@@ -133,6 +133,7 @@ export default function LineWithUncertaintyArea() {
             type: 'line',
             data: [1, 2, 3, 4, 1, 2, 3, 4, 5],
             valueFormatter: (v, i) => `${v}${i.dataIndex > 5 ? ' (estimated)' : ''}`,
+            showMark: true,
           },
         ]}
         xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6, 7, 8] }]}

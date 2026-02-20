@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
-import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
+import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
@@ -31,7 +31,6 @@ export default function LineChartWithReferenceLines() {
         margin={margin}
       >
         <LinePlot />
-        <MarkPlot />
         <ChartsReferenceLine
           x="Page C"
           label="Max PV PAGE"

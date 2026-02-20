@@ -58,12 +58,12 @@ export function useMarkPlotData(
           yAxisId = defaultYAxisId,
           visibleStackedData,
           data,
-          showMark = true,
+          showMark,
           shape = 'circle',
           hidden,
         } = series[seriesId];
 
-        if (showMark === false) {
+        if (!showMark) {
           continue;
         }
 

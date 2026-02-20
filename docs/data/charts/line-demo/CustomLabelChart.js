@@ -40,7 +40,7 @@ export default function CustomLabelChart() {
   return (
     <Box sx={{ width: '100%', height: 300 }}>
       <LineChart
-        series={[{ data: pData, label: 'pv' }]}
+        series={[{ data: pData, label: 'pv', showMark: true }]}
         xAxis={[{ scaleType: 'point', data: xLabels }]}
         yAxis={[{ width: 50 }]}
         margin={margin}

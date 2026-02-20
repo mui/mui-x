@@ -36,19 +36,16 @@ const series = [
     label: 'Germany',
     data: inflationData.map((p) => p.rateDE),
     valueFormatter: seriesValueFormatter,
-    showMark: false,
   },
   {
     label: 'United Kingdom',
     data: inflationData.map((p) => p.rateUK),
     valueFormatter: seriesValueFormatter,
-    showMark: false,
   },
   {
     label: 'France',
     data: inflationData.map((p) => p.rateFR),
     valueFormatter: seriesValueFormatter,
-    showMark: false,
   },
 ];
 

@@ -21,6 +21,7 @@ describe.skipIf(isJSDOM)('Web Components', () => {
         series={[
           {
             data: [2, 5.5, 2, 8.5, 1.5, 5],
+            showMark: true,
           },
         ]}
         height={300}

@@ -40,9 +40,9 @@ export default function SortDemo() {
           },
         ]}
         series={[
-          { data: [2, 5, 3, 4, 1], label: 'Series x' },
-          { data: [5, 3, 1, null, 10], label: 'Series y' },
-          { data: [10, 4, 6, 2, 8], label: 'Series z' },
+          { data: [2, 5, 3, 4, 1], label: 'Series x', showMark: true },
+          { data: [5, 3, 1, null, 10], label: 'Series y', showMark: true },
+          { data: [10, 4, 6, 2, 8], label: 'Series z', showMark: true },
         ]}
         slotProps={{ tooltip: { trigger: 'axis', sort } }}
         height={300}

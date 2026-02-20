@@ -23,8 +23,8 @@ export default function DashedLineChart() {
     <Box sx={{ width: '100%', height: 300 }}>
       <LineChart
         series={[
-          { data: pData, label: 'pv', id: 'pvId' },
-          { data: uData, label: 'uv', id: 'uvId' },
+          { data: pData, label: 'pv', id: 'pvId', showMark: true },
+          { data: uData, label: 'uv', id: 'uvId', showMark: true },
         ]}
         xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}

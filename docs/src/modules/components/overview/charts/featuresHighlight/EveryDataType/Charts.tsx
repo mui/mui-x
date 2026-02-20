@@ -51,8 +51,8 @@ export function LineAndBar() {
           label: 'ratio',
           dataKey: 'ratio',
           yAxisId: 'ratio',
-
           valueFormatter: formatRatio,
+          showMark: true,
         },
         { label: 'turnover', type: 'bar', dataKey: 'revenueFigure', valueFormatter: formatUSD },
         { label: 'net profit', type: 'bar', dataKey: 'benef', valueFormatter: formatUSD },

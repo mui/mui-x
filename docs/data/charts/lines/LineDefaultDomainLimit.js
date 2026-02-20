@@ -43,7 +43,6 @@ export default function LineDefaultDomainLimit() {
               dataKey: 'fr',
               stack: 'total',
               area: true,
-              showMark: false,
             },
             {
               id: 'Germany',
@@ -51,7 +50,6 @@ export default function LineDefaultDomainLimit() {
               dataKey: 'dl',
               stack: 'total',
               area: true,
-              showMark: false,
             },
             {
               id: 'United Kingdom',
@@ -59,7 +57,6 @@ export default function LineDefaultDomainLimit() {
               dataKey: 'gb',
               stack: 'total',
               area: true,
-              showMark: false,
             },
           ]}
           height={300}

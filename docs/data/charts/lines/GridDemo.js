@@ -23,7 +23,6 @@ const yAxis = [
 const series = [
   {
     dataKey: 'rate',
-    showMark: false,
     valueFormatter: percentageFormatter,
   },
 ];
