@@ -56,6 +56,25 @@ const options = {
   },
 };
 
+const getStrategies = (
+  props: Pick<DataGridPremiumProcessedProps, 'treeData' | 'lazyLoading' | 'disableRowGrouping'>,
+  groupingModelSize: number,
+) => {
+  const previousStrategies = new Set([
+    DataSourceRowsUpdateStrategy.Default,
+    DataSourceRowsUpdateStrategy.GroupedData,
+    DataSourceRowsUpdateStrategy.LazyLoadedGroupedData,
+  ]);
+  let currentStrategy = DataSourceRowsUpdateStrategy.Default;
+  if (props.treeData || (!props.disableRowGrouping && groupingModelSize > 0)) {
+    currentStrategy = props.lazyLoading
+      ? DataSourceRowsUpdateStrategy.LazyLoadedGroupedData
+      : DataSourceRowsUpdateStrategy.GroupedData;
+  }
+  previousStrategies.delete(currentStrategy);
+  return { currentStrategy, previousStrategies: Array.from(previousStrategies) };
+};
+
 export const useGridDataSourcePremium = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProcessedProps,
@@ -63,22 +82,31 @@ export const useGridDataSourcePremium = (
   const aggregationModel = gridAggregationModelSelector(apiRef);
   const groupingModelSize = gridRowGroupingSanitizedModelSelector(apiRef).length;
   const setStrategyAvailability = React.useCallback(() => {
-    const currentStrategy =
-      props.treeData || (!props.disableRowGrouping && groupingModelSize > 0)
-        ? DataSourceRowsUpdateStrategy.GroupedData
-        : DataSourceRowsUpdateStrategy.Default;
+    const { currentStrategy, previousStrategies } = getStrategies(
+      {
+        treeData: props.treeData,
+        lazyLoading: props.lazyLoading,
+        disableRowGrouping: props.disableRowGrouping,
+      },
+      groupingModelSize,
+    );
+    const [prevStrategy1, prevStrategy2] = previousStrategies;
 
-    const prevStrategy =
-      currentStrategy === DataSourceRowsUpdateStrategy.GroupedData
-        ? DataSourceRowsUpdateStrategy.Default
-        : DataSourceRowsUpdateStrategy.GroupedData;
-
-    apiRef.current.setStrategyAvailability(GridStrategyGroup.DataSource, prevStrategy, () => false);
+    apiRef.current.setStrategyAvailability(
+      GridStrategyGroup.DataSource,
+      prevStrategy1,
+      () => false,
+    );
+    apiRef.current.setStrategyAvailability(
+      GridStrategyGroup.DataSource,
+      prevStrategy2,
+      () => false,
+    );
 
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       currentStrategy,
-      props.dataSource && !props.lazyLoading ? () => true : () => false,
+      props.dataSource ? () => true : () => false,
     );
   }, [
     apiRef,
@@ -109,6 +137,7 @@ export const useGridDataSourcePremium = (
     debouncedFetchRows,
     flatTreeStrategyProcessor,
     groupedDataStrategyProcessor,
+    nestedDataStrategyProcessor,
     events,
   } = useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, {
     ...(!props.disableAggregation && Object.keys(aggregationModel).length > 0
@@ -216,6 +245,12 @@ export const useGridDataSourcePremium = (
     groupedDataStrategyProcessor.strategyName,
     groupedDataStrategyProcessor.group,
     groupedDataStrategyProcessor.processor,
+  );
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    nestedDataStrategyProcessor.strategyName,
+    nestedDataStrategyProcessor.group,
+    nestedDataStrategyProcessor.processor,
   );
 
   useGridRegisterPipeProcessor(apiRef, 'processDataSourceRows', processDataSourceRows);
