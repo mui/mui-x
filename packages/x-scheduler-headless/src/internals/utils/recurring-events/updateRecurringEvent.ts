@@ -86,8 +86,7 @@ export function applyRecurringUpdateFollowing(
   const stringified: Record<string, any> = { ...changes };
   // When start/end are not explicitly changed, the new series must start at the occurrence
   // date (not at DTSTART), otherwise the split series and the truncated original would overlap.
-  const effectiveStart = changes.start ?? occurrenceStart;
-  stringified.start = dateToEventString(adapter, effectiveStart, originalModel.start, dataTimezone);
+  stringified.start = dateToEventString(adapter, newStart, originalModel.start, dataTimezone);
   const occurrenceEnd = getOccurrenceEnd({ adapter, event: originalEvent, occurrenceStart });
   const effectiveEnd = changes.end ?? occurrenceEnd;
   stringified.end = dateToEventString(adapter, effectiveEnd, originalModel.end, dataTimezone);

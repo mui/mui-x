@@ -369,6 +369,8 @@ class RecurringEventExpander {
     yearStart: TemporalSupportedObject,
     minDate: TemporalSupportedObject,
   ): TemporalSupportedObject | null {
+    // Assumes yearStart is at or after minDate's year so that YEARLY_MAX_ATTEMPTS (8)
+    // is sufficient to span the worst-case gap of 8 consecutive non-leap years (e.g. 2097–2103).
     let year = yearStart;
     for (let i = 0; i < YEARLY_MAX_ATTEMPTS; i += 1) {
       const monthAnchor = this.adapter.setMonth(
