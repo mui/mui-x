@@ -49,7 +49,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }"
       }
     },
     "id": { "type": { "name": "string" } },

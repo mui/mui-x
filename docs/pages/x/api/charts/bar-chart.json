@@ -48,7 +48,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'bar' }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'bar' }"
       }
     },
     "id": { "type": { "name": "string" } },

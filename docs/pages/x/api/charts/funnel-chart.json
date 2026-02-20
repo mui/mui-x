@@ -38,7 +38,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'funnel' }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'funnel' }"
       }
     },
     "id": { "type": { "name": "string" } },

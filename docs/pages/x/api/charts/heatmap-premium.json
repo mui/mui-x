@@ -36,7 +36,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }"
+        "description": "{ seriesId: string, type?: 'heatmap', xIndex: number, yIndex: number }"
       }
     },
     "id": { "type": { "name": "string" } },

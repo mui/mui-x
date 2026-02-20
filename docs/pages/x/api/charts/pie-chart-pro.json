@@ -20,7 +20,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'pie' }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'pie' }"
       }
     },
     "id": { "type": { "name": "string" } },

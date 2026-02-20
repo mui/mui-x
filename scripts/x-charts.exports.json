@@ -256,6 +256,7 @@
   { "name": "greenPaletteLight", "kind": "Variable" },
   { "name": "HighlightElementClassKey", "kind": "TypeAlias" },
   { "name": "HighlightItemIdentifier", "kind": "TypeAlias" },
+  { "name": "HighlightItemIdentifierWithType", "kind": "TypeAlias" },
   { "name": "HighlightOptions", "kind": "TypeAlias" },
   { "name": "HighlightScope", "kind": "TypeAlias" },
   { "name": "ItemTooltip", "kind": "Interface" },

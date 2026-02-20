@@ -35,7 +35,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'radar' }"
       }
     },
     "id": { "type": { "name": "string" } },

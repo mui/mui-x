@@ -52,7 +52,7 @@
     "highlightedItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'line' }"
       }
     },
     "id": { "type": { "name": "string" } },
