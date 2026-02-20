@@ -98,8 +98,6 @@ export default defineConfig({
       fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
       testTimeout: 30000,
-      // Retry failed tests up to 3 times. This is useful for flaky tests.
-      retry: 3,
       // Reduce the number of workers to avoid CI timeouts.
       maxWorkers: 1,
     }),
