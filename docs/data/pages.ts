@@ -421,6 +421,11 @@ const pages: MuiPage[] = [
         subheader: 'Tutorials',
         children: [
           { pathname: '/x/react-data-grid/tutorials/server-side-data', title: 'Server-side data' },
+          {
+            pathname: '/x/react-data-grid/tutorials/aggregation-row-grouping',
+            title: 'Aggregation and row grouping',
+            plan: 'premium',
+          },
         ],
       },
     ],
