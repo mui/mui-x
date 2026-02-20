@@ -117,6 +117,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
   const listRef = React.useRef<HTMLUListElement>(null);
+  const lastActiveRef = React.useRef<HTMLElement | null>(null);
 
   const props = useThemeProps({
     props: inProps,
@@ -226,13 +227,22 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
       return;
     }
     const offsetTop = activeItem.offsetTop;
-    if (autoFocus || !!focusedView) {
+    if ((autoFocus || !!focusedView) && activeItem !== lastActiveRef.current) {
+      lastActiveRef.current = activeItem;
       activeItem.focus();
     }
 
     // Subtracting the 4px of extra margin intended for the first visible section item
     containerRef.current.scrollTop = offsetTop - 4;
   });
+
+  // Reset tracking when view loses focus
+  // so focus can be reapplied when user returns via keyboard
+  React.useEffect(() => {
+    if (!focusedView) {
+      lastActiveRef.current = null;
+    }
+  }, [focusedView]);
 
   const isTimeDisabled = React.useCallback(
     (valueToCheck: PickerValidDate) => {
