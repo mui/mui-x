@@ -133,9 +133,9 @@ jobs:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
-            - code-infra/upload-coverage:
-                key: << parameters.react-version >>-browser
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser
+            # - code-infra/upload-coverage:
+            #     key: << parameters.react-version >>-browser
       - store_test_results:
           path: test-results
   test_lint:
