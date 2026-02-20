@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import PageContext from 'docs/src/modules/components/PageContext';
+import { AnalyticsProvider } from 'docs/src/modules/components/AnalyticsProvider';
 import DemoContext from 'docs/src/modules/components/DemoContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { CodeCopyProvider } from '@mui/docs/CodeCopy';
@@ -374,8 +375,10 @@ function AppWrapper(props) {
                 <DemoContext.Provider value={demoContextValue}>
                   <ThemeWrapper>
                     <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                      {children}
-                      <GoogleAnalytics />
+                      <AnalyticsProvider>
+                        {children}
+                        <GoogleAnalytics />
+                      </AnalyticsProvider>
                     </DocsStyledEngineProvider>
                   </ThemeWrapper>
                 </DemoContext.Provider>
