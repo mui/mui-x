@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
-import { type ChartsAxisSlotProps, type ChartsAxisSlots } from '../models/axis';
+import type { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
 import { useXAxes, useYAxes } from '../hooks';
 
 export type { ChartsAxisSlots, ChartsAxisSlotProps };
