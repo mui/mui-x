@@ -24,7 +24,31 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.getFocusedItemId()).to.equal('1');
       });
 
-      it('should move the focus when the focused item is removed', () => {
+      it('should focus the next sibling when a focused middle item is removed', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+        });
+
+        fireEvent.focus(view.getItemRoot('2'));
+        expect(view.getFocusedItemId()).to.equal('2');
+
+        view.setItems([{ id: '1' }, { id: '3' }]);
+        expect(view.getFocusedItemId()).to.equal('3');
+      });
+
+      it('should focus the previous sibling when the focused last item is removed', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+        });
+
+        fireEvent.focus(view.getItemRoot('3'));
+        expect(view.getFocusedItemId()).to.equal('3');
+
+        view.setItems([{ id: '1' }, { id: '2' }]);
+        expect(view.getFocusedItemId()).to.equal('2');
+      });
+
+      it('should focus the remaining sibling when the focused item is removed and only one sibling is left', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
         });
@@ -34,6 +58,35 @@ describeTreeView<TreeViewAnyStore>(
 
         view.setItems([{ id: '1' }]);
         expect(view.getFocusedItemId()).to.equal('1');
+      });
+
+      it('should focus the parent when the focused item is removed and has no siblings left', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }],
+          defaultExpandedItems: ['2'],
+        });
+
+        fireEvent.focus(view.getItemRoot('2.1'));
+        expect(view.getFocusedItemId()).to.equal('2.1');
+
+        view.setItems([{ id: '1' }, { id: '2' }]);
+        expect(view.getFocusedItemId()).to.equal('2');
+      });
+
+      it('should focus the next nested sibling when a focused nested item is removed', () => {
+        const view = render({
+          items: [
+            { id: '1' },
+            { id: '2', children: [{ id: '2.1' }, { id: '2.2' }, { id: '2.3' }] },
+          ],
+          defaultExpandedItems: ['2'],
+        });
+
+        fireEvent.focus(view.getItemRoot('2.2'));
+        expect(view.getFocusedItemId()).to.equal('2.2');
+
+        view.setItems([{ id: '1' }, { id: '2', children: [{ id: '2.1' }, { id: '2.3' }] }]);
+        expect(view.getFocusedItemId()).to.equal('2.3');
       });
     });
 

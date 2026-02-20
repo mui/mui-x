@@ -1,5 +1,4 @@
 'use client';
-import type * as React from 'react';
 import { type ChartsSurfaceProps } from '../ChartsSurface';
 import { type ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartsContainerProps } from './ChartsContainer';
@@ -12,7 +11,7 @@ export type UseChartsContainerPropsReturnValue<
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = {
   chartDataProviderProps: ChartDataProviderProps<TSeries, TSignatures>;
-  chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
+  chartsSurfaceProps: ChartsSurfaceProps;
   children: React.ReactNode;
 };
 
@@ -21,7 +20,6 @@ export const useChartsContainerProps = <
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(
   props: ChartsContainerProps<TSeries, TSignatures>,
-  ref: React.Ref<SVGSVGElement>,
 ): UseChartsContainerPropsReturnValue<TSeries, TSignatures> => {
   const {
     width,
@@ -35,6 +33,8 @@ export const useChartsContainerProps = <
     onAxisClick,
     highlightedAxis,
     onHighlightedAxisChange,
+    tooltipAxis,
+    onTooltipAxisChange,
     tooltipItem,
     onTooltipItemChange,
     disableVoronoi,
@@ -66,11 +66,10 @@ export const useChartsContainerProps = <
     ...other
   } = props as ChartsContainerProps<TSeries, AllPluginSignatures<TSeries>>;
 
-  const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
+  const chartsSurfaceProps: ChartsSurfaceProps = {
     title,
     desc,
     sx,
-    ref,
     ...other,
   };
 
@@ -85,6 +84,8 @@ export const useChartsContainerProps = <
     onAxisClick,
     highlightedAxis,
     onHighlightedAxisChange,
+    tooltipAxis,
+    onTooltipAxisChange,
     tooltipItem,
     onTooltipItemChange,
     disableVoronoi,

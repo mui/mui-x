@@ -1,5 +1,4 @@
 'use client';
-import type * as React from 'react';
 import {
   type ChartAnyPluginSignature,
   type ChartSeriesType,
@@ -25,7 +24,6 @@ export function useChartsContainerPremiumProps<
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(
   props: ChartsContainerPremiumProps<TSeries, TSignatures>,
-  ref: React.Ref<SVGSVGElement>,
 ): UseChartsContainerPremiumPropsReturnValue<TSeries, TSignatures> {
   const {
     initialZoom,
@@ -38,7 +36,7 @@ export function useChartsContainerPremiumProps<
   } = props as ChartsContainerPremiumProps<TSeries, AllPluginSignatures<TSeries>>;
 
   const { chartDataProviderProProps, chartsSurfaceProps, children } =
-    useChartsContainerProProps<TSeries>(baseProps, ref);
+    useChartsContainerProProps<TSeries>(baseProps);
 
   const chartDataProviderPremiumProps = {
     ...chartDataProviderProProps,

@@ -56,11 +56,13 @@ const ChartsContainerPro = React.forwardRef(function ChartsContainerProInner<
   const { chartDataProviderProProps, children, chartsSurfaceProps } = useChartsContainerProProps<
     TSeries,
     TSignatures
-  >(props, ref);
+  >(props);
 
   return (
     <ChartDataProviderPro<TSeries, TSignatures> {...chartDataProviderProProps}>
-      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+      <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        {children}
+      </ChartsSurface>
     </ChartDataProviderPro>
   );
 }) as unknown as ChartsContainerProComponent;

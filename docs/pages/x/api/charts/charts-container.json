@@ -21,7 +21,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: object }&gt;"
+        "description": "Array&lt;{ dataIndex?: any, seriesId: object, type?: object }&gt;"
       }
     },
     "highlightedAxis": {
@@ -37,7 +37,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: object }&gt;"
+        "description": "Array&lt;{ dataIndex?: any, seriesId: object, type?: object }&gt;"
       }
     },
     "localeText": { "type": { "name": "object" } },
@@ -82,6 +82,13 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
+    "onTooltipAxisChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["axisItems"]
+      }
+    },
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
@@ -105,10 +112,16 @@
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "tooltipAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
+      }
+    },
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }"
       }
     },
     "voronoiMaxRadius": {

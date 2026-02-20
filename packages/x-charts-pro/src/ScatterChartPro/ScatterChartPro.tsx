@@ -84,7 +84,7 @@ export interface ScatterChartProProps
  */
 const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   inProps: ScatterChartProProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
   const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
@@ -102,17 +102,14 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'scatter',
     ScatterChartProPluginSignatures
-  >(
-    {
-      ...chartContainerProps,
-      initialZoom,
-      zoomData,
-      onZoomChange,
-      apiRef,
-      plugins: SCATTER_CHART_PRO_PLUGINS,
-    },
-    ref,
-  );
+  >({
+    ...chartContainerProps,
+    initialZoom,
+    zoomData,
+    onZoomChange,
+    apiRef,
+    plugins: SCATTER_CHART_PRO_PLUGINS,
+  });
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -121,7 +118,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     <ChartDataProviderPro<'scatter', ScatterChartProPluginSignatures>
       {...chartDataProviderProProps}
     >
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -236,8 +233,8 @@ ScatterChartPro.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['scatter']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['scatter']),
     }),
   ),
   /**
@@ -281,8 +278,8 @@ ScatterChartPro.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['scatter']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['scatter']),
     }),
   ),
   /**
@@ -345,6 +342,14 @@ ScatterChartPro.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onTooltipAxisChange: PropTypes.func,
+  /**
    * The callback fired when the tooltip item changes.
    *
    * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
@@ -398,13 +403,23 @@ ScatterChartPro.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number.isRequired,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['scatter']).isRequired,
+    type: PropTypes.oneOf(['scatter']),
   }),
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.

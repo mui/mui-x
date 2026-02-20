@@ -151,7 +151,7 @@ export interface HeatmapProps
 
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
@@ -173,10 +173,10 @@ const Heatmap = React.forwardRef(function Heatmap(
 
   return (
     <ChartDataProviderPro<'heatmap', HeatmapPluginSignatures> {...chartDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface ref={ref} sx={sx}>
+        <ChartsSurface sx={sx}>
           <g {...clipPathGroupProps}>
             <HeatmapPlot {...heatmapPlotProps} />
             <FocusedHeatmapCell />
@@ -311,9 +311,17 @@ Heatmap.propTypes = {
    * The callback fired when an item is clicked.
    *
    * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
-   * @param {SeriesItemIdentifier<SeriesType>} item The clicked item.
+   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onTooltipAxisChange: PropTypes.func,
   /**
    * The callback fired when the tooltip item changes.
    *
@@ -359,13 +367,23 @@ Heatmap.propTypes = {
    */
   tooltip: PropTypes.object,
   /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['heatmap']).isRequired,
+    type: PropTypes.oneOf(['heatmap']),
     xIndex: PropTypes.number.isRequired,
     yIndex: PropTypes.number.isRequired,
   }),
