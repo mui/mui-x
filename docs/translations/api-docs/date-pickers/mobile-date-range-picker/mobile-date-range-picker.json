@@ -57,6 +57,9 @@
     "formatDensity": {
       "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
     },
+    "initialFocusedSection": {
+      "description": "The index or type of the section to focus when the field is focused. If <code>undefined</code>/<code>null</code>, the first section will be focused."
+    },
     "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
     "label": { "description": "The label content." },
     "loading": {

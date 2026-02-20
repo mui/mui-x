@@ -22,6 +22,12 @@
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
+    "initialFocusedSection": {
+      "type": {
+        "name": "union",
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
+      }
+    },
     "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
     "maxDateTime": { "type": { "name": "object" } },
     "maxTime": { "type": { "name": "object" } },

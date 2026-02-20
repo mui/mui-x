@@ -118,7 +118,7 @@ export const useFieldV7TextField = <
     ) as number;
 
     setFocused(true);
-    sectionListRef.current.getSectionContent(newParsedSelectedSections).focus();
+    sectionListRef.current.getSectionContent(newParsedSelectedSections)?.focus();
   }
 
   const rootProps = useFieldRootProps({
@@ -228,7 +228,16 @@ export const useFieldV7TextField = <
     }
 
     if (autoFocus && !disabled && sectionListRef.current) {
-      sectionListRef.current.getSectionContent(sectionOrder.startIndex).focus();
+      const newParsedSelectedSections = parseSelectedSections(
+        internalPropsWithDefaults.initialFocusedSection ?? sectionOrder.startIndex,
+        state.sections,
+      );
+
+      if (newParsedSelectedSections === 'all') {
+        sectionListRef.current.getRoot()?.focus();
+      } else if (typeof newParsedSelectedSections === 'number') {
+        sectionListRef.current.getSectionContent(newParsedSelectedSections)?.focus();
+      }
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -238,12 +247,9 @@ export const useFieldV7TextField = <
     }
 
     if (parsedSelectedSections === 'all') {
-      sectionListRef.current.getRoot().focus();
+      sectionListRef.current.getRoot()?.focus();
     } else if (typeof parsedSelectedSections === 'number') {
-      const domElement = sectionListRef.current.getSectionContent(parsedSelectedSections);
-      if (domElement) {
-        domElement.focus();
-      }
+      sectionListRef.current.getSectionContent(parsedSelectedSections)?.focus();
     }
   }, [parsedSelectedSections, focused]);
 

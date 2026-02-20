@@ -7,7 +7,7 @@ import useTimeout from '@mui/utils/useTimeout';
 import useForkRef from '@mui/utils/useForkRef';
 import { UseFieldParameters, UseFieldProps, UseFieldReturnValue } from './useField.types';
 import { useSplitFieldProps } from '../../../hooks';
-import { FieldSectionType, InferFieldSection } from '../../../models';
+import { FieldSelectedSections, InferFieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid } from './useField.utils';
 import { PickerValidValue } from '../../models';
@@ -167,7 +167,7 @@ export const useFieldV6TextField = <
     setSelectedSections(sectionIndex);
   }
 
-  function focusField(newSelectedSection: number | FieldSectionType = 0) {
+  function focusField(newSelectedSection: FieldSelectedSections = 0) {
     if (getActiveElement(inputRef.current) === inputRef.current) {
       return;
     }
@@ -195,7 +195,9 @@ export const useFieldV6TextField = <
         input.value.length &&
         Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length
       ) {
-        setSelectedSections('all');
+        setSelectedSections(internalPropsWithDefaults.initialFocusedSection ?? 'all');
+      } else if (input.selectionStart === 0 && input.selectionEnd === 0) {
+        setSelectedSections(internalPropsWithDefaults.initialFocusedSection ?? 0);
       } else {
         syncSelectionFromDOM();
       }
@@ -399,9 +401,9 @@ export const useFieldV6TextField = <
   );
 
   React.useEffect(() => {
-    // Select all the sections when focused on mount (`autoFocus = true` on the input)
+    // Select the initial focused section (or all) when focused on mount (`autoFocus = true` on the input)
     if (inputRef.current && inputRef.current === getActiveElement(inputRef.current)) {
-      setSelectedSections('all');
+      setSelectedSections(internalPropsWithDefaults.initialFocusedSection ?? 'all');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

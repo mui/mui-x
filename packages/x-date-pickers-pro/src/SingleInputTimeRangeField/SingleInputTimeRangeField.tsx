@@ -173,6 +173,24 @@ SingleInputTimeRangeField.propTypes = {
    */
   id: PropTypes.string,
   /**
+   * The index or type of the section to focus when the field is focused.
+   * If `undefined`/`null`, the first section will be focused.
+   */
+  initialFocusedSection: PropTypes.oneOfType([
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
+    PropTypes.number,
+  ]),
+  /**
    * Props applied to the [`InputLabel`](https://mui.com/material-ui/api/input-label/) element.
    * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
    * @deprecated Use `slotProps.inputLabel` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
