@@ -22,7 +22,7 @@
     "@babel/core": "catalog:",
     "@babel/runtime": "catalog:",
     "@date-fns/tz": "catalog:",
-    "@docsearch/react": "^3.9.0",
+    "@docsearch/react": "^4.5.4",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@emotion/server": "^11.11.0",
