@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { vi } from 'vitest';
 import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import {
   useLicenseVerifier,
@@ -24,19 +25,8 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
 describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
   const { render } = createRenderer();
 
-  let env: any;
-
-  beforeEach(() => {
-    env = process.env.NODE_ENV;
-    // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-    // eslint-disable-next-line no-useless-concat
-    process.env['NODE_' + 'ENV'] = 'test';
-  });
-
   afterEach(() => {
-    // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-    // eslint-disable-next-line no-useless-concat
-    process.env['NODE_' + 'ENV'] = env;
+    vi.unstubAllEnvs();
   });
 
   describe('error', () => {
@@ -74,9 +64,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     });
 
     it('should throw if the license is expired by more than a 30 days', () => {
-      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-      // eslint-disable-next-line no-useless-concat
-      process.env['NODE_' + 'ENV'] = 'development';
+      vi.stubGlobal('MUI_TEST_ENV', undefined);
 
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
@@ -150,9 +138,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     it.each(planCombinations)(
       'should work for plan $planVersion with scope $planScope',
       ({ planVersion, planScope, ok, notOk, notInInitial }) => {
-        // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-        // eslint-disable-next-line no-useless-concat
-        process.env['NODE_' + 'ENV'] = 'development';
+        vi.stubGlobal('MUI_TEST_ENV', undefined);
 
         const licenseKey = generateLicense({
           expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),

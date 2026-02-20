@@ -9,6 +9,8 @@ import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicens
 import TestViewer from './TestViewer';
 import { type Test, testsBySuite } from './testsBySuite';
 
+(globalThis as any).MUI_TEST_ENV = true;
+
 setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
 
 Globals.assign({

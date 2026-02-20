@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { generateLicense } from '../generateLicense/generateLicense';
 import { generateReleaseInfo, verifyLicense } from './verifyLicense';
@@ -9,15 +10,8 @@ const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
 // Can't change the process.env.NODE_ENV in Browser
 describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
-  let env: any;
-
-  beforeEach(() => {
-    env = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'test';
-  });
-
   afterEach(() => {
-    process.env.NODE_ENV = env;
+    vi.unstubAllEnvs();
   });
 
   describe('key version: 1', () => {
@@ -25,7 +19,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       '65897de688b8bed993b1d6ddd0e1d548T1JERVI6MTIzLEVYUElSWT0xNzg1ODc0MDEwNzA4LEtFWVZFUlNJT049MQ==';
 
     it('should log an error when ReleaseInfo is not valid', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         () =>
           verifyLicense({
@@ -37,7 +31,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should verify License properly', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
@@ -48,7 +42,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should check expired license properly', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(releaseDate.getTime() - oneDayInMS),
         planScope: 'pro',
@@ -67,7 +61,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should return Invalid for invalid license', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
@@ -97,7 +91,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should log an error when ReleaseInfo is not valid', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         () =>
           verifyLicense({
@@ -110,7 +104,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
     describe('scope', () => {
       it('should accept pro license for pro features', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             releaseInfo: RELEASE_INFO,
@@ -121,7 +115,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should accept premium license for premium features', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             releaseInfo: RELEASE_INFO,
@@ -132,7 +126,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should not accept pro license for premium feature', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             releaseInfo: RELEASE_INFO,
@@ -145,7 +139,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
     describe('expiry date', () => {
       it('should validate subscription license in prod if current date is after expiry date but release date is before expiry date', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: '123',
@@ -182,7 +176,8 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should throw if the license is expired by more than a 30 days', () => {
-        process.env.NODE_ENV = 'development';
+        vi.stubGlobal('MUI_TEST_ENV', undefined);
+
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
           orderNumber: '123',
@@ -220,7 +215,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should return Invalid for invalid license', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
@@ -242,7 +237,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should accept licenseModel="annual"', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
@@ -279,7 +274,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('PlanVersion "initial" should not accept x-charts-pro', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
@@ -290,7 +285,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('PlanVersion "initial" should not accept x-tree-view-pro', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
@@ -301,7 +296,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('PlanVersion "Q3-2024" should accept x-charts-pro', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
@@ -312,7 +307,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('PlanVersion "Q3-2024" should accept x-tree-view-pro', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
@@ -323,7 +318,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('Premium with planVersion "initial" should accept x-tree-view-pro', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
@@ -334,7 +329,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('Premium with planVersion "initial" should accept x-charts-pro', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,

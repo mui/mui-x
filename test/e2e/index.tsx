@@ -3,6 +3,8 @@ import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router';
 import TestViewer from './TestViewer';
 
+(globalThis as any).MUI_TEST_ENV = true;
+
 interface Fixture {
   path: string;
   suite: string;
@@ -40,7 +42,7 @@ function App() {
     if (window.location.hash === '#no-dev') {
       return false;
     }
-    return process.env.NODE_ENV === 'development';
+    return process.env.NODE_ENV !== 'production';
   }
   const [isDev, setDev] = React.useState(computeIsDev);
   React.useEffect(() => {

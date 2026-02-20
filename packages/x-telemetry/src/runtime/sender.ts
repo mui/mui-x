@@ -62,6 +62,7 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
         headers: {
           'Content-Type': 'application/json',
           'X-Telemetry-Client-Version': process.env.MUI_VERSION ?? '<dev>',
+          // eslint-disable-next-line mui/consistent-production-guard
           'X-Telemetry-Node-Env': process.env.NODE_ENV ?? '<unknown>',
         },
         body: JSON.stringify([eventPayload]),
