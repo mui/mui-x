@@ -1,29 +1,7 @@
 'use client';
-import { styled } from '@mui/material/styles';
-import { useDrawingArea } from '../hooks/useDrawingArea';
 import type { CommonOverlayProps } from './ChartsOverlay';
-import { useChartsLocalization } from '../hooks/useChartsLocalization';
-
-const StyledText = styled('text', {
-  slot: 'internal',
-  shouldForwardProp: undefined,
-})(({ theme }) => ({
-  ...theme.typography.body2,
-  stroke: 'none',
-  fill: (theme.vars || theme).palette.text.primary,
-  shapeRendering: 'crispEdges',
-  textAnchor: 'middle',
-  dominantBaseline: 'middle',
-}));
+import OverlayText from './OverlayText';
 
 export function ChartsLoadingOverlay(props: CommonOverlayProps) {
-  const { message, ...other } = props;
-  const { top, left, height, width } = useDrawingArea();
-  const { localeText } = useChartsLocalization();
-
-  return (
-    <StyledText x={left + width / 2} y={top + height / 2} {...other}>
-      {message ?? localeText.loading}
-    </StyledText>
-  );
+  return <OverlayText state="loading" {...props} />;
 }
