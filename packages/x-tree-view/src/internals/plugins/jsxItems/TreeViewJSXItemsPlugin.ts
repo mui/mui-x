@@ -2,6 +2,7 @@ import { TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
 import type { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
 import { buildSiblingIndexes, itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../items';
+import { selectionSelectors } from '../selection/selectors';
 import { jsxItemsitemWrapper, useJSXItemsItemPlugin } from './itemPlugin';
 
 export class TreeViewJSXItemsPlugin {
@@ -127,5 +128,15 @@ export class TreeViewJSXItemsPlugin {
         [parentIdWithDefault]: buildSiblingIndexes(orderedChildrenIds),
       },
     });
+
+    // If a parent was selected while its children were unmounted (collapsed with unmountOnExit),
+    // re-run selection propagation now that the children are registered.
+    if (parentId !== null && selectionSelectors.isItemSelected(this.store.state, parentId)) {
+      this.store.selection.setItemSelection({
+        itemId: parentId,
+        shouldBeSelected: true,
+        keepExistingSelection: true,
+      });
+    }
   };
 }
