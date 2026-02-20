@@ -23,7 +23,7 @@ import {
   MultiSectionDigitalClockViewProps,
 } from './MultiSectionDigitalClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
-import { PickerOwnerState, PickerValidDate, TimeStepOptions, TimeView } from '../models';
+import { PickerOwnerState, PickerValidDate, TimeStepOptions } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -178,13 +178,15 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
   );
 
   const isTimeDisabled = React.useCallback(
-    (rawValue: number, viewType: TimeView) => {
+    (rawValue: number, viewType: TimeViewWithMeridiem) => {
       const isAfter = createIsAfterIgnoreDatePart(
         disableIgnoringDatePartForTimeValidation,
         adapter,
       );
       const shouldCheckPastEnd =
-        viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
+        viewType === 'hours' ||
+        (viewType === 'minutes' && views.includes('seconds')) ||
+        viewType === 'meridiem';
 
       const containsValidTime = ({
         start,
@@ -269,6 +271,17 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           const start = dateWithNewSeconds;
           const end = dateWithNewSeconds;
 
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
+        }
+        case 'meridiem': {
+          const start = adapter.setSeconds(
+            adapter.setMinutes(
+              adapter.setHours(adapter.startOfDay(valueOrReferenceDate), rawValue),
+              0,
+            ),
+            0,
+          );
+          const end = adapter.addSeconds(adapter.addMinutes(adapter.addHours(start, 11), 59), 59);
           return !containsValidTime({ start, end }) || !isValidValue(rawValue);
         }
 
@@ -375,6 +388,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
                 isSelected: () => !!value && meridiemMode === 'am',
                 isFocused: () => !!valueOrReferenceDate && meridiemMode === 'am',
                 ariaLabel: amLabel,
+                isDisabled: () => isTimeDisabled(0, 'meridiem'),
               },
               {
                 value: 'pm',
@@ -382,6 +396,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
                 isSelected: () => !!value && meridiemMode === 'pm',
                 isFocused: () => !!valueOrReferenceDate && meridiemMode === 'pm',
                 ariaLabel: pmLabel,
+                isDisabled: () => isTimeDisabled(12, 'meridiem'),
               },
             ],
           };
