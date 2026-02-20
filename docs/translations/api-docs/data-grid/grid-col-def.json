@@ -8,6 +8,12 @@
       "description": "If <code>true</code>, the cells of the column can be aggregated based."
     },
     "align": { "description": "Align cell content." },
+    "autoSizingMaxWidth": {
+      "description": "The maximum width of the column in pixels when autosizing.<br />If <code>autoSizingMaxWidth</code> is used together with <code>maxWidth</code>, the smaller of the two is used when autosizing.<br />If only <code>autoSizingMaxWidth</code> is used, then manual resizing acts as if max size is not set."
+    },
+    "autoSizingMinWidth": {
+      "description": "The minimum width of the column in pixels when autosizing.<br />If <code>autoSizingMinWidth</code> is used together with <code>minWidth</code>, the larger of the two is used when autosizing.<br />If only <code>autoSizingMinWidth</code> is used, then manual resizing acts as if min size is not set."
+    },
     "availableAggregationFunctions": {
       "description": "Limit the aggregation function usable on this column.<br />By default, the column will have all the aggregation functions that are compatible with its type."
     },
