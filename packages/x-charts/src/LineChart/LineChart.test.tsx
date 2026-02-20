@@ -10,11 +10,11 @@ describe('<LineChart />', () => {
     <LineChart height={100} width={100} series={[{ data: [100, 200] }]} />,
     () => ({
       classes: {} as any,
-      inheritComponent: 'svg',
+      inheritComponent: 'div',
       render,
       muiName: 'MuiLineChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.SVGSVGElement,
+      refInstanceof: window.HTMLDivElement,
       skip: [
         'componentProp',
         'componentsProp',

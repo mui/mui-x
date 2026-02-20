@@ -5,7 +5,6 @@ import {
   useChartsContainerProps,
   type UseChartsContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
-import type * as React from 'react';
 import type { ChartDataProviderProProps } from '../ChartDataProviderPro';
 import type { ChartsContainerProProps } from './ChartsContainerPro';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
@@ -25,7 +24,6 @@ export const useChartsContainerProProps = <
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(
   props: ChartsContainerProProps<TSeries, TSignatures>,
-  ref: React.Ref<SVGSVGElement>,
 ): UseChartsContainerProPropsReturnValue<TSeries, TSignatures> => {
   const {
     initialZoom,
@@ -37,10 +35,8 @@ export const useChartsContainerProProps = <
     ...baseProps
   } = props as ChartsContainerProProps<TSeries, AllPluginSignatures<TSeries>>;
 
-  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartsContainerProps<TSeries>(
-    baseProps,
-    ref,
-  );
+  const { chartDataProviderProps, chartsSurfaceProps, children } =
+    useChartsContainerProps<TSeries>(baseProps);
 
   const chartDataProviderProProps = {
     ...chartDataProviderProps,
