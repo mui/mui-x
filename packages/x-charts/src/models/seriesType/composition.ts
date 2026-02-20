@@ -14,10 +14,10 @@ export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesT
 ] as ComposableCartesianChartSeriesType[]);
 
 type TypeMapping = {
-  bar: ComposableCartesianChartSeriesType | 'bar';
-  line: ComposableCartesianChartSeriesType | 'line';
-  scatter: ComposableCartesianChartSeriesType | 'scatter';
-  // rangeBar: ComposableCartesianChartSeriesType;
+  bar: ComposableCartesianChartSeriesType;
+  line: ComposableCartesianChartSeriesType;
+  scatter: ComposableCartesianChartSeriesType;
+  rangeBar: ComposableCartesianChartSeriesType;
 };
 
 export type ComposableChartSeriesType<SeriesType extends ChartSeriesType> =
