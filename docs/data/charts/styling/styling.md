@@ -24,12 +24,8 @@ Series accepts a property `color` which is the base color used to render its com
 Charts come with built-in color palettes to automatically assign colors to series.
 If a particular series lacks a color prop, the chart will default to assigning a color based on the series' index.
 
-You can set a custom color palette by using the prop `colors` on chart components (or `<ChartContainer />` if you are using composition).
-This prop takes an array of colors, or a callback whose input is the theme's mode (`'dark'` or `'light'`), and returns the array of colors.
-
-#### Provided palettes
-
-The library includes three palettes.
+You can set a custom color palette using the `colors` prop on chart components (or `ChartsContainer` when composing a custom component).
+You can pass an array of colors, or a callback whose input is the theme's mode (`'dark'` or `'light'`) and returns the array of colors.
 
 {{"demo": "MuiColorTemplate.js"}}
 
