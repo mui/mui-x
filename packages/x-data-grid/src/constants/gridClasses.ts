@@ -968,7 +968,7 @@ export function getDataGridUtilityClass(slot: string): string {
   return generateUtilityClass('MuiDataGrid', slot);
 }
 
-export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
+export const gridClasses = /* #__PURE__ */ generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aiAssistantPanel',
   'aiAssistantPanelHeader',
   'aiAssistantPanelTitleContainer',

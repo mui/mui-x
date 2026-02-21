@@ -29,7 +29,13 @@ export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'f
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
 
-const COLUMN_TYPES = getGridDefaultColumnTypes();
+let COLUMN_TYPES: ReturnType<typeof getGridDefaultColumnTypes> | null = null;
+function getColumnTypes() {
+  if (COLUMN_TYPES === null) {
+    COLUMN_TYPES = getGridDefaultColumnTypes();
+  }
+  return COLUMN_TYPES;
+}
 
 /**
  * Computes width for flex columns.
@@ -298,9 +304,10 @@ export const applyInitialState = (
 };
 
 export function getDefaultColTypeDef(type: GridColDef['type']) {
-  let colDef = COLUMN_TYPES[DEFAULT_GRID_COL_TYPE_KEY];
-  if (type && COLUMN_TYPES[type]) {
-    colDef = COLUMN_TYPES[type];
+  const columnTypes = getColumnTypes();
+  let colDef = columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
+  if (type && columnTypes[type]) {
+    colDef = columnTypes[type];
   }
   return colDef;
 }

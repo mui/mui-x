@@ -37,7 +37,7 @@ export interface GridPanelProps extends Pick<
   onClose?: () => void;
 }
 
-export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('MuiDataGrid', [
+export const gridPanelClasses = /* #__PURE__ */ generateUtilityClasses<keyof GridPanelClasses>('MuiDataGrid', [
   'panel',
   'paper',
 ]);
