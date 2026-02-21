@@ -12,6 +12,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
 };
 
 const kzKZPickers: Partial<PickersLocaleText> = {
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   // Calendar navigation
   previousMonth: 'Алдыңғы ай',
   nextMonth: 'Келесі ай',
@@ -74,7 +75,6 @@ const kzKZPickers: Partial<PickersLocaleText> = {
   dateTableLabel: 'күнді таңдау',
 
   // Field section placeholders
-  ...DEFAULT_FIELD_PLACEHOLDERS,
   fieldYearPlaceholder: (params) => 'Ж'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'AAAA' : 'AA'),
   fieldDayPlaceholder: () => 'КК',

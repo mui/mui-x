@@ -11,6 +11,8 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
 };
 
 const urPKPickers: Partial<PickersLocaleText> = {
+  // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   // Calendar navigation
   previousMonth: 'پچھلا مہینہ',
   nextMonth: 'اگلا مہینہ',
@@ -72,8 +74,6 @@ const urPKPickers: Partial<PickersLocaleText> = {
   timeTableLabel: 'وقت منتخب کریں',
   dateTableLabel: 'تاریخ منتخب کریں',
 
-  // Field section placeholders
-  ...DEFAULT_FIELD_PLACEHOLDERS,
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',

@@ -11,6 +11,8 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
 };
 
 const ptPTPickers: Partial<PickersLocaleText> = {
+  // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   // Calendar navigation
   previousMonth: 'Mês anterior',
   nextMonth: 'Próximo mês',
@@ -72,8 +74,6 @@ const ptPTPickers: Partial<PickersLocaleText> = {
   timeTableLabel: 'escolha uma hora',
   dateTableLabel: 'escolha uma data',
 
-  // Field section placeholders
-  ...DEFAULT_FIELD_PLACEHOLDERS,
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'SSSS' : 'SS'),
 

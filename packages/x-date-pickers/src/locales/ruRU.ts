@@ -12,6 +12,8 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
 };
 
 const ruRUPickers: Partial<PickersLocaleText> = {
+  // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   // Calendar navigation
   previousMonth: 'Предыдущий месяц',
   nextMonth: 'Следующий месяц',
@@ -73,8 +75,6 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   timeTableLabel: 'выбрать время',
   dateTableLabel: 'выбрать дату',
 
-  // Field section placeholders
-  ...DEFAULT_FIELD_PLACEHOLDERS,
   fieldYearPlaceholder: (params) => 'Г'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'ММММ' : 'ММ'),
   fieldDayPlaceholder: () => 'ДД',
