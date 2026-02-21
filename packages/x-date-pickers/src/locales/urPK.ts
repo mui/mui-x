@@ -1,6 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { DEFAULT_FIELD_PLACEHOLDERS } from './utils/defaultLocaleHelpers';
 
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'گھنٹے',
@@ -58,7 +59,6 @@ const urPKPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberHeaderLabel: 'ہفتہ نمبر',
   calendarWeekNumberHeaderText: 'نمبر',
   calendarWeekNumberAriaLabelText: (weekNumber) => `ہفتہ ${weekNumber}`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
@@ -73,6 +73,7 @@ const urPKPickers: Partial<PickersLocaleText> = {
   dateTableLabel: 'تاریخ منتخب کریں',
 
   // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',

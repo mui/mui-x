@@ -1,6 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { DEFAULT_FIELD_PLACEHOLDERS } from './utils/defaultLocaleHelpers';
 
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'godzin',
@@ -56,9 +57,7 @@ const plPLPickers: Partial<PickersLocaleText> = {
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Numer tygodnia',
-  calendarWeekNumberHeaderText: '#',
   calendarWeekNumberAriaLabelText: (weekNumber) => `Tydzień ${weekNumber}`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
@@ -73,6 +72,7 @@ const plPLPickers: Partial<PickersLocaleText> = {
   dateTableLabel: 'wybierz datę',
 
   // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',
