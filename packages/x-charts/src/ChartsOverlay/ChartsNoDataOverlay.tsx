@@ -1,9 +1,8 @@
 'use client';
-import { styled } from '@mui/material/styles';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import type { CommonOverlayProps } from './ChartsOverlay';
 import { useChartsLocalization } from '../hooks/useChartsLocalization';
-import StyledText from './StyledText';
+import { StyledText } from './common';
 
 export function ChartsNoDataOverlay(props: CommonOverlayProps) {
   const { message, ...other } = props;

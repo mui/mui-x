@@ -617,7 +617,7 @@ async function generateChangelog(generator, newVersion, lastVersion, releaseBran
     return await generator({
       octokit,
       nextVersion: newVersion,
-      lastRelease: majorVersionBranch(lastVersion),
+      lastRelease: `v${lastVersion}`,
       release: releaseBranch,
       returnEntry: true,
     });

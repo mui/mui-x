@@ -34,7 +34,7 @@ type ChartType = 'scatter' | 'line' | 'bar' | 'pie';
 
 export default function KeyboardNavigation() {
   const [chartType, setChartType] = React.useState<ChartType>('line');
-  const svgRef = React.useRef<SVGSVGElement>(null);
+  const chartRef = React.useRef<HTMLDivElement>(null);
 
   const handleChange = (event: SelectChangeEvent) =>
     setChartType(event.target.value as ChartType);
@@ -63,27 +63,27 @@ export default function KeyboardNavigation() {
             <MenuItem value="pie">Pie</MenuItem>
           </Select>
         </FormControl>
-        <Button onClick={() => svgRef.current?.focus()} variant="contained">
+        <Button onClick={() => chartRef.current?.focus()} variant="contained">
           Focus chart
         </Button>
       </Stack>
-      <Chart key={chartType} svgRef={svgRef} type={chartType} />
+      <Chart key={chartType} chartRef={chartRef} type={chartType} />
     </Stack>
   );
 }
 
 function Chart<T extends ChartType = ChartType>({
-  svgRef,
+  chartRef,
   type,
 }: {
-  svgRef: React.RefObject<SVGSVGElement | null>;
+  chartRef: React.RefObject<HTMLDivElement | null>;
   type: T;
 }) {
   switch (type) {
     case 'scatter':
       return (
         <ScatterChart
-          ref={svgRef}
+          ref={chartRef}
           enableKeyboardNavigation
           height={300}
           series={scatterSeries}
@@ -92,7 +92,7 @@ function Chart<T extends ChartType = ChartType>({
     case 'line':
       return (
         <LineChart
-          ref={svgRef}
+          ref={chartRef}
           enableKeyboardNavigation
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
@@ -103,7 +103,7 @@ function Chart<T extends ChartType = ChartType>({
     case 'bar':
       return (
         <BarChart
-          ref={svgRef}
+          ref={chartRef}
           enableKeyboardNavigation
           height={300}
           xAxis={[
@@ -116,7 +116,7 @@ function Chart<T extends ChartType = ChartType>({
     case 'pie':
       return (
         <PieChart
-          ref={svgRef}
+          ref={chartRef}
           enableKeyboardNavigation
           series={[
             {
