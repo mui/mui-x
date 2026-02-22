@@ -173,7 +173,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
           barGapRatio,
           triggerTooltip,
           ...axis,
-...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
+          ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
           data,
           /* Doing this here is technically wrong, but acceptable in practice.
            * In theory, this should be done in the normalized scale selector, but then we'd need that selector to depend
@@ -195,7 +195,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
           offset: 0,
           triggerTooltip,
           ...axis,
-...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
+          ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
           data,
           scale,
           tickNumber,
