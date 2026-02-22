@@ -45,16 +45,24 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const elementOverrides = [
+  'scrollArea--left',
+  'scrollArea--right',
+  'scrollArea--up',
+  'scrollArea--down',
+] as const;
+
 const GridScrollAreaRawRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ScrollArea',
-  overridesResolver: (props, styles) => [
-    { [`&.${gridClasses['scrollArea--left']}`]: styles['scrollArea--left'] },
-    { [`&.${gridClasses['scrollArea--right']}`]: styles['scrollArea--right'] },
-    { [`&.${gridClasses['scrollArea--up']}`]: styles['scrollArea--up'] },
-    { [`&.${gridClasses['scrollArea--down']}`]: styles['scrollArea--down'] },
-    styles.scrollArea,
-  ],
+  overridesResolver: (props, styles) => {
+    const overrides = [styles.scrollArea];
+    elementOverrides.forEach((key) => {
+      overrides.push({ [`&.${gridClasses[key]}`]: styles[key] });
+    });
+
+    return overrides;
+  },
 })<{ ownerState: OwnerState }>(() => ({
   position: 'absolute',
   zIndex: 101,
