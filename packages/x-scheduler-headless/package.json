@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
-    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.2",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.5",
     "@babel/runtime": "catalog:",
     "@base-ui/react": "^1.0.0",
     "@base-ui/utils": "^0.2.3",
