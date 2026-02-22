@@ -1,6 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { DEFAULT_FIELD_PLACEHOLDERS } from './utils/defaultLocaleHelpers';
 
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'saat',
@@ -56,9 +57,7 @@ const trTRPickers: Partial<PickersLocaleText> = {
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Hafta numarası',
-  calendarWeekNumberHeaderText: '#',
   calendarWeekNumberAriaLabelText: (weekNumber) => `Hafta ${weekNumber}`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
@@ -73,14 +72,13 @@ const trTRPickers: Partial<PickersLocaleText> = {
   dateTableLabel: 'tarih seç',
 
   // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'AAA' : 'AA'),
   fieldDayPlaceholder: () => 'GG',
   fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'HHH' : 'HH'),
   fieldHoursPlaceholder: () => 'ss',
   fieldMinutesPlaceholder: () => 'dd',
-  fieldSecondsPlaceholder: () => 'ss',
-  fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
   // year: 'Year',

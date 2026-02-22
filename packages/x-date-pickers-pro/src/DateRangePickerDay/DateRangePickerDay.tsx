@@ -78,40 +78,23 @@ const startBorderStyle = {
   borderBottomLeftRadius: '50%',
 };
 
+const overrides = [
+  'rangeIntervalDayHighlight',
+  'rangeIntervalDayHighlightStart',
+  'rangeIntervalDayHighlightEnd',
+  'firstVisibleCell',
+  'lastVisibleCell',
+  'startOfMonth',
+  'endOfMonth',
+  'outsideCurrentMonth',
+  'hiddenDayFiller',
+] as const;
+
 const DateRangePickerDayRoot = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'Root',
   overridesResolver: (_, styles) => [
-    {
-      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]:
-        styles.rangeIntervalDayHighlight,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightStart}`]:
-        styles.rangeIntervalDayHighlightStart,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]:
-        styles.rangeIntervalDayHighlightEnd,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.firstVisibleCell}`]: styles.firstVisibleCell,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.lastVisibleCell}`]: styles.lastVisibleCell,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.startOfMonth}`]: styles.startOfMonth,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.endOfMonth}`]: styles.endOfMonth,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.outsideCurrentMonth}`]: styles.outsideCurrentMonth,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.hiddenDayFiller}`]: styles.hiddenDayFiller,
-    },
+    ...overrides.map((key) => ({ [`&.${dateRangePickerDayClasses[key]}`]: styles[key] })),
     styles.root,
   ],
 })<{ ownerState: DateRangePickerDayOwnerState }>(({ theme }) => ({

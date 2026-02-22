@@ -1,6 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { DEFAULT_FIELD_PLACEHOLDERS } from './utils/defaultLocaleHelpers';
 
 const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'le ore',
@@ -56,9 +57,7 @@ const itITPickers: Partial<PickersLocaleText> = {
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Numero settimana',
-  calendarWeekNumberHeaderText: '#',
   calendarWeekNumberAriaLabelText: (weekNumber) => `Settimana ${weekNumber}`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
@@ -73,14 +72,10 @@ const itITPickers: Partial<PickersLocaleText> = {
   dateTableLabel: 'scegli una data',
 
   // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
-  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'GG',
   fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'GGGG' : 'GG'),
-  fieldHoursPlaceholder: () => 'hh',
-  fieldMinutesPlaceholder: () => 'mm',
-  fieldSecondsPlaceholder: () => 'ss',
-  fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
   year: 'Anno',

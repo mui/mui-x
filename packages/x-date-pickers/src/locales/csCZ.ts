@@ -1,6 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { DEFAULT_FIELD_PLACEHOLDERS } from './utils/defaultLocaleHelpers';
 
 // maps TimeView to its translation
 const timeViews: Record<TimeViewWithMeridiem, string> = {
@@ -57,9 +58,7 @@ const csCZPickers: Partial<PickersLocaleText> = {
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Týden v roce',
-  calendarWeekNumberHeaderText: '#',
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} týden v roce`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
@@ -74,14 +73,8 @@ const csCZPickers: Partial<PickersLocaleText> = {
   dateTableLabel: 'vyberte datum',
 
   // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
-  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
-  fieldDayPlaceholder: () => 'DD',
-  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
-  fieldHoursPlaceholder: () => 'hh',
-  fieldMinutesPlaceholder: () => 'mm',
-  fieldSecondsPlaceholder: () => 'ss',
-  fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
   year: 'Rok',

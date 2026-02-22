@@ -1,5 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { DEFAULT_FIELD_PLACEHOLDERS } from './utils/defaultLocaleHelpers';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
@@ -50,9 +51,7 @@ const enUSPickers: PickersLocaleText = {
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Week number',
-  calendarWeekNumberHeaderText: '#',
   calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
@@ -68,14 +67,8 @@ const enUSPickers: PickersLocaleText = {
   dateTableLabel: 'pick date',
 
   // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
-  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
-  fieldDayPlaceholder: () => 'DD',
-  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
-  fieldHoursPlaceholder: () => 'hh',
-  fieldMinutesPlaceholder: () => 'mm',
-  fieldSecondsPlaceholder: () => 'ss',
-  fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
   year: 'Year',

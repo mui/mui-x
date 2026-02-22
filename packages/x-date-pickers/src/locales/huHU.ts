@@ -1,6 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { DEFAULT_FIELD_PLACEHOLDERS } from './utils/defaultLocaleHelpers';
 
 // maps TimeView to its translation
 const timeViews: Record<TimeViewWithMeridiem, string> = {
@@ -57,9 +58,7 @@ const huHUPickers: Partial<PickersLocaleText> = {
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Hét',
-  calendarWeekNumberHeaderText: '#',
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}. hét`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
@@ -76,6 +75,7 @@ const huHUPickers: Partial<PickersLocaleText> = {
   dateTableLabel: 'válasszon dátumot',
 
   // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   fieldYearPlaceholder: (params) => 'É'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'HHHH' : 'HH'),
   fieldDayPlaceholder: () => 'NN',

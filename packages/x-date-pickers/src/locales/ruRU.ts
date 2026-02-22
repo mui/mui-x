@@ -1,6 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { DEFAULT_FIELD_PLACEHOLDERS } from './utils/defaultLocaleHelpers';
 
 // Translation map for Clock Label
 const timeViews: Record<TimeViewWithMeridiem, string> = {
@@ -11,6 +12,8 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
 };
 
 const ruRUPickers: Partial<PickersLocaleText> = {
+  // Field section placeholders
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   // Calendar navigation
   previousMonth: 'Предыдущий месяц',
   nextMonth: 'Следующий месяц',
@@ -59,7 +62,6 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberHeaderLabel: 'Номер недели',
   calendarWeekNumberHeaderText: '№',
   calendarWeekNumberAriaLabelText: (weekNumber) => `Неделя ${weekNumber}`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
@@ -73,7 +75,6 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   timeTableLabel: 'выбрать время',
   dateTableLabel: 'выбрать дату',
 
-  // Field section placeholders
   fieldYearPlaceholder: (params) => 'Г'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'ММММ' : 'ММ'),
   fieldDayPlaceholder: () => 'ДД',

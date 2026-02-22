@@ -7,6 +7,7 @@ import {
   MuiPickersAdapter,
   PickersTimezone,
 } from '../models';
+import { BASE_ADAPTER_FORMATS } from '../baseAdapterFormats';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -55,30 +56,8 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
-  year: 'YYYY',
-  month: 'MMMM',
-  monthShort: 'MMM',
-  dayOfMonth: 'D',
-  dayOfMonthFull: 'Do',
-  weekday: 'dddd',
+  ...BASE_ADAPTER_FORMATS,
   weekdayShort: 'ddd',
-  hours24h: 'HH',
-  hours12h: 'hh',
-  meridiem: 'A',
-  minutes: 'mm',
-  seconds: 'ss',
-
-  fullDate: 'll',
-  keyboardDate: 'L',
-  shortDate: 'MMM D',
-  normalDate: 'D MMMM',
-  normalDateWithWeekday: 'ddd, MMM D',
-
-  fullTime12h: 'hh:mm A',
-  fullTime24h: 'HH:mm',
-
-  keyboardDateTime12h: 'L hh:mm A',
-  keyboardDateTime24h: 'L HH:mm',
 };
 
 const MISSING_TIMEZONE_PLUGIN = [

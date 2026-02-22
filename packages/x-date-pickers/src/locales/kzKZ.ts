@@ -1,6 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { DEFAULT_FIELD_PLACEHOLDERS } from './utils/defaultLocaleHelpers';
 
 // Translation map for Clock Label
 const timeViews: Record<TimeViewWithMeridiem, string> = {
@@ -11,6 +12,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
 };
 
 const kzKZPickers: Partial<PickersLocaleText> = {
+  ...DEFAULT_FIELD_PLACEHOLDERS,
   // Calendar navigation
   previousMonth: 'Алдыңғы ай',
   nextMonth: 'Келесі ай',
@@ -59,7 +61,6 @@ const kzKZPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberHeaderLabel: 'Апта нөмірі',
   calendarWeekNumberHeaderText: '№',
   calendarWeekNumberAriaLabelText: (weekNumber) => `Апта ${weekNumber}`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
