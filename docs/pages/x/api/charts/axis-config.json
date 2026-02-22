@@ -20,7 +20,7 @@
       }
     },
     "height": {
-      "type": { "description": "number" },
+      "type": { "description": "number | 'auto'" },
       "default": "45 if an axis label is provided, 25 otherwise."
     },
     "hideTooltip": { "type": { "description": "boolean" } },

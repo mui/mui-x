@@ -29,6 +29,10 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
+import {
+  selectorChartXAxisAutoSizes,
+  selectorChartYAxisAutoSizes,
+} from './useChartAxisAutoSize.selectors';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
 import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
 import { getNormalizedAxisScale, getRange } from './getAxisScale';
@@ -510,6 +514,7 @@ export const selectorChartXAxis = createSelectorMemoized(
   selectorChartZoomMap,
   selectorChartXAxisWithDomains,
   selectorChartXScales,
+  selectorChartXAxisAutoSizes,
 
   function selectorChartXAxis(
     drawingArea,
@@ -518,6 +523,7 @@ export const selectorChartXAxis = createSelectorMemoized(
     zoomMap,
     { axes, domains },
     scales,
+    autoSizes,
   ) {
     return computeAxisValue({
       scales,
@@ -528,6 +534,7 @@ export const selectorChartXAxis = createSelectorMemoized(
       axisDirection: 'x',
       zoomMap,
       domains,
+      autoSizes,
     });
   },
 );
@@ -539,6 +546,7 @@ export const selectorChartYAxis = createSelectorMemoized(
   selectorChartZoomMap,
   selectorChartYAxisWithDomains,
   selectorChartYScales,
+  selectorChartYAxisAutoSizes,
 
   function selectorChartYAxis(
     drawingArea,
@@ -547,6 +555,7 @@ export const selectorChartYAxis = createSelectorMemoized(
     zoomMap,
     { axes, domains },
     scales,
+    autoSizes,
   ) {
     return computeAxisValue({
       scales,
@@ -557,6 +566,7 @@ export const selectorChartYAxis = createSelectorMemoized(
       axisDirection: 'y',
       zoomMap,
       domains,
+      autoSizes,
     });
   },
 );

@@ -301,10 +301,32 @@ In the example below, the revenue axis label is styled with a teal color and the
 
 {{"demo": "AxisIdStyling.js"}}
 
+### Auto-sizing axes
+
+You can set the axis `height` (for x-axes) or `width` (for y-axes) to `'auto'` to automatically calculate the axis dimension based on the tick label measurements.
+This is useful when your tick labels have varying lengths or when you use rotated labels.
+
+{{"demo": "AxisAutoSize.js"}}
+
+Auto-sizing works well with rotated tick labels.
+In the demo below, adjust the angle slider to see how the axis height automatically adapts to accommodate the rotated labels.
+
+{{"demo": "AxisAutoSizeRotated.js"}}
+
+Auto-sizing also works with grouped axes.
+When an axis has `groups` defined, the auto-size calculation accounts for each group level's tick labels and tick sizes.
+
+{{"demo": "GroupedAxesAutoSize.js"}}
+
+:::info
+Auto-sizing is computed on the client side after hydration.
+During server-side rendering (SSR), the axis uses the default size until the client-side measurement is complete.
+:::
+
 ### Fixing tick label overflow issues
 
 When your tick labels are too long, they're clipped to avoid overflowing.
-To reduce clipping due to overflow, you can [apply an angle to the tick labels](/x/react-charts/axis/#text-customization) or [increase the axis size](/x/react-charts/styling/#placement) to accommodate them.
+To reduce clipping due to overflow, you can [apply an angle to the tick labels](/x/react-charts/axis/#text-customization), use [auto-sizing](/x/react-charts/axis/#auto-sizing-axes), or [increase the axis size](/x/react-charts/styling/#placement) to accommodate them.
 In the demo below, the size of the x- and y-axes is modified to increase the space available for tick labels.
 
 The first and last tick labels may bleed into the margin, and if that margin is not enough to display the label, it might be clipped.

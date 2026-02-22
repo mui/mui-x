@@ -9,6 +9,7 @@ import {
   type DefaultedXAxis,
   type DefaultedAxis,
   type CartesianChartSeriesType,
+  type AxisId,
   getAxisExtrema,
   isBandScaleConfig,
   isPointScaleConfig,
@@ -76,6 +77,7 @@ type ComputeCommonParams<T extends ChartSeriesType = 'funnel'> = {
   formattedSeries: ProcessedSeries<T>;
   seriesConfig: ChartSeriesConfig<T>;
   gap: number;
+  autoSizes?: Record<AxisId, number>;
 };
 
 export function computeAxisValue(
@@ -97,6 +99,7 @@ export function computeAxisValue({
   seriesConfig,
   axisDirection,
   gap,
+  autoSizes,
 }: ComputeCommonParams<'funnel'> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -140,13 +143,20 @@ export function computeAxisValue({
       const N = axis.data!.length;
       const bandWidth = (rangeSpace - gap * (N - 1)) / N;
       const step = bandWidth + gap;
+
+      // Get axis size, resolving 'auto' to computed value from autoSizes
+      const axisSize =
+        axisDirection === 'x' ? (axis as DefaultedXAxis).height : (axis as DefaultedYAxis).width;
+      const resolvedSize = axisSize === 'auto' ? (autoSizes?.[axis.id] ?? 0) : (axisSize ?? 0);
+
       completeAxis[axis.id] = {
         offset: 0,
-        height: 0,
         categoryGapRatio: 0,
         barGapRatio: 0,
         triggerTooltip,
         ...axis,
+        // Set height/width as a number (resolved from 'auto' if needed)
+        ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
         data,
         scale: scaleBand(axis.data!, scaleRange)
           .paddingInner(gap / step)
@@ -157,7 +167,7 @@ export function computeAxisValue({
           (axis.colorMap.type === 'ordinal'
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
             : getColorScale(axis.colorMap)),
-      };
+      } as ComputedAxisConfig<ChartsAxisProps>[string];
 
       if (isDateData(axis.data)) {
         const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
@@ -210,17 +220,23 @@ export function computeAxisValue({
       const [minDomain, maxDomain] = finalScale.domain();
       const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
+      // Get axis size, resolving 'auto' to computed value from autoSizes
+      const axisSize =
+        axisDirection === 'x' ? (axis as DefaultedXAxis).height : (axis as DefaultedYAxis).width;
+      const resolvedSize = axisSize === 'auto' ? (autoSizes?.[axis.id] ?? 0) : (axisSize ?? 0);
+
       completeAxis[axis.id] = {
         offset: 0,
-        height: 0,
         triggerTooltip,
         ...axis,
+        // Set height/width as a number (resolved from 'auto' if needed)
+        ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
         data,
         scaleType: scaleType as any,
         scale: finalScale.domain(domain) as any,
         tickNumber,
         colorScale: axis.colorMap && getColorScale(axis.colorMap),
-      };
+      } as ComputedAxisConfig<ChartsAxisProps>[string];
     }
   });
   return {

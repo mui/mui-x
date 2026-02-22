@@ -165,3 +165,10 @@ A linear scale is also available, and scales the sections based on their values.
 To do so, set the `scaleType` property to `linear` in the `categoryAxis`.
 
 {{"demo": "FunnelLinearScale.js"}}
+
+### Auto-sizing axis
+
+You can set the axis `size` to `'auto'` to automatically calculate the axis dimension based on tick label measurements.
+This is useful when your tick labels have varying lengths.
+
+{{"demo": "FunnelAxisAutoSize.js"}}

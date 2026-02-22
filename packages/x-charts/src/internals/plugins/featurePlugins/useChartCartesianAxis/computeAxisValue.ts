@@ -30,6 +30,11 @@ import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartS
 import { type ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
+import {
+  DEFAULT_AXIS_SIZE_HEIGHT,
+  DEFAULT_AXIS_SIZE_WIDTH,
+  AXIS_LABEL_DEFAULT_HEIGHT,
+} from '../../../../constants';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -56,6 +61,23 @@ function shouldIgnoreGapRatios(scale: ScaleBand<{ toString(): string }>, categor
   return paddingPx < 0.1;
 }
 
+function resolveAxisSize(
+  axis: DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>,
+  autoSizes: Record<AxisId, number> | undefined,
+  direction: 'x' | 'y',
+): number {
+  const size = direction === 'x' ? (axis as DefaultedXAxis).height : (axis as DefaultedYAxis).width;
+  if (size === 'auto') {
+    const autoSize = autoSizes?.[axis.id];
+    if (autoSize !== undefined) {
+      return autoSize;
+    }
+    const defaultSize = direction === 'x' ? DEFAULT_AXIS_SIZE_HEIGHT : DEFAULT_AXIS_SIZE_WIDTH;
+    return defaultSize + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
+  }
+  return size ?? 0;
+}
+
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
@@ -77,6 +99,7 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
       tickNumber?: number;
     }
   >;
+  autoSizes?: Record<AxisId, number>;
 };
 
 export function computeAxisValue<T extends ChartSeriesType>(
@@ -100,6 +123,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   axisDirection,
   zoomMap,
   domains,
+  autoSizes,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -130,11 +154,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);
     const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
+    const resolvedSize = resolveAxisSize(axis, autoSizes, axisDirection);
 
     const data = axis.data ?? [];
 
     if (isOrdinalScale(scale)) {
-      // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
 
       if (isBandScale(scale) && isBandScaleConfig(axis)) {
@@ -145,11 +169,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
         completeAxis[axis.id] = {
           offset: 0,
-          height: 0,
           categoryGapRatio,
           barGapRatio,
           triggerTooltip,
           ...axis,
+          ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
           data,
           /* Doing this here is technically wrong, but acceptable in practice.
            * In theory, this should be done in the normalized scale selector, but then we'd need that selector to depend
@@ -163,15 +187,15 @@ export function computeAxisValue<T extends ChartSeriesType>({
             (axis.colorMap.type === 'ordinal'
               ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
               : getColorScale(axis.colorMap)),
-        };
+        } as ComputedAxis<'band', any, ChartsAxisProps>;
       }
 
       if (isPointScaleConfig(axis)) {
         completeAxis[axis.id] = {
           offset: 0,
-          height: 0,
           triggerTooltip,
           ...axis,
+          ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
           data,
           scale,
           tickNumber,
@@ -180,7 +204,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
             (axis.colorMap.type === 'ordinal'
               ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
               : getColorScale(axis.colorMap)),
-        };
+        } as ComputedAxis<'point', any, ChartsAxisProps>;
       }
 
       if (isDateData(axis.data)) {
@@ -203,9 +227,10 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     completeAxis[axis.id] = {
       offset: 0,
-      height: 0,
       triggerTooltip,
       ...continuousAxis,
+      // Override height/width with resolved numeric value (in case 'auto' was set)
+      ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
       data,
       scaleType,
       scale,

@@ -32,32 +32,33 @@ export function defaultizeXAxis(
   const parsedAxes = inputAxes.map((axisConfig, index) => {
     const dataKey = axisConfig.dataKey;
 
-    // The first x-axis is defaultized to the bottom
     const defaultPosition = index === 0 ? 'bottom' : 'none';
     const position = axisConfig.position ?? defaultPosition;
     const defaultHeight =
       DEFAULT_AXIS_SIZE_HEIGHT + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
     const id = axisConfig.id ?? `defaultized-x-axis-${index}`;
+    const height: number | 'auto' =
+      axisConfig.height === 'auto' ? 'auto' : (axisConfig.height ?? defaultHeight);
     const sharedConfig = {
       offset: offsets[position],
       ...axisConfig,
       id,
       position,
-      height: axisConfig.height ?? defaultHeight,
+      height,
       zoom: defaultizeZoom(axisConfig.zoom, id, 'x', axisConfig.reverse),
     };
 
-    // Increment the offset for the next axis
+    // For 'auto' height, use default height as initial estimate
     if (position !== 'none') {
-      offsets[position] += sharedConfig.height + axesGap;
+      const heightForOffset = height === 'auto' ? defaultHeight : height;
+      offsets[position] += heightForOffset + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
         offsets[position] += sharedConfig.zoom.slider.size;
       }
     }
 
-    // If `dataKey` is NOT provided
     if (dataKey === undefined || axisConfig.data !== undefined) {
       return sharedConfig;
     }
@@ -66,7 +67,6 @@ export function defaultizeXAxis(
       throw new Error(`MUI X Charts: x-axis uses \`dataKey\` but no \`dataset\` is provided.`);
     }
 
-    // If `dataKey` is provided
     return {
       ...sharedConfig,
       data: dataset.map((d) => d[dataKey]),
@@ -93,32 +93,33 @@ export function defaultizeYAxis(
   const parsedAxes = inputAxes.map((axisConfig, index) => {
     const dataKey = axisConfig.dataKey;
 
-    // The first y-axis is defaultized to the left
     const defaultPosition = index === 0 ? 'left' : 'none';
     const position = axisConfig.position ?? defaultPosition;
     const defaultWidth =
       DEFAULT_AXIS_SIZE_WIDTH + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
     const id = axisConfig.id ?? `defaultized-y-axis-${index}`;
+    const width: number | 'auto' =
+      axisConfig.width === 'auto' ? 'auto' : (axisConfig.width ?? defaultWidth);
     const sharedConfig = {
       offset: offsets[position],
       ...axisConfig,
       id,
       position,
-      width: axisConfig.width ?? defaultWidth,
+      width,
       zoom: defaultizeZoom(axisConfig.zoom, id, 'y', axisConfig.reverse),
-    } satisfies DefaultedYAxis;
+    };
 
-    // Increment the offset for the next axis
+    // For 'auto' width, use default width as initial estimate
     if (position !== 'none') {
-      offsets[position] += sharedConfig.width + axesGap;
+      const widthForOffset = width === 'auto' ? defaultWidth : width;
+      offsets[position] += widthForOffset + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
         offsets[position] += sharedConfig.zoom.slider.size;
       }
     }
 
-    // If `dataKey` is NOT provided
     if (dataKey === undefined || axisConfig.data !== undefined) {
       return sharedConfig;
     }
@@ -127,7 +128,6 @@ export function defaultizeYAxis(
       throw new Error(`MUI X Charts: y-axis uses \`dataKey\` but no \`dataset\` is provided.`);
     }
 
-    // If `dataKey` is provided
     return {
       ...sharedConfig,
       data: dataset.map((d) => d[dataKey]),
