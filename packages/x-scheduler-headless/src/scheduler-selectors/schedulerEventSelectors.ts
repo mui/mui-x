@@ -10,13 +10,31 @@ const processedEventSelector = createSelector(
     eventId == null ? null : processedEventLookup.get(eventId),
 );
 
-const isEventReadOnlySelector = createSelector(
-  processedEventSelector,
-  (state: State) => state.readOnly,
-  (event, readOnly, _eventId: SchedulerEventId) => {
-    return !!event?.readOnly || readOnly;
-  },
-);
+const isEventReadOnlySelector = createSelector((state: State, eventId: SchedulerEventId) => {
+  const processedEvent = processedEventSelector(state, eventId);
+  if (!processedEvent) {
+    return false;
+  }
+
+  // If the `readOnly` property is defined on the event, it takes precedence
+  if (processedEvent.modelInBuiltInFormat?.readOnly !== undefined) {
+    return processedEvent.modelInBuiltInFormat.readOnly;
+  }
+
+  // Then check if the resource or any ancestor has the `areEventsReadOnly` property defined
+  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+  let currentResourceId = processedEvent.resource;
+  while (currentResourceId != null) {
+    const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
+    if (resource?.areEventsReadOnly !== undefined) {
+      return resource.areEventsReadOnly;
+    }
+    currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
+  }
+
+  // Otherwise, fall back to the component-level setting
+  return state.readOnly ?? false;
+});
 
 export const schedulerEventSelectors = {
   creationConfig: createSelectorMemoized(
