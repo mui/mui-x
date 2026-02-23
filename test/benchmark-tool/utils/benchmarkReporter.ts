@@ -3,6 +3,7 @@ import * as fs from 'node:fs/promises';
 import { $ } from 'execa';
 import type { Reporter, TestCase, TestResult } from '@playwright/test/reporter';
 import type { AggregatedResults, BenchmarkReport, BenchmarkResult } from '../ci-scripts/types';
+import { cyan, dim, fileUrl, green, red } from './log';
 
 function benchmarkNameFromFile(filePath: string): string {
   const parts = path.dirname(filePath).split('/app');
@@ -35,11 +36,6 @@ async function getCommitSha(): Promise<string | null> {
   }
 }
 
-const dim = (s: string) => `\x1b[2m${s}\x1b[0m`;
-const red = (s: string) => `\x1b[31m${s}\x1b[0m`;
-const green = (s: string) => `\x1b[32m${s}\x1b[0m`;
-const cyan = (s: string) => `\x1b[36m${s}\x1b[0m`;
-
 class BenchmarkReporter implements Reporter {
   private benchmarks: Record<string, BenchmarkResult> = {};
 
@@ -52,7 +48,7 @@ class BenchmarkReporter implements Reporter {
   onTestBegin(test: TestCase): void {
     // eslint-disable-next-line no-console
     console.log(
-      `\nRunning ${cyan(test.title)} ${dim(`(file://${test.location.file}:${test.location.line})`)}`,
+      `\nRunning ${cyan(test.title)} ${dim(`(${fileUrl(test.location.file)}:${test.location.line})`)}`,
     );
   }
 
@@ -127,7 +123,7 @@ class BenchmarkReporter implements Reporter {
     await fs.writeFile(outputPath, JSON.stringify(results, null, 2));
 
     // eslint-disable-next-line no-console
-    console.log(dim(`\nResults saved to file://${outputPath}`));
+    console.log(dim(`\nResults saved to ${fileUrl(outputPath)}`));
   }
 }
 
