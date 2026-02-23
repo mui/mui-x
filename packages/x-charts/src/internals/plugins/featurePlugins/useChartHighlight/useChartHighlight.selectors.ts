@@ -81,11 +81,11 @@ export const selectorChartsHighlightScope = createSelector(
 );
 const alwaysFalse = (): boolean => false;
 
-export const selectorChartsIsHighlightedCallback = createSelectorMemoized(
+const selectorChartsIsHighlightedCallbackImpl = createSelectorMemoized(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   selectorChartSeriesConfig,
-  function selectorChartsIsHighlightedCallback<SeriesType extends ChartSeriesType>(
+  function selectorChartsIsHighlightedCallbackCombiner<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
     highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
@@ -100,11 +100,23 @@ export const selectorChartsIsHighlightedCallback = createSelectorMemoized(
   },
 );
 
-export const selectorChartsIsFadedCallback = createSelectorMemoized(
+/**
+ * Returns a callback to test if an item is highlighted.
+ * Uses an explicit function declaration so that TypeScript preserves
+ * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
+ * allowing module augmentation from pro/premium packages to extend the accepted types.
+ */
+export function selectorChartsIsHighlightedCallback(
+  state: Parameters<typeof selectorChartsIsHighlightedCallbackImpl>[0],
+): (item: HighlightItemIdentifier<ChartSeriesType> | null) => boolean {
+  return selectorChartsIsHighlightedCallbackImpl(state);
+}
+
+const selectorChartsIsFadedCallbackImpl = createSelectorMemoized(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   selectorChartSeriesConfig,
-  function selectorChartsIsFadedCallback<SeriesType extends ChartSeriesType>(
+  function selectorChartsIsFadedCallbackCombiner<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
     highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
@@ -118,6 +130,18 @@ export const selectorChartsIsFadedCallback = createSelectorMemoized(
     );
   },
 );
+
+/**
+ * Returns a callback to test if an item is faded.
+ * Uses an explicit function declaration so that TypeScript preserves
+ * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
+ * allowing module augmentation from pro/premium packages to extend the accepted types.
+ */
+export function selectorChartsIsFadedCallback(
+  state: Parameters<typeof selectorChartsIsFadedCallbackImpl>[0],
+): (item: HighlightItemIdentifier<ChartSeriesType> | null) => boolean {
+  return selectorChartsIsFadedCallbackImpl(state);
+}
 
 const selectorChartsIsHighlightedImpl = createSelector(
   selectorChartsHighlightScope,
