@@ -123,17 +123,14 @@ export const selectorChartsIsFadedCallback = createSelectorMemoized(
   },
 );
 
-export const selectorChartsIsHighlighted = createSelector(
+const selectorChartsIsHighlightedImpl = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   selectorChartSeriesConfig,
-  function selectorChartsIsHighlighted<SeriesType extends ChartSeriesType>(
+  function selectorChartsIsHighlightedCombiner<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
     highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
-    /**
-     * The item to test if it's highlighted or not.
-     */
     item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
@@ -146,17 +143,27 @@ export const selectorChartsIsHighlighted = createSelector(
   },
 );
 
-export const selectorChartsIsFaded = createSelector(
+/**
+ * Test if an item is highlighted.
+ * Uses an explicit function declaration so that TypeScript preserves
+ * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
+ * allowing module augmentation from pro/premium packages to extend the accepted types.
+ */
+export function selectorChartsIsHighlighted(
+  state: Parameters<typeof selectorChartsIsHighlightedImpl>[0],
+  item: HighlightItemIdentifier<ChartSeriesType> | null,
+): boolean {
+  return selectorChartsIsHighlightedImpl(state, item);
+}
+
+const selectorChartsIsFadedImpl = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   selectorChartSeriesConfig,
-  function selectorChartsIsFaded<SeriesType extends ChartSeriesType>(
+  function selectorChartsIsFadedCombiner<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
     highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
-    /**
-     * The item to test if it's faded or not.
-     */
     item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
@@ -168,6 +175,19 @@ export const selectorChartsIsFaded = createSelector(
     )(item);
   },
 );
+
+/**
+ * Test if an item is faded.
+ * Uses an explicit function declaration so that TypeScript preserves
+ * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
+ * allowing module augmentation from pro/premium packages to extend the accepted types.
+ */
+export function selectorChartsIsFaded(
+  state: Parameters<typeof selectorChartsIsFadedImpl>[0],
+  item: HighlightItemIdentifier<ChartSeriesType> | null,
+): boolean {
+  return selectorChartsIsFadedImpl(state, item);
+}
 
 // ==========================================================================================
 //
