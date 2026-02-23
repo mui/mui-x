@@ -3,15 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { useStore } from '@base-ui/utils/store';
 import {
   useExtractEventTimelinePremiumParameters,
   useEventTimelinePremium,
 } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
-import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
 import {
@@ -31,7 +26,6 @@ import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledC
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
     root: ['root'],
-    headerToolbar: ['headerToolbar'],
     content: ['content'],
     grid: ['grid'],
     titleSubGridWrapper: ['titleSubGridWrapper'],
@@ -89,22 +83,16 @@ const EventTimelinePremiumRoot = styled('div', {
   // Months view uses per-day units instead of per-month, so each column width = days in month × 6px
   '--months-cell-width': '6px',
   '--years-cell-width': '200px',
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  padding: theme.spacing(2),
   gap: theme.spacing(2),
   height: '100%',
+  minHeight: 0,
+  overflow: 'hidden',
   fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
 }));
-
-const EventTimelinePremiumHeaderToolbar = styled('header', {
-  name: 'MuiEventTimeline',
-  slot: 'HeaderToolbar',
-})({
-  display: 'flex',
-  justifyContent: 'flex-start',
-});
 
 export const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   TEvent extends object,
@@ -123,13 +111,6 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   } = useExtractEventTimelinePremiumParameters<TEvent, TResource, typeof props>(props);
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
-
-  const view = useStore(store, eventTimelinePremiumViewSelectors.view);
-  const views = useStore(store, eventTimelinePremiumViewSelectors.views);
-
-  const handleViewChange = (event: SelectChangeEvent) => {
-    store.setView(event.target.value as EventTimelinePremiumView, event as Event);
-  };
 
   const { localeText, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
@@ -158,15 +139,6 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
             className={clsx(classes.root, className)}
             {...other}
           >
-            <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
-              <Select value={view} onChange={handleViewChange} size="small">
-                {views.map((viewItem) => (
-                  <MenuItem key={viewItem} value={viewItem}>
-                    {viewItem}
-                  </MenuItem>
-                ))}
-              </Select>
-            </EventTimelinePremiumHeaderToolbar>
             <EventTimelinePremiumContent />
           </EventTimelinePremiumRoot>
         </EventDialogStyledContext.Provider>

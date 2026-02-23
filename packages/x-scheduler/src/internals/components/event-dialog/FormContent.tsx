@@ -31,12 +31,10 @@ import EventDialogHeader from './EventDialogHeader';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 
-const FormActions = styled('div', {
+const FormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
 })(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
   padding: theme.spacing(3),
   gap: theme.spacing(2),
 }));
@@ -50,6 +48,9 @@ const DialogContent = styled(MuiDialogContent, {
   padding: 0,
   minWidth: 360,
   width: 450,
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
 });
 
 const EventDialogTitleTextField = styled(TextField, {
@@ -63,6 +64,16 @@ const EventDialogTitleTextField = styled(TextField, {
     fontWeight: theme.typography.h6.fontWeight,
   },
 }));
+
+const EventDialogForm = styled('form', {
+  name: 'MuiEventDialog',
+  slot: 'Form',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  minHeight: 0,
+});
 
 const EventDialogTabs = styled(Tabs, {
   name: 'MuiEventDialog',
@@ -104,6 +115,7 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.start,
   );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
@@ -157,7 +169,9 @@ export function FormContent(props: FormContentProps) {
     };
 
     let rruleToSubmit: RecurringEventRecurrenceRule | undefined;
-    if (controlled.recurrenceSelection === null) {
+    if (!showRecurrence) {
+      rruleToSubmit = undefined;
+    } else if (controlled.recurrenceSelection === null) {
       rruleToSubmit = undefined;
     } else if (controlled.recurrenceSelection === 'custom') {
       rruleToSubmit = controlled.rruleDraft;
@@ -172,7 +186,7 @@ export function FormContent(props: FormContentProps) {
         end,
         rrule: rruleToSubmit,
       });
-    } else if (occurrence.displayTimezone.rrule) {
+    } else if (showRecurrence && occurrence.displayTimezone.rrule) {
       const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
         store.state,
         occurrence.displayTimezone.rrule,
@@ -213,7 +227,7 @@ export function FormContent(props: FormContentProps) {
 
   return (
     <DialogContent className={classes.eventDialogContent}>
-      <form onSubmit={handleSubmit}>
+      <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
         <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
           <span
             id="event-dialog-title"
@@ -237,38 +251,40 @@ export function FormContent(props: FormContentProps) {
             size="small"
           />
         </EventDialogHeader>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <EventDialogTabs value={tabValue} onChange={handleTabChange}>
-            <Tab label={localeText.generalTabLabel} value="general" />
-            <Tab label={localeText.recurrenceTabLabel} value="recurrence" />
-          </EventDialogTabs>
-        </Box>
+        {showRecurrence && (
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <EventDialogTabs value={tabValue} onChange={handleTabChange}>
+              <Tab label={localeText.generalTabLabel} value="general" />
+              <Tab label={localeText.recurrenceTabLabel} value="recurrence" />
+            </EventDialogTabs>
+          </Box>
+        )}
         <GeneralTab
           occurrence={occurrence}
           errors={errors}
           setErrors={setErrors}
           controlled={controlled}
           setControlled={setControlled}
-          value={tabValue}
+          value={showRecurrence ? tabValue : 'general'}
         />
-        <RecurrenceTab
-          occurrence={occurrence}
-          controlled={controlled}
-          setControlled={setControlled}
-          value={tabValue}
-        />
+        {showRecurrence && (
+          <RecurrenceTab
+            occurrence={occurrence}
+            controlled={controlled}
+            setControlled={setControlled}
+            value={tabValue}
+          />
+        )}
         <Divider />
-        <DialogActions>
-          <FormActions className={classes.eventDialogFormActions}>
-            <Button color="error" type="button" onClick={handleDelete}>
-              {localeText.deleteEvent}
-            </Button>
-            <Button variant="contained" type="submit">
-              {localeText.saveChanges}
-            </Button>
-          </FormActions>
-        </DialogActions>
-      </form>
+        <FormActions className={classes.eventDialogFormActions}>
+          <Button color="error" type="button" onClick={handleDelete}>
+            {localeText.deleteEvent}
+          </Button>
+          <Button variant="contained" type="submit">
+            {localeText.saveChanges}
+          </Button>
+        </FormActions>
+      </EventDialogForm>
     </DialogContent>
   );
 }

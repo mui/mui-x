@@ -21,18 +21,22 @@ export interface EventDialogClasses {
   eventDialogResourceLegendColor: string;
   /** Styles applied to the event dialog resource title element. */
   eventDialogResourceTitle: string;
+  /** Styles applied to the event dialog paper element. */
+  eventDialogPaper: string;
+  /** Styles applied to the event dialog form element. */
+  eventDialogForm: string;
   /** Styles applied to the event dialog form actions element. */
   eventDialogFormActions: string;
   /** Styles applied to the event dialog content element. */
   eventDialogContent: string;
-  /** Styles applied to the event dialog general tab content element. */
-  eventDialogGeneralTabContent: string;
+  /** Styles applied to the event dialog tab panel element. */
+  eventDialogTabPanel: string;
+  /** Styles applied to the event dialog tab content element. */
+  eventDialogTabContent: string;
   /** Styles applied to the event dialog date time fields container element. */
   eventDialogDateTimeFieldsContainer: string;
   /** Styles applied to the event dialog date time fields row element. */
   eventDialogDateTimeFieldsRow: string;
-  /** Styles applied to the event dialog recurrence tab content element. */
-  eventDialogRecurrenceTabContent: string;
   /** Styles applied to the event dialog recurrence label container element in the readonly content. */
   eventDialogRecurrenceLabelContainer: string;
   /** Styles applied to the event dialog resource menu color dot element. */
@@ -55,12 +59,14 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogResourceLegendContainer',
   'eventDialogResourceLegendColor',
   'eventDialogResourceTitle',
+  'eventDialogPaper',
+  'eventDialogForm',
   'eventDialogFormActions',
   'eventDialogContent',
-  'eventDialogGeneralTabContent',
+  'eventDialogTabPanel',
+  'eventDialogTabContent',
   'eventDialogDateTimeFieldsContainer',
   'eventDialogDateTimeFieldsRow',
-  'eventDialogRecurrenceTabContent',
   'eventDialogResourceMenuColorDot',
   'eventDialogResourceMenuColorRadioButton',
   'eventDialogRecurrenceLabelContainer',
@@ -79,12 +85,14 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogResourceLegendContainer: ['eventDialogResourceLegendContainer'],
   eventDialogResourceLegendColor: ['eventDialogResourceLegendColor'],
   eventDialogResourceTitle: ['eventDialogResourceTitle'],
+  eventDialogPaper: ['eventDialogPaper'],
+  eventDialogForm: ['eventDialogForm'],
   eventDialogFormActions: ['eventDialogFormActions'],
   eventDialogContent: ['eventDialogContent'],
-  eventDialogGeneralTabContent: ['eventDialogGeneralTabContent'],
+  eventDialogTabPanel: ['eventDialogTabPanel'],
+  eventDialogTabContent: ['eventDialogTabContent'],
   eventDialogDateTimeFieldsContainer: ['eventDialogDateTimeFieldsContainer'],
   eventDialogDateTimeFieldsRow: ['eventDialogDateTimeFieldsRow'],
-  eventDialogRecurrenceTabContent: ['eventDialogRecurrenceTabContent'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
   eventDialogResourceMenuColorRadioButton: ['eventDialogResourceMenuColorRadioButton'],
   eventDialogRecurrenceLabelContainer: ['eventDialogRecurrenceLabelContainer'],
