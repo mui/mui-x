@@ -4,7 +4,7 @@ import {
   RecurringEventByDayValue,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
 } from '../../../models';
 
 const adapterCache = new WeakMap<
@@ -112,7 +112,7 @@ export function tokenizeByDay(byDay: RecurringEventByDayValue): {
  * @throws if any ordinal is present (e.g. 1MO, -1FR).
  */
 export function parsesByDayForWeeklyFrequency(
-  ruleByDay: RecurringEventRecurrenceRule['byDay'] | undefined,
+  ruleByDay: SchedulerProcessedEventRecurrenceRule['byDay'] | undefined,
 ): RecurringEventWeekDayCode[] | null {
   if (!ruleByDay?.length) {
     return null;
@@ -222,7 +222,7 @@ const GET_REMAINING_OCCURRENCES_METHOD_LOOKUP = {
  */
 export function getRemainingOccurrences(
   adapter: Adapter,
-  rule: RecurringEventRecurrenceRule,
+  rule: SchedulerProcessedEventRecurrenceRule,
   seriesStart: TemporalSupportedObject,
   date: TemporalSupportedObject,
   count: number,
@@ -244,7 +244,7 @@ export function getRemainingOccurrences(
 
 interface GetRemainingOccurrencesParameters {
   adapter: Adapter;
-  rule: RecurringEventRecurrenceRule;
+  rule: SchedulerProcessedEventRecurrenceRule;
   /**
    * The series start date (DTSTART).
    * This is normalized to startOfDay internally.

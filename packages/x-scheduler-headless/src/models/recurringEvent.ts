@@ -43,7 +43,7 @@ export type RecurringEventByDayValue =
  * This is a subset of the RFC 5545 RRULE specification that only contains the properties supported by the Event Calendar and the Event Timeline Premium components.
  * (read the full specification for more information: https://datatracker.ietf.org/doc/html/rfc5545).
  */
-export interface RecurringEventRecurrenceRule {
+export interface SchedulerProcessedEventRecurrenceRule {
   /**
    * Base frequency of the rule.
    * Corresponds to the FREQ property of the string-based RRULE.
@@ -90,9 +90,9 @@ export interface RecurringEventRecurrenceRule {
 
 /**
  * User-facing recurrence rule type used in `SchedulerEvent`.
- * Same as `RecurringEventRecurrenceRule` but with `until` as a `string`.
+ * Same as `SchedulerProcessedEventRecurrenceRule` but with `until` as a `string`.
  */
-export type SchedulerEventRecurrenceRule = Omit<RecurringEventRecurrenceRule, 'until'> & {
+export type SchedulerEventRecurrenceRule = Omit<SchedulerProcessedEventRecurrenceRule, 'until'> & {
   /**
    * A date time value that bounds the recurrence rule in an inclusive manner.
    * Same string semantics as `SchedulerEvent.start` / `end`.
