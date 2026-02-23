@@ -19,10 +19,11 @@ import {
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
+import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartsInteractionAxisTooltip,
-  type UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+  selectorChartsTooltipAxisPosition,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianTooltip.selectors';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
@@ -51,6 +52,23 @@ function getIsOpenSelector(
   }
   return selectorReturnFalse;
 }
+
+const defaultAnchorByTrigger = {
+  item: 'node',
+  axis: 'chart',
+  none: 'pointer',
+} as const;
+
+const getPositionSelectorByAnchor = (anchor: 'pointer' | 'node' | 'chart') => {
+  switch (anchor) {
+    case 'node':
+      return selectorChartsTooltipItemPosition;
+    case 'chart':
+      return selectorChartsTooltipAxisPosition;
+    default:
+      return selectorReturnNull;
+  }
+};
 
 type PopperSlots = NonNullable<PopperProps['slots']>;
 
@@ -91,7 +109,11 @@ export interface ChartsTooltipContainerProps<
    * Determine if the tooltip should be placed on the pointer location or on the node.
    * @default 'pointer'
    */
-  anchor?: 'pointer' | 'node';
+  anchor?: T extends 'item'
+    ? 'pointer' | 'node'
+    : T extends 'axis'
+      ? 'pointer' | 'chart'
+      : 'pointer';
   /**
    * Determines the tooltip position relatively to the anchor.
    */
@@ -149,14 +171,11 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const isOpen = store.use(getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush));
 
   const lastInteraction = store.use(selectorChartsLastInteraction);
-  const computedAnchor = lastInteraction === 'keyboard' || pointerType === null ? 'node' : anchor;
 
-  const itemPosition = store.use(
-    trigger === 'item' && computedAnchor === 'node'
-      ? selectorChartsTooltipItemPosition
-      : selectorReturnNull,
-    position,
-  );
+  const pointerAnchorUnavailable = lastInteraction === 'keyboard' || pointerType === null;
+  const computedAnchor = pointerAnchorUnavailable ? defaultAnchorByTrigger[trigger] : anchor;
+
+  const itemPosition = store.use(getPositionSelectorByAnchor(computedAnchor), props.position);
 
   const isTooltipNodeAnchored = itemPosition !== null;
 

@@ -1,7 +1,7 @@
 import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesConfig } from './types/seriesConfig.types';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type SeriesItemIdentifier } from '../../../../models/seriesType';
+import { type SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 
 export interface UseChartSeriesConfigParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -28,7 +28,7 @@ export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
 
 export type CleanIdentifierFunction = <T extends { type: ChartSeriesType }>(
   identifier: T,
-) => SeriesItemIdentifier<T['type']>;
+) => SeriesItemIdentifierWithType<T['type']>;
 
 export interface UseChartSeriesConfigInstance {
   /**

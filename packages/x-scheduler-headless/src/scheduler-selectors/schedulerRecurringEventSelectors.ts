@@ -53,12 +53,14 @@ export const schedulerRecurringEventSelectors = {
    */
   defaultPresetKey: createSelectorMemoized(
     (state: State) => state.adapter,
+    (state: State) => state.plan,
     (
       adapter,
+      plan,
       rule: RecurringEventRecurrenceRule | undefined,
       occurrenceStart: SchedulerProcessedDate,
     ): RecurringEventPresetKey | 'custom' | null => {
-      if (!rule) {
+      if (plan !== 'premium' || !rule) {
         return null;
       }
 

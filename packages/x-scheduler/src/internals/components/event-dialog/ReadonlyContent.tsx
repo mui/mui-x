@@ -9,16 +9,16 @@ import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/mo
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
+  schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import EventDialogHeader from './EventDialogHeader';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
-import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const ReadonlyContentDragContainer = styled('section', {
   name: 'MuiEventDialog',
@@ -125,9 +125,8 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   // Context hooks
   const adapter = useAdapter();
-  const translations = useTranslations();
+  const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
-  const classes = useEventDialogClasses();
 
   // Selector hooks
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
@@ -142,6 +141,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     occurrence.displayTimezone.rrule,
     occurrence.displayTimezone.start,
   );
+  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   // Feature hook
   const formatTime = useFormatTime();
@@ -149,7 +149,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     adapter,
     occurrence.displayTimezone.start,
     defaultRecurrenceKey,
-    translations,
+    localeText,
   );
 
   return (
@@ -181,7 +181,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             />
           </EventDialogResourceLegendContainer>
           <EventDialogResourceTitle className={classes.eventDialogResourceTitle}>
-            {resource?.title || translations.noResourceAriaLabel}
+            {resource?.title || localeText.noResourceAriaLabel}
           </EventDialogResourceTitle>
         </EventDialogResourceContainer>
         <EventDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
@@ -202,7 +202,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
               </span>
             </time>
             {occurrence.allDay ? (
-              <span> {translations.allDayLabel}</span>
+              <span> {localeText.allDayLabel}</span>
             ) : (
               <time>
                 <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
@@ -211,19 +211,21 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             )}
           </Typography>
         </EventDialogDateTimeContainer>
-        <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
-          <RepeatRoundedIcon fontSize="small" />
-          <Typography variant="body2" color="text.secondary" component="em">
-            {recurrenceLabel}
-          </Typography>
-        </RecurrenceLabelContainer>
+        {showRecurrence && (
+          <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
+            <RepeatRoundedIcon fontSize="small" />
+            <Typography variant="body2" color="text.secondary" component="em">
+              {recurrenceLabel}
+            </Typography>
+          </RecurrenceLabelContainer>
+        )}
         {hasProp(occurrence, 'description') && !!occurrence.description ? (
           <Typography variant="body2">{occurrence.description}</Typography>
         ) : null}
       </ReadonlyContentRoot>
       <EventDialogActions className={classes.eventDialogActions}>
         <Button variant="contained" type="button" onClick={onClose}>
-          {translations.closeButtonLabel}
+          {localeText.closeButtonLabel}
         </Button>
       </EventDialogActions>
     </ReadonlyContentDragContainer>

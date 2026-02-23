@@ -8,7 +8,7 @@ import {
   TemporalTimezone,
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { SchedulerTranslations } from '../../../models';
+import { EventDialogLocaleText } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 export interface ControlledValue {
@@ -83,31 +83,31 @@ export function getRecurrenceLabel(
   adapter: Adapter,
   start: SchedulerProcessedDate,
   recurrenceKey: string | null,
-  translations: SchedulerTranslations,
+  localeText: EventDialogLocaleText,
 ): string {
   if (!recurrenceKey) {
-    return translations.recurrenceNoRepeat;
+    return localeText.recurrenceNoRepeat;
   }
 
   switch (recurrenceKey) {
     case 'daily':
-      return translations.recurrenceDailyPresetLabel;
+      return localeText.recurrenceDailyPresetLabel;
     case 'weekly': {
       const weekday = adapter.format(start.value, 'weekday');
-      return translations.recurrenceWeeklyPresetLabel(weekday);
+      return localeText.recurrenceWeeklyPresetLabel(weekday);
     }
     case 'monthly': {
       const date = adapter.getDate(start.value);
-      return translations.recurrenceMonthlyPresetLabel(date);
+      return localeText.recurrenceMonthlyPresetLabel(date);
     }
     case 'yearly': {
       const normalDate = formatDayOfMonthAndMonthFullLetter(start.value, adapter);
-      return translations.recurrenceYearlyPresetLabel(normalDate);
+      return localeText.recurrenceYearlyPresetLabel(normalDate);
     }
     case 'custom':
-      return translations.recurrenceCustomRepeat;
+      return localeText.recurrenceCustomRepeat;
     default:
-      return translations.recurrenceNoRepeat;
+      return localeText.recurrenceNoRepeat;
   }
 }
 

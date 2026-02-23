@@ -17,11 +17,11 @@ describe('FunnelChart', () => {
     <FunnelChart height={100} width={100} series={[{ data: [{ value: 100 }, { value: 50 }] }]} />,
     () => ({
       classes: {} as any,
-      inheritComponent: 'svg',
+      inheritComponent: 'div',
       render,
       muiName: 'MuiFunnelChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.SVGSVGElement,
+      refInstanceof: window.HTMLDivElement,
       skip: [
         'componentProp',
         'componentsProp',

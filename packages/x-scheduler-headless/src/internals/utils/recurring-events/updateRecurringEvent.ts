@@ -5,15 +5,15 @@ import {
   RecurringEventUpdateScope,
   RecurringEventWeekDayCode,
   SchedulerEvent,
+  SchedulerEventCreationProperties,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '../../../models';
 import type { UpdateEventsParameters } from '../SchedulerStore';
-import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
+import { dateToEventString, getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
   getRemainingOccurrences,
-  getAdapterCache,
   getWeekDayCode,
   NOT_LOCALIZED_WEEK_DAYS,
   parsesByDayForWeeklyFrequency,
@@ -62,7 +62,7 @@ export function applyRecurringUpdateFollowing(
   occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const newStart = changes.start ?? originalEvent.dataTimezone.start.value;
+  const newStart = changes.start ?? occurrenceStart;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
@@ -81,9 +81,28 @@ export function applyRecurringUpdateFollowing(
   );
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
+  const originalModel = originalEvent.modelInBuiltInFormat;
+  const dataTimezone = originalModel.timezone ?? 'default';
+  const stringified: Record<string, any> = { ...changes };
+  // When start/end are not explicitly changed, the new series must start at the occurrence
+  // date (not at DTSTART), otherwise the split series and the truncated original would overlap.
+  stringified.start = dateToEventString(adapter, newStart, originalModel.start, dataTimezone);
+  const occurrenceEnd = getOccurrenceEnd({ adapter, event: originalEvent, occurrenceStart });
+  const effectiveEnd = changes.end ?? occurrenceEnd;
+  stringified.end = dateToEventString(adapter, effectiveEnd, originalModel.end, dataTimezone);
+  if (changes.exDates != null) {
+    stringified.exDates = changes.exDates.map((d, i) => {
+      const originalExDate = originalModel.exDates?.[i];
+      if (originalExDate) {
+        return dateToEventString(adapter, d, originalExDate, dataTimezone);
+      }
+      return dateToEventString(adapter, d, originalModel.start, dataTimezone);
+    });
+  }
+
   const newEvent: SchedulerEvent = {
     ...originalEvent.modelInBuiltInFormat,
-    ...changes,
+    ...stringified,
     id: newEventId,
     rrule: newRRule,
     extractedFromId: originalEvent.modelInBuiltInFormat.id,
@@ -181,8 +200,14 @@ export function applyRecurringUpdateAll(
     }
   }
 
-  // 4) RRULE adjustment: only if day changed and the event is recurring
-  if ((touchedStartDate || touchedEndDate) && originalEvent.dataTimezone.rrule) {
+  // 4) RRULE adjustment: only if day changed, the event is recurring, and the user did not
+  // provide an explicit rrule (same hasOwnProperty guard used in decideSplitRRule).
+  const hasExplicitRRule = Object.prototype.hasOwnProperty.call(changes, 'rrule');
+  if (
+    (touchedStartDate || touchedEndDate) &&
+    originalEvent.dataTimezone.rrule &&
+    !hasExplicitRRule
+  ) {
     const newOccurrenceStart = changes.start ?? occurrenceStart;
     eventUpdatedProperties.rrule = adjustRRuleForAllMove(
       adapter,
@@ -210,8 +235,28 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const originalModel = originalEvent.modelInBuiltInFormat;
+  const dataTimezone = originalModel.timezone ?? 'default';
+  const stringifiedChanges: Partial<SchedulerEventCreationProperties> = { ...changes };
+  if (changes.start != null) {
+    stringifiedChanges.start = dateToEventString(
+      adapter,
+      changes.start,
+      originalModel.start,
+      dataTimezone,
+    );
+  }
+  if (changes.end != null) {
+    stringifiedChanges.end = dateToEventString(
+      adapter,
+      changes.end,
+      originalModel.end,
+      dataTimezone,
+    );
+  }
+
   return {
-    created: [createEventFromRecurringEvent(originalEvent, changes)],
+    created: [createEventFromRecurringEvent(originalEvent, stringifiedChanges)],
     updated: [
       {
         id: originalEvent.id,
@@ -286,7 +331,7 @@ export function decideSplitRRule(
   originalRule: RecurringEventRecurrenceRule,
   originalSeriesStart: TemporalSupportedObject,
   splitStart: TemporalSupportedObject,
-  changes: Partial<SchedulerEvent>,
+  changes: Partial<SchedulerEventUpdatedProperties>,
 ): RecurringEventRecurrenceRule | undefined {
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
@@ -372,11 +417,12 @@ export function realignWeeklyByDay(
   }
 
   const weekDayCodesSet = new Set(weekDayCodes);
-  const mondayWeekDayNumber = getAdapterCache(adapter).mondayWeekDayNumber;
 
+  // Iterate in canonical RFC 5545 order (MO → SU), independent of locale.
+  // NOT_LOCALIZED_WEEK_DAYS is already in canonical order, so no offset is needed.
   const newWeekDayCodes: RecurringEventWeekDayCode[] = [];
   for (let i = 0; i < NOT_LOCALIZED_WEEK_DAYS.length; i += 1) {
-    const code = NOT_LOCALIZED_WEEK_DAYS[(i + mondayWeekDayNumber - 1) % 7];
+    const code = NOT_LOCALIZED_WEEK_DAYS[i];
 
     let shouldAddCode: boolean;
     // Only add the newCode if the oldCode was present

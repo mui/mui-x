@@ -1,11 +1,8 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import useEventCallback from '@mui/utils/useEventCallback';
-import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -102,72 +99,15 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
-    const isLocked = React.useRef(false);
-    const lastPosition = React.useRef(0);
-    const scrollbarRef = React.useRef<HTMLDivElement>(null);
     const classes = useUtilityClasses(rootProps, props.position);
     const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
-    const propertyScroll = props.position === 'vertical' ? 'scrollTop' : 'scrollLeft';
-    const propertyScrollPosition = props.position === 'vertical' ? 'top' : 'left';
 
     const scrollbarInnerSize =
       props.position === 'horizontal'
         ? dimensions.minimumSize.width
         : dimensions.minimumSize.height - dimensions.headersTotalHeight;
-
-    const onScrollerScroll = useEventCallback(() => {
-      const scrollbar = scrollbarRef.current;
-      const scrollPosition = props.scrollPosition.current;
-
-      if (!scrollbar) {
-        return;
-      }
-
-      if (scrollPosition[propertyScrollPosition] === lastPosition.current) {
-        return;
-      }
-
-      lastPosition.current = scrollPosition[propertyScrollPosition];
-
-      if (isLocked.current) {
-        isLocked.current = false;
-        return;
-      }
-      isLocked.current = true;
-
-      scrollbar[propertyScroll] = props.scrollPosition.current[propertyScrollPosition];
-    });
-
-    const onScrollbarScroll = useEventCallback(() => {
-      const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current;
-
-      if (!scrollbar) {
-        return;
-      }
-
-      if (isLocked.current) {
-        isLocked.current = false;
-        return;
-      }
-      isLocked.current = true;
-
-      scroller[propertyScroll] = scrollbar[propertyScroll];
-    });
-
-    useOnMount(() => {
-      const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current!;
-      const options: AddEventListenerOptions = { passive: true };
-      scroller.addEventListener('scroll', onScrollerScroll, options);
-      scrollbar.addEventListener('scroll', onScrollbarScroll, options);
-      return () => {
-        scroller.removeEventListener('scroll', onScrollerScroll, options);
-        scrollbar.removeEventListener('scroll', onScrollbarScroll, options);
-      };
-    });
 
     const Container = props.position === 'vertical' ? ScrollbarVertical : ScrollbarHorizontal;
 
@@ -180,7 +120,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
 
     return (
       <Container
-        ref={useForkRef(ref, scrollbarRef)}
+        ref={ref}
         className={classes.root}
         tabIndex={-1}
         aria-hidden="true"

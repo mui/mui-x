@@ -80,6 +80,7 @@ type ColumnsPlugin = Plugin<
 
 const columnsPlugin = createPlugin<ColumnsPlugin>()({
   name: 'columns',
+  order: 20,
   selectors: columnsSelectors,
   initialize: (state, params) => {
     const initialStateColumns = params.initialState?.columns;

@@ -3,8 +3,9 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { EventCalendarProvider as HeadlessEventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
-import { EventCalendarClassesContext } from '../../event-calendar/EventCalendarClassesContext';
-import { EventDialogClassesContext } from './event-dialog/EventDialogClassesContext';
+import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
+import { EventDialogStyledContext } from './event-dialog/EventDialogStyledContext';
+import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../constants/defaultLocaleText';
 import { schedulerTokens } from '../utils/tokens';
 
 /**
@@ -20,6 +21,15 @@ const StandaloneViewRoot = styled('div', {
   fontFamily: theme.typography.fontFamily,
 }));
 
+const calendarStyledValue = {
+  classes: eventCalendarClasses,
+  localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+};
+const dialogStyledValue = {
+  classes: eventCalendarClasses,
+  localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+};
+
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(
   props: HeadlessEventCalendarProvider.Props<TEvent, TResource>,
 ) {
@@ -27,11 +37,11 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
 
   return (
     <HeadlessEventCalendarProvider {...other}>
-      <EventCalendarClassesContext.Provider value={eventCalendarClasses}>
-        <EventDialogClassesContext.Provider value={eventCalendarClasses}>
+      <EventCalendarStyledContext.Provider value={calendarStyledValue}>
+        <EventDialogStyledContext.Provider value={dialogStyledValue}>
           <StandaloneViewRoot>{children}</StandaloneViewRoot>
-        </EventDialogClassesContext.Provider>
-      </EventCalendarClassesContext.Provider>
+        </EventDialogStyledContext.Provider>
+      </EventCalendarStyledContext.Provider>
     </HeadlessEventCalendarProvider>
   );
 }
