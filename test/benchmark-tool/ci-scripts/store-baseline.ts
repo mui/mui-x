@@ -25,13 +25,14 @@ async function pushWithRetry(
   dryRunFlag: string[],
   maxRetries: number = MAX_PUSH_RETRIES,
 ): Promise<void> {
-  for (let i = 1; i <= maxRetries; i++) {
+  for (let i = 1; i <= maxRetries; i += 1) {
     try {
+      // eslint-disable-next-line no-await-in-loop
       await $data`git push ${dryRunFlag} origin test-results`;
       return;
     } catch {
-       
       console.error(`Push failed (attempt ${i}), pulling with rebase and retrying...`);
+      // eslint-disable-next-line no-await-in-loop
       await $data`git pull --rebase origin test-results`;
     }
   }
@@ -79,7 +80,7 @@ async function main() {
   const monthlyDir = path.join(dataRepoDir, 'benchmarks/monthly');
   await fs.mkdir(monthlyDir, { recursive: true });
   const jsonlEntry = JSON.stringify(results);
-  await fs.appendFile(path.join(monthlyDir, `${month}.jsonl`), `${jsonlEntry  }\n`);
+  await fs.appendFile(path.join(monthlyDir, `${month}.jsonl`), `${jsonlEntry}\n`);
 
   // Commit and push
   const $data = $({ cwd: dataRepoDir });

@@ -1,9 +1,10 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fetchMasterMetrics } from './fetchMasterMetrics';
 import { generateComparisonBody } from './generateComparisonBody';
 import { readPrMetrics } from './readPrMetrics';
 import type { AggregatedResults } from './types';
+
+const DATA_REPO_BASE = 'https://raw.githubusercontent.com/mui/mui-x/test-results/benchmarks';
 
 const COMMENT_MARKER = '## Performance Comparison';
 
@@ -44,6 +45,26 @@ async function postOrUpdateComment(prNumber: number, body: string): Promise<void
   }
 }
 
+async function fetchMasterMetrics(baseSha?: string): Promise<Record<string, number>> {
+  if (!baseSha) {
+    return {};
+  }
+
+  const url = `${DATA_REPO_BASE}/commits/${baseSha}/results.json`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    return {};
+  }
+
+  const { benchmarks } = (await response.json()) as AggregatedResults;
+  const metrics: Record<string, number> = {};
+  for (const [name, benchmark] of Object.entries(benchmarks)) {
+    metrics[name] = benchmark.duration;
+  }
+  return metrics;
+}
+
 async function main() {
   const benchmarksDir = process.env.BENCHMARKS_DIR || './benchmarks';
   const failThreshold = parseFloat(process.env.FAIL_THRESHOLD || '5');
@@ -74,7 +95,7 @@ async function main() {
 
   if (failedBenchmarks.length > 0) {
     const names = failedBenchmarks.map((b) => b.name).join(', ');
-     
+
     console.error(
       `Performance regression detected: ${names} exceeded the ${failThreshold}% threshold`,
     );
