@@ -106,9 +106,9 @@ const selectorChartsIsHighlightedCallbackImpl = createSelectorMemoized(
  * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
  * allowing module augmentation from pro/premium packages to extend the accepted types.
  */
-export function selectorChartsIsHighlightedCallback(
+export function selectorChartsIsHighlightedCallback<SeriesType extends ChartSeriesType>(
   state: Parameters<typeof selectorChartsIsHighlightedCallbackImpl>[0],
-): (item: HighlightItemIdentifier<ChartSeriesType> | null) => boolean {
+): (item: HighlightItemIdentifier<SeriesType> | null) => boolean {
   return selectorChartsIsHighlightedCallbackImpl(state);
 }
 
@@ -137,9 +137,9 @@ const selectorChartsIsFadedCallbackImpl = createSelectorMemoized(
  * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
  * allowing module augmentation from pro/premium packages to extend the accepted types.
  */
-export function selectorChartsIsFadedCallback(
+export function selectorChartsIsFadedCallback<SeriesType extends ChartSeriesType>(
   state: Parameters<typeof selectorChartsIsFadedCallbackImpl>[0],
-): (item: HighlightItemIdentifier<ChartSeriesType> | null) => boolean {
+): (item: HighlightItemIdentifier<SeriesType> | null) => boolean {
   return selectorChartsIsFadedCallbackImpl(state);
 }
 
@@ -169,9 +169,9 @@ const selectorChartsIsHighlightedImpl = createSelector(
  * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
  * allowing module augmentation from pro/premium packages to extend the accepted types.
  */
-export function selectorChartsIsHighlighted(
+export function selectorChartsIsHighlighted<SeriesType extends ChartSeriesType>(
   state: Parameters<typeof selectorChartsIsHighlightedImpl>[0],
-  item: HighlightItemIdentifier<ChartSeriesType> | null,
+  item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
 ): boolean {
   return selectorChartsIsHighlightedImpl(state, item);
 }
@@ -202,9 +202,9 @@ const selectorChartsIsFadedImpl = createSelector(
  * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
  * allowing module augmentation from pro/premium packages to extend the accepted types.
  */
-export function selectorChartsIsFaded(
+export function selectorChartsIsFaded<SeriesType extends ChartSeriesType>(
   state: Parameters<typeof selectorChartsIsFadedImpl>[0],
-  item: HighlightItemIdentifier<ChartSeriesType> | null,
+  item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
 ): boolean {
   return selectorChartsIsFadedImpl(state, item);
 }
