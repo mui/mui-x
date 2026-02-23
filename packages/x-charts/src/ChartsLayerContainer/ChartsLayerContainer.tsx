@@ -21,6 +21,7 @@ const ChartsLayerContainerDiv = styled('div', {
 })<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
+  aspectRatio: '1 / 1',
   display: 'flex',
   position: 'relative',
   flexDirection: 'column',
