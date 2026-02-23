@@ -89,9 +89,7 @@ export const selectorChartsIsHighlightedCallback = createSelectorMemoized(
     highlightScope: HighlightScope<SeriesType> | null,
     highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
-  ): <TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
-    item: HighlightItemIdentifier<TestedSeriesType> | null,
-  ) => boolean {
+  ) {
     if (highlightedItem === null || highlightScope === null) {
       return alwaysFalse;
     }
@@ -110,9 +108,7 @@ export const selectorChartsIsFadedCallback = createSelectorMemoized(
     highlightScope: HighlightScope<SeriesType> | null,
     highlightedItem: HighlightItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
-  ): <TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
-    item: HighlightItemIdentifier<TestedSeriesType> | null,
-  ) => boolean {
+  ) {
     if (highlightedItem === null || highlightScope === null) {
       return alwaysFalse;
     }

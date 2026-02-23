@@ -102,5 +102,3 @@ export * from './constants';
 export * from './scales';
 export * from './identifierSerializer';
 export * from './identifierCleaner';
-
-export { type HighlightCreator } from './plugins/featurePlugins/useChartHighlight/highlightCreator.types';

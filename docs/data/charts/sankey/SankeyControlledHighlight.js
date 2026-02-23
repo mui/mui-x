@@ -8,6 +8,7 @@ import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyCha
 
 export default function SankeyControlledHighlight() {
   const [highlightedItem, setHighlightedItem] = React.useState({
+    type: 'sankey',
     seriesId: 'series-id',
     subType: 'node',
     nodeId: 'A',
@@ -26,6 +27,7 @@ export default function SankeyControlledHighlight() {
     if (newValue.startsWith('node-')) {
       const nodeId = newValue.replace('node-', '');
       setHighlightedItem({
+        type: 'sankey',
         seriesId: 'series-id',
         subType: 'node',
         nodeId,
@@ -33,6 +35,7 @@ export default function SankeyControlledHighlight() {
     } else if (newValue.startsWith('link-')) {
       const [source, target] = newValue.replace('link-', '').split('-');
       setHighlightedItem({
+        type: 'sankey',
         seriesId: 'series-id',
         subType: 'link',
         sourceId: source,

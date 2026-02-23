@@ -1,18 +1,14 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import type { SeriesId, UseChartHighlightSignature } from '@mui/x-charts/internals';
+import type { SeriesId } from '@mui/x-charts/internals';
 import {
   selectorChartsIsFaded,
   selectorChartsIsHighlighted,
   useInteractionItemProps,
   useStore,
 } from '@mui/x-charts/internals';
-import type {
-  SankeyItemIdentifier,
-  SankeyLayoutLink,
-  SankeyLinkIdentifierWithData,
-} from './sankey.types';
+import type { SankeyLayoutLink, SankeyLinkIdentifierWithData } from './sankey.types';
 
 export interface SankeyLinkElementProps {
   /**
@@ -44,7 +40,7 @@ export interface SankeyLinkElementProps {
 export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElementProps>(
   function SankeyLinkElement(props, ref) {
     const { link, opacity = 0.4, onClick, seriesId } = props;
-    const store = useStore<[UseChartHighlightSignature<'sankey'>]>();
+    const store = useStore();
 
     const identifier: SankeyLinkIdentifierWithData = {
       type: 'sankey',
@@ -55,20 +51,11 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
       link,
     };
 
-    const isHighlighted = store.use(
-      selectorChartsIsHighlighted as unknown as (
-        state: any,
-        identifier: SankeyItemIdentifier,
-      ) => boolean,
-      identifier,
-    );
-    const isFaded = store.use(
-      selectorChartsIsFaded as unknown as (state: any, identifier: SankeyItemIdentifier) => boolean,
-      identifier,
-    );
+    const isHighlighted = store.use(selectorChartsIsHighlighted, identifier);
+    const isFaded = store.use(selectorChartsIsFaded, identifier);
 
     // Add interaction props for tooltips
-    const interactionProps = useInteractionItemProps<'sankey'>(identifier);
+    const interactionProps = useInteractionItemProps(identifier);
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGPathElement>) => {
       onClick?.(event, identifier);

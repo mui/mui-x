@@ -6,7 +6,6 @@ import {
   selectorChartsIsHighlightedCallback,
   useStore,
   useRegisterPointerInteractions,
-  type HighlightCreator,
 } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks';
 import { HeatmapItem } from './HeatmapItem';
@@ -24,11 +23,8 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   const colorScale = useZColorScale()!;
   const series = useHeatmapSeriesContext();
 
-  const isHighlighted: ReturnType<HighlightCreator<'heatmap'>> = store.use(
-    selectorChartsIsHighlightedCallback,
-  );
-
-  const isFaded: ReturnType<HighlightCreator<'heatmap'>> = store.use(selectorChartsIsFadedCallback);
+  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
+  const isFaded = store.use(selectorChartsIsFadedCallback);
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();
