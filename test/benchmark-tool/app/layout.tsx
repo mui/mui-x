@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { Metadata } from 'next';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
-import { ClientSideProfiler } from '../utils/Profiler';
+import { Profiler } from '../utils/Profiler';
 
 export const metadata: Metadata = {
   title: 'MUI X Benchmark Tool',
@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AppRouterCacheProvider>
-          <ClientSideProfiler>{children}</ClientSideProfiler>
+          <Profiler>{children}</Profiler>
         </AppRouterCacheProvider>
       </body>
     </html>

@@ -41,11 +41,14 @@ async function pushWithRetry(
 
 async function main() {
   const dryRun = process.argv.includes('--dry-run');
-
   const benchmarksDir = process.env.BENCHMARKS_DIR || path.resolve(__dirname, '../benchmarks');
   const resultsPath = path.join(benchmarksDir, 'results.json');
   const results = JSON.parse(await fs.readFile(resultsPath, 'utf-8')) as AggregatedResults;
   const { commitSha, timestamp } = results;
+
+  if (!commitSha) {
+    throw new Error('commitSha is missing from results.json');
+  }
 
   const dataRepoDir = path.resolve('data-repo');
 

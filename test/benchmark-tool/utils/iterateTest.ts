@@ -117,7 +117,6 @@ export function iterateTest(times: number, testFn: TestFn, options?: { warmupRun
     testInfo: TestInfo,
   ) => {
     const args = { page, context, request };
-
     if (options?.warmupRuns) {
       for (let i = 0; i < options.warmupRuns; i += 1) {
         // eslint-disable-next-line no-await-in-loop

@@ -23,34 +23,80 @@ function extractTotalDuration(report: BenchmarkReport): number {
   return totalDuration;
 }
 
+async function getCommitSha(): Promise<string | null> {
+  if (process.env.COMMIT_SHA) {
+    return process.env.COMMIT_SHA;
+  }
+  try {
+    const { stdout } = await $`git rev-parse HEAD`;
+    return stdout.trim();
+  } catch {
+    return null;
+  }
+}
+
+const dim = (s: string) => `\x1b[2m${s}\x1b[0m`;
+const red = (s: string) => `\x1b[31m${s}\x1b[0m`;
+const green = (s: string) => `\x1b[32m${s}\x1b[0m`;
+const cyan = (s: string) => `\x1b[36m${s}\x1b[0m`;
+
 class BenchmarkReporter implements Reporter {
   private benchmarks: Record<string, BenchmarkResult> = {};
 
+  onBegin(_config: any, suite: any): void {
+    const count = suite.allTests?.().length ?? 0;
+    // eslint-disable-next-line no-console
+    console.log(cyan(`\nFound ${count} benchmark${count === 1 ? '' : 's'}`));
+  }
+
+  onTestBegin(test: TestCase): void {
+    // eslint-disable-next-line no-console
+    console.log(`\nRunning ${cyan(test.title)} ${dim(`(file://${test.location.file}:${test.location.line})`)}`);
+  }
+
   onTestEnd(test: TestCase, result: TestResult): void {
     if (result.status !== 'passed') {
+      // eslint-disable-next-line no-console
+      console.log(red(`  FAILED (${result.status})`));
+      for (const error of result.errors ?? []) {
+        // eslint-disable-next-line no-console
+        console.log(red(`  ${error.message ?? error.value ?? JSON.stringify(error)}`));
+      }
       return;
     }
 
     const attachment = result.attachments.find((a) => a.name === 'benchmark-report');
     if (!attachment?.body) {
+      // eslint-disable-next-line no-console
+      console.log(red(`  No benchmark report attached — test may not use iterateTest()`));
       return;
     }
 
     const report = JSON.parse(attachment.body.toString()) as BenchmarkReport;
     const name = benchmarkNameFromFile(test.location.file);
+    const duration = extractTotalDuration(report);
 
     this.benchmarks[name] = {
-      duration: extractTotalDuration(report),
+      duration,
       renderCount: report.renders.length,
       iterations: report.metadata?.iterations ?? 1,
     };
+
+    // eslint-disable-next-line no-console
+    console.log(green(`  ${name}: ${duration.toFixed(2)}ms`) + dim(` (${report.renders.length} renders, ${report.metadata?.iterations ?? 1} iterations)`));
   }
 
   async onEnd(): Promise<void> {
-    const commitSha = process.env.COMMIT_SHA;
-    if (!commitSha) {
-      return;
+    const count = Object.keys(this.benchmarks).length;
+
+    // eslint-disable-next-line no-console
+    console.log(`\n${cyan('Benchmark Results')} ${dim(`(${count} benchmark${count === 1 ? '' : 's'})`)}`);
+    for (const [name, result] of Object.entries(this.benchmarks)) {
+      // eslint-disable-next-line no-console
+      console.log(`  ${name}: ${result.duration.toFixed(2)}ms ${dim(`(${result.renderCount} renders, ${result.iterations} iterations)`)}`);
     }
+
+    const commitSha = await getCommitSha();
 
     const results: AggregatedResults = {
       commitSha,
@@ -71,7 +117,7 @@ class BenchmarkReporter implements Reporter {
     await fs.writeFile(outputPath, JSON.stringify(results, null, 2));
 
     // eslint-disable-next-line no-console
-    console.log(`Aggregated results saved to: ${outputPath}`);
+    console.log(dim(`\nResults saved to file://${outputPath}`));
   }
 }
 

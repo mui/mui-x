@@ -27,7 +27,7 @@ function onRender(id: string, phase: 'mount' | 'update' | 'nested-update', actua
 /**
  * This profiler will render its children client-side, so certain steps like hydration are not included in the benchmark.
  */
-export function ClientSideProfiler({ children }: { children: React.ReactNode }) {
+export function Profiler({ children }: { children: React.ReactNode }) {
   const [benchmark, setBenchmark] = React.useState(false);
 
   React.useEffect(() => {

@@ -22,7 +22,6 @@ function getRouteFromFilename(filename: string): string {
 
 export async function goToPage(filename: string, page: Page, renders: RenderEvent[]) {
   const route = getRouteFromFilename(filename);
-
   // Initialize or update state for this page
   let state = pageState.get(page);
   if (!state) {
