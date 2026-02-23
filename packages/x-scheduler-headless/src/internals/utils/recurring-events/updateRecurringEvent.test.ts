@@ -1,4 +1,4 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
 import {
   SchedulerEventUpdatedProperties,
   RecurringEventByDayValue,
@@ -390,6 +390,25 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(createdEvent.end).not.to.include('Z');
     });
 
+    it('should start the new series at the occurrence date, not DTSTART, when changes.start is not provided', () => {
+      // Daily series from Jan 01.
+      // Edit "this and following" on Jan 05 with only a title change (no start change).
+      // Expected: new series starts at Jan 05 (the occurrence), NOT at Jan 01 (DTSTART).
+      // Bug: if the new series starts at DTSTART, it overlaps with the truncated original (Jan 01–04).
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
+      const changes: SchedulerEventUpdatedProperties = {
+        id: defaultEvent.id,
+        title: 'Title-only change',
+        // no start/end changes
+      };
+
+      const result = applyRecurringUpdateFollowing(adapter, defaultEvent, occurrenceStart, changes);
+
+      // New series must start on Jan 05, not Jan 01
+      const newEventStart = result.created![0].start as string;
+      expect(adapter.getDate(adapter.date(newEventStart, 'default'))).to.equal(5);
+    });
+
     it('should inherit the original rule when changes.rrule is omitted', () => {
       // Original: daily from Jan 01
       const original = EventBuilder.new()
@@ -445,7 +464,27 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
 
-      expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['WE', 'SA', 'MO'] });
+      expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['MO', 'WE', 'SA'] });
+    });
+
+    it('should return BYDAY in canonical RFC 5545 order (MO first) regardless of adapter locale', () => {
+      // In a Sunday-first locale (US, mondayWeekDayNumber=2) the loop starts at TU,
+      // so MO ends up last in the output. The result must be locale-independent.
+      const rrule = {
+        freq: 'WEEKLY' as const,
+        byDay: ['MO', 'WE', 'SU'] as RecurringEventByDayValue[],
+      };
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default'); // SU
+      const newStart = adapter.date('2025-01-11T11:00:00Z', 'default'); // SA
+
+      // US adapter (Sunday-first locale)
+      const nextUs = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      // FR adapter (Monday-first locale)
+      const nextFr = adjustRRuleForAllMove(adapterFr, rrule, occurrenceStart, newStart);
+
+      // Both should produce canonical order: MO before WE before SA
+      expect(nextUs.byDay).to.deep.equal(['MO', 'WE', 'SA']);
+      expect(nextFr.byDay).to.deep.equal(['MO', 'WE', 'SA']);
     });
 
     it('should align the day-of-month to the destination date for MONTHLY (BYMONTHDAY)', () => {
@@ -649,6 +688,38 @@ describe('recurring-events/updateRecurringEvent', () => {
           rrule: defaultEvent.dataTimezone.rrule,
         },
       ]);
+    });
+
+    it('should preserve the user-provided changes.rrule and NOT auto-adjust it when the date also changes', () => {
+      // Series: weekly on Sunday (DTSTART Jan 1, a Wednesday - but with byDay:['SU'])
+      const original = EventBuilder.new()
+        .singleDay('2025-01-05T09:00:00Z') // Sunday
+        .rrule({ freq: 'WEEKLY', byDay: ['SU'] })
+        .toProcessed();
+
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default'); // Sunday
+
+      // User explicitly provides a brand-new rrule AND moves to a different day (Saturday).
+      // The user's explicit rrule must be respected; adjustRRuleForAllMove must NOT override it.
+      const explicitRRule: RecurringEventRecurrenceRule = {
+        freq: 'WEEKLY',
+        byDay: ['SA'],
+        interval: 2,
+        count: 10,
+      };
+      const changes: SchedulerEventUpdatedProperties = {
+        id: original.id,
+        start: adapter.date('2025-01-11T11:00:00Z', 'default'), // Saturday
+        end: adapter.date('2025-01-11T12:00:00Z', 'default'),
+        rrule: explicitRRule,
+      };
+
+      const updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
+
+      // The rrule in the result must be exactly the user-provided one (interval:2, count:10 preserved)
+      expect((updatedEvents.updated![0] as SchedulerEventUpdatedProperties).rrule).to.deep.equal(
+        explicitRRule,
+      );
     });
   });
 

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
-import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridRootCssVars } from './TimelineGridRootCssVars';
@@ -23,14 +23,19 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const resourcesCount = useStore(store, schedulerResourceSelectors.resourcesCount);
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const resources = useStore(
+    store,
+    schedulerOccurrenceSelectors.groupedByResourceList,
+    viewConfig.start,
+    viewConfig.end,
+  );
 
   const props = {
     role: 'grid',
     style: {
       [TimelineGridRootCssVars.unitCount]: viewConfig.unitCount,
-      [TimelineGridRootCssVars.rowCount]: resourcesCount,
+      [TimelineGridRootCssVars.rowCount]: resources.length,
     } as React.CSSProperties,
   };
 

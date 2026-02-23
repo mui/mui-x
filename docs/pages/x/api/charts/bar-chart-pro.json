@@ -35,7 +35,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'bar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'bar' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -52,7 +52,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'bar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'bar' }&gt;"
       }
     },
     "initialZoom": {
@@ -150,7 +150,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type: 'bar' }"
+        "description": "{ dataIndex: number, seriesId: string, type?: 'bar' }"
       }
     },
     "width": { "type": { "name": "number" } },
