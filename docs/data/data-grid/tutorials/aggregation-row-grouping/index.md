@@ -1,13 +1,13 @@
 ---
 title: Tutorial - Data Grid with Aggregation and Row Grouping
-description: Learn how to use aggregation functions and row grouping in the Data Grid Premium to analyze and organize your data.
+description: Learn how to use aggregation functions and row grouping in Data Grid Premium to analyze and organize your data.
 ---
 
 # Build a Data Grid with Aggregation and Row Grouping
 
 ## Overview
 
-This tutorial walks you through building a client-side Data Grid that demonstrates aggregation functions and row grouping using the MUI X Data Grid Premium.
+This tutorial walks you through building a client-side Data Grid that demonstrates aggregation functions and row grouping using Data Grid Premium.
 You will define data locally and use the grid to group rows by column values and apply aggregation functions (such as sum, average, min, max) to analyze data within those groups.
 
 :::success
@@ -21,7 +21,7 @@ If you'd rather skip the tutorial entirely, you can check out [the complete app 
 
 ### Relevant documentation
 
-The docs listed below may be useful if you're new to the MUI X Data Grid:
+The pages listed below may be useful if you're new to the MUI X Data Grid:
 
 - [Row grouping](/x/react-data-grid/row-grouping/)
 - [Aggregation](/x/react-data-grid/aggregation/)
@@ -30,7 +30,7 @@ The docs listed below may be useful if you're new to the MUI X Data Grid:
 
 ## Part one: App setup
 
-In part one, you'll set up a React app with Vite and install the dependencies you need for the Data Grid Premium.
+In part one, you'll set up a React app with Vite and install the dependencies you need for the Data Grid.
 
 ### 1. Create the project
 
@@ -559,7 +559,7 @@ const EMPLOYEE_DATA: Employee[] = [
 
 **What's happening here:**
 
-- `Employee` describes one row in the grid; `projects` and `salary` are used for aggregation.
+- `Employee` describes one row in the grid; `projects` and `salary` fields will be used for aggregation.
 - `EMPLOYEE_DATA` is the in-memory dataset. The grid will group and aggregate over these rows on the client.
 
 ### 6. Define the grid columns
@@ -624,7 +624,7 @@ function EmployeeDataGrid() {
 
 - `apiRef` is used by `useKeepGroupedColumnsHidden` to hide grouped columns from the column panel.
 - `rowGrouping.model` groups rows by `department`, then by `role` inside each department.
-- `aggregation.model` applies `sum` to `salary` and `projects` for each group.
+- `aggregation.model` applies `sum` aggregation to the `salary` and `projects` columns for each group.
 
 ### 8. Configure aggregation position
 
