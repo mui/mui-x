@@ -2,7 +2,14 @@ import { $ } from 'execa';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { AggregatedResults, BenchmarkReport, BenchmarkResult } from './types';
-import { extractTotalDuration } from './extractTotalDuration';
+
+function extractTotalDuration(report: BenchmarkReport): number {
+  let totalDuration = 0;
+  for (const render of report.renders) {
+    totalDuration += render.actualDuration;
+  }
+  return totalDuration;
+}
 
 async function main() {
   const benchmarksDir = process.env.BENCHMARKS_DIR || path.resolve(__dirname, '../benchmarks');
