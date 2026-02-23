@@ -144,6 +144,21 @@ const event = {
 Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-timeline/drag-interactions/).
 :::
 
+### Read-only
+
+Use the `readOnly` property to prevent an event from being modified:
+
+```ts
+const event = {
+  // ...other properties
+  readOnly: true,
+};
+```
+
+:::success
+Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/#read-only).
+:::
+
 ### Recurring events
 
 Use the `rrule` property to define an events recurring rule:
@@ -184,35 +199,3 @@ function Timeline() {
 ```
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Event creation
-
-Use the `eventCreation` prop to customize how newly created events are defined:
-
-### Disable event creation
-
-Pass `eventCreation={false}` to disable the event creation:
-
-```tsx
-<EventTimelinePremium eventCreation={false} />
-```
-
-### Custom default duration
-
-Pass a custom value to `eventCreation.duration` to change the default duration of newly created event:
-
-```tsx
-<EventTimelinePremium eventCreation={{ duration: 60 }} />
-```
-
-{{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Create event on click
-
-Set `eventCreation.interaction` to `"click"` to open the creation form when clicking a cell instead of double-clicking:
-
-```tsx
-<EventTimelinePremium eventCreation={{ interaction: 'click' }} />
-```
-
-{{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
