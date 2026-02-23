@@ -114,12 +114,23 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     native: nativeButton,
   });
 
-  const { position, duration } = useElementPositionInCollection({
-    start,
-    end,
-    collectionStart: viewConfig.start,
-    collectionEnd: viewConfig.end,
-  });
+  const { position, duration, startingBeforeEdge, endingAfterEdge } =
+    useElementPositionInCollection({
+      start,
+      end,
+      collectionStart: viewConfig.start,
+      collectionEnd: viewConfig.end,
+    });
+
+  const mergedState = React.useMemo(
+    () => ({ ...state, startingBeforeEdge, endingAfterEdge }),
+    [state, startingBeforeEdge, endingAfterEdge],
+  );
+
+  const stateAttributesMapping = {
+    startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
+    endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
+  };
 
   // Rendering hooks
   const style = React.useMemo(
@@ -139,9 +150,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   );
 
   const element = useRenderElement('div', componentProps, {
-    state,
+    state: mergedState,
     ref: [forwardedRef, ref, buttonRef],
     props: [props, elementProps, getButtonProps],
+    stateAttributesMapping,
   });
 
   return (
@@ -153,7 +165,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 });
 
 export namespace TimelineGridEvent {
-  export interface State extends useDraggableEvent.State {}
+  export interface State extends useDraggableEvent.State {
+    startingBeforeEdge: boolean;
+    endingAfterEdge: boolean;
+  }
 
   export interface Props
     extends

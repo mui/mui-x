@@ -11,6 +11,8 @@ import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.type
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
 
+const ARROW_DEPTH = 8; // px - depth of the chevron point
+
 const EventTimelinePremiumEventRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Event',
@@ -44,6 +46,27 @@ const EventTimelinePremiumEventRoot = styled('div', {
     borderRadius: '4px 0 0 4px',
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
+  },
+  // Left arrow (event starts before visible area)
+  '&[data-starting-before-edge]': {
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    clipPath: `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`,
+    paddingLeft: ARROW_DEPTH + 8,
+    '&::before': {
+      display: 'none',
+    },
+  },
+  // Right arrow (event ends after visible area)
+  '&[data-ending-after-edge]': {
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+    clipPath: `polygon(0 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, 0 100%)`,
+    paddingRight: ARROW_DEPTH + 8,
+  },
+  // Both sides overflow
+  '&[data-starting-before-edge][data-ending-after-edge]': {
+    clipPath: `polygon(${ARROW_DEPTH}px 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, ${ARROW_DEPTH}px 100%, 0 50%)`,
   },
   variants: getPaletteVariants(theme),
 }));
