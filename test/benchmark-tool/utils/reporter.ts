@@ -1,7 +1,10 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
 import type { RenderEvent } from './Profiler';
-import { routeToFileName } from './utils';
+
+function routeToFileName(route: string) {
+  return route.replace(/\//g, '-').replace(/^-/, '');
+}
 
 const benchmarksDir = path.resolve(__dirname, '../benchmarks');
 
