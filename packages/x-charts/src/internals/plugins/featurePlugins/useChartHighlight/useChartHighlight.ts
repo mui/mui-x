@@ -12,6 +12,7 @@ import type {
   SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import { createIdentifierWithType } from '../../corePlugins/useChartSeries/useChartSeries';
 
 export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -116,9 +117,15 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   };
 };
 
-useChartHighlight.getInitialState = (params) => ({
+useChartHighlight.getInitialState = (params, currentState) => ({
   highlight: {
-    item: params.highlightedItem,
+    item:
+      params.highlightedItem == null
+        ? params.highlightedItem
+        : createIdentifierWithType(currentState)(
+            // Need some as because the generic SeriesType can't be propagated to plugins methods.
+            params.highlightedItem as HighlightItemIdentifier<ChartSeriesType>,
+          ),
     lastUpdate: 'pointer',
     isControlled: params.highlightedItem !== undefined,
   },
