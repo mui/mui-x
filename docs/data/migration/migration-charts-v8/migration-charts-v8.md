@@ -372,8 +372,13 @@ const hasFocusedItem = focusedItem !== null;
 
 ### Theme style override removal
 
-The `ChartsSurface` component is now comprised of `ChartsLayerContainer` and `ChartsSvgLayer`. As a consequence, it is no longer possible to style the component using the `MuiChartsSurface` theme key.
+The `ChartsSurface` component is now comprised of `ChartsLayerContainer` and `ChartsSvgLayer`.
+As a consequence, it is no longer possible to style the component using the `MuiChartsSurface` theme key.
 If you want to style the layer container, you can use `MuiChartsLayerContainer` instead, and for the SVG layer, use `MuiChartsSvgLayer`.
+
+### Ref target
+
+The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
 
 ## Props propagation
 
@@ -382,7 +387,7 @@ The `ref` for single component charts like `<LineChart />` is now propagated to 
 Internally this change looks like this.
 
 ```diff
- const LineCHart = React.forwardRef(function LineChart(
+ const LineChart = React.forwardRef(function LineChart(
    inProps: LineChartProps,
 -  ref: React.Ref<SVGSVGElement>,
 +  ref: React.Ref<HTMLDivElement>,
