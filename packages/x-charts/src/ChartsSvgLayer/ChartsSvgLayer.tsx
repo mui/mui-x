@@ -67,7 +67,7 @@ const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
 
     return (
       <ChartsSvgLayerStyles
-        viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         className={clsx(classes.root, className)}
         {...other}
         onPointerEnter={(event) => {

@@ -208,26 +208,29 @@ function AppWrapper(props) {
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
     const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
-    const productIdSubpathMap = {
-      introduction: '/x/introduction',
-      'x-data-grid': '/x/react-data-grid',
-      'x-date-pickers': '/x/react-date-pickers',
-      'x-charts': '/x/react-charts',
-      'x-tree-view': '/x/react-tree-view',
+    const productIdMap = {
+      introduction: { subpath: '/x/introduction', version: process.env.LIB_VERSION },
+      'x-data-grid': { subpath: '/x/react-data-grid', version: process.env.DATA_GRID_VERSION },
+      'x-date-pickers': {
+        subpath: '/x/react-date-pickers',
+        version: process.env.DATE_PICKERS_VERSION,
+      },
+      'x-charts': { subpath: '/x/react-charts', version: process.env.CHARTS_VERSION },
+      'x-tree-view': { subpath: '/x/react-tree-view', version: process.env.TREE_VIEW_VERSION },
     };
 
     const getVersionOptions = (id, versions) =>
       versions.map((version) => {
-        if (version === process.env.LIB_VERSION) {
+        if (version === productIdMap[id].version) {
           return {
             current: true,
             text: `v${version}`,
-            href: `${languagePrefix}${productIdSubpathMap[id]}/`,
+            href: `${languagePrefix}${productIdMap[id].subpath}/`,
           };
         }
         return {
           text: version,
-          href: `https://${version}.mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
+          href: `https://${version}.mui.com${languagePrefix}${productIdMap[id].subpath}/`,
         };
       });
 

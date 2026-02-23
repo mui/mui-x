@@ -1,4 +1,5 @@
 'use client';
+import clsx from 'clsx';
 import { type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
@@ -30,9 +31,9 @@ export interface ChartsSurfaceProps extends Omit<
  *
  * - [ChartsSurface API](https://mui.com/x/api/charts/charts-surface/)
  */
-const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
+const ChartsSurface = React.forwardRef<HTMLDivElement, ChartsSurfaceProps>(function ChartsSurface(
   inProps: ChartsSurfaceProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
@@ -41,10 +42,8 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const classes = useUtilityClasses();
 
   return (
-    <ChartsLayerContainer className={classes.root}>
-      <ChartsSvgLayer className={className} {...other} ref={ref}>
-        {children}
-      </ChartsSvgLayer>
+    <ChartsLayerContainer className={clsx(classes.root, className)} ref={ref}>
+      <ChartsSvgLayer {...other}>{children}</ChartsSvgLayer>
     </ChartsLayerContainer>
   );
 });

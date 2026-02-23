@@ -560,6 +560,31 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
       expect(years).to.deep.equal([2024, 2028, 2032]);
     });
+
+    it('finds yearly Feb-29 occurrence spanning the century non-leap year 2100 (8 consecutive non-leap years)', () => {
+      // 2096 is a leap year. The following years 2097–2103 are NOT leap years:
+      // 2100 is a century year not divisible by 400, so it is NOT a leap year.
+      // This creates 8 consecutive non-leap years (2097–2103), with 2104 being the next leap year.
+      const event = EventBuilder.new()
+        .singleDay('2096-02-29T09:00:00Z')
+        .rrule({ freq: 'YEARLY', interval: 1 })
+        .toProcessed();
+
+      const visibleStart = adapter.date('2097-01-01T00:00:00Z', 'default');
+      const visibleEnd = adapter.date('2105-01-01T00:00:00Z', 'default');
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        visibleEnd,
+        adapter,
+        'default',
+      );
+
+      // The only Feb 29 in [2097, 2105) is 2104 (leap year)
+      const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
+      expect(years).to.deep.equal([2104]);
+    });
   });
 
   describe('timezone handling', () => {

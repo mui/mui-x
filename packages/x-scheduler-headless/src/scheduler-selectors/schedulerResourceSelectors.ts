@@ -140,5 +140,4 @@ export const schedulerResourceSelectors = {
       return state.processedResourceLookup.get(resourceId)?.eventColor ?? state.eventColor;
     },
   ),
-  resourcesCount: createSelector((state: State) => state.resourceIdList.length),
 };
