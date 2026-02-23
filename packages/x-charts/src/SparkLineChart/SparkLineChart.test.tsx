@@ -6,11 +6,11 @@ describe('<SparkLineChart />', () => {
 
   describeConformance(<SparkLineChart height={100} width={100} data={[100, 200]} />, () => ({
     classes: {} as any,
-    inheritComponent: 'svg',
+    inheritComponent: 'div',
     render,
     muiName: 'MuiSparkLineChart',
     testComponentPropWith: 'div',
-    refInstanceof: window.SVGSVGElement,
+    refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
       'componentsProp',

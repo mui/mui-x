@@ -39,7 +39,7 @@ export interface HeatmapPremiumProps extends HeatmapProps {
 
 const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   inProps: HeatmapPremiumProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmapPremium' });
   const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
@@ -64,7 +64,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
     <ChartDataProviderPremium<'heatmap', HeatmapPremiumPluginSignatures>
       {...chartDataProviderPremiumProps}
     >
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsLayerContainer>
@@ -73,7 +73,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
               <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
             </ChartsWebGlLayer>
           )}
-          <ChartsSvgLayer ref={ref} sx={sx}>
+          <ChartsSvgLayer sx={sx}>
             <g {...clipPathGroupProps}>
               {renderer !== 'webgl' && <HeatmapPlotPremium {...heatmapPlotPremiumProps} />}
               <FocusedHeatmapCell />
