@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { cyan, dim, fileUrl, green, indent, red } from '../utils/log';
 import type { AggregatedResults, ComparisonResult, FailedBenchmark } from './types';
 
 function calculateDiffPercent(
@@ -64,7 +65,8 @@ function generateComparisonBody(
     let statusSection = '';
     if (failedBenchmarks.length > 0) {
       statusSection = `
-> **⚠️ Performance regression detected!** The following benchmarks exceed the ${failThreshold}% threshold:
+> [!WARNING]
+> **Performance regression detected!** The following benchmarks exceed the ${failThreshold}% threshold:
 > ${failedBenchmarks.map((b) => `\`${b.name}\` (+${b.diff}%)`).join(', ')}
 
 `;
@@ -76,7 +78,7 @@ ${statusSection}
 |-----------|--------|-----|------|
 ${rows}
 
-> Fail threshold: **${failThreshold}%**
+Fail threshold: **${failThreshold}%**
 `;
   } else {
     const rows = allBenchmarks
@@ -88,7 +90,8 @@ ${rows}
 
     body = `## Performance Comparison
 
-> **Note:** Baseline metrics not found. Showing PR metrics only.
+> [!NOTE]
+> Baseline metrics not found. Showing PR metrics only.
 
 | Benchmark | PR |
 |-----------|-----|
@@ -164,17 +167,24 @@ async function main() {
   const benchmarksDir = process.env.BENCHMARKS_DIR || './benchmarks';
   const failThreshold = parseFloat(process.env.FAIL_THRESHOLD || '5');
 
-  const resultsPath = path.join(benchmarksDir, 'results.json');
+  const resultsPath = path.resolve(benchmarksDir, 'results.json');
+  // eslint-disable-next-line no-console
+  console.log(cyan(`Reading results from ${dim(fileUrl(resultsPath))}`));
   const results = JSON.parse(await fs.readFile(resultsPath, 'utf-8')) as AggregatedResults;
 
   if (!results.pr) {
     throw new Error('results.json is missing the "pr" field — expected PR benchmark artifact');
   }
 
+  // eslint-disable-next-line no-console
+  console.log(`PR #${dim(String(results.pr.number))}, mergeBase=${dim(results.pr.mergeBaseSha)}`);
+
   const prMetricsByFile: Record<string, number> = {};
   for (const [name, benchmark] of Object.entries(results.benchmarks)) {
     prMetricsByFile[name] = benchmark.duration;
   }
+  // eslint-disable-next-line no-console
+  console.log(cyan('Fetching master metrics...'));
   const masterMetricsByFile = await fetchMasterMetrics(results.pr.mergeBaseSha);
   const { body, failedBenchmarks } = generateComparisonBody(
     prMetricsByFile,
@@ -184,21 +194,31 @@ async function main() {
 
   const dryRun = process.argv.includes('--dry-run');
 
+  // eslint-disable-next-line no-console
+  console.log(cyan('PR comment body:'));
+  // eslint-disable-next-line no-console
+  console.log(dim(indent(body, 4)));
+
   if (process.env.GITHUB_TOKEN && !dryRun) {
+    // eslint-disable-next-line no-console
+    console.log(cyan('Posting comment to PR...'));
     await postOrUpdateComment(results.pr.number, body);
   } else {
     // eslint-disable-next-line no-console
-    console.log(body);
+    console.log(dim('Skipping post (dry-run or no GITHUB_TOKEN).'));
   }
 
   if (failedBenchmarks.length > 0) {
     const names = failedBenchmarks.map((b) => b.name).join(', ');
 
     console.error(
-      `Performance regression detected: ${names} exceeded the ${failThreshold}% threshold`,
+      red(`Performance regression detected: ${names} exceeded the ${failThreshold}% threshold`),
     );
     process.exitCode = 1;
   }
+
+  // eslint-disable-next-line no-console
+  console.log(green('Done.'));
 }
 
 main();
