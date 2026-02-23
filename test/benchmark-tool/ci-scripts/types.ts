@@ -7,6 +7,7 @@ export interface BenchmarkResult {
   duration: number;
   renderCount: number;
   iterations: number;
+  renders: Array<{ actualDuration: number }>;
 }
 
 export interface AggregatedResults {

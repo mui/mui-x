@@ -51,7 +51,9 @@ class BenchmarkReporter implements Reporter {
 
   onTestBegin(test: TestCase): void {
     // eslint-disable-next-line no-console
-    console.log(`\nRunning ${cyan(test.title)} ${dim(`(file://${test.location.file}:${test.location.line})`)}`);
+    console.log(
+      `\nRunning ${cyan(test.title)} ${dim(`(file://${test.location.file}:${test.location.line})`)}`,
+    );
   }
 
   onTestEnd(test: TestCase, result: TestResult): void {
@@ -80,20 +82,28 @@ class BenchmarkReporter implements Reporter {
       duration,
       renderCount: report.renders.length,
       iterations: report.metadata?.iterations ?? 1,
+      renders: report.renders,
     };
 
     // eslint-disable-next-line no-console
-    console.log(green(`  ${name}: ${duration.toFixed(2)}ms`) + dim(` (${report.renders.length} renders, ${report.metadata?.iterations ?? 1} iterations)`));
+    console.log(
+      green(`  ${name}: ${duration.toFixed(2)}ms`) +
+        dim(` (${report.renders.length} renders, ${report.metadata?.iterations ?? 1} iterations)`),
+    );
   }
 
   async onEnd(): Promise<void> {
     const count = Object.keys(this.benchmarks).length;
 
     // eslint-disable-next-line no-console
-    console.log(`\n${cyan('Benchmark Results')} ${dim(`(${count} benchmark${count === 1 ? '' : 's'})`)}`);
+    console.log(
+      `\n${cyan('Benchmark Results')} ${dim(`(${count} benchmark${count === 1 ? '' : 's'})`)}`,
+    );
     for (const [name, result] of Object.entries(this.benchmarks)) {
       // eslint-disable-next-line no-console
-      console.log(`  ${name}: ${result.duration.toFixed(2)}ms ${dim(`(${result.renderCount} renders, ${result.iterations} iterations)`)}`);
+      console.log(
+        `  ${name}: ${result.duration.toFixed(2)}ms ${dim(`(${result.renderCount} renders, ${result.iterations} iterations)`)}`,
+      );
     }
 
     const commitSha = await getCommitSha();
