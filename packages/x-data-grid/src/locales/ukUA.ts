@@ -1,5 +1,5 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization, type Localization, formatNumber } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
@@ -226,17 +226,15 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Рядків на сторінці:',
-  paginationDisplayedRows: ({
-    from,
-    to,
-    count,
-    estimated
-  }) => {
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
     const unknownRowCount = count == null || count === -1;
     if (!estimated) {
       return `${formatNumber(from)}–${formatNumber(to)} з ${!unknownRowCount ? formatNumber(count) : `більше ніж ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `близько ${formatNumber(estimated)}` : `більше ніж ${formatNumber(to)}`;
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `близько ${formatNumber(estimated)}`
+        : `більше ніж ${formatNumber(to)}`;
     return `${formatNumber(from)}–${formatNumber(to)} з ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
