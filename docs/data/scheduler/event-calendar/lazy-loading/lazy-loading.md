@@ -18,3 +18,10 @@ This package is not published yet.
 ## Basic example
 
 {{"demo": "BasicDataSource.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Error handling
+
+When the `dataSource.getEvents` method rejects, the Scheduler displays an error state.
+Use the toggle button to simulate a server error.
+
+{{"demo": "ErrorHandling.js", "bg": "inline", "defaultCodeOpen": false}}

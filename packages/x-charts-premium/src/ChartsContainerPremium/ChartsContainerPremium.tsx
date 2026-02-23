@@ -56,11 +56,13 @@ const ChartsContainerPremium = React.forwardRef(function ChartsContainerPremium<
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartsContainerPremiumProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
   const { chartDataProviderPremiumProps, children, chartsSurfaceProps } =
-    useChartsContainerPremiumProps<TSeries, TSignatures>(props, ref);
+    useChartsContainerPremiumProps<TSeries, TSignatures>(props);
 
   return (
     <ChartDataProviderPremium<TSeries, TSignatures> {...chartDataProviderPremiumProps}>
-      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+      <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        {children}
+      </ChartsSurface>
     </ChartDataProviderPremium>
   );
 }) as unknown as ChartsContainerPremiumComponent;

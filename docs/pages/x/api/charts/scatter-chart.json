@@ -36,7 +36,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'scatter' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -47,7 +47,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'scatter' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -121,7 +121,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type: 'scatter' }"
+        "description": "{ dataIndex: number, seriesId: string, type?: 'scatter' }"
       }
     },
     "voronoiMaxRadius": {
@@ -235,7 +235,7 @@
   "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiScatterChart",
-  "forwardsRefTo": "SVGSVGElement",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",

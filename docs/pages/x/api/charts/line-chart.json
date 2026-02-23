@@ -39,7 +39,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'line' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'line' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -56,7 +56,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'line' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'line' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -129,7 +129,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }"
+        "description": "{ dataIndex?: number, seriesId: string, type?: 'line' }"
       }
     },
     "width": { "type": { "name": "number" } },
@@ -241,7 +241,7 @@
   "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiLineChart",
-  "forwardsRefTo": "SVGSVGElement",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/LineChart/LineChart.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",

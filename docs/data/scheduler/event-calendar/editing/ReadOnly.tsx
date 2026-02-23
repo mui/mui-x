@@ -1,30 +1,24 @@
 import * as React from 'react';
-
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../../../data/scheduler/datasets/personal-agenda';
+} from '../../datasets/personal-agenda';
 
-export default function FullEventCalendar() {
-  const [events, setEvents] = React.useState(initialEvents);
+export default function ReadOnly() {
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        padding: 12,
-        height: '90vh',
-      }}
-    >
+    <div style={{ height: '650px', width: '100%' }}>
       <EventCalendar
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsDraggable
-        areEventsResizable
+        defaultPreferences={{ isSidePanelOpen: false }}
+        readOnly
       />
     </div>
   );

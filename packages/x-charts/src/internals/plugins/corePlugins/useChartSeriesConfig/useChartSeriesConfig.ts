@@ -10,7 +10,7 @@ import {
 import { serializeIdentifier as serializeIdentifierFn } from './utils/serializeIdentifier';
 import { cleanIdentifier as cleanIdentifierFn } from './utils/cleanIdentifier';
 import type { ChartSeriesConfig } from './types';
-import type { SeriesItemIdentifier } from '../../../../models/seriesType';
+import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = ({ store }) => {
@@ -19,7 +19,7 @@ export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = 
   );
 
   const cleanIdentifier: CleanIdentifierFunction = useEventCallback(
-    <T extends { type: ChartSeriesType }>(identifier: T): SeriesItemIdentifier<T['type']> =>
+    <T extends { type: ChartSeriesType }>(identifier: T): SeriesItemIdentifierWithType<T['type']> =>
       cleanIdentifierFn<T['type'], T>(store.state.seriesConfig.config, identifier),
   );
 

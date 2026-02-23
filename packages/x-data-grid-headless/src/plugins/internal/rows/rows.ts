@@ -12,6 +12,7 @@ import type {
   RowsPluginState,
   RowsPluginOptions,
   RowsPluginApi,
+  RowsApi,
 } from './types';
 
 type RowsPlugin = Plugin<
@@ -43,6 +44,29 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
                 processedRowIds,
               },
             });
+          },
+          reconcileDisabledProcessor: ({ previousInput, currentInput, cachedOutput }) => {
+            const previousSet = new Set(previousInput);
+            const currentSet = new Set(currentInput);
+
+            const added = currentInput.filter((id) => !previousSet.has(id));
+            const removedSet = new Set(previousInput.filter((id) => !currentSet.has(id)));
+
+            // No structural changes (just edits) → return cached output
+            if (added.length === 0 && removedSet.size === 0) {
+              return cachedOutput;
+            }
+
+            // Remove deleted rows from cached output
+            let result =
+              removedSet.size > 0 ? cachedOutput.filter((id) => !removedSet.has(id)) : cachedOutput;
+
+            // Append new rows unconditionally (they'll be filtered on next explicit apply())
+            if (added.length > 0) {
+              result = [...result, ...added];
+            }
+
+            return result;
           },
         }),
       [store],
@@ -86,8 +110,8 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       [params.getRowId, params.rowCount, store, rowIdsPipeline],
     );
 
-    const updateRows = React.useCallback(
-      (updates: Partial<GridRowModel>[]) => {
+    const updateRows = React.useCallback<RowsApi['updateRows']>(
+      (updates) => {
         const { dataRowIds, dataRowIdToModelLookup, tree, treeDepths } = store.state.rows;
 
         const newDataRowIds = [...dataRowIds];

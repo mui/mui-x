@@ -13,7 +13,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'pie' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -24,7 +24,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'pie' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -68,7 +68,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type: 'pie' }"
+        "description": "{ dataIndex: number, seriesId: string, type?: 'pie' }"
       }
     },
     "width": { "type": { "name": "number" } }

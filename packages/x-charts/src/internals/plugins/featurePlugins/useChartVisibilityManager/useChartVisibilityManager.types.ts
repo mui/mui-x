@@ -1,13 +1,18 @@
 import { type ChartPluginSignature } from '../../models';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { type SeriesItemIdentifier } from '../../../../models';
+import { type SeriesId, type SeriesItemIdentifier } from '../../../../models';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 
 export type VisibilityIdentifier<T extends ChartSeriesType = ChartSeriesType> = Partial<
   SeriesItemIdentifier<T>
 > &
-  // Only type is required. If type has subTypes, subType is required too.
-  (SeriesItemIdentifier<T> extends { subType?: infer U } ? { type: T; subType: U } : { type: T });
+  // If type has subTypes, subType is required too.
+  (SeriesItemIdentifier<T> extends { subType?: infer U }
+    ? { subType: U; seriesId: SeriesId }
+    : { seriesId: SeriesId });
+
+export type VisibilityIdentifierWithType<T extends ChartSeriesType = ChartSeriesType> =
+  T extends any ? VisibilityIdentifier<T> & { type: T } : never;
 
 export type VisibilityMap = Map<string, VisibilityIdentifier>;
 

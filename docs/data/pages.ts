@@ -28,14 +28,11 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
             pathname: '/x/react-scheduler/event-calendar-group',
             subheader: 'Event Calendar',
             children: [
-              {
-                pathname: '/x/react-scheduler/full-screen-event-calendar',
-                title: 'Full screen demo', // TODO: Remove before launch?
-              },
               { pathname: '/x/react-scheduler/event-calendar/events' },
               { pathname: '/x/react-scheduler/event-calendar/resources' },
               { pathname: '/x/react-scheduler/event-calendar/navigation' },
               { pathname: '/x/react-scheduler/event-calendar/drag-interactions' },
+              { pathname: '/x/react-scheduler/event-calendar/editing' },
               { pathname: '/x/react-scheduler/event-calendar/views' },
               { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
               { pathname: '/x/react-scheduler/event-calendar/preferences' },
@@ -47,14 +44,11 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
             subheader: 'Event Timeline',
             plan: 'premium',
             children: [
-              {
-                pathname: '/x/react-scheduler/full-screen-event-timeline-premium',
-                title: 'Full screen demo', // TODO: Remove before launch?
-              },
               { pathname: '/x/react-scheduler/event-timeline/events' },
               { pathname: '/x/react-scheduler/event-timeline/resources' },
               { pathname: '/x/react-scheduler/event-timeline/navigation' },
               { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
+              { pathname: '/x/react-scheduler/event-timeline/editing' },
               { pathname: '/x/react-scheduler/event-timeline/views' },
               { pathname: '/x/react-scheduler/event-timeline/preferences' },
               { pathname: '/x/react-scheduler/event-timeline/localization' },
@@ -752,7 +746,7 @@ const pages: MuiPage[] = [
                   { pathname: '/x/react-charts/hooks/use-series', title: 'Series' },
                   { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
                   { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
-                  { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
+                  { pathname: '/x/react-charts/hooks/use-scale', title: 'Scale' },
                   { pathname: '/x/react-charts/hooks/use-axes', title: 'Axis' },
                   { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
                 ],

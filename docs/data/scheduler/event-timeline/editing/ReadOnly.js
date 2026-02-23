@@ -2,28 +2,22 @@ import * as React from 'react';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
-  initialEvents,
   defaultVisibleDate,
+  initialEvents,
   resources,
-} from '../../../data/scheduler/datasets/company-roadmap';
+} from '../../datasets/company-roadmap';
 
-export default function FullEventTimelinePremium() {
+export default function ReadOnly() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: '100vh',
-      }}
-    >
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
       <EventTimelinePremium
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsDraggable
-        areEventsResizable
+        readOnly
       />
     </div>
   );
