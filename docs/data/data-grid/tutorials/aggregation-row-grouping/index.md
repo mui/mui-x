@@ -43,11 +43,6 @@ pnpm create vite@latest . -- --template react-ts &&
 pnpm install
 ```
 
-:::success
-This tutorial uses pnpm, but all MUI libraries are also compatible with npm and yarn.
-See the [Material UI installation page](https://mui.com/material-ui/getting-started/installation/) for more details.
-:::
-
 ### 2. Install dependencies
 
 Install Material UI and MUI X Data Grid Premium:
@@ -55,6 +50,11 @@ Install Material UI and MUI X Data Grid Premium:
 ```bash
 pnpm install @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid-premium @fontsource/roboto
 ```
+
+:::success
+This tutorial uses pnpm, but all MUI libraries are also compatible with npm and yarn.
+See the [Material UI installation page](https://mui.com/material-ui/getting-started/installation/) for more details.
+:::
 
 ### 3. Set up the app shell
 
@@ -87,6 +87,8 @@ const EmployeeDataGrid = () => {
 
 export default EmployeeDataGrid;
 ```
+
+The imports include `useGridApiRef()` and `useKeepGroupedColumnsHidden()`; you will use them in step 7 when configuring row grouping and aggregation.
 
 Update `src/App.tsx`:
 
@@ -588,12 +590,12 @@ const columns: GridColDef[] = [
 **What's happening here:**
 
 - `field` matches properties on `Employee`.
-- `type: 'number'` on `salary` and `projects` allows aggregation.
+- `type: 'number'` on `salary` and `projects` lets the grid apply aggregation.
 - `valueFormatter` formats salary as currency.
 
 ### 7. Configure row grouping and aggregation
 
-Use `useGridApiRef` and `useKeepGroupedColumnsHidden` to set initial row grouping and aggregation:
+Use `useGridApiRef()` and `useKeepGroupedColumnsHidden()` to set initial row grouping and aggregation:
 
 ```tsx
 function EmployeeDataGrid() {
@@ -622,7 +624,9 @@ function EmployeeDataGrid() {
 
 **What's happening here:**
 
-- `apiRef` is used by `useKeepGroupedColumnsHidden` to hide grouped columns from the column panel.
+- `useKeepGroupedColumnsHidden()` wraps your `initialState` so that columns in the row grouping model (here, `department` and `role`) are hidden from the grid body—they appear only as group headers.
+  Without it, those columns would still show as normal data columns.
+  The hook keeps the column panel in sync when the user changes grouping: it uses `apiRef` to subscribe to `rowGroupingModelChange` and then calls `setColumnVisibilityModel()` so that columns are hidden or shown as they are added to or removed from the grouping model.
 - `rowGrouping.model` groups rows by `department`, then by `role` inside each department.
 - `aggregation.model` applies `sum` aggregation to the `salary` and `projects` columns for each group.
 
