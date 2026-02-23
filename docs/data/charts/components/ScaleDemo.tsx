@@ -21,7 +21,9 @@ const StyledText = styled('text')(({ theme }) => ({
   shapeRendering: 'crispEdges',
 }));
 
-function ValueHighlight(props: { chartRef: React.RefObject<HTMLDivElement | null> }) {
+function ValueHighlight(props: {
+  chartRef: React.RefObject<HTMLDivElement | null>;
+}) {
   const { chartRef } = props;
 
   // Get the drawing area bounding box
