@@ -35,12 +35,9 @@ jobs:
         run: npx playwright install chromium --with-deps
 
       - name: Run performance benchmarks
-        run: pnpm -r run benchmark
-
-      - name: Aggregate benchmark results
         env:
           COMMIT_SHA: ${{ github.sha }}
-        run: pnpm -F benchmark-tool ci:aggregate
+        run: pnpm -r run benchmark
 
       - name: Store baseline results
         env:

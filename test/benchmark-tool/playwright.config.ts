@@ -7,7 +7,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   // Run benchmarks sequentially to avoid cross-test interference; parallel workers would skew results.
   workers: 1,
-  reporter: 'html',
+  reporter: [['html'], ['./utils/benchmarkReporter.ts']],
   use: {
     baseURL: 'http://localhost:5002',
     trace: 'on-first-retry',

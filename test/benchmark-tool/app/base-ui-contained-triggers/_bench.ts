@@ -1,9 +1,6 @@
 import { test } from '@playwright/test';
-import { getRouteFromFilename, goToPage } from '../../../utils/goToPage';
-import { iterateTest } from '../../../utils/iterateTest';
-import { generateReportFromIterations, saveReport } from '../../../utils/reporter';
-
-const route = getRouteFromFilename(__filename);
+import { goToPage } from '../../utils/goToPage';
+import { iterateTest } from '../../utils/iterateTest';
 
 test(
   'Base UI Contained Triggers',
@@ -18,10 +15,6 @@ test(
           requestIdleCallback(resolve, { timeout: 5000 });
         });
       });
-    },
-    async (iterations) => {
-      const report = generateReportFromIterations(iterations);
-      await saveReport(report, route);
     },
     { warmupRuns: 5 },
   ),

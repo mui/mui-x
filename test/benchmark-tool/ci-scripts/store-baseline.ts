@@ -56,8 +56,7 @@ async function main() {
 
   // Set up directory structure
   const commitsDir = path.join(dataRepoDir, 'benchmarks/commits', commitSha);
-  const dataDir = path.join(commitsDir, 'data');
-  await fs.mkdir(dataDir, { recursive: true });
+  await fs.mkdir(commitsDir, { recursive: true });
 
   // Copy aggregated results
   await fs.copyFile(resultsPath, path.join(commitsDir, 'results.json'));
@@ -66,14 +65,6 @@ async function main() {
   await fs.writeFile(
     path.join(commitsDir, 'metadata.json'),
     JSON.stringify({ commit: commitSha, timestamp }),
-  );
-
-  // Copy raw benchmark data files
-  const allFiles = await fs.readdir(benchmarksDir);
-  await Promise.all(
-    allFiles
-      .filter((f) => f.endsWith('.json') && f !== 'results.json')
-      .map((f) => fs.copyFile(path.join(benchmarksDir, f), path.join(dataDir, f))),
   );
 
   // Append to monthly JSONL

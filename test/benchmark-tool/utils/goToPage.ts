@@ -1,7 +1,6 @@
 import path from 'path';
 import { Page } from '@playwright/test';
 import { CAPTURE_RENDER_FN, RenderEvent } from './Profiler';
-import { generateReport, saveReport as saveReportToFs } from './reporter';
 
 // Store mutable state per page so the callback can access updated values
 interface PageState {
@@ -11,7 +10,7 @@ interface PageState {
 }
 const pageState = new WeakMap<Page, PageState>();
 
-export function getRouteFromFilename(filename: string): string {
+function getRouteFromFilename(filename: string): string {
   const parts = path.dirname(filename).split('/app');
   if (parts.length < 2) {
     throw new Error(
@@ -46,11 +45,6 @@ export async function goToPage(filename: string, page: Page, renders: RenderEven
 
   await page.goto(route);
 
-  const saveReport = async () => {
-    const report = generateReport(renders);
-    await saveReportToFs(report, route);
-  };
-
   const startBench = () => {
     state!.renders.splice(0); // Clear previous renders
     state!.trackEvents = true;
@@ -62,5 +56,5 @@ export async function goToPage(filename: string, page: Page, renders: RenderEven
 
   startBench();
 
-  return { renders, startBench, endBench, saveReport };
+  return { renders, startBench, endBench };
 }

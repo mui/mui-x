@@ -1,9 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { getRouteFromFilename, goToPage } from '../../../utils/goToPage';
-import { generateReportFromIterations, saveReport } from '../../../utils/reporter';
-import { iterateTest } from '../../../utils/iterateTest';
-
-const route = getRouteFromFilename(__filename);
+import { goToPage } from '../../utils/goToPage';
+import { iterateTest } from '../../utils/iterateTest';
 
 test(
   'benchmark render',
@@ -35,10 +32,6 @@ test(
       }
 
       endBench();
-    },
-    async (iterations) => {
-      const report = generateReportFromIterations(iterations);
-      await saveReport(report, route);
     },
     { warmupRuns: 3 },
   ),
