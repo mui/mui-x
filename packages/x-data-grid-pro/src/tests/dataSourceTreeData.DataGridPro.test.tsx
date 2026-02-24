@@ -337,7 +337,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
         return row;
       });
     };
-    const { user, unmount } = render(
+    const { user } = render(
       <TestDataSource dataSourceCache={null} transformGetRowsResponse={transformGetRowsResponse} />,
     );
 
@@ -365,8 +365,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(3);
       expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
     });
-
-    unmount();
   });
 
   it('should fetch nested data when clicking on a dropdown', async () => {
