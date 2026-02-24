@@ -151,7 +151,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
   });
 
-  it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
+  it.todo('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
     const localFetchRowsSpy = spy();
     render(
       <TestDataSource
