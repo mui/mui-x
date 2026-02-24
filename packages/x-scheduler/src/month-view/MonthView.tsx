@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
@@ -99,24 +98,14 @@ const MonthViewBody = styled('div', {
   display: 'grid',
   gridAutoRows: '1fr',
   maxHeight: '100%',
+  position: 'relative',
 });
 
-// TODO: Replace with a proper loading overlay component that is shared across views
-const MonthViewLoadingOverlay = styled(Typography, {
-  name: 'MuiEventCalendar',
-  slot: 'MonthViewLoadingOverlay',
-})(({ theme }) => ({
-  position: 'absolute',
-  fontSize: theme.typography.body1.fontSize,
-  padding: 2,
-  color: theme.palette.text.secondary,
-  zIndex: 1,
-}));
-
-const CELL_PADDING = 8;
+const CELL_PADDING = 12; // theme.spacing(0.7) * 2 ≈ 11.2px, rounded up
 const DAY_NUMBER_HEADER_HEIGHT = 18;
 const EVENT_HEIGHT = 18;
-const EVENT_GAP = 5;
+const EVENT_GAP = 4; // theme.spacing(0.5) = 4px
+const CELL_GAP = 4; // theme.spacing(0.5) = 4px — gap between cell grid rows (empty rows from --row-count)
 
 const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
@@ -158,7 +147,6 @@ export const MonthView = React.memo(
 
     // Selector hooks
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-    const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
@@ -190,7 +178,7 @@ export const MonthView = React.memo(
         const cellHeight = cellRef.current!.clientHeight;
         const eventContainerHeight = cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT;
         const maxEventsCount = Math.floor(
-          (eventContainerHeight + EVENT_GAP) / (EVENT_HEIGHT + EVENT_GAP),
+          (eventContainerHeight + EVENT_GAP) / (EVENT_HEIGHT + EVENT_GAP + CELL_GAP),
         );
         setMaxEvents(maxEventsCount);
       },
@@ -223,12 +211,6 @@ export const MonthView = React.memo(
               ))}
             </MonthViewHeader>
             <MonthViewBody className={classes.monthViewBody}>
-              {isLoading && (
-                <MonthViewLoadingOverlay className={classes.monthViewLoadingOverlay}>
-                  {localeText.loading}
-                </MonthViewLoadingOverlay>
-              )}
-
               {weeks.map((week, weekIdx) => (
                 <MonthViewWeekRow
                   key={weekIdx}

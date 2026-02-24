@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -30,18 +29,7 @@ import {
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
-
-const RecurrenceTabContent = styled('div', {
-  name: 'MuiEventDialog',
-  slot: 'RecurrenceTabContent',
-})(({ theme }) => ({
-  padding: theme.spacing(3),
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(2.5),
-  height: 450,
-  overflow: 'auto',
-}));
+import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
 interface RecurrenceTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -302,13 +290,14 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     : 'byMonthDay';
 
   return (
-    <Box
+    <EventDialogTabPanel
       role="tabpanel"
       id="recurrence-tabpanel"
       aria-labelledby="recurrence-tab"
+      className={classes.eventDialogTabPanel}
       hidden={tabValue !== 'recurrence'}
     >
-      <RecurrenceTabContent className={classes.eventDialogRecurrenceTabContent}>
+      <EventDialogTabContent className={classes.eventDialogTabContent}>
         <FormControl fullWidth size="small">
           <InputLabel id="recurrence-preset-label">
             {localeText.recurrenceMainSelectCustomLabel}
@@ -454,7 +443,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
             </Box>
           </RadioGroup>
         </FormControl>
-      </RecurrenceTabContent>
-    </Box>
+      </EventDialogTabContent>
+    </EventDialogTabPanel>
   );
 }

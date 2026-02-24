@@ -78,6 +78,9 @@ const MonthStart = styled('div', {
   top: 0,
   bottom: 0,
   left: 0,
+  ...theme.applyStyles('dark', {
+    background: theme.palette.grey[800],
+  }),
 }));
 
 const MonthStartLabel = styled('p', {

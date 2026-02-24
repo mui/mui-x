@@ -37,7 +37,7 @@ const ResourceLegendColor = styled('span', {
   height: 10,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-main)',
+  backgroundColor: 'var(--event-surface-accent)',
 });
 
 export default function EventTimelinePremiumTitleCell(props: { resourceId: SchedulerResourceId }) {

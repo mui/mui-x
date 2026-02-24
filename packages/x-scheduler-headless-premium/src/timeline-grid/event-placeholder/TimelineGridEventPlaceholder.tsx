@@ -7,6 +7,11 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { TimelineGridEventPlaceholderCssVars } from './TimelineGridEventPlaceholderCssVars';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
 
+const overflowStateAttributesMapping = {
+  startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
+  endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
+};
+
 export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGridEventPlaceholder(
   componentProps: TimelineGridEventPlaceholder.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -29,12 +34,13 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
 
   // Feature hooks
-  const { position, duration } = useElementPositionInCollection({
-    start,
-    end,
-    collectionStart: viewConfig.start,
-    collectionEnd: viewConfig.end,
-  });
+  const { position, duration, startingBeforeEdge, endingAfterEdge } =
+    useElementPositionInCollection({
+      start,
+      end,
+      collectionStart: viewConfig.start,
+      collectionEnd: viewConfig.end,
+    });
 
   // Rendering hooks
   const style = React.useMemo(
@@ -48,17 +54,26 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
 
   const props = React.useMemo(() => ({ style }), [style]);
 
-  const { state } = useEvent({ start, end });
+  const { state: eventState } = useEvent({ start, end });
+
+  const state = React.useMemo(
+    () => ({ ...eventState, startingBeforeEdge, endingAfterEdge }),
+    [eventState, startingBeforeEdge, endingAfterEdge],
+  );
 
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
     props: [props, elementProps],
+    stateAttributesMapping: overflowStateAttributesMapping,
   });
 });
 
 export namespace TimelineGridEventPlaceholder {
-  export interface State extends useEvent.State {}
+  export interface State extends useEvent.State {
+    startingBeforeEdge: boolean;
+    endingAfterEdge: boolean;
+  }
 
   export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {}
 }

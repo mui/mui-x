@@ -1,3 +1,5 @@
+import { SxProps } from '@mui/system/styleFunctionSx';
+import { Theme } from '@mui/material/styles';
 import {
   EventTimelinePremiumParameters,
   EventTimelinePremiumStore,
@@ -30,4 +32,8 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
    * Can be instantiated with `useEventTimelinePremiumApiRef()`.
    */
   apiRef?: EventTimelinePremiumApiRef;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
 }
