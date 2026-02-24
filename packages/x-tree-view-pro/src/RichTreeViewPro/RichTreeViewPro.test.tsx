@@ -20,11 +20,7 @@ describe('<RichTreeViewPro />', () => {
 
   it('should pass the id prop to the root element', () => {
     render(
-      <RichTreeViewPro
-        id="test-id"
-        items={[{ id: '1', label: 'Item 1' }]}
-        disableVirtualization
-      />,
+      <RichTreeViewPro id="test-id" items={[{ id: '1', label: 'Item 1' }]} disableVirtualization />,
     );
 
     expect(screen.getByRole('tree')).to.have.attribute('id', 'test-id');

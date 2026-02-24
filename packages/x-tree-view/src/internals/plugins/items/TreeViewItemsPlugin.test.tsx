@@ -531,13 +531,15 @@ describeTreeView<TreeViewAnyStore>(
     });
 
     describe('itemHeight prop', () => {
-      it('should not set --TreeView-itemHeight CSS variable when itemHeight is not defined', () => {
+      it('should not set --TreeView-itemHeight CSS variable when itemHeight is not defined except on RichTreeViewPro component', () => {
         const view = render({
           items: [{ id: '1' }],
         });
 
         const itemRoot = view.getItemRoot('1');
-        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          treeViewComponentName === 'RichTreeViewPro' ? '32px' : '',
+        );
       });
 
       it('should set --TreeView-itemHeight CSS variable when itemHeight is defined', () => {
