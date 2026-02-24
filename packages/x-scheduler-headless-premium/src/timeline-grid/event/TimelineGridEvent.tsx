@@ -26,6 +26,11 @@ import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
 
+const overflowStateAttributesMapping = {
+  startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
+  endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
+};
+
 export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   componentProps: TimelineGridEvent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -127,11 +132,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     [state, startingBeforeEdge, endingAfterEdge],
   );
 
-  const stateAttributesMapping = {
-    startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
-    endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
-  };
-
   // Rendering hooks
   const style = React.useMemo(
     () =>
@@ -153,7 +153,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     state: mergedState,
     ref: [forwardedRef, ref, buttonRef],
     props: [props, elementProps, getButtonProps],
-    stateAttributesMapping,
+    stateAttributesMapping: overflowStateAttributesMapping,
   });
 
   return (

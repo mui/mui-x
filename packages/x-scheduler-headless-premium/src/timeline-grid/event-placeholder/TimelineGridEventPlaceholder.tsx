@@ -7,6 +7,11 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { TimelineGridEventPlaceholderCssVars } from './TimelineGridEventPlaceholderCssVars';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
 
+const overflowStateAttributesMapping = {
+  startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
+  endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
+};
+
 export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGridEventPlaceholder(
   componentProps: TimelineGridEventPlaceholder.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -56,16 +61,11 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
     [eventState, startingBeforeEdge, endingAfterEdge],
   );
 
-  const stateAttributesMapping = {
-    startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
-    endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
-  };
-
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
     props: [props, elementProps],
-    stateAttributesMapping,
+    stateAttributesMapping: overflowStateAttributesMapping,
   });
 });
 
