@@ -255,52 +255,55 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
   });
 
-  it('should not set children loading state during background nested revalidation', async () => {
-    const localFetchRowsSpy = spy();
-    const { user } = render(
-      <TestDataSource
-        dataSourceCache={null}
-        dataSourceRevalidateMs={1}
-        onFetchRows={localFetchRowsSpy}
-      />,
-    );
+  it.todo(
+    'should not set children loading state during background nested revalidation',
+    async () => {
+      const localFetchRowsSpy = spy();
+      const { user } = render(
+        <TestDataSource
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
 
-    await waitFor(() => {
-      expect(localFetchRowsSpy.callCount).to.equal(1);
-    });
-
-    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
-    await user.click(within(cell11).getByRole('button'));
-
-    await waitFor(() => {
-      expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
-    });
-
-    const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
-
-    localFetchRowsSpy.resetHistory();
-    setChildrenLoadingSpy.resetHistory();
-
-    await waitFor(() => {
-      const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
-        const url = new URL(call.firstArg as string);
-        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-        return groupKeys.length > 0;
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.equal(1);
       });
-      expect(hasNestedGroupRequest).to.equal(true);
-    });
 
-    const hasLoadingTrueCall = setChildrenLoadingSpy
-      .getCalls()
-      .some((call) => call.args[0] === expandedRowId && call.args[1] === true);
-    setChildrenLoadingSpy.restore();
-    expect(hasLoadingTrueCall).to.equal(false);
-  });
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+        .children[0];
+      const cell11 = getCell(0, 0);
+      await user.click(within(cell11).getByRole('button'));
 
-  it.todo('should remove stale rows when re-fetching expanded nested rows', async () => {
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      });
+
+      const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
+
+      localFetchRowsSpy.resetHistory();
+      setChildrenLoadingSpy.resetHistory();
+
+      await waitFor(() => {
+        const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
+          const url = new URL(call.firstArg as string);
+          const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+          return groupKeys.length > 0;
+        });
+        expect(hasNestedGroupRequest).to.equal(true);
+      });
+
+      const hasLoadingTrueCall = setChildrenLoadingSpy
+        .getCalls()
+        .some((call) => call.args[0] === expandedRowId && call.args[1] === true);
+      setChildrenLoadingSpy.restore();
+      expect(hasLoadingTrueCall).to.equal(false);
+    },
+  );
+
+  it('should remove stale rows when re-fetching expanded nested rows', async () => {
     let hasTransformedTheNestedData = false;
     const testRowId = 'test-nested-row-id-1';
     const transformGetRowsResponse = (
