@@ -91,7 +91,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   return (
     <ChartsSurfaceStyles
       ownerState={{ width: propsWidth, height: propsHeight }}
-      viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
+      viewBox={`0 0 ${svgWidth} ${svgHeight}`}
       className={clsx(classes.root, className)}
       tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
       {...other}

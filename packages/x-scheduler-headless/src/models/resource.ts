@@ -38,6 +38,13 @@ export interface SchedulerResource {
    * Can be overridden per event using the `resizable` property on the event model.
    */
   areEventsResizable?: boolean | SchedulerEventSide;
+  /**
+   * Whether events assigned to this resource are read-only.
+   * Read-only events cannot be modified using UI features such as popover editing or drag and drop.
+   * If not defined, falls back to the component-level `readOnly` property.
+   * Can be overridden per event using the `readOnly` property on the event model.
+   */
+  areEventsReadOnly?: boolean;
 }
 
 export type SchedulerResourceModelStructure<TResource extends object> = {
