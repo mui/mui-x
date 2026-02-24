@@ -87,7 +87,6 @@ export default function BellCurveOverlay() {
             id: 'bell-curve',
             color: '#f97316',
             curve: 'natural',
-            showMark: false,
           },
         ]}
         xAxis={[

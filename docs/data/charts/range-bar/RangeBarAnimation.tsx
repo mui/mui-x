@@ -73,7 +73,7 @@ export default function RangeBarAnimation() {
   );
 }
 
-const highlightScope: HighlightScope = {
+const highlightScope: HighlightScope<'rangeBar'> = {
   highlight: 'series',
   fade: 'global',
 };

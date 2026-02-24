@@ -37,7 +37,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
         );
 
         // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
@@ -66,7 +66,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
         );
 
         // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
@@ -90,7 +90,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
 
     for (let i = 0; i < 3; i += 1) {
       // Don't care about what's focused.
-      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+      // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
     }
 

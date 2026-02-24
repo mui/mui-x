@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "FocusedRangeBar",
+  "imports": [
+    "import { FocusedRangeBar } from '@mui/x-charts-premium/BarChartPremium';",
+    "import { FocusedRangeBar } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiFocusedRangeBar",
+  "filename": "/packages/x-charts-premium/src/BarChartPremium/RangeBar/FocusedRangeBar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

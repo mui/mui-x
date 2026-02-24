@@ -18,8 +18,6 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     'Resource B': true,
   };
 
-  const noParents = new Map<string, string | null>();
-
   function run(events: SchedulerProcessedEvent[]) {
     return innerGetEventOccurrencesGroupedByDay({
       adapter,
@@ -27,7 +25,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events,
       visibleResources: visible,
       displayTimezone: 'default',
-      resourceParentIds: noParents,
+      plan: 'premium',
     });
   }
 
@@ -80,7 +78,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events: [visibleEvent, invisibleEvent],
       visibleResources: visibilityWithHidden,
       displayTimezone: 'default',
-      resourceParentIds: noParents,
+      plan: 'premium',
     });
 
     const list = result.get(days[1].key)!;
@@ -130,8 +128,8 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       days,
       events: [event],
       visibleResources: visible,
-      resourceParentIds: noParents,
       displayTimezone: 'Europe/Paris',
+      plan: 'premium',
     });
 
     // Should NOT appear on Jan 10 in Paris

@@ -17,11 +17,11 @@ describe('<RadarChart />', () => {
   const { render } = createRenderer();
   describeConformance(<RadarChart {...radarConfig} />, () => ({
     classes: {} as any,
-    inheritComponent: 'svg',
+    inheritComponent: 'div',
     render,
     muiName: 'MuiRadarChart',
     testComponentPropWith: 'div',
-    refInstanceof: window.SVGSVGElement,
+    refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
       'componentsProp',

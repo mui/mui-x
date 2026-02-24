@@ -5,6 +5,7 @@ import keyboardFocusHandler from './keyboardFocusHandler';
 const state = (withEmptyCells: boolean) => ({
   series: {
     seriesConfig: { heatmap: {} } as any,
+    idToType: new Map([['heatmap-1', 'heatmap' as const]]),
     defaultizedSeries: {
       heatmap: {
         seriesOrder: ['heatmap-1'],

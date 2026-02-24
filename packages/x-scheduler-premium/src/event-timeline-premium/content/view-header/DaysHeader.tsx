@@ -5,7 +5,7 @@ import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
 const DaysHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -78,6 +78,9 @@ const MonthStart = styled('div', {
   top: 0,
   bottom: 0,
   left: 0,
+  ...theme.applyStyles('dark', {
+    background: theme.palette.grey[800],
+  }),
 }));
 
 const MonthStartLabel = styled('p', {
@@ -91,7 +94,7 @@ export function DaysHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventTimelinePremiumStoreContext();
-  const classes = useEventTimelinePremiumClasses();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);

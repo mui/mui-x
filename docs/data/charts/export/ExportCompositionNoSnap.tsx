@@ -50,6 +50,7 @@ export default function ExportCompositionNoSnap() {
             type: 'line',
             data: [4, 3, 1, 3, 4],
             label: 'Line',
+            showMark: true,
           },
         ]}
         xAxis={[

@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@mui/x-internals": "workspace:*",
+    "@mui/x-virtualizer": "workspace:*",
     "@base-ui/utils": "0.2.4",
     "prop-types": "catalog:",
     "type-fest": "catalog:"

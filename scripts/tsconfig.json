@@ -2,6 +2,9 @@
   "compilerOptions": {
     "allowJs": true,
     "isolatedModules": true,
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "target": "ES2020",
     "noEmit": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,

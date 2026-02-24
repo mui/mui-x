@@ -75,7 +75,9 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
 
-    return adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1);
+    return adapter.startOfDay(
+      adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1),
+    );
   });
 
   const firstEventOfSeries = schedulerEventSelectors.processedEvent(store.state, eventId)!;
