@@ -78,12 +78,10 @@ export function buildItemsLookups<R extends TreeViewValidItem<R>>(
       : (item as any).label;
     if (label == null) {
       throw new Error(
-        [
-          'MUI X: The Tree View component requires all items to have a `label` property.',
-          'Alternatively, you can use the `getItemLabel` prop to specify a custom label for each item.',
-          'An item was provided without label in the `items` prop:',
-          JSON.stringify(item),
-        ].join('\n'),
+        `MUI X: The Tree View component requires all items to have a \`label\` property.
+Alternatively, you can use the \`getItemLabel\` prop to specify a custom label for each item.
+An item was provided without label in the \`items\` prop:
+${JSON.stringify(item)}`,
       );
     }
 
@@ -152,12 +150,10 @@ function checkId<R extends TreeViewValidItem<R>>({
 }) {
   if (id == null) {
     throw new Error(
-      [
-        'MUI X: The Tree View component requires all items to have a unique `id` property.',
-        'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-        'An item was provided without id in the `items` prop:',
-        JSON.stringify(item),
-      ].join('\n'),
+      `MUI X: The Tree View component requires all items to have a unique \`id\` property.
+Alternatively, you can use the \`getItemId\` prop to specify a custom id for each item.
+An item was provided without id in the \`items\` prop:
+${JSON.stringify(item)}`,
     );
   }
 
@@ -167,11 +163,9 @@ function checkId<R extends TreeViewValidItem<R>>({
     (itemMetaLookup[id] != null && itemMetaLookup[id]!.parentId !== parentId)
   ) {
     throw new Error(
-      [
-        'MUI X: The Tree View component requires all items to have a unique `id` property.',
-        'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-        `Two items were provided with the same id in the \`items\` prop: "${id}"`,
-      ].join('\n'),
+      `MUI X: The Tree View component requires all items to have a unique \`id\` property.
+Alternatively, you can use the \`getItemId\` prop to specify a custom id for each item.
+Two items were provided with the same id in the \`items\` prop: "${id}"`,
     );
   }
 }

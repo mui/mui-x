@@ -273,7 +273,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         }
 
         default:
-          throw new Error('not supported');
+          throw /* minify-error-disabled */ new Error('not supported');
       }
     },
     [
@@ -388,7 +388,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         }
 
         default:
-          throw new Error(`Unknown view: ${viewToBuild} found.`);
+          throw new Error(`MUI X: Unknown view: ${viewToBuild} found.`);
       }
     },
     [

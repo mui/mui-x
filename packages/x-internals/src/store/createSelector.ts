@@ -33,7 +33,7 @@ export const createSelector = ((
   ...other: any[]
 ) => {
   if (other.length > 0) {
-    throw new Error('Unsupported number of selectors');
+    throw new Error('MUI X: Unsupported number of selectors');
   }
 
   let selector: any;
@@ -96,7 +96,7 @@ export const createSelector = ((
   } else if (a) {
     selector = a;
   } else {
-    throw new Error('Missing arguments');
+    throw new Error('MUI X: Missing arguments');
   }
 
   return selector;
@@ -117,7 +117,7 @@ export const createSelectorMemoizedWithOptions =
     const argsLength = Math.max(combiner.length - nSelectors, 0);
 
     if (argsLength > 3) {
-      throw new Error('Unsupported number of arguments');
+      throw new Error('MUI X: Unsupported number of arguments');
     }
 
     // prettier-ignore
@@ -165,7 +165,7 @@ export const createSelectorMemoizedWithOptions =
           break;
         }
         default:
-          throw new Error('Unsupported number of arguments');
+          throw new Error('MUI X: Unsupported number of arguments');
       }
       if (options) {
         reselectArgs = [...reselectArgs, options];
@@ -192,7 +192,7 @@ export const createSelectorMemoizedWithOptions =
       case 2: return fn(state, a1, a2);
       case 3: return fn(state, a1, a2, a3);
       default:
-        throw new Error('unreachable');
+        throw /* minify-error-disabled */ new Error('unreachable');
     }
   };
 

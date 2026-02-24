@@ -29,10 +29,8 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
       });
     } else if (dataset === undefined) {
       throw new Error(
-        [
-          `MUI X Charts: bar series with id='${id}' has no data.`,
-          'Either provide a data property to the series or use the dataset prop.',
-        ].join('\n'),
+        `MUI X Charts: bar series with id='${id}' has no data.
+Either provide a data property to the series or use the dataset prop.`,
       );
     }
 
@@ -42,10 +40,8 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
 
         if (!dataKey) {
           throw new Error(
-            [
-              `MUI X Charts: bar series with id='${id}' has no data and no dataKey.`,
-              'You must provide a dataKey when using the dataset prop.',
-            ].join('\n'),
+            `MUI X Charts: bar series with id='${id}' has no data and no dataKey.
+You must provide a dataKey when using the dataset prop.`,
           );
         }
 
@@ -53,10 +49,8 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
           const value = entry[dataKey];
           if (value != null && typeof value !== 'number') {
             warnOnce(
-              [
-                `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.`,
-                'Bar plots only support numeric and null values.',
-              ].join('\n'),
+              `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
+Bar plots only support numeric and null values.`,
             );
           }
         });

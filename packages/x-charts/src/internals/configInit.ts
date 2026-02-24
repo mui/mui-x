@@ -11,7 +11,7 @@ class CartesianSeriesTypes {
 
   constructor() {
     if (cartesianInstance) {
-      throw new Error('You can only create one instance!');
+      throw new Error('MUI X: You can only create one instance!');
     }
     cartesianInstance = this.types;
   }
@@ -30,7 +30,7 @@ class PolarSeriesTypes {
 
   constructor() {
     if (polarInstance) {
-      throw new Error('You can only create one instance!');
+      throw new Error('MUI X: You can only create one instance!');
     }
     polarInstance = this.types;
   }

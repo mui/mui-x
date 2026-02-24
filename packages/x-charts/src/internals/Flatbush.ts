@@ -44,25 +44,25 @@ export class Flatbush {
    */
   static from(data, byteOffset = 0) {
     if (byteOffset % 8 !== 0) {
-      throw new Error('byteOffset must be 8-byte aligned.');
+      throw new Error('MUI X: byteOffset must be 8-byte aligned.');
     }
 
     // @ts-expect-error duck typing array buffers
     if (!data || data.byteLength === undefined || data.buffer) {
-      throw new Error('Data must be an instance of ArrayBuffer or SharedArrayBuffer.');
+      throw new Error('MUI X: Data must be an instance of ArrayBuffer or SharedArrayBuffer.');
     }
 
     const [magic, versionAndType] = new Uint8Array(data, byteOffset + 0, 2);
     if (magic !== 0xfb) {
-      throw new Error('Data does not appear to be in a Flatbush format.');
+      throw new Error('MUI X: Data does not appear to be in a Flatbush format.');
     }
     const version = versionAndType >> 4;
     if (version !== VERSION) {
-      throw new Error(`Got v${version} data when expected v${VERSION}.`);
+      throw new Error(`MUI X: Got v${version} data when expected v${VERSION}.`);
     }
     const ArrayType = ARRAY_TYPES[versionAndType & 0x0f];
     if (!ArrayType) {
-      throw new Error('Unrecognized array type.');
+      throw new Error('MUI X: Unrecognized array type.');
     }
     const [nodeSize] = new Uint16Array(data, byteOffset + 2, 1);
     const [numItems] = new Uint32Array(data, byteOffset + 4, 1);
@@ -88,10 +88,10 @@ export class Flatbush {
     byteOffset = 0,
   ) {
     if (numItems === undefined) {
-      throw new Error('Missing required argument: numItems.');
+      throw new Error('MUI X: Missing required argument: "numItems".');
     }
     if (isNaN(numItems) || numItems <= 0) {
-      throw new Error(`Unexpected numItems value: ${numItems}.`);
+      throw new Error(`MUI X: Unexpected numItems value: ${numItems}.`);
     }
 
     this.numItems = +numItems;
@@ -116,7 +116,7 @@ export class Flatbush {
     const nodesByteSize = numNodes * 4 * ArrayType.BYTES_PER_ELEMENT;
 
     if (arrayTypeIndex < 0) {
-      throw new Error(`Unexpected typed array class: ${ArrayType}.`);
+      throw new Error(`MUI X: Unexpected typed array class: ${ArrayType}.`);
     }
 
     if (data) {
@@ -187,7 +187,7 @@ export class Flatbush {
   /** Perform indexing of the added rectangles. */
   finish() {
     if (this._pos >> 2 !== this.numItems) {
-      throw new Error(`Added ${this._pos >> 2} items when expected ${this.numItems}.`);
+      throw new Error(`MUI X: Added ${this._pos >> 2} items when expected ${this.numItems}.`);
     }
     const boxes = this._boxes;
 
@@ -266,7 +266,7 @@ export class Flatbush {
     filterFn?: (index: number) => boolean,
   ): number[] {
     if (this._pos !== this._boxes.length) {
-      throw new Error('Data not yet indexed - call index.finish().');
+      throw new Error('MUI X: Data not yet indexed - call index.finish().');
     }
 
     /** @type number | undefined */
@@ -330,7 +330,7 @@ export class Flatbush {
     sqDistFn = sqDist,
   ) {
     if (this._pos !== this._boxes.length) {
-      throw new Error('Data not yet indexed - call index.finish().');
+      throw new Error('MUI X: Data not yet indexed - call index.finish().');
     }
 
     /** @type number | undefined */

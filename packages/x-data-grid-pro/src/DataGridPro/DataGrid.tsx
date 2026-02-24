@@ -7,12 +7,9 @@ export function DataGrid() {
   }
 
   throw new Error(
-    [
-      "You try to import Data Grid from @mui/x-data-grid-pro but this module isn't exported from this npm package.",
-      '',
-      "Instead, you can do `import { DataGridPro } from '@mui/x-data-grid-pro'`.",
-      '',
-    ].join('\n'),
+    `MUI X: You try to import Data Grid from @mui/x-data-grid-pro but this module isn't exported from this npm package.
+
+Instead, you can do \`import { DataGridPro } from '@mui/x-data-grid-pro'\`.`,
   );
 }
 
@@ -25,14 +22,10 @@ export function DataGridPremium() {
   }
 
   throw new Error(
-    [
-      "You try to import Data Grid Premium from @mui/x-data-grid-pro but this module isn't exported from this npm package.",
-      '',
-      'Instead, if you have a Premium plan license or want to try Premium, you can do this:',
-      `import { DataGridPremium } from '@mui/x-data-grid-premium'`,
-      '',
-      "Otherwise, you can stay on the Pro plan: `import { DataGridPro } from '@mui/x-data-grid-pro'`.",
-      '',
-    ].join('\n'),
+    `MUI X: You try to import Data Grid Premium from @mui/x-data-grid-pro but this module isn't exported from this npm package.
+
+Instead, if you have a Premium plan license or want to try Premium, you can do this:
+
+Otherwise, you can stay on the Pro plan: \`import { DataGridPro } from '@mui/x-data-grid-pro'\`.`,
   );
 }

@@ -35,7 +35,7 @@ describe('PanUserGesture', () => {
   it('should throw an error if no target is provided', async () => {
     // @ts-expect-error, testing a missing target
     const panGesture = () => pan(pointerManager, { distance: 50 });
-    await expect(panGesture).rejects.toThrow('Target element is required for pan gesture');
+    await expect(panGesture).rejects.toThrow('MUI X: Target element is required for pan gesture');
   });
 
   it('should perform a pan gesture', async () => {

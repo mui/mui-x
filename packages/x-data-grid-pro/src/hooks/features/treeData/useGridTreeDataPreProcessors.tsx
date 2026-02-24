@@ -141,11 +141,9 @@ export const useGridTreeDataPreProcessors = (
 
       const onDuplicatePath: GridTreePathDuplicateHandler = (firstId, secondId, path) => {
         throw new Error(
-          [
-            'MUI X: The path returned by `getTreeDataPath` should be unique.',
-            `The rows with id #${firstId} and #${secondId} have the same.`,
-            `Path: ${JSON.stringify(path.map((step) => step.key))}.`,
-          ].join('\n'),
+          `MUI X: The path returned by \`getTreeDataPath\` should be unique.
+The rows with id #${firstId} and #${secondId} have the same.
+Path: ${JSON.stringify(path.map((step) => step.key))}.`,
         );
       };
 

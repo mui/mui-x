@@ -19,11 +19,9 @@ function throwIfNotDateObject({
 }) {
   if (!(value instanceof Date)) {
     throw new Error(
-      [
-        `MUI X: \`${columnType}\` column type only accepts \`Date\` objects as values.`,
-        'Use `valueGetter` to transform the value into a `Date` object.',
-        `Row ID: ${rowId}, field: "${field}".`,
-      ].join('\n'),
+      `MUI X: \`${columnType}\` column type only accepts \`Date\` objects as values.
+Use \`valueGetter\` to transform the value into a \`Date\` object.
+Row ID: ${rowId}, field: "${field}".`,
     );
   }
 }

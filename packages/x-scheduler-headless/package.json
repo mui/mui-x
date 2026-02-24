@@ -94,5 +94,8 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

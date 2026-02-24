@@ -237,7 +237,7 @@ export const getNonDisabledItemsInRange = (
       itemMeta = itemMeta.parentId ? itemsSelectors.itemMeta(state, itemMeta.parentId) : null;
     }
 
-    throw new Error('Invalid range');
+    throw new Error('MUI X: Invalid range');
   };
 
   const [first, last] = findOrderInTremauxTree(state, itemAId, itemBId);
