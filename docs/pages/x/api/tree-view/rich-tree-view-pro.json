@@ -105,7 +105,7 @@
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
     },
-    "itemHeight": { "type": { "name": "number" } },
+    "itemHeight": { "type": { "name": "number" }, "default": "32" },
     "itemsReordering": { "type": { "name": "bool" }, "default": "false" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
