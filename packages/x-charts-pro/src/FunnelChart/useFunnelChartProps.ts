@@ -67,7 +67,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
       data: categoryAxis?.categories
         ? categoryAxis.categories
         : // Otherwise we just need random data to create the band scale.
-          Array.from({ length: maxSeriesLength }, (_, index) => index),
+        Array.from({ length: maxSeriesLength }, (_, index) => index),
       tickLabelPlacement: 'middle',
       ...categoryValues,
       scaleType: 'band',
@@ -163,7 +163,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     sx,
     highlightedItem,
     onHighlightChange,
-    className,
     apiRef,
     plugins: FUNNEL_CHART_PLUGINS,
   };
@@ -192,6 +191,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
+    className,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
