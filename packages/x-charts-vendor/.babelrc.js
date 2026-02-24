@@ -30,7 +30,7 @@ module.exports = function getBabelConfig(api) {
     only: [/node_modules\/(d3-.*|internmap|flatqueue)\/.*\.js/],
     plugins: [
       [
-        '@babel/transform-modules-commonjs',
+        '@babel/plugin-transform-modules-commonjs',
         {
           strict: false,
           allowTopLevelThis: true,
