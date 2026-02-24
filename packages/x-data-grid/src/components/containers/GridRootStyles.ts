@@ -206,19 +206,21 @@ export const GridRootStyles = styled('div', {
     pinnedBackground,
     hoverColor,
     hoverOpacity,
-    fallbackColors.hover,
+    // Fall back to the solid pinned background so older WebKit (no color-mix support)
+    // doesn't render pinned cells as transparent on row hover (see #18273).
+    pinnedBackground,
   );
   const pinnedSelectedBackground = mix(
     pinnedBackground,
     selectedColor,
     selectedOpacity,
-    fallbackColors.selected,
+    pinnedBackground,
   );
   const pinnedSelectedHoverBackground = mix(
     pinnedBackground,
     selectedHoverColor,
     selectedHoverOpacity,
-    fallbackColors.selectedHover,
+    pinnedBackground,
   );
 
   const getPinnedBackgroundStyles = (backgroundColor: string) => ({
@@ -229,14 +231,14 @@ export const GridRootStyles = styled('div', {
           backgroundColor,
           selectedBackground,
           selectedOpacity,
-          fallbackColors.selected,
+          backgroundColor,
         ),
         '&:hover': {
           backgroundColor: mix(
             backgroundColor,
             selectedHoverBackground,
             selectedHoverOpacity,
-            fallbackColors.selectedHover,
+            backgroundColor,
           ),
         },
       },
