@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   defaultVisibleDate,
   initialEvents,
   resources,
-} from '../datasets/timezone-instant-based-events';
+} from '../datasets/timezone-community-instant-based';
 
-export default function TimezoneDatasetInstantBased() {
+export default function TimezoneInstantBased() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '100%' }}>
-      <EventCalendarPremium
+      <EventCalendar
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
