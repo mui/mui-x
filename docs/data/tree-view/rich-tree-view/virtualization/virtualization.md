@@ -70,8 +70,8 @@ When to use:
 
 When not to use:
 
-- You want the Rich Tree View to always take the height of its content, with no vertical scrollbar, and no row virtualization.
-  In this case, use the [`autoHeight`](/x/react-tree-view/rich-tree-view/virtualization/#auto-height) prop.
+- You want the Rich Tree View to always take the height of its content, with no vertical scrollbar, and no item virtualization.
+  In this case, use the `disableVirtualization` prop.
 
 :::
 
