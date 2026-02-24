@@ -67,7 +67,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
       data: categoryAxis?.categories
         ? categoryAxis.categories
         : // Otherwise we just need random data to create the band scale.
-        Array.from({ length: maxSeriesLength }, (_, index) => index),
+          Array.from({ length: maxSeriesLength }, (_, index) => index),
       tickLabelPlacement: 'middle',
       ...categoryValues,
       scaleType: 'band',
