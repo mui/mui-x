@@ -49,10 +49,7 @@ export default function LiveLineChartNoSnap() {
       <LineChart
         height={300}
         skipAnimation
-        series={[
-          { data: secondData, showMark: false },
-          { data: firstData, showMark: false },
-        ]}
+        series={[{ data: secondData }, { data: firstData }]}
         xAxis={[
           {
             scaleType: 'point',
