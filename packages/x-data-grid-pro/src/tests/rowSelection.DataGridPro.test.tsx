@@ -3,6 +3,7 @@ import { spy } from 'sinon';
 import { type RefObject } from '@mui/x-internals/types';
 import {
   getCell,
+  getColumnHeaderCell,
   getColumnValues,
   getRows,
   includeRowSelection,
@@ -1378,6 +1379,49 @@ describe('<DataGridPro /> - Row selection', () => {
         type: 'exclude',
         ids: new Set(),
       });
+    });
+  });
+
+  describe('lazy loading: onRowSelectionModelChange reason', () => {
+    function TestLazyLoadingSelection(props: Partial<DataGridProProps>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            columns={[{ field: 'id' }, { field: 'name' }]}
+            rows={[
+              { id: 1, name: 'Alice' },
+              { id: 2, name: 'Bob' },
+              { id: 3, name: 'Charlie' },
+            ]}
+            rowCount={3}
+            rowsLoadingMode="server"
+            paginationMode="server"
+            sortingMode="server"
+            filterMode="server"
+            checkboxSelection
+            disableVirtualization
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    it('should pass reason="singleRowSelection" when a row checkbox is clicked (lazy loading)', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestLazyLoadingSelection onRowSelectionModelChange={onRowSelectionModelChange} />,
+      );
+      await user.click(getCell(0, 0).querySelector('input')!);
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('singleRowSelection');
+    });
+
+    it('should pass reason="multipleRowsSelection" when the "Select all" header checkbox is clicked (lazy loading)', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestLazyLoadingSelection onRowSelectionModelChange={onRowSelectionModelChange} />,
+      );
+      await user.click(getColumnHeaderCell(0).querySelector('input')!);
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('multipleRowsSelection');
     });
   });
 });
