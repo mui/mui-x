@@ -50,7 +50,6 @@ const EventTimelinePremiumEventRoot = styled('div', {
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
-  // Left arrow (event starts before visible area)
   '&[data-starting-before-edge]': {
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
@@ -60,14 +59,12 @@ const EventTimelinePremiumEventRoot = styled('div', {
       display: 'none',
     },
   },
-  // Right arrow (event ends after visible area)
   '&[data-ending-after-edge]': {
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
     clipPath: RIGHT_ARROW_CLIP,
     paddingRight: ARROW_DEPTH + 8,
   },
-  // Both sides overflow
   '&[data-starting-before-edge][data-ending-after-edge]': {
     clipPath: BOTH_ARROWS_CLIP,
   },
