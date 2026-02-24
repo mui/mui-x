@@ -151,28 +151,32 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
   });
 
-  it.todo(
-    'should periodically revalidate root rows when dataSourceRevalidateMs is set',
-    async () => {
-      const localFetchRowsSpy = spy();
-      render(
-        <TestDataSource
-          dataSourceCache={null}
-          dataSourceRevalidateMs={1}
-          onFetchRows={localFetchRowsSpy}
-        />,
-      );
-      await waitFor(() => {
-        expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
-      });
+  it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
+    const localFetchRowsSpy = spy();
+    const { unmount } = render(
+      <TestDataSource
+        dataSourceCache={null}
+        dataSourceRevalidateMs={1}
+        onFetchRows={localFetchRowsSpy}
+      />,
+    );
 
-      localFetchRowsSpy.resetHistory();
+    await waitFor(() => {
+      expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
+    });
 
-      await waitFor(() => {
-        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
-      });
-    },
-  );
+    vi.useFakeTimers();
+    localFetchRowsSpy.resetHistory();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+    });
+
+    expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+
+    vi.useRealTimers();
+    unmount();
+  });
 
   it.todo(
     'should periodically revalidate expanded nested rows when dataSourceRevalidateMs is set',
