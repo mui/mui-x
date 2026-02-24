@@ -258,31 +258,28 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(afterFilteringSearchParams.get('start')).to.equal('0');
     });
 
-    it.todo(
-      'should not refetch already fetched rows on scroll-back when cache entry is still valid',
-      async () => {
-        render(<TestDataSourceLazyLoader mockServerRowCount={20} disableVirtualization={false} />);
-        await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+    it('should not refetch already fetched rows on scroll-back when cache entry is still valid', async () => {
+      render(<TestDataSourceLazyLoader mockServerRowCount={20} disableVirtualization={false} />);
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-        vi.useFakeTimers();
-        fetchRowsSpy.resetHistory();
+      vi.useFakeTimers();
+      fetchRowsSpy.resetHistory();
 
-        await act(async () => {
-          apiRef.current?.publishEvent('renderedRowsIntervalChange', {
-            firstRowIndex: 1,
-            lastRowIndex: 5,
-            firstColumnIndex: 0,
-            lastColumnIndex: 0,
-          });
-          await vi.advanceTimersByTimeAsync(700);
+      await act(async () => {
+        apiRef.current?.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 1,
+          lastRowIndex: 5,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
         });
+        await vi.advanceTimersByTimeAsync(700);
+      });
 
-        expect(fetchRowsSpy.callCount).to.equal(0);
-        vi.useRealTimers();
-      },
-    );
+      expect(fetchRowsSpy.callCount).to.equal(0);
+      vi.useRealTimers();
+    });
 
-    it.todo('should not refetch during polling when cache entry is still valid', async () => {
+    it('should not refetch during polling when cache entry is still valid', async () => {
       const localFetchRowsSpy = spy();
       render(
         <TestDataSourceLazyLoader
@@ -311,30 +308,27 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       vi.useRealTimers();
     });
 
-    it.todo(
-      'should periodically revalidate the current range when dataSourceRevalidateMs is set',
-      async () => {
-        const localFetchRowsSpy = spy();
-        render(
-          <TestDataSourceLazyLoader
-            mockServerRowCount={20}
-            disableVirtualization={false}
-            dataSourceCache={null}
-            dataSourceRevalidateMs={1}
-            onFetchRows={localFetchRowsSpy}
-          />,
-        );
-        await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-        await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
-        await waitFor(() => expect(getRow(19)).not.to.be.undefined);
+    it('should periodically revalidate the current range when dataSourceRevalidateMs is set', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={20}
+          disableVirtualization={false}
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
+      await waitFor(() => expect(getRow(19)).not.to.be.undefined);
 
-        localFetchRowsSpy.resetHistory();
+      localFetchRowsSpy.resetHistory();
 
-        await waitFor(() => {
-          expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
-        });
-      },
-    );
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      });
+    });
   });
 
   describe('Infinite loading', () => {
