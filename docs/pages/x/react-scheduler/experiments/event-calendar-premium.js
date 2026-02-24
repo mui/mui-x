@@ -73,7 +73,7 @@ function SchedulerContent({ dataset }) {
       onEventsChange={setEvents}
       areEventsDraggable
       areEventsResizable
-      {...(dataset.displayTimezone && { displayTimezone: dataset.displayTimezone })}
+      displayTimezone={dataset.displayTimezone}
     />
   );
 }
