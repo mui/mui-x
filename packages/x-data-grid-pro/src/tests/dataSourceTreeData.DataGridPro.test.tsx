@@ -215,17 +215,15 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   );
 
   it('should keep selected nested rows selected during background nested revalidation', async () => {
-    const localFetchRowsSpy = spy();
     const { user } = render(
       <TestDataSource
         dataSourceCache={null}
-        dataSourceRevalidateMs={100}
-        onFetchRows={localFetchRowsSpy}
+        dataSourceRevalidateMs={1}
       />,
     );
 
     await waitFor(() => {
-      expect(localFetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.callCount).to.equal(1);
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
@@ -235,7 +233,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
       const expandedNode = apiRef.current!.state.rows.tree[expandedRowId] as GridGroupNode;
       expect(expandedNode.children.length).to.be.greaterThan(0);
     });
@@ -247,10 +245,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
 
-    localFetchRowsSpy.resetHistory();
+    fetchRowsSpy.resetHistory();
 
     await waitFor(() => {
-      const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
+      const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
         const url = new URL(call.firstArg as string);
         const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
         return groupKeys.length > 0;
