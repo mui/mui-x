@@ -164,14 +164,19 @@ If not provided, no height restriction is applied to the tree item content eleme
 {{"demo": "ItemHeight.js"}}
 
 :::info
-When [virtualization](/x/react-tree-view/rich-tree-view/virtualization/) is enabled, the `itemHeight` defaults to `32px` if this prop is not defined.
+When virtualization is enabled (the default for `RichTreeViewPro`), the `itemHeight` defaults to `32px` if this prop is not defined.
 :::
 
 ## DOM structure
 
 Use the `domStructure` prop to control how items are rendered in the DOM.
+By default, the DOM structure is **nested** when virtualization is disabled and **flat** when virtualization is enabled (on `<RichTreeViewPro />`)
 
-By default, items are rendered with a **nested** structure where children are placed inside their parent:
+When `domStructure="nested"`, items are rendered with a **nested** structure where children are placed inside their parent:
+
+```tsx
+<RichTreeView items={ITEMS} domStructure="nested" />
+```
 
 ```html
 <ul>
@@ -188,7 +193,11 @@ By default, items are rendered with a **nested** structure where children are pl
 </ul>
 ```
 
-When `domStructure="flat"` is set, all items are rendered as siblings regardless of their hierarchy:
+When `domStructure="flat"`, all items are rendered as siblings regardless of their hierarchy:
+
+```tsx
+<RichTreeView items={ITEMS} domStructure="flat" />
+```
 
 ```html
 <ul>
@@ -199,14 +208,6 @@ When `domStructure="flat"` is set, all items are rendered as siblings regardless
   <li>Item 2</li>
 </ul>
 ```
-
-```tsx
-<RichTreeView items={ITEMS} domStructure="flat" />
-```
-
-:::info
-When [virtualization](/x/react-tree-view/rich-tree-view/virtualization/) is enabled, the `domStructure` defaults to `"flat"` if this prop is not defined.
-:::
 
 ## Track item clicks
 

@@ -49,10 +49,7 @@ export default function LazyLoadingDemo() {
         <Box
           sx={{
             height: 352,
-            overflow: 'auto',
-            minWidth: 260,
-            padding: 2,
-            width: 'fit-content',
+            width: 320,
             alignSelf: 'center',
           }}
         >

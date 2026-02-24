@@ -224,10 +224,15 @@ RichTreeViewPro.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
+   * If `true`, the virtualization is disabled.
+   * @default false
+   */
+  disableVirtualization: PropTypes.bool,
+  /**
    * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
    * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
    * Nested DOM structure is not compatible with collapse / expansion animations.
-   * @default 'flat' when using virtualization, 'nested' otherwise
+   * @default 'nested' when using disableVirtualization, 'flat' otherwise
    */
   domStructure: PropTypes.oneOf(['flat', 'nested']),
   /**
@@ -419,13 +424,6 @@ RichTreeViewPro.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Whether virtualization is enabled.
-   * If true, the DOM structure will be set to 'flat'.
-   * If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization.
-   * @default false
-   */
-  virtualization: PropTypes.bool,
 } as any;
 
 export { RichTreeViewPro };
