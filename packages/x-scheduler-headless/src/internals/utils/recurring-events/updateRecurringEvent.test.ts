@@ -709,7 +709,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // User explicitly provides a brand-new rrule AND moves to a different day (Saturday).
       // The user's explicit rrule must be respected; adjustRRuleForAllMove must NOT override it.
-      const explicitRRule: RecurringEventRecurrenceRule = {
+      const explicitRRule: SchedulerProcessedEventRecurrenceRule = {
         freq: 'WEEKLY',
         byDay: ['SA'],
         interval: 2,
