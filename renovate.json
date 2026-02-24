@@ -15,11 +15,6 @@
       "matchPackageNames": ["@react-spring/**"]
     },
     {
-      "groupName": "react-docgen",
-      "matchPackageNames": ["react-docgen"],
-      "allowedVersions": "< 6.0.0"
-    },
-    {
       "groupName": "bundling fixtures",
       "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "* * 1 1,7 *"
