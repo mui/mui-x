@@ -58,14 +58,4 @@ export const initialEvents = [
     timezone: 'Asia/Tokyo',
     resource: 'tokyo',
   },
-  // Same time slot as ny-morning but on Friday — useful to compare
-  // how the same UTC instant renders differently across timezones.
-  {
-    id: 'ny-friday-sync',
-    title: 'NY Friday Sync',
-    start: '2025-03-14T13:00:00Z', // 09:00 NY (EDT, UTC-4)
-    end: '2025-03-14T14:00:00Z',
-    timezone: 'America/New_York',
-    resource: 'ny',
-  },
 ];
