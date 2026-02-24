@@ -33,7 +33,7 @@ const SORTING_PIPELINE_PROCESSOR_NAME = 'sorting';
 
 const sortingPlugin = createPlugin<SortingPlugin>()({
   name: 'sorting',
-  order: 40,
+  order: 50,
   selectors: sortingSelectors,
 
   initialize: (state, params) => {
@@ -41,12 +41,12 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     const initialSortModel =
       params.sorting?.model ?? params.initialState?.sorting?.model ?? ([] as GridSortModel);
 
-    const dataRowIds = state.rows.dataRowIds;
+    const inputRowIds = state.rows.processedRowIds;
     let sortedRowIds: GridRowId[];
 
     if (params.sorting?.external || params.sorting?.mode === 'manual') {
       // For external/manual sorting, just mirror the row order
-      sortedRowIds = dataRowIds;
+      sortedRowIds = inputRowIds;
     } else {
       // Auto mode: compute sorted row IDs synchronously to avoid a flash of unsorted content
       const getColumn = (field: string) =>
@@ -61,7 +61,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         getRow,
         locale: params.intl?.locale,
       });
-      sortedRowIds = sortingApplier ? sortingApplier(dataRowIds) : dataRowIds;
+      sortedRowIds = sortingApplier ? sortingApplier(inputRowIds) : inputRowIds;
     }
 
     return {

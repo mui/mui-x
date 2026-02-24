@@ -204,6 +204,25 @@ After running the codemod make sure to adapt the hook returned value to your nee
  }
 ```
 
+## Line Chart
+
+### `showMark` default value changed ✅
+
+The default value of the `showMark` prop in the line series has changed from `true` to `false` in v9.
+
+If you were relying on marks being visible by default, explicitly set `showMark` to `true`:
+
+```diff
+ <LineChart
+   series={[
+     {
+       data: [1, 2, 3],
++      showMark: true,
+     },
+   ]}
+ />
+```
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
@@ -368,6 +387,33 @@ If you were relying on this attribute to check whether a chart item is focused, 
 ```ts
 const focusedItem = useFocusedItem();
 const hasFocusedItem = focusedItem !== null;
+```
+
+## Props propagation
+
+The `ref` for single component charts like `<LineChart />` is now propagated to the root element instead of the SVG element.
+
+Internally this change looks like this.
+
+```diff
+ const LineCHart = React.forwardRef(function LineChart(
+   inProps: LineChartProps,
+-  ref: React.Ref<SVGSVGElement>,
++  ref: React.Ref<HTMLDivElement>,
+ ) {
+   /* ... */
+   return (
+     <ChartDataProvider>
+-      <ChartsWrapper>
++      <ChartsWrapper ref={ref}>
+         {/* ... */}
+-        <ChartsSurface ref={ref}>
++        <ChartsSurface>
+           {/* ... */}
+         </ChartsSurface>
+     </ChartDataProvider>
+   );
+ });
 ```
 
 ## Typescript

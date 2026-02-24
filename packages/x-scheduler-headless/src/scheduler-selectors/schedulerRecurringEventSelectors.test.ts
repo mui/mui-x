@@ -1,10 +1,10 @@
-import { adapter, storeClasses } from 'test/utils/scheduler';
+import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
 import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
 import { getWeekDayCode } from '../internals/utils/recurring-events';
 
-describe.for(storeClasses.map((storeClass) => [storeClass.name, storeClass] as const))(
+describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClass] as const))(
   `Recurring event - %s`,
   ([, storeClass]) => {
     describe('Selector: recurrencePresets', () => {
