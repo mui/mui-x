@@ -97,6 +97,7 @@ The list includes these transformers
 - [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
 - [`rename-chart-api-import`](#rename-chart-api-import)
 - [`rename-id-to-series-id`](#rename-id-to-series-id)
+- [`replace-show-mark-default`](#replace-show-mark-default)
 
 ### `replace-heatmap-hide-legend-false`
 
@@ -164,6 +165,17 @@ Here is the list of slots and components that are impacted by the renaming:
 | line          | AnimatedLine, LineElement                |
 | mark          | MarkElement                              |
 | lineHighlight | LineHighlightElement                     |
+
+#### `replace-show-mark-default`
+
+Add `showMark: true` to line series when not defined to keep the same default behavior.
+
+```diff
+- <LineChart series={[{ data: [/* ... */] }]} />
++ <LineChart series={[{ data: [/* ... */] showMark: true }]} />
+- <ChartDataProvider series={[{ type: 'line', data: [/* ... */] }]} />
++ <ChartDataProvider series={[{ type: 'line', data: [/* ... */] showMark: true }]} />
+```
 
 ## v8.0.0
 
