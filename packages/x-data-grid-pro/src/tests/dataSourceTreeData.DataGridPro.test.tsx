@@ -216,10 +216,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
   it('should keep selected nested rows selected during background nested revalidation', async () => {
     const localFetchRowsSpy = spy();
-    const { user, unmount } = render(
+    const { user } = render(
       <TestDataSource
         dataSourceCache={null}
-        dataSourceRevalidateMs={1}
+        dataSourceRevalidateMs={100}
         onFetchRows={localFetchRowsSpy}
       />,
     );
@@ -259,7 +259,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
-    unmount();
   });
 
   it.todo(
