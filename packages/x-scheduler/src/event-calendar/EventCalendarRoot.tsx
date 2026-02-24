@@ -41,6 +41,9 @@ const EventCalendarRootStyled = styled('div', {
   ...schedulerTokens,
   // Layout
   boxSizing: 'border-box',
+  '*, *::before, *::after': {
+    boxSizing: 'inherit',
+  },
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
