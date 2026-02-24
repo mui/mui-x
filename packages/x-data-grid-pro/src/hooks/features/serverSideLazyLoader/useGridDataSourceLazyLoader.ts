@@ -549,6 +549,8 @@ export const useGridDataSourceLazyLoader = (
     }
   }, [props.dataSourceRevalidateMs, stopPolling]);
 
+  React.useEffect(() => stopPolling, [stopPolling]);
+
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       rowsStale.current = true;
