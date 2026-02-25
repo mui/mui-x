@@ -218,23 +218,24 @@ function getIsResizableFromProperty(
  * 2. The resource hierarchy, child → parent → … (`getValueInResource`)
  * 3. The component-level state (`valueInState`)
  */
-function resolveEventProperty<T>(params: {
+function resolveEventProperty<T>(parameters: {
   state: State;
   resourceId: string | null | undefined;
   valueInEvent: T | undefined;
   getValueInResource: (resource: SchedulerResource) => T | undefined;
   valueInState: T;
 }): T {
-  if (params.valueInEvent !== undefined) {
-    return params.valueInEvent;
+  const { state, resourceId, valueInEvent, getValueInResource, valueInState } = parameters;
+  if (valueInEvent !== undefined) {
+    return valueInEvent;
   }
 
-  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(params.state);
-  let currentResourceId = params.resourceId ?? null;
+  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+  let currentResourceId = resourceId ?? null;
   while (currentResourceId != null) {
-    const resource = schedulerResourceSelectors.processedResource(params.state, currentResourceId);
+    const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
     if (resource != null) {
-      const value = params.getValueInResource(resource);
+      const value = getValueInResource(resource);
       if (value !== undefined) {
         return value;
       }
@@ -242,5 +243,5 @@ function resolveEventProperty<T>(params: {
     currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
   }
 
-  return params.valueInState;
+  return valueInState;
 }
