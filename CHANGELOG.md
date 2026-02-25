@@ -89,14 +89,7 @@ Internal changes.
 
 ### Docs
 
-- [docs] Add doc for nested resources on Event Calendar and Event Timeline (#21402) @flaviendelangle
-- [docs] Add one demo per timeline view and create year and month good datasets (#21358) @flaviendelangle
-- [docs] Add the scheduler doc pages to the navbar in dev and staging env (#21334) @flaviendelangle
 - [docs] Fix external 301s (#21377) @Janpot
-- [docs] Make the Event Calendar lazy loading demo stable on the CI (#21389) @flaviendelangle
-- [docs] Merge all Event Calendar view pages (#21369) @flaviendelangle
-- [docs] Move scheduler full screen doc pages to an experiment folder (#21363) @flaviendelangle
-- [docs] Remove CSS files in scheduler demos (#21332) @flaviendelangle
 - [docs] Show premium in the overview (#21343) @alexfauquette
 - [docs][charts] Revise the useLegend hook doc (#21352) @mapache-salvaje
 - [docs][charts] Revise the axis hooks doc (#21317) @mapache-salvaje
