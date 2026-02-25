@@ -9,12 +9,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 25, 2026_
 
-We'd like to extend a big thank you to the 1 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🐞 Bugfixes
+- ⚡️ Improved dynamic data support and cache invalidation in lazy loading for Data Grid Pro
 
 The following team members contributed to this release:
-@cherniavskii
+@cherniavskii, @michelengelen, @MBilalShafi, @arminmeh
 
 ### Data Grid
 
