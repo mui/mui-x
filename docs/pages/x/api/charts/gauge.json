@@ -64,7 +64,7 @@
     }
   ],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiGauge",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/Gauge/Gauge.tsx",

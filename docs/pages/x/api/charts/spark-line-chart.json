@@ -201,7 +201,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiSparkLineChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/SparkLineChart/SparkLineChart.tsx",
