@@ -35,7 +35,6 @@ const DayGridEventBaseStyles = (theme: any) => ({
   gridRow: 'var(--grid-row)',
   gridColumn: 1,
   padding: `0 ${theme.spacing(0.5)}`,
-  boxSizing: 'border-box',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),

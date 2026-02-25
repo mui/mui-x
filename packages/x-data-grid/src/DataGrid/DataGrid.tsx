@@ -192,6 +192,13 @@ DataGridRaw.propTypes = {
     set: PropTypes.func.isRequired,
   }),
   /**
+   * If positive, the Data Grid will periodically revalidate data source rows by
+   * re-fetching them from the server when the cache entry has expired.
+   * Set to `0` to disable polling.
+   * @default 0
+   */
+  dataSourceRevalidateMs: PropTypes.number,
+  /**
    * Set the density of the Data Grid.
    * @default "standard"
    */
