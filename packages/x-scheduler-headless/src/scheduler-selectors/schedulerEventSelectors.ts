@@ -5,28 +5,36 @@ import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 
 /**
- * Walks up the resource hierarchy starting from `startResourceId` and returns
- * the first defined value produced by `getValue`.
- * Returns `undefined` if no resource in the hierarchy defines the property.
+ * Resolves an event property by checking (in order of priority):
+ * 1. The event itself (`valueInEvent`)
+ * 2. The resource hierarchy, child → parent → … (`getValueInResource`)
+ * 3. The component-level state (`valueInState`)
  */
-function findInResourceHierarchy<T>(
-  state: State,
-  startResourceId: string | null | undefined,
-  getValue: (resource: SchedulerResource) => T | undefined,
-): T | undefined {
-  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
-  let currentResourceId = startResourceId ?? null;
+function resolveEventProperty<T>(params: {
+  state: State;
+  resourceId: string | null | undefined;
+  valueInEvent: T | undefined;
+  getValueInResource: (resource: SchedulerResource) => T | undefined;
+  valueInState: T;
+}): T {
+  if (params.valueInEvent !== undefined) {
+    return params.valueInEvent;
+  }
+
+  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(params.state);
+  let currentResourceId = params.resourceId ?? null;
   while (currentResourceId != null) {
-    const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
+    const resource = schedulerResourceSelectors.processedResource(params.state, currentResourceId);
     if (resource != null) {
-      const value = getValue(resource);
+      const value = params.getValueInResource(resource);
       if (value !== undefined) {
         return value;
       }
     }
     currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
   }
-  return undefined;
+
+  return params.valueInState;
 }
 
 const processedEventSelector = createSelector(
@@ -41,23 +49,13 @@ const isEventReadOnlySelector = createSelector((state: State, eventId: Scheduler
     return false;
   }
 
-  // If the `readOnly` property is defined on the event, it takes precedence
-  if (processedEvent.modelInBuiltInFormat?.readOnly !== undefined) {
-    return processedEvent.modelInBuiltInFormat.readOnly;
-  }
-
-  // Then check if the resource or any ancestor has the `areEventsReadOnly` property defined
-  const resourceReadOnly = findInResourceHierarchy(
+  return resolveEventProperty({
     state,
-    processedEvent.resource,
-    (r) => r.areEventsReadOnly,
-  );
-  if (resourceReadOnly !== undefined) {
-    return resourceReadOnly;
-  }
-
-  // Otherwise, fall back to the component-level setting
-  return state.readOnly ?? false;
+    resourceId: processedEvent.resource,
+    valueInEvent: processedEvent.modelInBuiltInFormat?.readOnly,
+    getValueInResource: (r) => r.areEventsReadOnly,
+    valueInState: state.readOnly ?? false,
+  });
 });
 
 export const schedulerEventSelectors = {
@@ -176,23 +174,13 @@ export const schedulerEventSelectors = {
       return false;
     }
 
-    // If the `draggable` property is defined on the event, it takes precedence
-    if (processedEvent.draggable !== undefined) {
-      return processedEvent.draggable;
-    }
-
-    // Then check if the resource or any ancestor has the `areEventsDraggable` property defined
-    const resourceDraggable = findInResourceHierarchy(
+    return resolveEventProperty({
       state,
-      processedEvent.resource,
-      (r) => r.areEventsDraggable,
-    );
-    if (resourceDraggable !== undefined) {
-      return resourceDraggable;
-    }
-
-    // Otherwise, fall back to the component-level setting
-    return state.areEventsDraggable;
+      resourceId: processedEvent.resource,
+      valueInEvent: processedEvent.draggable,
+      getValueInResource: (r) => r.areEventsDraggable,
+      valueInState: state.areEventsDraggable,
+    });
   }),
   isResizable: createSelector(
     (state: State, eventId: SchedulerEventId, side: SchedulerEventSide) => {
@@ -214,34 +202,14 @@ export const schedulerEventSelectors = {
         return false;
       }
 
-      // If the `resizable` property is defined on the event, it takes precedence
-      const isResizableFromEventProperty = getIsResizableFromProperty(
-        processedEvent.resizable,
-        side,
-      );
-
-      if (isResizableFromEventProperty !== null) {
-        return isResizableFromEventProperty;
-      }
-
-      // TODO: Pre-process the resource, like we do for the event. That way we can compute this information only once.
-      // Then check if the resource or any ancestor has the `areEventsResizable` property defined
-      const resourceResizable = findInResourceHierarchy(
+      return resolveEventProperty({
         state,
-        processedEvent.resource,
-        (r) => r.areEventsResizable,
-      );
-      if (resourceResizable !== undefined) {
-        return getIsResizableFromProperty(resourceResizable, side) ?? false;
-      }
-
-      // Otherwise, fall back to the component-level setting
-      const isResizableFromComponentProperty = getIsResizableFromProperty(
-        state.areEventsResizable,
-        side,
-      );
-
-      return isResizableFromComponentProperty ?? false;
+        resourceId: processedEvent.resource,
+        valueInEvent: getIsResizableFromProperty(processedEvent.resizable, side) ?? undefined,
+        getValueInResource: (r) =>
+          getIsResizableFromProperty(r.areEventsResizable, side) ?? undefined,
+        valueInState: getIsResizableFromProperty(state.areEventsResizable, side) ?? false,
+      });
     },
   ),
   isRecurring: createSelector(
