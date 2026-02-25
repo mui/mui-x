@@ -21,61 +21,21 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@8.27.3`
 
-- [DataGrid] Preserve key input during row edit when using `rowModesModel` (@michelengelen) (#21457) @github-actions[bot]
+- [DataGrid] Preserve key input during row edit when using `rowModesModel` (#21457) @michelengelen
 
 #### `@mui/x-data-grid-pro@8.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@8.27.3`, plus:
 
-- [DataGridPro] Improve dynamic data support and cache invalidation in lazy loading (@MBilalShafi) (#21465) @github-actions[bot]
+- [DataGridPro] Improve dynamic data support and cache invalidation in lazy loading (#21465) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@8.27.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@8.27.3`.
 
-### Date and Time Pickers
-
-#### `@mui/x-date-pickers@8.27.3`
-
-Internal changes.
-
-#### `@mui/x-date-pickers-pro@8.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-date-pickers@8.27.3`.
-
-### Charts
-
-#### `@mui/x-charts@8.27.3`
-
-Internal changes.
-
-#### `@mui/x-charts-pro@8.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-charts@8.27.3`.
-
-#### `@mui/x-charts-premium@8.27.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
-
-Same changes as in `@mui/x-charts-pro@8.27.3`.
-
-### Tree View
-
-#### `@mui/x-tree-view@8.27.3`
-
-Internal changes.
-
-#### `@mui/x-tree-view-pro@8.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@8.27.3`.
-
-### Codemod
-
-#### `@mui/x-codemod@8.27.3`
-
-Internal changes.
-
 ### Core
 
-- [code-infra] Do not append `x` to the last version for the compare API (@arminmeh) (#21422) @github-actions[bot]
+- [code-infra] Do not append `x` to the last version for the compare API (#21422) @arminmeh
 - [docs-infra] Fix current version detection logic (#21415) @cherniavskii
 
 ## 8.27.2
