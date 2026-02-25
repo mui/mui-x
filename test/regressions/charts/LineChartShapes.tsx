@@ -1,8 +1,8 @@
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { LineChart } from '@mui/x-charts/LineChart';
-import type { D3Shape } from '@mui/x-charts/models/seriesType/line';
+import type { MarkShape } from '@mui/x-charts/models/seriesType/line';
 
-const shapes: D3Shape[] = ['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'];
+const shapes: MarkShape[] = ['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'];
 
 const xData = [0, 1, 2, 3, 4, 5, 6];
 const yData = [2, 5.5, 2, 8.5, 1.5, 5, 3];

@@ -234,7 +234,7 @@
   { "name": "cyanPalette", "kind": "Variable" },
   { "name": "cyanPaletteDark", "kind": "Variable" },
   { "name": "cyanPaletteLight", "kind": "Variable" },
-  { "name": "D3Shape", "kind": "TypeAlias" },
+  { "name": "MarkShape", "kind": "TypeAlias" },
   { "name": "DEFAULT_AXIS_SIZE_HEIGHT", "kind": "Variable" },
   { "name": "DEFAULT_AXIS_SIZE_WIDTH", "kind": "Variable" },
   { "name": "DEFAULT_MARGINS", "kind": "Variable" },

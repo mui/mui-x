@@ -9,7 +9,7 @@ import {
   labelMarkClasses,
   useUtilityClasses,
 } from './labelMarkClasses';
-import type { D3Shape } from '../models/seriesType/line';
+import type { MarkShape } from '../models/seriesType/line';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import { getSymbol } from '../internals/getSymbol';
 
@@ -37,7 +37,7 @@ export interface ChartsLabelMarkProps {
    * The line will be rendered first, followed by the mark.
    * Only used if `type='line+mark'`.
    */
-  markShape?: D3Shape;
+  markShape?: MarkShape;
   /**
    * The color of the mark.
    */
