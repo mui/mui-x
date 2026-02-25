@@ -111,7 +111,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
         : series[id].data!;
       const hidden = !isItemVisible?.({ type: 'line', seriesId: id });
       completedSeries[id] = {
-        labelMarkType: 'line',
+        labelMarkType: 'line+mark',
         ...series[id],
         data,
         valueFormatter: series[id].valueFormatter ?? lineValueFormatter,

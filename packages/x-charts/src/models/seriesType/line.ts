@@ -32,6 +32,8 @@ export interface ShowMarkParams<AxisValue = number | Date> {
   value: number;
 }
 
+export type D3Shape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
+
 export interface LineSeriesType
   extends CommonSeriesType<number | null, 'line'>, CartesianSeriesType, StackableSeriesType {
   type: 'line';
@@ -73,7 +75,7 @@ export interface LineSeriesType
    * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
    * @default 'circle'
    */
-  shape?: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
+  shape?: D3Shape;
   /**
    * Do not render the line highlight item if set to `true`.
    * @default false
