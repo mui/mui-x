@@ -241,7 +241,7 @@ function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
           modifiers: [
             {
               name: 'offset',
-              options: { offset: [-1, -rowHeight] },
+              options: { offset: [-1, -rowHeight + 1] }, // 1px compensate for the editing cell padding.
             },
           ],
         }}
