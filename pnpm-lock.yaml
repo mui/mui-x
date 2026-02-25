@@ -12,9 +12,6 @@ catalogs:
     '@babel/core':
       specifier: ^7.29.0
       version: 7.29.0
-    '@babel/plugin-transform-react-constant-elements':
-      specifier: ^7.27.1
-      version: 7.27.1
     '@babel/plugin-transform-runtime':
       specifier: ^7.29.0
       version: 7.29.0
@@ -117,15 +114,9 @@ catalogs:
     '@vitest/ui':
       specifier: ^4.0.18
       version: 4.0.18
-    babel-plugin-optimize-clsx:
-      specifier: ^2.6.2
-      version: 2.6.2
     babel-plugin-react-remove-properties:
       specifier: ^0.3.1
       version: 0.3.1
-    babel-plugin-transform-react-remove-prop-types:
-      specifier: ^0.4.24
-      version: 0.4.24
     chance:
       specifier: ^1.1.13
       version: 1.1.13
@@ -236,9 +227,6 @@ importers:
       '@babel/plugin-transform-object-rest-spread':
         specifier: 7.28.6
         version: 7.28.6(@babel/core@7.29.0)
-      '@babel/plugin-transform-react-constant-elements':
-        specifier: 'catalog:'
-        version: 7.27.1(@babel/core@7.29.0)
       '@babel/traverse':
         specifier: 'catalog:'
         version: 7.29.0
@@ -335,18 +323,12 @@ importers:
       axe-core:
         specifier: 4.11.1
         version: 4.11.1
-      babel-loader:
-        specifier: 10.0.0
-        version: 10.0.0(@babel/core@7.29.0)(webpack@5.101.3(@swc/core@1.15.13)(esbuild@0.27.3))
       babel-plugin-react-remove-properties:
         specifier: 'catalog:'
         version: 0.3.1
       babel-plugin-search-and-replace:
         specifier: 1.1.1
         version: 1.1.1
-      babel-plugin-transform-react-remove-prop-types:
-        specifier: 'catalog:'
-        version: 0.4.24
       babel-plugin-transform-replace-expressions:
         specifier: 0.2.0
         version: 0.2.0(@babel/core@7.29.0)
@@ -596,18 +578,6 @@ importers:
       ast-types:
         specifier: ^0.14.2
         version: 0.14.2
-      babel-plugin-optimize-clsx:
-        specifier: 'catalog:'
-        version: 2.6.2
-      babel-plugin-preval:
-        specifier: ^5.1.0
-        version: 5.1.0
-      babel-plugin-react-remove-properties:
-        specifier: 'catalog:'
-        version: 0.3.1
-      babel-plugin-transform-react-remove-prop-types:
-        specifier: 'catalog:'
-        version: 0.4.24
       chance:
         specifier: 'catalog:'
         version: 1.1.13
@@ -720,9 +690,6 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
     devDependencies:
-      '@babel/plugin-transform-react-constant-elements':
-        specifier: 'catalog:'
-        version: 7.27.1(@babel/core@7.29.0)
       '@babel/preset-typescript':
         specifier: 'catalog:'
         version: 7.28.5(@babel/core@7.29.0)
@@ -3234,12 +3201,6 @@ packages:
 
   '@babel/plugin-transform-property-literals@7.27.1':
     resolution: {integrity: sha512-oThy3BCuCha8kDZ8ZkgOg2exvPYUlprMukKQXI1r1pJ47NCvxfkEy8vK+r/hT9nF0Aa4H1WUPZZjHTFtAhGfmQ==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
-  '@babel/plugin-transform-react-constant-elements@7.27.1':
-    resolution: {integrity: sha512-edoidOjl/ZxvYo4lSBOQGDSyToYVkTAwyVoa2tkuYTSmjrB1+uAedoL5iROVLXkxH+vRgA7uP4tMg2pUJpZ3Ug==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -6787,13 +6748,6 @@ packages:
   b4a@1.6.7:
     resolution: {integrity: sha512-OnAYlL5b7LEkALw87fUVafQw5rVR9RjwGd4KUwNQ6DrrNmaVaUCgLipfVlzrPQ4tWOR9P0IXGNOx50jYCCdSJg==}
 
-  babel-loader@10.0.0:
-    resolution: {integrity: sha512-z8jt+EdS61AMw22nSfoNJAZ0vrtmhPRVi6ghL3rCeRZI8cdNYFiV5xeV3HbE7rlZZNmGH8BVccwWt8/ED0QOHA==}
-    engines: {node: ^18.20.0 || ^20.10.0 || >=22.0.0}
-    peerDependencies:
-      '@babel/core': ^7.12.0
-      webpack: '>=5.61.0'
-
   babel-plugin-macros@3.1.0:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
     engines: {node: '>=10', npm: '>=6'}
@@ -6818,10 +6772,6 @@ packages:
     resolution: {integrity: sha512-ISqQ2frbiNU9vIJkzg7dlPpznPZ4jOiUQ1uSmB0fEHeowtN3COYRsXr/xexn64NpU13P06jc/L5TgiJXOgrbEg==}
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
-
-  babel-plugin-preval@5.1.0:
-    resolution: {integrity: sha512-G5R+xmo5LS41A4UyZjOjV0mp9AvkuCyUOAJ6TOv/jTZS+VKh7L7HUDRcCSOb0YCM/u0fFarh7Diz0wjY8rFNFg==}
-    engines: {node: '>=10', npm: '>=6'}
 
   babel-plugin-react-compiler@1.0.0:
     resolution: {integrity: sha512-Ixm8tFfoKKIPYdCCKYTsqv+Fd4IJ0DQqMyEimo+pxUOMUR9cVPlwTrFt9Avu+3cb6Zp3mAzl+t1MrG2fxxKsxw==}
@@ -13548,11 +13498,6 @@ snapshots:
       '@babel/core': 7.29.0
       '@babel/helper-plugin-utils': 7.28.6
 
-  '@babel/plugin-transform-react-constant-elements@7.27.1(@babel/core@7.29.0)':
-    dependencies:
-      '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
-
   '@babel/plugin-transform-react-display-name@7.28.0(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
@@ -17592,12 +17537,6 @@ snapshots:
 
   b4a@1.6.7: {}
 
-  babel-loader@10.0.0(@babel/core@7.29.0)(webpack@5.101.3(@swc/core@1.15.13)(esbuild@0.27.3)):
-    dependencies:
-      '@babel/core': 7.29.0
-      find-up: 5.0.0
-      webpack: 5.101.3(@swc/core@1.15.13)(esbuild@0.27.3)
-
   babel-plugin-macros@3.1.0:
     dependencies:
       '@babel/runtime': 7.28.6
@@ -17644,13 +17583,6 @@ snapshots:
       '@babel/helper-define-polyfill-provider': 0.6.5(@babel/core@7.29.0)
     transitivePeerDependencies:
       - supports-color
-
-  babel-plugin-preval@5.1.0:
-    dependencies:
-      '@babel/runtime': 7.28.6
-      '@types/babel__core': 7.20.5
-      babel-plugin-macros: 3.1.0
-      require-from-string: 2.0.2
 
   babel-plugin-react-compiler@1.0.0:
     dependencies:
