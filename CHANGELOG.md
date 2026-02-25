@@ -25,7 +25,7 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid-pro@8.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@__VERSION__`, plus:
+Same changes as in `@mui/x-data-grid@8.27.3`, plus:
 
 - [DataGridPro] Improve dynamic data support and cache invalidation in lazy loading (@MBilalShafi) (#21465) @github-actions[bot]
 
