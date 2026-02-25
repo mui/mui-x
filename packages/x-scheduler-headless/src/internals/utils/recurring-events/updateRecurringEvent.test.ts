@@ -2,7 +2,7 @@ import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
 import {
   SchedulerEventUpdatedProperties,
   RecurringEventByDayValue,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import { mergeDateAndTime } from '../date-utils';
@@ -26,29 +26,33 @@ describe('recurring-events/updateRecurringEvent', () => {
     const splitStart = adapter.date('2025-01-06T15:00:00Z', 'default'); // "this and following" starts here
 
     const call = (
-      originalRule: RecurringEventRecurrenceRule,
+      originalRule: SchedulerProcessedEventRecurrenceRule,
       changes: Partial<SchedulerEventUpdatedProperties> = {},
       originalSeriesStart: TemporalSupportedObject = seriesStart,
       split: TemporalSupportedObject = splitStart,
     ) => decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes);
 
     it('should return changes.rrule as is when user explicitly changed recurrence', () => {
-      const original: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
-      const newRule: RecurringEventRecurrenceRule = { freq: 'WEEKLY', interval: 2, count: 5 };
+      const original: SchedulerProcessedEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
+      const newRule: SchedulerProcessedEventRecurrenceRule = {
+        freq: 'WEEKLY',
+        interval: 2,
+        count: 5,
+      };
 
       const res = call(original, { rrule: newRule });
       expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 2, count: 5 });
     });
 
     it('should return undefined when user explicitly removed recurrence', () => {
-      const original: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
+      const original: SchedulerProcessedEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
       const res = call(original, { rrule: undefined });
       expect(res).to.equal(undefined);
     });
 
     describe('should inherit base pattern when RRULE not explicitly changed', () => {
       it('should inherit base pattern when RRULE not touched and there are no boundaries', () => {
-        const original: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
+        const original: SchedulerProcessedEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
         const res = call(original, { title: 'New Event Title' });
         expect(res).to.deep.equal({ freq: 'DAILY', interval: 2 });
       });
@@ -56,7 +60,11 @@ describe('recurring-events/updateRecurringEvent', () => {
       it('should inherit base pattern and recomputes COUNT to remaining occurrences when RRULE not touched', () => {
         // Original: daily with count 42 from Jan 01
         // Split on Jan 06 => Jan 01..05 consumed => remaining 37 => new COUNT=37
-        const original: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 1, count: 42 };
+        const original: SchedulerProcessedEventRecurrenceRule = {
+          freq: 'DAILY',
+          interval: 1,
+          count: 42,
+        };
 
         const dayBeforeSplit = adapter.addDays(adapter.startOfDay(splitStart), -1);
         const remaining = getRemainingOccurrences(
@@ -73,7 +81,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       it('should keep the original UNTIL when inheriting (untouched RRULE)', () => {
         const originalUntil = adapter.date('2025-01-20T23:59:59Z', 'default');
-        const original: RecurringEventRecurrenceRule = {
+        const original: SchedulerProcessedEventRecurrenceRule = {
           freq: 'DAILY',
           interval: 1,
           until: originalUntil,
@@ -86,7 +94,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       describe('weekly realignment (BYDAY swap)', () => {
         it('should keep pattern selectors when inheriting (e.g., WEEKLY BYDAY)', () => {
-          const original: RecurringEventRecurrenceRule = {
+          const original: SchedulerProcessedEventRecurrenceRule = {
             freq: 'WEEKLY',
             interval: 1,
             byDay: ['MO', 'WE'],
@@ -97,7 +105,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
         it('should realign WEEKLY BYDAY when moving the day of the occurrence', () => {
           // Expect MO,WE → TU,WE (preserve pattern, swap only the edited weekday).
-          const original: RecurringEventRecurrenceRule = {
+          const original: SchedulerProcessedEventRecurrenceRule = {
             freq: 'WEEKLY',
             interval: 1,
             byDay: ['MO', 'WE'],
@@ -109,7 +117,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
         it('should avoid duplicates when new weekday already exists (MO→TU with TU present)', () => {
           // Expect MO,TU and moving MO → TU to result in just TU (no duplicate).
-          const original: RecurringEventRecurrenceRule = {
+          const original: SchedulerProcessedEventRecurrenceRule = {
             freq: 'WEEKLY',
             interval: 1,
             byDay: ['MO', 'TU'],
@@ -122,7 +130,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       describe('monthly realignment (BYMONTHDAY swap / ordinal BYDAY)', () => {
         it('should realign to new day of month (10th → 12th) (BYMONTHDAY)', () => {
-          const original: RecurringEventRecurrenceRule = {
+          const original: SchedulerProcessedEventRecurrenceRule = {
             freq: 'MONTHLY',
             interval: 1,
             byMonthDay: [10],
@@ -137,7 +145,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
         it('should recompute ordinal+weekday (2TU → 3WE) (ordinal BYDAY)', () => {
           const startMonth = adapter.date('2025-07-01T00:00:00Z', 'default');
-          const original: RecurringEventRecurrenceRule = {
+          const original: SchedulerProcessedEventRecurrenceRule = {
             freq: 'MONTHLY',
             interval: 1,
             byDay: ['2TU'],
@@ -150,7 +158,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
         it('should use -1 for last weekday of month (→ -1FR) (ordinal BYDAY)', () => {
           const monthStart = adapter.date('2025-10-01T00:00:00Z', 'default');
-          const original: RecurringEventRecurrenceRule = {
+          const original: SchedulerProcessedEventRecurrenceRule = {
             freq: 'MONTHLY',
             interval: 1,
             byDay: ['2TU'],
@@ -265,7 +273,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         changes,
       );
 
-      const until = (updated.updated![0].rrule as RecurringEventRecurrenceRule).until!;
+      const until = (updated.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
       // The UI thinks it's Jan 4 (display timezone), but truncation MUST use Jan 3 NY → until Jan 2.
       expect(adapter.getDate(until)).to.equal(2);
@@ -438,7 +446,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const expectedUntil = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
       expect(updatedEvents.updated).to.have.length(1);
       expect(
-        (updatedEvents.updated![0].rrule as RecurringEventRecurrenceRule)!.until,
+        (updatedEvents.updated![0].rrule as SchedulerProcessedEventRecurrenceRule)!.until,
       ).toEqualDateTime(expectedUntil);
     });
   });
@@ -701,7 +709,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // User explicitly provides a brand-new rrule AND moves to a different day (Saturday).
       // The user's explicit rrule must be respected; adjustRRuleForAllMove must NOT override it.
-      const explicitRRule: RecurringEventRecurrenceRule = {
+      const explicitRRule: SchedulerProcessedEventRecurrenceRule = {
         freq: 'WEEKLY',
         byDay: ['SA'],
         interval: 2,

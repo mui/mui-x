@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
@@ -11,7 +11,7 @@ interface CustomEvent {
   start: string;
   end: string;
   name: string;
-  rrule: RecurringEventRecurrenceRule;
+  rrule: SchedulerProcessedEventRecurrenceRule;
 }
 
 const initialEvents: CustomEvent[] = [
