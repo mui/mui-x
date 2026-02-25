@@ -93,7 +93,7 @@ It does not modify the event data or change when an event occurs.
 />
 ```
 
-{{"demo": "TimezoneDatasetInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "TimezoneInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Creating an event
 
@@ -102,7 +102,7 @@ When creating events from the UI, the entered date/time is interpreted in the cu
 The created event does not include an explicit `timezone` field.
 As a result, when the event is processed, its original timezone is treated as `"default"`.
 
-## Recurring events and timezones
+## Recurring events and timezones [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 Recurring events define a pattern that is evaluated in a specific timezone.
 
@@ -125,3 +125,5 @@ to happen at 09:00 local time in Europe/Paris.
 
 The Scheduler uses the event's `timezone` to interpret and expand
 the recurrence pattern correctly across DST boundaries.
+
+{{"demo": "TimezoneRecurringEvents.js", "bg": "inline", "defaultCodeOpen": false}}

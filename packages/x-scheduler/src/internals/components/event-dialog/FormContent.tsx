@@ -14,7 +14,7 @@ import {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
   RecurringEventFrequency,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -137,7 +137,7 @@ export function FormContent(props: FormContentProps) {
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,
       rruleDraft: {
-        freq: (base?.freq ?? 'DAILY') as RecurringEventFrequency,
+        freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
         interval: base?.interval ?? 1,
         byDay: base?.byDay ?? [],
         byMonthDay: base?.byMonthDay ?? [],
@@ -168,7 +168,7 @@ export function FormContent(props: FormContentProps) {
       color: controlled.color === null ? undefined : controlled.color,
     };
 
-    let rruleToSubmit: RecurringEventRecurrenceRule | undefined;
+    let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
     if (!showRecurrence) {
       rruleToSubmit = undefined;
     } else if (controlled.recurrenceSelection === null) {
