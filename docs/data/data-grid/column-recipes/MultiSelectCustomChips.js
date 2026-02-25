@@ -89,6 +89,7 @@ const getAssigneeChipProps = (option) => ({
 const getDepartmentChipProps = (value) => {
   const colors = departmentColors[value] ?? { bg: '#f0f0f0', color: '#555' };
   return {
+    variant: 'filled',
     sx: {
       backgroundColor: colors.bg,
       color: colors.color,
