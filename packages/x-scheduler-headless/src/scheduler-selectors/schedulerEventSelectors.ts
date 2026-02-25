@@ -4,39 +4,6 @@ import { SchedulerState as State } from '../internals/utils/SchedulerStore/Sched
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 
-/**
- * Resolves an event property by checking (in order of priority):
- * 1. The event itself (`valueInEvent`)
- * 2. The resource hierarchy, child → parent → … (`getValueInResource`)
- * 3. The component-level state (`valueInState`)
- */
-function resolveEventProperty<T>(params: {
-  state: State;
-  resourceId: string | null | undefined;
-  valueInEvent: T | undefined;
-  getValueInResource: (resource: SchedulerResource) => T | undefined;
-  valueInState: T;
-}): T {
-  if (params.valueInEvent !== undefined) {
-    return params.valueInEvent;
-  }
-
-  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(params.state);
-  let currentResourceId = params.resourceId ?? null;
-  while (currentResourceId != null) {
-    const resource = schedulerResourceSelectors.processedResource(params.state, currentResourceId);
-    if (resource != null) {
-      const value = params.getValueInResource(resource);
-      if (value !== undefined) {
-        return value;
-      }
-    }
-    currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
-  }
-
-  return params.valueInState;
-}
-
 const processedEventSelector = createSelector(
   (state: State) => state.processedEventLookup,
   (processedEventLookup, eventId: SchedulerEventId | null | undefined) =>
@@ -243,4 +210,37 @@ function getIsResizableFromProperty(
   // If the property is a specific side (e.g., 'start' or 'end') but doesn't match the current side,
   // return false because the property explicitly restricts resizing to a specific side.
   return false;
+}
+
+/**
+ * Resolves an event property by checking (in order of priority):
+ * 1. The event itself (`valueInEvent`)
+ * 2. The resource hierarchy, child → parent → … (`getValueInResource`)
+ * 3. The component-level state (`valueInState`)
+ */
+function resolveEventProperty<T>(params: {
+  state: State;
+  resourceId: string | null | undefined;
+  valueInEvent: T | undefined;
+  getValueInResource: (resource: SchedulerResource) => T | undefined;
+  valueInState: T;
+}): T {
+  if (params.valueInEvent !== undefined) {
+    return params.valueInEvent;
+  }
+
+  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(params.state);
+  let currentResourceId = params.resourceId ?? null;
+  while (currentResourceId != null) {
+    const resource = schedulerResourceSelectors.processedResource(params.state, currentResourceId);
+    if (resource != null) {
+      const value = params.getValueInResource(resource);
+      if (value !== undefined) {
+        return value;
+      }
+    }
+    currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
+  }
+
+  return params.valueInState;
 }
