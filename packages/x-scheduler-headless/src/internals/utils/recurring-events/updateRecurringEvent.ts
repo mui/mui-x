@@ -1,11 +1,12 @@
 import { Adapter } from '../../../use-adapter';
 import {
   RecurringEventByDayValue,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   RecurringEventUpdateScope,
   RecurringEventWeekDayCode,
   SchedulerEvent,
   SchedulerEventCreationProperties,
+  SchedulerEventRecurrenceRule,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
@@ -100,11 +101,24 @@ export function applyRecurringUpdateFollowing(
     });
   }
 
+  let newEventRRule: SchedulerEventRecurrenceRule | undefined;
+  if (newRRule != null) {
+    if (newRRule.until != null) {
+      newEventRRule = {
+        ...newRRule,
+        until: dateToEventString(adapter, newRRule.until, originalModel.start, dataTimezone),
+      };
+    } else {
+      const { until: unusedUntil, ...rest } = newRRule;
+      newEventRRule = rest;
+    }
+  }
+
   const newEvent: SchedulerEvent = {
     ...originalEvent.modelInBuiltInFormat,
     ...stringified,
     id: newEventId,
-    rrule: newRRule,
+    rrule: newEventRRule,
     extractedFromId: originalEvent.modelInBuiltInFormat.id,
   };
 
@@ -282,11 +296,11 @@ export function applyRecurringUpdateOnlyThis(
  */
 export function adjustRRuleForAllMove(
   adapter: Adapter,
-  rrule: RecurringEventRecurrenceRule,
+  rrule: SchedulerProcessedEventRecurrenceRule,
   occurrenceStart: TemporalSupportedObject,
   newStart: TemporalSupportedObject,
-): RecurringEventRecurrenceRule {
-  const nextRRule: RecurringEventRecurrenceRule = { ...rrule };
+): SchedulerProcessedEventRecurrenceRule {
+  const nextRRule: SchedulerProcessedEventRecurrenceRule = { ...rrule };
 
   if (rrule.freq === 'WEEKLY') {
     const normalized = parsesByDayForWeeklyFrequency(rrule.byDay) ?? [
@@ -328,18 +342,18 @@ export function adjustRRuleForAllMove(
  */
 export function decideSplitRRule(
   adapter: Adapter,
-  originalRule: RecurringEventRecurrenceRule,
+  originalRule: SchedulerProcessedEventRecurrenceRule,
   originalSeriesStart: TemporalSupportedObject,
   splitStart: TemporalSupportedObject,
   changes: Partial<SchedulerEventUpdatedProperties>,
-): RecurringEventRecurrenceRule | undefined {
+): SchedulerProcessedEventRecurrenceRule | undefined {
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
   const changesRRule = changes.rrule;
 
   // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
   if (hasRRuleProp && changesRRule) {
-    return changesRRule as RecurringEventRecurrenceRule;
+    return changesRRule as SchedulerProcessedEventRecurrenceRule;
   }
 
   // Case B — user explicitly removed recurrence → one-off
@@ -348,7 +362,7 @@ export function decideSplitRRule(
   }
 
   // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
-  const realignedRule: RecurringEventRecurrenceRule = { ...originalRule };
+  const realignedRule: SchedulerProcessedEventRecurrenceRule = { ...originalRule };
 
   // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
   if (originalRule.freq === 'WEEKLY' && originalRule.byDay?.length && changes.start) {

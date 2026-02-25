@@ -1,7 +1,7 @@
 import { TemporalTimezone } from '../../../base-ui-copy/types';
 import { processDate } from '../../../process-date';
 import {
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
@@ -42,7 +42,7 @@ const YEARLY_MAX_ATTEMPTS = 8;
 class RecurringEventExpander {
   private readonly dataTimezone: SchedulerProcessedEvent['dataTimezone'];
 
-  private readonly rule: RecurringEventRecurrenceRule;
+  private readonly rule: SchedulerProcessedEventRecurrenceRule;
 
   /*
    * Day anchor for RRULE math (BYDAY/COUNT), always in data timezone.
