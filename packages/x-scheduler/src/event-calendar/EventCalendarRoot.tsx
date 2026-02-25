@@ -92,12 +92,9 @@ const EventCalendarContent = styled('section', {
   display: 'flex',
   flex: 1,
   overflow: 'auto',
-  height: 'fit-content',
+  height: '100%',
   maxHeight: '100%',
-  '&[data-view="month"]': {
-    height: '100%',
-    maxHeight: '100%',
-  },
+
   '&[data-side-panel-open="false"]': {
     gridColumn: '1 / -1',
   },
