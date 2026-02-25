@@ -227,12 +227,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       backgroundColor,
       '&.Mui-selected': {
-        backgroundColor: mix(
-          backgroundColor,
-          selectedBackground,
-          selectedOpacity,
-          backgroundColor,
-        ),
+        backgroundColor: mix(backgroundColor, selectedBackground, selectedOpacity, backgroundColor),
         '&:hover': {
           backgroundColor: mix(
             backgroundColor,
