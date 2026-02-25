@@ -29,8 +29,9 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
       });
     } else if (dataset === undefined) {
       throw new Error(
-        `MUI X Charts: bar series with id='${id}' has no data.
-Either provide a data property to the series or use the dataset prop.`,
+        `MUI X Charts: Bar series with id="${id}" has no data. ` +
+          'The chart cannot render this series without data. ' +
+          'Provide a data property to the series or use the dataset prop.',
       );
     }
 
@@ -40,8 +41,9 @@ Either provide a data property to the series or use the dataset prop.`,
 
         if (!dataKey) {
           throw new Error(
-            `MUI X Charts: bar series with id='${id}' has no data and no dataKey.
-You must provide a dataKey when using the dataset prop.`,
+            `MUI X Charts: Bar series with id="${id}" has no data and no dataKey. ` +
+              'When using the dataset prop, each series must have a dataKey to identify which dataset column to use. ' +
+              'Add a dataKey property to the series configuration.',
           );
         }
 

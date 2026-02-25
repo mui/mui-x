@@ -78,10 +78,9 @@ export function buildItemsLookups<R extends TreeViewValidItem<R>>(
       : (item as any).label;
     if (label == null) {
       throw new Error(
-        `MUI X: The Tree View component requires all items to have a \`label\` property.
-Alternatively, you can use the \`getItemLabel\` prop to specify a custom label for each item.
-An item was provided without label in the \`items\` prop:
-${JSON.stringify(item)}`,
+        'MUI X Tree View: All items must have a `label` property. ' +
+          'You can use the `getItemLabel` prop to specify a custom label for each item. ' +
+          `An item was provided without a label: ${JSON.stringify(item)}`,
       );
     }
 
@@ -150,10 +149,9 @@ function checkId<R extends TreeViewValidItem<R>>({
 }) {
   if (id == null) {
     throw new Error(
-      `MUI X: The Tree View component requires all items to have a unique \`id\` property.
-Alternatively, you can use the \`getItemId\` prop to specify a custom id for each item.
-An item was provided without id in the \`items\` prop:
-${JSON.stringify(item)}`,
+      'MUI X Tree View: All items must have a unique `id` property. ' +
+        'You can use the `getItemId` prop to specify a custom id for each item. ' +
+        `An item was provided without an id: ${JSON.stringify(item)}`,
     );
   }
 
@@ -163,9 +161,9 @@ ${JSON.stringify(item)}`,
     (itemMetaLookup[id] != null && itemMetaLookup[id]!.parentId !== parentId)
   ) {
     throw new Error(
-      `MUI X: The Tree View component requires all items to have a unique \`id\` property.
-Alternatively, you can use the \`getItemId\` prop to specify a custom id for each item.
-Two items were provided with the same id in the \`items\` prop: "${id}"`,
+      `MUI X Tree View: All items must have a unique \`id\` property. ` +
+        `The id "${id}" is used by multiple items. ` +
+        'Use the `getItemId` prop to specify a custom id for each item if needed.',
     );
   }
 }

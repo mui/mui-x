@@ -297,7 +297,7 @@ export function sankey<
           next.add(target);
         }
       }
-      if (++x > n) throw new Error('MUI X: circular link');
+      if (++x > n) throw /* minify-error-disabled */ new Error('circular link');
       current = next;
       next = new Set();
     }
@@ -315,7 +315,7 @@ export function sankey<
           next.add(source);
         }
       }
-      if (++x > n) throw new Error('MUI X: circular link');
+      if (++x > n) throw /* minify-error-disabled */ new Error('circular link');
       current = next;
       next = new Set();
     }

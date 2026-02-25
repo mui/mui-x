@@ -94,15 +94,19 @@ const defaultFormats: AdapterFormats = {
 };
 
 function throwMissingUTCPluginError() {
-  throw new Error(`MUI X: Missing UTC plugin
-To be able to use UTC or timezones, you have to enable the \`utc\` plugin
-Find more information on https://mui.com/x/react-date-pickers/timezone/#day-js-and-utc`);
+  throw new Error(
+    'MUI X Date Pickers: Missing dayjs UTC plugin. ' +
+      'UTC and timezone support requires the dayjs UTC plugin to be enabled. ' +
+      'See https://mui.com/x/react-date-pickers/timezone/#day-js-and-utc for setup instructions.',
+  );
 }
 
 function throwMissingTimezonePluginError() {
-  throw new Error(`MUI X: Missing timezone plugin
-To be able to use timezones, you have to enable both the \`utc\` and the \`timezone\` plugin
-Find more information on https://mui.com/x/react-date-pickers/timezone/#day-js-and-timezone`);
+  throw new Error(
+    'MUI X Date Pickers: Missing dayjs timezone plugin. ' +
+      'Timezone support requires both the dayjs UTC and timezone plugins to be enabled. ' +
+      'See https://mui.com/x/react-date-pickers/timezone/#day-js-and-timezone for setup instructions.',
+  );
 }
 
 declare module '@mui/x-date-pickers/models' {
