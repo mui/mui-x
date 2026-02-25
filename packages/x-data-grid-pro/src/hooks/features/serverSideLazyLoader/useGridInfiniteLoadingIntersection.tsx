@@ -8,7 +8,7 @@ import {
   gridHorizontalScrollbarHeightSelector,
 } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
