@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import type { GridSlotProps, GridSlotsComponent } from '../models';
 import type { GridSortDirection } from '../models/gridSortModel';

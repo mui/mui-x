@@ -2,9 +2,9 @@
 // Non-realistic set focused on edge cases of timezone handling.
 
 export const resources = [
-  { id: 'ny', title: 'New York', eventColor: 'violet' },
-  { id: 'paris', title: 'Paris', eventColor: 'jade' },
-  { id: 'tokyo', title: 'Tokyo', eventColor: 'cyan' },
+  { id: 'ny', title: 'New York', eventColor: 'purple' },
+  { id: 'paris', title: 'Paris', eventColor: 'teal' },
+  { id: 'tokyo', title: 'Tokyo', eventColor: 'teal' },
   { id: 'la', title: 'Los Angeles', eventColor: 'orange' },
   { id: 'sydney', title: 'Sydney', eventColor: 'pink' },
 ];

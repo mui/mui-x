@@ -1,0 +1,259 @@
+import { spawnSync } from 'node:child_process';
+import { createInterface } from 'node:readline';
+import { checkbox, confirm, input } from '@inquirer/prompts';
+import { applyTranslations } from './applyTranslations';
+import { getMissingTranslations } from './getMissingTranslations';
+import { buildPrompt } from './getPrompt';
+import { PACKAGE_CONFIGS } from './packageConfigs';
+
+function runClipboardCommand(command: string, args: string[], inputText: string): boolean {
+  const result = spawnSync(command, args, { input: inputText, encoding: 'utf8' });
+  return !result.error && result.status === 0;
+}
+
+function copyToClipboard(text: string): boolean {
+  if (process.platform === 'darwin') {
+    return runClipboardCommand('pbcopy', [], text);
+  }
+
+  if (process.platform === 'win32') {
+    return runClipboardCommand('clip', [], text);
+  }
+
+  return (
+    runClipboardCommand('wl-copy', [], text) ||
+    runClipboardCommand('xclip', ['-selection', 'clipboard'], text) ||
+    runClipboardCommand('xsel', ['--clipboard', '--input'], text)
+  );
+}
+
+const getCommands = () => {
+  if (process.platform === 'darwin') {
+    return [{ command: 'pbpaste', args: [] }];
+  }
+  if (process.platform === 'win32') {
+    return [
+      {
+        command: 'powershell',
+        args: ['-NoProfile', '-Command', 'Get-Clipboard -Raw'],
+      },
+    ];
+  }
+  return [
+    { command: 'wl-paste', args: [] },
+    { command: 'xclip', args: ['-selection', 'clipboard', '-o'] },
+    { command: 'xsel', args: ['--clipboard', '--output'] },
+  ];
+};
+
+function readFromClipboard(): string | null {
+  const commands = getCommands();
+
+  for (const { command, args } of commands) {
+    const result = spawnSync(command, args, { encoding: 'utf8' });
+    if (!result.error && result.status === 0 && result.stdout.length > 0) {
+      return result.stdout.trim();
+    }
+  }
+
+  return null;
+}
+
+function readMultilineInputFromStdin(): Promise<string> {
+  return new Promise((resolve) => {
+    const stdin = process.stdin;
+    stdin.setEncoding('utf8');
+
+    if (!stdin.isTTY) {
+      const chunks = [];
+
+      stdin.on('data', (chunk) => {
+        chunks.push(chunk);
+      });
+      stdin.on('end', () => {
+        resolve(chunks.join('').trim());
+      });
+      stdin.resume();
+      return;
+    }
+
+    const chunks: string[] = [];
+    let isDone = false;
+
+    const rl = createInterface({
+      input: stdin,
+      output: process.stdout,
+      terminal: true,
+    });
+
+    function getInput() {
+      return chunks.join('\n').trim();
+    }
+
+    function canAutoSubmit() {
+      const rawInput = getInput();
+      if (rawInput.length === 0) {
+        return false;
+      }
+
+      try {
+        const parsed = JSON.parse(rawInput);
+        return typeof parsed === 'object' && parsed !== null;
+      } catch {
+        return false;
+      }
+    }
+
+    function finish() {
+      if (isDone) {
+        return;
+      }
+      isDone = true;
+      rl.close();
+      resolve(getInput());
+    }
+
+    rl.on('line', (line) => {
+      if (line.length === 0) {
+        finish();
+        return;
+      }
+
+      chunks.push(line);
+      if (canAutoSubmit()) {
+        finish();
+      }
+    });
+    rl.on('close', () => {
+      if (isDone) {
+        return;
+      }
+      isDone = true;
+      resolve(getInput());
+    });
+  });
+}
+
+function formatSummary(result: ReturnType<typeof applyTranslations>): string {
+  return [
+    `Mode: ${result.mode}`,
+    `Files targeted: ${result.filesTargeted}`,
+    `Files updated: ${result.filesUpdated}`,
+    `Translations inserted: ${result.translationsInserted}`,
+    `Commented-out fields uncommented in place: ${result.commentedOutFieldsUncommentedInPlace}`,
+    `Translations skipped (already present): ${result.translationsSkippedAlreadyPresent}`,
+    `Warnings: ${result.warnings.length}`,
+  ].join('\n');
+}
+
+function parseLocaleCodes(raw: string): string[] {
+  return Array.from(
+    new Set(
+      raw
+        .split(/[,\s]+/)
+        .map((locale) => locale.trim())
+        .filter((locale) => locale.length > 0),
+    ),
+  );
+}
+
+async function main() {
+  const dryRun = process.argv.slice(2).includes('--dry-run');
+  const packageNames = Object.keys(PACKAGE_CONFIGS).sort();
+
+  const selectedPackages = await checkbox({
+    message: 'Select package(s) to translate',
+    choices: packageNames.map((name) => ({ name, value: name, checked: true })),
+    validate: (value) => (value.length > 0 ? true : 'Select at least one package.'),
+  });
+
+  const translateAllLocales = await confirm({
+    message: 'Translate all locales?',
+    default: true,
+  });
+
+  let selectedLocales: string[] | undefined;
+  if (!translateAllLocales) {
+    const localeInput = await input({
+      message: 'Enter locale codes (comma or space separated, e.g. frFR, deDE):',
+      validate: (value) =>
+        parseLocaleCodes(value).length > 0
+          ? true
+          : 'Enter at least one locale code or choose "all locales".',
+    });
+    selectedLocales = parseLocaleCodes(localeInput);
+  }
+
+  const missingTranslations = getMissingTranslations(selectedPackages, selectedLocales);
+  const totalMissingKeys = Object.values(missingTranslations.packages).reduce(
+    (sum, packageData) => sum + Object.keys(packageData.missing).length,
+    0,
+  );
+
+  if (totalMissingKeys === 0) {
+    process.stdout.write('\nNo missing locales found for the selected package(s).\n');
+    return;
+  }
+
+  const prompt = buildPrompt(selectedPackages, selectedLocales);
+  const copied = copyToClipboard(prompt);
+
+  process.stdout.write('\n');
+  process.stdout.write(`Prompt generated for ${selectedPackages.length} package(s).\n`);
+  process.stdout.write(copied ? 'Prompt copied to clipboard.\n' : 'Clipboard copy failed.\n');
+  process.stdout.write(
+    "Paste the prompt into your preferred LLM, then copy only the JSON response.\nUse Gemini, ChatGPT or similar. Avoid coding agents like Claude Code for this task, they'll try to scan file system and overcomplicate things.\n",
+  );
+
+  if (!copied) {
+    process.stdout.write('\n----- PROMPT START -----\n');
+    process.stdout.write(prompt);
+    process.stdout.write('\n----- PROMPT END -----\n\n');
+  }
+
+  const proceed = await confirm({
+    message:
+      'Ready to paste the LLM response into this CLI now?\nThe JSON response from LLM should be copied to your clipboard before you proceed',
+    default: true,
+  });
+
+  if (!proceed) {
+    process.stdout.write('Cancelled.\n');
+    return;
+  }
+
+  let rawResponse = '';
+  const clipboardResponse = readFromClipboard();
+
+  if (clipboardResponse) {
+    const useClipboard = await confirm({
+      message: 'Use current clipboard content as the LLM JSON response? (faster)',
+      default: true,
+    });
+    if (useClipboard) {
+      rawResponse = clipboardResponse;
+    }
+  }
+
+  if (rawResponse.length === 0) {
+    process.stdout.write(
+      '\nPaste the LLM JSON response, then press Enter to submit. Ctrl+D (macOS/Linux) and Ctrl+Z (Windows) also submit.\n\n',
+    );
+    rawResponse = await readMultilineInputFromStdin();
+  }
+
+  if (rawResponse.length === 0) {
+    throw new Error('No response was provided.');
+  }
+
+  const result = applyTranslations(rawResponse, { dryRun });
+  result.warnings.forEach((warning) => process.stderr.write(`Warning: ${warning}\n`));
+  process.stdout.write('\n');
+  process.stdout.write(formatSummary(result));
+  process.stdout.write('\n');
+}
+
+main().catch((error) => {
+  process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+  process.exitCode = 1;
+});

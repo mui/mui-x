@@ -80,6 +80,20 @@ In v9, only `string` is accepted.
 
 This type modification impacts the objects in the `series` props, as well as the `highlightedItem` and `tooltipItem` objects.
 
+### Series' id should be unique
+
+In v8 series `id` properties was enforced to be unique per series type.
+In v9 series `id` properties must be unique among all series, regardless of their type.
+
+The following code was valid in v8, but in v9 one of the IDs need to be modified.
+
+```jsx
+series={[
+  { type: 'line', id: 'series-a' },
+  { type: 'bar', id: 'series-a' },
+]}
+```
+
 ## Renaming `id` to `seriesId` ✅
 
 Some components used for composition got their prop `id` renamed `seriesId` to improve clarity.
@@ -188,6 +202,25 @@ After running the codemod make sure to adapt the hook returned value to your nee
 -  const tooltipData = useAxisTooltip({ multipleAxes: true });
 +  const tooltipData = useAxesTooltip();
  }
+```
+
+## Line Chart
+
+### `showMark` default value changed ✅
+
+The default value of the `showMark` prop in the line series has changed from `true` to `false` in v9.
+
+If you were relying on marks being visible by default, explicitly set `showMark` to `true`:
+
+```diff
+ <LineChart
+   series={[
+     {
+       data: [1, 2, 3],
++      showMark: true,
+     },
+   ]}
+ />
 ```
 
 ## Heatmap
@@ -304,6 +337,25 @@ To get the numeric value, call `valueOf()` on the `NumberValue` parameters.
 
 ## Styling
 
+### Label mark
+
+The charts label mark has been redesigned to improve consistency in how different mark types can be styled.
+
+The `markElementClasses.mask` class got removed, together with the corresponding `mask` component which was used to create a mask effect on the label mark.
+
+Now the `line` type of mark can be styled in the same way you would a line chart's line element, since they both use SVG `<path>` elements.
+
+```diff
+  <LineChart
+    sx={{
+      [`.${lineElementClasses.root}[data-series="my-series"], .${legendClasses.item}[data-series="my-series"] .${labelMarkClasses.fill}`]:
+        {
+          strokeDasharray: '3 2',
+        },
+    }}
+  />
+```
+
 ### Chart class names updated
 
 The following CSS class prefixes have been renamed to include the "Chart" suffix for consistency:
@@ -324,3 +376,54 @@ If you're using these classes manually in your styles, update them accordingly:
 -`.MuiBar-root`
 +`.MuiBarChart-root`
 ```
+
+## ChartsSurface
+
+### `data-has-focused-item` attribute removed
+
+The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
+If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem` hook instead.
+
+```ts
+const focusedItem = useFocusedItem();
+const hasFocusedItem = focusedItem !== null;
+```
+
+## Props propagation
+
+The `ref` for single component charts like `<LineChart />` is now propagated to the root element instead of the SVG element.
+
+Internally this change looks like this.
+
+```diff
+ const LineCHart = React.forwardRef(function LineChart(
+   inProps: LineChartProps,
+-  ref: React.Ref<SVGSVGElement>,
++  ref: React.Ref<HTMLDivElement>,
+ ) {
+   /* ... */
+   return (
+     <ChartDataProvider>
+-      <ChartsWrapper>
++      <ChartsWrapper ref={ref}>
+         {/* ... */}
+-        <ChartsSurface ref={ref}>
++        <ChartsSurface>
+           {/* ... */}
+         </ChartsSurface>
+     </ChartDataProvider>
+   );
+ });
+```
+
+## Typescript
+
+### Remove default generic of `SeriesItemIdentifier`
+
+In v9 the argument of `SeriesItemIdentifier` is now required.
+
+It accepts an union of series types.
+For example:
+
+- `SeriesItemIdentifier<'bar'>` for a BarChart.
+- `SeriesItemIdentifier<'bar' | 'line'>` if you compose bar and line series.

@@ -1,5 +1,16 @@
 import type { AnyPlugin, BaseApi, ExtractPluginApi, PluginRegistryApi } from './plugin';
 
+function comparePluginsByOrder(a: AnyPlugin, b: AnyPlugin): number {
+  const orderA = a.order ?? 0;
+  const orderB = b.order ?? 0;
+
+  if (orderA !== orderB) {
+    return orderA - orderB;
+  }
+
+  return a.name.localeCompare(b.name);
+}
+
 function resolvePluginDependencies(userPlugins: readonly AnyPlugin[]): AnyPlugin[] {
   const resolved: AnyPlugin[] = [];
   const resolvedNames = new Set<string>();
@@ -19,7 +30,13 @@ function resolvePluginDependencies(userPlugins: readonly AnyPlugin[]): AnyPlugin
     visiting.add(plugin.name);
 
     if (plugin.dependencies) {
-      for (const dep of plugin.dependencies) {
+      const sortedDependencies = [...plugin.dependencies].sort(comparePluginsByOrder);
+      for (const dep of sortedDependencies) {
+        if (plugin.order !== undefined && dep.order !== undefined && plugin.order < dep.order) {
+          throw new Error(
+            `Plugin order/dependency conflict: "${plugin.name}" (order: ${plugin.order}) depends on "${dep.name}" (order: ${dep.order}), but dependency order requires "${dep.name}" to run before "${plugin.name}". Update either the dependency relationship or the order values.`,
+          );
+        }
         visit(dep);
       }
     }
@@ -29,7 +46,8 @@ function resolvePluginDependencies(userPlugins: readonly AnyPlugin[]): AnyPlugin
     resolved.push(plugin);
   }
 
-  for (const plugin of userPlugins) {
+  const sortedUserPlugins = [...userPlugins].sort(comparePluginsByOrder);
+  for (const plugin of sortedUserPlugins) {
     visit(plugin);
   }
 
@@ -38,7 +56,7 @@ function resolvePluginDependencies(userPlugins: readonly AnyPlugin[]): AnyPlugin
 
 export class PluginRegistry implements PluginRegistryApi {
   private plugins: Map<string, AnyPlugin> = new Map();
-  private resolvedUserPlugins: AnyPlugin[] = [];
+  private resolvedPluginsChain: AnyPlugin[] = [];
 
   constructor(internalPlugins: readonly AnyPlugin[], userPlugins: readonly AnyPlugin[]) {
     internalPlugins.forEach((plugin) => {
@@ -46,8 +64,8 @@ export class PluginRegistry implements PluginRegistryApi {
     });
 
     // Resolve dependencies and register user plugins in dependency order
-    this.resolvedUserPlugins = resolvePluginDependencies(userPlugins);
-    this.resolvedUserPlugins.forEach((plugin) => {
+    const resolvedUserPlugins = resolvePluginDependencies(userPlugins);
+    resolvedUserPlugins.forEach((plugin) => {
       if (this.plugins.has(plugin.name)) {
         // Skip if already registered (from internal plugins)
         // This allows dependencies to be internal plugins
@@ -55,6 +73,29 @@ export class PluginRegistry implements PluginRegistryApi {
       }
       this.register(plugin);
     });
+
+    const chain: AnyPlugin[] = [];
+    const chainNames = new Set<string>();
+
+    internalPlugins.forEach((plugin) => {
+      if (!chainNames.has(plugin.name)) {
+        chain.push(plugin);
+        chainNames.add(plugin.name);
+      }
+    });
+
+    resolvedUserPlugins.forEach((plugin) => {
+      if (chainNames.has(plugin.name)) {
+        return;
+      }
+      const registeredPlugin = this.plugins.get(plugin.name);
+      if (registeredPlugin) {
+        chain.push(registeredPlugin);
+        chainNames.add(plugin.name);
+      }
+    });
+
+    this.resolvedPluginsChain = chain;
 
     return this;
   }
@@ -74,16 +115,11 @@ export class PluginRegistry implements PluginRegistryApi {
     this.plugins.set(plugin.name, plugin);
   }
 
-  forEach(callback: (plugin: AnyPlugin) => void): void {
-    this.plugins.forEach(callback);
+  forEachPlugin(callback: (plugin: AnyPlugin) => void): void {
+    this.resolvedPluginsChain.forEach(callback);
   }
 
-  forEachUserPlugin(callback: (plugin: AnyPlugin) => void): void {
-    // Use resolved order to ensure dependencies are processed first
-    this.resolvedUserPlugins.forEach((plugin) => {
-      if (this.plugins.has(plugin.name)) {
-        callback(plugin);
-      }
-    });
+  getPluginsChain(): readonly AnyPlugin[] {
+    return this.resolvedPluginsChain;
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

@@ -20,4 +20,10 @@ export class EventCalendarPremiumStore<
 
     this.lazyLoading = new EventCalendarPremiumLazyLoadingPlugin<TEvent>(this);
   }
+
+  public buildPublicAPI() {
+    return {
+      ...super.buildPublicAPI(),
+    };
+  }
 }

@@ -10,6 +10,8 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import setupVitest from '@mui/internal-test-utils/setupVitest';
 import { configure, isJsdom } from '@mui/internal-test-utils';
 
+(globalThis as any).MUI_TEST_ENV = true;
+
 setupVitest({ emotion: true });
 
 configure({

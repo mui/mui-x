@@ -68,7 +68,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
   }
 
-  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+  /* eslint-disable mui/disallow-active-element-as-key-event-target */
   describe('cell navigation', () => {
     it('should move to cell below when pressing "ArrowDown" on a cell on the 1st page', async () => {
       const { user } = render(<NavigationTestCaseNoScrollX />);
