@@ -43,9 +43,11 @@ export function useCalendarGridPlaceholderInDay(
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
-      const endingAfterEdge = adapter.isAfter(rawPlaceholder.end, rowEnd);
       const startProcessed = processDate(day, adapter);
-      const endProcessed = processDate(endingAfterEdge ? rowEnd : rawPlaceholder.end, adapter);
+      const endProcessed = processDate(
+        adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+        adapter,
+      );
       const timezone = adapter.getTimezone(day);
       return {
         ...sharedProperties,
@@ -60,8 +62,6 @@ export function useCalendarGridPlaceholderInDay(
           index: 1,
           daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
-        startingBeforeEdge: adapter.isBefore(day, rowStart),
-        endingAfterEdge,
       };
     }
 
@@ -82,8 +82,6 @@ export function useCalendarGridPlaceholderInDay(
           index: 1,
           daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
-        startingBeforeEdge: adapter.isBefore(rawPlaceholder.start, rowStart),
-        endingAfterEdge: adapter.isAfter(rawPlaceholder.end, rowEnd),
       };
     }
 
@@ -107,8 +105,6 @@ export function useCalendarGridPlaceholderInDay(
         index: positionIndex,
         daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
       },
-      startingBeforeEdge: adapter.isBefore(rawPlaceholder.start, rowStart),
-      endingAfterEdge: adapter.isAfter(rawPlaceholder.end, rowEnd),
     };
-  }, [adapter, day, originalEvent, originalEventId, rawPlaceholder, row.days, rowEnd, rowStart]);
+  }, [adapter, day, originalEvent, originalEventId, rawPlaceholder, row.days, rowEnd]);
 }

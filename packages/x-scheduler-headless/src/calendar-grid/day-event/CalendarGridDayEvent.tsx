@@ -131,10 +131,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const startingBeforeEdge = draggableEventContextValue.doesEventStartBeforeCollectionStart;
   const endingAfterEdge = draggableEventContextValue.doesEventEndAfterCollectionEnd;
 
-  const mergedState = React.useMemo(
-    () => ({ ...state, startingBeforeEdge, endingAfterEdge }),
-    [state, startingBeforeEdge, endingAfterEdge],
-  );
+  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
 
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
