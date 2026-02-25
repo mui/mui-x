@@ -1,4 +1,5 @@
-import { createRenderer, describeConformance } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
+import { describeConformance } from 'test/utils/charts/describeConformance';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
 describe('<SparkLineChart />', () => {
@@ -11,16 +12,5 @@ describe('<SparkLineChart />', () => {
     muiName: 'MuiSparkLineChart',
     testComponentPropWith: 'div',
     refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'slotPropsProp',
-      'slotPropsCallback',
-      'slotsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'themeCustomPalette',
-    ],
   }));
 });

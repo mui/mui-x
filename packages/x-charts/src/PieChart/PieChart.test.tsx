@@ -1,5 +1,5 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { describeConformance } from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/charts/describeConformance';
 import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
 import { CHART_SELECTOR } from '../tests/constants';
 
@@ -25,17 +25,6 @@ describe('<PieChart />', () => {
       muiName: 'MuiPieChart',
       testComponentPropWith: 'div',
       refInstanceof: window.HTMLDivElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'slotPropsProp',
-        'slotPropsCallback',
-        'slotsProp',
-        'themeStyleOverrides',
-        'themeVariants',
-        'themeCustomPalette',
-        'themeDefaultProps',
-      ],
     }),
   );
 

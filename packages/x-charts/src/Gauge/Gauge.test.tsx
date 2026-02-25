@@ -1,5 +1,6 @@
-import { createRenderer, describeConformance } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { Gauge } from '@mui/x-charts/Gauge';
+import { describeConformance } from 'test/utils/charts/describeConformance';
 
 describe('<Gauge />', () => {
   const { render } = createRenderer();
@@ -11,16 +12,5 @@ describe('<Gauge />', () => {
     muiName: 'MuiGauge',
     testComponentPropWith: 'div',
     refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'slotPropsProp',
-      'slotPropsCallback',
-      'slotsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'themeCustomPalette',
-    ],
   }));
 });
