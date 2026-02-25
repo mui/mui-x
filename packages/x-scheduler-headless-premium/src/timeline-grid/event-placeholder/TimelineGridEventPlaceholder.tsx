@@ -56,10 +56,7 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
 
   const { state: eventState } = useEvent({ start, end });
 
-  const state = React.useMemo(
-    () => ({ ...eventState, startingBeforeEdge, endingAfterEdge }),
-    [eventState, startingBeforeEdge, endingAfterEdge],
-  );
+  const state = { ...eventState, startingBeforeEdge, endingAfterEdge };
 
   return useRenderElement('div', componentProps, {
     state,
