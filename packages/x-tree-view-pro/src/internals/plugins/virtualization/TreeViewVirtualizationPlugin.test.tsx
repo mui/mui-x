@@ -32,14 +32,14 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('48px');
       });
 
-      it('should not default itemHeight when virtualization is disabled', () => {
+      it('should default itemHeight to 32px when virtualization is disabled', () => {
         const view = render({
           items: [{ id: '1' }],
           disableVirtualization: true,
         });
 
         const itemRoot = view.getItemRoot('1');
-        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('32px');
       });
     });
 
