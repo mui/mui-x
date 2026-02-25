@@ -5,6 +5,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.27.3
+
+_Feb 25, 2026_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- ⚡️ Improved dynamic data support and cache invalidation in lazy loading for Data Grid Pro
+
+The following team members contributed to this release:
+@cherniavskii, @michelengelen, @MBilalShafi, @arminmeh
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.27.3`
+
+- [DataGrid] Preserve key input during row edit when using `rowModesModel` (#21457) @michelengelen
+
+#### `@mui/x-data-grid-pro@8.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.27.3`, plus:
+
+- [DataGridPro] Improve dynamic data support and cache invalidation in lazy loading (#21465) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.27.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.27.3`.
+
+### Core
+
+- [code-infra] Do not append `x` to the last version for the compare API (#21422) @arminmeh
+- [docs-infra] Fix current version detection logic (#21415) @cherniavskii
+
 ## 8.27.2
 
 _Feb 20, 2026_
