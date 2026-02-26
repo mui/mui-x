@@ -2,7 +2,7 @@ import {
   SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
   SchedulerProcessedDate,
   TemporalTimezone,
@@ -20,7 +20,7 @@ export interface ControlledValue {
   allDay: boolean;
   color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
-  rruleDraft: RecurringEventRecurrenceRule;
+  rruleDraft: SchedulerProcessedEventRecurrenceRule;
 }
 
 export type EndsSelection = 'never' | 'after' | 'until';

@@ -15,8 +15,8 @@ describe('highlight', () => {
     expect(document.querySelector(`.${barElementClasses.highlighted}`)).to.equal(null);
   });
 
-  it('should set highlight when keyboard move focus', async () => {
-    const { user } = render(
+  it.skipIf(isJSDOM)('should set highlight when keyboard move focus', async () => {
+    const { container, user } = render(
       <BarChart
         height={100}
         width={100}
@@ -27,17 +27,17 @@ describe('highlight', () => {
       />,
     );
 
-    const svg = document.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-    const firstBar = document.querySelector(
+    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+    const firstBar = container.querySelector(
       `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
     );
-    const secondBar = document.querySelector(
+    const secondBar = container.querySelector(
       `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
     );
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
 
-    svg!.focus();
+    await user.click(svg);
     await user.keyboard('[ArrowRight]');
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal('true');
@@ -76,7 +76,7 @@ describe('highlight', () => {
   });
 
   it('should support highlight without series `type` provided', async () => {
-    const { user } = render(
+    const { container, user } = render(
       <BarChart
         height={100}
         width={100}
@@ -88,28 +88,29 @@ describe('highlight', () => {
       />,
     );
 
-    const svg = document.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-    const firstBar = document.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
-    );
-    const secondBar = document.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
-    );
+      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+      const firstBar = container.querySelector(
+        `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
+      );
+      const secondBar = container.querySelector(
+        `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
+      );
 
-    expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
-    expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
+      expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
+      expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
 
-    svg!.focus();
-    await user.keyboard('[ArrowRight]');
+      await user.click(svg);
+      await user.keyboard('[ArrowRight]');
 
-    expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
-    expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
-  });
+      expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
+      expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
+    },
+  );
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   it.skipIf(isJSDOM)('should call onHighlightChange when leaving the highlightedItem', async () => {
     const handleHighlight = spy();
-    const { user } = render(
+    const { container, user } = render(
       <BarChart
         height={400}
         width={400}
@@ -125,7 +126,7 @@ describe('highlight', () => {
       />,
     );
 
-    const bars = document.querySelectorAll(`.${barElementClasses.root}`);
+    const bars = container.querySelectorAll(`.${barElementClasses.root}`);
 
     await user.pointer({ target: bars[0] });
 

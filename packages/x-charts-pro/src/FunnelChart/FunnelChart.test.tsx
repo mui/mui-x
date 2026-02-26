@@ -1,4 +1,5 @@
-import { createRenderer, describeConformance, screen } from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
+import { describeConformance } from 'test/utils/charts/describeConformance';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -22,17 +23,6 @@ describe('FunnelChart', () => {
       muiName: 'MuiFunnelChart',
       testComponentPropWith: 'div',
       refInstanceof: window.HTMLDivElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'slotPropsProp',
-        'slotPropsCallback',
-        'slotsProp',
-        'themeStyleOverrides',
-        'themeVariants',
-        'themeCustomPalette',
-        'themeDefaultProps',
-      ],
     }),
   );
 

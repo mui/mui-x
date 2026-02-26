@@ -195,7 +195,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiFunnelChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts-pro/src/FunnelChart/FunnelChart.tsx",

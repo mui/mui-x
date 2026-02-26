@@ -32,7 +32,7 @@ function Export() {
 
   return (
     <Stack height="100%" spacing={3} alignItems="center">
-      <div style={{ flexGrow: 1, minHeight: 0 }}>
+      <div style={{ flexGrow: 1, minHeight: 0, width: '100%' }}>
         <Typography align="center">Google vs Meta stock price</Typography>
         <LineChartPro
           apiRef={apiRef}
@@ -41,14 +41,12 @@ function Export() {
             {
               label: 'Google',
               dataKey: 'google',
-              showMark: false,
               valueFormatter: (value: number | null) =>
                 value === null ? '' : currencyFormatter(value),
             },
             {
               label: 'Meta',
               dataKey: 'meta',
-              showMark: false,
               valueFormatter: (value: number | null) =>
                 value === null ? '' : currencyFormatter(value),
             },

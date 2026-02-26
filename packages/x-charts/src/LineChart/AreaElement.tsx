@@ -14,9 +14,15 @@ import { type SeriesId } from '../models/seriesType/common';
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when highlighted. */
+  /**
+   * Styles applied to the root element when highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element when faded. */
+  /**
+   * Styles applied to the root element when faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
@@ -130,6 +136,8 @@ function AreaElement(props: AreaElementProps) {
       ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
     },
     className: classes.root,
     ownerState,

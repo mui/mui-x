@@ -176,7 +176,7 @@ const SPARK_LINE_DEFAULT_MARGIN = 5;
  */
 const SparkLineChart = React.forwardRef(function SparkLineChart(
   props: SparkLineChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const {
     xAxis: xAxisProps,
