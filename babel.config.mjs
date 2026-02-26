@@ -60,7 +60,7 @@ export default function getBabelConfig(api) {
         replace: [
           ['LICENSE_DISABLE_CHECK', 'false'],
           [
-            'process.env.ALLOW_TEST_LICENSES',
+            'ALLOW_TEST_LICENSES',
             process.env.NODE_ENV === 'test' ? 'true' : 'false',
           ],
         ],
