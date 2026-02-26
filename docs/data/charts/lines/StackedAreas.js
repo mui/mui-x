@@ -22,7 +22,6 @@ export default function StackedAreas() {
             dataKey: 'fr',
             stack: 'total',
             area: true,
-            showMark: false,
           },
           {
             id: 'Germany',
@@ -30,7 +29,6 @@ export default function StackedAreas() {
             dataKey: 'dl',
             stack: 'total',
             area: true,
-            showMark: false,
           },
           {
             id: 'United Kingdom',
@@ -38,7 +36,6 @@ export default function StackedAreas() {
             dataKey: 'gb',
             stack: 'total',
             area: true,
-            showMark: false,
           },
         ]}
         experimentalFeatures={{ preferStrictDomainInLineCharts: true }}

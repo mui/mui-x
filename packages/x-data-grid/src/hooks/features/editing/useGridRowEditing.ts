@@ -267,12 +267,15 @@ export const useGridRowEditing = (
             ...rowParams,
             field: params.field,
             reason,
+            // Only pass the pressed key when the row editing is controlled via `rowModesModel`.
+            // In uncontrolled mode, the default editor already inserts the character and passing it here would duplicate it.
+            key: rowModesModelProp && isPrintableKey(event) ? event.key : undefined,
           };
           apiRef.current.publishEvent('rowEditStart', newParams, event);
         }
       }
     },
-    [apiRef, hasFieldsWithErrors],
+    [apiRef, hasFieldsWithErrors, rowModesModelProp],
   );
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
@@ -285,12 +288,24 @@ export const useGridRowEditing = (
         reason === GridRowEditStartReasons.printableKeyDown ||
         reason === GridRowEditStartReasons.deleteKeyDown
       ) {
-        startRowEditModeParams.deleteValue = !!field;
+        // If the user typed a printable key, initialize the value with that key
+        // to avoid losing the first character when the component is controlled.
+        if (
+          rowModesModelProp &&
+          reason === GridRowEditStartReasons.printableKeyDown &&
+          params.key &&
+          field
+        ) {
+          startRowEditModeParams.initialValue = params.key;
+        } else {
+          // For Delete / Backspace or for uncontrolled row editing we clear the value
+          startRowEditModeParams.deleteValue = !!field;
+        }
       }
 
       apiRef.current.startRowEditMode(startRowEditModeParams);
     },
-    [apiRef],
+    [apiRef, rowModesModelProp],
   );
 
   const handleRowEditStop = React.useCallback<GridEventListener<'rowEditStop'>>(

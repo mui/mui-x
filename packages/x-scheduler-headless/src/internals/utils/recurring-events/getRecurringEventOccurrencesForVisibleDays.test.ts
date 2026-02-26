@@ -1,5 +1,5 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 import { getWeekDayCode } from './internal-utils';
 
@@ -37,10 +37,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
     it('includes last day defined by "until" but excludes the following day', () => {
       const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
-      const until = adapter.date('2025-01-05T23:59:59Z', 'default');
       const event = EventBuilder.new()
         .singleDay('2025-01-01T09:00:00Z')
-        .rrule({ freq: 'DAILY', interval: 1, until })
+        .rrule({ freq: 'DAILY', interval: 1, until: '2025-01-05T23:59:59Z' })
         .toProcessed();
 
       const result = getRecurringEventOccurrencesForVisibleDays(
@@ -187,7 +186,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           freq: 'MONTHLY',
           interval: 1,
           byMonthDay: [10],
-          until: adapter.date('2025-01-31T23:59:59Z', 'default'),
+          until: '2025-01-31T23:59:59Z',
         })
         .toProcessed();
 
@@ -304,7 +303,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
       const event = EventBuilder.new()
         .singleDay('2025-01-10T00:00:00Z')
-        .rrule({ freq: 'WEEKLY', byDay: ['1MO'] } as RecurringEventRecurrenceRule)
+        .rrule({ freq: 'WEEKLY', byDay: ['1MO'] } as SchedulerEventRecurrenceRule)
         .toProcessed();
 
       expect(() =>
@@ -559,6 +558,31 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       // Only leap years: 2024, 2028, 2032
       const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
       expect(years).to.deep.equal([2024, 2028, 2032]);
+    });
+
+    it('finds yearly Feb-29 occurrence spanning the century non-leap year 2100 (8 consecutive non-leap years)', () => {
+      // 2096 is a leap year. The following years 2097–2103 are NOT leap years:
+      // 2100 is a century year not divisible by 400, so it is NOT a leap year.
+      // This creates 8 consecutive non-leap years (2097–2103), with 2104 being the next leap year.
+      const event = EventBuilder.new()
+        .singleDay('2096-02-29T09:00:00Z')
+        .rrule({ freq: 'YEARLY', interval: 1 })
+        .toProcessed();
+
+      const visibleStart = adapter.date('2097-01-01T00:00:00Z', 'default');
+      const visibleEnd = adapter.date('2105-01-01T00:00:00Z', 'default');
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        visibleEnd,
+        adapter,
+        'default',
+      );
+
+      // The only Feb 29 in [2097, 2105) is 2104 (leap year)
+      const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
+      expect(years).to.deep.equal([2104]);
     });
   });
 

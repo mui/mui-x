@@ -1,25 +1,24 @@
 import * as React from 'react';
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
-  defaultVisibleDate,
   initialEvents,
+  defaultVisibleDate,
   resources,
-} from '../datasets/timezone-instant-based-events';
+} from '../../datasets/personal-agenda';
 
-export default function TimezoneDatasetInstantBased() {
-  const [events, setEvents] = React.useState(initialEvents);
+export default function ReadOnly() {
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
-    <div style={{ height: '600px', width: '100%' }}>
+    <div style={{ height: '650px', width: '100%' }}>
       <EventCalendar
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
-        displayTimezone="Europe/Paris"
-        areEventsDraggable
-        areEventsResizable
+        readOnly
       />
     </div>
   );

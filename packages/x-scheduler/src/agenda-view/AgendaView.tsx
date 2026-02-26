@@ -29,10 +29,10 @@ const AgendaViewRoot = styled('div', {
   slot: 'AgendaView',
 })(({ theme }) => ({
   width: '100%',
-  height: '100%',
+  maxHeight: '100%',
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
-  overflowY: 'scroll',
+  overflowY: 'auto',
   position: 'relative',
 }));
 
