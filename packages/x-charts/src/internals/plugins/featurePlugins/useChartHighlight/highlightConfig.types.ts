@@ -20,5 +20,3 @@ export type CommonHighlightScope = {
    */
   fade?: FadeOptions;
 };
-
-export type { HighlightScope } from '../../../../models/seriesType/config';

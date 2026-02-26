@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   FocusedHeatmapCell,
   HeatmapTooltip,
@@ -17,6 +16,9 @@ import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
+import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
+import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
+import { ChartsWebGlLayer } from '../ChartsWebGlLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
@@ -37,7 +39,7 @@ export interface HeatmapPremiumProps extends HeatmapProps {
 
 const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   inProps: HeatmapPremiumProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmapPremium' });
   const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
@@ -56,25 +58,33 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
 
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
   const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
+  const renderer = heatmapPlotPremiumProps.renderer;
 
   return (
     <ChartDataProviderPremium<'heatmap', HeatmapPremiumPluginSignatures>
       {...chartDataProviderPremiumProps}
     >
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface ref={ref} sx={sx}>
-          <g {...clipPathGroupProps}>
-            <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
-            <FocusedHeatmapCell />
-            <ChartsOverlay {...overlayProps} />
-          </g>
-          <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} />
-          <ChartsBrushOverlay />
-          {children}
-        </ChartsSurface>
+        <ChartsLayerContainer>
+          {renderer === 'webgl' && (
+            <ChartsWebGlLayer>
+              <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
+            </ChartsWebGlLayer>
+          )}
+          <ChartsSvgLayer sx={sx}>
+            <g {...clipPathGroupProps}>
+              {renderer !== 'webgl' && <HeatmapPlotPremium {...heatmapPlotPremiumProps} />}
+              <FocusedHeatmapCell />
+              <ChartsOverlay {...overlayProps} />
+            </g>
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsClipPath {...clipPathProps} />
+            <ChartsBrushOverlay />
+            {children}
+          </ChartsSvgLayer>
+        </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPremium>
@@ -199,9 +209,17 @@ HeatmapPremium.propTypes = {
    * The callback fired when an item is clicked.
    *
    * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
-   * @param {SeriesItemIdentifier<SeriesType>} item The clicked item.
+   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onTooltipAxisChange: PropTypes.func,
   /**
    * The callback fired when the tooltip item changes.
    *
@@ -254,13 +272,23 @@ HeatmapPremium.propTypes = {
    */
   tooltip: PropTypes.object,
   /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['heatmap']).isRequired,
+    type: PropTypes.oneOf(['heatmap']),
     xIndex: PropTypes.number.isRequired,
     yIndex: PropTypes.number.isRequired,
   }),

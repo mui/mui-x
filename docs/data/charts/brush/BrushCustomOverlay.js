@@ -182,7 +182,6 @@ export default function BrushCustomOverlay() {
           {
             data: marketData,
             label: 'Market Value',
-            showMark: false,
             id: 'marketValue',
           },
         ]}

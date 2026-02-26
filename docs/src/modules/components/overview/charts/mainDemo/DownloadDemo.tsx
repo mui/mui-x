@@ -103,7 +103,6 @@ export default function DownloadDemo() {
             dataKey: `${v}${selectedFormat === 'relative' ? '_percent' : ''}`,
             stack: 'v',
             area: true,
-            showMark: false,
             curve: 'linear',
             label: `v${v}`,
             valueFormatter: selectedFormat === 'relative' ? percentValueFormatter : valueFormatter,

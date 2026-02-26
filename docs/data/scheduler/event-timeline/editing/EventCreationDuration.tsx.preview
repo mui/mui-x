@@ -1,0 +1,8 @@
+<EventTimelinePremium
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  defaultView="months"
+  eventCreation={{ duration: 60 * 24 * 7 }} // 1 week in minutes
+/>

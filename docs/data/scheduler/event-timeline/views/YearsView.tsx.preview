@@ -1,0 +1,8 @@
+<EventTimelinePremium
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  defaultView="years"
+  views={['years']}
+/>

@@ -18,13 +18,15 @@
       "key": "faded",
       "className": "MuiPieArcLabel-faded",
       "description": "Styles applied to the root element when faded.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "highlighted",
       "className": "MuiPieArcLabel-highlighted",
       "description": "Styles applied to the root element when highlighted.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "root",

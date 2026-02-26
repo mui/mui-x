@@ -18,12 +18,16 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
-import { useTranslations } from '../../../utils/TranslationsContext';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
-import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
+
+const ARROW_DEPTH = 8; // px - depth of the chevron point
+const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
+const RIGHT_ARROW_CLIP = `polygon(0 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, 0 100%)`;
+const BOTH_ARROWS_CLIP = `polygon(${ARROW_DEPTH}px 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
@@ -36,7 +40,6 @@ const DayGridEventBaseStyles = (theme: any) => ({
   gridRow: 'var(--grid-row)',
   gridColumn: 1,
   padding: `0 ${theme.spacing(0.5)}`,
-  boxSizing: 'border-box',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
@@ -62,6 +65,21 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       },
       [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
         color: 'var(--event-on-surface-bold)',
+      },
+      '&[data-starting-before-edge]': {
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
+        clipPath: LEFT_ARROW_CLIP,
+        paddingLeft: ARROW_DEPTH + 8,
+      },
+      '&[data-ending-after-edge]': {
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+        clipPath: RIGHT_ARROW_CLIP,
+        paddingRight: ARROW_DEPTH + 8,
+      },
+      '&[data-starting-before-edge][data-ending-after-edge]': {
+        clipPath: BOTH_ARROWS_CLIP,
       },
     },
     '&[data-variant="invisible"]': {
@@ -244,9 +262,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const { occurrence, variant, style: styleProp, className, ...other } = props;
 
   // Context hooks
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
 
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
@@ -299,8 +316,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               role="img"
               aria-label={
                 resource?.title
-                  ? translations.resourceAriaLabel(resource.title)
-                  : translations.noResourceAriaLabel
+                  ? localeText.resourceAriaLabel(resource.title)
+                  : localeText.noResourceAriaLabel
               }
             />
             <DayGridEventLinesClamp
@@ -336,7 +353,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     occurrence.displayTimezone.end.value,
     isRecurring,
     resource?.title,
-    translations,
+    localeText,
     formatTime,
     classes,
   ]);
