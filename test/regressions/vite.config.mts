@@ -9,14 +9,20 @@ export default defineConfig({
     outDir: 'build',
   },
   resolve: {
-    alias: {
+    alias: [
       ...alias,
-      '@mui/docs': path.resolve(
-        import.meta.dirname,
-        '../../node_modules/@mui/monorepo/packages/mui-docs/src',
-      ),
-      docsx: path.resolve(import.meta.dirname, '../../docs'),
-    },
+      {
+        find: '@mui/docs',
+        replacement: path.resolve(
+          import.meta.dirname,
+          '../../node_modules/@mui/monorepo/packages/mui-docs/src',
+        ),
+      },
+      {
+        find: 'docsx',
+        replacement: path.resolve(import.meta.dirname, '../../docs'),
+      },
+    ],
   },
   worker: {
     format: 'es',
