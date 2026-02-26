@@ -35,11 +35,7 @@ describe('MonthView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneMonthView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneMonthView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     const eventElement = screen.getByRole('button', { name: /Conference/i });
@@ -65,11 +61,7 @@ describe('MonthView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneMonthView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneMonthView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     const eventElement = screen.getByRole('button', { name: /Multi Day Conference/i });
@@ -103,11 +95,7 @@ describe('MonthView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneMonthView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneMonthView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     const eventElement = screen.getByRole('button', { name: /Multi Day Conference/i });
@@ -137,11 +125,7 @@ describe('MonthView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneMonthView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneMonthView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     const eventElement = screen.getByRole('button', { name: /Multi Day Conference/i });

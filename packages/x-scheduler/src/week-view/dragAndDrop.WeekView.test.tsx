@@ -70,11 +70,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -101,11 +97,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -134,11 +126,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -177,11 +165,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -217,11 +201,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -250,11 +230,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -290,11 +266,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -331,11 +303,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -374,11 +342,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -417,11 +381,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
@@ -453,11 +413,7 @@ describe('WeekView - Drag and Drop', () => {
       .build();
 
     render(
-      <StandaloneWeekView
-        events={[event]}
-        resources={[]}
-        onEventsChange={handleEventsChange}
-      />,
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
     );
 
     mockAllTimeGridColumnBounds();
