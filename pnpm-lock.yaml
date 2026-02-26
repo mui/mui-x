@@ -1878,6 +1878,9 @@ importers:
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
+      '@mui/x-license':
+        specifier: workspace:*
+        version: link:../x-license/build
       '@mui/x-scheduler':
         specifier: workspace:*
         version: link:../x-scheduler/build
@@ -1906,6 +1909,9 @@ importers:
       '@types/use-sync-external-store':
         specifier: 'catalog:'
         version: 1.5.0
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
       react:
         specifier: 'catalog:'
         version: 19.2.3

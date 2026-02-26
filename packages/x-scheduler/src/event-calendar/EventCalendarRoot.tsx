@@ -28,6 +28,10 @@ export interface EventCalendarRootProps extends Omit<
   'children'
 > {
   /**
+   * @ignore
+   */
+  children?: React.ReactNode;
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
@@ -107,7 +111,7 @@ const EventCalendarContent = styled('section', {
  */
 export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarRootProps>(
   function EventCalendarRoot(props, forwardedRef) {
-    const { className, ...other } = props;
+    const { children, className, ...other } = props;
 
     const store = useEventCalendarStoreContext();
     const { classes } = useEventCalendarStyledContext();
@@ -163,6 +167,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
           </EventCalendarContent>
         </EventCalendarMainPanel>
         <ErrorContainer />
+        {children}
       </EventCalendarRootStyled>
     );
   },
