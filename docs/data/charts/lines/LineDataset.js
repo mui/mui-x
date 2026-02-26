@@ -26,7 +26,6 @@ export default function LineDataset() {
         dataKey: key,
         label: keyToLabel[key],
         color: colors[key],
-        showMark: false,
         ...stackStrategy,
       }))}
       dataset={worldElectricityProduction}

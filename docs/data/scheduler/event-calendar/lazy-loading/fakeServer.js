@@ -205,7 +205,7 @@ function estimateRecurrenceEnd(event) {
   const eventDuration = eventEnd.getTime() - eventStart.getTime();
 
   if (rrule.until) {
-    return new Date(rrule.until.getTime() + eventDuration);
+    return new Date(new Date(rrule.until).getTime() + eventDuration);
   }
 
   if (rrule.count) {

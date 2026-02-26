@@ -3,6 +3,21 @@ import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { SchedulerResource, SchedulerResourceId } from '../models';
 
+const resourceParentIdLookupSelector = createSelectorMemoized(
+  (state: State) => state.resourceChildrenIdLookup,
+  (resourceChildrenIdLookup) => {
+    const result: Map<SchedulerResourceId, SchedulerResourceId | null> = new Map();
+
+    for (const [resourceId, childrenIds] of resourceChildrenIdLookup) {
+      for (const childId of childrenIds) {
+        result.set(childId, resourceId);
+      }
+    }
+
+    return result;
+  },
+);
+
 export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
@@ -50,7 +65,7 @@ export const schedulerResourceSelectors = {
     (processedResourceLookup, resourceChildrenIdLookup) => {
       const result: Map<SchedulerResourceId, SchedulerResource[]> = new Map();
 
-      for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
+      for (const [resourceId, childrenIds] of resourceChildrenIdLookup) {
         const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
         result.set(resourceId, children);
       }
@@ -63,37 +78,16 @@ export const schedulerResourceSelectors = {
     (state: State, resourceId: SchedulerResourceId) =>
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   ),
-  resourceParentIdLookup: createSelectorMemoized(
-    (state: State) => state.resourceChildrenIdLookup,
-    (resourceChildrenIdLookup) => {
-      const result: Map<SchedulerResourceId, SchedulerResourceId | null> = new Map();
-
-      for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
-        for (const childId of childrenIds) {
-          result.set(childId, resourceId);
-        }
-      }
-
-      return result;
-    },
-  ),
+  resourceParentIdLookup: resourceParentIdLookupSelector,
   idList: createSelector((state: State) => state.resourceIdList),
   visibleMap: createSelectorMemoized(
     (state: State) => state.visibleResources,
-    (state: State) => state.resourceChildrenIdLookup,
+    resourceParentIdLookupSelector,
     (state: State) => state.processedResourceLookup,
-    (visibleResources, resourceChildrenIdLookup, processedResourceLookup) => {
+    (visibleResources, parentLookup, processedResourceLookup) => {
       // Fast path: no parent-child relationships means no ancestor visibility to check
-      if (resourceChildrenIdLookup.size === 0) {
+      if (parentLookup.size === 0) {
         return visibleResources;
-      }
-
-      // Build parent lookup from children lookup
-      const parentLookup = new Map<string, string>();
-      for (const [parentId, childrenIds] of resourceChildrenIdLookup) {
-        for (const childId of childrenIds) {
-          parentLookup.set(childId, parentId);
-        }
       }
 
       const cache = new Map<string, boolean>();
