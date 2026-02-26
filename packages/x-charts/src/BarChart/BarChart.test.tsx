@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { describeConformance } from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/charts/describeConformance';
 import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -17,17 +17,6 @@ describe('<BarChart />', () => {
       muiName: 'MuiBarChart',
       testComponentPropWith: 'div',
       refInstanceof: window.HTMLDivElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'slotPropsProp',
-        'slotPropsCallback',
-        'slotsProp',
-        'themeStyleOverrides',
-        'themeVariants',
-        'themeCustomPalette',
-        'themeDefaultProps',
-      ],
     }),
   );
 
