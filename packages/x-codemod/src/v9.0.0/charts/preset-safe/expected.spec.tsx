@@ -14,4 +14,13 @@ import * as React from 'react';
   <Heatmap hideLegend series={[{}]} />
   <HeatmapPremium hideLegend {...otherProps} />
   <PieArc seriesId="test" />
+  <LineChart series={[{
+    data: [1, 2, 3],
+    showMark: true,
+  }]} />
+  <ChartsDataProvider series={[{
+    type: 'line',
+    data: [1, 2, 3],
+    showMark: true,
+  }]} />
 </div>;

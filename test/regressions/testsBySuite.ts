@@ -41,7 +41,6 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
     '!docsx/data/charts/axis/SelectTimeFrequency', // sub-component for demo purpose
     '!docsx/data/charts/sankey/CustomNodeLabelPlot', // sub-component for demo purpose
-    '!docsx/data/scheduler/event-calendar/lazy-loading/BasicDataSource', // Has random behavior
 
     // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
     '!docsx/data/migration/migration-pickers-v5/MobileKeyboardView',

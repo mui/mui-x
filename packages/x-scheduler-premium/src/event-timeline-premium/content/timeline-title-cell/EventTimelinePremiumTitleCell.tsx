@@ -1,13 +1,13 @@
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { EventTimelinePremium as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
+import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
-const EventTimelinePremiumTitleCellRow = styled(TimelinePrimitive.Row, {
+const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.Row, {
   name: 'MuiEventTimeline',
   slot: 'TitleCellRow',
 })(({ theme }) => ({
@@ -18,7 +18,7 @@ const EventTimelinePremiumTitleCellRow = styled(TimelinePrimitive.Row, {
   },
 }));
 
-const EventTimelinePremiumTitleCellRoot = styled(TimelinePrimitive.Cell, {
+const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.Cell, {
   name: 'MuiEventTimeline',
   slot: 'TitleCell',
 })(({ theme }) => ({
@@ -37,7 +37,7 @@ const ResourceLegendColor = styled('span', {
   height: 10,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-main)',
+  backgroundColor: 'var(--event-surface-accent)',
 });
 
 export default function EventTimelinePremiumTitleCell(props: { resourceId: SchedulerResourceId }) {

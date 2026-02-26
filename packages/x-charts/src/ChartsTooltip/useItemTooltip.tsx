@@ -1,7 +1,7 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import { type ChartSeriesDefaultized, type ChartSeriesType } from '../models/seriesType/config';
-import { type SeriesItemIdentifier } from '../models/seriesType';
+import { type SeriesItemIdentifierWithType } from '../models/seriesType';
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { useStore } from '../internals/store/useStore';
 import { useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
@@ -24,7 +24,7 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
   | (T extends 'radar' ? ItemTooltipWithMultipleValues<T> : ItemTooltip<T>)
   | null {
   const store = useStore();
-  const identifier = store.use(selectorChartsTooltipItem) as SeriesItemIdentifier<T>;
+  const identifier = store.use(selectorChartsTooltipItem) as SeriesItemIdentifierWithType<T>;
   const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const series = useSeries();

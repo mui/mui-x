@@ -14,4 +14,6 @@ import * as React from 'react';
   <Heatmap series={[{}]} />
   <HeatmapPremium {...otherProps} />
   <PieArc id="test" />
+  <LineChart series={[{ data: [1, 2, 3] }]} />
+  <ChartsDataProvider series={[{ type: 'line', data: [1, 2, 3] }]} />
 </div>;

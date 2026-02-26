@@ -22,7 +22,6 @@ const DayHeaderCell = styled('div', {
   width: 'var(--days-cell-width)',
   textAlign: 'center',
   padding: theme.spacing(1),
-  boxSizing: 'border-box',
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
@@ -78,6 +77,9 @@ const MonthStart = styled('div', {
   top: 0,
   bottom: 0,
   left: 0,
+  ...theme.applyStyles('dark', {
+    background: theme.palette.grey[800],
+  }),
 }));
 
 const MonthStartLabel = styled('p', {

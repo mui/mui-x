@@ -4,7 +4,6 @@ export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 export * from '../BarChart/BarLabel/BarLabelPlot';
 export * from '../BarChart/BarClipPath';
-export * from './components/WebGLContext';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -75,6 +74,7 @@ export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
 export * from './commonNextFocusItem';
+export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';

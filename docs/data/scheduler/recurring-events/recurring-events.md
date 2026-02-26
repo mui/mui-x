@@ -41,7 +41,7 @@ rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] }
 **Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**. We do not support every rule or combination yet. If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
 :::
 
-The `EventCalendar` and the `EventTimelinePremium` expand recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
+The `EventCalendarPremium` and the `EventTimelinePremium` expand recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
 
 {{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -50,7 +50,7 @@ The `EventCalendar` and the `EventTimelinePremium` expand recurring events only 
 The repeating pattern of an event is defined using an object which expects the following properties:
 
 ```ts
-export interface RecurringEventRecurrenceRule {
+export interface SchedulerProcessedEventRecurrenceRule {
   /**
    * Base frequency of the rule.
    * Corresponds to the FREQ property of the string-based RRULE.
@@ -64,7 +64,7 @@ export interface RecurringEventRecurrenceRule {
    */
   interval?: number;
   // ... other properties like `byDay` or `byMonthDay` that depends on the frequency
-  // see the example below or the full RecurringEventRecurrenceRule definition for more details
+  // see the example below or the full SchedulerProcessedEventRecurrenceRule definition for more details
 }
 ```
 

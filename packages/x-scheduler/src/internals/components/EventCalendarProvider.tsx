@@ -19,6 +19,10 @@ const StandaloneViewRoot = styled('div', {
   ...schedulerTokens,
   display: 'contents',
   fontFamily: theme.typography.fontFamily,
+  boxSizing: 'border-box',
+  '*, *::before, *::after': {
+    boxSizing: 'inherit',
+  },
 }));
 
 const calendarStyledValue = {

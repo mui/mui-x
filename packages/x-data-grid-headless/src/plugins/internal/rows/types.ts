@@ -7,6 +7,10 @@ export interface GridRowModel {
   [key: string]: any;
 }
 
+export type GridRowModelUpdate<TRow> = Partial<TRow> & {
+  _action?: 'delete';
+};
+
 export interface GridLeafNode {
   id: GridRowId;
   type: 'leaf';
@@ -83,7 +87,7 @@ export interface RowsApi<TRow = any> {
   getRowsCount: () => number;
   getAllRowIds: () => GridRowId[];
   setRows: (rows: TRow[]) => void;
-  updateRows: (updates: Partial<TRow>[]) => void;
+  updateRows: (updates: GridRowModelUpdate<TRow>[]) => void;
   getRowNode: (id: GridRowId) => GridTreeNode | null;
   setLoading: (loading: boolean) => void;
   rowIdsPipeline: Pipeline<GridRowId[]>;

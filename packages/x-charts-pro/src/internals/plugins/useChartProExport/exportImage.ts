@@ -19,7 +19,7 @@ export const getDrawDocument = async () => {
 
 export async function exportImage(
   element: Element,
-  svg: SVGElement,
+  svg: HTMLElement | SVGElement,
   params?: ChartImageExportOptions,
 ) {
   const {

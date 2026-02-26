@@ -1,9 +1,39 @@
 'use client';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { type ChartPlugin } from '../../models';
-import { type UseChartSeriesSignature } from './useChartSeries.types';
+import type { UseChartSeriesState, UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { defaultizeSeries } from './processSeries';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import type {
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+  SeriesId,
+} from '../../../../models/seriesType';
+
+type RetrunedType<SeriesType extends ChartSeriesType, Item> =
+  Item extends SeriesItemIdentifier<SeriesType>
+    ? SeriesItemIdentifierWithType<SeriesType>
+    : Item & { type: SeriesType };
+
+export function createIdentifierWithType(state: UseChartSeriesState) {
+  function identifierWithType<
+    SeriesType extends ChartSeriesType,
+    Item extends { seriesId: SeriesId; type?: SeriesType },
+  >(identifier: Item): RetrunedType<SeriesType, Item> {
+    if (identifier.type !== undefined) {
+      return identifier as RetrunedType<SeriesType, Item>;
+    }
+    const type = state.series.idToType.get(identifier.seriesId);
+
+    if (type === undefined) {
+      throw new Error(`MUI X Charts: id "${identifier.seriesId}" is not a series id.`);
+    }
+    return { ...identifier, type } as RetrunedType<SeriesType, Item>;
+  }
+
+  return identifierWithType;
+}
 
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, store }) => {
   const { series, dataset, theme, colors } = params;
@@ -24,7 +54,9 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
     });
   }, [colors, dataset, series, theme, store]);
 
-  return {};
+  const identifierWithType = createIdentifierWithType(store.state);
+
+  return { instance: { identifierWithType } };
 };
 
 useChartSeries.params = {

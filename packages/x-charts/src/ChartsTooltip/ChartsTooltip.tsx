@@ -7,18 +7,17 @@ import { ChartsTooltipContainer, type ChartsTooltipContainerProps } from './Char
 import { useUtilityClasses } from './chartsTooltipClasses';
 import { type TriggerOptions } from './utils';
 
-export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> extends Omit<
-  ChartsTooltipContainerProps<T>,
-  'children'
-> {
-  /**
-   * Defines the sort order in which series items are displayed in the axis tooltip.
-   * When set to `none`, series are displayed in the same order they are provided in the series property. Otherwise they are sorted by their value.
-   * Only applies when `trigger='axis'`.
-   * @default 'none'
-   */
-  sort?: T extends 'axis' ? 'none' | 'asc' | 'desc' : never;
-}
+export type ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> = T extends TriggerOptions
+  ? Omit<ChartsTooltipContainerProps<T>, 'children'> & {
+      /**
+       * Defines the sort order in which series items are displayed in the axis tooltip.
+       * When set to `none`, series are displayed in the same order they are provided in the series property. Otherwise they are sorted by their value.
+       * Only applies when `trigger='axis'`.
+       * @default 'none'
+       */
+      sort?: T extends 'axis' ? 'none' | 'asc' | 'desc' : never;
+    }
+  : never;
 
 /**
  * Demos:
