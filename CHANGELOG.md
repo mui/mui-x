@@ -60,7 +60,7 @@ Same changes as in `@mui/x-date-pickers@9.0.0-alpha.1`, plus:
 - [charts] Refactor loading and no data overlays to use a shared OverlayText component (#21414) @sai6855
 - [charts] Require series ids to be unique (#21330) @alexfauquette
 - [charts] Set `showMark` as `false` by default (#21373) @alexfauquette
-- [charts] Use createGetNextIndexFocusedItem util in Funnel and RangeBar charts (#21390) @sai6855
+- [charts] Use `createGetNextIndexFocusedItem()` util in Funnel and RangeBar charts (#21390) @sai6855
 - [charts] Remove unnecessary string concatenation (#21418) @sai6855
 
 #### `@mui/x-charts-pro@9.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
