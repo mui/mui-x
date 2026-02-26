@@ -38,6 +38,7 @@ function createDragEvent(
     cancelable: true,
     clientX: options.clientX ?? 0,
     clientY: options.clientY ?? 0,
+    dataTransfer: new DataTransfer(),
   });
 }
 
