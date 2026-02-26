@@ -114,7 +114,7 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'sankey'> = 
     // 1. If the data contains circular references, d3-sankey will throw an error.
     // 2. If there are missing source/target nodes, d3-sankey will throw an error.
     // We handle the second case by building a map of nodes ourselves, so they are always present.
-    if (error instanceof Error && error.message === 'MUI X: circular link') {
+    if (error instanceof Error && error.message === 'circular link') {
       throw new Error('MUI X Charts: Sankey diagram contains circular references.');
     }
 

@@ -18,8 +18,7 @@ export const serializeIdentifier = <T extends ChartSeriesType, U extends { type:
   if (!serializer) {
     throw new Error(
       `MUI X Charts: No identifier serializer found for series type "${identifier.type}". ` +
-        'This internal error occurs when the series configuration is incomplete. ' +
-        'Ensure the series type is properly registered with an identifierSerializer.',
+        'This internal error occurs when the series configuration is incomplete.',
     );
   }
   // @ts-expect-error identifierSerializer expects the full object,

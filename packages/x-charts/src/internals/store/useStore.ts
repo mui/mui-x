@@ -11,8 +11,8 @@ export function useStore<TSignatures extends ChartAnyPluginSignature[] = []>(): 
   if (!context) {
     throw new Error(
       'MUI X Charts: Could not find the charts context. ' +
-        'This happens when the component is rendered outside of a ChartContainer parent component. ' +
-        'Wrap your component in a ChartContainer or ChartDataProvider.',
+        'This happens when the component is rendered outside of a ChartsContainer parent component. ' +
+        'Wrap your component in a ChartsContainer or ChartsDataProvider.',
     );
   }
 
