@@ -104,8 +104,10 @@ To see what telemetry events are being generated **without** sending them to the
 
 ```bash
 # Via environment variable (before starting the dev server)
-MUI_X_TELEMETRY_DEBUG=true pnpm docs:dev
+NEXT_PUBLIC_MUI_X_TELEMETRY_DEBUG=true pnpm docs:dev
 ```
+
+> ⚠️ Note that some frameworks require prefixing the variable with `NEXT_PUBLIC_`, `REACT_APP_`, etc. for it to be available in the browser.
 
 Or in the browser console:
 
