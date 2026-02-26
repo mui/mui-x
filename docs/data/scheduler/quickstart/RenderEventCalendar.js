@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
-const events = [
+const initialEvents = [
   {
     id: 1,
     title: 'Team Meeting',
@@ -23,9 +23,15 @@ const events = [
 ];
 
 export default function RenderEventCalendar() {
+  const [events, setEvents] = React.useState(initialEvents);
+
   return (
     <div style={{ height: 600, width: '100%' }}>
-      <EventCalendar events={events} defaultVisibleDate={new Date(2024, 0, 15)} />
+      <EventCalendar
+        events={events}
+        onEventsChange={setEvents}
+        defaultVisibleDate={new Date(2024, 0, 15)}
+      />
     </div>
   );
 }
