@@ -815,5 +815,11 @@ export const useGridRowEditing = (
         }
       }
     });
-  }, [apiRef, rowModesModel, updateOrDeleteRowState, updateStateToStartRowEditMode, updateStateToStopRowEditMode]);
+  }, [
+    apiRef,
+    rowModesModel,
+    updateOrDeleteRowState,
+    updateStateToStartRowEditMode,
+    updateStateToStopRowEditMode,
+  ]);
 };
