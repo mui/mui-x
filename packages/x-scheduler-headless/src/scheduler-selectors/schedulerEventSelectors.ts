@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { SchedulerEvent, SchedulerEventId, SchedulerEventSide } from '../models';
+import { SchedulerEvent, SchedulerEventId, SchedulerEventSide, SchedulerResource } from '../models';
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
@@ -16,24 +16,13 @@ const isEventReadOnlySelector = createSelector((state: State, eventId: Scheduler
     return false;
   }
 
-  // If the `readOnly` property is defined on the event, it takes precedence
-  if (processedEvent.modelInBuiltInFormat?.readOnly !== undefined) {
-    return processedEvent.modelInBuiltInFormat.readOnly;
-  }
-
-  // Then check if the resource or any ancestor has the `areEventsReadOnly` property defined
-  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
-  let currentResourceId = processedEvent.resource;
-  while (currentResourceId != null) {
-    const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
-    if (resource?.areEventsReadOnly !== undefined) {
-      return resource.areEventsReadOnly;
-    }
-    currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
-  }
-
-  // Otherwise, fall back to the component-level setting
-  return state.readOnly ?? false;
+  return resolveEventProperty({
+    state,
+    resourceId: processedEvent.resource,
+    valueInEvent: processedEvent.modelInBuiltInFormat?.readOnly,
+    getValueInResource: (r) => r.areEventsReadOnly,
+    valueInState: state.readOnly ?? false,
+  });
 });
 
 export const schedulerEventSelectors = {
@@ -152,24 +141,13 @@ export const schedulerEventSelectors = {
       return false;
     }
 
-    // If the `draggable` property is defined on the event, it takes precedence
-    if (processedEvent.draggable !== undefined) {
-      return processedEvent.draggable;
-    }
-
-    // Then check if the resource or any ancestor has the `areEventsDraggable` property defined
-    const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
-    let currentResourceId = processedEvent.resource;
-    while (currentResourceId != null) {
-      const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
-      if (resource?.areEventsDraggable !== undefined) {
-        return resource.areEventsDraggable;
-      }
-      currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
-    }
-
-    // Otherwise, fall back to the component-level setting
-    return state.areEventsDraggable;
+    return resolveEventProperty({
+      state,
+      resourceId: processedEvent.resource,
+      valueInEvent: processedEvent.draggable,
+      getValueInResource: (r) => r.areEventsDraggable,
+      valueInState: state.areEventsDraggable,
+    });
   }),
   isResizable: createSelector(
     (state: State, eventId: SchedulerEventId, side: SchedulerEventSide) => {
@@ -191,40 +169,14 @@ export const schedulerEventSelectors = {
         return false;
       }
 
-      // If the `resizable` property is defined on the event, it takes precedence
-      const isResizableFromEventProperty = getIsResizableFromProperty(
-        processedEvent.resizable,
-        side,
-      );
-
-      if (isResizableFromEventProperty !== null) {
-        return isResizableFromEventProperty;
-      }
-
-      // TODO: Pre-process the resource, like we do for the event. That way we can compute this information only once.
-      // Then check if the resource or any ancestor has the `areEventsResizable` property defined
-      const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
-      let currentResourceId = processedEvent.resource;
-      while (currentResourceId != null) {
-        const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
-        const isResizableFromResourceProperty = getIsResizableFromProperty(
-          resource?.areEventsResizable,
-          side,
-        );
-
-        if (isResizableFromResourceProperty !== null) {
-          return isResizableFromResourceProperty;
-        }
-        currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
-      }
-
-      // Otherwise, fall back to the component-level setting
-      const isResizableFromComponentProperty = getIsResizableFromProperty(
-        state.areEventsResizable,
-        side,
-      );
-
-      return isResizableFromComponentProperty ?? false;
+      return resolveEventProperty({
+        state,
+        resourceId: processedEvent.resource,
+        valueInEvent: getIsResizableFromProperty(processedEvent.resizable, side) ?? undefined,
+        getValueInResource: (r) =>
+          getIsResizableFromProperty(r.areEventsResizable, side) ?? undefined,
+        valueInState: getIsResizableFromProperty(state.areEventsResizable, side) ?? false,
+      });
     },
   ),
   isRecurring: createSelector(
@@ -258,4 +210,38 @@ function getIsResizableFromProperty(
   // If the property is a specific side (e.g., 'start' or 'end') but doesn't match the current side,
   // return false because the property explicitly restricts resizing to a specific side.
   return false;
+}
+
+/**
+ * Resolves an event property by checking (in order of priority):
+ * 1. The event itself (`valueInEvent`)
+ * 2. The resource hierarchy, child → parent → … (`getValueInResource`)
+ * 3. The component-level state (`valueInState`)
+ */
+function resolveEventProperty<T>(parameters: {
+  state: State;
+  resourceId: string | null | undefined;
+  valueInEvent: T | undefined;
+  getValueInResource: (resource: SchedulerResource) => T | undefined;
+  valueInState: T;
+}): T {
+  const { state, resourceId, valueInEvent, getValueInResource, valueInState } = parameters;
+  if (valueInEvent !== undefined) {
+    return valueInEvent;
+  }
+
+  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+  let currentResourceId = resourceId ?? null;
+  while (currentResourceId != null) {
+    const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
+    if (resource != null) {
+      const value = getValueInResource(resource);
+      if (value !== undefined) {
+        return value;
+      }
+    }
+    currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
+  }
+
+  return valueInState;
 }
