@@ -23,13 +23,11 @@ export default function DemoRadarSeriesHighlight() {
     series.map((item) => ({
       ...item,
       fillArea,
-      type: 'radar',
     }));
 
   const handleHighLightedSeries = (event, newHighLightedSeries) => {
     if (newHighLightedSeries !== null) {
       setHighlightedItem({
-        type: 'radar',
         seriesId: newHighLightedSeries,
       });
     }

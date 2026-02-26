@@ -15,7 +15,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 
 export default function ControlledHighlight() {
   const [highlightedItem, setHighLightedItem] = React.useState({
-    type: 'bar',
     seriesId: 'A',
     dataIndex: 0,
   });
@@ -25,7 +24,6 @@ export default function ControlledHighlight() {
   const handleHighLightedSeries = (event, newHighLightedSeries) => {
     if (newHighLightedSeries !== null) {
       setHighLightedItem((prev) => ({
-        type: 'bar',
         dataIndex: 0,
         ...prev,
         seriesId: newHighLightedSeries,
@@ -35,7 +33,6 @@ export default function ControlledHighlight() {
 
   const handleHighLightedItem = (event) => {
     setHighLightedItem((prev) => ({
-      type: 'bar',
       seriesId: 'A',
       ...prev,
       dataIndex: Number(event.target.value),
