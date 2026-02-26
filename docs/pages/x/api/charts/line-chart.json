@@ -239,7 +239,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiLineChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/LineChart/LineChart.tsx",
