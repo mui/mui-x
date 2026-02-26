@@ -38,6 +38,8 @@ export const useGridRowSelectionPreProcessors = (
         headerClassName: classes.columnHeaderCheckbox,
         headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
         ...props.checkboxColDef,
+        GRID_CHECKBOX_SELECTION_COL_DEF.field,
+        GRID_CHECKBOX_SELECTION_COL_DEF.type,
       };
 
       const shouldHaveSelectionColumn = props.checkboxSelection;
