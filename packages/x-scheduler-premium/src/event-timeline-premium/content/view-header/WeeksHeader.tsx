@@ -15,7 +15,7 @@ const WeeksHeaderRoot = styled('div', {
 })({
   display: 'flex',
   // TODO: update this calculation when we add the option to hide weekends
-  minWidth: 'calc(var(--unit-count) * 7 * var(--weeks-cell-width))',
+  minWidth: 'calc(var(--unit-count) * var(--weeks-cell-width))',
 });
 
 const TimeHeaderCell = styled('div', {
@@ -46,11 +46,10 @@ const DayLabel = styled('div', {
 const WeekDaysRow = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'WeeksHeaderDaysRow',
-})(({ theme }) => ({
+})({
   display: 'grid',
-  gridTemplateColumns: 'repeat(7, 1fr)',
-  columnGap: theme.spacing(0.5),
-}));
+  gridTemplateColumns: 'repeat(7, var(--time-cell-width))',
+});
 
 const WeekDayCell = styled('time', {
   name: 'MuiEventTimeline',

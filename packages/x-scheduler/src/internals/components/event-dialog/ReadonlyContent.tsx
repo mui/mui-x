@@ -9,6 +9,7 @@ import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/mo
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
+  schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
@@ -140,6 +141,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     occurrence.displayTimezone.rrule,
     occurrence.displayTimezone.start,
   );
+  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   // Feature hook
   const formatTime = useFormatTime();
@@ -209,12 +211,14 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             )}
           </Typography>
         </EventDialogDateTimeContainer>
-        <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
-          <RepeatRoundedIcon fontSize="small" />
-          <Typography variant="body2" color="text.secondary" component="em">
-            {recurrenceLabel}
-          </Typography>
-        </RecurrenceLabelContainer>
+        {showRecurrence && (
+          <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
+            <RepeatRoundedIcon fontSize="small" />
+            <Typography variant="body2" color="text.secondary" component="em">
+              {recurrenceLabel}
+            </Typography>
+          </RecurrenceLabelContainer>
+        )}
         {hasProp(occurrence, 'description') && !!occurrence.description ? (
           <Typography variant="body2">{occurrence.description}</Typography>
         ) : null}

@@ -33,6 +33,35 @@ const resources = [
 <EventCalendar events={events} resources={resources} />;
 ```
 
+## Nested resources
+
+Use the `children` property to create hierarchical resource structures:
+
+```tsx
+const resources = [
+  {
+    id: 'academics',
+    title: 'Academics',
+    children: [
+      {
+        id: 'stem',
+        title: 'STEM',
+        children: [
+          { id: 'computer-science', title: 'Computer Science' },
+          { id: 'mathematics', title: 'Mathematics' },
+        ],
+      },
+    ],
+  },
+];
+```
+
+{{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+Nested resources are not yet supported in the resource visibility UI in the sidebar. Only top level resource can be toggled.
+:::
+
 ## Visible resources
 
 Use the `defaultVisibleResources` prop to initialize the visible resources.
@@ -117,6 +146,21 @@ const resource = {
 
 :::success
 Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-calendar/drag-interactions/).
+:::
+
+### Read-only
+
+Use the `areEventsReadOnly` property to mark all events of a resource as read-only:
+
+```ts
+const resource = {
+  // ...other properties
+  areEventsReadOnly: true,
+};
+```
+
+:::success
+Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-calendar/editing/#read-only).
 :::
 
 ## Store data in custom properties

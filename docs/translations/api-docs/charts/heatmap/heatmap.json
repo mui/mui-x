@@ -57,6 +57,12 @@
         "item": { "name": "item", "description": "The clicked item." }
       }
     },
+    "onTooltipAxisChange": {
+      "description": "The function called when the pointer position corresponds to a new axis data item. This update can either be caused by a pointer movement, or an axis update. In case of multiple axes, the function is called if at least one axis is updated. The argument contains the identifier for all axes with a <code>data</code> property.",
+      "typeDescriptions": {
+        "axisItems": { "name": "axisItems", "description": "The array of axes item identifiers." }
+      }
+    },
     "onTooltipItemChange": {
       "description": "The callback fired when the tooltip item changes.",
       "typeDescriptions": {
@@ -78,6 +84,9 @@
     "tooltip": {
       "description": "The configuration of the tooltip.",
       "seeMoreText": "See {{link}} for more details."
+    },
+    "tooltipAxis": {
+      "description": "The controlled axis tooltip. Identified by the axis id, and data index."
     },
     "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {

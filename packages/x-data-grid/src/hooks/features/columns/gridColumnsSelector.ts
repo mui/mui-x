@@ -9,7 +9,6 @@ import {
   type GridPinnedColumnFields,
   EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
-import { gridIsRtlSelector } from '../../core/gridCoreSelector';
 import { gridListColumnSelector, gridListViewSelector } from '../listView';
 
 /**
@@ -109,8 +108,7 @@ export const gridPinnedColumnsSelector = createRootSelector(
 export const gridExistingPinnedColumnSelector = createSelectorMemoized(
   gridPinnedColumnsSelector,
   gridColumnFieldsSelector,
-  gridIsRtlSelector,
-  (model, orderedFields, isRtl) => filterMissingColumns(model, orderedFields, isRtl),
+  (model, orderedFields) => filterMissingColumns(model, orderedFields),
 );
 
 /**
@@ -121,13 +119,12 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   gridColumnsStateSelector,
   gridPinnedColumnsSelector,
   gridVisibleColumnFieldsSelector,
-  gridIsRtlSelector,
   gridListViewSelector,
-  (columnsState, model, visibleColumnFields, isRtl, listView) => {
+  (columnsState, model, visibleColumnFields, listView) => {
     if (listView) {
       return EMPTY_PINNED_COLUMN_FIELDS;
     }
-    const visiblePinnedFields = filterMissingColumns(model, visibleColumnFields, isRtl);
+    const visiblePinnedFields = filterMissingColumns(model, visibleColumnFields);
     const visiblePinnedColumns = {
       left: visiblePinnedFields.left.map((field) => columnsState.lookup[field]),
       right: visiblePinnedFields.right.map((field) => columnsState.lookup[field]),
@@ -136,11 +133,7 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   },
 );
 
-function filterMissingColumns(
-  pinnedColumns: GridPinnedColumnFields,
-  columns: string[],
-  invert?: boolean,
-) {
+function filterMissingColumns(pinnedColumns: GridPinnedColumnFields, columns: string[]) {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
     return EMPTY_PINNED_COLUMN_FIELDS;
   }
@@ -158,14 +151,9 @@ function filterMissingColumns(
 
   const leftPinnedColumns = filter(pinnedColumns.left, columns);
   const columnsWithoutLeftPinnedColumns = columns.filter(
-    // Filter out from the remaining columns those columns already pinned to the left
     (field) => !leftPinnedColumns.includes(field),
   );
   const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
-
-  if (invert) {
-    return { left: rightPinnedColumns, right: leftPinnedColumns };
-  }
 
   return { left: leftPinnedColumns, right: rightPinnedColumns };
 }

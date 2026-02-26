@@ -4,7 +4,8 @@ import { calculateRangeChange, calculateRangePreview } from './date-range-manage
 import { DateRange } from '../../models';
 
 const start2018 = adapterToUse.date('2018-01-01');
-const start2018At4PM = adapterToUse.date('2018-01-01T16:00:00');
+const start2018EndOfDay = adapterToUse.date('2018-01-01T23:59:59.999Z');
+const start2018At4PM = adapterToUse.date('2018-01-01T16:00:00.000Z');
 const mid2018 = adapterToUse.date('2018-07-01');
 const end2019 = adapterToUse.date('2019-01-01');
 
@@ -102,7 +103,7 @@ describe('date-range-manager', () => {
       range: [start2018At4PM, null],
       rangePosition: 'end' as const,
       newDate: start2018,
-      expectedRange: [start2018At4PM, start2018],
+      expectedRange: [start2018At4PM, start2018EndOfDay],
       allowRangeFlip: false,
       expectedNextSelection: 'start' as const,
     },
