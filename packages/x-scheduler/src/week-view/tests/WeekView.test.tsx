@@ -8,8 +8,8 @@ import {
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { EventDialogProvider } from '../internals/components/event-dialog';
-import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
+import { EventDialogProvider } from '../../internals/components/event-dialog';
+import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 
 const multiDayEvent = EventBuilder.new()
   .span('2025-05-05T00:00:00Z', '2025-05-07T23:59:59Z')
