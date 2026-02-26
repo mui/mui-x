@@ -17,12 +17,16 @@ import {
   type ChartsLocalizationProviderProps,
 } from '../ChartsLocalizationProvider';
 
+export interface ChartDataProviderSlots extends ChartsSlots {}
+
+export interface ChartDataProviderSlotProps extends ChartsSlotProps {}
+
 export type ChartDataProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = React.PropsWithChildren<
   ChartProviderProps<TSeries, TSignatures>['pluginParams'] &
-    Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'>
+  Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'>
 > &
   ChartsLocalizationProviderProps & {
     /**
