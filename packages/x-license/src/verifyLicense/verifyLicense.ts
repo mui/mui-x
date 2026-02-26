@@ -233,7 +233,7 @@ export function verifyLicense({
   }
 
   // Reject test license keys outside of test environments.
-  if (license.isTestKey && !(process.env.NODE_ENV === 'test' || process.env.VITEST)) {
+  if (license.isTestKey && !(globalThis as any).MUI_TEST_ENV) {
     console.error(
       'MUI X: Error checking license. Test license key used in a non-test environment!',
     );
