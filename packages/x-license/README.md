@@ -97,3 +97,24 @@ cat ~/.config/mui-x/config.json
 cat packages/x-license/build/esm/telemetry/context.js
 cat packages/x-license/build/telemetry/context.js
 ```
+
+### Debugging telemetry
+
+To see what telemetry events are being generated **without** sending them to the server, enable debug mode:
+
+```bash
+# Via environment variable (before starting the dev server)
+MUI_X_TELEMETRY_DEBUG=true pnpm docs:dev
+```
+
+Or in the browser console:
+
+```js
+globalThis.__MUI_X_TELEMETRY_DEBUG__ = true;
+```
+
+With debug mode enabled, events are logged to the browser console as `[mui-x-telemetry] event { ... }` instead of being sent to the server.
+
+To verify that events are actually reaching the server (without debug mode), open the browser **Network** tab and filter by `x-telemetry.mui.com`. Events are POSTed to `https://x-telemetry.mui.com/v2/telemetry/record` in development mode.
+
+> Note: Telemetry is automatically disabled in production builds, SSR/Node.js, and CI environments.
