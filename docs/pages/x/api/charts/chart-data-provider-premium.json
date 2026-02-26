@@ -59,7 +59,7 @@
   "spread": false,
   "themeDefaultProps": false,
   "muiName": "MuiChartDataProviderPremium",
-  "forwardsRefTo": "SVGSVGElement",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts-premium/src/ChartDataProviderPremium/ChartDataProviderPremium.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",

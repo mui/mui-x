@@ -64,9 +64,9 @@
     }
   ],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiGauge",
-  "forwardsRefTo": "SVGSVGElement",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/Gauge/Gauge.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/gauge/\">Charts - Gauge</a></li></ul>",
