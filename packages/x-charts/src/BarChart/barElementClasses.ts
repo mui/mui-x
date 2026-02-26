@@ -6,9 +6,15 @@ import { type SeriesId } from '../models/seriesType/common';
 export interface BarElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element if it is highlighted. */
+  /**
+   * Styles applied to the root element if it is highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element if it is faded. */
+  /**
+   * Styles applied to the root element if it is faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
