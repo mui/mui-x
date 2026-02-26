@@ -111,6 +111,37 @@ jobs:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
+      - run:
+          name: Detect charts-only changes
+          command: |
+            # #target-branch-reference
+            CHANGED_FILES=$(git diff --name-only "$(git merge-base master HEAD)")
+
+            if [[ -z "$CHANGED_FILES" ]]; then
+              echo "No changed files detected, running all browser tests."
+              exit 0
+            fi
+
+            CHARTS_ONLY=true
+            while IFS= read -r file; do
+              case "$file" in               
+                packages/x-charts*) ;;
+                docs/*) ;;
+                scripts/x-charts*) ;;
+                *)
+                  CHARTS_ONLY=false
+                  echo "Non-charts file changed: $file"
+                  break
+                  ;;
+              esac
+            done <<< "$CHANGED_FILES"
+
+            if [[ "$CHARTS_ONLY" == "true" ]]; then
+              echo "Only charts-related files changed. Filtering browser tests to x-charts* projects."
+              echo 'export BROWSER_TEST_PROJECT_FILTER="--project \"x-charts*\""' >> "$BASH_ENV"
+            else
+              echo "Non-charts files changed. Running all browser tests."
+            fi
       - when:
           condition:
             not:
@@ -122,7 +153,7 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
                 command: |
-                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser ${BROWSER_TEST_PROJECT_FILTER:+$BROWSER_TEST_PROJECT_FILTER}
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
@@ -133,7 +164,7 @@ jobs:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser ${BROWSER_TEST_PROJECT_FILTER:+$BROWSER_TEST_PROJECT_FILTER} --coverage
             - code-infra/upload-coverage:
                 key: << parameters.react-version >>-browser
       - store_test_results:
