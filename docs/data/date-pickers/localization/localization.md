@@ -132,6 +132,9 @@ You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the date and time picker components depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
 
+You can also run the `pnpm l10n:llm` CLI script to translate missing locales for specific packages and locales using an LLM.
+The interactive CLI will guide you through the process of selecting the packages and locales to translate, and then it will generate a prompt for the LLM to translate the missing locales.
+
 ## Access the translations in slots and subcomponents
 
 You can use the `usePickerTranslations` hook to access the translations in your custom components.

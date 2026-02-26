@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { getDataGridUtilityClass, GridShadowScrollArea } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import type { Conversation } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
