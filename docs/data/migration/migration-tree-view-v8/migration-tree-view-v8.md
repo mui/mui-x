@@ -87,7 +87,7 @@ Make sure to set a height on the container:
 ```
 
 :::success
-See [Virtualization—Layout](/x/react-tree-view/virtualization/#layout) to learn more.
+See [Virtualization—Layout](/x/react-tree-view/rich-tree-view/virtualization/#layout) to learn more.
 :::
 
 ### Item height
