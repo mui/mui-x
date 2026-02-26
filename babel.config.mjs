@@ -57,7 +57,13 @@ export default function getBabelConfig(api) {
     baseConfig.plugins.push([
       'babel-plugin-transform-replace-expressions',
       {
-        replace: [['LICENSE_DISABLE_CHECK', 'false']],
+        replace: [
+          ['LICENSE_DISABLE_CHECK', 'false'],
+          [
+            'process.env.ALLOW_TEST_LICENSES',
+            process.env.NODE_ENV === 'test' ? 'true' : 'false',
+          ],
+        ],
       },
     ]);
   }

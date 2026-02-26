@@ -233,7 +233,9 @@ export function verifyLicense({
   }
 
   // Reject test license keys outside of test environments.
-  if (license.isTestKey && !(globalThis as any).MUI_TEST_ENV) {
+  // Gets replaced with `false` during production builds, making it impossible
+  // for users of published packages to use test licenses.
+  if (license.isTestKey && !process.env.ALLOW_TEST_LICENSES) {
     console.error(
       'MUI X: Error checking license. Test license key used in a non-test environment!',
     );
