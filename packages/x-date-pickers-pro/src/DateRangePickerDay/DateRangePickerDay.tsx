@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useLicenseVerifier } from '@mui/x-license';
+import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';

@@ -5,11 +5,11 @@ import { Globals } from '@react-spring/web';
 // eslint-disable-next-line import/no-relative-packages
 import '../utils/setupFakeClock';
 // eslint-disable-next-line import/no-relative-packages
-import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense';
+import { setupTestLicenseKey } from '../utils/testLicense';
 import TestViewer from './TestViewer';
 import { type Test, testsBySuite } from './testsBySuite';
 
-setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
+setupTestLicenseKey();
 
 Globals.assign({
   skipAnimation: true,

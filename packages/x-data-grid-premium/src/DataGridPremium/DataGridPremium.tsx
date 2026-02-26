@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
+import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { Watermark } from '@mui/x-license/Watermark';
 import {
   GridRoot,
   GridContextProvider,

@@ -1,7 +1,17 @@
-export * from './generateLicense';
-export * from './utils';
-export * from './verifyLicense';
-export * from './useLicenseVerifier';
-export * from './Watermark';
-export * from './Unstable_LicenseInfoProvider';
+export {
+  Unstable_LicenseInfoProvider,
+  type Unstable_LicenseInfoProviderProps,
+} from './Unstable_LicenseInfoProvider';
+export { LicenseInfo } from './utils';
+export type {
+  LicenseStatus,
+  MuiLicenseInfo,
+  AppType,
+  KeyVersion,
+  LicenseDetails,
+  LicenseModel,
+  PlanScope,
+} from './utils';
+export { base64Encode } from './encoding/base64';
+export { md5 } from './encoding/md5';
 export { muiXTelemetrySettings } from '@mui/x-telemetry';

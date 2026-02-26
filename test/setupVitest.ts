@@ -1,7 +1,7 @@
-import { beforeAll, beforeEach, afterEach } from 'vitest';
+import { beforeEach, afterEach } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/licenseRelease';
-import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
+import { setupTestLicenseKey } from 'test/utils/testLicense';
 import { config } from 'react-transition-group';
 import sinon from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
@@ -19,15 +19,9 @@ configure({
   computedStyleSupportsPseudoElements: !isJsdom(),
 });
 
-let licenseKey: string = '';
-
-beforeAll(() => {
-  licenseKey = generateTestLicenseKey();
-});
-
 beforeEach(() => {
   clearWarningsCache();
-  setupTestLicenseKey(licenseKey);
+  setupTestLicenseKey();
   config.disabled = true;
 });
 
