@@ -177,7 +177,7 @@ This is useful when items have different heights, but it requires disabling virt
 ## DOM structure
 
 Use the `domStructure` prop to control how items are rendered in the DOM.
-By default, the DOM structure is **nested** when virtualization is disabled and **flat** when virtualization is enabled (on `<RichTreeViewPro />`)
+By default, the DOM structure is **nested** on `<RichTreeView />` and **flat** on `<RichTreeViewPro />`.
 
 When `domStructure="nested"`, items are rendered with a **nested** structure where children are placed inside their parent:
 
@@ -215,6 +215,10 @@ When `domStructure="flat"`, all items are rendered as siblings regardless of the
   <li>Item 2</li>
 </ul>
 ```
+
+:::success
+The **nested** DOM structure is not compatible with the virtualization on the `<RichTreeViewPro />`.
+:::
 
 ## Track item clicks
 
