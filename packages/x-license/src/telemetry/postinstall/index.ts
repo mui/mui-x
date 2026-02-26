@@ -14,8 +14,8 @@ const buildRoot =
     : (() => {
         const filename = fileURLToPath(import.meta.url);
 
-        // esm: build/esm/telemetry/postinstall/index.js -> build (3 levels up)
-        return path.dirname(path.dirname(path.dirname(filename)));
+        // esm: build/esm/telemetry/postinstall/index.js -> build (4 levels up)
+        return path.dirname(path.dirname(path.dirname(path.dirname(filename))));
       })();
 
 (async () => {
