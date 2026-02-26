@@ -6,7 +6,7 @@ components: BarChart, BarElement, BarPlot
 
 # Charts - Bar demos
 
-<p class="description">This page groups demos using bar charts.</p>
+<p class="description">Explore bar chart demos and examples.</p>
 
 ## TinyBarChart
 
@@ -42,12 +42,12 @@ components: BarChart, BarElement, BarPlot
 
 ## Waterfall Chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-The following demo shows a waterfall chart built using a [range bar chart](/x/react-charts/range-bar/).
+The following demo shows a waterfall chart built with a [range bar chart](/x/react-charts/range-bar/).
 
 {{"demo": "WaterfallChart.js"}}
 
 ## Candlestick Chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-The following demo shows a simplified candlestick chart built using a [range bar chart](/x/react-charts/range-bar/).
+The following demo shows a simplified candlestick chart built with a [range bar chart](/x/react-charts/range-bar/).
 
 {{"demo": "RangeBarCandlestick.js"}}

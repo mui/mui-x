@@ -6,25 +6,26 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 # Charts - Bars
 
-<p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
+<p class="description">Compare discrete categories and quantities using bar length and a common baseline.</p>
 
 ## Overview
 
-Bar charts are ideal for comparing discrete categories.
-They excel at visualizing differences in magnitude across categories (or a group of categories), highlight trends, and compare proportions at a glance.
-The categories can represent progressive values such as time periods, or independent groups such as products, countries, age brackets, etc.
-Here are the basic requirements to create a bar chart:
+Bar charts compare discrete categories by showing quantities as bar lengths from a common baseline.
+They work well for comparing magnitude across categories, highlighting trends, and comparing proportions at a glance.
+Categories can be progressive (for example, time periods) or independent (for example, products, countries, or age brackets).
 
-- One categorical dimension (x-axis for vertical bars, y-axis for horizontal bars)
-- One or more numerical metric for length of each bar
+To create a bar chart you need:
 
-The horizontal bar chart below compares voter turnout in some European countries:
+- One categorical dimension (for example, the x-axis for vertical bars or the y-axis for horizontal bars)
+- One or more numerical values that set the length of each bar
+
+The horizontal bar chart below compares voter turnout in several European countries.
 
 {{"demo": "ShinyBarChartHorizontal.js"}}
 
 ## Basics
 
-Bar charts series should contain a `data` property containing an array of values.
+Bar chart series should contain a `data` property with an array of values.
 
 You can specify bar ticks with the `xAxis` prop.
 This axis might have `scaleType='band'` and its `data` should have the same length as your series.
@@ -69,14 +70,14 @@ You can use the `stackOffset` and `stackOrder` properties to define how the seri
 
 By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
 
-For more information, see [stacking docs](/x/react-charts/stacking/).
+See [stacking docs](/x/react-charts/stacking/) for details.
 
 ## Layout
 
 ### Bar direction
 
 Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
-If you're using [composition](/x/react-charts/composition/), you should set the property `layout: 'horizontal'` to each bar series object.
+If you're composing a custom component, you should set the property `layout: 'horizontal'` to each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
 
@@ -135,13 +136,13 @@ The bar charts use by priority:
 2. The band axis color
 3. The series color
 
-Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
+See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
 
 {{"demo": "ColorScale.js"}}
 
 ### Border radius
 
-To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
+To give your bar chart rounded corners, set the `borderRadius` property on [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 
 It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
 
@@ -221,7 +222,7 @@ In the example below, we position the labels above the bars they refer to.
 
 ## Click event
 
-Bar charts provides two click handlers:
+Bar charts provide two click handlers:
 
 - `onItemClick` for click on a specific bar.
 - `onAxisClick` for a click anywhere in the chart
@@ -240,8 +241,8 @@ const clickHandler = (
 :::info
 There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
 
-- For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
-- For `onAxisClick` it's a native mouse event emitted by the svg component.
+- For `onItemClick` the event is a React synthetic mouse event emitted by the bar component.
+- For `onAxisClick` the event is a native mouse event emitted by the svg component.
 
 :::
 
@@ -259,7 +260,7 @@ Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-When `skipAnimation` is enabled, the chart renders without any animations.
+When you set `skipAnimation` to `true`, the chart renders without animations.
 
 ```jsx
 // For a single component chart
@@ -292,11 +293,11 @@ The example below uses the `renderer` prop to improve performance when rendering
 
 ## Composition
 
-Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+Use `ChartDataProvider` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
-In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<BarPlot />` component that renders the bars and their labels.
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `BarPlot` component to render the bars and their labels.
 
-Here's how the Bar Chart is composed:
+Here's how the bar chart is composed:
 
 ```jsx
 <ChartDataProvider>
