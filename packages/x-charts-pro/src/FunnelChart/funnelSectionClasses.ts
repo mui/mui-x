@@ -9,12 +9,12 @@ export interface FunnelSectionClasses {
   root: string;
   /**
    * Styles applied to the root element if `highlighted={true}`.
-   * @deprecated Use `[data-highlighted=true]` selector instead.
+   * @deprecated Use `[data-highlighted]` selector instead.
    */
   highlighted: string;
   /**
    * Styles applied to the root element if `faded={true}`.
-   * @deprecated Use `[data-faded=true]` selector instead.
+   * @deprecated Use `[data-faded]` selector instead.
    */
   faded: string;
   /** Styles applied to the root element if `variant="filled"`. */

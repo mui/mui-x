@@ -14,12 +14,12 @@ export interface PieArcLabelClasses {
   root: string;
   /**
    * Styles applied to the root element when highlighted.
-   * @deprecated Use `[data-highlighted="true"]` selector instead.
+   * @deprecated Use `[data-highlighted]` selector instead.
    */
   highlighted: string;
   /**
    * Styles applied to the root element when faded.
-   * @deprecated Use `[data-faded="true"]` selector instead.
+   * @deprecated Use `[data-faded]` selector instead.
    */
   faded: string;
   /** Styles applied to the root element when animation is not skipped. */

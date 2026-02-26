@@ -8,12 +8,12 @@ export interface BarLabelClasses {
   root: string;
   /**
    * Styles applied to the root element if it is highlighted.
-   * @deprecated Use `[data-highlighted=true]` selector instead.
+   * @deprecated Use `[data-highlighted]` selector instead.
    */
   highlighted: string;
   /**
    * Styles applied to the root element if it is faded.
-   * @deprecated Use `[data-faded=true]` selector instead.
+   * @deprecated Use `[data-faded]` selector instead.
    */
   faded: string;
   /** Styles applied to the root element if it is animated. */

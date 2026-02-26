@@ -6,12 +6,12 @@ export interface HeatmapClasses {
   cell: string;
   /**
    * Styles applied to the cell element if highlighted.
-   * @deprecated Use `[data-highlighted=true]` selector instead.
+   * @deprecated Use `[data-highlighted]` selector instead.
    */
   highlighted: string;
   /**
    * Styles applied to the cell element if faded.
-   * @deprecated Use `[data-faded=true]` selector instead.
+   * @deprecated Use `[data-faded]` selector instead.
    */
   faded: string;
   /**
