@@ -104,6 +104,7 @@ Internal changes.
 - [code-infra] Cleanup unused babel plugins (#21453) @brijeshb42
 - [code-infra] Do not append `x` to the last version for the compare API (#21408) @arminmeh
 - [code-infra] Upgrade react-docgen to v8 X (#21155) @JCQuintas
+- [code-infra] Modernize codemod (#21096) @JCQuintas
 - [docs-infra] Fix current version detection logic (#21417) @cherniavskii
 - [docs-infra] Reapply Cookie Banner (#21281) @dav-is
 - [internal] Headless filtering plugin (#21302) @arminmeh
