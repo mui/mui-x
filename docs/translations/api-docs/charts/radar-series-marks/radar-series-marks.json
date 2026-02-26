@@ -25,13 +25,13 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the series element",
       "conditions": "it is faded",
-      "deprecationInfo": "Use <code>[data-faded=&quot;true&quot;]</code> selector instead."
+      "deprecationInfo": "Use <code>[data-faded]</code> selector instead."
     },
     "highlighted": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the series element",
       "conditions": "it is highlighted",
-      "deprecationInfo": "Use <code>[data-highlighted=&quot;true&quot;]</code> selector instead."
+      "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
     },
     "mark": {
       "description": "Styles applied to {{nodeName}}.",

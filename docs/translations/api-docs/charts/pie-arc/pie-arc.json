@@ -11,7 +11,7 @@
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "faded",
-      "deprecationInfo": "Use <code>[data-faded=&quot;true&quot;]</code> selector instead."
+      "deprecationInfo": "Use <code>[data-faded]</code> selector instead."
     },
     "focusIndicator": {
       "description": "Styles applied to {{nodeName}}.",
@@ -21,7 +21,7 @@
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "highlighted",
-      "deprecationInfo": "Use <code>[data-highlighted=&quot;true&quot;]</code> selector instead."
+      "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
     },
     "root": { "description": "Styles applied to the root element." },
     "series": {
