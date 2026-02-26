@@ -1175,18 +1175,14 @@ function getFirstNonSpannedColumnToRender({
   return firstNonSpannedColumnToRender;
 }
 
-/** Placeholder API functions for colspan & rowspan to re-implement */
+/** Default no-op API functions for colspan & rowspan, overridden by their respective features */
 function createSpanningAPI(): AbstractAPI {
-  const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
-  };
+  const getCellColSpanInfo = (() => undefined) as unknown as AbstractAPI['getCellColSpanInfo'];
 
-  const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
-  };
+  const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {};
 
   const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
-    throw new Error('Unimplemented: rowspan feature is required');
+    return {};
   };
 
   return { getCellColSpanInfo, calculateColSpan, getHiddenCellsOrigin };

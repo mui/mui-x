@@ -6,7 +6,7 @@ import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { useStoreEffect } from '@mui/x-internals/store';
 import {
-  useVirtualizer,
+  useVirtualizerGrid,
   Dimensions,
   LayoutDataGridLegacy,
   type VirtualizerParams,
@@ -179,7 +179,7 @@ export function useGridVirtualizer() {
       }),
   ).current;
 
-  const virtualizer = useVirtualizer({
+  const virtualizer = useVirtualizerGrid({
     layout,
 
     dimensions: dimensionsParams,
