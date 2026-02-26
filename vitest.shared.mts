@@ -46,6 +46,7 @@ export default defineConfig({
   define: {
     'process.env.NODE_ENV': '"test"',
     LICENSE_DISABLE_CHECK: 'false',
+    ALLOW_TEST_LICENSES: 'true',
   },
   esbuild: {
     minifyIdentifiers: false,
