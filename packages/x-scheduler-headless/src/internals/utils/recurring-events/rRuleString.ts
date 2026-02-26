@@ -1,6 +1,11 @@
 import { TemporalTimezone } from '../../../base-ui-copy/types';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
-import { RecurringEventByDayValue, RecurringEventRecurrenceRule } from '../../../models';
+import {
+  RecurringEventByDayValue,
+  SchedulerProcessedEventRecurrenceRule,
+  SchedulerEventRecurrenceRule,
+} from '../../../models';
+import { resolveEventDate } from '../../../process-event/resolveEventDate';
 import { getAdapterCache, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -15,18 +20,24 @@ const SUPPORTED_RRULE_KEYS = new Set([
 
 /**
  * Parses and validates a RRULE string (RFC5545) into a canonical
- * `RecurringEventRecurrenceRule`.
+ * `SchedulerProcessedEventRecurrenceRule`.
  *
  * The resulting rule is expressed in the provided timezone
  * (typically the event data timezone).
  */
 export function parseRRule(
   adapter: Adapter,
-  input: string | RecurringEventRecurrenceRule,
+  input: string | SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
-): RecurringEventRecurrenceRule {
+): SchedulerProcessedEventRecurrenceRule {
   if (typeof input === 'object') {
-    return input;
+    if (input.until != null) {
+      return {
+        ...input,
+        until: resolveEventDate(input.until, timezone, adapter),
+      };
+    }
+    return input as SchedulerProcessedEventRecurrenceRule;
   }
 
   const rruleObject: Record<string, string> = {};
@@ -55,8 +66,8 @@ export function parseRRule(
     throw new Error('MUI: RRULE must include a FREQ property.');
   }
 
-  const rrule: RecurringEventRecurrenceRule = {
-    freq: rruleObject.FREQ as RecurringEventRecurrenceRule['freq'],
+  const rrule: SchedulerProcessedEventRecurrenceRule = {
+    freq: rruleObject.FREQ as SchedulerProcessedEventRecurrenceRule['freq'],
   };
 
   if (rruleObject.INTERVAL) {
@@ -110,10 +121,13 @@ export function parseRRule(
 }
 
 /**
- * Serializes a RecurringEventRecurrenceRule object
+ * Serializes a SchedulerProcessedEventRecurrenceRule object
  * into a RRULE string (RFC5545).
  */
-export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceRule): string {
+export function serializeRRule(
+  adapter: Adapter,
+  rule: SchedulerProcessedEventRecurrenceRule,
+): string {
   const parts: string[] = [];
 
   parts.push(`FREQ=${rule.freq}`);

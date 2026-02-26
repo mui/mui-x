@@ -1,10 +1,10 @@
 import { adapter } from 'test/utils/scheduler';
-import { RecurringEventRecurrenceRule } from '../../../models';
+import { SchedulerProcessedEventRecurrenceRule } from '../../../models';
 import { projectRRuleToTimezone } from './projectRRuleToTimezone';
 
 describe('recurring-events/projectRRuleToTimezone', () => {
   it('projects UNTIL to the target timezone', () => {
-    const rrule: RecurringEventRecurrenceRule = {
+    const rrule: SchedulerProcessedEventRecurrenceRule = {
       freq: 'DAILY',
       until: adapter.date('2025-03-10T23:59:59Z', 'default'),
     };
@@ -18,7 +18,7 @@ describe('recurring-events/projectRRuleToTimezone', () => {
   });
 
   it('projects multiple WEEKLY BYDAY from data timezone to display timezone (LA → Paris)', () => {
-    const rrule: RecurringEventRecurrenceRule = {
+    const rrule: SchedulerProcessedEventRecurrenceRule = {
       freq: 'WEEKLY',
       byDay: ['SU', 'TU'],
     };
@@ -31,7 +31,7 @@ describe('recurring-events/projectRRuleToTimezone', () => {
   });
 
   it('does not drift weekdays when crossing midnight (NY → Madrid)', () => {
-    const rrule: RecurringEventRecurrenceRule = {
+    const rrule: SchedulerProcessedEventRecurrenceRule = {
       freq: 'WEEKLY',
       byDay: ['MO'],
     };

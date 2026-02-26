@@ -33,6 +33,7 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
   '--hour-height': `${HOUR_HEIGHT}px`,
   '--has-scroll': 1,
   width: '100%',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',

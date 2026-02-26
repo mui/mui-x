@@ -33,7 +33,7 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   display: 'grid',
   gridTemplateRows: 'repeat(var(--row-count), minmax(auto, 18px))',
   gap: theme.spacing(0.5),
-  padding: theme.spacing(0.7, 0.5),
+  padding: theme.spacing(0.5),
   fontSize: theme.typography.body2.fontSize,
   lineHeight: '18px',
   color: theme.palette.text.secondary,

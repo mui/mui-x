@@ -1,16 +1,27 @@
 import { adapter } from 'test/utils/scheduler';
 import {
   RecurringEventByDayValue,
-  RecurringEventRecurrenceRule,
+  SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-headless/models';
 import { parseRRule, serializeRRule } from './rRuleString';
 
 describe('recurring-events/rRuleString', () => {
   describe('parseRRuleString', () => {
-    it('should return the same object if the input is already an object', () => {
-      const input: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
+    it('should return the same object if the input is already an object without until', () => {
+      const input: SchedulerEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
       const result = parseRRule(adapter, input, 'default');
-      expect(result).to.equal(input);
+      expect(result).to.deep.equal(input);
+    });
+
+    it('should resolve string until from object input', () => {
+      const result = parseRRule(
+        adapter,
+        { freq: 'DAILY', until: '2025-03-15T00:00:00Z' },
+        'default',
+      );
+      expect(result.freq).to.equal('DAILY');
+      expect(typeof result.until).to.equal('object');
+      expect(result.until!).toEqualDateTime('2025-03-15T00:00:00.000Z');
     });
 
     it('should parse a simple RRULE string into an object', () => {

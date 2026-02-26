@@ -150,6 +150,15 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
       return dateToEventString(adapter, d, originalBuiltInModel.start, dataTimezone);
     });
   }
+  if (changes.rrule != null && typeof changes.rrule === 'object' && changes.rrule.until != null) {
+    const originalRRule = originalBuiltInModel.rrule;
+    const originalUntilString = typeof originalRRule === 'object' ? originalRRule.until : undefined;
+    const referenceString = originalUntilString ?? originalBuiltInModel.start;
+    stringified.rrule = {
+      ...changes.rrule,
+      until: dateToEventString(adapter, changes.rrule.until, referenceString, dataTimezone),
+    };
+  }
 
   return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
@@ -175,12 +184,22 @@ export function createEventModel<TEvent extends object>(
     return adapter.toJsDate(value).toISOString();
   };
 
+  // Internal callers (e.g. FormContent) may pass rrule.until as a TemporalSupportedObject.
+  // Convert it to a string so the built-in model stays in SchedulerEvent format.
+  const rrule: SchedulerEvent['rrule'] =
+    typeof event.rrule === 'object' &&
+    event.rrule.until != null &&
+    typeof event.rrule.until !== 'string'
+      ? { ...event.rrule, until: formatNewDate(event.rrule.until) }
+      : (event.rrule as SchedulerEvent['rrule']);
+
   const builtInEvent: SchedulerEvent = {
     ...event,
     id,
     start: formatNewDate(event.start),
     end: formatNewDate(event.end),
     exDates: event.exDates?.map(formatNewDate),
+    rrule,
   };
 
   const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(

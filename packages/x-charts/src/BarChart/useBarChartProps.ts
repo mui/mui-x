@@ -148,7 +148,6 @@ export const useBarChartProps = (props: UseBarChartProps) => {
       slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none',
-    className,
     skipAnimation,
     brushConfig,
     plugins: BAR_CHART_PLUGINS,
@@ -202,6 +201,7 @@ export const useBarChartProps = (props: UseBarChartProps) => {
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
+    className,
   };
 
   return {
