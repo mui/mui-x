@@ -133,10 +133,10 @@ Use the `hideDescendantCount` property of the `groupingColDef` to hide this numb
 
 By default, [grouped columns](#grouping-columns) remain visible when grouping is applied.
 This means that when there's only one grouping criterion, the grouping column and the grouped column both display the same values, which may be redundant or unnecessary.
-You can use the `useKeepGroupedColumnsHidden` utility hook to hide grouped columns.
+You can use the `useKeepGroupedColumnsHidden()` utility hook to hide grouped columns.
 This automatically hides grouped columns when added to the model, and displays them when removed.
 
-The two examples below show how to use `columnVisibilityModel` and `initialState` with the `useKeepGroupedColumnsHidden` hook.
+The two examples below show how to use `columnVisibilityModel` and `initialState` with the `useKeepGroupedColumnsHidden()` hook.
 You can mix the two examples to support both at the same time.
 
 ```tsx

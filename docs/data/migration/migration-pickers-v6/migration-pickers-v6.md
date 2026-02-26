@@ -344,7 +344,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 ### Headless fields
 
 :::success
-The following breaking changes only impact you if you are using hooks like `useDateField` to build a custom UI.
+The following breaking changes only impact you if you are using hooks like `useDateField()` to build a custom UI.
 
 If you are just using the regular field components, then you can safely skip this section.
 :::
@@ -406,7 +406,7 @@ If you are using a multi input range field hook, the same applies to the ref in 
 
 #### Restructure the API of `useClearableField`
 
-The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
+The `useClearableField()` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
 You should now be able to directly pass the returned value from your field hook (for example `useDateField`) to `useClearableField`
 

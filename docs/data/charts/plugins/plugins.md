@@ -67,16 +67,16 @@ For example, `useChartClosestPoint()` depends on `useChartCartesianAxis()` and o
 
 | Plugin                                             | Dependencies            | Optional dependency                            |
 | :------------------------------------------------- | :---------------------- | :--------------------------------------------- |
-| `useChartCartesianAxis`                            |                         | `useChartInteraction`                          |
-| `useChartPolarAxis`                                |                         | `useChartInteraction`                          |
-| `useChartHighlight`                                |                         |                                                |
-| `useChartTooltip`                                  |                         |                                                |
-| `useChartInteraction`                              |                         | `useChartTooltip`                              |
-| `useChartClosestPoint`                             | `useChartCartesianAxis` | `useChartInteraction`,<br/>`useChartHighlight` |
-| `useChartZAxis`                                    |                         |                                                |
-| `useChartBrush`                                    |                         |                                                |
-| `useChartProExport` <span class="plan-pro"></span> |                         |                                                |
-| `useChartProZoom` <span class="plan-pro"></span>   | `useChartCartesianAxis` |                                                |
+| `useChartCartesianAxis()`                            |                         | `useChartInteraction()`                          |
+| `useChartPolarAxis()`                                |                         | `useChartInteraction()`                          |
+| `useChartHighlight()`                                |                         |                                                |
+| `useChartTooltip()`                                  |                         |                                                |
+| `useChartInteraction()`                              |                         | `useChartTooltip()`                              |
+| `useChartClosestPoint()`                             | `useChartCartesianAxis()` | `useChartInteraction()`,<br/>`useChartHighlight()` |
+| `useChartZAxis()`                                    |                         |                                                |
+| `useChartBrush()`                                    |                         |                                                |
+| `useChartProExport()` <span class="plan-pro"></span> |                         |                                                |
+| `useChartProZoom()` <span class="plan-pro"></span>   | `useChartCartesianAxis()` |                                                |
 
 ## Custom plugins
 
