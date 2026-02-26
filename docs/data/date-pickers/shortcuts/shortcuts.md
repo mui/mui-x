@@ -15,7 +15,7 @@ This component accepts a `shortcuts` prop as an array of `PickersShortcutsItem`.
 Those items are made of two required attributes:
 
 - `label`: The string displayed on the shortcut chip. This property must be unique.
-- `getValue`: A function that returns the value associated to the shortcut.
+- `getValue()`: A function that returns the value associated to the shortcut.
 
 You can use `slotProps.shortcuts` to customize this prop. For example to add a shortcut to Christmas Day, you can do the following:
 
@@ -47,7 +47,7 @@ Here is an example where `minDate` is set to the middle of the year.
 
 ## Range shortcuts [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-Shortcuts on range pickers require `getValue` property to return an array with two values.
+Shortcuts on range pickers require `getValue()` property to return an array with two values.
 
 {{"demo": "BasicRangeShortcuts.js", "bg": "inline"}}
 
@@ -55,7 +55,7 @@ Shortcuts on range pickers require `getValue` property to return an array with t
 
 ### Use validation to get the value
 
-The `getValue` methods receive a `isValid` helper function.
+The `getValue()` methods receive a `isValid()` helper function.
 You can use it to test if a value is valid or not based on the [validation props](/x/react-date-pickers/validation/).
 
 In the following demonstration, it is used to get the next available week and weekend.

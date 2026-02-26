@@ -203,9 +203,9 @@ The `slotProps.legend.hidden` prop has been removed in favor of the `hideLegend`
  />
 ```
 
-### The `getSeriesToDisplay` function was removed
+### The `getSeriesToDisplay()` function was removed
 
-The `getSeriesToDisplay` function was removed in favor of the `useLegend()` hook.
+The `getSeriesToDisplay()` function was removed in favor of the `useLegend()` hook.
 You can check the [HTML Components example](/x/react-charts/components/#html-components) for usage information.
 
 ## Tooltip

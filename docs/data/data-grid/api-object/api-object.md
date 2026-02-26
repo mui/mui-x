@@ -17,7 +17,7 @@ To access this variable, use `useGridApiContext()` (inside `DataGrid`) or `useGr
 
 ### Inside the Data Grid
 
-To access the API object inside component slots or inside renders (for instance, `renderCell` or `renderHeader`), use the `useGridApiContext()` hook.
+To access the API object inside component slots or inside renders (for instance, `renderCell()` or `renderHeader()`), use the `useGridApiContext()` hook.
 The snippet below renders `Button` inside the Grid's `GridToolbarContainer`:
 
 ```tsx

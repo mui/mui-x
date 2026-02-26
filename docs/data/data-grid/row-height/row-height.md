@@ -13,7 +13,7 @@ Use the `rowHeight` prop to change this default value, as shown below:
 
 ## Variable row height
 
-If you need some rows to have different row heights, this can be achieved using the `getRowHeight` prop.
+If you need some rows to have different row heights, this can be achieved using the `getRowHeight()` prop.
 This function is called for each visible row and if the return value is a `number` then that `number` will be set as that row's `rowHeight`.
 If the return value is `null` or `undefined`, then the `rowHeight` prop will take effect for the given row.
 
@@ -21,11 +21,11 @@ If the return value is `null` or `undefined`, then the `rowHeight` prop will tak
 
 :::warning
 Changing the Data Grid density does not affect the rows with variable row height.
-You can access the density factor from the params provided to the `getRowHeight` prop
+You can access the density factor from the params provided to the `getRowHeight()` prop
 :::
 
 :::warning
-Always memoize the function provided to `getRowHeight`.
+Always memoize the function provided to `getRowHeight()`.
 The Data Grid bases on the referential value of these props to cache their values and optimize the rendering.
 :::
 
@@ -38,7 +38,7 @@ const getRowHeight = React.useCallback(() => { ... }, []);
 ## Dynamic row height
 
 Instead of a fixed row height, you can let the Data Grid calculate the height of each row based on its content.
-To do so, return `"auto"` on the function passed to the `getRowHeight` prop.
+To do so, return `"auto"` on the function passed to the `getRowHeight()` prop.
 
 ```tsx
 <DataGrid getRowHeight={() => 'auto'} />
@@ -51,7 +51,7 @@ The following demo shows this feature in action:
 The dynamic row height implementation is based on a lazy approach, which means that the rows are measured as they are rendered.
 Because of this, you may see the size of the scrollbar thumb changing during scroll.
 This side effect happens because a row height estimation is used while a row is not rendered, then this value is replaced once the true measurement is obtained.
-You can configure the estimated value used by passing a function to the `getEstimatedRowHeight` prop.
+You can configure the estimated value used by passing a function to the `getEstimatedRowHeight()` prop.
 If not provided, the default row height of `52px` is used as estimation.
 It's recommended to pass this prop if the content deviates too much from the default value.
 
@@ -96,7 +96,7 @@ See [Density](/x/react-data-grid/accessibility/#density) for details.
 
 ## Row spacing
 
-You can use the `getRowSpacing` prop to increase the spacing between rows.
+You can use the `getRowSpacing()` prop to increase the spacing between rows.
 This prop is called with a [`GridRowSpacingParams`](/x/api/data-grid/grid-row-spacing-params/) object.
 
 ```tsx
@@ -110,7 +110,7 @@ const getRowSpacing = React.useCallback((params: GridRowSpacingParams) => {
 
 {{"demo": "RowMarginGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-By default, setting `getRowSpacing` will change the `marginXXX` CSS properties of each row.
+By default, setting `getRowSpacing()` will change the `marginXXX` CSS properties of each row.
 To add a border instead, set `rowSpacingType` to `"border"` and customize the color and style.
 
 ```tsx

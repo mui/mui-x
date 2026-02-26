@@ -127,7 +127,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - ✅ The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector`.
 - ✅ The `gridVisibleSortedTopLevelRowEntriesSelector` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector`.
 - ✅ The `gridVisibleTopLevelRowCountSelector` selector was renamed to `gridFilteredTopLevelRowCountSelector`.
-- ✅ The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
+- ✅ The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators()` instead.
 - The `gridVisibleRowsSelector` selector was removed. Use `gridExpandedSortedRowIdsSelector` instead.
 - The `gridColumnsSelector` selector was removed. Use more specific grid columns selectors instead.
   ```diff
@@ -436,7 +436,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 - The `useGridApi()` hook was removed. Use `apiRef.current` instead.
 - The `useGridState()` hook was removed. Use `apiRef.current.state`, `apiRef.current.setState` and `apiRef.current.forceUpdate` instead.
-- The `getGridColDef` utility function was removed.
+- The `getGridColDef()` utility function was removed.
 - The `GridColumns` type was removed. Use `GridColDef[]` instead.
 - The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
 - The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
@@ -445,7 +445,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
   If you use it to type `searchPredicate` - use `GridColumnsPanelProps['searchPredicate']` instead.
 
-  If you use it to type `getApplyFilterFn` - use `GridFilterOperator['getApplyFilterFn']` instead.
+  If you use it to type `getApplyFilterFn()` - use `GridFilterOperator['getApplyFilterFn']` instead.
 
 - The `GridHeaderPlaceholder` component was removed.
 - The `GridValueGetterFullParams` type was removed.
@@ -486,8 +486,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### Removals from the public API
 
-- The `getGridSingleSelectQuickFilterFn` function was removed.
-  You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.
+- The `getGridSingleSelectQuickFilterFn()` function was removed.
+  You can copy the old function and pass it to the `getApplyQuickFilterFn()` property of the `singleSelect` column definition.
 
 ## Rename `components` to `slots` (optional)
 

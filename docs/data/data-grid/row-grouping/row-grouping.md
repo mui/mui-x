@@ -209,7 +209,7 @@ To apply row grouping programmatically on non-groupable columns (columns with `g
 
 1. Pass `rowGrouping.model` to the `initialState` prop. This [initializes grouping](/x/react-data-grid/row-grouping/#initializing-row-grouping) with the provided model.
 2. Provide the `rowGroupingModel` prop. This [controls grouping](/x/react-data-grid/row-grouping/#controlled-row-grouping) with the provided model.
-3. Call the API method `setRowGroupingModel`. This sets the aggregation with the provided model.
+3. Call the API method `setRowGroupingModel()`. This sets the aggregation with the provided model.
 
 In the following example, the **Company** column is not groupable through the interface, but the `rowGroupingModel` prop is passed to generate a read-only row group.
 

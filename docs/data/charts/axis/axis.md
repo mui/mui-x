@@ -254,10 +254,10 @@ Below is an example of how to use the these hooks to get the coordinates of seve
 ## Grouped axes
 
 To group `band` or `point` axes together, provide a `groups` property in the axis definition.
-This property expects an array of objects with a `getValue` function.
+This property expects an array of objects with a `getValue()` function.
 This feature is available for both x- and y-axes.
 
-The `getValue` function receives the axis data value and should return a group name.
+The `getValue()` function receives the axis data value and should return a group name.
 Each group name is used as-is, overriding any `valueFormatter` for the axis.
 Groups are displayed in the order they're defined in the `groups` array.
 
@@ -277,7 +277,7 @@ In the following demo, the y-axis is grouped by category and subcategory.
 
 You can customize the tick size for each group by providing a `tickSize` property in the `groups` array.
 The `tickSize` also affects the tick label position.
-Each item in the array corresponds to a group defined in the `getValue` function.
+Each item in the array corresponds to a group defined in the `getValue()` function.
 
 {{"demo": "GroupedAxesTickSize.js"}}
 

@@ -20,7 +20,7 @@ To expand a row, click on the **+** icon or press <kbd class="key">Space</kbd> w
 
 ## Implementing master-detail row panels
 
-To create master-detail row panels, pass a function to the `getDetailPanelContent` prop that returns the content to be rendered inside the panel.
+To create master-detail row panels, pass a function to the `getDetailPanelContent()` prop that returns the content to be rendered inside the panel.
 You can use any valid React element—even another Data Grid.
 
 ```tsx
@@ -30,7 +30,7 @@ You can use any valid React element—even another Data Grid.
 ### Detail panel height
 
 By default, the detail panel height is 500px.
-You can customize this by passing a function to the `getDetailPanelHeight` prop.
+You can customize this by passing a function to the `getDetailPanelHeight()` prop.
 This function must return either a number or `"auto"`:
 
 - If it returns a number, then the panel will use that value (in pixels) for the height.
@@ -52,7 +52,7 @@ This function must return either a number or `"auto"`:
 ```
 
 :::info
-The `getDetailPanelContent` and `getDetailPanelHeight` props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/) object, which lets you return a different value for each row.
+The `getDetailPanelContent()` and `getDetailPanelHeight()` props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/) object, which lets you return a different value for each row.
 :::
 
 The demo below shows master-detail panels with heights derived from their contents:
@@ -60,7 +60,7 @@ The demo below shows master-detail panels with heights derived from their conten
 {{"demo": "DetailPanelAutoHeight.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
+Always memoize the function provided to `getDetailPanelContent()` and `getDetailPanelHeight()`.
 The Data Grid depends on the referential value of these props to cache their values and optimize the rendering.
 
 ```tsx
@@ -89,7 +89,7 @@ To initialize the Data Grid with specific row panels expanded, use the `initialS
 You don't need to provide the content for detail panels upfront—instead, you can load it lazily when a row is expanded.
 
 In the following example, the `<DetailPanelContent />` component fetches data on mount.
-This component is used by the `getDetailPanelContent` prop to render the detail panel content.
+This component is used by the `getDetailPanelContent()` prop to render the detail panel content.
 
 {{"demo": "LazyLoadingDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -97,7 +97,7 @@ This component is used by the `getDetailPanelContent` prop to render the detail 
 Lazy loading panels with auto height can lead to scrolling issues.
 This happens because panels that are re-mounted briefly have a smaller height than they had when they were removed from the DOM by the virtualizer.
 
-In that case, cache the last panel heights and provide those values from `getDetailPanelHeight`.
+In that case, cache the last panel heights and provide those values from `getDetailPanelHeight()`.
 Check the [Lazy loading detail panels with auto height](/x/react-data-grid/row-recipes/#lazy-loading-detail-panels-with-auto-height) recipe for implementation details.
 :::
 
@@ -161,7 +161,7 @@ As with any other cell renderer, the `value` prop is also available, and it corr
 
 ## Customizing the detail panel column header
 
-To render a custom header for the detail panel column, use the [`renderHeader`](/x/react-data-grid/column-header/#custom-header-renderer) property in the column definition.
+To render a custom header for the detail panel column, use the [`renderHeader()`](/x/react-data-grid/column-header/#custom-header-renderer) property in the column definition.
 This property receives a `GridRenderHeaderParams` object that contains `colDef` (the column definition) and `field`.
 The snippet below shows how to do this:
 

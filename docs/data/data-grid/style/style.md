@@ -41,7 +41,7 @@ const columns: GridColDef[] = [
 
 ## Styling rows
 
-The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string. Sometimes it might be needed to override the existing rules using higher specificity CSS selectors.
+The `getRowClassName()` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string. Sometimes it might be needed to override the existing rules using higher specificity CSS selectors.
 
 ```tsx
 interface GridRowParams<R extends GridRowModel = GridRowModel> {
@@ -91,7 +91,7 @@ const columns: GridColDef[] = [
 
 {{"demo": "StylingCellsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-2. Using the `getCellClassName` prop:
+2. Using the `getCellClassName()` prop:
 
 This prop is called for every cell in every column.
 Different from the first option, this prop is defined at the Data Grid level, not column level.
@@ -110,7 +110,7 @@ You must use `headerAlign` to align the content of the header.
 
 ## Striped rows
 
-You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` to apply alternating styles to the rows.
+You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName()` to apply alternating styles to the rows.
 
 The following demo illustrates how this can be achieved.
 
@@ -186,7 +186,7 @@ The following demo leverages the CSS customization API to match the Ant Design s
 
 ## Styling row groups [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-Use `getRowClassName` to add a custom class to the row group and then write CSS to style it.
+Use `getRowClassName()` to add a custom class to the row group and then write CSS to style it.
 
 The example below demonstrates how to style a row group when any of the child rows has a "Gross" value greater than a specific value. The condition uses [`gridRowNodeSelector` and `gridRowSelector`](/x/react-data-grid/row-definition/#selectors) to check for the targeted row type and to get the row data respectively.
 
