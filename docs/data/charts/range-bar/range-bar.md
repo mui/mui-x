@@ -28,7 +28,7 @@ Each data point in a range bar series consists of a `{ start: number, end: numbe
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
 ### Border radius
 

@@ -121,7 +121,7 @@ You can work around this limitation by using a [symlog scale](/x/react-charts/ax
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 
@@ -142,11 +142,11 @@ See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) 
 
 ### Border radius
 
-To give your bar chart rounded corners, set the `borderRadius` property on [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
+To give your bar chart rounded corners, set the `borderRadius` property on [`BarChart`](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 
 It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
 
-When using composition, you can set the `borderRadius` prop on the `BarPlot` component.
+When composing a custom component, you can set the `borderRadius` prop on the `BarPlot` component.
 
 {{"demo": "BorderRadius.js"}}
 
@@ -185,7 +185,8 @@ You can display labels on the bars. This can be useful to show the value of each
 If you provide `'value'` to the `barLabel` property of a bar series, the value of that bar is shown.
 Alternatively, the `barLabel` property accepts a function that is called with the bar item and context about the bar.
 
-In the example below, the value of the first series is displayed using the default formatter, and format the value of the second series as US dollars. The labels of the third series are hidden.
+In the example below, the value of the first series is displayed using the default formatter, and the value of the second series is formatted as US dollars.
+The labels of the third series are hidden.
 
 {{"demo": "BarLabel.js"}}
 
@@ -194,8 +195,10 @@ In the example below, the value of the first series is displayed using the defau
 The position of the bar label can be customized.
 To do so, set a series' `barLabelPlacement` property to one of the following values:
 
-- `center`: the label is centered on the bar;
-- `outside`: the label is placed after the end of the bar, from the point of the view of the origin. For a vertical positive bar, the label is above its top edge; for a horizontal negative bar, the label is placed to the left of its leftmost limit.
+- `center`: the label is centered on the bar.
+- `outside`: the label is placed after the end of the bar, from the point of view of the origin.
+For a vertical positive bar, the label is above its top edge.
+For a horizontal negative bar, the label is to the left of its leftmost limit.
 
 {{"demo": "BarLabelPlacement.js"}}
 
@@ -276,15 +279,16 @@ When you set `skipAnimation` to `true`, the chart renders without animations.
 
 ## Performance
 
-Bar charts can display many bars, which can impact performance. The default rendering of bars use SVG `rect` elements, which can be slow for a large number of bars.
+Bar charts can display many bars, which can impact performance. The default rendering of bars uses SVG `rect` elements, which can be slow for a large number of bars.
 
 To improve performance, you can use the `renderer` prop set to `"svg-batch"`, which renders the bars more efficiently.
 However, this comes with the following trade-offs:
 
-- CSS styling of single bars is no longer possible;
-- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible;
-- No animation when highlighting or fading bars;
-- The event of the `onItemClick` handler is a `MouseEvent` instead of a `React.MouseEvent`. To avoid breaking changes, the type of `onItemClick` was not changed, but you can import a type overload to fix it: `import type {} from '@mui/x-charts/moduleAugmentation/barChartBatchRendererOnItemClick'`;
+- CSS styling of single bars is no longer possible.
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar.
+Applying transparency to the highlighted bar can cause the original bar to be partially visible.
+- No animation when highlighting or fading bars.
+- The event of the `onItemClick` handler is a `MouseEvent` instead of a `React.MouseEvent`. To avoid breaking changes, the type of `onItemClick` was not changed, but you can import a type overload to fix it: `import type {} from '@mui/x-charts/moduleAugmentation/barChartBatchRendererOnItemClick'`.
 - It is not available for [range bar charts](/x/react-charts/range-bar/).
 
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.

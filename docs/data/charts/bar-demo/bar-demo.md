@@ -40,13 +40,13 @@ components: BarChart, BarElement, BarPlot
 
 {{"demo": "PopulationPyramidBarChart.js"}}
 
-## Waterfall Chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+## Waterfall chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The following demo shows a waterfall chart built with a [range bar chart](/x/react-charts/range-bar/).
 
 {{"demo": "WaterfallChart.js"}}
 
-## Candlestick Chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+## Candlestick chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The following demo shows a simplified candlestick chart built with a [range bar chart](/x/react-charts/range-bar/).
 
