@@ -1,19 +1,19 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
-import { $ } from 'execa';
 import type { Reporter, TestCase, TestResult } from '@playwright/test/reporter';
 import type { AggregatedResults, BenchmarkReport, BenchmarkResult } from '../ci-scripts/types';
 import { cyan, dim, fileUrl, green, red } from './log';
 
 function benchmarkNameFromFile(filePath: string): string {
-  const parts = path.dirname(filePath).split('/app');
-  if (parts.length < 2) {
+  const segments = path.normalize(path.dirname(filePath)).split(path.sep);
+  const appIndex = segments.lastIndexOf('app');
+  if (appIndex === -1) {
     throw new Error(
-      `Expected file path to contain an '/app' directory segment, but got: ${filePath}`,
+      `Expected file path to contain an 'app' directory segment, but got: ${filePath}`,
     );
   }
-  // e.g. "/scatter" -> "scatter"
-  return parts[parts.length - 1].replace(/\//g, '-').replace(/^-/, '');
+  // e.g. ["app", "scatter"] -> "scatter"
+  return segments.slice(appIndex + 1).join('-') || 'root';
 }
 
 function extractTotalDuration(report: BenchmarkReport): number {
@@ -109,12 +109,6 @@ class BenchmarkReporter implements Reporter {
       timestamp: Date.now(),
       benchmarks: this.benchmarks,
     };
-
-    const prNumber = process.env.PR_NUMBER;
-    if (prNumber) {
-      const { stdout: mergeBaseSha } = await $`git merge-base HEAD origin/master`;
-      results.pr = { number: parseInt(prNumber, 10), mergeBaseSha: mergeBaseSha.trim() };
-    }
 
     const benchmarksDir = path.resolve(__dirname, '../benchmarks');
     await fs.mkdir(benchmarksDir, { recursive: true });

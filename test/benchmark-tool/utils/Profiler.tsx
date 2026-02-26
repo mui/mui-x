@@ -14,8 +14,13 @@ export interface RenderEvent {
   startTime: number;
 }
 
-function onRender(id: string, phase: 'mount' | 'update' | 'nested-update', actualDuration: number) {
-  const startTime = performance.now() - actualDuration;
+function onRender(
+  id: string,
+  phase: 'mount' | 'update' | 'nested-update',
+  actualDuration: number,
+  _baseDuration: number,
+  startTime: number,
+) {
   (window as any)[CAPTURE_RENDER_FN]?.({
     id,
     phase,

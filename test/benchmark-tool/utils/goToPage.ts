@@ -11,13 +11,14 @@ interface PageState {
 const pageState = new WeakMap<Page, PageState>();
 
 function getRouteFromFilename(filename: string): string {
-  const parts = path.dirname(filename).split('/app');
-  if (parts.length < 2) {
+  const normalizedDir = path.dirname(filename).replace(/\\/g, '/');
+  const appIndex = normalizedDir.lastIndexOf('/app');
+  if (appIndex === -1) {
     throw new Error(
       `Expected filename to contain an '/app' directory segment, but got: ${filename}`,
     );
   }
-  return parts[parts.length - 1];
+  return normalizedDir.slice(appIndex + '/app'.length) || '/';
 }
 
 export async function goToPage(filename: string, page: Page, renders: RenderEvent[]) {

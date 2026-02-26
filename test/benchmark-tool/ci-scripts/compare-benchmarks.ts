@@ -7,18 +7,20 @@ function calculateDiffPercent(
   diff: number,
   masterDuration: number,
   prDuration: number,
-): { num: number; str: string } {
+): number {
   if (masterDuration > 0) {
-    const num = (diff / masterDuration) * 100;
-    return { num, str: num.toFixed(2) };
+    return (diff / masterDuration) * 100;
   }
   if (prDuration > 0) {
-    return { num: Infinity, str: '+∞' };
+    return NaN; // new benchmark, no baseline to compare against
   }
-  return { num: 0, str: '0.00' };
+  return 0;
 }
 
 function getEmoji(diffPercent: number, failThreshold: number): string {
+  if (Number.isNaN(diffPercent)) {
+    return '🆕';
+  }
   if (diffPercent > failThreshold) {
     return '❌';
   }
@@ -52,13 +54,16 @@ function generateComparisonBody(
         const masterDuration = masterMetrics[name] || 0;
         const diff = prDuration - masterDuration;
         const diffPercent = calculateDiffPercent(diff, masterDuration, prDuration);
-        const emoji = getEmoji(diffPercent.num, failThreshold);
+        const emoji = getEmoji(diffPercent, failThreshold);
 
-        if (diffPercent.num > failThreshold) {
-          failedBenchmarks.push({ name, diff: diffPercent.str });
+        if (!Number.isNaN(diffPercent) && diffPercent > failThreshold) {
+          failedBenchmarks.push({ name, diff: diffPercent.toFixed(2) });
         }
 
-        return `| ${name} | ${formatMs(masterDuration)} | ${formatMs(prDuration)} | ${emoji} ${diff > 0 ? '+' : ''}${diff.toFixed(2)} ms (${diffPercent.str}%) |`;
+        const diffStr = Number.isNaN(diffPercent)
+          ? 'N/A'
+          : `${diff > 0 ? '+' : ''}${diff.toFixed(2)} ms (${diffPercent.toFixed(2)}%)`;
+        return `| ${name} | ${formatMs(masterDuration)} | ${formatMs(prDuration)} | ${emoji} ${diffStr} |`;
       })
       .join('\n');
 
@@ -125,10 +130,22 @@ async function githubApi(endpoint: string, options: RequestInit = {}): Promise<R
 }
 
 async function postOrUpdateComment(prNumber: number, body: string): Promise<void> {
-  const response = await githubApi(`/issues/${prNumber}/comments`);
-  const comments = (await response.json()) as GitHubComment[];
+  let existing: GitHubComment | undefined;
+  let page = 1;
 
-  const existing = comments.find((c) => c.user.type === 'Bot' && c.body.includes(COMMENT_MARKER));
+  while (!existing) {
+    const response = await githubApi(
+      `/issues/${prNumber}/comments?per_page=100&page=${page}`,
+    );
+    const comments = (await response.json()) as GitHubComment[];
+
+    existing = comments.find((c) => c.user.type === 'Bot' && c.body.includes(COMMENT_MARKER));
+
+    if (comments.length < 100) {
+      break;
+    }
+    page += 1;
+  }
 
   if (existing) {
     await githubApi(`/issues/comments/${existing.id}`, {
@@ -172,12 +189,15 @@ async function main() {
   console.log(cyan(`Reading results from ${dim(fileUrl(resultsPath))}`));
   const results = JSON.parse(await fs.readFile(resultsPath, 'utf-8')) as AggregatedResults;
 
-  if (!results.pr) {
-    throw new Error('results.json is missing the "pr" field — expected PR benchmark artifact');
+  const prNumber = process.env.PR_NUMBER ? parseInt(process.env.PR_NUMBER, 10) : undefined;
+  const mergeBaseSha = process.env.MERGE_BASE_SHA || undefined;
+
+  if (!prNumber) {
+    throw new Error('PR_NUMBER environment variable is required');
   }
 
   // eslint-disable-next-line no-console
-  console.log(`PR #${dim(String(results.pr.number))}, mergeBase=${dim(results.pr.mergeBaseSha)}`);
+  console.log(`PR #${dim(String(prNumber))}, mergeBase=${dim(mergeBaseSha ?? 'unknown')}`);
 
   const prMetricsByFile: Record<string, number> = {};
   for (const [name, benchmark] of Object.entries(results.benchmarks)) {
@@ -185,7 +205,7 @@ async function main() {
   }
   // eslint-disable-next-line no-console
   console.log(cyan('Fetching master metrics...'));
-  const masterMetricsByFile = await fetchMasterMetrics(results.pr.mergeBaseSha);
+  const masterMetricsByFile = await fetchMasterMetrics(mergeBaseSha);
   const { body, failedBenchmarks } = generateComparisonBody(
     prMetricsByFile,
     masterMetricsByFile,
@@ -202,7 +222,7 @@ async function main() {
   if (process.env.GITHUB_TOKEN && !dryRun) {
     // eslint-disable-next-line no-console
     console.log(cyan('Posting comment to PR...'));
-    await postOrUpdateComment(results.pr.number, body);
+    await postOrUpdateComment(prNumber, body);
   } else {
     // eslint-disable-next-line no-console
     console.log(dim('Skipping post (dry-run or no GITHUB_TOKEN).'));

@@ -15,7 +15,9 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
+      issues: write
       actions: read
     steps:
       - name: Checkout repository
@@ -36,6 +38,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Resolve PR metadata
+        id: pr-meta
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.workflow_run.pull_requests[0].number }}
+          MERGE_BASE=$(gh api repos/${{ github.repository }}/compare/master...${{ github.event.workflow_run.head_sha }} --jq '.merge_base_commit.sha')
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "merge_base=$MERGE_BASE" >> "$GITHUB_OUTPUT"
+
       - name: Download benchmark results
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
@@ -49,4 +61,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BENCHMARKS_DIR: ${{ github.workspace }}/pr-benchmarks
           FAIL_THRESHOLD: ${{ env.BENCHMARK_FAIL_THRESHOLD }}
+          PR_NUMBER: ${{ steps.pr-meta.outputs.pr_number }}
+          MERGE_BASE_SHA: ${{ steps.pr-meta.outputs.merge_base }}
         run: pnpm -F ./test/benchmark-tool ci:compare
