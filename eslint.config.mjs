@@ -409,7 +409,7 @@ export default defineConfig(
   },
 
   {
-    files: ['packages/x-telemetry/**/*{.tsx,.ts,.js}'],
+    files: ['packages/x-license/src/telemetry/**/*{.tsx,.ts,.js}'],
     rules: {
       'no-console': 'off',
     },
@@ -448,7 +448,6 @@ export default defineConfig(
     'x-tree-view',
     'x-tree-view-pro',
     'x-license',
-    'x-telemetry',
   ].map((pkgName) => ({
     files: [`packages/${pkgName}/src/**/*${EXTENSION_TS}`],
     ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],

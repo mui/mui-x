@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
-import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { isJSDOM } from '@mui/x-internals/platform';
+import { muiXTelemetrySettings } from '..';
 import { getTelemetryEnvConfig } from './config';
 
 const mockGetTelemetryContext = vi.fn();

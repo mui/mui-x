@@ -19,7 +19,6 @@ export const alias = [
     { lib: 'x-internals' },
     { lib: 'x-internal-gestures' },
     { lib: 'x-license' },
-    { lib: 'x-telemetry' },
     { lib: 'x-virtualizer' },
   ].flatMap((v) => {
     return [

@@ -12,9 +12,8 @@
     "types": ["../../mui-env.d.ts"]
   },
   "references": [
-    { "path": "../x-internals/tsconfig.build.json" },
-    { "path": "../x-telemetry/tsconfig.build.json" }
+    { "path": "../x-internals/tsconfig.build.json" }
   ],
   "include": ["src/**/*.ts*"],
-  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
+  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/telemetry/postinstall/**"]
 }

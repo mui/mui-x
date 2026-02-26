@@ -15,7 +15,6 @@ const publishDirs = {
   '@mui/x-license': 'packages/x-license',
   // private packages can not be published
   // '@mui/x-scheduler': 'packages/x-scheduler',
-  '@mui/x-telemetry': 'packages/x-telemetry',
   '@mui/x-tree-view': 'packages/x-tree-view',
   '@mui/x-tree-view-pro': 'packages/x-tree-view-pro',
 };

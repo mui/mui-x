@@ -1669,15 +1669,24 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.6
+      '@fingerprintjs/fingerprintjs':
+        specifier: ^3.4.2
+        version: 3.4.2
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.7(@types/react@19.2.9)(react@19.2.3)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
-      '@mui/x-telemetry':
-        specifier: workspace:*
-        version: link:../x-telemetry/build
+      ci-info:
+        specifier: ^4.3.1
+        version: 4.3.1
+      is-docker:
+        specifier: ^4.0.0
+        version: 4.0.0
+      node-machine-id:
+        specifier: ^1.1.12
+        version: 1.1.12
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1912,35 +1921,6 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.3(react@19.2.3)
-      rimraf:
-        specifier: 'catalog:'
-        version: 6.1.2
-    publishDirectory: build
-
-  packages/x-telemetry:
-    dependencies:
-      '@babel/runtime':
-        specifier: 'catalog:'
-        version: 7.28.6
-      '@fingerprintjs/fingerprintjs':
-        specifier: ^3.4.2
-        version: 3.4.2
-      ci-info:
-        specifier: ^4.3.1
-        version: 4.3.1
-      is-docker:
-        specifier: ^4.0.0
-        version: 4.0.0
-      node-machine-id:
-        specifier: ^1.1.12
-        version: 1.1.12
-    devDependencies:
-      '@mui/internal-test-utils':
-        specifier: 'catalog:'
-        version: 2.0.18-canary.8(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
-      '@types/device-uuid':
-        specifier: 1.0.3
-        version: 1.0.3
       rimraf:
         specifier: 'catalog:'
         version: 6.1.2
@@ -5942,9 +5922,6 @@ packages:
 
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
-
-  '@types/device-uuid@1.0.3':
-    resolution: {integrity: sha512-z1FXOPDVE85XSjOFtTYXPm4Hyvi1ByjkndfdwU3cBNYGKfYhL4WN6qwYfvMSUNz8j7QGeO+mLJYMfgiyRywzhg==}
 
   '@types/doctrine@0.0.9':
     resolution: {integrity: sha512-eOIHzCUSH7SMfonMG1LsC2f8vxBFtho6NGBznK41R84YzPuvSBzrhEps33IsQiOW9+VL6NQ9DbjQJznk/S4uRA==}
@@ -16469,8 +16446,6 @@ snapshots:
       '@types/ms': 2.1.0
 
   '@types/deep-eql@4.0.2': {}
-
-  '@types/device-uuid@1.0.3': {}
 
   '@types/doctrine@0.0.9': {}
 

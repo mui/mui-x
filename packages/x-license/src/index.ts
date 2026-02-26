@@ -14,4 +14,4 @@ export type {
 } from './utils';
 export { base64Encode } from './encoding/base64';
 export { md5 } from './encoding/md5';
-export { muiXTelemetrySettings } from '@mui/x-telemetry';
+export { muiXTelemetrySettings } from './telemetry';

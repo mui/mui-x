@@ -1,0 +1,24 @@
+export {};
+
+declare global {
+  interface MUIEnv {
+    MUI_X_TELEMETRY_DISABLED?: string;
+    NEXT_PUBLIC_MUI_X_TELEMETRY_DISABLED?: string;
+    GATSBY_MUI_X_TELEMETRY_DISABLED?: string;
+    REACT_APP_MUI_X_TELEMETRY_DISABLED?: string;
+    PUBLIC_MUI_X_TELEMETRY_DISABLED?: string;
+    MUI_X_TELEMETRY_DEBUG?: string;
+    NEXT_PUBLIC_MUI_X_TELEMETRY_DEBUG?: string;
+    GATSBY_MUI_X_TELEMETRY_DEBUG?: string;
+    REACT_APP_MUI_X_TELEMETRY_DEBUG?: string;
+    PUBLIC_MUI_X_TELEMETRY_DEBUG?: string;
+    MUI_VERSION?: string;
+  }
+
+  interface Process {
+    cwd(): string;
+    permission: {
+      has(scope: string): boolean;
+    };
+  }
+}
