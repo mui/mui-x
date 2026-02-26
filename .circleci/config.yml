@@ -122,21 +122,9 @@ jobs:
               exit 0
             fi
 
-            CHARTS_ONLY=true
-            while IFS= read -r file; do
-              case "$file" in               
-                packages/x-charts*) ;;
-                docs/*) ;;
-                scripts/x-charts*) ;;
-                *)
-                  CHARTS_ONLY=false
-                  echo "Non-charts file changed: $file"
-                  break
-                  ;;
-              esac
-            done <<< "$CHANGED_FILES"
+            NON_CHARTS_FILES=$(echo "$CHANGED_FILES" | grep -v -E '^(packages/x-charts|docs/|scripts/x-charts)' || true)
 
-            if [[ "$CHARTS_ONLY" == "true" ]]; then
+            if [[ -z "$NON_CHARTS_FILES" ]]; then
               echo "Only charts-related files changed. Filtering browser tests to x-charts* projects."
               echo 'export BROWSER_TEST_PROJECT_FILTER="--project \"x-charts*\""' >> "$BASH_ENV"
             else
