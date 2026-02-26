@@ -2,7 +2,7 @@
 
 ## 9.0.0-alpha.1
 
-_Feb 25, 2026_
+_Feb 26, 2026_
 
 We'd like to extend a big thank you to the 18 contributors who made this release possible. Here are some highlights ✨:
 
