@@ -43,6 +43,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     onAreaClick,
     onMarkClick,
     enableKeyboardNavigation,
+    className,
     ...other
   } = props;
 
@@ -77,6 +78,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
     hideLegend: props.hideLegend ?? false,
+    className,
   };
 
   const radarGrid: RadarGridProps = { divisions, shape, stripeColor };

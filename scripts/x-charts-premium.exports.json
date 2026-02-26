@@ -208,6 +208,7 @@
   { "name": "ChartsTooltipSlots", "kind": "Interface" },
   { "name": "ChartsTooltipTable", "kind": "Variable" },
   { "name": "ChartsTypeFeatureFlags", "kind": "Interface" },
+  { "name": "ChartsWebGlLayer", "kind": "Variable" },
   { "name": "ChartsXAxis", "kind": "Function" },
   { "name": "ChartsXAxisProps", "kind": "Interface" },
   { "name": "ChartsXAxisSlotProps", "kind": "Interface" },
