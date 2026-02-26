@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useChartSurfaceRef } from '../../../../hooks';
+import { useChartsLayerContainerRef } from '../../../../hooks';
 import { type UseChartTooltipSignature } from '../../featurePlugins/useChartTooltip';
 import { type SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
@@ -28,7 +28,7 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
     useChartContext<
       [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
     >();
-  const chartSurfaceRef = useChartSurfaceRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
   const interactionActive = React.useRef(false);
   const lastItemRef = React.useRef<SeriesItemIdentifierWithType<SeriesType> | undefined>(undefined);
@@ -37,7 +37,7 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
   const onItemLeaveRef = useEventCallback(() => onItemLeave?.());
 
   React.useEffect(() => {
-    const svg = chartSurfaceRef.current;
+    const svg = chartsLayerContainerRef.current;
 
     if (!svg) {
       return undefined;
@@ -98,5 +98,5 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
         onPointerLeave();
       }
     };
-  }, [getItemAtPosition, instance, onItemEnterRef, onItemLeaveRef, store, chartSurfaceRef]);
+  }, [getItemAtPosition, instance, onItemEnterRef, onItemLeaveRef, store, chartsLayerContainerRef]);
 }

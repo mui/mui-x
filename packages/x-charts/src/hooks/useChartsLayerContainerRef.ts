@@ -6,8 +6,8 @@ import { useChartContext } from '../context/ChartProvider';
  * Get the ref for the chart surface element.
  * @returns The chart surface ref.
  */
-export function useChartSurfaceRef(): React.RefObject<HTMLDivElement | null> {
+export function useChartsLayerContainerRef(): React.RefObject<HTMLDivElement | null> {
   const { instance } = useChartContext();
 
-  return instance.chartSurfaceRef;
+  return instance.chartsLayerContainerRef;
 }

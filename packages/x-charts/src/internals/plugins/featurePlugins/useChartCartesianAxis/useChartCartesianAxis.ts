@@ -27,7 +27,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   store,
   instance,
 }) => {
-  const { chartSurfaceRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const { xAxis, yAxis, dataset, onHighlightedAxisChange, onTooltipAxisChange, axesGap } = params;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -132,7 +132,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   const hasInteractionPlugin = checkHasInteractionPlugin(instance);
 
   React.useEffect(() => {
-    const element = chartSurfaceRef.current;
+    const element = chartsLayerContainerRef.current;
     if (!isInteractionEnabled || !hasInteractionPlugin || !element || params.disableAxisListener) {
       return () => {};
     }
@@ -189,7 +189,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       pressEndHandler.cleanup();
     };
   }, [
-    chartSurfaceRef,
+    chartsLayerContainerRef,
     store,
     xAxisWithScale,
     usedXAxis,
@@ -202,7 +202,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   ]);
 
   React.useEffect(() => {
-    const element = chartSurfaceRef.current;
+    const element = chartsLayerContainerRef.current;
     const onAxisClick = params.onAxisClick;
     if (element === null || !onAxisClick) {
       return () => {};
@@ -263,7 +263,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   }, [
     params.onAxisClick,
     processedSeries,
-    chartSurfaceRef,
+    chartsLayerContainerRef,
     xAxisWithScale,
     xAxisIds,
     yAxisWithScale,

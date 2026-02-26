@@ -19,7 +19,7 @@ export const usePanOnDrag = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const { chartSurfaceRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const drawingArea = store.use(selectorChartDrawingArea);
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const config = store.use(selectorPanInteractionConfig, 'drag' as const);
@@ -44,7 +44,7 @@ export const usePanOnDrag = (
 
   // Add event for chart panning
   React.useEffect(() => {
-    const element = chartSurfaceRef.current;
+    const element = chartsLayerContainerRef.current;
     let isInteracting = false;
     const accumulatedChange = { x: 0, y: 0 };
 
@@ -100,7 +100,7 @@ export const usePanOnDrag = (
     };
   }, [
     instance,
-    chartSurfaceRef,
+    chartsLayerContainerRef,
     isPanOnDragEnabled,
     optionsLookup,
     drawingArea.width,

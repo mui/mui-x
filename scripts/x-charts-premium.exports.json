@@ -632,7 +632,7 @@
   { "name": "UseChartProZoomSignature", "kind": "TypeAlias" },
   { "name": "useChartRootRef", "kind": "Function" },
   { "name": "useChartsLocalization", "kind": "Variable" },
-  { "name": "useChartSurfaceRef", "kind": "Function" },
+  { "name": "useChartsLayerContainerRef", "kind": "Function" },
   { "name": "useChartTooltip", "kind": "Variable" },
   { "name": "UseChartTooltipSignature", "kind": "TypeAlias" },
   { "name": "useChartVisibilityManager", "kind": "Variable" },

@@ -15,7 +15,7 @@ export const useZoomOnDoubleTapReset = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const { chartSurfaceRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const config = store.use(selectorZoomInteractionConfig, 'doubleTapReset' as const);
 
@@ -39,7 +39,7 @@ export const useZoomOnDoubleTapReset = (
 
   // Reset zoom on double tap
   React.useEffect(() => {
-    const element = chartSurfaceRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null || !isZoomOnDoubleTapResetEnabled) {
       return () => {};
     }
@@ -72,7 +72,7 @@ export const useZoomOnDoubleTapReset = (
       doubleTapResetHandler.cleanup();
     };
   }, [
-    chartSurfaceRef,
+    chartsLayerContainerRef,
     isZoomOnDoubleTapResetEnabled,
     optionsLookup,
     instance,

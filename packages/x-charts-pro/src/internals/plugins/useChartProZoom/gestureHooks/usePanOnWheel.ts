@@ -19,7 +19,7 @@ export const usePanOnWheel = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const { chartSurfaceRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const drawingArea = store.use(selectorChartDrawingArea);
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const startedOutsideRef = React.useRef(false);
@@ -40,7 +40,7 @@ export const usePanOnWheel = (
 
   // Add event for chart pan on wheel
   React.useEffect(() => {
-    const element = chartSurfaceRef.current;
+    const element = chartsLayerContainerRef.current;
     const accumulatedChange = { x: 0, y: 0 };
     if (element === null || !isPanOnWheelEnabled) {
       return () => {};
@@ -121,7 +121,7 @@ export const usePanOnWheel = (
       rafThrottledSetZoomData.clear();
     };
   }, [
-    chartSurfaceRef,
+    chartsLayerContainerRef,
     drawingArea,
     isPanOnWheelEnabled,
     optionsLookup,

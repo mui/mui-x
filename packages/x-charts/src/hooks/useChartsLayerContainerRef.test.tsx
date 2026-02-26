@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { useChartSurfaceRef } from './useChartSurfaceRef';
+import { useChartsLayerContainerRef } from './useChartsLayerContainerRef';
 import { ChartProvider } from '../context/ChartProvider';
 
-function UseChartSurfaceRef() {
-  const ref = useChartSurfaceRef();
+function UseChartsLayerContainerRef() {
+  const ref = useChartsLayerContainerRef();
   return (
     <div ref={ref} id="test-id">
       {ref.current?.id}
@@ -13,7 +13,7 @@ function UseChartSurfaceRef() {
   );
 }
 
-describe('useChartSurfaceRef', () => {
+describe('useChartsLayerContainerRef', () => {
   const { render } = createRenderer();
 
   // can't catch render errors in the browser for unknown reason
@@ -21,12 +21,14 @@ describe('useChartSurfaceRef', () => {
   it.skipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
-    const expectedError = ['The above error occurred in the <UseChartSurfaceRef> component'];
+    const expectedError = [
+      'The above error occurred in the <UseChartsLayerContainerRef> component',
+    ];
 
     expect(() =>
       render(
         <ErrorBoundary ref={errorRef}>
-          <UseChartSurfaceRef />
+          <UseChartsLayerContainerRef />
         </ErrorBoundary>,
       ),
     ).toErrorDev(expectedError);
@@ -41,7 +43,7 @@ describe('useChartSurfaceRef', () => {
     function RenderDrawingProvider() {
       return (
         <ChartProvider pluginParams={{ width: 200, height: 200 }}>
-          <UseChartSurfaceRef />
+          <UseChartsLayerContainerRef />
         </ChartProvider>
       );
     }

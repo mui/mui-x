@@ -39,11 +39,11 @@ type GestureManagerTyped = GestureManager<
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
   instance,
 }) => {
-  const { chartSurfaceRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const gestureManagerRef = React.useRef<GestureManagerTyped | null>(null);
 
   React.useEffect(() => {
-    const svg = chartSurfaceRef.current;
+    const svg = chartsLayerContainerRef.current;
 
     if (!gestureManagerRef.current) {
       gestureManagerRef.current = new GestureManager({
@@ -137,12 +137,12 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       // Cleanup gesture manager
       gestureManager.unregisterAllGestures(svg);
     };
-  }, [chartSurfaceRef, gestureManagerRef]);
+  }, [chartsLayerContainerRef, gestureManagerRef]);
 
   const addInteractionListener: AddInteractionListener = React.useCallback(
     (interaction, callback, options) => {
-      // Forcefully cast the chartSurfaceRef to any, it is annoying to fix the types.
-      const svg = chartSurfaceRef.current as any;
+      // Forcefully cast the chartsLayerContainerRef to any, it is annoying to fix the types.
+      const svg = chartsLayerContainerRef.current as any;
 
       svg?.addEventListener(interaction, callback, options);
 
@@ -150,12 +150,12 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         cleanup: () => svg?.removeEventListener(interaction, callback, options),
       };
     },
-    [chartSurfaceRef],
+    [chartsLayerContainerRef],
   );
 
   const updateZoomInteractionListeners: UpdateZoomInteractionListeners = React.useCallback(
     (interaction, options) => {
-      const svg = chartSurfaceRef.current;
+      const svg = chartsLayerContainerRef.current;
       const gestureManager = gestureManagerRef.current;
       if (!gestureManager || !svg) {
         return;
@@ -163,11 +163,11 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
 
       gestureManager.setGestureOptions(interaction, svg, options ?? {});
     },
-    [chartSurfaceRef, gestureManagerRef],
+    [chartsLayerContainerRef, gestureManagerRef],
   );
 
   React.useEffect(() => {
-    const svg = chartSurfaceRef.current;
+    const svg = chartsLayerContainerRef.current;
 
     // Disable gesture on safari
     // https://use-gesture.netlify.app/docs/gestures/#about-the-pinch-gesture
@@ -180,7 +180,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       svg?.removeEventListener('gesturechange', preventDefault);
       svg?.removeEventListener('gestureend', preventDefault);
     };
-  }, [chartSurfaceRef]);
+  }, [chartsLayerContainerRef]);
 
   return {
     instance: {

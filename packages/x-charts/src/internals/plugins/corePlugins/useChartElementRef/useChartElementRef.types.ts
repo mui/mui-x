@@ -5,7 +5,7 @@ export interface UseChartElementRefInstance {
   /**
    * Reference to the chart surface element.
    */
-  chartSurfaceRef: React.RefObject<HTMLDivElement | null>;
+  chartsLayerContainerRef: React.RefObject<HTMLDivElement | null>;
   /**
    * Reference to the chart root element.
    */

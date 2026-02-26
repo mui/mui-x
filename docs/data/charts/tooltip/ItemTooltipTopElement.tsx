@@ -4,7 +4,7 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import {
-  useChartSurfaceRef,
+  useChartsLayerContainerRef,
   useXAxis,
   useXScale,
   useYScale,
@@ -17,7 +17,7 @@ type PointerState = {
 };
 
 function usePointer(): PointerState {
-  const chartSurfaceRef = useChartSurfaceRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [pointer, setPointer] = React.useState<PointerState>({
@@ -27,7 +27,7 @@ function usePointer(): PointerState {
   });
 
   React.useEffect(() => {
-    const element = chartSurfaceRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null) {
       return () => {};
     }
@@ -56,7 +56,7 @@ function usePointer(): PointerState {
       element.removeEventListener('pointerenter', handleEnter);
       element.removeEventListener('pointerup', handleOut);
     };
-  }, [chartSurfaceRef]);
+  }, [chartsLayerContainerRef]);
 
   return pointer;
 }
@@ -73,7 +73,7 @@ export function ItemTooltipTopElement({ children }: React.PropsWithChildren) {
   // Pass the axis id to this hook if you use multiple one.
   const yScale = useYScale();
   // Get the ref of the <svg/> component.
-  const chartSurfaceRef = useChartSurfaceRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
 
   if (!tooltipData || !isActive || !xAxis.data) {
     // No data to display
@@ -84,7 +84,7 @@ export function ItemTooltipTopElement({ children }: React.PropsWithChildren) {
     tooltipData.identifier.type !== 'bar' ||
     tooltipData.identifier.dataIndex === undefined ||
     tooltipData.value === null ||
-    chartSurfaceRef.current === null
+    chartsLayerContainerRef.current === null
   ) {
     // This demo is only about bar charts
     return null;
@@ -98,11 +98,11 @@ export function ItemTooltipTopElement({ children }: React.PropsWithChildren) {
   const tooltipPosition = {
     // Add half of `yScale.step()` to be in the middle of the band.
     x:
-      chartSurfaceRef.current.getBoundingClientRect().left +
+      chartsLayerContainerRef.current.getBoundingClientRect().left +
       svgXPosition +
       (xScale as ScaleBand<any>).step() / 2,
     // Add the coordinate of the <svg/> to the to position inside the <svg/>.
-    y: chartSurfaceRef.current.getBoundingClientRect().top + svgYPosition,
+    y: chartsLayerContainerRef.current.getBoundingClientRect().top + svgYPosition,
   };
 
   return (
