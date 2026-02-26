@@ -98,6 +98,8 @@
   { "name": "ChartDataProviderPro", "kind": "Function" },
   { "name": "ChartDataProviderProProps", "kind": "TypeAlias" },
   { "name": "ChartDataProviderProps", "kind": "TypeAlias" },
+  { "name": "ChartDataProviderSlotProps", "kind": "Interface" },
+  { "name": "ChartDataProviderSlots", "kind": "Interface" },
   { "name": "ChartDrawingArea", "kind": "TypeAlias" },
   { "name": "ChartPremiumApi", "kind": "TypeAlias" },
   { "name": "ChartProApi", "kind": "TypeAlias" },
