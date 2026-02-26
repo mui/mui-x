@@ -56,7 +56,6 @@
     "@react-spring/web": "catalog:",
     "@tanstack/query-core": "^5.90.20",
     "@tanstack/react-query": "^5.90.20",
-    "ast-types": "^0.14.2",
     "chance": "catalog:",
     "clipboard-copy": "^4.0.1",
     "clsx": "catalog:",

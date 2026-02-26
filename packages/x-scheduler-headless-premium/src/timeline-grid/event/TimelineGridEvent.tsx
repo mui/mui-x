@@ -127,10 +127,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       collectionEnd: viewConfig.end,
     });
 
-  const mergedState = React.useMemo(
-    () => ({ ...state, startingBeforeEdge, endingAfterEdge }),
-    [state, startingBeforeEdge, endingAfterEdge],
-  );
+  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
 
   // Rendering hooks
   const style = React.useMemo(

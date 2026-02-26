@@ -1,21 +1,16 @@
 'use client';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import useForkRef from '@mui/utils/useForkRef';
-import { useChartRootRef, useDrawingArea } from '../../hooks';
-import {
-  selectorChartSvgHeight,
-  selectorChartSvgWidth,
-} from '../plugins/corePlugins/useChartDimensions';
-import { useStore } from '../store/useStore';
+import { selectorChartSvgHeight, selectorChartSvgWidth, useStore } from '@mui/x-charts/internals';
+import { useDrawingArea, useChartRootRef } from '@mui/x-charts/hooks';
 
-const WebGLContext = React.createContext<WebGL2RenderingContext | null>(null);
+const ChartsWebGLContext = React.createContext<WebGL2RenderingContext | null>(null);
 
 export function useWebGLContext(): WebGL2RenderingContext | null {
-  return React.useContext(WebGLContext);
+  return React.useContext(ChartsWebGLContext);
 }
 
-export const WebGLProvider = React.forwardRef<
+export const ChartsWebGlLayer = React.forwardRef<
   HTMLCanvasElement,
   React.PropsWithChildren<React.ComponentProps<'canvas'>>
 >(function WebGLProvider({ children, ...props }, ref) {
@@ -78,25 +73,22 @@ export const WebGLProvider = React.forwardRef<
   }
 
   return (
-    <WebGLContext.Provider value={context}>
-      {ReactDOM.createPortal(
-        <CanvasPositioner>
-          <canvas
-            ref={handleRef}
-            {...props}
-            style={{
-              position: 'relative',
-              left: drawingArea.left,
-              top: drawingArea.top,
-              width: drawingArea.width,
-              height: drawingArea.height,
-            }}
-          />
-        </CanvasPositioner>,
-        chartRoot,
-      )}
+    <ChartsWebGLContext.Provider value={context}>
+      <CanvasPositioner>
+        <canvas
+          ref={handleRef}
+          {...props}
+          style={{
+            position: 'relative',
+            left: drawingArea.left,
+            top: drawingArea.top,
+            width: drawingArea.width,
+            height: drawingArea.height,
+          }}
+        />
+      </CanvasPositioner>
       {children}
-    </WebGLContext.Provider>
+    </ChartsWebGLContext.Provider>
   );
 });
 
@@ -108,16 +100,15 @@ function CanvasPositioner({ children }: React.PropsWithChildren) {
   return (
     <div
       style={{
-        position: 'relative',
+        position: 'absolute',
+        inset: 0,
         pointerEvents: 'none',
         /* Ensures the canvas occupies the same space as the SVG */
-        gridArea: 'chart',
-        /* This property ensures the canvas renders below the SVG */
-        order: -1,
         maxWidth: svgWidth,
         maxHeight: svgHeight,
         width: '100%',
         height: '100%',
+        margin: 'auto',
       }}
     >
       {children}

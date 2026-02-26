@@ -4,9 +4,15 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 export interface HeatmapClasses {
   /** Styles applied to the heatmap cells. */
   cell: string;
-  /** Styles applied to the cell element if highlighted. */
+  /**
+   * Styles applied to the cell element if highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the cell element if faded. */
+  /**
+   * Styles applied to the cell element if faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
