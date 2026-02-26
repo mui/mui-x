@@ -37,7 +37,7 @@ This axis might have `scaleType='band'` and its `data` should have the same leng
 If your data is stored in an array of objects, you can use the `dataset` helper prop.
 It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
 
-You can reuse this data when defining the series and axis, thanks to the `dataKey` property.
+You can reuse this data when defining the series and axes by using the `dataKey` property.
 
 For example `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
 
@@ -53,7 +53,7 @@ The ratio is obtained by dividing the size of the gap by the size of the categor
 The `barGapRatio` defines the gap between two bars of the same category.
 It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
-And a value of `-1` will make bars overlap on top of each other.
+A value of `-1` will make bars overlap.
 
 {{"demo": "BarGap.js", "hideToolbar": true, "bg": "playground"}}
 
@@ -77,7 +77,7 @@ See [stacking docs](/x/react-charts/stacking/) for details.
 ### Bar direction
 
 Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
-If you're composing a custom component, you should set the property `layout: 'horizontal'` to each bar series object.
+If you're composing a custom component, set the `layout: 'horizontal'` property on each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
 
@@ -94,7 +94,7 @@ You can test all configuration options in the following demo:
 
 ### Date axis
 
-If your band axis represents dates in a usual way (they are sorted and evenly spaced), you can set `ordinalTimeTicks` to pick some date frequencies.
+If your band axis represents dates in the usual way (they are sorted and evenly spaced), you can set `ordinalTimeTicks` to pick some date frequencies.
 This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
 
 Instead of one tick per band, the axis renders ticks according to the provided frequencies and the tick number.
@@ -129,8 +129,8 @@ See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
 As with other charts, you can modify the [series color](/x/react-charts/styling/#colors) either directly, or with the color palette.
 
-You can also modify the color by using axes `colorMap` which maps values to colors.
-The bar charts use by priority:
+You can also modify the color by using the axes' `colorMap`, which maps values to colors.
+Bar charts use the following, in order of priority:
 
 1. The value axis color
 2. The band axis color
@@ -213,7 +213,7 @@ You can display, change, or hide labels based on conditional logic.
 To do so, provide a function to the `barLabel`.
 Labels are not displayed if the function returns `null`.
 
-In the example we display a `'High'` text on values higher than 10, and hide values when the generated bar height is lower than 60px.
+In the example, we display the text `'High'` on values higher than 10, and hide values when the generated bar height is lower than 60px.
 
 {{"demo": "CustomLabels.js"}}
 
@@ -227,8 +227,8 @@ In the example below, we position the labels above the bars they refer to.
 
 Bar charts provide two click handlers:
 
-- `onItemClick` for click on a specific bar.
-- `onAxisClick` for a click anywhere in the chart
+- `onItemClick` for clicks on a specific bar.
+- `onAxisClick` for a click anywhere in the chart.
 
 They both provide the following signature.
 
@@ -245,7 +245,7 @@ const clickHandler = (
 There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
 
 - For `onItemClick` the event is a React synthetic mouse event emitted by the bar component.
-- For `onAxisClick` the event is a native mouse event emitted by the svg component.
+- For `onAxisClick` the event is a native mouse event emitted by the SVG component.
 
 :::
 
@@ -281,7 +281,7 @@ When you set `skipAnimation` to `true`, the chart renders without animations.
 
 Bar charts can display many bars, which can impact performance. The default rendering of bars uses SVG `rect` elements, which can be slow for a large number of bars.
 
-To improve performance, you can use the `renderer` prop set to `"svg-batch"`, which renders the bars more efficiently.
+Set the `renderer` prop to `"svg-batch"` to render the bars more efficiently.
 However, this comes with the following trade-offs:
 
 - CSS styling of single bars is no longer possible.

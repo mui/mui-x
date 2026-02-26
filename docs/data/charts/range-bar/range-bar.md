@@ -12,7 +12,8 @@ components: BarChartPremium, RangeBarPlot, ChartDataProviderPremium, ChartsConta
 
 A range bar chart displays the span between two values for each category.
 
-Each bar extends from a lower to an upper value, and is commonly used for visualizing data like temperature ranges, project timelines, or performance intervals.
+Each bar extends from a lower to an upper value.
+This type of chart is commonly used for visualizing data like temperature ranges, project timelines, or performance intervals.
 
 ## Basics
 
