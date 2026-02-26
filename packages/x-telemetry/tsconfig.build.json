@@ -9,7 +9,7 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["vite/client"]
+    "types": ["node", "vite/client"]
   },
   "include": ["src/**/*.ts*", "src/compiled/**/*.js*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
