@@ -71,5 +71,12 @@ export const useZoomOnDoubleTapReset = (
     return () => {
       doubleTapResetHandler.cleanup();
     };
-  }, [chartSurfaceRef, isZoomOnDoubleTapResetEnabled, optionsLookup, instance, setZoomDataCallback, store]);
+  }, [
+    chartSurfaceRef,
+    isZoomOnDoubleTapResetEnabled,
+    optionsLookup,
+    instance,
+    setZoomDataCallback,
+    store,
+  ]);
 };

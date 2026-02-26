@@ -3,7 +3,12 @@ import { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
-import { useChartSurfaceRef, useXAxis, useXScale, useYScale } from '@mui/x-charts/hooks';
+import {
+  useChartSurfaceRef,
+  useXAxis,
+  useXScale,
+  useYScale,
+} from '@mui/x-charts/hooks';
 
 type PointerState = {
   isActive: boolean;

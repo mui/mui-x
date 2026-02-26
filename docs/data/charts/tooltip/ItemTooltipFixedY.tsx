@@ -73,7 +73,9 @@ export function ItemTooltipFixedY({ children }: React.PropsWithChildren) {
     const handleMove = (event: PointerEvent) => {
       positionRef.current = {
         x: event.clientX,
-        y: (chartSurfaceRef.current?.getBoundingClientRect().top ?? 0) + drawingArea.top,
+        y:
+          (chartSurfaceRef.current?.getBoundingClientRect().top ?? 0) +
+          drawingArea.top,
       };
       popperRef.current?.update();
     };
