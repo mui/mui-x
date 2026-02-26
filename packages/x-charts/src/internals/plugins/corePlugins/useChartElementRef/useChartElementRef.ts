@@ -4,7 +4,7 @@ import { type ChartPlugin } from '../../models';
 import { type UseChartElementRefSignature } from './useChartElementRef.types';
 
 export const useChartElementRef: ChartPlugin<UseChartElementRefSignature> = () => {
-  const svgRef = React.useRef<SVGSVGElement>(null);
+  const svgRef = React.useRef<HTMLDivElement>(null);
   const chartRootRef = React.useRef<Element>(null);
 
   return {
