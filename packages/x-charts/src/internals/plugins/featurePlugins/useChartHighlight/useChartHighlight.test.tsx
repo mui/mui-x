@@ -88,24 +88,23 @@ describe('highlight', () => {
       />,
     );
 
-      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-      const firstBar = container.querySelector(
-        `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
-      );
-      const secondBar = container.querySelector(
-        `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
-      );
+    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+    const firstBar = container.querySelector(
+      `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
+    );
+    const secondBar = container.querySelector(
+      `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
+    );
 
-      expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
-      expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
+    expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
+    expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
 
-      await user.click(svg);
-      await user.keyboard('[ArrowRight]');
+    await user.click(svg);
+    await user.keyboard('[ArrowRight]');
 
-      expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
-      expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
-    },
-  );
+    expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
+    expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
+  });
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   it.skipIf(isJSDOM)('should call onHighlightChange when leaving the highlightedItem', async () => {
