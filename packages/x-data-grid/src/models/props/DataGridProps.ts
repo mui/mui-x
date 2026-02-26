@@ -12,7 +12,11 @@ import type { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from
 import type { GridEventListener } from '../events';
 import type { GridCallbackDetails, GridLocaleText } from '../api';
 import type { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColDef, GridListViewColDef, GridCheckboxSelectionColDef } from '../colDef/gridColDef';
+import type {
+  GridColDef,
+  GridListViewColDef,
+  GridCheckboxSelectionColDef,
+} from '../colDef/gridColDef';
 import type { GridClasses } from '../../constants/gridClasses';
 import type {
   GridRowHeightParams,
@@ -871,6 +875,11 @@ export interface DataGridPropsWithoutDefaultValue<
   autosizeOptions?: GridAutosizeOptions;
   /**
    * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   *
+   * @warning
+   * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+   * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+   * Overriding them without providing the same functionality will break the row selection.
    */
   checkboxColDef?: GridCheckboxSelectionColDef<R>;
   /**

@@ -384,6 +384,12 @@ export type GridListViewColDef<R extends GridValidRowModel = any, V = any, F = V
 
 /**
  * Column Definition interface used for the checkbox selection column.
+ *
+ * @warning
+ * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+ * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+ * Overriding them without providing the same functionality will break the row selection.
+ *
  * @demos
  *   - [Row selection](/x/react-data-grid/row-selection/)
  */
