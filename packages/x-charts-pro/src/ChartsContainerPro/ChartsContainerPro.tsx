@@ -52,7 +52,7 @@ type ChartsContainerProComponent = <
 const ChartsContainerPro = React.forwardRef(function ChartsContainerProInner<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerProProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+>(props: ChartsContainerProProps<TSeries, TSignatures>, ref: React.Ref<HTMLDivElement>) {
   const { chartDataProviderProProps, children, chartsSurfaceProps } = useChartsContainerProProps<
     TSeries,
     TSignatures

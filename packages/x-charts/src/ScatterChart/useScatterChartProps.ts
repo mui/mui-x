@@ -71,7 +71,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onItemClick: useVoronoiOnItemClick
       ? (onItemClick as UseChartClosestPointSignature['params']['onItemClick'])
       : undefined,
-    className,
     plugins: SCATTER_CHART_PLUGINS,
     slots,
     slotProps,
@@ -119,6 +118,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
+    className,
   };
 
   return {
