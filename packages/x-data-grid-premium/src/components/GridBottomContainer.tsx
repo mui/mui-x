@@ -29,7 +29,7 @@ const Element = styled('div', {
   slot: 'internal',
   shouldForwardProp: undefined,
 })({
-  position: 'sticky',
+  position: 'absolute',
   zIndex: 40,
   bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
 });
