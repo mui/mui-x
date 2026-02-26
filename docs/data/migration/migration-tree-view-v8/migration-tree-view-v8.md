@@ -31,7 +31,9 @@ Since `v9` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
 
-## Hook exports restricted in `@mui/x-tree-view-pro`
+## Hooks
+
+### Restrict hook exports in pro package
 
 The `useSimpleTreeViewApiRef` and `useRichTreeViewApiRef` hooks are no longer re-exported from `@mui/x-tree-view-pro`.
 If you were importing them from the pro package, you need to import them from `@mui/x-tree-view` instead:
@@ -59,12 +61,12 @@ return <RichTreeViewPro apiRef={apiRef} items={items} />;
 
 :::
 
-## Virtualization enabled by default in `RichTreeViewPro`
+## DOM and items rendering
 
-The `RichTreeViewPro` component now has virtualization enabled by default.
+### Item virtualization
+
+The `RichTreeViewPro` component now uses virtualization to render its items.
 This improves performance when rendering large datasets.
-
-### Disable virtualization
 
 If you want to opt out of virtualization, use the `disableVirtualization` prop:
 
@@ -75,8 +77,6 @@ If you want to opt out of virtualization, use the `disableVirtualization` prop:
  />
 ```
 
-### Set dimensions on the parent container
-
 When virtualization is enabled, the `RichTreeViewPro` component requires its parent container to have intrinsic dimensions.
 Make sure to set a height on the container:
 
@@ -86,22 +86,36 @@ Make sure to set a height on the container:
 </div>
 ```
 
-### Customize item height
+:::success
+See [Virtualization—Layout](/x/react-tree-view/virtualization/#layout) to learn more.
+:::
 
-The default height of each item is `32px`.
+### Item height
+
+The three Tree View components now support a new `itemHeight` prop to customize the height each item takes.
+For `RichTreeViewPro`, this prop is set to `32px` by default because the component needs to be able to calculate the position of every item in order to virtualize them.
+
 You can customize it using the `itemHeight` prop:
 
 ```tsx
 <RichTreeViewPro items={items} itemHeight={48} />
 ```
 
-### DOM structure
-
-When virtualization is enabled (default), the DOM structure defaults to `'flat'`.
-When virtualization is disabled, it defaults to `'nested'`.
-
-You can explicitly control the DOM structure using the `domStructure` prop:
+If your items have different heights, you can pass `itemHeight={null}` to remove the height restriction.
+This requires disabling virtualization:
 
 ```tsx
-<RichTreeViewPro items={items} domStructure="nested" />
+<RichTreeViewPro items={items} itemHeight={null} disableVirtualization />
+```
+
+### DOM structure
+
+The `RichTreeView` and `RichTreeViewPro` components now support a new `domStructure` prop to switch between a flat list and a nested tree to render the items in the DOM.
+For `RichTreeViewPro`, this prop is set to `"flat"` by default.
+
+If your styling required keeping the items nested, you can pass `domStructure="nested"` to go back to the old behavior.
+This requires disabling virtualization:
+
+```tsx
+<RichTreeViewPro items={items} domStructure="nested" disableVirtualization />
 ```

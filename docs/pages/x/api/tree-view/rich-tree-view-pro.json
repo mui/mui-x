@@ -37,7 +37,7 @@
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "domStructure": {
       "type": { "name": "enum", "description": "'flat'<br>&#124;&nbsp;'nested'" },
-      "default": "'nested' when using disableVirtualization, 'flat' otherwise"
+      "default": "'flat'"
     },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "expansionTrigger": {

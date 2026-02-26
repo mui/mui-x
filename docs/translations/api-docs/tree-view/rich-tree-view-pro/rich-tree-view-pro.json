@@ -115,7 +115,9 @@
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
-    "itemHeight": { "description": "Sets the height in pixel of an item." },
+    "itemHeight": {
+      "description": "Sets the height in pixel of an item. Set to <code>null</code> to explicitly remove any item height restriction when items have different heights (not compatible with virtualization)."
+    },
     "itemsReordering": {
       "description": "If <code>true</code>, the reordering of items is enabled."
     },

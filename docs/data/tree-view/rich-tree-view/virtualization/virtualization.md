@@ -34,6 +34,11 @@ You can customize the item height by passing a different value:
 <RichTreeViewPro items={ITEMS} itemHeight={48} />
 ```
 
+:::warning
+Virtualization is not compatible with `itemHeight={null}`.
+If your items have different heights, you need to disable virtualization using the `disableVirtualization` prop.
+:::
+
 See the [Item height](/x/react-tree-view/rich-tree-view/items/#item-height) documentation for more details.
 
 ## DOM structure

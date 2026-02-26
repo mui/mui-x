@@ -583,11 +583,21 @@ describeTreeView<TreeViewAnyStore>(
           '48px',
         );
       });
+
+      it('should not set --TreeView-itemHeight CSS variable when itemHeight is null', () => {
+        const view = render({
+          items: [{ id: '1' }],
+          itemHeight: null,
+        });
+
+        const itemRoot = view.getItemRoot('1');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
+      });
     });
 
     describe('domStructure prop', () => {
-      it.skipIf(!isRichTreeView)(
-        'should use nested DOM structure by default (children inside parent)',
+      it.skipIf(treeViewComponentName !== 'RichTreeView')(
+        'should use nested DOM structure by default on RichTreeView (children inside parent)',
         () => {
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -599,6 +609,24 @@ describeTreeView<TreeViewAnyStore>(
 
           // In nested DOM structure, the child is a descendant of the parent
           expect(parentRoot.contains(childRoot)).to.equal(true);
+        },
+      );
+
+      it.skipIf(treeViewComponentName !== 'RichTreeViewPro')(
+        'should use flat DOM structure by default on RichTreeViewPro (children as siblings)',
+        () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            defaultExpandedItems: ['1'],
+          });
+
+          const parentRoot = view.getItemRoot('1');
+          const childRoot = view.getItemRoot('1.1');
+
+          // In flat DOM structure, the child is NOT a descendant of the parent
+          expect(parentRoot.contains(childRoot)).to.equal(false);
+          // Both items should be siblings (same parent)
+          expect(parentRoot.parentElement).to.equal(childRoot.parentElement);
         },
       );
 

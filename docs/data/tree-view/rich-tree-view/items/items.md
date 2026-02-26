@@ -167,6 +167,13 @@ If not provided, no height restriction is applied to the tree item content eleme
 When virtualization is enabled (the default for `RichTreeViewPro`), the `itemHeight` defaults to `32px` if this prop is not defined.
 :::
 
+You can pass `itemHeight={null}` to explicitly remove any item height restriction.
+This is useful when items have different heights, but it requires disabling virtualization on `RichTreeViewPro`:
+
+```tsx
+<RichTreeViewPro items={ITEMS} itemHeight={null} disableVirtualization />
+```
+
 ## DOM structure
 
 Use the `domStructure` prop to control how items are rendered in the DOM.
