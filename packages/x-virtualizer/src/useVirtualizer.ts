@@ -196,6 +196,13 @@ export const useVirtualizerList = <L extends Layout = Layout>(
     Object.assign(api, feature.use(store as any, paramsWithDefault, api as any));
   }
 
+  // 1D list virtualization never uses colspan or rowspan. Provide safe no-ops so that
+  // `inputsSelector` (which calls `getHiddenCellsOrigin` unconditionally) doesn't throw.
+  // Note: `createSpanningAPI()` still throws in the grid hook to catch misuse.
+  (api as any).getHiddenCellsOrigin = () => ({});
+  (api as any).getCellColSpanInfo = () => undefined;
+  (api as any).calculateColSpan = () => {};
+
   return {
     store,
     api,
