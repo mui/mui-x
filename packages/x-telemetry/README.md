@@ -1,12 +1,22 @@
 # @mui/x-telemetry
 
-Package used by some of MUI X to collects **anonymous** telemetry data about general usage. Participation in this anonymous program is optional, and you may opt-out if you'd not like to share any information.
+Package used by some of MUI X to collect **anonymous** telemetry data about general usage during development. Telemetry is **enabled by default** in development mode and is completely removed in production builds. Participation in this anonymous program is optional, and you may opt out if you'd not like to share any information.
 
-## How to opt-in
+## How to configure telemetry
 
-Currently, **it's disabled by default,** and you could opt-in to it in 3 ways:
+Telemetry is **enabled by default** in development mode. You can enable or disable it in any of the following ways:
 
-1. By setting it directly to package settings on the application start (for example, in the main file).
+1. By setting the environment variable.
+
+```dotenv
+MUI_X_TELEMETRY_DISABLED=true # Disable telemetry
+# or
+MUI_X_TELEMETRY_DISABLED=false # Enable telemetry
+```
+
+> ⚠️ Note that some frameworks require prefixing the variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
+
+2. By using the package settings on application start (for example, in the main file).
 
 ```js
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
@@ -18,32 +28,10 @@ muiXTelemetrySettings.enableTelemetry(); // to enable telemetry collection and s
 muiXTelemetrySettings.disableTelemetry(); // to disable telemetry collection and sending
 ```
 
-2. By setting the environment variable.
-
-```dotenv
-MUI_X_TELEMETRY_DISABLED=false # Enable telemetry
-# or
-MUI_X_TELEMETRY_DISABLED=true # Enable telemetry
-```
-
-> ⚠️ Note that some frameworks requires to prefix the variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
-
-3. By setting the flag to global object on the application start (for example, in the main file).
+3. By setting the flag on the global object on application start (for example, in the main file).
 
 ```js
 globalThis.__MUI_X_TELEMETRY_DISABLED__ = false; // enabled
 // or
 globalThis.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
-```
-
-OR
-
-```js
-if (typeof window !== 'undefined') {
-  window.__MUI_X_TELEMETRY_DISABLED__ = false; // enabled
-}
-// or
-if (typeof window !== 'undefined') {
-  window.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
-}
 ```
