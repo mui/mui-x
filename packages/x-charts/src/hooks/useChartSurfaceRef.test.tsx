@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { useSvgRef } from './useSvgRef';
+import { useChartSurfaceRef } from './useChartSurfaceRef';
 import { ChartProvider } from '../context/ChartProvider';
 
-function UseSvgRef() {
-  const ref = useSvgRef();
+function UseChartSurfaceRef() {
+  const ref = useChartSurfaceRef();
   return (
     <div ref={ref} id="test-id">
       {ref.current?.id}
@@ -13,7 +13,7 @@ function UseSvgRef() {
   );
 }
 
-describe('useSvgRef', () => {
+describe('useChartSurfaceRef', () => {
   const { render } = createRenderer();
 
   // can't catch render errors in the browser for unknown reason
@@ -21,12 +21,12 @@ describe('useSvgRef', () => {
   it.skipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
-    const expectedError = ['The above error occurred in the <UseSvgRef> component'];
+    const expectedError = ['The above error occurred in the <UseChartSurfaceRef> component'];
 
     expect(() =>
       render(
         <ErrorBoundary ref={errorRef}>
-          <UseSvgRef />
+          <UseChartSurfaceRef />
         </ErrorBoundary>,
       ),
     ).toErrorDev(expectedError);
@@ -41,7 +41,7 @@ describe('useSvgRef', () => {
     function RenderDrawingProvider() {
       return (
         <ChartProvider pluginParams={{ width: 200, height: 200 }}>
-          <UseSvgRef />
+          <UseChartSurfaceRef />
         </ChartProvider>
       );
     }

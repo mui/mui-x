@@ -26,7 +26,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianTooltip.selectors';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
-import { useSvgRef } from '../hooks';
+import { useChartSurfaceRef } from '../hooks';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
@@ -154,7 +154,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const store = useStore<[UseChartCartesianAxisSignature, UseChartInteractionSignature]>();
 
-  const svgRef = useSvgRef();
+  const chartSurfaceRef = useChartSurfaceRef();
   const anchorRef = React.useRef<HTMLDivElement | null>(null);
 
   const classes = useUtilityClasses(propClasses);
@@ -180,7 +180,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const isTooltipNodeAnchored = itemPosition !== null;
 
   React.useEffect(() => {
-    const svgElement = svgRef.current;
+    const svgElement = chartSurfaceRef.current;
     if (svgElement === null) {
       return () => {};
     }
@@ -208,7 +208,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       svgElement.removeEventListener('pointerenter', handlePointerEvent);
       pointerUpdate.clear();
     };
-  }, [svgRef, positionRef, isTooltipNodeAnchored]);
+  }, [chartSurfaceRef, positionRef, isTooltipNodeAnchored]);
 
   const pointerAnchorEl = React.useMemo(
     () => ({
@@ -265,7 +265,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   return (
     <React.Fragment>
-      {svgRef.current &&
+      {chartSurfaceRef.current &&
         ReactDOM.createPortal(
           <div
             ref={anchorRef}
@@ -282,7 +282,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
               height: 1,
             }}
           />,
-          svgRef.current,
+          chartSurfaceRef.current,
         )}
       <NoSsr>
         {isOpen && (

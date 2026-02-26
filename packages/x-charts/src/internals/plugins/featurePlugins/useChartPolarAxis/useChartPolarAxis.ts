@@ -27,7 +27,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   store,
   instance,
 }) => {
-  const { svgRef } = instance;
+  const { chartSurfaceRef } = instance;
   const { rotationAxis, radiusAxis, dataset } = params;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -96,7 +96,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   const hasInteractionPlugin = checkHasInteractionPlugin(instance);
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartSurfaceRef.current;
     if (
       !isInteractionEnabled ||
       !hasInteractionPlugin ||
@@ -194,7 +194,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       pressEndHandler.cleanup();
     };
   }, [
-    svgRef,
+    chartSurfaceRef,
     store,
     center,
     radiusAxisWithScale,
@@ -209,7 +209,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   ]);
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartSurfaceRef.current;
     const onAxisClick = params.onAxisClick;
     if (element === null || !onAxisClick) {
       return () => {};
@@ -261,7 +261,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     processedSeries,
     radiusAxisWithScale,
     rotationAxisWithScale,
-    svgRef,
+    chartSurfaceRef,
     usedRadiusAxisId,
     usedRotationAxisId,
   ]);

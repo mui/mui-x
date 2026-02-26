@@ -9,7 +9,7 @@ import { type UseChartBrushSignature, type Point } from './useChartBrush.types';
 import { selectorIsBrushEnabled } from './useChartBrush.selectors';
 
 export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, instance, params }) => {
-  const { svgRef } = instance;
+  const { chartSurfaceRef } = instance;
   const isEnabled = store.use(selectorIsBrushEnabled);
 
   useEnhancedEffect(() => {
@@ -53,7 +53,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, inst
   });
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartSurfaceRef.current;
     if (element === null || !isEnabled) {
       return () => {};
     }
@@ -91,7 +91,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, inst
       brushEndHandler.cleanup();
       brushCancelHandler.cleanup();
     };
-  }, [svgRef, instance, store, clearBrush, setBrushCoordinates, isEnabled]);
+  }, [chartSurfaceRef, instance, store, clearBrush, setBrushCoordinates, isEnabled]);
 
   return {
     instance: {
