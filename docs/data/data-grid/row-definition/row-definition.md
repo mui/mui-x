@@ -25,9 +25,9 @@ This identifier is used internally to identify the row in the various models—f
 
 By default, the Data Grid looks for a property named `id` in the data set to get that identifier.
 
-If the row's identifier is not called `id`, then you need to use the `getRowId()` prop to tell the Data Grid where it's located.
+If the row's identifier is not called `id`, then you need to use the `getRowId` prop to tell the Data Grid where it's located.
 
-The following demo shows how to use `getRowId()` to grab the unique identifier from a property named `internalId`:
+The following demo shows how to use `getRowId` to grab the unique identifier from a property named `internalId`:
 
 ```tsx
 function getRowId(row) {
@@ -45,7 +45,7 @@ Note that it is not necessary to create a column to display the unique identifie
 The Data Grid pulls this information directly from the data set itself, not from anything displayed on the screen.
 
 :::warning
-Just like the `rows` prop, the `getRowId()` function should keep the same JavaScript reference between two renders.
+Just like the `rows` prop, the `getRowId` function should keep the same JavaScript reference between two renders.
 Otherwise, the Data Grid will re-apply heavy work like sorting and filtering.
 
 It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.

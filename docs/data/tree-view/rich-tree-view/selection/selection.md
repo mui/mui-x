@@ -164,8 +164,8 @@ The `useApplyPropagationToSelectedItemsOnMount()` must receive the following pro
 
 - `items`
 - `selectionPropagation`
-- `getItemId()` (can be skipped if not provided to `RichTreeView`)
-- `getItemChildren()` (can be skipped if not provided to `RichTreeView`)
+- `getItemId` (can be skipped if not provided to `RichTreeView`)
+- `getItemChildren` (can be skipped if not provided to `RichTreeView`)
 
 :::
 

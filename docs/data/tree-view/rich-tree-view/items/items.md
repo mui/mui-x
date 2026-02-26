@@ -37,9 +37,9 @@ const ITEMS = [{ id: 'tree-view-community' }];
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's identifier is not called `id`, then you must use the `getItemId()` prop to tell `RichTreeView` where it is located.
+If the item's identifier is not called `id`, then you must use the `getItemId` prop to tell `RichTreeView` where it is located.
 
-The following demo shows how to use `getItemId()` to grab the unique identifier from a property named `internalId`:
+The following demo shows how to use `getItemId` to grab the unique identifier from a property named `internalId`:
 
 ```tsx
 const ITEMS = [{ internalId: 'tree-view-community' }];
@@ -65,9 +65,9 @@ const ITEMS = [{ label: '@mui/x-tree-view' }];
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's label is not called `label`, then you must use the `getItemLabel()` prop to tell `RichTreeView` where it's located:
+If the item's label is not called `label`, then you must use the `getItemLabel` prop to tell `RichTreeView` where it's located:
 
-The following demo shows how to use `getItemLabel()` to grab the unique identifier from a property named `name`:
+The following demo shows how to use `getItemLabel` to grab the unique identifier from a property named `name`:
 
 ```tsx
 const ITEMS = [{ name: '@mui/x-tree-view' }];
@@ -100,9 +100,9 @@ const ITEMS = [
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's children are not called `children`, then you must use the `getItemChildren()` prop to tell `RichTreeView` where they're located:
+If the item's children are not called `children`, then you must use the `getItemChildren` prop to tell `RichTreeView` where they're located:
 
-The following demo shows how to use `getItemChildren()` to grab the children from a property named `nodes`:
+The following demo shows how to use `getItemChildren` to grab the children from a property named `nodes`:
 
 ```tsx
 const ITEMS = [

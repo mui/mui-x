@@ -487,7 +487,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 ### Removals from the public API
 
 - The `getGridSingleSelectQuickFilterFn()` function was removed.
-  You can copy the old function and pass it to the `getApplyQuickFilterFn()` property of the `singleSelect` column definition.
+  You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.
 
 ## Rename `components` to `slots` (optional)
 

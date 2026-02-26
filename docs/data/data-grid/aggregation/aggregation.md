@@ -74,7 +74,7 @@ In the example below, the sum and the count of `true` values for each row group 
 
 {{"demo": "AggregationRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
-You can use the `getAggregationPosition()` prop to customize this behavior.
+You can use the `getAggregationPosition` prop to customize this behavior.
 This function takes the current group node as an argument (or `null` for the root group) and returns the position of the aggregated value.
 The position can be one of three values:
 
@@ -82,7 +82,7 @@ The position can be one of three values:
 - `"inline"`—the Data Grid disables aggregation on the grouping row.
 - `null`—the Data Grid doesn't aggregate the group.
 
-The following snippets build on the demo above to show various use cases for the `getAggregationPosition()` prop:
+The following snippets build on the demo above to show various use cases for the `getAggregationPosition` prop:
 
 ```tsx
 // Aggregate the root group in the top-level footer
