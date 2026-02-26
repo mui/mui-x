@@ -218,6 +218,9 @@ importers:
 
   .:
     devDependencies:
+      '@atlaskit/pragmatic-drag-and-drop-unit-testing':
+        specifier: ^1.1.1
+        version: 1.1.1
       '@babel/core':
         specifier: 'catalog:'
         version: 7.29.0
@@ -2587,6 +2590,9 @@ packages:
 
   '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.2':
     resolution: {integrity: sha512-6BgAUxSNbQFiG3uqNxf53cDQADn5mSeh/JsQzCHo46GPQnVWIJk77zWC8yZ++0Mfg1ECy02zNrbniF7SgHAhXQ==}
+
+  '@atlaskit/pragmatic-drag-and-drop-unit-testing@1.1.1':
+    resolution: {integrity: sha512-ZkJ0UuNzIbgvkmYYbgN8D7obv1yx7QzkpzBgrKrEYiZ2B9YTLY6kgRdoSI5REuY07/yzEtyFbYe+r8MvMe9Zsw==}
 
   '@atlaskit/pragmatic-drag-and-drop@1.7.7':
     resolution: {integrity: sha512-jX+68AoSTqO/fhCyJDTZ38Ey6/wyL2Iq+J/moanma0YyktpnoHxevjY1UNJHYp0NCburdQDZSL1ZFac1mO1osQ==}
@@ -12401,6 +12407,10 @@ snapshots:
       '@atlaskit/pragmatic-drag-and-drop': 1.7.7
       '@babel/runtime': 7.28.6
 
+  '@atlaskit/pragmatic-drag-and-drop-unit-testing@1.1.1':
+    dependencies:
+      '@babel/runtime': 7.28.6
+
   '@atlaskit/pragmatic-drag-and-drop@1.7.7':
     dependencies:
       '@babel/runtime': 7.28.6
@@ -17125,7 +17135,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.5.2)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jsdom@27.4.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
+      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.19.3)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
 
   '@vitest/utils@4.0.18':
     dependencies:

@@ -25,10 +25,13 @@ import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRo
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
 
 const overflowStateAttributesMapping = {
-  startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
-  endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
+  startingBeforeEdge: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.startingBeforeEdge]: '' } : null,
+  endingAfterEdge: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.endingAfterEdge]: '' } : null,
 };
 
 export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
