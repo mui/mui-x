@@ -1,6 +1,6 @@
 # @mui/x-telemetry
 
-Package used by some of MUI X to collect **anonymous** telemetry data about general usage during development. Telemetry is **enabled by default** in development mode and is completely removed in production builds. Participation in this anonymous program is optional, and you may opt out if you'd not like to share any information.
+Package used by some of MUI X to collect **anonymous** telemetry data about general usage during development. Telemetry is **enabled by default** in development mode and is completely removed in production builds. Participation in this anonymous program is optional, and you may opt out if you'd not like to share any information.
 
 ## How to configure telemetry
 
