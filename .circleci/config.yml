@@ -126,7 +126,7 @@ jobs:
 
             if [[ -z "$NON_CHARTS_FILES" ]]; then
               echo "Only charts-related files changed. Filtering browser tests to x-charts* projects."
-              echo 'export BROWSER_TEST_PROJECT_FILTER="--project \"x-charts*\""' >> "$BASH_ENV"
+              echo 'export BROWSER_TEST_PROJECT_FILTER=" ./packages/x-charts*"' >> "$BASH_ENV"
             else
               echo "Non-charts files changed. Running all browser tests."
             fi
