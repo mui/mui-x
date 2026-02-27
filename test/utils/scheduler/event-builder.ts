@@ -1,7 +1,7 @@
 import {
   SchedulerResourceId,
   RecurringEventPresetKey,
-  RecurringEventRecurrenceRule,
+  SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
@@ -103,7 +103,7 @@ export class EventBuilder {
   }
 
   /** Set an RRULE */
-  rrule(rule?: RecurringEventRecurrenceRule) {
+  rrule(rule?: SchedulerEventRecurrenceRule) {
     this.event.rrule = rule;
     return this;
   }
@@ -206,13 +206,13 @@ export class EventBuilder {
    * - If only kind: auto-generates a preset based on start or DEFAULT_VISIBLE_DATE.
    * - If kind + rule: merges your rrule over the preset.
    */
-  recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
+  recurrent(kind: RecurringEventPresetKey, rrule?: Omit<SchedulerEventRecurrenceRule, 'freq'>) {
     const dataTimezone = this.event.timezone ?? 'default';
     const anchor = this.event.start
       ? resolveEventDate(this.event.start, dataTimezone, this.adapter)
       : this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, 'default');
 
-    let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
+    let base: SchedulerEventRecurrenceRule = { freq: kind, interval: 1 };
 
     if (kind === 'WEEKLY') {
       const code = getWeekDayCode(this.adapter, anchor);

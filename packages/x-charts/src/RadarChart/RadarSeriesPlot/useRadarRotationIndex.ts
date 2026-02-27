@@ -4,7 +4,7 @@ import { getChartPoint } from '../../internals/getChartPoint';
 import { generateSvg2rotation } from '../../internals/plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
 import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
 import { useStore } from '../../internals/store/useStore';
-import { useSvgRef } from '../../hooks/useSvgRef';
+import { useChartsLayerContainerRef } from '../../hooks/useChartsLayerContainerRef';
 import { useRotationAxis } from '../../hooks/useAxis';
 
 /**
@@ -12,7 +12,7 @@ import { useRotationAxis } from '../../hooks/useAxis';
  * @return {(event: { clientX: number; clientY: number }) => number | null} rotationIndexGetter Returns the rotation data index.
  */
 export function useRadarRotationIndex() {
-  const svgRef = useSvgRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
 
   const store = useStore();
   const rotationAxis = useRotationAxis();
@@ -21,7 +21,7 @@ export function useRadarRotationIndex() {
 
   const rotationIndexGetter = React.useCallback(
     function rotationIndexGetter(event: { clientX: number; clientY: number }) {
-      const element = svgRef.current;
+      const element = chartsLayerContainerRef.current;
       if (!element || !rotationAxis) {
         // Should never append
         throw new Error(
@@ -35,7 +35,7 @@ export function useRadarRotationIndex() {
 
       return rotationIndex;
     },
-    [center, rotationAxis, svgRef],
+    [center, rotationAxis, chartsLayerContainerRef],
   );
   return rotationIndexGetter;
 }

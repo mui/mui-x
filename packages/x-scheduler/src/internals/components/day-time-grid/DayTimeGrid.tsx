@@ -33,6 +33,7 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
   '--hour-height': `${HOUR_HEIGHT}px`,
   '--has-scroll': 1,
   width: '100%',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
@@ -357,9 +358,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
-      {/* TODO: Add the 3 letter week day format to the adapter */}
       <DayTimeGridHeaderDayName className={classes.dayTimeGridHeaderDayName}>
-        {adapter.formatByString(day.value, 'ccc')}
+        {adapter.format(day.value, 'weekday3Letters')}
       </DayTimeGridHeaderDayName>
       <DayTimeGridHeaderDayNumber className={classes.dayTimeGridHeaderDayNumber}>
         {adapter.format(day.value, 'dayOfMonth')}

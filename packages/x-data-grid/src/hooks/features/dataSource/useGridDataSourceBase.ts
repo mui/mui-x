@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
+import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -10,7 +11,11 @@ import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/g
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridPaginationModelSelector } from '../pagination/gridPaginationSelector';
+import {
+  gridPaginationModelSelector,
+  gridVisibleRowsSelector,
+} from '../pagination/gridPaginationSelector';
+import { gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault, type GridDataSourceCacheDefaultConfig } from './cache';
@@ -21,6 +26,7 @@ import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommuni
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import type { GridEventListener } from '../../../models/events';
+import type { GridRowId } from '../../../models/gridRows';
 
 const noopCache: GridDataSourceCache = {
   clear: () => {},
@@ -48,6 +54,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     | 'pageSizeOptions'
     | 'pagination'
     | 'signature'
+    | 'dataSourceRevalidateMs'
   >,
   options: GridDataSourceBaseOptions = {},
 ) => {
@@ -72,8 +79,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
+  const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   const onDataSourceErrorProp = props.onDataSourceError;
+  const revalidateMs = props.dataSourceRevalidateMs;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
     if (!props.pagination) {
@@ -200,6 +209,90 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     );
   }, [apiRef]);
 
+  const fetchRowChildrenOption = options.fetchRowChildren;
+
+  const revalidate = useEventCallback(async () => {
+    const getRows = props.dataSource?.getRows;
+    if (!getRows || !standardRowsUpdateStrategyActive) {
+      return;
+    }
+
+    const revalidateExpandedGroups = () => {
+      if (currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData || !fetchRowChildrenOption) {
+        return;
+      }
+
+      const rowTree = gridRowTreeSelector(apiRef);
+      const visibleRows = gridVisibleRowsSelector(apiRef).rows;
+      const expandedGroupIds = visibleRows.reduce((acc, row) => {
+        const node = rowTree[row.id];
+        if (
+          node.type === 'group' &&
+          node.id !== GRID_ROOT_GROUP_ID &&
+          node.childrenExpanded === true
+        ) {
+          acc.push(row.id);
+        }
+        return acc;
+      }, [] as GridRowId[]);
+
+      if (expandedGroupIds.length > 0) {
+        fetchRowChildrenOption(expandedGroupIds, { showChildrenLoading: false });
+      }
+    };
+
+    const fetchParams = {
+      ...gridGetRowsParamsSelector(apiRef),
+      ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
+    };
+
+    const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
+    const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
+    if (responses.every((response) => response !== undefined)) {
+      revalidateExpandedGroups();
+      return;
+    }
+
+    try {
+      const response = await getRows(fetchParams);
+
+      const currentParams = {
+        ...gridGetRowsParamsSelector(apiRef),
+        ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
+      };
+      if (!isDeepEqual(fetchParams, currentParams)) {
+        return;
+      }
+
+      const cacheResponses = cacheChunkManager.splitResponse(fetchParams, response);
+      cacheResponses.forEach((cacheResponse, key) => cache.set(key, cacheResponse));
+
+      apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+        response,
+        fetchParams,
+        options: {},
+      });
+      revalidateExpandedGroups();
+    } catch {
+      // Ignore background revalidation errors.
+    }
+  });
+
+  const stopPolling = React.useCallback(() => {
+    if (pollingIntervalRef.current !== null) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+  }, []);
+
+  const startPolling = useEventCallback(() => {
+    stopPolling();
+    if (revalidateMs <= 0 || !standardRowsUpdateStrategyActive) {
+      return;
+    }
+    pollingIntervalRef.current = setInterval(revalidate, revalidateMs);
+  });
+
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
@@ -217,8 +310,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         { params: params.fetchParams, response },
         true,
       );
+      startPolling();
     },
-    [apiRef],
+    [apiRef, startPolling],
   );
 
   const dataSourceUpdateRow = props.dataSource?.updateRow;
@@ -276,6 +370,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   };
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
+  const handleFetchRowsOnParamsChange = React.useCallback(() => {
+    stopPolling();
+    debouncedFetchRows();
+  }, [stopPolling, debouncedFetchRows]);
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -291,6 +389,20 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   }, [props.dataSourceCache, options.cacheOptions]);
 
   React.useEffect(() => {
+    if (!standardRowsUpdateStrategyActive) {
+      stopPolling();
+    }
+  }, [standardRowsUpdateStrategyActive, stopPolling]);
+
+  React.useEffect(() => {
+    if (revalidateMs <= 0) {
+      stopPolling();
+    }
+  }, [revalidateMs, stopPolling]);
+
+  React.useEffect(() => stopPolling, [stopPolling]);
+
+  React.useEffect(() => {
     // Return early if the proper strategy isn't set yet
     // Context: https://github.com/mui/mui-x/issues/19650
     if (
@@ -301,6 +413,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       return undefined;
     }
     if (props.dataSource) {
+      stopPolling();
       apiRef.current.setRows([]);
       apiRef.current.dataSource.cache.clear();
       apiRef.current.dataSource.fetchRows();
@@ -310,7 +423,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       // ignore the current request on unmount
       lastRequestId.current += 1;
     };
-  }, [apiRef, props.dataSource, currentStrategy]);
+  }, [apiRef, props.dataSource, currentStrategy, stopPolling]);
 
   return {
     api: { public: dataSourceApi },
@@ -321,13 +434,15 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       processor: handleDataUpdate,
     },
     setStrategyAvailability,
+    startPolling,
+    stopPolling,
     cacheChunkManager,
     cache,
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
-      sortModelChange: runIf(standardRowsUpdateStrategyActive, () => debouncedFetchRows()),
-      filterModelChange: runIf(standardRowsUpdateStrategyActive, () => debouncedFetchRows()),
-      paginationModelChange: runIf(standardRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      sortModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
+      filterModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
+      paginationModelChange: runIf(standardRowsUpdateStrategyActive, handleFetchRowsOnParamsChange),
     },
   };
 };

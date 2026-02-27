@@ -21,10 +21,12 @@ const EventDialogTabContent = styled('div', {
   padding: theme.spacing(3),
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(2.5),
+  gap: theme.spacing(2),
   flex: 1,
   overflow: 'auto',
   scrollbarWidth: 'thin',
+  maxHeight: 450,
+  height: 'fit-content',
 }));
 
 export { EventDialogTabPanel, EventDialogTabContent };
