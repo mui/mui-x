@@ -9,8 +9,8 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["node", "vite/client"]
+    "types": ["../../mui-env.d.ts"]
   },
   "include": ["src/**/*.ts*", "src/compiled/**/*.js*"],
-  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
+  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/postinstall/**"]
 }
