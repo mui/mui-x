@@ -31,7 +31,11 @@ export const applyDefaultViewProps = <TView extends DateOrTimeViewWithMeridiem>(
   } else if (viewsWithDefault.length > 0) {
     openToWithDefault = viewsWithDefault[0];
   } else {
-    throw new Error('MUI X: The `views` prop must contain at least one view.');
+    throw new Error(
+      'MUI X Date Pickers: The `views` prop must contain at least one view. ' +
+        'The date picker needs at least one view to display. ' +
+        'Add a valid view to the views array (e.g., ["year", "month", "day"]).',
+    );
   }
 
   return {

@@ -77,7 +77,11 @@ export const useGridCellEditing = (
     (id: GridRowId, field: string) => {
       const params = apiRef.current.getCellParams(id, field);
       if (!apiRef.current.isCellEditable(params)) {
-        throw new Error(`MUI X: The cell with id=${id} and field=${field} is not editable.`);
+        throw new Error(
+          `MUI X Data Grid: The cell with id=${id} and field=${field} is not editable. ` +
+            'Cell editing requires the cell to be marked as editable. ' +
+            'Check the column definition and ensure editable is set to true, or verify the isCellEditable callback.',
+        );
       }
     },
     [apiRef],
@@ -86,7 +90,11 @@ export const useGridCellEditing = (
   const throwIfNotInMode = React.useCallback(
     (id: GridRowId, field: string, mode: GridCellModes) => {
       if (apiRef.current.getCellMode(id, field) !== mode) {
-        throw new Error(`MUI X: The cell with id=${id} and field=${field} is not in ${mode} mode.`);
+        throw new Error(
+          `MUI X Data Grid: The cell with id=${id} and field=${field} is not in ${mode} mode. ` +
+            'The operation requires the cell to be in a specific editing mode. ' +
+            `Ensure the cell is in ${mode} mode before performing this operation.`,
+        );
       }
     },
     [apiRef],
