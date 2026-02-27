@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router';
-// eslint-disable-next-line import/no-relative-packages
-import { setupTestLicenseKey } from '../utils/testLicense';
+import { LicenseInfo } from '@mui/x-license';
+import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/test-keys';
 import TestViewer from './TestViewer';
 
-setupTestLicenseKey();
+LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
 
 interface Fixture {
   path: string;
