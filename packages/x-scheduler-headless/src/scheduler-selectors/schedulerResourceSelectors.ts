@@ -18,6 +18,31 @@ const resourceParentIdLookupSelector = createSelectorMemoized(
   },
 );
 
+/**
+ * Walks the resource hierarchy (child → parent → …) and returns the first
+ * defined value found by `getValue`, or `fallback` if none is found.
+ */
+export function resolveResourceProperty<T>(
+  state: State,
+  resourceId: string | null | undefined,
+  getValue: (resource: SchedulerResource) => T | undefined,
+  fallback: T,
+): T {
+  const parentLookup = resourceParentIdLookupSelector(state);
+  let currentId = resourceId ?? null;
+  while (currentId != null) {
+    const resource = state.processedResourceLookup.get(currentId);
+    if (resource != null) {
+      const value = getValue(resource);
+      if (value !== undefined) {
+        return value;
+      }
+    }
+    currentId = parentLookup.get(currentId) ?? null;
+  }
+  return fallback;
+}
+
 export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
@@ -133,17 +158,7 @@ export const schedulerResourceSelectors = {
         return state.eventColor;
       }
 
-      const parentLookup = resourceParentIdLookupSelector(state);
-      let currentResourceId: string | null = resourceId;
-      while (currentResourceId != null) {
-        const resource = state.processedResourceLookup.get(currentResourceId);
-        if (resource?.eventColor) {
-          return resource.eventColor;
-        }
-        currentResourceId = parentLookup.get(currentResourceId) ?? null;
-      }
-
-      return state.eventColor;
+      return resolveResourceProperty(state, resourceId, (r) => r.eventColor, state.eventColor);
     },
   ),
 };
