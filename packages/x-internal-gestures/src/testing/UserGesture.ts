@@ -49,7 +49,7 @@ export class UserGesture {
       // @ts-expect-error, we are using a dynamic key
       if (this[plugin.name]) {
         throw new Error(
-          `Plugin with name "${plugin.name}" already exists. Please use a unique name.`,
+          `MUI X: Plugin with name "${plugin.name}" already exists. Please use a unique name.`,
         );
       }
       // @ts-expect-error, we are using a dynamic key
