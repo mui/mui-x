@@ -17,8 +17,8 @@ export default function WeeksView() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="months"
-        views={['months']}
+        defaultView="weeks"
+        views={['weeks']}
       />
     </div>
   );
