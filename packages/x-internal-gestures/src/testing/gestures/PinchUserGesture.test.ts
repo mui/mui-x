@@ -36,7 +36,9 @@ describe('PinchUserGesture', () => {
   it('should throw an error if no target is provided', async () => {
     // @ts-expect-error, testing a missing target
     const pinchGesture = () => pinch(pointerManager, {});
-    await expect(pinchGesture).rejects.toThrow('Target element is required for pinch gesture');
+    await expect(pinchGesture).rejects.toThrow(
+      'MUI X: Target element is required for pinch gesture',
+    );
   });
 
   it('should throw an error if less than 2 pointers are available', async () => {
@@ -47,7 +49,7 @@ describe('PinchUserGesture', () => {
     };
 
     const pinchGesture = () => pinch(pointerManager, options);
-    await expect(pinchGesture).rejects.toThrow('Pinch gesture requires at least 2 pointers');
+    await expect(pinchGesture).rejects.toThrow('MUI X: Pinch gesture requires at least 2 pointers');
   });
 
   it('should not perform any movement when distance is 0', async () => {
