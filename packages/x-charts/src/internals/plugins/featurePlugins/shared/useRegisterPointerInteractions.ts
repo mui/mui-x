@@ -33,7 +33,8 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
       ]
     >();
   const chartsLayerContainerRef = useChartsLayerContainerRef();
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature<SeriesType>]>();
+  const store =
+    useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature<SeriesType>]>();
 
   const interactionActive = React.useRef(false);
   const lastItemRef = React.useRef<SeriesItemIdentifierWithType<SeriesType> | undefined>(undefined);
