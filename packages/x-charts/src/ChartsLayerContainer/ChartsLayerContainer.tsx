@@ -11,7 +11,7 @@ import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/
 import { type UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartContext } from '../context/ChartProvider';
-import { useSvgRef } from '../hooks';
+import { useChartsLayerContainerRef } from '../hooks';
 // eslint-disable-next-line import/no-cycle
 import { ChartsSurface } from '../ChartsSurface';
 
@@ -58,8 +58,8 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
     const { children, ...other } = themeProps;
 
-    const svgRef = useSvgRef();
-    const handleRef = useForkRef(svgRef, ref);
+    const chartsLayerContainerRef = useChartsLayerContainerRef();
+    const handleRef = useForkRef(chartsLayerContainerRef, ref);
 
     if (process.env.NODE_ENV !== 'production') {
       React.Children.forEach(children, (child) => {
