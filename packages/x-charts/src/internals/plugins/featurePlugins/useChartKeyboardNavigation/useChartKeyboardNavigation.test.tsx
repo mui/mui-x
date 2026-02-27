@@ -26,30 +26,27 @@ describe('useChartKeyboardNavigation', () => {
   }
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  it.skipIf(isJSDOM)(
-    'should show focus indicator when navigating with keyboard',
-    async () => {
-      const { container, user } = render(
-        <BarChart
-          height={100}
-          width={100}
-          skipAnimation
-          margin={0}
-          series={[{ id: 'A', data: [50, 100] }]}
-          enableKeyboardNavigation
-        />,
-      );
+  it.skipIf(isJSDOM)('should show focus indicator when navigating with keyboard', async () => {
+    const { container, user } = render(
+      <BarChart
+        height={100}
+        width={100}
+        skipAnimation
+        margin={0}
+        series={[{ id: 'A', data: [50, 100] }]}
+        enableKeyboardNavigation
+      />,
+    );
 
-      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
 
-      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
+    expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
 
-      await user.click(svg);
-      await user.keyboard('[ArrowRight]');
+    await user.click(svg);
+    await user.keyboard('[ArrowRight]');
 
-      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
-    },
-  );
+    expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
+  });
 
   it.skipIf(isJSDOM)('should remove focus indicator on blur', async () => {
     const { container, user } = render(
@@ -84,9 +81,7 @@ describe('useChartKeyboardNavigation', () => {
           width={100}
           skipAnimation
           margin={0}
-          series={[
-            { id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } },
-          ]}
+          series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
           enableKeyboardNavigation
         />,
       );
