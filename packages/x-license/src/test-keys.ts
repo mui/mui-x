@@ -7,18 +7,18 @@
 /**
  * Test Premium license key.
  * orderId: #123, scope: premium, licenseModel: annual, planVersion: Q3-2024
- * quantity: 1, keyVersion: 2, expiryDate: 2099-12-30T23:00:00.000Z
+ * keyVersion: 2, expiryDate: 2099-12-30T23:00:00.000Z
  */
 export const TEST_LICENSE_KEY_PREMIUM =
-  'f208808aea987489c65606c96439d338Tz0xMjMsRT00MTAyMzU0ODAwMDAwLFM9cHJlbWl1bSxMTT1hbm51YWwsUFY9UTMtMjAyNCxRPTEsVD10cnVlLEtWPTI=';
+  '715a2f48d6140e8e6f2484e6c4b981aeTz0xMjMsRT00MTAyMzU0ODAwMDAwLFM9cHJlbWl1bSxMTT1hbm51YWwsUFY9UTMtMjAyNCxUPXRydWUsS1Y9Mg==';
 
 /**
  * Test Pro license key.
  * orderId: #123, scope: pro, licenseModel: annual, planVersion: Q3-2024
- * quantity: 1, keyVersion: 2, expiryDate: 2099-12-30T23:00:00.000Z
+ * keyVersion: 2, expiryDate: 2099-12-30T23:00:00.000Z
  */
 export const TEST_LICENSE_KEY_PRO =
-  'ac8aa961e0d14af4f029bd25d60830cdTz0xMjMsRT00MTAyMzU0ODAwMDAwLFM9cHJvLExNPWFubnVhbCxQVj1RMy0yMDI0LFE9MSxUPXRydWUsS1Y9Mg==';
+  '8d0500f3fe93ffea84445b2aed17c59cTz0xMjMsRT00MTAyMzU0ODAwMDAwLFM9cHJvLExNPWFubnVhbCxQVj1RMy0yMDI0LFQ9dHJ1ZSxLVj0y';
 
 // --- Key format v1 ---
 
