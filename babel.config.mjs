@@ -56,22 +56,18 @@ export default function getBabelConfig(api) {
       ]);
     }
 
-    if (process.env.BABEL_ENV) {
-      baseConfig.plugins.push([
-        'babel-plugin-search-and-replace',
-        {
-          rules: [
-            {
-              search: '__RELEASE_INFO__',
-              replace: generateReleaseInfo(),
-            },
-          ],
-        },
-      ]);
-    }
-  }
+    baseConfig.plugins.push([
+      'babel-plugin-search-and-replace',
+      {
+        rules: [
+          {
+            search: '__RELEASE_INFO__',
+            replace: generateReleaseInfo(),
+          },
+        ],
+      },
+    ]);
 
-  if (process.env.BABEL_ENV || process.env.NODE_ENV === 'test') {
     baseConfig.plugins.push([
       'babel-plugin-transform-replace-expressions',
       {
