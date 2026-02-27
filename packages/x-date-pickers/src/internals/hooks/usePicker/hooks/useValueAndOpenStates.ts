@@ -224,7 +224,9 @@ export function useValueAndOpenStates<
   React.useEffect(() => {
     if (isOpenControlled) {
       if (openProp === undefined) {
-        throw new Error('You must not mix controlling and uncontrolled mode for `open` prop');
+        throw new Error(
+          'MUI X: You must not mix controlling and uncontrolled mode for `open` prop',
+        );
       }
 
       setState((prevState) => ({ ...prevState, open: openProp }));

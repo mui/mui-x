@@ -18,7 +18,8 @@ export const cleanIdentifier = <T extends ChartSeriesType, U extends { type: T }
   const cleaner = seriesConfig[identifier.type]?.identifierCleaner;
   if (!cleaner) {
     throw new Error(
-      `MUI X Charts: No identifier cleaner found for series type "${identifier.type}".`,
+      `MUI X Charts: No identifier cleaner found for series type "${identifier.type}". ` +
+        'This internal error occurs when the series configuration is incomplete.',
     );
   }
   // @ts-expect-error identifierCleaner expects the full object,
