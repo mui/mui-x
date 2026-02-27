@@ -576,9 +576,7 @@ describe('schedulerEventSelectors', () => {
             id: 'parent-resource',
             title: 'Parent Resource',
             eventColor: 'purple',
-            children: [
-              { id: 'child-resource', title: 'Child Resource', eventColor: 'blue' },
-            ],
+            children: [{ id: 'child-resource', title: 'Child Resource', eventColor: 'blue' }],
           },
         ],
         eventColor: 'teal',

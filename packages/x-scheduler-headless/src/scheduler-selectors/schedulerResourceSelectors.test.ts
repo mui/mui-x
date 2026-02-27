@@ -629,10 +629,7 @@ storeClasses.forEach((storeClass) => {
           },
         ];
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.defaultEventColor(
-          state,
-          'grandchild-resource',
-        );
+        const result = schedulerResourceSelectors.defaultEventColor(state, 'grandchild-resource');
         expect(result).to.equal('purple');
       });
 
@@ -653,10 +650,7 @@ storeClasses.forEach((storeClass) => {
           },
         ];
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        const result = schedulerResourceSelectors.defaultEventColor(
-          state,
-          'grandchild-resource',
-        );
+        const result = schedulerResourceSelectors.defaultEventColor(state, 'grandchild-resource');
         expect(result).to.equal('blue');
       });
     });
