@@ -1,7 +1,6 @@
 import { beforeEach, afterEach } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/licenseRelease';
-import { setupTestLicenseKey } from 'test/utils/testLicense';
 import { config } from 'react-transition-group';
 import sinon from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
@@ -9,6 +8,8 @@ import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridP
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import setupVitest from '@mui/internal-test-utils/setupVitest';
 import { configure, isJsdom } from '@mui/internal-test-utils';
+import { LicenseInfo } from '@mui/x-license';
+import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/test-keys';
 
 (globalThis as any).MUI_TEST_ENV = true;
 
@@ -21,7 +22,7 @@ configure({
 
 beforeEach(() => {
   clearWarningsCache();
-  setupTestLicenseKey();
+  LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
   config.disabled = true;
 });
 

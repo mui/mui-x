@@ -4,14 +4,14 @@ import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } fro
 import { Globals } from '@react-spring/web';
 // eslint-disable-next-line import/no-relative-packages
 import '../utils/setupFakeClock';
-// eslint-disable-next-line import/no-relative-packages
-import { setupTestLicenseKey } from '../utils/testLicense';
+import { LicenseInfo } from '@mui/x-license';
+import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/test-keys';
 import TestViewer from './TestViewer';
 import { type Test, testsBySuite } from './testsBySuite';
 
 (globalThis as any).MUI_TEST_ENV = true;
 
-setupTestLicenseKey();
+LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
 
 Globals.assign({
   skipAnimation: true,
