@@ -1,6 +1,6 @@
 import { type BarChartPluginSignatures } from '@mui/x-charts/BarChart';
 import { useBarChartProps } from '@mui/x-charts/internals';
-import { ChartsContainerProps } from '@mui/x-charts/ChartsContainer';
+import { type ChartsContainerProps } from '@mui/x-charts/ChartsContainer';
 import { type BarChartPremiumProps } from './BarChartPremium';
 import { type RangeBarPlotProps } from './RangeBar/RangeBarPlot';
 
