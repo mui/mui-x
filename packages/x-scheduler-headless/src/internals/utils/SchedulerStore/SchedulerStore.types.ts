@@ -237,7 +237,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   ) => void;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
-   * @default false
+   * @default true
    */
   areEventsDraggable?: boolean;
   /**
@@ -246,7 +246,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * If `false`, the events are not resizable.
    * If `"start"`, only the start can be resized.
    * If `"end"`, only the end can be resized.
-   * @default false
+   * @default true
    */
   areEventsResizable?: boolean | SchedulerEventSide;
   /**

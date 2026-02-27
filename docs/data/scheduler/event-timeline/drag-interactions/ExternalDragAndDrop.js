@@ -158,7 +158,6 @@ export default function ExternalDragAndDrop() {
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          areEventsDraggable
           canDragEventsFromTheOutside
           canDropEventsToTheOutside
         />
