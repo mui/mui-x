@@ -45,7 +45,7 @@ export default defineConfig({
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
-    ALLOW_TEST_LICENSES: 'true',
+    __ALLOW_TEST_LICENSES__: 'true',
   },
   esbuild: {
     minifyIdentifiers: false,

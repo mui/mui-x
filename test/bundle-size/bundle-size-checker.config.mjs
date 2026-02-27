@@ -6,7 +6,8 @@
 import path from 'path';
 import { globby } from 'globby';
 import { defineConfig } from '@mui/internal-bundle-size-checker';
-import { generateReleaseInfo } from '@mui/x-internals/generateReleaseInfo';
+// eslint-disable-next-line import/no-relative-packages
+import generateReleaseInfo from '../../packages/x-internals/generateReleaseInfo.js';
 
 const rootDir = path.resolve(import.meta.dirname, '../..');
 

@@ -9,5 +9,5 @@ module.exports = function generateReleaseInfo(releaseDate) {
       today.setHours(0, 0, 0, 0);
       return today;
     })();
-  return Buffer.from(date.getTime().toString()).toString('base64');
+  return btoa(date.getTime().toString());
 };
