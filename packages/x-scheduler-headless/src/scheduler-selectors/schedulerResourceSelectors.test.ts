@@ -633,7 +633,7 @@ storeClasses.forEach((storeClass) => {
         expect(result).to.equal('purple');
       });
 
-      it('should inherit from nearest ancestor with color (skipping intermediate without)', () => {
+      it('should use nearest ancestor eventColor over more distant ancestor', () => {
         const resources = [
           {
             id: 'grandparent-resource',

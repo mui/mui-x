@@ -606,7 +606,7 @@ describe('schedulerEventSelectors', () => {
       expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('purple');
     });
 
-    it('should inherit from nearest ancestor with color (skipping intermediate without)', () => {
+    it('should use nearest ancestor eventColor over more distant ancestor', () => {
       const state = getEventCalendarStateFromParameters({
         events: [EventBuilder.new().id('event-1').resource('grandchild-resource').build()],
         resources: [
