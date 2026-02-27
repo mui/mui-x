@@ -56,24 +56,26 @@ export default function getBabelConfig(api) {
       ]);
     }
 
-    baseConfig.plugins.push([
-      'babel-plugin-search-and-replace',
-      {
-        rules: [
-          {
-            search: '__RELEASE_INFO__',
-            replace: generateReleaseInfo(),
-          },
-        ],
-      },
-    ]);
+    if (process.env.BABEL_ENV) {
+      baseConfig.plugins.push([
+        'babel-plugin-search-and-replace',
+        {
+          rules: [
+            {
+              search: '__RELEASE_INFO__',
+              replace: generateReleaseInfo(),
+            },
+          ],
+        },
+      ]);
 
-    baseConfig.plugins.push([
-      'babel-plugin-transform-replace-expressions',
-      {
-        replace: [['__ALLOW_TEST_LICENSES__', 'false']],
-      },
-    ]);
+      baseConfig.plugins.push([
+        'babel-plugin-transform-replace-expressions',
+        {
+          replace: [['__ALLOW_TEST_LICENSES__', 'false']],
+        },
+      ]);
+    }
   }
 
   baseConfig.plugins.unshift(['@babel/plugin-transform-object-rest-spread', { loose: true }]);

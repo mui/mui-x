@@ -8,6 +8,8 @@ import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
+// eslint-disable-next-line import/no-relative-packages, import/extensions
+import generateReleaseInfo from '../packages/x-internals/generateReleaseInfo.js';
 
 declare global {
   interface MUIEnv {
@@ -154,6 +156,22 @@ export default withDeploymentConfig({
             test: /\.+(js|jsx|mjs|ts|tsx)$/,
             include: [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/],
             use: options.defaultLoaders.babel,
+          },
+          {
+            test: /\.(ts|tsx)$/,
+            loader: 'string-replace-loader',
+            options: {
+              multiple: [
+                {
+                  search: '__RELEASE_INFO__',
+                  replace: generateReleaseInfo(),
+                },
+                {
+                  search: '__ALLOW_TEST_LICENSES__',
+                  replace: 'false',
+                },
+              ],
+            },
           },
         ]),
       },
