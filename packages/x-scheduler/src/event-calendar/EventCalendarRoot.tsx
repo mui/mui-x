@@ -23,14 +23,7 @@ import { MiniCalendar } from './mini-calendar';
 import { schedulerTokens } from '../internals/utils/tokens';
 import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
-export interface EventCalendarRootProps extends Omit<
-  React.HTMLAttributes<HTMLDivElement>,
-  'children'
-> {
-  /**
-   * @ignore
-   */
-  children?: React.ReactNode;
+export interface EventCalendarRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
