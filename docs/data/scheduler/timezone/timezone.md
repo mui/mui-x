@@ -116,7 +116,7 @@ const event = {
   start: '2024-03-01T08:00:00Z', // 09:00 in Paris (UTC+1 in winter)
   end: '2024-03-01T09:00:00Z',
   timezone: 'Europe/Paris',
-  rrule: { freq: 'DAILY' },
+  rrule: 'FREQ=DAILY',
 };
 ```
 
