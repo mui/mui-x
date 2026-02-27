@@ -45,7 +45,9 @@ function ChartsGroupedYAxisTicks(inProps: ChartsYAxisProps) {
 
   if (!isOrdinalScale(yScale)) {
     throw new Error(
-      'MUI X Charts: ChartsGroupedYAxis only supports the `band` and `point` scale types.',
+      'MUI X Charts: ChartsGroupedYAxis only supports the `band` and `point` scale types. ' +
+        'Grouped axis ticks require an ordinal scale to display category groupings. ' +
+        'Use a band or point scale type for the y-axis, or use a non-grouped axis component.',
     );
   }
 

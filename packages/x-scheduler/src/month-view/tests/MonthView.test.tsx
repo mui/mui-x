@@ -8,9 +8,9 @@ import {
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
-import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
-import { EventCalendar, eventCalendarClasses } from '../event-calendar';
-import { EventDialogProvider } from '../internals/components/event-dialog';
+import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
+import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
+import { EventDialogProvider } from '../../internals/components/event-dialog';
 
 describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
