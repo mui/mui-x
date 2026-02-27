@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 {{"demo": "BasicDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Enable event dragging
