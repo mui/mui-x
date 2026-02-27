@@ -1,12 +1,10 @@
 [
   { "name": "AppType", "kind": "TypeAlias" },
-  { "name": "base64Encode", "kind": "Variable" },
   { "name": "KeyVersion", "kind": "TypeAlias" },
   { "name": "LicenseDetails", "kind": "Interface" },
   { "name": "LicenseInfo", "kind": "Class" },
   { "name": "LicenseModel", "kind": "TypeAlias" },
   { "name": "LicenseStatus", "kind": "TypeAlias" },
-  { "name": "md5", "kind": "Function" },
   { "name": "MuiLicenseInfo", "kind": "Interface" },
   { "name": "muiXTelemetrySettings", "kind": "Variable" },
   { "name": "PlanScope", "kind": "TypeAlias" },
