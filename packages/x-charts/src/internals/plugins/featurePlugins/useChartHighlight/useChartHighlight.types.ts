@@ -38,7 +38,7 @@ export interface UseChartHighlightParameters<SeriesType extends ChartSeriesType>
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange?: (highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void;
 }
