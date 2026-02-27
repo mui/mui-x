@@ -71,7 +71,7 @@ Use the `BYDAY` property with plain weekday codes (no ordinal) to define the day
 
 ```ts
 // Every week on Monday
-rrule: 'FREQ=WEEKLY';
+rrule: 'FREQ=WEEKLY;BYDAY=MO';
 
 // Every two weeks on Monday, Wednesday and Friday
 rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR';
