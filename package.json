@@ -69,10 +69,11 @@
     "@babel/traverse": "catalog:",
     "@babel/types": "7.29.0",
     "@emotion/cache": "catalog:",
+    "@eslint/compat": "^2.0.2",
     "@inquirer/prompts": "8.1.0",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.12",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.61",
-    "@mui/internal-code-infra": "0.0.3-canary.94",
+    "@mui/internal-code-infra": "https://pkg.pr.new/@mui/internal-code-infra@96f1bfe",
     "@mui/internal-markdown": "2.0.15",
     "@mui/internal-netlify-cache": "0.0.3-canary.0",
     "@mui/internal-test-utils": "catalog:",
@@ -108,7 +109,7 @@
     "date-fns-v2": "npm:date-fns@2.30.0",
     "es-toolkit": "1.43.0",
     "esbuild": "0.27.3",
-    "eslint": "9.39.2",
+    "eslint": "^10.0.2",
     "eslint-import-resolver-webpack": "0.13.10",
     "eslint-plugin-consistent-default-export-name": "0.0.15",
     "eslint-plugin-jsdoc": "62.5.2",
@@ -142,6 +143,30 @@
     "vitest": "catalog:",
     "yargs": "catalog:",
     "zod": "^4.3.6"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "eslint-plugin-react@*": {
+        "peerDependencies": {
+          "eslint": "^9.0.0 || ^10.0.0"
+        }
+      },
+      "eslint-plugin-import@*": {
+        "peerDependencies": {
+          "eslint": "^9.0.0 || ^10.0.0"
+        }
+      },
+      "eslint-plugin-jsx-a11y@*": {
+        "peerDependencies": {
+          "eslint": "^9.0.0 || ^10.0.0"
+        }
+      },
+      "eslint-plugin-react-hooks@*": {
+        "peerDependencies": {
+          "eslint": "^9.0.0 || ^10.0.0"
+        }
+      }
+    }
   },
   "packageManager": "pnpm@10.30.1",
   "engines": {
