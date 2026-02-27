@@ -170,16 +170,15 @@ function EventRowContent({
   placeholder,
   showCurrentTimeIndicator,
   isFirstRow,
-  currentTimeIndicatorClassName,
 }: {
   resourceId: SchedulerResourceId;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
   showCurrentTimeIndicator: boolean;
   isFirstRow: boolean;
-  currentTimeIndicatorClassName: string | undefined;
 }) {
   const store = useEventTimelinePremiumStoreContext();
+  const { classes } = useEventTimelinePremiumStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -217,10 +216,14 @@ function EventRowContent({
       )}
       {showCurrentTimeIndicator && (
         <EventTimelinePremiumCurrentTimeIndicator
-          className={currentTimeIndicatorClassName}
+          className={classes.currentTimeIndicator}
           aria-hidden
         >
-          {isFirstRow && <EventTimelinePremiumCurrentTimeIndicatorCircle />}
+          {isFirstRow && (
+            <EventTimelinePremiumCurrentTimeIndicatorCircle
+              className={classes.currentTimeIndicatorCircle}
+            />
+          )}
         </EventTimelinePremiumCurrentTimeIndicator>
       )}
     </React.Fragment>
@@ -322,7 +325,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                       placeholder={placeholder}
                       showCurrentTimeIndicator={showCurrentTimeIndicator}
                       isFirstRow={resourceId === firstResourceId}
-                      currentTimeIndicatorClassName={classes.currentTimeIndicator}
                     />
                   )}
                 </EventTimelinePremiumEventsSubGridRow>

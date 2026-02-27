@@ -33,6 +33,8 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   titleCellLegendColor: string;
   /** Styles applied to the current time indicator element. */
   currentTimeIndicator: string;
+  /** Styles applied to the current time indicator circle element. */
+  currentTimeIndicatorCircle: string;
   /** Styles applied to event elements. */
   event: string;
   /** Styles applied to event placeholder elements. */
@@ -113,6 +115,7 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'titleCell',
     'titleCellLegendColor',
     'currentTimeIndicator',
+    'currentTimeIndicatorCircle',
     'event',
     'eventPlaceholder',
     'eventResizeHandler',

@@ -40,6 +40,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     titleCell: ['titleCell'],
     titleCellLegendColor: ['titleCellLegendColor'],
     currentTimeIndicator: ['currentTimeIndicator'],
+    currentTimeIndicatorCircle: ['currentTimeIndicatorCircle'],
     event: ['event'],
     eventPlaceholder: ['eventPlaceholder'],
     eventResizeHandler: ['eventResizeHandler'],
