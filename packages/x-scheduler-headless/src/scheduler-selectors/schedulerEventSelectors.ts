@@ -77,19 +77,13 @@ export const schedulerEventSelectors = {
       return state.eventColor;
     }
 
-    if (event.color) {
-      return event.color;
-    }
-
-    const resourceColor = schedulerResourceSelectors.processedResource(
+    return resolveEventProperty({
       state,
-      event.resource,
-    )?.eventColor;
-    if (resourceColor) {
-      return resourceColor;
-    }
-
-    return state.eventColor;
+      resourceId: event.resource,
+      valueInEvent: event.color,
+      getValueInResource: (r) => r.eventColor,
+      valueInState: state.eventColor,
+    });
   }),
   isPropertyReadOnly: createSelectorMemoized(
     isEventReadOnlySelector,

@@ -508,6 +508,130 @@ describe('schedulerEventSelectors', () => {
     });
   });
 
+  describe('color', () => {
+    it('should return state eventColor when event has no color and no resource', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventColor: 'teal',
+      });
+      expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('teal');
+    });
+
+    it('should return event color when event has a color', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().id('event-1').color('red').build()],
+        eventColor: 'teal',
+      });
+      expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('red');
+    });
+
+    it('should return resource eventColor when event has no color', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
+        resources: [{ id: 'resource-1', title: 'Resource 1', eventColor: 'purple' }],
+        eventColor: 'teal',
+      });
+      expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('purple');
+    });
+
+    it('should use event color over resource eventColor when both are defined', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().id('event-1').resource('resource-1').color('red').build()],
+        resources: [{ id: 'resource-1', title: 'Resource 1', eventColor: 'purple' }],
+        eventColor: 'teal',
+      });
+      expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('red');
+    });
+
+    it('should fall back to state eventColor when resource has no eventColor', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
+        resources: [{ id: 'resource-1', title: 'Resource 1' }],
+        eventColor: 'teal',
+      });
+      expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('teal');
+    });
+
+    it('should inherit eventColor from ancestor resource when child resource does not define it', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
+        resources: [
+          {
+            id: 'parent-resource',
+            title: 'Parent Resource',
+            eventColor: 'purple',
+            children: [{ id: 'child-resource', title: 'Child Resource' }],
+          },
+        ],
+        eventColor: 'teal',
+      });
+      expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('purple');
+    });
+
+    it('should use child resource eventColor over parent resource when both are defined', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
+        resources: [
+          {
+            id: 'parent-resource',
+            title: 'Parent Resource',
+            eventColor: 'purple',
+            children: [
+              { id: 'child-resource', title: 'Child Resource', eventColor: 'blue' },
+            ],
+          },
+        ],
+        eventColor: 'teal',
+      });
+      expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('blue');
+    });
+
+    it('should inherit eventColor from grandparent resource when parent and child do not define it', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().id('event-1').resource('grandchild-resource').build()],
+        resources: [
+          {
+            id: 'grandparent-resource',
+            title: 'Grandparent Resource',
+            eventColor: 'purple',
+            children: [
+              {
+                id: 'parent-resource',
+                title: 'Parent Resource',
+                children: [{ id: 'grandchild-resource', title: 'Grandchild Resource' }],
+              },
+            ],
+          },
+        ],
+        eventColor: 'teal',
+      });
+      expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('purple');
+    });
+
+    it('should inherit from nearest ancestor with color (skipping intermediate without)', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().id('event-1').resource('grandchild-resource').build()],
+        resources: [
+          {
+            id: 'grandparent-resource',
+            title: 'Grandparent Resource',
+            eventColor: 'purple',
+            children: [
+              {
+                id: 'parent-resource',
+                title: 'Parent Resource',
+                eventColor: 'blue',
+                children: [{ id: 'grandchild-resource', title: 'Grandchild Resource' }],
+              },
+            ],
+          },
+        ],
+        eventColor: 'teal',
+      });
+      expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('blue');
+    });
+  });
+
   describe('isReadOnly', () => {
     it('should return false by default', () => {
       const state = getEventCalendarStateFromParameters({

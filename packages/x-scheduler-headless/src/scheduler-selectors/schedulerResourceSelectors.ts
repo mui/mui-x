@@ -124,6 +124,8 @@ export const schedulerResourceSelectors = {
   ),
   /**
    * Gets the default event color used when no color is specified on the event.
+   * Walks the resource hierarchy (child → parent → …) until a color is found,
+   * falling back to the component-level default.
    */
   defaultEventColor: createSelector(
     (state: State, resourceId: SchedulerResourceId | null | undefined) => {
@@ -131,7 +133,17 @@ export const schedulerResourceSelectors = {
         return state.eventColor;
       }
 
-      return state.processedResourceLookup.get(resourceId)?.eventColor ?? state.eventColor;
+      const parentLookup = resourceParentIdLookupSelector(state);
+      let currentResourceId: string | null = resourceId;
+      while (currentResourceId != null) {
+        const resource = state.processedResourceLookup.get(currentResourceId);
+        if (resource?.eventColor) {
+          return resource.eventColor;
+        }
+        currentResourceId = parentLookup.get(currentResourceId) ?? null;
+      }
+
+      return state.eventColor;
     },
   ),
 };
