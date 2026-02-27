@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
-import { useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
@@ -23,6 +23,36 @@ import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
+const EventDialogRoot = styled(Dialog, {
+  name: 'MuiEventDialog',
+  slot: 'Root',
+})({
+  '& .MuiBackdrop-root': {
+    backgroundColor: 'transparent',
+  },
+  '& .MuiDialog-container': {
+    width: '100%',
+    justifyContent: 'unset',
+    alignItems: 'unset',
+  },
+  '& .MuiDialog-paper': {
+    margin: 0,
+  },
+});
+
+const EventDialogPaper = styled(Paper, {
+  name: 'MuiEventDialog',
+  slot: 'Paper',
+})(({ theme }) => ({
+  borderWidth: 0,
+  borderTopWidth: 1,
+  height: 'fit-content',
+  overflow: 'hidden',
+  '&[data-dragging]': {
+    outline: `1px solid ${theme.palette.primary.light}`,
+  },
+}));
+
 interface PaperComponentProps extends PaperProps {
   anchorRef: React.RefObject<HTMLElement>;
   dragHandlerRef: React.RefObject<HTMLElement | null>;
@@ -41,7 +71,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     [nodeRef],
   );
 
-  const { anchorRef, dragHandlerRef, ...other } = props;
+  const { anchorRef, dragHandlerRef, className, ...other } = props;
   const resetDrag = useDraggableDialog(nodeRef, dragHandlerRef, mutateStyle);
 
   const updatePosition = React.useCallback(
@@ -75,21 +105,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     };
   }, [updatePosition, resetDrag]);
 
-  return (
-    <Paper
-      {...other}
-      ref={nodeRef}
-      sx={(theme) => ({
-        borderWidth: 0,
-        borderTopWidth: 1,
-        height: 'fit-content',
-        m: 0,
-        '&[data-dragging]': {
-          outline: `1px solid ${theme.palette.primary.light}`,
-        },
-      })}
-    />
-  );
+  return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
 } as any as DialogProps['PaperComponent'];
 
 const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
@@ -117,7 +133,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const dragHandlerRef = React.useRef<HTMLElement>(null);
 
   return (
-    <Dialog
+    <EventDialogRoot
       ref={forwardedRef}
       open={open}
       onClose={onClose}
@@ -126,15 +142,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       aria-modal="false"
       className={classes.eventDialog}
       slotProps={{
-        backdrop: {
-          sx: {
-            backgroundColor: 'transparent',
-          },
-        },
-        container: {
-          sx: { width: '100%', justifyContent: 'unset', alignItems: 'unset' },
-        },
-        paper: { sx: { m: 0 }, anchorRef, dragHandlerRef } as PaperProps,
+        paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,
       }}
       {...other}
     >
@@ -147,7 +155,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       ) : (
         <FormContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
       )}
-    </Dialog>
+    </EventDialogRoot>
   );
 });
 
@@ -155,6 +163,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, ...other } = props;
   const store = useSchedulerStoreContext();
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   return (
     <EventDialog.Provider
@@ -172,7 +181,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
       }}
     >
       {children}
-      {isScopeDialogOpen && <RecurringScopeDialog />}
+      {showRecurrence && isScopeDialogOpen && <RecurringScopeDialog />}
     </EventDialog.Provider>
   );
 }

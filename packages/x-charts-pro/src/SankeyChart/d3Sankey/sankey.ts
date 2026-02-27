@@ -73,7 +73,7 @@ function defaultLinks<WithPosition extends boolean>(graph: SankeyGraph<WithPosit
 function find(nodeById: Map<any, SankeyNodeMinimal<{}, {}>>, id: string | number) {
   const node = nodeById.get(id);
   if (!node) {
-    throw new Error('missing: ' + id);
+    throw new Error(`MUI X Charts: Sankey node with id='${id}' is missing.`);
   }
   return node;
 }
@@ -297,7 +297,7 @@ export function sankey<
           next.add(target);
         }
       }
-      if (++x > n) throw new Error('circular link');
+      if (++x > n) throw /* minify-error-disabled */ new Error('circular link');
       current = next;
       next = new Set();
     }
@@ -315,7 +315,7 @@ export function sankey<
           next.add(source);
         }
       }
-      if (++x > n) throw new Error('circular link');
+      if (++x > n) throw /* minify-error-disabled */ new Error('circular link');
       current = next;
       next = new Set();
     }

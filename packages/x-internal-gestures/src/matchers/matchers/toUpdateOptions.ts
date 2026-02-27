@@ -46,7 +46,7 @@ export const toUpdateOptions: SyncMatcherFn = function toUpdateOptions(
 ) {
   // Check if the matcher is being used with .not and throw an error since it's not supported
   if (this.isNot) {
-    throw new Error(messages.negationError('toUpdateOptions'));
+    throw /* minify-error-disabled */ new Error(messages.negationError('toUpdateOptions'));
   }
   // Validate inputs
   if (!received) {

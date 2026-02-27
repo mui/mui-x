@@ -155,7 +155,7 @@ export interface LineChartProps
  */
 const LineChart = React.forwardRef(function LineChart(
   inProps: LineChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChart' });
   const {
@@ -174,17 +174,15 @@ const LineChart = React.forwardRef(function LineChart(
     legendProps,
     children,
   } = useLineChartProps(props);
-  const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps(
-    chartContainerProps,
-    ref,
-  );
+  const { chartDataProviderProps, chartsSurfaceProps } =
+    useChartContainerProps(chartContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
 
   return (
     <ChartDataProvider<'line', LineChartPluginSignatures> {...chartDataProviderProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -304,8 +302,8 @@ LineChart.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['line']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['line']),
     }),
   ),
   /**
@@ -359,8 +357,8 @@ LineChart.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['line']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['line']),
     }),
   ),
   /**
@@ -488,7 +486,7 @@ LineChart.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['line']).isRequired,
+    type: PropTypes.oneOf(['line']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

@@ -30,11 +30,12 @@ import {
 } from '../../models/events';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
-import { schedulerEventSelectors } from '../../../scheduler-selectors';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
+  getSchedulerPlan,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
@@ -92,6 +93,7 @@ export class SchedulerStore<
         ? MOCK_EVENT_STATE
         : buildEventsState(parameters, adapter, stateFromParameters.displayTimezone)),
       ...buildResourcesState(parameters),
+      plan: getSchedulerPlan(instanceName),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
@@ -384,7 +386,11 @@ export class SchedulerStore<
    * Creates a new event in the calendar.
    */
   public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {
-    return this.updateEvents({ created: [calendarEvent] }).created[0];
+    const eventToCreate =
+      !schedulerOtherSelectors.areRecurringEventsAvailable(this.state) && calendarEvent.rrule
+        ? { ...calendarEvent, rrule: undefined }
+        : calendarEvent;
+    return this.updateEvents({ created: [eventToCreate] }).created[0];
   };
 
   /**
@@ -392,8 +398,15 @@ export class SchedulerStore<
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
-    if (original.dataTimezone.rrule) {
-      throw new Error('MUI: this event is recurring. Use updateRecurringEvent(...) instead.');
+    if (
+      schedulerOtherSelectors.areRecurringEventsAvailable(this.state) &&
+      original.dataTimezone.rrule
+    ) {
+      throw new Error(
+        'MUI X Scheduler: This event is recurring and cannot be updated with updateEvent(). ' +
+          'Recurring events require special handling to manage series and exceptions. ' +
+          'Use updateRecurringEvent() instead to update recurring events.',
+      );
     }
 
     this.updateEvents({
@@ -405,6 +418,15 @@ export class SchedulerStore<
    * Updates a recurring event in the calendar.
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
+    if (!schedulerOtherSelectors.areRecurringEventsAvailable(this.state)) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X: Recurring event updates are a premium feature.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
+      return;
+    }
     this.set('pendingUpdateRecurringEventParameters', params);
   };
 
@@ -413,6 +435,9 @@ export class SchedulerStore<
    * @param scope The selected update scope, or null if canceled.
    */
   public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
+    if (!schedulerOtherSelectors.areRecurringEventsAvailable(this.state)) {
+      return;
+    }
     const { pendingUpdateRecurringEventParameters, adapter } = this.state;
     if (pendingUpdateRecurringEventParameters == null) {
       return;
@@ -426,7 +451,11 @@ export class SchedulerStore<
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
     const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
     if (!original.dataTimezone.rrule) {
-      throw new Error('MUI: the original event is not recurring. Use updateEvent(...) instead.');
+      throw new Error(
+        'MUI X Scheduler: The original event is not recurring and cannot be updated with updateRecurringEvent(). ' +
+          'This method is designed for recurring events with recurrence rules. ' +
+          'Use updateEvent() instead to update non-recurring events.',
+      );
     }
 
     // IMPORTANT:

@@ -32,18 +32,20 @@ export class MockGesture extends Gesture<string> {
 describe('Gesture', () => {
   it('should throw an error when creating a gesture without options', () => {
     // @ts-expect-error, we are testing invalid usage
-    expect(() => new MockGesture()).toThrowError('Gesture must be initialized with a valid name.');
+    expect(() => new MockGesture()).toThrowError(
+      'MUI X: Gesture must be initialized with a valid name.',
+    );
   });
 
   it('should throw an error when creating a gesture with an invalid name', () => {
     expect(() => new MockGesture({ name: '' })).toThrowError(
-      'Gesture must be initialized with a valid name.',
+      'MUI X: Gesture must be initialized with a valid name.',
     );
   });
 
   it('should throw an error when creating a gesture with the same name as a native event', () => {
     expect(() => new MockGesture({ name: 'wheel' })).toThrowError(
-      `Gesture can't be created with a native event name. Tried to use "wheel". Please use a custom name instead.`,
+      `MUI X: Gesture can't be created with a native event name. Tried to use "wheel". Please use a custom name instead.`,
     );
   });
 });

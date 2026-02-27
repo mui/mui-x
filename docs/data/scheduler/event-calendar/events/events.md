@@ -43,21 +43,6 @@ const event = {
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Recurring events
-
-Use the `rrule` property to define an events recurring rule:
-
-```ts
-const event = {
-  // ...other properties
-  rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
-};
-```
-
-:::success
-Learn more about _recurring events_ in the [dedicated doc page](/x/react-scheduler/recurring-events/).
-:::
-
 ### Timezone
 
 Use the `timezone` property to define in which timezone an event's dates are defined:
@@ -157,6 +142,36 @@ const event = {
 Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-calendar/drag-interactions/).
 :::
 
+### Read-only
+
+Use the `readOnly` property to prevent an event from being modified:
+
+```ts
+const event = {
+  // ...other properties
+  readOnly: true,
+};
+```
+
+:::success
+Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-calendar/editing/#read-only).
+:::
+
+### Recurring events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+Use the `rrule` property to define an events recurring rule:
+
+```ts
+const event = {
+  // ...other properties
+  rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
+};
+```
+
+:::success
+Learn more about _recurring events_ in the [dedicated doc page](/x/react-scheduler/recurring-events/).
+:::
+
 ## Store data in custom properties
 
 Use the `eventModelStructure` prop to define how to read and write properties of the event model when they don't match the model expected by the components:
@@ -182,35 +197,3 @@ function Calendar() {
 ```
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Event creation
-
-Use the `eventCreation` prop to customize how newly created events are defined:
-
-### Disable event creation
-
-Pass `eventCreation={false}` to disable the event creation:
-
-```tsx
-<EventCalendar eventCreation={false} />
-```
-
-### Custom default duration
-
-Pass a custom value to `eventCreation.duration` to change the default duration of newly created event:
-
-```tsx
-<EventCalendar eventCreation={{ duration: 60 }} />
-```
-
-{{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Create event on click
-
-Set `eventCreation.interaction` to `"click"` to open the creation form when clicking a cell instead of double-clicking:
-
-```tsx
-<EventCalendar eventCreation={{ interaction: 'click' }} />
-```
-
-{{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}

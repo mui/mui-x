@@ -10,11 +10,10 @@ export function useGridApiContext<Api extends GridApiCommon = GridApiCommunity>(
 
   if (apiRef === undefined) {
     throw new Error(
-      [
-        'MUI X: Could not find the Data Grid context.',
-        'It looks like you rendered your component outside of a DataGrid, DataGridPro or DataGridPremium parent component.',
+      'MUI X Data Grid: Could not find the Data Grid context. ' +
+        'This happens when a component is rendered outside of a DataGrid, DataGridPro, or DataGridPremium parent component. ' +
+        'Ensure your component is a child of a Data Grid component. ' +
         'This can also happen if you are bundling multiple versions of the Data Grid.',
-      ].join('\n'),
     );
   }
 

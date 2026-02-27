@@ -9,12 +9,12 @@ export default function LineChartConnectNulls() {
     <Stack sx={{ width: '100%', height: 400 }}>
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point', height: 28 }]}
-        series={[{ data }]}
+        series={[{ data, showMark: true }]}
         margin={margin}
       />
       <LineChart
         xAxis={[{ data: xData, scaleType: 'point', height: 28 }]}
-        series={[{ data, connectNulls: true }]}
+        series={[{ data, connectNulls: true, showMark: true }]}
         margin={margin}
       />
     </Stack>

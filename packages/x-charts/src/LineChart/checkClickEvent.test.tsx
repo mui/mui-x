@@ -76,13 +76,13 @@ describe('LineChart - click event', () => {
   });
 
   describe('onMarkClick', () => {
-    it('should add cursor="pointer" to bar elements', () => {
+    it('should add cursor="pointer" to mark elements', () => {
       render(
         <LineChart
           {...config}
           series={[
-            { dataKey: 'v1', id: 's1' },
-            { dataKey: 'v2', id: 's2' },
+            { dataKey: 'v1', id: 's1', showMark: true },
+            { dataKey: 'v2', id: 's2', showMark: true },
           ]}
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
           onMarkClick={() => {}}
@@ -115,8 +115,8 @@ describe('LineChart - click event', () => {
           <LineChart
             {...config}
             series={[
-              { dataKey: 'v1', id: 's1' },
-              { dataKey: 'v2', id: 's2' },
+              { dataKey: 'v1', id: 's1', showMark: true },
+              { dataKey: 'v2', id: 's2', showMark: true },
             ]}
             xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
             onMarkClick={onMarkClick}

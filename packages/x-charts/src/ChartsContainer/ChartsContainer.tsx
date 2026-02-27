@@ -49,19 +49,21 @@ export type ChartsContainerProps<
 const ChartsContainer = React.forwardRef(function ChartsContainer<
   TSeries extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+>(props: ChartsContainerProps<TSeries, TSignatures>, ref: React.Ref<HTMLDivElement>) {
   const { chartDataProviderProps, children, chartsSurfaceProps } = useChartsContainerProps<
     TSeries,
     TSignatures
-  >(props, ref);
+  >(props);
 
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+      <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        {children}
+      </ChartsSurface>
     </ChartDataProvider>
   );
 }) as <TSeries extends ChartSeriesType>(
-  props: ChartsContainerProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
+  props: ChartsContainerProps<TSeries> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.JSX.Element;
 
 // @ts-ignore
@@ -142,9 +144,9 @@ ChartsContainer.propTypes = {
    */
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.object.isRequired,
+      dataIndex: PropTypes.any,
+      seriesId: PropTypes.object.isRequired,
+      type: PropTypes.object,
     }),
   ),
   /**
@@ -193,9 +195,9 @@ ChartsContainer.propTypes = {
    */
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.object.isRequired,
+      dataIndex: PropTypes.any,
+      seriesId: PropTypes.object.isRequired,
+      type: PropTypes.object,
     }),
   ),
   /**
@@ -1041,7 +1043,7 @@ ChartsContainer.propTypes = {
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
   }),
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
