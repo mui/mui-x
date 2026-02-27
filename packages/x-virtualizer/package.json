@@ -55,5 +55,8 @@
     ".": "./src/index.ts",
     "./useVirtualizer": "./src/useVirtualizer.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

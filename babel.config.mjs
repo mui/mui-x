@@ -1,6 +1,14 @@
 import getBaseConfig from '@mui/internal-code-infra/babel-config';
 // Direct path: babel runs during x-internals build, before the package exists.
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import generateReleaseInfo from './packages/x-internals/generateReleaseInfo.js';
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+const errorCodesPath = path.resolve(dirname, './docs/public/static/error-codes.json');
 
 /**
  * @typedef {import('@babel/core')} babel
@@ -9,6 +17,15 @@ import generateReleaseInfo from './packages/x-internals/generateReleaseInfo.js';
 /** @type {babel.ConfigFunction} */
 export default function getBabelConfig(api) {
   const baseConfig = getBaseConfig(api);
+
+  baseConfig.plugins.push([
+    '@mui/internal-babel-plugin-minify-errors',
+    {
+      detection: 'opt-out',
+      errorCodesPath,
+      outExtension: process.env.MUI_OUT_FILE_EXTENSION ?? undefined,
+    },
+  ]);
 
   const removePropTypesPlugin = baseConfig.plugins.find(
     (p) => p[2] === 'babel-plugin-transform-react-remove-prop-types',

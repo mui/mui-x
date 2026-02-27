@@ -66,5 +66,8 @@
     ".": "./src/index.ts",
     "./services/static-data": "./src/services/static-data.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

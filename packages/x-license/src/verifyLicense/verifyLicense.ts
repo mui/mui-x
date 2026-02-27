@@ -192,7 +192,11 @@ export function verifyLicense({
   packageName: MuiCommercialPackageName;
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
-    throw new Error('MUI X: The release information is missing. Not able to validate license.');
+    throw new Error(
+      'MUI X: The release information is missing and license validation cannot proceed. ' +
+        'This is an internal error that should not occur in normal usage. ' +
+        'Please report this issue if you encounter it.',
+    );
   }
 
   if (!licenseKey) {
@@ -237,7 +241,11 @@ export function verifyLicense({
   if (license.licenseModel === 'perpetual' || process.env.NODE_ENV === 'production') {
     const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
     if (Number.isNaN(pkgTimestamp)) {
-      throw new Error('MUI X: The release information is invalid. Not able to validate license.');
+      throw new Error(
+        'MUI X: The release information is invalid and license validation cannot proceed. ' +
+          'The package release timestamp could not be parsed. ' +
+          'This may indicate a corrupted package. Try reinstalling the MUI X packages.',
+      );
     }
 
     if (license.expiryTimestamp < pkgTimestamp) {
