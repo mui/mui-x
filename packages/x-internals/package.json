@@ -56,5 +56,8 @@
   },
   "exports": {
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "./src/formatErrorMessage/index.ts"
   }
 }
