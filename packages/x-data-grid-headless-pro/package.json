@@ -60,5 +60,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

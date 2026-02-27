@@ -80,5 +80,8 @@
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts",
     "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }
