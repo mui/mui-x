@@ -402,7 +402,11 @@ export class SchedulerStore<
       schedulerOtherSelectors.areRecurringEventsAvailable(this.state) &&
       original.dataTimezone.rrule
     ) {
-      throw new Error('MUI: this event is recurring. Use updateRecurringEvent(...) instead.');
+      throw new Error(
+        'MUI X Scheduler: This event is recurring and cannot be updated with updateEvent(). ' +
+          'Recurring events require special handling to manage series and exceptions. ' +
+          'Use updateRecurringEvent() instead to update recurring events.',
+      );
     }
 
     this.updateEvents({
@@ -447,7 +451,11 @@ export class SchedulerStore<
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
     const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
     if (!original.dataTimezone.rrule) {
-      throw new Error('MUI: the original event is not recurring. Use updateEvent(...) instead.');
+      throw new Error(
+        'MUI X Scheduler: The original event is not recurring and cannot be updated with updateRecurringEvent(). ' +
+          'This method is designed for recurring events with recurrence rules. ' +
+          'Use updateEvent() instead to update non-recurring events.',
+      );
     }
 
     // IMPORTANT:
