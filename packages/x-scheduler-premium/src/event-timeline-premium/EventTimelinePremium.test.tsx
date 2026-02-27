@@ -1,5 +1,6 @@
 import { screen } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   adapter,
   createSchedulerRenderer,
@@ -9,6 +10,7 @@ import {
 } from 'test/utils/scheduler';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-headless/models';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
+import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 
 const baseResources: SchedulerResource[] = [
   { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
@@ -37,14 +39,17 @@ describe('<EventTimelinePremium />', () => {
     events?: SchedulerEvent[];
     view?: EventTimelinePremiumView;
     views?: EventTimelinePremiumView[];
+    visibleDate?: TemporalSupportedObject;
+    showCurrentTimeIndicator?: boolean;
   }) {
     return render(
       <EventTimelinePremium
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        visibleDate={options?.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
         view={options?.view ?? 'days'}
         views={options?.views ?? ['time', 'days', 'weeks', 'months', 'years']}
+        showCurrentTimeIndicator={options?.showCurrentTimeIndicator}
       />,
     );
   }
@@ -221,6 +226,36 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition2).to.be.greaterThanOrEqual(200); // 2026
       expect(eventPosition2).to.be.lessThanOrEqual(400); // 2026
+    });
+  });
+
+  describe('current time indicator', () => {
+    it('should render the indicator when today is in view', () => {
+      renderTimeline();
+
+      const indicators = document.querySelectorAll(
+        `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
+      );
+      expect(indicators.length).to.be.greaterThan(0);
+    });
+
+    it('should not render the indicator when today is not in view', () => {
+      const visibleDate = adapter.date('2030-01-01T00:00:00Z', 'default');
+      renderTimeline({ visibleDate });
+
+      const indicators = document.querySelectorAll(
+        `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
+      );
+      expect(indicators.length).to.equal(0);
+    });
+
+    it('should not render the indicator when showCurrentTimeIndicator is false', () => {
+      renderTimeline({ showCurrentTimeIndicator: false });
+
+      const indicators = document.querySelectorAll(
+        `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
+      );
+      expect(indicators.length).to.equal(0);
     });
   });
 
