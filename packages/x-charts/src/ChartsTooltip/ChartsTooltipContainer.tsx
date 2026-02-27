@@ -19,6 +19,7 @@ import {
 import {
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
+  type UseChartTooltipSignature,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
@@ -153,12 +154,14 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     ...other
   } = props;
 
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartInteractionSignature]>();
+  const store =
+    useStore<
+      [UseChartCartesianAxisSignature, UseChartInteractionSignature, UseChartTooltipSignature]
+    >();
 
   if (process.env.NODE_ENV !== 'production') {
-    const state = store.state as Record<string, any>;
-    const isItemControlled = state.tooltip?.itemIsControlled ?? false;
-    const isAxisControlled = state.controlledCartesianAxisTooltip !== undefined;
+    const isItemControlled = store.state.tooltip?.itemIsControlled ?? false;
+    const isAxisControlled = store.state.controlledCartesianAxisTooltip !== undefined;
 
     if (trigger !== 'item' && isItemControlled) {
       warnOnce(

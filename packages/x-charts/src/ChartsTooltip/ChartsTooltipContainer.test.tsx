@@ -49,7 +49,7 @@ describe('ChartsTooltipContainer', () => {
       expect(() =>
         render(
           <BarChart
-            series={[{ data: [1, 2, 3] }]}
+            series={[{ data: [1, 2, 3], id: 'A' }]}
             xAxis={[{ id: 'x-axis', data: ['a', 'b', 'c'], position: 'none' }]}
             yAxis={[{ position: 'none' }]}
             height={100}
@@ -91,7 +91,7 @@ describe('ChartsTooltipContainer', () => {
       expect(() =>
         render(
           <BarChart
-            series={[{ data: [1, 2, 3] }]}
+            series={[{ data: [1, 2, 3], id: 'A' }]}
             xAxis={[{ id: 'x-axis', data: ['a', 'b', 'c'], position: 'none' }]}
             yAxis={[{ position: 'none' }]}
             height={100}
