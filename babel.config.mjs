@@ -1,5 +1,6 @@
 import getBaseConfig from '@mui/internal-code-infra/babel-config';
-import generateReleaseInfo from './packages/x-license/generateReleaseInfo.js';
+// Direct path: babel runs during x-internals build, before the package exists.
+import generateReleaseInfo from './packages/x-internals/generateReleaseInfo.js';
 
 /**
  * @typedef {import('@babel/core')} babel
@@ -57,9 +58,7 @@ export default function getBabelConfig(api) {
     baseConfig.plugins.push([
       'babel-plugin-transform-replace-expressions',
       {
-        replace: [
-          ['ALLOW_TEST_LICENSES', process.env.NODE_ENV === 'test' ? 'true' : 'false'],
-        ],
+        replace: [['ALLOW_TEST_LICENSES', process.env.NODE_ENV === 'test' ? 'true' : 'false']],
       },
     ]);
   }

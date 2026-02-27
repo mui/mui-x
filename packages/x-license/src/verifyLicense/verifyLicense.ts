@@ -1,4 +1,4 @@
-import { base64Decode, base64Encode } from '../encoding/base64';
+import { base64Decode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import { PlanScope, PLAN_SCOPES, PlanVersion } from '../utils/licensePlan';
@@ -7,16 +7,7 @@ import { LicenseModel, LICENSE_MODELS } from '../utils/licenseModel';
 import type { NullableLicenseDetails } from '../utils/licenseDetails';
 import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
-const getDefaultReleaseDate = () => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  return today;
-};
-
-export function generateReleaseInfo(releaseDate = getDefaultReleaseDate()) {
-  return base64Encode(releaseDate.getTime().toString());
-}
+export { generateReleaseInfo } from '@mui/x-internals/generateReleaseInfo';
 
 function isPlanScopeSufficient(packageName: MuiCommercialPackageName, planScope: PlanScope) {
   let acceptedScopes: PlanScope[];

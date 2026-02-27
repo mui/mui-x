@@ -2,6 +2,7 @@ import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
 import * as fs from 'fs/promises';
+import { generateReleaseInfo } from '@mui/x-internals/generateReleaseInfo';
 import { alias } from '../../vitest.shared.mts';
 
 export default defineConfig({
@@ -57,6 +58,7 @@ export default defineConfig({
           code
             .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
             .replaceAll('ALLOW_TEST_LICENSES', 'true')
+            .replaceAll('__RELEASE_INFO__', generateReleaseInfo())
             // Always disable animations in tests
             .replaceAll('disableAnimations ? 1 : 0', '1')
         );
