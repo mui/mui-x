@@ -54,31 +54,6 @@ function writeConfigFile(configPath: string, data: ConfigData): void {
   fs.writeFileSync(configPath, JSON.stringify(data, null, '\t'));
 }
 
-function getNestedValue(data: ConfigData, dotPath: string): string | undefined {
-  const keys = dotPath.split('.');
-  let current: unknown = data;
-  for (const key of keys) {
-    if (current == null || typeof current !== 'object') {
-      return undefined;
-    }
-    current = (current as ConfigData)[key];
-  }
-  return typeof current === 'string' ? current : undefined;
-}
-
-function setNestedValue(data: ConfigData, dotPath: string, value: string): void {
-  const keys = dotPath.split('.');
-  let current: ConfigData = data;
-  for (let i = 0; i < keys.length - 1; i += 1) {
-    const key = keys[i];
-    if (current[key] == null || typeof current[key] !== 'object') {
-      current[key] = {};
-    }
-    current = current[key] as ConfigData;
-  }
-  current[keys[keys.length - 1]] = value;
-}
-
 export class TelemetryStorage {
   private readonly configPath: string | null;
 
@@ -111,10 +86,10 @@ export class TelemetryStorage {
     // We will re-inform users about the telemetry if significant changes are
     // ever made.
     const data = readConfigFile(this.configPath);
-    if (getNestedValue(data, TELEMETRY_KEY_NOTIFY_DATE)) {
+    if (data[TELEMETRY_KEY_NOTIFY_DATE]) {
       return;
     }
-    setNestedValue(data, TELEMETRY_KEY_NOTIFY_DATE, Date.now().toString());
+    data[TELEMETRY_KEY_NOTIFY_DATE] = Date.now().toString();
     writeConfigFile(this.configPath, data);
 
     notifyAboutMuiXTelemetry();
@@ -123,13 +98,13 @@ export class TelemetryStorage {
   get anonymousId(): string {
     if (this.configPath) {
       const data = readConfigFile(this.configPath);
-      const existing = getNestedValue(data, TELEMETRY_KEY_ID);
-      if (existing) {
+      const existing = data[TELEMETRY_KEY_ID];
+      if (typeof existing === 'string') {
         return existing;
       }
 
       const generated = randomBytes(32).toString('hex');
-      setNestedValue(data, TELEMETRY_KEY_ID, generated);
+      data[TELEMETRY_KEY_ID] = generated;
       writeConfigFile(this.configPath, data);
       return generated;
     }
