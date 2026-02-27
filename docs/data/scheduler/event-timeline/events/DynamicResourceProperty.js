@@ -158,6 +158,7 @@ export default function DynamicResourceProperty() {
           resources={resourceProperty === 'room' ? rooms : classes}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
+          defaultView="months"
         />
       </div>
     </Stack>
