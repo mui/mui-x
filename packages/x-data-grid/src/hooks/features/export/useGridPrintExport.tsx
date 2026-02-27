@@ -278,7 +278,11 @@ export const useGridPrintExport = (
       logger.debug(`Export data as Print`);
 
       if (!apiRef.current.rootElementRef!.current) {
-        throw new Error('MUI X: No grid root element available.');
+        throw new Error(
+          'MUI X Data Grid: No grid root element available for print export. ' +
+            'The grid must be mounted before exporting. ' +
+            'Ensure the DataGrid component is rendered and visible before calling exportDataAsPrint.',
+        );
       }
 
       previousGridState.current = apiRef.current.exportState();
