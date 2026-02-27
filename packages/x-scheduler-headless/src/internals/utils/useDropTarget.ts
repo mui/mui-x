@@ -46,7 +46,6 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     if (!ref.current) {
       return undefined;
     }
-
     const getDataFromInside: useDropTarget.GetDataFromInside = (data, newStart, newEnd) => {
       const type =
         data.source === 'CalendarGridDayEventResizeHandler' ||
@@ -213,12 +212,6 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   const { eventId, start, end, originalOccurrence } = placeholder;
 
   const adapter = store.state.adapter;
-  if (
-    adapter.isEqual(originalOccurrence.displayTimezone.start.value, start) &&
-    adapter.isEqual(originalOccurrence.displayTimezone.end.value, end)
-  ) {
-    return;
-  }
 
   const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
 
@@ -228,8 +221,24 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
     changes.resource = placeholder.resourceId;
   }
 
-  if (addPropertiesToDroppedEvent) {
-    Object.assign(changes, addPropertiesToDroppedEvent());
+  const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};
+  Object.assign(changes, additionalChanges);
+
+  const hasChanged = Object.entries(changes).some(([key, value]) => {
+    if (key === 'id') {
+      return false;
+    }
+    if (key === 'start' || key === 'end') {
+      return !adapter.isEqual(
+        originalOccurrence.displayTimezone[key].value,
+        value as TemporalSupportedObject,
+      );
+    }
+    return originalOccurrence[key as keyof typeof originalOccurrence] !== value;
+  });
+
+  if (!hasChanged) {
+    return;
   }
 
   if (originalOccurrence.displayTimezone.rrule) {
