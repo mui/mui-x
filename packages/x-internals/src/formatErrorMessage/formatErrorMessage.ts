@@ -8,7 +8,8 @@
  *   ...
  */
 export function formatErrorMessage(code: number, ...args: string[]): string {
-  const url = new URL('https://mui.com/x/production-error');
+  // @TODO: Update the URL to the correct one when switching to stable release.
+  const url = new URL('https://next.mui.com/x/production-error');
   url.searchParams.set('code', code.toString());
   args.forEach((arg) => url.searchParams.append('args[]', arg));
   return `MUI X error #${code}; visit ${url} for the full message.`;
