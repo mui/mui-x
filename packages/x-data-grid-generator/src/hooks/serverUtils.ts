@@ -99,8 +99,10 @@ interface PivotingDataRowsResponse extends NestedDataRowsResponse {
   pivotColumns: GridGetRowsResponse['pivotColumns'];
 }
 
-declare const DISABLE_CHANCE_RANDOM: any;
-export const disableDelay = typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM;
+// eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle
+declare const __DISABLE_CHANCE_RANDOM__: any;
+export const disableDelay =
+  typeof __DISABLE_CHANCE_RANDOM__ !== 'undefined' && __DISABLE_CHANCE_RANDOM__;
 
 export const DEFAULT_SERVER_OPTIONS: DefaultServerOptions = {
   minDelay: disableDelay ? 0 : 100,

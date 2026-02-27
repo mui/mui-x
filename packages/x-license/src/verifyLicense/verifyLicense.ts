@@ -217,7 +217,7 @@ export function verifyLicense({
   // Gets replaced with `false` during production builds, making it impossible
   // for users of published packages to use test licenses.
   // @ts-ignore
-  if (license.isTestKey && !ALLOW_TEST_LICENSES) {
+  if (license.isTestKey && !__ALLOW_TEST_LICENSES__) {
     console.error(
       'MUI X: Error checking license. Test license key used in a non-test environment!',
     );

@@ -14,8 +14,8 @@ export default defineConfig({
       enforce: 'post',
       async transform(code) {
         return code
-          .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
-          .replaceAll('ALLOW_TEST_LICENSES', 'true')
+          .replaceAll('__DISABLE_CHANCE_RANDOM__', 'true')
+          .replaceAll('__ALLOW_TEST_LICENSES__', 'true')
           .replaceAll('__RELEASE_INFO__', generateReleaseInfo());
       },
     },
