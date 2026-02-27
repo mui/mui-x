@@ -138,7 +138,11 @@ ChartsContainer.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.any,
-      seriesId: PropTypes.object,
+      seriesId: PropTypes.shape({
+        toLocaleString: PropTypes.func.isRequired,
+        toString: PropTypes.func.isRequired,
+        valueOf: PropTypes.func.isRequired,
+      }),
       type: PropTypes.object.isRequired,
     }),
   ),
@@ -158,7 +162,7 @@ ChartsContainer.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -189,7 +193,11 @@ ChartsContainer.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.any,
-      seriesId: PropTypes.object,
+      seriesId: PropTypes.shape({
+        toLocaleString: PropTypes.func.isRequired,
+        toString: PropTypes.func.isRequired,
+        valueOf: PropTypes.func.isRequired,
+      }),
       type: PropTypes.object.isRequired,
     }),
   ),
@@ -1017,7 +1025,7 @@ ChartsContainer.propTypes = {
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
   }),
   /**
