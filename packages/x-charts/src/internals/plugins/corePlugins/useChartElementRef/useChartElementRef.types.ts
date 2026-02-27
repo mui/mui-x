@@ -3,9 +3,9 @@ import { type ChartPluginSignature } from '../../models';
 
 export interface UseChartElementRefInstance {
   /**
-   * Reference to the main svg element.
+   * Reference to the chart surface element.
    */
-  svgRef: React.RefObject<HTMLDivElement | null>;
+  chartsLayerContainerRef: React.RefObject<HTMLDivElement | null>;
   /**
    * Reference to the chart root element.
    */
