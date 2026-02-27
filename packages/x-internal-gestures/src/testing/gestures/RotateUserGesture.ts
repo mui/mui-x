@@ -24,7 +24,7 @@ export const rotate = async (
   } = options;
 
   if (!target) {
-    throw new Error('Target element is required for rotate gesture');
+    throw new Error('MUI X: Target element is required for rotate gesture');
   }
 
   // Parse pointers configuration
@@ -34,7 +34,7 @@ export const rotate = async (
   });
 
   if (pointersArray.length < 2) {
-    throw new Error('Rotate gesture requires at least 2 pointers');
+    throw new Error('MUI X: Rotate gesture requires at least 2 pointers');
   }
 
   // Start the rotate gesture by pressing down all pointers

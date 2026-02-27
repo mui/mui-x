@@ -237,7 +237,11 @@ export const getNonDisabledItemsInRange = (
       itemMeta = itemMeta.parentId ? itemsSelectors.itemMeta(state, itemMeta.parentId) : null;
     }
 
-    throw new Error('Invalid range');
+    throw new Error(
+      'MUI X Tree View: Invalid range - unable to find a path between the two items. ' +
+        'This may occur if the items are not in the same tree or the tree structure is invalid. ' +
+        'Verify that both items exist in the tree.',
+    );
   };
 
   const [first, last] = findOrderInTremauxTree(state, itemAId, itemBId);

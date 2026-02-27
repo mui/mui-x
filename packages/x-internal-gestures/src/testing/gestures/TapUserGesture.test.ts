@@ -35,7 +35,7 @@ describe('TapUserGesture', () => {
   it('should throw an error if no target is provided', async () => {
     // @ts-expect-error, testing a missing target
     const tapGesture = () => tap(pointerManager, {});
-    await expect(tapGesture).rejects.toThrow('Target element is required for tap gesture');
+    await expect(tapGesture).rejects.toThrow('MUI X: Target element is required for tap gesture');
   });
 
   it('should perform a basic mouse tap gesture with default options', async () => {
