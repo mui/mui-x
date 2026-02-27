@@ -6,10 +6,13 @@ import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headles
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { TimelineGridEventPlaceholderCssVars } from './TimelineGridEventPlaceholderCssVars';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { TimelineGridEventPlaceholderDataAttributes } from './TimelineGridEventPlaceholderDataAttributes';
 
 const overflowStateAttributesMapping = {
-  startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
-  endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
+  startingBeforeEdge: (value: boolean) =>
+    value ? { [TimelineGridEventPlaceholderDataAttributes.startingBeforeEdge]: '' } : null,
+  endingAfterEdge: (value: boolean) =>
+    value ? { [TimelineGridEventPlaceholderDataAttributes.endingAfterEdge]: '' } : null,
 };
 
 export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGridEventPlaceholder(
