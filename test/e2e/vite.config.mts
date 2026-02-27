@@ -14,7 +14,6 @@ export default defineConfig({
       async transform(code) {
         return code
           .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
-          .replaceAll('LICENSE_DISABLE_CHECK', 'true')
           .replaceAll('ALLOW_TEST_LICENSES', 'true');
       },
     },

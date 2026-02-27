@@ -1,7 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router';
+// eslint-disable-next-line import/no-relative-packages
+import { setupTestLicenseKey } from '../utils/testLicense';
 import TestViewer from './TestViewer';
+
+setupTestLicenseKey();
 
 interface Fixture {
   path: string;
