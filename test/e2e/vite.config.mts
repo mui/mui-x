@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { generateReleaseInfo } from '@mui/x-internals/generateReleaseInfo';
 import { alias } from '../../vitest.shared.mts';
 
 export default defineConfig({
@@ -14,7 +15,8 @@ export default defineConfig({
       async transform(code) {
         return code
           .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
-          .replaceAll('ALLOW_TEST_LICENSES', 'true');
+          .replaceAll('ALLOW_TEST_LICENSES', 'true')
+          .replaceAll('__RELEASE_INFO__', generateReleaseInfo());
       },
     },
   ],
