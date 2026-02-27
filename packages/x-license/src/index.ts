@@ -9,6 +9,7 @@ export type {
   AppType,
   KeyVersion,
   LicenseDetails,
+  NullableLicenseDetails,
   LicenseModel,
   PlanScope,
 } from './utils';

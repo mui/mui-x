@@ -7,9 +7,9 @@ import {
   decodeLicense,
   decodeLicenseVersion2,
   decodeLicenseVersion3,
-  type MuiLicense,
 } from './verifyLicense';
 import { LICENSE_STATUS } from '../utils/licenseStatus';
+import { NullableLicenseDetails } from '../utils/licenseDetails';
 import {
   TEST_LICENSE_KEY_PRO,
   TEST_KEY_V1,
@@ -317,7 +317,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
   describe('parseLicenseTokens', () => {
     it('should parse all v2 tokens', () => {
-      const licenseInfo: MuiLicense = {
+      const licenseInfo: NullableLicenseDetails = {
         keyVersion: 2,
         licenseModel: null,
         planScope: null,
@@ -345,7 +345,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should parse quantity and appType tokens (v3)', () => {
-      const licenseInfo: MuiLicense = {
+      const licenseInfo: NullableLicenseDetails = {
         keyVersion: 3,
         licenseModel: null,
         planScope: null,
@@ -370,7 +370,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should ignore invalid numeric values', () => {
-      const licenseInfo: MuiLicense = {
+      const licenseInfo: NullableLicenseDetails = {
         keyVersion: 3,
         licenseModel: null,
         planScope: null,
