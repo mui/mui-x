@@ -395,6 +395,10 @@ The `ChartsSurface` component is now comprised of `ChartsLayerContainer` and `Ch
 As a consequence, it is no longer possible to style the component using the `MuiChartsSurface` theme key.
 If you want to style the layer container, you can use `MuiChartsLayerContainer` instead, and for the SVG layer, use `MuiChartsSvgLayer`.
 
+### Rename `useSvgRef()` by `useChartsLayerContainerRef()`
+
+The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a ref to the `ChartsLayerContainer`.
+
 ### Ref target
 
 The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
