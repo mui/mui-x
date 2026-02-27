@@ -529,7 +529,7 @@ importers:
         version: link:../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../packages/x-charts-vendor
+        version: link:../packages/x-charts-vendor/build
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../packages/x-data-grid/build
@@ -811,7 +811,7 @@ importers:
         version: 7.3.7(@types/react@19.2.9)(react@19.2.3)
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../x-charts-vendor
+        version: link:../x-charts-vendor/build
       '@mui/x-internal-gestures':
         specifier: workspace:*
         version: link:../x-internal-gestures/build
@@ -885,7 +885,7 @@ importers:
         version: link:../x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../x-charts-vendor
+        version: link:../x-charts-vendor/build
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -945,7 +945,7 @@ importers:
         version: link:../x-charts/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../x-charts-vendor
+        version: link:../x-charts-vendor/build
       '@mui/x-internal-gestures':
         specifier: workspace:*
         version: link:../x-internal-gestures/build
@@ -1079,6 +1079,7 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.2
+    publishDirectory: build
 
   packages/x-codemod:
     dependencies:
@@ -2148,7 +2149,7 @@ importers:
         version: link:../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../packages/x-charts-vendor
+        version: link:../packages/x-charts-vendor/build
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../packages/x-data-grid/build
@@ -2280,7 +2281,7 @@ importers:
         version: link:../../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../../packages/x-charts-vendor
+        version: link:../../packages/x-charts-vendor/build
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../../packages/x-data-grid/build
@@ -2403,7 +2404,7 @@ importers:
         version: link:../../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../../packages/x-charts-vendor
+        version: link:../../packages/x-charts-vendor/build
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../../packages/x-data-grid/build
