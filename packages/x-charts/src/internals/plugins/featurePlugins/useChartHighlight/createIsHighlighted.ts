@@ -1,4 +1,5 @@
 import type { HighlightItemIdentifier } from '../../../../models/seriesType';
+import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
 function alwaysFalse(): boolean {
@@ -18,10 +19,9 @@ export function createIsHighlighted<
     return alwaysFalse;
   }
 
-  // Exclude<ChartSeriesType, 'sankey' | 'heatmap'> should be ComposableChartSeriesType<SeriesType> to be correct.
-  return function isHighlighted<
-    TestedSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  >(item: HighlightItemIdentifier<TestedSeriesType> | null): boolean {
+  return function isHighlighted<TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
+    item: HighlightItemIdentifier<TestedSeriesType> | null,
+  ): boolean {
     if (!item) {
       return false;
     }

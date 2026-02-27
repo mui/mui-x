@@ -1,10 +1,11 @@
-import type { ChartSeriesType } from './config';
+import type { ChartSeriesType, ChartsSeriesConfig } from './config';
 
 export type ComposableCartesianChartSeriesType =
   | 'bar'
   | 'line'
   | 'scatter'
-  | ('rangeBar' extends ChartSeriesType ? 'rangeBar' : never);
+  // @ts-ignore, 'rangeBar' does not exist in the base ChartsSeriesConfig, but it is added via module augmentation in x-charts-premium
+  | (ChartsSeriesConfig['rangeBar'] extends undefined ? never : 'rangeBar');
 
 export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesType> = new Set([
   'bar',

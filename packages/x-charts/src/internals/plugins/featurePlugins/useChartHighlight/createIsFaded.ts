@@ -1,4 +1,5 @@
 import type { HighlightItemIdentifier } from '../../../../models/seriesType';
+import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
 function alwaysFalse(): boolean {
@@ -16,8 +17,7 @@ export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sanke
     return alwaysFalse;
   }
 
-  // Exclude<ChartSeriesType, 'sankey' | 'heatmap'> should be ComposableChartSeriesType<SeriesType> to be correct.
-  return function isFaded<TestedSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>>(
+  return function isFaded<TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
     item: HighlightItemIdentifier<TestedSeriesType> | null,
   ): boolean {
     if (!item) {
