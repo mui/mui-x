@@ -60,6 +60,10 @@ Click on any event in the demo below to open the dialog. From there you can edit
 
 {{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::success
+This demo uses `EventCalendarPremium` to showcase the Recurrence tab. All other dialog features (editing title, dates, resources, colors, description, and deleting events) are available in the standard `EventCalendar` component.
+:::
+
 :::info
 Events with `readOnly: true` (or belonging to a read-only resource) open the dialog in view-only mode.
 :::

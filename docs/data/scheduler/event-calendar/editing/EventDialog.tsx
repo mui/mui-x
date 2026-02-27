@@ -47,6 +47,7 @@ export default function EventDialog() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
+        defaultView="month"
       />
     </div>
   );
