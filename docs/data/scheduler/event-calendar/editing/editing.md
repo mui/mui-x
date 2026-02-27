@@ -47,6 +47,25 @@ Set `eventCreation.interaction` to `"click"` to open the creation form when clic
 
 {{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Event dialog
+
+Clicking an event or creating a new one opens the **Event Dialog** — a built-in modal for editing event details.
+
+The dialog has two tabs:
+
+- **General** — edit the title, start/end date and time, toggle all-day, pick a resource and color, and add a description.
+- **Recurrence** — set the frequency, interval, days of the week, and end condition for recurring events. This tab is only available when using the Premium package (`@mui/x-scheduler-premium`).
+
+The dialog footer contains **Delete** and **Save Changes** buttons.
+
+Click on any event in the demo below to open the dialog:
+
+{{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+When an event has `readOnly: true` (or belongs to a read-only resource), the dialog opens in view-only mode — the form fields are replaced by a read-only summary.
+:::
+
 ## Read-only
 
 Use the `readOnly` prop to disable all editing interactions (event creation, drag and drop, resizing, and popover editing):
