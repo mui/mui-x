@@ -199,5 +199,6 @@
   "198": "MUI X: RichTreeViewItems only supports flat DOM structure when virtualized.",
   "199": "MUI X: There is no ongoing reordering.",
   "200": "MUI X: Unimplemented: colspan feature is required",
-  "201": "MUI X: Unimplemented: rowspan feature is required"
+  "201": "MUI X: Unimplemented: rowspan feature is required",
+  "202": "MUI X: Request failed with status %s"
 }
