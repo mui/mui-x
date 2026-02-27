@@ -26,7 +26,7 @@ export type ChartDataProviderProps<
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = React.PropsWithChildren<
   ChartProviderProps<TSeries, TSignatures>['pluginParams'] &
-  Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'>
+    Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'>
 > &
   ChartsLocalizationProviderProps & {
     /**
