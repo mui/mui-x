@@ -1,6 +1,6 @@
-import { AppType } from './appType';
+import { AppType } from './licenseAppType';
 import { LicenseModel } from './licenseModel';
-import { PlanScope, PlanVersion } from './plan';
+import { PlanScope, PlanVersion } from './licensePlan';
 
 /**
  * The version of the license key encoding format.
@@ -57,3 +57,7 @@ export interface LicenseDetails {
    */
   keyVersion: KeyVersion;
 }
+
+export type NullableLicenseDetails = {
+  [K in keyof LicenseDetails]: LicenseDetails[K] | null;
+} & { isTestKey: boolean };

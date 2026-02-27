@@ -1,11 +1,11 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { PlanScope, PLAN_SCOPES, PlanVersion } from '../utils/plan';
+import { PlanScope, PLAN_SCOPES, PlanVersion } from '../utils/licensePlan';
+import type { AppType } from '../utils/licenseAppType';
 import { LicenseModel, LICENSE_MODELS } from '../utils/licenseModel';
+import type { NullableLicenseDetails } from '../utils/licenseDetails';
 import { MuiCommercialPackageName } from '../utils/commercialPackages';
-import type { LicenseDetails } from '../utils/licenseDetails';
-import type { AppType } from '../utils/appType';
 
 const getDefaultReleaseDate = () => {
   const today = new Date();
@@ -34,10 +34,6 @@ function isPlanScopeSufficient(packageName: MuiCommercialPackageName, planScope:
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 const orderReg = /^.*ORDER:([0-9]+),.*$/;
 
-export type MuiLicense = {
-  [K in keyof LicenseDetails]: LicenseDetails[K] | null;
-} & { isTestKey: boolean };
-
 const PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN: MuiCommercialPackageName[] = [
   'x-data-grid-pro',
   'x-date-pickers-pro',
@@ -46,7 +42,7 @@ const PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN: MuiCommercialPackageName[] = [
 /**
  * Format: ORDER:${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=1
  */
-function decodeLicenseVersion1(license: string): MuiLicense {
+function decodeLicenseVersion1(license: string): NullableLicenseDetails {
   let expiryTimestamp: number | null;
   let orderId: number | null;
   try {
@@ -79,10 +75,10 @@ function decodeLicenseVersion1(license: string): MuiLicense {
 }
 
 /**
- * Parse a comma-separated key=value license string into a MuiLicense object.
+ * Parse a comma-separated key=value license string into a NullableLicenseDetails object.
  * Shared by v2 and v3 decoders.
  */
-export function parseLicenseTokens(license: string, licenseInfo: MuiLicense): void {
+export function parseLicenseTokens(license: string, licenseInfo: NullableLicenseDetails): void {
   license
     .split(',')
     .map((token) => token.split('='))
@@ -135,8 +131,8 @@ export function parseLicenseTokens(license: string, licenseInfo: MuiLicense): vo
 /**
  * Format: O=${orderNumber},E=${expiryTimestamp},S=${planScope},LM=${licenseModel},PV=${planVersion},KV=2
  */
-export function decodeLicenseVersion2(license: string): MuiLicense {
-  const licenseInfo: MuiLicense = {
+export function decodeLicenseVersion2(license: string): NullableLicenseDetails {
+  const licenseInfo: NullableLicenseDetails = {
     keyVersion: 2,
     licenseModel: null,
     planScope: null,
@@ -156,8 +152,8 @@ export function decodeLicenseVersion2(license: string): MuiLicense {
 /**
  * Format: O=${orderNumber},E=${expiryTimestamp},S=${planScope},LM=${licenseModel},PV=${planVersion},Q=${quantity},AT=${appType},KV=3
  */
-export function decodeLicenseVersion3(license: string): MuiLicense {
-  const licenseInfo: MuiLicense = {
+export function decodeLicenseVersion3(license: string): NullableLicenseDetails {
+  const licenseInfo: NullableLicenseDetails = {
     keyVersion: 3,
     licenseModel: null,
     planScope: null,
@@ -175,9 +171,9 @@ export function decodeLicenseVersion3(license: string): MuiLicense {
 }
 
 /**
- * Decode the license based on its key version and return a version-agnostic `MuiLicense` object.
+ * Decode the license based on its key version and return a version-agnostic `NullableLicenseDetails` object.
  */
-export function decodeLicense(encodedLicense: string): MuiLicense | null {
+export function decodeLicense(encodedLicense: string): NullableLicenseDetails | null {
   const license = base64Decode(encodedLicense);
 
   if (license.includes('KEYVERSION=1')) {
