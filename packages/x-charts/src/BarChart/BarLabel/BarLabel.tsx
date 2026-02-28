@@ -167,7 +167,7 @@ BarLabel.propTypes = {
    * @default 'center'
    */
   placement: PropTypes.oneOf(['center', 'outside']),
-  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   /**
    * Width of the bar this label belongs to.

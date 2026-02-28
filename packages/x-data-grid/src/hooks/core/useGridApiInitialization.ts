@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { EventManager } from '@mui/x-internals/EventManager';
 import { Store } from '@mui/x-internals/store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../../constants/signature';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridCoreApi } from '../../models';
 import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 

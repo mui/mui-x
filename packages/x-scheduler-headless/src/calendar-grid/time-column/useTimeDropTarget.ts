@@ -40,8 +40,9 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       const clientY = input.clientY;
       const elementPosition = elementRef.current.getBoundingClientRect();
       const positionY = (clientY - elementPosition.y) / ref.current.offsetHeight;
+      const clampedPositionY = Math.max(0, Math.min(1, positionY));
 
-      return Math.round(collectionDurationMs * positionY);
+      return Math.round(collectionDurationMs * clampedPositionY);
     });
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
@@ -63,10 +64,19 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       if (data.source === 'CalendarGridTimeEvent') {
         const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
-        const newStartDate = addOffsetToDate(
+        let newStartDate = addOffsetToDate(
           start,
           cursorOffsetMs - data.initialCursorPositionInEventMs,
         );
+
+        // Clamp the event to stay within the time grid bounds
+        if (adapter.isBefore(newStartDate, start)) {
+          newStartDate = start;
+        }
+        const maxStartDate = adapter.addMilliseconds(end, -eventDurationMs);
+        if (adapter.isAfter(newStartDate, maxStartDate)) {
+          newStartDate = maxStartDate;
+        }
 
         const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
 
@@ -76,10 +86,15 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       // Resize a Time Grid Event
       if (data.source === 'CalendarGridTimeEventResizeHandler') {
         if (data.side === 'start') {
-          const cursorDate = addOffsetToDate(
+          let cursorDate = addOffsetToDate(
             start,
             cursorOffsetMs - data.initialCursorPositionInEventMs,
           );
+
+          // Clamp to the time grid bounds
+          if (adapter.isBefore(cursorDate, start)) {
+            cursorDate = start;
+          }
 
           // Ensure the new start date is not after or too close to the end date.
           const maxStartDate = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
@@ -93,10 +108,15 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         if (data.side === 'end') {
           const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
-          const cursorDate = addOffsetToDate(
+          let cursorDate = addOffsetToDate(
             start,
             cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
           );
+
+          // Clamp to the time grid bounds
+          if (adapter.isAfter(cursorDate, end)) {
+            cursorDate = end;
+          }
 
           // Ensure the new end date is not before or too close to the start date.
           const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);

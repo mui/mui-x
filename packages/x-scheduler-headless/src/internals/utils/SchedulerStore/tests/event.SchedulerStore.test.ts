@@ -1,11 +1,7 @@
 import { spy } from 'sinon';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
-import {
-  SchedulerEventModelStructure,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-headless/models';
+import { adapter, EventBuilder, storeClasses } from 'test/utils/scheduler';
+import { SchedulerEventModelStructure } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { storeClasses } from './utils';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
 storeClasses.forEach((storeClass) => {
@@ -35,16 +31,16 @@ storeClasses.forEach((storeClass) => {
           },
         },
         start: {
-          getter: (event) => adapter.date(event.myStart, 'default'),
+          getter: (event) => event.myStart,
           setter: (event, value) => {
-            event.myStart = value.toISOString()!;
+            event.myStart = value;
             return event;
           },
         },
         end: {
-          getter: (event) => adapter.date(event.myEnd, 'default'),
+          getter: (event) => event.myEnd,
           setter: (event, value) => {
-            event.myEnd = value.toISOString()!;
+            event.myEnd = value;
             return event;
           },
         },
@@ -149,8 +145,8 @@ storeClasses.forEach((storeClass) => {
         interface MyEvent2 {
           myId: string;
           title: string;
-          start: TemporalSupportedObject;
-          end: TemporalSupportedObject;
+          start: string;
+          end: string;
         }
 
         const idGetter = spy((event: MyEvent2) => event.myId);
@@ -169,8 +165,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             title: 'Event 1',
-            start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
-            end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
+            start: '2025-07-01T09:00:00.000Z',
+            end: '2025-07-01T10:00:00.000Z',
           },
         ];
 
@@ -198,14 +194,14 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             title: 'Event 1',
-            start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
-            end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
+            start: '2025-07-01T09:00:00.000Z',
+            end: '2025-07-01T10:00:00.000Z',
           },
           {
             myId: '2',
             title: 'Event 2',
-            start: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
-            end: adapter.date('2025-07-01T11:00:00.000Z', 'default'),
+            start: '2025-07-01T10:00:00.000Z',
+            end: '2025-07-01T11:00:00.000Z',
           },
         ];
 
@@ -259,12 +255,8 @@ storeClasses.forEach((storeClass) => {
         expect(updatedEvents[0].title).to.equal(event1.title);
         expect(updatedEvents[1].title).to.equal('Event 2 updated');
         expect(updatedEvents[1].description).to.equal('Event 2 description');
-        expect(updatedEvents[1].start).toEqualDateTime(
-          adapter.date('2025-07-01T11:30:00Z', 'default'),
-        );
-        expect(updatedEvents[1].end).toEqualDateTime(
-          adapter.date('2025-07-01T12:30:00Z', 'default'),
-        );
+        expect(updatedEvents[1].start).to.equal('2025-07-01T11:30:00.000Z');
+        expect(updatedEvents[1].end).to.equal('2025-07-01T12:30:00.000Z');
       });
 
       it('should update start/end as instants, preserve unrelated properties, and keep event.timezone', () => {
@@ -303,9 +295,9 @@ storeClasses.forEach((storeClass) => {
 
         // Keep the event conceptual timezone
         expect(updated.timezone).to.equal(dataTimezone);
-        // Persist the new instants
-        expect(updated.start).toEqualDateTime(newStart);
-        expect(updated.end).toEqualDateTime(newEnd);
+        // Persist the new instants as strings
+        expect(updated.start).to.equal(newStart.toISOString());
+        expect(updated.end).to.equal(newEnd.toISOString());
       });
     });
 
@@ -383,7 +375,13 @@ storeClasses.forEach((storeClass) => {
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           event,
-          { ...event, id: duplicatedId, extractedFromId: event.id, start, end },
+          {
+            ...event,
+            id: duplicatedId,
+            extractedFromId: event.id,
+            start: start.toISOString(),
+            end: end.toISOString(),
+          },
         ]);
       });
 
@@ -408,8 +406,8 @@ storeClasses.forEach((storeClass) => {
             ...originalEventWithoutRecurrence,
             id: duplicatedId,
             extractedFromId: event.id,
-            start,
-            end,
+            start: start.toISOString(),
+            end: end.toISOString(),
           },
         ]);
       });
@@ -467,8 +465,8 @@ storeClasses.forEach((storeClass) => {
           {
             ...event,
             id: createdEventId,
-            start: adapter.date('2025-07-01T09:00:00Z', 'default'),
-            end: adapter.date('2025-07-01T10:00:00Z', 'default'),
+            start: '2025-07-01T09:00:00.000Z',
+            end: '2025-07-01T10:00:00.000Z',
             extractedFromId: event.id,
           },
         ]);
@@ -536,8 +534,8 @@ storeClasses.forEach((storeClass) => {
           {
             ...event,
             id: createdEventId,
-            start: adapter.date('2025-07-01T09:00:00Z', 'default'),
-            end: adapter.date('2025-07-01T10:00:00Z', 'default'),
+            start: '2025-07-01T09:00:00.000Z',
+            end: '2025-07-01T10:00:00.000Z',
           },
         ]);
       });

@@ -16,13 +16,13 @@ function MyCustomLegend() {
       }}
     >
       <tbody>
-        {items.map((v) => {
+        {items.map((item) => {
           return (
-            <tr key={v.id}>
+            <tr key={item.seriesId}>
               <td aria-hidden>
                 <div
                   style={{
-                    background: v.color,
+                    background: item.color,
                     height: 10,
                     width: 10,
                     marginRight: 10,
@@ -31,7 +31,7 @@ function MyCustomLegend() {
                   }}
                 />
               </td>
-              <td>{`${v.label}`}</td>
+              <td>{`${item.label}`}</td>
             </tr>
           );
         })}

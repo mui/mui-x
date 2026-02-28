@@ -6,7 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import debounce from '@mui/utils/debounce';
 import { styled } from '@mui/material/styles';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import { TextFieldProps } from '../../models/gridBaseSlots';
+import type { TextFieldProps } from '../../models/gridBaseSlots';
 import { vars } from '../../constants/cssVariables';
 import {
   gridColumnDefinitionsSelector,

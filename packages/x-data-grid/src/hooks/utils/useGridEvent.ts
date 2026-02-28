@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { EventListenerOptions } from '@mui/x-internals/EventManager';
-import { GridEventListener, GridEvents } from '../../models/events';
-import { UnregisterToken } from '../../utils/cleanupTracking/CleanupTracking';
+import type { RefObject } from '@mui/x-internals/types';
+import type { EventListenerOptions } from '@mui/x-internals/EventManager';
+import type { GridEventListener, GridEvents } from '../../models/events';
+import type { UnregisterToken } from '../../utils/cleanupTracking/CleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import type { GridApiCommon } from '../../models';

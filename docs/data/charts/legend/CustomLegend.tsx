@@ -44,10 +44,10 @@ function MyCustomLegend() {
   return (
     <Stack direction="column" justifySelf={'start'} marginLeft={9}>
       {items.map((item) => {
-        const { label, id, color, seriesId, markType } = item;
+        const { label, color, seriesId, markType } = item;
         return (
           <Box
-            key={id}
+            key={seriesId}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -95,7 +95,6 @@ export default function CustomLegend() {
             id: 'avg',
             label: 'temp. avg. 1991-2020 (°C)',
             dataKey: '1991_2020_avg',
-            showMark: false,
             color: theme.palette.text.primary,
             labelMarkType: DashedLine,
           },
@@ -105,6 +104,7 @@ export default function CustomLegend() {
             dataKey: '2023',
             color: theme.palette.primary.main,
             labelMarkType: LineWithMark,
+            showMark: true,
           },
         ]}
         xAxis={[{ dataKey: 'month', scaleType: 'band', id: 'x-axis' }]}

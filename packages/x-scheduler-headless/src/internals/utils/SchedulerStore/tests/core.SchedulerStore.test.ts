@@ -1,6 +1,5 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, storeClasses } from 'test/utils/scheduler';
 import { SchedulerEvent } from '@mui/x-scheduler-headless/models';
-import { storeClasses } from './utils';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
@@ -111,7 +110,7 @@ storeClasses.forEach((storeClass) => {
             },
             adapter,
           );
-        }).toWarnDev(['Scheduler: A component is changing the default visibleDate state']);
+        }).toWarnDev(['MUI: A component is changing the default visibleDate state']);
 
         expect(store.state.visibleDate).toEqualDateTime(defaultDate);
       });
@@ -128,7 +127,7 @@ storeClasses.forEach((storeClass) => {
         const newDate = adapter.date('2025-07-10T00:00:00Z', 'default');
         expect(() => {
           store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: newDate }, adapter);
-        }).toWarnDev('Scheduler: A component is changing the uncontrolled visibleDate state');
+        }).toWarnDev('MUI: A component is changing the uncontrolled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(newDate);
       });
@@ -146,7 +145,7 @@ storeClasses.forEach((storeClass) => {
             },
             adapter,
           );
-        }).toWarnDev('Scheduler: A component is changing the controlled visibleDate state');
+        }).toWarnDev('MUI: A component is changing the controlled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(visibleDate);
       });

@@ -11,7 +11,7 @@ import { useCSSVariablesClass } from '../../utils/css/context';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridSlotProps } from '../../models/gridSlotsComponent';
+import type { GridSlotProps } from '../../models/gridSlotsComponent';
 import { NotRendered } from '../../utils/assert';
 
 type OwnerState = DataGridProcessedProps;

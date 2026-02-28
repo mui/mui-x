@@ -1,12 +1,12 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { useGridSelector } from '../../utils';
 import { gridExpandedRowCountSelector } from '../filter';
 import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows';
 import { gridPinnedRowsCountSelector } from '../rows/gridRowsSelector';
 import { gridVisibleColumnDefinitionsSelector } from '../columns';
 import { gridPivotActiveSelector } from '../pivoting';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridOverlayType, GridLoadingOverlayVariant } from './gridOverlaysInterfaces';
 
 /**

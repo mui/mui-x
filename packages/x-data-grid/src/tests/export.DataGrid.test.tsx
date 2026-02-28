@@ -1,5 +1,5 @@
-import { spy, SinonSpy } from 'sinon';
-import { DataGrid, DataGridProps, GridToolbarExport } from '@mui/x-data-grid';
+import { spy, type SinonSpy } from 'sinon';
+import { DataGrid, type DataGridProps, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';

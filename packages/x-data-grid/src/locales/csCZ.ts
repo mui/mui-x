@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const csCZGrid: Partial<GridLocaleText> = {
   // Root
@@ -138,7 +138,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnMenuManageColumns: 'Spravovat sloupce',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Skrýt',
-  columnMenuUnsort: 'Zrušit filtry',
+  columnMenuUnsort: 'Zrušit řazení',
   columnMenuSortAsc: 'Seřadit vzestupně',
   columnMenuSortDesc: 'Seřadit sestupně',
   // columnMenuManagePivot: 'Manage pivot',
@@ -155,7 +155,7 @@ const csCZGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Zobrazit filtry',
-  columnHeaderSortIconLabel: 'Filtrovat',
+  columnHeaderSortIconLabel: 'Řadit',
 
   // Rows selected footer text
   footerRowSelected: (count) => {
@@ -192,6 +192,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbalit',
+  longTextCellCollapseLabel: 'Sbalit',
 
   // Actions cell more text
   actionsCellMore: 'více',

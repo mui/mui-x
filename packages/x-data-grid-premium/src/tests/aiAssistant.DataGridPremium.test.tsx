@@ -1,12 +1,12 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { spy, stub } from 'sinon';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
+  type DataGridPremiumProps,
   GridAiAssistantPanel,
-  GridApi,
-  GridRowsProp,
+  type GridApi,
+  type GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';

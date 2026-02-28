@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  GridPipeProcessor,
+  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   gridExistingPinnedColumnSelector,
 } from '@mui/x-data-grid/internals';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const useGridColumnPinningPreProcessors = (
   apiRef: RefObject<GridPrivateApiPro>,

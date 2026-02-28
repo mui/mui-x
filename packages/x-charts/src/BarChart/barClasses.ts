@@ -14,10 +14,10 @@ export interface BarClasses {
 export type BarClassKey = keyof BarClasses;
 
 export function getBarUtilityClass(slot: string) {
-  return generateUtilityClass('MuiBar', slot);
+  return generateUtilityClass('MuiBarChart', slot);
 }
 
-export const barClasses: BarClasses = generateUtilityClasses('MuiBar', [
+export const barClasses: BarClasses = generateUtilityClasses('MuiBarChart', [
   'root',
   'series',
   'seriesLabels',

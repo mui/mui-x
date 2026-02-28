@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
-import Slider, { SliderProps, sliderClasses } from '@mui/material/Slider';
+import { type GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
+import Slider, { type SliderProps, sliderClasses } from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
 import debounce from '@mui/utils/debounce';
 import { alpha, styled } from '@mui/material/styles';
@@ -54,7 +54,7 @@ function ValueLabelComponent(props: any) {
 }
 
 function EditProgress(props: GridRenderEditCellParams<any, number>) {
-  const { id, value, field } = props;
+  const { id, value, field, hasFocus } = props;
   const [valueState, setValueState] = React.useState(Number(value));
 
   const apiRef = useGridApiContext();
@@ -81,7 +81,7 @@ function EditProgress(props: GridRenderEditCellParams<any, number>) {
   }, [value]);
 
   const handleRef: SliderProps['ref'] = (element) => {
-    if (element) {
+    if (element && hasFocus) {
       element.querySelector<HTMLElement>('[type="range"]')!.focus();
     }
   };

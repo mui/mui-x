@@ -11,7 +11,9 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
 
   if (process.env.NODE_ENV !== 'production') {
     if (adapter.isBefore(adapter.startOfDay(end), adapter.startOfDay(start))) {
-      throw new Error(`getDayList: The 'end' parameter must be a day after the 'start' parameter.`);
+      throw new Error(
+        `MUI: getDayList: The 'end' parameter must be a day after the 'start' parameter.`,
+      );
     }
   }
 

@@ -1,7 +1,7 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { screen } from '@mui/internal-test-utils';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<ChartsYAxis />', () => {
@@ -20,18 +20,18 @@ describe('<ChartsYAxis />', () => {
 
     expect(() =>
       render(
-        <ChartContainer {...defaultProps}>
+        <ChartsContainer {...defaultProps}>
           <ChartsYAxis axisId="invalid-axis-id" />
-        </ChartContainer>,
+        </ChartsContainer>,
       ),
     ).toWarnDev(expectedError);
   });
 
   it('should render with valid axisId', () => {
     render(
-      <ChartContainer {...defaultProps}>
+      <ChartsContainer {...defaultProps}>
         <ChartsYAxis axisId="test-y-axis" />
-      </ChartContainer>,
+      </ChartsContainer>,
     );
 
     expect(screen.getByText('Downloads')).toBeTruthy();

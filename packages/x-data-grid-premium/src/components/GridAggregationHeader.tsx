@@ -3,15 +3,15 @@ import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
   gridClasses,
-  GridColDef,
-  GridColumnHeaderParams,
+  type GridColDef,
+  type GridColumnHeaderParams,
   GridColumnHeaderTitle,
 } from '@mui/x-data-grid';
 import { vars, type GridBaseColDef } from '@mui/x-data-grid/internals';
 import { getAggregationFunctionLabel } from '../hooks/features/aggregation/gridAggregationUtils';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
 interface OwnerState extends DataGridPremiumProcessedProps {
   classes: DataGridPremiumProcessedProps['classes'];

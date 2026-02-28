@@ -1,5 +1,5 @@
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import { GridColTypeDef, GridValueFormatter } from '../models/colDef/gridColDef';
+import type { GridColTypeDef, GridValueFormatter } from '../models/colDef/gridColDef';
 import { renderBooleanCell } from '../components/cell/GridBooleanCell';
 import { renderEditBooleanCell } from '../components/cell/GridEditBooleanCell';
 import { gridNumberComparator } from '../hooks/features/sorting/gridSortingUtils';

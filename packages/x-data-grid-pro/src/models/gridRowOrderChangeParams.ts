@@ -1,4 +1,4 @@
-import { GridRowModel, GridRowId } from '@mui/x-data-grid';
+import type { GridRowModel, GridRowId } from '@mui/x-data-grid';
 
 /**
  * Object passed as parameter of the row order change event.

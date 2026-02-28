@@ -39,10 +39,12 @@ export function useExtractRichTreeViewProParameters<
     onSelectedItemsChange,
     onItemSelectionToggle,
     onItemFocus,
+    itemHeight,
 
     // RichTreeViewStore parameters
     onItemLabelChange,
     isItemEditable,
+    domStructure,
 
     // RichTreeViewProStore parameters
     dataSource,
@@ -51,6 +53,7 @@ export function useExtractRichTreeViewProParameters<
     isItemReorderable,
     canMoveItemToNewPosition,
     onItemPositionChange,
+    virtualization,
 
     // Forwarded props
     ...forwardedProps
@@ -83,10 +86,12 @@ export function useExtractRichTreeViewProParameters<
       onSelectedItemsChange,
       onItemSelectionToggle,
       onItemFocus,
+      itemHeight,
 
       // RichTreeViewStore parameters
       onItemLabelChange,
       isItemEditable,
+      domStructure,
 
       // RichTreeViewProStore parameters
       dataSource,
@@ -95,6 +100,7 @@ export function useExtractRichTreeViewProParameters<
       isItemReorderable,
       canMoveItemToNewPosition,
       onItemPositionChange,
+      virtualization,
     }),
     [
       // Shared parameters
@@ -122,10 +128,12 @@ export function useExtractRichTreeViewProParameters<
       onSelectedItemsChange,
       onItemSelectionToggle,
       onItemFocus,
+      itemHeight,
 
       // RichTreeViewStore parameters
       onItemLabelChange,
       isItemEditable,
+      domStructure,
 
       // RichTreeViewProStore parameters
       dataSource,
@@ -134,6 +142,7 @@ export function useExtractRichTreeViewProParameters<
       isItemReorderable,
       canMoveItemToNewPosition,
       onItemPositionChange,
+      virtualization,
     ],
   );
 

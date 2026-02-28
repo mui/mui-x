@@ -1,4 +1,4 @@
-import { GridCsvExportOptions } from '../gridExport';
+import type { GridCsvExportOptions } from '../gridExport';
 
 /**
  * The CSV export API interface that is available in the grid [[apiRef]].

@@ -22,6 +22,7 @@ const initialRows = [
     isAdmin: true,
     country: 'Spain',
     discount: '',
+    bio: 'Damien is a software engineer with 5 years of experience in web development. He specializes in React and Node.js.',
   },
   {
     id: 2,
@@ -32,6 +33,7 @@ const initialRows = [
     isAdmin: false,
     country: 'France',
     discount: '',
+    bio: 'Nicolas is a product manager who loves building user-centric products. He has led multiple successful product launches.',
   },
   {
     id: 3,
@@ -42,6 +44,7 @@ const initialRows = [
     isAdmin: false,
     country: 'Brazil',
     discount: 'junior',
+    bio: 'Kate is a junior developer passionate about learning new technologies. She is currently focused on frontend development.',
   },
 ];
 
@@ -88,6 +91,11 @@ function ActionsCell(props: GridRenderCellParams) {
 
 const columns: GridColDef<Row>[] = [
   { field: 'name', type: 'string' },
+  {
+    field: 'bio',
+    type: 'longText',
+    width: 200,
+  },
   { field: 'age', type: 'number' },
   { field: 'dateCreated', type: 'date', width: 130 },
   { field: 'lastLogin', type: 'dateTime', width: 180 },

@@ -1,4 +1,4 @@
-import { GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-premium';
+import { type GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-premium';
 import {
   randomCity,
   randomCompanyName,
@@ -25,9 +25,10 @@ import {
   renderRating,
   renderEditRating,
   renderEditCountry,
+  renderEditBoolean,
 } from '../renderer';
-import { COUNTRY_ISO_OPTIONS_SORTED, CountryIsoOption } from '../services/static-data';
-import { GridColDefGenerator } from '../services/gridColDefGenerator';
+import { COUNTRY_ISO_OPTIONS_SORTED, type CountryIsoOption } from '../services/static-data';
+import type { GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getEmployeeColumns = (): GridColDefGenerator[] => [
   {
@@ -162,6 +163,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     generateData: randomBoolean,
     type: 'boolean',
     width: 150,
+    renderEditCell: renderEditBoolean,
     editable: true,
   },
   {

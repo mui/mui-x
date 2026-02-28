@@ -4,7 +4,7 @@ export * from './useScale';
 export * from './useAxis';
 export * from './useZAxis';
 export * from './useColorScale';
-export * from './useSvgRef';
+export * from './useChartsLayerContainerRef';
 export * from './useSeries';
 export * from './useDataset';
 export * from './useScatterSeries';
@@ -31,3 +31,6 @@ export {
   useYAxisCoordinates,
   type AxisCoordinates,
 } from './useAxisCoordinates';
+export * from './useAxisTicks';
+export { type TickItem } from './useTicks';
+export * from './getValueToPositionMapper';

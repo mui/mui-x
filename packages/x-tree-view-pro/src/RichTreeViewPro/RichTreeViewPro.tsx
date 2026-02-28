@@ -2,15 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useStore } from '@mui/x-internals/store';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import useSlotProps from '@mui/utils/useSlotProps';
 import {
   TreeViewProvider,
   RichTreeViewItems,
   TreeViewItemDepthContext,
   itemsSelectors,
-  useTreeViewRootProps,
   useTreeViewStore,
 } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -19,6 +18,8 @@ import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
 import { useExtractRichTreeViewProParameters } from './useExtractRichTreeViewProParameters';
 import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
+import { RichTreeViewVirtualizedItems } from '../components/RichTreeViewVirtualizedItems';
+import { virtualizationSelectors } from '../internals/plugins/virtualization';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -54,6 +55,10 @@ export const RichTreeViewProRoot = styled('ul', {
   listStyle: 'none',
   outline: 0,
   position: 'relative',
+  '&[data-virtualized]': {
+    height: '100%',
+    width: '100%',
+  },
 });
 
 type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
@@ -90,23 +95,29 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     }
   }
 
-  const { slots, slotProps, apiRef, parameters, forwardedProps } =
-    useExtractRichTreeViewProParameters(props);
+  const {
+    slots: inSlots,
+    slotProps,
+    apiRef,
+    parameters,
+    forwardedProps,
+  } = useExtractRichTreeViewProParameters(props);
+
+  // Context hooks
   const store = useTreeViewStore(RichTreeViewProStore, parameters);
 
+  // Ref hooks
   const ref = React.useRef<HTMLUListElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, ref);
-  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
-  const classes = useUtilityClasses(props);
 
-  const Root = slots?.root ?? RichTreeViewProRoot;
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
-    className: classes.root,
-    getSlotProps: getRootProps,
-    ownerState: props as RichTreeViewProProps<any, any>,
-  });
+  // Selector hooks
+  const isVirtualizationEnabled = useStore(store, virtualizationSelectors.enabled);
+
+  // Feature hooks
+  const classes = useUtilityClasses(props);
+  const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
+
+  const Renderer = isVirtualizationEnabled ? RichTreeViewVirtualizedItems : RichTreeViewItems;
 
   return (
     <TreeViewProvider
@@ -118,10 +129,14 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
       rootRef={ref}
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-        <Root {...rootProps}>
-          <RichTreeViewItems slots={slots} slotProps={slotProps} />
-          <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
-        </Root>
+        <Renderer
+          slots={slots}
+          slotProps={slotProps}
+          forwardedProps={forwardedProps}
+          ownerState={props}
+          rootRef={handleRef}
+        />
+        <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );
@@ -209,6 +224,13 @@ RichTreeViewPro.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
+   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
+   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
+   * Nested DOM structure is not compatible with collapse / expansion animations.
+   * @default 'flat' when using virtualization, 'nested' otherwise
+   */
+  domStructure: PropTypes.oneOf(['flat', 'nested']),
+  /**
    * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
@@ -285,6 +307,11 @@ RichTreeViewPro.propTypes = {
    * @default 12px
    */
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * Sets the height in pixel of an item.
+   * If not provided, no height restriction is applied to the tree item content element.
+   */
+  itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
    * If `true`, the reordering of items is enabled.
@@ -392,6 +419,13 @@ RichTreeViewPro.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Whether virtualization is enabled.
+   * If true, the DOM structure will be set to 'flat'.
+   * If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization.
+   * @default false
+   */
+  virtualization: PropTypes.bool,
 } as any;
 
 export { RichTreeViewPro };

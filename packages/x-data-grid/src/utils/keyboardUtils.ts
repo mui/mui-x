@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 
 // Non printable keys have a name, for example "ArrowRight", see the whole list:
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values

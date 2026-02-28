@@ -1,4 +1,4 @@
-import { GridValidRowModel, GridRowEntry, GridRowId } from '../gridRows';
+import type { GridValidRowModel, GridRowEntry, GridRowId } from '../gridRows';
 import type { GridColDef } from '../colDef/gridColDef';
 
 /**
@@ -83,7 +83,6 @@ export interface GridRowEditStartParams<
   reason?: GridRowEditStartReasons;
   /**
    * If the reason is related to a keyboard event, it contains which key was pressed.
-   * @deprecated No longer needed.
    */
   key?: string;
 }

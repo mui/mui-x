@@ -78,7 +78,7 @@ function AreaPlot(props: AreaPlotProps) {
           !!area && (
             <AreaElement
               key={seriesId}
-              id={seriesId}
+              seriesId={seriesId}
               d={d}
               color={color}
               gradientId={gradientId}

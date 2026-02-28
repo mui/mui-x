@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import {
-  GridRenderCellParams,
-  GridRowEventLookup,
+  type GridRenderCellParams,
+  type GridRowEventLookup,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,

@@ -73,6 +73,45 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## Change `seriesId` type to `string`
+
+The `seriesId` property accepted `number | string`.
+In v9, only `string` is accepted.
+
+This type modification impacts the objects in the `series` props, as well as the `highlightedItem` and `tooltipItem` objects.
+
+### Series' id should be unique
+
+In v8 series `id` properties was enforced to be unique per series type.
+In v9 series `id` properties must be unique among all series, regardless of their type.
+
+The following code was valid in v8, but in v9 one of the IDs need to be modified.
+
+```jsx
+series={[
+  { type: 'line', id: 'series-a' },
+  { type: 'bar', id: 'series-a' },
+]}
+```
+
+## Renaming `id` to `seriesId` ✅
+
+Some components used for composition got their prop `id` renamed `seriesId` to improve clarity.
+
+Here is the list of slots and components that are impacted by the renaming:
+
+| slot          | Component                                |
+| :------------ | :--------------------------------------- |
+| pieArc        | PieArc                                   |
+|               | PieArcPlot                               |
+| pieArcLabel   | PieArcLabel                              |
+|               | PieArcLabelPlot                          |
+| bar           | BarElement, AnimatedRangeBarElementProps |
+| area          | AnimatedArea, AreaElement                |
+| line          | AnimatedLine, LineElement                |
+| mark          | MarkElement                              |
+| lineHighlight | LineHighlightElement                     |
+
 ## Removed deprecated types and APIs
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
@@ -135,6 +174,55 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
+### Rename `useAxisTooltip` hook
+
+The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
+
+The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
+
+```diff
+-import { useAxisTooltip, UseAxisTooltipReturnValue, UseAxisTooltipParams } from '@mui/x-charts';
++import { useAxesTooltip, UseAxesTooltipReturnValue, UseAxesTooltipParams } from '@mui/x-charts';
+```
+
+Run the following command to do the renaming.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/rename-axis-tooltip-hook <path|folder>
+```
+
+After running the codemod make sure to adapt the hook returned value to your needs.
+
+```diff
+ function CustomTooltip() {
+   // If you want to keep only one axis
+-  const tooltipData = useAxisTooltip();
++  const tooltipData = useAxesTooltip()[0] ?? null;
+   // If you use all the axes
+-  const tooltipData = useAxisTooltip({ multipleAxes: true });
++  const tooltipData = useAxesTooltip();
+ }
+```
+
+## Line Chart
+
+### `showMark` default value changed ✅
+
+The default value of the `showMark` prop in the line series has changed from `true` to `false` in v9.
+
+If you were relying on marks being visible by default, explicitly set `showMark` to `true`:
+
+```diff
+ <LineChart
+   series={[
+     {
+       data: [1, 2, 3],
++      showMark: true,
+     },
+   ]}
+ />
+```
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
@@ -148,11 +236,208 @@ This improves consistency across chart components and developer experience.
  />
 ```
 
+### New identifier structure
+
+The heatmap identifier type has been modified as follows.
+
+This new type relies on the `xIndex`/`yIndex` to identify the cell instead of just the `dataIndex`, permitting the identification of cells without data.
+
+```diff
+ {
+  type: 'heatmap';
+  seriesId: SeriesId;
+  dataIndex?: number;
+-  xIndex?: number;
++  xIndex: number;
+-  yIndex?: number;
++  yIndex: number;
+ }
+```
+
 ## Legend
 
-### Property `type` is now required
-
-The `type` property of `LegendItemParams` has been modified from optional to required.
+### `LegendItemParams` Modification
 
 This type is used in the return value of `useLegend()`.
 If you haven't created a custom legend, you should not be impacted by this change.
+
+#### Property `type` is now required
+
+The `type` property of `LegendItemParams` has been modified from optional to required.
+
+#### Property `id` is removed
+
+The `id` property of `LegendItemParams` was deprecated in v8 and is removed in v9.
+You should use the `seriesId` and `dataIndex` instead.
+
+## Axis
+
+### Styling axes by ID
+
+The `axisClasses.id` class and the dynamically generated `MuiChartsAxis-id-{axisId}` classes have been removed.
+To style a specific axis by its ID, use the `data-axis-id` attribute selector instead.
+
+This change improves maintainability by using data attributes rather than dynamic class name suffixes.
+
+```diff
+-import { axisClasses } from '@mui/x-charts/ChartsAxis';
+-
+-// CSS selector
+-`.MuiChartsAxis-id-myXAxis`
+-// Or using axisClasses
+-`.${axisClasses.id}-myXAxis`
++import { axisClasses } from '@mui/x-charts/ChartsAxis';
++
++// CSS selector
++`.MuiChartsAxis-root[data-axis-id="myXAxis"]`
++// Or using axisClasses
++`.${axisClasses.root}[data-axis-id="myXAxis"]`
+```
+
+If you're using the `sx` prop or `styled()`:
+
+```diff
+ <LineChart
+   sx={{
+-    [`& .MuiChartsAxis-id-myXAxis`]: {
++    [`& .MuiChartsAxis-root[data-axis-id="myXAxis"]`]: {
+       // Your custom styles
+     },
+   }}
+ />
+```
+
+### The `domainLimit` function signature updated
+
+The `domainLimit` function now receives `NumberValue` instead of `number` for its parameters and return type.
+This change allows the function to work correctly with time-based axes where values are `Date` objects.
+
+`NumberValue` is a number-like type that can be either a `number` or an object with a `valueOf(): number` method.
+Some objects, such as `Date` already implement this method.
+It is now exported from `@mui/x-charts` for convenience.
+
+If you're using TypeScript and have a custom `domainLimit` function, update the types to use the new values.
+To get the numeric value, call `valueOf()` on the `NumberValue` parameters.
+
+```diff
++import { NumberValue } from '@mui/x-charts';
++
+ calculateDomainLimit(min: number, max: number) {
+   // Your implementation
+ }
+
+ <LineChart
+   xAxis={[{
+     scaleType: 'time',
+-    domainLimit: (min: number, max: number) => ({ min, max }),
++    domainLimit: (min: NumberValue, max: NumberValue) => calculateDomainLimit(min.valueOf(), max.valueOf()),
+   }]}
+ />
+```
+
+## Styling
+
+### Label mark
+
+The charts label mark has been redesigned to improve consistency in how different mark types can be styled.
+
+The `markElementClasses.mask` class got removed, together with the corresponding `mask` component which was used to create a mask effect on the label mark.
+
+Now the `line` type of mark can be styled in the same way you would a line chart's line element, since they both use SVG `<path>` elements.
+
+```diff
+  <LineChart
+    sx={{
+      [`.${lineElementClasses.root}[data-series="my-series"], .${legendClasses.item}[data-series="my-series"] .${labelMarkClasses.fill}`]:
+        {
+          strokeDasharray: '3 2',
+        },
+    }}
+  />
+```
+
+### Chart class names updated
+
+The following CSS class prefixes have been renamed to include the "Chart" suffix for consistency:
+
+| Old class prefix | New class prefix   |
+| :--------------- | :----------------- |
+| `MuiScatter-`    | `MuiScatterChart-` |
+| `MuiBar-`        | `MuiBarChart-`     |
+
+The `barClasses` and `scatterClasses` objects have been updated, so you can continue to use them without any changes.
+
+If you're using these classes manually in your styles, update them accordingly:
+
+```diff
+-`.MuiScatter-root`
++`.MuiScatterChart-root`
+
+-`.MuiBar-root`
++`.MuiBarChart-root`
+```
+
+## ChartsSurface
+
+### `data-has-focused-item` attribute removed
+
+The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
+If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem` hook instead.
+
+```ts
+const focusedItem = useFocusedItem();
+const hasFocusedItem = focusedItem !== null;
+```
+
+### Theme style override removal
+
+The `ChartsSurface` component is now comprised of `ChartsLayerContainer` and `ChartsSvgLayer`.
+As a consequence, it is no longer possible to style the component using the `MuiChartsSurface` theme key.
+If you want to style the layer container, you can use `MuiChartsLayerContainer` instead, and for the SVG layer, use `MuiChartsSvgLayer`.
+
+### Rename `useSvgRef()` by `useChartsLayerContainerRef()`
+
+The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a ref to the `ChartsLayerContainer`.
+
+### Ref target
+
+The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
+
+## Props propagation
+
+The `ref` for single component charts like `<LineChart />` is now propagated to the root element instead of the SVG element.
+
+Internally this change looks like this.
+
+```diff
+ const LineChart = React.forwardRef(function LineChart(
+   inProps: LineChartProps,
+-  ref: React.Ref<SVGSVGElement>,
++  ref: React.Ref<HTMLDivElement>,
+ ) {
+   /* ... */
+   return (
+     <ChartDataProvider>
+-      <ChartsWrapper>
++      <ChartsWrapper ref={ref}>
+         {/* ... */}
+-        <ChartsSurface ref={ref}>
++        <ChartsSurface>
+           {/* ... */}
+         </ChartsSurface>
+     </ChartDataProvider>
+   );
+ });
+```
+
+## Typescript
+
+### Remove default generic of `SeriesItemIdentifier`
+
+In v9 the argument of `SeriesItemIdentifier` is now required.
+
+It accepts an union of series types.
+For example:
+
+- `SeriesItemIdentifier<'bar'>` for a BarChart.
+- `SeriesItemIdentifier<'bar' | 'line'>` if you compose bar and line series.

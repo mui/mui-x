@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const isISGrid: Partial<GridLocaleText> = {
   // Root
@@ -165,6 +165,10 @@ const isISGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'já',
   booleanCellFalseLabel: 'nei',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Stækka',
+  longTextCellCollapseLabel: 'Minnka',
+
   // Actions cell more text
   actionsCellMore: 'meira',
 
@@ -196,11 +200,12 @@ const isISGrid: Partial<GridLocaleText> = {
   //   count,
   //   estimated
   // }) => {
+  //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //     return `${from}–${to} of ${!unknownRowCount ? count : `more than ${to}`}`;
   //   }
   //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  //   return `${from}–${to} of ${!unknownRowCount ? count : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

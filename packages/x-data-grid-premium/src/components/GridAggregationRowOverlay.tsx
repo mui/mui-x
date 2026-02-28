@@ -6,7 +6,7 @@ import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid-pro'
 import { GridSkeletonLoadingOverlayInner, useGridSelector } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
-import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
 type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };
 

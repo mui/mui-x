@@ -1,14 +1,12 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import { styled, alpha } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
@@ -18,21 +16,24 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
+import clsx from 'clsx';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
-import { useTranslations } from '../internals/utils/TranslationsContext';
-import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components';
-import '../index.css';
+import { EventSkeleton } from '../internals/components/event-skeleton';
+import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
+import { EventDialogProvider, EventDialogTrigger } from '../internals/components/event-dialog';
 
 const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'AgendaViewRoot',
+  slot: 'AgendaView',
 })(({ theme }) => ({
   width: '100%',
-  height: '100%',
+  maxHeight: '100%',
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
-  overflowY: 'scroll',
+  overflowY: 'auto',
+  position: 'relative',
 }));
 
 const AgendaViewRow = styled('section', {
@@ -56,8 +57,8 @@ const DayHeaderCell = styled('header', {
   padding: theme.spacing(2),
   gap: theme.spacing(0.5),
   '&[data-current]': {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: alpha(theme.palette.primary.light, 0.05),
+    color: theme.palette.primary.main,
   },
 }));
 
@@ -71,6 +72,9 @@ const DayNumberCell = styled('span', {
   minWidth: '4ch',
   textAlign: 'center',
   color: theme.palette.text.primary,
+  '&[data-current]': {
+    color: theme.palette.primary.main,
+  },
 }));
 
 const WeekDayCell = styled('div', {
@@ -123,22 +127,9 @@ const EventsList = styled('ul', {
   display: 'flex',
   flexDirection: 'column',
   padding: theme.spacing(1),
+  margin: 0,
+  listStyle: 'none',
   flexGrow: 1,
-  '& .EventRecurringIcon': {
-    position: 'static',
-  },
-}));
-
-// TODO: Replace with a proper loading overlay component that is shared across views
-const AgendaViewLoadingOverlay = styled(Typography, {
-  name: 'MuiEventCalendar',
-  slot: 'AgendaViewLoadingOverlay',
-})(({ theme }) => ({
-  position: 'absolute',
-  fontSize: theme.typography.body1.fontSize,
-  padding: 2,
-  color: theme.palette.text.secondary,
-  zIndex: 1,
 }));
 
 const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
@@ -160,7 +151,7 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapter();
-    const translations = useTranslations();
+    const { classes } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
     // Ref hooks
@@ -180,61 +171,75 @@ export const AgendaView = React.memo(
     const daysWithOccurrences = React.useMemo(
       () =>
         days.map((date) => {
-          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || [], adapter);
+          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
           return { date, occurrences };
         }),
-      [days, occurrencesMap, adapter],
+      [days, occurrencesMap],
     );
 
     return (
-      <AgendaViewRoot {...props} ref={handleRef}>
-        <EventPopoverProvider containerRef={containerRef}>
-          {isLoading && <AgendaViewLoadingOverlay>{translations.loading}</AgendaViewLoadingOverlay>}
-
-          {daysWithOccurrences.map(({ date, occurrences }) => (
-            <AgendaViewRow
-              key={date.key}
-              id={`AgendaViewRow-${date.key}`}
-              aria-labelledby={`DayHeaderCell-${date.key}`}
+      <AgendaViewRoot
+        {...props}
+        ref={handleRef}
+        className={clsx(props.className, classes.agendaView)}
+      >
+        {daysWithOccurrences.map(({ date, occurrences }) => (
+          <AgendaViewRow
+            className={classes.agendaViewRow}
+            key={date.key}
+            id={`AgendaViewRow-${date.key}`}
+            aria-labelledby={`DayHeaderCell-${date.key}`}
+          >
+            <DayHeaderCell
+              className={classes.agendaViewDayHeaderCell}
+              id={`DayHeaderCell-${date.key}`}
+              aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
+              data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
             >
-              <DayHeaderCell
-                id={`DayHeaderCell-${date.key}`}
-                aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
+              <DayNumberCell
+                className={classes.agendaViewDayNumberCell}
                 data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
               >
-                <DayNumberCell>{adapter.format(date.value, 'dayOfMonth')}</DayNumberCell>
-                <WeekDayCell>
-                  <AgendaWeekDayNameLabel style={{ '--number-of-lines': 1 } as React.CSSProperties}>
-                    {adapter.format(date.value, 'weekday')}
-                  </AgendaWeekDayNameLabel>
-                  <AgendaYearAndMonthLabel
-                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
-                  >
-                    {adapter.format(date.value, 'monthFullLetter')},{' '}
-                    {adapter.format(date.value, 'yearPadded')}
-                  </AgendaYearAndMonthLabel>
-                </WeekDayCell>
-              </DayHeaderCell>
-              <EventsList>
-                {occurrences.map((occurrence) => (
+                {adapter.format(date.value, 'dayOfMonth')}
+              </DayNumberCell>
+              <WeekDayCell className={classes.agendaViewWeekDayCell}>
+                <AgendaWeekDayNameLabel
+                  className={classes.agendaViewWeekDayNameLabel}
+                  style={{ '--number-of-lines': 1 } as React.CSSProperties}
+                >
+                  {adapter.format(date.value, 'weekday')}
+                </AgendaWeekDayNameLabel>
+                <AgendaYearAndMonthLabel
+                  className={classes.agendaViewYearAndMonthLabel}
+                  style={{ '--number-of-lines': 1 } as React.CSSProperties}
+                >
+                  {adapter.format(date.value, 'monthFullLetter')},{' '}
+                  {adapter.format(date.value, 'yearPadded')}
+                </AgendaYearAndMonthLabel>
+              </WeekDayCell>
+            </DayHeaderCell>
+            <EventsList className={classes.agendaViewEventsList}>
+              {isLoading && (
+                <li>
+                  <EventSkeleton data-variant="agenda" />
+                </li>
+              )}
+              {!isLoading &&
+                occurrences.map((occurrence) => (
                   <li key={occurrence.key}>
-                    <EventPopoverTrigger
-                      occurrence={occurrence}
-                      render={
-                        <EventItem
-                          occurrence={occurrence}
-                          date={date}
-                          variant="regular"
-                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
-                        />
-                      }
-                    />
+                    <EventDialogTrigger occurrence={occurrence}>
+                      <EventItem
+                        occurrence={occurrence}
+                        date={date}
+                        variant="regular"
+                        ariaLabelledBy={`DayHeaderCell-${date.key}`}
+                      />
+                    </EventDialogTrigger>
                   </li>
                 ))}
-              </EventsList>
-            </AgendaViewRow>
-          ))}
-        </EventPopoverProvider>
+            </EventsList>
+          </AgendaViewRow>
+        ))}
       </AgendaViewRoot>
     );
   }),
@@ -258,7 +263,9 @@ export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaVi
 
   return (
     <EventCalendarProvider {...parameters}>
-      <AgendaView ref={forwardedRef} {...forwardedProps} />
+      <EventDialogProvider>
+        <AgendaView ref={forwardedRef} {...forwardedProps} />
+      </EventDialogProvider>
     </EventCalendarProvider>
   );
 }) as StandaloneAgendaViewComponent;

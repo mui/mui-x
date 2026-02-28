@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import { GridExportMenuItemProps } from '@mui/x-data-grid-pro';
+import type { GridExportMenuItemProps } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridExcelExportOptions } from '../hooks/features/export';
+import type { GridExcelExportOptions } from '../hooks/features/export';
 
 export type GridExcelExportMenuItemProps = GridExportMenuItemProps<GridExcelExportOptions>;
 

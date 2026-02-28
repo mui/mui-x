@@ -1,5 +1,8 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type { SeriesItemIdentifier } from '../../../../models/seriesType';
+import type {
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type ProcessedSeries,
@@ -7,7 +10,11 @@ import {
   selectorChartSeriesLayout,
   type SeriesLayout,
 } from '../../corePlugins/useChartSeries';
-import { type TooltipPositionGetterAxesConfig } from '../../models/seriesConfig/tooltipItemPositionGetter.types';
+import {
+  type TooltipPositionGetterAxesConfig,
+  type ChartSeriesConfig,
+  selectorChartSeriesConfig,
+} from '../../corePlugins/useChartSeriesConfig';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -17,7 +24,6 @@ import {
   selectorChartsHasFocusedItem,
 } from '../useChartKeyboardNavigation';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
-import type { ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
 import type {
   AxisId,
   ChartsRadiusAxisProps,
@@ -36,7 +42,6 @@ import {
 import type { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
-import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 
 const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
 
@@ -124,7 +129,7 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
   selectorChartsTooltipAxisConfig,
 
   function selectorChartsTooltipItemPosition<T extends ChartSeriesType>(
-    identifier: SeriesItemIdentifier<T> | null,
+    identifier: SeriesItemIdentifierWithType<T> | null,
     drawingArea: ChartDrawingArea,
     seriesConfig: ChartSeriesConfig<T>,
     series: ProcessedSeries<T>,

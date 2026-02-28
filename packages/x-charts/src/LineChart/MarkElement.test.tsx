@@ -30,7 +30,7 @@ describe.for([
     const { user } = render(
       <TestWrapper>
         <MarkElementComponent
-          id="s1"
+          seriesId="s1"
           dataIndex={0}
           x={10}
           y={10}
@@ -57,7 +57,7 @@ describe.for([
     const { user } = render(
       <TestWrapper>
         <CircleMarkElement
-          id="s1"
+          seriesId="s1"
           dataIndex={0}
           x={10}
           y={10}

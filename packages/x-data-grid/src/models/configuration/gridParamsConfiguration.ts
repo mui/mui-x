@@ -1,5 +1,5 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridParamsApi } from '../api/gridParamsApi';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridParamsApi } from '../api/gridParamsApi';
 
 /**
  * Overridable params methods interface, these methods could be overriden in a higher plan package.

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
+import type { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
+import { type PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
 
 export type PromptFieldSendProps = Omit<GridSlotProps['baseIconButton'], 'className'> & {
   /**

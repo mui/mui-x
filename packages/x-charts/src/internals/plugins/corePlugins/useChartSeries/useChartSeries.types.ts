@@ -1,12 +1,18 @@
-import { type AllSeriesType, type SeriesItemIdentifier } from '../../../../models/seriesType';
+import type {
+  AllSeriesType,
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
-import { type ChartPluginSignature, type SeriesLayoutGetterResult } from '../../models';
+import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
+import { type SeriesId } from '../../../../models/seriesType/common';
 import {
+  type SeriesLayoutGetterResult,
   type SeriesProcessorParams,
   type SeriesProcessorResult,
-} from '../../models/seriesConfig/seriesProcessor.types';
-import { type UseChartSeriesConfigSignature } from '../useChartSeriesConfig';
+  type UseChartSeriesConfigSignature,
+} from '../useChartSeriesConfig';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -55,37 +61,30 @@ export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = Chart
   [type in TSeriesTypes]?: SeriesProcessorParams<type>;
 };
 
+export type SeriesIdToType = ReadonlyMap<SeriesId, ChartSeriesType>;
+
 export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType> {
   series: {
     defaultizedSeries: DefaultizedSeriesGroups<T>;
+    idToType: SeriesIdToType;
     dataset?: Readonly<DatasetType>;
   };
 }
 
-export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
-  identifier: T,
-) => string;
-
-export type CleanIdentifierFunction = <T extends { type: ChartSeriesType }>(
-  identifier: T,
-) => SeriesItemIdentifier<T['type']>;
-
-export interface UseChartSeriesInstance {
+interface UseChartSeriesInstance {
   /**
-   * Function to serialize a series item identifier into a unique string.
-   *
-   * @param identifier The identifier to serialize.
-   * @returns A unique string representing the identifier.
+   * Utils top add series type when developers do not provide it.
+   * @param {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'>} identifier The series identifier without its type
+   * @returns {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'> & Pick<SeriesItemIdentifier<SeriesType>, 'type'>}The identifier with the type.
    */
-  serializeIdentifier: SerializeIdentifierFunction;
-  /**
-   * Function to clean a series item identifier, returning only the properties
-   * relevant to the series type.
-   *
-   * @param identifier The partial identifier to clean.
-   * @returns A cleaned identifier with only the relevant properties.
-   */
-  cleanIdentifier: CleanIdentifierFunction;
+  identifierWithType: <
+    SeriesType extends ChartSeriesType,
+    Item extends { seriesId: SeriesId; type?: SeriesType },
+  >(
+    identifier: Item,
+  ) => Item extends SeriesItemIdentifier<SeriesType>
+    ? SeriesItemIdentifierWithType<SeriesType>
+    : Item & { type: SeriesType };
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =

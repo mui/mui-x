@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
@@ -197,6 +197,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'так',
   booleanCellFalseLabel: 'ні',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Показати',
+  longTextCellCollapseLabel: 'Приховати',
+
   // Actions cell more text
   actionsCellMore: 'більше',
 
@@ -222,18 +226,15 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Рядків на сторінці:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    const unknownRowCount = count == null || count === -1;
+    if (!estimated) {
+      return `${from}–${to} з ${!unknownRowCount ? count : `більше ніж ${to}`}`;
+    }
+    const estimatedLabel =
+      estimated && estimated > to ? `близько ${estimated}` : `більше ніж ${to}`;
+    return `${from}–${to} з ${!unknownRowCount ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Перейти на першу сторінку';

@@ -16,7 +16,7 @@ export function useCalendarGridDayCellContext() {
   const context = React.useContext(CalendarGridDayCellContext);
   if (context === undefined) {
     throw new Error(
-      'Scheduler: `CalendarGridDayCellContext` is missing. <CalendarGrid.DayEvent /> must be placed within <CalendarGrid.DayCell />.',
+      'MUI: `CalendarGridDayCellContext` is missing. <CalendarGrid.DayEvent /> must be placed within <CalendarGrid.DayCell />.',
     );
   }
   return context;

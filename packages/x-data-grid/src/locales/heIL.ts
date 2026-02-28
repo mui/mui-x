@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const heILGrid: Partial<GridLocaleText> = {
   // Root
@@ -164,6 +164,10 @@ const heILGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'כן',
   booleanCellFalseLabel: 'לא',
+
+  // Long text cell
+  longTextCellExpandLabel: 'הרחב',
+  longTextCellCollapseLabel: 'כווץ',
 
   // Actions cell more text
   actionsCellMore: 'עוד',

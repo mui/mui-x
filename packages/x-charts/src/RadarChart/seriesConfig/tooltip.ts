@@ -1,5 +1,8 @@
 import { getLabel } from '../../internals/getLabel';
-import type { AxisTooltipGetter, TooltipGetter } from '../../internals/plugins/models';
+import type {
+  AxisTooltipGetter,
+  TooltipGetter,
+} from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const tooltipGetter: TooltipGetter<'radar'> = (params) => {
   const { series, axesConfig, getColor, identifier } = params;

@@ -1,10 +1,13 @@
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
-import { serializeIdentifier } from '../../corePlugins/useChartSeries/serializeIdentifier';
-import type { ChartSeriesConfig } from '../../models';
-import type { VisibilityIdentifier, VisibilityMap } from './useChartVisibilityManager.types';
+import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import { serializeIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/serializeIdentifier';
+import type {
+  VisibilityIdentifierWithType,
+  VisibilityMap,
+} from './useChartVisibilityManager.types';
 
 export const visibilityParamToMap = (
-  hiddenItems: VisibilityIdentifier[] | undefined,
+  hiddenItems: VisibilityIdentifierWithType[] | undefined,
   seriesConfig: ChartSeriesConfig<ChartSeriesType>,
 ): VisibilityMap => {
   const visibilityMap: VisibilityMap = new Map();

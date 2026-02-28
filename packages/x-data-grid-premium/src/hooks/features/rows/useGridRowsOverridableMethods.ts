@@ -5,7 +5,7 @@ import {
   gridRowNodeSelector,
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowIndexLookupSelector,
-  GridRowProApi,
+  type GridRowProApi,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRowsOverridableMethodsCommunity,

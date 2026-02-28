@@ -8,10 +8,11 @@ import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowComp
 import { TreeItem, TreeItemProps } from '../../TreeItem';
 import { TreeViewItemId } from '../../models';
 import { itemsSelectors } from '../plugins/items';
-import { useTreeViewContext } from '../TreeViewProvider';
+import { useTreeViewContext, useTreeViewStyleContext } from '../TreeViewProvider';
 import { expansionSelectors } from '../plugins/expansion';
 import { RichTreeViewStore } from '../RichTreeViewStore';
 import { MinimalTreeViewState } from '../MinimalTreeViewStore';
+import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
 
 const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null
@@ -21,13 +22,13 @@ const selectorNoChildren = () => EMPTY_ARRAY;
 const selectorChildrenIdsNull = (state: MinimalTreeViewState<any, any>) =>
   itemsSelectors.itemOrderedChildrenIds(state, null);
 
-const WrappedTreeItem = React.memo(function WrappedTreeItem({
+export const RichTreeViewItem = React.memo(function RichTreeViewItem({
   itemSlot,
   itemSlotProps,
   itemId,
   skipChildren,
-}: WrappedTreeItemProps) {
-  const renderItemForRichTreeView = React.useContext(RichTreeViewItemsContext)!;
+}: RichTreeViewItemProps) {
+  const renderItemForRichTreeView = React.useContext(RichTreeViewItemsContext);
   const { store } = useTreeViewContext<RichTreeViewStore<any, any>>();
 
   const itemMeta = useStore(store, itemsSelectors.itemMeta, itemId);
@@ -45,12 +46,17 @@ const WrappedTreeItem = React.memo(function WrappedTreeItem({
     ownerState: { itemId, label: itemMeta?.label as string },
   });
 
-  return <Item {...itemProps}>{children?.map(renderItemForRichTreeView)}</Item>;
+  return (
+    <Item {...itemProps}>
+      {renderItemForRichTreeView ? children?.map(renderItemForRichTreeView) : null}
+    </Item>
+  );
 }, fastObjectShallowCompare);
 
-export function RichTreeViewItems(props: RichTreeViewItemsProps) {
-  const { slots, slotProps } = props;
+export function RichTreeViewItems<TProps extends object>(props: RichTreeViewItemsProps<TProps>) {
+  const { slots, slotProps, ownerState, forwardedProps, rootRef } = props;
   const { store } = useTreeViewContext<RichTreeViewStore<any, any>>();
+  const { classes } = useTreeViewStyleContext();
 
   const itemSlot = slots?.item as React.JSXElementConstructor<TreeItemProps> | undefined;
   const itemSlotProps = slotProps?.item;
@@ -60,12 +66,23 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
     domStructure === 'flat' ? expansionSelectors.flatList : selectorChildrenIdsNull,
   );
 
+  const getRootProps = useTreeViewRootProps(store, forwardedProps, rootRef);
+
+  const Root = slots.root;
+  const rootProps = useSlotProps({
+    elementType: Root,
+    externalSlotProps: slotProps?.root,
+    className: classes.root,
+    getSlotProps: getRootProps,
+    ownerState,
+  });
+
   const skipChildren = domStructure === 'flat';
 
   const renderItem = React.useCallback(
     (itemId: TreeViewItemId) => {
       return (
-        <WrappedTreeItem
+        <RichTreeViewItem
           itemSlot={itemSlot}
           itemSlotProps={itemSlotProps}
           key={itemId}
@@ -79,7 +96,7 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
 
   return (
     <RichTreeViewItemsContext.Provider value={renderItem}>
-      {items.map(renderItem)}
+      <Root {...rootProps}>{items.map(renderItem)}</Root>
     </RichTreeViewItemsContext.Provider>
   );
 }
@@ -91,30 +108,48 @@ interface RichTreeViewItemsOwnerState {
 
 export interface RichTreeViewItemsSlots {
   /**
+   * Element rendered at the root.
+   * @default RichTreeViewProRoot
+   */
+  root: React.ElementType;
+  /**
    * Custom component to render a Tree Item.
    * @default TreeItem.
    */
   item?: React.JSXElementConstructor<TreeItemProps>;
 }
 
-export interface RichTreeViewItemsSlotProps {
+export interface RichTreeViewItemsSlotProps<TProps extends object> {
   item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState>;
+  root?: SlotComponentProps<'ul', {}, TProps>;
 }
 
-export interface RichTreeViewItemsProps {
+export interface RichTreeViewItemsProps<TProps extends object> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: RichTreeViewItemsSlots;
+  slots: RichTreeViewItemsSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: RichTreeViewItemsSlotProps;
+  slotProps?: RichTreeViewItemsSlotProps<TProps>;
+  /**
+   * Owner state applied to the root slot component.
+   */
+  ownerState: TProps;
+  /**
+   * Props provided to the component and applied to the root element.
+   */
+  forwardedProps: React.HTMLAttributes<HTMLUListElement>;
+  /**
+   * Ref forwarded to the root element.
+   */
+  rootRef: React.Ref<HTMLUListElement>;
 }
 
-interface WrappedTreeItemProps extends Pick<TreeItemProps, 'id' | 'itemId' | 'children'> {
+interface RichTreeViewItemProps extends Pick<TreeItemProps, 'id' | 'itemId' | 'children'> {
   itemSlot: React.JSXElementConstructor<TreeItemProps> | undefined;
   itemSlotProps: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState> | undefined;
   skipChildren: boolean;

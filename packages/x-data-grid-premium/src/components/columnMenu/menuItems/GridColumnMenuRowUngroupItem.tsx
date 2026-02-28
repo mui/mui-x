@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   gridColumnLookupSelector,
   useGridSelector,
-  GridColumnMenuItemProps,
+  type GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';

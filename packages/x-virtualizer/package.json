@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-virtualizer",
-  "version": "0.3.2",
+  "version": "1.0.0-alpha.0",
   "author": "MUI Team",
   "description": "MUI virtualization library",
   "license": "MIT",
@@ -55,5 +55,8 @@
     ".": "./src/index.ts",
     "./useVirtualizer": "./src/useVirtualizer.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

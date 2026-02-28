@@ -1,18 +1,18 @@
 'use client';
-import * as React from 'react';
+import { useSchedulerStoreContext } from '../use-scheduler-store-context';
 import { EventCalendarStore } from '../use-event-calendar';
 
-export const EventCalendarStoreContext = React.createContext<EventCalendarStore<any, any> | null>(
-  null,
-);
-
 export function useEventCalendarStoreContext<TEvent extends object, TResource extends object>() {
-  const context = React.useContext(EventCalendarStoreContext);
-  if (context == null) {
+  const context = useSchedulerStoreContext();
+
+  if (
+    context.instanceName !== 'EventCalendarStore' &&
+    context.instanceName !== 'EventCalendarPremiumStore'
+  ) {
     throw new Error(
-      'useEventCalendarStoreContext must be used within an <EventCalendar /> component',
+      'MUI: useEventCalendarStoreContext must be used within an <EventCalendar /> component',
     );
   }
 
-  return context as EventCalendarStore<TEvent, TResource>;
+  return context as unknown as EventCalendarStore<TEvent, TResource>;
 }

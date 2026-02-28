@@ -24,7 +24,7 @@ import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import type { ChartDrawingArea } from '../../../../hooks';
-import { type ChartSeriesConfig } from '../../models/seriesConfig';
+import { type ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { type ComputedAxisConfig } from './useChartCartesianAxis.types';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { type ZoomData } from './zoom.types';

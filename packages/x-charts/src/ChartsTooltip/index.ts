@@ -8,10 +8,9 @@ export * from './ChartsItemTooltipContent';
 
 export * from './ChartsTooltipTable';
 
-export type { ItemTooltip } from '../internals/plugins/models/seriesConfig/tooltipGetter.types';
+export type { ItemTooltip } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 export type { UseItemTooltipReturnValue, UseRadarItemTooltipReturnValue } from './useItemTooltip';
 export { useItemTooltip, useRadarItemTooltip } from './useItemTooltip';
-export * from './useAxisTooltip';
 export * from './useAxesTooltip';
 
 export { useMouseTracker } from './utils';

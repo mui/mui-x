@@ -1,12 +1,34 @@
 'use client';
 
-import { type ChartPlugin, type ChartSeriesConfig } from '../../models';
-import { type UseChartSeriesConfigSignature } from './useChartSeriesConfig.types';
+import useEventCallback from '@mui/utils/useEventCallback';
+import { type ChartPlugin } from '../../models';
+import {
+  type UseChartSeriesConfigSignature,
+  type SerializeIdentifierFunction,
+  type CleanIdentifierFunction,
+} from './useChartSeriesConfig.types';
+import { serializeIdentifier as serializeIdentifierFn } from './utils/serializeIdentifier';
+import { cleanIdentifier as cleanIdentifierFn } from './utils/cleanIdentifier';
+import type { ChartSeriesConfig } from './types';
+import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
-export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = () => {
-  // The seriesConfig is static and doesn't change after initialization
-  // It's stored in the initial state and accessed via selectors
-  return {};
+export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = ({ store }) => {
+  const serializeIdentifier: SerializeIdentifierFunction = useEventCallback((identifier) =>
+    serializeIdentifierFn(store.state.seriesConfig.config, identifier),
+  );
+
+  const cleanIdentifier: CleanIdentifierFunction = useEventCallback(
+    <T extends { type: ChartSeriesType }>(identifier: T): SeriesItemIdentifierWithType<T['type']> =>
+      cleanIdentifierFn<T['type'], T>(store.state.seriesConfig.config, identifier),
+  );
+
+  return {
+    instance: {
+      serializeIdentifier,
+      cleanIdentifier,
+    },
+  };
 };
 
 useChartSeriesConfig.params = {

@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import {
   DataGrid,
-  DataGridProps,
-  GridSortModel,
+  type DataGridProps,
+  type GridSortModel,
   useGridApiRef,
-  GridApi,
-  GridColDef,
+  type GridApi,
+  type GridColDef,
   gridStringOrNumberComparator,
-  GridInitialState,
+  type GridInitialState,
 } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';

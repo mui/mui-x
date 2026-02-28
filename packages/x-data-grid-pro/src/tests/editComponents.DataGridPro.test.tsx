@@ -1,10 +1,10 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
-  DataGridProProps,
+  type GridApi,
+  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
-  GridEditCellValueParams,
+  type GridEditCellValueParams,
   renderEditBooleanCell,
   renderEditDateCell,
   renderEditInputCell,
@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, spyApi, sleep } from 'test/utils/helperFn';
-import { spy, SinonSpy } from 'sinon';
+import { spy, type SinonSpy } from 'sinon';
 
 /**
  * Creates a date that is compatible with years before 1901

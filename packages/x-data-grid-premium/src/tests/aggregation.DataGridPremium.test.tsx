@@ -1,18 +1,18 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { SinonSpy, spy } from 'sinon';
+import { type SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
+  type DataGridPremiumProps,
   GRID_AGGREGATION_FUNCTIONS,
-  GridAggregationFunction,
-  GridApi,
-  GridRenderCellParams,
-  GridGroupNode,
+  type GridAggregationFunction,
+  type GridApi,
+  type GridRenderCellParams,
+  type GridGroupNode,
   useGridApiRef,
-  GridColDef,
+  type GridColDef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -999,6 +999,24 @@ describe('<DataGridPremium /> - Aggregation', () => {
         '5',
         '5' /* Agg "Cat B" */,
       ]);
+    });
+
+    it('should show aggregation with both sorting and pinnedColumns in initialState', async () => {
+      await render(
+        <Test
+          initialState={{
+            aggregation: { model: { id: 'max' } },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'asc' }],
+            },
+            pinnedColumns: {
+              left: ['id'],
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5']);
     });
   });
 

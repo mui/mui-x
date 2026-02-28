@@ -1,4 +1,4 @@
-import { PromptResponse, PromptResolverOptions } from './gridAiAssistantInterfaces';
+import type { PromptResponse, PromptResolverOptions } from './gridAiAssistantInterfaces';
 
 type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 
@@ -42,7 +42,7 @@ export function gridDefaultPromptResolver(
     .then((result) => result.json())
     .then((result: Result<PromptResponse>) => {
       if (result.ok === false) {
-        return Promise.reject(new Error(result.message));
+        return Promise.reject(/* minify-error-disabled */ new Error(result.message));
       }
       return result.data;
     });

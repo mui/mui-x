@@ -30,7 +30,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
   const animatedProps = useAnimateArea(props);
 
   return (
-    <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-area-clip`}>
+    <AppearingMask skipAnimation={skipAnimation} seriesId={`${ownerState.seriesId}-area-clip`}>
       <path
         fill={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
         filter={
@@ -43,7 +43,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
         }
         opacity={ownerState.isFaded ? 0.3 : 1}
         stroke="none"
-        data-series={ownerState.id}
+        data-series={ownerState.seriesId}
         data-highlighted={ownerState.isHighlighted || undefined}
         data-faded={ownerState.isFaded || undefined}
         {...other}
@@ -63,7 +63,7 @@ AnimatedArea.propTypes = {
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
     gradientId: PropTypes.string,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
   }).isRequired,

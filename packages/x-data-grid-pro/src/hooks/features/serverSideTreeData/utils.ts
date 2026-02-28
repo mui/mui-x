@@ -1,13 +1,13 @@
 import {
-  GridRowId,
-  GridRowTreeConfig,
+  type GridRowId,
+  type GridRowTreeConfig,
   GRID_ROOT_GROUP_ID,
-  GridDataSourceGroupNode,
+  type GridDataSourceGroupNode,
 } from '@mui/x-data-grid';
 import {
   defaultGridFilterLookup,
   getTreeNodeDescendants,
-  GridRowTreeCreationParams,
+  type GridRowTreeCreationParams,
 } from '@mui/x-data-grid/internals';
 
 export function skipFiltering(rowTree: GridRowTreeConfig) {
@@ -33,6 +33,9 @@ export function skipSorting(rowTree: GridRowTreeConfig) {
 /**
  * Retrieves the parent path for a row from the previous tree state.
  * Used during full tree updates to maintain correct hierarchy.
+ *
+ * Uses the parent node's `path` property, which stores the group keys
+ * representing the full path to the parent (i.e. the keys used to fetch the current node).
  */
 export function getParentPath(
   rowId: GridRowId,
@@ -41,11 +44,23 @@ export function getParentPath(
   if (
     treeCreationParams.updates.type !== 'full' ||
     !treeCreationParams.previousTree?.[rowId] ||
-    treeCreationParams.previousTree[rowId].depth < 1 ||
-    !('path' in treeCreationParams.previousTree[rowId])
+    treeCreationParams.previousTree[rowId].depth < 1
   ) {
     return [];
   }
 
-  return (treeCreationParams.previousTree[rowId] as GridDataSourceGroupNode).path || [];
+  const node = treeCreationParams.previousTree[rowId];
+  const parentId = node.parent;
+
+  if (parentId == null) {
+    return [];
+  }
+
+  const parentNode = treeCreationParams.previousTree[parentId];
+
+  if (parentNode && 'path' in parentNode) {
+    return (parentNode as GridDataSourceGroupNode).path || [];
+  }
+
+  return [];
 }

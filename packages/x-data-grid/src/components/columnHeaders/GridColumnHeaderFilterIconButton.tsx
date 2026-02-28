@@ -13,7 +13,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
-import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
+import type { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 
 export interface ColumnHeaderFilterIconButtonProps {
   field: string;

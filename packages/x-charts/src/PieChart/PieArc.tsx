@@ -9,14 +9,20 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { type PieItemId } from '../models';
+import { type SeriesId } from '../models';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when highlighted. */
+  /**
+   * Styles applied to the root element when highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element when faded. */
+  /**
+   * Styles applied to the root element when faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
@@ -30,7 +36,7 @@ export interface PieArcClasses {
 export type PieArcClassKey = keyof PieArcClasses;
 
 interface PieArcOwnerState {
-  id: PieItemId;
+  seriesId: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -53,11 +59,11 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
 ]);
 
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
-  const { classes, id, isFaded, isHighlighted, dataIndex } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted, dataIndex } = ownerState;
   const slots = {
     root: [
       'root',
-      `series-${id}`,
+      `series-${seriesId}`,
       `data-index-${dataIndex}`,
       isHighlighted && 'highlighted',
       isFaded && 'faded',
@@ -77,7 +83,7 @@ const PieArcRoot = styled('path', {
   transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
 });
 
-export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
+export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> &
   PieArcOwnerState & {
     cornerRadius: number;
     endAngle: number;
@@ -103,7 +109,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     classes: innerClasses,
     color,
     dataIndex,
-    id,
+    seriesId,
     isFaded,
     isHighlighted,
     isFocused,
@@ -124,7 +130,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
   const stroke = strokeProp ?? (theme.vars || theme).palette.background.paper;
 
   const ownerState = {
-    id,
+    seriesId,
     dataIndex,
     classes: innerClasses,
     color,
@@ -135,7 +141,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
   const classes = useUtilityClasses(ownerState);
 
   const interactionProps = useInteractionItemProps(
-    { type: 'pie', seriesId: id, dataIndex },
+    { type: 'pie', seriesId, dataIndex },
     skipInteraction,
   );
   const animatedProps = useAnimatePieArc({
@@ -155,14 +161,14 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
-      fill={ownerState.color}
-      opacity={ownerState.isFaded ? 0.3 : 1}
-      filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+      fill={color}
+      opacity={isFaded ? 0.3 : 1}
+      filter={isHighlighted ? 'brightness(120%)' : 'none'}
       stroke={stroke}
       strokeWidth={1}
       strokeLinejoin="round"
-      data-highlighted={ownerState.isHighlighted || undefined}
-      data-faded={ownerState.isFaded || undefined}
+      data-highlighted={isHighlighted || undefined}
+      data-faded={isFaded || undefined}
       {...other}
       {...interactionProps}
       {...animatedProps}
@@ -179,13 +185,13 @@ PieArc.propTypes = {
   cornerRadius: PropTypes.number.isRequired,
   dataIndex: PropTypes.number.isRequired,
   endAngle: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isFocused: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   outerRadius: PropTypes.number.isRequired,
   paddingAngle: PropTypes.number.isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, the animation is disabled.
    */

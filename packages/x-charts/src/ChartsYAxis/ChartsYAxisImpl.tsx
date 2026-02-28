@@ -32,7 +32,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
   const { scale: yScale, tickNumber, reverse, ordinalTimeTicks, ...settings } = axis;
   const isHydrated = useIsHydrated();
 
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
   const defaultizedProps = { ...defaultProps, ...themedProps };
 
@@ -120,6 +120,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
     <YAxisRoot
       transform={`translate(${position === 'right' ? left + width + offset : left - offset}, 0)`}
       className={classes.root}
+      data-axis-id={defaultizedProps.id}
       sx={sx}
     >
       {!disableLine && <Line y1={top} y2={top + height} className={classes.line} {...lineProps} />}

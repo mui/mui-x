@@ -7,14 +7,20 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
-import { type PieItemId } from '../models/seriesType/pie';
+import { type SeriesId } from '../models';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when highlighted. */
+  /**
+   * Styles applied to the root element when highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element when faded. */
+  /**
+   * Styles applied to the root element when faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /** Styles applied to the root element when animation is not skipped. */
   animate: string;
@@ -28,7 +34,7 @@ export interface PieArcLabelClasses {
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
 interface PieArcLabelOwnerState {
-  id: PieItemId;
+  seriesId: SeriesId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -49,11 +55,11 @@ export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
-  const { classes, id, isFaded, isHighlighted, skipAnimation } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
     root: [
       'root',
-      `series-${id}`,
+      `series-${seriesId}`,
       isHighlighted && 'highlighted',
       isFaded && 'faded',
       !skipAnimation && 'animate',
@@ -86,7 +92,7 @@ const PieArcLabelRoot = styled('text', {
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
-  Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color' | 'id'> & {
+  Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color'> & {
     startAngle: number;
     endAngle: number;
     innerRadius: number;
@@ -102,7 +108,7 @@ export type PieArcLabelProps = PieArcLabelOwnerState &
 const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
   function PieArcLabel(props, ref) {
     const {
-      id,
+      seriesId,
       classes: innerClasses,
       color,
       startAngle,
@@ -121,7 +127,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     } = props;
 
     const ownerState = {
-      id,
+      seriesId,
       classes: innerClasses,
       color,
       isFaded,
@@ -144,6 +150,8 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     return (
       <PieArcLabelRoot
         className={classes.root}
+        data-highlighted={isHighlighted || undefined}
+        data-faded={isFaded || undefined}
         {...other}
         {...animatedProps}
         opacity={hidden ? 0 : 1}
@@ -166,12 +174,12 @@ PieArcLabel.propTypes = {
   endAngle: PropTypes.number.isRequired,
   formattedArcLabel: PropTypes.string,
   hidden: PropTypes.bool,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   outerRadius: PropTypes.number.isRequired,
   paddingAngle: PropTypes.number.isRequired,
+  seriesId: PropTypes.string.isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   startAngle: PropTypes.number.isRequired,
 } as any;

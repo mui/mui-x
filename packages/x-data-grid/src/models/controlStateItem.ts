@@ -1,4 +1,4 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import type { GridCallbackDetails } from './api/gridCallbackDetails';
 import type { GridEventLookup, GridControlledStateEventLookup } from './events';
 import type { OutputSelector } from '../utils/createSelector';

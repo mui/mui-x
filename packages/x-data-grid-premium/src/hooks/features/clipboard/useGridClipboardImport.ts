@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  GridColDef,
-  GridRowId,
-  GridValidRowModel,
+  type GridColDef,
+  type GridRowId,
+  type GridValidRowModel,
   GRID_CHECKBOX_SELECTION_FIELD,
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
-  GridRowModel,
+  type GridRowModel,
   useGridEventPriority,
   useGridEvent,
-  GridEventListener,
+  type GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowSelectionIdsSelector,
@@ -19,7 +19,7 @@ import {
 import {
   getRowIdFromRowModel,
   getActiveElement,
-  GridPipeProcessor,
+  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   getPublicApiRef,
   isPasteShortcut,
@@ -28,7 +28,7 @@ import {
 import { warnOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import debounce from '@mui/utils/debounce';
-import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 const columnFieldsToExcludeFromPaste = [

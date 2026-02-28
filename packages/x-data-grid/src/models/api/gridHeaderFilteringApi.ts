@@ -1,5 +1,5 @@
-import { GridColDef } from '../colDef';
-import { GridHeaderFilteringState } from '../gridHeaderFilteringModel';
+import type { GridColDef } from '../colDef';
+import type { GridHeaderFilteringState } from '../gridHeaderFilteringModel';
 
 export interface GridHeaderFilteringPrivateApi {
   /**

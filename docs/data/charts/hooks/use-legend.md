@@ -5,9 +5,9 @@ productId: x-charts
 
 # useLegend
 
-<p class="description">Access formatted legend data for creating custom legend components.</p>
+<p class="description">Get formatted legend data to build custom legend components.</p>
 
-The `useLegend` hook provides access to formatted legend data that can be used to create custom legend components.
+The `useLegend()` hook returns formatted legend data for building custom legend components.
 
 ## Usage
 
@@ -24,7 +24,7 @@ function CustomLegend() {
 
 ## Return value
 
-The hook returns an object with the following structure:
+`useLegend()` returns an object with the following structure:
 
 ```ts
 {
@@ -32,8 +32,9 @@ The hook returns an object with the following structure:
 }
 ```
 
-The [LegendItemParams](/x/api/charts/legend-item-params/) interface defines the structure of each legend item.
+The [`LegendItemParams`](/x/api/charts/legend-item-params/) interface defines the structure of each legend item.
 
 ## Caveats
 
-This hook must be used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
+You can only use this hook within a chart context.
+See the [hooks overview](/x/react-charts/hooks/) for usage requirements.

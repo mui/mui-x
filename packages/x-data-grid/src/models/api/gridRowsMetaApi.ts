@@ -1,5 +1,5 @@
-import { GridRowId } from '../gridRows';
-import { HeightEntry } from '../../hooks/features/rows/gridRowsMetaInterfaces';
+import type { GridRowId } from '../gridRows';
+import type { HeightEntry } from '../../hooks/features/rows/gridRowsMetaInterfaces';
 
 /**
  * The Row Meta API interface that is available in the grid `apiRef`.

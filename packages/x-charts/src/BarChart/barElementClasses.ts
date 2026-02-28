@@ -6,9 +6,15 @@ import { type SeriesId } from '../models/seriesType/common';
 export interface BarElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element if it is highlighted. */
+  /**
+   * Styles applied to the root element if it is highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element if it is faded. */
+  /**
+   * Styles applied to the root element if it is faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
@@ -20,11 +26,12 @@ export interface BarElementClasses {
 export type BarElementClassKey = keyof BarElementClasses;
 
 export interface BarElementOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  isFocused: boolean;
   classes?: Partial<BarElementClasses>;
 }
 
@@ -40,9 +47,9 @@ export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiB
 ]);
 
 export const useUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes, id, isHighlighted, isFaded } = ownerState;
+  const { classes, seriesId, isHighlighted, isFaded } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getBarElementUtilityClass, classes);

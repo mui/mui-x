@@ -17,7 +17,7 @@ export interface LineHighlightElementClasses {
 export type HighlightElementClassKey = keyof LineHighlightElementClasses;
 
 interface LineHighlightElementCommonProps {
-  id: SeriesId;
+  seriesId: SeriesId;
   color: string;
   x: number;
   y: number;
@@ -33,21 +33,25 @@ export const lineHighlightElementClasses: LineHighlightElementClasses = generate
   ['root'],
 );
 
-const useUtilityClasses = (ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'id'>) => {
-  const { classes, id } = ownerState;
+const useUtilityClasses = (
+  ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'seriesId'>,
+) => {
+  const { classes, seriesId } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`],
+    root: ['root', `series-${seriesId}`],
   };
 
   return composeClasses(slots, getHighlightElementUtilityClass, classes);
 };
 
 export type LineHighlightElementProps =
-  | (LineHighlightElementCommonProps &
-      ({ shape: 'circle' } & Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>))
+  | (LineHighlightElementCommonProps & { shape: 'circle' } & Omit<
+        React.SVGProps<SVGCircleElement>,
+        'ref'
+      >)
   | (LineHighlightElementCommonProps & {
       shape: 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
-    } & Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'>);
+    } & Omit<React.SVGProps<SVGPathElement>, 'ref'>);
 
 /**
  * Demos:
@@ -60,7 +64,7 @@ export type LineHighlightElementProps =
  * - [LineHighlightElement API](https://mui.com/x/api/charts/line-highlight-element/)
  */
 function LineHighlightElement(props: LineHighlightElementProps) {
-  const { x, y, id, classes: innerClasses, color, shape, ...other } = props;
+  const { x, y, seriesId, classes: innerClasses, color, shape, ...other } = props;
 
   const classes = useUtilityClasses(props);
 
@@ -96,7 +100,7 @@ LineHighlightElement.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
     .isRequired,
 } as any;

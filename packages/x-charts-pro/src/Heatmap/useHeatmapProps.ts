@@ -62,6 +62,7 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     dataset,
     sx,
     onAxisClick,
+    onItemClick,
     children,
     slots,
     slotProps,
@@ -142,6 +143,7 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     onHighlightChange,
     enableKeyboardNavigation,
     onAxisClick,
+    onItemClick,
     plugins: HEATMAP_PLUGINS,
   };
 

@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const arSDGrid: Partial<GridLocaleText> = {
   // Root
@@ -164,6 +164,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'نعم',
   booleanCellFalseLabel: 'لا',
+
+  // Long text cell
+  longTextCellExpandLabel: 'توسيع',
+  longTextCellCollapseLabel: 'طوي',
 
   // Actions cell more text
   actionsCellMore: 'المزيد',

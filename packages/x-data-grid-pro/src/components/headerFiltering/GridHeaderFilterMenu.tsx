@@ -6,9 +6,9 @@ import {
   useGridRootProps,
   useGridApiContext,
   GridMenu,
-  GridFilterOperator,
-  GridFilterItem,
-  GridColDef,
+  type GridFilterOperator,
+  type GridFilterItem,
+  type GridColDef,
 } from '@mui/x-data-grid';
 
 interface GridHeaderFilterMenuProps {

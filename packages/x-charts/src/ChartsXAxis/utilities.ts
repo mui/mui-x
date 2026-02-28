@@ -3,11 +3,11 @@ import { type AxisConfig, type ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 
 export const useUtilityClasses = (
-  ownerState: Pick<AxisConfig<any, any, ChartsXAxisProps>, 'id' | 'position' | 'classes'>,
+  ownerState: Pick<AxisConfig<any, any, ChartsXAxisProps>, 'position' | 'classes'>,
 ) => {
-  const { classes, position, id } = ownerState;
+  const { classes, position } = ownerState;
   const slots = {
-    root: ['root', 'directionX', position, `id-${id}`],
+    root: ['root', 'directionX', position],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],

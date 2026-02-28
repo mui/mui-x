@@ -10,10 +10,10 @@ export interface ScatterClasses {
 export type ScatterClassKey = keyof ScatterClasses;
 
 export function getScatterUtilityClass(slot: string) {
-  return generateUtilityClass('MuiScatter', slot);
+  return generateUtilityClass('MuiScatterChart', slot);
 }
 
-export const scatterClasses: ScatterClasses = generateUtilityClasses('MuiScatter', ['root']);
+export const scatterClasses: ScatterClasses = generateUtilityClasses('MuiScatterChart', ['root']);
 
 export const useUtilityClasses = (classes?: Partial<ScatterClasses>) => {
   const slots = {

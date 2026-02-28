@@ -242,7 +242,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
         }
 
         default:
-          throw new Error('not supported');
+          throw /* minify-error-disabled */ new Error('not supported');
       }
     },
     [
@@ -356,7 +356,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
       }
 
       default:
-        throw new Error('You must provide the type for ClockView');
+        throw new Error('MUI X: You must provide the type for ClockView');
     }
   }, [
     view,

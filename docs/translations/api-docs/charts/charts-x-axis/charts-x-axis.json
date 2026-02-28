@@ -36,13 +36,18 @@
     "tickPlacement": {
       "description": "The placement of ticks in regard to the band interval. Only used if scale is &#39;band&#39;."
     },
-    "tickSize": { "description": "The size of the ticks." }
+    "tickSize": { "description": "The size of the ticks." },
+    "tickSpacing": {
+      "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
+    }
   },
   "classDescriptions": {},
   "slotDescriptions": {
     "axisLabel": "Custom component for axis label.",
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
-    "axisTickLabel": "Custom component for tick label."
+    "axisTickLabel": "Custom component for tick label.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis."
   }
 }

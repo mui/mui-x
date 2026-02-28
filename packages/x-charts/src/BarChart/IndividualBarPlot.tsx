@@ -61,7 +61,7 @@ export function IndividualBarPlot({
               const barElement = (
                 <BarElement
                   key={dataIndex}
-                  id={seriesId}
+                  seriesId={seriesId}
                   dataIndex={dataIndex}
                   color={color}
                   skipAnimation={skipAnimation ?? false}

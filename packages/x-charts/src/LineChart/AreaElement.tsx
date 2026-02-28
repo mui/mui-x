@@ -14,9 +14,15 @@ import { type SeriesId } from '../models/seriesType/common';
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when highlighted. */
+  /**
+   * Styles applied to the root element when highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element when faded. */
+  /**
+   * Styles applied to the root element when faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
@@ -28,7 +34,7 @@ export interface AreaElementClasses {
 export type AreaElementClassKey = keyof AreaElementClasses;
 
 export interface AreaElementOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   color: string;
   gradientId?: string;
   isFaded: boolean;
@@ -48,9 +54,9 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getAreaElementUtilityClass, classes);
@@ -72,7 +78,7 @@ export interface AreaElementProps
   extends
     Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
-    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color'> {
   d: string;
   /**
    * The props used for each component slot.
@@ -98,7 +104,7 @@ export interface AreaElementProps
  */
 function AreaElement(props: AreaElementProps) {
   const {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
@@ -108,13 +114,13 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId });
   const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
+    seriesId,
   });
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
@@ -131,6 +137,8 @@ function AreaElement(props: AreaElementProps) {
       ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
     },
     className: classes.root,
     ownerState,
@@ -148,7 +156,7 @@ AreaElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

@@ -2,9 +2,9 @@
 // Non-realistic set focused on edge cases of timezone handling.
 
 export const resources = [
-  { id: 'ny', title: 'New York', eventColor: 'violet' },
-  { id: 'paris', title: 'Paris', eventColor: 'jade' },
-  { id: 'tokyo', title: 'Tokyo', eventColor: 'cyan' },
+  { id: 'ny', title: 'New York', eventColor: 'purple' },
+  { id: 'paris', title: 'Paris', eventColor: 'teal' },
+  { id: 'tokyo', title: 'Tokyo', eventColor: 'teal' },
   { id: 'la', title: 'Los Angeles', eventColor: 'orange' },
   { id: 'sydney', title: 'Sydney', eventColor: 'pink' },
 ];
@@ -74,7 +74,7 @@ export const initialEvents = [
     rrule: {
       freq: 'MONTHLY',
       byMonthDay: [15],
-      until: new Date('2025-06-30T21:59:00Z'), // 23:59 Paris → 21:59Z (after DST adjust)
+      until: '2025-06-30T21:59:00Z', // 23:59 Paris → 21:59Z (after DST adjust)
     },
   },
   // Tokyo daily — 07:00 JST → always UTC+9 (Tokyo has no DST)

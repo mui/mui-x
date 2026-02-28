@@ -1,5 +1,5 @@
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import { GridSingleSelectColDef, ValueOptions } from '../models/colDef/gridColDef';
+import type { GridSingleSelectColDef, ValueOptions } from '../models/colDef/gridColDef';
 import { renderEditSingleSelectCell } from '../components/cell/GridEditSingleSelectCell';
 import { getGridSingleSelectOperators } from './gridSingleSelectOperators';
 import {

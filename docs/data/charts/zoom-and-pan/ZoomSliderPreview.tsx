@@ -66,7 +66,6 @@ const lineSettings = {
   series: [
     {
       data: lineData,
-      showMark: false,
       valueFormatter: (v: number | null) => percentageFormatter.format(v!),
     },
   ],
@@ -93,7 +92,7 @@ const areaSettings = {
     data: populationPrediction2050
       .filter((point) => point.location === continent)
       .map((point) => point.value),
-    showMark: false,
+
     area: true,
     label: continent,
     stack: 'population',

@@ -57,7 +57,7 @@ export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line
  *
  * API:
  *
- * - [ChartDataProviderPro API](https://mui.com/x/api/charts/chart-data-provider/)
+ * - [ChartDataProviderPro API](https://mui.com/x/api/charts/chart-data-provider-pro/)
  *
  * @example
  * ```jsx

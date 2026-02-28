@@ -10,7 +10,7 @@ import {
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
 } from './static-data';
-import { GridDataGeneratorContext } from './gridColDefGenerator';
+import type { GridDataGeneratorContext } from './gridColDefGenerator';
 
 let chance: Chance.Chance;
 let chanceGuid: Chance.Chance;

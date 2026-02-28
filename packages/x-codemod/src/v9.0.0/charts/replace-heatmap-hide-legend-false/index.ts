@@ -27,7 +27,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   }).toSource(printOptions);
 }
 
-export const testConfig = {
+export const testConfig = () => ({
   name: 'replace-heatmap-hide-legend-false',
   specFiles: [
     {
@@ -36,4 +36,4 @@ export const testConfig = {
       expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
     },
   ],
-};
+});

@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
+  type GridApi,
   useGridApiRef,
   DataGridPremium,
-  DataGridPremiumProps,
-  GridColDef,
+  type DataGridPremiumProps,
+  type GridColDef,
 } from '@mui/x-data-grid-premium';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { SinonSpy, spy, stub, SinonStub } from 'sinon';
+import { type SinonSpy, spy, stub, type SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';

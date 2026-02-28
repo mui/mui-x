@@ -34,6 +34,10 @@
     "defaultSelectedItems": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
+    "domStructure": {
+      "type": { "name": "enum", "description": "'flat'<br>&#124;&nbsp;'nested'" },
+      "default": "'flat' when using virtualization, 'nested' otherwise"
+    },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "expansionTrigger": {
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
@@ -100,6 +104,7 @@
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
     },
+    "itemHeight": { "type": { "name": "number" } },
     "itemsReordering": { "type": { "name": "bool" }, "default": "false" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
@@ -180,7 +185,8 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
-    }
+    },
+    "virtualization": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "RichTreeViewPro",
   "imports": [

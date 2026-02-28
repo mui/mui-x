@@ -38,6 +38,18 @@
       "description": "Custom component for tick label.",
       "default": "ChartsText",
       "class": null
+    },
+    {
+      "name": "xAxis",
+      "description": "Custom component for the x-axis.",
+      "default": "ChartsXAxis",
+      "class": null
+    },
+    {
+      "name": "yAxis",
+      "description": "Custom component for the y-axis.",
+      "default": "ChartsYAxis",
+      "class": null
     }
   ],
   "classes": [
@@ -57,12 +69,6 @@
       "key": "directionY",
       "className": "MuiChartsAxis-directionY",
       "description": "Styles applied to y-axes.",
-      "isGlobal": false
-    },
-    {
-      "key": "id",
-      "className": "MuiChartsAxis-id",
-      "description": "Styles applied to the root element for the axis with the given ID.\nNeeds to be suffixed with the axis ID: `.${axisClasses.id}-${axisId}`.",
       "isGlobal": false
     },
     {

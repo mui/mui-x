@@ -1,5 +1,5 @@
 import { createSelector, createRootSelector } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 export const gridHeaderFilteringStateSelector = createRootSelector(
   (state: GridStateCommunity) => state.headerFiltering,

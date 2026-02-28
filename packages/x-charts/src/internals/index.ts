@@ -18,6 +18,7 @@ export { useLinePlotData } from '../LineChart/useLinePlotData';
 export * from '../BarChart/useBarChartProps';
 export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
+export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';
@@ -49,7 +50,6 @@ export * from './store/useCharts';
 export * from './store/useStore';
 
 // plugins configs
-
 export * from '../BarChart/BarChart.plugins';
 export * from '../LineChart/LineChart.plugins';
 export * from '../ScatterChart/ScatterChart.plugins';
@@ -59,7 +59,7 @@ export * from '../PieChart/PieChart.plugins';
 // utils
 export * from './configInit';
 export * from './getLabel';
-export * from './getSVGPoint';
+export * from './getChartPoint';
 export * from './isDefined';
 export * from './getScale';
 export * from './stacking';
@@ -74,6 +74,7 @@ export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
 export * from './commonNextFocusItem';
+export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';

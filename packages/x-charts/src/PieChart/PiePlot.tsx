@@ -72,7 +72,7 @@ function PiePlot(props: PiePlotProps) {
               outerRadius={seriesLayout[seriesId].radius.outer}
               cornerRadius={cornerRadius}
               paddingAngle={paddingAngle}
-              id={seriesId}
+              seriesId={seriesId}
               data={data}
               skipAnimation={skipAnimation}
               highlighted={highlighted}
@@ -100,7 +100,7 @@ function PiePlot(props: PiePlotProps) {
               arcLabelRadius={seriesLayout[seriesId].radius.label}
               cornerRadius={cornerRadius}
               paddingAngle={paddingAngle}
-              id={seriesId}
+              seriesId={seriesId}
               data={data}
               skipAnimation={skipAnimation}
               arcLabel={arcLabel}

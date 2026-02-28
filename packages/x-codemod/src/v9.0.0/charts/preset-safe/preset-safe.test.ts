@@ -4,9 +4,10 @@ import transform, { testConfig } from './index';
 import readFile from '../../../util/readFile';
 
 const parsedFiles = testConfig.allModules
+  .map((mod) => mod.testConfig())
   .map((mod) =>
-    mod.testConfig.specFiles.map((file) => {
-      file.name = `${mod.testConfig.name}/${file.name}`;
+    mod.specFiles.map((file) => {
+      file.name = `${mod.name}/${file.name}`;
       return file;
     }),
   )

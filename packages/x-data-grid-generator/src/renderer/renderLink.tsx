@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { GridRenderCellParams } from '@mui/x-data-grid-premium';
+import type { GridRenderCellParams } from '@mui/x-data-grid-premium';
 
 interface DemoLinkProps {
   href: string;

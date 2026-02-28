@@ -249,10 +249,10 @@ If you're composing a custom component, you can incorporate click events as show
 Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ```jsx
-<ChartContainer onAxisClick={onAxisClick}>
+<ChartsContainer onAxisClick={onAxisClick}>
   {/* ... */}
   <BarPlot onItemClick={onItemClick} />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 ## Animation
@@ -266,9 +266,9 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 <BarChart skipAnimation />
 
 // For a composed chart
-<ChartContainer>
+<ChartsContainer>
   <BarPlot skipAnimation />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "BarAnimation.js"}}

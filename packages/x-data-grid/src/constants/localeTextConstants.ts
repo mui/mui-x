@@ -1,4 +1,4 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
 
 export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
@@ -166,6 +166,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   booleanCellTrueLabel: 'yes',
   booleanCellFalseLabel: 'no',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Expand',
+  longTextCellCollapseLabel: 'Collapse',
+
   // Actions cell more text
   actionsCellMore: 'more',
 
@@ -192,11 +196,12 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Pagination
   paginationRowsPerPage: 'Rows per page:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    const unknownRowCount = count == null || count === -1;
     if (!estimated) {
-      return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+      return `${from}–${to} of ${!unknownRowCount ? count : `more than ${to}`}`;
     }
     const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-    return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+    return `${from}–${to} of ${!unknownRowCount ? count : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

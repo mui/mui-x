@@ -27,7 +27,7 @@ export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
           !!area && (
             <PreviewAreaElement
               key={seriesId}
-              id={seriesId}
+              seriesId={seriesId}
               d={d}
               color={color}
               gradientId={gradientId}
@@ -42,7 +42,7 @@ export interface PreviewAreaElementProps extends Omit<
   React.SVGProps<SVGPathElement>,
   'ref' | 'color' | 'id'
 > {
-  id: SeriesId;
+  seriesId: SeriesId;
   gradientId?: string;
   color: string;
   d: string;
@@ -52,12 +52,18 @@ export interface PreviewAreaElementProps extends Omit<
  * Preview of the area element for the zoom preview.
  * Based on AreaElement and AnimatedArea.
  */
-function PreviewAreaElement({ id, color, gradientId, onClick, ...other }: PreviewAreaElementProps) {
+function PreviewAreaElement({
+  seriesId,
+  color,
+  gradientId,
+  onClick,
+  ...other
+}: PreviewAreaElementProps) {
   return (
     <path
       fill={gradientId ? `url(#${gradientId})` : color}
       stroke="none"
-      data-series={id}
+      data-series={seriesId}
       {...other}
     />
   );

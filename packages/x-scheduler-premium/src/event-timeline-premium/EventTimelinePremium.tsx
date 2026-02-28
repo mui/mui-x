@@ -1,0 +1,157 @@
+'use client';
+import * as React from 'react';
+import clsx from 'clsx';
+import { styled, useThemeProps } from '@mui/material/styles';
+import composeClasses from '@mui/utils/composeClasses';
+import {
+  useExtractEventTimelinePremiumParameters,
+  useEventTimelinePremium,
+} from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
+import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
+import {
+  eventDialogSlots,
+  EventDialogStyledContext,
+  EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+  schedulerTokens,
+} from '@mui/x-scheduler/internals';
+import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
+import { EventTimelinePremiumContent } from './content';
+import {
+  EventTimelinePremiumClasses,
+  getEventTimelinePremiumUtilityClass,
+} from './eventTimelinePremiumClasses';
+import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
+
+const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
+  const slots = {
+    root: ['root'],
+    content: ['content'],
+    grid: ['grid'],
+    titleSubGridWrapper: ['titleSubGridWrapper'],
+    titleSubGrid: ['titleSubGrid'],
+    titleSubGridHeaderRow: ['titleSubGridHeaderRow'],
+    titleSubGridHeaderCell: ['titleSubGridHeaderCell'],
+    eventsSubGridWrapper: ['eventsSubGridWrapper'],
+    eventsSubGrid: ['eventsSubGrid'],
+    eventsSubGridHeaderRow: ['eventsSubGridHeaderRow'],
+    eventsSubGridRow: ['eventsSubGridRow'],
+    titleCellRow: ['titleCellRow'],
+    titleCell: ['titleCell'],
+    titleCellLegendColor: ['titleCellLegendColor'],
+    event: ['event'],
+    eventPlaceholder: ['eventPlaceholder'],
+    eventResizeHandler: ['eventResizeHandler'],
+    eventLinesClamp: ['eventLinesClamp'],
+    timeHeader: ['timeHeader'],
+    timeHeaderCell: ['timeHeaderCell'],
+    timeHeaderDayLabel: ['timeHeaderDayLabel'],
+    timeHeaderCellsRow: ['timeHeaderCellsRow'],
+    timeHeaderTimeCell: ['timeHeaderTimeCell'],
+    timeHeaderTimeLabel: ['timeHeaderTimeLabel'],
+    daysHeader: ['daysHeader'],
+    daysHeaderCell: ['daysHeaderCell'],
+    daysHeaderTime: ['daysHeaderTime'],
+    daysHeaderWeekDay: ['daysHeaderWeekDay'],
+    daysHeaderDayNumber: ['daysHeaderDayNumber'],
+    daysHeaderMonthStart: ['daysHeaderMonthStart'],
+    daysHeaderMonthStartLabel: ['daysHeaderMonthStartLabel'],
+    weeksHeader: ['weeksHeader'],
+    weeksHeaderCell: ['weeksHeaderCell'],
+    weeksHeaderDayLabel: ['weeksHeaderDayLabel'],
+    weeksHeaderDaysRow: ['weeksHeaderDaysRow'],
+    weeksHeaderDayCell: ['weeksHeaderDayCell'],
+    monthsHeader: ['monthsHeader'],
+    monthsHeaderYearLabel: ['monthsHeaderYearLabel'],
+    monthsHeaderMonthLabel: ['monthsHeaderMonthLabel'],
+    yearsHeader: ['yearsHeader'],
+    yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
+    ...eventDialogSlots,
+  };
+
+  return composeClasses(slots, getEventTimelinePremiumUtilityClass, classes);
+};
+
+const EventTimelinePremiumRoot = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'Root',
+})(({ theme }) => ({
+  ...schedulerTokens,
+  '--time-cell-width': '64px',
+  '--days-cell-width': '120px',
+  '--weeks-cell-width': 'calc(64px * 7)',
+  // Months view uses per-day units instead of per-month, so each column width = days in month × 6px
+  '--months-cell-width': '6px',
+  '--years-cell-width': '200px',
+  boxSizing: 'border-box',
+  '*, *::before, *::after': {
+    boxSizing: 'inherit',
+  },
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  height: '100%',
+  minHeight: 0,
+  overflow: 'hidden',
+  fontFamily: theme.typography.fontFamily,
+  fontSize: theme.typography.body2.fontSize,
+}));
+
+export const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
+  TEvent extends object,
+  TResource extends object,
+>(
+  inProps: EventTimelinePremiumProps<TEvent, TResource>,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  // We don't want the plan suffix in the theme, otherwise we couldn't share the theme entry across packages
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
+
+  const {
+    parameters,
+    forwardedProps: { className, classes: classesProp, ...forwardedProps },
+  } = useExtractEventTimelinePremiumParameters<TEvent, TResource, typeof props>(props);
+  const store = useEventTimelinePremium(parameters);
+  const classes = useUtilityClasses(classesProp);
+
+  const { localeText, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
+
+  const mergedLocaleText = React.useMemo(
+    () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),
+    [localeText],
+  );
+
+  const timelineStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
+
+  const dialogStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
+
+  return (
+    <SchedulerStoreContext.Provider value={store as any}>
+      <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
+        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
+          <EventTimelinePremiumRoot
+            ref={forwardedRef}
+            className={clsx(classes.root, className)}
+            {...other}
+          >
+            <EventTimelinePremiumContent />
+          </EventTimelinePremiumRoot>
+        </EventDialogStyledContext.Provider>
+      </EventTimelinePremiumStyledContext.Provider>
+    </SchedulerStoreContext.Provider>
+  );
+}) as EventTimelinePremiumComponent;
+
+type EventTimelinePremiumComponent = <TEvent extends object, TResource extends object>(
+  props: EventTimelinePremiumProps<TEvent, TResource> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+  },
+) => React.JSX.Element;

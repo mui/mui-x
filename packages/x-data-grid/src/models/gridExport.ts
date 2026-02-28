@@ -1,5 +1,5 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridRowId } from './gridRows';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridRowId } from './gridRows';
 import type { GridApiCommon } from './api';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 

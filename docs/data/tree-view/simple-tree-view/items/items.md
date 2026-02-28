@@ -79,6 +79,13 @@ Use the `onItemClick` prop to track the clicked item:
 
 {{"demo": "OnItemClick.js"}}
 
+## Item height
+
+Use the `itemHeight` prop to set the height of each item in the tree.
+If not provided, no height restriction is applied to the tree item content element.
+
+{{"demo": "ItemHeight.js"}}
+
 ## Imperative API
 
 To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef()` hook as follows:

@@ -1,24 +1,25 @@
-import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
-import { type AxisId, type ZoomOptions } from '@mui/x-charts/internals';
-import {
-  type DefaultizedFunnelSeriesType,
-  type FunnelItemIdentifier,
-  type FunnelSeriesType,
-  type FunnelValueType,
+import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
+import type { AxisId, CommonHighlightScope, ZoomOptions } from '@mui/x-charts/internals';
+import type {
+  DefaultizedFunnelSeriesType,
+  FunnelItemIdentifier,
+  FunnelSeriesType,
+  FunnelValueType,
 } from '../FunnelChart/funnel.types';
-import {
-  type HeatmapItemIdentifier,
-  type HeatmapSeriesType,
-  type DefaultizedHeatmapSeriesType,
-  type HeatmapValueType,
+import type {
+  HeatmapItemIdentifier,
+  HeatmapSeriesType,
+  DefaultizedHeatmapSeriesType,
+  HeatmapValueType,
 } from '../models/seriesType/heatmap';
-import {
-  type SankeyLayout,
-  type SankeySeriesType,
-  type DefaultizedSankeySeriesType,
-  type SankeyItemIdentifier,
-  type SankeyItemIdentifierWithData,
+import type {
+  SankeyLayout,
+  SankeySeriesType,
+  DefaultizedSankeySeriesType,
+  SankeyItemIdentifier,
+  SankeyItemIdentifierWithData,
 } from '../SankeyChart/sankey.types';
+import type { SankeyHighlightScope } from '../SankeyChart/sankey.highlight.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -31,6 +32,7 @@ declare module '@mui/x-charts/internals' {
       itemIdentifierWithData: HeatmapItemIdentifier;
       valueType: HeatmapValueType;
       axisType: 'cartesian';
+      highlightScope: CommonHighlightScope;
     };
     funnel: {
       seriesInput: Omit<DefaultizedProps<FunnelSeriesType, 'id'>, 'data'> & {
@@ -43,6 +45,7 @@ declare module '@mui/x-charts/internals' {
       itemIdentifierWithData: FunnelItemIdentifier;
       valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
       axisType: 'cartesian';
+      highlightScope: CommonHighlightScope;
     };
     sankey: {
       seriesInput: DefaultizedSankeySeriesType;
@@ -54,6 +57,7 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: SankeyItemIdentifier;
       itemIdentifierWithData: SankeyItemIdentifierWithData<true>;
       valueType: number;
+      highlightScope: SankeyHighlightScope;
     };
   }
 

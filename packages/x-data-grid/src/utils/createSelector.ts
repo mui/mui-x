@@ -1,8 +1,8 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   createSelector as baseCreateSelector,
   createSelectorMemoized as baseCreateSelectorMemoized,
-  CreateSelectorFunction,
+  type CreateSelectorFunction,
 } from '@mui/x-internals/store';
 
 export interface OutputSelector<State, Args, Result> {

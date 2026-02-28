@@ -1,5 +1,5 @@
 import { GridFilterInputSingleSelect } from '../components/panel/filterPanel/GridFilterInputSingleSelect';
-import { GridFilterOperator } from '../models/gridFilterOperator';
+import type { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 import { isObject } from '../utils/utils';
 

@@ -1,15 +1,15 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { EventBuilder } from 'test/utils/scheduler';
 import { sortEventOccurrences } from './sortEventOccurrences';
 
 describe('sortEventOccurrences', () => {
   describe('basic sorting', () => {
     it('should return empty array when given empty array', () => {
-      expect(sortEventOccurrences([], adapter)).toEqual([]);
+      expect(sortEventOccurrences([])).toEqual([]);
     });
 
     it('should return single occurrence unchanged', () => {
       const occurrence = EventBuilder.new().singleDay('2024-01-15T10:00:00Z').toOccurrence();
-      expect(sortEventOccurrences([occurrence], adapter)).toEqual([occurrence]);
+      expect(sortEventOccurrences([occurrence])).toEqual([occurrence]);
     });
 
     it('should sort occurrences by start date (earliest first)', () => {
@@ -20,11 +20,7 @@ describe('sortEventOccurrences', () => {
         .toOccurrence();
       const third = EventBuilder.new().id('third').singleDay('2024-01-15T14:00:00Z').toOccurrence();
 
-      expect(sortEventOccurrences([third, first, second], adapter)).to.deep.equal([
-        first,
-        second,
-        third,
-      ]);
+      expect(sortEventOccurrences([third, first, second])).to.deep.equal([first, second, third]);
     });
   });
 
@@ -39,7 +35,7 @@ describe('sortEventOccurrences', () => {
         .singleDay('2024-01-15T10:00:00Z', 120)
         .toOccurrence();
 
-      expect(sortEventOccurrences([short, long], adapter)).to.deep.equal([long, short]);
+      expect(sortEventOccurrences([short, long])).to.deep.equal([long, short]);
     });
 
     it('should handle multiple events with same start but different ends', () => {
@@ -56,11 +52,7 @@ describe('sortEventOccurrences', () => {
         .singleDay('2024-01-15T10:00:00Z', 120)
         .toOccurrence();
 
-      expect(sortEventOccurrences([short, medium, long], adapter)).to.deep.equal([
-        long,
-        medium,
-        short,
-      ]);
+      expect(sortEventOccurrences([short, medium, long])).to.deep.equal([long, medium, short]);
     });
   });
 
@@ -77,7 +69,7 @@ describe('sortEventOccurrences', () => {
         .allDay(true)
         .toOccurrence();
 
-      expect(sortEventOccurrences([day2, day1], adapter)).to.deep.equal([day1, day2]);
+      expect(sortEventOccurrences([day2, day1])).to.deep.equal([day1, day2]);
     });
 
     it('should sort all-day events with same start by end date (longer first)', () => {
@@ -92,10 +84,7 @@ describe('sortEventOccurrences', () => {
         .allDay(true)
         .toOccurrence();
 
-      expect(sortEventOccurrences([singleDay, multiDay], adapter)).to.deep.equal([
-        multiDay,
-        singleDay,
-      ]);
+      expect(sortEventOccurrences([singleDay, multiDay])).to.deep.equal([multiDay, singleDay]);
     });
   });
 
@@ -109,7 +98,7 @@ describe('sortEventOccurrences', () => {
       const timed = EventBuilder.new().id('timed').singleDay('2024-01-15T10:00:00Z').toOccurrence();
 
       // All-day event starts at midnight (start of day), so it should come first
-      expect(sortEventOccurrences([timed, allDay], adapter)).to.deep.equal([allDay, timed]);
+      expect(sortEventOccurrences([timed, allDay])).to.deep.equal([allDay, timed]);
     });
 
     it('should sort all-day event after timed event that starts earlier in the day', () => {
@@ -123,10 +112,7 @@ describe('sortEventOccurrences', () => {
         .singleDay('2024-01-15T10:00:00Z')
         .toOccurrence();
 
-      expect(sortEventOccurrences([allDay, timedEarlier], adapter)).to.deep.equal([
-        timedEarlier,
-        allDay,
-      ]);
+      expect(sortEventOccurrences([allDay, timedEarlier])).to.deep.equal([timedEarlier, allDay]);
     });
   });
 
@@ -143,7 +129,7 @@ describe('sortEventOccurrences', () => {
         .toOccurrence();
 
       // Should maintain original order when equal
-      expect(sortEventOccurrences([event1, event2], adapter)).to.deep.equal([event1, event2]);
+      expect(sortEventOccurrences([event1, event2])).to.deep.equal([event1, event2]);
     });
 
     it('should handle events spanning multiple days', () => {
@@ -157,10 +143,7 @@ describe('sortEventOccurrences', () => {
         .toOccurrence();
 
       // multiDay starts earlier (10:00), so it should come first
-      expect(sortEventOccurrences([singleDay, multiDay], adapter)).to.deep.equal([
-        multiDay,
-        singleDay,
-      ]);
+      expect(sortEventOccurrences([singleDay, multiDay])).to.deep.equal([multiDay, singleDay]);
     });
 
     it('should handle events on different days', () => {
@@ -177,7 +160,7 @@ describe('sortEventOccurrences', () => {
         .singleDay('2024-01-16T10:00:00Z')
         .toOccurrence();
 
-      expect(sortEventOccurrences([wednesday, monday, tuesday], adapter)).to.deep.equal([
+      expect(sortEventOccurrences([wednesday, monday, tuesday])).to.deep.equal([
         monday,
         tuesday,
         wednesday,
@@ -190,7 +173,7 @@ describe('sortEventOccurrences', () => {
 
       const original = [late, early];
 
-      expect(sortEventOccurrences(original, adapter)).to.deep.equal([early, late]);
+      expect(sortEventOccurrences(original)).to.deep.equal([early, late]);
       expect(original).to.deep.equal([late, early]);
     });
   });

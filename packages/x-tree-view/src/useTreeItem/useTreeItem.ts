@@ -88,6 +88,7 @@ export const useTreeItem = <TStore extends TreeViewAnyStore = DefaultStore>(
     focusSelectors.isItemTheDefaultFocusableItem,
     itemId,
   );
+  const itemHeight = useStore(store, itemsSelectors.itemHeight);
 
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
@@ -227,6 +228,7 @@ export const useTreeItem = <TStore extends TreeViewAnyStore = DefaultStore>(
       style: {
         ...(externalProps.style ?? {}),
         '--TreeView-itemDepth': depth,
+        ...(itemHeight == null ? {} : { '--TreeView-itemHeight': `${itemHeight}px` }),
       } as React.CSSProperties,
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),

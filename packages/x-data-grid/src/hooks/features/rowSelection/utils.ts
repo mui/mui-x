@@ -1,4 +1,4 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { GridSignature } from '../../../constants/signature';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
@@ -12,9 +12,9 @@ import type {
   GridPrivateApiCommunity,
   GridApiCommunity,
 } from '../../../models/api/gridApiCommunity';
-import { type GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
-import { type RowSelectionManager } from '../../../models/gridRowSelectionManager';
-import { GridRowParams } from '../../../models/params/gridRowParams';
+import type { GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
+import type { RowSelectionManager } from '../../../models/gridRowSelectionManager';
+import type { GridRowParams } from '../../../models/params/gridRowParams';
 import { gridColumnDefinitionsSelector } from '../columns';
 import { gridRowSelectableSelector } from '../../core/gridPropsSelectors';
 

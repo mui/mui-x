@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useLegend } from '../hooks/useLegend';
 import type { Direction } from './direction';
-import { type SeriesLegendItemContext, type LegendItemParams } from './legendContext.types';
+import { type SeriesLegendItemContext, type SeriesLegendItemParams } from './legendContext.types';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
@@ -18,7 +18,6 @@ import {
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 export interface ChartsLegendProps {
   /**
@@ -111,16 +110,13 @@ const ChartsLegend = consumeSlots(
     const data = useLegend();
     const { instance } = useChartContext<[UseChartVisibilityManagerSignature]>();
     const store = useStore<[UseChartVisibilityManagerSignature]>();
-    const seriesConfig = store.use(selectorChartSeriesConfig);
     const isItemVisible = store.use(selectorIsItemVisibleGetter);
     const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;
 
     const isButton = Boolean(onItemClick || toggleVisibilityOnClick);
 
-    const Element = isButton ? 'button' : 'div';
-
     const handleClick = useEventCallback(
-      (item: LegendItemParams, i: number) =>
+      (item: SeriesLegendItemParams, i: number) =>
         (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
           if (onItemClick && item) {
             onItemClick(event, seriesContextBuilder(item), i);
@@ -148,7 +144,7 @@ const ChartsLegend = consumeSlots(
         ownerState={props}
       >
         {data.items.map((item, i) => {
-          const isVisible = isItemVisible(seriesConfig, {
+          const isVisible = isItemVisible({
             type: item.type,
             seriesId: item.seriesId,
             dataIndex: item.dataIndex,
@@ -160,20 +156,29 @@ const ChartsLegend = consumeSlots(
               data-series={item.seriesId}
               data-index={item.dataIndex}
             >
-              <Element
-                className={clsx(classes?.series, !isVisible && classes?.hidden)}
-                role={isButton ? 'button' : undefined}
-                type={isButton ? 'button' : undefined}
-                // @ts-expect-error onClick is only attached to a button
-                onClick={isButton ? handleClick(item, i) : undefined}
-              >
-                <ChartsLabelMark
-                  className={classes?.mark}
-                  color={item.color}
-                  type={item.markType}
-                />
-                <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
-              </Element>
+              {isButton ? (
+                <button
+                  className={clsx(classes?.series, !isVisible && classes?.hidden)}
+                  onClick={handleClick(item, i)}
+                  type="button"
+                >
+                  <ChartsLabelMark
+                    className={classes?.mark}
+                    color={item.color}
+                    type={item.markType}
+                  />
+                  <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
+                </button>
+              ) : (
+                <div className={clsx(classes?.series, !isVisible && classes?.hidden)}>
+                  <ChartsLabelMark
+                    className={classes?.mark}
+                    color={item.color}
+                    type={item.markType}
+                  />
+                  <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
+                </div>
+              )}
             </li>
           );
         })}

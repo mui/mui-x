@@ -1,18 +1,18 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   gridRowTreeSelector,
   useFirstRender,
-  GridColDef,
-  GridRenderCellParams,
-  GridGroupNode,
-  GridRowId,
+  type GridColDef,
+  type GridRenderCellParams,
+  type GridGroupNode,
+  type GridRowId,
 } from '@mui/x-data-grid';
 import {
-  GridPipeProcessor,
+  type GridPipeProcessor,
   GridStrategyGroup,
-  GridStrategyProcessor,
+  type GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
 } from '@mui/x-data-grid/internals';
@@ -20,16 +20,16 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { filterRowTreeFromTreeData, TreeDataStrategy } from './gridTreeDataUtils';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import {
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from '../../../models/gridGroupingColDefOverride';
 import { GridTreeDataGroupingCell } from '../../../components';
 import { createRowTree } from '../../../utils/tree/createRowTree';
-import {
+import type {
   GridTreePathDuplicateHandler,
   RowTreeBuilderGroupingCriterion,
 } from '../../../utils/tree/models';
@@ -129,7 +129,11 @@ export const useGridTreeDataPreProcessors = (
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
       if (!props.getTreeDataPath) {
-        throw new Error('MUI X: No getTreeDataPath given.');
+        throw new Error(
+          'MUI X Data Grid: No getTreeDataPath function provided. ' +
+            'Tree data mode requires a getTreeDataPath prop to determine the hierarchy. ' +
+            'Provide a getTreeDataPath function that returns the path array for each row.',
+        );
       }
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => ({
@@ -141,11 +145,9 @@ export const useGridTreeDataPreProcessors = (
 
       const onDuplicatePath: GridTreePathDuplicateHandler = (firstId, secondId, path) => {
         throw new Error(
-          [
-            'MUI X: The path returned by `getTreeDataPath` should be unique.',
-            `The rows with id #${firstId} and #${secondId} have the same.`,
-            `Path: ${JSON.stringify(path.map((step) => step.key))}.`,
-          ].join('\n'),
+          `MUI X Data Grid: The path returned by getTreeDataPath must be unique for each row. ` +
+            `Rows with id "${firstId}" and "${secondId}" have the same path: ${JSON.stringify(path.map((step) => step.key))}. ` +
+            'Ensure each row has a unique path in the tree structure.',
         );
       };
 

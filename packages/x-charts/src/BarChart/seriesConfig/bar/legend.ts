@@ -1,6 +1,6 @@
-import type { LegendItemParams } from '../../../ChartsLegend';
+import type { SeriesLegendItemParams } from '../../../ChartsLegend';
 import { getLabel } from '../../../internals/getLabel';
-import { type LegendGetter } from '../../../internals/plugins/models';
+import type { LegendGetter } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const legendGetter: LegendGetter<'bar'> = (params) => {
   const { seriesOrder, series } = params;
@@ -14,14 +14,13 @@ const legendGetter: LegendGetter<'bar'> = (params) => {
     acc.push({
       type: 'bar',
       markType: series[seriesId].labelMarkType,
-      id: seriesId,
       seriesId,
       color: series[seriesId].color,
       label: formattedLabel,
     });
 
     return acc;
-  }, [] as LegendItemParams[]);
+  }, [] as SeriesLegendItemParams[]);
 };
 
 export default legendGetter;

@@ -18,7 +18,15 @@ import {
 } from '../../../models';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 
+export type SchedulerPlan = 'community' | 'premium';
+
 export interface SchedulerState<TEvent extends object = any> {
+  /**
+   * The plan of the scheduler instance.
+   * Derived from the `instanceName` of the store.
+   * Used to gate premium features like recurring events.
+   */
+  plan: SchedulerPlan;
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -262,7 +270,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * The color palette used for all events.
    * Can be overridden per resource using the `eventColor` property on the resource model.
    * Can be overridden per event using the `color` property on the event model.
-   * @default "jade"
+   * @default "teal"
    */
   eventColor?: SchedulerEventColor;
   /**
@@ -303,7 +311,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
  */
 export type UpdateRecurringEventParameters = {
   /**
-   * The start date of the occurrence affected by the update.
+   * The start date of the occurrence affected by the update before the update is applied.
    */
   occurrenceStart: TemporalSupportedObject;
   /**
@@ -359,3 +367,12 @@ export interface UpdateEventsParameters {
 }
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
+
+/**
+ * The unique identifier for each scheduler store type.
+ * Used by context hooks to assert the store type at runtime.
+ */
+export type SchedulerInstanceName =
+  | 'EventCalendarStore'
+  | 'EventCalendarPremiumStore'
+  | 'EventTimelinePremiumStore';

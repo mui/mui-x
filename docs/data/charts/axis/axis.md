@@ -121,9 +121,9 @@ If you use composition you can pass these as props to the `<ChartsGrid />` compo
 ```jsx
 <BarChart grid={{ vertical: true }}>
 
-<ChartContainer>
+<ChartsContainer>
   <ChartsGrid vertical />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "GridDemo.js"}}
@@ -292,6 +292,15 @@ The example below has a yellow tick color for the last group and blue text for t
 
 Beyond the axis definition, there are several other ways to further customize how axes are rendered:
 
+### Styling axes by ID
+
+To target a specific axis by its ID, use the `data-axis-id` attribute as a selector.
+This is useful when you have multiple axes and want to style them differently.
+
+In the example below, the revenue axis label is styled with a teal color and the profit axis label with a blue color to match their respective series.
+
+{{"demo": "AxisIdStyling.js"}}
+
 ### Fixing tick label overflow issues
 
 When your tick labels are too long, they're clipped to avoid overflowing.
@@ -326,6 +335,13 @@ Bear in mind that using `foreignObject` might prevent charts from being [exporte
 
 {{"demo": "TickLabelImage.js"}}
 
+### Custom axis rendering
+
+You can fully customize how axis and their ticks are rendered by providing a component to the `xAxis` or `yAxis` slots.
+For more information about how to create custom axes, refer to the [composition section](#composition)
+
+{{"demo": "CustomAxisTicks.js"}}
+
 ## Symlog scale
 
 A log scale cannot plot zero because log(0) is undefined.
@@ -336,10 +352,10 @@ You can customize the value where the scale switches from linear to logarithmic 
 
 ## Composition
 
-If you're using composition, you must provide the axis settings in the `<ChartContainer />` using the `xAxis` and `yAxis` props.
+If you're using composition, you must provide the axis settings in the `<ChartsContainer />` using the `xAxis` and `yAxis` props.
 This provides all the scaling properties to its children, and lets you use the `<XAxis/>` and `<YAxis/>` components as children.
 
-In turn, those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
+In turn, those components require an `axisId` prop to link them to an axis you defined in the `<ChartsContainer />`.
 You can choose their position with the `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
 The props described in the [rendering playground above](/x/react-charts/axis/#rendering) are also available.
 

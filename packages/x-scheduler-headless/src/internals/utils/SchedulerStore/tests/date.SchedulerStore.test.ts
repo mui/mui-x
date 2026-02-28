@@ -1,6 +1,5 @@
 import { spy } from 'sinon';
-import { adapter } from 'test/utils/scheduler';
-import { storeClasses } from './utils';
+import { adapter, storeClasses } from 'test/utils/scheduler';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -79,6 +78,54 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.displayTimezone).to.equal(displayTimezone);
         expect(onVisibleDateChange.calledOnce).to.equal(true);
         expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(expected);
+      });
+    });
+
+    describe('Method: goToDate', () => {
+      it('should set visibleDate to the provided date and call onVisibleDateChange when uncontrolled', () => {
+        const onVisibleDateChange = spy();
+        const initialDate = adapter.date('2025-05-26T00:00:00Z', 'default');
+        const targetDate = adapter.date('2025-06-15T10:30:00Z', 'default');
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onVisibleDateChange, defaultVisibleDate: initialDate },
+          adapter,
+        );
+
+        store.goToDate(targetDate, {} as any);
+
+        expect(store.state.visibleDate).toEqualDateTime(targetDate);
+        expect(onVisibleDateChange.calledOnce).to.equal(true);
+        expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
+      });
+
+      it('should not change state but call onVisibleDateChange when controlled', () => {
+        const onVisibleDateChange = spy();
+        const controlledDate = adapter.date('2025-07-01T00:00:00Z', 'default');
+        const targetDate = adapter.date('2025-08-15T00:00:00Z', 'default');
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, visibleDate: controlledDate, onVisibleDateChange },
+          adapter,
+        );
+
+        store.goToDate(targetDate, {} as any);
+
+        expect(store.state.visibleDate).toEqualDateTime(controlledDate);
+        expect(onVisibleDateChange.calledOnce).to.equal(true);
+        expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
+      });
+
+      it('should do nothing if already at the target date', () => {
+        const onVisibleDateChange = spy();
+        const targetDate = adapter.date('2025-05-26T00:00:00Z', 'default');
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultVisibleDate: targetDate, onVisibleDateChange },
+          adapter,
+        );
+
+        store.goToDate(targetDate, {} as any);
+
+        expect(store.state.visibleDate).toEqualDateTime(targetDate);
+        expect(onVisibleDateChange.called).to.equal(false);
       });
     });
   });

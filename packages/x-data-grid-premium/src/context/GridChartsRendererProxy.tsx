@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useGridChartsIntegrationContext } from '../hooks/utils/useGridChartIntegration';
-import { ChartState } from '../models/gridChartsIntegration';
+import type { ChartState } from '../models/gridChartsIntegration';
 import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 
 export type GridChartsRendererProxyRendererCallback = (

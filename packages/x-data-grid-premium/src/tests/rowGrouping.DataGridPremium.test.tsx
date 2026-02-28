@@ -1,5 +1,5 @@
 import { config } from 'react-transition-group';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   microtasks,
@@ -12,11 +12,11 @@ import {
 } from 'test/utils/helperFn';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
+  type DataGridPremiumProps,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  GridApi,
+  type GridApi,
   GridPreferencePanelsValue,
-  GridRowsProp,
+  type GridRowsProp,
   useGridApiRef,
   GridLogicOperator,
 } from '@mui/x-data-grid-premium';

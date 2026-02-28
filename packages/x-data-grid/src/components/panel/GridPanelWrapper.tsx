@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, Theme } from '@mui/material/styles';
-import { MUIStyledCommonProps } from '@mui/system';
+import { styled, type Theme } from '@mui/material/styles';
+import type { MUIStyledCommonProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';

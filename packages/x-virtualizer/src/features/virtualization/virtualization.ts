@@ -9,7 +9,7 @@ import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
-import reactMajor from '@mui/x-internals/reactMajor';
+import useRefCallback from '../../utils/useRefCallback';
 import { PinnedRows, PinnedColumns, Size } from '../../models/core';
 import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
@@ -424,11 +424,18 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     let virtualRowIndex = -1;
     const focusedVirtualCell = params.focusedVirtualCell?.();
     if (!isPinnedSection && focusedVirtualCell) {
-      if (focusedVirtualCell.rowIndex < firstRowToRender) {
+      if (
+        focusedVirtualCell.rowIndex < firstRowToRender &&
+        focusedVirtualCell.rowIndex >= 0 &&
+        focusedVirtualCell.rowIndex < rowModels.length
+      ) {
         rowIndexes.unshift(focusedVirtualCell.rowIndex);
         virtualRowIndex = focusedVirtualCell.rowIndex;
       }
-      if (focusedVirtualCell.rowIndex > lastRowToRender) {
+      if (
+        focusedVirtualCell.rowIndex > lastRowToRender &&
+        focusedVirtualCell.rowIndex < rowModels.length
+      ) {
         rowIndexes.push(focusedVirtualCell.rowIndex);
         virtualRowIndex = focusedVirtualCell.rowIndex;
       }
@@ -694,25 +701,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     scheduleUpdateRenderContext,
     ...createSpanningAPI(),
   };
-}
-
-function useRefCallback(fn: (node: HTMLDivElement) => (() => void) | undefined) {
-  const refCleanup = React.useRef<() => void | undefined>(undefined);
-  const refCallback = useEventCallback((node: HTMLDivElement | null) => {
-    if (!node) {
-      // Cleanup for R18
-      refCleanup.current?.();
-      return;
-    }
-
-    refCleanup.current = fn(node);
-
-    if (reactMajor >= 19) {
-      /* eslint-disable-next-line consistent-return */
-      return refCleanup.current;
-    }
-  });
-  return refCallback;
 }
 
 type RenderContextInputs = ReturnType<typeof inputsSelector>;
@@ -1116,7 +1104,7 @@ function bufferForDirection(
       };
     default:
       // eslint unable to figure out enum exhaustiveness
-      throw new Error('unreachable');
+      throw /* minify-error-disabled */ new Error('unreachable');
   }
 }
 
@@ -1190,15 +1178,15 @@ function getFirstNonSpannedColumnToRender({
 /** Placeholder API functions for colspan & rowspan to re-implement */
 function createSpanningAPI(): AbstractAPI {
   const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
+    throw new Error('MUI X: Unimplemented: colspan feature is required');
   };
 
   const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
+    throw new Error('MUI X: Unimplemented: colspan feature is required');
   };
 
   const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
-    throw new Error('Unimplemented: rowspan feature is required');
+    throw new Error('MUI X: Unimplemented: rowspan feature is required');
   };
 
   return { getCellColSpanInfo, calculateColSpan, getHiddenCellsOrigin };

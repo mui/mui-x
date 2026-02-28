@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -37,6 +37,7 @@ import type {
   SelectOptionProps,
   SkeletonProps,
   SwitchProps,
+  TextareaProps,
   TooltipProps,
   TextFieldProps,
   IconProps,
@@ -68,6 +69,7 @@ export interface BasePaginationPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
+export interface BaseTextareaPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseSkeletonPropsOverrides {}
 export interface BaseIconPropsOverrides {}
@@ -115,6 +117,7 @@ interface BaseSlotProps {
   basePopper: PopperProps & BasePopperPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInput: InputProps & BaseInputPropsOverrides;
+  baseTextarea: TextareaProps & BaseTextareaPropsOverrides;
   baseSelect: SelectProps & BaseSelectPropsOverrides;
   baseSelectOption: SelectOptionProps & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;

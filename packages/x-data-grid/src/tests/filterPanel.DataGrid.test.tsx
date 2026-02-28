@@ -2,10 +2,10 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   DataGrid,
-  DataGridProps,
+  type DataGridProps,
   GridFilterInputValue,
-  GridFilterInputValueProps,
-  GridFilterOperator,
+  type GridFilterInputValueProps,
+  type GridFilterOperator,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';

@@ -64,6 +64,7 @@
   { "name": "randomUserName", "kind": "Variable" },
   { "name": "renderAvatar", "kind": "Function" },
   { "name": "renderCountry", "kind": "Function" },
+  { "name": "renderEditBoolean", "kind": "Function" },
   { "name": "renderEditCountry", "kind": "Function" },
   { "name": "renderEditCurrency", "kind": "Function" },
   { "name": "renderEditIncoterm", "kind": "Function" },

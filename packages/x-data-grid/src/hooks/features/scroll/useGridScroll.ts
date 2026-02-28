@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
-import { GridCellIndexCoordinates } from '../../../models/gridCell';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridCellIndexCoordinates } from '../../../models/gridCell';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
   gridColumnPositionsSelector,
   gridVisibleColumnDefinitionsSelector,
 } from '../columns/gridColumnsSelector';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPageSelector, gridPageSizeSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { GridScrollParams } from '../../../models/params/gridScrollParams';
-import { GridScrollApi } from '../../../models/api/gridScrollApi';
+import type { GridScrollParams } from '../../../models/params/gridScrollParams';
+import type { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { gridDimensionsSelector } from '../dimensions';

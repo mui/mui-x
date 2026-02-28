@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const skSKGrid: Partial<GridLocaleText> = {
   // Root
@@ -192,6 +192,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'áno',
   booleanCellFalseLabel: 'nie',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbaliť',
+  longTextCellCollapseLabel: 'Zbaliť',
 
   // Actions cell more text
   actionsCellMore: 'viac',

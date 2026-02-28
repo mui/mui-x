@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import {
   type AxisId,
   type ComputedAxis,
-  getSVGPoint,
+  getChartPoint,
   invertScale,
   selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
@@ -77,7 +77,8 @@ export function ChartAxisZoomSliderActiveTrack({
   onPointerEnter,
   onPointerLeave,
 }: ChartAxisZoomSliderActiveTrackProps) {
-  const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
+  const { instance } = useChartContext<[UseChartProZoomSignature]>();
+  const { chartsLayerContainerRef } = instance;
   const store = useStore<[UseChartProZoomSignature]>();
   const axis = store.use(selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
@@ -102,13 +103,13 @@ export function ChartAxisZoomSliderActiveTrack({
     let prevPointerZoom = 0;
 
     const onPointerMove = rafThrottle((event: PointerEvent) => {
-      const element = svgRef.current;
+      const element = chartsLayerContainerRef.current;
 
       if (!element) {
         return;
       }
 
-      const point = getSVGPoint(element, event);
+      const point = getChartPoint(element, event);
       const pointerZoom = calculateZoomFromPoint(store.state, axisId, point);
 
       if (pointerZoom === null) {
@@ -132,13 +133,13 @@ export function ChartAxisZoomSliderActiveTrack({
       activePreviewRect.setPointerCapture(event.pointerId);
 
       const axisZoomData = selectorChartAxisZoomData(store.state, axisId);
-      const element = svgRef.current;
+      const element = chartsLayerContainerRef.current;
 
       if (!axisZoomData || !element) {
         return;
       }
 
-      const point = getSVGPoint(element, event);
+      const point = getChartPoint(element, event);
       const pointerDownZoom = calculateZoomFromPoint(store.state, axisId, point);
 
       if (pointerDownZoom === null) {
@@ -158,16 +159,16 @@ export function ChartAxisZoomSliderActiveTrack({
       activePreviewRect.removeEventListener('pointerdown', onPointerDown);
       onPointerMove.clear();
     };
-  }, [axisDirection, axisId, instance, reverse, store, svgRef]);
+  }, [axisDirection, axisId, instance, reverse, store, chartsLayerContainerRef]);
 
   const onStartThumbMove = (event: PointerEvent) => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
     if (!element) {
       return;
     }
 
-    const point = getSVGPoint(element, event);
+    const point = getChartPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
       const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
@@ -192,13 +193,13 @@ export function ChartAxisZoomSliderActiveTrack({
   };
 
   const onEndThumbMove = (event: PointerEvent) => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
     if (!element) {
       return;
     }
 
-    const point = getSVGPoint(element, event);
+    const point = getChartPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
       const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);

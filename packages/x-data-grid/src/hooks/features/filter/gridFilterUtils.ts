@@ -1,20 +1,20 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  GridColDef,
-  GridFilterItem,
-  GridFilterModel,
+  type GridColDef,
+  type GridFilterItem,
+  type GridFilterModel,
   GridLogicOperator,
-  GridRowModel,
-  GridValidRowModel,
+  type GridRowModel,
+  type GridValidRowModel,
 } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   getDefaultGridFilterModel,
-  GridAggregatedFilterItemApplier,
-  GridFilterItemResult,
-  GridQuickFilterValueResult,
+  type GridAggregatedFilterItemApplier,
+  type GridFilterItemResult,
+  type GridQuickFilterValueResult,
 } from './gridFilterState';
 import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
@@ -184,7 +184,11 @@ const getFilterCallbackFromItem = (
 
   const filterOperators = column.filterOperators;
   if (!filterOperators?.length) {
-    throw new Error(`MUI X: No filter operators found for column '${column.field}'.`);
+    throw new Error(
+      `MUI X Data Grid: No filter operators found for column "${column.field}". ` +
+        'Columns must have filter operators defined to enable filtering. ' +
+        'Add filterOperators to the column definition or use a column type that includes them.',
+    );
   }
 
   const filterOperator = filterOperators.find(
@@ -192,7 +196,9 @@ const getFilterCallbackFromItem = (
   )!;
   if (!filterOperator) {
     throw new Error(
-      `MUI X: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operator}'.`,
+      `MUI X Data Grid: No filter operator "${newFilterItem.operator}" found for column "${column.field}". ` +
+        'The specified operator is not available for this column. ' +
+        "Use one of the operators defined in the column's filterOperators array.",
     );
   }
 

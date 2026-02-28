@@ -1,4 +1,4 @@
-import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 
 export interface GridStatePersistenceApi<InitialState extends GridInitialStateCommunity> {
   /**

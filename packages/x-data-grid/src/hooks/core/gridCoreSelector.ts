@@ -1,5 +1,5 @@
 import { createRootSelector } from '../../utils/createSelector';
-import { GridStateCommunity } from '../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../models/gridStateCommunity';
 
 /**
  * Get the theme state

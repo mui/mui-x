@@ -1,8 +1,8 @@
-import { GridFilterModel } from '../gridFilterModel';
-import { GridFilterItem, GridLogicOperator } from '../gridFilterItem';
-import { GridControlledStateReasonLookup } from '../events';
+import type { GridFilterModel } from '../gridFilterModel';
+import type { GridFilterItem, GridLogicOperator } from '../gridFilterItem';
+import type { GridControlledStateReasonLookup } from '../events';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
-import { GridStateCommunity } from '../gridStateCommunity';
+import type { GridStateCommunity } from '../gridStateCommunity';
 
 /**
  * The filter API interface that is available in the grid [[apiRef]].

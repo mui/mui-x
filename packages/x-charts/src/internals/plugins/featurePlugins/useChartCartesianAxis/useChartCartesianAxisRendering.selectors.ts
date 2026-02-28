@@ -35,12 +35,14 @@ import { getNormalizedAxisScale, getRange } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtrema } from './getAxisExtrema';
-import { type ChartSeriesConfig } from '../../models';
 import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import { calculateFinalDomain, calculateInitialDomainAndTickNumber } from './domain';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { Flatbush } from '../../../Flatbush';
-import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import {
+  selectorChartSeriesConfig,
+  type ChartSeriesConfig,
+} from '../../corePlugins/useChartSeriesConfig';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();

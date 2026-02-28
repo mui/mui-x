@@ -1,5 +1,5 @@
 import { getLabel, type LegendGetter } from '@mui/x-charts/internals';
-import type { LegendItemParams } from '@mui/x-charts/ChartsLegend';
+import type { SeriesLegendItemParams } from '@mui/x-charts/ChartsLegend';
 
 const legendGetter: LegendGetter<'rangeBar'> = (params) => {
   const { seriesOrder, series } = params;
@@ -13,14 +13,13 @@ const legendGetter: LegendGetter<'rangeBar'> = (params) => {
     acc.push({
       type: 'rangeBar',
       markType: series[seriesId].labelMarkType,
-      id: seriesId,
       seriesId,
       color: series[seriesId].color,
       label: formattedLabel,
     });
 
     return acc;
-  }, [] as LegendItemParams[]);
+  }, [] as SeriesLegendItemParams[]);
 };
 
 export default legendGetter;

@@ -1,7 +1,7 @@
 import { type D3OrdinalScale } from '../../models/axis';
 import { generatePolar2svg } from '../../internals/plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
 import { getDrawingAreaCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import type { TooltipItemPositionGetter } from '../../internals/plugins/models/seriesConfig/tooltipItemPositionGetter.types';
+import type { TooltipItemPositionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'radar'> = (params) => {
   const { series, identifier, axesConfig, drawingArea, placement } = params;

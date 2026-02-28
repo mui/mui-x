@@ -11,7 +11,7 @@ import {
 } from './markElementClasses';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
+  Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
     /**
      * If `true`, the marker is hidden.
      * @default false
@@ -65,7 +65,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const {
     x,
     y,
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     dataIndex,
@@ -80,10 +80,10 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   } = props;
 
   const theme = useTheme();
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     isHighlighted,
     isFaded,
@@ -122,7 +122,7 @@ CircleMarkElement.propTypes = {
    * The index to the element in the series' data array.
    */
   dataIndex: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The shape of the marker.
    */

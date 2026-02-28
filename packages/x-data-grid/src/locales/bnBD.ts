@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const bnBDGrid: Partial<GridLocaleText> = {
   // Root
@@ -167,6 +167,10 @@ const bnBDGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'হ্যাঁ',
   booleanCellFalseLabel: 'না',
 
+  // Long text cell
+  longTextCellExpandLabel: 'সম্প্রসারিত করুন',
+  longTextCellCollapseLabel: 'সংকুচিত করুন',
+
   // Actions cell more text
   actionsCellMore: 'আরও',
 
@@ -198,11 +202,12 @@ const bnBDGrid: Partial<GridLocaleText> = {
   //   count,
   //   estimated
   // }) => {
+  //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //     return `${from}–${to} of ${!unknownRowCount ? count : `more than ${to}`}`;
   //   }
   //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  //   return `${from}–${to} of ${!unknownRowCount ? count : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

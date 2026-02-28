@@ -3,7 +3,7 @@ import * as React from 'react';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { useStore } from '../../../store/useStore';
 import { selectorChartSeriesConfig } from '../useChartSeriesConfig';
-import { type ColorProcessor } from '../../models/seriesConfig';
+import { type ColorProcessor } from '../useChartSeriesConfig';
 
 export type ColorProcessorsConfig<T extends ChartSeriesType> = {
   [Key in T]?: ColorProcessor<Key>;

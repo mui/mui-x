@@ -1,4 +1,4 @@
-import { CleanupTracking, UnregisterToken, UnsubscribeFn } from './CleanupTracking';
+import type { CleanupTracking, UnregisterToken, UnsubscribeFn } from './CleanupTracking';
 
 // If no effect ran after this amount of time, we assume that the render was not committed by React
 const CLEANUP_TIMER_LOOP_MILLIS = 1000;

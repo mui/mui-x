@@ -69,7 +69,7 @@ export interface RadarChartProProps
  */
 const RadarChartPro = React.forwardRef(function RadarChartPro(
   inProps: RadarChartProProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiRadarChartPro' });
   const {
@@ -95,10 +95,10 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
 
   return (
     <RadarDataProvider<RadarChartProPluginSignatures> {...radarDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        <ChartsSurface {...chartsSurfaceProps}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
           <RadarSeriesArea />
@@ -170,8 +170,8 @@ RadarChartPro.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      type: PropTypes.oneOf(['radar']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']),
     }),
   ),
   /**
@@ -189,7 +189,7 @@ RadarChartPro.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -220,8 +220,8 @@ RadarChartPro.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      type: PropTypes.oneOf(['radar']).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']),
     }),
   ),
   /**
@@ -353,8 +353,8 @@ RadarChartPro.propTypes = {
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    type: PropTypes.oneOf(['radar']).isRequired,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['radar']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

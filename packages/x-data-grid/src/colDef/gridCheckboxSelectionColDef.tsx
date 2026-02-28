@@ -1,6 +1,6 @@
 import { GridCellCheckboxRenderer } from '../components/columnSelection/GridCellCheckboxRenderer';
 import { GridHeaderCheckbox } from '../components/columnSelection/GridHeaderCheckbox';
-import { GridColDef } from '../models/colDef/gridColDef';
+import type { GridColDef } from '../models/colDef/gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
 import { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
 

@@ -24,7 +24,7 @@ function _default(locale) {
     percent = locale.percent === undefined ? "%" : locale.percent + "",
     minus = locale.minus === undefined ? "−" : locale.minus + "",
     nan = locale.nan === undefined ? "NaN" : locale.nan + "";
-  function newFormat(specifier) {
+  function newFormat(specifier, options) {
     specifier = (0, _formatSpecifier.default)(specifier);
     var fill = specifier.fill,
       align = specifier.align,
@@ -48,8 +48,8 @@ function _default(locale) {
 
     // Compute the prefix and suffix.
     // For SI-prefix, the suffix is lazily computed.
-    var prefix = symbol === "$" ? currencyPrefix : symbol === "#" && /[boxX]/.test(type) ? "0" + type.toLowerCase() : "",
-      suffix = symbol === "$" ? currencySuffix : /[%p]/.test(type) ? percent : "";
+    var prefix = (options && options.prefix !== undefined ? options.prefix : "") + (symbol === "$" ? currencyPrefix : symbol === "#" && /[boxX]/.test(type) ? "0" + type.toLowerCase() : ""),
+      suffix = (symbol === "$" ? currencySuffix : /[%p]/.test(type) ? percent : "") + (options && options.suffix !== undefined ? options.suffix : "");
 
     // What format function should we use?
     // Is this an integer type?
@@ -88,7 +88,7 @@ function _default(locale) {
 
         // Compute the prefix and suffix.
         valuePrefix = (valueNegative ? sign === "(" ? sign : minus : sign === "-" || sign === "(" ? "" : sign) + valuePrefix;
-        valueSuffix = (type === "s" ? prefixes[8 + _formatPrefixAuto.prefixExponent / 3] : "") + valueSuffix + (valueNegative && sign === "(" ? ")" : "");
+        valueSuffix = (type === "s" && !isNaN(value) && _formatPrefixAuto.prefixExponent !== undefined ? prefixes[8 + _formatPrefixAuto.prefixExponent / 3] : "") + valueSuffix + (valueNegative && sign === "(" ? ")" : "");
 
         // Break the formatted value into the integer “value” part that can be
         // grouped, and fractional or exponential “suffix” part that is not.
@@ -137,12 +137,13 @@ function _default(locale) {
     return format;
   }
   function formatPrefix(specifier, value) {
-    var f = newFormat((specifier = (0, _formatSpecifier.default)(specifier), specifier.type = "f", specifier)),
-      e = Math.max(-8, Math.min(8, Math.floor((0, _exponent.default)(value) / 3))) * 3,
+    var e = Math.max(-8, Math.min(8, Math.floor((0, _exponent.default)(value) / 3))) * 3,
       k = Math.pow(10, -e),
-      prefix = prefixes[8 + e / 3];
+      f = newFormat((specifier = (0, _formatSpecifier.default)(specifier), specifier.type = "f", specifier), {
+        suffix: prefixes[8 + e / 3]
+      });
     return function (value) {
-      return f(k * value) + prefix;
+      return f(k * value);
     };
   }
   return {
