@@ -1,5 +1,5 @@
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
-import { describeConformance } from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/charts/describeConformance';
 import { Unstable_RadarChart as RadarChart, type RadarChartProps } from '@mui/x-charts/RadarChart';
 import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -17,22 +17,11 @@ describe('<RadarChart />', () => {
   const { render } = createRenderer();
   describeConformance(<RadarChart {...radarConfig} />, () => ({
     classes: {} as any,
-    inheritComponent: 'svg',
+    inheritComponent: 'div',
     render,
     muiName: 'MuiRadarChart',
     testComponentPropWith: 'div',
-    refInstanceof: window.SVGSVGElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'slotPropsProp',
-      'slotPropsCallback',
-      'slotsProp',
-      'themeStyleOverrides',
-      'themeVariants',
-      'themeCustomPalette',
-      'themeDefaultProps',
-    ],
+    refInstanceof: window.HTMLDivElement,
   }));
 
   it('should render "No Data" overlay when series prop is an empty array', () => {

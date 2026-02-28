@@ -19,8 +19,9 @@ function updateRowPosition(
         rowsClone.splice(newIndex, 0, row);
         resolve(rowsClone);
       },
+      // eslint-disable-next-line no-restricted-properties -- simulates network latency
       Math.random() * 500 + 100,
-    ); // simulate network latency
+    );
   });
 }
 

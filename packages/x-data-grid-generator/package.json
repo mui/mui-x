@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "8.25.0",
+  "version": "9.0.0-alpha.1",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
   "license": "UNLICENSED",
@@ -66,5 +66,8 @@
     ".": "./src/index.ts",
     "./services/static-data": "./src/services/static-data.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

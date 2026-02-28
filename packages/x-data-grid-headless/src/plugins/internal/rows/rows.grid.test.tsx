@@ -2,14 +2,8 @@ import * as React from 'react';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import type { useDataGrid, ColumnDef } from '../../..';
-import type { sortingPlugin } from '../../sorting';
-import type { paginationPlugin } from '../../pagination';
-import { TestDataGrid } from '../../../test/TestDataGrid';
-
-type GridApi<TRow extends object> = ReturnType<
-  typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>
->;
+import type { ColumnDef } from '../../..';
+import { TestDataGrid, type TestGridApi } from '../../../test/TestDataGrid';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -78,7 +72,7 @@ describe('<DataGrid /> - Rows', () => {
     const testColumns: ColumnDef<TestRow>[] = [{ id: 'brand', field: 'brand' }];
 
     it('should allow to update one row at the time', async () => {
-      const apiRef = React.createRef<GridApi<TestRow> | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       render(
         <div style={{ width: 300, height: 300 }}>
           <TestDataGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
@@ -91,7 +85,7 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should allow adding rows', async () => {
-      const apiRef = React.createRef<GridApi<TestRow> | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       render(
         <div style={{ width: 300, height: 300 }}>
           <TestDataGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
@@ -105,19 +99,15 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should allow to delete rows', async () => {
-      const apiRef = React.createRef<GridApi<TestRow> | null>();
+      const apiRef = React.createRef<TestGridApi | null>();
       render(
         <div style={{ width: 300, height: 300 }}>
           <TestDataGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
         </div>,
       );
-      await act(async () =>
-        apiRef.current?.api.rows.updateRows([{ id: 1, _action: 'delete' } as any]),
-      );
+      await act(async () => apiRef.current?.api.rows.updateRows([{ id: 1, _action: 'delete' }]));
       await act(async () => apiRef.current?.api.rows.updateRows([{ id: 0, brand: 'Apple' }]));
-      await act(async () =>
-        apiRef.current?.api.rows.updateRows([{ id: 2, _action: 'delete' } as any]),
-      );
+      await act(async () => apiRef.current?.api.rows.updateRows([{ id: 2, _action: 'delete' }]));
       await act(async () => apiRef.current?.api.rows.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });

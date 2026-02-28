@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { describeConformance } from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/charts/describeConformance';
 import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -12,22 +12,11 @@ describe('<BarChart />', () => {
     <BarChart height={100} width={100} series={[{ data: [100, 200] }]} />,
     () => ({
       classes: {} as any,
-      inheritComponent: 'svg',
+      inheritComponent: 'div',
       render,
       muiName: 'MuiBarChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.SVGSVGElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'slotPropsProp',
-        'slotPropsCallback',
-        'slotsProp',
-        'themeStyleOverrides',
-        'themeVariants',
-        'themeCustomPalette',
-        'themeDefaultProps',
-      ],
+      refInstanceof: window.HTMLDivElement,
     }),
   );
 

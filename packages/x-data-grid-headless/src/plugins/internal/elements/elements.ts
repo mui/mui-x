@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../../core/plugin';
-import type { GridRowId } from '../rows/rowUtils';
+import type { GridRowId } from '../rows/types';
 import type { VirtualizationPlugin } from '../../virtualization';
 import rowsPlugin from '../rows/rows';
 import columnsPlugin from '../columns/columns';

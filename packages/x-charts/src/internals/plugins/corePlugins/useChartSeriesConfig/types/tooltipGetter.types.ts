@@ -1,4 +1,4 @@
-import type { SeriesItemIdentifier } from '../../../../../models/seriesType';
+import type { SeriesItemIdentifierWithType } from '../../../../../models/seriesType';
 import type {
   ChartSeriesDefaultized,
   ChartSeriesType,
@@ -20,7 +20,7 @@ export interface ItemTooltip<T extends ChartSeriesType> {
   /**
    * An object that identifies the item to display.
    */
-  identifier: SeriesItemIdentifier<T>;
+  identifier: SeriesItemIdentifierWithType<T>;
   /**
    * The color associated with the item.
    */
@@ -78,7 +78,7 @@ export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
   series: ChartSeriesDefaultized<TSeriesType>;
   axesConfig: TooltipGetterAxesConfig;
   getColor: ColorGetter<TSeriesType>;
-  identifier: SeriesItemIdentifier<TSeriesType> | null;
+  identifier: SeriesItemIdentifierWithType<TSeriesType> | null;
 }) =>
   | (TSeriesType extends 'radar'
       ? ItemTooltipWithMultipleValues<TSeriesType>

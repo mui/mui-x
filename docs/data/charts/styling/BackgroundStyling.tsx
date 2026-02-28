@@ -60,7 +60,6 @@ const series = [
   {
     type: 'line' as const,
     dataKey: 'rate',
-    showMark: false,
     valueFormatter: percentageFormatter,
   },
 ];

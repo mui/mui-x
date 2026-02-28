@@ -1,4 +1,4 @@
-import type { GridRowId } from '../internal/rows/rowUtils';
+import type { GridRowId } from '../internal/rows/types';
 
 export type GridSortDirection = 'asc' | 'desc' | null;
 
@@ -133,10 +133,6 @@ export interface SortingInternalOptions {
     external?: boolean;
   };
 }
-
-export type SortingSelectors = {
-  model: (state: SortingState) => GridSortModel;
-};
 
 export interface ComputeSortedRowIdsOptions {
   /** Use stable sort - build on current sorted order instead of starting fresh. */

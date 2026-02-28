@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-premium",
-  "version": "8.25.0",
+  "version": "9.0.0-alpha.1",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Charts components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -79,5 +79,8 @@
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts",
     "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }
