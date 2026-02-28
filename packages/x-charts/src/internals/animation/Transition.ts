@@ -16,7 +16,7 @@ export class Transition {
 
   private readonly easingFn: (t: number) => number;
 
-  private timer: Timer | null = null;
+  private transitionTimer: Timer | null = null;
 
   private readonly onTickCallback: (easedT: number) => void;
 
@@ -35,7 +35,7 @@ export class Transition {
   }
 
   private get running() {
-    return this.timer !== null;
+    return this.transitionTimer !== null;
   }
 
   private timerCallback(elapsed: number) {
@@ -63,7 +63,7 @@ export class Transition {
     /* If we're resuming the transition, then subtract elapsed to continue the easing. */
     const time = now() - this.elapsed;
 
-    this.timer = timer((elapsed) => this.timerCallback(elapsed), 0, time);
+    this.transitionTimer = timer((elapsed) => this.timerCallback(elapsed), 0, time);
 
     return this;
   }
@@ -76,9 +76,9 @@ export class Transition {
       return this;
     }
 
-    if (this.timer) {
-      this.timer.stop();
-      this.timer = null;
+    if (this.transitionTimer) {
+      this.transitionTimer.stop();
+      this.transitionTimer = null;
     }
 
     return this;
