@@ -25,7 +25,7 @@ catalogs:
       specifier: ^7.29.0
       version: 7.29.0
     '@date-fns/tz':
-      specifier: ^1.2.0
+      specifier: ^1.4.1
       version: 1.4.1
     '@emotion/cache':
       specifier: ^11.14.0
@@ -1542,6 +1542,9 @@ importers:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
     devDependencies:
+      '@date-fns/tz':
+        specifier: 'catalog:'
+        version: 1.4.1
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.8(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)

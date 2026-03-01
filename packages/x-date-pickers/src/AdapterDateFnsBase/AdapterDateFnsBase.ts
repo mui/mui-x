@@ -5,6 +5,7 @@ import {
   DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
+  PickersTimezone,
 } from '../models';
 
 type DateFnsLocaleBase = {
@@ -181,8 +182,12 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase> impleme
     this.lib = lib || 'date-fns';
   }
 
-  public date = <T extends string | null | undefined>(value?: T): DateBuilderReturnType<T> => {
+  public date = <T extends string | null | undefined>(
+    value?: T,
+    timezone?: PickersTimezone,
+  ): DateBuilderReturnType<T> => {
     type R = DateBuilderReturnType<T>;
+    void timezone;
     if (typeof value === 'undefined') {
       return new Date() as unknown as R;
     }
@@ -196,11 +201,13 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase> impleme
 
   public getInvalidDate = () => new Date('Invalid Date');
 
-  public getTimezone = (): string => {
+  public getTimezone = (value: Date | null): string => {
+    void value;
     return 'default';
   };
 
-  public setTimezone = (value: Date): Date => {
+  public setTimezone = (value: Date, timezone: PickersTimezone): Date => {
+    void timezone;
     return value;
   };
 

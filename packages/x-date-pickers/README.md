@@ -15,6 +15,7 @@ Then install the date library of your choice (if not already installed).
 The pickers currently support the following date libraries:
 
 - [date-fns](https://date-fns.org/)
+- [date-fns](https://date-fns.org/) + [@date-fns/tz](https://github.com/date-fns/tz)
 - [Day.js](https://day.js.org/)
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
@@ -22,6 +23,9 @@ The pickers currently support the following date libraries:
 ```bash
 # date-fns
 npm install date-fns
+
+# date-fns + timezone support
+npm install date-fns @date-fns/tz
 
 # or dayjs
 npm install dayjs
@@ -50,6 +54,8 @@ The supported adapters are exported from `@mui/x-date-pickers`.
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // date-fns
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// or for date-fns + @date-fns/tz
+import { AdapterTZDateFns } from '@mui/x-date-pickers/AdapterTZDateFns';
 // or for dayjs
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // or for luxon

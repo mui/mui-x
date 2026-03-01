@@ -29,10 +29,20 @@ chai.use((chaiAPI, utils) => {
       cleanExpectedDate = expectedDate;
     }
 
-    const assertion = new chaiAPI.Assertion(cleanActualDate.toISOString(), message);
+    const isTZDateLike = (value: any) =>
+      value != null && typeof value.withTimeZone === 'function' && 'timeZone' in value;
+
+    const shouldCompareByInstant = isTZDateLike(cleanActualDate) || isTZDateLike(cleanExpectedDate);
+
+    const assertion = new chaiAPI.Assertion(
+      shouldCompareByInstant ? cleanActualDate.valueOf() : cleanActualDate.toISOString(),
+      message,
+    );
     // TODO: Investigate if `as any` can be removed after https://github.com/DefinitelyTyped/DefinitelyTyped/issues/48634 is resolved.
     utils.transferFlags(this as any, assertion, false);
-    assertion.to.equal(cleanExpectedDate.toISOString());
+    assertion.to.equal(
+      shouldCompareByInstant ? cleanExpectedDate.valueOf() : cleanExpectedDate.toISOString(),
+    );
   });
 });
 
