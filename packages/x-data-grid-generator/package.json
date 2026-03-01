@@ -34,7 +34,7 @@
     "@mui/x-internals": "workspace:*",
     "chance": "catalog:",
     "clsx": "catalog:",
-    "lru-cache": "^11.2.2"
+    "lru-cache": "^11.2.6"
   },
   "devDependencies": {
     "@mui/icons-material": "catalog:",
