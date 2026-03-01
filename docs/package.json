@@ -33,7 +33,7 @@
     "@mui/joy": "^5.0.0-beta.52",
     "@mui/lab": "^7.0.0-beta.17",
     "@mui/material": "catalog:",
-    "@mui/material-nextjs": "^7.3.7",
+    "@mui/material-nextjs": "^7.3.8",
     "@mui/stylis-plugin-rtl": "catalog:",
     "@mui/system": "catalog:",
     "@mui/utils": "catalog:",
