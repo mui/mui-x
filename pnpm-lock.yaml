@@ -264,8 +264,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#600ea849c3a238c97ca0eb0c9e06da7f1cd2f366
-        version: https://codeload.github.com/mui/material-ui/tar.gz/600ea849c3a238c97ca0eb0c9e06da7f1cd2f366(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
+        specifier: github:mui/material-ui#ba12a4c9365051da8673a1b949c306ae2a77f138
+        version: https://codeload.github.com/mui/material-ui/tar.gz/ba12a4c9365051da8673a1b949c306ae2a77f138(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.7(@types/react@19.2.9)(react@19.2.3)
@@ -4440,7 +4440,7 @@ packages:
   '@mui/base@5.0.0-beta.40-1':
     resolution: {integrity: sha512-agKXuNNy0bHUmeU7pNmoZwNFr7Hiyhojkb9+2PVyDG5+6RafYuyMgbrav8CndsB7KUc/U51JAw9vKNDLYBzaUA==}
     engines: {node: '>=12.0.0'}
-    deprecated: This package has been replaced by @base-ui-components/react
+    deprecated: This package has been replaced by @base-ui/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4645,9 +4645,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/600ea849c3a238c97ca0eb0c9e06da7f1cd2f366':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/600ea849c3a238c97ca0eb0c9e06da7f1cd2f366}
-    version: 9.0.0-alpha.0
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/ba12a4c9365051da8673a1b949c306ae2a77f138':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/ba12a4c9365051da8673a1b949c306ae2a77f138}
+    version: 9.0.0-alpha.1
     engines: {node: '>=22.18.0', pnpm: 10.30.1}
 
   '@mui/private-theming@5.17.1':
@@ -8474,6 +8474,7 @@ packages:
   git-raw-commits@3.0.0:
     resolution: {integrity: sha512-b5OHmZ3vAgGrDn/X0kS+9qCfNKWe4K/jFnhwzVWWg0/k5eLa3060tZShrRg8Dja5kPc+YjS0Gc6y7cRr44Lpjw==}
     engines: {node: '>=14'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-remote-origin-url@2.0.0:
@@ -8483,6 +8484,7 @@ packages:
   git-semver-tags@5.0.1:
     resolution: {integrity: sha512-hIvOeZwRbQ+7YEUmCkHqo8FOLQZCEn18yevLHADlFPZY02KJGsu5FZt9YW/lybfK2uhWFI7Qg/07LekJiTv7iA==}
     engines: {node: '>=14'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-up@7.0.0:
@@ -15252,7 +15254,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
       '@types/react': 19.2.9
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/600ea849c3a238c97ca0eb0c9e06da7f1cd2f366(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/ba12a4c9365051da8673a1b949c306ae2a77f138(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
     dependencies:
       '@netlify/functions': 5.1.2
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
