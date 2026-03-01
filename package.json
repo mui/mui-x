@@ -118,7 +118,7 @@
     "execa": "9.6.1",
     "globby": "16.1.0",
     "jsdom": "26.1.0",
-    "lerna": "9.0.3",
+    "lerna": "9.0.4",
     "magic-string": "0.30.21",
     "markdownlint-cli2": "0.20.0",
     "moment": "catalog:",
