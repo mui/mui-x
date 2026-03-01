@@ -69,7 +69,7 @@
     "jscodeshift": "catalog:",
     "luxon": "catalog:",
     "lz-string": "^1.5.0",
-    "markdown-to-jsx": "^9.7.3",
+    "markdown-to-jsx": "^9.7.6",
     "moment": "catalog:",
     "moment-hijri": "catalog:",
     "moment-jalaali": "catalog:",
