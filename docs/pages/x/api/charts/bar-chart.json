@@ -245,7 +245,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiBarChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",

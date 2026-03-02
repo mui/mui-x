@@ -42,6 +42,12 @@
     "cellSelection": { "type": { "name": "bool" }, "default": "false" },
     "cellSelectionModel": { "type": { "name": "object" } },
     "chartsIntegration": { "type": { "name": "bool" }, "default": "false" },
+    "checkboxColDef": {
+      "type": {
+        "name": "shape",
+        "description": "{ aggregable?: bool, align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', availableAggregationFunctions?: Array&lt;string&gt;, cellClassName?: func<br>&#124;&nbsp;string, chartable?: bool, colSpan?: func<br>&#124;&nbsp;number, description?: string, disableColumnMenu?: bool, disableExport?: bool, disableReorder?: bool, display?: 'flex'<br>&#124;&nbsp;'text', editable?: bool, examples?: array, filterable?: bool, filterOperators?: Array&lt;{ getApplyFilterFn: func, getValueAsString?: func, headerLabel?: string, InputComponent?: elementType, InputComponentProps?: object, label?: string, requiresFilterValue?: bool, value: string }&gt;, flex?: number, getApplyQuickFilterFn?: func, getSortComparator?: func, groupable?: bool, groupingValueGetter?: func, groupingValueSetter?: func, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, hideable?: bool, hideSortIcons?: bool, maxWidth?: number, minWidth?: number, pastedValueParser?: func, pinnable?: bool, pivotable?: bool, preProcessEditCellProps?: func, renderCell?: func, renderEditCell?: func, renderHeader?: func, renderHeaderFilter?: func, resizable?: bool, rowSpanValueGetter?: func, sortable?: bool, sortComparator?: func, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, valueFormatter?: func, valueGetter?: func, valueParser?: func, valueSetter?: func, width?: number }"
+      }
+    },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },

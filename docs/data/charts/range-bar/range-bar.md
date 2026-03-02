@@ -1,7 +1,7 @@
 ---
 title: React Range Bar chart
 productId: x-charts
-components: BarChartPremium, RangeBarPlot, ChartDataProviderPremium, ChartsContainerPremium, FocusedRangeBar
+components: BarChartPremium, RangeBarPlot, ChartsDataProviderPremium, ChartsContainerPremium, FocusedRangeBar
 ---
 
 # Charts - Range Bar [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
@@ -99,7 +99,7 @@ Besides the common chart components available for [composition](/x/react-charts/
 Here's roughly how `BarChartPremium` is composed:
 
 ```jsx
-<ChartDataProviderPremium>
+<ChartsDataProviderPremium>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -117,7 +117,7 @@ Here's roughly how `BarChartPremium` is composed:
     </ChartsSurface>
     <ChartsTooltip />
   </ChartsWrapper>
-</ChartDataProviderPremium>
+</ChartsDataProviderPremium>
 ```
 
 In the example below, we follow a similar pattern and create a project schedule chart using range bars to represent task durations.

@@ -2,7 +2,7 @@ import Typography from '@mui/material/Typography';
 import { RangeBarPlot, RangeBarSeries } from '@mui/x-charts-premium/BarChartPremium';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartContainerPremium } from '@mui/x-charts-premium/ChartContainerPremium';
+import { ChartsContainerPremium } from '@mui/x-charts-premium/ChartsContainerPremium';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import * as React from 'react';
 import {
@@ -89,7 +89,7 @@ export default function RangeBarCandlestick() {
   const clipPathId = React.useId();
 
   return (
-    <ChartContainerPremium
+    <ChartsContainerPremium
       dataset={dataset}
       xAxis={xAxis}
       yAxis={yAxis}
@@ -107,7 +107,7 @@ export default function RangeBarCandlestick() {
       <ChartsTooltipContainer>
         <TooltipContent />
       </ChartsTooltipContainer>
-    </ChartContainerPremium>
+    </ChartsContainerPremium>
   );
 }
 

@@ -8,6 +8,9 @@ import {
 } from '@mui/x-data-grid';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
+import { Chance } from 'chance';
+
+const chance = new Chance(42);
 
 interface StockRow {
   id: number;
@@ -123,14 +126,14 @@ function fakeStockServer(params: GridGetRowsParams) {
   for (let index = start; index < end; index += 1) {
     const stock = STOCKS[index % STOCKS.length];
     const basePrice = basePrices[stock.symbol];
-    const priceFluctuation = 1 + (Math.random() - 0.5) * 0.03;
+    const priceFluctuation = 1 + chance.floating({ min: -0.5, max: 0.5 }) * 0.03;
 
     rows.push({
       id: index,
       symbol: stock.symbol,
       company: stock.company,
       price: Math.round(basePrice * priceFluctuation * 100) / 100,
-      volume: Math.floor(500_000 + Math.random() * 20_000_000),
+      volume: Math.floor(chance.floating({ min: 500_000, max: 20_500_000 })),
     });
   }
 

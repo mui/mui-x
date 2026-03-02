@@ -423,6 +423,11 @@ const pages: MuiPage[] = [
         subheader: 'Tutorials',
         children: [
           { pathname: '/x/react-data-grid/tutorials/server-side-data', title: 'Server-side data' },
+          {
+            pathname: '/x/react-data-grid/tutorials/aggregation-row-grouping',
+            title: 'Aggregation and row grouping',
+            plan: 'premium',
+          },
         ],
       },
     ],
@@ -827,7 +832,7 @@ const pages: MuiPage[] = [
         pathname: '/x/migration-v9',
         subheader: 'Upgrade to v9',
         children: [
-          // { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
+          { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
           // {
           //   pathname: '/x/migration/migration-pickers-v8',
           //   title: 'Breaking changes: Date and Time Pickers',

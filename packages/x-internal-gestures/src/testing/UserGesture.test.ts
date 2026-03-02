@@ -54,7 +54,7 @@ describe('UserGesture - Plugin System', () => {
       userGesture.setup({
         plugins: [duplicatePlugin],
       });
-    }).toThrow('Plugin with name "customGesture" already exists. Please use a unique name.');
+    }).toThrow('MUI X: Plugin with name "customGesture" already exists. Please use a unique name.');
   });
 
   it('should call the plugin gesture function with correct parameters when invoked', async () => {

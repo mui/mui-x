@@ -304,7 +304,7 @@ In addition to the common chart components available for [composition](/x/react-
 Here's how the bar chart is composed:
 
 ```jsx
-<ChartDataProvider>
+<ChartsDataProvider>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -320,7 +320,7 @@ Here's how the bar chart is composed:
     </ChartsSurface>
     <ChartsTooltip />
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 {{"demo": "BarScatterCompostion.js"}}
