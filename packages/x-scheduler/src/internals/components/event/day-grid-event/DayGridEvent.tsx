@@ -35,6 +35,9 @@ const DayGridEventBaseStyles = (theme: any) => ({
   minWidth: 18,
   height: 'auto',
   cursor: 'pointer',
+  '&[data-draggable]': {
+    cursor: 'grab',
+  },
   position: 'relative',
   zIndex: 1,
   gridRow: 'var(--grid-row)',
@@ -396,6 +399,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
+      data-draggable={isDraggable || undefined}
       {...sharedProps}
       className={clsx(classes.dayGridEvent, sharedProps.className)}
     >
