@@ -102,6 +102,16 @@ Always set the `checkboxSelection` prop to `true` even when providing a custom c
 Otherwise, the Data Grid might remove your column.
 :::
 
+#### Customizing the checkbox column
+
+You can use the `checkboxColDef` prop to customize the checkbox selection column.
+
+:::warning
+Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+Overriding them without providing the same functionality will break the row selection.
+:::
+
 ### Visible rows selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 By default, when you click the "Select All" checkbox, all rows in the Data Grid are selected.

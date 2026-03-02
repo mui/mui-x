@@ -136,7 +136,6 @@ const PieChart = React.forwardRef(function PieChart(
     colors,
     highlightedItem,
     onHighlightChange,
-    className,
     skipAnimation,
     plugins: PIE_CHART_PLUGINS,
   });
@@ -151,6 +150,7 @@ const PieChart = React.forwardRef(function PieChart(
         legendDirection={slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
         hideLegend={hideLegend ?? false}
+        className={className}
         ref={ref}
       >
         {showToolbar && Toolbar ? <Toolbar {...slotProps?.toolbar} /> : null}

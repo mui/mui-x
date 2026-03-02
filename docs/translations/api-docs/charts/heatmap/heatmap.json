@@ -106,12 +106,14 @@
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
-      "conditions": "faded"
+      "conditions": "faded",
+      "deprecationInfo": "Use <code>[data-faded]</code> selector instead."
     },
     "highlighted": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
-      "conditions": "highlighted"
+      "conditions": "highlighted",
+      "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
     },
     "series": {
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${heatmapClasses.series}-${seriesId}</code>.",

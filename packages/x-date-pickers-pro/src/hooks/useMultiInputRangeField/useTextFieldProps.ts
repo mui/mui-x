@@ -81,7 +81,7 @@ export function useTextFieldProps<
       break;
     }
     default: {
-      throw new Error(`Unknown valueType: ${valueType}`);
+      throw new Error(`MUI X: Unknown valueType: ${valueType}`);
     }
   }
 

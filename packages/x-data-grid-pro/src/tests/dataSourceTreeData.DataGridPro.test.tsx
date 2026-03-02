@@ -14,7 +14,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const dataSetOptions = {
@@ -45,15 +45,25 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   function TestDataSource(
     props: Partial<DataGridProProps> & {
       shouldRequestsFail?: boolean;
-      transformGetRowsResponse?: (rows: GridGetRowsResponse['rows']) => GridGetRowsResponse['rows'];
+      onFetchRows?: typeof fetchRowsSpy;
+      transformGetRowsResponse?: (
+        rows: GridGetRowsResponse['rows'],
+        params: GridGetRowsParams,
+      ) => GridGetRowsResponse['rows'];
     },
   ) {
     apiRef = useGridApiRef();
-    mockServer = useMockServer(dataSetOptions, serverOptions, props.shouldRequestsFail ?? false);
+    const {
+      shouldRequestsFail = false,
+      onFetchRows,
+      transformGetRowsResponse: transformGetRowsResponseProp = (rows) => rows,
+      ...otherProps
+    } = props;
+    const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
+    mockServer = useMockServer(dataSetOptions, serverOptions, shouldRequestsFail);
     const { columns } = mockServer;
 
     const { fetchRows } = mockServer;
-    const { transformGetRowsResponse: transformGetRowsResponseProp = (rows) => rows } = props;
 
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
@@ -66,18 +76,18 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
           });
 
           const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
-          fetchRowsSpy(url);
+          effectiveFetchRowsSpy(url);
           const getRowsResponse = await fetchRows(url);
 
           return {
-            rows: transformGetRowsResponseProp(getRowsResponse.rows),
+            rows: transformGetRowsResponseProp(getRowsResponse.rows, params),
             rowCount: getRowsResponse.rowCount,
           };
         },
         getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
         getChildrenCount: (row) => row.descendantCount,
       };
-    }, [fetchRows, transformGetRowsResponseProp]);
+    }, [fetchRows, transformGetRowsResponseProp, effectiveFetchRowsSpy]);
 
     if (!mockServer.isReady) {
       return null;
@@ -95,7 +105,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
           treeData
           pageSizeOptions={pageSizeOptions}
           disableVirtualization
-          {...props}
+          {...otherProps}
         />
       </div>
     );
@@ -138,6 +148,222 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     setProps({ paginationModel: { page: 1, pageSize: 10 } });
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
+  it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
+    const localFetchRowsSpy = spy();
+    const { unmount } = render(
+      <TestDataSource
+        dataSourceCache={null}
+        dataSourceRevalidateMs={1}
+        onFetchRows={localFetchRowsSpy}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
+    });
+
+    vi.useFakeTimers();
+    localFetchRowsSpy.resetHistory();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+    });
+
+    expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+
+    vi.useRealTimers();
+    unmount();
+  });
+
+  it('should periodically revalidate expanded nested rows when dataSourceRevalidateMs is set', async () => {
+    const localFetchRowsSpy = spy();
+    const { user, unmount } = render(
+      <TestDataSource
+        dataSourceCache={null}
+        dataSourceRevalidateMs={1}
+        onFetchRows={localFetchRowsSpy}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(localFetchRowsSpy.callCount).to.equal(1);
+    });
+
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+    });
+
+    vi.useFakeTimers();
+    localFetchRowsSpy.resetHistory();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+    });
+
+    const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
+      const url = new URL(call.firstArg as string);
+      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+      return groupKeys.length > 0;
+    });
+
+    expect(hasNestedGroupRequest).to.equal(true);
+
+    vi.useRealTimers();
+    unmount();
+  });
+
+  it('should keep selected nested rows selected during background nested revalidation', async () => {
+    const { user, unmount } = render(
+      <TestDataSource dataSourceCache={null} dataSourceRevalidateMs={1} />,
+    );
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+      .children[0];
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+      const expandedNode = apiRef.current!.state.rows.tree[expandedRowId] as GridGroupNode;
+      expect(expandedNode.children.length).to.be.greaterThan(0);
+    });
+
+    const firstChildId = (apiRef.current!.state.rows.tree[expandedRowId] as GridGroupNode)
+      .children[0];
+    act(() => {
+      apiRef.current?.selectRow(firstChildId, true);
+    });
+    expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
+
+    vi.useFakeTimers();
+    fetchRowsSpy.resetHistory();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+    });
+
+    const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
+      const url = new URL(call.firstArg as string);
+      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+      return groupKeys.length > 0;
+    });
+    expect(hasNestedGroupRequest).to.equal(true);
+
+    expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
+
+    vi.useRealTimers();
+    unmount();
+  });
+
+  it('should not set children loading state during background nested revalidation', async () => {
+    const localFetchRowsSpy = spy();
+    const { user, unmount } = render(
+      <TestDataSource
+        dataSourceCache={null}
+        dataSourceRevalidateMs={1}
+        onFetchRows={localFetchRowsSpy}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(localFetchRowsSpy.callCount).to.equal(1);
+    });
+
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+      .children[0];
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+    });
+
+    const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
+
+    vi.useFakeTimers();
+    localFetchRowsSpy.resetHistory();
+    setChildrenLoadingSpy.resetHistory();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(100);
+    });
+
+    const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
+      const url = new URL(call.firstArg as string);
+      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+      return groupKeys.length > 0;
+    });
+    expect(hasNestedGroupRequest).to.equal(true);
+
+    const hasLoadingTrueCall = setChildrenLoadingSpy
+      .getCalls()
+      .some((call) => call.args[0] === expandedRowId && call.args[1] === true);
+    setChildrenLoadingSpy.restore();
+    expect(hasLoadingTrueCall).to.equal(false);
+
+    vi.useRealTimers();
+    unmount();
+  });
+
+  it('should remove stale rows when re-fetching expanded nested rows', async () => {
+    let hasTransformedTheNestedData = false;
+    const testRowId = 'test-nested-row-id-1';
+    const transformGetRowsResponse = (
+      rows: GridGetRowsResponse['rows'],
+      params: GridGetRowsParams,
+    ) => {
+      if (params.groupKeys?.length !== 1 || hasTransformedTheNestedData) {
+        return rows;
+      }
+
+      hasTransformedTheNestedData = true;
+      return rows.map((row, index) => {
+        if (index === 1) {
+          return { ...row, id: testRowId, name: `${row.name}-updated` };
+        }
+        return row;
+      });
+    };
+    const { user } = render(
+      <TestDataSource dataSourceCache={null} transformGetRowsResponse={transformGetRowsResponse} />,
+    );
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+      .children[0];
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
+    });
+
+    await act(async () => {
+      await apiRef.current?.dataSource.fetchRows(expandedRowId);
+    });
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(3);
+      expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
     });
   });
 
@@ -239,7 +465,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
@@ -247,12 +473,14 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       10 + 1 + cell11ChildrenCount,
     );
 
+    fetchRowsSpy.resetHistory();
+
     act(() => {
       apiRef.current?.dataSource.fetchRows(undefined, { keepChildrenExpanded: false });
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(3);
+      expect(fetchRowsSpy.callCount).to.equal(1);
     });
 
     expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
@@ -279,7 +507,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
     });
 
     const cell11 = getCell(0, 0);

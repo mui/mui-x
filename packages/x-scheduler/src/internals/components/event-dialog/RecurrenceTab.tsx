@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -7,12 +8,13 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Box from '@mui/material/Box';
+import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import {
   RecurringEventFrequency,
   RecurringEventPresetKey,
@@ -30,6 +32,108 @@ import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
+
+const SectionHeaderTitle = styled(Typography, {
+  name: 'MuiEventDialog',
+  slot: 'SectionHeaderTitle',
+})(({ theme }) => ({
+  textTransform: 'uppercase',
+  color: theme.palette.text.secondary,
+}));
+
+const RecurrenceSelectorContainer = styled(Paper, {
+  name: 'MuiEventDialog',
+  slot: 'RecurrenceSelectorContainer',
+})(({ theme }) => ({
+  display: 'inline-flex',
+  border: `1px solid ${theme.palette.divider}`,
+  flexWrap: 'wrap',
+  width: 'fit-content',
+  maxWidth: '100%',
+}));
+
+const RadioButtonLabel = styled(FormControlLabel, {
+  name: 'MuiEventDialog',
+  slot: 'RadioButtonLabel',
+})(({ theme }) => ({
+  color: theme.palette.text.primary,
+  [`& .${formControlLabelClasses.label}`]: {
+    minWidth: 60,
+  },
+}));
+
+const RepeatSectionLabel = styled(FormLabel, {
+  name: 'MuiEventDialog',
+  slot: 'RepeatSectionLabel',
+})(({ theme }) => ({
+  color: theme.palette.text.primary,
+  minWidth: 60,
+}));
+
+const EndsRadioGroup = styled(RadioGroup, {
+  name: 'MuiEventDialog',
+  slot: 'EndsRadioGroup',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 8,
+});
+
+const RepeatSectionContent = styled('div', {
+  name: 'MuiEventDialog',
+  slot: 'RepeatSectionContent',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 12,
+});
+
+const InlineRow = styled('div', {
+  name: 'MuiEventDialog',
+  slot: 'InlineRow',
+})({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+});
+
+const RecurrenceSelectorToggleGroup = styled(ToggleButtonGroup, {
+  name: 'MuiEventDialog',
+  slot: 'RecurrenceSelectorToggleGroup',
+})(({ theme }) => ({
+  [`& .${toggleButtonGroupClasses.grouped}`]: {
+    margin: theme.spacing(0.5),
+    border: 0,
+    borderRadius: theme.shape.borderRadius,
+    minWidth: 0,
+    display: 'block',
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    [`&.${toggleButtonGroupClasses.disabled}`]: {
+      border: 0,
+    },
+  },
+  [`& .${toggleButtonGroupClasses.middleButton}, & .${toggleButtonGroupClasses.lastButton}`]: {
+    marginLeft: -1,
+    borderLeft: '1px solid transparent',
+  },
+}));
+
+const FrequencySelect = styled(Select, {
+  name: 'MuiEventDialog',
+  slot: 'FrequencySelect',
+})({
+  maxWidth: 120,
+});
+
+const SmallNumberField = styled(TextField, {
+  name: 'MuiEventDialog',
+  slot: 'SmallNumberField',
+})({
+  maxWidth: 100,
+});
 
 interface RecurrenceTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -69,7 +173,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         ...prev,
         recurrenceSelection: 'custom',
         rruleDraft: {
-          freq: base?.freq ?? prev.rruleDraft.freq ?? 'DAILY',
+          freq: base?.freq ?? prev.rruleDraft.freq ?? 'WEEKLY',
           interval: base?.interval ?? prev.rruleDraft.interval ?? 1,
           byDay: base?.byDay ?? prev.rruleDraft.byDay ?? [],
           byMonthDay: base?.byMonthDay ?? prev.rruleDraft.byMonthDay ?? [],
@@ -81,7 +185,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       setControlled((prev) => ({
         ...prev,
         recurrenceSelection: newSelection,
-        rruleDraft: { freq: 'DAILY', interval: 1, byDay: [], byMonthDay: [] },
+        rruleDraft: { freq: 'WEEKLY', interval: 1, byDay: [], byMonthDay: [] },
       }));
     }
   };
@@ -306,125 +410,166 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
             labelId="recurrence-preset-label"
             name="recurrencePreset"
             label={localeText.recurrenceMainSelectCustomLabel}
-            value={controlled.recurrenceSelection ?? ''}
-            onChange={(event) =>
+            value={controlled.recurrenceSelection ?? 'no-repeat'}
+            onChange={(event) => {
+              const value = event.target.value;
               handleRecurrenceSelectionChange(
-                event.target.value as RecurringEventPresetKey | null | 'custom',
-              )
-            }
+                value === 'no-repeat' ? null : (value as RecurringEventPresetKey | 'custom'),
+              );
+            }}
             readOnly={isPropertyReadOnly('rrule')}
             aria-label={localeText.recurrenceLabel}
           >
             {recurrenceOptions.map(({ label, value: optionValue }) => (
-              <MenuItem key={label} value={optionValue ?? ''}>
+              <MenuItem key={label} value={optionValue ?? 'no-repeat'}>
                 {label}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
 
-        <FormControl component="fieldset" disabled={customDisabled}>
-          <FormLabel component="legend">{localeText.recurrenceRepeatLabel}</FormLabel>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
-            {localeText.recurrenceEveryLabel}
-            <TextField
-              type="number"
-              slotProps={{ htmlInput: { min: 1 } }}
-              value={controlled.rruleDraft.interval}
-              onChange={handleChangeInterval}
-              disabled={customDisabled}
-              size="small"
-              sx={{ width: 80 }}
-            />
-            <Select
-              value={controlled.rruleDraft.freq}
-              onChange={(event) =>
-                handleChangeFrequency(event.target.value as RecurringEventFrequency)
-              }
-              disabled={customDisabled}
-              size="small"
-              sx={{ minWidth: 120 }}
-            >
-              {recurrenceFrequencyOptions.map(({ label, value: freqValue }) => (
-                <MenuItem key={label} value={freqValue}>
-                  {label}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
+        <FormControl component="fieldset" aria-label={localeText.recurrenceRepeatLabel}>
+          <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>
+            {localeText.recurrenceRepeatLabel}
+          </SectionHeaderTitle>
+          <RepeatSectionContent className={classes.eventDialogRepeatSectionContent}>
+            <InlineRow className={classes.eventDialogInlineRow}>
+              <RepeatSectionLabel className={classes.eventDialogRepeatSectionLabel}>
+                {localeText.recurrenceEveryLabel}
+              </RepeatSectionLabel>
+              <SmallNumberField
+                className={classes.eventDialogSmallNumberField}
+                type="number"
+                slotProps={{ htmlInput: { min: 1 } }}
+                value={controlled.rruleDraft.interval}
+                onChange={handleChangeInterval}
+                disabled={customDisabled}
+                size="small"
+              />
+              <FrequencySelect
+                className={classes.eventDialogFrequencySelect}
+                value={controlled.rruleDraft.freq}
+                onChange={(event) =>
+                  handleChangeFrequency(event.target.value as RecurringEventFrequency)
+                }
+                disabled={customDisabled}
+                size="small"
+                fullWidth
+              >
+                {recurrenceFrequencyOptions.map(({ label, value: freqValue }) => (
+                  <MenuItem key={label} value={freqValue}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </FrequencySelect>
+            </InlineRow>
+
+            {controlled.rruleDraft.freq === 'WEEKLY' && (
+              <InlineRow className={classes.eventDialogInlineRow}>
+                <RepeatSectionLabel className={classes.eventDialogRepeatSectionLabel}>
+                  {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
+                </RepeatSectionLabel>
+                <RecurrenceSelectorContainer
+                  elevation={0}
+                  className={classes.eventDialogRecurrenceSelectorContainer}
+                >
+                  <RecurrenceSelectorToggleGroup
+                    className={classes.eventDialogRecurrenceSelectorToggleGroup}
+                    size="small"
+                    value={controlled.rruleDraft.byDay}
+                    onChange={(_, newValue) => handleChangeWeeklyDays(newValue)}
+                    disabled={customDisabled}
+                    aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
+                  >
+                    {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
+                      <ToggleButton key={dayValue} aria-label={ariaLabel} value={dayValue}>
+                        {label}
+                      </ToggleButton>
+                    ))}
+                  </RecurrenceSelectorToggleGroup>
+                </RecurrenceSelectorContainer>
+              </InlineRow>
+            )}
+
+            {controlled.rruleDraft.freq === 'MONTHLY' && (
+              <InlineRow className={classes.eventDialogInlineRow}>
+                <RepeatSectionLabel className={classes.eventDialogRepeatSectionLabel}>
+                  {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
+                </RepeatSectionLabel>
+                <RecurrenceSelectorContainer
+                  elevation={0}
+                  className={classes.eventDialogRecurrenceSelectorContainer}
+                >
+                  <RecurrenceSelectorToggleGroup
+                    className={classes.eventDialogRecurrenceSelectorToggleGroup}
+                    size="small"
+                    value={monthlyMode}
+                    exclusive
+                    onChange={(_, newValue) => {
+                      if (newValue) {
+                        handleChangeMonthlyGroup([newValue]);
+                      }
+                    }}
+                    disabled={customDisabled}
+                    aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
+                  >
+                    {monthlyItems.map(({ value: monthlyValue, ariaLabel, label }) => (
+                      <ToggleButton key={monthlyValue} aria-label={ariaLabel} value={monthlyValue}>
+                        {label}
+                      </ToggleButton>
+                    ))}
+                  </RecurrenceSelectorToggleGroup>
+                </RecurrenceSelectorContainer>
+              </InlineRow>
+            )}
+          </RepeatSectionContent>
         </FormControl>
 
-        {controlled.recurrenceSelection === 'custom' && controlled.rruleDraft.freq === 'WEEKLY' && (
-          <FormControl component="fieldset">
-            <FormLabel>{localeText.recurrenceWeeklyMonthlySpecificInputsLabel}</FormLabel>
-            <ToggleButtonGroup
-              value={controlled.rruleDraft.byDay}
-              onChange={(_, newValue) => handleChangeWeeklyDays(newValue)}
-              aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
-            >
-              {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
-                <ToggleButton key={dayValue} aria-label={ariaLabel} value={dayValue}>
-                  {label}
-                </ToggleButton>
-              ))}
-            </ToggleButtonGroup>
-          </FormControl>
-        )}
-        {controlled.recurrenceSelection === 'custom' &&
-          controlled.rruleDraft.freq === 'MONTHLY' && (
-            <FormControl component="fieldset">
-              <FormLabel>{localeText.recurrenceWeeklyMonthlySpecificInputsLabel}</FormLabel>
-              <ToggleButtonGroup
-                value={monthlyMode}
-                exclusive
-                onChange={(_, newValue) => {
-                  if (newValue) {
-                    handleChangeMonthlyGroup([newValue]);
-                  }
-                }}
-                aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
-              >
-                {monthlyItems.map(({ value: monthlyValue, ariaLabel, label }) => (
-                  <ToggleButton key={monthlyValue} aria-label={ariaLabel} value={monthlyValue}>
-                    {label}
-                  </ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-            </FormControl>
-          )}
-
-        <FormControl component="fieldset" disabled={customDisabled}>
-          <FormLabel component="legend">{localeText.recurrenceEndsLabel}</FormLabel>
-          <RadioGroup
+        <FormControl component="fieldset" aria-label={localeText.recurrenceEndsLabel}>
+          <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>
+            {localeText.recurrenceEndsLabel}
+          </SectionHeaderTitle>
+          <EndsRadioGroup
+            className={classes.eventDialogEndsRadioGroup}
             value={customEndsValue}
             onChange={(event) => handleEndsChange(event.target.value as EndsSelection)}
           >
-            <FormControlLabel
+            <RadioButtonLabel
+              className={classes.eventDialogRadioButtonLabel}
               value="never"
-              control={<Radio disabled={customDisabled} />}
+              control={<Radio size="small" disabled={customDisabled} />}
               label={localeText.recurrenceEndsNeverLabel}
             />
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <FormControlLabel
+            <InlineRow className={classes.eventDialogInlineRow}>
+              <RadioButtonLabel
+                className={classes.eventDialogRadioButtonLabel}
                 value="after"
-                control={<Radio disabled={customDisabled} />}
+                control={<Radio size="small" disabled={customDisabled} />}
                 label={localeText.recurrenceEndsAfterLabel}
               />
-              <TextField
+              <SmallNumberField
+                className={classes.eventDialogSmallNumberField}
                 type="number"
                 slotProps={{ htmlInput: { min: 1 } }}
                 value={customEndsValue === 'after' ? (controlled.rruleDraft.count ?? 1) : 1}
                 onChange={handleChangeCount}
                 disabled={customDisabled || customEndsValue !== 'after'}
                 size="small"
-                sx={{ width: 80 }}
               />
               {localeText.recurrenceEndsTimesLabel}
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <FormControlLabel
+            </InlineRow>
+            <InlineRow
+              className={classes.eventDialogInlineRow}
+              onClick={() => {
+                if (!customDisabled && customEndsValue !== 'until') {
+                  handleEndsChange('until');
+                }
+              }}
+            >
+              <RadioButtonLabel
+                className={classes.eventDialogRadioButtonLabel}
                 value="until"
-                control={<Radio disabled={customDisabled} />}
+                control={<Radio size="small" disabled={customDisabled} />}
                 label={localeText.recurrenceEndsUntilLabel}
               />
               <TextField
@@ -440,8 +585,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 size="small"
                 slotProps={{ inputLabel: { shrink: true } }}
               />
-            </Box>
-          </RadioGroup>
+            </InlineRow>
+          </EndsRadioGroup>
         </FormControl>
       </EventDialogTabContent>
     </EventDialogTabPanel>
