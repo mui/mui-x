@@ -93,7 +93,7 @@ For example, you can use `useLineSeries()` to obtain the series of a Line Chart 
 
 ## HTML components
 
-Use the `ChartDataProvider` to access chart data from any component.
+Use the `ChartsDataProvider` to access chart data from any component.
 This lets you create HTML components that interact with the data.
 
 In the next example, notice that the `MyCustomLegend` component displays the series names and colors.
@@ -103,5 +103,5 @@ This creates an HTML `<table>` element, which can be customized in any way.
 
 :::warning
 Note that the HTML components are not part of the SVG hierarchy.
-This means they must be outside of the `ChartsSurface` component to avoid mixing HTML and SVG, and inside of the `ChartDataProvider` component to get access to the data.
+This means they must be outside of the `ChartsSurface` component to avoid mixing HTML and SVG, and inside of the `ChartsDataProvider` component to get access to the data.
 :::

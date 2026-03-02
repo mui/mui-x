@@ -5,7 +5,7 @@ import { ChartsSurface, type ChartsSurfaceProps } from '@mui/x-charts/ChartsSurf
 import { type ChartAnyPluginSignature, type ChartSeriesType } from '@mui/x-charts/internals';
 import { useChartsContainerProProps } from './useChartsContainerProProps';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ChartDataProviderPro, type ChartDataProviderProProps } from '../ChartDataProviderPro';
+import { ChartsDataProviderPro, type ChartsDataProviderProProps } from '../ChartsDataProviderPro';
 
 export interface ChartsContainerProSlots {}
 
@@ -14,7 +14,7 @@ export interface ChartsContainerProSlotProps {}
 export type ChartsContainerProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartDataProviderProProps<TSeries, TSignatures> & ChartsSurfaceProps;
+> = ChartsDataProviderProProps<TSeries, TSignatures> & ChartsSurfaceProps;
 
 type ChartsContainerProComponent = <
   TSeries extends ChartSeriesType = ChartSeriesType,
@@ -28,7 +28,7 @@ type ChartsContainerProComponent = <
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
- * This is a combination of both the `ChartDataProviderPro` and `ChartsSurface` components.
+ * This is a combination of both the `ChartsDataProviderPro` and `ChartsSurface` components.
  *
  * Demos:
  *
@@ -59,11 +59,11 @@ const ChartsContainerPro = React.forwardRef(function ChartsContainerProInner<
   >(props);
 
   return (
-    <ChartDataProviderPro<TSeries, TSignatures> {...chartDataProviderProProps}>
+    <ChartsDataProviderPro<TSeries, TSignatures> {...chartDataProviderProProps}>
       <ChartsSurface {...chartsSurfaceProps} ref={ref}>
         {children}
       </ChartsSurface>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 }) as unknown as ChartsContainerProComponent;
 
