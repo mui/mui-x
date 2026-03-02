@@ -6,7 +6,7 @@
 import path from 'path';
 import { globby } from 'globby';
 import { defineConfig } from '@mui/internal-bundle-size-checker';
-import generateReleaseInfo from '../../scripts/generateReleaseInfo.js';
+import generateReleaseInfo from '../../scripts/generateReleaseInfo.mjs';
 
 const rootDir = path.resolve(import.meta.dirname, '../..');
 

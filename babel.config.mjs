@@ -2,7 +2,7 @@ import getBaseConfig from '@mui/internal-code-infra/babel-config';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import generateReleaseInfo from './scripts/generateReleaseInfo.js';
+import generateReleaseInfo from './scripts/generateReleaseInfo.mjs';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
