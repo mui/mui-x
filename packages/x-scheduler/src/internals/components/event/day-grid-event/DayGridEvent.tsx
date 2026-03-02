@@ -35,8 +35,8 @@ const DayGridEventBaseStyles = (theme: any) => ({
   minWidth: 18,
   height: 'auto',
   cursor: 'pointer',
-  '&[data-draggable]': {
-    cursor: 'grab',
+  '&[data-dragging]': {
+    cursor: 'grabbing',
   },
   position: 'relative',
   zIndex: 1,
