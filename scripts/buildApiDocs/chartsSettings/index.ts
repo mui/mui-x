@@ -116,8 +116,8 @@ export default chartsApiPages;
       'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLRenderer.tsx',
       'x-charts/src/ChartContainer/ChartContainer.tsx',
       'x-charts-pro/src/ChartContainerPro/ChartContainerPro.tsx',
-      'x-charts-premium/src/ChartsWebGlLayer/ChartsWebGlLayer.tsx',
       'x-charts-premium/src/ChartContainerPremium/ChartContainerPremium.tsx',
+      'x-charts-premium/src/ChartsWebGLLayer/ChartsWebGLLayer.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
