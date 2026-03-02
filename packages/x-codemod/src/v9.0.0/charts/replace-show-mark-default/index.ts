@@ -16,6 +16,11 @@ const PROVIDER_NAMES = [
   'ChartsContainer',
   'ChartsContainerPro',
   'ChartsContainerPremium',
+
+  // Old naming to be sure codemod order does not matter
+  'ChartContainer',
+  'ChartContainerPro',
+  'ChartContainerPremium',
 ];
 
 /**
@@ -23,9 +28,9 @@ const PROVIDER_NAMES = [
  *
  * If `showMark` is not defined, adds `showMark: true` to preserve v8 behavior.
  *
- * The `showmMark: false` cases are left unchanged to stay idempotent.
+ * The `showMark: false` cases are left unchanged to stay idempotent.
  *
- * Ths codemod applies on LineChart components and providers when series type is set to 'line'.
+ * This codemod applies on LineChart components and providers when series type is set to 'line'.
  */
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;

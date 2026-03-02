@@ -48,13 +48,21 @@ export const defaultizeSeries = <TSeriesType extends ChartSeriesType>({
     }
 
     if (seriesGroups[seriesData.type]?.series[id] !== undefined) {
-      throw new Error(`MUI X Charts: series' id "${id}" is not unique.`);
+      throw new Error(
+        `MUI X Charts: Series id "${id}" is not unique. ` +
+          'Each series must have a unique id to be properly identified and rendered. ' +
+          'Provide a unique id for each series in your chart configuration.',
+      );
     }
 
     seriesGroups[seriesData.type]!.series[id] = seriesWithDefaultValues;
     seriesGroups[seriesData.type]!.seriesOrder.push(id);
     if (idToType.has(id)) {
-      throw new Error(`MUI X Charts: series' id "${id}" is not unique.`);
+      throw new Error(
+        `MUI X Charts: Series id "${id}" is not unique across series types. ` +
+          'Each series must have a unique id even across different series types. ' +
+          'Provide a unique id for each series in your chart configuration.',
+      );
     }
     idToType.set(id, seriesData.type);
   });

@@ -5,9 +5,15 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 export interface RadarSeriesPlotClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the series element if it is highlighted. */
+  /**
+   * Styles applied to the series element if it is highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the series element if it is faded. */
+  /**
+   * Styles applied to the series element if it is faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /** Styles applied to the series area element. */
   area: string;

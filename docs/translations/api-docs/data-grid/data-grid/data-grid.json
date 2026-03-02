@@ -19,6 +19,9 @@
     },
     "autosizeOptions": { "description": "The options for autosize when user-initiated." },
     "cellModesModel": { "description": "Controls the modes of the cells." },
+    "checkboxColDef": {
+      "description": "Definition of the column rendered when the <code>checkboxSelection</code> prop is enabled."
+    },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
     },

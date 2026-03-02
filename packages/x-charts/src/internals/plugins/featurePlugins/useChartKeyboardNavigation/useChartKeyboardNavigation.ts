@@ -14,7 +14,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   store,
   instance,
 }) => {
-  const { svgRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const removeFocus = useEventCallback(function removeFocus() {
     if (store.state.keyboardNavigation.item !== null) {
       store.set('keyboardNavigation', {
@@ -25,7 +25,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   });
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
     if (!element || !params.enableKeyboardNavigation) {
       return undefined;
@@ -81,7 +81,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('blur', removeFocus);
     };
-  }, [svgRef, removeFocus, params.enableKeyboardNavigation, store]);
+  }, [chartsLayerContainerRef, removeFocus, params.enableKeyboardNavigation, store]);
 
   useEnhancedEffect(() => {
     if (

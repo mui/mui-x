@@ -64,7 +64,7 @@ describe('PointerManager', () => {
     it('should throw an error when used with touch mode', () => {
       expect(() => {
         touchPointerManager.parseMousePointer(undefined, target);
-      }).toThrow('Mouse pointer can only be used in mouse mode');
+      }).toThrow('MUI X: Mouse pointer can only be used in mouse mode');
     });
   });
 
@@ -121,7 +121,7 @@ describe('PointerManager', () => {
             distance: 50,
           },
         );
-      }).toThrow('Mouse mode only supports one pointer');
+      }).toThrow('MUI X: Mouse mode only supports one pointer');
     });
 
     it('should handle custom pointer ids when provided', () => {
