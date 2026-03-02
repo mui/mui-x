@@ -9,7 +9,7 @@ import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
 // eslint-disable-next-line import/no-relative-packages, import/extensions
-import generateReleaseInfo from '../packages/x-internals/generateReleaseInfo.js';
+import generateReleaseInfo from '../scripts/generateReleaseInfo.js';
 
 declare global {
   interface MUIEnv {
