@@ -6,7 +6,7 @@ import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { type ChartPlugin } from '../../models';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { type UseChartClosestPointSignature } from './useChartClosestPoint.types';
-import { getSVGPoint } from '../../../getSVGPoint';
+import { getChartPoint } from '../../../getChartPoint';
 import {
   selectorChartAxisZoomData,
   selectorChartSeriesEmptyFlatbushMap,
@@ -23,7 +23,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   store,
   instance,
 }) => {
-  const { svgRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
 
   const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
@@ -43,10 +43,10 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   }, [store, disableVoronoi]);
 
   React.useEffect(() => {
-    if (svgRef.current === null || disableVoronoi) {
+    if (chartsLayerContainerRef.current === null || disableVoronoi) {
       return undefined;
     }
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
     function getClosestPoint(
       event: MouseEvent,
@@ -56,7 +56,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       | 'outside-voronoi-max-radius'
       | 'no-point-found' {
       // Get mouse coordinate in global SVG space
-      const svgPoint = getSVGPoint(element, event);
+      const svgPoint = getChartPoint(element, event);
 
       if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
         return 'outside-chart';
@@ -200,7 +200,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       pressEndHandler.cleanup();
     };
   }, [
-    svgRef,
+    chartsLayerContainerRef,
     yAxis,
     xAxis,
     voronoiMaxRadius,

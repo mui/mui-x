@@ -7,9 +7,15 @@ import type { FunnelSectionLabelProps } from './FunnelSectionLabel';
 export interface FunnelSectionClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element if `highlighted={true}`. */
+  /**
+   * Styles applied to the root element if `highlighted={true}`.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element if `faded={true}`. */
+  /**
+   * Styles applied to the root element if `faded={true}`.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /** Styles applied to the root element if `variant="filled"`. */
   filled: string;

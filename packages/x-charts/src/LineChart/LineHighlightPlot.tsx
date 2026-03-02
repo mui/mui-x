@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useStore } from '../internals/store/useStore';
 import { LineHighlightElement, type LineHighlightElementProps } from './LineHighlightElement';
-import { getValueToPositionMapper } from '../hooks/useScale';
+import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import getColor from './seriesConfig/getColor';
@@ -102,7 +102,9 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
                   xAxisId === DEFAULT_X_AXIS_KEY
                     ? 'The first `xAxis`'
                     : `The x-axis with id "${xAxisId}"`
-                } should have data property to be able to display a line plot.`,
+                } should have a data property to be able to display a line plot. ` +
+                  'The x-axis data defines the positions for each point in the line. ' +
+                  'Provide a data array to the x-axis configuration.',
               );
             }
 

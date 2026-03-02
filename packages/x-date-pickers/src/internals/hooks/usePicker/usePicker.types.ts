@@ -106,6 +106,13 @@ export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextV
    */
   closeOnSelect?: boolean;
   /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus?: boolean;
+  /**
    * Control the popup or dialog open state.
    * @default false
    */

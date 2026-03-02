@@ -2,7 +2,7 @@
   "name": "@mui/x-scheduler-premium",
   "version": "0.0.1-alpha.0",
   "private": true,
-  "description": "The Premium plan edition of the Scheduler component (MUI X).",
+  "description": "The Premium plan edition of the scheduler components (MUI X).",
   "author": "MUI Team",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
@@ -13,6 +13,8 @@
     "./event-calendar-premium": "./src/event-calendar-premium/index.ts",
     "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
     "./use-event-calendar-premium-api-ref": "./src/use-event-calendar-premium-api-ref/index.ts",
+    "./use-event-timeline-premium-api-ref": "./src/use-event-timeline-premium-api-ref/index.ts",
+    "./locales": "./src/locales/index.ts",
     "./theme-augmentation": "./src/theme-augmentation/index.ts"
   },
   "sideEffects": false,
@@ -37,7 +39,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -83,5 +85,8 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

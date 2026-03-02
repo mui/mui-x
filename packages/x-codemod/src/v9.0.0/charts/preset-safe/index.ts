@@ -1,15 +1,19 @@
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import * as renameIdToSeriesId from '../rename-id-to-series-id';
 import * as renameChartApiImport from '../rename-chart-api-import';
+import * as renameChartContainer from '../rename-chart-container';
 import * as replaceHeatmapHideLegend from '../replace-heatmap-hide-legend-false';
 import * as renameSankeyChart from '../rename-sankey-chart';
+import * as replaceShowMarkDefault from '../replace-show-mark-default';
 
 const allModules = [
   // Add other transforms here as they are created
   replaceHeatmapHideLegend,
+  replaceShowMarkDefault,
   renameIdToSeriesId,
   renameChartApiImport,
   renameSankeyChart,
+  renameChartContainer,
 ];
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {

@@ -2,6 +2,8 @@
 /* eslint-disable */
 import * as React from 'react';
 import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { ChartContainer } from '@mui/x-charts';
+import { ChartContainerProps, ChartApi } from '@mui/x-charts/ChartContainer';
 
 // Use this space to add tests that touch multiple codemods in the preset-safe package
 // It is important to ensure that the codemods don't conflict with each other
@@ -16,4 +18,7 @@ import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
   <HeatmapPremium {...otherProps} />
   <PieArc id="test" />
   <Unstable_SankeyChart series={{}} />
+  <LineChart series={[{ data: [1, 2, 3] }]} />
+  <ChartsDataProvider series={[{ type: 'line', data: [1, 2, 3] }]} />
+  <ChartContainer />
 </div>;

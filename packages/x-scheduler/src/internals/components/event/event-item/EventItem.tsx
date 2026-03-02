@@ -13,9 +13,8 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { EventItemProps } from './EventItem.types';
-import { useTranslations } from '../../../utils/TranslationsContext';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 
 const EventItemCard = styled('div', {
@@ -145,9 +144,8 @@ export const EventItem = React.forwardRef(function EventItem(
   } = props;
 
   // Context hooks
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
 
   // State hooks
   const id = useId(idProp);
@@ -173,8 +171,8 @@ export const EventItem = React.forwardRef(function EventItem(
               role="img"
               aria-label={
                 resource?.title
-                  ? translations.resourceAriaLabel(resource.title)
-                  : translations.noResourceAriaLabel
+                  ? localeText.resourceAriaLabel(resource.title)
+                  : localeText.noResourceAriaLabel
               }
             />
             <EventItemLinesClamp
@@ -226,8 +224,8 @@ export const EventItem = React.forwardRef(function EventItem(
               role="img"
               aria-label={
                 resource?.title
-                  ? translations.resourceAriaLabel(resource.title)
-                  : translations.noResourceAriaLabel
+                  ? localeText.resourceAriaLabel(resource.title)
+                  : localeText.noResourceAriaLabel
               }
             />
             <EventItemLinesClamp
@@ -251,9 +249,13 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
       default:
-        throw new Error('MUI: Unsupported variant provided to EventItem component.');
+        throw new Error(
+          'MUI X Scheduler: Unsupported variant provided to EventItem component. ' +
+            'The EventItem component only supports specific variant values. ' +
+            'Check the component documentation for supported variants.',
+        );
     }
-  }, [variant, resource?.title, translations, formatTime, occurrence, isRecurring, classes]);
+  }, [variant, resource?.title, localeText, formatTime, occurrence, isRecurring, classes]);
 
   return (
     // TODO: Use button
@@ -280,8 +282,7 @@ function MultiDayDateLabel(props: {
   const { occurrence, formatTime } = props;
 
   const adapter = useAdapter();
-  const translations = useTranslations();
-  const classes = useEventCalendarClasses();
+  const { classes, localeText } = useEventCalendarStyledContext();
 
   if (
     !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
@@ -289,7 +290,7 @@ function MultiDayDateLabel(props: {
     const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
-        {translations.eventItemMultiDayLabel(
+        {localeText.eventItemMultiDayLabel(
           adapter.formatByString(occurrence.displayTimezone.end.value, format),
         )}
       </EventItemTime>
@@ -298,7 +299,7 @@ function MultiDayDateLabel(props: {
   if (occurrence.allDay) {
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
-        {translations.allDay}
+        {localeText.allDay}
       </EventItemTime>
     );
   }

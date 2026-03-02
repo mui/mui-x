@@ -6,6 +6,7 @@ import {
   SchedulerEventOccurrence,
   SchedulerEventId,
 } from '../../models';
+import { SchedulerPlan } from './SchedulerStore/SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import { getRecurringEventOccurrencesForVisibleDays } from './recurring-events';
 
@@ -70,48 +71,30 @@ export function getDaysTheOccurrenceIsVisibleOn(
  * Returns the occurrences to render in the given date range, expanding recurring events.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources, resourceParentIds, displayTimezone } =
-    parameters;
+  const { adapter, start, end, events, visibleResources, displayTimezone, plan } = parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
-
-  const resourceVisibilityCache = new Map<string, boolean>();
-
-  const checkResourceVisibility = (resourceId: string): boolean => {
-    if (!resourceId) {
-      return true;
-    }
-
-    const cached = resourceVisibilityCache.get(resourceId);
-    if (cached !== undefined) {
-      return cached;
-    }
-
-    const isResourceVisible = visibleResources[resourceId] !== false;
-
-    let result: boolean;
-    if (isResourceVisible) {
-      const parentId = resourceParentIds.get(resourceId);
-      if (!parentId) {
-        result = isResourceVisible;
-      } else {
-        result = checkResourceVisibility(parentId);
-      }
-    } else {
-      result = isResourceVisible;
-    }
-
-    resourceVisibilityCache.set(resourceId, result);
-    return result;
-  };
 
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
-    if (event.resource && checkResourceVisibility(event.resource) === false) {
+    if (event.resource && visibleResources[event.resource] === false) {
       continue;
     }
 
     // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
     if (event.displayTimezone.rrule) {
+      // In community, recurring events are not expanded into occurrences.
+      // They are treated as single non-recurring events.
+      if (plan !== 'premium') {
+        if (
+          adapter.isAfter(event.displayTimezone.start.value, end) ||
+          adapter.isBefore(event.displayTimezone.end.value, start)
+        ) {
+          continue;
+        }
+        occurrences.push({ ...event, key: String(event.id) });
+        continue;
+      }
+
       // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
         ...getRecurringEventOccurrencesForVisibleDays(event, start, end, adapter, displayTimezone),
@@ -139,6 +122,6 @@ export interface GetOccurrencesFromEventsParameters {
   end: TemporalSupportedObject;
   events: SchedulerProcessedEvent[];
   visibleResources: Record<string, boolean>;
-  resourceParentIds: Map<string, string | null>;
   displayTimezone: TemporalTimezone;
+  plan: SchedulerPlan;
 }

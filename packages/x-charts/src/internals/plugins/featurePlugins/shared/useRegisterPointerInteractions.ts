@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useSvgRef } from '../../../../hooks';
+import { useChartsLayerContainerRef } from '../../../../hooks';
 import { type UseChartTooltipSignature } from '../../featurePlugins/useChartTooltip';
-import { type SeriesItemIdentifier } from '../../../../models/seriesType';
+import { type SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type UseChartInteractionSignature } from '../useChartInteraction';
 import { type UseChartHighlightSignature } from '../useChartHighlight';
 import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 import { useStore } from '../../../store/useStore';
 import { useChartContext } from '../../../../context/ChartProvider';
-import { getSVGPoint } from '../../../getSVGPoint';
+import { getChartPoint } from '../../../getChartPoint';
 import { type ChartState } from '../../models';
 
 /**
@@ -20,7 +20,7 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
   getItemAtPosition: (
     state: ChartState<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>,
     point: { x: number; y: number },
-  ) => SeriesItemIdentifier<SeriesType> | undefined,
+  ) => SeriesItemIdentifierWithType<SeriesType> | undefined,
   onItemEnter?: () => void,
   onItemLeave?: () => void,
 ) {
@@ -28,16 +28,16 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
     useChartContext<
       [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
     >();
-  const svgRef = useSvgRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
   const interactionActive = React.useRef(false);
-  const lastItemRef = React.useRef<SeriesItemIdentifier<SeriesType> | undefined>(undefined);
+  const lastItemRef = React.useRef<SeriesItemIdentifierWithType<SeriesType> | undefined>(undefined);
 
   const onItemEnterRef = useEventCallback(() => onItemEnter?.());
   const onItemLeaveRef = useEventCallback(() => onItemLeave?.());
 
   React.useEffect(() => {
-    const svg = svgRef.current;
+    const svg = chartsLayerContainerRef.current;
 
     if (!svg) {
       return undefined;
@@ -64,7 +64,7 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
     }
 
     const onPointerMove = function onPointerMove(event: PointerEvent) {
-      const svgPoint = getSVGPoint(svg, event);
+      const svgPoint = getChartPoint(svg, event);
 
       if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
         reset();
@@ -98,5 +98,5 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
         onPointerLeave();
       }
     };
-  }, [getItemAtPosition, instance, onItemEnterRef, onItemLeaveRef, store, svgRef]);
+  }, [getItemAtPosition, instance, onItemEnterRef, onItemLeaveRef, store, chartsLayerContainerRef]);
 }

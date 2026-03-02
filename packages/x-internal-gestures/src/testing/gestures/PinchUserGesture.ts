@@ -24,7 +24,7 @@ export const pinch = async (
   } = options;
 
   if (!target) {
-    throw new Error('Target element is required for pinch gesture');
+    throw new Error('MUI X: Target element is required for pinch gesture');
   }
 
   // Handle no movement case
@@ -42,7 +42,7 @@ export const pinch = async (
   });
 
   if (pointersArray.length < 2) {
-    throw new Error('Pinch gesture requires at least 2 pointers');
+    throw new Error('MUI X: Pinch gesture requires at least 2 pointers');
   }
 
   // Start the pinch gesture by pressing down all pointers
