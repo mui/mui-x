@@ -136,7 +136,24 @@ export type ParamsWithDefaults = RequiredFields<
 };
 
 const FEATURES = [Dimensions, Virtualization, Colspan, Rowspan, Keyboard] as const;
-const LIST_FEATURES = [Dimensions, Virtualization] as const;
+
+/**
+ * Placeholder feature for list-only virtualization.
+ * Provides no-op implementations of the colspan/rowspan API so that `inputsSelector`
+ * (which calls `getHiddenCellsOrigin` unconditionally) doesn't throw when those
+ * features are not included. The real `createSpanningAPI()` still throws when
+ * colspan/rowspan is used without the proper feature in the grid hook.
+ */
+const SpanningPlaceholder = {
+  initialize: () => ({}),
+  use: () => ({
+    getCellColSpanInfo: () => undefined as any,
+    calculateColSpan: () => {},
+    getHiddenCellsOrigin: () => ({}) as Record<any, Record<number, number>>,
+  }),
+} as const;
+
+const LIST_FEATURES = [Dimensions, Virtualization, SpanningPlaceholder] as const;
 
 /**
  * Parameters for the list-only virtualizer hook.
@@ -195,13 +212,6 @@ export const useVirtualizerList = <L extends Layout = Layout>(
   for (const feature of LIST_FEATURES) {
     Object.assign(api, feature.use(store as any, paramsWithDefault, api as any));
   }
-
-  // 1D list virtualization never uses colspan or rowspan. Provide safe no-ops so that
-  // `inputsSelector` (which calls `getHiddenCellsOrigin` unconditionally) doesn't throw.
-  // Note: `createSpanningAPI()` still throws in the grid hook to catch misuse.
-  (api as any).getHiddenCellsOrigin = () => ({});
-  (api as any).getCellColSpanInfo = () => undefined;
-  (api as any).calculateColSpan = () => {};
 
   return {
     store,
