@@ -382,7 +382,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   let handleFocus = other.onFocus;
 
   if (
-    process.env.NODE_ENV === 'test' &&
+    process.env.NODE_ENV !== 'production' &&
+    (globalThis as any).MUI_TEST_ENV &&
     rootProps.experimentalFeatures?.warnIfFocusStateIsNotSynced
   ) {
     handleFocus = (event: React.FocusEvent) => {
