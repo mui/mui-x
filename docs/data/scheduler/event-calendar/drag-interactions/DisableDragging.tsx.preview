@@ -1,8 +1,8 @@
-<EventTimelinePremium
+<EventCalendar
   events={events}
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  areEventsDraggable
-  defaultView="months"
+  areEventsDraggable={false}
+  defaultPreferences={{ isSidePanelOpen: false }}
 />
