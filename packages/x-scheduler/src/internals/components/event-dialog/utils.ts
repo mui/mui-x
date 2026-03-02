@@ -90,17 +90,17 @@ export function getRecurrenceLabel(
   }
 
   switch (recurrenceKey) {
-    case 'daily':
+    case 'DAILY':
       return localeText.recurrenceDailyPresetLabel;
-    case 'weekly': {
+    case 'WEEKLY': {
       const weekday = adapter.format(start.value, 'weekday');
       return localeText.recurrenceWeeklyPresetLabel(weekday);
     }
-    case 'monthly': {
+    case 'MONTHLY': {
       const date = adapter.getDate(start.value);
       return localeText.recurrenceMonthlyPresetLabel(date);
     }
-    case 'yearly': {
+    case 'YEARLY': {
       const normalDate = formatDayOfMonthAndMonthFullLetter(start.value, adapter);
       return localeText.recurrenceYearlyPresetLabel(normalDate);
     }
