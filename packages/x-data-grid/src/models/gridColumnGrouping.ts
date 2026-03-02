@@ -8,7 +8,7 @@ export interface GridLeafColumn {
 export type GridColumnNode = GridColumnGroup | GridLeafColumn;
 
 export function isLeaf(node: GridColumnNode): node is GridLeafColumn {
-  return (<GridLeafColumn>node).field !== undefined;
+  return (node as GridLeafColumn).field !== undefined;
 }
 
 /**

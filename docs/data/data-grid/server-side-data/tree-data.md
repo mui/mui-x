@@ -74,6 +74,16 @@ In a real-world scenario you would replace this with your own server-side data-f
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
+## Handle dynamic data updates
+
+To keep retrieving new values for the dynamic server-side tree data, use the `dataSourceRevalidateMs` prop.
+This starts a polling timer that revalidates the current server-side query in the background and updates the Data Grid with the latest data.
+
+The demo below uses `dataSourceRevalidateMs={2_000}` and disables the cache to make periodic updates visible.
+It also uses stable row IDs in a nested stock hierarchy so expanded rows stay expanded after updates.
+
+{{"demo": "ServerSideTreeDataRevalidation.js", "bg": "inline"}}
+
 ## Row expansion state persistence
 
 For complete details on row expansion state persistence, see [Server-side data row grouping—Row expansion state persistence](/x/react-data-grid/server-side-data/row-grouping/#row-expansion-state-persistence).

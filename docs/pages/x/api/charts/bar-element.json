@@ -27,13 +27,15 @@
       "key": "faded",
       "className": "MuiBarElement-faded",
       "description": "Styles applied to the root element if it is faded.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "highlighted",
       "className": "MuiBarElement-highlighted",
       "description": "Styles applied to the root element if it is highlighted.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "root",

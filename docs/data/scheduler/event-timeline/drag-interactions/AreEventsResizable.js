@@ -18,6 +18,7 @@ export default function AreEventsResizable() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsResizable
+        defaultView="months"
       />
     </div>
   );

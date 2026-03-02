@@ -9,7 +9,9 @@ import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
+import { EventSkeleton } from '../event-skeleton';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
@@ -133,6 +135,7 @@ function ColumnInteractiveLayer({
     end,
   );
   const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
@@ -146,11 +149,13 @@ function ColumnInteractiveLayer({
       className={classes.dayTimeGridColumnInteractiveLayer}
       ref={columnRef}
     >
-      {occurrences.map((occurrence) => (
-        <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-          <TimeGridEvent occurrence={occurrence} variant="regular" />
-        </EventDialogTrigger>
-      ))}
+      {isLoading && <EventSkeleton data-variant="time-column" />}
+      {!isLoading &&
+        occurrences.map((occurrence) => (
+          <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+            <TimeGridEvent occurrence={occurrence} variant="regular" />
+          </EventDialogTrigger>
+        ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
         <DayTimeGridCurrentTimeIndicator

@@ -26,7 +26,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianTooltip.selectors';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
-import { useSvgRef } from '../hooks';
+import { useChartsLayerContainerRef } from '../hooks';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
@@ -154,8 +154,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const store = useStore<[UseChartCartesianAxisSignature, UseChartInteractionSignature]>();
 
-  const svgRef = useSvgRef();
-  const anchorRef = React.useRef<SVGRectElement | null>(null);
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
+  const anchorRef = React.useRef<HTMLDivElement | null>(null);
 
   const classes = useUtilityClasses(propClasses);
 
@@ -180,7 +180,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const isTooltipNodeAnchored = itemPosition !== null;
 
   React.useEffect(() => {
-    const svgElement = svgRef.current;
+    const svgElement = chartsLayerContainerRef.current;
     if (svgElement === null) {
       return () => {};
     }
@@ -208,7 +208,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       svgElement.removeEventListener('pointerenter', handlePointerEvent);
       pointerUpdate.clear();
     };
-  }, [svgRef, positionRef, isTooltipNodeAnchored]);
+  }, [chartsLayerContainerRef, positionRef, isTooltipNodeAnchored]);
 
   const pointerAnchorEl = React.useMemo(
     () => ({
@@ -265,19 +265,24 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   return (
     <React.Fragment>
-      {svgRef.current &&
+      {chartsLayerContainerRef.current &&
         ReactDOM.createPortal(
-          <rect
+          <div
             ref={anchorRef}
-            {...itemPosition}
-            display="hidden"
-            // On ios a rect with no width/height is not detectable by the popper.js
-            pointerEvents="none"
-            opacity={0}
-            width={1}
-            height={1}
+            style={{
+              position: 'absolute',
+              display: 'hidden',
+              left: itemPosition?.x ?? 0,
+              top: itemPosition?.y ?? 0,
+              pointerEvents: 'none',
+              opacity: 0,
+              // TODO: Is this true for a div as well?
+              // On ios a rect with no width/height is not detectable by the popper.js
+              width: 1,
+              height: 1,
+            }}
           />,
-          svgRef.current,
+          chartsLayerContainerRef.current,
         )}
       <NoSsr>
         {isOpen && (
@@ -368,10 +373,10 @@ ChartsTooltipContainer.propTypes = {
   container: PropTypes.oneOfType([
     (props, propName) => {
       if (props[propName] == null) {
-        return new Error(`Prop '${propName}' is required but wasn't specified`);
+        return new Error(`MUI X: Prop '${propName}' is required but wasn't specified`);
       }
       if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-        return new Error(`Expected prop '${propName}' to be of type Element`);
+        return new Error(`MUI X: Expected prop '${propName}' to be of type Element`);
       }
       return null;
     },

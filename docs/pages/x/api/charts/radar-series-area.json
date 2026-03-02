@@ -28,13 +28,15 @@
       "key": "faded",
       "className": "MuiRadarSeriesArea-faded",
       "description": "Styles applied to the series element if it is faded.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "highlighted",
       "className": "MuiRadarSeriesArea-highlighted",
       "description": "Styles applied to the series element if it is highlighted.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "mark",

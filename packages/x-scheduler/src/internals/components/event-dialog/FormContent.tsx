@@ -14,7 +14,7 @@ import {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
   RecurringEventFrequency,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -115,6 +115,7 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.start,
   );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
@@ -136,7 +137,7 @@ export function FormContent(props: FormContentProps) {
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,
       rruleDraft: {
-        freq: (base?.freq ?? 'DAILY') as RecurringEventFrequency,
+        freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
         interval: base?.interval ?? 1,
         byDay: base?.byDay ?? [],
         byMonthDay: base?.byMonthDay ?? [],
@@ -167,8 +168,10 @@ export function FormContent(props: FormContentProps) {
       color: controlled.color === null ? undefined : controlled.color,
     };
 
-    let rruleToSubmit: RecurringEventRecurrenceRule | undefined;
-    if (controlled.recurrenceSelection === null) {
+    let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
+    if (!showRecurrence) {
+      rruleToSubmit = undefined;
+    } else if (controlled.recurrenceSelection === null) {
       rruleToSubmit = undefined;
     } else if (controlled.recurrenceSelection === 'custom') {
       rruleToSubmit = controlled.rruleDraft;
@@ -183,7 +186,7 @@ export function FormContent(props: FormContentProps) {
         end,
         rrule: rruleToSubmit,
       });
-    } else if (occurrence.displayTimezone.rrule) {
+    } else if (showRecurrence && occurrence.displayTimezone.rrule) {
       const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
         store.state,
         occurrence.displayTimezone.rrule,
@@ -248,26 +251,30 @@ export function FormContent(props: FormContentProps) {
             size="small"
           />
         </EventDialogHeader>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <EventDialogTabs value={tabValue} onChange={handleTabChange}>
-            <Tab label={localeText.generalTabLabel} value="general" />
-            <Tab label={localeText.recurrenceTabLabel} value="recurrence" />
-          </EventDialogTabs>
-        </Box>
+        {showRecurrence && (
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <EventDialogTabs value={tabValue} onChange={handleTabChange}>
+              <Tab label={localeText.generalTabLabel} value="general" />
+              <Tab label={localeText.recurrenceTabLabel} value="recurrence" />
+            </EventDialogTabs>
+          </Box>
+        )}
         <GeneralTab
           occurrence={occurrence}
           errors={errors}
           setErrors={setErrors}
           controlled={controlled}
           setControlled={setControlled}
-          value={tabValue}
+          value={showRecurrence ? tabValue : 'general'}
         />
-        <RecurrenceTab
-          occurrence={occurrence}
-          controlled={controlled}
-          setControlled={setControlled}
-          value={tabValue}
-        />
+        {showRecurrence && (
+          <RecurrenceTab
+            occurrence={occurrence}
+            controlled={controlled}
+            setControlled={setControlled}
+            value={tabValue}
+          />
+        )}
         <Divider />
         <FormActions className={classes.eventDialogFormActions}>
           <Button color="error" type="button" onClick={handleDelete}>

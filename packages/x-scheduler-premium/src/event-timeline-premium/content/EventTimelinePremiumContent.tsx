@@ -38,7 +38,7 @@ const EventTimelinePremiumGrid = styled(TimelineGrid.Root, {
 })({
   height: '100%',
   display: 'grid',
-  gridTemplateColumns: 'minmax(100px, auto) 1fr',
+  gridTemplateColumns: 'minmax(100px, auto) minmax(0, 1fr)',
   gridTemplateRows: 'auto repeat(var(--row-count, 0), auto) minmax(auto, 1fr)',
   alignItems: 'stretch',
 });
@@ -120,7 +120,6 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
 })(({ theme }) => ({
   width: 'calc(var(--unit-count) * var(--unit-width))',
   minWidth: '100%',
-  boxSizing: 'border-box',
   display: 'grid',
   gridTemplateRows: `repeat(var(--lane-count, 1), minmax(calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)}), auto))`,
   rowGap: theme.spacing(0.5),

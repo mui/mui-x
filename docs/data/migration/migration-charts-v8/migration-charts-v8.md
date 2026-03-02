@@ -204,6 +204,25 @@ After running the codemod make sure to adapt the hook returned value to your nee
  }
 ```
 
+## Line Chart
+
+### `showMark` default value changed ✅
+
+The default value of the `showMark` prop in the line series has changed from `true` to `false` in v9.
+
+If you were relying on marks being visible by default, explicitly set `showMark` to `true`:
+
+```diff
+ <LineChart
+   series={[
+     {
+       data: [1, 2, 3],
++      showMark: true,
+     },
+   ]}
+ />
+```
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
@@ -368,6 +387,47 @@ If you were relying on this attribute to check whether a chart item is focused, 
 ```ts
 const focusedItem = useFocusedItem();
 const hasFocusedItem = focusedItem !== null;
+```
+
+### Theme style override removal
+
+The `ChartsSurface` component is now comprised of `ChartsLayerContainer` and `ChartsSvgLayer`.
+As a consequence, it is no longer possible to style the component using the `MuiChartsSurface` theme key.
+If you want to style the layer container, you can use `MuiChartsLayerContainer` instead, and for the SVG layer, use `MuiChartsSvgLayer`.
+
+### Rename `useSvgRef()` by `useChartsLayerContainerRef()`
+
+The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a ref to the `ChartsLayerContainer`.
+
+### Ref target
+
+The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
+
+## Props propagation
+
+The `ref` for single component charts like `<LineChart />` is now propagated to the root element instead of the SVG element.
+
+Internally this change looks like this.
+
+```diff
+ const LineChart = React.forwardRef(function LineChart(
+   inProps: LineChartProps,
+-  ref: React.Ref<SVGSVGElement>,
++  ref: React.Ref<HTMLDivElement>,
+ ) {
+   /* ... */
+   return (
+     <ChartDataProvider>
+-      <ChartsWrapper>
++      <ChartsWrapper ref={ref}>
+         {/* ... */}
+-        <ChartsSurface ref={ref}>
++        <ChartsSurface>
+           {/* ... */}
+         </ChartsSurface>
+     </ChartDataProvider>
+   );
+ });
 ```
 
 ## Typescript
