@@ -11,7 +11,7 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
 
       const row = apiRef.current.getRow(id);
       if (!row) {
-        throw new Error(`No row with id #${id} found`);
+        throw new Error(`MUI X: No row with id #${id} found`);
       }
 
       if (!colDef || !colDef.valueGetter) {

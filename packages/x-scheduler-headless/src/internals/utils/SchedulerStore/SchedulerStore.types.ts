@@ -311,7 +311,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
  */
 export type UpdateRecurringEventParameters = {
   /**
-   * The start date of the occurrence affected by the update.
+   * The start date of the occurrence affected by the update before the update is applied.
    */
   occurrenceStart: TemporalSupportedObject;
   /**
