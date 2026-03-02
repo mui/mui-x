@@ -54,7 +54,7 @@ type ChartsContainerPremiumComponent = <
 const ChartsContainerPremium = React.forwardRef(function ChartsContainerPremium<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerPremiumProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+>(props: ChartsContainerPremiumProps<TSeries, TSignatures>, ref: React.Ref<HTMLDivElement>) {
   const { chartDataProviderPremiumProps, children, chartsSurfaceProps } =
     useChartsContainerPremiumProps<TSeries, TSignatures>(props);
 

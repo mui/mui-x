@@ -127,6 +127,13 @@ so the picker will close even if you never went to those views.
 
 Pressing <kbd class="key">Escape</kbd> or clicking outside the picker will close the picker.
 
+#### When clicking or focusing the field
+
+By default, the picker's popper closes when the field is clicked or focused.
+You can use the `keepOpenDuringFieldFocus` prop to keep it open when the user is interacting with the field.
+
+{{"demo": "KeepOpenDuringFieldFocus.js"}}
+
 #### When a value is selected using the action bar
 
 Clicking on any built-in button of the action bar will close the picker.

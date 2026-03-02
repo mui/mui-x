@@ -50,7 +50,7 @@ The `EventCalendarPremium` and the `EventTimelinePremium` expand recurring event
 The repeating pattern of an event is defined using an object which expects the following properties:
 
 ```ts
-export interface RecurringEventRecurrenceRule {
+export interface SchedulerProcessedEventRecurrenceRule {
   /**
    * Base frequency of the rule.
    * Corresponds to the FREQ property of the string-based RRULE.
@@ -64,7 +64,7 @@ export interface RecurringEventRecurrenceRule {
    */
   interval?: number;
   // ... other properties like `byDay` or `byMonthDay` that depends on the frequency
-  // see the example below or the full RecurringEventRecurrenceRule definition for more details
+  // see the example below or the full SchedulerProcessedEventRecurrenceRule definition for more details
 }
 ```
 

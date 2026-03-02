@@ -32,6 +32,7 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
               { pathname: '/x/react-scheduler/event-calendar/resources' },
               { pathname: '/x/react-scheduler/event-calendar/navigation' },
               { pathname: '/x/react-scheduler/event-calendar/drag-interactions' },
+              { pathname: '/x/react-scheduler/event-calendar/editing' },
               { pathname: '/x/react-scheduler/event-calendar/views' },
               { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
               { pathname: '/x/react-scheduler/event-calendar/preferences' },
@@ -47,6 +48,7 @@ const schedulerPages: MuiPage[] = isSchedulerVisible
               { pathname: '/x/react-scheduler/event-timeline/resources' },
               { pathname: '/x/react-scheduler/event-timeline/navigation' },
               { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
+              { pathname: '/x/react-scheduler/event-timeline/editing' },
               { pathname: '/x/react-scheduler/event-timeline/views' },
               { pathname: '/x/react-scheduler/event-timeline/preferences' },
               { pathname: '/x/react-scheduler/event-timeline/localization' },
@@ -421,6 +423,11 @@ const pages: MuiPage[] = [
         subheader: 'Tutorials',
         children: [
           { pathname: '/x/react-data-grid/tutorials/server-side-data', title: 'Server-side data' },
+          {
+            pathname: '/x/react-data-grid/tutorials/aggregation-row-grouping',
+            title: 'Aggregation and row grouping',
+            plan: 'premium',
+          },
         ],
       },
     ],
