@@ -80,7 +80,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
       <ChartsLayerContainerDiv
         ref={handleRef}
         ownerState={{ width: propsWidth, height: propsHeight }}
-        tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
+        role='presentation'
         {...other}
       >
         {children}

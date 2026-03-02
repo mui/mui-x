@@ -219,6 +219,7 @@ const ChartsWrapper = React.forwardRef<HTMLDivElement, ChartsWrapperProps>(
         sx={sx}
         extendVertically={extendVertically ?? propsHeight === undefined}
         width={propsWidth}
+        role='figure'
         {...other}
       >
         {children}

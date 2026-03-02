@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useFocusedBarData, type UseFocusedBarDataReturn } from './useFocusedBarData';
+import { useChartId } from '../hooks';
 
 function formatMessage(params: UseFocusedBarDataReturn): string {
   const { axis, series } = params;
@@ -42,6 +43,7 @@ export interface BarVoiceOverProps {
 
 export function BarVoiceOver(props: BarVoiceOverProps) {
   const data = useFocusedBarData();
+  const chartId = useChartId();
 
   const currentFormatRef = React.useRef<string | null>(null);
   const currentIndexRef = React.useRef<number>(0);
@@ -59,9 +61,23 @@ export function BarVoiceOver(props: BarVoiceOverProps) {
     // Initialize children if not present
     if (container.children.length === 0) {
       for (let i = 0; i < 2; i += 1) {
-        const div = document.createElement('rect');
-        div.setAttribute('tabindex', '-1');
+        const div = document.createElement('div');
+        div.setAttribute('id', i === 0 ? `voiceover-${chartId}-1` : `voiceover-${chartId}-2`);
         div.style.display = 'none';
+        container.appendChild(div);
+      }
+
+      // The divs with the message content
+      for (let i = 0; i < 2; i += 1) {
+        const div = document.createElement('div');
+        if (i === (currentIndexRef.current + 1) % 2) {
+          div.setAttribute('tabindex', '0');
+        }
+        div.setAttribute('role', 'img');
+        div.setAttribute(
+          'aria-labelledby',
+          i === 0 ? `voiceover-${chartId}-1` : `voiceover-${chartId}-2`,
+        );
         container.appendChild(div);
       }
     }
@@ -75,16 +91,24 @@ export function BarVoiceOver(props: BarVoiceOverProps) {
 
       const activeIndex = currentIndexRef.current;
 
-      const activeDiv = container.children[activeIndex] as HTMLDivElement;
-      const inactiveDiv = container.children[inactiveIndex] as HTMLDivElement;
+      const activeDiv = container.children[2 + activeIndex] as HTMLDivElement;
+      const inactiveDiv = container.children[2 + inactiveIndex] as HTMLDivElement;
 
-      activeDiv.setAttribute('aria-label', message ?? '');
-      activeDiv.style.display = 'block';
-      inactiveDiv.style.display = 'none';
+      const activeTextDiv = container.children[activeIndex] as HTMLDivElement;
+      const inactiveTextDiv = container.children[inactiveIndex] as HTMLDivElement;
+
+      // Both get text update
+      activeTextDiv.setAttribute('aria-label', message ?? '');
+      inactiveTextDiv.setAttribute('aria-label', message ?? '');
+
+      activeDiv.setAttribute('aria-hidden', 'false');
+      inactiveDiv.setAttribute('aria-hidden', 'true');
+      activeDiv.setAttribute('tabindex', '0');
+      inactiveDiv.removeAttribute('tabindex');
 
       activeDiv.focus();
     }
-  }, [message]);
+  }, [message, chartId]);
 
-  return <g ref={containerRef} style={visuallyHiddenStyle} />;
+  return <div role="presentation" ref={containerRef} style={visuallyHiddenStyle} />;
 }

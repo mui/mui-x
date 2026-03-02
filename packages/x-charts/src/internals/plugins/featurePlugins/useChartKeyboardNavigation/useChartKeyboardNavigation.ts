@@ -15,11 +15,20 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   instance,
 }) => {
   const { svgRef } = instance;
-  const removeFocus = useEventCallback(function removeFocus() {
-    if (store.state.keyboardNavigation.item !== null) {
+  const removeFocus = useEventCallback(function removeFocus(event: FocusEvent) {
+    if (store.state.keyboardNavigation.enableKeyboardNavigation && event.relatedTarget && !(event.currentTarget as Node).contains(event.relatedTarget as Node)) {
       store.set('keyboardNavigation', {
         ...store.state.keyboardNavigation,
-        item: null,
+        focusIsActive: false,
+      });
+    }
+  });
+
+  const addFocus = useEventCallback(function addFocus() {
+    if (store.state.keyboardNavigation.enableKeyboardNavigation && !store.state.keyboardNavigation.focusIsActive) {
+      store.set('keyboardNavigation', {
+        ...store.state.keyboardNavigation,
+        focusIsActive: true,
       });
     }
   });
@@ -75,13 +84,16 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       }
     }
 
+
+    element.addEventListener('focusin', addFocus);
     element.addEventListener('keydown', keyboardHandler);
-    element.addEventListener('blur', removeFocus);
+    element.addEventListener('focusout', removeFocus);
     return () => {
+      element.removeEventListener('focusin', addFocus);
       element.removeEventListener('keydown', keyboardHandler);
-      element.removeEventListener('blur', removeFocus);
+      element.removeEventListener('focusout', removeFocus);
     };
-  }, [svgRef, removeFocus, params.enableKeyboardNavigation, store]);
+  }, [svgRef, removeFocus, params.enableKeyboardNavigation, store, addFocus]);
 
   useEnhancedEffect(() => {
     if (
@@ -100,6 +112,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 useChartKeyboardNavigation.getInitialState = (params) => ({
   keyboardNavigation: {
     item: null,
+    focusIsActive: false,
     enableKeyboardNavigation: !!params.enableKeyboardNavigation,
   },
 });
