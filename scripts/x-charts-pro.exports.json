@@ -90,8 +90,6 @@
   { "name": "ChartDataProviderPro", "kind": "Variable" },
   { "name": "ChartDataProviderProProps", "kind": "TypeAlias" },
   { "name": "ChartDataProviderProps", "kind": "TypeAlias" },
-  { "name": "ChartDataProviderProSlotProps", "kind": "TypeAlias" },
-  { "name": "ChartDataProviderProSlots", "kind": "TypeAlias" },
   { "name": "ChartDataProviderSlotProps", "kind": "TypeAlias" },
   { "name": "ChartDataProviderSlots", "kind": "TypeAlias" },
   { "name": "ChartDrawingArea", "kind": "TypeAlias" },
