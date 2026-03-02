@@ -224,24 +224,17 @@ describe('<EventDialogContent open />', () => {
     });
 
     it('should display recurrence label for recurring events', () => {
-      const recurringEvent = EventBuilder.new(adapter)
+      const recurringEventBuilder = EventBuilder.new(adapter)
         .title('Daily Standup')
         .singleDay('2025-05-26T09:00:00Z', 30)
         .recurrent('DAILY')
-        .readOnly(true)
-        .build();
+        .readOnly(true);
 
-      const recurringOccurrence = EventBuilder.new(adapter)
-        .id(recurringEvent.id)
-        .title(recurringEvent.title)
-        .singleDay('2025-05-26T09:00:00Z', 30)
-        .rrule(recurringEvent.rrule)
-        .readOnly(true)
-        .toOccurrence();
+      const recurringOccurrence = recurringEventBuilder.toOccurrence();
 
       render(
         <EventCalendarProvider
-          events={[recurringEvent]}
+          events={[recurringEventBuilder.build()]}
           resources={resources}
           storeClass={PremiumTestStore}
         >

@@ -82,7 +82,7 @@ export function validateRange(
 export function getRecurrenceLabel(
   adapter: Adapter,
   start: SchedulerProcessedDate,
-  recurrenceKey: string | null,
+  recurrenceKey: RecurringEventPresetKey | 'custom' | null,
   localeText: EventDialogLocaleText,
 ): string {
   if (!recurrenceKey) {
