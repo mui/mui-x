@@ -7,7 +7,7 @@ import {
   resources,
 } from '../../datasets/company-roadmap';
 
-export default function AreEventsDraggable() {
+export default function DisableDragging() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
@@ -17,7 +17,8 @@ export default function AreEventsDraggable() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsDraggable
+        areEventsDraggable={false}
+        defaultView="months"
       />
     </div>
   );
