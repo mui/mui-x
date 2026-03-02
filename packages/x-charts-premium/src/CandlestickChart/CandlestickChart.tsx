@@ -175,6 +175,8 @@ CandlestickChart.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      exportAsImage: PropTypes.func.isRequired,
+      exportAsPrint: PropTypes.func.isRequired,
       setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
@@ -385,6 +387,11 @@ CandlestickChart.propTypes = {
    * An array of [[OHLCSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

@@ -101,6 +101,7 @@
         "describedArgs": ["zoomData"]
       }
     },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
@@ -191,8 +192,14 @@
       "class": null
     },
     {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
+      "class": null
+    },
+    {
       "name": "tooltip",
-      "description": "Custom component for the tooltip popper.",
+      "description": "Custom component for the tooltip.",
       "default": "ChartsTooltipRoot",
       "class": null
     },
