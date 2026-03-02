@@ -22,7 +22,7 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 We highly recommend updating `@mui/x-charts` and `@mui/x-charts-pro` to the latest v8 version before migrating to v9.
 This will help you resolve deprecation warnings at your own pace, reducing the number of changes needed when upgrading.
 
-Below is a list of deprecated APIs and their replacements.
+Below is a list of deprecated APIs that have alternatives in the latest minor of v8. We recommend you move from these deprecated APIs before upgrading to v9 to ease the migration.
 Items marked with ✅ are handled by the [codemod](#run-codemods).
 
 ### Component and type renames (Chart → Charts) ✅
