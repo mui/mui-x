@@ -5,7 +5,8 @@ import { LicenseInfo, Unstable_LicenseInfoProvider as LicenseInfoProvider } from
 import { isJSDOM } from 'test/utils/skipIf';
 import type { MuiCommercialPackageName } from '../utils/commercialPackages';
 import { useLicenseVerifier, clearLicenseStatusCache } from './useLicenseVerifier';
-import generateReleaseInfo from '../../../../scripts/generateReleaseInfo';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../../../../scripts/generateReleaseInfo.mjs';
 import {
   TEST_LICENSE_KEY_PRO,
   TEST_LICENSE_KEY_PREMIUM,
