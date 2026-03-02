@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
-  initialEvents,
   defaultVisibleDate,
+  initialEvents,
   resources,
-} from '../../datasets/personal-agenda';
+} from '../../datasets/company-roadmap';
 
-export default function AreEventsDraggable() {
+export default function DisableResizing() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
-    <div style={{ height: '600px', width: '100%' }}>
-      <EventCalendar
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+      <EventTimelinePremium
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsDraggable
-        defaultPreferences={{ isSidePanelOpen: false }}
+        areEventsResizable={false}
+        defaultView="months"
       />
     </div>
   );
