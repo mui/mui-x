@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,
@@ -7,8 +7,8 @@ import {
   resources,
 } from '../../datasets/personal-agenda';
 
-export default function AreEventsDraggable() {
-  const [events, setEvents] = React.useState(initialEvents);
+export default function DisableResizing() {
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '100%' }}>
@@ -17,7 +17,7 @@ export default function AreEventsDraggable() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsDraggable
+        areEventsResizable={false}
         defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>

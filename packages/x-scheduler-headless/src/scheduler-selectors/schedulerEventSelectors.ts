@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { SchedulerEvent, SchedulerEventId, SchedulerEventSide, SchedulerResource } from '../models';
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
-import { schedulerResourceSelectors } from './schedulerResourceSelectors';
+import { resolveResourceProperty } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 
 const processedEventSelector = createSelector(
@@ -81,19 +81,13 @@ export const schedulerEventSelectors = {
       return state.eventColor;
     }
 
-    if (event.color) {
-      return event.color;
-    }
-
-    const resourceColor = schedulerResourceSelectors.processedResource(
+    return resolveEventProperty({
       state,
-      event.resource,
-    )?.eventColor;
-    if (resourceColor) {
-      return resourceColor;
-    }
-
-    return state.eventColor;
+      resourceId: event.resource,
+      valueInEvent: event.color,
+      getValueInResource: (r) => r.eventColor,
+      valueInState: state.eventColor,
+    });
   }),
   isPropertyReadOnly: createSelectorMemoized(
     isEventReadOnlySelector,
@@ -234,18 +228,5 @@ function resolveEventProperty<T>(parameters: {
     return valueInEvent;
   }
 
-  const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
-  let currentResourceId = resourceId ?? null;
-  while (currentResourceId != null) {
-    const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
-    if (resource != null) {
-      const value = getValueInResource(resource);
-      if (value !== undefined) {
-        return value;
-      }
-    }
-    currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
-  }
-
-  return valueInState;
+  return resolveResourceProperty(state, resourceId, getValueInResource, valueInState);
 }
