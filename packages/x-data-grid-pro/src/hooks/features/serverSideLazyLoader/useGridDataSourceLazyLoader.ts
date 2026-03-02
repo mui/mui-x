@@ -184,13 +184,6 @@ export const useGridDataSourceLazyLoader = (
 
     let hasChanged = false;
 
-    const skeletonRowNode: GridSkeletonRowNode = {
-      type: 'skeletonRow',
-      id: '',
-      parent: GRID_ROOT_GROUP_ID,
-      depth: 0,
-    };
-
     // SWR: Only add skeleton padding for never-fetched positions beyond current data.
     // Previously fetched rows are kept in place (not skeletonized) to avoid flicker on scroll-back.
     // Should only happen with VIEWPORT loading trigger
@@ -199,7 +192,14 @@ export const useGridDataSourceLazyLoader = (
       for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
         const skeletonId = getSkeletonRowId(i + rootChildrenCount); // to avoid duplicate keys on rebuild
         rootGroupChildren.push(skeletonId);
-        skeletonRowNode.id = skeletonId;
+
+        const skeletonRowNode: GridSkeletonRowNode = {
+          type: 'skeletonRow',
+          id: skeletonId,
+          parent: GRID_ROOT_GROUP_ID,
+          depth: 0,
+        };
+
         tree[skeletonId] = skeletonRowNode;
         hasChanged = true;
       }
