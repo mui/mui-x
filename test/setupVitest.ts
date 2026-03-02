@@ -1,4 +1,4 @@
-import { beforeEach, afterEach } from 'vitest';
+import { beforeAll, beforeEach, afterEach } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/licenseRelease';
 import { config } from 'react-transition-group';
@@ -18,6 +18,13 @@ setupVitest({ emotion: true });
 configure({
   // JSDOM logs errors otherwise on `getComputedStyle(element, pseudoElement)` calls.
   computedStyleSupportsPseudoElements: !isJsdom(),
+});
+
+beforeAll(async () => {
+  if (!isJsdom()) {
+    const { server } = await import('vitest/browser');
+    await server.commands.setupCrashHandler();
+  }
 });
 
 beforeEach(() => {
