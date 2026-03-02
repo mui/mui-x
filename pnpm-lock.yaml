@@ -196,7 +196,7 @@ catalogs:
       specifier: ^4.21.0
       version: 4.21.0
     type-fest:
-      specifier: ^5.4.3
+      specifier: ^5.4.4
       version: 5.4.4
     use-sync-external-store:
       specifier: ^1.6.0
