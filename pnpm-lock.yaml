@@ -157,7 +157,7 @@ catalogs:
       specifier: ^0.6.0
       version: 0.6.0
     motion:
-      specifier: ^12.29.2
+      specifier: ^12.34.3
       version: 12.34.3
     playwright:
       specifier: ^1.58.1
