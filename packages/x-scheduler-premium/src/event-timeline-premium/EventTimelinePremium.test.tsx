@@ -10,7 +10,11 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
 } from 'test/utils/scheduler';
-import { SchedulerEvent, SchedulerResource, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
+import {
+  SchedulerEvent,
+  SchedulerResource,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-headless/models';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 
 const baseResources: SchedulerResource[] = [
