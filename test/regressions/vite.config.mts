@@ -2,7 +2,8 @@ import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
 import * as fs from 'fs/promises';
-import generateReleaseInfo from '../../scripts/generateReleaseInfo';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../../scripts/generateReleaseInfo.mjs';
 import { alias } from '../../vitest.shared.mts';
 
 export default defineConfig({

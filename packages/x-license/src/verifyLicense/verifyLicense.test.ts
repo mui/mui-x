@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
-import generateReleaseInfo from '../../../../scripts/generateReleaseInfo';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../../../../scripts/generateReleaseInfo.mjs';
 import {
   verifyLicense,
   parseLicenseTokens,
