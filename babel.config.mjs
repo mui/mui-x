@@ -1,9 +1,8 @@
 import getBaseConfig from '@mui/internal-code-infra/babel-config';
-// Direct path: babel runs during x-internals build, before the package exists.
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import generateReleaseInfo from './packages/x-internals/generateReleaseInfo.js';
+import generateReleaseInfo from './scripts/generateReleaseInfo.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);

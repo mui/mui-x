@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
+import generateReleaseInfo from '../../../../scripts/generateReleaseInfo';
 import {
-  generateReleaseInfo,
   verifyLicense,
   parseLicenseTokens,
   decodeLicense,

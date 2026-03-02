@@ -1,5 +1,7 @@
 /**
- * For babel.config.mjs - Node can't load .ts. Sync with src/generateReleaseInfo/generateReleaseInfo.ts
+ * Build-time utility that generates a base64-encoded release timestamp.
+ * Used by babel.config.mjs, next.config.ts, and Vite configs to replace
+ * the __RELEASE_INFO__ placeholder in packages at build time.
  */
 module.exports = function generateReleaseInfo(releaseDate) {
   const date =
