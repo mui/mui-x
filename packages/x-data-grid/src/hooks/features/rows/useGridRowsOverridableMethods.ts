@@ -93,12 +93,18 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
       const node = gridRowNodeSelector(apiRef, rowId);
 
       if (!node) {
-        throw new Error(`MUI X: No row with id #${rowId} found.`);
+        throw new Error(
+          `MUI X Data Grid: No row with id "${rowId}" found. ` +
+            'The row to reorder does not exist in the grid. ' +
+            'Verify the row id is correct and the row exists.',
+        );
       }
 
       if (node.type !== 'leaf') {
         throw new Error(
-          `MUI X: The row reordering does not support reordering of footer or grouping rows.`,
+          'MUI X Data Grid: Row reordering does not support reordering of footer or grouping rows. ' +
+            'Only leaf (data) rows can be reordered. ' +
+            'Ensure you are only reordering data rows.',
         );
       }
 

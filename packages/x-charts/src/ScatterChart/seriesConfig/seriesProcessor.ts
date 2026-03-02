@@ -16,10 +16,10 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
 
       if (seriesData?.datasetKeys && missingKeys.length > 0) {
         throw new Error(
-          [
-            `MUI X Charts: scatter series with id='${seriesId}' has incomplete datasetKeys.`,
-            `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
-          ].join('\n'),
+          `MUI X Charts: Scatter series with id="${seriesId}" has incomplete datasetKeys. ` +
+            `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing. ` +
+            'Scatter plots require both "x" and "y" keys to map dataset values to coordinates. ' +
+            'Add the missing datasetKeys to the series configuration.',
         );
       }
 

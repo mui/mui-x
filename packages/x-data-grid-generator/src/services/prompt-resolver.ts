@@ -10,7 +10,7 @@ export const mockPromptResolver = (query: string, _: string) => {
         resolve(resolved);
       } else {
         console.error(`Unsupported query: ${query}`);
-        reject(new Error('Could not process prompt'));
+        reject(new Error('MUI X: Could not process prompt'));
       }
     }, 1000);
   });

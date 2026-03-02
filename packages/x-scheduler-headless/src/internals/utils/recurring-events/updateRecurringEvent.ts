@@ -46,7 +46,11 @@ export function updateRecurringEvent(
     }
 
     default: {
-      throw new Error(`MUI: scope="${scope}" is not supported.`);
+      throw new Error(
+        `MUI X Scheduler: The scope "${scope}" is not supported for recurring event updates. ` +
+          'Supported scopes are "all", "only-this", and "this-and-following". ' +
+          'Use one of the supported scope values.',
+      );
     }
   }
 }
