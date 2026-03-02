@@ -34,7 +34,7 @@
       "@mui/x-charts-premium": ["./packages/x-charts-premium/src"],
       "@mui/x-charts-premium/*": ["./packages/x-charts-premium/src/*"],
       "@mui/x-charts-vendor": ["./packages/x-charts-vendor"],
-      "@mui/x-charts-vendor/*": ["./packages/x-charts-vendor/*"],
+      "@mui/x-charts-vendor/*": ["./packages/x-charts-vendor/build/*"],
       // There is no root import on these packages
       // "@mui/x-scheduler": ["./packages/x-scheduler/src"],
       // "@mui/x-scheduler-premium": ["./packages/x-scheduler-premium/src"],
