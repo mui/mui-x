@@ -63,15 +63,14 @@ const elementOverrides = [
 const PickersSlideTransitionRoot = styled(TransitionGroup, {
   name: 'MuiPickersSlideTransition',
   slot: 'Root',
-  overridesResolver: (_, styles) => {
-    const overrides = [styles.root];
-
-    elementOverrides.forEach((key) => {
-      overrides.push({ [`&.${pickersSlideTransitionClasses[key]}`]: styles[key] });
-    });
-
-    return overrides;
-  },
+  overridesResolver: (_, styles) =>
+    elementOverrides.reduce(
+      (acc, key) => {
+        acc.push({ [`&.${pickersSlideTransitionClasses[key]}`]: styles[key] });
+        return acc;
+      },
+      [styles.root],
+    ),
 })<TransitionGroupProps & { ownerState?: PickerSlideTransitionOwnerState }>(({ theme }) => {
   const slideTransition = theme.transitions.create('transform', {
     duration: theme.transitions.duration.complex,
