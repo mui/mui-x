@@ -55,7 +55,7 @@
     "@mui/x-tree-view-pro": "workspace:*",
     "@react-spring/web": "catalog:",
     "@tanstack/query-core": "^5.90.20",
-    "@tanstack/react-query": "^5.90.20",
+    "@tanstack/react-query": "^5.90.21",
     "chance": "catalog:",
     "clipboard-copy": "^4.0.1",
     "clsx": "catalog:",
