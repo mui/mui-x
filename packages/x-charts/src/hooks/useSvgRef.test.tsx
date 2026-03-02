@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { useChartsLayerContainerRef } from './useChartsLayerContainerRef';
 import { ChartsProvider } from '../context/ChartsProvider';
+import { useSvgRef } from './useSvgRef';
 
 function UseSvgRef() {
   const ref = useSvgRef();
@@ -41,7 +41,7 @@ describe('useSvgRef', () => {
     function RenderDrawingProvider() {
       return (
         <ChartsProvider pluginParams={{ width: 200, height: 200 }}>
-          <UseChartsLayerContainerRef />
+          <UseSvgRef />
         </ChartsProvider>
       );
     }
