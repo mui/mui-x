@@ -162,7 +162,10 @@ export class ExtendableEventCalendarStore<
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter({ delta, state: this.state }), event);
+    this.setVisibleDate({
+      visibleDate: siblingVisibleDateGetter({ delta, state: this.state }),
+      event,
+    });
   };
 
   /**

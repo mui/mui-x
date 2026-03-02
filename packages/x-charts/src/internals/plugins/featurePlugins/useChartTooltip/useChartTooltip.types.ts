@@ -1,6 +1,9 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 import type { ChartPluginSignature } from '../../models';
-import type { SeriesItemIdentifier } from '../../../../models/seriesType';
+import type {
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export interface UseChartTooltipInstance {
@@ -30,7 +33,7 @@ export interface UseChartTooltipParameters<TSeries extends ChartSeriesType = Cha
    *
    * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
    */
-  onTooltipItemChange?: (tooltipItem: SeriesItemIdentifier<TSeries> | null) => void;
+  onTooltipItemChange?: (tooltipItem: SeriesItemIdentifierWithType<TSeries> | null) => void;
 }
 
 export type UseChartTooltipDefaultizedParameters<
@@ -46,7 +49,7 @@ export interface UseChartTooltipState<TSeries extends ChartSeriesType = ChartSer
     /**
      * The item currently under the pointer.
      */
-    item: null | SeriesItemIdentifier<TSeries>;
+    item: null | SeriesItemIdentifierWithType<TSeries>;
   };
 }
 

@@ -8,12 +8,12 @@ packages:
 
 catalog:
   '@babel/cli': ^7.28.6
-  '@babel/core': ^7.28.6
+  '@babel/core': ^7.29.0
   '@babel/plugin-transform-react-constant-elements': ^7.27.1
-  '@babel/plugin-transform-runtime': ^7.28.5
+  '@babel/plugin-transform-runtime': ^7.29.0
   '@babel/preset-typescript': ^7.28.5
   '@babel/runtime': ^7.28.6
-  '@babel/traverse': ^7.28.6
+  '@babel/traverse': ^7.29.0
   '@date-fns/tz': ^1.2.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
@@ -25,8 +25,8 @@ catalog:
   '@mui/system': ^7.3.7
   '@mui/utils': ^7.3.7
   '@mui/x-internal-exceljs-fork': 4.4.4
-  '@playwright/test': ^1.57.0
-  'playwright': ^1.57.0
+  '@playwright/test': ^1.58.1
+  'playwright': ^1.58.1
   '@react-spring/web': ^10.0.3
   '@types/chance': ^1.1.7
   '@types/karma': ^6.3.9

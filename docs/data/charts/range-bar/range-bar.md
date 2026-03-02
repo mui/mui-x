@@ -1,7 +1,7 @@
 ---
 title: React Range Bar chart
 productId: x-charts
-components: BarChartPremium, RangeBarPlot, ChartDataProviderPremium, ChartsContainerPremium
+components: BarChartPremium, RangeBarPlot, ChartDataProviderPremium, ChartsContainerPremium, FocusedRangeBar
 ---
 
 # Charts - Range Bar [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
@@ -109,6 +109,8 @@ Here's roughly a `BarChartPremium` is composed, which you can use as a reference
         <RangeBarPlot />
         <ChartsOverlay />
         <ChartsAxisHighlight />
+        <FocusedBar />
+        <FocusedRangeBar />
       </g>
       <ChartsAxis />
       <ChartsClipPath id={clipPathId} />

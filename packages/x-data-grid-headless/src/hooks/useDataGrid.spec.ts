@@ -80,9 +80,11 @@ export function Example() {
         // Handle sort model change
       },
     },
-    paginationModel: { page: 0, pageSize: 10 },
-    onPaginationModelChange: (_model: PaginationModel) => {
-      // Handle pagination model change
+    pagination: {
+      model: { page: 0, pageSize: 10 },
+      onModelChange: (_model: PaginationModel) => {
+        // Handle pagination model change
+      },
     },
   });
 
@@ -561,7 +563,7 @@ export function SelectorsExample() {
   });
 
   // Selectors - accessed via static plugin properties
-  rowsPlugin.selectors.rowIds;
+  rowsPlugin.selectors.processedRowIds;
   rowsPlugin.selectors.tree;
   rowsPlugin.selectors.loading;
   columnsPlugin.selectors.orderedFields;
@@ -569,15 +571,15 @@ export function SelectorsExample() {
   columnsPlugin.selectors.allColumns;
 
   sortingPlugin.selectors.model;
-  paginationPlugin.selectors.paginationModel;
+  paginationPlugin.selectors.model;
 
   // Should be able to call selectors imperatively
-  rowsPlugin.selectors.rowIds(grid1.getState());
+  rowsPlugin.selectors.processedRowIds(grid1.getState());
 
   // Should be able to use with grid.use()
   grid1.use(sortingPlugin.selectors.model);
-  grid1.use(rowsPlugin.selectors.rowIds);
+  grid1.use(rowsPlugin.selectors.processedRowIds);
 
   // @ts-expect-error paginationPlugin is not added
-  grid1.use(paginationPlugin.selectors.paginationModel);
+  grid1.use(paginationPlugin.selectors.model);
 }

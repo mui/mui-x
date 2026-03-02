@@ -209,8 +209,11 @@ export const schedulerEventSelectors = {
       return isResizableFromComponentProperty ?? false;
     },
   ),
-  isRecurring: createSelector(processedEventSelector, (event) =>
-    Boolean(event?.dataTimezone.rrule),
+  isRecurring: createSelector(
+    processedEventSelector,
+    (state: State) => state.plan,
+    (event, plan, _eventId: SchedulerEventId) =>
+      plan === 'premium' && Boolean(event?.dataTimezone.rrule),
   ),
 };
 

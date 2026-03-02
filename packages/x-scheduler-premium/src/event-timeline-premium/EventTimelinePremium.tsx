@@ -3,29 +3,29 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { useStore } from '@base-ui/utils/store';
 import {
   useExtractEventTimelinePremiumParameters,
   useEventTimelinePremium,
 } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
-import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { eventDialogSlots, EventDialogClassesContext } from '@mui/x-scheduler/internals';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
+import {
+  eventDialogSlots,
+  EventDialogStyledContext,
+  EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+  schedulerTokens,
+} from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
 import {
   EventTimelinePremiumClasses,
   getEventTimelinePremiumUtilityClass,
 } from './eventTimelinePremiumClasses';
-import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
+import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
     root: ['root'],
-    headerToolbar: ['headerToolbar'],
     content: ['content'],
     grid: ['grid'],
     titleSubGridWrapper: ['titleSubGridWrapper'],
@@ -40,6 +40,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     titleCell: ['titleCell'],
     titleCellLegendColor: ['titleCellLegendColor'],
     event: ['event'],
+    eventPlaceholder: ['eventPlaceholder'],
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     timeHeader: ['timeHeader'],
@@ -75,26 +76,23 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
+  ...schedulerTokens,
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
-  '--weeks-cell-width': '64px',
-  '--months-cell-width': '180px',
+  '--weeks-cell-width': 'calc(64px * 7)',
+  // Months view uses per-day units instead of per-month, so each column width = days in month × 6px
+  '--months-cell-width': '6px',
   '--years-cell-width': '200px',
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  padding: theme.spacing(2),
   gap: theme.spacing(2),
   height: '100%',
+  minHeight: 0,
+  overflow: 'hidden',
+  fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
 }));
-
-const EventTimelinePremiumHeaderToolbar = styled('header', {
-  name: 'MuiEventTimeline',
-  slot: 'HeaderToolbar',
-})({
-  display: 'flex',
-  justifyContent: 'flex-start',
-});
 
 export const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   TEvent extends object,
@@ -114,35 +112,37 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
 
-  const view = useStore(store, eventTimelinePremiumViewSelectors.view);
-  const views = useStore(store, eventTimelinePremiumViewSelectors.views);
+  const { localeText, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
 
-  const handleViewChange = (event: SelectChangeEvent) => {
-    store.setView(event.target.value as EventTimelinePremiumView, event as Event);
-  };
+  const mergedLocaleText = React.useMemo(
+    () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),
+    [localeText],
+  );
+
+  const timelineStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
+
+  const dialogStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
-      <EventTimelinePremiumClassesContext.Provider value={classes}>
-        <EventDialogClassesContext.Provider value={classes}>
+      <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
+        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
           <EventTimelinePremiumRoot
             ref={forwardedRef}
             className={clsx(classes.root, className)}
-            {...forwardedProps}
+            {...other}
           >
-            <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
-              <Select value={view} onChange={handleViewChange} size="small">
-                {views.map((viewItem) => (
-                  <MenuItem key={viewItem} value={viewItem}>
-                    {viewItem}
-                  </MenuItem>
-                ))}
-              </Select>
-            </EventTimelinePremiumHeaderToolbar>
             <EventTimelinePremiumContent />
           </EventTimelinePremiumRoot>
-        </EventDialogClassesContext.Provider>
-      </EventTimelinePremiumClassesContext.Provider>
+        </EventDialogStyledContext.Provider>
+      </EventTimelinePremiumStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;

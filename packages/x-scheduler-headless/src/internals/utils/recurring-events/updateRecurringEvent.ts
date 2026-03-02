@@ -5,12 +5,13 @@ import {
   RecurringEventUpdateScope,
   RecurringEventWeekDayCode,
   SchedulerEvent,
+  SchedulerEventCreationProperties,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '../../../models';
 import type { UpdateEventsParameters } from '../SchedulerStore';
-import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
+import { dateToEventString, getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
   getRemainingOccurrences,
   getAdapterCache,
@@ -81,9 +82,33 @@ export function applyRecurringUpdateFollowing(
   );
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
+  const originalModel = originalEvent.modelInBuiltInFormat;
+  const dataTimezone = originalModel.timezone ?? 'default';
+  const stringified: Record<string, any> = { ...changes };
+  if (changes.start != null) {
+    stringified.start = dateToEventString(
+      adapter,
+      changes.start,
+      originalModel.start,
+      dataTimezone,
+    );
+  }
+  if (changes.end != null) {
+    stringified.end = dateToEventString(adapter, changes.end, originalModel.end, dataTimezone);
+  }
+  if (changes.exDates != null) {
+    stringified.exDates = changes.exDates.map((d, i) => {
+      const originalExDate = originalModel.exDates?.[i];
+      if (originalExDate) {
+        return dateToEventString(adapter, d, originalExDate, dataTimezone);
+      }
+      return dateToEventString(adapter, d, originalModel.start, dataTimezone);
+    });
+  }
+
   const newEvent: SchedulerEvent = {
     ...originalEvent.modelInBuiltInFormat,
-    ...changes,
+    ...stringified,
     id: newEventId,
     rrule: newRRule,
     extractedFromId: originalEvent.modelInBuiltInFormat.id,
@@ -210,8 +235,28 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const originalModel = originalEvent.modelInBuiltInFormat;
+  const dataTimezone = originalModel.timezone ?? 'default';
+  const stringifiedChanges: Partial<SchedulerEventCreationProperties> = { ...changes };
+  if (changes.start != null) {
+    stringifiedChanges.start = dateToEventString(
+      adapter,
+      changes.start,
+      originalModel.start,
+      dataTimezone,
+    );
+  }
+  if (changes.end != null) {
+    stringifiedChanges.end = dateToEventString(
+      adapter,
+      changes.end,
+      originalModel.end,
+      dataTimezone,
+    );
+  }
+
   return {
-    created: [createEventFromRecurringEvent(originalEvent, changes)],
+    created: [createEventFromRecurringEvent(originalEvent, stringifiedChanges)],
     updated: [
       {
         id: originalEvent.id,
@@ -286,7 +331,7 @@ export function decideSplitRRule(
   originalRule: RecurringEventRecurrenceRule,
   originalSeriesStart: TemporalSupportedObject,
   splitStart: TemporalSupportedObject,
-  changes: Partial<SchedulerEvent>,
+  changes: Partial<SchedulerEventUpdatedProperties>,
 ): RecurringEventRecurrenceRule | undefined {
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');

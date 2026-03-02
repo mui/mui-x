@@ -27,7 +27,9 @@
       "@mui/x-data-grid-headless-pro": ["../../packages/x-data-grid-headless-pro/src"],
       "@mui/x-data-grid-headless-pro/*": ["../../packages/x-data-grid-headless-pro/src/*"],
       "@mui/x-data-grid-headless-premium": ["../../packages/x-data-grid-headless-premium/src"],
-      "@mui/x-data-grid-headless-premium/*": ["../../packages/x-data-grid-headless-premium/src/*"]
+      "@mui/x-data-grid-headless-premium/*": ["../../packages/x-data-grid-headless-premium/src/*"],
+      "@mui/x-virtualizer": ["../../packages/x-virtualizer/src"],
+      "@mui/x-virtualizer/*": ["../../packages/x-virtualizer/src/*"]
     }
   },
   "include": ["src"],

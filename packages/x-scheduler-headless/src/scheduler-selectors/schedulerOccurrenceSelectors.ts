@@ -18,8 +18,8 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   schedulerResourceSelectors.visibleMap,
   schedulerResourceSelectors.processedResourceList,
   schedulerResourceSelectors.processedResourceChildrenLookup,
-  schedulerResourceSelectors.resourceParentIdLookup,
   schedulerOtherSelectors.displayTimezone,
+  (state: State) => state.plan,
 
   (
     adapter,
@@ -27,8 +27,8 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     visibleResources,
     resources,
     resourcesChildrenMap,
-    resourceParentIds,
     displayTimezone,
+    plan,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
@@ -40,8 +40,8 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
       end,
       events,
       visibleResources,
-      resourceParentIds,
       displayTimezone,
+      plan,
     });
 
     for (const occurrence of occurrences) {
@@ -63,6 +63,10 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
       }[] = [];
 
       for (const resource of sortedResources) {
+        if (visibleResources[resource.id] === false) {
+          continue;
+        }
+
         result.push({
           resource,
           occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],

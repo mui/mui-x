@@ -5,22 +5,22 @@ const events = [
   {
     id: 1,
     title: 'Project Kickoff',
-    start: new Date(2024, 0, 15, 9, 0),
-    end: new Date(2024, 0, 15, 17, 0),
+    start: '2024-01-15T09:00:00',
+    end: '2024-01-15T17:00:00',
     resource: 'team-a',
   },
   {
     id: 2,
     title: 'Development Phase',
-    start: new Date(2024, 0, 16, 9, 0),
-    end: new Date(2024, 0, 19, 17, 0),
+    start: '2024-01-16T09:00:00',
+    end: '2024-01-19T17:00:00',
     resource: 'team-b',
   },
   {
     id: 3,
     title: 'Testing',
-    start: new Date(2024, 0, 17, 9, 0),
-    end: new Date(2024, 0, 18, 17, 0),
+    start: '2024-01-17T09:00:00',
+    end: '2024-01-18T17:00:00',
     resource: 'team-a',
   },
 ];
