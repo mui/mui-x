@@ -17,7 +17,7 @@ import { BarPlot, FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
-import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
+import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { seriesPreviewPlotMap, useChartsContainerProProps } from '@mui/x-charts-pro/internals';
@@ -32,7 +32,7 @@ import {
 } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
-import { RangeBarPreviewPlot } from '../ChartZoomSlider/internals/previews/RangeBarPreviewPlot';
+import { RangeBarPreviewPlot } from '../ChartsZoomSlider/internals/previews/RangeBarPreviewPlot';
 
 import type {} from '../typeOverloads/modules';
 
@@ -141,7 +141,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
             <FocusedRangeBar />
           </g>
           <ChartsAxis {...chartsAxisProps} />
-          <ChartZoomSlider />
+          <ChartsZoomSlider />
           <ChartsBrushOverlay />
           <ChartsClipPath {...clipPathProps} />
           {children}

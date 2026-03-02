@@ -7,15 +7,15 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import clsx from 'clsx';
 import {
-  chartAxisZoomSliderThumbClasses,
+  chartsAxisZoomSliderThumbClasses,
   useUtilityClasses,
-} from './chartAxisZoomSliderThumbClasses';
+} from './chartsAxisZoomSliderThumbClasses';
 
 const Rect = styled('rect', {
   slot: 'internal',
   shouldForwardProp: undefined,
 })(({ theme }) => ({
-  [`&.${chartAxisZoomSliderThumbClasses.root}`]: {
+  [`&.${chartsAxisZoomSliderThumbClasses.root}`]: {
     fill: (theme.vars || theme).palette.common.white,
     stroke: (theme.vars || theme).palette.grey[500],
     ...theme.applyStyles('dark', {
@@ -23,22 +23,22 @@ const Rect = styled('rect', {
       stroke: (theme.vars || theme).palette.grey[600],
     }),
   },
-  [`&.${chartAxisZoomSliderThumbClasses.horizontal}`]: {
+  [`&.${chartsAxisZoomSliderThumbClasses.horizontal}`]: {
     cursor: 'ew-resize',
   },
-  [`&.${chartAxisZoomSliderThumbClasses.vertical}`]: {
+  [`&.${chartsAxisZoomSliderThumbClasses.vertical}`]: {
     cursor: 'ns-resize',
   },
 }));
 
-export interface ChartZoomSliderThumbOwnerState {
+export interface ChartsZoomSliderThumbOwnerState {
   onMove: (event: PointerEvent) => void;
   orientation: 'horizontal' | 'vertical';
   placement: 'start' | 'end';
 }
 
-export interface ChartZoomSliderThumbProps
-  extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartZoomSliderThumbOwnerState {}
+export interface ChartsZoomSliderThumbProps
+  extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartsZoomSliderThumbOwnerState {}
 
 function preventDefault(event: Event) {
   event.preventDefault();
@@ -48,8 +48,8 @@ function preventDefault(event: Event) {
  * Renders the zoom slider thumb, which is responsible for resizing the zoom range.
  * @internal
  */
-export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZoomSliderThumbProps>(
-  function ChartAxisZoomSliderThumb(
+export const ChartsAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartsZoomSliderThumbProps>(
+  function ChartsAxisZoomSliderThumb(
     { className, onMove, orientation, placement, rx = 4, ry = 4, ...other },
     forwardedRef,
   ) {

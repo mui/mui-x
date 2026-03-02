@@ -24,7 +24,7 @@ import {
   type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
-import { ChartZoomSlider } from '../ChartZoomSlider';
+import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { type ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
@@ -117,7 +117,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
           <ChartsAxis {...chartsAxisProps} />
-          <ChartZoomSlider />
+          <ChartsZoomSlider />
           <ChartsBrushOverlay />
           <ChartsClipPath {...clipPathProps} />
           {children}

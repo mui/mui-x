@@ -4,7 +4,7 @@ import { type AxisId, selectorChartAxisZoomOptionsLookup, useStore } from '@mui/
 import { alpha } from '@mui/system';
 import useId from '@mui/utils/useId';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
-import { ChartAxisZoomSliderPreviewContent } from './ChartAxisZoomSliderPreviewContent';
+import { ChartsAxisZoomSliderPreviewContent } from './ChartsAxisZoomSliderPreviewContent';
 
 const PreviewBackgroundRect = styled('rect', {
   slot: 'internal',
@@ -16,7 +16,7 @@ const PreviewBackgroundRect = styled('rect', {
   fill: alpha(theme.palette.grey[700], 0.4),
 }));
 
-interface ChartAxisZoomSliderPreviewProps {
+interface ChartsAxisZoomSliderPreviewProps {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   reverse: boolean;
@@ -26,17 +26,17 @@ interface ChartAxisZoomSliderPreviewProps {
   width: number;
 }
 
-export function ChartAxisZoomSliderPreview({
+export function ChartsAxisZoomSliderPreview({
   axisId,
   axisDirection,
   reverse,
   ...props
-}: ChartAxisZoomSliderPreviewProps) {
+}: ChartsAxisZoomSliderPreviewProps) {
   return (
     <g {...props}>
       <PreviewRectangles {...props} axisId={axisId} axisDirection={axisDirection} />
       <rect {...props} fill="transparent" rx={4} ry={4} />
-      <ChartAxisZoomSliderPreviewContent axisId={axisId} {...props} />
+      <ChartsAxisZoomSliderPreviewContent axisId={axisId} {...props} />
     </g>
   );
 }
