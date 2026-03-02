@@ -25,6 +25,14 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         },
         splitUnmatchedSpecifiers: true,
       },
+      {
+        oldEndpoint: 'ChartsContainer',
+        newEndpoint: 'context',
+        importsMapping: {
+          ChartApi: 'ChartApi',
+        },
+        splitUnmatchedSpecifiers: true,
+      },
     ],
   });
 

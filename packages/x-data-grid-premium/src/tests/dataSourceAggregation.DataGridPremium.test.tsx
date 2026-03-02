@@ -7,6 +7,7 @@ import {
   type DataGridPremiumProps,
   type GridApi,
   type GridDataSource,
+  type GridGroupNode,
   type GridGetRowsResponse,
   useGridApiRef,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
@@ -199,6 +200,84 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     expect(apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID].id.value).to.equal(
       'Agg value',
     );
+  });
+
+  it('should periodically revalidate grouped rows when dataSourceRevalidateMs is set', async () => {
+    render(
+      <TestDataSourceAggregation
+        dataSourceCache={null}
+        dataSourceRevalidateMs={1}
+        initialState={{
+          rowGrouping: { model: ['company'] },
+        }}
+        dataSetOptions={{
+          dataSet: 'Movies',
+          rowLength: 100,
+          maxColumns: undefined,
+        }}
+      />,
+    );
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+    });
+
+    fetchRowsSpy.resetHistory();
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+    });
+  });
+
+  it('should not set children loading state during background grouped revalidation', async () => {
+    const { user } = render(
+      <TestDataSourceAggregation
+        dataSourceCache={null}
+        dataSourceRevalidateMs={1}
+        initialState={{
+          rowGrouping: { model: ['company'] },
+        }}
+        dataSetOptions={{
+          dataSet: 'Movies',
+          rowLength: 100,
+          maxColumns: undefined,
+        }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.be.greaterThan(1);
+    });
+
+    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+      .children[0];
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+    });
+
+    const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
+
+    fetchRowsSpy.resetHistory();
+    setChildrenLoadingSpy.resetHistory();
+
+    await waitFor(() => {
+      const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
+        const groupKeys = call.args[0].groupKeys || [];
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
+    });
+
+    const hasLoadingTrueCall = setChildrenLoadingSpy
+      .getCalls()
+      .some((call) => call.args[0] === expandedRowId && call.args[1] === true);
+    setChildrenLoadingSpy.restore();
+    expect(hasLoadingTrueCall).to.equal(false);
   });
 
   it('should re-fetch all parents when the leaf row is updated', async () => {

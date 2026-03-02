@@ -22,7 +22,7 @@ const StyledText = styled('text')(({ theme }) => ({
 }));
 
 function ValueHighlight(props) {
-  const { svgRef } = props;
+  const { chartRef } = props;
 
   // Get the drawing area bounding box
   const { left, top, width, height } = useDrawingArea();
@@ -34,7 +34,7 @@ function ValueHighlight(props) {
   const [mouseY, setMouseY] = React.useState(null);
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartRef.current;
     if (element === null) {
       return () => {};
     }
@@ -64,7 +64,7 @@ function ValueHighlight(props) {
       element.removeEventListener('mouseout', handleMouseOut);
       element.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [height, left, top, width, svgRef]);
+  }, [height, left, top, width, chartRef]);
 
   if (mouseY === null) {
     return null;
@@ -93,10 +93,10 @@ function ValueHighlight(props) {
   );
 }
 export default function ScaleDemo() {
-  const svgRef = React.useRef(null);
+  const chartRef = React.useRef(null);
   return (
     <ChartContainer
-      ref={svgRef}
+      ref={chartRef}
       height={300}
       series={[
         {
@@ -127,7 +127,7 @@ export default function ScaleDemo() {
       <LinePlot />
       <ChartsYAxis axisId="left_axis_id" />
       <ChartsYAxis axisId="right_axis_id" />
-      <ValueHighlight svgRef={svgRef} />
+      <ValueHighlight chartRef={chartRef} />
     </ChartContainer>
   );
 }
