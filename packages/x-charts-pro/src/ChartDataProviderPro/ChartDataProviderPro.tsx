@@ -1,6 +1,5 @@
 'use client';
 import PropTypes from 'prop-types';
-import { Watermark } from '@mui/x-license/Watermark';
 import {
   ChartProvider,
   type ChartSeriesType,
@@ -97,7 +96,6 @@ function ChartDataProviderPro<
           {children}
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>
-      <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
     </ChartProvider>
   );
 }
