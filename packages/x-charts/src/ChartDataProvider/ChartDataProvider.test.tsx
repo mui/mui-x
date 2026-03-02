@@ -6,11 +6,11 @@ describe('<ChartDataProvider />', () => {
 
   describeConformance(<ChartDataProvider height={100} width={100} series={[]} />, () => ({
     classes: {} as any,
-    inheritComponent: 'svg',
+    inheritComponent: 'div',
     render,
     muiName: 'MuiChartDataProvider',
     testComponentPropWith: 'div',
-    refInstanceof: window.SVGSVGElement,
+    refInstanceof: window.HTMLDivElement,
     skip: [
       'mergeClassName',
       'propsSpread',

@@ -1,4 +1,4 @@
-import type { SeriesItemIdentifier } from '../../../../../models/seriesType';
+import type { SeriesItemIdentifierWithType } from '../../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import {
   type ChartsRotationAxisProps,
@@ -21,7 +21,7 @@ export type TooltipItemPositionGetter<TSeriesType extends ChartSeriesType> = (pa
   series: ProcessedSeries<TSeriesType>;
   axesConfig: TooltipPositionGetterAxesConfig;
   drawingArea: ChartDrawingArea;
-  identifier: SeriesItemIdentifier<TSeriesType> | null;
+  identifier: SeriesItemIdentifierWithType<TSeriesType> | null;
   seriesLayout: SeriesLayout<TSeriesType>;
   /**
    * The preferred placement of the tooltip related to the element.

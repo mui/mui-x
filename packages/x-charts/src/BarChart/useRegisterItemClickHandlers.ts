@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import { type BarItemIdentifier } from '../models/seriesType';
-import { useSvgRef } from '../hooks/useSvgRef';
+import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
 import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useChartContext } from '../context/ChartProvider';
-import { getSVGPoint } from '../internals/getSVGPoint';
+import { getChartPoint } from '../internals/getChartPoint';
 import { useStore } from '../internals/store/useStore';
 import { selectorBarItemAtPosition } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 
@@ -22,11 +22,11 @@ export function useRegisterItemClickHandlers(
     useChartContext<
       [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
     >();
-  const svgRef = useSvgRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
     if (!element || !onItemClick) {
       return undefined;
@@ -57,7 +57,7 @@ export function useRegisterItemClickHandlers(
 
       lastPointerUp = null;
 
-      const svgPoint = getSVGPoint(element, point);
+      const svgPoint = getChartPoint(element, point);
 
       if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
         return;
@@ -85,5 +85,5 @@ export function useRegisterItemClickHandlers(
       element.removeEventListener('click', onClick);
       element.removeEventListener('pointerup', onPointerUp);
     };
-  }, [instance, onItemClick, store, svgRef]);
+  }, [instance, onItemClick, store, chartsLayerContainerRef]);
 }

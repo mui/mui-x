@@ -188,6 +188,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'FocusedRadarMark',
   },
   {
+    pathname: '/x/api/charts/focused-range-bar',
+    title: 'FocusedRangeBar',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/focused-sankey-link',
     title: 'FocusedSankeyLink',
     plan: 'pro',

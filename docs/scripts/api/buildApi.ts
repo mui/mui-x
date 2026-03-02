@@ -3,7 +3,6 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import path from 'path';
 import fs from 'fs';
-import * as prettier from 'prettier';
 import { kebabCase } from 'es-toolkit/string';
 import {
   buildApiInterfacesJson,
@@ -18,38 +17,7 @@ import {
   datagridApiToDocument,
   interfacesToDocument,
 } from '../createXTypeScriptProjects';
-import { DocumentedInterfaces } from './utils';
-import { resolvePrettierConfigPath } from '../utils';
-
-export async function writePrettifiedFile(
-  filename: string,
-  data: string,
-  prettierConfigPath: string = '',
-  options: object = {},
-) {
-  let resolvedPrettierConfigPath = prettierConfigPath;
-  if (!resolvedPrettierConfigPath) {
-    // If no prettier config path is provided, use the default one
-    resolvedPrettierConfigPath = await resolvePrettierConfigPath();
-  }
-  const prettierConfig = await prettier.resolveConfig(filename, {
-    config: resolvedPrettierConfigPath,
-  });
-  if (prettierConfig === null) {
-    throw new Error(
-      `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
-    );
-  }
-
-  fs.writeFileSync(
-    filename,
-    await prettier.format(data, { ...prettierConfig, filepath: filename }),
-    {
-      encoding: 'utf8',
-      ...options,
-    },
-  );
-}
+import { DocumentedInterfaces, writePrettifiedFile } from './utils';
 
 const bracketsRegexp = /\[\[([^\]]+)\]\]/g;
 

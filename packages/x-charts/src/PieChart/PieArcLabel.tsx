@@ -12,9 +12,15 @@ import { type SeriesId } from '../models';
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when highlighted. */
+  /**
+   * Styles applied to the root element when highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element when faded. */
+  /**
+   * Styles applied to the root element when faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /** Styles applied to the root element when animation is not skipped. */
   animate: string;
@@ -144,6 +150,8 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     return (
       <PieArcLabelRoot
         className={classes.root}
+        data-highlighted={isHighlighted || undefined}
+        data-faded={isFaded || undefined}
         {...other}
         {...animatedProps}
         opacity={hidden ? 0 : 1}

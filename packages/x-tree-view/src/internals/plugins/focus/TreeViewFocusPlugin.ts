@@ -3,6 +3,11 @@ import { expansionSelectors } from '../expansion';
 import { focusSelectors } from './selectors';
 import { itemsSelectors } from '../items';
 import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
+import {
+  getFirstNavigableItem,
+  getNextNavigableItem,
+  getPreviousNavigableItem,
+} from '../../utils/tree';
 
 export class TreeViewFocusPlugin {
   private store: MinimalTreeViewStore<any, any>;
@@ -13,24 +18,36 @@ export class TreeViewFocusPlugin {
     this.store = store;
 
     // Whenever the items change, we need to ensure the focused item is still present.
-    this.store.registerStoreEffect(itemsSelectors.itemMetaLookup, () => {
-      const focusedItemId = focusSelectors.focusedItemId(store.state);
-      if (focusedItemId == null) {
+    // If the focused item was removed, focus the closest neighbor instead of the first item.
+    let previousState = store.state;
+    this.store.subscribe((newState) => {
+      // Only run when items actually changed.
+      if (newState.itemMetaLookup === previousState.itemMetaLookup) {
+        previousState = newState;
         return;
       }
 
-      const hasItemBeenRemoved = !itemsSelectors.itemMeta(store.state, focusedItemId);
-      if (!hasItemBeenRemoved) {
+      const focusedItemId = focusSelectors.focusedItemId(newState);
+      if (focusedItemId == null || itemsSelectors.itemMeta(newState, focusedItemId)) {
+        previousState = newState;
         return;
       }
 
-      const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
-      if (defaultFocusableItemId == null) {
+      const checkItemInNewTree = (itemId: TreeViewItemId | null) =>
+        itemId == null || !itemsSelectors.itemMeta(newState, itemId) ? null : itemId;
+
+      const itemToFocusId =
+        checkItemInNewTree(getNextNavigableItem(previousState, focusedItemId)) ??
+        checkItemInNewTree(getPreviousNavigableItem(previousState, focusedItemId)) ??
+        getFirstNavigableItem(newState);
+
+      if (itemToFocusId == null) {
         this.setFocusedItemId(null);
-        return;
+      } else {
+        this.applyItemFocus(null, itemToFocusId);
       }
 
-      this.applyItemFocus(null, defaultFocusableItemId);
+      previousState = newState;
     });
   }
 

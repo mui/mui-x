@@ -3,6 +3,21 @@ import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { SchedulerResource, SchedulerResourceId } from '../models';
 
+const resourceParentIdLookupSelector = createSelectorMemoized(
+  (state: State) => state.resourceChildrenIdLookup,
+  (resourceChildrenIdLookup) => {
+    const result: Map<SchedulerResourceId, SchedulerResourceId | null> = new Map();
+
+    for (const [resourceId, childrenIds] of resourceChildrenIdLookup) {
+      for (const childId of childrenIds) {
+        result.set(childId, resourceId);
+      }
+    }
+
+    return result;
+  },
+);
+
 export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
@@ -50,7 +65,7 @@ export const schedulerResourceSelectors = {
     (processedResourceLookup, resourceChildrenIdLookup) => {
       const result: Map<SchedulerResourceId, SchedulerResource[]> = new Map();
 
-      for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
+      for (const [resourceId, childrenIds] of resourceChildrenIdLookup) {
         const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
         result.set(resourceId, children);
       }
@@ -63,29 +78,49 @@ export const schedulerResourceSelectors = {
     (state: State, resourceId: SchedulerResourceId) =>
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   ),
-  resourceParentIdLookup: createSelectorMemoized(
-    (state: State) => state.resourceChildrenIdLookup,
-    (resourceChildrenIdLookup) => {
-      const result: Map<SchedulerResourceId, SchedulerResourceId | null> = new Map();
+  resourceParentIdLookup: resourceParentIdLookupSelector,
+  idList: createSelector((state: State) => state.resourceIdList),
+  visibleMap: createSelectorMemoized(
+    (state: State) => state.visibleResources,
+    resourceParentIdLookupSelector,
+    (state: State) => state.processedResourceLookup,
+    (visibleResources, parentLookup, processedResourceLookup) => {
+      // Fast path: no parent-child relationships means no ancestor visibility to check
+      if (parentLookup.size === 0) {
+        return visibleResources;
+      }
 
-      for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
-        for (const childId of childrenIds) {
-          result.set(childId, resourceId);
+      const cache = new Map<string, boolean>();
+
+      const checkVisibility = (resourceId: string): boolean => {
+        const cached = cache.get(resourceId);
+        if (cached !== undefined) {
+          return cached;
+        }
+
+        const isDirectlyVisible = visibleResources[resourceId] !== false;
+        let result: boolean;
+
+        if (!isDirectlyVisible) {
+          result = false;
+        } else {
+          const parentId = parentLookup.get(resourceId);
+          result = parentId ? checkVisibility(parentId) : true;
+        }
+
+        cache.set(resourceId, result);
+        return result;
+      };
+
+      const curatedMap: Record<string, boolean> = {};
+      for (const resourceId of processedResourceLookup.keys()) {
+        if (!checkVisibility(resourceId)) {
+          curatedMap[resourceId] = false;
         }
       }
 
-      return result;
+      return curatedMap;
     },
-  ),
-  idList: createSelector((state: State) => state.resourceIdList),
-  visibleMap: createSelector((state: State) => state.visibleResources),
-  visibleIdList: createSelectorMemoized(
-    (state: State) => state.resourceIdList,
-    (state: State) => state.visibleResources,
-    (resources, visibleResources) =>
-      resources
-        .filter((resourceId) => visibleResources[resourceId] !== false)
-        .map((resourceId) => resourceId),
   ),
   /**
    * Gets the default event color used when no color is specified on the event.
@@ -99,5 +134,4 @@ export const schedulerResourceSelectors = {
       return state.processedResourceLookup.get(resourceId)?.eventColor ?? state.eventColor;
     },
   ),
-  resourcesCount: createSelector((state: State) => state.resourceIdList.length),
 };

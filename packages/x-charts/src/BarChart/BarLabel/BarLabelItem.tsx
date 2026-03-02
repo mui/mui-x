@@ -149,6 +149,8 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
       height,
       placement: barLabelPlacement,
       className: classes.root,
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
     },
     ownerState,
   });

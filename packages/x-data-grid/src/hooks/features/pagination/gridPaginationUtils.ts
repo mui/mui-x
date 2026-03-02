@@ -10,7 +10,7 @@ export const getPageCount = (rowCount: number, pageSize: number, page: number): 
     return Math.ceil(rowCount / pageSize);
   }
 
-  if (rowCount === -1) {
+  if (rowCount === -1 || rowCount == null) {
     // With unknown row-count, we can assume a page after the current one
     return page + 2;
   }
@@ -37,10 +37,8 @@ export const throwIfPageSizeExceedsTheLimit = (
 ) => {
   if (signatureProp === GridSignature.DataGrid && pageSize > MAX_PAGE_SIZE) {
     throw new Error(
-      [
-        'MUI X: `pageSize` cannot exceed 100 in the MIT version of the DataGrid.',
-        'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-      ].join('\n'),
+      `MUI X: \`pageSize\` cannot exceed 100 in the MIT version of the DataGrid.
+You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.`,
     );
   }
 };

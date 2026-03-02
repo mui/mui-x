@@ -102,5 +102,5 @@ const barChartsProps: BarChartProps = {
       highlightScope: { highlight: 'item', fade: 'global' },
     },
   ],
-  height: 400,
+  height: 250,
 };

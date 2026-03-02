@@ -24,7 +24,7 @@ export const pan = async <P extends PointerType>(
   } = options;
 
   if (!target) {
-    throw new Error('Target element is required for pan gesture');
+    throw new Error('MUI X: Target element is required for pan gesture');
   }
 
   // Convert angle to radians

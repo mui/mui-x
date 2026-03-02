@@ -15,7 +15,7 @@ This package is not published on npm yet.
 
 ## Installation
 
-Install the Scheduler package:
+Install the Scheduler package that best suits your needs — Community, or Premium:
 
 {{"component": "modules/components/SchedulerInstallationInstructions.js"}}
 
@@ -23,7 +23,7 @@ Install the Scheduler package:
 
 #### Material UI
 
-The Scheduler packages has a peer dependency on `@mui/material`.
+The Scheduler packages have a peer dependency on `@mui/material`.
 If you're not already using it, install it now:
 
 <codeblock storageKey="package-manager">
@@ -59,10 +59,11 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ### Import the component
 
-Import the Event Calendar component along with the `SchedulerEvent` type:
+Import the Event Calendar component that corresponds to the version you're using, along with the `SchedulerEvent` type:
 
 ```js
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventCalendarPremium } from '@mui/x-scheduler/event-calendar-premium';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 ```
 
@@ -72,7 +73,7 @@ Each event in the Event Calendar is an object with properties that define when i
 
 The code snippet below defines three events with `id`, `title`, `start`, and `end` properties:
 
-```tsx
+```ts
 const events: SchedulerEvent[] = [
   {
     id: 1,
@@ -97,15 +98,15 @@ const events: SchedulerEvent[] = [
 
 ### Render the component
 
-With the component imported and events defined, you're now ready to render the Event Calendar as shown below:
+With the component imported, and events defined, you're now ready to render the render the Event Timeline as shown below:
 
 {{"demo": "RenderEventCalendar.js", "defaultCodeOpen": true, "bg": "inline"}}
 
-## Rendering a Timeline
+## Rendering an Event Timeline
 
 ### Import the component
 
-Import the `EventTimelinePremium` component along with the `SchedulerEvent` and `SchedulerResource` types:
+Import the `<EventTimelinePremium />` component along with the `SchedulerEvent` and `SchedulerResource` types:
 
 ```js
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -114,10 +115,11 @@ import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 ### Define events and resources
 
-The `EventTimelinePremium` component requires both events and resources.
-Resources represent the entities (people, rooms, equipment) that events are assigned to:
+Each event in the Event Timeline is an object with properties that define when it occurs and what it displays.
 
-```tsx
+The code snippet below defines three events with `id`, `title`, `start`, and `end` properties:
+
+```ts
 const events: SchedulerEvent[] = [
   {
     id: 1,
@@ -134,7 +136,11 @@ const events: SchedulerEvent[] = [
     resource: 'team-b',
   },
 ];
+```
 
+The event passed to the Event Timeline component need to have a resource that represents the entities (people, rooms, equipment) that it is are assigned to:
+
+```ts
 const resources: SchedulerResource[] = [
   { id: 'team-a', title: 'Team A' },
   { id: 'team-b', title: 'Team B' },
@@ -143,7 +149,7 @@ const resources: SchedulerResource[] = [
 
 ### Render the component
 
-With events and resources defined, render the `EventTimelinePremium` component:
+With the component imported, and events and resources defined, you're now ready to render the render the Event Timeline as shown below:
 
 {{"demo": "RenderEventTimelinePremium.js", "defaultCodeOpen": true, "bg": "inline"}}
 
@@ -155,6 +161,7 @@ To benefit from [CSS overrides](/material-ui/customization/theme-components/#the
 These types use module augmentation to extend the default theme structure.
 
 ```tsx
+// Premium users: add `-premium` suffix to package name
 import type {} from '@mui/x-scheduler/themeAugmentation';
 
 const theme = createTheme({
@@ -175,4 +182,18 @@ const theme = createTheme({
 TODO: Uncomment once available
 
 <!-- - [EventCalendar](/x/api/scheduler/event-calendar/)
+ - [EventCalendarPremium](/x/api/scheduler/event-calendar-premium/)
 - [EventTimelinePremium](/x/api/scheduler/event-timeline-premium/) -->
+
+## Using this documentation
+
+### Feature availability
+
+:::info
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+See [Licensing](/x/introduction/licensing/) for details.
+:::
+
+Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') icons, respectively.
+
+All documentation for Community components and features also applies to their Pro and Premium counterparts.

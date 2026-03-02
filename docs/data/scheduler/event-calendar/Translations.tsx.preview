@@ -1,8 +1,0 @@
-<EventCalendar
-  events={events}
-  resources={resources}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
-  translations={frFR}
-  defaultPreferences={{ isSidePanelOpen: false }}
-/>
