@@ -159,12 +159,12 @@ Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-
 
 ### Recurring events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-Use the `rrule` property to define an events recurring rule:
+Use the `rrule` property to define an event's recurring rule:
 
 ```ts
 const event = {
   // ...other properties
-  rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
+  rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TH',
 };
 ```
 

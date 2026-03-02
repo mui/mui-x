@@ -74,12 +74,16 @@ export function useAreaPlotData(
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
+              } should have a data property to be able to display a line plot. ` +
+                'The x-axis data defines the positions for each point in the line. ' +
+                'Provide a data array to the x-axis configuration.',
             );
           }
           if (xData.length < stackedData.length) {
             throw new Error(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              `MUI X Charts: The data length of the x-axis (${xData.length} items) is less than the length of series data (${stackedData.length} items). ` +
+                'Some data points will not be displayed because they have no corresponding x-axis value. ' +
+                'Ensure the x-axis data has at least as many items as the series data.',
             );
           }
         }

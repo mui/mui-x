@@ -64,7 +64,11 @@ export const schedulerEventSelectors = {
     processedEventSelector,
     (event, eventId: SchedulerEventId) => {
       if (!event) {
-        throw new Error(`MUI: the original event was not found (id="${eventId}").`);
+        throw new Error(
+          `MUI X Scheduler: Event with id="${eventId}" was not found. ` +
+            'The requested event does not exist in the scheduler state. ' +
+            'Verify the event id is correct and the event has been added.',
+        );
       }
 
       return event;

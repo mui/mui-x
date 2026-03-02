@@ -344,7 +344,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
           </DayGridEventCardWrapper>
         );
       default:
-        throw new Error('MUI: Unsupported variant provided to EventItem component.');
+        throw new Error(
+          'MUI X Scheduler: Unsupported variant provided to DayGridEvent component. ' +
+            'The DayGridEvent component only supports specific variant values. ' +
+            'Check the component documentation for supported variants.',
+        );
     }
   }, [
     variant,
