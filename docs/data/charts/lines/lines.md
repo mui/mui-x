@@ -254,7 +254,7 @@ The highlighted data has a mark regardless if it has an even or odd index.
 {{"demo": "MarkOptimization.js"}}
 
 :::info
-Removing, or reducing the number of mark can significantly improve the performances of your line chart and its readability.
+For line charts with many data points, removing or reducing the number of marks can significantly improve its performance and readability.
 :::
 
 ### CSS
