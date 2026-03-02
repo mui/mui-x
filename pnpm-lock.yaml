@@ -615,7 +615,7 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0
       markdown-to-jsx:
-        specifier: ^9.7.3
+        specifier: ^9.7.6
         version: 9.7.6(react@19.2.3)
       moment:
         specifier: 'catalog:'
