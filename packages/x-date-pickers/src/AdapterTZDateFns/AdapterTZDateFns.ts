@@ -17,6 +17,15 @@ declare module '@mui/x-date-pickers/models' {
 }
 
 const timezoneWithOffsetRegExp = /(Z|[+-]\d{2}:\d{2}|[+-]\d{4})$/i;
+type DateWithTimezoneMethod = {
+  withTimeZone: (timezone: string) => Date;
+};
+
+const hasWithTimeZone = (value: Date): value is Date & DateWithTimezoneMethod => {
+  return (
+    typeof (value as unknown as Partial<DateWithTimezoneMethod>).withTimeZone === 'function'
+  );
+};
 
 /**
  * A timezone-aware date-fns adapter powered by `@date-fns/tz`.
@@ -45,7 +54,12 @@ export class AdapterTZDateFns extends AdapterDateFns {
   };
 
   private createTZDateWithLocalTime = (value: string, timezone: string): TZDate => {
-    const date = new Date(value);
+    // Normalize date-only strings ("2024-06-15") to datetime ("2024-06-15T00:00:00")
+    // so they are parsed as local time rather than UTC (which is the ES spec behavior
+    // for date-only ISO strings). This ensures getFullYear()/getDate()/etc. return
+    // values matching the string's literal components regardless of system timezone.
+    const normalizedValue = value.includes('T') ? value : `${value}T00:00:00`;
+    const date = new Date(normalizedValue);
 
     return new TZDate(
       date.getFullYear(),
@@ -68,8 +82,8 @@ export class AdapterTZDateFns extends AdapterDateFns {
       return value;
     }
 
-    if (typeof (value as any)?.withTimeZone === 'function') {
-      return (value as any).withTimeZone(timezone);
+    if (hasWithTimeZone(value)) {
+      return value.withTimeZone(timezone);
     }
 
     return new TZDate(value, timezone);
@@ -85,31 +99,33 @@ export class AdapterTZDateFns extends AdapterDateFns {
   ): DateBuilderReturnType<T> => {
     type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return null as unknown as R;
+      return <R>null;
     }
 
     const resolvedTimezone = this.resolveTimezone(timezone);
     if (typeof value === 'undefined') {
       if (resolvedTimezone === 'system') {
-        return new Date() as unknown as R;
+        return <R>new Date();
       }
 
-      return TZDate.tz(resolvedTimezone) as unknown as R;
+      return <R>TZDate.tz(resolvedTimezone);
     }
 
     if (resolvedTimezone === 'system') {
-      return new Date(value) as unknown as R;
+      return <R>new Date(value);
     }
 
     if (this.hasTimezonePart(value)) {
-      return new TZDate(value, resolvedTimezone) as unknown as R;
+      return <R>new TZDate(value, resolvedTimezone);
     }
 
-    return this.createTZDateWithLocalTime(value, resolvedTimezone) as unknown as R;
+    return <R>this.createTZDateWithLocalTime(value, resolvedTimezone);
   };
 
   public getTimezone = (value: Date | null): string => {
     if (value == null) {
+      // Return 'default' (not 'system') so that resolveTimezone() will look up
+      // the configured defaultTimezone when chaining operations on null values.
       return 'default';
     }
 

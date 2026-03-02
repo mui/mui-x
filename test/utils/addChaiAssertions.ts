@@ -34,9 +34,22 @@ chai.use((chaiAPI, utils) => {
 
     const shouldCompareByInstant = isTZDateLike(cleanActualDate) || isTZDateLike(cleanExpectedDate);
 
+    // When comparing TZDate values by instant, build a descriptive message
+    // so failures show timezone + ISO info, not just opaque millisecond timestamps.
+    const describeDate = (d: any) => {
+      if (isTZDateLike(d)) {
+        return `${d.toISOString()} (tz: ${d.timeZone}, instant: ${d.valueOf()})`;
+      }
+      return d.toISOString();
+    };
+    const tzMessage =
+      shouldCompareByInstant && !message
+        ? `expected ${describeDate(cleanActualDate)} to equal ${describeDate(cleanExpectedDate)}`
+        : message;
+
     const assertion = new chaiAPI.Assertion(
       shouldCompareByInstant ? cleanActualDate.valueOf() : cleanActualDate.toISOString(),
-      message,
+      tzMessage,
     );
     // TODO: Investigate if `as any` can be removed after https://github.com/DefinitelyTyped/DefinitelyTyped/issues/48634 is resolved.
     utils.transferFlags(this as any, assertion, false);
