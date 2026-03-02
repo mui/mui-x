@@ -1,2 +1,3 @@
-// Re-export automatically generated, to customize, simply remove this line.
-export * from '@mui/x-charts/ChartsSurface';
+// eslint-disable-next-line import/no-cycle
+export * from './ChartsSurface';
+export { chartsSurfaceClasses, type ChartsSurfaceClasses } from './chartsSurfaceClasses';

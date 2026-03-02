@@ -11,7 +11,6 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { BarPlot, FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -25,6 +24,7 @@ import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins'
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
+import { ChartsSurface } from '../ChartsSurface';
 import {
   type BarItemIdentifier,
   type RangeBarItemIdentifier,

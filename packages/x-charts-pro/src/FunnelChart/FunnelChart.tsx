@@ -6,7 +6,6 @@ import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOver
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { type MakeOptional } from '@mui/x-internals/types';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   ChartsAxisHighlight,
   type ChartsAxisHighlightProps,
@@ -19,6 +18,7 @@ import { useFunnelChartProps } from './useFunnelChartProps';
 import { type ChartContainerProProps } from '../ChartContainerPro';
 import { funnelSeriesConfig } from './seriesConfig';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { type FunnelChartSlotExtension } from './funnelSlots.types';
 import { type CategoryAxis } from './categoryAxis.types';

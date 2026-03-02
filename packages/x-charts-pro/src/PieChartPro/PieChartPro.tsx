@@ -5,7 +5,6 @@ import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import * as React from 'react';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   type PieChartProps,
   type PieChartSlotProps,
@@ -14,6 +13,7 @@ import {
 } from '@mui/x-charts/PieChart';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { type ChartsSlotsPro, type ChartsSlotPropsPro } from '../internals/material';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';

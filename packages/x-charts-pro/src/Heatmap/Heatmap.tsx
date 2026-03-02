@@ -25,7 +25,7 @@ import {
   type ChartsLegendSlots,
 } from '@mui/x-charts/ChartsLegend';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
+import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { type ChartContainerProProps } from '../ChartContainerPro';
 import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
@@ -41,7 +41,7 @@ import {
 } from '../ChartsToolbarPro/Toolbar.types';
 import { FocusedHeatmapCell } from './FocusedHeatmapCell';
 import { useHeatmapProps } from './useHeatmapProps';
-import { ChartsSvgLayer } from '../ChartsSvgLayer';
+import { ChartsLayerContainer } from '../ChartsLayerContainer';
 
 export interface HeatmapSlots
   extends

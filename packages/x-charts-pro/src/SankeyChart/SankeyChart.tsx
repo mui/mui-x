@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
@@ -16,6 +15,7 @@ import { FocusedSankeyNode } from './FocusedSankeyNode';
 import { FocusedSankeyLink } from './FocusedSankeyLink';
 import { SankeyDataProvider } from './SankeyDataProvider';
 import type { ChartContainerProProps } from '../ChartContainerPro';
+import { ChartsSurface } from '../ChartsSurface';
 import type { SankeyChartPluginSignatures } from './SankeyChart.plugins';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;

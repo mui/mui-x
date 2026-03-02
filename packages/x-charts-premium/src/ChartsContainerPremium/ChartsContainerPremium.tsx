@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { ChartsSurface, type ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
 import { type ChartAnyPluginSignature, type ChartSeriesType } from '@mui/x-charts/internals';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import {
   ChartDataProviderPremium,
   type ChartDataProviderPremiumProps,
 } from '../ChartDataProviderPremium';
+import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { useChartsContainerPremiumProps } from './useChartsContainerPremiumProps';
 
 export interface ChartsContainerPremiumSlots {}

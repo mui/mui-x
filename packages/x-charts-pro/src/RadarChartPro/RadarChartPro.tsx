@@ -16,7 +16,6 @@ import {
 import { useThemeProps } from '@mui/material/styles';
 import { useRadarChartProps } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
@@ -29,6 +28,7 @@ import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
+import { ChartsSurface } from '../ChartsSurface';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 
 export interface RadarChartProSlots

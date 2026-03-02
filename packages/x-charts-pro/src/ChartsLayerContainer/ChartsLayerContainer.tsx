@@ -12,7 +12,7 @@ const packageIdentifier = 'x-charts-pro';
  * A component that contains the chart layers, such as `<ChartsSvgLayer>`, and `<ChartsWebGlLayer>`.
  * It is responsible for positioning itself and providing the dimensions and interaction context to its children layers.
  */
-const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(
+export const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(
   function ChartsLayerContainer(props, ref) {
     const { children, ...other } = props;
     return (
@@ -23,6 +23,3 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     );
   },
 );
-
-export { ChartsLayerContainer };
-export type { ChartsLayerContainerProps };

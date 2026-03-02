@@ -12,7 +12,6 @@ import {
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
@@ -23,6 +22,7 @@ import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { type ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
+import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import {
   SCATTER_CHART_PRO_PLUGINS,
