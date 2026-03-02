@@ -63,7 +63,7 @@
     "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo"
   },
   "devDependencies": {
-    "@atlaskit/pragmatic-drag-and-drop-unit-testing": "^1.1.1",
+    "@atlaskit/pragmatic-drag-and-drop-unit-testing": "1.1.1",
     "@babel/core": "catalog:",
     "@babel/plugin-syntax-typescript": "7.28.6",
     "@babel/plugin-transform-object-rest-spread": "7.28.6",
@@ -118,7 +118,7 @@
     "execa": "9.6.1",
     "globby": "16.1.0",
     "jsdom": "26.1.0",
-    "lerna": "9.0.3",
+    "lerna": "9.0.4",
     "magic-string": "0.30.21",
     "markdownlint-cli2": "0.20.0",
     "moment": "catalog:",
@@ -143,7 +143,7 @@
     "vite": "catalog:",
     "vitest": "catalog:",
     "yargs": "catalog:",
-    "zod": "^4.3.6"
+    "zod": "4.3.6"
   },
   "packageManager": "pnpm@10.30.1",
   "engines": {
