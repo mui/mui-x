@@ -11,10 +11,7 @@ import {
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
-import {
-  schedulerNowSelectors,
-  schedulerOccurrenceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   EventDialogProvider,
@@ -100,6 +97,7 @@ const EventTimelinePremiumEventsSubGridWrapper = styled('div', {
   display: 'grid',
   gridTemplateRows: 'subgrid',
   gridRow: '1 / -1',
+  position: 'relative',
 });
 
 const EventTimelinePremiumEventsSubGrid = styled(TimelineGrid.SubGrid, {
@@ -141,44 +139,25 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   slot: 'CurrentTimeIndicator',
 })(({ theme }) => ({
   position: 'absolute',
-  top: -1,
-  bottom: -1,
-  left: 'var(--x-position)',
+  top: 0,
+  bottom: 0,
+  left: 'calc(var(--unit-count) * var(--unit-width) * var(--x-position))',
   width: 0,
   zIndex: 2,
   borderLeft: `2px solid ${theme.palette.primary.main}`,
   pointerEvents: 'none',
 }));
 
-const EventTimelinePremiumCurrentTimeIndicatorCircle = styled('span', {
-  name: 'MuiEventTimeline',
-  slot: 'CurrentTimeIndicatorCircle',
-})(({ theme }) => ({
-  position: 'absolute',
-  zIndex: 1,
-  top: -3,
-  left: -5,
-  width: 8,
-  height: 8,
-  borderRadius: '50%',
-  backgroundColor: theme.palette.primary.main,
-}));
-
 function EventRowContent({
   resourceId,
   occurrences,
   placeholder,
-  showCurrentTimeIndicator,
-  isFirstRow,
 }: {
   resourceId: SchedulerResourceId;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
-  showCurrentTimeIndicator: boolean;
-  isFirstRow: boolean;
 }) {
   const store = useEventTimelinePremiumStoreContext();
-  const { classes } = useEventTimelinePremiumStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -214,18 +193,6 @@ function EventRowContent({
           variant="placeholder"
         />
       )}
-      {showCurrentTimeIndicator && (
-        <EventTimelinePremiumCurrentTimeIndicator
-          className={classes.currentTimeIndicator}
-          aria-hidden
-        >
-          {isFirstRow && (
-            <EventTimelinePremiumCurrentTimeIndicatorCircle
-              className={classes.currentTimeIndicatorCircle}
-            />
-          )}
-        </EventTimelinePremiumCurrentTimeIndicator>
-      )}
     </React.Fragment>
   );
 }
@@ -251,13 +218,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     schedulerNowSelectors.showCurrentTimeIndicator,
   );
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
-  const resources = useStore(
-    store,
-    schedulerOccurrenceSelectors.groupedByResourceList,
-    viewConfig.start,
-    viewConfig.end,
-  );
-  const firstResourceId = resources.length > 0 ? resources[0].resource.id : null;
   const isNowInView = React.useMemo(
     () => adapter.isWithinRange(now, [viewConfig.start, viewConfig.end]),
     [adapter, now, viewConfig.start, viewConfig.end],
@@ -323,13 +283,17 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                       resourceId={resourceId}
                       occurrences={occurrences}
                       placeholder={placeholder}
-                      showCurrentTimeIndicator={showCurrentTimeIndicator}
-                      isFirstRow={resourceId === firstResourceId}
                     />
                   )}
                 </EventTimelinePremiumEventsSubGridRow>
               )}
             </EventTimelinePremiumEventsSubGrid>
+            {showCurrentTimeIndicator && (
+              <EventTimelinePremiumCurrentTimeIndicator
+                className={classes.currentTimeIndicator}
+                aria-hidden
+              />
+            )}
           </EventTimelinePremiumEventsSubGridWrapper>
         </EventTimelinePremiumGrid>
       </EventDialogProvider>

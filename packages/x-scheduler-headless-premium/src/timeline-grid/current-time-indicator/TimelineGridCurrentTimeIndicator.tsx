@@ -46,7 +46,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const style = React.useMemo(
       () =>
         ({
-          [TimelineGridCurrentTimeIndicatorCssVars.xPosition]: `${position * 100}%`,
+          [TimelineGridCurrentTimeIndicatorCssVars.xPosition]: position,
         }) as React.CSSProperties,
       [position],
     );
