@@ -7,7 +7,7 @@ import {
   resources,
 } from '../../datasets/personal-agenda';
 
-export default function AreEventsResizable() {
+export default function DisableDragging() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
@@ -17,7 +17,7 @@ export default function AreEventsResizable() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsResizable
+        areEventsDraggable={false}
         defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>

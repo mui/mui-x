@@ -3,6 +3,6 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  areEventsResizable
+  areEventsResizable={false}
   defaultView="months"
 />

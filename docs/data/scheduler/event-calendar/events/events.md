@@ -118,21 +118,21 @@ When defined, the class is applied to the event root DOM element in all views (W
 
 ### Drag interactions
 
-Use the `draggable` property to mark an event as draggable to another point in time:
+Use the `draggable` property on the event model to prevent an event from being dragged to another point in time:
 
 ```ts
 const event = {
   // ...other properties
-  draggable: true,
+  draggable: false,
 };
 ```
 
-Use the `resizable` property to mark an event as resizable by dragging it's start or end edge:
+Use the `resizable` property on the event model to prevent an event from being resized by dragging its start or end edge:
 
 ```ts
 const event = {
   // ...other properties
-  resizable: true,
+  resizable: false,
   resizable: "start" // only the start edge is draggable.
   resizable: "end" // only the end edge is draggable.
 };

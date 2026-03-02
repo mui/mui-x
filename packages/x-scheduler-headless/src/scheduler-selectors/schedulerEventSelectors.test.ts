@@ -59,12 +59,12 @@ describe('schedulerEventSelectors', () => {
   });
 
   describe('isDraggable', () => {
-    it('should return false when areEventsDraggable is not defined', () => {
+    it('should return true when areEventsDraggable is not defined', () => {
       const state = getEventCalendarStateFromParameters({
         events: [defaultEvent],
         areEventsDraggable: undefined,
       });
-      expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(false);
+      expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(true);
     });
 
     it('should return false when areEventsDraggable is false', () => {
@@ -225,13 +225,13 @@ describe('schedulerEventSelectors', () => {
   });
 
   describe('isResizable', () => {
-    it('should return false when areEventsResizable is not defined', () => {
+    it('should return true when areEventsResizable is not defined', () => {
       const state = getEventCalendarStateFromParameters({
         events: [defaultEvent],
         areEventsResizable: undefined,
       });
-      expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(false);
-      expect(schedulerEventSelectors.isResizable(state, 'event-1', 'end')).to.equal(false);
+      expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(true);
+      expect(schedulerEventSelectors.isResizable(state, 'event-1', 'end')).to.equal(true);
     });
 
     it('should return false when areEventsResizable is false', () => {
