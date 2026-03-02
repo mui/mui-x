@@ -15,8 +15,6 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
-TODO: Issue #20394 - Create documentation and demos
-
 ## Overview
 
 The Event Calendar and Event Timeline accepts event dates (`start` and `end`) as **strings** and supports two semantics depending on the format:
@@ -94,6 +92,17 @@ It does not modify the event data or change when an event occurs.
 ```
 
 {{"demo": "TimezoneInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Supported timezones
+
+Both the `displayTimezone` prop and the event's `timezone` field accept the following values:
+
+|            Timezone | Description                                                                                                                                                |
+| ------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|             `"UTC"` | Will use the [Coordinated Universal Time](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)                                                        |
+|         `"default"` | Will use the default timezone of the date library                                                                                                          |
+|          `"system"` | Will use the system's local timezone                                                                                                                       |
+| IANA standard zones | Any [IANA](https://www.iana.org/time-zones) timezone, for example `"Europe/Paris"` or `"America/New_York"`. [Full list](https://timezonedb.com/time-zones) |
 
 ## Creating an event
 

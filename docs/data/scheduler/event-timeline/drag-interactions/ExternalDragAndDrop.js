@@ -160,6 +160,7 @@ export default function ExternalDragAndDrop() {
           onEventsChange={setEvents}
           canDragEventsFromTheOutside
           canDropEventsToTheOutside
+          defaultView="months"
         />
       </div>
     </Container>

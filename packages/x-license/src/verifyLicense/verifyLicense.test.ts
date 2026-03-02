@@ -33,7 +33,9 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
             licenseKey,
             packageName: 'x-data-grid-pro',
           }).status,
-      ).to.throw('MUI X: The release information is invalid. Not able to validate license.');
+      ).to.throw(
+        'MUI X: The release information is invalid and license validation cannot proceed. The package release timestamp could not be parsed. This may indicate a corrupted package. Try reinstalling the MUI X packages.',
+      );
     });
 
     it('should verify License properly', () => {
@@ -105,7 +107,9 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
             licenseKey: licenseKeyPro,
             packageName: 'x-data-grid-pro',
           }).status,
-      ).to.throw('MUI X: The release information is invalid. Not able to validate license.');
+      ).to.throw(
+        'MUI X: The release information is invalid and license validation cannot proceed. The package release timestamp could not be parsed. This may indicate a corrupted package. Try reinstalling the MUI X packages.',
+      );
     });
 
     describe('scope', () => {

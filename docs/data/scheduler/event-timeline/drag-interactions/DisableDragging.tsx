@@ -18,6 +18,7 @@ export default function DisableDragging() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsDraggable={false}
+        defaultView="months"
       />
     </div>
   );
