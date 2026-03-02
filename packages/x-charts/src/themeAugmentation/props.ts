@@ -10,8 +10,6 @@ import { type PieChartProps } from '../PieChart/PieChart';
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models/axis';
 import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 import { type ChartsDataProviderProps } from '../ChartsDataProvider';
-import { type ChartsLayerContainerProps } from '../ChartsLayerContainer';
-import { type ChartsSvgLayerProps } from '../ChartsSvgLayer';
 
 export interface ChartsComponentsPropsList {
   MuiChartsXAxis: ChartsXAxisProps;

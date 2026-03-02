@@ -3,6 +3,7 @@ import type {
   ChartAnyPluginSignature,
   ChartInstance,
   ChartPublicAPI,
+  ChartSeriesConfig,
   ChartState,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
@@ -27,6 +28,14 @@ export type ChartsContextValue<
    * The internal state of the chart.
    */
   store: Store<ChartState<TSignatures, TOptionalSignatures>>;
+  /**
+   * The ref to the <svg />.
+   */
+  svgRef: React.RefObject<SVGSVGElement | null>;
+  /**
+   * The ref to the chart root element.
+   */
+  chartRootRef: React.RefObject<HTMLDivElement | null>;
 };
 
 export type ChartsPluginParams<
@@ -44,4 +53,9 @@ export interface ChartsProviderProps<
    */
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
   pluginParams?: ChartsPluginParams<TSeriesType, TSignatures>;
+  /**
+   * The configuration helpers used to compute attributes according to the series type.
+   * @ignore Unstable props for internal usage.
+   */
+  seriesConfig?: ChartSeriesConfig<TSeriesType>;
 }
