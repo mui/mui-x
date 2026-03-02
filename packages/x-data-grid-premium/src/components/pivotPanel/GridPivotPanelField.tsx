@@ -64,10 +64,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPivotPanelFieldRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelField',
-  overridesResolver: (props, styles) => [
-    { [`&.${gridClasses['pivotPanelField--sorted']}`]: styles['pivotPanelField--sorted'] },
-    styles.pivotPanelField,
-  ],
 })<{ ownerState: OwnerState }>({
   flexShrink: 0,
   position: 'relative',

@@ -118,6 +118,7 @@ const elementOverrides = {
     'pinnedRows',
     'pinnedRows--bottom',
     'pinnedRows--top',
+    'pivotPanelField--sorted',
     'row',
     'row--borderBottom',
     'row--detailPanelExpanded',
