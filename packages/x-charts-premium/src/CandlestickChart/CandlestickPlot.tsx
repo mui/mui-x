@@ -4,7 +4,6 @@ import {
   type ContinuousScaleName,
   useDrawingArea,
   useRegisterPointerInteractions,
-  useWebGLContext,
 } from '@mui/x-charts/internals';
 import { useXScale, useYScale } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
@@ -22,6 +21,7 @@ import { selectorCandlestickItemAtPosition } from '../plugins/selectors/useChart
 import { useCandlestickPlotData } from './useCandlestickPlotData';
 import { parseColor } from '../utils/webgl/parseColor';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
+import { useWebGLContext } from '../ChartsWebGlLayer/ChartsWebGlLayer';
 
 export interface CandlestickPlotProps {}
 
