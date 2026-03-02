@@ -23,23 +23,20 @@
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "width": { "type": { "name": "number" } }
   },
-  "name": "ChartDataProvider",
+  "name": "ChartsDataProvider",
   "imports": [
-    "import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';",
-    "import { ChartDataProvider } from '@mui/x-charts';",
-    "import { ChartDataProvider } from '@mui/x-charts-pro';",
-    "import { ChartDataProvider } from '@mui/x-charts-premium';"
+    "import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';",
+    "import { ChartsDataProvider } from '@mui/x-charts';",
+    "import { ChartsDataProvider } from '@mui/x-charts-pro';",
+    "import { ChartsDataProvider } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null }
   ],
   "classes": [],
-  "spread": false,
-  "themeDefaultProps": false,
-  "muiName": "MuiChartDataProvider",
-  "forwardsRefTo": "SVGSVGElement",
-  "filename": "/packages/x-charts/src/ChartDataProvider/ChartDataProvider.tsx",
+  "muiName": "MuiChartsDataProvider",
+  "filename": "/packages/x-charts/src/ChartsDataProvider/ChartsDataProvider.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li>\n<li><a href=\"/x/react-charts/localization/\">Charts - Localization</a></li>\n<li><a href=\"/x/react-charts/plugins/\">Charts - Plugins</a></li></ul>",
   "cssComponent": false
