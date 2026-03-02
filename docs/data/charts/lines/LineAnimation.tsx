@@ -52,6 +52,7 @@ export default function LineAnimation() {
             setSeries((prev) =>
               prev.map((item) => ({
                 ...item,
+                // eslint-disable-next-line no-restricted-properties -- interactive randomize button
                 data: item.data.map((v) => Math.max(0.5, v - 4 + 8 * Math.random())),
               })),
             )

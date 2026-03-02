@@ -35,7 +35,9 @@ describe('PressUserGesture', () => {
   it('should throw an error if no target is provided', async () => {
     // @ts-expect-error, testing a missing target
     const pressGesture = () => press(pointerManager, {});
-    await expect(pressGesture).rejects.toThrow('Target element is required for press gesture');
+    await expect(pressGesture).rejects.toThrow(
+      'MUI X: Target element is required for press gesture',
+    );
   });
 
   it('should perform a basic mouse press gesture with default duration', async () => {

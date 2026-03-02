@@ -31,10 +31,9 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
       });
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
-        [
-          `MUI X Charts: line series with id='${id}' has no data.`,
-          'Either provide a data property to the series or use the dataset prop.',
-        ].join('\n'),
+        `MUI X Charts: Line series with id="${id}" has no data. ` +
+          'The chart cannot render this series without data. ' +
+          'Provide a data property to the series or use the dataset prop.',
       );
     }
 
@@ -44,10 +43,9 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
 
         if (!dataKey) {
           throw new Error(
-            [
-              `MUI X Charts: line series with id='${id}' has no data and no dataKey.`,
-              'You must provide a dataKey when using the dataset prop.',
-            ].join('\n'),
+            `MUI X Charts: Line series with id="${id}" has no data and no dataKey. ` +
+              'When using the dataset prop, each series must have a dataKey to identify which dataset column to use. ' +
+              'Add a dataKey property to the series configuration.',
           );
         }
 
@@ -55,10 +53,8 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
           const value = entry[dataKey];
           if (value != null && typeof value !== 'number') {
             warnOnce(
-              [
-                `MUI X Charts: your dataset key "${dataKey}" is used for plotting lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.`,
-                'Line plots only support numeric and null values.',
-              ].join('\n'),
+              `MUI X Charts: your dataset key "${dataKey}" is used for plotting lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
+Line plots only support numeric and null values.`,
             );
           }
         });

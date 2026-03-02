@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { describeConformance } from 'test/utils/describeConformance';
+import { describeConformance } from 'test/utils/charts/describeConformance';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { screen } from '@mui/internal-test-utils';
 import * as React from 'react';
@@ -15,17 +15,6 @@ describe('<LineChart />', () => {
       muiName: 'MuiLineChart',
       testComponentPropWith: 'div',
       refInstanceof: window.HTMLDivElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'slotPropsProp',
-        'slotPropsCallback',
-        'slotsProp',
-        'themeStyleOverrides',
-        'themeVariants',
-        'themeCustomPalette',
-        'themeDefaultProps',
-      ],
     }),
   );
 

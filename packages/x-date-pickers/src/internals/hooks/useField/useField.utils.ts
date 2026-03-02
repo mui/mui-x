@@ -27,10 +27,8 @@ export const getDateSectionConfigFromFormatToken = (
 
   if (config == null) {
     throw new Error(
-      [
-        `MUI X: The token "${formatToken}" is not supported by the Date and Time Pickers.`,
-        'Please try using another token or open an issue on https://github.com/mui/mui-x/issues/new/choose if you think it should be supported.',
-      ].join('\n'),
+      `MUI X: The token "${formatToken}" is not supported by the Date and Time Pickers.
+Please try using another token or open an issue on https://github.com/mui/mui-x/issues/new/choose if you think it should be supported.`,
     );
   }
 
@@ -312,7 +310,7 @@ export const doesSectionFormatHaveLeadingZeros = (
     }
 
     default: {
-      throw new Error('Invalid section type');
+      throw new Error('MUI X:Invalid section type');
     }
   }
 };

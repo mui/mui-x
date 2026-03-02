@@ -247,13 +247,15 @@
       "key": "faded",
       "className": "MuiHeatmap-faded",
       "description": "Styles applied to the cell element if faded.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "highlighted",
       "className": "MuiHeatmap-highlighted",
       "description": "Styles applied to the cell element if highlighted.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "series",

@@ -84,6 +84,9 @@ const EventTimelinePremiumRoot = styled('div', {
   '--months-cell-width': '6px',
   '--years-cell-width': '200px',
   boxSizing: 'border-box',
+  '*, *::before, *::after': {
+    boxSizing: 'inherit',
+  },
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
