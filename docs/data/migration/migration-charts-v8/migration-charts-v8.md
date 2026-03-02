@@ -44,9 +44,9 @@ The `Chart` prefix has been renamed to `Charts` (with an S) to align with other 
 | `useChartContainerProProps()`          | `useChartsContainerProProps()`          |
 | `UseChartContainerProPropsReturnValue` | `UseChartsContainerProPropsReturnValue` |
 
-### CSS class deprecations (`.highlighted` / `.faded`)
+### CSS class deprecations (`highlighted` / `faded`)
 
-The `.highlighted` and `.faded` CSS state classes are deprecated across all chart element types.
+The highlighted and faded CSS state classes are deprecated across all chart element types.
 Use `[data-highlighted]` and `[data-faded]` attribute selectors instead.
 
 This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkElement`, `PieArc`, `PieArcLabel`, `RadarSeriesPlot`, `Heatmap`, and `FunnelSection`.
