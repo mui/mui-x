@@ -2,7 +2,7 @@ import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
 import * as fs from 'fs/promises';
-import { generateReleaseInfo } from '@mui/x-internals/generateReleaseInfo';
+import generateReleaseInfo from '../../scripts/generateReleaseInfo';
 import { alias } from '../../vitest.shared.mts';
 
 export default defineConfig({

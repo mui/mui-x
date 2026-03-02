@@ -7,8 +7,6 @@ import { LicenseModel, LICENSE_MODELS } from '../utils/licenseModel';
 import type { NullableLicenseDetails } from '../utils/licenseDetails';
 import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
-export { generateReleaseInfo } from '@mui/x-internals/generateReleaseInfo';
-
 function isPlanScopeSufficient(packageName: MuiCommercialPackageName, planScope: PlanScope) {
   let acceptedScopes: PlanScope[];
   if (packageName.includes('-pro')) {
