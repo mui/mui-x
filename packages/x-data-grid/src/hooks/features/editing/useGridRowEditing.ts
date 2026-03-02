@@ -818,6 +818,7 @@ export const useGridRowEditing = (
         if (row) {
           updateStateToStopRowEditMode({ id: originalId, ...params });
         } else {
+          updateRowInRowModesModel(id, null);
           updateOrDeleteRowState(id, null);
           delete prevRowValuesLookup.current[id];
         }
