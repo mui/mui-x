@@ -25,6 +25,61 @@ This will help you resolve deprecation warnings at your own pace, reducing the n
 Below is a list of deprecated APIs and their replacements.
 Items marked with ✅ are handled by the [codemod](#run-codemods).
 
+### Component and type renames (Chart → Charts) ✅
+
+The `Chart` prefix has been renamed to `Charts` (with an S) to align with other components.
+
+| Deprecated                             | Replacement                             |
+| :------------------------------------- | :-------------------------------------- |
+| `ChartContainer`                       | `ChartsContainer`                       |
+| `ChartContainerProps`                  | `ChartsContainerProps`                  |
+| `ChartContainerSlots`                  | `ChartsContainerSlots`                  |
+| `ChartContainerSlotProps`              | `ChartsContainerSlotProps`              |
+| `useChartContainerProps()`             | `useChartsContainerProps()`             |
+| `UseChartContainerPropsReturnValue`    | `UseChartsContainerPropsReturnValue`    |
+| `ChartContainerPro`                    | `ChartsContainerPro`                    |
+| `ChartContainerProProps`               | `ChartsContainerProProps`               |
+| `ChartContainerProSlots`               | `ChartsContainerProSlots`               |
+| `ChartContainerProSlotProps`           | `ChartsContainerProSlotProps`           |
+| `useChartContainerProProps()`          | `useChartsContainerProProps()`          |
+| `UseChartContainerProPropsReturnValue` | `UseChartsContainerProPropsReturnValue` |
+
+### CSS class deprecations (`.highlighted` / `.faded`)
+
+The `.highlighted` and `.faded` CSS state classes are deprecated across all chart element types.
+Use `[data-highlighted]` and `[data-faded]` attribute selectors instead.
+
+This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkElement`, `PieArc`, `PieArcLabel`, `RadarSeriesPlot`, `Heatmap`, and `FunnelSection`.
+
+```diff
+-`.MuiBarElement-root.MuiBarElement-highlighted`
++`.MuiBarElement-root[data-highlighted]`
+
+-`.MuiBarElement-root.MuiBarElement-faded`
++`.MuiBarElement-root[data-faded]`
+```
+
+### Unstable exports are now stable
+
+- `Unstable_RadarChart` → `RadarChart`
+- `Unstable_RadarDataProvider` → `RadarDataProvider`
+- `Unstable_FunnelChart` → `FunnelChart`
+<!-- - `Unstable_SankeyChart` → `SankeyChart` -->
+
+### Props
+
+- The `barLabel` prop on `BarPlot` and `BarChartPro` is deprecated. Use `barLabel` in the series definition instead.
+- The `message` prop on `ChartsOverlay` is deprecated. Use the [localization](/x/react-charts/localization/) keys `loading` and `noData` instead.
+- The `disableHover` prop on scatter series is deprecated. Disable the highlight or the tooltip separately instead.
+- The `onAxisClick` prop on `Heatmap` is deprecated. Use `onItemClick` instead.
+- The `components` and `componentsProps` props on `ChartsTooltip`, `HeatmapTooltip`, and `SankeyTooltip` are deprecated. Use `slots` and `slotProps` instead.
+
+### Other
+
+- The `useMouseTracker()` hook is deprecated. Use vanilla JS to track the mouse position instead.
+- The `itemId` property in `SeriesLegendItemContext` is deprecated. Use `dataIndex` instead.
+- The `innerRadius` and `outerRadius` params in `useAnimatePieArcLabel` are deprecated. Use `arcLabelRadius` instead.
+
 ## Start using the new release
 
 In `package.json`, change the version of the charts package to `latest`.
