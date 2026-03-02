@@ -330,6 +330,7 @@ Use `ChartsLayerContainer`, `ChartsSvgLayer` and `ChartsWebGlLayer` to create mu
 This is useful for managing the vertical stacking of alternating SVG and WebGL elements.
 
 In the example below, we create three layers:
+
 1. An SVG layer that displays the chart's grid;
 2. A WebGL layer for rendering with `CandlestickPlot`;
 3. An SVG layer that renders the axes and crosshair
