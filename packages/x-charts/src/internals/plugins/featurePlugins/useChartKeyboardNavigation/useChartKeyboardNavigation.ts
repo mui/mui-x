@@ -8,6 +8,7 @@ import type { ChartPlugin } from '../../models';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { FocusedItemUpdater } from './keyboardFocusHandler.types';
+import type { FocusedItemIdentifier } from '../../../../models';
 
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
   params,
@@ -94,7 +95,20 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
   }, [store, params.enableKeyboardNavigation]);
 
-  return {};
+  const getFocusedValues = useEventCallback(
+    <SeriesType extends ChartSeriesType>(itemParams?: FocusedItemIdentifier<SeriesType>) => {
+      const item = itemParams;
+
+      if (item == null) {
+        return null;
+      }
+
+      const seriesConfig = selectorChartSeriesConfig(store.state);
+
+      return seriesConfig[item.type].getFocusedValues?.(item, store.state) ?? null;
+    },
+  );
+  return { instance: { getFocusedValues } };
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({
