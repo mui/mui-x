@@ -8,7 +8,8 @@ import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
-import generateReleaseInfo from '../scripts/generateReleaseInfo';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../scripts/generateReleaseInfo.mjs';
 
 declare global {
   interface MUIEnv {

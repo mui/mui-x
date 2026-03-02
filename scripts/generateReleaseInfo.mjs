@@ -3,7 +3,7 @@
  * Used by babel.config.mjs, next.config.ts, and Vite configs to replace
  * the __RELEASE_INFO__ placeholder in packages at build time.
  */
-module.exports = function generateReleaseInfo(releaseDate) {
+export default function generateReleaseInfo(releaseDate) {
   const date =
     releaseDate ??
     (() => {
@@ -12,4 +12,4 @@ module.exports = function generateReleaseInfo(releaseDate) {
       return today;
     })();
   return btoa(date.getTime().toString());
-};
+}
