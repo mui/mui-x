@@ -25,12 +25,12 @@ import {
 } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { ChartsWebGlLayer } from '@mui/x-charts/ChartsWebGlLayer';
 import {
   ChartsToolbarPro,
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
+import { ChartsWebGlLayer } from '../ChartsWebGlLayer';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type OHLCSeriesType } from '../models';
 import { type CandlestickChartPluginSignatures } from './CandlestickChart.plugins';
