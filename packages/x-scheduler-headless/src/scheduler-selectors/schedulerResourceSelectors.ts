@@ -18,6 +18,31 @@ const resourceParentIdLookupSelector = createSelectorMemoized(
   },
 );
 
+/**
+ * Walks the resource hierarchy (child → parent → …) and returns the first
+ * defined value found by `getValue`, or `fallback` if none is found.
+ */
+export function resolveResourceProperty<T>(
+  state: State,
+  resourceId: string | null | undefined,
+  getValue: (resource: SchedulerResource) => T | undefined,
+  fallback: T,
+): T {
+  const parentLookup = resourceParentIdLookupSelector(state);
+  let currentId = resourceId ?? null;
+  while (currentId != null) {
+    const resource = state.processedResourceLookup.get(currentId);
+    if (resource != null) {
+      const value = getValue(resource);
+      if (value !== undefined) {
+        return value;
+      }
+    }
+    currentId = parentLookup.get(currentId) ?? null;
+  }
+  return fallback;
+}
+
 export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
@@ -124,6 +149,8 @@ export const schedulerResourceSelectors = {
   ),
   /**
    * Gets the default event color used when no color is specified on the event.
+   * Walks the resource hierarchy (child → parent → …) until a color is found,
+   * falling back to the component-level default.
    */
   defaultEventColor: createSelector(
     (state: State, resourceId: SchedulerResourceId | null | undefined) => {
@@ -131,7 +158,7 @@ export const schedulerResourceSelectors = {
         return state.eventColor;
       }
 
-      return state.processedResourceLookup.get(resourceId)?.eventColor ?? state.eventColor;
+      return resolveResourceProperty(state, resourceId, (r) => r.eventColor, state.eventColor);
     },
   ),
 };
