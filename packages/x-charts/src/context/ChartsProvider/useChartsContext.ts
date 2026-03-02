@@ -14,7 +14,7 @@ export const useChartsContext = <
   >;
   if (context == null) {
     throw new Error(
-      'MUI X Charts: Could not find the Chart context. ' +
+      'MUI X Charts: Could not find the Charts context. ' +
         'This happens when the component is rendered outside of a ChartsDataProvider or ChartsContainer parent component, ' +
         'which means the required context is not available. ' +
         'Wrap your component in a ChartsDataProvider or ChartsContainer. ' +

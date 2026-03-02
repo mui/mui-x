@@ -35,7 +35,7 @@ describe('useChartsLayerContainerRef', () => {
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(
-      'MUI X Charts: Could not find the Chart context. ',
+      'MUI X Charts: Could not find the Charts context. ',
     );
   });
 

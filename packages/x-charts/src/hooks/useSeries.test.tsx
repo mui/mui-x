@@ -18,7 +18,7 @@ describe('useSeries', () => {
   it.skipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
-    const errorMessage1 = `MUI X Charts: Could not find the Chart context. This happens when the component is rendered outside of a ChartsDataProvider or ChartsContainer parent component, which means the required context is not available. Wrap your component in a ChartsDataProvider or ChartsContainer. This can also happen if you are bundling multiple versions of the library.`;
+    const errorMessage1 = `MUI X Charts: Could not find the Charts context. This happens when the component is rendered outside of a ChartsDataProvider or ChartsContainer parent component, which means the required context is not available. Wrap your component in a ChartsDataProvider or ChartsContainer. This can also happen if you are bundling multiple versions of the library.`;
     const errorMessage2 = 'The above error occurred in the <UseSeries> component';
     const expectedError = reactMajor < 19 ? [errorMessage2] : [errorMessage1];
 
