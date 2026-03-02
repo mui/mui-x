@@ -154,6 +154,27 @@ jobs:
     steps:
       - checkout
       - install-deps
+      - run:
+          name: Resolve base branch
+          command: |
+            BASE_BRANCH="master"
+            if [[ -n "${CIRCLE_PULL_REQUEST}" ]]; then
+              PR_NUMBER="${CIRCLE_PULL_REQUEST##*/}"
+              REPO_SLUG="${CIRCLE_PULL_REQUEST#https://github.com/}"
+              REPO_SLUG="${REPO_SLUG%/pull/*}"
+              FETCHED_BASE=$(curl -sf "https://api.github.com/repos/${REPO_SLUG}/pulls/${PR_NUMBER}" | jq -r '.base.ref // empty')
+              if [[ -n "${FETCHED_BASE}" ]]; then
+                BASE_BRANCH="${FETCHED_BASE}"
+              fi
+            fi
+            echo "Resolved base branch: ${BASE_BRANCH}"
+            git fetch origin "${BASE_BRANCH}" --depth 1
+            if [[ $(git diff --name-status "${BASE_BRANCH:-master}" | grep -E 'pnpm-workspace\.yaml|pnpm-lock.yaml|package\.json') == "" ]];
+            then
+              echo "No changes to dependencies detected. Skipping..."
+            else
+              pnpm dedupe --check
+            fi
       - code-infra/check-static-changes
       - run:
           name: Generate PropTypes
