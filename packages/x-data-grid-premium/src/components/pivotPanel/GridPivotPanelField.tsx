@@ -3,7 +3,6 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
-  gridClasses,
   type GridColDef,
   GridMenu,
   type GridSlotProps,
