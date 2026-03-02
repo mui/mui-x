@@ -1,6 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useChartPolarAxis } from './useChartPolarAxis';
 
@@ -17,7 +17,7 @@ describe('useChartPolarAxis', () => {
 
     expect(() =>
       render(
-        <ChartDataProvider<'radar', [UseChartPolarAxisSignature]>
+        <ChartsDataProvider<'radar', [UseChartPolarAxisSignature]>
           rotationAxis={[
             { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] },
             { scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] },
@@ -42,7 +42,7 @@ describe('useChartPolarAxis', () => {
 
       expect(() =>
         render(
-          <ChartDataProvider<'radar', [UseChartPolarAxisSignature]>
+          <ChartsDataProvider<'radar', [UseChartPolarAxisSignature]>
             rotationAxis={[{ scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] }]}
             radiusAxis={[{ id: 'qwerty' }]}
             height={100}

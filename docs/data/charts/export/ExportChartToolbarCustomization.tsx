@@ -20,7 +20,7 @@ const gdpPerCapitaFormatter = new Intl.NumberFormat('en-US', {
 
 const series = continents.map(
   (continent) =>
-    (({
+    ({
       label: continent,
 
       data: populationGdpPerCapitaData[continent].map((p) => ({
@@ -36,7 +36,7 @@ const series = continents.map(
         highlight: 'item',
         fade: 'global',
       },
-    }) as const),
+    }) as const,
 );
 
 const fileName = 'Population_vs_GDP_Per_Capita_USD_2019';
