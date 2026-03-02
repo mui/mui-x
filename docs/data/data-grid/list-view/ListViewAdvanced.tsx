@@ -242,6 +242,7 @@ export default function ListViewAdvanced({ window }: Props) {
       apiRef.current?.updateRows([row]);
 
       // Simulate server response time
+      // eslint-disable-next-line no-restricted-properties -- not visible in UI
       const timeout = Math.floor(Math.random() * 3000) + 2000;
       setTimeout(() => {
         const uploadedRow: RowModel = { ...row, state: 'uploaded' };

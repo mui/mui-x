@@ -16,8 +16,8 @@ describe.runIf(isJSDOM)('Telemetry: getTelemetryConfig', () => {
     getTelemetryEnvConfig(true);
   });
 
-  it('should be disabled by default', () => {
-    expect(getTelemetryEnvConfig(true).IS_COLLECTING).not.equal(true);
+  it('should be enabled by default', () => {
+    expect(getTelemetryEnvConfig(true).IS_COLLECTING).not.equal(false);
   });
 
   function testConfigWithDisabledEnv(envKey: string) {
