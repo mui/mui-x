@@ -11,3 +11,4 @@ export { defaultSlotsMaterial } from './material';
 export * from '../Heatmap/HeatmapSVGPlot';
 export type * from '../Heatmap/Heatmap.types';
 export { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';
+export * from './ChartsWatermark'
