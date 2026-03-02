@@ -38,7 +38,7 @@ import { CandlestickPlot, type CandlestickPlotProps } from './CandlestickPlot';
 import { useCandlestickChartProps } from './useCandlestickChartProps';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
 import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
-import { type CandlestickTooltipProps } from './CandlestickTooltip';
+import { CandlestickTooltip, type CandlestickTooltipProps } from './CandlestickTooltip';
 
 export interface CandlestickChartSlots
   extends ChartsAxisSlots, ChartsOverlaySlots, ChartsToolbarProSlots, Partial<ChartsSlots> {
@@ -132,7 +132,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
     ref,
   );
 
-  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Tooltip = props.slots?.tooltip ?? CandlestickTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
@@ -159,7 +159,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
         {!props.loading && (
           <Tooltip
             // TODO: Do we want trigger item to be the default?
-            trigger="item"
+            trigger="axis"
             {...props.slotProps?.tooltip}
           />
         )}
