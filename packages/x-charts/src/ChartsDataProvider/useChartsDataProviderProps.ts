@@ -34,9 +34,9 @@ export const useChartsDataProviderProps = <
 
   const chartProviderProps: ChartsProviderProps<TSeries, TSignatures> = {
     plugins: plugins as ChartsProviderProps<TSeries, TSignatures>['plugins'],
+    seriesConfig,
     pluginParams: {
       theme: theme.palette.mode,
-      seriesConfig,
       ...other,
     } as unknown as MergeSignaturesProperty<
       [...ChartCorePluginSignatures, ...TSignatures],
