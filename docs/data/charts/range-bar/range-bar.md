@@ -1,7 +1,7 @@
 ---
 title: React Range Bar chart
 productId: x-charts
-components: BarChartPremium, RangeBarPlot, ChartsDataProviderPremium, ChartsContainerPremium, FocusedRangeBar
+components: BarChartPremium, RangeBarPlot, ChartsDataProviderPremium, ChartsContainerPremium
 ---
 
 # Charts - Range Bar [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
