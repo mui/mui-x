@@ -161,6 +161,12 @@ export const useGridDataSourceLazyLoader = (
       renderedRowsIntervalCache.current.firstRowToRender === 0 &&
       renderedRowsIntervalCache.current.lastRowToRender === 0;
 
+    const skeletonRowNode: GridSkeletonRowNode = {
+      type: 'skeletonRow',
+      parent: GRID_ROOT_GROUP_ID,
+      depth: 0,
+      id: '',
+    };
     for (let i = 0; i < rootChildrenCount; i += 1) {
       if (isInitialPage) {
         break;
@@ -175,13 +181,7 @@ export const useGridDataSourceLazyLoader = (
       }
 
       const rowId = tree[rootGroupChildren[i]].id; // keep the id, so that row related state is maintained
-      const skeletonRowNode: GridSkeletonRowNode = {
-        type: 'skeletonRow',
-        id: rowId,
-        parent: GRID_ROOT_GROUP_ID,
-        depth: 0,
-      };
-
+      skeletonRowNode.id = rowId;
       tree[rowId] = skeletonRowNode;
       hasChanged = true;
     }
@@ -193,12 +193,7 @@ export const useGridDataSourceLazyLoader = (
         const skeletonId = getSkeletonRowId(i + rootChildrenCount); // to avoid duplicate keys on rebuild
         rootGroupChildren.push(skeletonId);
 
-        const skeletonRowNode: GridSkeletonRowNode = {
-          type: 'skeletonRow',
-          id: skeletonId,
-          parent: GRID_ROOT_GROUP_ID,
-          depth: 0,
-        };
+        skeletonRowNode.id = skeletonId;
 
         tree[skeletonId] = skeletonRowNode;
         hasChanged = true;

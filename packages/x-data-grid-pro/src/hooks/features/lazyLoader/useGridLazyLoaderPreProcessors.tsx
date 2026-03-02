@@ -28,17 +28,19 @@ export const useGridLazyLoaderPreProcessors = (
       const tree = { ...groupingParams.tree };
       const rootGroupChildren = [...rootGroup.children];
 
+      const skeletonRowNode: GridSkeletonRowNode = {
+        type: 'skeletonRow',
+        parent: GRID_ROOT_GROUP_ID,
+        depth: 0,
+        id: '',
+      };
+
       for (let i = 0; i < props.rowCount - rootGroup.children.length; i += 1) {
         const skeletonId = getSkeletonRowId(i);
 
         rootGroupChildren.push(skeletonId);
 
-        const skeletonRowNode: GridSkeletonRowNode = {
-          type: 'skeletonRow',
-          id: skeletonId,
-          parent: GRID_ROOT_GROUP_ID,
-          depth: 0,
-        };
+        skeletonRowNode.id = skeletonId;
 
         tree[skeletonId] = skeletonRowNode;
       }

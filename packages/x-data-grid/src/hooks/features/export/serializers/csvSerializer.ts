@@ -184,11 +184,11 @@ export function buildCSV(options: BuildCSVOptions): string {
       return acc;
     }, {});
 
+    const headerGroupRow = new CSVRow({
+      csvOptions,
+      sanitizeCellValue,
+    });
     for (let i = 0; i < maxColumnGroupsDepth; i += 1) {
-      const headerGroupRow = new CSVRow({
-        csvOptions,
-        sanitizeCellValue,
-      });
       headerRows.push(headerGroupRow);
       filteredColumns.forEach((column) => {
         const columnGroupId = (columnGroupPathsLookup[column.field] || [])[i];
