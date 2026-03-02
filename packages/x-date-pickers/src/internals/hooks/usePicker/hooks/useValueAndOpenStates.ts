@@ -119,6 +119,14 @@ export function useValueAndOpenStates<
     }
   });
 
+  const isCompleteRange = (val: unknown): boolean => {
+    if (Array.isArray(val) && val.length === 2) {
+      const [start, end] = val as [unknown, unknown];
+      return start != null && end != null;
+    }
+    return true;
+  };
+
   const setValue = useEventCallback((newValue: TValue, options?: SetValueActionOptions<TError>) => {
     const {
       changeImportance = 'accept',
@@ -135,11 +143,12 @@ export function useValueAndOpenStates<
       // If the value is not controlled and the value has never been modified before,
       // Then clicking on any value (including the one equal to `defaultValue`) should call `onChange` and `onAccept`
       shouldFireOnChange = true;
-      shouldFireOnAccept = changeImportance === 'accept';
+      shouldFireOnAccept = changeImportance === 'accept' && isCompleteRange(newValue);
     } else {
       shouldFireOnChange = !valueManager.areValuesEqual(adapter, newValue, value);
       shouldFireOnAccept =
         changeImportance === 'accept' &&
+        isCompleteRange(newValue) &&
         !valueManager.areValuesEqual(adapter, newValue, state.lastCommittedValue);
     }
 
