@@ -25,9 +25,7 @@ const GridAggregationHeaderRoot = styled('div', {
     const { ownerState } = props;
     return [
       styles.aggregationColumnHeader,
-      ownerState.colDef.headerAlign === 'left' && styles['aggregationColumnHeader--alignLeft'],
-      ownerState.colDef.headerAlign === 'center' && styles['aggregationColumnHeader--alignCenter'],
-      ownerState.colDef.headerAlign === 'right' && styles['aggregationColumnHeader--alignRight'],
+      styles[`aggregationColumnHeader-${ownerState.colDef.headerAlign}`],
     ];
   },
 })<{ ownerState: OwnerState }>({
@@ -55,12 +53,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, colDef } = ownerState;
 
   const slots = {
-    root: [
-      'aggregationColumnHeader',
-      colDef.headerAlign === 'left' && 'aggregationColumnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'aggregationColumnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'aggregationColumnHeader--alignRight',
-    ],
+    root: ['aggregationColumnHeader', `aggregationColumnHeader-${colDef.headerAlign}`],
     aggregationLabel: ['aggregationColumnHeaderLabel'],
   };
 

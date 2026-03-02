@@ -63,9 +63,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'columnHeader',
-      headerAlign === 'left' && 'columnHeader--alignLeft',
-      headerAlign === 'center' && 'columnHeader--alignCenter',
-      headerAlign === 'right' && 'columnHeader--alignRight',
+      `columnHeader-${headerAlign}`,
       isDragging && 'columnHeader--moving',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
