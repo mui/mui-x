@@ -15,7 +15,9 @@ export function useEventCalendarStyledContext(): EventCalendarStyledContextValue
   const value = React.useContext(EventCalendarStyledContext);
   if (!value) {
     throw new Error(
-      'MUI X: useEventCalendarStyledContext must be used within EventCalendarStyledContext.Provider',
+      'MUI X Scheduler: useEventCalendarStyledContext must be used within an EventCalendarStyledContext.Provider. ' +
+        'The component requires access to calendar styling and locale information. ' +
+        'Ensure the component is rendered inside an EventCalendar component.',
     );
   }
   return value;
