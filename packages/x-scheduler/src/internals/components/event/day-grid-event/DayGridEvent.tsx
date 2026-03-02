@@ -399,7 +399,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
-      data-draggable={isDraggable || undefined}
       {...sharedProps}
       className={clsx(classes.dayGridEvent, sharedProps.className)}
     >

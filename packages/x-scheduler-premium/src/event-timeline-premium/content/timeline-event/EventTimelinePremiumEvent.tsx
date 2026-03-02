@@ -167,7 +167,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
-      data-draggable={isDraggable || undefined}
       {...sharedProps}
       className={clsx(sharedProps.className, classes.event)}
     >

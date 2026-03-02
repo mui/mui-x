@@ -277,7 +277,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       <TimeGridEventPlaceholder
         aria-hidden={true}
         data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-        data-draggable={isDraggable || undefined}
         data-recurrent={isRecurring || undefined}
         data-under-fifteen-minutes={isLessThan15Minutes || undefined}
         data-palette={color}
@@ -296,7 +295,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-      data-draggable={isDraggable || undefined}
       data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
       data-palette={color}

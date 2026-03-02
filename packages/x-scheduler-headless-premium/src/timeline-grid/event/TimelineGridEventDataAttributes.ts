@@ -8,6 +8,10 @@ export enum TimelineGridEventDataAttributes {
    */
   ended = 'data-ended',
   /**
+   * Present when the event can be dragged.
+   */
+  draggable = 'data-draggable',
+  /**
    * Present when the event is being dragged.
    */
   dragging = 'data-dragging',
