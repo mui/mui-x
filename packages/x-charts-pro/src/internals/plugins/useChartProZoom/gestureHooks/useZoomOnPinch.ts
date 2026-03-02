@@ -25,7 +25,7 @@ export const useZoomOnPinch = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const { svgRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const drawingArea = store.use(selectorChartDrawingArea);
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const config = store.use(selectorZoomInteractionConfig, 'pinch' as const);
@@ -44,7 +44,7 @@ export const useZoomOnPinch = (
 
   // Zoom on pinch
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null || !isZoomOnPinchEnabled) {
       return () => {};
     }
@@ -92,7 +92,7 @@ export const useZoomOnPinch = (
       rafThrottledCallback.clear();
     };
   }, [
-    svgRef,
+    chartsLayerContainerRef,
     drawingArea,
     isZoomOnPinchEnabled,
     optionsLookup,

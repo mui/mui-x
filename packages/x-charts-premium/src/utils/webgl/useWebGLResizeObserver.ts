@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useWebGLContext } from '@mui/x-charts/internals';
+import { useWebGLContext } from '../../ChartsWebGlLayer/ChartsWebGlLayer';
 
 function getDevicePixelContentBoxSize(entry: ResizeObserverEntry) {
   // Safari does not support devicePixelContentBoxSize
