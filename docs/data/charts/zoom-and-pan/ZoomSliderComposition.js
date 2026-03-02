@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { LinePlot } from '@mui/x-charts/LineChart';
-import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
+import { ChartsContainerPro } from '@mui/x-charts-pro/ChartsContainerPro';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { Chance } from 'chance';
@@ -21,7 +21,7 @@ export default function ZoomSliderComposition() {
   const clipPathId = React.useId();
 
   return (
-    <ChartContainerPro
+    <ChartsContainerPro
       series={[
         { type: 'line', data: firstSeriesData },
         { type: 'line', data: secondSeriesData },
@@ -44,6 +44,6 @@ export default function ZoomSliderComposition() {
       <ChartsXAxis label="X axis" axisId="x-axis-id" />
       <ChartZoomSlider />
       <ChartsClipPath id={clipPathId} />
-    </ChartContainerPro>
+    </ChartsContainerPro>
   );
 }

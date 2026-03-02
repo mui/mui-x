@@ -20,7 +20,7 @@ import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { seriesPreviewPlotMap, useChartContainerProProps } from '@mui/x-charts-pro/internals';
+import { seriesPreviewPlotMap, useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
@@ -108,7 +108,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
     children,
   } = useBarChartPremiumProps(other);
 
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'bar' | 'rangeBar',
     BarChartPremiumPluginSignatures
   >({

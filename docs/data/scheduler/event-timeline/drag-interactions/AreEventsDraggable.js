@@ -18,6 +18,7 @@ export default function AreEventsDraggable() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsDraggable
+        defaultView="months"
       />
     </div>
   );

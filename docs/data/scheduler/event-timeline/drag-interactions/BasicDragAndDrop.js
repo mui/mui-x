@@ -19,6 +19,7 @@ export default function BasicDragAndDrop() {
         onEventsChange={setEvents}
         areEventsDraggable
         areEventsResizable
+        defaultView="months"
       />
     </div>
   );

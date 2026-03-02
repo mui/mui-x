@@ -23,10 +23,7 @@ import { MiniCalendar } from './mini-calendar';
 import { schedulerTokens } from '../internals/utils/tokens';
 import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
-export interface EventCalendarRootProps extends Omit<
-  React.HTMLAttributes<HTMLDivElement>,
-  'children'
-> {
+export interface EventCalendarRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -107,7 +104,7 @@ const EventCalendarContent = styled('section', {
  */
 export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarRootProps>(
   function EventCalendarRoot(props, forwardedRef) {
-    const { className, ...other } = props;
+    const { children, className, ...other } = props;
 
     const store = useEventCalendarStoreContext();
     const { classes } = useEventCalendarStyledContext();
@@ -163,6 +160,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
           </EventCalendarContent>
         </EventCalendarMainPanel>
         <ErrorContainer />
+        {children}
       </EventCalendarRootStyled>
     );
   },

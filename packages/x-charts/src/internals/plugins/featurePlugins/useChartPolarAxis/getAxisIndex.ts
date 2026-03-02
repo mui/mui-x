@@ -10,7 +10,10 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
   const { scale, data: axisData, reverse } = axisConfig;
 
   if (!isOrdinalScale(scale)) {
-    throw new Error('MUI X Charts: getAxisValue is not implemented for polare continuous axes.');
+    throw new Error(
+      'MUI X Charts: getAxisValue is not implemented for polar continuous axes. ' +
+        'This function only supports ordinal (band/point) scales.',
+    );
   }
 
   if (!axisData) {
