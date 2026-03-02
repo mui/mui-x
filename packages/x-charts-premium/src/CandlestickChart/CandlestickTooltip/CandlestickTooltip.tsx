@@ -7,7 +7,7 @@ export function CandlestickTooltip(props: CandlestickTooltipProps) {
   const classes = useUtilityClasses({ classes: props.classes });
 
   return (
-    <ChartsTooltipContainer trigger="item" {...props} classes={classes}>
+    <ChartsTooltipContainer trigger="axis" {...props} classes={classes}>
       <CandlestickTooltipContent classes={classes} />
     </ChartsTooltipContainer>
   );

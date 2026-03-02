@@ -27,7 +27,7 @@ const tooltipGetter: TooltipGetter<'ohlc'> = (params) => {
 };
 
 export const axisTooltipGetter: AxisTooltipGetter<'ohlc', 'x' | 'y'> = (series) => {
-  return Object.values(series).map((s) => ({ direction: 'y', axisId: s.yAxisId }));
+  return Object.values(series).map((s) => ({ direction: 'x', axisId: s.yAxisId }));
 };
 
 export default tooltipGetter;
