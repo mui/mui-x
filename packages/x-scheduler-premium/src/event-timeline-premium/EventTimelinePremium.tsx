@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useExtractEventTimelinePremiumParameters,
@@ -22,6 +23,9 @@ import {
   getEventTimelinePremiumUtilityClass,
 } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
+
+const releaseInfo = '__RELEASE_INFO__';
+const watermark = <Watermark packageName="x-scheduler-premium" releaseInfo={releaseInfo} />;
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
@@ -107,6 +111,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   // We don't want the plan suffix in the theme, otherwise we couldn't share the theme entry across packages
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
+  useLicenseVerifier('x-scheduler-premium', releaseInfo);
 
   const {
     parameters,
@@ -143,6 +148,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
             {...other}
           >
             <EventTimelinePremiumContent />
+            {watermark}
           </EventTimelinePremiumRoot>
         </EventDialogStyledContext.Provider>
       </EventTimelinePremiumStyledContext.Provider>
