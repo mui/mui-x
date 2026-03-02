@@ -36,7 +36,9 @@ describe('RotateUserGesture', () => {
   it('should throw an error if no target is provided', async () => {
     // @ts-expect-error, testing a missing target
     const rotateGesture = () => rotate(pointerManager, {});
-    await expect(rotateGesture).rejects.toThrow('Target element is required for rotate gesture');
+    await expect(rotateGesture).rejects.toThrow(
+      'MUI X: Target element is required for rotate gesture',
+    );
   });
 
   it('should throw an error if less than 2 pointers are available', async () => {
@@ -46,7 +48,9 @@ describe('RotateUserGesture', () => {
     };
 
     const rotateGesture = () => rotate(pointerManager, options);
-    await expect(rotateGesture).rejects.toThrow('Rotate gesture requires at least 2 pointers');
+    await expect(rotateGesture).rejects.toThrow(
+      'MUI X: Rotate gesture requires at least 2 pointers',
+    );
   });
 
   it('should perform a basic rotation with default options', async () => {

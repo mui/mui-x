@@ -31,13 +31,15 @@
       "key": "faded",
       "className": "MuiMarkElement-faded",
       "description": "Styles applied to the root element when faded.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "highlighted",
       "className": "MuiMarkElement-highlighted",
       "description": "Styles applied to the root element when highlighted.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "root",

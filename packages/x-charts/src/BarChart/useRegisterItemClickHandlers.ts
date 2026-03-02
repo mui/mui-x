@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { type BarItemIdentifier } from '../models/seriesType';
-import { useSvgRef } from '../hooks/useSvgRef';
+import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
 import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
@@ -22,11 +22,11 @@ export function useRegisterItemClickHandlers(
     useChartContext<
       [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
     >();
-  const svgRef = useSvgRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
     if (!element || !onItemClick) {
       return undefined;
@@ -85,5 +85,5 @@ export function useRegisterItemClickHandlers(
       element.removeEventListener('click', onClick);
       element.removeEventListener('pointerup', onPointerUp);
     };
-  }, [instance, onItemClick, store, svgRef]);
+  }, [instance, onItemClick, store, chartsLayerContainerRef]);
 }

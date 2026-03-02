@@ -164,7 +164,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiRadarChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/RadarChart/RadarChart.tsx",

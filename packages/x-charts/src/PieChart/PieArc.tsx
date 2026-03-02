@@ -14,9 +14,15 @@ import { type SeriesId } from '../models';
 export interface PieArcClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when highlighted. */
+  /**
+   * Styles applied to the root element when highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element when faded. */
+  /**
+   * Styles applied to the root element when faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
@@ -155,14 +161,14 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
-      fill={ownerState.color}
-      opacity={ownerState.isFaded ? 0.3 : 1}
-      filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+      fill={color}
+      opacity={isFaded ? 0.3 : 1}
+      filter={isHighlighted ? 'brightness(120%)' : 'none'}
       stroke={stroke}
       strokeWidth={1}
       strokeLinejoin="round"
-      data-highlighted={ownerState.isHighlighted || undefined}
-      data-faded={ownerState.isFaded || undefined}
+      data-highlighted={isHighlighted || undefined}
+      data-faded={isFaded || undefined}
       {...other}
       {...interactionProps}
       {...animatedProps}

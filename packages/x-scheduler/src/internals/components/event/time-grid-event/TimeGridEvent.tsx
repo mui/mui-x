@@ -40,7 +40,6 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   padding: theme.spacing(0.5, 1, 0.5, 1),
   display: 'flex',
   flexDirection: 'column',
-  boxSizing: 'border-box',
   gap: theme.spacing(0.25),
   justifyContent: 'flex-start',
   alignContent: 'flex-start',
