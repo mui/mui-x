@@ -76,7 +76,7 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 
 ### Other
 
-- The `useMouseTracker()` hook is deprecated. Use vanilla JS to track the mouse position instead.
+- The `useMouseTracker()` hook is deprecated. Use vanilla JavaScript to track the mouse position instead.
 - The `itemId` property in `SeriesLegendItemContext` is deprecated. Use `dataIndex` instead.
 - The `innerRadius` and `outerRadius` params in `useAnimatePieArcLabel` are deprecated. Use `arcLabelRadius` instead.
 
