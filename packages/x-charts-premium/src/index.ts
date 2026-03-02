@@ -60,4 +60,4 @@ export * from './ChartsContainerPremium';
 export * from './ChartContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';
-export * from './ChartsWebGlLayer';
+export * from './ChartsWebGLLayer';

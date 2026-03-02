@@ -109,7 +109,7 @@ export default chartsApiPages;
       'x-charts-premium/src/HeatmapPremium/HeatmapPlotPremium.tsx',
       'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLPlot.tsx',
       'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLRenderer.tsx',
-      'x-charts-premium/src/ChartsWebGlLayer/ChartsWebGlLayer.tsx',
+      'x-charts-premium/src/ChartsWebGLLayer/ChartsWebGLLayer.tsx',
       'x-charts/src/ChartsLayerContainer/ChartsLayerContainer.tsx',
       'x-charts/src/ChartsSvgLayer/ChartsSvgLayer.tsx',
       'x-charts/src/ChartContainer/ChartContainer.tsx',
