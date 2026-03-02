@@ -175,14 +175,14 @@ The example below uses the `renderer` prop to improve performance when rendering
 
 ## Composition
 
-Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+Use the `<ChartsDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<ScatterPlot />` component that renders the scatter marks.
 
 Here's how the Scatter Chart is composed:
 
 ```jsx
-<ChartDataProvider>
+<ChartsDataProvider>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -198,7 +198,7 @@ Here's how the Scatter Chart is composed:
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 :::info

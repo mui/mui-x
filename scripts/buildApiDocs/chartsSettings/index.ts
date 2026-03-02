@@ -74,9 +74,6 @@ export default chartsApiPages;
   translationLanguages: LANGUAGES,
   skipComponent(filename) {
     if (filename.includes('/context/')) {
-      if (filename.endsWith('ChartDataProvider.tsx')) {
-        return false;
-      }
       return true;
     }
     return [
@@ -101,8 +98,6 @@ export default chartsApiPages;
       'x-charts/src/ScatterChart/BatchScatter.tsx',
       'x-charts/src/BarChart/BatchBarPlot.tsx',
       'x-charts/src/BarChart/IndividualBarPlot.tsx',
-      'x-charts/src/ChartsLayerContainer/ChartsLayerContainer.tsx',
-      'x-charts/src/ChartsSvgLayer/ChartsSvgLayer.tsx',
       'x-charts-pro/src/Heatmap/HeatmapSVGPlot.tsx',
       'x-charts-pro/src/SankeyChart/SankeyLinkPlot.tsx',
       'x-charts-pro/src/SankeyChart/SankeyNodePlot.tsx',
@@ -114,10 +109,17 @@ export default chartsApiPages;
       'x-charts-premium/src/HeatmapPremium/HeatmapPlotPremium.tsx',
       'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLPlot.tsx',
       'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLRenderer.tsx',
+      'x-charts-premium/src/ChartsWebGLLayer/ChartsWebGLLayer.tsx',
+      'x-charts/src/ChartsLayerContainer/ChartsLayerContainer.tsx',
+      'x-charts/src/ChartsSvgLayer/ChartsSvgLayer.tsx',
       'x-charts/src/ChartContainer/ChartContainer.tsx',
       'x-charts-pro/src/ChartContainerPro/ChartContainerPro.tsx',
       'x-charts-premium/src/ChartContainerPremium/ChartContainerPremium.tsx',
-      'x-charts-premium/src/ChartsWebGLLayer/ChartsWebGLLayer.tsx',
+      'x-charts/src/ChartProvider/ChartProvider.tsx',
+      'x-charts/src/ChartsProvider/ChartsProvider.tsx',
+      'x-charts/src/ChartDataProvider/ChartDataProvider.tsx',
+      'x-charts-pro/src/ChartDataProviderPro/ChartDataProviderPro.tsx',
+      'x-charts-premium/src/ChartDataProviderPremium/ChartDataProviderPremium.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
