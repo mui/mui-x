@@ -249,7 +249,11 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
       default:
-        throw new Error('MUI: Unsupported variant provided to EventItem component.');
+        throw new Error(
+          'MUI X Scheduler: Unsupported variant provided to EventItem component. ' +
+            'The EventItem component only supports specific variant values. ' +
+            'Check the component documentation for supported variants.',
+        );
     }
   }, [variant, resource?.title, localeText, formatTime, occurrence, isRecurring, classes]);
 

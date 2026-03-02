@@ -15,14 +15,6 @@
     "directory": "packages/x-charts-vendor"
   },
   "license": "MIT AND ISC",
-  "exports": {
-    "./package.json": "./package.json",
-    "./*": {
-      "types": "./*.d.ts",
-      "import": "./es/*.mjs",
-      "default": "./lib/*.js"
-    }
-  },
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@types/d3-array": "^3.2.2",
@@ -51,14 +43,17 @@
   "devDependencies": {
     "@babel/cli": "catalog:",
     "@babel/plugin-transform-runtime": "catalog:",
+    "@babel/plugin-transform-modules-commonjs": "7.28.6",
     "babel-plugin-module-resolver": "5.0.2",
     "execa": "9.6.1",
     "rimraf": "catalog:"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "scripts": {
-    "build": "node ./scripts/build.js"
+    "build": "node ./scripts/build.mjs",
+    "postinstall": "pnpm build"
   }
 }

@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -47,7 +47,7 @@ const config = {
 export default function ReferenceLine() {
   return (
     <Box sx={{ width: '100%', maxWidth: 600 }}>
-      <ChartContainer {...config}>
+      <ChartsContainer {...config}>
         <LinePlot />
         <ChartsReferenceLine
           x={new Date(2023, 8, 2, 9)}
@@ -59,7 +59,7 @@ export default function ReferenceLine() {
         <ChartsReferenceLine y={50} label="Middle value" labelAlign="end" />
         <ChartsXAxis />
         <ChartsYAxis />
-      </ChartContainer>
+      </ChartsContainer>
     </Box>
   );
 }

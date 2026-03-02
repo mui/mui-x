@@ -53,7 +53,7 @@ export const toBeClonable: SyncMatcherFn = function toBeClonable(
 ) {
   // Check if the matcher is being used with .not and throw an error since it's not supported
   if (this.isNot) {
-    throw new Error(messages.negationError('toBeClonable'));
+    throw /* minify-error-disabled */ new Error(messages.negationError('toBeClonable'));
   }
 
   // Validate inputs
