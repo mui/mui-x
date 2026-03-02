@@ -54,11 +54,10 @@ export function useDraggableEvent(
   const state = React.useMemo(
     () => ({
       ...eventState,
-      draggable: isDraggable,
       dragging: placeholderAction === 'internal-drag',
       resizing: placeholderAction === 'internal-resize',
     }),
-    [eventState, isDraggable, placeholderAction],
+    [eventState, placeholderAction],
   );
 
   React.useEffect(() => {
@@ -99,10 +98,6 @@ export function useDraggableEvent(
 
 export namespace useDraggableEvent {
   export interface State {
-    /**
-     * Whether the event can be dragged.
-     */
-    draggable: boolean;
     /**
      * Whether the event is being dragged.
      */

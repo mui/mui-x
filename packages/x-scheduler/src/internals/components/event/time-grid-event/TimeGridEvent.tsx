@@ -47,8 +47,8 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
-  '&[data-draggable]': {
-    cursor: 'grab',
+  '&[data-dragging]': {
+    cursor: 'grabbing',
   },
   '&[data-under-hour="true"]': {
     flexDirection: 'row',
