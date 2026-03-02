@@ -15,7 +15,7 @@ import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';
 import { ChartsAxisHighlight } from '@mui/x-charts-premium/ChartsAxisHighlight';
 import { ChartsGrid } from '@mui/x-charts-premium/ChartsGrid';
 import { useDrawingArea } from '@mui/x-charts-premium/hooks';
-import { ChartsWebGlLayer } from '@mui/x-charts/ChartsWebGlLayer';
+import { ChartsWebGlLayer } from '@mui/x-charts-premium/ChartsWebGlLayer';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json'; // Source: Yahoo Finance

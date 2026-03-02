@@ -8,7 +8,7 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { ChartsWebGlLayer } from '@mui/x-charts/ChartsWebGlLayer';
+import { ChartsWebGlLayer } from '@mui/x-charts-premium/ChartsWebGlLayer';
 import { CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';
 import { OHLCValueType } from '@mui/x-charts-premium/models';
 
