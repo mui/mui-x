@@ -24,7 +24,7 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
   | (T extends 'radar'
       ? ItemTooltipWithMultipleValues<T>
       : T extends 'heatmap'
-        ? Omit<ItemTooltip<'heatmap'>, 'value'> & { value: number | null }
+        ? Omit<ItemTooltip<T>, 'value'> & { value: number | null }
         : ItemTooltip<T>)
   | null {
   const store = useStore();
