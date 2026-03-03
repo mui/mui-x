@@ -5,5 +5,4 @@ export {
   type ChartsDataProviderPremiumProps,
   type ChartsDataProviderPremiumSlots,
   type ChartsDataProviderPremiumSlotProps,
-  defaultSeriesConfigPremium,
 } from './ChartsDataProviderPremium';

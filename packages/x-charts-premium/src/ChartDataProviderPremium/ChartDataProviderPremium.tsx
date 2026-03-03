@@ -5,8 +5,10 @@ import {
   type ChartsDataProviderPremiumProps,
   type ChartsDataProviderPremiumSlots,
   type ChartsDataProviderPremiumSlotProps,
-  defaultSeriesConfigPremium,
 } from '../ChartsDataProviderPremium';
+import {
+  defaultSeriesConfigPremium
+} from '../ChartsDataProviderPremium/ChartsDataProviderPremium';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export { defaultSeriesConfigPremium };
