@@ -242,6 +242,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   preferencesMenuButton: string;
   /** Styles applied to the preferences menu list element. */
   preferencesMenuList: string;
+  /** Styles applied to the preferences menu check icon element. */
+  preferencesMenuCheckIcon: string;
   /** Styles applied to the view switcher button element. */
   viewSwitcherButton: string;
   /** Styles applied to the view switcher menu element. */
@@ -380,6 +382,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'headerToolbarNextButton',
     'preferencesMenuButton',
     'preferencesMenuList',
+    'preferencesMenuCheckIcon',
     'viewSwitcherButton',
     'viewSwitcherMenu',
     'miniCalendarPreviousButton',
@@ -507,6 +510,7 @@ const slots = {
   headerToolbarNextButton: ['headerToolbarNextButton'],
   preferencesMenuButton: ['preferencesMenuButton'],
   preferencesMenuList: ['preferencesMenuList'],
+  preferencesMenuCheckIcon: ['preferencesMenuCheckIcon'],
   viewSwitcherButton: ['viewSwitcherButton'],
   viewSwitcherMenu: ['viewSwitcherMenu'],
   miniCalendarPreviousButton: ['miniCalendarPreviousButton'],

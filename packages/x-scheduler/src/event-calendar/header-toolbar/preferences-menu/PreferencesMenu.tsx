@@ -30,6 +30,13 @@ const PreferencesMenuRoot = styled('div', {
   slot: 'PreferencesMenu',
 })({});
 
+const PreferencesMenuCheckIcon = styled(ListItemIcon, {
+  name: 'MuiEventCalendar',
+  slot: 'PreferencesMenuCheckIcon',
+})({
+  justifyContent: 'flex-end',
+});
+
 const PreferencesListSubheader = styled(ListSubheader, {
   name: 'MuiEventCalendar',
   slot: 'PreferencesListSubheader',
@@ -173,9 +180,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
           >
             <ListItemText>{option.label}</ListItemText>
             {preferences[option.preferenceKey] && (
-              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+              <PreferencesMenuCheckIcon>
                 <CheckIcon fontSize="small" />
-              </ListItemIcon>
+              </PreferencesMenuCheckIcon>
             )}
           </MenuItem>
         ))}
@@ -191,9 +198,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
           >
             <ListItemText>{localeText.amPm12h}</ListItemText>
             {preferences.ampm && (
-              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+              <PreferencesMenuCheckIcon>
                 <CheckIcon fontSize="small" />
-              </ListItemIcon>
+              </PreferencesMenuCheckIcon>
             )}
           </MenuItem>
         )}
@@ -205,9 +212,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
           >
             <ListItemText>{localeText.hour24h}</ListItemText>
             {!preferences.ampm && (
-              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+              <PreferencesMenuCheckIcon>
                 <CheckIcon fontSize="small" />
-              </ListItemIcon>
+              </PreferencesMenuCheckIcon>
             )}
           </MenuItem>
         )}
@@ -231,9 +238,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
             >
               <ListItemText>{option.label}</ListItemText>
               {preferences[option.preferenceKey] && (
-                <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+                <PreferencesMenuCheckIcon>
                   <CheckIcon fontSize="small" />
-                </ListItemIcon>
+                </PreferencesMenuCheckIcon>
               )}
             </MenuItem>
           ))}
