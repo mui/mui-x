@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDataset } from '@mui/x-charts/hooks';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -149,7 +149,7 @@ export default function UseDatasetAdvanced() {
   }, []);
 
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       dataset={dataset}
       xAxis={[{ id: 'x-axis-id', dataKey: 'product', scaleType: 'band' }]}
       series={[
@@ -181,6 +181,6 @@ export default function UseDatasetAdvanced() {
           onHighlightedIndexChange={setHighlightedIndexCallback}
         />
       </Box>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 }
