@@ -1,13 +1,5 @@
-# Next.js
-.next/
-out/
-
 # Dependencies
 node_modules/
-
-# Testing
-playwright-report/
-test-results/
 
 # Build
 dist/
@@ -20,12 +12,8 @@ yarn-error.log*
 # Local env files
 .env*.local
 
-# Vercel
-.vercel
-
 # TypeScript
 *.tsbuildinfo
-next-env.d.ts
 
 # Results of benchmark tests
 benchmarks/

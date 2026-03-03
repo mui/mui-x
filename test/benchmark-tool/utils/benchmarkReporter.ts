@@ -1,19 +1,160 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
-import type { Reporter, TestCase, TestResult } from '@playwright/test/reporter';
+import { $ } from 'execa';
+import type { Reporter, TestCase } from 'vitest/node';
 import type { AggregatedResults, BenchmarkReport, BenchmarkResult } from '../ci-scripts/types';
-import { cyan, dim, fileUrl, green, red } from './log';
+import { cyan, dim, green, red, yellow } from './log';
 
-function benchmarkNameFromFile(filePath: string): string {
-  const segments = path.normalize(path.dirname(filePath)).split(path.sep);
-  const appIndex = segments.lastIndexOf('app');
-  if (appIndex === -1) {
-    throw new Error(
-      `Expected file path to contain an 'app' directory segment, but got: ${filePath}`,
-    );
+interface IterationEvent {
+  id: string;
+  phase: string;
+  actualDuration: number;
+  startTime: number;
+}
+
+function getEventKey(event: IterationEvent): string {
+  return `${event.id}:${event.phase}`;
+}
+
+function calculateMean(values: number[]): number {
+  return values.reduce((sum, v) => sum + v, 0) / values.length;
+}
+
+function calculateStdDev(values: number[], mean: number): number {
+  const squaredDiffs = values.map((v) => (v - mean) ** 2);
+  return Math.sqrt(squaredDiffs.reduce((sum, v) => sum + v, 0) / values.length);
+}
+
+function generateReportFromIterations(iterations: IterationEvent[][]): BenchmarkReport {
+  if (iterations.length === 0) {
+    return { renders: [] };
   }
-  // e.g. ["app", "scatter"] -> "scatter"
-  return segments.slice(appIndex + 1).join('-') || 'root';
+
+  const iterationCount = iterations.length;
+  const firstIteration = iterations[0];
+  const expectedKeys = firstIteration.map(getEventKey);
+
+  // Validate all iterations have the same events in the same order
+  for (let i = 1; i < iterations.length; i += 1) {
+    const iteration = iterations[i];
+    const iterationKeys = iteration.map(getEventKey);
+
+    if (iterationKeys.length !== expectedKeys.length) {
+      throw new Error(
+        `Iteration ${i} has ${iterationKeys.length} events, but iteration 0 has ${expectedKeys.length} events`,
+      );
+    }
+
+    for (let j = 0; j < expectedKeys.length; j += 1) {
+      if (iterationKeys[j] !== expectedKeys[j]) {
+        throw new Error(
+          `Event order mismatch at index ${j} in iteration ${i}: ` +
+            `expected "${expectedKeys[j]}", got "${iterationKeys[j]}"`,
+        );
+      }
+    }
+  }
+
+  // Merge events by calculating mean duration and standard deviation
+  const renders = firstIteration.map((event, index) => {
+    const durations = iterations.map((iteration) => iteration[index].actualDuration);
+    const meanDuration = calculateMean(durations);
+    const stdDev = calculateStdDev(durations, meanDuration);
+    const coefficientOfVariation = meanDuration > 0 ? stdDev / meanDuration : 0;
+
+    // Calculate mean relative start time
+    const relativeStartTimes = iterations.map((iteration) => {
+      const firstEventStartTime = iteration[0].startTime;
+      return iteration[index].startTime - firstEventStartTime;
+    });
+    const meanStartTime = calculateMean(relativeStartTimes);
+
+    if (meanDuration > 1 && coefficientOfVariation > 0.1) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `High coefficient of variation (${(coefficientOfVariation * 100).toFixed(1)}%) for render #${index} event "${getEventKey(event)}". ` +
+          `Mean: ${meanDuration.toFixed(2)}ms, StdDev: ${stdDev.toFixed(2)}ms. Results may be unreliable.`,
+      );
+    }
+
+    return {
+      actualDuration: meanDuration,
+      startTime: meanStartTime,
+    };
+  });
+
+  return {
+    metadata: { iterations: iterationCount },
+    renders,
+  };
+}
+
+function quantile(sorted: number[], q: number): number {
+  const pos = (sorted.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  if (sorted[base + 1] !== undefined) {
+    return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+  }
+  return sorted[base];
+}
+
+function isOutlier(value: number, q1: number, q3: number): boolean {
+  const iqr = q3 - q1;
+  return value < q1 - 1.5 * iqr || value > q3 + 1.5 * iqr;
+}
+
+function printDurationMatrix(name: string, iterations: IterationEvent[][]): void {
+  if (iterations.length === 0) return;
+
+  const renderCount = iterations[0].length;
+  const iterCount = iterations.length;
+
+  // Collect durations per render: durations[renderIdx][iterIdx]
+  const durations: number[][] = [];
+  for (let r = 0; r < renderCount; r += 1) {
+    durations.push(iterations.map((iter) => iter[r].actualDuration));
+  }
+
+  // Compute Q1/Q3 per render for outlier detection
+  const bounds = durations.map((row) => {
+    const sorted = [...row].sort((a, b) => a - b);
+    return { q1: quantile(sorted, 0.25), q3: quantile(sorted, 0.75) };
+  });
+
+  // Build header
+  const renderLabel = 'Render';
+  const iterHeaders = Array.from({ length: iterCount }, (_, i) => `Iter ${i}`);
+  const cellWidth = 10;
+
+  const pad = (s: string, w: number) => (s.length >= w ? s : ' '.repeat(w - s.length) + s);
+
+  const headerCells = [pad(renderLabel, 28), ...iterHeaders.map((h) => pad(h, cellWidth))];
+  const header = headerCells.join(dim(' | '));
+  const separator = dim('-'.repeat(headerCells.join(' | ').length));
+
+  const rows = durations.map((row, r) => {
+    const event = iterations[0][r];
+    const label = `#${r} ${event.id}:${event.phase}`;
+    const { q1, q3 } = bounds[r];
+    const cells = row.map((d) => {
+      const formatted = d.toFixed(2);
+      if (isOutlier(d, q1, q3)) {
+        return yellow(pad(formatted, cellWidth));
+      }
+      return pad(formatted, cellWidth);
+    });
+    return [pad(label.slice(0, 28), 28), ...cells].join(dim(' | '));
+  });
+
+  // eslint-disable-next-line no-console
+  console.log(`\n${dim(`=== Duration Matrix: ${name} (outliers highlighted, IQR method) ===`)}`);
+  // eslint-disable-next-line no-console
+  console.log(header);
+  // eslint-disable-next-line no-console
+  console.log(separator);
+  // eslint-disable-next-line no-console
+  rows.forEach((row) => console.log(row));
 }
 
 function extractTotalDuration(report: BenchmarkReport): number {
@@ -39,39 +180,26 @@ async function getCommitSha(): Promise<string | null> {
 class BenchmarkReporter implements Reporter {
   private benchmarks: Record<string, BenchmarkResult> = {};
 
-  onBegin(_config: any, suite: any): void {
-    const count = suite.allTests?.().length ?? 0;
-    // eslint-disable-next-line no-console
-    console.log(cyan(`\nFound ${count} benchmark${count === 1 ? '' : 's'}`));
-  }
+  onTestCaseResult(testCase: TestCase): void {
+    const meta = testCase.meta();
+    const iterations = meta.benchmarkIterations as IterationEvent[][] | undefined;
+    console.log(iterations);
 
-  onTestBegin(test: TestCase): void {
-    // eslint-disable-next-line no-console
-    console.log(
-      `\nRunning ${cyan(test.title)} ${dim(`(${fileUrl(test.location.file)}:${test.location.line})`)}`,
-    );
-  }
-
-  onTestEnd(test: TestCase, result: TestResult): void {
-    if (result.status !== 'passed') {
-      // eslint-disable-next-line no-console
-      console.log(red(`  FAILED (${result.status})`));
-      for (const error of result.errors ?? []) {
+    if (!iterations) {
+      if (testCase.result().state === 'failed') {
+        const errors = testCase.result().errors ?? [];
         // eslint-disable-next-line no-console
-        console.log(red(`  ${error.message ?? error.value ?? JSON.stringify(error)}`));
+        console.log(red(`  FAILED: ${testCase.fullName}`));
+        for (const error of errors) {
+          // eslint-disable-next-line no-console
+          console.log(red(`  ${error.message ?? JSON.stringify(error)}`));
+        }
       }
       return;
     }
 
-    const attachment = result.attachments.find((a) => a.name === 'benchmark-report');
-    if (!attachment?.body) {
-      // eslint-disable-next-line no-console
-      console.log(red(`  No benchmark report attached — test may not use iterateTest()`));
-      return;
-    }
-
-    const report = JSON.parse(attachment.body.toString()) as BenchmarkReport;
-    const name = benchmarkNameFromFile(test.location.file);
+    const name = (meta.benchmarkName as string) ?? testCase.fullName;
+    const report = generateReportFromIterations(iterations);
     const duration = extractTotalDuration(report);
 
     this.benchmarks[name] = {
@@ -86,9 +214,11 @@ class BenchmarkReporter implements Reporter {
       green(`  ${name}: ${duration.toFixed(2)}ms`) +
         dim(` (${report.renders.length} renders, ${report.metadata?.iterations ?? 1} iterations)`),
     );
+
+    printDurationMatrix(name, iterations);
   }
 
-  async onEnd(): Promise<void> {
+  async onTestRunEnd(): Promise<void> {
     const count = Object.keys(this.benchmarks).length;
 
     // eslint-disable-next-line no-console
@@ -117,7 +247,7 @@ class BenchmarkReporter implements Reporter {
     await fs.writeFile(outputPath, JSON.stringify(results, null, 2));
 
     // eslint-disable-next-line no-console
-    console.log(dim(`\nResults saved to ${fileUrl(outputPath)}`));
+    console.log(dim(`\nResults saved to ${outputPath}`));
   }
 }
 

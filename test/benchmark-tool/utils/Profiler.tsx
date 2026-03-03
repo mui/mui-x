@@ -1,49 +1,36 @@
-'use client';
-
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-
-export const CAPTURE_RENDER_FN = '__captureRender';
 
 export interface RenderEvent {
   id: string;
-  name?: string;
   phase: 'mount' | 'update' | 'nested-update';
   actualDuration: number;
   /** Start time in milliseconds (from performance.now()) */
   startTime: number;
 }
 
-function onRender(
-  id: string,
-  phase: 'mount' | 'update' | 'nested-update',
-  actualDuration: number,
-  _baseDuration: number,
-  startTime: number,
-) {
-  (window as any)[CAPTURE_RENDER_FN]?.({
-    id,
-    phase,
-    actualDuration,
-    startTime,
-  } satisfies RenderEvent);
-}
-
-/**
- * This profiler will render its children client-side, so certain steps like hydration are not included in the benchmark.
- */
-export function Profiler({ children }: { children: React.ReactNode }) {
-  const [benchmark, setBenchmark] = React.useState(false);
-
-  React.useEffect(() => {
-    ReactDOM.flushSync(() => {
-      setBenchmark(true);
-    });
-  }, []);
+export function BenchProfiler({
+  captures,
+  children,
+}: {
+  captures: RenderEvent[];
+  children: React.ReactNode;
+}) {
+  const onRender = React.useCallback(
+    (
+      id: string,
+      phase: 'mount' | 'update' | 'nested-update',
+      actualDuration: number,
+      _baseDuration: number,
+      startTime: number,
+    ) => {
+      captures.push({ id, phase, actualDuration, startTime });
+    },
+    [captures],
+  );
 
   return (
     <React.Profiler id="bench" onRender={onRender}>
-      {benchmark ? children : null}
+      {children}
     </React.Profiler>
   );
 }
