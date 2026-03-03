@@ -21,7 +21,11 @@ export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
 
 export function useInternalItemTooltip<T extends ChartSeriesType>():
-  | (T extends 'radar' ? ItemTooltipWithMultipleValues<T> : ItemTooltip<T>)
+  | (T extends 'radar'
+      ? ItemTooltipWithMultipleValues<T>
+      : T extends 'heatmap'
+        ? Omit<ItemTooltip<'heatmap'>, 'value'> & { value: number | null }
+        : ItemTooltip<T>)
   | null {
   const store = useStore();
   const identifier = store.use(selectorChartsTooltipItem) as SeriesItemIdentifierWithType<T> | null;

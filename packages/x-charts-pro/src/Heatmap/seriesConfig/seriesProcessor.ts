@@ -22,7 +22,7 @@ const seriesProcessor: SeriesProcessor<'heatmap'> = (params) => {
 
     defaultizedSeries[seriesId] = {
       // Defaultize the data and the value formatter.
-      valueFormatter: (v) => v[2].toString(),
+      valueFormatter: (v) => v?.toString() ?? null,
       data,
       labelMarkType: 'square',
       ...series[seriesId],

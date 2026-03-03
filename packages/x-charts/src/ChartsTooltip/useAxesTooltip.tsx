@@ -10,7 +10,6 @@ import {
 import { type ComputedAxis, type PolarAxisDefaultized, type AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
 import { getLabel } from '../internals/getLabel';
-import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
 import {
   useRotationAxes,
@@ -30,6 +29,10 @@ import { type ChartsLabelMarkProps } from '../ChartsLabel';
 import { selectorChartsInteractionTooltipRotationAxes } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { isPolarSeriesType } from '../internals/isPolar';
 import { selectorIsItemVisibleGetter } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.selectors';
+import {
+  type ComposableCartesianChartSeriesType,
+  composableCartesianSeriesTypes,
+} from '../models/seriesType/composition';
 
 export interface UseAxesTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType | PolarChartSeriesType =
@@ -145,8 +148,10 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
   }
 
   Object.keys(series)
-    .filter(isCartesianSeriesType)
-    .forEach(<SeriesT extends CartesianChartSeriesType>(seriesType: SeriesT) => {
+    .filter((seriesType): seriesType is ComposableCartesianChartSeriesType =>
+      composableCartesianSeriesTypes.has(seriesType as ComposableCartesianChartSeriesType),
+    )
+    .forEach(<SeriesT extends ComposableCartesianChartSeriesType>(seriesType: SeriesT) => {
       const seriesOfType = series[seriesType];
       if (!seriesOfType) {
         return [];

@@ -10,8 +10,9 @@ import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 export type ColorGetter<TSeriesType extends ChartSeriesType> = TSeriesType extends
   | 'pie'
   | 'funnel'
-  | 'heatmap'
   ? (dataIndex: number) => string
+  : TSeriesType extends 'heatmap'
+  ? (value: number | null, xIndex: number, yIndex: number) => string
   : (dataIndex?: number) => string;
 
 /**

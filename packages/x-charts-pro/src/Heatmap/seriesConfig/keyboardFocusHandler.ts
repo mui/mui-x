@@ -14,12 +14,8 @@ function getFirstCell(
   if (!seriesId || !series || !data || data.length === 0) {
     return null;
   }
-  const dataIndex = data.findIndex((value) => value[0] === 0 && value[1] === 0);
 
-  if (dataIndex === -1) {
-    return { type: 'heatmap', seriesId, xIndex: 0, yIndex: 0 };
-  }
-  return { type: 'heatmap', seriesId, dataIndex, xIndex: 0, yIndex: 0 };
+  return { type: 'heatmap', seriesId, xIndex: 0, yIndex: 0 };
 }
 
 const updateCoordinates = (

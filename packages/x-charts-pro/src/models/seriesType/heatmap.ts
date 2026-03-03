@@ -9,8 +9,8 @@ export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
   extends
-    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter'>,
-    CartesianSeriesType {
+  Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
+  CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each cell in the heatmap.
@@ -25,6 +25,15 @@ export interface HeatmapSeriesType
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * Formatter used to render values in tooltip or other data display.
+   * @param {number | null} value The series' value to render. null if no value associated ot the cell.
+   * @param {{ xIndex: number; yIndex: number}} context The rendering context of the value.
+   * @param {number} context.xIndex The x index of the cell the value belongs to.
+   * @param {number} context.yIndex The y index of the cell the value belongs to.
+   * @returns {string | null} The string to display or null if the value should not be shown.
+   */
+  valueFormatter?: (value: number | null, context: { xIndex: number; yIndex: number }) => string | null;
 }
 
 /**

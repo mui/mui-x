@@ -26,32 +26,36 @@ export function HeatmapTooltipContent(props: HeatmapTooltipContentProps) {
 
   const tooltipData = useItemTooltip<'heatmap'>();
 
-  const dataIndex = tooltipData?.identifier.dataIndex;
-  if (
-    !tooltipData ||
-    dataIndex === undefined ||
-    !heatmapSeries ||
-    heatmapSeries.seriesOrder.length === 0
-  ) {
+  if (!tooltipData || !heatmapSeries || heatmapSeries.seriesOrder.length === 0) {
+    return null;
+  }
+
+  const { color, markType, identifier } = tooltipData;
+
+  const value =
+    heatmapSeries.series[heatmapSeries.seriesOrder[0]].valueLookup
+      .get(identifier.xIndex)
+      ?.get(identifier.yIndex) ?? null;
+
+  if (value === null) {
     return null;
   }
 
   const { series, seriesOrder } = heatmapSeries;
   const seriesId = seriesOrder[0];
 
-  const { color, value, markType } = tooltipData;
-
-  const [xIndex, yIndex] = value;
-
+  const { xIndex, yIndex } = identifier;
   const formattedX =
     xAxis.valueFormatter?.(xAxis.data![xIndex], {
       location: 'tooltip',
       scale: xAxis.scale,
     }) ?? xAxis.data![xIndex].toLocaleString();
   const formattedY =
-    yAxis.valueFormatter?.(yAxis.data![yIndex], { location: 'tooltip', scale: yAxis.scale }) ??
-    yAxis.data![yIndex].toLocaleString();
-  const formattedValue = series[seriesId].valueFormatter(value, { dataIndex });
+    yAxis.valueFormatter?.(yAxis.data![yIndex], {
+      location: 'tooltip',
+      scale: yAxis.scale,
+    }) ?? yAxis.data![yIndex].toLocaleString();
+  const formattedValue = series[seriesId].valueFormatter(value, { xIndex, yIndex });
 
   const seriesLabel = getLabel(series[seriesId].label, 'tooltip');
 
