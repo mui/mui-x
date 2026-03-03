@@ -1,7 +1,6 @@
 import type { DefaultedXAxis, DefaultedYAxis, AxisGroup } from '../../../../models/axis';
 import { batchMeasureStrings } from '../../../domUtils';
 import type { ChartsTextStyle } from '../../../getWordsByLines';
-import { getMinXTranslation } from '../../../geometry';
 import { deg2rad } from '../../../angleConversion';
 import {
   AXIS_AUTO_SIZE_PADDING,
@@ -237,7 +236,7 @@ function getRotatedDimension(
     return Math.abs(width * sinAngle) + Math.abs(height * cosAngle);
   }
 
-  return getMinXTranslation(width, height, angle);
+  return Math.abs(width * cosAngle) + Math.abs(height * sinAngle);
 }
 
 /**
