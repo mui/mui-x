@@ -12,7 +12,8 @@ import {
 } from './ChartsTooltipTable';
 import { useAxesTooltip } from './useAxesTooltip';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
-import { selectorChartSeriesConfig, useStore, useSeries } from '../internals';
+import { useStore } from '../internals/store/useStore';
+import { selectorChartSeriesConfigGetter } from '../internals/plugins/corePlugins/useChartSeries';
 
 export interface ChartsAxisTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -34,9 +35,8 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   const { sort } = props;
   const classes = useUtilityClasses(props.classes);
   const store = useStore();
-  const series = useSeries();
 
-  const seriesConfig = store.use(selectorChartSeriesConfig);
+  const getSeriesConfig = store.use(selectorChartSeriesConfigGetter);
 
   const tooltipData = useAxesTooltip();
 
@@ -78,10 +78,11 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
                   return null;
                 }
 
-                const thisSeries = Object.values(series)
-                  .flatMap((s) => Object.values(s.series))
-                  .find((s) => s.id === seriesId);
-                const Content = seriesConfig?.[thisSeries.type].AxisTooltipContent;
+                const seriesConfig = getSeriesConfig(seriesId);
+                const Content =
+                  seriesConfig && 'AxisTooltipContent' in seriesConfig
+                    ? seriesConfig.AxisTooltipContent
+                    : null;
 
                 return (
                   <ChartsTooltipRow key={seriesId} className={classes.row}>
@@ -103,7 +104,16 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
                       className={clsx(classes.valueCell, classes.cell)}
                       component="td"
                     >
-                      {Content ? <Content item={item} /> : formattedValue}
+                      {Content ? (
+                        <Content
+                          item={
+                            /* TypeScript can't assert that the item's type is the same type as the `Content`, so we need to cast */
+                            item as any
+                          }
+                        />
+                      ) : (
+                        formattedValue
+                      )}
                     </ChartsTooltipCell>
                   </ChartsTooltipRow>
                 );
