@@ -2,11 +2,11 @@
 
 const startDate = '2024-08-08';
 const endDate = '2025-08-06';
-const package = '@mui/x-charts';
+const packageName = '@mui/x-charts';
 
 const main = async () => {
   const data = await fetch(
-    `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${package}`,
+    `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packageName}`,
   )
     .then((rep) => rep.json())
     .then((body) => body.downloads);

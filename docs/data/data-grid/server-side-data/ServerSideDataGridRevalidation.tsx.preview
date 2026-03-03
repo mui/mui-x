@@ -1,0 +1,13 @@
+<DataGrid
+  columns={columns}
+  dataSource={dataSource}
+  dataSourceCache={null}
+  dataSourceRevalidateMs={2_000}
+  pagination
+  initialState={{
+    pagination: { paginationModel: { pageSize: 5, page: 0 }, rowCount: 0 },
+  }}
+  pageSizeOptions={[5, 10]}
+  disableColumnSorting
+  disableColumnFilter
+/>

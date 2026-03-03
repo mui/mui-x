@@ -44,25 +44,45 @@ export class Flatbush {
    */
   static from(data, byteOffset = 0) {
     if (byteOffset % 8 !== 0) {
-      throw new Error('byteOffset must be 8-byte aligned.');
+      throw new Error(
+        'MUI X Charts: byteOffset must be 8-byte aligned. ' +
+          'The spatial index requires proper memory alignment for performance. ' +
+          'Ensure the byteOffset is a multiple of 8.',
+      );
     }
 
     // @ts-expect-error duck typing array buffers
     if (!data || data.byteLength === undefined || data.buffer) {
-      throw new Error('Data must be an instance of ArrayBuffer or SharedArrayBuffer.');
+      throw new Error(
+        'MUI X Charts: Data must be an instance of ArrayBuffer or SharedArrayBuffer. ' +
+          'The spatial index requires a valid buffer to store data. ' +
+          'Provide an ArrayBuffer or SharedArrayBuffer instance.',
+      );
     }
 
     const [magic, versionAndType] = new Uint8Array(data, byteOffset + 0, 2);
     if (magic !== 0xfb) {
-      throw new Error('Data does not appear to be in a Flatbush format.');
+      throw new Error(
+        'MUI X Charts: Data does not appear to be in a Flatbush format. ' +
+          'The buffer does not contain valid spatial index data. ' +
+          'Ensure you are loading data that was created by Flatbush.',
+      );
     }
     const version = versionAndType >> 4;
     if (version !== VERSION) {
-      throw new Error(`Got v${version} data when expected v${VERSION}.`);
+      throw new Error(
+        `MUI X Charts: Got v${version} data when expected v${VERSION}. ` +
+          'The spatial index data version is incompatible. ' +
+          'Recreate the index using the current version.',
+      );
     }
     const ArrayType = ARRAY_TYPES[versionAndType & 0x0f];
     if (!ArrayType) {
-      throw new Error('Unrecognized array type.');
+      throw new Error(
+        'MUI X Charts: Unrecognized array type in spatial index data. ' +
+          'The data contains an unsupported typed array type. ' +
+          'Recreate the index using a supported array type.',
+      );
     }
     const [nodeSize] = new Uint16Array(data, byteOffset + 2, 1);
     const [numItems] = new Uint32Array(data, byteOffset + 4, 1);
@@ -88,10 +108,18 @@ export class Flatbush {
     byteOffset = 0,
   ) {
     if (numItems === undefined) {
-      throw new Error('Missing required argument: numItems.');
+      throw new Error(
+        'MUI X Charts: Missing required argument "numItems" for spatial index. ' +
+          'The index needs to know how many items it will contain. ' +
+          'Provide the expected number of items as the first argument.',
+      );
     }
     if (isNaN(numItems) || numItems <= 0) {
-      throw new Error(`Unexpected numItems value: ${numItems}.`);
+      throw new Error(
+        `MUI X Charts: Unexpected numItems value: ${numItems}. ` +
+          'The spatial index requires a positive integer for numItems. ' +
+          'Provide a positive number greater than 0.',
+      );
     }
 
     this.numItems = +numItems;
@@ -116,7 +144,11 @@ export class Flatbush {
     const nodesByteSize = numNodes * 4 * ArrayType.BYTES_PER_ELEMENT;
 
     if (arrayTypeIndex < 0) {
-      throw new Error(`Unexpected typed array class: ${ArrayType}.`);
+      throw new Error(
+        `MUI X Charts: Unexpected typed array class: ${ArrayType}. ` +
+          'The spatial index only supports standard typed array types. ' +
+          'Use one of: Int8Array, Uint8Array, Int16Array, Uint16Array, Int32Array, Uint32Array, Float32Array, or Float64Array.',
+      );
     }
 
     if (data) {
@@ -187,7 +219,11 @@ export class Flatbush {
   /** Perform indexing of the added rectangles. */
   finish() {
     if (this._pos >> 2 !== this.numItems) {
-      throw new Error(`Added ${this._pos >> 2} items when expected ${this.numItems}.`);
+      throw new Error(
+        `MUI X Charts: Added ${this._pos >> 2} items when expected ${this.numItems}. ` +
+          'The number of items added does not match the expected count. ' +
+          'Ensure you add exactly the number of items specified when creating the index.',
+      );
     }
     const boxes = this._boxes;
 
@@ -266,7 +302,11 @@ export class Flatbush {
     filterFn?: (index: number) => boolean,
   ): number[] {
     if (this._pos !== this._boxes.length) {
-      throw new Error('Data not yet indexed - call index.finish().');
+      throw new Error(
+        'MUI X Charts: Spatial index data not yet indexed. ' +
+          'The search cannot be performed until indexing is complete. ' +
+          'Call index.finish() before performing searches.',
+      );
     }
 
     /** @type number | undefined */
@@ -330,7 +370,11 @@ export class Flatbush {
     sqDistFn = sqDist,
   ) {
     if (this._pos !== this._boxes.length) {
-      throw new Error('Data not yet indexed - call index.finish().');
+      throw new Error(
+        'MUI X Charts: Spatial index data not yet indexed. ' +
+          'The neighbors search cannot be performed until indexing is complete. ' +
+          'Call index.finish() before performing neighbor searches.',
+      );
     }
 
     /** @type number | undefined */

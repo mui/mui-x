@@ -228,10 +228,10 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     // moment-hijri only supports dates between 1356-01-01 H and 1499-12-29 H
     // We need to throw if outside min/max bounds, otherwise the while loop below will be infinite.
     if (start.isBefore('1937-03-14')) {
-      throw new Error('min date must be on or after 1356-01-01 H (1937-03-14)');
+      throw new Error('MUI X: min date must be on or after 1356-01-01 H (1937-03-14)');
     }
     if (end.isAfter('2076-11-26')) {
-      throw new Error('max date must be on or before 1499-12-29 H (2076-11-26)');
+      throw new Error('MUI X: max date must be on or before 1499-12-29 H (2076-11-26)');
     }
 
     return super.getYearRange([start, end]);

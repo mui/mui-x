@@ -7,24 +7,23 @@ import { getAreaPath } from './getAreaPath';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import { type SeriesId } from '../../models/seriesType/common';
-import { type HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import type { HighlightItemIdentifierWithType, SeriesId } from '../../models/seriesType';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (item: HighlightItemData | null) => boolean;
-  isHighlighted: (item: HighlightItemData | null) => boolean;
+  isFaded: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
+  isHighlighted: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
   points: { x: number; y: number }[];
   fillArea?: boolean;
   color: string;
 }
 
-export function getPathProps(params: GetPathPropsParams): React.SVGProps<SVGPathElement> {
+export function getPathProps(params: GetPathPropsParams) {
   const { isHighlighted, isFaded, seriesId, classes, points, fillArea, color } = params;
-  const isItemHighlighted = isHighlighted({ seriesId });
-  const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
+  const isItemHighlighted = isHighlighted({ type: 'radar', seriesId });
+  const isItemFaded = !isItemHighlighted && isFaded({ type: 'radar', seriesId });
 
   return {
     d: getAreaPath(points),
@@ -37,6 +36,8 @@ export function getPathProps(params: GetPathPropsParams): React.SVGProps<SVGPath
     strokeOpacity: isItemFaded ? 0.5 : 1,
     fillOpacity: (isItemHighlighted && 0.4) || (isItemFaded && 0.1) || 0.2,
     strokeWidth: !fillArea && isItemHighlighted ? 2 : 1,
+    'data-highlighted': isItemHighlighted || undefined,
+    'data-faded': isItemFaded || undefined,
   };
 }
 
@@ -46,7 +47,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter<'radar'>();
 
   const classes = useUtilityClasses(props.classes);
   return (

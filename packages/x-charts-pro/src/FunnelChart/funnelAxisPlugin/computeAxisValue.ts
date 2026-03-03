@@ -180,7 +180,7 @@ export function computeAxisValue({
 
     if (isPointScaleConfig(axis)) {
       throw new Error(
-        'Point scale is not supported in FunnelChart. Please use band scale instead.',
+        'MUI X Charts: Point scale is not supported in FunnelChart. Please use band scale instead.',
       );
     }
 

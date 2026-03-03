@@ -32,7 +32,7 @@ const GStyled = styled('g', {
 
 const GaugeContainer = React.forwardRef(function GaugeContainer(
   props: GaugeContainerProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const {
     width: inWidth,

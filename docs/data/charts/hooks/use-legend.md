@@ -3,7 +3,7 @@ title: Charts - useLegend
 productId: x-charts
 ---
 
-# useLegend
+# `useLegend()`
 
 <p class="description">Get formatted legend data to build custom legend components.</p>
 

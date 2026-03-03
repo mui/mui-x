@@ -20,7 +20,9 @@ describeTreeView<TreeViewAnyStore>(
         ).toErrorDev([
           'Encountered two children with the same key, `1`',
           reactMajor >= 19 &&
-            'MUI X: The Tree View component requires all items to have a unique `id` property.',
+            `MUI X: The Tree View component requires all items to have a unique \`id\` property.
+Alternatively, you can use the \`getItemId\` prop to specify a custom id for each item.
+Two items were provided with the same id in the \`items\` prop: "1"`,
           reactMajor >= 19 &&
             'Alternatively, you can use the `getItemId` prop to specify a custom id for each item',
           reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem2)> component`,
@@ -32,7 +34,7 @@ describeTreeView<TreeViewAnyStore>(
           render({ items: [{ id: '1' }, { id: '1' }], withErrorBoundary: true }),
         ).toErrorDev([
           reactMajor >= 19 &&
-            'MUI X: The Tree View component requires all items to have a unique `id` property.',
+            `MUI X Tree View: All items must have a unique \`id\` property. The id "1" is used by multiple items. Use the \`getItemId\` prop to specify a custom id for each item if needed.`,
           reactMajor < 19 &&
             `The above error occurred in the <ForwardRef(${treeViewComponentName}2)> component`,
         ]);

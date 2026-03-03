@@ -10,5 +10,6 @@ export * from './state';
 export * from './event-builder';
 export * from './storeClasses';
 export * from './dom-queries';
+export * from './dnd';
 
 export type AnyEventCalendarStore = EventCalendarStore<any, any>;

@@ -526,7 +526,7 @@ export const useGridAiAssistant = (
 
       const conversation = gridAiAssistantActiveConversationSelector(apiRef);
       if (!conversation) {
-        throw new Error('Conversation not found');
+        throw new Error('MUI X: Conversation not found');
       }
       return conversation;
     },

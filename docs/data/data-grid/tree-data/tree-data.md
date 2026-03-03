@@ -170,7 +170,7 @@ const invalidRows = [{ path: ['X'] }, { path: ['Y'] }, { path: ['X', 'X'] }];
 With row reordering, users can reorder tree data or move rows from one group to another.
 
 To enable this feature with tree data, pass the `rowReordering` prop to the Data Grid component.
-You also need to pass the `setTreeDataPath()` prop to revert the operation done by [`getTreeDataPath()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-getTreeDataPath) while building the tree, because row reordering can change the path of the row.
+You also need to pass the `setTreeDataPath` prop to revert the operation done by [`getTreeDataPath`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-getTreeDataPath) while building the tree, because row reordering can change the path of the row.
 
 ```tsx
 <DataGridPro
