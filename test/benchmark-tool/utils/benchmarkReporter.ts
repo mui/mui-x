@@ -55,17 +55,33 @@ function generateReportFromIterations(iterations: IterationEvent[][]): Benchmark
     }
   }
 
-  // Merge events by calculating mean duration and standard deviation
+  // Merge events by calculating mean duration and standard deviation (with IQR outlier removal)
   const renders = firstIteration.map((event, index) => {
     const durations = iterations.map((iteration) => iteration[index].actualDuration);
-    const meanDuration = calculateMean(durations);
-    const stdDev = calculateStdDev(durations, meanDuration);
+
+    // Apply IQR outlier removal
+    const sorted = [...durations].sort((a, b) => a - b);
+    const q1 = quantile(sorted, 0.25);
+    const q3 = quantile(sorted, 0.75);
+    const filteredIndices = durations
+      .map((d, i) => (isOutlier(d, q1, q3) ? -1 : i))
+      .filter((i) => i >= 0);
+
+    // Fall back to all values if every value is an outlier
+    const indices =
+      filteredIndices.length > 0
+        ? filteredIndices
+        : durations.map((_, i) => i);
+
+    const filteredDurations = indices.map((i) => durations[i]);
+    const meanDuration = calculateMean(filteredDurations);
+    const stdDev = calculateStdDev(filteredDurations, meanDuration);
     const coefficientOfVariation = meanDuration > 0 ? stdDev / meanDuration : 0;
 
-    // Calculate mean relative start time
-    const relativeStartTimes = iterations.map((iteration) => {
-      const firstEventStartTime = iteration[0].startTime;
-      return iteration[index].startTime - firstEventStartTime;
+    // Calculate mean relative start time from the same filtered iterations
+    const relativeStartTimes = indices.map((i) => {
+      const firstEventStartTime = iterations[i][0].startTime;
+      return iterations[i][index].startTime - firstEventStartTime;
     });
     const meanStartTime = calculateMean(relativeStartTimes);
 
@@ -109,6 +125,9 @@ function printDurationMatrix(name: string, iterations: IterationEvent[][]): void
 
   const renderCount = iterations[0].length;
   const iterCount = iterations.length;
+  const maxDisplayedIters = 10;
+  const displayedIterCount = Math.min(iterCount, maxDisplayedIters);
+  const truncated = iterCount > maxDisplayedIters;
 
   // Collect durations per render: durations[renderIdx][iterIdx]
   const durations: number[][] = [];
@@ -116,39 +135,65 @@ function printDurationMatrix(name: string, iterations: IterationEvent[][]): void
     durations.push(iterations.map((iter) => iter[r].actualDuration));
   }
 
-  // Compute Q1/Q3 per render for outlier detection
-  const bounds = durations.map((row) => {
+  // Compute Q1/Q3 per render for outlier detection and filtered stats
+  const perRender = durations.map((row) => {
     const sorted = [...row].sort((a, b) => a - b);
-    return { q1: quantile(sorted, 0.25), q3: quantile(sorted, 0.75) };
+    const q1 = quantile(sorted, 0.25);
+    const q3 = quantile(sorted, 0.75);
+    const filtered = row.filter((d) => !isOutlier(d, q1, q3));
+    const used = filtered.length > 0 ? filtered : row;
+    const rawMean = calculateMean(row);
+    const rawSigma = calculateStdDev(row, rawMean);
+    const iqrMean = calculateMean(used);
+    const iqrSigma = calculateStdDev(used, iqrMean);
+    return { q1, q3, rawMean, rawSigma, iqrMean, iqrSigma, dropped: row.length - used.length };
   });
 
-  // Build header
+  // Build header (show at most maxDisplayedIters columns)
   const renderLabel = 'Render';
-  const iterHeaders = Array.from({ length: iterCount }, (_, i) => `Iter ${i}`);
+  const iterHeaders = Array.from({ length: displayedIterCount }, (_, i) => `Iter ${i}`);
   const cellWidth = 10;
+  const statWidth = 16;
 
   const pad = (s: string, w: number) => (s.length >= w ? s : ' '.repeat(w - s.length) + s);
 
-  const headerCells = [pad(renderLabel, 28), ...iterHeaders.map((h) => pad(h, cellWidth))];
+  const headerCells = [
+    pad(renderLabel, 28),
+    ...iterHeaders.map((h) => pad(h, cellWidth)),
+    ...(truncated ? ['...'] : []),
+    pad('Raw μ±σ', statWidth),
+    pad('IQR μ±σ', statWidth),
+    pad('Out', 4),
+  ];
   const header = headerCells.join(dim(' | '));
   const separator = dim('-'.repeat(headerCells.join(' | ').length));
 
   const rows = durations.map((row, r) => {
     const event = iterations[0][r];
     const label = `#${r} ${event.id}:${event.phase}`;
-    const { q1, q3 } = bounds[r];
-    const cells = row.map((d) => {
+    const { q1, q3, rawMean, rawSigma, iqrMean, iqrSigma, dropped } = perRender[r];
+    const cells = row.slice(0, displayedIterCount).map((d) => {
       const formatted = d.toFixed(2);
       if (isOutlier(d, q1, q3)) {
         return yellow(pad(formatted, cellWidth));
       }
       return pad(formatted, cellWidth);
     });
-    return [pad(label.slice(0, 28), 28), ...cells].join(dim(' | '));
+    const rawStr = `${rawMean.toFixed(2)}±${rawSigma.toFixed(2)}`;
+    const iqrStr = `${iqrMean.toFixed(2)}±${iqrSigma.toFixed(2)}`;
+    return [
+      pad(label.slice(0, 28), 28),
+      ...cells,
+      ...(truncated ? [dim('...')] : []),
+      dim(pad(rawStr, statWidth)),
+      cyan(pad(iqrStr, statWidth)),
+      dropped > 0 ? yellow(pad(String(dropped), 4)) : dim(pad('0', 4)),
+    ].join(dim(' | '));
   });
 
+  const truncNote = truncated ? `, showing ${displayedIterCount}/${iterCount}` : '';
   // eslint-disable-next-line no-console
-  console.log(`\n${dim(`=== Duration Matrix: ${name} (outliers highlighted, IQR method) ===`)}`);
+  console.log(`\n${dim(`=== Duration Matrix: ${name} (outliers highlighted, IQR method${truncNote}) ===`)}`);
   // eslint-disable-next-line no-console
   console.log(header);
   // eslint-disable-next-line no-console
@@ -183,7 +228,6 @@ class BenchmarkReporter implements Reporter {
   onTestCaseResult(testCase: TestCase): void {
     const meta = testCase.meta();
     const iterations = meta.benchmarkIterations as IterationEvent[][] | undefined;
-    console.log(iterations);
 
     if (!iterations) {
       if (testCase.result().state === 'failed') {

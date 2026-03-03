@@ -15,7 +15,7 @@ export function benchmark(
   },
 ) {
   it(name, async ({ task }) => {
-    const runs = options?.runs ?? 10;
+    const runs = options?.runs ?? 20;
     const warmupRuns = options?.warmupRuns ?? 10;
 
     const totalRuns = warmupRuns + runs;
