@@ -844,7 +844,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           processRowUpdate={() => {
             throw new Error();
           }}
-          onProcessRowUpdateError={() => { }} // suppress error
+          onProcessRowUpdateError={() => {}} // suppress error
         />,
       );
 
@@ -871,7 +871,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           processRowUpdate={() => {
             return Promise.reject();
           }}
-          onProcessRowUpdateError={() => { }} // suppress error
+          onProcessRowUpdateError={() => {}} // suppress error
         />,
       );
 
