@@ -128,7 +128,7 @@ SankeyChart.propTypes = {
          */
         'node',
       ]).isRequired,
-      type: PropTypes.oneOf(['sankey']),
+      type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
       seriesId: PropTypes.string.isRequired,
@@ -140,7 +140,28 @@ SankeyChart.propTypes = {
         'link',
       ]).isRequired,
       targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      type: PropTypes.oneOf(['sankey']),
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     }),
   ]),
   /**
@@ -232,7 +253,7 @@ SankeyChart.propTypes = {
          */
         'node',
       ]).isRequired,
-      type: PropTypes.oneOf(['sankey']),
+      type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
       seriesId: PropTypes.string.isRequired,
@@ -244,7 +265,28 @@ SankeyChart.propTypes = {
         'link',
       ]).isRequired,
       targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      type: PropTypes.oneOf(['sankey']),
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     }),
   ]),
   /**

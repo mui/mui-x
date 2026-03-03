@@ -219,11 +219,18 @@ PieChart.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['pie']),
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']),
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -233,11 +240,17 @@ PieChart.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['pie']),
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -265,11 +278,18 @@ PieChart.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['pie']),
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']),
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, a loading overlay is displayed.
@@ -297,7 +317,7 @@ PieChart.propTypes = {
   ]),
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
@@ -352,11 +372,17 @@ PieChart.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number.isRequired,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['pie']),
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
