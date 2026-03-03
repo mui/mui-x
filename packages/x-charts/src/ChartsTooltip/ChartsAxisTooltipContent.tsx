@@ -11,8 +11,8 @@ import {
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
 import { useAxesTooltip } from './useAxesTooltip';
-
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
+import { selectorChartSeriesConfig, useStore, useSeries } from '../internals';
 
 export interface ChartsAxisTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -33,6 +33,10 @@ export interface ChartsAxisTooltipContentProps {
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   const { sort } = props;
   const classes = useUtilityClasses(props.classes);
+  const store = useStore();
+  const series = useSeries();
+
+  const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const tooltipData = useAxesTooltip();
 
@@ -66,37 +70,44 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
             )}
 
             <tbody>
-              {sortedItems.map(
-                ({ seriesId, color, formattedValue, formattedLabel, markType, markShape }) => {
-                  if (formattedValue == null) {
-                    return null;
-                  }
-                  return (
-                    <ChartsTooltipRow key={seriesId} className={classes.row}>
-                      <ChartsTooltipCell
-                        className={clsx(classes.labelCell, classes.cell)}
-                        component="th"
-                      >
-                        <div className={classes.markContainer}>
-                          <ChartsLabelMark
-                            type={markType}
-                            markShape={markShape}
-                            color={color}
-                            className={classes.mark}
-                          />
-                        </div>
-                        {formattedLabel || null}
-                      </ChartsTooltipCell>
-                      <ChartsTooltipCell
-                        className={clsx(classes.valueCell, classes.cell)}
-                        component="td"
-                      >
-                        {formattedValue}
-                      </ChartsTooltipCell>
-                    </ChartsTooltipRow>
-                  );
-                },
-              )}
+              {sortedItems.map((item) => {
+                const { seriesId, color, formattedValue, formattedLabel, markType, markShape } =
+                  item;
+
+                if (formattedValue == null) {
+                  return null;
+                }
+
+                const thisSeries = Object.values(series)
+                  .flatMap((s) => Object.values(s.series))
+                  .find((s) => s.id === seriesId);
+                const Content = seriesConfig?.[thisSeries.type].AxisTooltipContent;
+
+                return (
+                  <ChartsTooltipRow key={seriesId} className={classes.row}>
+                    <ChartsTooltipCell
+                      className={clsx(classes.labelCell, classes.cell)}
+                      component="th"
+                    >
+                      <div className={classes.markContainer}>
+                        <ChartsLabelMark
+                          type={markType}
+                          markShape={markShape}
+                          color={color}
+                          className={classes.mark}
+                        />
+                      </div>
+                      {formattedLabel || null}
+                    </ChartsTooltipCell>
+                    <ChartsTooltipCell
+                      className={clsx(classes.valueCell, classes.cell)}
+                      component="td"
+                    >
+                      {Content ? <Content item={item} /> : formattedValue}
+                    </ChartsTooltipCell>
+                  </ChartsTooltipRow>
+                );
+              })}
             </tbody>
           </ChartsTooltipTable>
         );

@@ -132,7 +132,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
     ref,
   );
 
-  const Tooltip = props.slots?.tooltip ?? CandlestickTooltip;
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
