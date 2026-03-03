@@ -11,12 +11,8 @@ import type { HighlightItemIdentifierWithType } from '../../models';
 interface GetCirclePropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (
-    item: HighlightItemIdentifierWithType<'radar'> | null,
-  ) => boolean;
-  isHighlighted: (
-    item: HighlightItemIdentifierWithType<'radar'> | null,
-  ) => boolean;
+  isFaded: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
+  isHighlighted: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
   point: { x: number; y: number };
   fillArea?: boolean;
   color: string;
