@@ -21,7 +21,7 @@ Structural components are used to define a chart's dimensions, surfaces, and dat
 
 - Basics
   - `ChartsDataProvider` provides data to descendants.
-  - `ChartsLayerContainer` positions the layers according to their DOM order.
+  - `ChartsLayerContainer` a `div` that handles the responsiveness of the chart and contains the layers.
   - `ChartsSvgLayer` renders a layer that is an SVG element, which can be used to render axes, plots, etc.
   - `ChartsWebGLLayer` renders a layer that is a WebGL canvas, which can be used to render plots.
 - Helpers
@@ -49,7 +49,7 @@ Notice that the `width` and `height` props are passed to the `ChartsDataProvider
   height={300}
 >
   <ChartsLegend />
-  <ChartsLayerContainer ref={myRef}>
+  <ChartsLayerContainer>
     <ChartsSvgLayer>
       {children}
     </ChartsSvgLayer>
@@ -59,8 +59,8 @@ Notice that the `width` and `height` props are passed to the `ChartsDataProvider
 
 ### Chart Surface usage
 
-The `ChartsSurface` component is responsible for rendering the SVG element and positioning the layers.
-It also forwards the ref to the layer container element.
+The `ChartsSurface` component is composed of `ChartsLayerContainer` and a `ChartsSvgLayer`.
+It can be used as a shortcut when your chart only has one SVG layer.
 
 When using `ChartsSurface`, all the children are rendered inside the SVG element.
 This means that you can't interleave different layers, such as rendering a canvas between two SVG layers.
@@ -74,10 +74,7 @@ This means that you can't interleave different layers, such as rendering a canva
   height={300}
 >
   <ChartsLegend />
-  <ChartsSurface
-    // Ref needs to be directly on ChartsSurface
-    ref={myRef}
-  >
+  <ChartsSurface>
     {children}
   </ChartsSurface>
 </ChartsDataProvider>
@@ -98,8 +95,6 @@ You can't render HTML elements such as `ChartsLegend` as shown in the previous e
   xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
   width={500}
   height={300}
-  // Ref is forwarded internally to ChartsSurface
-  ref={myRef}
 >
   {children} // Only SVG component here
 </ChartsContainer>
