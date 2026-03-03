@@ -21,9 +21,12 @@ Structural components are used to define a chart's dimensions, surfaces, and dat
 
 - Basics
   - `ChartsDataProvider` provides data to descendants.
-  - `ChartsSurface` renders the SVG element.
+  - `ChartsLayerContainer` positions the layers according to their DOM order.
+  - `ChartsSvgLayer` renders a layer that is an SVG element, which can be used to render axes, plots, etc.
+  - `ChartsWebGLLayer` renders a layer that is a WebGL canvas, which can be used to render plots.
 - Helpers
   - `ChartsContainer` combines the Data Provider and Surface components.
+  - `ChartsSurface` combines the layer container and an SVG layer.
   - `ChartsWrapper` styled div that positions surface, tooltip, and legend on a grid.
 
 :::info
@@ -33,9 +36,34 @@ For demos using `ChartsDataProvider` and `ChartsSurface`, see [HTML components](
 
 ### Chart Data Provider and Surface usage
 
-Notice that the `width` and `height` props are passed to `ChartsDataProvider` and not `ChartsSurface`.
+Notice that the `width` and `height` props are passed to the `ChartsDataProvider`.
 
-`ChartsLegend` is placed inside `ChartsDataProvider` to get access to the context, but outside `ChartsSurface` since it is a component that renders HTML.
+`ChartsLegend` is placed inside `ChartsDataProvider` to get access to the context, but outside `ChartsLayerContainer` since we want to display it outside the chart itself.
+
+```jsx
+<ChartsDataProvider
+  // The configuration of the chart
+  series={[{ type: 'bar', data: [100, 200] }]}
+  xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+  width={500}
+  height={300}
+>
+  <ChartsLegend />
+  <ChartsLayerContainer ref={myRef}>
+    <ChartsSvgLayer>
+      {children}
+    </ChartsSvgLayer>
+  </ChartsLayerContainer>
+</ChartsDataProvider>
+```
+
+### Chart Surface usage
+
+The `ChartsSurface` component is responsible for rendering the SVG element and positioning the layers.
+It also forwards the ref to the layer container element.
+
+When using `ChartsSurface`, all the children are rendered inside the SVG element.
+This means that you can't interleave different layers, such as rendering a canvas between two SVG layers.
 
 ```jsx
 <ChartsDataProvider
