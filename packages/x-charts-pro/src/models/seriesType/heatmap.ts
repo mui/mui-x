@@ -64,5 +64,5 @@ export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
   /**
    * Map the `xIndex` and `yIndex` to the corresponding value of the cell.
    */
-  dataIndexLookup: Map<number, Map<number, number>>;
+  valueLookup: Map<number, Map<number, number>>;
 }

@@ -8,15 +8,15 @@ const seriesProcessor: SeriesProcessor<'heatmap'> = (params) => {
   Object.keys(series).forEach((seriesId) => {
 
     const data = series[seriesId].data ?? []
-    const dataIndexLookup = new Map<number, Map<number, number>>();
+    const valueLookup = new Map<number, Map<number, number>>();
     for (const [xIndex, yIndex, value] of data) {
 
-      if (!dataIndexLookup.has(xIndex)) {
-        dataIndexLookup.set(xIndex, new Map<number, number>());
+      if (!valueLookup.has(xIndex)) {
+        valueLookup.set(xIndex, new Map<number, number>());
       }
 
-      if (!dataIndexLookup.get(xIndex)!.has(yIndex)) {
-        dataIndexLookup.get(xIndex)!.set(yIndex, value);
+      if (!valueLookup.get(xIndex)!.has(yIndex)) {
+        valueLookup.get(xIndex)!.set(yIndex, value);
       }
     }
 
@@ -26,7 +26,7 @@ const seriesProcessor: SeriesProcessor<'heatmap'> = (params) => {
       data,
       labelMarkType: 'square',
       ...series[seriesId],
-      dataIndexLookup,
+      valueLookup,
     };
   });
 
