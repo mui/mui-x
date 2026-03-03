@@ -1,5 +1,5 @@
 {
-  "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartDataProviderPremium` and `ChartsSurface` components.",
+  "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartsDataProviderPremium` and `ChartsSurface` components.",
   "propDescriptions": {},
   "classDescriptions": {}
 }
