@@ -30,9 +30,6 @@ const EventTimelinePremiumEventRoot = styled('div', {
   gridRow: 'var(--row-index, 1)',
   gridColumn: 1,
   cursor: 'pointer',
-  '&[data-dragging]': {
-    cursor: 'grabbing',
-  },
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
