@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 ## Overview
 
 The Event Calendar and Event Timeline accepts event dates (`start` and `end`) as **strings** and supports two semantics depending on the format:
