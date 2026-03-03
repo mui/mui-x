@@ -194,9 +194,7 @@ export type VirtualizerListParams<L extends Layout = Layout> = {
  * and keyboard navigation are not needed, to reduce bundle size.
  * @see {@link useVirtualizerGrid} for the full-featured grid virtualizer.
  */
-export const useVirtualizerList = <L extends Layout = Layout>(
-  params: VirtualizerListParams<L>,
-) => {
+export const useVirtualizerList = <L extends Layout = Layout>(params: VirtualizerListParams<L>) => {
   const paramsWithDefault = mergeDefaults<ParamsWithDefaults>(params, DEFAULT_PARAMS);
 
   const store = useLazyRef(() => {
