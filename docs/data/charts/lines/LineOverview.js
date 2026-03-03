@@ -92,6 +92,7 @@ export default function LineOverview() {
       <Typography textAlign="center">
         US unemployment rate comparison with GDP per capita
       </Typography>
+
       <ChartsDataProviderPro
         height={300}
         experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
@@ -177,6 +178,7 @@ export default function LineOverview() {
         </ChartsSurface>
         <ChartsTooltip />
       </ChartsDataProviderPro>
+
       <Typography
         variant="caption"
         component="p"
