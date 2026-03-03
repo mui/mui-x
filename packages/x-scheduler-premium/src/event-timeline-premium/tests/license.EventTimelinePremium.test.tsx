@@ -1,7 +1,8 @@
-import { addYears } from 'date-fns/addYears';
 import { screen } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { clearLicenseStatusCache, generateLicense, LicenseInfo } from '@mui/x-license';
+import { LicenseInfo } from '@mui/x-license';
+import { TEST_LICENSE_KEY_PRO } from '@mui/x-license/test-keys';
+import { clearLicenseStatusCache } from '@mui/x-license/useLicenseVerifier';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -14,15 +15,7 @@ describe('<EventTimelinePremium /> - License', () => {
   });
 
   it('should throw out of scope error when using EventTimelinePremium with a pro license', () => {
-    LicenseInfo.setLicenseKey(
-      generateLicense({
-        expiryDate: addYears(new Date(), 1),
-        orderNumber: '123',
-        licenseModel: 'subscription',
-        planScope: 'pro',
-        planVersion: 'initial',
-      }),
-    );
+    LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PRO);
     expect(() =>
       render(
         <EventTimelinePremium

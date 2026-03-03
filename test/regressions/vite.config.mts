@@ -2,6 +2,8 @@ import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
 import * as fs from 'fs/promises';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../../scripts/generateReleaseInfo.mjs';
 import { alias } from '../../vitest.shared.mts';
 
 export default defineConfig({
@@ -9,14 +11,20 @@ export default defineConfig({
     outDir: 'build',
   },
   resolve: {
-    alias: {
+    alias: [
       ...alias,
-      '@mui/docs': path.resolve(
-        import.meta.dirname,
-        '../../node_modules/@mui/monorepo/packages/mui-docs/src',
-      ),
-      docsx: path.resolve(import.meta.dirname, '../../docs'),
-    },
+      {
+        find: '@mui/docs',
+        replacement: path.resolve(
+          import.meta.dirname,
+          '../../node_modules/@mui/monorepo/packages/mui-docs/src',
+        ),
+      },
+      {
+        find: 'docsx',
+        replacement: path.resolve(import.meta.dirname, '../../docs'),
+      },
+    ],
   },
   worker: {
     format: 'es',
@@ -49,8 +57,9 @@ export default defineConfig({
       async transform(code) {
         return (
           code
-            .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
-            .replaceAll('LICENSE_DISABLE_CHECK', 'true')
+            .replaceAll('__DISABLE_CHANCE_RANDOM__', 'true')
+            .replaceAll('__ALLOW_TEST_LICENSES__', 'true')
+            .replaceAll('__RELEASE_INFO__', generateReleaseInfo())
             // Always disable animations in tests
             .replaceAll('disableAnimations ? 1 : 0', '1')
         );
