@@ -6,9 +6,7 @@ import {
   type ChartsDataProviderProSlots,
   type ChartsDataProviderProSlotProps,
 } from '../ChartsDataProviderPro';
-import {
-  defaultSeriesConfigPro,
-} from '../ChartsDataProviderPro/ChartsDataProviderPro';
+import { defaultSeriesConfigPro } from '../ChartsDataProviderPro/ChartsDataProviderPro';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export { defaultSeriesConfigPro };
