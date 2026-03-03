@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { isJSDOM } from 'test/utils/skipIf';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 
 describe('ChartsTooltipContainer', () => {
@@ -11,8 +10,7 @@ describe('ChartsTooltipContainer', () => {
     clearWarningsCache();
   });
 
-  // can't catch render errors in the browser for unknown reason
-  it.skipIf(!isJSDOM)('should warn when tooltipItem is controlled but trigger is axis', () => {
+  it('should warn when tooltipItem is controlled but trigger is axis', () => {
     const expectedError = [
       "MUI X Charts: The `tooltipItem` prop is provided, but the tooltip trigger is set to 'axis'.",
       "The `tooltipItem` prop only has an effect when the tooltip trigger is 'item'.",
@@ -34,8 +32,7 @@ describe('ChartsTooltipContainer', () => {
     ).toErrorDev(expectedError);
   });
 
-  // can't catch render errors in the browser for unknown reason
-  it.skipIf(!isJSDOM)('should warn when tooltipAxis is controlled but trigger is item', () => {
+  it('should warn when tooltipAxis is controlled but trigger is item', () => {
     const expectedError = [
       "MUI X Charts: The `tooltipAxis` prop is provided, but the tooltip trigger is set to 'item'.",
       "The `tooltipAxis` prop only has an effect when the tooltip trigger is 'axis'.",
@@ -57,8 +54,7 @@ describe('ChartsTooltipContainer', () => {
     ).toErrorDev(expectedError);
   });
 
-  // can't catch render errors in the browser for unknown reason
-  it.skipIf(!isJSDOM)('should not warn when tooltipItem is controlled and trigger is item', () => {
+  it('should not warn when tooltipItem is controlled and trigger is item', () => {
     expect(() =>
       render(
         <BarChart
@@ -75,8 +71,7 @@ describe('ChartsTooltipContainer', () => {
     ).not.toErrorDev();
   });
 
-  // can't catch render errors in the browser for unknown reason
-  it.skipIf(!isJSDOM)('should not warn when tooltipAxis is controlled and trigger is axis', () => {
+  it('should not warn when tooltipAxis is controlled and trigger is axis', () => {
     expect(() =>
       render(
         <BarChart
