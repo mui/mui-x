@@ -35,8 +35,8 @@
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
-        "name": "shape",
-        "description": "{ seriesId: string, type?: 'heatmap', xIndex: number, yIndex: number }"
+        "name": "union",
+        "description": "{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -117,8 +117,8 @@
     },
     "tooltipItem": {
       "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type?: 'heatmap', xIndex: number, yIndex: number }"
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, xIndex: number, yIndex: number }"
       }
     },
     "width": { "type": { "name": "number" } },

@@ -13,21 +13,21 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type?: 'pie' }"
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -41,7 +41,7 @@
     "onHiddenItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "type": "function(hiddenItems: Array<VisibilityIdentifierWithType>) => void",
         "describedArgs": ["hiddenItems"]
       }
     },
@@ -70,8 +70,8 @@
     },
     "tooltipItem": {
       "type": {
-        "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type?: 'pie' }"
+        "name": "union",
+        "description": "{ dataIndex: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
       }
     },
     "width": { "type": { "name": "number" } }
