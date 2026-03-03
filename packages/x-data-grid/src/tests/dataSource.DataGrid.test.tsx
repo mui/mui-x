@@ -20,7 +20,6 @@ const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
-// Needs layout
 describe('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();

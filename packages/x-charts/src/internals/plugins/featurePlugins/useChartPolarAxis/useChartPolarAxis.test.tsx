@@ -6,8 +6,6 @@ import { useChartPolarAxis } from './useChartPolarAxis';
 describe('useChartPolarAxis', () => {
   const { render } = createRenderer();
 
-  // can't catch render errors in the browser for unknown reason
-  // tried try-catch + error boundary + window onError preventDefault
   it('should throw an error when axis have duplicate ids', () => {
     const expectedError = [
       'MUI X Charts: The following axis ids are duplicated: qwerty.',
@@ -29,8 +27,6 @@ describe('useChartPolarAxis', () => {
     ).toErrorDev(expectedError);
   });
 
-  // can't catch render errors in the browser for unknown reason
-  // tried try-catch + error boundary + window onError preventDefault
   it('should throw an error when axis have duplicate ids across different directions (radius, rotation)', () => {
     const expectedError = [
       'MUI X Charts: The following axis ids are duplicated: qwerty.',

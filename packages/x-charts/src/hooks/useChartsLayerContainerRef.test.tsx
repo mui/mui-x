@@ -15,8 +15,6 @@ function UseChartsLayerContainerRef() {
 describe('useChartsLayerContainerRef', () => {
   const { render } = createRenderer();
 
-  // can't catch render errors in the browser for unknown reason
-  // tried try-catch + error boundary + window onError preventDefault
   it('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 

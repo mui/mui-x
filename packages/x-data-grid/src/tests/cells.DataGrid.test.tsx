@@ -50,7 +50,6 @@ describe('<DataGrid /> - Cells', () => {
     });
   });
 
-  // Doesn't work with mocked window.getComputedStyle
   describe('prop: showCellVerticalBorder', () => {
     function expectRightBorder(element: HTMLElement) {
       const computedStyle = window.getComputedStyle(element);
@@ -203,7 +202,6 @@ describe('<DataGrid /> - Cells', () => {
   });
 
   // See https://github.com/mui/mui-x/issues/6378
-  // Needs layout
   it('should not cause scroll jump when focused cell mounts in the render zone', async () => {
     const rowHeight = 50;
     const columns = [{ field: 'id' }];

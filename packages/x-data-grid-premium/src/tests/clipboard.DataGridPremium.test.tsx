@@ -192,7 +192,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
   });
 
-  // These test are flaky in JSDOM
   describe('paste', () => {
     function paste(cell: HTMLElement, pasteText: string) {
       const pasteEvent = new Event('paste');
@@ -845,7 +844,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           processRowUpdate={() => {
             throw new Error();
           }}
-          onProcessRowUpdateError={() => {}} // suppress error
+          onProcessRowUpdateError={() => { }} // suppress error
         />,
       );
 
@@ -872,7 +871,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           processRowUpdate={() => {
             return Promise.reject();
           }}
-          onProcessRowUpdateError={() => {}} // suppress error
+          onProcessRowUpdateError={() => { }} // suppress error
         />,
       );
 

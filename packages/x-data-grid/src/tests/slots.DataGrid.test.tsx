@@ -157,8 +157,6 @@ describe('<DataGrid /> - Slots', () => {
     });
   });
 
-  // can't catch render errors in the browser for unknown reason
-  // tried try-catch + error boundary + window onError preventDefault
   it('should throw if a component is used without providing the context', () => {
     expect(() => {
       render(
@@ -168,7 +166,7 @@ describe('<DataGrid /> - Slots', () => {
       );
     }).toErrorDev([
       reactMajor >= 19 &&
-        'MUI X Data Grid: useGridRootProps should only be used inside a Data Grid component. The component must be a child of DataGrid, DataGridPro, or DataGridPremium. Ensure your component is properly nested within a Data Grid.',
+      'MUI X Data Grid: useGridRootProps should only be used inside a Data Grid component. The component must be a child of DataGrid, DataGridPro, or DataGridPremium. Ensure your component is properly nested within a Data Grid.',
       reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay2)> component',
     ]);
   });

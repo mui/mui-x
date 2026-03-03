@@ -131,7 +131,6 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  // JSDOM has neither layout nor window.scrollTo
   describe('scroll', () => {
     const NoTransition = React.forwardRef(function NoTransition(
       props: TransitionProps & { children?: React.ReactNode },

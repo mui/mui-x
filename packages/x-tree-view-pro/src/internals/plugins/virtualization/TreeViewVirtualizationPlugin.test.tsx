@@ -49,7 +49,6 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       });
     });
 
-    // Virtualization requires actual layout calculations which don't work in JSDOM
     describe('rendering', () => {
       it('should render items with virtualization enabled', () => {
         const view = render({
