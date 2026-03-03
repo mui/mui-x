@@ -220,8 +220,6 @@ export interface EventCalendarClasses extends EventDialogClasses {
   moreEventsPopoverTitle: string;
   /** Styles applied to the more events popover body element. */
   moreEventsPopoverBody: string;
-  /** Styles applied to the more events popover arrow element. */
-  moreEventsPopoverArrow: string;
   /** Styles applied to the event drag preview element. */
   eventDragPreview: string;
   /** Styles applied to the standalone event element. */
@@ -343,7 +341,6 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'moreEventsPopoverHeader',
     'moreEventsPopoverTitle',
     'moreEventsPopoverBody',
-    'moreEventsPopoverArrow',
     'eventDragPreview',
     'standaloneEvent',
     ...eventDialogClassKeys,
@@ -457,7 +454,6 @@ const slots = {
   moreEventsPopoverHeader: ['moreEventsPopoverHeader'],
   moreEventsPopoverTitle: ['moreEventsPopoverTitle'],
   moreEventsPopoverBody: ['moreEventsPopoverBody'],
-  moreEventsPopoverArrow: ['moreEventsPopoverArrow'],
   eventDragPreview: ['eventDragPreview'],
   standaloneEvent: ['standaloneEvent'],
   ...eventDialogSlots,
