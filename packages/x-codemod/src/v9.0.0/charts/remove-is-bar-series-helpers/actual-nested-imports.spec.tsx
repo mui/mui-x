@@ -1,7 +1,7 @@
 import { isBarSeries, isDefaultizedBarSeries } from '@mui/x-charts/models';
 import { isBarSeries as isBarSeriesPro } from '@mui/x-charts-pro/models';
 
-function handleSeries(series: any) {
+function handleNestedSeries(series: any) {
   if (isBarSeries(series)) {
     console.log('bar series');
   }

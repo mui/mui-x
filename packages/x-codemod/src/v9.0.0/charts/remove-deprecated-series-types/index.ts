@@ -48,10 +48,10 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
     specifiers.forEach((specifier) => {
       if (specifier.type === 'ImportSpecifier') {
-        const importedName = specifier.imported.name;
+        const importedName = specifier.imported.name.toString();
         if (REMOVED_TYPE_NAMES.includes(importedName)) {
           // Track the local name used for this import
-          const localName = specifier.local?.name || importedName;
+          const localName = specifier.local?.name.toString() || importedName;
           removedTypeLocalNames[localName] = importedName;
           // Track the original import source (use the first one found)
           if (!originalImportSource) {

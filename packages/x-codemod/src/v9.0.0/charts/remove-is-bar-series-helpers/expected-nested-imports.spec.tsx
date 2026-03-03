@@ -1,4 +1,4 @@
-function handleSeries(series: any) {
+function handleNestedSeries(series: any) {
   if (series.type === 'bar') {
     console.log('bar series');
   }

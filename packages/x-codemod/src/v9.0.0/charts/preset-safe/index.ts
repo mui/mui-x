@@ -14,8 +14,8 @@ import * as renameLegendPositionType from '../rename-legend-position-type';
 import * as replaceAxisClickHandler from '../remove-on-axis-click-handler';
 import * as renameUnstableUseSeries from '../rename-unstable-use-series';
 import * as replaceLegendHiddenSlotProp from '../replace-legend-hidden-slot-prop';
-import * as removeDeprecatedSeriesTypes from '../remove-deprecated-series-types/index';
-import * as removeIsBarSeriesHelpers from '../remove-is-bar-series-helpers/index';
+import * as removeDeprecatedSeriesTypes from '../remove-deprecated-series-types';
+import * as removeIsBarSeriesHelpers from '../remove-is-bar-series-helpers';
 
 const allModules = [
   // Add other transforms here as they are created
