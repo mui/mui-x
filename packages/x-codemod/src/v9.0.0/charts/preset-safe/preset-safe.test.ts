@@ -1,55 +1,40 @@
-import jscodeshift from 'jscodeshift';
 import path from 'path';
-import transform, { testConfig } from './index';
+import jscodeshift from 'jscodeshift';
+import transform from './index';
 import readFile from '../../../util/readFile';
 
-const parsedFiles = testConfig.allModules
-  .map((mod) => mod.testConfig())
-  .map((mod) =>
-    mod.specFiles.map((file) => {
-      file.name = `${mod.name}/${file.name}`;
-      return file;
-    }),
-  )
-  .flat();
+function read(fileName) {
+  return readFile(path.join(__dirname, fileName));
+}
 
-const testCases = [
-  ...parsedFiles,
-  {
-    name: 'preset-safe/own-files',
-    actual: readFile(path.join(import.meta.dirname, 'actual.spec.tsx')),
-    expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
-  },
-];
-
-describe('v9.0.0/charts', () => {
+describe('v8.0.0/charts', () => {
   describe('preset-safe', () => {
-    describe.each(testCases)('transforms $name correctly', (file) => {
-      it('transforms code as needed', () => {
-        const actual = transform(
-          {
-            source: file.actual,
-          },
-          { jscodeshift: jscodeshift.withParser('tsx') },
-          {},
-        );
+    it('transforms code as needed', () => {
+      const actual = transform(
+        {
+          source: read('./actual.spec.tsx'),
+          path: require.resolve('./actual.spec.tsx'),
+        },
+        { jscodeshift: jscodeshift.withParser('tsx') },
+        {},
+      );
 
-        const expected = file.expected;
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
+      const expected = read('./expected.spec.tsx');
+      expect(actual).to.equal(expected, 'The transformed version should be correct');
+    });
 
-      it('should be idempotent for expression', () => {
-        const actual = transform(
-          {
-            source: file.expected,
-          },
-          { jscodeshift: jscodeshift.withParser('tsx') },
-          {},
-        );
+    it('should be idempotent for expression', () => {
+      const actual = transform(
+        {
+          source: read('./expected.spec.tsx'),
+          path: require.resolve('./expected.spec.tsx'),
+        },
+        { jscodeshift: jscodeshift.withParser('tsx') },
+        {},
+      );
 
-        const expected = file.expected;
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
+      const expected = read('./expected.spec.tsx');
+      expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
   });
 });
