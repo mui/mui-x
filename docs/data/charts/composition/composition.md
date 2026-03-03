@@ -50,9 +50,7 @@ Notice that the `width` and `height` props are passed to the `ChartsDataProvider
 >
   <ChartsLegend />
   <ChartsLayerContainer>
-    <ChartsSvgLayer>
-      {children}
-    </ChartsSvgLayer>
+    <ChartsSvgLayer>{children}</ChartsSvgLayer>
   </ChartsLayerContainer>
 </ChartsDataProvider>
 ```
@@ -74,9 +72,7 @@ This means that you can't interleave different layers, such as rendering a canva
   height={300}
 >
   <ChartsLegend />
-  <ChartsSurface>
-    {children}
-  </ChartsSurface>
+  <ChartsSurface>{children}</ChartsSurface>
 </ChartsDataProvider>
 ```
 
