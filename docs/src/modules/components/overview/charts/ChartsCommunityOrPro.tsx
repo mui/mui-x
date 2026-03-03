@@ -16,20 +16,20 @@ export default function ChartsCommunityOrPro() {
         mx="auto"
       >
         <CommunityOrPro
-          caption={'Community and Pro'}
-          title={'Two packages for every need'}
+          caption={'Community, Pro and Premium'}
+          title={'Three packages for every growing need'}
           description={
-            "Start with the free-forever Community version, then upgrade to Pro when you're ready for additional features and components."
+            'Start with the free-forever Community version, then upgrade to Pro or Premium as your needs grow.'
           }
           communityDescription={
-            'Free forever under an MIT license. Includes essential charts and core features like axes, legends, styling customizations, tooltips, highlights, and more.'
+            'Free forever under an MIT license. Includes core chart types and building blocks like axes, legends, theming, tooltips, and highlights.'
           }
           proDescription={
-            'Requires a commercial license. Includes advanced charts and features such as zooming, panning, and exporting. Ideal for data-rich and enterprise applications.'
+            'Built for data-rich production apps. Commercial license. Includes advanced charts (funnel, heatmap, sankey) and interactions like zooming, panning, and exporting.'
           }
-          // premiumDescription={
-          //   'Requires a commercial license. Includes the most advanced features such as... [complete this when ready to launch]'
-          // }
+          premiumDescription={
+            'Maximum performance for dense data visualizations. Includes WebGL rendering for smooth interaction at scale, plus candlestick, OHLC charts, and (coming soon) annotations and AI assistance.'
+          }
         />
       </Stack>
     </React.Fragment>

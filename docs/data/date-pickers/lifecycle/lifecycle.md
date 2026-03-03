@@ -127,6 +127,13 @@ so the picker will close even if you never went to those views.
 
 Pressing <kbd class="key">Escape</kbd> or clicking outside the picker will close the picker.
 
+#### When clicking or focusing the field
+
+By default, the picker's popper closes when the field is clicked or focused.
+You can use the `keepOpenDuringFieldFocus` prop to keep it open when the user is interacting with the field.
+
+{{"demo": "KeepOpenDuringFieldFocus.js"}}
+
 #### When a value is selected using the action bar
 
 Clicking on any built-in button of the action bar will close the picker.
@@ -142,7 +149,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 The `onChange` callback is called whenever the current value changes.
 
-If you don't want to listen to the intermediary steps, consider using the [`onAccept` prop](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-quot-onaccept-quot) instead.
+If you don't want to listen to the intermediary steps, consider using the [`onAccept` prop](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-onaccept) instead.
 
 ```tsx
 <DatePicker onChange={(value) => setValue(value)} />
@@ -429,7 +436,7 @@ In such a case, the recommended UI is to add a button for validating the form.
 If for some reason, you need to send the data to the server without having the user pressing a validation button, you can debounce the `onChange` as follows.
 
 The following demo shows how to extend the Date Field component by adding an `onAccept` prop, which is a debounced version of `onChange`.
-You can find more information about the `onAccept` prop [in the dedicated doc section](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-quot-onaccept-quot).
+You can find more information about the `onAccept` prop [in the dedicated doc section](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-onaccept).
 
 {{"demo": "ServerInteraction.js"}}
 

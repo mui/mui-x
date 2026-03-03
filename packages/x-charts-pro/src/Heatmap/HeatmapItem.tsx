@@ -107,7 +107,13 @@ function HeatmapItem(props: HeatmapItemProps) {
   const Cell = slots?.cell ?? HeatmapCell;
   const cellProps = useSlotProps({
     elementType: Cell,
-    additionalProps: { ...interactionProps, rx: borderRadius, ry: borderRadius },
+    additionalProps: {
+      ...interactionProps,
+      rx: borderRadius,
+      ry: borderRadius,
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
+    },
     externalForwardedProps: { ...other },
     externalSlotProps: slotProps.cell,
     ownerState,

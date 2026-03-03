@@ -48,6 +48,7 @@ type DemoActions =
 const demoReducer: React.Reducer<DemoState, DemoActions> = (state, action) => {
   switch (action.type) {
     case 'createView': {
+      // eslint-disable-next-line no-restricted-properties -- used for unique ID generation
       const id = Math.random().toString();
 
       return {

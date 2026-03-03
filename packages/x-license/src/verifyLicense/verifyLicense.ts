@@ -1,20 +1,11 @@
-import { base64Decode, base64Encode } from '../encoding/base64';
+import { base64Decode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { PlanScope, PLAN_SCOPES, PlanVersion } from '../utils/plan';
+import { PlanScope, PLAN_SCOPES, PlanVersion } from '../utils/licensePlan';
+import type { AppType } from '../utils/licenseAppType';
 import { LicenseModel, LICENSE_MODELS } from '../utils/licenseModel';
+import type { NullableLicenseDetails } from '../utils/licenseDetails';
 import { MuiCommercialPackageName } from '../utils/commercialPackages';
-
-const getDefaultReleaseDate = () => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  return today;
-};
-
-export function generateReleaseInfo(releaseDate = getDefaultReleaseDate()) {
-  return base64Encode(releaseDate.getTime().toString());
-}
 
 function isPlanScopeSufficient(packageName: MuiCommercialPackageName, planScope: PlanScope) {
   let acceptedScopes: PlanScope[];
@@ -32,16 +23,6 @@ function isPlanScopeSufficient(packageName: MuiCommercialPackageName, planScope:
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 const orderReg = /^.*ORDER:([0-9]+),.*$/;
 
-interface MuiLicense {
-  version: 1 | 2;
-  licenseModel: LicenseModel | null;
-  planScope: PlanScope | null;
-  planVersion: PlanVersion;
-  expiryTimestamp: number | null;
-  expiryDate: Date | null;
-  orderId: number | null;
-}
-
 const PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN: MuiCommercialPackageName[] = [
   'x-data-grid-pro',
   'x-date-pickers-pro',
@@ -50,7 +31,7 @@ const PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN: MuiCommercialPackageName[] = [
 /**
  * Format: ORDER:${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=1
  */
-function decodeLicenseVersion1(license: string): MuiLicense {
+function decodeLicenseVersion1(license: string): NullableLicenseDetails {
   let expiryTimestamp: number | null;
   let orderId: number | null;
   try {
@@ -69,30 +50,24 @@ function decodeLicenseVersion1(license: string): MuiLicense {
   }
 
   return {
-    version: 1,
+    keyVersion: 1,
     licenseModel: 'perpetual',
     planScope: 'pro',
     planVersion: 'initial',
     expiryTimestamp,
     expiryDate: expiryTimestamp ? new Date(expiryTimestamp) : null,
     orderId,
+    appType: 'multi',
+    quantity: null,
+    isTestKey: license.includes('T=true'),
   };
 }
 
 /**
- * Format: O=${orderNumber},E=${expiryTimestamp},S=${planScope},LM=${licenseModel},PV=${planVersion},KV=2`;
+ * Parse a comma-separated key=value license string into a NullableLicenseDetails object.
+ * Shared by v2 and v3 decoders.
  */
-function decodeLicenseVersion2(license: string): MuiLicense {
-  const licenseInfo: MuiLicense = {
-    version: 2,
-    licenseModel: null,
-    planScope: null,
-    planVersion: 'initial',
-    expiryTimestamp: null,
-    expiryDate: null,
-    orderId: null,
-  };
-
+export function parseLicenseTokens(license: string, licenseInfo: NullableLicenseDetails): void {
   license
     .split(',')
     .map((token) => token.split('='))
@@ -124,15 +99,70 @@ function decodeLicenseVersion2(license: string): MuiLicense {
           licenseInfo.orderId = orderNum;
         }
       }
-    });
 
+      if (key === 'Q') {
+        const qty = parseInt(value, 10);
+        if (qty && !Number.isNaN(qty)) {
+          licenseInfo.quantity = qty;
+        }
+      }
+
+      if (key === 'AT') {
+        licenseInfo.appType = value as AppType;
+      }
+
+      if (key === 'T') {
+        licenseInfo.isTestKey = value === 'true';
+      }
+    });
+}
+
+/**
+ * Format: O=${orderNumber},E=${expiryTimestamp},S=${planScope},LM=${licenseModel},PV=${planVersion},KV=2
+ */
+export function decodeLicenseVersion2(license: string): NullableLicenseDetails {
+  const licenseInfo: NullableLicenseDetails = {
+    keyVersion: 2,
+    licenseModel: null,
+    planScope: null,
+    planVersion: 'initial',
+    expiryTimestamp: null,
+    expiryDate: null,
+    orderId: null,
+    appType: 'multi',
+    quantity: null,
+    isTestKey: false,
+  };
+
+  parseLicenseTokens(license, licenseInfo);
   return licenseInfo;
 }
 
 /**
- * Decode the license based on its key version and return a version-agnostic `MuiLicense` object.
+ * Format: O=${orderNumber},E=${expiryTimestamp},S=${planScope},LM=${licenseModel},PV=${planVersion},Q=${quantity},AT=${appType},KV=3
  */
-function decodeLicense(encodedLicense: string): MuiLicense | null {
+export function decodeLicenseVersion3(license: string): NullableLicenseDetails {
+  const licenseInfo: NullableLicenseDetails = {
+    keyVersion: 3,
+    licenseModel: null,
+    planScope: null,
+    planVersion: 'initial',
+    expiryTimestamp: null,
+    expiryDate: null,
+    orderId: null,
+    appType: null,
+    quantity: null,
+    isTestKey: false,
+  };
+
+  parseLicenseTokens(license, licenseInfo);
+  return licenseInfo;
+}
+
+/**
+ * Decode the license based on its key version and return a version-agnostic `NullableLicenseDetails` object.
+ */
+export function decodeLicense(encodedLicense: string): NullableLicenseDetails | null {
   const license = base64Decode(encodedLicense);
 
   if (license.includes('KEYVERSION=1')) {
@@ -141,6 +171,10 @@ function decodeLicense(encodedLicense: string): MuiLicense | null {
 
   if (license.includes('KV=2')) {
     return decodeLicenseVersion2(license);
+  }
+
+  if (license.includes('KV=3')) {
+    return decodeLicenseVersion3(license);
   }
 
   return null;
@@ -155,22 +189,20 @@ export function verifyLicense({
   licenseKey?: string;
   packageName: MuiCommercialPackageName;
 }): { status: LicenseStatus; meta?: any } {
-  // Gets replaced at build time
-  // @ts-ignore
-  if (LICENSE_DISABLE_CHECK) {
-    return { status: LICENSE_STATUS.Valid };
-  }
-
   if (!releaseInfo) {
-    throw new Error('MUI X: The release information is missing. Not able to validate license.');
+    throw new Error(
+      'MUI X: The release information is missing and license validation cannot proceed. ' +
+        'This is an internal error that should not occur in normal usage. ' +
+        'Please report this issue if you encounter it.',
+    );
   }
 
   if (!licenseKey) {
     return { status: LICENSE_STATUS.NotFound };
   }
 
-  const hash = licenseKey.substr(0, 32);
-  const encoded = licenseKey.substr(32);
+  const hash = licenseKey.slice(0, 32);
+  const encoded = licenseKey.slice(32);
 
   if (hash !== md5(encoded)) {
     return { status: LICENSE_STATUS.Invalid };
@@ -180,6 +212,17 @@ export function verifyLicense({
 
   if (license == null) {
     console.error('MUI X: Error checking license. Key version not found!');
+    return { status: LICENSE_STATUS.Invalid };
+  }
+
+  // Reject test license keys outside of test environments.
+  // Gets replaced with `false` during production builds, making it impossible
+  // for users of published packages to use test licenses.
+  // @ts-ignore
+  if (license.isTestKey && !__ALLOW_TEST_LICENSES__) {
+    console.error(
+      'MUI X: Error checking license. Test license key used in a non-test environment!',
+    );
     return { status: LICENSE_STATUS.Invalid };
   }
 
@@ -196,7 +239,11 @@ export function verifyLicense({
   if (license.licenseModel === 'perpetual' || process.env.NODE_ENV === 'production') {
     const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
     if (Number.isNaN(pkgTimestamp)) {
-      throw new Error('MUI X: The release information is invalid. Not able to validate license.');
+      throw new Error(
+        'MUI X: The release information is invalid and license validation cannot proceed. ' +
+          'The package release timestamp could not be parsed. ' +
+          'This may indicate a corrupted package. Try reinstalling the MUI X packages.',
+      );
     }
 
     if (license.expiryTimestamp < pkgTimestamp) {

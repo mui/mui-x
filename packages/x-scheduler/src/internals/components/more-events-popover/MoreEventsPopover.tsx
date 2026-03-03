@@ -11,10 +11,7 @@ import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
-import {
-  EventDraggableDialogTrigger,
-  useEventDraggableDialogContext,
-} from '../event-draggable-dialog';
+import { EventDialogTrigger, useEventDialogContext } from '../event-dialog';
 
 const MoreEventsPopoverHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -59,7 +56,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
 
   // Context hooks
   const adapter = useAdapter();
-  const { subscribeCloseHandler } = useEventDraggableDialogContext();
+  const { subscribeCloseHandler } = useEventDialogContext();
 
   React.useEffect(() => {
     subscribeCloseHandler(() => {
@@ -79,14 +76,14 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody>
         {occurrences.map((occurrence) => (
-          <EventDraggableDialogTrigger occurrence={occurrence} key={occurrence.key}>
+          <EventDialogTrigger occurrence={occurrence} key={occurrence.key}>
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
               ariaLabelledBy={`PopoverHeader-${day.key}`}
             />
-          </EventDraggableDialogTrigger>
+          </EventDialogTrigger>
         ))}
       </MoreEventsPopoverBody>
     </Popover>

@@ -1,26 +1,20 @@
 import { type ChartsOverlaySlotProps, type ChartsOverlaySlots } from '@mui/x-charts/ChartsOverlay';
-import {
-  type ChartsTooltipProps,
-  type ChartsTooltipSlotProps,
-  type ChartsTooltipSlots,
-} from '@mui/x-charts/ChartsTooltip';
+import { type ChartsTooltipSlotProps, type ChartsTooltipSlots } from '@mui/x-charts/ChartsTooltip';
 import { type ChartsSlotProps, type ChartsSlots } from '@mui/x-charts/internals';
 import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
 
 export interface SankeyChartSlots
-  extends ChartsTooltipSlots, ChartsOverlaySlots, ChartsToolbarSlots, Partial<ChartsSlots> {}
+  extends
+    ChartsTooltipSlots<'item' | 'none'>,
+    ChartsOverlaySlots,
+    ChartsToolbarSlots,
+    Partial<ChartsSlots> {}
 export interface SankeyChartSlotProps
   extends
-    Omit<ChartsTooltipSlotProps, 'tooltip'>,
+    ChartsTooltipSlotProps<'item' | 'none'>,
     ChartsOverlaySlotProps,
     ChartsToolbarSlotProps,
-    Partial<ChartsSlotProps> {
-  /**
-   * Slot props for the tooltip component.
-   * @default {}
-   */
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>>;
-}
+    Partial<ChartsSlotProps> {}
 
 export interface SankeyChartSlotExtension {
   /**

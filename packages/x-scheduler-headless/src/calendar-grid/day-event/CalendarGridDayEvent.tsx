@@ -21,6 +21,11 @@ import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellCo
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { generateOccurrenceFromEvent } from '../../internals/utils/event-utils';
 
+const overflowStateAttributesMapping = {
+  startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
+  endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
+};
+
 export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEvent(
   componentProps: CalendarGridDayEvent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -75,7 +80,9 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
 
-    return adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1);
+    return adapter.startOfDay(
+      adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1),
+    );
   });
 
   const firstEventOfSeries = schedulerEventSelectors.processedEvent(store.state, eventId)!;
@@ -121,6 +128,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     collectionEnd: rowEnd,
   });
 
+  const startingBeforeEdge = draggableEventContextValue.doesEventStartBeforeCollectionStart;
+  const endingAfterEdge = draggableEventContextValue.doesEventEndAfterCollectionEnd;
+
+  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
+
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
     native: nativeButton,
@@ -142,9 +154,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   );
 
   const element = useRenderElement('div', componentProps, {
-    state,
+    state: mergedState,
     ref: [forwardedRef, buttonRef, ref],
     props: [props, elementProps, getButtonProps],
+    stateAttributesMapping: overflowStateAttributesMapping,
   });
 
   return (
@@ -156,7 +169,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 });
 
 export namespace CalendarGridDayEvent {
-  export interface State extends useDraggableEvent.State {}
+  export interface State extends useDraggableEvent.State {
+    startingBeforeEdge: boolean;
+    endingAfterEdge: boolean;
+  }
 
   export interface Props
     extends

@@ -83,7 +83,7 @@ You can also enable it globally using [theme default props](/material-ui/customi
 
 ```js
 components: {
-  MuiChartDataProvider: {
+  MuiChartsDataProvider: {
     defaultProps: {
        experimentalFeatures: { preferStrictDomainInLineCharts: true }
     },
@@ -166,11 +166,11 @@ If you're using composition, you can get those click events as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
-<ChartContainer onAxisClick={onAxisClick}>
+<ChartsContainer onAxisClick={onAxisClick}>
   {/* ... */}
   <LinePlot onItemClick={onLineClick} />
   <AreaPlot onItemClick={onAreaClick} />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 ## Styling
@@ -295,17 +295,17 @@ This will lead to strange behaviors.
 <LineChart skipAnimation />
 
 // For a composed chart
-<ChartContainer>
+<ChartsContainer>
   <LinePlot skipAnimation />
   <AreaPlot skipAnimation />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "LineAnimation.js"}}
 
 ## Composition
 
-Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+Use the `<ChartsDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
 
@@ -318,7 +318,7 @@ In addition to the common chart components available for [composition](/x/react-
 Here's how the Line Chart is composed:
 
 ```jsx
-<ChartDataProvider>
+<ChartsDataProvider>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -341,7 +341,7 @@ Here's how the Line Chart is composed:
     </ChartsSurface>
     <ChartsTooltip />
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 :::info

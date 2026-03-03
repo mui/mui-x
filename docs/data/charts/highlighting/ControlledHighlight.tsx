@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import { HighlightItemData, HighlightScope } from '@mui/x-charts/context';
+import { HighlightItemIdentifier } from '@mui/x-charts/models';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -15,16 +15,19 @@ import RadioGroup from '@mui/material/RadioGroup';
 
 export default function ControlledHighlight() {
   const [highlightedItem, setHighLightedItem] =
-    React.useState<HighlightItemData | null>({
+    React.useState<HighlightItemIdentifier<'bar'> | null>({
       seriesId: 'A',
       dataIndex: 0,
     });
-  const [highlight, setHighlight] = React.useState('item');
-  const [fade, setFade] = React.useState('global');
+  const [highlight, setHighlight] = React.useState<'none' | 'item' | 'series'>(
+    'item',
+  );
+  const [fade, setFade] = React.useState<'none' | 'series' | 'global'>('global');
 
   const handleHighLightedSeries = (event: any, newHighLightedSeries: string) => {
     if (newHighLightedSeries !== null) {
       setHighLightedItem((prev) => ({
+        dataIndex: 0,
         ...prev,
         seriesId: newHighLightedSeries,
       }));
@@ -84,7 +87,7 @@ export default function ControlledHighlight() {
             highlightScope: {
               highlight,
               fade,
-            } as HighlightScope,
+            },
           }))}
           highlightedItem={highlightedItem}
           onHighlightChange={setHighLightedItem}
@@ -101,7 +104,9 @@ export default function ControlledHighlight() {
           select
           label="highlighted"
           value={highlight}
-          onChange={(event) => setHighlight(event.target.value)}
+          onChange={(event) =>
+            setHighlight(event.target.value as 'none' | 'item' | 'series')
+          }
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>
@@ -112,7 +117,9 @@ export default function ControlledHighlight() {
           select
           label="faded"
           value={fade}
-          onChange={(event) => setFade(event.target.value)}
+          onChange={(event) =>
+            setFade(event.target.value as 'none' | 'series' | 'global')
+          }
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>

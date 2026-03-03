@@ -99,8 +99,10 @@ interface PivotingDataRowsResponse extends NestedDataRowsResponse {
   pivotColumns: GridGetRowsResponse['pivotColumns'];
 }
 
-declare const DISABLE_CHANCE_RANDOM: any;
-export const disableDelay = typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM;
+// eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle
+declare const __DISABLE_CHANCE_RANDOM__: any;
+export const disableDelay =
+  typeof __DISABLE_CHANCE_RANDOM__ !== 'undefined' && __DISABLE_CHANCE_RANDOM__;
 
 export const DEFAULT_SERVER_OPTIONS: DefaultServerOptions = {
   minDelay: disableDelay ? 0 : 100,
@@ -272,7 +274,7 @@ const getFilteredRows = (
     ) as any;
 
     if (!colDef.filterOperators) {
-      throw new Error(`MUI: No filter operator found for column '${field}'.`);
+      throw new Error(`MUI X: No filter operator found for column '${field}'.`);
     }
     const filterOperator: any = colDef.filterOperators.find(
       ({ value }: GridFilterOperator) => operator === value,
@@ -410,7 +412,7 @@ export const loadServerRows = (
   const { minDelay = 100, maxDelay = 300, useCursorPagination } = serverOptions;
 
   if (maxDelay < minDelay) {
-    throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
+    throw new Error('MUI X: serverOptions.minDelay is larger than serverOptions.maxDelay');
   }
   const delay = randomInt(minDelay, maxDelay);
 
@@ -586,11 +588,11 @@ export const processTreeDataRows = (
   const pathKey = 'path';
   // TODO: Support filtering and cursor based pagination
   if (maxDelay < minDelay) {
-    throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
+    throw new Error('MUI X: serverOptions.minDelay is larger than serverOptions.maxDelay');
   }
 
   if (queryOptions.groupKeys == null) {
-    throw new Error('serverOptions.groupKeys must be defined to compute tree data ');
+    throw new Error('MUI X: serverOptions.groupKeys must be defined to compute tree data');
   }
 
   const delay = randomInt(minDelay, maxDelay);
@@ -681,15 +683,17 @@ export const processRowGroupingRows = (
   const pathKey = 'path';
 
   if (maxDelay < minDelay) {
-    throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
+    throw new Error('MUI X: serverOptions.minDelay is larger than serverOptions.maxDelay');
   }
 
   if (queryOptions.groupKeys == null) {
-    throw new Error('serverOptions.groupKeys must be defined to compute row grouping data');
+    throw new Error('MUI X: serverOptions.groupKeys must be defined to compute row grouping data');
   }
 
   if (queryOptions.groupFields == null) {
-    throw new Error('serverOptions.groupFields must be defined to compute row grouping data');
+    throw new Error(
+      'MUI X: serverOptions.groupFields must be defined to compute row grouping data',
+    );
   }
 
   const delay = randomInt(minDelay, maxDelay);
@@ -830,11 +834,11 @@ export const processPivotingRows = (
   const { minDelay = 100, maxDelay = 300 } = serverOptions;
 
   if (maxDelay < minDelay) {
-    throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
+    throw new Error('MUI X: serverOptions.minDelay is larger than serverOptions.maxDelay ');
   }
 
   if (!queryOptions.pivotModel) {
-    throw new Error('queryOptions.pivotModel must be defined to compute pivoting data');
+    throw new Error('MUI X: queryOptions.pivotModel must be defined to compute pivoting data');
   }
 
   const delay = randomInt(minDelay, maxDelay);

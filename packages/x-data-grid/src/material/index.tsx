@@ -82,7 +82,7 @@ import './augmentation';
 
 export { useMaterialCSSVariables } from './variables';
 
-/* eslint-disable material-ui/disallow-react-api-in-server-components */
+/* eslint-disable mui/disallow-react-api-in-server-components */
 
 const InputAdornment = styled(MUIInputAdornment, {
   slot: 'internal',

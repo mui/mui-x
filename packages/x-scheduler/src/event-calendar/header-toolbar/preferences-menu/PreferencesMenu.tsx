@@ -3,7 +3,6 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
-import ChevronRight from '@mui/icons-material/ChevronRight';
 import CheckIcon from '@mui/icons-material/Check';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import IconButton from '@mui/material/IconButton';
@@ -24,22 +23,30 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import clsx from 'clsx';
-import { useTranslations } from '../../../internals/utils/TranslationsContext';
-import { useEventCalendarClasses } from '../../EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../EventCalendarStyledContext';
 
 const PreferencesMenuRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'PreferencesMenu',
 })({});
 
+const PreferencesListSubheader = styled(ListSubheader, {
+  name: 'MuiEventCalendar',
+  slot: 'PreferencesListSubheader',
+})(({ theme }) => ({
+  ...theme.typography.button,
+  color: theme.palette.text.disabled,
+  paddingBottom: theme.spacing(1),
+  backgroundColor: 'transparent',
+}));
+
 export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   props: React.HTMLAttributes<HTMLDivElement>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // Context hooks
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -52,10 +59,8 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
 
   // State hooks (must come before any early returns)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [timeFormatAnchorEl, setTimeFormatAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
-  const timeFormatOpen = Boolean(timeFormatAnchorEl);
 
   const handleToggle = (key: keyof EventCalendarPreferences, checked: boolean, event: Event) => {
     store.setPreferences({ [key]: checked }, event);
@@ -73,14 +78,6 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
     setAnchorEl(null);
   };
 
-  const handleTimeFormatClick = (event: React.MouseEvent<HTMLElement>) => {
-    setTimeFormatAnchorEl(event.currentTarget);
-  };
-
-  const handleTimeFormatClose = () => {
-    setTimeFormatAnchorEl(null);
-  };
-
   // Early return if config is false
   if (preferencesMenuConfig === false) {
     return null;
@@ -94,12 +91,12 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
     {
       configKey: 'toggleWeekendVisibility',
       preferenceKey: 'showWeekends',
-      label: translations.showWeekends,
+      label: localeText.showWeekends,
     },
     {
       configKey: 'toggleWeekNumberVisibility',
       preferenceKey: 'showWeekNumber',
-      label: translations.showWeekNumber,
+      label: localeText.showWeekNumber,
     },
   ];
 
@@ -113,7 +110,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       configKey: 'toggleEmptyDaysInAgenda',
       preferenceKey: 'showEmptyDaysInAgenda',
       view: 'agenda',
-      label: translations.showEmptyDaysInAgenda,
+      label: localeText.showEmptyDaysInAgenda,
     },
   ];
 
@@ -140,7 +137,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       className={clsx(props.className, classes.preferencesMenu)}
     >
       <IconButton
-        aria-label={translations.preferencesMenu}
+        aria-label={localeText.preferencesMenu}
         onClick={handleClick}
         aria-controls={open ? 'preferences-menu' : undefined}
         aria-haspopup="true"
@@ -156,7 +153,10 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         container={containerRef.current}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        slotProps={{ list: { 'aria-label': translations.preferencesMenu } }}
+        slotProps={{
+          list: { 'aria-label': localeText.preferencesMenu },
+          paper: { sx: { minWidth: 220 } },
+        }}
       >
         {visibleOptions.map((option) => (
           <MenuItem
@@ -177,15 +177,43 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
             )}
           </MenuItem>
         ))}
+        {showTimeFormatSubmenu && visibleOptions.length > 0 && <Divider />}
         {showTimeFormatSubmenu && (
-          <MenuItem onClick={handleTimeFormatClick}>
-            <ListItemText>{translations.timeFormat}</ListItemText>
-            <ChevronRight fontSize="small" />
+          <PreferencesListSubheader>{localeText.timeFormat}</PreferencesListSubheader>
+        )}
+        {showTimeFormatSubmenu && (
+          <MenuItem
+            onClick={(event) => {
+              handleTimeFormatChange('12', event.nativeEvent);
+            }}
+          >
+            <ListItemText>{localeText.amPm12h}</ListItemText>
+            {preferences.ampm && (
+              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+                <CheckIcon fontSize="small" />
+              </ListItemIcon>
+            )}
           </MenuItem>
         )}
-        {showSpecificOptions && visibleOptions.length > 0 && <Divider />}
+        {showTimeFormatSubmenu && (
+          <MenuItem
+            onClick={(event) => {
+              handleTimeFormatChange('24', event.nativeEvent);
+            }}
+          >
+            <ListItemText>{localeText.hour24h}</ListItemText>
+            {!preferences.ampm && (
+              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+                <CheckIcon fontSize="small" />
+              </ListItemIcon>
+            )}
+          </MenuItem>
+        )}
+        {showSpecificOptions && (visibleOptions.length > 0 || showTimeFormatSubmenu) && <Divider />}
         {showSpecificOptions && (
-          <ListSubheader>{translations.viewSpecificOptions(currentView)}</ListSubheader>
+          <PreferencesListSubheader>
+            {localeText.viewSpecificOptions(currentView)}
+          </PreferencesListSubheader>
         )}
         {showSpecificOptions &&
           visibleViewSpecificOptions.map((option) => (
@@ -207,45 +235,6 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
               )}
             </MenuItem>
           ))}
-      </Menu>
-      {/* Time format submenu */}
-      <Menu
-        anchorEl={timeFormatAnchorEl}
-        open={timeFormatOpen}
-        onClose={handleTimeFormatClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-      >
-        <MenuItem
-          selected={preferences.ampm}
-          onClick={(event) => {
-            handleTimeFormatChange('12', event.nativeEvent);
-            handleTimeFormatClose();
-            handleClose();
-          }}
-        >
-          <ListItemText>{translations.amPm12h}</ListItemText>
-          {preferences.ampm && (
-            <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-              <CheckIcon fontSize="small" />
-            </ListItemIcon>
-          )}
-        </MenuItem>
-        <MenuItem
-          selected={!preferences.ampm}
-          onClick={(event) => {
-            handleTimeFormatChange('24', event.nativeEvent);
-            handleTimeFormatClose();
-            handleClose();
-          }}
-        >
-          <ListItemText>{translations.hour24h}</ListItemText>
-          {!preferences.ampm && (
-            <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-              <CheckIcon fontSize="small" />
-            </ListItemIcon>
-          )}
-        </MenuItem>
       </Menu>
     </PreferencesMenuRoot>
   );

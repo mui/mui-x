@@ -1,6 +1,9 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 import type { ChartPluginSignature } from '../../models';
-import type { SeriesItemIdentifier } from '../../../../models/seriesType';
+import type {
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export interface UseChartTooltipInstance {
@@ -8,7 +11,7 @@ export interface UseChartTooltipInstance {
    * Setter for the item the user is pointing at.
    * @param {SeriesItemIdentifier} newItem The identifier of the item.
    */
-  setTooltipItem: (newItem: SeriesItemIdentifier<ChartSeriesType>) => void;
+  setTooltipItem: (newItem: SeriesItemIdentifierWithType<ChartSeriesType>) => void;
   /**
    * Remove the item the user was pointing at.
    * - If `itemToRemove` is provided, it removes the item only if it matches the current one.
@@ -16,7 +19,7 @@ export interface UseChartTooltipInstance {
    * - If `itemToRemove` is not provided, it removes the current item unconditionally.
    * @param {SeriesItemIdentifier} itemToRemove The identifier of the item.
    */
-  removeTooltipItem: (itemToRemove?: SeriesItemIdentifier<ChartSeriesType>) => void;
+  removeTooltipItem: (itemToRemove?: SeriesItemIdentifierWithType<ChartSeriesType>) => void;
 }
 
 export interface UseChartTooltipParameters<TSeries extends ChartSeriesType = ChartSeriesType> {
@@ -24,13 +27,13 @@ export interface UseChartTooltipParameters<TSeries extends ChartSeriesType = Cha
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem?: SeriesItemIdentifier<TSeries> | null;
+  tooltipItem?: SeriesItemIdentifier<TSeries> | SeriesItemIdentifierWithType<TSeries> | null;
   /**
    * The callback fired when the tooltip item changes.
    *
    * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
    */
-  onTooltipItemChange?: (tooltipItem: SeriesItemIdentifier<TSeries> | null) => void;
+  onTooltipItemChange?: (tooltipItem: SeriesItemIdentifierWithType<TSeries> | null) => void;
 }
 
 export type UseChartTooltipDefaultizedParameters<
@@ -46,7 +49,7 @@ export interface UseChartTooltipState<TSeries extends ChartSeriesType = ChartSer
     /**
      * The item currently under the pointer.
      */
-    item: null | SeriesItemIdentifier<TSeries>;
+    item: null | SeriesItemIdentifierWithType<TSeries>;
   };
 }
 

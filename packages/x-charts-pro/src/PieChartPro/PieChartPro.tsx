@@ -51,7 +51,7 @@ export interface PieChartProProps
   slotProps?: PieChartProSlotProps;
 }
 
-const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
+const PieChartPro = React.forwardRef<HTMLDivElement, PieChartProProps>(
   function PieChartPro(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiPieChartPro' });
     const {
@@ -79,22 +79,19 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
     const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
       'pie',
       PieChartProPluginSignatures
-    >(
-      {
-        ...other,
-        series: series.map((s) => ({ type: 'pie', ...s })),
-        width,
-        height,
-        margin,
-        colors,
-        highlightedItem,
-        onHighlightChange,
-        className,
-        skipAnimation,
-        plugins: PIE_CHART_PRO_PLUGINS,
-      },
-      ref,
-    );
+    >({
+      ...other,
+      series: series.map((s) => ({ type: 'pie', ...s })),
+      width,
+      height,
+      margin,
+      colors,
+      highlightedItem,
+      onHighlightChange,
+      className,
+      skipAnimation,
+      plugins: PIE_CHART_PRO_PLUGINS,
+    });
 
     const Tooltip = slots?.tooltip ?? ChartsTooltip;
     const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
@@ -106,6 +103,7 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
           legendDirection={slotProps?.legend?.direction ?? 'vertical'}
           sx={sx}
           hideLegend={hideLegend ?? false}
+          ref={ref}
         >
           {showToolbar ? <Toolbar {...slotProps?.toolbar} /> : null}
           {!hideLegend && (
@@ -176,11 +174,18 @@ PieChartPro.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['pie']).isRequired,
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']),
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -190,10 +195,17 @@ PieChartPro.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -221,11 +233,18 @@ PieChartPro.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string,
-      type: PropTypes.oneOf(['pie']).isRequired,
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']),
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, a loading overlay is displayed.
@@ -253,13 +272,13 @@ PieChartPro.propTypes = {
   ]),
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -308,11 +327,17 @@ PieChartPro.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number.isRequired,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['pie']).isRequired,
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

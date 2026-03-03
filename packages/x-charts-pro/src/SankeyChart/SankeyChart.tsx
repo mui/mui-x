@@ -52,7 +52,7 @@ export interface SankeyChartProps
  */
 const SankeyChart = React.forwardRef(function SankeyChart(
   props: SankeyChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themedProps = useThemeProps({ props, name: 'MuiSankeyChart' });
 
@@ -61,13 +61,13 @@ const SankeyChart = React.forwardRef(function SankeyChart(
   const {
     chartDataProviderProProps: { series, ...chartDataProviderProProps },
     chartsSurfaceProps,
-  } = useChartContainerProProps<'sankey', SankeyChartPluginSignatures>(chartContainerProps, ref);
+  } = useChartContainerProProps<'sankey', SankeyChartPluginSignatures>(chartContainerProps);
 
   const Tooltip = themedProps.slots?.tooltip ?? SankeyTooltip;
 
   return (
     <SankeyDataProvider series={series as SankeySeriesType[]} {...chartDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         <ChartsSurface {...chartsSurfaceProps}>
           <SankeyPlot {...sankeyPlotProps} />
           <ChartsOverlay {...overlayProps} />
@@ -142,6 +142,27 @@ SankeyChart.propTypes = {
       targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       type: PropTypes.oneOf(['sankey']).isRequired,
     }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    }),
   ]),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -175,7 +196,7 @@ SankeyChart.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {SankeyHighlightItemData | null} highlightedItem The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -245,6 +266,27 @@ SankeyChart.propTypes = {
       ]).isRequired,
       targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     }),
   ]),
   /**
