@@ -4,6 +4,23 @@ import { createRoot } from 'react-dom/client'; // aliased to react-dom/profiling
 import { flushSync } from 'react-dom';
 import { BenchProfiler, RenderEvent } from './Profiler';
 
+// Double GC: the first pass collects garbage, the second catches weak refs
+// and prevent leaking into the next iteration.
+function forceGC() {
+  if (typeof window.gc === 'function') {
+    window.gc();
+    window.gc();
+  }
+}
+
+// Flush pending microtasks and React cleanup effects (e.g. from a previous unmount)
+// so they don't interfere with the next iteration's timing.
+function settle(): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, 0);
+  });
+}
+
 export function benchmark(
   name: string,
   element: React.ReactElement,
@@ -30,10 +47,10 @@ export function benchmark(
     for (let i = 0; i < totalRuns; i += 1) {
       const isWarmup = i < warmupRuns;
 
-      // GC before each iteration for consistent starting conditions
-      if (typeof window.gc === 'function') {
-        window.gc();
-      }
+      // Drain event loop from previous unmount, then double GC for thorough cleanup
+      // eslint-disable-next-line no-await-in-loop
+      await settle();
+      forceGC();
 
       const captures: RenderEvent[] = [];
       const container = document.createElement('div');

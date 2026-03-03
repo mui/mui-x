@@ -68,10 +68,7 @@ function generateReportFromIterations(iterations: IterationEvent[][]): Benchmark
       .filter((i) => i >= 0);
 
     // Fall back to all values if every value is an outlier
-    const indices =
-      filteredIndices.length > 0
-        ? filteredIndices
-        : durations.map((_, i) => i);
+    const indices = filteredIndices.length > 0 ? filteredIndices : durations.map((_, i) => i);
 
     const filteredDurations = indices.map((i) => durations[i]);
     const meanDuration = calculateMean(filteredDurations);
@@ -119,6 +116,8 @@ function isOutlier(value: number, q1: number, q3: number): boolean {
   const iqr = q3 - q1;
   return value < q1 - 1.5 * iqr || value > q3 + 1.5 * iqr;
 }
+
+const DURATION_NOISE_FLOOR = 0.1; // ms — below timer resolution
 
 function printDurationMatrix(name: string, iterations: IterationEvent[][]): void {
   if (iterations.length === 0) return;
@@ -168,32 +167,42 @@ function printDurationMatrix(name: string, iterations: IterationEvent[][]): void
   const header = headerCells.join(dim(' | '));
   const separator = dim('-'.repeat(headerCells.join(' | ').length));
 
-  const rows = durations.map((row, r) => {
-    const event = iterations[0][r];
-    const label = `#${r} ${event.id}:${event.phase}`;
-    const { q1, q3, rawMean, rawSigma, iqrMean, iqrSigma, dropped } = perRender[r];
-    const cells = row.slice(0, displayedIterCount).map((d) => {
-      const formatted = d.toFixed(2);
-      if (isOutlier(d, q1, q3)) {
-        return yellow(pad(formatted, cellWidth));
+  const rows = durations
+    .map((row, r) => {
+      const event = iterations[0][r];
+      const label = `#${r} ${event.id}:${event.phase}`;
+      const { q1, q3, rawMean, rawSigma, iqrMean, iqrSigma, dropped } = perRender[r];
+
+      // Skip statistically irrelevant renders
+      if (iqrMean < DURATION_NOISE_FLOOR) {
+        return null;
       }
-      return pad(formatted, cellWidth);
-    });
-    const rawStr = `${rawMean.toFixed(2)}±${rawSigma.toFixed(2)}`;
-    const iqrStr = `${iqrMean.toFixed(2)}±${iqrSigma.toFixed(2)}`;
-    return [
-      pad(label.slice(0, 28), 28),
-      ...cells,
-      ...(truncated ? [dim('...')] : []),
-      dim(pad(rawStr, statWidth)),
-      cyan(pad(iqrStr, statWidth)),
-      dropped > 0 ? yellow(pad(String(dropped), 4)) : dim(pad('0', 4)),
-    ].join(dim(' | '));
-  });
+
+      const cells = row.slice(0, displayedIterCount).map((d) => {
+        const formatted = d.toFixed(2);
+        if (isOutlier(d, q1, q3)) {
+          return yellow(pad(formatted, cellWidth));
+        }
+        return pad(formatted, cellWidth);
+      });
+      const rawStr = `${rawMean.toFixed(2)}±${rawSigma.toFixed(2)}`;
+      const iqrStr = `${iqrMean.toFixed(2)}±${iqrSigma.toFixed(2)}`;
+      return [
+        pad(label.slice(0, 28), 28),
+        ...cells,
+        ...(truncated ? [dim('...')] : []),
+        dim(pad(rawStr, statWidth)),
+        cyan(pad(iqrStr, statWidth)),
+        dropped > 0 ? yellow(pad(String(dropped), 4)) : dim(pad('0', 4)),
+      ].join(dim(' | '));
+    })
+    .filter((row): row is string => row !== null);
 
   const truncNote = truncated ? `, showing ${displayedIterCount}/${iterCount}` : '';
   // eslint-disable-next-line no-console
-  console.log(`\n${dim(`=== Duration Matrix: ${name} (outliers highlighted, IQR method${truncNote}) ===`)}`);
+  console.log(
+    `\n${dim(`=== Duration Matrix: ${name} (outliers highlighted, IQR method${truncNote}) ===`)}`,
+  );
   // eslint-disable-next-line no-console
   console.log(header);
   // eslint-disable-next-line no-console
@@ -205,7 +214,9 @@ function printDurationMatrix(name: string, iterations: IterationEvent[][]): void
 function extractTotalDuration(report: BenchmarkReport): number {
   let totalDuration = 0;
   for (const render of report.renders) {
-    totalDuration += render.actualDuration;
+    if (render.actualDuration >= DURATION_NOISE_FLOOR) {
+      totalDuration += render.actualDuration;
+    }
   }
   return totalDuration;
 }

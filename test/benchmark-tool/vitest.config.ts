@@ -17,7 +17,18 @@ export default defineConfig({
       instances: [{ browser: 'chromium', testTimeout: 120_000 }],
       provider: playwright({
         launchOptions: {
-          args: ['--js-flags=--expose-gc'],
+          args: [
+            // V8 flags for deterministic JS execution
+            '--js-flags=--expose-gc,--predictable,--no-opt,--predictable-gc-schedule,--no-concurrent-sweeping,--hash-seed=1,--random-seed=1,--max-old-space-size=4096',
+
+            // Chromium flags to reduce renderer/compositor noise
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-renderer-backgrounding',
+            '--disable-background-networking',
+            '--enable-benchmarking',
+            '--disable-gpu',
+          ],
         },
       }),
     },
