@@ -120,6 +120,35 @@ With this feature, you would be able to use the `lazyLoading` flag in use cases 
 Before it is implemented internally you can use the [row pinning](/x/react-data-grid/row-pinning/) feature to implement nested lazy loading with a few limitations.
 Check the [server-side data recipes](/x/react-data-grid/server-side-data/recipes/) section for a working example.
 
+## Dynamic data and cache revalidation
+
+When users scroll back to an already fetched range, the Data Grid performs a revalidation for that range. It checks the cache entry, and if it is outdated (or the cache is disabled), it refetches the data from the server, and updates only if the subset is _actually changed_ minimizing the row replacements in the Data Grid.
+
+For highly dynamic use cases, where the revalidation is required for the current viewport too, you can add polling with `dataSourceRevalidateMs` to trigger revalidation every "X" milliseconds.
+This is useful for dashboards such as stock tickers, where values can change every few seconds.
+
+### Dynamically updated datasets
+
+The following demo uses `dataSourceRevalidateMs="3_000"` (3 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
+
+Note that the row IDs stay stable but the row values change over time.
+
+{{"demo": "ServerSideLazyLoadingRevalidation.js", "bg": "inline"}}
+
+### Dynamically replaced datasets
+
+In this scenario, the backend can replace the data set with entirely new rows, including new row IDs.
+On each revalidation, only the visible range is replaced with the latest rows, and scrolling loads new ranges from the current data set.
+
+The demo below uses data batch numbers to identify the data set and replace the current viewport with the latest data set. It uses `dataSourceRevalidateMs="2_000"` (2 seconds) to revalidate the current viewport and get the latest data set. But the actual update only happens if the data batch is different from the previous one, which is only regenerated on the backend server every 10 seconds.
+
+{{"demo": "ServerSideLazyLoadingFullyReplaced.js", "bg": "inline"}}
+
+:::info
+The sorting and filtering are disabled in the demos above to keep the dummy server's code simple and easy to relate.
+In real applications, you should enable sorting and filtering to keep the Data Grid in sync with the server-side data.
+:::
+
 ## Error handling
 
 To handle errors, use the `onDataSourceError()` prop as described in [Server-side data overview—Error handling](/x/react-data-grid/server-side-data/#error-handling).

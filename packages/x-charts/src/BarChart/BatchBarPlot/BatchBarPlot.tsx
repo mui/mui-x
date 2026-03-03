@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useSvgRef } from '../../hooks';
+import { useChartsLayerContainerRef } from '../../hooks';
 import type { BarItemIdentifier } from '../../models';
 import { type ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
@@ -30,11 +30,11 @@ export function BatchBarPlot({
   skipAnimation = false,
 }: BatchBarPlotProps) {
   const prevCursorRef = React.useRef<string | null>(null);
-  const svgRef = useSvgRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
 
   const onItemEnter = onItemClick
     ? () => {
-        const svg = svgRef.current;
+        const svg = chartsLayerContainerRef.current;
 
         if (!svg) {
           return;
@@ -50,7 +50,7 @@ export function BatchBarPlot({
 
   const onItemLeave = onItemClick
     ? () => {
-        const svg = svgRef.current;
+        const svg = chartsLayerContainerRef.current;
 
         if (!svg) {
           return;

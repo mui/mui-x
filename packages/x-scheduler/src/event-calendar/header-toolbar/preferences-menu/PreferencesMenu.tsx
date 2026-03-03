@@ -23,8 +23,7 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import clsx from 'clsx';
-import { useTranslations } from '../../../internals/utils/TranslationsContext';
-import { useEventCalendarClasses } from '../../EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../EventCalendarStyledContext';
 
 const PreferencesMenuRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -46,9 +45,8 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // Context hooks
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -93,12 +91,12 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
     {
       configKey: 'toggleWeekendVisibility',
       preferenceKey: 'showWeekends',
-      label: translations.showWeekends,
+      label: localeText.showWeekends,
     },
     {
       configKey: 'toggleWeekNumberVisibility',
       preferenceKey: 'showWeekNumber',
-      label: translations.showWeekNumber,
+      label: localeText.showWeekNumber,
     },
   ];
 
@@ -112,7 +110,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       configKey: 'toggleEmptyDaysInAgenda',
       preferenceKey: 'showEmptyDaysInAgenda',
       view: 'agenda',
-      label: translations.showEmptyDaysInAgenda,
+      label: localeText.showEmptyDaysInAgenda,
     },
   ];
 
@@ -139,7 +137,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       className={clsx(props.className, classes.preferencesMenu)}
     >
       <IconButton
-        aria-label={translations.preferencesMenu}
+        aria-label={localeText.preferencesMenu}
         onClick={handleClick}
         aria-controls={open ? 'preferences-menu' : undefined}
         aria-haspopup="true"
@@ -156,7 +154,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{
-          list: { 'aria-label': translations.preferencesMenu },
+          list: { 'aria-label': localeText.preferencesMenu },
           paper: { sx: { minWidth: 220 } },
         }}
       >
@@ -181,7 +179,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         ))}
         {showTimeFormatSubmenu && visibleOptions.length > 0 && <Divider />}
         {showTimeFormatSubmenu && (
-          <PreferencesListSubheader>{translations.timeFormat}</PreferencesListSubheader>
+          <PreferencesListSubheader>{localeText.timeFormat}</PreferencesListSubheader>
         )}
         {showTimeFormatSubmenu && (
           <MenuItem
@@ -189,7 +187,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
               handleTimeFormatChange('12', event.nativeEvent);
             }}
           >
-            <ListItemText>{translations.amPm12h}</ListItemText>
+            <ListItemText>{localeText.amPm12h}</ListItemText>
             {preferences.ampm && (
               <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
                 <CheckIcon fontSize="small" />
@@ -203,7 +201,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
               handleTimeFormatChange('24', event.nativeEvent);
             }}
           >
-            <ListItemText>{translations.hour24h}</ListItemText>
+            <ListItemText>{localeText.hour24h}</ListItemText>
             {!preferences.ampm && (
               <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
                 <CheckIcon fontSize="small" />
@@ -214,7 +212,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         {showSpecificOptions && (visibleOptions.length > 0 || showTimeFormatSubmenu) && <Divider />}
         {showSpecificOptions && (
           <PreferencesListSubheader>
-            {translations.viewSpecificOptions(currentView)}
+            {localeText.viewSpecificOptions(currentView)}
           </PreferencesListSubheader>
         )}
         {showSpecificOptions &&

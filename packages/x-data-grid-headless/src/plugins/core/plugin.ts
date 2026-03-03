@@ -71,6 +71,8 @@ export interface PluginRegistryApi {
     _api: BaseApi,
     pluginName: TPlugin['name'],
   ): _api is BaseApi & ExtractPluginApi<TPlugin>;
+  forEachPlugin(callback: (plugin: AnyPlugin) => void): void;
+  getPluginsChain(): readonly AnyPlugin[];
 }
 
 export interface Plugin<
@@ -79,11 +81,13 @@ export interface Plugin<
   TSelectors extends Record<string, Function> = Record<string, never>,
   TApi = {},
   TParams extends Record<string, any> = any,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   TColumnMeta = {},
   TDeps extends readonly AnyPlugin[] = readonly AnyPlugin[],
 > {
+  /** @internal Phantom property to carry TColumnMeta for type extraction. */
+  readonly __columnMeta?: TColumnMeta;
   name: TName;
+  order?: number;
   dependencies?: TDeps;
   selectors: TSelectors;
   initialize: (

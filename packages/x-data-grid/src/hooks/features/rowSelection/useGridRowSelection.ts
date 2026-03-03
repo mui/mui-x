@@ -161,10 +161,8 @@ export const useGridRowSelection = (
         (model.type !== 'include' || model.ids.size > 1)
       ) {
         throw new Error(
-          [
-            'MUI X: `rowSelectionModel` can only contain 1 item in DataGrid.',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
-          ].join('\n'),
+          `MUI X: \`rowSelectionModel\` can only contain 1 item in DataGrid.
+You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.`,
         );
       }
       const currentModel = gridRowSelectionStateSelector(apiRef);

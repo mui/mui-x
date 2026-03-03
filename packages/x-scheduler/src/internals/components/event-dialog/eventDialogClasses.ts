@@ -21,22 +21,48 @@ export interface EventDialogClasses {
   eventDialogResourceLegendColor: string;
   /** Styles applied to the event dialog resource title element. */
   eventDialogResourceTitle: string;
+  /** Styles applied to the event dialog paper element. */
+  eventDialogPaper: string;
+  /** Styles applied to the event dialog form element. */
+  eventDialogForm: string;
   /** Styles applied to the event dialog form actions element. */
   eventDialogFormActions: string;
   /** Styles applied to the event dialog content element. */
   eventDialogContent: string;
-  /** Styles applied to the event dialog general tab content element. */
-  eventDialogGeneralTabContent: string;
+  /** Styles applied to the event dialog tab panel element. */
+  eventDialogTabPanel: string;
+  /** Styles applied to the event dialog tab content element. */
+  eventDialogTabContent: string;
   /** Styles applied to the event dialog date time fields container element. */
   eventDialogDateTimeFieldsContainer: string;
   /** Styles applied to the event dialog date time fields row element. */
   eventDialogDateTimeFieldsRow: string;
-  /** Styles applied to the event dialog recurrence tab content element. */
-  eventDialogRecurrenceTabContent: string;
+  /** Styles applied to the event dialog recurrence label container element in the readonly content. */
+  eventDialogRecurrenceLabelContainer: string;
+  /** Styles applied to the event dialog recurrence selector container element. */
+  eventDialogRecurrenceSelectorContainer: string;
   /** Styles applied to the event dialog resource menu color dot element. */
   eventDialogResourceMenuColorDot: string;
   /** Styles applied to the event dialog resource menu color radio button element. */
   eventDialogResourceMenuColorRadioButton: string;
+  /** Styles applied to the event dialog inline row element. */
+  eventDialogInlineRow: string;
+  /** Styles applied to the event dialog section header title element. */
+  eventDialogSectionHeaderTitle: string;
+  /** Styles applied to the event dialog radio button label element. */
+  eventDialogRadioButtonLabel: string;
+  /** Styles applied to the event dialog repeat section label element. */
+  eventDialogRepeatSectionLabel: string;
+  /** Styles applied to the event dialog ends radio group element. */
+  eventDialogEndsRadioGroup: string;
+  /** Styles applied to the event dialog repeat section content element. */
+  eventDialogRepeatSectionContent: string;
+  /** Styles applied to the event dialog recurrence selector toggle group element. */
+  eventDialogRecurrenceSelectorToggleGroup: string;
+  /** Styles applied to the event dialog frequency select element. */
+  eventDialogFrequencySelect: string;
+  /** Styles applied to the event dialog small number field element. */
+  eventDialogSmallNumberField: string;
 }
 
 export type EventDialogClassKey = keyof EventDialogClasses;
@@ -53,14 +79,27 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogResourceLegendContainer',
   'eventDialogResourceLegendColor',
   'eventDialogResourceTitle',
+  'eventDialogPaper',
+  'eventDialogForm',
   'eventDialogFormActions',
   'eventDialogContent',
-  'eventDialogGeneralTabContent',
+  'eventDialogTabPanel',
+  'eventDialogTabContent',
   'eventDialogDateTimeFieldsContainer',
   'eventDialogDateTimeFieldsRow',
-  'eventDialogRecurrenceTabContent',
   'eventDialogResourceMenuColorDot',
   'eventDialogResourceMenuColorRadioButton',
+  'eventDialogRecurrenceLabelContainer',
+  'eventDialogRecurrenceSelectorContainer',
+  'eventDialogInlineRow',
+  'eventDialogSectionHeaderTitle',
+  'eventDialogRadioButtonLabel',
+  'eventDialogRepeatSectionLabel',
+  'eventDialogEndsRadioGroup',
+  'eventDialogRepeatSectionContent',
+  'eventDialogRecurrenceSelectorToggleGroup',
+  'eventDialogFrequencySelect',
+  'eventDialogSmallNumberField',
 ];
 
 // Create a slots object for reuse in useUtilityClasses (avoids duplication in EventCalendar.tsx and EventTimelinePremium.tsx)
@@ -76,12 +115,25 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogResourceLegendContainer: ['eventDialogResourceLegendContainer'],
   eventDialogResourceLegendColor: ['eventDialogResourceLegendColor'],
   eventDialogResourceTitle: ['eventDialogResourceTitle'],
+  eventDialogPaper: ['eventDialogPaper'],
+  eventDialogForm: ['eventDialogForm'],
   eventDialogFormActions: ['eventDialogFormActions'],
   eventDialogContent: ['eventDialogContent'],
-  eventDialogGeneralTabContent: ['eventDialogGeneralTabContent'],
+  eventDialogTabPanel: ['eventDialogTabPanel'],
+  eventDialogTabContent: ['eventDialogTabContent'],
   eventDialogDateTimeFieldsContainer: ['eventDialogDateTimeFieldsContainer'],
   eventDialogDateTimeFieldsRow: ['eventDialogDateTimeFieldsRow'],
-  eventDialogRecurrenceTabContent: ['eventDialogRecurrenceTabContent'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
   eventDialogResourceMenuColorRadioButton: ['eventDialogResourceMenuColorRadioButton'],
+  eventDialogRecurrenceLabelContainer: ['eventDialogRecurrenceLabelContainer'],
+  eventDialogRecurrenceSelectorContainer: ['eventDialogRecurrenceSelectorContainer'],
+  eventDialogInlineRow: ['eventDialogInlineRow'],
+  eventDialogSectionHeaderTitle: ['eventDialogSectionHeaderTitle'],
+  eventDialogRadioButtonLabel: ['eventDialogRadioButtonLabel'],
+  eventDialogRepeatSectionLabel: ['eventDialogRepeatSectionLabel'],
+  eventDialogEndsRadioGroup: ['eventDialogEndsRadioGroup'],
+  eventDialogRepeatSectionContent: ['eventDialogRepeatSectionContent'],
+  eventDialogRecurrenceSelectorToggleGroup: ['eventDialogRecurrenceSelectorToggleGroup'],
+  eventDialogFrequencySelect: ['eventDialogFrequencySelect'],
+  eventDialogSmallNumberField: ['eventDialogSmallNumberField'],
 };

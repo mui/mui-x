@@ -20,8 +20,8 @@ describe('Core - EventCalendarStore', () => {
 
       const expectedState = {
         adapter,
-        areEventsDraggable: false,
-        areEventsResizable: false,
+        areEventsDraggable: true,
+        areEventsResizable: true,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
@@ -35,6 +35,7 @@ describe('Core - EventCalendarStore', () => {
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
+        plan: 'community',
         preferences: EMPTY_OBJECT,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         processedEventLookup: new Map(),

@@ -16,11 +16,21 @@ import {
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { ExtendableEventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
+
+/**
+ * A test store that behaves like a premium store, enabling recurring event features.
+ */
+class PremiumTestStore extends ExtendableEventCalendarStore<any, any> {
+  public constructor(parameters: any, adapterParam: any) {
+    super(parameters, adapterParam, 'EventCalendarPremiumStore');
+  }
+}
 
 const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .title('Running')
@@ -64,7 +74,11 @@ describe('<EventDialogContent open />', () => {
 
   it('should render the event data in the form fields', async () => {
     const { user } = render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
         <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
@@ -90,6 +104,7 @@ describe('<EventDialogContent open />', () => {
         events={[DEFAULT_EVENT]}
         onEventsChange={onEventsChange}
         resources={resources}
+        storeClass={PremiumTestStore}
       >
         <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
@@ -112,8 +127,8 @@ describe('<EventDialogContent open />', () => {
       id: DEFAULT_EVENT.id,
       title: 'Running test',
       description: DEFAULT_EVENT.description,
-      start: adapter.startOfDay(DEFAULT_EVENT.start),
-      end: adapter.endOfDay(DEFAULT_EVENT.end),
+      start: adapter.startOfDay(adapter.date(DEFAULT_EVENT.start, 'default')).toISOString(),
+      end: adapter.endOfDay(adapter.date(DEFAULT_EVENT.end, 'default')).toISOString(),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',
@@ -125,7 +140,11 @@ describe('<EventDialogContent open />', () => {
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
         <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
@@ -147,6 +166,7 @@ describe('<EventDialogContent open />', () => {
         events={[DEFAULT_EVENT]}
         onEventsChange={onEventsChange}
         resources={resources}
+        storeClass={PremiumTestStore}
       >
         <EventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
@@ -156,86 +176,154 @@ describe('<EventDialogContent open />', () => {
     expect(onEventsChange.firstCall.firstArg).to.deep.equal([]);
   });
 
-  it('should handle read-only events and render ReadonlyContent', () => {
-    const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
+  describe('read-only events', () => {
+    it('should render ReadonlyContent', () => {
+      const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
 
-    const readOnlyOccurrence = EventBuilder.new(adapter)
-      .id(readOnlyEvent.id)
-      .title(readOnlyEvent.title)
-      .description(readOnlyEvent.description)
-      .span(readOnlyEvent.start, readOnlyEvent.end)
-      .readOnly(true)
-      .toOccurrence();
+      const readOnlyOccurrence = EventBuilder.new(adapter)
+        .id(readOnlyEvent.id)
+        .title(readOnlyEvent.title)
+        .description(readOnlyEvent.description)
+        .span(readOnlyEvent.start, readOnlyEvent.end)
+        .readOnly(true)
+        .toOccurrence();
 
-    render(
-      <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
-        <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
-      </EventCalendarProvider>,
-    );
+      render(
+        <EventCalendarProvider
+          events={[readOnlyEvent]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        </EventCalendarProvider>,
+      );
 
-    const dialogs = screen.getAllByRole('dialog');
-    const dialog = within(dialogs[dialogs.length - 1]);
+      const dialogs = screen.getAllByRole('dialog');
+      const dialog = within(dialogs[dialogs.length - 1]);
 
-    // Should display title as text, not in an input
-    expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
-    expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
+      // Should display title as text, not in an input
+      expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
+      expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
 
-    // Should display description as text, not in an input
-    expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
-    expect(dialog.queryByLabelText(/description/i)).to.equal(null);
+      // Should display description as text, not in an input
+      expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
+      expect(dialog.queryByLabelText(/description/i)).to.equal(null);
 
-    // Should not have date/time inputs
-    expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
+      // Should not have date/time inputs
+      expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
 
-    // Should not have all-day checkbox
-    expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
+      // Should not have all-day checkbox
+      expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
 
-    // Should not have resource/recurrence comboboxes
-    expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
-    expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
-  });
+      // Should not have resource/recurrence comboboxes
+      expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+      expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+    });
 
-  it('should handle read-only events if EventCalendar is read-only', () => {
-    const readOnlyOccurrence = EventBuilder.new(adapter)
-      .id(DEFAULT_EVENT.id)
-      .title(DEFAULT_EVENT.title)
-      .description(DEFAULT_EVENT.description)
-      .span(DEFAULT_EVENT.start, DEFAULT_EVENT.end)
-      .readOnly(true)
-      .toOccurrence();
+    it('should display recurrence label for recurring events', () => {
+      const recurringEventBuilder = EventBuilder.new(adapter)
+        .title('Daily Standup')
+        .singleDay('2025-05-26T09:00:00Z', 30)
+        .recurrent('DAILY')
+        .readOnly(true);
 
-    render(
-      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} readOnly>
-        <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
-      </EventCalendarProvider>,
-    );
+      const recurringOccurrence = recurringEventBuilder.toOccurrence();
 
-    const dialogs = screen.getAllByRole('dialog');
-    const dialog = within(dialogs[dialogs.length - 1]);
+      render(
+        <EventCalendarProvider
+          events={[recurringEventBuilder.build()]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={recurringOccurrence} />
+        </EventCalendarProvider>,
+      );
 
-    // Should display title as text, not in an input
-    expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
-    expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
+      const dialogs = screen.getAllByRole('dialog');
+      const dialog = within(dialogs[dialogs.length - 1]);
 
-    // Should display description as text, not in an input
-    expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
-    expect(dialog.queryByLabelText(/description/i)).to.equal(null);
+      expect(dialog.getByText(/repeats daily/i)).not.to.equal(null);
+    });
 
-    // Should not have date/time inputs
-    expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
+    it('should not display recurrence label for non-recurring events', () => {
+      const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
 
-    // Should not have all-day checkbox
-    expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
+      const readOnlyOccurrence = EventBuilder.new(adapter)
+        .id(readOnlyEvent.id)
+        .title(readOnlyEvent.title)
+        .description(readOnlyEvent.description)
+        .span(readOnlyEvent.start, readOnlyEvent.end)
+        .readOnly(true)
+        .toOccurrence();
 
-    // Should not have resource/recurrence comboboxes
-    expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
-    expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+      render(
+        <EventCalendarProvider
+          events={[readOnlyEvent]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      const dialogs = screen.getAllByRole('dialog');
+      const dialog = within(dialogs[dialogs.length - 1]);
+
+      expect(dialog.queryByText(/repeats daily/i)).to.equal(null);
+      expect(dialog.queryByText(/repeats weekly/i)).to.equal(null);
+      expect(dialog.queryByText(/repeats monthly/i)).to.equal(null);
+      expect(dialog.queryByText(/repeats annually/i)).to.equal(null);
+      expect(dialog.queryByText(/custom repeat/i)).to.equal(null);
+      expect(dialog.queryByText(/don.?t repeat/i)).to.equal(null);
+    });
+
+    it('should render ReadonlyContent if EventCalendar is read-only', () => {
+      const readOnlyOccurrence = EventBuilder.new(adapter)
+        .id(DEFAULT_EVENT.id)
+        .title(DEFAULT_EVENT.title)
+        .description(DEFAULT_EVENT.description)
+        .span(DEFAULT_EVENT.start, DEFAULT_EVENT.end)
+        .readOnly(true)
+        .toOccurrence();
+
+      render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          readOnly
+          storeClass={PremiumTestStore}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      const dialogs = screen.getAllByRole('dialog');
+      const dialog = within(dialogs[dialogs.length - 1]);
+
+      // Should display title as text, not in an input
+      expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
+      expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
+
+      // Should display description as text, not in an input
+      expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
+      expect(dialog.queryByLabelText(/description/i)).to.equal(null);
+
+      // Should not have date/time inputs
+      expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
+
+      // Should not have all-day checkbox
+      expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
+
+      // Should not have resource/recurrence comboboxes
+      expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+      expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+    });
   });
 
   it('should handle a resource without an eventColor (fallback to default)', async () => {
@@ -265,6 +353,7 @@ describe('<EventDialogContent open />', () => {
         events={[eventWithNoResourceColor]}
         onEventsChange={onEventsChange}
         resources={resourcesNoColor}
+        storeClass={PremiumTestStore}
       >
         <EventDialogContent
           open
@@ -305,6 +394,7 @@ describe('<EventDialogContent open />', () => {
         events={[eventWithoutResource]}
         onEventsChange={onEventsChange}
         resources={resources}
+        storeClass={PremiumTestStore}
       >
         <EventDialogContent open {...defaultProps} occurrence={eventWithoutResourceOccurrence} />
       </EventCalendarProvider>,
@@ -336,11 +426,11 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .toOccurrence();
 
       const { user } = render(
-        <EventCalendarProvider events={[]} resources={resources}>
+        <EventCalendarProvider events={[]} resources={resources} storeClass={PremiumTestStore}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) =>
@@ -379,12 +469,12 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .allDay(true)
         .toOccurrence();
 
       const { user } = render(
-        <EventCalendarProvider events={[]} resources={resources}>
+        <EventCalendarProvider events={[]} resources={resources} storeClass={PremiumTestStore}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) =>
@@ -423,11 +513,11 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('tmp')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .toOccurrence();
 
       const { user } = render(
-        <EventCalendarProvider events={[]} resources={resources}>
+        <EventCalendarProvider events={[]} resources={resources} storeClass={PremiumTestStore}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) =>
@@ -472,7 +562,7 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('placeholder-id')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .title('')
         .description('')
         .toOccurrence();
@@ -481,7 +571,12 @@ describe('<EventDialogContent open />', () => {
       let createEventSpy;
 
       const { user } = render(
-        <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
+        <EventCalendarProvider
+          events={[]}
+          resources={resources}
+          onEventsChange={onEventsChange}
+          storeClass={PremiumTestStore}
+        >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
@@ -536,7 +631,7 @@ describe('<EventDialogContent open />', () => {
 
       const creationOccurrence = EventBuilder.new(adapter)
         .id('placeholder-id')
-        .span(start, end)
+        .span(start.toISOString(), end.toISOString())
         .title('')
         .toOccurrence();
 
@@ -549,6 +644,7 @@ describe('<EventDialogContent open />', () => {
           resources={resources}
           onEventsChange={onEventsChange}
           displayTimezone={displayTimezone}
+          storeClass={PremiumTestStore}
         >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
@@ -615,7 +711,11 @@ describe('<EventDialogContent open />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <EventCalendarProvider
+              events={[originalRecurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <StoreSpy
                 Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
@@ -665,7 +765,11 @@ describe('<EventDialogContent open />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <EventCalendarProvider
+              events={[originalRecurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <StoreSpy
                 Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
@@ -728,7 +832,11 @@ describe('<EventDialogContent open />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <EventCalendarProvider
+              events={[originalRecurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <StoreSpy
                 Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
@@ -789,7 +897,11 @@ describe('<EventDialogContent open />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <EventCalendarProvider
+              events={[originalRecurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <StoreSpy
                 Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
@@ -840,7 +952,11 @@ describe('<EventDialogContent open />', () => {
       describe('Recurrence Custom behavior', () => {
         it('should render recurrence fields as disabled when not recurrent', async () => {
           const { user } = render(
-            <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
@@ -859,7 +975,11 @@ describe('<EventDialogContent open />', () => {
 
         it('should keep recurrence fields disabled when a preset is selected', async () => {
           const { user } = render(
-            <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
@@ -878,7 +998,11 @@ describe('<EventDialogContent open />', () => {
 
         it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
           const { user } = render(
-            <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
@@ -903,6 +1027,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -956,6 +1081,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1005,6 +1131,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1041,7 +1168,7 @@ describe('<EventDialogContent open />', () => {
 
           expect(updated.rrule).to.deep.include({ freq: 'YEARLY', interval: 3 });
           expect(updated.rrule?.count ?? undefined).to.equal(undefined);
-          expect(updated.rrule?.until).toEqualDateTime('2025-07-20T00:00:00.000Z');
+          expect(updated.rrule?.until).to.equal('2025-07-20T00:00:00.000Z');
         });
 
         it('should submit custom weekly with selected weekdays', async () => {
@@ -1052,6 +1179,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1091,6 +1219,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1131,6 +1260,7 @@ describe('<EventDialogContent open />', () => {
               events={[DEFAULT_EVENT]}
               resources={resources}
               onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
             >
               <EventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
@@ -1180,7 +1310,11 @@ describe('<EventDialogContent open />', () => {
         let updateEventSpy;
 
         const { user } = render(
-          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
+          <EventCalendarProvider
+            events={[nonRecurringEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+          >
             <StoreSpy
               Context={SchedulerStoreContext}
               method="updateEvent"
@@ -1216,7 +1350,11 @@ describe('<EventDialogContent open />', () => {
         let updateEventSpy;
 
         const { user } = render(
-          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
+          <EventCalendarProvider
+            events={[nonRecurringEvent]}
+            resources={resources}
+            storeClass={PremiumTestStore}
+          >
             <StoreSpy
               Context={SchedulerStoreContext}
               method="updateEvent"
@@ -1248,7 +1386,11 @@ describe('<EventDialogContent open />', () => {
   describe('Event dialog classes', () => {
     it('should apply built-in classes to dialog elements', () => {
       render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
           <EventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
@@ -1257,9 +1399,8 @@ describe('<EventDialogContent open />', () => {
       expect(document.querySelector('.MuiEventCalendar-eventDialogCloseButton')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogHeader')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogContent')).not.to.equal(null);
-      expect(document.querySelector('.MuiEventCalendar-eventDialogGeneralTabContent')).not.to.equal(
-        null,
-      );
+      expect(document.querySelector('.MuiEventCalendar-eventDialogTabPanel')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogTabContent')).not.to.equal(null);
       expect(
         document.querySelector('.MuiEventCalendar-eventDialogDateTimeFieldsContainer'),
       ).not.to.equal(null);
@@ -1280,7 +1421,11 @@ describe('<EventDialogContent open />', () => {
         .toOccurrence();
 
       render(
-        <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
+        <EventCalendarProvider
+          events={[readOnlyEvent]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
           <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
         </EventCalendarProvider>,
       );

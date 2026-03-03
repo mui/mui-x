@@ -1,6 +1,11 @@
 import { TemporalTimezone } from '../../../base-ui-copy/types';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
-import { RecurringEventByDayValue, RecurringEventRecurrenceRule } from '../../../models';
+import {
+  RecurringEventByDayValue,
+  SchedulerProcessedEventRecurrenceRule,
+  SchedulerEventRecurrenceRule,
+} from '../../../models';
+import { resolveEventDate } from '../../../process-event/resolveEventDate';
 import { getAdapterCache, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -15,18 +20,24 @@ const SUPPORTED_RRULE_KEYS = new Set([
 
 /**
  * Parses and validates a RRULE string (RFC5545) into a canonical
- * `RecurringEventRecurrenceRule`.
+ * `SchedulerProcessedEventRecurrenceRule`.
  *
  * The resulting rule is expressed in the provided timezone
  * (typically the event data timezone).
  */
 export function parseRRule(
   adapter: Adapter,
-  input: string | RecurringEventRecurrenceRule,
+  input: string | SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
-): RecurringEventRecurrenceRule {
+): SchedulerProcessedEventRecurrenceRule {
   if (typeof input === 'object') {
-    return input;
+    if (input.until != null) {
+      return {
+        ...input,
+        until: resolveEventDate(input.until, timezone, adapter),
+      };
+    }
+    return input as SchedulerProcessedEventRecurrenceRule;
   }
 
   const rruleObject: Record<string, string> = {};
@@ -41,28 +52,44 @@ export function parseRRule(
     const value = rawValue?.trim().toUpperCase();
 
     if (!key || !value) {
-      throw new Error(`MUI: Invalid RRULE part: "${part}"`);
+      throw new Error(
+        `MUI X Scheduler: Invalid RRULE part "${part}". ` +
+          'Each RRULE part must be in the format "KEY=VALUE". ' +
+          'Check the recurrence rule string format.',
+      );
     }
 
     if (!SUPPORTED_RRULE_KEYS.has(key)) {
-      throw new Error(`MUI: Unsupported RRULE property: "${key}"`);
+      throw new Error(
+        `MUI X Scheduler: Unsupported RRULE property "${key}". ` +
+          `Supported properties are: ${Array.from(SUPPORTED_RRULE_KEYS).join(', ')}. ` +
+          'Remove or replace the unsupported property.',
+      );
     }
 
     rruleObject[key] = value;
   }
 
   if (!rruleObject.FREQ) {
-    throw new Error('MUI: RRULE must include a FREQ property.');
+    throw new Error(
+      'MUI X Scheduler: RRULE must include a FREQ property. ' +
+        'The frequency (DAILY, WEEKLY, MONTHLY, or YEARLY) is required for recurrence rules. ' +
+        'Add a FREQ property to the RRULE string.',
+    );
   }
 
-  const rrule: RecurringEventRecurrenceRule = {
-    freq: rruleObject.FREQ as RecurringEventRecurrenceRule['freq'],
+  const rrule: SchedulerProcessedEventRecurrenceRule = {
+    freq: rruleObject.FREQ as SchedulerProcessedEventRecurrenceRule['freq'],
   };
 
   if (rruleObject.INTERVAL) {
     const interval = Number(rruleObject.INTERVAL);
     if (Number.isNaN(interval) || interval < 1) {
-      throw new Error(`MUI: Invalid INTERVAL value: "${rruleObject.INTERVAL}"`);
+      throw new Error(
+        `MUI X Scheduler: Invalid INTERVAL value "${rruleObject.INTERVAL}". ` +
+          'INTERVAL must be a positive integer (1 or greater). ' +
+          'Provide a valid interval value.',
+      );
     }
     rrule.interval = interval;
   }
@@ -75,7 +102,11 @@ export function parseRRule(
   if (rruleObject.BYMONTHDAY) {
     const days = rruleObject.BYMONTHDAY.split(',').map((d) => Number(d.trim()));
     if (days.some((d) => Number.isNaN(d) || d < 1 || d > 31)) {
-      throw new Error(`MUI: Invalid BYMONTHDAY values: "${rruleObject.BYMONTHDAY}"`);
+      throw new Error(
+        `MUI X Scheduler: Invalid BYMONTHDAY values "${rruleObject.BYMONTHDAY}". ` +
+          'BYMONTHDAY values must be integers between 1 and 31. ' +
+          'Provide valid day of month values.',
+      );
     }
     rrule.byMonthDay = days.toSorted((a, b) => a - b);
   }
@@ -83,7 +114,11 @@ export function parseRRule(
   if (rruleObject.BYMONTH) {
     const months = rruleObject.BYMONTH.split(',').map((m) => Number(m.trim()));
     if (months.some((m) => Number.isNaN(m) || m < 1 || m > 12)) {
-      throw new Error(`MUI: Invalid BYMONTH values: "${rruleObject.BYMONTH}"`);
+      throw new Error(
+        `MUI X Scheduler: Invalid BYMONTH values "${rruleObject.BYMONTH}". ` +
+          'BYMONTH values must be integers between 1 and 12. ' +
+          'Provide valid month values.',
+      );
     }
     rrule.byMonth = months.toSorted((a, b) => a - b);
   }
@@ -91,7 +126,11 @@ export function parseRRule(
   if (rruleObject.COUNT) {
     const count = Number(rruleObject.COUNT);
     if (Number.isNaN(count) || count < 1) {
-      throw new Error(`MUI: Invalid COUNT value: "${rruleObject.COUNT}"`);
+      throw new Error(
+        `MUI X Scheduler: Invalid COUNT value "${rruleObject.COUNT}". ` +
+          'COUNT must be a positive integer (1 or greater). ' +
+          'Provide a valid count value.',
+      );
     }
     rrule.count = count;
   }
@@ -100,7 +139,11 @@ export function parseRRule(
     const parsed = adapter.parse(rruleObject.UNTIL, getAdapterCache(adapter).untilFormat, timezone);
 
     if (!adapter.isValid(parsed)) {
-      throw new Error(`MUI: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
+      throw new Error(
+        `MUI X Scheduler: Invalid UNTIL date "${rruleObject.UNTIL}". ` +
+          'The UNTIL value must be a valid date in ISO format. ' +
+          'Provide a valid date string.',
+      );
     }
 
     rrule.until = parsed;
@@ -110,10 +153,13 @@ export function parseRRule(
 }
 
 /**
- * Serializes a RecurringEventRecurrenceRule object
+ * Serializes a SchedulerProcessedEventRecurrenceRule object
  * into a RRULE string (RFC5545).
  */
-export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceRule): string {
+export function serializeRRule(
+  adapter: Adapter,
+  rule: SchedulerProcessedEventRecurrenceRule,
+): string {
   const parts: string[] = [];
 
   parts.push(`FREQ=${rule.freq}`);

@@ -2,13 +2,13 @@ import {
   SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
   SchedulerProcessedDate,
   TemporalTimezone,
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { SchedulerTranslations } from '../../../models';
+import { EventDialogLocaleText } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 export interface ControlledValue {
@@ -20,7 +20,7 @@ export interface ControlledValue {
   allDay: boolean;
   color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
-  rruleDraft: RecurringEventRecurrenceRule;
+  rruleDraft: SchedulerProcessedEventRecurrenceRule;
 }
 
 export type EndsSelection = 'never' | 'after' | 'until';
@@ -82,32 +82,32 @@ export function validateRange(
 export function getRecurrenceLabel(
   adapter: Adapter,
   start: SchedulerProcessedDate,
-  recurrenceKey: string | null,
-  translations: SchedulerTranslations,
+  recurrenceKey: RecurringEventPresetKey | 'custom' | null,
+  localeText: EventDialogLocaleText,
 ): string {
   if (!recurrenceKey) {
-    return translations.recurrenceNoRepeat;
+    return localeText.recurrenceNoRepeat;
   }
 
   switch (recurrenceKey) {
-    case 'daily':
-      return translations.recurrenceDailyPresetLabel;
-    case 'weekly': {
+    case 'DAILY':
+      return localeText.recurrenceDailyPresetLabel;
+    case 'WEEKLY': {
       const weekday = adapter.format(start.value, 'weekday');
-      return translations.recurrenceWeeklyPresetLabel(weekday);
+      return localeText.recurrenceWeeklyPresetLabel(weekday);
     }
-    case 'monthly': {
+    case 'MONTHLY': {
       const date = adapter.getDate(start.value);
-      return translations.recurrenceMonthlyPresetLabel(date);
+      return localeText.recurrenceMonthlyPresetLabel(date);
     }
-    case 'yearly': {
+    case 'YEARLY': {
       const normalDate = formatDayOfMonthAndMonthFullLetter(start.value, adapter);
-      return translations.recurrenceYearlyPresetLabel(normalDate);
+      return localeText.recurrenceYearlyPresetLabel(normalDate);
     }
     case 'custom':
-      return translations.recurrenceCustomRepeat;
+      return localeText.recurrenceCustomRepeat;
     default:
-      return translations.recurrenceNoRepeat;
+      return localeText.recurrenceNoRepeat;
   }
 }
 
