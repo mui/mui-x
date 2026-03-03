@@ -21,10 +21,7 @@ export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sanke
   }
 
   return function isFaded<TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
-    item:
-      | HighlightItemIdentifierWithType<TestedSeriesType>
-      | HighlightItemIdentifier<TestedSeriesType>
-      | null,
+    item: HighlightItemIdentifierWithType<TestedSeriesType> | null,
   ): boolean {
     if (!item) {
       return false;

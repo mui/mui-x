@@ -1,7 +1,4 @@
-import type {
-  HighlightItemIdentifier,
-  HighlightItemIdentifierWithType,
-} from '../../../../models/seriesType';
+import type { HighlightItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
@@ -23,10 +20,7 @@ export function createIsHighlighted<
   }
 
   return function isHighlighted<TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
-    item:
-      | HighlightItemIdentifier<TestedSeriesType>
-      | HighlightItemIdentifierWithType<TestedSeriesType>
-      | null,
+    item: HighlightItemIdentifierWithType<TestedSeriesType> | null,
   ): boolean {
     if (!item) {
       return false;
