@@ -145,7 +145,7 @@ const ChartsLabelMark = consumeThemeProps(
                 />
                 {markShape && (
                   <path
-                    d={d3Symbol(d3SymbolsFill[getSymbol(markShape)])()!}
+                    d={d3Symbol(d3SymbolsFill[getSymbol(markShape)], 32)()!}
                     transform="translate(8, 8) "
                     stroke={color}
                     strokeWidth={2}
