@@ -21,7 +21,7 @@ import { type GetItemAtPosition } from './getItemAtPosition.types';
 import { type UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
 import { type UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
 import { type HighlightCreator } from '../../../featurePlugins/useChartHighlight/highlightCreator.types';
-import { type SeriesItem } from '../../../../../ChartsTooltip';
+import { type AxisTooltipContentProps, type ItemTooltipContentProps } from './TooltipContent.types';
 
 export type ChartSeriesTypeRequiredPlugins<SeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[SeriesType] extends { axisType: 'cartesian' }
@@ -39,6 +39,7 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
   colorProcessor: ColorProcessor<SeriesType>;
   legendGetter: LegendGetter<SeriesType>;
   tooltipGetter: TooltipGetter<SeriesType>;
+  ItemTooltipContent?: React.ComponentType<ItemTooltipContentProps<SeriesType>>;
   tooltipItemPositionGetter?: TooltipItemPositionGetter<SeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<SeriesType>;
   keyboardFocusHandler?: KeyboardFocusHandler<SeriesType>;
@@ -63,7 +64,7 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
       xExtremumGetter: CartesianExtremumGetter<SeriesType>;
       yExtremumGetter: CartesianExtremumGetter<SeriesType>;
       axisTooltipGetter?: AxisTooltipGetter<SeriesType, 'x' | 'y'>;
-      AxisTooltipContent?: React.ComponentType<{ item: SeriesItem<SeriesType> }>;
+      AxisTooltipContent?: React.ComponentType<AxisTooltipContentProps<SeriesType>>;
     }
   : {}) &
   (SeriesType extends PolarChartSeriesType
@@ -71,7 +72,7 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
         rotationExtremumGetter: PolarExtremumGetter<SeriesType>;
         radiusExtremumGetter: PolarExtremumGetter<SeriesType>;
         axisTooltipGetter?: AxisTooltipGetter<SeriesType, 'rotation' | 'radius'>;
-        AxisTooltipContent?: React.ComponentType<{ item: SeriesItem<SeriesType> }>;
+        AxisTooltipContent?: React.ComponentType<AxisTooltipContentProps<SeriesType>>;
       }
     : {});
 

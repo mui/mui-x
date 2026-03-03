@@ -2,19 +2,19 @@ import {
   ChartsTooltipCell,
   ChartsTooltipRow,
   ChartsTooltipTable,
-  type SeriesItem,
 } from '@mui/x-charts/ChartsTooltip';
 import clsx from 'clsx';
-import { type CartesianChartSeriesType, type PolarChartSeriesType } from '@mui/x-charts/internals';
+import {
+  type AxisTooltipContentProps,
+  type ItemTooltipContentProps,
+} from '@mui/x-charts/internals';
 import { useUtilityClasses } from '../CandlestickTooltip/Candlestick.classes';
 
-interface AxisTooltipContentProps<T extends CartesianChartSeriesType | PolarChartSeriesType> {
-  item: SeriesItem<T>;
-}
-
-export function OHLCAxisTooltipContent(props: AxisTooltipContentProps<'ohlc'>) {
+export function OHLCTooltipContent(
+  props: AxisTooltipContentProps<'ohlc'> | ItemTooltipContentProps<'ohlc'>,
+) {
   const { item } = props;
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses({});
 
   if (item.value == null) {
     return null;
