@@ -23,8 +23,8 @@ function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
     return false;
   }
 
-  // Disabled by default
-  return false;
+  // Enabled by default
+  return true;
 }
 
 async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
