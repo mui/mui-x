@@ -3,7 +3,7 @@ title: Charts - useDataset
 productId: x-charts
 ---
 
-# useDataset
+# `useDataset()`
 
 <p class="description">Read the dataset array used to populate series and axes in custom components.</p>
 

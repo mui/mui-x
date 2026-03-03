@@ -59,7 +59,7 @@ The demo below shows how viewport loading mode works:
 {{"demo": "ServerSideLazyLoadingViewport.js", "bg": "inline"}}
 
 :::info
-The Data Source demos use a `useMockServer` utility function to simulate server-side data fetching.
+The Data Source demos use a `useMockServer()` utility function to simulate server-side data fetching.
 In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
