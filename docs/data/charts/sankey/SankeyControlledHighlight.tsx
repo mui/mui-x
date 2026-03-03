@@ -4,7 +4,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { HighlightItemIdentifier } from '@mui/x-charts-pro/models';
 
 export default function SankeyControlledHighlight() {
