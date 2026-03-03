@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 ## Basic example
 
 {{"demo": "BasicDataSource.js", "bg": "inline", "defaultCodeOpen": false}}

@@ -41,13 +41,14 @@ export function useTransformData(
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
       data.map((item, itemIndex) => {
-        const currentItem = {
+        const identifier = {
+          type: 'pie' as const,
           seriesId,
           dataIndex: itemIndex,
         };
-        const isHighlighted = isItemHighlighted(currentItem);
-        const isFaded = !isHighlighted && isItemFaded(currentItem);
-        const isFocused = isItemFocused({ type: 'pie', seriesId, dataIndex: itemIndex });
+        const isHighlighted = isItemHighlighted(identifier);
+        const isFaded = !isHighlighted && isItemFaded(identifier);
+        const isFocused = isItemFocused(identifier);
 
         // TODO v9: Replace the second argument with the result of useSeriesLayout
         const arcSizes = getModifiedArcProperties(
