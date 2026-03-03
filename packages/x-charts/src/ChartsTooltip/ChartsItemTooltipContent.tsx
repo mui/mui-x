@@ -12,6 +12,7 @@ import {
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
+import { selectorChartSeriesConfigGetter, useStore } from '../internals';
 
 export interface ChartsItemTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -26,12 +27,18 @@ export interface ChartsItemTooltipContentProps {
 function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   const { classes: propClasses, sx } = props;
   const tooltipData = useInternalItemTooltip();
+  const store = useStore();
+  const getSeriesConfig = store.use(selectorChartSeriesConfigGetter);
 
   const classes = useUtilityClasses(propClasses);
 
   if (!tooltipData) {
     return null;
   }
+
+  const seriesConfig = getSeriesConfig(tooltipData.identifier.seriesId);
+  const Content =
+    seriesConfig && 'ItemTooltipContent' in seriesConfig ? seriesConfig.ItemTooltipContent : null;
 
   if ('values' in tooltipData) {
     const { label: seriesLabel, color, markType, markShape } = tooltipData;
@@ -50,13 +57,22 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
             {seriesLabel}
           </Typography>
           <tbody>
-            {tooltipData.values.map(({ formattedValue, label }) => (
-              <ChartsTooltipRow key={label} className={classes.row}>
+            {tooltipData.values.map((value) => (
+              <ChartsTooltipRow key={value.label} className={classes.row}>
                 <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-                  {label}
+                  {value.label}
                 </ChartsTooltipCell>
                 <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-                  {formattedValue}
+                  {Content ? (
+                    <Content
+                      item={
+                        /* TypeScript can't assert that the item's type is the same type as the `Content`, so we need to cast */
+                        value
+                      }
+                    />
+                  ) : (
+                    value.formattedValue
+                  )}
                 </ChartsTooltipCell>
               </ChartsTooltipRow>
             ))}
@@ -85,7 +101,16 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
               {label}
             </ChartsTooltipCell>
             <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-              {formattedValue}
+              {Content ? (
+                <Content
+                  item={
+                    /* TypeScript can't assert that the item's type is the same type as the `Content`, so we need to cast */
+                    tooltipData as any
+                  }
+                />
+              ) : (
+                formattedValue
+              )}
             </ChartsTooltipCell>
           </ChartsTooltipRow>
         </tbody>

@@ -156,13 +156,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
             {children}
           </ChartsSvgLayer>
         </ChartsLayerContainer>
-        {!props.loading && (
-          <Tooltip
-            // TODO: Do we want trigger item to be the default?
-            trigger="axis"
-            {...props.slotProps?.tooltip}
-          />
-        )}
+        {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPremium>
   );
