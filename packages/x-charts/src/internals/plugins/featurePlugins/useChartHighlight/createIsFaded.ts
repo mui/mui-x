@@ -1,4 +1,7 @@
-import type { HighlightItemIdentifier } from '../../../../models/seriesType';
+import type {
+  HighlightItemIdentifier,
+  HighlightItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
@@ -18,7 +21,10 @@ export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sanke
   }
 
   return function isFaded<TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
-    item: HighlightItemIdentifier<TestedSeriesType> | null,
+    item:
+      | HighlightItemIdentifierWithType<TestedSeriesType>
+      | HighlightItemIdentifier<TestedSeriesType>
+      | null,
   ): boolean {
     if (!item) {
       return false;

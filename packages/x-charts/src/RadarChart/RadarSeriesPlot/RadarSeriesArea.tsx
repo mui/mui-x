@@ -7,14 +7,14 @@ import { getAreaPath } from './getAreaPath';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import type { HighlightItemIdentifier, SeriesId } from '../../models/seriesType';
+import type { HighlightItemIdentifierWithType, SeriesId } from '../../models/seriesType';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
-  isHighlighted: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
+  isFaded: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
+  isHighlighted: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
   points: { x: number; y: number }[];
   fillArea?: boolean;
   color: string;
@@ -47,7 +47,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter<'radar'>();
 
   const classes = useUtilityClasses(props.classes);
   return (

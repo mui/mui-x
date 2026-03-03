@@ -1,4 +1,7 @@
-import type { HighlightItemIdentifier } from '../../../../models/seriesType';
+import type {
+  HighlightItemIdentifier,
+  HighlightItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 
@@ -13,14 +16,17 @@ export function createIsHighlighted<
   SeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
 >(
   highlightScope: HighlightScope<SeriesType> | null | undefined,
-  highlightedItem: HighlightItemIdentifier<SeriesType> | null,
+  highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
 ) {
   if (!highlightScope || !highlightedItem) {
     return alwaysFalse;
   }
 
   return function isHighlighted<TestedSeriesType extends ComposableChartSeriesType<SeriesType>>(
-    item: HighlightItemIdentifier<TestedSeriesType> | null,
+    item:
+      | HighlightItemIdentifier<TestedSeriesType>
+      | HighlightItemIdentifierWithType<TestedSeriesType>
+      | null,
   ): boolean {
     if (!item) {
       return false;

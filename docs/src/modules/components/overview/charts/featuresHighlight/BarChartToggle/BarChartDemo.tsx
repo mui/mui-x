@@ -34,7 +34,7 @@ export default function BarChartDemo(props: { selected: SelectOptions }) {
 
   useEnhancedEffect(() => {
     if (props.selected === 'highlighting') {
-      setHighlightedItem({ type: 'bar', seriesId: 'B', dataIndex: 2 });
+      setHighlightedItem({ seriesId: 'B', dataIndex: 2 });
     } else {
       setHighlightedItem(null);
     }

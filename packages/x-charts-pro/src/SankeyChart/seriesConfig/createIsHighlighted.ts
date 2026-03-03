@@ -1,5 +1,5 @@
 import type { ChartSeriesType } from '@mui/x-charts/internals';
-import type { HighlightItemIdentifier } from '@mui/x-charts/models';
+import type { HighlightItemIdentifierWithType } from '@mui/x-charts/models';
 import type {
   SankeyHighlightScope,
   SankeyLinkHighlight,
@@ -14,10 +14,10 @@ function alwaysFalse(): boolean {
 }
 
 function isNodeHighlighted(
-  highlightedItem: HighlightItemIdentifier<'sankey'>,
+  highlightedItem: HighlightItemIdentifierWithType<'sankey'>,
   nodeHighlight: SankeyNodeHighlight,
   linkHighlight: SankeyLinkHighlight,
-  item: HighlightItemIdentifier<'sankey'>,
+  item: HighlightItemIdentifierWithType<'sankey'>,
 ): boolean {
   if (item.subType !== 'node') {
     return false;
@@ -52,10 +52,10 @@ function isNodeHighlighted(
 }
 
 function isLinkHighlighted(
-  highlightedItem: HighlightItemIdentifier<'sankey'>,
+  highlightedItem: HighlightItemIdentifierWithType<'sankey'>,
   nodeHighlight: SankeyNodeHighlight,
   linkHighlight: SankeyLinkHighlight,
-  item: HighlightItemIdentifier<'sankey'>,
+  item: HighlightItemIdentifierWithType<'sankey'>,
 ): boolean {
   if (item.subType !== 'link') {
     return false;
@@ -95,7 +95,7 @@ function isLinkHighlighted(
 
 export function createSankeyIsHighlighted(
   highlightScope: SankeyHighlightScope | null | undefined,
-  highlightedItem: HighlightItemIdentifier<'sankey'> | null,
+  highlightedItem: HighlightItemIdentifierWithType<'sankey'> | null,
 ) {
   if (!highlightedItem) {
     return alwaysFalse;
@@ -104,12 +104,14 @@ export function createSankeyIsHighlighted(
   const nodeHighlight = highlightScope?.nodes?.highlight ?? DEFAULT_NODE_HIGHLIGHT;
   const linkHighlight = highlightScope?.links?.highlight ?? DEFAULT_LINK_HIGHLIGHT;
 
-  return function isHighlighted(item: HighlightItemIdentifier<ChartSeriesType> | null): boolean {
+  return function isHighlighted(
+    item: HighlightItemIdentifierWithType<ChartSeriesType> | null,
+  ): boolean {
     if (!item || item.type !== 'sankey') {
       return false;
     }
 
-    const sankeyItem = item as HighlightItemIdentifier<'sankey'>;
+    const sankeyItem = item as HighlightItemIdentifierWithType<'sankey'>;
 
     if (sankeyItem.subType === 'node') {
       return isNodeHighlighted(highlightedItem, nodeHighlight, linkHighlight, sankeyItem);

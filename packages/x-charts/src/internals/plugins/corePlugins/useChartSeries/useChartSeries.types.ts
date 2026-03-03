@@ -84,7 +84,7 @@ export type IdentifierWithTypeFunction = {
     Item extends SeriesItemIdentifier<SeriesType> | SeriesItemIdentifierWithType<SeriesType>,
   >(
     identifier: Item,
-    typeOfIdentifier?: 'seriesItem',
+    typeOfIdentifier: 'seriesItem',
   ): SeriesItemIdentifierWithType<SeriesType>;
 
   <
@@ -92,7 +92,7 @@ export type IdentifierWithTypeFunction = {
     Item extends HighlightItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType>,
   >(
     identifier: Item,
-    typeOfIdentifier?: 'highlightItem',
+    typeOfIdentifier: 'highlightItem',
   ): HighlightItemIdentifierWithType<SeriesType>;
 
   <
@@ -100,7 +100,7 @@ export type IdentifierWithTypeFunction = {
     Item extends VisibilityIdentifier<SeriesType> | VisibilityIdentifierWithType<SeriesType>,
   >(
     identifier: Item,
-    typeOfIdentifier?: 'visibility',
+    typeOfIdentifier: 'visibility',
   ): VisibilityIdentifierWithType<SeriesType>;
 };
 

@@ -6,13 +6,17 @@ import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { type SeriesId } from '../../models/seriesType/common';
-import { type HighlightItemIdentifier } from '../../models';
+import type { HighlightItemIdentifierWithType, HighlightItemIdentifier } from '../../models';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
-  isHighlighted: (item: HighlightItemIdentifier<'radar'> | null) => boolean;
+  isFaded: (
+    item: HighlightItemIdentifier<'radar'> | HighlightItemIdentifierWithType<'radar'> | null,
+  ) => boolean;
+  isHighlighted: (
+    item: HighlightItemIdentifier<'radar'> | HighlightItemIdentifierWithType<'radar'> | null,
+  ) => boolean;
   point: { x: number; y: number };
   fillArea?: boolean;
   color: string;

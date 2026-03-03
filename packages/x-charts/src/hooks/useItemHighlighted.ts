@@ -6,7 +6,7 @@ import {
   selectorChartsIsHighlighted,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
-import type { HighlightItemIdentifier } from '../models/seriesType';
+import type { HighlightItemIdentifierWithType } from '../models/seriesType';
 import type { ChartSeriesType } from '../models/seriesType/config';
 
 type UseItemHighlightedReturnType = {
@@ -21,7 +21,7 @@ type UseItemHighlightedReturnType = {
 };
 
 type UseItemHighlightedParams<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  HighlightItemIdentifier<SeriesType> | null;
+  HighlightItemIdentifierWithType<SeriesType> | null;
 
 /**
  * A hook to check the highlighted state of the item.
@@ -29,7 +29,7 @@ type UseItemHighlightedParams<SeriesType extends ChartSeriesType = ChartSeriesTy
  *
  * If you need fine control over the state, use the `useItemHighlightedGetter` hook instead.
  *
- * @param {SeriesItemIdentifier<SeriesType> | null} item is the item to check
+ * @param {HighlightItemIdentifierWithType<SeriesType> | null} item is the item to check
  * @returns {UseItemHighlightedReturnType} the state of the item
  */
 export function useItemHighlighted<SeriesType extends ChartSeriesType = ChartSeriesType>(

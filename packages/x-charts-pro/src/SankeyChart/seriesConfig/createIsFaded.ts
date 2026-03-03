@@ -1,4 +1,4 @@
-import type { HighlightItemIdentifier } from '@mui/x-charts/models';
+import type { HighlightItemIdentifierWithType } from '@mui/x-charts/models';
 import type { SankeyHighlightScope } from '../sankey.highlight.types';
 import { createSankeyIsHighlighted } from './createIsHighlighted';
 
@@ -10,7 +10,7 @@ function alwaysFalse(): boolean {
 
 export function createSankeyIsFaded(
   highlightScope: SankeyHighlightScope | null | undefined,
-  highlightedItem: HighlightItemIdentifier<'sankey'> | null,
+  highlightedItem: HighlightItemIdentifierWithType<'sankey'> | null,
 ) {
   if (!highlightedItem) {
     return alwaysFalse;
@@ -21,7 +21,7 @@ export function createSankeyIsFaded(
 
   const isHighlighted = createSankeyIsHighlighted(highlightScope, highlightedItem);
 
-  return function isFaded(item: HighlightItemIdentifier<'sankey'> | null): boolean {
+  return function isFaded(item: HighlightItemIdentifierWithType<'sankey'> | null): boolean {
     if (!item || item.type !== 'sankey') {
       return false;
     }

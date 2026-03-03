@@ -1,9 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import type {
-  HighlightItemIdentifier,
-  HighlightItemIdentifierWithType,
-} from '../../../../models/seriesType';
+import type { HighlightItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import { type ChartRootSelector } from '../../utils/selectors';
@@ -87,7 +84,7 @@ const selectorChartsIsHighlightedCallbackImpl = createSelectorMemoized(
   selectorChartSeriesConfig,
   function selectorChartsIsHighlightedCallbackCombiner<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
   ) {
     if (highlightedItem === null || highlightScope === null) {
@@ -108,7 +105,7 @@ const selectorChartsIsHighlightedCallbackImpl = createSelectorMemoized(
  */
 export function selectorChartsIsHighlightedCallback<SeriesType extends ChartSeriesType>(
   state: Parameters<typeof selectorChartsIsHighlightedCallbackImpl>[0],
-): (item: HighlightItemIdentifier<SeriesType> | null) => boolean {
+): (item: HighlightItemIdentifierWithType<SeriesType> | null) => boolean {
   return selectorChartsIsHighlightedCallbackImpl(state);
 }
 
@@ -118,7 +115,7 @@ const selectorChartsIsFadedCallbackImpl = createSelectorMemoized(
   selectorChartSeriesConfig,
   function selectorChartsIsFadedCallbackCombiner<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
   ) {
     if (highlightedItem === null || highlightScope === null) {
@@ -139,7 +136,7 @@ const selectorChartsIsFadedCallbackImpl = createSelectorMemoized(
  */
 export function selectorChartsIsFadedCallback<SeriesType extends ChartSeriesType>(
   state: Parameters<typeof selectorChartsIsFadedCallbackImpl>[0],
-): (item: HighlightItemIdentifier<SeriesType> | null) => boolean {
+): (item: HighlightItemIdentifierWithType<SeriesType> | null) => boolean {
   return selectorChartsIsFadedCallbackImpl(state);
 }
 
@@ -149,9 +146,9 @@ const selectorChartsIsHighlightedImpl = createSelector(
   selectorChartSeriesConfig,
   function selectorChartsIsHighlightedCombiner<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
-    item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
+    item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;
@@ -171,7 +168,7 @@ const selectorChartsIsHighlightedImpl = createSelector(
  */
 export function selectorChartsIsHighlighted<SeriesType extends ChartSeriesType>(
   state: Parameters<typeof selectorChartsIsHighlightedImpl>[0],
-  item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
+  item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
 ): boolean {
   return selectorChartsIsHighlightedImpl(state, item);
 }
@@ -182,9 +179,9 @@ const selectorChartsIsFadedImpl = createSelector(
   selectorChartSeriesConfig,
   function selectorChartsIsFadedCombiner<SeriesType extends ChartSeriesType>(
     highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: HighlightItemIdentifier<SeriesType> | null,
+    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
-    item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
+    item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;
@@ -204,7 +201,7 @@ const selectorChartsIsFadedImpl = createSelector(
  */
 export function selectorChartsIsFaded<SeriesType extends ChartSeriesType>(
   state: Parameters<typeof selectorChartsIsFadedImpl>[0],
-  item: HighlightItemIdentifier<ComposableChartSeriesType<SeriesType>> | null,
+  item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
 ): boolean {
   return selectorChartsIsFadedImpl(state, item);
 }
@@ -222,7 +219,7 @@ export const selectorChartIsSeriesHighlighted = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartIsSeriesHighlighted<SeriesType extends ChartSeriesType>(
     scope: Partial<HighlightScope<SeriesType>> | null,
-    item: HighlightItemIdentifier<SeriesType> | null,
+    item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
     if (!isBatchRenderingSeriesType(item?.type)) {
@@ -237,7 +234,7 @@ export const selectorChartIsSeriesFaded = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartIsSeriesFaded<SeriesType extends ChartSeriesType>(
     scope: Partial<HighlightScope<SeriesType>> | null,
-    item: HighlightItemIdentifier<SeriesType> | null,
+    item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
     if (!isBatchRenderingSeriesType(item?.type)) {
@@ -252,7 +249,7 @@ export const selectorChartSeriesUnfadedItem = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartSeriesUnfadedItem<SeriesType extends ChartSeriesType>(
     scope: Partial<HighlightScope<SeriesType>> | null,
-    item: HighlightItemIdentifier<SeriesType> | null,
+    item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
     if (!isBatchRenderingSeriesType(item?.type)) {
@@ -267,7 +264,7 @@ export const selectorChartSeriesHighlightedItem = createSelector(
   selectorChartsHighlightedItem,
   function selectorChartSeriesHighlightedItem<SeriesType extends ChartSeriesType>(
     scope: Partial<HighlightScope<SeriesType>> | null,
-    item: HighlightItemIdentifier<SeriesType> | null,
+    item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
     if (!isBatchRenderingSeriesType(item?.type)) {

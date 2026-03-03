@@ -12,7 +12,7 @@ type DefaultizedSeriesType<T extends ChartSeriesType = ChartSeriesType> =
 // item identifier
 
 export type SeriesItemIdentifier<T extends ChartSeriesType> = T extends any
-  ? DistributiveOmit<ChartsSeriesConfig[T]['itemIdentifier'], 'type'> & { type?: T }
+  ? DistributiveOmit<ChartsSeriesConfig[T]['itemIdentifier'], 'type'>
   : never;
 
 export type SeriesItemIdentifierWithType<T extends ChartSeriesType> = T extends any
@@ -30,7 +30,7 @@ export type SeriesItemIdentifierWithData<T extends ChartSeriesType> = T extends 
  * Identifies an highlighted item or series.
  */
 export type HighlightItemIdentifier<T extends ChartSeriesType> = T extends any
-  ? DistributiveOmit<ChartsSeriesConfig[T]['highlightIdentifier'], 'type'> & { type?: T }
+  ? DistributiveOmit<ChartsSeriesConfig[T]['highlightIdentifier'], 'type'>
   : never;
 
 export type HighlightItemIdentifierWithType<T extends ChartSeriesType> = T extends any
