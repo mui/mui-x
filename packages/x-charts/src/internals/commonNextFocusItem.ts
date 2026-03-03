@@ -5,7 +5,7 @@ import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboard
 import type { ChartState } from './plugins/models/chart';
 import { seriesHasData } from './seriesHasData';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { FocusedItemIdentifier, SeriesId, SeriesItemIdentifier } from '../models/seriesType';
+import type { SeriesId, FocusedItemIdentifier } from '../models/seriesType';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 
 type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
@@ -39,7 +39,7 @@ export function createGetNextIndexFocusedItem<
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
     );
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType | undefined;
+    let type = currentItem?.type;
     if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
       const nextSeries = getNextNonEmptySeries<OutSeriesType>(
         processedSeries,
@@ -64,7 +64,7 @@ export function createGetNextIndexFocusedItem<
     }
 
     return {
-      type,
+      type: type as OutSeriesType,
       seriesId,
       dataIndex,
     };
@@ -85,14 +85,14 @@ export function createGetPreviousIndexFocusedItem<
   allowCycles: boolean = false,
 ) {
   return function getPreviousIndexFocusedItem(
-    currentItem: SeriesItemIdentifier<InSeriesType> | null,
+    currentItem: FocusedItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
     );
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType | undefined;
+    let type = currentItem?.type;
     if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
       const previousSeries = getPreviousNonEmptySeries<OutSeriesType>(
         processedSeries,
@@ -117,7 +117,7 @@ export function createGetPreviousIndexFocusedItem<
     }
 
     return {
-      type,
+      type: type as OutSeriesType,
       seriesId,
       dataIndex,
     };
@@ -134,14 +134,14 @@ export function createGetNextSeriesFocusedItem<
   compatibleSeriesTypes: Set<OutSeriesType>,
 ) {
   return function getNextSeriesFocusedItem(
-    currentItem: SeriesItemIdentifier<InSeriesType> | null,
+    currentItem: FocusedItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
     );
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType;
+    let type = currentItem?.type;
 
     const nextSeries = getNextNonEmptySeries<OutSeriesType>(
       processedSeries,
@@ -159,7 +159,7 @@ export function createGetNextSeriesFocusedItem<
     const dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex;
 
     return {
-      type,
+      type: type as OutSeriesType,
       seriesId,
       dataIndex,
     };
@@ -176,14 +176,14 @@ export function createGetPreviousSeriesFocusedItem<
   compatibleSeriesTypes: Set<OutSeriesType>,
 ) {
   return function getPreviousSeriesFocusedItem(
-    currentItem: SeriesItemIdentifier<InSeriesType> | null,
+    currentItem: FocusedItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
     );
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType;
+    let type = currentItem?.type;
 
     const previousSeries = getPreviousNonEmptySeries<OutSeriesType>(
       processedSeries,
@@ -201,21 +201,9 @@ export function createGetPreviousSeriesFocusedItem<
     const dataIndex = currentItem?.dataIndex == null ? data.length - 1 : currentItem.dataIndex;
 
     return {
-      type,
+      type: type as OutSeriesType,
       seriesId,
       dataIndex,
     };
   };
 }
-
-export type ComposableCartesianChartSeriesType =
-  | 'bar'
-  | 'line'
-  | 'scatter'
-  | ('rangeBar' extends ChartSeriesType ? 'rangeBar' : never);
-export const composableCartesianSeriesTypes: Set<ComposableCartesianChartSeriesType> = new Set([
-  'bar',
-  'line',
-  'scatter',
-  'rangeBar',
-] as ComposableCartesianChartSeriesType[]);

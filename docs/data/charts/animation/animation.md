@@ -52,9 +52,9 @@ With `params` you can define the following properties:
 - `skip`: If `true`, apply the new value immediately
 - `ref`: A ref to merge with the ref returned from this hook
 - `initialProps`: The props used to generate the animation of component creation; if none are provided, there is no initial animation
-- `createInterpolator`: Create an interpolation function from the last to the next props
-- `transformProps`: Optionally transform interpolated props to another format
-- `applyProps`: Apply transformed props to the element
+- `createInterpolator()`: Create an interpolation function from the last to the next props
+- `transformProps()`: Optionally transform interpolated props to another format
+- `applyProps()`: Apply transformed props to the element
 
 You can find more detailed explanations in the hook's JSDoc.
 

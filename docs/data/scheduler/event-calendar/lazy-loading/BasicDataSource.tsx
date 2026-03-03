@@ -14,7 +14,6 @@ export default function BasicDataSource() {
         events={[]}
         dataSource={{ getEvents, updateEvents }}
         resources={resources}
-        areEventsDraggable
         defaultVisibleDate={defaultVisibleDate}
         defaultPreferences={{ isSidePanelOpen: false }}
       />

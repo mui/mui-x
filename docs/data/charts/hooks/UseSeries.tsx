@@ -4,7 +4,7 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 
 const barData = [4, 3, 5, 7, 2] as const;
@@ -44,7 +44,7 @@ function MaxLineOnEachSeries() {
 export default function UseSeries() {
   return (
     <div>
-      <ChartDataProvider
+      <ChartsDataProvider
         series={[
           {
             data: barData,
@@ -79,7 +79,7 @@ export default function UseSeries() {
           <ChartsYAxis />
           <MaxLineOnEachSeries />
         </ChartsSurface>
-      </ChartDataProvider>
+      </ChartsDataProvider>
     </div>
   );
 }
