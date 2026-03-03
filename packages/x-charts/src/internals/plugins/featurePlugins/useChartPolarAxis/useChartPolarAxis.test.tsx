@@ -31,25 +31,22 @@ describe('useChartPolarAxis', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  it(
-    'should throw an error when axis have duplicate ids across different directions (radius, rotation)',
-    () => {
-      const expectedError = [
-        'MUI X Charts: The following axis ids are duplicated: qwerty.',
-        'Please make sure that each axis has a unique id.',
-      ].join('\n');
+  it('should throw an error when axis have duplicate ids across different directions (radius, rotation)', () => {
+    const expectedError = [
+      'MUI X Charts: The following axis ids are duplicated: qwerty.',
+      'Please make sure that each axis has a unique id.',
+    ].join('\n');
 
-      expect(() =>
-        render(
-          <ChartsDataProvider<'radar', [UseChartPolarAxisSignature]>
-            rotationAxis={[{ scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] }]}
-            radiusAxis={[{ id: 'qwerty' }]}
-            height={100}
-            width={100}
-            plugins={[useChartPolarAxis]}
-          />,
-        ),
-      ).toErrorDev(expectedError);
-    },
-  );
+    expect(() =>
+      render(
+        <ChartsDataProvider<'radar', [UseChartPolarAxisSignature]>
+          rotationAxis={[{ scaleType: 'band', id: 'qwerty', data: ['a', 'b', 'c'] }]}
+          radiusAxis={[{ id: 'qwerty' }]}
+          height={100}
+          width={100}
+          plugins={[useChartPolarAxis]}
+        />,
+      ),
+    ).toErrorDev(expectedError);
+  });
 });

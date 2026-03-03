@@ -29,25 +29,22 @@ describe('useChartCartesianAxis', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  it(
-    'should throw an error when axis have duplicate ids across different directions (x,y)',
-    () => {
-      const expectedError = [
-        'MUI X Charts: The following axis ids are duplicated: qwerty.',
-        'Please make sure that each axis has a unique id.',
-      ].join('\n');
+  it('should throw an error when axis have duplicate ids across different directions (x,y)', () => {
+    const expectedError = [
+      'MUI X Charts: The following axis ids are duplicated: qwerty.',
+      'Please make sure that each axis has a unique id.',
+    ].join('\n');
 
-      expect(() =>
-        render(
-          <BarChart
-            xAxis={[{ id: 'qwerty', data: ['a', 'b', 'c'] }]}
-            yAxis={[{ id: 'qwerty' }]}
-            series={[{ data: [1, 2, 3] }]}
-            height={100}
-            width={100}
-          />,
-        ),
-      ).toErrorDev(expectedError);
-    },
-  );
+    expect(() =>
+      render(
+        <BarChart
+          xAxis={[{ id: 'qwerty', data: ['a', 'b', 'c'] }]}
+          yAxis={[{ id: 'qwerty' }]}
+          series={[{ data: [1, 2, 3] }]}
+          height={100}
+          width={100}
+        />,
+      ),
+    ).toErrorDev(expectedError);
+  });
 });
