@@ -237,9 +237,9 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
-### Rename `useAxisTooltip` hook
+### Rename `useAxisTooltip()` hook
 
-The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
+The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
 
 The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
 
@@ -445,7 +445,7 @@ If you're using these classes manually in your styles, update them accordingly:
 ### `data-has-focused-item` attribute removed
 
 The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
-If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem` hook instead.
+If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem()` hook instead.
 
 ```ts
 const focusedItem = useFocusedItem();
@@ -495,12 +495,31 @@ Internally this change looks like this.
 
 ## Typescript
 
-### Remove default generic of `SeriesItemIdentifier`
+### Identifiers are now generics
 
-In v9 the argument of `SeriesItemIdentifier` is now required.
+In v9 we introduce generics to our identifiers.
+
+This will allow you to get the correct type according to the series you're using.
+
+#### Remove default generic of `SeriesItemIdentifier`
+
+The argument of `SeriesItemIdentifier` is now required.
 
 It accepts an union of series types.
 For example:
 
 - `SeriesItemIdentifier<'bar'>` for a BarChart.
 - `SeriesItemIdentifier<'bar' | 'line'>` if you compose bar and line series.
+
+#### Add generic to `HighlightScope`
+
+The `HighlightScope` is now a generic and require its argument the same way `SeriesItemIdentifier` does.
+
+#### Replace `HighlightItemData` by `HighlightItemIdentifier<SeriesType>`
+
+The `HighlightItemData` type was replaced by `HighlightItemIdentifier<SeriesType>`.
+
+The main difference from the `SeriesItemIdentifier` is the ability to identify a whole series.
+
+For example, in a `SeriesItemIdentifier<'bar'>` the `dataIndex` is required since it identifies an item of the series.
+A `HighlightItemIdentifier<'bar'>` can identify a data point, which requires a `dataIndex`, but also an entire series, in which case the `dataIndex` is optional.

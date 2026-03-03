@@ -4,7 +4,7 @@ import {
   piecewiseColorDefaultLabelFormatter,
   PiecewiseColorLegend,
 } from '@mui/x-charts/ChartsLegend';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsAxesGradients } from '@mui/x-charts/internals';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -17,7 +17,7 @@ export default function LegendLabelPositions() {
       : '';
 
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       series={[]}
       width={200}
       height={200}
@@ -240,6 +240,6 @@ export default function LegendLabelPositions() {
       <svg width={0} height={0}>
         <ChartsAxesGradients />
       </svg>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 }

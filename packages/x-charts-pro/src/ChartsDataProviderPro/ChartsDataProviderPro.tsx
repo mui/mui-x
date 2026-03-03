@@ -1,6 +1,5 @@
 'use client';
 import PropTypes from 'prop-types';
-import { Watermark } from '@mui/x-license/Watermark';
 import {
   ChartsProvider,
   type ChartSeriesType,
@@ -20,6 +19,7 @@ import {
 } from '../internals/material';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderProProps } from './useChartsDataProviderProProps';
+import { ChartsWatermark } from '../internals/ChartsWatermark';
 
 const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-pro';
@@ -97,7 +97,7 @@ function ChartsDataProviderPro<
           {children}
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>
-      <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
+      <ChartsWatermark packageName={packageIdentifier} />
     </ChartsProvider>
   );
 }

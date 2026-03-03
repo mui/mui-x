@@ -1,6 +1,5 @@
 'use client';
 import PropTypes from 'prop-types';
-import { Watermark } from '@mui/x-license/Watermark';
 import {
   ChartsProvider,
   type ChartSeriesType,
@@ -10,7 +9,7 @@ import {
   type ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
-import { defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
+import { ChartsWatermark, defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import {
   type ChartsSlotPropsPro,
@@ -102,7 +101,7 @@ function ChartsDataProviderPremium<
           {children}
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>
-      <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
+      <ChartsWatermark packageName={packageIdentifier} />
     </ChartsProvider>
   );
 }
