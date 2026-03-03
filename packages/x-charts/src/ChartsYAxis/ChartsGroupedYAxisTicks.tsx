@@ -8,7 +8,6 @@ import { useTicksGrouped } from '../hooks/useTicksGrouped';
 import { useAxisTicksProps } from './useAxisTicksProps';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartYAxisAutoSizeResults } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartAxisAutoSize.selectors';
-import { isGroupedAxisAutoSizeResult } from '../internals/plugins/featurePlugins/useChartCartesianAxis/computeAxisAutoSize';
 import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 const DEFAULT_GROUPING_CONFIG = {
@@ -23,22 +22,13 @@ const getGroupingConfig = (
 ) => {
   const config = groups[groupIndex] ?? ({} as AxisGroup);
 
-  // Use computed tick size if available (from auto-sizing)
-  if (computedGroupTickSizes && computedGroupTickSizes[groupIndex] !== undefined) {
-    return {
-      ...DEFAULT_GROUPING_CONFIG,
-      ...config,
-      tickSize: computedGroupTickSizes[groupIndex],
-    };
-  }
-
   const defaultTickSize = tickSize ?? DEFAULT_GROUPING_CONFIG.tickSize;
   const calculatedTickSize = defaultTickSize * groupIndex * 2 + defaultTickSize;
 
   return {
     ...DEFAULT_GROUPING_CONFIG,
     ...config,
-    tickSize: config.tickSize ?? calculatedTickSize,
+    tickSize: computedGroupTickSizes?.[groupIndex] ?? config.tickSize ?? calculatedTickSize,
   };
 };
 
@@ -84,9 +74,7 @@ function ChartsGroupedYAxisTicks(inProps: ChartsYAxisProps) {
   // Get computed group tick sizes from auto-sizing (if available)
   const autoSizeResults = store.use(selectorChartYAxisAutoSizeResults);
   const axisAutoSizeResult = axisId ? autoSizeResults[axisId] : undefined;
-  const computedGroupTickSizes = isGroupedAxisAutoSizeResult(axisAutoSizeResult)
-    ? axisAutoSizeResult.groupTickSizes
-    : undefined;
+  const computedGroupTickSizes = axisAutoSizeResult?.groupTickSizes;
 
   const yTicks = useTicksGrouped({
     scale: yScale,

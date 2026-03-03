@@ -3,11 +3,7 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
-import {
-  computeAxisAutoSize,
-  isGroupedAxisAutoSizeResult,
-  type AxisAutoSizeResult,
-} from './computeAxisAutoSize';
+import { computeAxisAutoSize, type AxisAutoSizeResult } from './computeAxisAutoSize';
 import type { AxisId } from '../../../../models/axis';
 import { type UseChartDimensionsSignature } from '../../corePlugins/useChartDimensions/useChartDimensions.types';
 import type { ChartState } from '../../models';
@@ -22,13 +18,6 @@ const selectorIsHydrated = (state: ChartState<[UseChartDimensionsSignature]>) =>
 
 const EMPTY_SIZES: Record<AxisId, number> = {};
 const EMPTY_RESULTS: Record<AxisId, AxisAutoSizeResult> = {};
-
-/**
- * Helper to extract just the size from an auto-size result.
- */
-function getSize(result: AxisAutoSizeResult): number {
-  return isGroupedAxisAutoSizeResult(result) ? result.size : result;
-}
 
 /**
  * Selector that computes full auto-size results for X axes that have `height: 'auto'`.
@@ -77,7 +66,7 @@ export const selectorChartXAxisAutoSizes = createSelectorMemoized(
 
     const sizes: Record<AxisId, number> = {};
     for (const [axisId, result] of Object.entries(results)) {
-      sizes[axisId as AxisId] = getSize(result);
+      sizes[axisId as AxisId] = result.size;
     }
     return sizes;
   },
@@ -130,7 +119,7 @@ export const selectorChartYAxisAutoSizes = createSelectorMemoized(
 
     const sizes: Record<AxisId, number> = {};
     for (const [axisId, result] of Object.entries(results)) {
-      sizes[axisId as AxisId] = getSize(result);
+      sizes[axisId as AxisId] = result.size;
     }
     return sizes;
   },

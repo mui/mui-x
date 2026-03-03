@@ -41,39 +41,22 @@ interface ComputeAxisAutoSizeOptions {
   direction: 'x' | 'y';
   /**
    * The actual data extrema [min, max] for continuous scales.
-   * When provided, these are used instead of the axis min/max props to estimate tick labels.
+   * These are used to estimate tick labels, unless axis min/max props are provided.
    */
   extrema?: [number, number];
 }
 
 /**
- * Result of auto-size computation for grouped axes.
- * Includes both the total size and the computed tick sizes for each group level.
+ * Result of auto-size computation for axes.
  */
-export interface GroupedAxisAutoSizeResult {
+export interface AxisAutoSizeResult {
   size: number;
   /**
    * Computed tick sizes for each group level.
    * These are cumulative - each group's tick extends further than the previous.
    * The renderer should use these instead of the formula-based tick sizes.
    */
-  groupTickSizes: number[];
-}
-
-/**
- * Result of auto-size computation.
- * For regular axes, returns just a number.
- * For grouped axes, returns an object with size and group tick sizes.
- */
-export type AxisAutoSizeResult = number | GroupedAxisAutoSizeResult;
-
-/**
- * Type guard to check if the result is a grouped axis result.
- */
-export function isGroupedAxisAutoSizeResult(
-  result: AxisAutoSizeResult | undefined,
-): result is GroupedAxisAutoSizeResult {
-  return result !== undefined && typeof result === 'object' && 'groupTickSizes' in result;
+  groupTickSizes?: number[];
 }
 
 /**
@@ -238,8 +221,12 @@ function getRotatedDimension(
   angle: number | undefined,
   direction: 'x' | 'y',
 ): number {
-  if (angle === undefined || angle === 0) {
+  if (!angle || angle % 180 === 0) {
     return direction === 'x' ? height : width;
+  }
+
+  if (angle % 90 === 0) {
+    return direction === 'x' ? width : height;
   }
 
   const radAngle = deg2rad(Math.abs(angle));
@@ -263,12 +250,12 @@ function getRotatedDimension(
 function computeGroupedAxisAutoSize(
   axis: DefaultedXAxis & { groups: AxisGroup[] },
   direction: 'x' | 'y',
-): GroupedAxisAutoSizeResult | undefined {
+): AxisAutoSizeResult | undefined {
   const { groups, data, tickSize: baseTickSize, tickLabelStyle: axisTickLabelStyle } = axis;
   const hasAxisLabel = Boolean(axis.label);
 
   if (!data || data.length === 0) {
-    return { size: AXIS_AUTO_SIZE_MIN, groupTickSizes: [] };
+    return { size: AXIS_AUTO_SIZE_MIN };
   }
 
   const groupTickSizes: number[] = [];
@@ -277,7 +264,7 @@ function computeGroupedAxisAutoSize(
 
   for (let groupIndex = 0; groupIndex < groups.length; groupIndex += 1) {
     const group = groups[groupIndex];
-    const groupLabels = getGroupLabels(data, group);
+    const groupLabels = selectBiggestCandidates(getGroupLabels(data, group));
 
     const groupTickLabelStyle = {
       ...axisTickLabelStyle,
@@ -352,7 +339,7 @@ export function computeAxisAutoSize(
   const labels = getTickLabels(axis, extrema);
 
   if (labels.length === 0) {
-    return AXIS_AUTO_SIZE_MIN;
+    return { size: AXIS_AUTO_SIZE_MIN };
   }
 
   const { maxWidth, maxHeight } = measureTickLabels(labels, tickLabelStyle);
@@ -371,5 +358,5 @@ export function computeAxisAutoSize(
 
   totalSize += AXIS_AUTO_SIZE_PADDING;
 
-  return Math.max(Math.ceil(totalSize), AXIS_AUTO_SIZE_MIN);
+  return { size: Math.max(Math.ceil(totalSize), AXIS_AUTO_SIZE_MIN) };
 }
