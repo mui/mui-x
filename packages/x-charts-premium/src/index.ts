@@ -40,6 +40,7 @@ export * from '@mui/x-charts-pro/PieChartPro';
 export * from '@mui/x-charts-pro/FunnelChart';
 export * from '@mui/x-charts-pro/RadarChartPro';
 export * from '@mui/x-charts-pro/ChartsZoomSlider';
+export * from '@mui/x-charts-pro/ChartZoomSlider';
 export * from '@mui/x-charts-pro/ChartsToolbarPro';
 
 // Premium utilities
