@@ -35,7 +35,7 @@ For demos using `ChartsDataProvider` and `ChartsSurface`, see [HTML components](
 
 Notice that the `width` and `height` props are passed to `ChartsDataProvider` and not `ChartsSurface`.
 
-`ChartsLegend` is placed inside `ChartsDataProvider` to get access to the context, but outside `ChartsSurface` since it's not an SVG component.
+`ChartsLegend` is placed inside `ChartsDataProvider` to get access to the context, but outside `ChartsSurface` since it is a component that renders HTML.
 
 ```jsx
 <ChartsDataProvider
@@ -48,7 +48,7 @@ Notice that the `width` and `height` props are passed to `ChartsDataProvider` an
   <ChartsLegend />
   <ChartsSurface
     // Ref needs to be directly on ChartsSurface
-    ref={mySvgRef}
+    ref={myRef}
   >
     {children}
   </ChartsSurface>
@@ -71,7 +71,7 @@ You can't render HTML elements such as `ChartsLegend` as shown in the previous e
   width={500}
   height={300}
   // Ref is forwarded internally to ChartsSurface
-  ref={mySvgRef}
+  ref={myRef}
 >
   {children} // Only SVG component here
 </ChartsContainer>
