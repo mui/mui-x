@@ -242,8 +242,16 @@ export interface EventCalendarClasses extends EventDialogClasses {
   preferencesMenuButton: string;
   /** Styles applied to the preferences menu list element. */
   preferencesMenuList: string;
-  /** Styles applied to the preferences menu check icon element. */
-  preferencesMenuCheckIcon: string;
+  /** Styles applied to the preferences menu list item icon elements. */
+  preferencesMenuListItemIcon: string;
+  /** Styles applied to the preferences menu list subheader elements. */
+  preferencesMenuListSubheader: string;
+  /** Styles applied to the preferences menu item elements. */
+  preferencesMenuItem: string;
+  /** Styles applied to the preferences menu divider elements. */
+  preferencesMenuDivider: string;
+  /** Styles applied to the preferences menu list item text elements. */
+  preferencesMenuListItemText: string;
   /** Styles applied to the view switcher button element. */
   viewSwitcherButton: string;
   /** Styles applied to the view switcher menu element. */
@@ -382,7 +390,11 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'headerToolbarNextButton',
     'preferencesMenuButton',
     'preferencesMenuList',
-    'preferencesMenuCheckIcon',
+    'preferencesMenuListItemIcon',
+    'preferencesMenuListSubheader',
+    'preferencesMenuItem',
+    'preferencesMenuDivider',
+    'preferencesMenuListItemText',
     'viewSwitcherButton',
     'viewSwitcherMenu',
     'miniCalendarPreviousButton',
@@ -510,7 +522,11 @@ const slots = {
   headerToolbarNextButton: ['headerToolbarNextButton'],
   preferencesMenuButton: ['preferencesMenuButton'],
   preferencesMenuList: ['preferencesMenuList'],
-  preferencesMenuCheckIcon: ['preferencesMenuCheckIcon'],
+  preferencesMenuListItemIcon: ['preferencesMenuListItemIcon'],
+  preferencesMenuListSubheader: ['preferencesMenuListSubheader'],
+  preferencesMenuItem: ['preferencesMenuItem'],
+  preferencesMenuDivider: ['preferencesMenuDivider'],
+  preferencesMenuListItemText: ['preferencesMenuListItemText'],
   viewSwitcherButton: ['viewSwitcherButton'],
   viewSwitcherMenu: ['viewSwitcherMenu'],
   miniCalendarPreviousButton: ['miniCalendarPreviousButton'],
