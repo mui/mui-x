@@ -84,39 +84,57 @@ export function isGroupedAxisAutoSizeResult(
 const MAX_AUTO_SIZE_CANDIDATES = 5;
 
 /**
+ * Returns the maximum line length of a label (splitting by newlines).
+ */
+function maxLineLength(label: string): number {
+  const lines = label.split('\n');
+  return Math.max(...lines.map((line) => line.length));
+}
+
+/**
  * From a list of rendered label strings, returns a small subset of candidates
  * that are most likely to be the visually widest and highest labels to measure for auto-size calculation.
  * Uses character count as a proxy for visual width, and number of lines as a proxy for visual height, which works well in practice.
+ *
+ * Maintains a sorted list of the top candidates by width, plus the label with the most lines.
  */
 function selectBiggestCandidates(labels: string[]): string[] {
   if (labels.length <= MAX_AUTO_SIZE_CANDIDATES) {
     return labels;
   }
 
+  const candidates: { label: string; length: number }[] = [];
   let maxLines = 1;
-  let maxLinesValue = null;
+  let maxLinesValue: string | null = null;
 
-  // Sort labels by length in descending order and take the top candidates, need to check for newlines as well
-  const sortedByWidth = [...labels].sort((a, b) => {
-    const aLines = a.split('\n').length;
-    const bLines = b.split('\n').length;
-
-    if (aLines > maxLines) {
-      maxLines = aLines;
-      maxLinesValue = a;
-    } else if (bLines > maxLines) {
-      maxLines = bLines;
-      maxLinesValue = b;
+  for (const label of labels) {
+    const lines = label.split('\n').length;
+    if (lines > maxLines) {
+      maxLines = lines;
+      maxLinesValue = label;
     }
 
-    // Secondary sort by character count (more characters = potentially wider)
-    return b.length - a.length;
-  });
-  const candidates = new Set(sortedByWidth.slice(0, MAX_AUTO_SIZE_CANDIDATES));
-  if (maxLinesValue !== null) {
-    candidates.add(maxLinesValue);
+    const length = maxLineLength(label);
+
+    // Keep a sorted array with the largest labels found
+    if (candidates.length < MAX_AUTO_SIZE_CANDIDATES || length > candidates[0].length) {
+      const index = candidates.findIndex((candidate) => candidate.length > length);
+      candidates.splice(index === -1 ? candidates.length : index, 0, { label, length });
+      if (candidates.length > MAX_AUTO_SIZE_CANDIDATES) {
+        candidates.shift();
+      }
+    }
   }
-  return Array.from(candidates);
+
+  // Add the item with the largest number of lines
+  if (
+    maxLinesValue !== null &&
+    candidates.find((candidate) => candidate.label === maxLinesValue) === undefined
+  ) {
+    candidates.push({ label: maxLinesValue, length: maxLineLength(maxLinesValue) });
+  }
+
+  return candidates.map((candidate) => candidate.label);
 }
 
 /**
