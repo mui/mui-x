@@ -214,6 +214,18 @@ export interface EventCalendarClasses extends EventDialogClasses {
   eventItemCardContent: string;
   /** Styles applied to event item lines clamp elements. */
   eventItemLinesClamp: string;
+  /** Styles applied to the more events popover header element. */
+  moreEventsPopoverHeader: string;
+  /** Styles applied to the more events popover title element. */
+  moreEventsPopoverTitle: string;
+  /** Styles applied to the more events popover body element. */
+  moreEventsPopoverBody: string;
+  /** Styles applied to the more events popover arrow element. */
+  moreEventsPopoverArrow: string;
+  /** Styles applied to the event drag preview element. */
+  eventDragPreview: string;
+  /** Styles applied to the standalone event element. */
+  standaloneEvent: string;
 }
 
 export type EventCalendarClassKey = keyof EventCalendarClasses;
@@ -328,6 +340,12 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'resourceLegendColor',
     'eventItemCardContent',
     'eventItemLinesClamp',
+    'moreEventsPopoverHeader',
+    'moreEventsPopoverTitle',
+    'moreEventsPopoverBody',
+    'moreEventsPopoverArrow',
+    'eventDragPreview',
+    'standaloneEvent',
     ...eventDialogClassKeys,
   ],
 );
@@ -436,6 +454,12 @@ const slots = {
   resourceLegendColor: ['resourceLegendColor'],
   eventItemCardContent: ['eventItemCardContent'],
   eventItemLinesClamp: ['eventItemLinesClamp'],
+  moreEventsPopoverHeader: ['moreEventsPopoverHeader'],
+  moreEventsPopoverTitle: ['moreEventsPopoverTitle'],
+  moreEventsPopoverBody: ['moreEventsPopoverBody'],
+  moreEventsPopoverArrow: ['moreEventsPopoverArrow'],
+  eventDragPreview: ['eventDragPreview'],
+  standaloneEvent: ['standaloneEvent'],
   ...eventDialogSlots,
 };
 

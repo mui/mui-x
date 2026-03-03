@@ -13,7 +13,10 @@ import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog';
 
-const MoreEventsPopoverHeader = styled('div')(({ theme }) => ({
+const MoreEventsPopoverHeader = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'MoreEventsPopoverHeader',
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -21,7 +24,10 @@ const MoreEventsPopoverHeader = styled('div')(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const MoreEventsPopoverTitle = styled(Typography)(({ theme }) => ({
+const MoreEventsPopoverTitle = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'MoreEventsPopoverTitle',
+})(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
   color: theme.palette.text.primary,
@@ -29,7 +35,10 @@ const MoreEventsPopoverTitle = styled(Typography)(({ theme }) => ({
   margin: 0,
 }));
 
-const MoreEventsPopoverBody = styled('div')(({ theme }) => ({
+const MoreEventsPopoverBody = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'MoreEventsPopoverBody',
+})(({ theme }) => ({
   padding: theme.spacing(1),
   display: 'flex',
   flexDirection: 'column',

@@ -6,8 +6,8 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-schedule
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 
 const EventDragPreviewRoot = styled('div', {
-  name: 'MuiEventDragPreview',
-  slot: 'Root',
+  name: 'MuiEventCalendar',
+  slot: 'EventDragPreview',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.spacing(0.5),

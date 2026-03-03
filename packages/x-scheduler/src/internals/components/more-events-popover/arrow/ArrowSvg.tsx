@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 
-const ArrowWrapper = styled('div')({
+const ArrowWrapper = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'MoreEventsPopoverArrow',
+})({
   display: 'flex',
   '&[data-side="top"]': {
     bottom: -8,
