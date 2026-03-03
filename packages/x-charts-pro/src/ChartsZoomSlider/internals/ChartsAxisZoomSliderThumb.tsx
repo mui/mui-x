@@ -48,62 +48,63 @@ function preventDefault(event: Event) {
  * Renders the zoom slider thumb, which is responsible for resizing the zoom range.
  * @internal
  */
-export const ChartsAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartsZoomSliderThumbProps>(
-  function ChartsAxisZoomSliderThumb(
-    { className, onMove, orientation, placement, rx = 4, ry = 4, ...other },
-    forwardedRef,
-  ) {
-    const classes = useUtilityClasses({ onMove, orientation, placement });
+export const ChartsAxisZoomSliderThumb = React.forwardRef<
+  SVGRectElement,
+  ChartsZoomSliderThumbProps
+>(function ChartsAxisZoomSliderThumb(
+  { className, onMove, orientation, placement, rx = 4, ry = 4, ...other },
+  forwardedRef,
+) {
+  const classes = useUtilityClasses({ onMove, orientation, placement });
 
-    const thumbRef = React.useRef<SVGRectElement>(null);
-    const ref = useForkRef(thumbRef, forwardedRef);
+  const thumbRef = React.useRef<SVGRectElement>(null);
+  const ref = useForkRef(thumbRef, forwardedRef);
 
-    const onMoveEvent = useEventCallback(onMove);
+  const onMoveEvent = useEventCallback(onMove);
 
-    React.useEffect(() => {
-      const thumb = thumbRef.current;
+  React.useEffect(() => {
+    const thumb = thumbRef.current;
 
-      if (!thumb) {
-        return () => {};
-      }
+    if (!thumb) {
+      return () => {};
+    }
 
-      // Prevent scrolling on touch devices when dragging the thumb
-      thumb.addEventListener('touchmove', preventDefault, { passive: false });
+    // Prevent scrolling on touch devices when dragging the thumb
+    thumb.addEventListener('touchmove', preventDefault, { passive: false });
 
-      const onPointerMove = rafThrottle((event: PointerEvent) => {
-        onMoveEvent(event);
-      });
+    const onPointerMove = rafThrottle((event: PointerEvent) => {
+      onMoveEvent(event);
+    });
 
-      const onPointerEnd = (event: PointerEvent) => {
-        thumb.removeEventListener('pointermove', onPointerMove);
-        thumb.removeEventListener('pointerup', onPointerEnd);
-        thumb.removeEventListener('pointercancel', onPointerEnd);
-        thumb.releasePointerCapture(event.pointerId);
-      };
+    const onPointerEnd = (event: PointerEvent) => {
+      thumb.removeEventListener('pointermove', onPointerMove);
+      thumb.removeEventListener('pointerup', onPointerEnd);
+      thumb.removeEventListener('pointercancel', onPointerEnd);
+      thumb.releasePointerCapture(event.pointerId);
+    };
 
-      const onPointerDown = (event: PointerEvent) => {
-        // Prevent text selection when dragging the thumb
-        event.preventDefault();
-        event.stopPropagation();
-        thumb.setPointerCapture(event.pointerId);
+    const onPointerDown = (event: PointerEvent) => {
+      // Prevent text selection when dragging the thumb
+      event.preventDefault();
+      event.stopPropagation();
+      thumb.setPointerCapture(event.pointerId);
 
-        thumb.addEventListener('pointermove', onPointerMove);
-        thumb.addEventListener('pointercancel', onPointerEnd);
-        thumb.addEventListener('pointerup', onPointerEnd);
-      };
+      thumb.addEventListener('pointermove', onPointerMove);
+      thumb.addEventListener('pointercancel', onPointerEnd);
+      thumb.addEventListener('pointerup', onPointerEnd);
+    };
 
-      thumb.addEventListener('pointerdown', onPointerDown);
+    thumb.addEventListener('pointerdown', onPointerDown);
 
-      return () => {
-        thumb.removeEventListener('pointerdown', onPointerDown);
-        thumb.removeEventListener('pointermove', onPointerMove);
-        thumb.removeEventListener('pointercancel', onPointerEnd);
-        thumb.removeEventListener('pointerup', onPointerEnd);
-        thumb.removeEventListener('touchmove', preventDefault);
-        onPointerMove.clear();
-      };
-    }, [onMoveEvent, orientation]);
+    return () => {
+      thumb.removeEventListener('pointerdown', onPointerDown);
+      thumb.removeEventListener('pointermove', onPointerMove);
+      thumb.removeEventListener('pointercancel', onPointerEnd);
+      thumb.removeEventListener('pointerup', onPointerEnd);
+      thumb.removeEventListener('touchmove', preventDefault);
+      onPointerMove.clear();
+    };
+  }, [onMoveEvent, orientation]);
 
-    return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...other} />;
-  },
-);
+  return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...other} />;
+});
