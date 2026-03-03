@@ -237,9 +237,9 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
-### Rename `useAxisTooltip` hook
+### Rename `useAxisTooltip()` hook
 
-The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
+The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
 
 The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
 
@@ -445,7 +445,7 @@ If you're using these classes manually in your styles, update them accordingly:
 ### `data-has-focused-item` attribute removed
 
 The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
-If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem` hook instead.
+If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem()` hook instead.
 
 ```ts
 const focusedItem = useFocusedItem();

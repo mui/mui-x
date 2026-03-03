@@ -40,7 +40,7 @@ AI Assistant demos use a limited version of [MUI's processing service](/x/react-
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
 
 :::success
-Provide examples for the [derived columns](/x/react-data-grid/pivoting/#derived-columns-in-pivot-mode) using the `getPivotDerivedColumns()` prop.
+Provide examples for the [derived columns](/x/react-data-grid/pivoting/#derived-columns-in-pivot-mode) using the `getPivotDerivedColumns` prop.
 :::
 
 ### Use row data for examples
