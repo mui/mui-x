@@ -111,6 +111,7 @@ export default function LegendClick() {
           />
         </ChartsDataProvider>
       </Box>
+
       <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>
         <Box
           sx={{
