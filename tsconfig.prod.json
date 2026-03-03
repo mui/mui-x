@@ -41,6 +41,9 @@
         "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
       ],
       "test/*": ["./test/*"],
+      "docs/src/modules/utils/mapApiPageTranslations": [
+        "./docs/src/modules/utils/mapApiPageTranslations.js"
+      ],
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
     },

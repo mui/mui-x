@@ -1,6 +1,6 @@
 import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
 import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+import mapApiPageTranslations from 'docsx/src/modules/utils/mapApiPageTranslations';
 import jsonPageContent from './pie-series-type.json';
 
 export default function Page(props) {
