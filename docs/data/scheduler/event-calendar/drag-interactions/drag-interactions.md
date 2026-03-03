@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 Events can be moved to a different time slot by dragging them, and resized by dragging their start or end edge.
 Both behaviors are enabled by default:
 
