@@ -11,6 +11,7 @@ import getColor from './getColor';
 import legendGetter from './legend';
 import tooltipItemPositionGetter from './tooltipPosition';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
+import { OHLCAxisTooltipContent } from './OHLCAxisTooltipContent';
 
 export const ohlcSeriesConfig: ChartSeriesTypeConfig<'ohlc'> = {
   seriesProcessor,
@@ -19,6 +20,7 @@ export const ohlcSeriesConfig: ChartSeriesTypeConfig<'ohlc'> = {
   tooltipGetter,
   tooltipItemPositionGetter,
   axisTooltipGetter,
+  AxisTooltipContent: OHLCAxisTooltipContent,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
