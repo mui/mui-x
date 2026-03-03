@@ -123,8 +123,14 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           >
             <ChevronLeft />
           </Button>
-          <Button className={classes.headerToolbarTodayButton} onClick={store.goToToday}>{localeText.today}</Button>
-          <Button className={classes.headerToolbarNextButton} onClick={store.goToNextVisibleDate} aria-label={localeText.nextTimeSpan(view)}>
+          <Button className={classes.headerToolbarTodayButton} onClick={store.goToToday}>
+            {localeText.today}
+          </Button>
+          <Button
+            className={classes.headerToolbarNextButton}
+            onClick={store.goToNextVisibleDate}
+            aria-label={localeText.nextTimeSpan(view)}
+          >
             <ChevronRight />
           </Button>
         </HeaderToolbarDateNavigator>

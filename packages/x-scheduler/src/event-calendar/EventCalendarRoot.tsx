@@ -142,7 +142,11 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
         <HeaderToolbar />
 
         <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
-          <Collapse in={isSidePanelOpen} orientation="horizontal" className={classes.sidePanelCollapse}>
+          <Collapse
+            in={isSidePanelOpen}
+            orientation="horizontal"
+            className={classes.sidePanelCollapse}
+          >
             <EventCalendarSidePanel className={classes.sidePanel}>
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />

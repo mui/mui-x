@@ -260,8 +260,16 @@ export function FormContent(props: FormContentProps) {
         {showRecurrence && (
           <EventDialogTabsContainer className={classes.eventDialogTabsContainer}>
             <EventDialogTabs value={tabValue} onChange={handleTabChange}>
-              <Tab className={classes.eventDialogTab} label={localeText.generalTabLabel} value="general" />
-              <Tab className={classes.eventDialogTab} label={localeText.recurrenceTabLabel} value="recurrence" />
+              <Tab
+                className={classes.eventDialogTab}
+                label={localeText.generalTabLabel}
+                value="general"
+              />
+              <Tab
+                className={classes.eventDialogTab}
+                label={localeText.recurrenceTabLabel}
+                value="recurrence"
+              />
             </EventDialogTabs>
           </EventDialogTabsContainer>
         )}
@@ -283,7 +291,12 @@ export function FormContent(props: FormContentProps) {
         )}
         <Divider className={classes.eventDialogFormDivider} />
         <FormActions className={classes.eventDialogFormActions}>
-          <Button className={classes.eventDialogDeleteButton} color="error" type="button" onClick={handleDelete}>
+          <Button
+            className={classes.eventDialogDeleteButton}
+            color="error"
+            type="button"
+            onClick={handleDelete}
+          >
             {localeText.deleteEvent}
           </Button>
           <Button className={classes.eventDialogSaveButton} variant="contained" type="submit">

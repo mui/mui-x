@@ -179,7 +179,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
               );
             }}
           >
-            <ListItemText className={classes.preferencesMenuListItemText}>{option.label}</ListItemText>
+            <ListItemText className={classes.preferencesMenuListItemText}>
+              {option.label}
+            </ListItemText>
             {preferences[option.preferenceKey] && (
               <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
                 <CheckIcon fontSize="small" />
@@ -202,7 +204,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
               handleTimeFormatChange('12', event.nativeEvent);
             }}
           >
-            <ListItemText className={classes.preferencesMenuListItemText}>{localeText.amPm12h}</ListItemText>
+            <ListItemText className={classes.preferencesMenuListItemText}>
+              {localeText.amPm12h}
+            </ListItemText>
             {preferences.ampm && (
               <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
                 <CheckIcon fontSize="small" />
@@ -217,7 +221,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
               handleTimeFormatChange('24', event.nativeEvent);
             }}
           >
-            <ListItemText className={classes.preferencesMenuListItemText}>{localeText.hour24h}</ListItemText>
+            <ListItemText className={classes.preferencesMenuListItemText}>
+              {localeText.hour24h}
+            </ListItemText>
             {!preferences.ampm && (
               <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
                 <CheckIcon fontSize="small" />
@@ -246,7 +252,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
                 );
               }}
             >
-              <ListItemText className={classes.preferencesMenuListItemText}>{option.label}</ListItemText>
+              <ListItemText className={classes.preferencesMenuListItemText}>
+                {option.label}
+              </ListItemText>
               {preferences[option.preferenceKey] && (
                 <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
                   <CheckIcon fontSize="small" />

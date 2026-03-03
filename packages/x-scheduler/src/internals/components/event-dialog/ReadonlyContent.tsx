@@ -186,7 +186,12 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
         </EventDialogResourceContainer>
         <EventDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
           <CalendarMonthRounded className={classes.eventDialogDateTimeIcon} fontSize="small" />
-          <Typography className={classes.eventDialogDateTimeLabel} variant="body2" component="p" noWrap>
+          <Typography
+            className={classes.eventDialogDateTimeLabel}
+            variant="body2"
+            component="p"
+            noWrap
+          >
             <time
               dateTime={adapter.format(
                 occurrence.displayTimezone.start.value,
@@ -214,17 +219,29 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
         {showRecurrence && (
           <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
             <RepeatRoundedIcon className={classes.eventDialogRecurrenceIcon} fontSize="small" />
-            <Typography className={classes.eventDialogRecurrenceLabel} variant="body2" color="text.secondary" component="em">
+            <Typography
+              className={classes.eventDialogRecurrenceLabel}
+              variant="body2"
+              color="text.secondary"
+              component="em"
+            >
               {recurrenceLabel}
             </Typography>
           </RecurrenceLabelContainer>
         )}
         {hasProp(occurrence, 'description') && !!occurrence.description ? (
-          <Typography className={classes.eventDialogDescriptionLabel} variant="body2">{occurrence.description}</Typography>
+          <Typography className={classes.eventDialogDescriptionLabel} variant="body2">
+            {occurrence.description}
+          </Typography>
         ) : null}
       </ReadonlyContentRoot>
       <EventDialogActions className={classes.eventDialogActions}>
-        <Button className={classes.eventDialogCloseAction} variant="contained" type="button" onClick={onClose}>
+        <Button
+          className={classes.eventDialogCloseAction}
+          variant="contained"
+          type="button"
+          onClick={onClose}
+        >
           {localeText.closeButtonLabel}
         </Button>
       </EventDialogActions>
