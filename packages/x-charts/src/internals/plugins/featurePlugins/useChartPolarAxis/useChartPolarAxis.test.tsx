@@ -1,5 +1,4 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { isJSDOM } from 'test/utils/skipIf';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useChartPolarAxis } from './useChartPolarAxis';
@@ -9,7 +8,7 @@ describe('useChartPolarAxis', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  it.skipIf(!isJSDOM)('should throw an error when axis have duplicate ids', () => {
+  it('should throw an error when axis have duplicate ids', () => {
     const expectedError = [
       'MUI X Charts: The following axis ids are duplicated: qwerty.',
       'Please make sure that each axis has a unique id.',
@@ -32,7 +31,7 @@ describe('useChartPolarAxis', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  it.skipIf(!isJSDOM)(
+  it(
     'should throw an error when axis have duplicate ids across different directions (radius, rotation)',
     () => {
       const expectedError = [

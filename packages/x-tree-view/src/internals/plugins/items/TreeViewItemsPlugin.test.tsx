@@ -2,7 +2,6 @@ import { spy } from 'sinon';
 import { act, fireEvent, reactMajor, waitFor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
-import { isJSDOM } from 'test/utils/skipIf';
 import { TreeViewAnyStore } from '../../models';
 
 describeTreeView<TreeViewAnyStore>(
@@ -12,7 +11,7 @@ describeTreeView<TreeViewAnyStore>(
 
     // can't catch render errors in the browser for unknown reason
     // tried try-catch + error boundary + window onError preventDefault
-    it.skipIf(!isJSDOM)('should throw an error when two items have the same ID', () => {
+    it('should throw an error when two items have the same ID', () => {
       if (treeViewComponentName === 'SimpleTreeView') {
         // eslint-disable-next-line vitest/no-conditional-expect
         expect(() =>

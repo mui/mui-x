@@ -97,7 +97,7 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
 
-    it.skipIf(isJSDOM)('should move the focus to the newly opened views', async () => {
+    it('should move the focus to the newly opened views', async () => {
       const { user } = render(
         <DesktopDatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />,
       );
@@ -132,7 +132,7 @@ describe('<DesktopDatePicker />', () => {
   });
 
   // JSDOM has neither layout nor window.scrollTo
-  describe.skipIf(isJSDOM)('scroll', () => {
+  describe('scroll', () => {
     const NoTransition = React.forwardRef(function NoTransition(
       props: TransitionProps & { children?: React.ReactNode },
       ref: React.Ref<HTMLDivElement>,

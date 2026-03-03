@@ -939,7 +939,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
     // can't catch render errors in the browser for unknown reason
     // tried try-catch + error boundary + window onError preventDefault
-    it.skipIf(!isJSDOM)('should throw if the rows has no id', () => {
+    it('should throw if the rows has no id', () => {
       const rows = [
         {
           brand: 'Nike',
@@ -997,7 +997,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   describe('non-strict mode', () => {
     const { render: innerRender } = createRenderer({ strict: false });
 
-    it.skipIf(!isJSDOM)('should render in JSDOM', () => {
+    it('should render in JSDOM', () => {
       innerRender(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} />

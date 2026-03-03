@@ -17,7 +17,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Events params', () => {
   const { render } = createRenderer();
@@ -330,7 +329,7 @@ describe('<DataGridPro /> - Events params', () => {
   });
 
   // Needs layout
-  it.skipIf(isJSDOM)(
+  it(
     'lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled',
     () => {
       const handleFetchRows = spy();
