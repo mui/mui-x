@@ -15,11 +15,19 @@ export interface LicenseDetails {
 
 function getClearLicenseString(details: LicenseDetails) {
   if (details.planScope && !PLAN_SCOPES.includes(details.planScope)) {
-    throw new Error('MUI X: Invalid scope');
+    throw new Error(
+      'MUI X: Invalid scope provided for license generation. ' +
+        `The scope "${details.planScope}" is not recognized. ` +
+        `Valid scopes are: ${PLAN_SCOPES.join(', ')}.`,
+    );
   }
 
   if (details.licenseModel && !LICENSE_MODELS.includes(details.licenseModel)) {
-    throw new Error('MUI X: Invalid licensing model');
+    throw new Error(
+      'MUI X: Invalid licensing model provided for license generation. ' +
+        `The licensing model "${details.licenseModel}" is not recognized. ` +
+        `Valid models are: ${LICENSE_MODELS.join(', ')}.`,
+    );
   }
 
   const keyParts = [

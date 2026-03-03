@@ -1,4 +1,4 @@
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import {
   LinePlot,
   MarkPlot,
@@ -19,10 +19,10 @@ const xLabels = [
 
 export default function TinyLineChart() {
   return (
-    <ChartContainer
+    <ChartsContainer
       width={500}
       height={300}
-      series={[{ type: 'line', data: pData }]}
+      series={[{ type: 'line', data: pData, showMark: true }]}
       xAxis={[{ scaleType: 'point', data: xLabels, position: 'none' }]}
       yAxis={[{ position: 'none' }]}
       sx={{
@@ -41,6 +41,6 @@ export default function TinyLineChart() {
     >
       <LinePlot />
       <MarkPlot />
-    </ChartContainer>
+    </ChartsContainer>
   );
 }

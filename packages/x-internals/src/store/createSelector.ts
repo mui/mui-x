@@ -33,7 +33,11 @@ export const createSelector = ((
   ...other: any[]
 ) => {
   if (other.length > 0) {
-    throw new Error('Unsupported number of selectors');
+    throw new Error(
+      'MUI X: Unsupported number of selectors. ' +
+        'The createSelector function supports up to 8 input selectors. ' +
+        'Consider combining selectors or restructuring your selector logic.',
+    );
   }
 
   let selector: any;
@@ -96,7 +100,11 @@ export const createSelector = ((
   } else if (a) {
     selector = a;
   } else {
-    throw new Error('Missing arguments');
+    throw new Error(
+      'MUI X: Missing arguments for createSelector. ' +
+        'At least one selector function is required. ' +
+        'Provide one or more selector functions as arguments.',
+    );
   }
 
   return selector;
@@ -117,7 +125,11 @@ export const createSelectorMemoizedWithOptions =
     const argsLength = Math.max(combiner.length - nSelectors, 0);
 
     if (argsLength > 3) {
-      throw new Error('Unsupported number of arguments');
+      throw new Error(
+        'MUI X: Unsupported number of arguments for selector combiner. ' +
+          'The combiner function supports up to 3 additional arguments beyond the selector outputs. ' +
+          'Consider restructuring your selector to use fewer arguments.',
+      );
     }
 
     // prettier-ignore
@@ -165,7 +177,11 @@ export const createSelectorMemoizedWithOptions =
           break;
         }
         default:
-          throw new Error('Unsupported number of arguments');
+          throw new Error(
+            'MUI X: Unsupported number of arguments for selector. ' +
+              'The memoized selector supports up to 3 additional arguments. ' +
+              'Consider restructuring your selector to use fewer arguments.',
+          );
       }
       if (options) {
         reselectArgs = [...reselectArgs, options];
@@ -192,7 +208,7 @@ export const createSelectorMemoizedWithOptions =
       case 2: return fn(state, a1, a2);
       case 3: return fn(state, a1, a2, a3);
       default:
-        throw new Error('unreachable');
+        throw /* minify-error-disabled */ new Error('unreachable');
     }
   };
 

@@ -8,8 +8,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { CalendarView } from '@mui/x-scheduler-headless/models';
-import { useTranslations } from '../../../internals/utils/TranslationsContext';
-import { useEventCalendarClasses } from '../../EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../EventCalendarStyledContext';
 
 const ViewSwitcherRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -38,8 +37,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
-  const translations = useTranslations();
-  const classes = useEventCalendarClasses();
+  const { classes, localeText } = useEventCalendarStyledContext();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -70,7 +68,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         onClick={handleMenuOpen}
         endIcon={<ExpandMoreOutlined />}
       >
-        {translations[view]}
+        {localeText[view]}
       </Button>
       <Menu
         id="view-switcher-menu"
@@ -91,7 +89,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
             aria-selected={view === viewItem}
             onClick={(event) => handleMenuItemClick(event, viewItem)}
           >
-            {translations[viewItem]}
+            {localeText[viewItem]}
           </MenuItem>
         ))}
       </Menu>

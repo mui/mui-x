@@ -18,7 +18,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     })
     .forEach((path) => {
       path.node.specifiers?.forEach((node) => {
-        root.findJSXElements(node.local?.name).forEach((elementPath) => {
+        root.findJSXElements(node.local?.name.toString()).forEach((elementPath) => {
           if (elementPath.node.type !== 'JSXElement') {
             return;
           }

@@ -9,6 +9,7 @@ import {
   type GridInitialState,
   GridPreferencePanelsValue,
   type GridRowsProp,
+  gridColumnFieldsSelector,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
@@ -295,6 +296,49 @@ describe('<DataGridPro /> - State persistence', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+    });
+
+    it('should correctly reorder columns for pinning when restoring state with different columns', () => {
+      const columns1: GridColDef[] = [{ field: 'id' }, { field: 'a' }, { field: '1' }];
+      const columns2: GridColDef[] = [{ field: 'id' }, { field: 'a' }, { field: '2' }];
+
+      function Grid1() {
+        const ref = useGridApiRef();
+        apiRef = ref;
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              rows={[{ id: 0, a: 'a0', 1: '10' }]}
+              columns={columns1}
+              apiRef={ref}
+              initialState={{ pinnedColumns: { right: ['a'] } }}
+            />
+          </div>
+        );
+      }
+
+      function Grid2() {
+        const ref = useGridApiRef();
+        apiRef = ref;
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro rows={[{ id: 0, a: 'a0', 2: '20' }]} columns={columns2} apiRef={ref} />
+          </div>
+        );
+      }
+
+      // Render Grid1 and export its state
+      const { unmount } = render(<Grid1 />);
+      const exportedState = apiRef.current!.exportState();
+      unmount();
+
+      // Render Grid2 and restore Grid1's state
+      render(<Grid2 />);
+      act(() => apiRef.current!.restoreState(exportedState));
+
+      // Column 'a' should be pinned to the right, meaning it should be last in orderedFields
+      const orderedFields = gridColumnFieldsSelector(apiRef);
+      expect(orderedFields[orderedFields.length - 1]).to.equal('a');
     });
   });
 });

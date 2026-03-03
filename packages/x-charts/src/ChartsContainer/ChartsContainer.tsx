@@ -3,29 +3,29 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { type ChartSeriesType } from '../models/seriesType/config';
 import {
-  ChartDataProvider,
-  type ChartDataProviderProps,
-  type ChartDataProviderSlotProps,
-  type ChartDataProviderSlots,
-} from '../ChartDataProvider';
+  ChartsDataProvider,
+  type ChartsDataProviderProps,
+  type ChartsDataProviderSlotProps,
+  type ChartsDataProviderSlots,
+} from '../ChartsDataProvider';
 import { useChartsContainerProps } from './useChartsContainerProps';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
-export interface ChartsContainerSlots extends ChartDataProviderSlots {}
+export interface ChartsContainerSlots extends ChartsDataProviderSlots {}
 
-export interface ChartsContainerSlotProps extends ChartDataProviderSlotProps {}
+export interface ChartsContainerSlotProps extends ChartsDataProviderSlotProps {}
 
 export type ChartsContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
-> = Omit<ChartDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
+> = Omit<ChartsDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
 
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
- * This is a combination of both the `ChartDataProvider` and `ChartsSurface` components.
+ * This is a combination of both the `ChartsDataProvider` and `ChartsSurface` components.
  *
  * Demos:
  *
@@ -49,19 +49,21 @@ export type ChartsContainerProps<
 const ChartsContainer = React.forwardRef(function ChartsContainer<
   TSeries extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+>(props: ChartsContainerProps<TSeries, TSignatures>, ref: React.Ref<HTMLDivElement>) {
   const { chartDataProviderProps, children, chartsSurfaceProps } = useChartsContainerProps<
     TSeries,
     TSignatures
-  >(props, ref);
+  >(props);
 
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
-      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
-    </ChartDataProvider>
+    <ChartsDataProvider {...chartDataProviderProps}>
+      <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        {children}
+      </ChartsSurface>
+    </ChartsDataProvider>
   );
 }) as <TSeries extends ChartSeriesType>(
-  props: ChartsContainerProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
+  props: ChartsContainerProps<TSeries> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.JSX.Element;
 
 // @ts-ignore
@@ -143,8 +145,8 @@ ChartsContainer.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.any,
-      seriesId: PropTypes.object,
-      type: PropTypes.object.isRequired,
+      seriesId: PropTypes.object.isRequired,
+      type: PropTypes.object,
     }),
   ),
   /**
@@ -194,8 +196,8 @@ ChartsContainer.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.any,
-      seriesId: PropTypes.object,
-      type: PropTypes.object.isRequired,
+      seriesId: PropTypes.object.isRequired,
+      type: PropTypes.object,
     }),
   ),
   /**
@@ -250,6 +252,14 @@ ChartsContainer.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onTooltipAxisChange: PropTypes.func,
   /**
    * The callback fired when the tooltip item changes.
    *
@@ -1017,13 +1027,23 @@ ChartsContainer.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']),
   }),
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.

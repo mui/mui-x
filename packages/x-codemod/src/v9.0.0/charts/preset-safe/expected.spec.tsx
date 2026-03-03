@@ -21,6 +21,10 @@ import {
   useScatterSeries,
 } from '@mui/x-charts/hooks';
 import { useHeatmapSeries } from '@mui/x-charts-pro/hooks';
+import { ChartsContainer } from '@mui/x-charts';
+import { ChartsContainerProps } from '@mui/x-charts/ChartsContainer';
+
+import { ChartApi } from '@mui/x-charts/context';
 
 function App() {
   const series = useSeries();
@@ -128,6 +132,21 @@ function App() {
           }
         }
       }} />
+    <Heatmap series={[{}]} hideLegend />
+    <HeatmapPremium series={[{}]} hideLegend={false} />
+    <Heatmap hideLegend series={[{}]} />
+    <HeatmapPremium hideLegend {...otherProps} />
+    <PieArc seriesId="test" />
+    <LineChart series={[{
+      data: [1, 2, 3],
+      showMark: true,
+    }]} />
+    <ChartsDataProvider series={[{
+      type: 'line',
+      data: [1, 2, 3],
+      showMark: true,
+    }]} />
+    <ChartsContainer />
   </div>;
 }
 

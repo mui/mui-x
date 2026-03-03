@@ -8,3 +8,5 @@ export * from './useEvent';
 export * from './useDraggableEvent';
 export * from './TimeoutManager';
 export * from './date-utils';
+export * from './useInitializeApiRef';
+export * from './useEventCreation';

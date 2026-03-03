@@ -2,10 +2,10 @@ import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
-import { useSvgRef } from '@mui/x-charts/hooks';
+import { useChartsLayerContainerRef } from '@mui/x-charts/hooks';
 
 function usePointer() {
-  const svgRef = useSvgRef();
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
   const popperRef = React.useRef(null);
   const positionRef = React.useRef({ x: 0, y: 0 });
 
@@ -17,7 +17,7 @@ function usePointer() {
   });
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null) {
       return () => {};
     }
@@ -56,7 +56,7 @@ function usePointer() {
       element.removeEventListener('pointerup', handleOut);
       element.removeEventListener('pointermove', handleMove);
     };
-  }, [svgRef]);
+  }, [chartsLayerContainerRef]);
 
   return {
     ...pointer,

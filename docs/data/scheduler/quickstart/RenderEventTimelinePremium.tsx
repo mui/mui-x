@@ -2,26 +2,26 @@ import * as React from 'react';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
-const events: SchedulerEvent[] = [
+const initialEvents: SchedulerEvent[] = [
   {
     id: 1,
     title: 'Project Kickoff',
-    start: new Date(2024, 0, 15, 9, 0),
-    end: new Date(2024, 0, 15, 17, 0),
+    start: '2024-01-15T09:00:00',
+    end: '2024-01-15T17:00:00',
     resource: 'team-a',
   },
   {
     id: 2,
     title: 'Development Phase',
-    start: new Date(2024, 0, 16, 9, 0),
-    end: new Date(2024, 0, 19, 17, 0),
+    start: '2024-01-16T09:00:00',
+    end: '2024-01-19T17:00:00',
     resource: 'team-b',
   },
   {
     id: 3,
     title: 'Testing',
-    start: new Date(2024, 0, 17, 9, 0),
-    end: new Date(2024, 0, 18, 17, 0),
+    start: '2024-01-17T09:00:00',
+    end: '2024-01-18T17:00:00',
     resource: 'team-a',
   },
 ];
@@ -32,10 +32,13 @@ const resources: SchedulerResource[] = [
 ];
 
 export default function RenderEventTimelinePremium() {
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <EventTimelinePremium
         events={events}
+        onEventsChange={setEvents}
         resources={resources}
         defaultVisibleDate={new Date(2024, 0, 15)}
       />

@@ -24,6 +24,8 @@ import {
   isBarSeries,
   isDefaultizedBarSeries,
 } from '@mui/x-charts/models';
+import { ChartContainer } from '@mui/x-charts';
+import { ChartContainerProps, ChartApi } from '@mui/x-charts/ChartContainer';
 
 function App() {
   const series = unstable_useSeries();
@@ -62,6 +64,14 @@ function App() {
     <BarChart slotProps={{ legend: { position: { vertical: 'top', horizontal: 'middle' } } }} />
     <BarChart slotProps={{ legend: { position: { vertical: 'bottom', horizontal: 'right' } } }} />
     <BarChart slotProps={{ legend: { position: { vertical: 'wrong', horizontal: 'wrong' } } }} />
+    <Heatmap series={[{}]} hideLegend />
+    <HeatmapPremium series={[{}]} hideLegend={false} />
+    <Heatmap series={[{}]} />
+    <HeatmapPremium {...otherProps} />
+    <PieArc id="test" />
+    <LineChart series={[{ data: [1, 2, 3] }]} />
+    <ChartsDataProvider series={[{ type: 'line', data: [1, 2, 3] }]} />
+    <ChartContainer />
   </div>;
 }
 

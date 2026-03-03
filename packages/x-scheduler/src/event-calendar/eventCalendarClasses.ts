@@ -5,7 +5,7 @@ import {
   EventDialogClasses,
   eventDialogClassKeys,
   eventDialogSlots,
-} from '../internals/components/event-draggable-dialog/eventDialogClasses';
+} from '../internals/components/event-dialog/eventDialogClasses';
 
 export interface EventCalendarClasses extends EventDialogClasses {
   /** Styles applied to the root element. */
@@ -16,10 +16,32 @@ export interface EventCalendarClasses extends EventDialogClasses {
   mainPanel: string;
   /** Styles applied to the content section element. */
   content: string;
-  /** Styles applied to the month calendar placeholder element. */
-  monthCalendarPlaceholder: string;
+  /** Styles applied to the mini calendar root element. */
+  miniCalendar: string;
+  /** Styles applied to the mini calendar header element. */
+  miniCalendarHeader: string;
+  /** Styles applied to the mini calendar header navigation container. */
+  miniCalendarNavigation: string;
+  /** Styles applied to the mini calendar month label. */
+  miniCalendarMonthLabel: string;
+  /** Styles applied to the mini calendar weekday header row. */
+  miniCalendarWeekdayHeader: string;
+  /** Styles applied to individual mini calendar weekday header cells. */
+  miniCalendarWeekdayCell: string;
+  /** Styles applied to the mini calendar grid (body). */
+  miniCalendarGrid: string;
+  /** Styles applied to mini calendar week rows. */
+  miniCalendarWeekRow: string;
+  /** Styles applied to mini calendar day cells. */
+  miniCalendarDayCell: string;
+  /** Styles applied to mini calendar day buttons. */
+  miniCalendarDayButton: string;
   /** Styles applied to the error container element. */
   errorContainer: string;
+  /** Styles applied to the error alert element. */
+  errorAlert: string;
+  /** Styles applied to the error message element. */
+  errorMessage: string;
   /** Styles applied to the header toolbar element. */
   headerToolbar: string;
   /** Styles applied to the header toolbar actions element. */
@@ -36,10 +58,10 @@ export interface EventCalendarClasses extends EventDialogClasses {
   preferencesMenu: string;
   /** Styles applied to the resources legend root element. */
   resourcesLegend: string;
+  /** Styles applied to the resources legend label element. */
+  resourcesLegendLabel: string;
   /** Styles applied to resources legend item elements. */
   resourcesLegendItem: string;
-  /** Styles applied to resources legend item color dot elements. */
-  resourcesLegendItemColorDot: string;
   /** Styles applied to resources legend item name elements. */
   resourcesLegendItemName: string;
   /** Styles applied to resources legend item checkbox elements. */
@@ -60,8 +82,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   agendaViewYearAndMonthLabel: string;
   /** Styles applied to the agenda view events list element. */
   agendaViewEventsList: string;
-  /** Styles applied to the agenda view loading overlay element. */
-  agendaViewLoadingOverlay: string;
+  /** Styles applied to event skeleton elements. */
+  eventSkeleton: string;
   /** Styles applied to the month view root element. */
   monthView: string;
   /** Styles applied to the month view grid element. */
@@ -74,8 +96,6 @@ export interface EventCalendarClasses extends EventDialogClasses {
   monthViewWeekHeaderCell: string;
   /** Styles applied to the month view body element. */
   monthViewBody: string;
-  /** Styles applied to the month view loading overlay element. */
-  monthViewLoadingOverlay: string;
   /** Styles applied to month view row elements. */
   monthViewRow: string;
   /** Styles applied to month view week number cell elements. */
@@ -128,8 +148,6 @@ export interface EventCalendarClasses extends EventDialogClasses {
   dayTimeGridTimeAxisText: string;
   /** Styles applied to the day time grid grid element. */
   dayTimeGridGrid: string;
-  /** Styles applied to the day time grid loading overlay element. */
-  dayTimeGridLoadingOverlay: string;
   /** Styles applied to day time grid column elements. */
   dayTimeGridColumn: string;
   /** Styles applied to day time grid column interactive layer elements. */
@@ -170,6 +188,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   timeGridEvent: string;
   /** Styles applied to time grid event placeholder elements. */
   timeGridEventPlaceholder: string;
+  /** Styles applied to time grid event skeleton elements. */
+  timeGridEventSkeleton: string;
   /** Styles applied to time grid event title elements. */
   timeGridEventTitle: string;
   /** Styles applied to time grid event time elements. */
@@ -209,8 +229,19 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'sidePanel',
     'mainPanel',
     'content',
-    'monthCalendarPlaceholder',
+    'miniCalendar',
+    'miniCalendarHeader',
+    'miniCalendarNavigation',
+    'miniCalendarMonthLabel',
+    'miniCalendarWeekdayHeader',
+    'miniCalendarWeekdayCell',
+    'miniCalendarGrid',
+    'miniCalendarWeekRow',
+    'miniCalendarDayCell',
+    'miniCalendarDayButton',
     'errorContainer',
+    'errorAlert',
+    'errorMessage',
     'headerToolbar',
     'headerToolbarActions',
     'headerToolbarLeftElement',
@@ -219,8 +250,8 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'viewSwitcher',
     'preferencesMenu',
     'resourcesLegend',
+    'resourcesLegendLabel',
     'resourcesLegendItem',
-    'resourcesLegendItemColorDot',
     'resourcesLegendItemName',
     'resourcesLegendItemCheckbox',
     'agendaView',
@@ -231,14 +262,13 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'agendaViewWeekDayNameLabel',
     'agendaViewYearAndMonthLabel',
     'agendaViewEventsList',
-    'agendaViewLoadingOverlay',
+    'eventSkeleton',
     'monthView',
     'monthViewGrid',
     'monthViewHeader',
     'monthViewHeaderCell',
     'monthViewWeekHeaderCell',
     'monthViewBody',
-    'monthViewLoadingOverlay',
     'monthViewRow',
     'monthViewWeekNumberCell',
     'monthViewCell',
@@ -265,7 +295,6 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayTimeGridTimeAxisCell',
     'dayTimeGridTimeAxisText',
     'dayTimeGridGrid',
-    'dayTimeGridLoadingOverlay',
     'dayTimeGridColumn',
     'dayTimeGridColumnInteractiveLayer',
     'dayTimeGridCurrentTimeIndicator',
@@ -286,6 +315,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'eventColorIndicator',
     'timeGridEvent',
     'timeGridEventPlaceholder',
+    'timeGridEventSkeleton',
     'timeGridEventTitle',
     'timeGridEventTime',
     'timeGridEventRecurringIcon',
@@ -307,8 +337,19 @@ const slots = {
   sidePanel: ['sidePanel'],
   mainPanel: ['mainPanel'],
   content: ['content'],
-  monthCalendarPlaceholder: ['monthCalendarPlaceholder'],
+  miniCalendar: ['miniCalendar'],
+  miniCalendarHeader: ['miniCalendarHeader'],
+  miniCalendarNavigation: ['miniCalendarNavigation'],
+  miniCalendarMonthLabel: ['miniCalendarMonthLabel'],
+  miniCalendarWeekdayHeader: ['miniCalendarWeekdayHeader'],
+  miniCalendarWeekdayCell: ['miniCalendarWeekdayCell'],
+  miniCalendarGrid: ['miniCalendarGrid'],
+  miniCalendarWeekRow: ['miniCalendarWeekRow'],
+  miniCalendarDayCell: ['miniCalendarDayCell'],
+  miniCalendarDayButton: ['miniCalendarDayButton'],
   errorContainer: ['errorContainer'],
+  errorAlert: ['errorAlert'],
+  errorMessage: ['errorMessage'],
   headerToolbar: ['headerToolbar'],
   headerToolbarActions: ['headerToolbarActions'],
   headerToolbarLeftElement: ['headerToolbarLeftElement'],
@@ -317,8 +358,8 @@ const slots = {
   viewSwitcher: ['viewSwitcher'],
   preferencesMenu: ['preferencesMenu'],
   resourcesLegend: ['resourcesLegend'],
+  resourcesLegendLabel: ['resourcesLegendLabel'],
   resourcesLegendItem: ['resourcesLegendItem'],
-  resourcesLegendItemColorDot: ['resourcesLegendItemColorDot'],
   resourcesLegendItemName: ['resourcesLegendItemName'],
   resourcesLegendItemCheckbox: ['resourcesLegendItemCheckbox'],
   agendaView: ['agendaView'],
@@ -329,14 +370,13 @@ const slots = {
   agendaViewWeekDayNameLabel: ['agendaViewWeekDayNameLabel'],
   agendaViewYearAndMonthLabel: ['agendaViewYearAndMonthLabel'],
   agendaViewEventsList: ['agendaViewEventsList'],
-  agendaViewLoadingOverlay: ['agendaViewLoadingOverlay'],
+  eventSkeleton: ['eventSkeleton'],
   monthView: ['monthView'],
   monthViewGrid: ['monthViewGrid'],
   monthViewHeader: ['monthViewHeader'],
   monthViewHeaderCell: ['monthViewHeaderCell'],
   monthViewWeekHeaderCell: ['monthViewWeekHeaderCell'],
   monthViewBody: ['monthViewBody'],
-  monthViewLoadingOverlay: ['monthViewLoadingOverlay'],
   monthViewRow: ['monthViewRow'],
   monthViewWeekNumberCell: ['monthViewWeekNumberCell'],
   monthViewCell: ['monthViewCell'],
@@ -363,7 +403,6 @@ const slots = {
   dayTimeGridTimeAxisCell: ['dayTimeGridTimeAxisCell'],
   dayTimeGridTimeAxisText: ['dayTimeGridTimeAxisText'],
   dayTimeGridGrid: ['dayTimeGridGrid'],
-  dayTimeGridLoadingOverlay: ['dayTimeGridLoadingOverlay'],
   dayTimeGridColumn: ['dayTimeGridColumn'],
   dayTimeGridColumnInteractiveLayer: ['dayTimeGridColumnInteractiveLayer'],
   dayTimeGridCurrentTimeIndicator: ['dayTimeGridCurrentTimeIndicator'],
@@ -384,6 +423,7 @@ const slots = {
   eventColorIndicator: ['eventColorIndicator'],
   timeGridEvent: ['timeGridEvent'],
   timeGridEventPlaceholder: ['timeGridEventPlaceholder'],
+  timeGridEventSkeleton: ['timeGridEventSkeleton'],
   timeGridEventTitle: ['timeGridEventTitle'],
   timeGridEventTime: ['timeGridEventTime'],
   timeGridEventRecurringIcon: ['timeGridEventRecurringIcon'],

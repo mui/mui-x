@@ -11,7 +11,7 @@ import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
-import { getBarDimensions } from '../internals/getBarDimensions';
+import { createGetBarDimensions } from '../internals/createGetBarDimensions';
 import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
@@ -98,16 +98,16 @@ export function processBarDataForPlot(
       const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
 
       const seriesDataPoints: ProcessedBarData[] = [];
+      const getBarDimensions = createGetBarDimensions({
+        verticalLayout,
+        xAxisConfig,
+        yAxisConfig,
+        series: series[seriesId],
+        numberOfGroups: stackingGroups.length,
+      });
+
       for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
-        const barDimensions = getBarDimensions({
-          verticalLayout,
-          xAxisConfig,
-          yAxisConfig,
-          series: series[seriesId],
-          dataIndex,
-          numberOfGroups: stackingGroups.length,
-          groupIndex,
-        });
+        const barDimensions = getBarDimensions(dataIndex, groupIndex);
 
         if (barDimensions == null) {
           continue;
