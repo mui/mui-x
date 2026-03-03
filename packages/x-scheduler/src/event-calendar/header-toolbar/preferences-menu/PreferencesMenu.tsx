@@ -137,6 +137,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       className={clsx(props.className, classes.preferencesMenu)}
     >
       <IconButton
+        className={classes.preferencesMenuButton}
         aria-label={localeText.preferencesMenu}
         onClick={handleClick}
         aria-controls={open ? 'preferences-menu' : undefined}
@@ -146,6 +147,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         <SettingsOutlined />
       </IconButton>
       <Menu
+        className={classes.preferencesMenuList}
         id="preferences-menu"
         anchorEl={anchorEl}
         open={open}

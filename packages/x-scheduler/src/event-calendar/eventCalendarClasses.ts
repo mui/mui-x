@@ -224,6 +224,34 @@ export interface EventCalendarClasses extends EventDialogClasses {
   eventDragPreview: string;
   /** Styles applied to the standalone event element. */
   standaloneEvent: string;
+  /** Styles applied to the agenda view event list item elements. */
+  agendaViewEventListItem: string;
+  /** Styles applied to the side panel collapse element. */
+  sidePanelCollapse: string;
+  /** Styles applied to the side panel divider element. */
+  sidePanelDivider: string;
+  /** Styles applied to the header toolbar side panel toggle button element. */
+  headerToolbarSidePanelToggle: string;
+  /** Styles applied to the header toolbar previous button element. */
+  headerToolbarPreviousButton: string;
+  /** Styles applied to the header toolbar today button element. */
+  headerToolbarTodayButton: string;
+  /** Styles applied to the header toolbar next button element. */
+  headerToolbarNextButton: string;
+  /** Styles applied to the preferences menu button element. */
+  preferencesMenuButton: string;
+  /** Styles applied to the preferences menu list element. */
+  preferencesMenuList: string;
+  /** Styles applied to the view switcher button element. */
+  viewSwitcherButton: string;
+  /** Styles applied to the view switcher menu element. */
+  viewSwitcherMenu: string;
+  /** Styles applied to the mini calendar previous button element. */
+  miniCalendarPreviousButton: string;
+  /** Styles applied to the mini calendar next button element. */
+  miniCalendarNextButton: string;
+  /** Styles applied to the more events popover element. */
+  moreEventsPopover: string;
 }
 
 export type EventCalendarClassKey = keyof EventCalendarClasses;
@@ -343,6 +371,20 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'moreEventsPopoverBody',
     'eventDragPreview',
     'standaloneEvent',
+    'agendaViewEventListItem',
+    'sidePanelCollapse',
+    'sidePanelDivider',
+    'headerToolbarSidePanelToggle',
+    'headerToolbarPreviousButton',
+    'headerToolbarTodayButton',
+    'headerToolbarNextButton',
+    'preferencesMenuButton',
+    'preferencesMenuList',
+    'viewSwitcherButton',
+    'viewSwitcherMenu',
+    'miniCalendarPreviousButton',
+    'miniCalendarNextButton',
+    'moreEventsPopover',
     ...eventDialogClassKeys,
   ],
 );
@@ -456,6 +498,20 @@ const slots = {
   moreEventsPopoverBody: ['moreEventsPopoverBody'],
   eventDragPreview: ['eventDragPreview'],
   standaloneEvent: ['standaloneEvent'],
+  agendaViewEventListItem: ['agendaViewEventListItem'],
+  sidePanelCollapse: ['sidePanelCollapse'],
+  sidePanelDivider: ['sidePanelDivider'],
+  headerToolbarSidePanelToggle: ['headerToolbarSidePanelToggle'],
+  headerToolbarPreviousButton: ['headerToolbarPreviousButton'],
+  headerToolbarTodayButton: ['headerToolbarTodayButton'],
+  headerToolbarNextButton: ['headerToolbarNextButton'],
+  preferencesMenuButton: ['preferencesMenuButton'],
+  preferencesMenuList: ['preferencesMenuList'],
+  viewSwitcherButton: ['viewSwitcherButton'],
+  viewSwitcherMenu: ['viewSwitcherMenu'],
+  miniCalendarPreviousButton: ['miniCalendarPreviousButton'],
+  miniCalendarNextButton: ['miniCalendarNextButton'],
+  moreEventsPopover: ['moreEventsPopover'],
   ...eventDialogSlots,
 };
 

@@ -12,6 +12,7 @@ import { createModal } from '../create-modal';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const MoreEventsPopoverHeader = styled('div', {
   name: 'MuiEventCalendar',
@@ -65,6 +66,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
 
   // Context hooks
   const adapter = useAdapter();
+  const { classes } = useEventCalendarStyledContext();
   const { subscribeCloseHandler } = useEventDialogContext();
 
   React.useEffect(() => {
@@ -74,16 +76,17 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   }, [subscribeCloseHandler, onClose]);
 
   return (
-    <Popover open={open} anchorEl={anchor} onClose={onClose}>
+    <Popover className={classes.moreEventsPopover} open={open} anchorEl={anchor} onClose={onClose}>
       <MoreEventsPopoverHeader
+        className={classes.moreEventsPopoverHeader}
         id={`PopoverHeader-${day.key}`}
         aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
       >
-        <MoreEventsPopoverTitle>
+        <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>
           {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
         </MoreEventsPopoverTitle>
       </MoreEventsPopoverHeader>
-      <MoreEventsPopoverBody>
+      <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
         {occurrences.map((occurrence) => (
           <EventDialogTrigger occurrence={occurrence} key={occurrence.key}>
             <EventItem
