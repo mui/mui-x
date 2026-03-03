@@ -8,8 +8,8 @@ The grid exposes two hooks to help you access the Data Grid data while overridin
 
 They can be used as below:
 
-- `useGridApiContext`: returns the `apiRef` object (more details on the [API object page](/x/react-data-grid/api-object/#inside-the-data-grid)).
-- `useGridSelector`: returns the result of a selector on the current state (more details on the [State page](/x/react-data-grid/state/#access-the-state)).
+- `useGridApiContext()`: returns the `apiRef` object (more details on the [API object page](/x/react-data-grid/api-object/#inside-the-data-grid)).
+- `useGridSelector()`: returns the result of a selector on the current state (more details on the [State page](/x/react-data-grid/state/#access-the-state)).
 
 ```tsx
 function CustomPagination() {
