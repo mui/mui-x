@@ -46,8 +46,8 @@ catalogs:
       specifier: ^7.3.7
       version: 7.3.7
     '@mui/stylis-plugin-rtl':
-      specifier: ^7.3.7
-      version: 7.3.7
+      specifier: 9.0.0-alpha.2
+      version: 9.0.0-alpha.2
     '@mui/system':
       specifier: ^7.3.7
       version: 7.3.7
@@ -252,8 +252,8 @@ importers:
         specifier: 0.0.4-canary.5
         version: 0.0.4-canary.5(@next/eslint-plugin-next@15.5.12)(@types/node@22.19.3)(@typescript-eslint/parser@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.56.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(postcss@8.5.6)(prettier@3.8.1)(stylelint@17.1.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)
       '@mui/internal-markdown':
-        specifier: 2.0.15
-        version: 2.0.15
+        specifier: 3.0.3
+        version: 3.0.3
       '@mui/internal-netlify-cache':
         specifier: 0.0.3-canary.1
         version: 0.0.3-canary.1
@@ -264,8 +264,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#600ea849c3a238c97ca0eb0c9e06da7f1cd2f366
-        version: https://codeload.github.com/mui/material-ui/tar.gz/600ea849c3a238c97ca0eb0c9e06da7f1cd2f366(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
+        specifier: github:mui/material-ui#e08f12f
+        version: https://codeload.github.com/mui/material-ui/tar.gz/e08f12fb2ba9ded7124d6c60dade3a23a230ab51(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.7(@types/react@19.2.9)(react@19.2.3)
@@ -491,9 +491,6 @@ importers:
       '@emotion/styled':
         specifier: 'catalog:'
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
-      '@mui/docs':
-        specifier: 7.3.9
-        version: 7.3.9(08686a6d65762dccb52c3980e384be8f)
       '@mui/icons-material':
         specifier: 'catalog:'
         version: 7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
@@ -514,7 +511,7 @@ importers:
         version: 7.3.7(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/server@11.11.0)(@types/react@19.2.9)(next@15.5.12(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 7.3.7(stylis@4.3.6)
+        version: 9.0.0-alpha.2(stylis@4.3.6)
       '@mui/system':
         specifier: 'catalog:'
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
@@ -724,7 +721,7 @@ importers:
         specifier: 'catalog:'
         version: 0.7.9
       '@types/nprogress':
-        specifier: 0.2.3
+        specifier: ^0.2.3
         version: 0.2.3
       '@types/prop-types':
         specifier: 'catalog:'
@@ -2189,7 +2186,7 @@ importers:
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 7.3.7(stylis@4.3.6)
+        version: 9.0.0-alpha.2(stylis@4.3.6)
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../packages/x-charts/build
@@ -4503,23 +4500,6 @@ packages:
   '@mui/core-downloads-tracker@7.3.7':
     resolution: {integrity: sha512-8jWwS6FweMkpyRkrJooamUGe1CQfO1yJ+lM43IyUJbrhHW/ObES+6ry4vfGi8EKaldHL3t3BG1bcLcERuJPcjg==}
 
-  '@mui/docs@7.3.9':
-    resolution: {integrity: sha512-njowoYNc+xdhgWgmwQKDi6aW2h9WOC39jCVAsJgCKqtvZajjtTntgqvIfmYYtl6fi9QqurF4v/pN4u8Pek5j/Q==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      '@mui/base': ^5.0.0 || ^5.0.0-beta || ^7.0.0 || ^7.0.0-beta
-      '@mui/icons-material': ^5.0.0 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
-      '@mui/material': ^5.0.0 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
-      '@mui/system': ^5.0.0 || ^6.0.0 || ^7.0.0 || ^7.0.0-beta
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-      chai: ^6.0.1
-      csstype: ^3.1.3
-      next: ^13.5.1 || ^14 || ^15.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   '@mui/icons-material@7.3.7':
     resolution: {integrity: sha512-3Q+ulAqG+A1+R4ebgoIs7AccaJhIGy+Xi/9OnvX376jQ6wcy+rz4geDGrxQxCGzdjOQr4Z3NgyFSZCz4T999lA==}
     engines: {node: '>=14.0.0'}
@@ -4587,8 +4567,8 @@ packages:
   '@mui/internal-docs-utils@2.0.6':
     resolution: {integrity: sha512-IeLb3ItTXl1DrAYKdI/LlmjlAGbUd3RaWvzs9yOipIestyvkmw0jxjarUQSSjVXJgcoDjzd+drr2k1ucH9Amkw==}
 
-  '@mui/internal-markdown@2.0.15':
-    resolution: {integrity: sha512-9X9NP87aMg/92ZYaPOBfdRkm+jhr+hnr5HCxpKHQut2x+jQzBrGkL14pqoBxx0bee7i10HAmfdCY+RrPoXAMRg==}
+  '@mui/internal-markdown@3.0.3':
+    resolution: {integrity: sha512-jzHtrlPixIUvEu2BLIyy56S96UZU1j24YwNvHBLCOFYNycMagRx51coqDRG2d13yG3jPBA4ESubC2OcJSH0vYA==}
 
   '@mui/internal-netlify-cache@0.0.3-canary.1':
     resolution: {integrity: sha512-dCYCo7mZ7sm9CDyiSZkHfoH5NHk0rg70r9M6OnRVrsIfSkQvhWmHDzY1Ga0KR20iYNdURwJx6MVVBeULd6Tt3Q==}
@@ -4687,10 +4667,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/600ea849c3a238c97ca0eb0c9e06da7f1cd2f366':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/600ea849c3a238c97ca0eb0c9e06da7f1cd2f366}
-    version: 9.0.0-alpha.0
-    engines: {node: '>=22.18.0', pnpm: 10.30.1}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/e08f12fb2ba9ded7124d6c60dade3a23a230ab51':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/e08f12fb2ba9ded7124d6c60dade3a23a230ab51}
+    version: 9.0.0-alpha.1
+    engines: {node: '>=22.18.0', pnpm: 10.30.3}
 
   '@mui/private-theming@5.17.1':
     resolution: {integrity: sha512-XMxU0NTYcKqdsG8LRmSoxERPXwMbp16sIXPcLVgLGII/bVNagX0xaheWAwFv8+zDK7tI3ajllkuD3GZZE++ICQ==}
@@ -4738,8 +4718,8 @@ packages:
       '@emotion/styled':
         optional: true
 
-  '@mui/stylis-plugin-rtl@7.3.7':
-    resolution: {integrity: sha512-maXrecDHMksZXLzUsMshuo4lyhZl7CSFcBHxT5fGIEMKvEp6Cs4vKUDB5bdCdK+c2o93uly6YcpRVYuEsDDBow==}
+  '@mui/stylis-plugin-rtl@9.0.0-alpha.2':
+    resolution: {integrity: sha512-Lw87fAnymrvQxwsGWnhFizRYNyMkt7ekVB48f/J9vACIfc4uwgk4whas8/tGv79bQtjR/2Igkp63PQjBP3QJHw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       stylis: 4.x
@@ -9674,8 +9654,8 @@ packages:
     resolution: {integrity: sha512-UKybllYNheWac61Ia7T6fzuQNDZimFIpCg2w6hHjgV1Qu0w1TV0LlSgryUGzM0bkKQCBhy2FDhEELB73Kb0kAg==}
     engines: {node: '>=20'}
 
-  marked@17.0.1:
-    resolution: {integrity: sha512-boeBdiS0ghpWcSwoNm/jJBwdpFaMnZWRzjA6SkUMYb40SVaN1x7mmfGKp0jvexGcx+7y2La5zRZsYFZI6Qpypg==}
+  marked@17.0.3:
+    resolution: {integrity: sha512-jt1v2ObpyOKR8p4XaUJVk3YWRJ5n+i4+rjQopxvV32rSndTJXvIzuUdWWIy/1pFQMkQmvTXawzDNqOH/CUmx6A==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -15004,25 +14984,6 @@ snapshots:
 
   '@mui/core-downloads-tracker@7.3.7': {}
 
-  '@mui/docs@7.3.9(08686a6d65762dccb52c3980e384be8f)':
-    dependencies:
-      '@babel/runtime': 7.28.6
-      '@mui/base': 5.0.0-beta.40-1(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@mui/icons-material': 7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
-      '@mui/internal-markdown': 2.0.15
-      '@mui/material': 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@mui/system': 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
-      chai: 6.2.1
-      clipboard-copy: 4.0.1
-      clsx: 2.1.1
-      csstype: 3.2.3
-      next: 15.5.12(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      nprogress: 0.2.0
-      prop-types: 15.8.1
-      react: 19.2.3
-    optionalDependencies:
-      '@types/react': 19.2.9
-
   '@mui/icons-material@7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)':
     dependencies:
       '@babel/runtime': 7.28.6
@@ -15207,11 +15168,11 @@ snapshots:
       rimraf: 6.1.3
       typescript: 5.9.3
 
-  '@mui/internal-markdown@2.0.15':
+  '@mui/internal-markdown@3.0.3':
     dependencies:
       '@babel/runtime': 7.28.6
       es-toolkit: 1.45.1
-      marked: 17.0.1
+      marked: 17.0.3
       prismjs: 1.30.0
 
   '@mui/internal-netlify-cache@0.0.3-canary.1': {}
@@ -15363,7 +15324,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
       '@types/react': 19.2.9
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/600ea849c3a238c97ca0eb0c9e06da7f1cd2f366(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/e08f12fb2ba9ded7124d6c60dade3a23a230ab51(@babel/core@7.29.0)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18)':
     dependencies:
       '@netlify/functions': 5.1.2
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
@@ -15424,7 +15385,7 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.9)(react@19.2.3)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
 
-  '@mui/stylis-plugin-rtl@7.3.7(stylis@4.3.6)':
+  '@mui/stylis-plugin-rtl@9.0.0-alpha.2(stylis@4.3.6)':
     dependencies:
       '@babel/runtime': 7.28.6
       cssjanus: 2.3.0
@@ -21088,7 +21049,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  marked@17.0.1: {}
+  marked@17.0.3: {}
 
   math-intrinsics@1.1.0: {}
 
