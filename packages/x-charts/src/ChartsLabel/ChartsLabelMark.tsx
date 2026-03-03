@@ -4,11 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useTheme, type SxProps, type Theme } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import {
-  type ChartsLabelMarkClasses,
-  labelMarkClasses,
-  useUtilityClasses,
-} from './labelMarkClasses';
+import { type ChartsLabelMarkClasses, useUtilityClasses } from './labelMarkClasses';
 import type { MarkShape } from '../models/seriesType/line';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import { getSymbol } from '../internals/getSymbol';
@@ -61,26 +57,6 @@ const Root = styled('div', {
     ['& > *']: {
       width: '100%',
       height: '100%',
-    },
-    [`&.${labelMarkClasses.line}`]: {
-      width: 16,
-      height: 8,
-      alignItems: 'center',
-    },
-    [`&.${labelMarkClasses.lineAndMark}`]: {
-      width: 16,
-      height: 16,
-      alignItems: 'center',
-    },
-    [`&.${labelMarkClasses.square}`]: {
-      height: 13,
-      width: 13,
-      borderRadius: 2,
-      overflow: 'hidden',
-    },
-    [`&.${labelMarkClasses.circle}`]: {
-      height: 15,
-      width: 15,
     },
     svg: {
       display: 'block',
