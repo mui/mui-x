@@ -6,11 +6,9 @@ const seriesProcessor: SeriesProcessor<'heatmap'> = (params) => {
 
   const defaultizedSeries: Record<SeriesId, DefaultizedHeatmapSeriesType> = {};
   Object.keys(series).forEach((seriesId) => {
-
-    const data = series[seriesId].data ?? []
+    const data = series[seriesId].data ?? [];
     const valueLookup = new Map<number, Map<number, number>>();
     for (const [xIndex, yIndex, value] of data) {
-
       if (!valueLookup.has(xIndex)) {
         valueLookup.set(xIndex, new Map<number, number>());
       }

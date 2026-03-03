@@ -9,8 +9,8 @@ export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
   extends
-  Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
-  CartesianSeriesType {
+    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
+    CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each cell in the heatmap.
@@ -33,7 +33,10 @@ export interface HeatmapSeriesType
    * @param {number} context.yIndex The y index of the cell the value belongs to.
    * @returns {string | null} The string to display or null if the value should not be shown.
    */
-  valueFormatter?: (value: number | null, context: { xIndex: number; yIndex: number }) => string | null;
+  valueFormatter?: (
+    value: number | null,
+    context: { xIndex: number; yIndex: number },
+  ) => string | null;
 }
 
 /**
@@ -64,7 +67,7 @@ export type HeatmapItemIdentifierWithData = HeatmapItemIdentifier & {
    * The value of the cell. Null if there is no data associated.
    */
   value: number | null;
-}
+};
 
 export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
   HeatmapSeriesType,

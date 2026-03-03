@@ -7,13 +7,11 @@ import type { ChartSeriesType } from '../../../../../models/seriesType/config';
  * Map data index to a color.
  * If dataIndex is not defined, it falls back to the series color when defined.
  */
-export type ColorGetter<TSeriesType extends ChartSeriesType> = TSeriesType extends
-  | 'pie'
-  | 'funnel'
+export type ColorGetter<TSeriesType extends ChartSeriesType> = TSeriesType extends 'pie' | 'funnel'
   ? (dataIndex: number) => string
   : TSeriesType extends 'heatmap'
-  ? (value: number | null, xIndex: number, yIndex: number) => string
-  : (dataIndex?: number) => string;
+    ? (value: number | null, xIndex: number, yIndex: number) => string
+    : (dataIndex?: number) => string;
 
 /**
  * Transforms charts config to a color getter.

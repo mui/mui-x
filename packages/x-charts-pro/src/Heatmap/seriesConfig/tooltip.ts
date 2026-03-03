@@ -10,7 +10,10 @@ const tooltipGetter: TooltipGetter<'heatmap'> = (params) => {
   const cellValue = series.valueLookup.get(identifier.xIndex)?.get(identifier.yIndex) ?? null;
 
   const label = getLabel(series.label, 'tooltip');
-  const formattedValue = series.valueFormatter(cellValue, { xIndex: identifier.xIndex, yIndex: identifier.yIndex });
+  const formattedValue = series.valueFormatter(cellValue, {
+    xIndex: identifier.xIndex,
+    yIndex: identifier.yIndex,
+  });
 
   return {
     identifier,
