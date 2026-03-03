@@ -23,7 +23,6 @@ const updateCoordinates = (
   newYIndex: number,
   currentItem: FocusedItemIdentifier<'heatmap'>,
 ) => {
-
   return {
     ...currentItem,
     xIndex: newXIndex,

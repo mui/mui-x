@@ -76,10 +76,7 @@ function test(
   initialFocus: FocusedItemIdentifier<'heatmap'> | null,
 ) {
   return {
-    ...keyboardFocusHandler({ key: direction } as KeyboardEvent)?.(
-      initialFocus,
-      state,
-    ),
+    ...keyboardFocusHandler({ key: direction } as KeyboardEvent)?.(initialFocus, state),
   };
 }
 
