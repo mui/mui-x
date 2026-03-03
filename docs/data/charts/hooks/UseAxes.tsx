@@ -3,7 +3,7 @@ import { useYAxes, useXAxis, useLineSeries } from '@mui/x-charts/hooks';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useTheme } from '@mui/material/styles';
 
@@ -123,7 +123,7 @@ function AxisRangeIndicators() {
 export default function UseAxes() {
   return (
     <div style={{ width: '100%' }}>
-      <ChartDataProvider
+      <ChartsDataProvider
         dataset={dataset}
         xAxis={[
           {
@@ -184,7 +184,7 @@ export default function UseAxes() {
           <ChartsYAxis axisId="rainfall" />
           <AxisRangeIndicators />
         </ChartsSurface>
-      </ChartDataProvider>
+      </ChartsDataProvider>
     </div>
   );
 }

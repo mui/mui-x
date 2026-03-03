@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
 import { useChartCartesianAxis } from './useChartCartesianAxis';
@@ -15,7 +15,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   it('should call onHighlightedAxisChange when crossing any value', async () => {
     const onHighlightedAxisChange = vi.fn();
     const { user, container } = render(
-      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+      <ChartsDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ id: 'y-axis', min: 0, max: 1, data: [0, 0.5], position: 'none' }]}
@@ -25,7 +25,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         onHighlightedAxisChange={onHighlightedAxisChange}
       >
         <ChartsSurface />
-      </ChartDataProvider>,
+      </ChartsDataProvider>,
     );
 
     const svg = container.querySelector('svg')!;
@@ -73,7 +73,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   it('should call onHighlightedAxisChange when axis got modified', async () => {
     const onHighlightedAxisChange = vi.fn();
     const { user, setProps, container } = render(
-      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+      <ChartsDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none' }]}
@@ -83,7 +83,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         onHighlightedAxisChange={onHighlightedAxisChange}
       >
         <ChartsSurface />
-      </ChartDataProvider>,
+      </ChartsDataProvider>,
     );
 
     const svg = container.querySelector('svg')!;
@@ -108,7 +108,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   it('should not call onHighlightedAxisChange when axis got modified but highlighted item stay the same', async () => {
     const onHighlightedAxisChange = vi.fn();
     const { user, setProps, container } = render(
-      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+      <ChartsDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none' }]}
@@ -118,7 +118,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         onHighlightedAxisChange={onHighlightedAxisChange}
       >
         <ChartsSurface />
-      </ChartDataProvider>,
+      </ChartsDataProvider>,
     );
 
     const svg = container.querySelector('svg')!;
@@ -140,7 +140,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   it('should call onHighlightedAxisChange when highlighted axis got removed', async () => {
     const onHighlightedAxisChange = vi.fn();
     const { user, setProps, container } = render(
-      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+      <ChartsDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none' }]}
@@ -150,7 +150,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         onHighlightedAxisChange={onHighlightedAxisChange}
       >
         <ChartsSurface />
-      </ChartDataProvider>,
+      </ChartsDataProvider>,
     );
 
     const svg = container.querySelector('svg')!;
@@ -174,7 +174,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
   it('should allow to highlight axes without data', async () => {
     const { user, container } = render(
-      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+      <ChartsDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none', min: 0, max: 100 }]}
@@ -185,7 +185,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         <ChartsSurface>
           <ChartsAxisHighlight y="line" />
         </ChartsSurface>
-      </ChartDataProvider>,
+      </ChartsDataProvider>,
     );
 
     const svg = container.querySelector('svg')!;
@@ -199,7 +199,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
   it('should allow to highlight axes with data', async () => {
     const { user, container } = render(
-      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+      <ChartsDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none', min: 0, max: 100 }]}
@@ -210,7 +210,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         <ChartsSurface>
           <ChartsAxisHighlight x="line" />
         </ChartsSurface>
-      </ChartDataProvider>,
+      </ChartsDataProvider>,
     );
 
     const svg = container.querySelector('svg')!;
