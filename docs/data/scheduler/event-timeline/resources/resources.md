@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 ## Define resources
 
 Use the `resources` prop to define the list of resources the events can be associated to and the `resource` property on the event model to link an event to its resource:

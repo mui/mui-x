@@ -216,7 +216,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             )}
           </Typography>
         </EventDialogDateTimeContainer>
-        {showRecurrence && (
+        {showRecurrence && defaultRecurrenceKey != null && (
           <RecurrenceLabelContainer className={classes.eventDialogRecurrenceLabelContainer}>
             <RepeatRoundedIcon className={classes.eventDialogRecurrenceIcon} fontSize="small" />
             <Typography
