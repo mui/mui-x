@@ -1,21 +1,14 @@
-import { addYears } from 'date-fns/addYears';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
-import { clearLicenseStatusCache, generateLicense, LicenseInfo } from '@mui/x-license';
+import { LicenseInfo } from '@mui/x-license';
+import { TEST_LICENSE_KEY_PRO } from '@mui/x-license/test-keys';
+import { clearLicenseStatusCache } from '@mui/x-license/useLicenseVerifier';
 
 describe('<DataGridPremium /> - License', () => {
   const { render } = createRenderer();
 
   it('should throw out of scope error when using DataGridPremium with a pro license', () => {
-    LicenseInfo.setLicenseKey(
-      generateLicense({
-        expiryDate: addYears(new Date(), 1),
-        orderNumber: '123',
-        licenseModel: 'subscription',
-        planScope: 'pro',
-        planVersion: 'initial',
-      }),
-    );
+    LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PRO);
     expect(() => render(<DataGridPremium columns={[]} rows={[]} autoHeight />)).toErrorDev([
       'MUI X: License key plan mismatch',
     ]);

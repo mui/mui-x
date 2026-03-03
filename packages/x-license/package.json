@@ -18,7 +18,7 @@
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build --flat",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -46,7 +46,12 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    "./*": "./src/*/index.ts",
+    "./Watermark": "./src/Watermark/index.ts",
+    "./useLicenseVerifier": "./src/useLicenseVerifier/index.ts",
+    "./verifyLicense": "./src/verifyLicense/index.ts",
+    "./utils": "./src/utils/index.ts",
+    "./test-keys": "./src/test-keys.ts"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"

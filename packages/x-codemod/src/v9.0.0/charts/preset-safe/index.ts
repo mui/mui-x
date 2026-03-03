@@ -1,6 +1,8 @@
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import * as renameIdToSeriesId from '../rename-id-to-series-id';
 import * as renameChartApiImport from '../rename-chart-api-import';
+import * as renameChartContainer from '../rename-chart-container';
+import * as renameChartDataProvider from '../rename-chart-data-provider';
 import * as replaceHeatmapHideLegend from '../replace-heatmap-hide-legend-false';
 import * as replaceShowMarkDefault from '../replace-show-mark-default';
 
@@ -10,6 +12,8 @@ const allModules = [
   replaceShowMarkDefault,
   renameIdToSeriesId,
   renameChartApiImport,
+  renameChartContainer,
+  renameChartDataProvider,
 ];
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {

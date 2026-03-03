@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDataset } from '@mui/x-charts/hooks';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -86,7 +86,7 @@ function DatasetStats() {
 
 export default function UseDataset() {
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       dataset={dataset}
       xAxis={[{ dataKey: 'month', scaleType: 'point' }]}
       series={[
@@ -119,6 +119,6 @@ export default function UseDataset() {
           <ChartsLegend direction="horizontal" />
         </Box>
       </Box>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 }

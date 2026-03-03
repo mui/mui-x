@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 The default locale of MUI X is English (United States).
 To use other locales, follow the instructions below.
 
