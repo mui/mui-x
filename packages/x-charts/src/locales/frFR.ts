@@ -114,6 +114,12 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
   chartConfigurationOptionStepAfter: 'Palier après',
   chartConfigurationOptionBumpX: 'Bosse X',
   chartConfigurationOptionBumpY: 'Bosse Y',
+
+  // OHLC/Candlestick
+  // open: 'Open',
+  // high: 'High',
+  // low: 'Low',
+  // close: 'Close',
 };
 
 export const frFR = getChartsLocalization(frFRLocalText);

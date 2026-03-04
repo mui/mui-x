@@ -8,6 +8,7 @@ import {
   type AxisTooltipContentProps,
   type ItemTooltipContentProps,
 } from '@mui/x-charts/internals';
+import { useChartsLocalization } from '@mui/x-charts/hooks';
 import { useUtilityClasses } from '../CandlestickTooltip/Candlestick.classes';
 
 export function OHLCTooltipContent(
@@ -15,6 +16,7 @@ export function OHLCTooltipContent(
 ) {
   const { item } = props;
   const classes = useUtilityClasses({});
+  const { localeText } = useChartsLocalization();
 
   if (item.value == null) {
     return null;
@@ -27,7 +29,7 @@ export function OHLCTooltipContent(
       <tbody>
         <ChartsTooltipRow className={classes.row}>
           <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-            Open
+            {localeText.open}
           </ChartsTooltipCell>
           <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
             {open}
@@ -35,7 +37,7 @@ export function OHLCTooltipContent(
         </ChartsTooltipRow>
         <ChartsTooltipRow className={classes.row}>
           <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-            High
+            {localeText.high}
           </ChartsTooltipCell>
           <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
             {high}
@@ -43,7 +45,7 @@ export function OHLCTooltipContent(
         </ChartsTooltipRow>
         <ChartsTooltipRow className={classes.row}>
           <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-            Low
+            {localeText.low}
           </ChartsTooltipCell>
           <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
             {low}
@@ -51,7 +53,7 @@ export function OHLCTooltipContent(
         </ChartsTooltipRow>
         <ChartsTooltipRow className={classes.row}>
           <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-            Close
+            {localeText.close}
           </ChartsTooltipCell>
           <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
             {close}
