@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
-import { isJSDOM } from 'test/utils/skipIf';
 import { useSeries } from './useSeries';
 import { ChartsProvider } from '../context/ChartsProvider';
 import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
@@ -13,9 +12,7 @@ function UseSeries() {
 describe('useSeries', () => {
   const { render } = createRenderer();
 
-  // can't catch render errors in the browser for unknown reason
-  // tried try-catch + error boundary + window onError preventDefault
-  it.skipIf(!isJSDOM)('should throw an error when parent context not present', () => {
+  it('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
     const errorMessage1 = `MUI X Charts: Could not find the Charts context. This happens when the component is rendered outside of a ChartsDataProvider or ChartsContainer parent component, which means the required context is not available. Wrap your component in a ChartsDataProvider or ChartsContainer. This can also happen if you are bundling multiple versions of the library.`;
