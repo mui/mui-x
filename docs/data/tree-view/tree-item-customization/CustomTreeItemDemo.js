@@ -121,6 +121,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             {...getContentProps({
               'data-name': 'TreeItemContent',
             })}
+            status={status}
           >
             <CustomTreeItemIconContainer
               {...getIconContainerProps({
