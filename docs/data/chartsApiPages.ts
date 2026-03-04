@@ -165,8 +165,8 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsYAxis',
   },
   {
-    pathname: '/x/api/charts/chart-zoom-slider',
-    title: 'ChartZoomSlider',
+    pathname: '/x/api/charts/charts-zoom-slider',
+    title: 'ChartsZoomSlider',
     plan: 'pro',
   },
   {

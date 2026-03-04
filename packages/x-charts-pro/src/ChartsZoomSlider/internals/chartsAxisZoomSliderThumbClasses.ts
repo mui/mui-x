@@ -1,9 +1,9 @@
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import type { ChartZoomSliderThumbOwnerState } from './ChartAxisZoomSliderThumb';
+import type { ChartsZoomSliderThumbOwnerState } from './ChartsAxisZoomSliderThumb';
 
-export interface ChartAxisZoomSliderThumbClasses {
+export interface ChartsAxisZoomSliderThumbClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element when it is horizontal. */
@@ -16,9 +16,9 @@ export interface ChartAxisZoomSliderThumbClasses {
   end: string;
 }
 
-export type ChartAxisZoomSliderThumbClassKey = keyof ChartAxisZoomSliderThumbClasses;
+export type ChartsAxisZoomSliderThumbClassKey = keyof ChartsAxisZoomSliderThumbClasses;
 
-export const chartAxisZoomSliderThumbClasses: ChartAxisZoomSliderThumbClasses =
+export const chartsAxisZoomSliderThumbClasses: ChartsAxisZoomSliderThumbClasses =
   generateUtilityClasses('MuiChartAxisZoomSliderThumb', [
     'root',
     'horizontal',
@@ -31,7 +31,7 @@ export function getAxisZoomSliderThumbUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartAxisZoomSliderThumb', slot);
 }
 
-export const useUtilityClasses = (ownerState: ChartZoomSliderThumbOwnerState) => {
+export const useUtilityClasses = (ownerState: ChartsZoomSliderThumbOwnerState) => {
   const { orientation, placement } = ownerState;
   const slots = {
     root: [
