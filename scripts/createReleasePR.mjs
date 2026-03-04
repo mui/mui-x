@@ -708,36 +708,6 @@ function createPrBody(newVersion) {
 }
 
 /**
- * Assign reviewers to a pull request
- * @param {number} prNumber - The PR number
- * @param {string[]} reviewers - Array of GitHub usernames to assign as reviewers
- * @returns {Promise<boolean>} Whether the operation was successful
- */
-async function assignReviewers(prNumber, reviewers) {
-  try {
-    console.log(`Assigning ${reviewers.length} reviewers to PR #${prNumber}...`);
-
-    // Assign reviewers
-    await octokit.rest.pulls.requestReviewers({
-      owner: ORG,
-      repo: REPO,
-      pull_number: prNumber,
-      reviewers,
-    });
-
-    console.log('Reviewers assigned successfully.');
-    return true;
-  } catch (error) {
-    console.error('Error assigning reviewers:', error.message);
-    if (error.response) {
-      console.error(`Status: ${error.response.status}`);
-      console.error('Response data:', error.response.data);
-    }
-    return false;
-  }
-}
-
-/**
  * Add labels to a pull request
  * @param {number} prNumber - The PR number
  * @param {string[]} labels - Array of label names to add to the PR
