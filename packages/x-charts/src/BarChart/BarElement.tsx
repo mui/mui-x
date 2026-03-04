@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { type BarElementOwnerState, useBarElementUtilityClasses } from './barClasses';
+import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
 import { useUtilityClasses as useDeprecatedUtilityClasses } from './barElementClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
@@ -96,7 +96,7 @@ function BarElement(props: BarElementProps) {
     isFocused,
   };
 
-  const classes = useBarElementUtilityClasses(ownerState);
+  const classes = useUtilityClasses(ownerState);
   const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Bar = slots?.bar ?? AnimatedBarElement;
@@ -125,7 +125,7 @@ function BarElement(props: BarElementProps) {
       layout,
       hidden,
     },
-    className: `${classes.root} ${deprecatedClasses.root}`,
+    className: `${classes.element} ${deprecatedClasses.root}`,
     ownerState,
   });
 

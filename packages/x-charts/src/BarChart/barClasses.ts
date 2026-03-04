@@ -30,11 +30,6 @@ export interface BarElementOwnerState {
   classes?: Partial<BarClasses>;
 }
 
-interface BarLabelOwnerStateForClasses {
-  skipAnimation: boolean;
-  classes?: Partial<BarClasses>;
-}
-
 export function getBarUtilityClass(slot: string) {
   return generateUtilityClass('MuiBarChart', slot);
 }
@@ -48,29 +43,19 @@ export const barClasses: BarClasses = generateUtilityClasses('MuiBarChart', [
   'labelAnimate',
 ]);
 
-export const useUtilityClasses = (classes?: Partial<BarClasses>) => {
+export interface UseUtilityClassesOptions {
+  skipAnimation?: boolean;
+  classes?: Partial<BarClasses>;
+}
+
+export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
+  const { skipAnimation, classes } = options ?? {};
   const slots = {
     root: ['root'],
     series: ['series'],
     seriesLabels: ['seriesLabels'],
-  };
-
-  return composeClasses(slots, getBarUtilityClass, classes);
-};
-
-export const useBarElementUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes } = ownerState;
-  const slots = {
-    root: ['element'],
-  };
-
-  return composeClasses(slots, getBarUtilityClass, classes);
-};
-
-export const useBarLabelUtilityClasses = (ownerState: BarLabelOwnerStateForClasses) => {
-  const { classes, skipAnimation } = ownerState;
-  const slots = {
-    root: ['label', !skipAnimation && 'labelAnimate'],
+    element: ['element'],
+    label: ['label', !skipAnimation && 'labelAnimate'],
   };
 
   return composeClasses(slots, getBarUtilityClass, classes);

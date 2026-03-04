@@ -35,7 +35,7 @@
   { "name": "barElementClasses", "kind": "Variable" },
   { "name": "BarElementClasses", "kind": "Interface" },
   { "name": "BarElementClassKey", "kind": "TypeAlias" },
-  { "name": "BarElementOwnerState", "kind": "Interface" },
+  { "name": "BarElementOwnerState", "kind": "ImportSpecifier" },
   { "name": "BarElementProps", "kind": "TypeAlias" },
   { "name": "BarElementSlotProps", "kind": "Interface" },
   { "name": "BarElementSlots", "kind": "Interface" },
