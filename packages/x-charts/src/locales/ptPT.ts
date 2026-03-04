@@ -115,6 +115,12 @@ export const ptPTLocaleText: Partial<ChartsLocaleText> = {
   // chartConfigurationOptionStepAfter: 'Step After',
   // chartConfigurationOptionBumpX: 'Bump X',
   // chartConfigurationOptionBumpY: 'Bump Y',
+
+  // OHLC/Candlestick
+  open: 'Abertura',
+  high: 'Máximo',
+  low: 'Mínimo',
+  close: 'Fecho',
 };
 
 export const ptPT = getChartsLocalization(ptPTLocaleText);
