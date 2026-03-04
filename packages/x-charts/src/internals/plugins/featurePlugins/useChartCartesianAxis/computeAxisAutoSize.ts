@@ -2,6 +2,7 @@ import type { DefaultedXAxis, DefaultedYAxis, AxisGroup } from '../../../../mode
 import { batchMeasureStrings } from '../../../domUtils';
 import type { ChartsTextStyle } from '../../../getWordsByLines';
 import { deg2rad } from '../../../angleConversion';
+import { getGraphemeCount } from '../../../getGraphemeCount';
 import {
   AXIS_AUTO_SIZE_PADDING,
   AXIS_AUTO_SIZE_MIN,
@@ -66,11 +67,12 @@ export interface AxisAutoSizeResult {
 const MAX_AUTO_SIZE_CANDIDATES = 5;
 
 /**
- * Returns the maximum line length of a label (splitting by newlines).
+ * Returns the maximum grapheme count of a label's lines (splitting by newlines).
+ * Uses grapheme count instead of string length for correct handling of emojis and complex characters.
  */
 function maxLineLength(label: string): number {
   const lines = label.split('\n');
-  return Math.max(...lines.map((line) => line.length));
+  return Math.max(...lines.map((line) => getGraphemeCount(line)));
 }
 
 /**
