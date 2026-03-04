@@ -38,7 +38,7 @@ If you use composition without `<ChartsWrapper />` you can ignore this info.
 You can customize basic components, such as buttons and tooltips, by passing custom elements to the `slots` prop of the chart.
 You can use this to replace the default buttons with components from your design system.
 
-If you're creating a chart using [composition](/x/react-charts/composition/), these basic components can be provided as slots to the `ChartDataProvider`.
+If you're composing a custom component, you can provide these basic components as slots to `ChartsDataProvider`.
 
 {{"demo": "ChartsToolbarCustomElements.js"}}
 

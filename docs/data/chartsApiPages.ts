@@ -44,34 +44,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
-    pathname: '/x/api/charts/chart-container',
-    title: 'ChartContainer',
-  },
-  {
-    pathname: '/x/api/charts/chart-container-premium',
-    title: 'ChartContainerPremium',
-    plan: 'premium',
-  },
-  {
-    pathname: '/x/api/charts/chart-container-pro',
-    title: 'ChartContainerPro',
-    plan: 'pro',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider',
-    title: 'ChartDataProvider',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider-premium',
-    title: 'ChartDataProviderPremium',
-    plan: 'premium',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider-pro',
-    title: 'ChartDataProviderPro',
-    plan: 'pro',
-  },
-  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
@@ -90,6 +62,34 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-clip-path',
     title: 'ChartsClipPath',
+  },
+  {
+    pathname: '/x/api/charts/charts-container',
+    title: 'ChartsContainer',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-premium',
+    title: 'ChartsContainerPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-pro',
+    title: 'ChartsContainerPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider',
+    title: 'ChartsDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider-premium',
+    title: 'ChartsDataProviderPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider-pro',
+    title: 'ChartsDataProviderPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/charts-grid',
@@ -165,8 +165,8 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsYAxis',
   },
   {
-    pathname: '/x/api/charts/chart-zoom-slider',
-    title: 'ChartZoomSlider',
+    pathname: '/x/api/charts/charts-zoom-slider',
+    title: 'ChartsZoomSlider',
     plan: 'pro',
   },
   {

@@ -249,10 +249,10 @@ If you're composing a custom component, you can incorporate click events as show
 Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ```jsx
-<ChartContainer onAxisClick={onAxisClick}>
+<ChartsContainer onAxisClick={onAxisClick}>
   {/* ... */}
   <BarPlot onItemClick={onItemClick} />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 ## Animation
@@ -266,9 +266,9 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 <BarChart skipAnimation />
 
 // For a composed chart
-<ChartContainer>
+<ChartsContainer>
   <BarPlot skipAnimation />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "BarAnimation.js"}}
@@ -292,14 +292,14 @@ The example below uses the `renderer` prop to improve performance when rendering
 
 ## Composition
 
-Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+Use the `<ChartsDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<BarPlot />` component that renders the bars and their labels.
 
 Here's how the Bar Chart is composed:
 
 ```jsx
-<ChartDataProvider>
+<ChartsDataProvider>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -314,7 +314,7 @@ Here's how the Bar Chart is composed:
     </ChartsSurface>
     <ChartsTooltip />
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 {{"demo": "BarScatterCompostion.js"}}
