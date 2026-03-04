@@ -13,7 +13,7 @@ export function createScalarFormatter(tickNumber: number, zoomScale: D3Continuou
     value: any,
     context: AxisValueFormatterContext<S>,
   ): string {
-    if (context.location === 'tick') {
+    if (context.location === 'tick' && context.scale) {
       const domain = context.scale.domain();
       const zeroSizeDomain = domain[0] === domain[1];
 

@@ -140,7 +140,7 @@ function getTickLabels(
 
     const labels = data.map((value) => {
       if (valueFormatter) {
-        return valueFormatter(value, { location: 'auto-size' });
+        return valueFormatter(value, { location: 'tick' });
       }
       return `${value}`;
     });
@@ -158,14 +158,9 @@ function getTickLabels(
 
   return valuesToMeasure.map((value) => {
     if (valueFormatter) {
-      return valueFormatter(value, {
-        location: 'auto-size',
-      });
+      return valueFormatter(value, { location: 'tick' });
     }
-    if (Number.isInteger(value)) {
-      return `${value}`;
-    }
-    return value.toFixed(2);
+    return `${value}`;
   });
 }
 
