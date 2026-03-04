@@ -17,8 +17,7 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.0.0-alpha.2`
 
-- [data grid] Fix keyboard nav with single-row checkbox selection (#21149) @mj12albert
-- [data grid][docs] Add tutorial and example app for aggregation with row grouping (DX-162) (#21102) @mapache-salvaje
+- [dataGrid] Fix keyboard nav with single-row checkbox selection (#21149) @mj12albert
 - [DataGrid] Add `checkboxColDef` prop to customize the selection column (#21331) @michelengelen
 - [DataGrid] Format pagination numbers by default (#21117) @siriwatknp
 - [DataGrid] Prevent unnecessary row selection checkbox rerendering (#21570) @arminmeh
@@ -93,11 +92,12 @@ Internal changes.
 - [docs] Add backticks and parentheses to all functions and hooks (DX-173) (#21496) @mapache-salvaje
 - [docs] Remove mentions of `mySvgRef` (#21559) @bernardobelchior
 - [docs] Update Roadmap section in the docs  (#20892) @alelthomas
-- [docs][scheduler] Add supported timezones section (#21508) @flaviendelangle
-- [docs][scheduler] Always control the events in demos without lazy loading (#21493) @flaviendelangle
-- [docs][scheduler] Remove warning saying that the package is not published (#21521) @flaviendelangle
-- [docs][scheduler] Use RRULE string format in docs instead of object format (#21510) @flaviendelangle
-- [docs][scheduler] Use the right default view for timeline `company-roadmap` dataset (#21517) @flaviendelangle
+- [docs] Add supported timezones section (#21508) @flaviendelangle
+- [docs] Always control the events in demos without lazy loading (#21493) @flaviendelangle
+- [docs] Remove warning saying that the package is not published (#21521) @flaviendelangle
+- [docs] Use RRULE string format in docs instead of object format (#21510) @flaviendelangle
+- [docs] Use the right default view for timeline `company-roadmap` dataset (#21517) @flaviendelangle
+- [docs] Add tutorial and example app for aggregation with row grouping (DX-162) (#21102) @mapache-salvaje
 
 ### Core
 
