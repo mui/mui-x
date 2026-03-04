@@ -97,7 +97,6 @@ const EventTimelinePremiumEventsSubGridWrapper = styled('div', {
   display: 'grid',
   gridTemplateRows: 'subgrid',
   gridRow: '1 / -1',
-  position: 'relative',
 });
 
 const EventTimelinePremiumEventsSubGrid = styled(TimelineGrid.SubGrid, {
@@ -107,6 +106,7 @@ const EventTimelinePremiumEventsSubGrid = styled(TimelineGrid.SubGrid, {
   display: 'grid',
   gridTemplateRows: 'subgrid',
   gridRow: '2 / -1',
+  gridColumn: 1,
 });
 
 const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelineGrid.Row, {
@@ -138,14 +138,27 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   name: 'MuiEventTimeline',
   slot: 'CurrentTimeIndicator',
 })(({ theme }) => ({
-  position: 'absolute',
-  top: 0,
-  bottom: 0,
-  left: 'calc(var(--unit-count) * var(--unit-width) * var(--x-position))',
+  gridRow: '2 / -1',
+  gridColumn: 1,
+  marginLeft: 'calc(var(--unit-count) * var(--unit-width) * var(--x-position))',
   width: 0,
   zIndex: 2,
   borderLeft: `2px solid ${theme.palette.primary.main}`,
   pointerEvents: 'none',
+  position: 'relative',
+}));
+
+const EventTimelinePremiumCurrentTimeIndicatorCircle = styled('span', {
+  name: 'MuiEventTimeline',
+  slot: 'CurrentTimeIndicatorCircle',
+})(({ theme }) => ({
+  position: 'absolute',
+  top: -3,
+  left: -5,
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.primary.main,
 }));
 
 function EventRowContent({
@@ -292,7 +305,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               <EventTimelinePremiumCurrentTimeIndicator
                 className={classes.currentTimeIndicator}
                 aria-hidden
-              />
+              >
+                <EventTimelinePremiumCurrentTimeIndicatorCircle
+                  className={classes.currentTimeIndicatorCircle}
+                />
+              </EventTimelinePremiumCurrentTimeIndicator>
             )}
           </EventTimelinePremiumEventsSubGridWrapper>
         </EventTimelinePremiumGrid>
