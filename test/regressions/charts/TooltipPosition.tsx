@@ -23,6 +23,12 @@ const barChartProps: BarChartProps = {
 };
 
 export default function TooltipPosition() {
+  const [showTooltip, setShowTooltip] = React.useState(false);
+
+  React.useEffect(() => {
+    setShowTooltip(true);
+  }, []);
+
   return (
     <div
       style={{
@@ -37,7 +43,9 @@ export default function TooltipPosition() {
           <BarChart
             {...barChartProps}
             slotProps={{ tooltip: { trigger: 'item', position } }}
-            tooltipItem={{ type: 'bar', seriesId: 'A', dataIndex: 2 }}
+            // We need to do this because there's a bug with the tooltip where the first render doesn't position the
+            // tooltip correctly, but it does on the second render.
+            tooltipItem={showTooltip ? { type: 'bar', seriesId: 'A', dataIndex: 2 } : null}
           />
         </div>
       ))}
