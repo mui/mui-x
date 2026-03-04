@@ -38,7 +38,6 @@ export default function TooltipPosition() {
             {...barChartProps}
             slotProps={{ tooltip: { trigger: 'item', position } }}
             tooltipItem={{ type: 'bar', seriesId: 'A', dataIndex: 2 }}
-            onTooltipItemChange={() => {}}
           />
         </div>
       ))}
