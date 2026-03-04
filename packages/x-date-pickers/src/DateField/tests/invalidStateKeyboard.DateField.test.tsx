@@ -16,7 +16,7 @@ describeAdapters(
       const view = renderWithProps({ enableAccessibleFieldDOMStructure: true }); // default format is numeric, e.g. MM/DD/YYYY
 
       // Make month invalid by typing "00"
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await view.user.keyboard('00');
       await view.user.tab();
 
@@ -25,13 +25,13 @@ describeAdapters(
       // Should be invalid now
       expect(inputRoot).to.have.attribute('aria-invalid', 'true');
 
-      await view.selectSectionAsync('day');
+      await view.selectSection('day');
 
       // Returns to valid after refocusing (incomplete date)
       expect(inputRoot).to.have.attribute('aria-invalid', 'false');
       await view.user.keyboard('05');
 
-      await view.selectSectionAsync('year');
+      await view.selectSection('year');
       await view.user.keyboard('2025');
 
       // Should now be invalid
@@ -49,24 +49,24 @@ describeAdapters(
     it('keeps aria-invalid=true while spinning year when month is invalid (non-accessible DOM)', async () => {
       const view = renderWithProps({ enableAccessibleFieldDOMStructure: false }); // default format is numeric, e.g. MM/DD/YYYY
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       const input = getTextbox();
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await view.user.keyboard('00');
       await view.user.tab();
 
       // Should be invalid now
       expect(input).to.have.attribute('aria-invalid', 'true');
 
-      await view.selectSectionAsync('day');
+      await view.selectSection('day');
 
       // Returns to valid after refocusing (incomplete date)
       expect(input).to.have.attribute('aria-invalid', 'false');
       await view.user.keyboard('05');
 
       // Move to year and spin using keypress
-      await view.selectSectionAsync('year');
+      await view.selectSection('year');
       await view.user.keyboard('2025');
 
       // Should now be invalid

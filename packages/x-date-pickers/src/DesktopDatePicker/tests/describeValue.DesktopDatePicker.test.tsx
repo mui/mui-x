@@ -28,7 +28,7 @@ describe('<DesktopDatePicker /> - Describe Value', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
 
       if (isOpened) {
@@ -36,7 +36,7 @@ describe('<DesktopDatePicker /> - Describe Value', () => {
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
-        selectSection('day');
+        await selectSection('day');
         pressKey(undefined, 'ArrowUp');
       }
 

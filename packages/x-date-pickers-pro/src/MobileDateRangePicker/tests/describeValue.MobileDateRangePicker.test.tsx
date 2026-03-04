@@ -4,7 +4,7 @@ import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-picke
 import {
   adapterToUse,
   createPickerRenderer,
-  openPicker,
+  openPickers,
   expectFieldValueV7,
   describeValue,
   getFieldSectionsContainer,
@@ -45,7 +45,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endFieldRoot, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false, user }) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
@@ -56,7 +56,11 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       if (!isOpened) {
-        openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
+        await openPickers(user, {
+          type: 'date-range',
+          initialFocus: 'start',
+          fieldType: 'multi-input',
+        });
       }
 
       fireEvent.click(
@@ -67,8 +71,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('[Escape]');
       }
 
       return newValue;
@@ -105,7 +108,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
@@ -125,7 +128,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
           })[0],
         );
       } else {
-        selectSection('day');
+        await selectSection('day');
         pressKey(undefined, 'ArrowUp');
       }
 

@@ -24,7 +24,7 @@ describe('<DateField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
 
         view.pressKey(2, 'ArrowUp');
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
@@ -42,7 +42,7 @@ describe('<DateField /> - Editing', () => {
           onChange: onChangeV6,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         const input = getTextbox();
         fireUserEvent.keyPress(input, { key: 'ArrowUp' });
         expectFieldValueV6(getTextbox(), '06/04/2022');
@@ -60,7 +60,7 @@ describe('<DateField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
 
         view.pressKey(2, 'ArrowUp');
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2023');
@@ -78,7 +78,7 @@ describe('<DateField /> - Editing', () => {
           onChange: onChangeV6,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         fireUserEvent.keyPress(getTextbox(), { key: 'ArrowUp' });
         expectFieldValueV6(getTextbox(), '06/04/2023');
 
@@ -96,7 +96,7 @@ describe('<DateField /> - Editing', () => {
           format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
         });
 
-        await view.selectSectionAsync('day');
+        await view.selectSection('day');
 
         view.pressKey(0, '4');
         expect(onChangeV7.callCount).to.equal(0);
@@ -121,7 +121,7 @@ describe('<DateField /> - Editing', () => {
           format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
         });
 
-        await view.selectSectionAsync('day');
+        await view.selectSection('day');
         const input = getTextbox();
 
         fireEvent.change(input, { target: { value: '4 MMMM' } }); // Press 4
@@ -161,7 +161,7 @@ describe('<DateField /> - Editing', () => {
         'ArrowRight',
       ];
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       keys.forEach((key) => {
         view.pressKey(0, key);
@@ -184,7 +184,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // v6 doesn't allow focusing on sections when disabled
       keys.forEach((key) => {
@@ -197,14 +197,13 @@ describe('<DateField /> - Editing', () => {
   });
 
   describeAdapters('Digit editing', DateField, ({ adapter, testFieldChange, renderWithProps }) => {
-    it('should set the day to the digit pressed when no digit no value is provided', () => {
+    it('should set the day to the digit pressed when no digit no value is provided', () =>
       testFieldChange({
         format: adapter.formats.dayOfMonth,
         keyStrokes: [{ value: '1', expected: '01' }],
-      });
-    });
+      }));
 
-    it('should concatenate the digit pressed to the current section value if the output is valid (digit format)', () => {
+    it('should concatenate the digit pressed to the current section value if the output is valid (digit format)', () =>
       testFieldChange({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date('2022-06-01'),
@@ -212,18 +211,16 @@ describe('<DateField /> - Editing', () => {
           { value: '1', expected: '01' },
           { value: '1', expected: '11' },
         ],
-      });
-    });
+      }));
 
-    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (digit format)', () => {
+    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (digit format)', () =>
       testFieldChange({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date('2022-06-04'),
         keyStrokes: [{ value: '1', expected: '01' }],
-      });
-    });
+      }));
 
-    it('should concatenate the digit pressed to the current section value if the output is valid (letter format)', () => {
+    it('should concatenate the digit pressed to the current section value if the output is valid (letter format)', () =>
       testFieldChange({
         format: adapter.formats.month,
         defaultValue: adapter.date('2022-02-01'),
@@ -231,18 +228,16 @@ describe('<DateField /> - Editing', () => {
           { value: '1', expected: 'January' },
           { value: '1', expected: 'November' },
         ],
-      });
-    });
+      }));
 
-    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (letter format)', () => {
+    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (letter format)', () =>
       testFieldChange({
         format: adapter.formats.month,
         defaultValue: adapter.date('2022-06-01'),
         keyStrokes: [{ value: '1', expected: 'January' }],
-      });
-    });
+      }));
 
-    it('should support 2-digits year format', () => {
+    it('should support 2-digits year format', () =>
       testFieldChange({
         // This format is not present in any of the adapter formats
         format: adapter.lib.includes('moment') || adapter.lib.includes('dayjs') ? 'YY' : 'yy',
@@ -256,10 +251,9 @@ describe('<DateField /> - Editing', () => {
           // 3rd year: 00
           { value: '0', expected: '00' },
         ],
-      });
-    });
+      }));
 
-    it('should support 2-digits year format when a value is provided', () => {
+    it('should support 2-digits year format when a value is provided', () =>
       testFieldChange({
         // This format is not present in any of the adapter formats
         format: adapter.lib.includes('moment') || adapter.lib.includes('dayjs') ? 'YY' : 'yy',
@@ -269,10 +263,9 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '22' },
           { value: '3', expected: '03' },
         ],
-      });
-    });
+      }));
 
-    it('should support 4-digits year format', () => {
+    it('should support 4-digits year format', () =>
       testFieldChange({
         format: adapter.formats.year,
         keyStrokes: [
@@ -285,10 +278,9 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '0202' },
           { value: '3', expected: '2023' },
         ],
-      });
-    });
+      }));
 
-    it('should support 4-digits year format when a value is provided', () => {
+    it('should support 4-digits year format when a value is provided', () =>
       testFieldChange({
         format: adapter.formats.year,
         defaultValue: adapter.date('2022-06-04'),
@@ -302,10 +294,9 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '0202' },
           { value: '3', expected: '2023' },
         ],
-      });
-    });
+      }));
 
-    it('should support month without trailing zeros format', () => {
+    it('should support month without trailing zeros format', () =>
       testFieldChange({
         format: 'M', // This format is not present in any of the adapter formats
         keyStrokes: [
@@ -314,11 +305,10 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '2' },
         ],
         shouldRespectLeadingZeros: true,
-      });
-    });
+      }));
 
     // Luxon doesn't have any day format with a letter suffix
-    it.skipIf(adapter.lib === 'luxon')('should support day with letter suffix', () => {
+    it.skipIf(adapter.lib === 'luxon')('should support day with letter suffix', () =>
       testFieldChange({
         format: adapter.lib === 'date-fns' ? 'do' : 'Do',
         keyStrokes: [
@@ -326,10 +316,10 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '12th' },
           { value: '2', expected: '2nd' },
         ],
-      });
-    });
+      }),
+    );
 
-    it('should respect leading zeros when shouldRespectLeadingZeros = true', () => {
+    it('should respect leading zeros when shouldRespectLeadingZeros = true', () =>
       testFieldChange({
         format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: true,
@@ -338,10 +328,9 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '12' },
           { value: '2', expected: '2' },
         ],
-      });
-    });
+      }));
 
-    it('should not respect leading zeros when shouldRespectLeadingZeros = false', () => {
+    it('should not respect leading zeros when shouldRespectLeadingZeros = false', () =>
       testFieldChange({
         format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: false,
@@ -350,8 +339,7 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '12' },
           { value: '2', expected: '02' },
         ],
-      });
-    });
+      }));
 
     it('should allow to type the date 29th of February for leap years', async () => {
       // Test with accessible DOM structure
@@ -360,7 +348,7 @@ describe('<DateField /> - Editing', () => {
         format: adapter.formats.keyboardDate,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       await view.user.keyboard('2');
       expectFieldValueV7(view.getSectionsContainer(), '02/DD/YYYY');
@@ -392,7 +380,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       await view.user.keyboard('2');
       expectFieldValueV6(input, '02/DD/YYYY');
@@ -416,28 +404,26 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, '02/29/1988');
     });
 
-    it('should not edit when props.readOnly = true and no value is provided', () => {
+    it('should not edit when props.readOnly = true and no value is provided', () =>
       testFieldChange({
         format: adapter.formats.year,
         readOnly: true,
         keyStrokes: [{ value: '1', expected: 'YYYY' }],
-      });
-    });
+      }));
 
-    it('should not edit value when props.readOnly = true and a value is provided', () => {
+    it('should not edit value when props.readOnly = true and a value is provided', () =>
       testFieldChange({
         format: adapter.formats.year,
         defaultValue: adapter.date(),
         readOnly: true,
         keyStrokes: [{ value: '1', expected: '2022' }],
-      });
-    });
+      }));
 
     it('should reset the select "all" state when typing a digit', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       // select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
         key: 'a',
@@ -454,7 +440,7 @@ describe('<DateField /> - Editing', () => {
       // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       const input = getTextbox();
       // select all sections
       fireEvent.keyDown(input, {
@@ -500,7 +486,7 @@ describe('<DateField /> - Editing', () => {
         disabled: false,
       });
 
-      await view.selectSectionAsync('year');
+      await view.selectSection('year');
 
       await view.user.keyboard('3');
       expectFieldValueV6(getTextbox(), 'MM/DD/0003');
@@ -513,22 +499,20 @@ describe('<DateField /> - Editing', () => {
     'Letter editing',
     DateField,
     ({ adapter, testFieldChange, testFieldKeyPress, renderWithProps }) => {
-      it('should select the first matching month with no previous query and no value is provided (letter format)', () => {
+      it('should select the first matching month with no previous query and no value is provided (letter format)', () =>
         testFieldChange({
           format: adapter.formats.month,
           keyStrokes: [{ value: 'm', expected: 'March' }],
-        });
-      });
+        }));
 
-      it('should select the first matching month with no previous query and a value is provided (letter format)', () => {
+      it('should select the first matching month with no previous query and a value is provided (letter format)', () =>
         testFieldChange({
           format: adapter.formats.month,
           defaultValue: adapter.date(),
           keyStrokes: [{ value: 'm', expected: 'March' }],
-        });
-      });
+        }));
 
-      it('should use the previously typed letters as long as it matches at least one month (letter format)', () => {
+      it('should use the previously typed letters as long as it matches at least one month (letter format)', () =>
         testFieldChange({
           format: adapter.formats.month,
           keyStrokes: [
@@ -541,25 +525,22 @@ describe('<DateField /> - Editing', () => {
             // Current query: "JULO" => 0 match => fallback set the query to "O"
             { value: 'o', expected: 'October' },
           ],
-        });
-      });
+        }));
 
-      it('should select the first matching month with no previous query and no value is provided (digit format)', () => {
+      it('should select the first matching month with no previous query and no value is provided (digit format)', () =>
         testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
           keyStrokes: [{ value: 'm', expected: '03' }],
-        });
-      });
+        }));
 
-      it('should select the first matching month with no previous query and a value is provided (digit format)', () => {
+      it('should select the first matching month with no previous query and a value is provided (digit format)', () =>
         testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
           defaultValue: adapter.date(),
           keyStrokes: [{ value: 'm', expected: '03' }],
-        });
-      });
+        }));
 
-      it('should use the previously typed letters as long as it matches at least one month (digit format)', () => {
+      it('should use the previously typed letters as long as it matches at least one month (digit format)', () =>
         testFieldChange({
           format: 'MM', // This format is not present in any of the adapter formats
           keyStrokes: [
@@ -572,33 +553,30 @@ describe('<DateField /> - Editing', () => {
             // Current query: "JULO" => 0 match => fallback set the query to "O"
             { value: 'o', expected: '10' },
           ],
-        });
-      });
+        }));
 
-      it('should not edit when props.readOnly = true and no value is provided (letter)', () => {
+      it('should not edit when props.readOnly = true and no value is provided (letter)', () =>
         testFieldKeyPress({
           format: adapter.formats.month,
           readOnly: true,
           key: '1',
           expectedValue: 'MMMM',
-        });
-      });
+        }));
 
-      it('should not edit value when props.readOnly = true and a value is provided (letter)', () => {
+      it('should not edit value when props.readOnly = true and a value is provided (letter)', () =>
         testFieldKeyPress({
           format: adapter.formats.month,
           defaultValue: adapter.date(),
           readOnly: true,
           key: 'd',
           expectedValue: 'June',
-        });
-      });
+        }));
 
       it('should reset the select "all" state when typing a letter', async () => {
         // Test with accessible DOM structure
         let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         // select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
           key: 'a',
@@ -615,7 +593,7 @@ describe('<DateField /> - Editing', () => {
         // Test with non-accessible DOM structure
         view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         const input = getTextbox();
         // select all sections
         fireEvent.keyDown(input, {
@@ -642,7 +620,7 @@ describe('<DateField /> - Editing', () => {
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         await view.user.keyboard('j');
         expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
 
@@ -658,7 +636,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         await view.user.keyboard('j');
         expectFieldValueV6(input, 'January YYYY');
 
@@ -674,7 +652,7 @@ describe('<DateField /> - Editing', () => {
           defaultValue: adapter.date(),
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         await view.user.keyboard('[Backspace]');
         expectFieldValueV7(view.getSectionsContainer(), 'MMMM 2022');
@@ -689,7 +667,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         await view.user.keyboard('[Backspace]');
         expectFieldValueV6(input, 'MMMM 2022');
@@ -703,7 +681,7 @@ describe('<DateField /> - Editing', () => {
           defaultValue: adapter.date(),
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
@@ -725,7 +703,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Select all sections
         fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -741,7 +719,7 @@ describe('<DateField /> - Editing', () => {
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         await view.user.keyboard('j');
         expectFieldValueV7(view.getSectionsContainer(), 'January YYYY');
 
@@ -764,7 +742,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         await view.user.keyboard('j');
         expectFieldValueV6(input, 'January YYYY');
 
@@ -775,7 +753,7 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV6(input, 'MMMM YYYY');
       });
 
-      it('should not keep query after typing again on a cleared section (Backspace)', () => {
+      it('should not keep query after typing again on a cleared section (Backspace)', () =>
         testFieldChange({
           format: adapter.formats.year,
           keyStrokes: [
@@ -783,22 +761,20 @@ describe('<DateField /> - Editing', () => {
             { value: '', expected: 'YYYY' },
             { value: '2', expected: '0002' },
           ],
-        });
-      });
+        }));
 
-      it('should not clear the sections when props.readOnly = true (Backspace)', () => {
+      it('should not clear the sections when props.readOnly = true (Backspace)', () =>
         testFieldChange({
           format: adapter.formats.year,
           defaultValue: adapter.date(),
           readOnly: true,
           keyStrokes: [{ value: '', expected: '2022' }],
-        });
-      });
+        }));
 
-      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', () => {
+      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', async () => {
         const onChange = spy();
 
-        testFieldChange({
+        await testFieldChange({
           format: adapter.formats.year,
           onChange,
           keyStrokes: [{ value: '', expected: 'YYYY' }],
@@ -818,12 +794,12 @@ describe('<DateField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         view.pressKey(0, '');
         expect(onChangeV7.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg).to.equal(null);
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         view.pressKey(1, '');
         expect(onChangeV7.callCount).to.equal(1);
 
@@ -840,7 +816,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         fireEvent.change(input, { target: { value: ' 2022' } });
         expect(onChangeV6.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg).to.equal(null);
@@ -851,10 +827,10 @@ describe('<DateField /> - Editing', () => {
         expect(onChangeV6.callCount).to.equal(1);
       });
 
-      it('should not call `onChange` if the section is already empty (Backspace)', () => {
+      it('should not call `onChange` if the section is already empty (Backspace)', async () => {
         const onChange = spy();
 
-        testFieldChange({
+        await testFieldChange({
           format: adapter.formats.year,
           defaultValue: adapter.date(),
           keyStrokes: [
@@ -937,7 +913,7 @@ describe('<DateField /> - Editing', () => {
         defaultValue: adapter.date(),
         onChange: onChangeV7,
       });
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -961,7 +937,7 @@ describe('<DateField /> - Editing', () => {
         enableAccessibleFieldDOMStructure: false,
       });
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -979,7 +955,7 @@ describe('<DateField /> - Editing', () => {
         enableAccessibleFieldDOMStructure: true,
         onChange: onChangeV7,
       });
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -1001,7 +977,7 @@ describe('<DateField /> - Editing', () => {
         enableAccessibleFieldDOMStructure: false,
       });
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -1019,7 +995,7 @@ describe('<DateField /> - Editing', () => {
         enableAccessibleFieldDOMStructure: true,
         onChange: onChangeV7,
       });
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -1039,7 +1015,7 @@ describe('<DateField /> - Editing', () => {
         enableAccessibleFieldDOMStructure: false,
       });
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -1059,7 +1035,7 @@ describe('<DateField /> - Editing', () => {
         format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
       });
 
-      await view.selectSectionAsync('year');
+      await view.selectSection('year');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -1082,7 +1058,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('year');
+      await view.selectSection('year');
 
       // Select all sections
       fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -1102,7 +1078,7 @@ describe('<DateField /> - Editing', () => {
         readOnly: true,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -1126,7 +1102,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireUserEvent.keyPress(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -1144,7 +1120,7 @@ describe('<DateField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
       await firePasteEventV7(view.getActiveSection(0), '12');
@@ -1163,7 +1139,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       expectFieldValueV6(input, 'MM/DD/YYYY');
       await firePasteEventV6(input, '12');
@@ -1182,7 +1158,7 @@ describe('<DateField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       expectFieldValueV7(view.getSectionsContainer(), '01/13/2018');
       await firePasteEventV7(view.getActiveSection(0), '12');
@@ -1202,7 +1178,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       expectFieldValueV6(input, '01/13/2018');
       await firePasteEventV6(input, '12');
@@ -1221,7 +1197,7 @@ describe('<DateField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       expectFieldValueV7(view.getSectionsContainer(), '01/13/2018');
       await firePasteEventV7(view.getActiveSection(0), 'Jun');
@@ -1240,7 +1216,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       expectFieldValueV6(input, '01/13/2018');
       await firePasteEventV6(input, 'Jun');
@@ -1255,7 +1231,7 @@ describe('<DateField /> - Editing', () => {
         defaultValue: adapter.date('2018-12-05'),
       });
 
-      await view.selectSectionAsync('day');
+      await view.selectSection('day');
 
       view.pressKey(1, '2');
       expectFieldValueV7(view.getSectionsContainer(), '12/02/2018');
@@ -1266,7 +1242,7 @@ describe('<DateField /> - Editing', () => {
       await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
       expectFieldValueV7(view.getSectionsContainer(), '09/16/2022');
 
-      await view.selectSectionAsync('day');
+      await view.selectSection('day');
 
       view.pressKey(1, '2'); // Press 2
       expectFieldValueV7(view.getSectionsContainer(), '09/02/2022'); // If internal state is not reset it would be 22 instead of 02
@@ -1280,7 +1256,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('day');
+      await view.selectSection('day');
 
       fireEvent.change(input, { target: { value: '12/2/2018' } }); // Press 2
       expectFieldValueV6(input, '12/02/2018');
@@ -1298,7 +1274,7 @@ describe('<DateField /> - Editing', () => {
         defaultValue: adapter.date('2018-12-05'),
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       view.pressKey(0, '1'); // Press 1
       expectFieldValueV7(view.getSectionsContainer(), '01/05/2018');
@@ -1306,7 +1282,7 @@ describe('<DateField /> - Editing', () => {
       await firePasteEventV7(view.getActiveSection(0), '05');
       expectFieldValueV7(view.getSectionsContainer(), '05/05/2018');
 
-      await view.selectSectionAsync('month'); // move back to month section
+      await view.selectSection('month'); // move back to month section
       view.pressKey(0, '2'); // check that the search query has been cleared after pasting
       expectFieldValueV7(view.getSectionsContainer(), '02/05/2018'); // If internal state is not reset it would be 12 instead of 02
 
@@ -1318,7 +1294,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       fireEvent.change(input, { target: { value: '1/05/2018' } }); // initiate search query on month section
       expectFieldValueV6(input, '01/05/2018');
@@ -1326,7 +1302,7 @@ describe('<DateField /> - Editing', () => {
       await firePasteEventV6(input, undefined, '05');
       expectFieldValueV6(input, '05/05/2018');
 
-      await view.selectSectionAsync('month'); // move back to month section
+      await view.selectSection('month'); // move back to month section
       fireEvent.change(input, { target: { value: '2/05/2018' } }); // check that the search query has been cleared after pasting
       expectFieldValueV6(input, '02/05/2018'); // If internal state is not reset it would be 12 instead of 02
     });
@@ -1340,7 +1316,7 @@ describe('<DateField /> - Editing', () => {
         disabled: true,
       });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -1363,7 +1339,7 @@ describe('<DateField /> - Editing', () => {
         disabled: true,
       });
       const input = getTextbox();
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await firePasteEventV6(input, '9');
 
       // v6 doesn't allow focusing on sections when disabled
@@ -1385,7 +1361,7 @@ describe('<DateField /> - Editing', () => {
           defaultValue: adapter.date('2010-04-03T03:03:03'),
           onChange: onChangeV7,
         });
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         await view.user.keyboard('{ArrowDown}');
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
 
@@ -1398,7 +1374,7 @@ describe('<DateField /> - Editing', () => {
           onChange: onChangeV6,
           enableAccessibleFieldDOMStructure: false,
         });
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         await view.user.keyboard('{ArrowDown}');
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
       });
@@ -1413,7 +1389,7 @@ describe('<DateField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         fireEvent.keyDown(view.getActiveSection(0), {
           key: 'a',
           keyCode: 65,
@@ -1421,7 +1397,7 @@ describe('<DateField /> - Editing', () => {
         });
         await view.user.keyboard('[Backspace]');
         expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         await view.user.keyboard('1');
         expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
@@ -1448,7 +1424,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         fireEvent.keyDown(input, {
           key: 'a',
           keyCode: 65,
@@ -1481,7 +1457,7 @@ describe('<DateField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         await view.user.keyboard('{ArrowDown}');
 
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
@@ -1498,7 +1474,7 @@ describe('<DateField /> - Editing', () => {
           enableAccessibleFieldDOMStructure: false,
         });
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         await view.user.keyboard('{ArrowDown}');
 
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
@@ -1515,7 +1491,7 @@ describe('<DateField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         await view.user.keyboard('{ArrowDown}');
         expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
 
@@ -1531,7 +1507,7 @@ describe('<DateField /> - Editing', () => {
           enableAccessibleFieldDOMStructure: false,
         });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         await view.user.keyboard('{ArrowDown}');
         expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
       });
@@ -1636,7 +1612,7 @@ describe('<DateField /> - Editing', () => {
         const input = getTextbox();
         const initialValueStr = input.value;
 
-        await view.selectSectionAsync('day');
+        await view.selectSection('day');
 
         // Remove the selected section
         fireEvent.change(input, { target: { value: initialValueStr.replace('23', '') } });
@@ -1662,7 +1638,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         // Remove the selected section
         fireEvent.change(input, { target: { value: ' 2022' } });
@@ -1692,7 +1668,7 @@ describe('<DateField /> - Editing', () => {
 
       view.setProps({ value: null });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       view.unmount();
@@ -1707,7 +1683,7 @@ describe('<DateField /> - Editing', () => {
 
       view.setProps({ value: null });
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       expectFieldValueV6(input, 'MM/DD/YYYY');
     });
 
@@ -1717,7 +1693,7 @@ describe('<DateField /> - Editing', () => {
         // Test with accessible DOM structure
         let view = renderWithProps({ enableAccessibleFieldDOMStructure: true, value: null });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         await view.user.keyboard('1');
         expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
@@ -1735,7 +1711,7 @@ describe('<DateField /> - Editing', () => {
         view.setProps({ value: adapter.date('2022-11-23') });
         view.setProps({ value: null });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         await view.user.keyboard('1');
         expectFieldValueV7(view.getSectionsContainer(), '01/DD/YYYY');
@@ -1752,7 +1728,7 @@ describe('<DateField /> - Editing', () => {
         view = renderWithProps({ enableAccessibleFieldDOMStructure: false, value: null });
 
         const input = getTextbox();
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         await view.user.keyboard('1');
         expectFieldValueV6(input, '01/DD/YYYY');
@@ -1770,7 +1746,7 @@ describe('<DateField /> - Editing', () => {
         view.setProps({ value: adapter.date('2022-11-23') });
         view.setProps({ value: null });
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
 
         await view.user.keyboard('1');
         expectFieldValueV6(input, '01/DD/YYYY');
@@ -1788,7 +1764,7 @@ describe('<DateField /> - Editing', () => {
     it('should edit the 1st section when all sections are selected', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -1806,7 +1782,7 @@ describe('<DateField /> - Editing', () => {
 
       // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       const input = getTextbox();
 
       // Select all sections

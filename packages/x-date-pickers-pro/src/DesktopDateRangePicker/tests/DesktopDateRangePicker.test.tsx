@@ -11,7 +11,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   AdapterClassToUse,
-  openPickerAsync,
+  openPickers,
   getFieldSectionsContainer,
   getTextbox,
 } from 'test/utils/pickers';
@@ -33,14 +33,14 @@ describe('<DesktopDateRangePicker />', () => {
       />,
     );
 
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: 'date-range',
       initialFocus: 'start',
       fieldType: 'multi-input',
     });
     expect(screen.getByText('May 2019')).toBeVisible();
 
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: 'date-range',
       initialFocus: 'end',
       fieldType: 'multi-input',
@@ -48,7 +48,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByText('October 2019')).toBeVisible();
 
     // scroll back
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: 'date-range',
       initialFocus: 'start',
       fieldType: 'multi-input',
@@ -61,7 +61,7 @@ describe('<DesktopDateRangePicker />', () => {
       <DesktopDateRangePicker defaultValue={[new Date(NaN), adapterToUse.date('2019-01-31')]} />,
     );
 
-    await openPickerAsync(user, {
+    await openPickers(user, {
       type: 'date-range',
       initialFocus: 'start',
       fieldType: 'single-input',
@@ -167,7 +167,7 @@ describe('<DesktopDateRangePicker />', () => {
         <DesktopDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'multi-input',
@@ -184,7 +184,7 @@ describe('<DesktopDateRangePicker />', () => {
         <DesktopDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'end',
         fieldType: 'multi-input',
@@ -248,7 +248,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'multi-input',
@@ -295,7 +295,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'end',
         fieldType: 'multi-input',
@@ -333,7 +333,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'end',
         fieldType: 'multi-input',
@@ -364,7 +364,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -399,7 +399,7 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'multi-input',
@@ -437,7 +437,7 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'multi-input',
@@ -502,7 +502,7 @@ describe('<DesktopDateRangePicker />', () => {
           </React.Fragment>,
         );
 
-        await openPickerAsync(user, {
+        await openPickers(user, {
           type: 'date-range',
           initialFocus: 'start',
           fieldType: 'multi-input',
@@ -541,7 +541,7 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'multi-input',
@@ -582,7 +582,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -612,7 +612,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -648,14 +648,14 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker (already tested)
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'multi-input',
       });
 
       // Switch to end date
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'end',
         fieldType: 'multi-input',
@@ -681,14 +681,14 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker (already tested)
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'end',
         fieldType: 'multi-input',
       });
 
       // Switch to start date
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'multi-input',
@@ -706,7 +706,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -728,7 +728,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the disablePast prop', async () => {
       const { user } = render(<DesktopDateRangePicker disablePast />);
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -744,7 +744,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the disableFuture prop', async () => {
       const { user } = render(<DesktopDateRangePicker disableFuture />);
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -760,7 +760,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the minDate prop', async () => {
       const { user } = render(<DesktopDateRangePicker minDate={adapterToUse.date('2018-01-15')} />);
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -776,7 +776,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the maxDate prop', async () => {
       const { user } = render(<DesktopDateRangePicker maxDate={adapterToUse.date('2018-01-15')} />);
 
-      await openPickerAsync(user, {
+      await openPickers(user, {
         type: 'date-range',
         initialFocus: 'start',
         fieldType: 'single-input',

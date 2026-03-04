@@ -5,7 +5,7 @@ import {
   adapterToUse,
   expectFieldValueV7,
   describeValue,
-  openPicker,
+  openPickers,
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
@@ -44,9 +44,12 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false, closeMobilePicker }) => {
+    setNewValue: async (
+      value,
+      { isOpened, applySameValue, setEndDate = false, closeMobilePicker, user },
+    ) => {
       if (!isOpened) {
-        openPicker({
+        await openPickers(user, {
           type: 'time-range',
           initialFocus: setEndDate ? 'end' : 'start',
           fieldType: 'single-input',
@@ -85,8 +88,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
         if (setEndDate) {
           fireEvent.click(screen.getByRole('button', { name: /ok/i }));
         } else {
-          // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-          fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+          await user.keyboard('[Escape]');
         }
       }
 

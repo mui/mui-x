@@ -40,15 +40,11 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
     },
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
     /**
-     * @deprecated use `selectSectionAsync` instead.
-     */
-    selectSection: FieldSectionSelector;
-    /**
      * Helper that simplifies selecting a section of the date field.
      * @param {FieldSectionType | undefined} selectedSection The requested section to select.
      * @param {'first' | 'last'} index The index of the section to select.
      */
-    selectSectionAsync: FieldSectionSelectorAsync;
+    selectSection: FieldSectionSelectorAsync;
     getSectionsContainer: () => HTMLDivElement;
     /**
      * Returns the contentEditable DOM node of the requested section.
@@ -76,14 +72,14 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
       expectedValue: string;
       selectedSection?: FieldSectionType;
     },
-  ) => void;
+  ) => Promise<void>;
   testFieldChange: (
     params: P & {
       keyStrokes: { value: string; expected: string }[];
       selectedSection?: FieldSectionType;
       skipV7?: boolean;
     },
-  ) => void;
+  ) => Promise<void>;
 }
 
 const RTL_THEME = createTheme({
@@ -161,35 +157,7 @@ export const buildFieldInteractions = <P extends {}>({
         `.${pickersSectionListClasses.section}[data-sectionindex="${sectionIndex}"] .${pickersSectionListClasses.sectionContent}`,
       )!;
 
-    const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
-      let sectionIndexToSelect: number;
-      if (selectedSection === undefined) {
-        sectionIndexToSelect = 0;
-      } else {
-        const sections = fieldRef.current!.getSections();
-        sectionIndexToSelect = sections[index === 'first' ? 'findIndex' : 'findLastIndex'](
-          (section) => section.type === selectedSection,
-        );
-      }
-
-      act(() => {
-        fieldRef.current!.setSelectedSections(sectionIndexToSelect);
-        if (!props.enableAccessibleFieldDOMStructure) {
-          getTextbox().focus();
-        }
-      });
-
-      act(() => {
-        if (props.enableAccessibleFieldDOMStructure) {
-          getSection(sectionIndexToSelect).focus();
-        }
-      });
-    };
-
-    const selectSectionAsync: FieldSectionSelectorAsync = async (
-      selectedSection,
-      index = 'first',
-    ) => {
+    const selectSection: FieldSectionSelectorAsync = async (selectedSection, index = 'first') => {
       let sectionIndexToSelect: number;
       if (selectedSection === undefined) {
         sectionIndexToSelect = 0;
@@ -257,7 +225,6 @@ export const buildFieldInteractions = <P extends {}>({
 
     return {
       selectSection,
-      selectSectionAsync,
       getActiveSection,
       getSection,
       pressKey,
@@ -267,7 +234,7 @@ export const buildFieldInteractions = <P extends {}>({
     };
   };
 
-  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = ({
+  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = async ({
     key,
     expectedValue,
     selectedSection,
@@ -278,7 +245,7 @@ export const buildFieldInteractions = <P extends {}>({
       ...props,
       enableAccessibleFieldDOMStructure: true,
     } as any);
-    v7Response.selectSection(selectedSection);
+    await v7Response.selectSection(selectedSection);
     v7Response.pressKey(undefined, key);
     expectFieldValueV7(v7Response.getSectionsContainer(), expectedValue);
     v7Response.unmount();
@@ -288,14 +255,14 @@ export const buildFieldInteractions = <P extends {}>({
       ...props,
       enableAccessibleFieldDOMStructure: false,
     } as any);
-    v6Response.selectSection(selectedSection);
+    await v6Response.selectSection(selectedSection);
     const input = getTextbox();
     fireUserEvent.keyPress(input, { key });
     expectFieldValueV6(input, expectedValue);
     v6Response.unmount();
   };
 
-  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
+  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = async ({
     keyStrokes,
     selectedSection,
     ...props
@@ -305,7 +272,7 @@ export const buildFieldInteractions = <P extends {}>({
       ...props,
       enableAccessibleFieldDOMStructure: true,
     } as any);
-    v7Response.selectSection(selectedSection);
+    await v7Response.selectSection(selectedSection);
     keyStrokes.forEach((keyStroke) => {
       v7Response.pressKey(undefined, keyStroke.value);
       expectFieldValueV7(
@@ -321,7 +288,7 @@ export const buildFieldInteractions = <P extends {}>({
       ...props,
       enableAccessibleFieldDOMStructure: false,
     } as any);
-    v6Response.selectSection(selectedSection);
+    await v6Response.selectSection(selectedSection);
     const input = getTextbox();
 
     keyStrokes.forEach((keyStroke) => {
