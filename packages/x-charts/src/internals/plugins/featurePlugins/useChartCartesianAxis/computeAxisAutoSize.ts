@@ -9,6 +9,7 @@ import type { ChartsTextStyle } from '../../../getWordsByLines';
 import { deg2rad } from '../../../angleConversion';
 import { getGraphemeCount } from '../../../getGraphemeCount';
 import { getScale } from '../../../getScale';
+import { scaleBand, scalePoint } from '../../../scales';
 import {
   AXIS_AUTO_SIZE_PADDING,
   AXIS_AUTO_SIZE_MIN,
@@ -144,11 +145,16 @@ function getTickLabels(
       return [];
     }
 
+    const scale =
+      scaleType === 'band'
+        ? scaleBand(data, [0, 1])
+        : scalePoint(data, [0, 1]);
+
     const labels = data.map((value) => {
       if (valueFormatter) {
         return valueFormatter(value, {
           location: 'tick',
-          scale: {} as any,
+          scale,
           defaultTickLabel: `${value}`,
         });
       }
