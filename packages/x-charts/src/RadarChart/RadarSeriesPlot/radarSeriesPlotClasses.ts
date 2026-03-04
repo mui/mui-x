@@ -37,7 +37,7 @@ const slotNames = [
 
 export const radarSeriesPlotClasses = generateUtilityClasses('MuiRadarSeriesPlot', slotNames);
 
-export const useUtilityClasses = (classes?: Partial<RadarSeriesPlotClasses>) => {
+export const useUtilityClasses = (classes?: Partial<RadarSeriesPlotClasses>): Record<RadarSeriesPlotClassKey, string> => {
   const slots = Object.fromEntries(Object.keys(radarSeriesPlotClasses).map((key) => [key, [key]]));
 
   return composeClasses(slots, getRadarSeriesPlotUtilityClass, classes);
