@@ -22,6 +22,14 @@ export function OHLCTooltipContent(
     return null;
   }
 
+  /* This can only happen if the series is a radar series, but this is a candlestick tooltip, so in
+   * practice this will never happen.
+   * We can remove this if/when we fix the multiples values in an item tooltip introduced with the
+   * radar chart. */
+  if (typeof item.value === 'number') {
+    return null;
+  }
+
   const [open, high, low, close] = item.value;
 
   return (
