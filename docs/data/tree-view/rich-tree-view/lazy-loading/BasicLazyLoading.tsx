@@ -9,6 +9,7 @@ import {
   randomBoolean,
 } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
+
 type ItemType = {
   id: string;
   label: string;
