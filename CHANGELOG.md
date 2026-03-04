@@ -6,7 +6,9 @@ _Mar 4, 2026_
 
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- ✅ Stabilize Sankey chart
+- 🐞 Bugfixes and internal improvements
+
 
 The following team members contributed to this release:
 @aemartos, @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @rita-codes, @siriwatknp
