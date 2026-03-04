@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { it } from 'vitest';
-import { createRoot } from 'react-dom/client'; // aliased to react-dom/profiling by Vite
-import { flushSync } from 'react-dom';
+import * as ReactDOMClient from 'react-dom/client'; // aliased to react-dom/profiling by Vite
+import * as ReactDOM from 'react-dom';
 import { BenchProfiler, RenderEvent } from './Profiler';
 
 // Double GC: the first pass collects garbage, the second catches weak refs
@@ -55,8 +55,8 @@ export function benchmark(
       const captures: RenderEvent[] = [];
       const container = document.createElement('div');
       document.body.appendChild(container);
-      const root = createRoot(container);
-      flushSync(() => {
+      const root = ReactDOMClient.createRoot(container);
+      ReactDOM.flushSync(() => {
         root.render(<BenchProfiler captures={captures}>{element}</BenchProfiler>);
       });
       if (interaction) {

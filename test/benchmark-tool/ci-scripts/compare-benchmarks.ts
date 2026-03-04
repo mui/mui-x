@@ -1,7 +1,12 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { Octokit } from '@octokit/rest';
+import { retry } from '@octokit/plugin-retry';
 import { cyan, dim, fileUrl, green, indent, red } from '../utils/log';
 import type { AggregatedResults, ComparisonResult, FailedBenchmark } from './types';
+
+// @ts-ignore
+const MyOctokit = Octokit.plugin(retry);
 
 function calculateDiffPercent(diff: number, masterDuration: number, prDuration: number): number {
   if (masterDuration > 0) {
@@ -107,49 +112,32 @@ const DATA_REPO_BASE = 'https://raw.githubusercontent.com/mui/mui-x/test-results
 
 const COMMENT_MARKER = '## Performance Comparison';
 
-interface GitHubComment {
-  id: number;
-  body: string;
-  user: { type: string };
-}
-
-async function githubApi(endpoint: string, options: RequestInit = {}): Promise<Response> {
-  return fetch(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}${endpoint}`, {
-    ...options,
-    headers: {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-      'X-GitHub-Api-Version': '2022-11-28',
-      ...options.headers,
-    },
-  });
-}
-
 async function postOrUpdateComment(prNumber: number, body: string): Promise<void> {
-  let existing: GitHubComment | undefined;
-  let page = 1;
+  const octokit = new MyOctokit({ auth: process.env.GITHUB_TOKEN });
+  const [owner, repo] = (process.env.GITHUB_REPOSITORY ?? '').split('/');
 
-  while (!existing) {
-    const response = await githubApi(`/issues/${prNumber}/comments?per_page=100&page=${page}`);
-    const comments = (await response.json()) as GitHubComment[];
+  const comments = await octokit.paginate(octokit.rest.issues.listComments, {
+    owner,
+    repo,
+    issue_number: prNumber,
+    per_page: 100,
+  });
 
-    existing = comments.find((c) => c.user.type === 'Bot' && c.body.includes(COMMENT_MARKER));
-
-    if (comments.length < 100) {
-      break;
-    }
-    page += 1;
-  }
+  const existing = comments.find((c) => c.user?.type === 'Bot' && c.body?.includes(COMMENT_MARKER));
 
   if (existing) {
-    await githubApi(`/issues/comments/${existing.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ body }),
+    await octokit.rest.issues.updateComment({
+      owner,
+      repo,
+      comment_id: existing.id,
+      body,
     });
   } else {
-    await githubApi(`/issues/${prNumber}/comments`, {
-      method: 'POST',
-      body: JSON.stringify({ body }),
+    await octokit.rest.issues.createComment({
+      owner,
+      repo,
+      issue_number: prNumber,
+      body,
     });
   }
 }
