@@ -1,9 +1,11 @@
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { Store, useStore } from '@base-ui/utils/store';
 import { RenderDragPreviewParameters } from '@mui/x-scheduler-headless/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
+import { EventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const EventDragPreviewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -24,11 +26,19 @@ const fakeStore = {
 
 export function EventDragPreview(props: RenderDragPreviewParameters) {
   const store = useSchedulerStoreContext(true);
+  const styledContext = React.useContext(EventCalendarStyledContext);
   const color = useStore(
     store ?? fakeStore,
     store ? schedulerEventSelectors.color : () => 'teal' as const,
     props.data.id,
   );
 
-  return <EventDragPreviewRoot data-palette={color}>{props.data.title}</EventDragPreviewRoot>;
+  return (
+    <EventDragPreviewRoot
+      className={styledContext?.classes.eventDragPreview}
+      data-palette={color}
+    >
+      {props.data.title}
+    </EventDragPreviewRoot>
+  );
 }
