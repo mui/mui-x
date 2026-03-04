@@ -19,24 +19,20 @@ export function getSankeyPlotUtilityClass(slot: string) {
   return generateUtilityClass('MuiSankeyChart', slot);
 }
 
-export const sankeyPlotClasses: SankeyPlotClasses = generateUtilityClasses('MuiSankeyChart', [
+const slotNames = [
   'root',
   'nodes',
   'nodeLabels',
   'links',
   'linkLabels',
-]);
+] as (keyof SankeyPlotClasses)[];
+
+export const sankeyPlotClasses: SankeyPlotClasses = generateUtilityClasses('MuiSankeyChart', slotNames);
 
 export const useUtilityClasses = (ownerState: { classes?: Partial<SankeyPlotClasses> }) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['root'],
-    nodes: ['nodes'],
-    nodeLabels: ['nodeLabels'],
-    links: ['links'],
-    linkLabels: ['linkLabels'],
-  };
+  const slots = Object.fromEntries(Object.keys(sankeyPlotClasses).map((key) => [key, [key]]));
 
   return composeClasses(slots, getSankeyPlotUtilityClass, classes);
 };

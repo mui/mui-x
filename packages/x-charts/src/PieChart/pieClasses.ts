@@ -17,18 +17,16 @@ export function getPieUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieChart', slot);
 }
 
-export const pieClasses: PieClasses = generateUtilityClasses('MuiPieChart', [
+const slotNames = [
   'root',
   'series',
   'seriesLabels',
-]);
+] as (keyof PieClasses)[];
+
+export const pieClasses: PieClasses = generateUtilityClasses('MuiPieChart', slotNames);
 
 export const useUtilityClasses = (classes?: Partial<PieClasses>) => {
-  const slots = {
-    root: ['root'],
-    series: ['series'],
-    seriesLabels: ['seriesLabels'],
-  };
+  const slots = Object.fromEntries(Object.keys(pieClasses).map((key) => [key, [key]]));
 
   return composeClasses(slots, getPieUtilityClass, classes);
 };

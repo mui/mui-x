@@ -17,18 +17,16 @@ export function getRangeBarUtilityClass(slot: string) {
   return generateUtilityClass('MuiRangeBar', slot);
 }
 
-export const rangeBarClasses: RangeBarClasses = generateUtilityClasses('MuiRangeBar', [
+const slotNames = [
   'root',
   'series',
   'seriesLabels',
-]);
+] as (keyof RangeBarClasses)[];
+
+export const rangeBarClasses: RangeBarClasses = generateUtilityClasses('MuiRangeBar', slotNames);
 
 export const useUtilityClasses = (classes?: Partial<RangeBarClasses>) => {
-  const slots = {
-    root: ['root'],
-    series: ['series'],
-    seriesLabels: ['seriesLabels'],
-  };
+  const slots = Object.fromEntries(Object.keys(rangeBarClasses).map((key) => [key, [key]]));
 
   return composeClasses(slots, getRangeBarUtilityClass, classes);
 };

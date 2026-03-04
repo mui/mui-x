@@ -17,18 +17,16 @@ export function getBarUtilityClass(slot: string) {
   return generateUtilityClass('MuiBarChart', slot);
 }
 
-export const barClasses: BarClasses = generateUtilityClasses('MuiBarChart', [
+const slotNames = [
   'root',
   'series',
   'seriesLabels',
-]);
+] as (keyof BarClasses)[];
+
+export const barClasses: BarClasses = generateUtilityClasses('MuiBarChart', slotNames);
 
 export const useUtilityClasses = (classes?: Partial<BarClasses>) => {
-  const slots = {
-    root: ['root'],
-    series: ['series'],
-    seriesLabels: ['seriesLabels'],
-  };
+  const slots = Object.fromEntries(Object.keys(barClasses).map((key) => [key, [key]]));
 
   return composeClasses(slots, getBarUtilityClass, classes);
 };

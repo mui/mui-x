@@ -16,18 +16,17 @@ export type RadarAxisClassKey = keyof RadarAxisClasses;
 export function getRadarAxisUtilityClass(slot: string) {
   return generateUtilityClass('MuiRadarAxis', slot);
 }
-export const chartsAxisClasses: RadarAxisClasses = generateUtilityClasses('MuiRadarAxis', [
+
+const slotNames = [
   'root',
   'line',
   'label',
-]);
+] as (keyof RadarAxisClasses)[];
+
+export const chartsAxisClasses: RadarAxisClasses = generateUtilityClasses('MuiRadarAxis', slotNames);
 
 export const useUtilityClasses = (classes?: Partial<RadarAxisClasses>) => {
-  const slots = {
-    root: ['root'],
-    line: ['line'],
-    label: ['label'],
-  };
+  const slots = Object.fromEntries(Object.keys(chartsAxisClasses).map((key) => [key, [key]]));
 
   return composeClasses(slots, getRadarAxisUtilityClass, classes);
 };

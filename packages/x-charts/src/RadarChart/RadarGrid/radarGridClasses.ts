@@ -16,18 +16,17 @@ export type RadarGridClassKey = keyof RadarGridClasses;
 export function getRadarGridUtilityClass(slot: string) {
   return generateUtilityClass('MuiRadarGrid', slot);
 }
-export const chartsGridClasses: RadarGridClasses = generateUtilityClasses('MuiRadarGrid', [
+
+const slotNames = [
   'radial',
   'divider',
   'stripe',
-]);
+] as (keyof RadarGridClasses)[];
+
+export const chartsGridClasses: RadarGridClasses = generateUtilityClasses('MuiRadarGrid', slotNames);
 
 export const useUtilityClasses = (classes?: Partial<RadarGridClasses>) => {
-  const slots = {
-    radial: ['radial'],
-    divider: ['divider'],
-    stripe: ['stripe'],
-  };
+  const slots = Object.fromEntries(Object.keys(chartsGridClasses).map((key) => [key, [key]]));
 
   return composeClasses(slots, getRadarGridUtilityClass, classes);
 };

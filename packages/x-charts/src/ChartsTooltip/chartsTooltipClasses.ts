@@ -34,35 +34,27 @@ export type ChartsTooltipClassKey = keyof Omit<
 export function getChartsTooltipUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsTooltip', slot);
 }
+
+const slotNames = [
+  'root',
+  'paper',
+  'table',
+  'row',
+  'cell',
+  'mark',
+  'markContainer',
+  'labelCell',
+  'valueCell',
+  'axisValueCell',
+] as (keyof ChartsTooltipClasses)[];
+
 export const chartsTooltipClasses: ChartsTooltipClasses = generateUtilityClasses(
   'MuiChartsTooltip',
-  [
-    'root',
-    'paper',
-    'table',
-    'row',
-    'cell',
-    'mark',
-    'markContainer',
-    'labelCell',
-    'valueCell',
-    'axisValueCell',
-  ],
+  slotNames,
 );
 
 export const useUtilityClasses = (classes?: Partial<ChartsTooltipClasses>) => {
-  const slots = {
-    root: ['root'],
-    paper: ['paper'],
-    table: ['table'],
-    row: ['row'],
-    cell: ['cell'],
-    mark: ['mark'],
-    markContainer: ['markContainer'],
-    labelCell: ['labelCell'],
-    valueCell: ['valueCell'],
-    axisValueCell: ['axisValueCell'],
-  };
+  const slots = Object.fromEntries(Object.keys(chartsTooltipClasses).map((key) => [key, [key]]));
 
   return composeClasses(slots, getChartsTooltipUtilityClass, classes);
 };

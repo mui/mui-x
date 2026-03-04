@@ -27,22 +27,18 @@ export function getRadarSeriesPlotUtilityClass(slot: string) {
   return generateUtilityClass('MuiRadarSeriesPlot', slot);
 }
 
-export const radarSeriesPlotClasses = generateUtilityClasses('MuiRadarSeriesPlot', [
+const slotNames = [
   'root',
   'area',
   'mark',
   'highlighted',
   'faded',
-]);
+] as (keyof RadarSeriesPlotClasses)[];
+
+export const radarSeriesPlotClasses = generateUtilityClasses('MuiRadarSeriesPlot', slotNames);
 
 export const useUtilityClasses = (classes?: Partial<RadarSeriesPlotClasses>) => {
-  const slots = {
-    root: ['root'],
-    area: ['area'],
-    mark: ['mark'],
-    highlighted: ['highlighted'],
-    faded: ['faded'],
-  };
+  const slots = Object.fromEntries(Object.keys(radarSeriesPlotClasses).map((key) => [key, [key]]));
 
   return composeClasses(slots, getRadarSeriesPlotUtilityClass, classes);
 };
