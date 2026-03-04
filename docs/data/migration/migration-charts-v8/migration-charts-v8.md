@@ -43,6 +43,13 @@ The `Chart` prefix has been renamed to `Charts` (with an S) to align with other 
 | `ChartContainerProSlotProps`           | `ChartsContainerProSlotProps`           |
 | `useChartContainerProProps()`          | `useChartsContainerProProps()`          |
 | `UseChartContainerProPropsReturnValue` | `UseChartsContainerProPropsReturnValue` |
+| `ChartZoomSlider`                      | `ChartsZoomSlider`                      |
+| `ChartAxisZoomSliderThumbClasses`      | `ChartsAxisZoomSliderThumbClasses`      |
+| `ChartAxisZoomSliderThumbClassKey`     | `ChartsAxisZoomSliderThumbClassKey`     |
+| `chartAxisZoomSliderThumbClasses`      | `chartsAxisZoomSliderThumbClasses`      |
+| `ChartAxisZoomSliderTrackClasses`      | `ChartsAxisZoomSliderTrackClasses`      |
+| `ChartAxisZoomSliderTrackClassKey`     | `ChartsAxisZoomSliderTrackClassKey`     |
+| `chartAxisZoomSliderTrackClasses`      | `chartsAxisZoomSliderTrackClasses`      |
 
 ### CSS class deprecations (`highlighted` / `faded`)
 

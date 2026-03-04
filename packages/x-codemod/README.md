@@ -98,6 +98,7 @@ The list includes these transformers
 - [`rename-chart-api-import`](#rename-chart-api-import)
 - [`rename-id-to-series-id`](#rename-id-to-series-id)
 - [`replace-show-mark-default`](#replace-show-mark-default)
+- [`rename-chart-zoom-slider`](#rename-chart-zoom-slider)
 
 ### `replace-heatmap-hide-legend-false`
 
@@ -175,6 +176,18 @@ Add `showMark: true` to line series when not defined to keep the same default be
 + <LineChart series={[{ data: [/* ... */] showMark: true }]} />
 - <ChartDataProvider series={[{ type: 'line', data: [/* ... */] }]} />
 + <ChartDataProvider series={[{ type: 'line', data: [/* ... */] showMark: true }]} />
+```
+
+#### `rename-chart-zoom-slider`
+
+Renames the `ChartZoomSlider` component and related exports to `ChartsZoomSlider` (with an S) to align with other components.
+
+```diff
+-import { ChartZoomSlider } from '@mui/x-charts-pro';
++import { ChartsZoomSlider } from '@mui/x-charts-pro';
+
+-import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
++import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 ```
 
 ## v8.0.0
