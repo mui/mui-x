@@ -147,7 +147,7 @@ If you were using these classes to style the Tree Item, update your CSS selector
  });
 ```
 
-If you were using the global CSS class names directly (e.g., `Mui-expanded`, `Mui-selected`), replace them with data attribute selectors:
+If you were using the global CSS class names directly (for example, `Mui-expanded`, `Mui-selected`), replace them with data attribute selectors:
 
 ```diff
  const StyledTreeItem = styled(TreeItem)({
