@@ -23,17 +23,16 @@ import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import { useTreeItemModel } from '@mui/x-tree-view/hooks';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-
 type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
 
 type ExtendedTreeItemProps = {
   fileType?: FileType;
   id: string;
   label: string;
+  children?: ExtendedTreeItemProps[];
 };
 
-const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
+const ITEMS: ExtendedTreeItemProps[] = [
   {
     id: '1',
     label: 'Documents',

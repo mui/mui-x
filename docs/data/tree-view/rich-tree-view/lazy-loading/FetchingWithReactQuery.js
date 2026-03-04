@@ -5,7 +5,6 @@ import {
   randomId,
   randomBoolean,
 } from '@mui/x-data-grid-generator';
-
 import {
   QueryClient,
   QueryClientProvider,

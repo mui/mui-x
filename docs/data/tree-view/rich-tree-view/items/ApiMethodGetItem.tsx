@@ -3,10 +3,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -38,7 +38,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 
 export default function ApiMethodGetItem() {
   const apiRef = useRichTreeViewApiRef();
-  const [selectedItem, setSelectedItem] = React.useState<TreeViewBaseItem | null>(
+  const [selectedItem, setSelectedItem] = React.useState<TreeViewDefaultItemModelProperties | null>(
     null,
   );
 

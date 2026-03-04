@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import {
   ThemeOptions,
@@ -189,10 +188,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
       <CustomTreeItemRoot
         {...getRootProps({
           ...other,
-          className: clsx(treeItemClasses.root, {
-            'Mui-selected': status.selected,
-            'Mui-disabled': status.disabled,
-          }),
+          className: treeItemClasses.root,
         })}
       >
         <CustomTreeItemContent {...getContentProps({ corner, density })}>

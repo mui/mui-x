@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-
 import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
   TreeItemContent,
