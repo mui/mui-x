@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { Store, useStore } from '@base-ui/utils/store';
@@ -34,10 +35,7 @@ export function EventDragPreview(props: RenderDragPreviewParameters) {
   );
 
   return (
-    <EventDragPreviewRoot
-      className={styledContext?.classes.eventDragPreview}
-      data-palette={color}
-    >
+    <EventDragPreviewRoot className={styledContext?.classes.eventDragPreview} data-palette={color}>
       {props.data.title}
     </EventDragPreviewRoot>
   );
