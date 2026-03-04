@@ -77,8 +77,7 @@ export function ChartsAxisZoomSliderActiveTrack({
   onPointerEnter,
   onPointerLeave,
 }: ChartsAxisZoomSliderActiveTrackProps) {
-  const { instance } = useChartContext<[UseChartProZoomSignature]>();
-  const { chartsLayerContainerRef } = instance;
+  const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
   const axis = store.use(selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
