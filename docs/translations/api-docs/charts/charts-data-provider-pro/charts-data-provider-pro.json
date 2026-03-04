@@ -30,5 +30,17 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "baseButton": "",
+    "baseDivider": "",
+    "baseIconButton": "",
+    "baseMenuItem": "",
+    "baseMenuList": "",
+    "basePopper": "",
+    "baseTooltip": "",
+    "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
+    "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
+    "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
+  }
 }

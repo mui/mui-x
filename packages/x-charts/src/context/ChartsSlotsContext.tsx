@@ -16,7 +16,7 @@ export interface ChartsSlotsContextValue<
 export const ChartsSlotsContext = React.createContext<ChartsSlotsContextValue | null>(null);
 
 /**
- * Get the slots and slotProps from the nearest `ChartDataProvider` or `ChartDataProviderPro`.
+ * Get the slots and slotProps from the nearest `ChartsDataProvider` or `ChartsDataProviderPro`.
  * @returns {ChartsSlotsContextValue} The slots and slotProps from the context.
  */
 export function useChartsSlots<
