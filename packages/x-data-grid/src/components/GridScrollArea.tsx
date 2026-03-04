@@ -52,19 +52,36 @@ const GridScrollAreaRawRoot = styled('div', {
     const { ownerState } = props;
     return [styles.scrollArea, styles[`scrollArea--${ownerState.scrollDirection}`]];
   },
-})<{ ownerState: OwnerState }>(() => {
-  return {
-    position: 'absolute',
-    zIndex: 101,
-    inset: 0,
-    // Horizontal scroll areas
-    [`&.${gridClasses['scrollArea--left']}`]: { right: 'unset', width: 20 },
-    [`&.${gridClasses['scrollArea--right']}`]: { left: 'unset', width: 20 },
-    // Vertical scroll areas
-    [`&.${gridClasses['scrollArea--up']}`]: { bottom: 'unset', height: 20 },
-    [`&.${gridClasses['scrollArea--down']}`]: { top: 'unset', height: 20 },
-  };
-});
+})<{ ownerState: OwnerState }>(() => ({
+  position: 'absolute',
+  zIndex: 101,
+  // Horizontal scroll areas
+  [`&.${gridClasses['scrollArea--left']}`]: {
+    top: 0,
+    left: 0,
+    width: 20,
+    bottom: 0,
+  },
+  [`&.${gridClasses['scrollArea--right']}`]: {
+    top: 0,
+    right: 0,
+    width: 20,
+    bottom: 0,
+  },
+  // Vertical scroll areas
+  [`&.${gridClasses['scrollArea--up']}`]: {
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 20,
+  },
+  [`&.${gridClasses['scrollArea--down']}`]: {
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 20,
+  },
+}));
 
 const offsetSelector = createSelector(
   gridDimensionsSelector,
