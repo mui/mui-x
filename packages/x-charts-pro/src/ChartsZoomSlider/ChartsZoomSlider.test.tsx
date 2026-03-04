@@ -4,8 +4,8 @@ import { createRenderer, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 import { LineChartPro, type LineChartProProps } from '../LineChartPro/LineChartPro';
-import { chartAxisZoomSliderThumbClasses } from './internals/chartAxisZoomSliderThumbClasses';
-import { chartAxisZoomSliderTrackClasses } from './internals/chartAxisZoomSliderTrackClasses';
+import { chartsAxisZoomSliderThumbClasses } from './internals/chartsAxisZoomSliderThumbClasses';
+import { chartsAxisZoomSliderTrackClasses } from './internals/chartsAxisZoomSliderTrackClasses';
 
 const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
   const axisData = Array.from(
@@ -19,7 +19,7 @@ const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
   return axisData as string[];
 };
 
-describe.skipIf(isJSDOM)('<ChartZoomSlider />', () => {
+describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
   const { render } = createRenderer();
 
   const lineChartProps: LineChartProProps = {
@@ -68,7 +68,7 @@ describe.skipIf(isJSDOM)('<ChartZoomSlider />', () => {
     expect(getAxisTickValues('x')).to.deep.equal(['C', 'D']);
 
     // Get the zoom slider thumb elements
-    const sliderTrack = document.querySelector(`.${chartAxisZoomSliderTrackClasses.active}`)!;
+    const sliderTrack = document.querySelector(`.${chartsAxisZoomSliderTrackClasses.active}`)!;
 
     await user.pointer([
       {
@@ -103,8 +103,8 @@ describe.skipIf(isJSDOM)('<ChartZoomSlider />', () => {
     expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
     // Find the slider elements
-    const startThumb = document.querySelector(`.${chartAxisZoomSliderThumbClasses.start}`)!;
-    const endThumb = document.querySelector(`.${chartAxisZoomSliderThumbClasses.end}`)!;
+    const startThumb = document.querySelector(`.${chartsAxisZoomSliderThumbClasses.start}`)!;
+    const endThumb = document.querySelector(`.${chartsAxisZoomSliderThumbClasses.end}`)!;
 
     // Move the start thumb to zoom in from the left
     await user.pointer([

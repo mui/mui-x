@@ -13,7 +13,7 @@ import { shouldForwardProp } from '@mui/system';
 import clsx from 'clsx';
 import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';
 import { type UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
-import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
+import { useUtilityClasses } from './chartsAxisZoomSliderTrackClasses';
 
 const ZoomSliderTrack = styled('rect', {
   slot: 'internal',
@@ -41,7 +41,7 @@ const ZoomSliderTrack = styled('rect', {
   ],
 }));
 
-interface ChartAxisZoomSliderTrackProps extends React.ComponentProps<'rect'> {
+interface ChartsAxisZoomSliderTrackProps extends React.ComponentProps<'rect'> {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   reverse: boolean;
@@ -49,14 +49,14 @@ interface ChartAxisZoomSliderTrackProps extends React.ComponentProps<'rect'> {
   onSelectEnd?: () => void;
 }
 
-export function ChartAxisZoomSliderTrack({
+export function ChartsAxisZoomSliderTrack({
   axisId,
   axisDirection,
   reverse,
   onSelectStart,
   onSelectEnd,
   ...other
-}: ChartAxisZoomSliderTrackProps) {
+}: ChartsAxisZoomSliderTrackProps) {
   const ref = React.useRef<SVGRectElement>(null);
   const { instance } = useChartContext<[UseChartProZoomSignature]>();
   const { chartsLayerContainerRef } = instance;

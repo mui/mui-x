@@ -60,6 +60,7 @@ export * from './PieChartPro';
 export * from './FunnelChart';
 export * from './RadarChartPro';
 export * from './ChartZoomSlider';
+export * from './ChartsZoomSlider';
 export * from './ChartsToolbarPro';
 
 export type {
