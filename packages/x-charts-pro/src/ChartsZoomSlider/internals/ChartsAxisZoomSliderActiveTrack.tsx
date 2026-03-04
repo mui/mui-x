@@ -20,11 +20,11 @@ import {
   selectorChartAxisZoomData,
   type UseChartProZoomSignature,
 } from '../../internals/plugins/useChartProZoom';
-import { ChartAxisZoomSliderThumb } from './ChartAxisZoomSliderThumb';
+import { ChartsAxisZoomSliderThumb } from './ChartsAxisZoomSliderThumb';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
 import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';
 import { ZOOM_SLIDER_THUMB_HEIGHT, ZOOM_SLIDER_THUMB_WIDTH } from './constants';
-import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
+import { useUtilityClasses } from './chartsAxisZoomSliderTrackClasses';
 
 const ZoomSliderActiveTrackRect = styled('rect', {
   slot: 'internal',
@@ -52,7 +52,7 @@ const ZoomSliderActiveTrackRect = styled('rect', {
   ],
 }));
 
-export interface ChartAxisZoomSliderActiveTrackProps {
+export interface ChartsAxisZoomSliderActiveTrackProps {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   axisPosition: 'top' | 'bottom' | 'left' | 'right';
@@ -65,7 +65,7 @@ export interface ChartAxisZoomSliderActiveTrackProps {
   onPointerLeave?: () => void;
 }
 
-export function ChartAxisZoomSliderActiveTrack({
+export function ChartsAxisZoomSliderActiveTrack({
   axisId,
   axisDirection,
   axisPosition,
@@ -76,7 +76,7 @@ export function ChartAxisZoomSliderActiveTrack({
   showTooltip,
   onPointerEnter,
   onPointerLeave,
-}: ChartAxisZoomSliderActiveTrackProps) {
+}: ChartsAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
   const axis = store.use(selectorChartAxis, axisId);
@@ -293,7 +293,7 @@ export function ChartAxisZoomSliderActiveTrack({
         onPointerLeave={onPointerLeave}
         className={classes.active}
       />
-      <ChartAxisZoomSliderThumb
+      <ChartsAxisZoomSliderThumb
         ref={setStartThumbEl}
         x={startThumbX}
         y={startThumbY}
@@ -305,7 +305,7 @@ export function ChartAxisZoomSliderActiveTrack({
         onPointerLeave={onPointerLeave}
         placement="start"
       />
-      <ChartAxisZoomSliderThumb
+      <ChartsAxisZoomSliderThumb
         ref={setEndThumbEl}
         x={endThumbX}
         y={endThumbY}

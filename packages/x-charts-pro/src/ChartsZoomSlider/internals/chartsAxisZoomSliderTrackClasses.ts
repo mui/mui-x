@@ -1,8 +1,8 @@
 import composeClasses from '@mui/utils/composeClasses';
 import ClassNameGenerator from '@mui/utils/ClassNameGenerator';
-import type { ChartAxisZoomSliderActiveTrackProps } from './ChartAxisZoomSliderActiveTrack';
+import type { ChartsAxisZoomSliderActiveTrackProps } from './ChartsAxisZoomSliderActiveTrack';
 
-export interface ChartAxisZoomSliderTrackClasses {
+export interface ChartsAxisZoomSliderTrackClasses {
   /** Styles applied to the root element when it is horizontal. */
   horizontal: string;
   /** Styles applied to the root element when it is vertical. */
@@ -13,17 +13,17 @@ export interface ChartAxisZoomSliderTrackClasses {
   background: string;
 }
 
-export type ChartAxisZoomSliderTrackClassKey = keyof ChartAxisZoomSliderTrackClasses;
+export type ChartsAxisZoomSliderTrackClassKey = keyof ChartsAxisZoomSliderTrackClasses;
 
-export const chartAxisZoomSliderTrackClasses: ChartAxisZoomSliderTrackClasses = [
+export const chartsAxisZoomSliderTrackClasses: ChartsAxisZoomSliderTrackClasses = [
   'horizontal',
   'vertical',
   'background',
   'active',
 ].reduce((acc, slot) => {
-  acc[slot as keyof ChartAxisZoomSliderTrackClasses] = getAxisZoomSliderTrackUtilityClass(slot);
+  acc[slot as keyof ChartsAxisZoomSliderTrackClasses] = getAxisZoomSliderTrackUtilityClass(slot);
   return acc;
-}, {} as ChartAxisZoomSliderTrackClasses);
+}, {} as ChartsAxisZoomSliderTrackClasses);
 
 export function getAxisZoomSliderTrackUtilityClass(slot: string) {
   // We use the `ClassNameGenerator` because the original `generateUtilityClass` function
@@ -31,7 +31,7 @@ export function getAxisZoomSliderTrackUtilityClass(slot: string) {
   return `${ClassNameGenerator.generate('MuiChartAxisZoomSliderTrack')}-${slot}`;
 }
 
-export const useUtilityClasses = (props: Partial<ChartAxisZoomSliderActiveTrackProps>) => {
+export const useUtilityClasses = (props: Partial<ChartsAxisZoomSliderActiveTrackProps>) => {
   const { axisDirection } = props;
   const slots = {
     background: [axisDirection === 'x' ? 'horizontal' : 'vertical', 'background'],
