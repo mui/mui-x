@@ -2,7 +2,7 @@ import {
   SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
   SchedulerProcessedDate,
   TemporalTimezone,
@@ -20,7 +20,7 @@ export interface ControlledValue {
   allDay: boolean;
   color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
-  rruleDraft: RecurringEventRecurrenceRule;
+  rruleDraft: SchedulerProcessedEventRecurrenceRule;
 }
 
 export type EndsSelection = 'never' | 'after' | 'until';
@@ -82,7 +82,7 @@ export function validateRange(
 export function getRecurrenceLabel(
   adapter: Adapter,
   start: SchedulerProcessedDate,
-  recurrenceKey: string | null,
+  recurrenceKey: RecurringEventPresetKey | 'custom' | null,
   localeText: EventDialogLocaleText,
 ): string {
   if (!recurrenceKey) {
@@ -90,17 +90,17 @@ export function getRecurrenceLabel(
   }
 
   switch (recurrenceKey) {
-    case 'daily':
+    case 'DAILY':
       return localeText.recurrenceDailyPresetLabel;
-    case 'weekly': {
+    case 'WEEKLY': {
       const weekday = adapter.format(start.value, 'weekday');
       return localeText.recurrenceWeeklyPresetLabel(weekday);
     }
-    case 'monthly': {
+    case 'MONTHLY': {
       const date = adapter.getDate(start.value);
       return localeText.recurrenceMonthlyPresetLabel(date);
     }
-    case 'yearly': {
+    case 'YEARLY': {
       const normalDate = formatDayOfMonthAndMonthFullLetter(start.value, adapter);
       return localeText.recurrenceYearlyPresetLabel(normalDate);
     }

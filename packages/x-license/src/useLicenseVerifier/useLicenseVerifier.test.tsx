@@ -1,17 +1,22 @@
 import * as React from 'react';
+import { vi } from 'vitest';
 import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
-import {
-  useLicenseVerifier,
-  LicenseInfo,
-  generateLicense,
-  Unstable_LicenseInfoProvider as LicenseInfoProvider,
-  MuiCommercialPackageName,
-} from '@mui/x-license';
+import { LicenseInfo, Unstable_LicenseInfoProvider as LicenseInfoProvider } from '@mui/x-license';
 import { isJSDOM } from 'test/utils/skipIf';
-import { clearLicenseStatusCache } from './useLicenseVerifier';
-import { generateReleaseInfo } from '../verifyLicense';
+import type { MuiCommercialPackageName } from '../utils/commercialPackages';
+import { useLicenseVerifier, clearLicenseStatusCache } from './useLicenseVerifier';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../../../../scripts/generateReleaseInfo.mjs';
+import {
+  TEST_LICENSE_KEY_PRO,
+  TEST_LICENSE_KEY_PREMIUM,
+  TEST_KEY_EXPIRED_30DAYS,
+  TEST_KEY_PRO_SUBSCRIPTION_FUTURE,
+  TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE,
+  TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
+  TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
+} from '../test-keys';
 
-const oneDayInMS = 1000 * 60 * 60 * 24;
 const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
 const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
@@ -52,19 +57,11 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     });
 
     it('should detect an override of a valid license key in the context', () => {
-      const key = generateLicense({
-        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        licenseModel: 'perpetual',
-        orderNumber: '123',
-        planScope: 'pro',
-        planVersion: 'initial',
-      });
-
       LicenseInfo.setLicenseKey('');
 
       expect(() => {
         render(
-          <LicenseInfoProvider info={{ key }}>
+          <LicenseInfoProvider info={{ key: TEST_LICENSE_KEY_PRO }}>
             <TestComponent />
           </LicenseInfoProvider>,
         );
@@ -78,34 +75,37 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
       // eslint-disable-next-line no-useless-concat
       process.env['NODE_' + 'ENV'] = 'development';
 
-      const expiredLicenseKey = generateLicense({
-        expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
-        orderNumber: '123',
-        planScope: 'pro',
-        licenseModel: 'subscription',
-        planVersion: 'initial',
-      });
-      LicenseInfo.setLicenseKey(expiredLicenseKey);
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2024-06-15T00:00:00.000Z'));
+
+      LicenseInfo.setLicenseKey(TEST_KEY_EXPIRED_30DAYS);
 
       const errorRef = React.createRef<any>();
 
-      expect(() => {
-        render(
-          <ErrorBoundary ref={errorRef}>
-            <TestComponent />
-          </ErrorBoundary>,
+      try {
+        expect(() => {
+          render(
+            <ErrorBoundary ref={errorRef}>
+              <TestComponent />
+            </ErrorBoundary>,
+          );
+        }).to.toErrorDev([
+          reactMajor >= 19 && 'MUI X: Expired license key',
+          reactMajor < 19 && 'The above error occurred in the <TestComponent> component',
+        ]);
+        expect((errorRef.current as any).errors[0].toString()).to.match(
+          /MUI X: Expired license key/,
         );
-      }).to.toErrorDev([
-        reactMajor >= 19 && 'MUI X: Expired license key',
-        reactMajor < 19 && 'The above error occurred in the <TestComponent> component',
-      ]);
-      expect((errorRef.current as any).errors[0].toString()).to.match(/MUI X: Expired license key/);
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     const planCombinations = [
       {
         planVersion: 'initial',
         planScope: 'pro',
+        licenseKey: TEST_KEY_PRO_SUBSCRIPTION_FUTURE,
         ok: ['x-data-grid-pro', 'x-date-pickers-pro'],
         notOk: ['x-charts-premium', 'x-data-grid-premium'],
         notInInitial: ['x-charts-pro', 'x-tree-view-pro'],
@@ -113,6 +113,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
       {
         planVersion: 'initial',
         planScope: 'premium',
+        licenseKey: TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE,
         ok: [
           'x-data-grid-pro',
           'x-data-grid-premium',
@@ -127,6 +128,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
       {
         planVersion: 'Q3-2024',
         planScope: 'pro',
+        licenseKey: TEST_LICENSE_KEY_PRO,
         ok: ['x-data-grid-pro', 'x-date-pickers-pro', 'x-charts-pro', 'x-tree-view-pro'],
         notOk: ['x-charts-premium', 'x-data-grid-premium'],
         notInInitial: [],
@@ -134,6 +136,30 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
       {
         planVersion: 'Q3-2024',
         planScope: 'premium',
+        licenseKey: TEST_LICENSE_KEY_PREMIUM,
+        ok: [
+          'x-data-grid-pro',
+          'x-data-grid-premium',
+          'x-date-pickers-pro',
+          'x-charts-pro',
+          'x-charts-premium',
+          'x-tree-view-pro',
+        ],
+        notOk: [],
+        notInInitial: [],
+      },
+      {
+        planVersion: 'Q1-2026',
+        planScope: 'pro',
+        licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
+        ok: ['x-data-grid-pro', 'x-date-pickers-pro', 'x-charts-pro', 'x-tree-view-pro'],
+        notOk: ['x-charts-premium', 'x-data-grid-premium'],
+        notInInitial: [],
+      },
+      {
+        planVersion: 'Q1-2026',
+        planScope: 'premium',
+        licenseKey: TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
         ok: [
           'x-data-grid-pro',
           'x-data-grid-premium',
@@ -149,18 +175,10 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
     it.each(planCombinations)(
       'should work for plan $planVersion with scope $planScope',
-      ({ planVersion, planScope, ok, notOk, notInInitial }) => {
+      ({ licenseKey, ok, notOk, notInInitial }) => {
         // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
         // eslint-disable-next-line no-useless-concat
         process.env['NODE_' + 'ENV'] = 'development';
-
-        const licenseKey = generateLicense({
-          expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-          orderNumber: '123',
-          planScope,
-          licenseModel: 'subscription',
-          planVersion,
-        });
 
         LicenseInfo.setLicenseKey(licenseKey);
 

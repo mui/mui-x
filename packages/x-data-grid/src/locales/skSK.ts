@@ -1,5 +1,11 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('sk-SK');
 
 const skSKGrid: Partial<GridLocaleText> = {
   // Root
@@ -224,11 +230,13 @@ const skSKGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Riadkov na stránke:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} z ${count !== -1 ? count : `viac ako ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : `viac ako ${formatNumber(to)}`}`;
     }
     const estimatedLabel =
-      estimated && estimated > to ? `približne ${estimated}` : `viac ako ${to}`;
-    return `${from}–${to} z ${count !== -1 ? count : estimatedLabel}`;
+      estimated && estimated > to
+        ? `približne ${formatNumber(estimated)}`
+        : `viac ako ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

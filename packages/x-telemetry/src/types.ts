@@ -1,5 +1,6 @@
 export interface TelemetryEventContext {
   licenseKey?: string;
+  xLicenseClientVersion?: string;
 }
 
 export interface TelemetryEvent {

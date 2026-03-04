@@ -45,9 +45,14 @@ export function useElementPositionInCollection(
     const clampedStartMinutes = clampToTimeline(startIndexMinutes);
     const clampedEndMinutes = clampToTimeline(endIndexMinutes);
 
+    const startingBeforeEdge = startIndexMinutes < 0;
+    const endingAfterEdge = endIndexMinutes > totalMinutes;
+
     return {
       position: clampedStartMinutes / totalMinutes,
       duration: Math.max(0, clampedEndMinutes - clampedStartMinutes) / totalMinutes,
+      startingBeforeEdge,
+      endingAfterEdge,
     };
   }, [adapter, start, end, collectionStart, collectionEnd]);
 }
@@ -63,5 +68,7 @@ namespace useElementPositionInCollection {
   export interface ReturnValue {
     position: number;
     duration: number;
+    startingBeforeEdge: boolean;
+    endingAfterEdge: boolean;
   }
 }

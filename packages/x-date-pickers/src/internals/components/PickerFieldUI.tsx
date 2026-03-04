@@ -161,7 +161,8 @@ export function PickerFieldUI<
 
   const handleClickOpeningButton = useEventCallback((event: React.MouseEvent) => {
     event.preventDefault();
-    pickerContext?.setOpen((prev) => !prev);
+    // Force open instead of toggling to avoid conflicts with field-level open-on-focus logic
+    pickerContext?.setOpen(true);
   });
 
   const triggerStatus = pickerContext ? pickerContext.triggerStatus : 'hidden';
@@ -202,6 +203,8 @@ export function PickerFieldUI<
       disabled: triggerStatus === 'disabled',
       onClick: handleClickOpeningButton,
       'aria-label': openPickerAriaLabel,
+      // Mark this element so field handlers can ignore its events
+      'data-mui-picker-open-button': 'true',
       edge:
         // open button is always rendered at the edge
         textFieldProps.variant !== 'standard' ? openPickerButtonPosition : false,
@@ -513,6 +516,53 @@ export function useFieldTextFieldProps<
     },
     ownerState,
   }) as any as TProps;
+
+  // When requested, open the picker when the user focuses/clicks the field to edit
+  if (
+    pickerContext &&
+    pickerContext.keepOpenDuringFieldFocus &&
+    pickerContext.triggerStatus === 'enabled' &&
+    !pickerContext.open &&
+    !pickerContext.readOnly &&
+    !pickerContext.disabled
+  ) {
+    const prevOnFocus = (textFieldProps as any).onFocus as React.FocusEventHandler | undefined;
+    const prevOnMouseDown = (textFieldProps as any).onMouseDown as
+      | React.MouseEventHandler
+      | undefined;
+
+    const isFromOpenButton = (event: React.SyntheticEvent) => {
+      const nativeEvent: any = (event as any).nativeEvent ?? event;
+      const path: any[] | undefined = nativeEvent?.composedPath?.();
+      if (Array.isArray(path)) {
+        for (const el of path) {
+          if (el && el.getAttribute && el.getAttribute('data-mui-picker-open-button') === 'true') {
+            return true;
+          }
+        }
+      }
+      const target = event.target as Element | null;
+      if (target && (target as any).closest) {
+        return Boolean((target as any).closest('[data-mui-picker-open-button="true"]'));
+      }
+      return false;
+    };
+
+    (textFieldProps as any).onFocus = (event: React.FocusEvent) => {
+      prevOnFocus?.(event);
+      // Avoid opening if event was prevented by user code
+      if (!event.isDefaultPrevented() && !isFromOpenButton(event)) {
+        pickerContext.setOpen(true);
+      }
+    };
+
+    (textFieldProps as any).onMouseDown = (event: React.MouseEvent) => {
+      prevOnMouseDown?.(event);
+      if (!event.isDefaultPrevented() && !isFromOpenButton(event)) {
+        pickerContext.setOpen(true);
+      }
+    };
+  }
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };

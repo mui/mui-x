@@ -101,6 +101,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         className={classes.headerToolbarLeftElement}
       >
         <IconButton
+          className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
           onClick={(event) =>
             store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
@@ -114,12 +115,14 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         </HeaderToolbarLabel>
         <HeaderToolbarDateNavigator className={classes.headerToolbarDateNavigator}>
           <IconButton
+            className={classes.headerToolbarPreviousButton}
             onClick={store.goToPreviousVisibleDate}
             aria-label={localeText.previousTimeSpan(view)}
           >
             <ChevronLeft />
           </IconButton>
           <IconButton
+            className={classes.headerToolbarNextButton}
             onClick={store.goToNextVisibleDate}
             aria-label={localeText.nextTimeSpan(view)}
           >

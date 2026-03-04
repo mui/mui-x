@@ -152,9 +152,9 @@ All documentation for Community components and features also applies to their Pr
 You can use it to create a reproduction of a bug or generate demo data in your development environment.
 You should not rely on its API—it doesn't follow semver.
 
-### useDemoData hook
+### `useDemoData()` hook
 
-The `useDemoData` hook is a utility hook from the `@mui/x-data-grid-generator` package, used in demos throughout this documentation to provide realistic data without polluting the code with data generation logic.
+The `useDemoData()` hook is a utility hook from the `@mui/x-data-grid-generator` package, used in demos throughout this documentation to provide realistic data without polluting the code with data generation logic.
 It contains column definitions and generates random data for the Data Grid.
 For more details on these definitions and the custom cell renderers available, see the [custom columns demo](/x/react-data-grid/custom-columns/#full-example) where you can copy them from the demo source code.
 

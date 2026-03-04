@@ -58,6 +58,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   return (
     <ViewSwitcherRoot ref={handleRef} {...other} className={clsx(className, classes.viewSwitcher)}>
       <Button
+        className={classes.viewSwitcherButton}
         size="medium"
         id="view-switcher-button"
         aria-controls={open ? 'view-switcher-menu' : undefined}
@@ -70,6 +71,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         {localeText[view]}
       </Button>
       <Menu
+        className={classes.viewSwitcherMenu}
         id="view-switcher-menu"
         anchorEl={anchorEl}
         open={open}
