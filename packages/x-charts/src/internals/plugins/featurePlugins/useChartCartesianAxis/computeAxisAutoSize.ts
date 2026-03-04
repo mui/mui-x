@@ -88,7 +88,7 @@ function maxLineLength(label: string): number {
  *
  * Maintains a sorted list of the top candidates by width, plus the label with the most lines.
  */
-function selectBiggestCandidates(labels: string[]): string[] {
+function selectLargestCandidates(labels: string[]): string[] {
   if (labels.length <= MAX_AUTO_SIZE_CANDIDATES) {
     return labels;
   }
@@ -155,9 +155,7 @@ function getTickLabels(
       return `${value}`;
     });
 
-    // We only need the widest label to determine axis size.
-    // We pick a small set of candidates using label length as a proxy for visual width.
-    return selectBiggestCandidates(labels);
+    return selectLargestCandidates(labels);
   }
 
   // Use axis min/max props first, then data extrema, then defaults.
@@ -278,7 +276,7 @@ function computeGroupedAxisAutoSize(
 
   for (let groupIndex = 0; groupIndex < groups.length; groupIndex += 1) {
     const group = groups[groupIndex];
-    const groupLabels = selectBiggestCandidates(getGroupLabels(data, group));
+    const groupLabels = selectLargestCandidates(getGroupLabels(data, group));
 
     const groupTickLabelStyle = {
       ...axisTickLabelStyle,
