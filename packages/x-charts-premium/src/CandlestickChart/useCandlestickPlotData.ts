@@ -2,7 +2,9 @@ import * as React from 'react';
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { type D3ContinuousScale } from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
+import { useTheme } from '@mui/material/styles';
 import type { DefaultizedOHLCSeriesType } from '../models';
+import { parseColor } from '../utils/webgl/parseColor';
 
 export function useCandlestickPlotData(
   drawingArea: ChartDrawingArea,
@@ -10,6 +12,17 @@ export function useCandlestickPlotData(
   xScale: ScaleBand<{ toString(): string }>,
   yScale: D3ContinuousScale,
 ) {
+  const theme = useTheme();
+
+  const bullishColor = React.useMemo(
+    () => parseColor(theme.palette.success.main),
+    [theme.palette.success.main],
+  );
+  const bearishColor = React.useMemo(
+    () => parseColor(theme.palette.error.main),
+    [theme.palette.error.main],
+  );
+
   return React.useMemo(() => {
     const rectCenters = new Float32Array(series.data.length * 2);
     const rectHeights = new Float32Array(series.data.length);
@@ -49,16 +62,16 @@ export function useCandlestickPlotData(
 
       if (close >= open) {
         // Bullish - green
-        colors[dataIndex * 4] = 0.0;
-        colors[dataIndex * 4 + 1] = 1.0;
-        colors[dataIndex * 4 + 2] = 0.0;
-        colors[dataIndex * 4 + 3] = 1.0;
+        colors[dataIndex * 4] = bullishColor[0];
+        colors[dataIndex * 4 + 1] = bullishColor[1];
+        colors[dataIndex * 4 + 2] = bullishColor[2];
+        colors[dataIndex * 4 + 3] = bullishColor[3];
       } else {
         // Bearish - red
-        colors[dataIndex * 4] = 1.0;
-        colors[dataIndex * 4 + 1] = 0.0;
-        colors[dataIndex * 4 + 2] = 0.0;
-        colors[dataIndex * 4 + 3] = 1.0;
+        colors[dataIndex * 4] = bearishColor[0];
+        colors[dataIndex * 4 + 1] = bearishColor[1];
+        colors[dataIndex * 4 + 2] = bearishColor[2];
+        colors[dataIndex * 4 + 3] = bearishColor[3];
       }
     }
 
@@ -69,5 +82,5 @@ export function useCandlestickPlotData(
       lineHeights,
       colors,
     };
-  }, [drawingArea.left, drawingArea.top, series.data, xScale, yScale]);
+  }, [bearishColor, bullishColor, drawingArea.left, drawingArea.top, series.data, xScale, yScale]);
 }

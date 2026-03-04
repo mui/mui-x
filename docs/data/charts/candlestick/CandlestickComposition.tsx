@@ -18,7 +18,8 @@ import { useDrawingArea } from '@mui/x-charts-premium/hooks';
 import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json'; // Source: Yahoo Finance
+import { useTheme } from '@mui/material/styles'; // Source: Yahoo Finance
+import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json';
 
 const xData = sp500ohlcv.map((entry) => new Date(Date.parse(entry.date)));
 
@@ -66,21 +67,22 @@ const formatAsDollar = (value: number) =>
     maximumFractionDigits: 0,
   });
 
-const volumeBarColorGetter = ({ dataIndex }: { dataIndex: number }) => {
-  if (dataIndex === 0) {
-    return 'green';
-  }
-
-  // Color the volume bar green if the closing price is higher than or equal to the previous day's close,
-  // red otherwise. This is how Yahoo Finance colors their volume bars.
-  return sp500ohlcv[dataIndex].close >= sp500ohlcv[dataIndex - 1].close
-    ? 'green'
-    : 'red';
-};
-
 export default function CandlestickComposition() {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
+  const theme = useTheme();
+
+  const volumeBarColorGetter = ({ dataIndex }: { dataIndex: number }) => {
+    if (dataIndex === 0) {
+      return theme.palette.success.main;
+    }
+
+    // Color the volume bar green if the closing price is higher than or equal to the previous day's close,
+    // red otherwise. This is how Yahoo Finance colors their volume bars.
+    return sp500ohlcv[dataIndex].close >= sp500ohlcv[dataIndex - 1].close
+      ? theme.palette.success.main
+      : theme.palette.error.main;
+  };
 
   return (
     <ChartsDataProviderPremium
