@@ -71,7 +71,7 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 - `Unstable_RadarChart` → `RadarChart`
 - `Unstable_RadarDataProvider` → `RadarDataProvider`
 - `Unstable_FunnelChart` → `FunnelChart`
-<!-- - `Unstable_SankeyChart` → `SankeyChart` -->
+- `Unstable_SankeyChart` → `SankeyChart`
 
 ### Props
 

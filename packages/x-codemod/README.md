@@ -95,9 +95,12 @@ npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path|folder>
 The list includes these transformers
 
 - [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
-- [`rename-chart-api-import`](#rename-chart-api-import)
-- [`rename-id-to-series-id`](#rename-id-to-series-id)
 - [`replace-show-mark-default`](#replace-show-mark-default)
+- [`rename-id-to-series-id`](#rename-id-to-series-id)
+- [`rename-chart-api-import`](#rename-chart-api-import)
+- [`rename-sankey-chart`](#rename-sankey-chart)
+- [`rename-chart-container`](#rename-chart-container)
+- [`rename-chart-data-provider`](#rename-chart-data-provider)
 - [`rename-chart-zoom-slider`](#rename-chart-zoom-slider)
 
 ### `replace-heatmap-hide-legend-false`
@@ -188,6 +191,42 @@ Renames the `ChartZoomSlider` component and related exports to `ChartsZoomSlider
 
 -import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 +import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
+```
+
+#### `rename-sankey-chart`
+
+Stabilizes the `Unstable_SankeyChart` export by renaming it to `SankeyChart`.
+
+```diff
+-import { Unstable_SankeyChart } from '@mui/x-charts-pro';
++import { SankeyChart } from '@mui/x-charts-pro';
+
+-import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
++import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+```
+
+#### `rename-chart-container`
+
+Renames the `ChartContainer` component and related exports to `ChartsContainer` (with an S) to align with other components.
+
+```diff
+-import { ChartContainer } from '@mui/x-charts/ChartContainer';
++import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
+
+-import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
++import { ChartsContainerPro } from '@mui/x-charts-pro/ChartsContainerPro';
+```
+
+#### `rename-chart-data-provider`
+
+Renames the `ChartDataProvider` component and related exports to `ChartsDataProvider` (with an S) to align with other components.
+
+```diff
+-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
++import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
+
+-import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
++import { ChartsDataProviderPro } from '@mui/x-charts-pro/ChartsDataProviderPro';
 ```
 
 ## v8.0.0
