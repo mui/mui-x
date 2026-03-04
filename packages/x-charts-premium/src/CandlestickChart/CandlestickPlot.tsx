@@ -21,7 +21,7 @@ import { selectorCandlestickItemAtPosition } from '../plugins/selectors/useChart
 import { useCandlestickPlotData } from './useCandlestickPlotData';
 import { parseColor } from '../utils/webgl/parseColor';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
-import { useWebGLContext } from '../ChartsWebGlLayer/ChartsWebGlLayer';
+import { useWebGLContext } from '../ChartsWebGLLayer';
 
 export interface CandlestickPlotProps {}
 

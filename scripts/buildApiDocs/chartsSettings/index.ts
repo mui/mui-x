@@ -122,6 +122,7 @@ export default chartsApiPages;
       'x-charts-premium/src/ChartDataProviderPremium/ChartDataProviderPremium.tsx',
       'x-charts-premium/src/CandlestickChart/CandlestickTooltip/CandlestickTooltip.tsx',
       'x-charts-premium/src/CandlestickChart/CandlestickTooltip/CandlestickTooltipContent.tsx',
+      'x-charts-premium/src/CandlestickChart/seriesConfig/OHLCTooltipContent.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

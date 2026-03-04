@@ -15,7 +15,7 @@ import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';
 import { ChartsAxisHighlight } from '@mui/x-charts-premium/ChartsAxisHighlight';
 import { ChartsGrid } from '@mui/x-charts-premium/ChartsGrid';
 import { useDrawingArea } from '@mui/x-charts-premium/hooks';
-import { ChartsWebGlLayer } from '@mui/x-charts-premium/ChartsWebGlLayer';
+import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json'; // Source: Yahoo Finance
@@ -144,9 +144,9 @@ export default function CandlestickComposition() {
           <ChartsSvgLayer>
             <ChartsGrid horizontal vertical />
           </ChartsSvgLayer>
-          <ChartsWebGlLayer>
+          <ChartsWebGLLayer>
             <CandlestickPlot />
-          </ChartsWebGlLayer>
+          </ChartsWebGLLayer>
           <ChartsSvgLayer>
             <g clipPath={`url(#${clipPathId})`}>
               <BarPlot renderer="svg-batch" />
