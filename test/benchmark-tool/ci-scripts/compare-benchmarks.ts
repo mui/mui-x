@@ -3,11 +3,7 @@ import path from 'node:path';
 import { cyan, dim, fileUrl, green, indent, red } from '../utils/log';
 import type { AggregatedResults, ComparisonResult, FailedBenchmark } from './types';
 
-function calculateDiffPercent(
-  diff: number,
-  masterDuration: number,
-  prDuration: number,
-): number {
+function calculateDiffPercent(diff: number, masterDuration: number, prDuration: number): number {
   if (masterDuration > 0) {
     return (diff / masterDuration) * 100;
   }
@@ -134,9 +130,7 @@ async function postOrUpdateComment(prNumber: number, body: string): Promise<void
   let page = 1;
 
   while (!existing) {
-    const response = await githubApi(
-      `/issues/${prNumber}/comments?per_page=100&page=${page}`,
-    );
+    const response = await githubApi(`/issues/${prNumber}/comments?per_page=100&page=${page}`);
     const comments = (await response.json()) as GitHubComment[];
 
     existing = comments.find((c) => c.user.type === 'Bot' && c.body.includes(COMMENT_MARKER));

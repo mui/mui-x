@@ -13,9 +13,7 @@ const xData = data.map((d) => d.x);
 benchmark(
   'scatter zoom',
   <ScatterChartPro
-    xAxis={[
-      { data: xData, valueFormatter: (v: number) => v.toLocaleString('en-US'), zoom: true },
-    ]}
+    xAxis={[{ data: xData, valueFormatter: (v: number) => v.toLocaleString('en-US'), zoom: true }]}
     yAxis={[{ zoom: true }]}
     series={[{ data }]}
     width={500}

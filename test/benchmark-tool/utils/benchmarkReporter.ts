@@ -83,7 +83,6 @@ function generateReportFromIterations(iterations: IterationEvent[][]): Benchmark
     const meanStartTime = calculateMean(relativeStartTimes);
 
     if (meanDuration > 1 && coefficientOfVariation > 0.1) {
-      // eslint-disable-next-line no-console
       console.warn(
         `High coefficient of variation (${(coefficientOfVariation * 100).toFixed(1)}%) for render #${index} event "${getEventKey(event)}". ` +
           `Mean: ${meanDuration.toFixed(2)}ms, StdDev: ${stdDev.toFixed(2)}ms. Results may be unreliable.`,
@@ -120,7 +119,9 @@ function isOutlier(value: number, q1: number, q3: number): boolean {
 const DURATION_NOISE_FLOOR = 0.1; // ms — below timer resolution
 
 function printDurationMatrix(name: string, iterations: IterationEvent[][]): void {
-  if (iterations.length === 0) return;
+  if (iterations.length === 0) {
+    return;
+  }
 
   const renderCount = iterations[0].length;
 
