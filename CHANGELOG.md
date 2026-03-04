@@ -5,6 +5,111 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.27.3
+
+_Feb 25, 2026_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- ⚡️ Improved dynamic data support and cache invalidation in lazy loading for Data Grid Pro
+
+The following team members contributed to this release:
+@cherniavskii, @michelengelen, @MBilalShafi, @arminmeh
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.27.3`
+
+- [DataGrid] Preserve key input during row edit when using `rowModesModel` (#21457) @michelengelen
+
+#### `@mui/x-data-grid-pro@8.27.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.27.3`, plus:
+
+- [DataGridPro] Improve dynamic data support and cache invalidation in lazy loading (#21465) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.27.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.27.3`.
+
+### Core
+
+- [code-infra] Do not append `x` to the last version for the compare API (#21422) @arminmeh
+- [docs-infra] Fix current version detection logic (#21415) @cherniavskii
+
+## 8.27.2
+
+_Feb 20, 2026_
+
+We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.27.2`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.27.2`, plus:
+
+- [DataGridPro] Fix number input visibility in header filters (#21345) @michelengelen
+
+#### `@mui/x-data-grid-premium@8.27.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.27.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.27.2`
+
+- [DatePicker] Add keyboard support for selecting day, month, and year (#21399) @michelengelen
+
+#### `@mui/x-date-pickers-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.27.2`, plus:
+
+- [DateRangePicker] Fix timezone update issue leading to `invalidRange` error (#21382) @michelengelen
+
+### Charts
+
+#### `@mui/x-charts@8.27.2`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.27.2`, plus:
+
+- [charts-pro] Handle edge case in export image (#21206) @bernardobelchior
+
+#### `@mui/x-charts-premium@8.27.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.27.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.27.2`
+
+- [tree view] Focus item sibling on unmount instead of the 1st item (#21386) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.27.2`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.27.2`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Only ignore `renovate[bot]` in changelog generation script (#21188) @bernardobelchior
+
 ## v8.27.1
 
 <!-- generated comparing v8.27.0..v8.x -->

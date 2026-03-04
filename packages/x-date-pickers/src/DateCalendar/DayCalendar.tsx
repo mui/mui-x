@@ -458,6 +458,11 @@ export function DayCalendar(inProps: DayCalendarProps) {
           focusDay(adapter.addMonths(day, -1));
           event.preventDefault();
           break;
+        case 'Enter':
+        case ' ':
+          handleDaySelect(day);
+          event.preventDefault();
+          break;
         default:
           break;
       }
