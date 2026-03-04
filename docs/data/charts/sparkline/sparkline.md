@@ -9,9 +9,9 @@ components: SparkLineChart
 <p class="description">Show data trends in a compact form without axes or coordinates.</p>
 
 A sparkline is a small, axis-free chart that plots a sequence of values.
-It stays compact so it can sit inline—in a table cell, a dashboard widget, or next to text—and the shape of the curve or bars conveys the trend without scales or labels.
+It stays compact so it can sit inline (for eample, in a table cell, a dashboard widget, or next to text) and the shape of the curve or bars conveys the trend without scales or labels.
 
-For example, npm uses a sparkline to display a package's weekly 
+As shown below, npm uses a sparkline to display a package's weekly
 downloads trend.
 
 {{"demo": "NpmSparkLine.js"}}
