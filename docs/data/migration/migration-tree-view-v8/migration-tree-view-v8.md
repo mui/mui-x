@@ -70,9 +70,9 @@ Use the component-specific hooks instead:
 ```diff
 -import { useTreeViewApiRef } from '@mui/x-tree-view';
 +import { useRichTreeViewApiRef } from '@mui/x-tree-view';
-// or
+ // or
 +import { useSimpleTreeViewApiRef } from '@mui/x-tree-view';
-// or
+ // or
 +import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro';
 ```
 
