@@ -30,7 +30,7 @@ type ChartsContainerPremiumComponent = <
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
- * This is a combination of both the `ChartDataProviderPremium` and `ChartsSurface` components.
+ * This is a combination of both the `ChartsDataProviderPremium` and `ChartsSurface` components.
  *
  * Demos:
  *

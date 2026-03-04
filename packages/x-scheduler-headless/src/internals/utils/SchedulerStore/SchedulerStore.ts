@@ -143,8 +143,8 @@ export class SchedulerStore<
   ) {
     return {
       adapter,
-      areEventsDraggable: parameters.areEventsDraggable ?? false,
-      areEventsResizable: parameters.areEventsResizable ?? false,
+      areEventsDraggable: parameters.areEventsDraggable ?? true,
+      areEventsResizable: parameters.areEventsResizable ?? true,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
       canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
       eventColor: parameters.eventColor ?? 'teal',

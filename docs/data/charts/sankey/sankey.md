@@ -4,13 +4,9 @@ productId: x-charts
 components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent, SankeyDataProvider, FocusedSankeyNode, FocusedSankeyLink
 ---
 
-# Charts - Sankey [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
+# Charts - Sankey [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Sankey charts are great for visualizing flows between different elements.</p>
-
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
 
 ## Overview
 

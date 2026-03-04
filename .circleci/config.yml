@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/f87c4b1b022bb383419be7979bcb05c4e343499b/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/48198a7131b2ee621cc13bc7729cc41c72f370e7/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -50,6 +50,11 @@ default-job: &default-job
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
+    # Used by the code-infra orb to diff against the correct base branch for dedupe and prettier checks
+    # #target-branch-reference
+    # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
+    # For example, when creating v9 from v8, `master -> v8.x`
+    BASE_BRANCH: master
   working_directory: /tmp/mui
   executor: code-infra/mui-node
 # CircleCI has disabled the cache across forks for security reasons.
@@ -87,6 +92,7 @@ jobs:
 
   test_unit:
     <<: *default-job
+    resource_class: large
     steps:
       - checkout
       - install-deps:
@@ -95,7 +101,12 @@ jobs:
           name: Test JSDOM
           command: |
             # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
-            pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=1/2" "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=2/2" || TEST_EXIT_CODE=$?
+            pnpm exec concurrently \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=1/4" \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=2/4" \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=3/4" \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=4/4" \
+              || TEST_EXIT_CODE=$?
             pnpm exec vitest run --merge-reports
             # Reports merged, we can now exit with the stored code
             exit ${TEST_EXIT_CODE:-0}
