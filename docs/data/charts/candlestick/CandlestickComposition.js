@@ -10,7 +10,7 @@ import { ChartsYAxis } from '@mui/x-charts-premium/ChartsYAxis';
 import { useAxesTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
 
-import { ChartDataProviderPremium } from '@mui/x-charts-premium/ChartDataProviderPremium';
+import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';
 import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';
 import { ChartsAxisHighlight } from '@mui/x-charts-premium/ChartsAxisHighlight';
 import { ChartsGrid } from '@mui/x-charts-premium/ChartsGrid';
@@ -83,7 +83,7 @@ export default function CandlestickComposition() {
   const clipPathId = `${id}-clip-path`;
 
   return (
-    <ChartDataProviderPremium
+    <ChartsDataProviderPremium
       series={[
         {
           id: 'ohlc',
@@ -134,7 +134,7 @@ export default function CandlestickComposition() {
         {
           id: 'volume',
           // Ensures that volume bars only take up to 20% of the chart height
-          domainLimit: (min, max) => ({ min: 0, max: max * 5 }),
+          domainLimit: (min, max) => ({ min: 0, max: max.valueOf() * 5 }),
         },
       ]}
       height={400}
@@ -162,7 +162,7 @@ export default function CandlestickComposition() {
           </ChartsSvgLayer>
         </ChartsLayerContainer>
       </ChartsWrapper>
-    </ChartDataProviderPremium>
+    </ChartsDataProviderPremium>
   );
 }
 
