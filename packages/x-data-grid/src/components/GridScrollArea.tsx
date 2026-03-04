@@ -9,7 +9,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass, gridClasses } from '../constants';
+import { getDataGridUtilityClass } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridEvent } from '../hooks/utils/useGridEvent';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
@@ -48,36 +48,22 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridScrollAreaRawRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ScrollArea',
-})<{ ownerState: OwnerState }>(() => ({
-  position: 'absolute',
-  zIndex: 101,
-  // Horizontal scroll areas
-  [`&.${gridClasses['scrollArea--left']}`]: {
-    top: 0,
-    left: 0,
-    width: 20,
-    bottom: 0,
+  overridesResolver: (props, styles) => {
+    const { ownerState } = props;
+    return [styles.scrollArea, styles[`scrollArea--${ownerState.scrollDirection}`]];
   },
-  [`&.${gridClasses['scrollArea--right']}`]: {
-    top: 0,
-    right: 0,
-    width: 20,
-    bottom: 0,
-  },
-  // Vertical scroll areas
-  [`&.${gridClasses['scrollArea--up']}`]: {
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 20,
-  },
-  [`&.${gridClasses['scrollArea--down']}`]: {
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 20,
-  },
-}));
+})<{ ownerState: OwnerState }>(({ ownerState }) => {
+  const isHorizontal =
+    ownerState.scrollDirection === 'left' || ownerState.scrollDirection === 'right';
+  const oppositeEdge = { left: 'right', right: 'left', up: 'bottom', down: 'top' } as const;
+  return {
+    position: 'absolute',
+    zIndex: 101,
+    inset: 0,
+    [isHorizontal ? 'width' : 'height']: 20,
+    [oppositeEdge[ownerState.scrollDirection]]: 'unset',
+  };
+});
 
 const offsetSelector = createSelector(
   gridDimensionsSelector,
