@@ -50,8 +50,7 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     () =>
       xAxis?.map((axis) => ({
         scaleType: 'band',
-        // TODO: Should we also include hours?
-        ordinalTimeTicks: ['years', 'quarterly', 'months', 'biweekly', 'weeks', 'days'],
+        ordinalTimeTicks: ['years', 'quarterly', 'months', 'biweekly', 'weeks', 'days', 'hours'],
         ...axis,
       })),
     [xAxis],

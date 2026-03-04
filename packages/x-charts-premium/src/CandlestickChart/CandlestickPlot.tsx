@@ -22,6 +22,7 @@ import { useCandlestickPlotData } from './useCandlestickPlotData';
 import { parseColor } from '../utils/webgl/parseColor';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
 import { useWebGLContext } from '../ChartsWebGLLayer';
+import { checkCandlestickScaleErrors } from './checkCandlestickScaleErrors';
 
 export interface CandlestickPlotProps {}
 
@@ -73,9 +74,10 @@ function CandlestickWebGLPlotImpl({
   series: DefaultizedOHLCSeriesType;
 }) {
   const drawingArea = useDrawingArea();
-  // TODO: Validate this earlier in the processing pipeline
   const xScale = useXScale<'band'>();
   const yScale = useYScale<ContinuousScaleName>();
+  checkCandlestickScaleErrors(series.id, xScale);
+
   const [rectProgram] = React.useState<WebGLProgram>(() =>
     initializeProgram(gl, candlestickRectVertexShader, candlestickRectFragmentShader),
   );
