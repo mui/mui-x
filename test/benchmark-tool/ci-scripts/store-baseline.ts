@@ -95,9 +95,15 @@ async function main() {
     await fs.appendFile(path.join(monthlyDir, `${month}.jsonl`), `${jsonlEntry}\n`);
 
     // Commit and push
-    const $data = $({ cwd: dataRepoDir });
-    await $data`git config user.name ${'github-actions[bot]'}`;
-    await $data`git config user.email ${'github-actions[bot]@users.noreply.github.com'}`;
+    const $data = $({
+      cwd: dataRepoDir,
+      env: {
+        GIT_AUTHOR_NAME: 'github-actions[bot]',
+        GIT_AUTHOR_EMAIL: 'github-actions[bot]@users.noreply.github.com',
+        GIT_COMMITTER_NAME: 'github-actions[bot]',
+        GIT_COMMITTER_EMAIL: 'github-actions[bot]@users.noreply.github.com',
+      },
+    });
     const dryRunFlag = dryRun ? ['--dry-run'] : [];
 
     // eslint-disable-next-line no-console
