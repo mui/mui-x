@@ -5,6 +5,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.27.4
+
+_Mar 4, 2026_
+
+We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@arminmeh, @dav-is, @JCQuintas
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.27.4`
+
+- [DataGrid] Prevent unnecessary row selection checkbox rerendering (@arminmeh) (#21571) @github-actions[bot]
+
+#### `@mui/x-data-grid-pro@8.27.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.27.4`, plus:
+
+- [DataGridPro] Use `getRowId` prop to calculate the tree data row update (@arminmeh) (#21544) @github-actions[bot]
+
+#### `@mui/x-data-grid-premium@8.27.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.27.4`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.27.2`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.27.2`.
+
+### Charts
+
+#### `@mui/x-charts@8.27.4`
+
+- [charts] Deprecate `ChartDataProvider` in favour of `ChartsDataProvider` (#21549) @JCQuintas
+- [charts] Rename `ChartContainer` to `ChartsContainer` (@JCQuintas) (#21186) @github-actions[bot]
+- [charts] Rename `ChartZoomSlider` to `ChartsZoomSlider` (@JCQuintas) (#21572) @github-actions[bot]
+
+#### `@mui/x-charts-pro@8.27.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.27.4`.
+
+#### `@mui/x-charts-premium@8.27.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.27.4`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.27.2`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.27.2`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.27.0`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Add eslint rule to prevent `Math.random` in docs (#21505) (#21563) @JCQuintas
+- [code-infra] V8 Dedupe (#21561) @JCQuintas
+- [docs-infra] Apply Cookie Banner to v8.x Branch (#21448) @dav-is
+
 ## 8.27.3
 
 _Feb 25, 2026_
