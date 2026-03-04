@@ -32,8 +32,9 @@ export default function MainDemo() {
     setSelectedTheme(event.target.value as CustomThemeName);
   };
 
+  const mode = brandingTheme.palette.mode;
+
   const theme = React.useMemo(() => {
-    const mode = brandingTheme.palette.mode;
     const baseTheme = createTheme({ palette: { mode } });
 
     switch (selectedTheme) {
@@ -44,7 +45,7 @@ export default function MainDemo() {
       default:
         return baseTheme;
     }
-  }, [brandingTheme, selectedTheme]);
+  }, [mode, selectedTheme]);
 
   return (
     <Stack spacing={1} sx={{ p: 1, width: '100%', mb: 6 }}>
