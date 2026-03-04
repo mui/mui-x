@@ -4,6 +4,7 @@ import * as renameChartApiImport from '../rename-chart-api-import';
 import * as renameChartContainer from '../rename-chart-container';
 import * as renameChartDataProvider from '../rename-chart-data-provider';
 import * as replaceHeatmapHideLegend from '../replace-heatmap-hide-legend-false';
+import * as renameSankeyChart from '../rename-sankey-chart';
 import * as replaceShowMarkDefault from '../replace-show-mark-default';
 
 const allModules = [
@@ -12,6 +13,7 @@ const allModules = [
   replaceShowMarkDefault,
   renameIdToSeriesId,
   renameChartApiImport,
+  renameSankeyChart,
   renameChartContainer,
   renameChartDataProvider,
 ];

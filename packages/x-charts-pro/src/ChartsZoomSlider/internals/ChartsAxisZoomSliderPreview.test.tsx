@@ -4,7 +4,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 
-describe('ChartAxisZoomSliderPreview', () => {
+describe('ChartsAxisZoomSliderPreview', () => {
   const { render } = createRenderer();
 
   it('handles two axes with zoom slider preview in a bar chart', () => {
