@@ -35,7 +35,9 @@ const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   },
 ];
 
-const getAllItemsWithChildrenItemIds = (items: TreeViewDefaultItemModelProperties[]) => {
+const getAllItemsWithChildrenItemIds = (
+  items: TreeViewDefaultItemModelProperties[],
+) => {
   const itemIds: string[] = [];
   const registerItemId = (item: TreeViewDefaultItemModelProperties) => {
     if (item.children?.length) {

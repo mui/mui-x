@@ -38,9 +38,8 @@ const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
 
 export default function ApiMethodGetItem() {
   const apiRef = useRichTreeViewApiRef();
-  const [selectedItem, setSelectedItem] = React.useState<TreeViewDefaultItemModelProperties | null>(
-    null,
-  );
+  const [selectedItem, setSelectedItem] =
+    React.useState<TreeViewDefaultItemModelProperties | null>(null);
 
   const handleSelectedItemsChange = (
     event: React.SyntheticEvent | null,
