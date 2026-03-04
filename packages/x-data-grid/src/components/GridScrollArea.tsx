@@ -9,7 +9,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../constants';
+import { getDataGridUtilityClass, gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridEvent } from '../hooks/utils/useGridEvent';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
@@ -52,16 +52,17 @@ const GridScrollAreaRawRoot = styled('div', {
     const { ownerState } = props;
     return [styles.scrollArea, styles[`scrollArea--${ownerState.scrollDirection}`]];
   },
-})<{ ownerState: OwnerState }>(({ ownerState }) => {
-  const isHorizontal =
-    ownerState.scrollDirection === 'left' || ownerState.scrollDirection === 'right';
-  const oppositeEdge = { left: 'right', right: 'left', up: 'bottom', down: 'top' } as const;
+})<{ ownerState: OwnerState }>(() => {
   return {
     position: 'absolute',
     zIndex: 101,
     inset: 0,
-    [isHorizontal ? 'width' : 'height']: 20,
-    [oppositeEdge[ownerState.scrollDirection]]: 'unset',
+    // Horizontal scroll areas
+    [`&.${gridClasses['scrollArea--left']}`]: { right: 'unset', width: 20 },
+    [`&.${gridClasses['scrollArea--right']}`]: { left: 'unset', width: 20 },
+    // Vertical scroll areas
+    [`&.${gridClasses['scrollArea--up']}`]: { bottom: 'unset', height: 20 },
+    [`&.${gridClasses['scrollArea--down']}`]: { top: 'unset', height: 20 },
   };
 });
 
