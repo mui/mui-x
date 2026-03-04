@@ -288,6 +288,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         {isOpen && (
           <ChartsTooltipRoot
             {...other}
+            // The key is here to make sure the tooltip uses the new anchor immediately.
+            key={itemPosition ? 'charts-anchored' : 'charts-pointer'}
             className={classes?.root}
             open={isOpen}
             placement={
