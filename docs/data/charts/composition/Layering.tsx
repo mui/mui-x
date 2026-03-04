@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartDataProviderPremium } from '@mui/x-charts-premium/ChartDataProviderPremium';
+import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
@@ -8,7 +8,7 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { ChartsWebGlLayer } from '@mui/x-charts-premium/ChartsWebGlLayer';
+import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
 import { CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';
 import { OHLCValueType } from '@mui/x-charts-premium/models';
 
@@ -39,7 +39,7 @@ const xAxisData = ohlcData.map((_, index) => `Day ${index + 1}`);
 
 export default function Layering() {
   return (
-    <ChartDataProviderPremium
+    <ChartsDataProviderPremium
       height={600}
       series={[
         {
@@ -56,9 +56,9 @@ export default function Layering() {
           <ChartsSvgLayer>
             <ChartsGrid horizontal />
           </ChartsSvgLayer>
-          <ChartsWebGlLayer>
+          <ChartsWebGLLayer>
             <CandlestickPlot />
-          </ChartsWebGlLayer>
+          </ChartsWebGLLayer>
           <ChartsSvgLayer>
             <ChartsXAxis />
             <ChartsYAxis />
@@ -67,6 +67,6 @@ export default function Layering() {
           <ChartsTooltip />
         </ChartsLayerContainer>
       </ChartsWrapper>
-    </ChartDataProviderPremium>
+    </ChartsDataProviderPremium>
   );
 }

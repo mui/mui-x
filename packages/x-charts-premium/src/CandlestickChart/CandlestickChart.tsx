@@ -30,15 +30,15 @@ import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
-import { ChartsWebGlLayer } from '../ChartsWebGlLayer';
-import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
+import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
+import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { type OHLCSeriesType } from '../models';
 import { type CandlestickChartPluginSignatures } from './CandlestickChart.plugins';
 import { CandlestickPlot, type CandlestickPlotProps } from './CandlestickPlot';
 import { useCandlestickChartProps } from './useCandlestickChartProps';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
 import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
-import { CandlestickTooltip, type CandlestickTooltipProps } from './CandlestickTooltip';
+import { type CandlestickTooltipProps } from './CandlestickTooltip';
 
 export interface CandlestickChartSlots
   extends ChartsAxisSlots, ChartsOverlaySlots, ChartsToolbarProSlots, Partial<ChartsSlots> {
@@ -111,7 +111,7 @@ export interface CandlestickChartProps
  */
 const CandlestickChart = React.forwardRef(function CandlestickChart(
   inProps: CandlestickChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiCandlestickChart' });
   const { showToolbar = false } = props;
@@ -127,24 +127,24 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
     axisHighlightProps,
     children,
   } = useCandlestickChartProps(props);
-  const { chartDataProviderPremiumProps, chartsSurfaceProps } = useChartsContainerPremiumProps(
-    chartContainerProps,
-    ref,
-  );
+  const { chartDataProviderPremiumProps, chartsSurfaceProps } = useChartsContainerPremiumProps<
+    'ohlc',
+    CandlestickChartPluginSignatures
+  >(chartContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPremium<'ohlc', CandlestickChartPluginSignatures>
+    <ChartsDataProviderPremium<'ohlc', CandlestickChartPluginSignatures>
       {...chartDataProviderPremiumProps}
     >
-      <ChartsWrapper {...chartsWrapperProps}>
+      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         <ChartsLayerContainer>
-          <ChartsWebGlLayer>
+          <ChartsWebGLLayer>
             <CandlestickPlot {...candlestickPlotProps} />
-          </ChartsWebGlLayer>
+          </ChartsWebGLLayer>
           <ChartsSvgLayer {...chartsSurfaceProps}>
             <ChartsGrid {...gridProps} />
             <g {...clipPathGroupProps}>
@@ -158,7 +158,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
         </ChartsLayerContainer>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPremium>
+    </ChartsDataProviderPremium>
   );
 });
 

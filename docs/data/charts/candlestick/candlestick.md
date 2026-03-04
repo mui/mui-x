@@ -28,4 +28,4 @@ In this example, we demonstrate how to create a candlestick chart that displays 
 
 {{"demo": "CandlestickComposition.js"}}
 
-Since the candlestick plot is a WebGL canvas, you need to render it inside a `ChartsWebGlLayer`. You can read more about layering in the [Layering](/x/react-charts/composition/#layering) documentation.
+Since the candlestick plot is a WebGL canvas, you need to render it inside a `ChartsWebGLLayer`. You can read more about layering in the [Layering](/x/react-charts/composition/#layering) documentation.

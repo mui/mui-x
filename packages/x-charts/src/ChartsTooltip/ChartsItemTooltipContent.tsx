@@ -12,7 +12,8 @@ import {
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
-import { selectorChartSeriesConfigGetter, useStore } from '../internals';
+import { useStore } from '../internals/store/useStore';
+import { selectorChartSeriesConfigGetter } from '../internals/plugins/corePlugins/useChartSeries';
 
 export interface ChartsItemTooltipContentClasses extends ChartsTooltipClasses {}
 
