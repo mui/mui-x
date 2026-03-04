@@ -6,5 +6,10 @@ export * from './FocusedBar';
 export * from './barElementClasses';
 export * from './BarChart.plugins';
 export { type BarProps } from './AnimatedBarElement';
-export { barClasses, getBarUtilityClass } from './barClasses';
+export {
+  barClasses,
+  getBarUtilityClass,
+  useBarElementUtilityClasses,
+  useBarLabelUtilityClasses,
+} from './barClasses';
 export type { BarClassKey, BarClasses } from './barClasses';
