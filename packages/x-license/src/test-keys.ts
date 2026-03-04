@@ -114,6 +114,22 @@ export const TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE =
 export const TEST_KEY_PRO_ANNUAL_V3 =
   '521a75b4cf0d0c5e8990ce070886e167Tz0xMjMsRT00MTAyMzU0ODAwMDAwLFM9cHJvLExNPWFubnVhbCxQVj1RMy0yMDI0LFE9NSxBVD1zaW5nbGUsVD10cnVlLEtWPTM=';
 
+// --- Key format v3 Q1-2026 ---
+
+/**
+ * Pro annual, Q1-2026, quantity: 5, appType: single.
+ * orderId: #123, keyVersion: 3, expiryDate: 3001-01-01
+ */
+export const TEST_KEY_PRO_ANNUAL_Q1_2026_V3 =
+  '5f52871b5845f28ebdd0fabbe0b89695Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXBybyxMTT1hbm51YWwsUFY9UTEtMjAyNixRPTUsQVQ9c2luZ2xlLFQ9dHJ1ZSxLVj0z';
+
+/**
+ * Premium annual, Q1-2026, quantity: 10, appType: single.
+ * orderId: #123, keyVersion: 3, expiryDate: 3001-01-01
+ */
+export const TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3 =
+  '450d9fc1b28e709fcb73969bd10e1c30Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXByZW1pdW0sTE09YW5udWFsLFBWPVExLTIwMjYsUT0xMCxBVD1zaW5nbGUsVD10cnVlLEtWPTM=';
+
 // --- Invalid / edge-case keys ---
 
 /**
