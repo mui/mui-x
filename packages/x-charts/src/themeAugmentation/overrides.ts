@@ -1,4 +1,5 @@
 import { type GaugeClassKey } from '../Gauge';
+import { type BarClassKey } from '../BarChart/barClasses';
 import { type BarLabelClassKey } from '../BarChart';
 import { type BarElementClassKey } from '../BarChart/barElementClasses';
 import { type ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
@@ -23,7 +24,10 @@ export interface ChartsComponentNameToClassKey {
   MuiChartsSurface: 'root';
 
   // BarChart components
+  MuiBarChart: BarClassKey;
+  /** @deprecated Use `MuiBarChart` instead. */
   MuiBarElement: BarElementClassKey;
+  /** @deprecated Use `MuiBarChart` instead. */
   MuiBarLabel: BarLabelClassKey;
 
   // LineChart components

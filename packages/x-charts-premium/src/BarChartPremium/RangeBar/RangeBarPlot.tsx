@@ -7,6 +7,7 @@ import {
   BarElement,
   type BarElementSlotProps,
   type BarElementSlots,
+  barClasses,
   barElementClasses,
   type BarLabelSlots,
   type BarLabelSlotProps,
@@ -57,7 +58,7 @@ const RangeBarPlotRoot = styled('g', {
   name: 'MuiRangeBarPlot',
   slot: 'Root',
 })({
-  [`& .${barElementClasses.root}`]: {
+  [`& .${barClasses.element}, & .${barElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   },
 });
