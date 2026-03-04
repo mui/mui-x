@@ -82,6 +82,11 @@ const Viewport = styled('div')({
   top: 0,
   left: 0,
   overflow: 'hidden',
+
+  scrollbarWidth: 'none' /* Firefox */,
+  '&::-webkit-scrollbar': {
+    display: 'none' /* Safari and Chrome */,
+  },
 });
 
 const hasPinnedRightSelector = (apiRef: RefObject<GridApiCommunity>) =>

@@ -18,6 +18,7 @@ const Element = styled('div', {
   position: 'sticky',
   zIndex: 40,
   top: 0,
+  width: 'fit-content',
 });
 
 export function GridTopContainer(props: React.PropsWithChildren) {

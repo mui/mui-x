@@ -32,6 +32,7 @@ const Element = styled('div', {
   position: 'absolute',
   zIndex: 40,
   bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+  width: 'fit-content',
 });
 
 export function GridBottomContainer(props: GridBottomContainerProps) {
