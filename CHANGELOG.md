@@ -97,6 +97,7 @@ Internal changes.
 - [docs] Use RRULE string format in docs instead of object format (#21510) @flaviendelangle
 - [docs] Use the right default view for timeline `company-roadmap` dataset (#21517) @flaviendelangle
 - [docs] Add tutorial and example app for aggregation with row grouping (DX-162) (#21102) @mapache-salvaje
+- [docs] Fix missing codemod docs (#21604) @JCQuintas
 
 ### Core
 
@@ -111,6 +112,8 @@ Internal changes.
 - [code-infra] Setup error code extraction (#21469) @brijeshb42
 - [code-infra] Setup flat build for packages (#21029) @brijeshb42
 - [code-infra] Upgrade test_unit to large resource class (#21558) @Janpot
+- [code-infra] Removed getTeamMembers function and usage from release script (#21605) @michelengelen
+
 
 ### Miscellaneous
 
