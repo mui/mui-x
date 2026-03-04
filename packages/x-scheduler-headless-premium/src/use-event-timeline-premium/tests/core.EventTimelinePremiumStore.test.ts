@@ -14,8 +14,8 @@ describe('Core - EventTimelinePremiumStore', () => {
 
       const expectedState = {
         adapter,
-        areEventsDraggable: false,
-        areEventsResizable: false,
+        areEventsDraggable: true,
+        areEventsResizable: true,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
@@ -29,6 +29,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
+        plan: 'premium',
         preferences: EMPTY_OBJECT,
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),

@@ -36,18 +36,21 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'scatter' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
-      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
+      "type": {
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+      }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'scatter' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
     "initialZoom": {
@@ -74,14 +77,14 @@
     "onHiddenItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "type": "function(hiddenItems: Array<VisibilityIdentifierWithType>) => void",
         "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },
@@ -90,6 +93,13 @@
       "signature": {
         "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
         "describedArgs": ["event", "scatterItemIdentifier"]
+      }
+    },
+    "onTooltipAxisChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["axisItems"]
       }
     },
     "onTooltipItemChange": {
@@ -118,10 +128,16 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "tooltipAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
+      }
+    },
     "tooltipItem": {
       "type": {
-        "name": "shape",
-        "description": "{ dataIndex: number, seriesId: string, type: 'scatter' }"
+        "name": "union",
+        "description": "{ dataIndex: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
       }
     },
     "voronoiMaxRadius": {

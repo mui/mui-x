@@ -5,8 +5,6 @@ import { EventDialogClasses, eventDialogClassKeys } from '@mui/x-scheduler/inter
 export interface EventTimelinePremiumClasses extends EventDialogClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the header toolbar element. */
-  headerToolbar: string;
   /** Styles applied to the content section element. */
   content: string;
   /** Styles applied to the grid element. */
@@ -35,6 +33,8 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   titleCellLegendColor: string;
   /** Styles applied to event elements. */
   event: string;
+  /** Styles applied to event placeholder elements. */
+  eventPlaceholder: string;
   /** Styles applied to event resize handler elements. */
   eventResizeHandler: string;
   /** Styles applied to event lines clamp elements. */
@@ -97,7 +97,6 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
   'MuiEventTimeline',
   [
     'root',
-    'headerToolbar',
     'content',
     'grid',
     'titleSubGridWrapper',
@@ -112,6 +111,7 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'titleCell',
     'titleCellLegendColor',
     'event',
+    'eventPlaceholder',
     'eventResizeHandler',
     'eventLinesClamp',
     'timeHeader',

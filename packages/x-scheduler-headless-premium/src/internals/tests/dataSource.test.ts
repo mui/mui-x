@@ -7,17 +7,17 @@ const DEFAULT_PARAMS = { events: [] };
 // Basic types for testing
 interface TestEvent {
   id: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   title: string;
 }
 
 const mockFetchData = async (_start: Date, _end: Date): Promise<TestEvent[]> => {
-  const events = [
+  const events: TestEvent[] = [
     {
       id: '1',
-      start: adapter.date('2025-07-01T00:00:00Z', 'default'),
-      end: adapter.date('2025-07-01T11:00:00Z', 'default'),
+      start: '2025-07-01T00:00:00.000Z',
+      end: '2025-07-01T11:00:00.000Z',
       title: 'Event 1',
     },
   ];
@@ -130,8 +130,8 @@ premiumStoreClasses.forEach((storeClass) => {
       resolveFetch!([
         {
           id: '1',
-          start: adapter.date('2025-07-01T00:00:00Z', 'default'),
-          end: adapter.date('2025-07-01T11:00:00Z', 'default'),
+          start: '2025-07-01T00:00:00.000Z',
+          end: '2025-07-01T11:00:00.000Z',
           title: 'Event 1',
         },
       ]);

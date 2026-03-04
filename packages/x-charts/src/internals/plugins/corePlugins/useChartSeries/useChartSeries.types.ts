@@ -1,13 +1,24 @@
-import { type AllSeriesType } from '../../../../models/seriesType';
+import type {
+  AllSeriesType,
+  HighlightItemIdentifier,
+  HighlightItemIdentifierWithType,
+  SeriesItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
 import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
+import { type SeriesId } from '../../../../models/seriesType/common';
 import {
   type SeriesLayoutGetterResult,
   type SeriesProcessorParams,
   type SeriesProcessorResult,
   type UseChartSeriesConfigSignature,
 } from '../useChartSeriesConfig';
+import {
+  type VisibilityIdentifier,
+  type VisibilityIdentifierWithType,
+} from '../../featurePlugins/useChartVisibilityManager/useChartVisibilityManager.types';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -56,11 +67,50 @@ export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = Chart
   [type in TSeriesTypes]?: SeriesProcessorParams<type>;
 };
 
+export type SeriesIdToType = ReadonlyMap<SeriesId, ChartSeriesType>;
+
 export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType> {
   series: {
     defaultizedSeries: DefaultizedSeriesGroups<T>;
+    idToType: SeriesIdToType;
     dataset?: Readonly<DatasetType>;
   };
+}
+
+export type IdentifierWithTypeFunction = {
+  // Overloads for different identifier types
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends SeriesItemIdentifier<SeriesType> | SeriesItemIdentifierWithType<SeriesType>,
+  >(
+    identifier: Item,
+    typeOfIdentifier: 'seriesItem',
+  ): SeriesItemIdentifierWithType<SeriesType>;
+
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends HighlightItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType>,
+  >(
+    identifier: Item,
+    typeOfIdentifier: 'highlightItem',
+  ): HighlightItemIdentifierWithType<SeriesType>;
+
+  <
+    SeriesType extends ChartSeriesType,
+    Item extends VisibilityIdentifier<SeriesType> | VisibilityIdentifierWithType<SeriesType>,
+  >(
+    identifier: Item,
+    typeOfIdentifier: 'visibility',
+  ): VisibilityIdentifierWithType<SeriesType>;
+};
+
+interface UseChartSeriesInstance {
+  /**
+   * Utils top add series type when developers do not provide it.
+   * @param {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'>} identifier The series identifier without its type
+   * @returns {Pick<SeriesItemIdentifier<SeriesType>, 'seriesId'> & Pick<SeriesItemIdentifier<SeriesType>, 'type'>}The identifier with the type.
+   */
+  identifierWithType: IdentifierWithTypeFunction;
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
@@ -68,5 +118,6 @@ export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSe
     params: UseChartSeriesParameters;
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
+    instance: UseChartSeriesInstance;
     dependencies: [UseChartSeriesConfigSignature<SeriesType>];
   }>;

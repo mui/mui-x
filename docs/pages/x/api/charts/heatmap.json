@@ -34,7 +34,10 @@
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
-      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
+      "type": {
+        "name": "union",
+        "description": "{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
+      }
     },
     "id": { "type": { "name": "string" } },
     "initialZoom": {
@@ -63,15 +66,22 @@
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifier<SeriesType>) => void",
+        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
         "describedArgs": ["event", "item"]
+      }
+    },
+    "onTooltipAxisChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["axisItems"]
       }
     },
     "onTooltipItemChange": {
@@ -99,10 +109,16 @@
       "type": { "name": "object" },
       "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
     },
+    "tooltipAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
+      }
+    },
     "tooltipItem": {
       "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }"
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, xIndex: number, yIndex: number }"
       }
     },
     "width": { "type": { "name": "number" } },
@@ -234,13 +250,15 @@
       "key": "faded",
       "className": "MuiHeatmap-faded",
       "description": "Styles applied to the cell element if faded.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "highlighted",
       "className": "MuiHeatmap-highlighted",
       "description": "Styles applied to the cell element if highlighted.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "series",

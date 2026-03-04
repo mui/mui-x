@@ -7,7 +7,7 @@ import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-pre
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { formatWeekDayMonthAndDayOfMonth } from '@mui/x-scheduler/internals';
-import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
 const WeeksHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -15,7 +15,7 @@ const WeeksHeaderRoot = styled('div', {
 })({
   display: 'flex',
   // TODO: update this calculation when we add the option to hide weekends
-  minWidth: 'calc(var(--unit-count) * 7 * var(--weeks-cell-width))',
+  minWidth: 'calc(var(--unit-count) * var(--weeks-cell-width))',
 });
 
 const TimeHeaderCell = styled('div', {
@@ -46,11 +46,10 @@ const DayLabel = styled('div', {
 const WeekDaysRow = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'WeeksHeaderDaysRow',
-})(({ theme }) => ({
+})({
   display: 'grid',
-  gridTemplateColumns: 'repeat(7, 1fr)',
-  columnGap: theme.spacing(0.5),
-}));
+  gridTemplateColumns: 'repeat(7, var(--time-cell-width))',
+});
 
 const WeekDayCell = styled('time', {
   name: 'MuiEventTimeline',
@@ -73,7 +72,7 @@ export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventTimelinePremiumStoreContext();
-  const classes = useEventTimelinePremiumClasses();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);

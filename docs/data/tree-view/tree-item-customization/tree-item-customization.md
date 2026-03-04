@@ -97,7 +97,7 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
 
 ## Hooks
 
-### useTreeItem
+### `useTreeItem()`
 
 The `useTreeItem()` hook lets you manage and customize individual `TreeItem` components.
 You can use it to get the properties needed for all slots, the status of any given item, or to tap into the interactive API of the Tree View.
@@ -152,7 +152,7 @@ If you want to access the item model, you can use the `useTreeItemModel()` hook.
 See [Tree Item customization—useTreeItemModel](/x/react-tree-view/tree-item-customization/#usetreeitemmodel) for more details.
 :::
 
-### `useTreeItemUtils`
+### `useTreeItemUtils()`
 
 The `useTreeItemUtils()` hook provides a set of interaction methods for implementing custom behaviors for the Tree View.
 It also returns the status of the `TreeItem`.
@@ -214,7 +214,7 @@ const {
 
 See [Editing—enable editing using only icons](/x/react-tree-view/rich-tree-view/editing/#enable-editing-using-only-icons) for more details on customizing this behavior.
 
-### `useTreeItemModel`
+### `useTreeItemModel()`
 
 The `useTreeItemModel()` hook lets you access the item model (the object passed to `props.items`):
 

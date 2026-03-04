@@ -123,21 +123,18 @@ export function showExpiredAnnualLicenseKeyError({
   expiryTimestamp: number;
 }) {
   throw new Error(
-    [
-      'MUI X: Expired license key.',
-      '',
-      `Your annual license key to use MUI X ${plan} in non-production environments has expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
-      '',
-      'To solve the problem you can either:',
-      '',
-      '- Renew your license https://mui.com/r/x-get-license and use the new key',
-      `- Stop making changes to code depending directly or indirectly on MUI X ${plan}'s APIs`,
-      '',
-      'Note that your license is perpetual in production environments with any version released before your license term ends.',
-      '',
-      `- License key expiry timestamp: ${new Date(expiryTimestamp)}`,
-      `- Installed license key: ${licenseKey}`,
-      '',
-    ].join('\n'),
+    `MUI X: Expired license key.
+
+Your annual license key to use MUI X ${plan} in non-production environments has expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).
+
+To solve the problem you can either:
+
+- Renew your license https://mui.com/r/x-get-license and use the new key
+- Stop making changes to code depending directly or indirectly on MUI X ${plan}'s APIs
+
+Note that your license is perpetual in production environments with any version released before your license term ends.
+
+- License key expiry timestamp: ${new Date(expiryTimestamp)}
+- Installed license key: ${licenseKey}`,
   );
 }

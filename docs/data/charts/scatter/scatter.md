@@ -145,7 +145,7 @@ For circles, the `markerSize` is the radius of the point in pixels.
 
 You can customize the plotting of the data in a scatter chart by providing custom components as `children` of the `ScatterChart` component.
 
-A scatter chart's series can be accessed through the `useScatterSeries` hook.
+A scatter chart's series can be accessed through the `useScatterSeries()` hook.
 This hook returns the order of the series and information about the series themselves, including their data points, color, etc.
 
 See [Custom components](/x/react-charts/components/) to learn how to further customize your charts.
@@ -175,14 +175,14 @@ The example below uses the `renderer` prop to improve performance when rendering
 
 ## Composition
 
-Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+Use the `<ChartsDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<ScatterPlot />` component that renders the scatter marks.
 
 Here's how the Scatter Chart is composed:
 
 ```jsx
-<ChartDataProvider>
+<ChartsDataProvider>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -198,7 +198,7 @@ Here's how the Scatter Chart is composed:
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 :::info

@@ -1,4 +1,5 @@
-import { createRenderer, describeConformance, screen } from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
+import { describeConformance } from 'test/utils/charts/describeConformance';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -17,22 +18,11 @@ describe('FunnelChart', () => {
     <FunnelChart height={100} width={100} series={[{ data: [{ value: 100 }, { value: 50 }] }]} />,
     () => ({
       classes: {} as any,
-      inheritComponent: 'svg',
+      inheritComponent: 'div',
       render,
       muiName: 'MuiFunnelChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.SVGSVGElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'slotPropsProp',
-        'slotPropsCallback',
-        'slotsProp',
-        'themeStyleOverrides',
-        'themeVariants',
-        'themeCustomPalette',
-        'themeDefaultProps',
-      ],
+      refInstanceof: window.HTMLDivElement,
     }),
   );
 

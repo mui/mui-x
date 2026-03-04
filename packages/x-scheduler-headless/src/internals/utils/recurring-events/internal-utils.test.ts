@@ -2,7 +2,7 @@ import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
 import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import {
@@ -169,12 +169,12 @@ describe('recurring-events/internal-utils', () => {
       });
 
       it('accepts plain byDay codes and returns them unchanged', () => {
-        const byDay: RecurringEventRecurrenceRule['byDay'] = ['MO', 'WE', 'FR'];
+        const byDay: SchedulerProcessedEventRecurrenceRule['byDay'] = ['MO', 'WE', 'FR'];
         expect(parsesByDayForWeeklyFrequency(byDay)).to.deep.equal(['MO', 'WE', 'FR']);
       });
 
       it('throws when any ordinal is provided (e.g., 1MO, -1FR)', () => {
-        const withOrdinal: RecurringEventRecurrenceRule['byDay'] = ['1MO', '-1FR'];
+        const withOrdinal: SchedulerProcessedEventRecurrenceRule['byDay'] = ['1MO', '-1FR'];
         expect(() => parsesByDayForWeeklyFrequency(withOrdinal)).to.throw();
       });
 
@@ -190,9 +190,9 @@ describe('recurring-events/internal-utils', () => {
       });
 
       it('parses one ordinal byDay code (e.g., 1MO, 3WE, -1FR)', () => {
-        const byDay: RecurringEventRecurrenceRule['byDay'] = ['1FR'];
+        const byDay: SchedulerProcessedEventRecurrenceRule['byDay'] = ['1FR'];
         expect(parsesByDayForMonthlyFrequency(byDay)).to.deep.equal({ ord: 1, code: 'FR' });
-        const negativeByDay: RecurringEventRecurrenceRule['byDay'] = ['-1MO'];
+        const negativeByDay: SchedulerProcessedEventRecurrenceRule['byDay'] = ['-1MO'];
         expect(parsesByDayForMonthlyFrequency(negativeByDay)).to.deep.equal({
           ord: -1,
           code: 'MO',
@@ -200,7 +200,7 @@ describe('recurring-events/internal-utils', () => {
       });
 
       it('throws when any entry lacks an ordinal (e.g., plain MO)', () => {
-        const mixed: RecurringEventRecurrenceRule['byDay'] = ['2TU', 'MO'];
+        const mixed: SchedulerProcessedEventRecurrenceRule['byDay'] = ['2TU', 'MO'];
         expect(() => parsesByDayForMonthlyFrequency(mixed)).to.throw();
       });
     });
@@ -260,7 +260,7 @@ describe('recurring-events/internal-utils', () => {
   });
 
   describe('getRemainingDailyOccurrences', () => {
-    const createRule = (interval = 1): RecurringEventRecurrenceRule => ({
+    const createRule = (interval = 1): SchedulerProcessedEventRecurrenceRule => ({
       freq: 'DAILY',
       interval,
     });
@@ -318,7 +318,7 @@ describe('recurring-events/internal-utils', () => {
     const createRule = (
       by: RecurringEventWeekDayCode[],
       interval = 1,
-    ): RecurringEventRecurrenceRule => ({
+    ): SchedulerProcessedEventRecurrenceRule => ({
       freq: 'WEEKLY',
       interval,
       byDay: by,
@@ -425,7 +425,7 @@ describe('recurring-events/internal-utils', () => {
 
   describe('getRemainingMonthlyOccurrences', () => {
     describe('byMonthDay', () => {
-      const createRule = (day: number, interval = 1): RecurringEventRecurrenceRule => ({
+      const createRule = (day: number, interval = 1): SchedulerProcessedEventRecurrenceRule => ({
         freq: 'MONTHLY',
         interval,
         byMonthDay: [day],
@@ -508,7 +508,7 @@ describe('recurring-events/internal-utils', () => {
       const createByDayRule = (
         byDay: RecurringEventByDayValue[],
         interval = 1,
-      ): RecurringEventRecurrenceRule => ({
+      ): SchedulerProcessedEventRecurrenceRule => ({
         freq: 'MONTHLY',
         interval,
         byDay,
@@ -607,7 +607,7 @@ describe('recurring-events/internal-utils', () => {
   });
 
   describe('getRemainingYearlyOccurrences', () => {
-    const createRule = (interval = 1): RecurringEventRecurrenceRule => ({
+    const createRule = (interval = 1): SchedulerProcessedEventRecurrenceRule => ({
       freq: 'YEARLY',
       interval,
     });

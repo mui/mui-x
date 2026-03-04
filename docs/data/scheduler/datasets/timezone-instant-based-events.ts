@@ -1,7 +1,7 @@
 // Timezone Events Dataset Instant-Based
 // Non-realistic set focused on edge cases of timezone handling.
 
-import { RecurringEventRecurrenceRule, SchedulerResource } from '@mui/x-scheduler/models';
+import { SchedulerResource } from '@mui/x-scheduler/models';
 
 export const resources: SchedulerResource[] = [
   { id: 'ny', title: 'New York', eventColor: 'purple' },
@@ -20,7 +20,7 @@ export interface TimezoneEvent {
   end: string;
   timezone: string;
   resource: string;
-  rrule?: RecurringEventRecurrenceRule;
+  rrule?: string;
   exDates?: string[];
 }
 
@@ -74,7 +74,7 @@ export const initialEvents: TimezoneEvent[] = [
     end: '2025-03-05T18:00:00Z',
     timezone: 'America/New_York',
     resource: 'ny',
-    rrule: { freq: 'WEEKLY', byDay: ['MO', 'WE'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=MO,WE',
   },
 
   // Paris monthly 15th UNTIL — 18:00 Paris → DST change on Mar 30
@@ -86,11 +86,7 @@ export const initialEvents: TimezoneEvent[] = [
     end: '2025-03-15T18:00:00Z',
     timezone: 'Europe/Paris',
     resource: 'paris',
-    rrule: {
-      freq: 'MONTHLY',
-      byMonthDay: [15],
-      until: new Date('2025-06-30T21:59:00Z'), // 23:59 Paris → 21:59Z (after DST adjust)
-    },
+    rrule: 'FREQ=MONTHLY;BYMONTHDAY=15;UNTIL=20250630T215900Z',
   },
 
   // Tokyo daily — 07:00 JST → always UTC+9 (Tokyo has no DST)
@@ -103,7 +99,7 @@ export const initialEvents: TimezoneEvent[] = [
     end: '2025-02-28T22:45:00Z',
     timezone: 'Asia/Tokyo',
     resource: 'tokyo',
-    rrule: { freq: 'DAILY' },
+    rrule: 'FREQ=DAILY',
   },
 
   // LA weekly COUNT — 16:00 LA
@@ -117,11 +113,7 @@ export const initialEvents: TimezoneEvent[] = [
     end: '2025-03-03T01:00:00Z',
     timezone: 'America/Los_Angeles',
     resource: 'la',
-    rrule: {
-      freq: 'WEEKLY',
-      byDay: ['SU'],
-      count: 5,
-    },
+    rrule: 'FREQ=WEEKLY;BYDAY=SU;COUNT=5',
   },
 
   // Sydney exDates — 13:00 Sydney (local time)
@@ -134,7 +126,7 @@ export const initialEvents: TimezoneEvent[] = [
     end: '2025-03-14T03:00:00Z',
     timezone: 'Australia/Sydney',
     resource: 'sydney',
-    rrule: { freq: 'WEEKLY', byDay: ['FR'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=FR',
     exDates: ['2025-03-21T02:00:00Z'],
   },
   // Paris crossing the DST jump (Mar 30, 2025)
