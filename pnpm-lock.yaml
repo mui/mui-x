@@ -4239,7 +4239,7 @@ packages:
   '@mui/base@5.0.0-beta.40-1':
     resolution: {integrity: sha512-agKXuNNy0bHUmeU7pNmoZwNFr7Hiyhojkb9+2PVyDG5+6RafYuyMgbrav8CndsB7KUc/U51JAw9vKNDLYBzaUA==}
     engines: {node: '>=12.0.0'}
-    deprecated: This package has been replaced by @base-ui/react
+    deprecated: This package has been replaced by @base-ui-components/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4433,7 +4433,7 @@ packages:
         optional: true
 
   '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/67acb51e5ffb2c26a17bd809884df348f3057ddc':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/67acb51e5ffb2c26a17bd809884df348f3057ddc}
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/67acb51e5ffb2c26a17bd809884df348f3057ddc}\
     version: 7.3.8
     engines: {node: '>=22.18.0', pnpm: 10.28.2}
 
