@@ -14,6 +14,7 @@ import {
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartSeriesConfigGetter } from '../internals/plugins/corePlugins/useChartSeries';
+import { type ItemTooltip, type ItemTooltipWithMultipleValues } from '../internals';
 
 export interface ChartsItemTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -68,7 +69,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
                     <Content
                       item={
                         /* TypeScript can't assert that the item's type is the same type as the `Content`, so we need to cast */
-                        value
+                        value as ItemTooltipWithMultipleValues['values'][number]
                       }
                     />
                   ) : (
@@ -106,7 +107,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
                 <Content
                   item={
                     /* TypeScript can't assert that the item's type is the same type as the `Content`, so we need to cast */
-                    tooltipData
+                    tooltipData as ItemTooltip<any>
                   }
                 />
               ) : (

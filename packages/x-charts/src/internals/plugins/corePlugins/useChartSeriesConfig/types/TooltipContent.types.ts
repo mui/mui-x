@@ -4,6 +4,7 @@ import type {
   ChartSeriesType,
   PolarChartSeriesType,
 } from '../../../../../models/seriesType/config';
+import { type ItemTooltipWithMultipleValues } from './tooltipGetter.types';
 
 export interface AxisTooltipContentProps<
   T extends CartesianChartSeriesType | PolarChartSeriesType,
@@ -12,5 +13,5 @@ export interface AxisTooltipContentProps<
 }
 
 export interface ItemTooltipContentProps<T extends ChartSeriesType> {
-  item: ItemTooltip<T>;
+  item: ItemTooltip<T> | ItemTooltipWithMultipleValues['values'][number];
 }
