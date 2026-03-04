@@ -141,7 +141,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <GridScrollArea scrollDirection="down" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
         <Content {...getContentProps()}>
-          <Viewport className="VIEWPORT" {...getViewportProps()}>
+          <Viewport {...getViewportProps()}>
             <TopContainer {...containerVerticalProps}>
               {!rootProps.listView && <GridHeaders />}
               <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
