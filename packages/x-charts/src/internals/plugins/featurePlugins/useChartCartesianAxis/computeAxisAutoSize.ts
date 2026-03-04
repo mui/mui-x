@@ -1,8 +1,14 @@
-import type { DefaultedXAxis, DefaultedYAxis, AxisGroup } from '../../../../models/axis';
+import type {
+  DefaultedXAxis,
+  DefaultedYAxis,
+  AxisGroup,
+  ContinuousScaleName,
+} from '../../../../models/axis';
 import { batchMeasureStrings } from '../../../domUtils';
 import type { ChartsTextStyle } from '../../../getWordsByLines';
 import { deg2rad } from '../../../angleConversion';
 import { getGraphemeCount } from '../../../getGraphemeCount';
+import { getScale } from '../../../getScale';
 import {
   AXIS_AUTO_SIZE_PADDING,
   AXIS_AUTO_SIZE_MIN,
@@ -140,7 +146,11 @@ function getTickLabels(
 
     const labels = data.map((value) => {
       if (valueFormatter) {
-        return valueFormatter(value, { location: 'tick' });
+        return valueFormatter(value, {
+          location: 'tick',
+          scale: {} as any,
+          defaultTickLabel: `${value}`,
+        });
       }
       return `${value}`;
     });
@@ -154,13 +164,21 @@ function getTickLabels(
   const minVal = min ?? (extrema && Number.isFinite(extrema[0]) ? extrema[0] : 0);
   const maxVal = max ?? (extrema && Number.isFinite(extrema[1]) ? extrema[1] : 100);
 
+  // Create a temporary scale for formatting (tickFormat only uses the domain, not the range)
+  const continuousScaleType = (scaleType ?? 'linear') as ContinuousScaleName;
+  const scale = getScale(continuousScaleType, [minVal, maxVal] as any, [0, 1]);
+
   const valuesToMeasure = minVal === maxVal ? [minVal] : [minVal, maxVal];
 
   return valuesToMeasure.map((value) => {
     if (valueFormatter) {
-      return valueFormatter(value, { location: 'tick' });
+      return valueFormatter(value, {
+        location: 'tick',
+        scale,
+        defaultTickLabel: `${value}`,
+      });
     }
-    return `${value}`;
+    return scale.tickFormat(valuesToMeasure.length)(value as any);
   });
 }
 
