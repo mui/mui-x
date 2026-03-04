@@ -153,7 +153,7 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled('span', {
   slot: 'CurrentTimeIndicatorCircle',
 })(({ theme }) => ({
   position: 'absolute',
-  top: -3,
+  top: -4,
   left: -5,
   width: 8,
   height: 8,
