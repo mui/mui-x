@@ -123,10 +123,6 @@ function printDurationMatrix(name: string, iterations: IterationEvent[][]): void
   if (iterations.length === 0) return;
 
   const renderCount = iterations[0].length;
-  const iterCount = iterations.length;
-  const maxDisplayedIters = 10;
-  const displayedIterCount = Math.min(iterCount, maxDisplayedIters);
-  const truncated = iterCount > maxDisplayedIters;
 
   // Collect durations per render: durations[renderIdx][iterIdx]
   const durations: number[][] = [];
@@ -134,8 +130,23 @@ function printDurationMatrix(name: string, iterations: IterationEvent[][]): void
     durations.push(iterations.map((iter) => iter[r].actualDuration));
   }
 
-  // Compute Q1/Q3 per render for outlier detection and filtered stats
-  const perRender = durations.map((row) => {
+  const pad = (s: string, w: number) => (s.length >= w ? s : ' '.repeat(w - s.length) + s);
+  const labelWidth = 28;
+  const statWidth = 16;
+
+  const headerCells = [
+    pad('Render', labelWidth),
+    pad('Raw μ±σ', statWidth),
+    pad('IQR μ±σ', statWidth),
+    pad('Out', 4),
+  ];
+  const header = headerCells.join(dim(' | '));
+  const separator = dim('-'.repeat(headerCells.join(' | ').length));
+
+  const rows: string[] = [];
+
+  for (let r = 0; r < renderCount; r += 1) {
+    const row = durations[r];
     const sorted = [...row].sort((a, b) => a - b);
     const q1 = quantile(sorted, 0.25);
     const q3 = quantile(sorted, 0.75);
@@ -145,64 +156,30 @@ function printDurationMatrix(name: string, iterations: IterationEvent[][]): void
     const rawSigma = calculateStdDev(row, rawMean);
     const iqrMean = calculateMean(used);
     const iqrSigma = calculateStdDev(used, iqrMean);
-    return { q1, q3, rawMean, rawSigma, iqrMean, iqrSigma, dropped: row.length - used.length };
-  });
+    const dropped = row.length - used.length;
 
-  // Build header (show at most maxDisplayedIters columns)
-  const renderLabel = 'Render';
-  const iterHeaders = Array.from({ length: displayedIterCount }, (_, i) => `Iter ${i}`);
-  const cellWidth = 10;
-  const statWidth = 16;
+    // Skip statistically irrelevant renders
+    if (iqrMean < DURATION_NOISE_FLOOR) {
+      continue;
+    }
 
-  const pad = (s: string, w: number) => (s.length >= w ? s : ' '.repeat(w - s.length) + s);
+    const event = iterations[0][r];
+    const label = `#${r} ${event.id}:${event.phase}`;
+    const rawStr = `${rawMean.toFixed(2)}±${rawSigma.toFixed(2)}`;
+    const iqrStr = `${iqrMean.toFixed(2)}±${iqrSigma.toFixed(2)}`;
 
-  const headerCells = [
-    pad(renderLabel, 28),
-    ...iterHeaders.map((h) => pad(h, cellWidth)),
-    ...(truncated ? ['...'] : []),
-    pad('Raw μ±σ', statWidth),
-    pad('IQR μ±σ', statWidth),
-    pad('Out', 4),
-  ];
-  const header = headerCells.join(dim(' | '));
-  const separator = dim('-'.repeat(headerCells.join(' | ').length));
-
-  const rows = durations
-    .map((row, r) => {
-      const event = iterations[0][r];
-      const label = `#${r} ${event.id}:${event.phase}`;
-      const { q1, q3, rawMean, rawSigma, iqrMean, iqrSigma, dropped } = perRender[r];
-
-      // Skip statistically irrelevant renders
-      if (iqrMean < DURATION_NOISE_FLOOR) {
-        return null;
-      }
-
-      const cells = row.slice(0, displayedIterCount).map((d) => {
-        const formatted = d.toFixed(2);
-        if (isOutlier(d, q1, q3)) {
-          return yellow(pad(formatted, cellWidth));
-        }
-        return pad(formatted, cellWidth);
-      });
-      const rawStr = `${rawMean.toFixed(2)}±${rawSigma.toFixed(2)}`;
-      const iqrStr = `${iqrMean.toFixed(2)}±${iqrSigma.toFixed(2)}`;
-      return [
-        pad(label.slice(0, 28), 28),
-        ...cells,
-        ...(truncated ? [dim('...')] : []),
+    rows.push(
+      [
+        pad(label.slice(0, labelWidth), labelWidth),
         dim(pad(rawStr, statWidth)),
         cyan(pad(iqrStr, statWidth)),
         dropped > 0 ? yellow(pad(String(dropped), 4)) : dim(pad('0', 4)),
-      ].join(dim(' | '));
-    })
-    .filter((row): row is string => row !== null);
+      ].join(dim(' | ')),
+    );
+  }
 
-  const truncNote = truncated ? `, showing ${displayedIterCount}/${iterCount}` : '';
   // eslint-disable-next-line no-console
-  console.log(
-    `\n${dim(`=== Duration Matrix: ${name} (outliers highlighted, IQR method${truncNote}) ===`)}`,
-  );
+  console.log(`\n${dim(`=== Duration Matrix: ${name} (IQR method) ===`)}`);
   // eslint-disable-next-line no-console
   console.log(header);
   // eslint-disable-next-line no-console
