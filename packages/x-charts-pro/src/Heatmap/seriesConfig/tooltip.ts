@@ -17,7 +17,7 @@ const tooltipGetter: TooltipGetter<'heatmap'> = (params) => {
 
   return {
     identifier,
-    color: getColor(cellValue, identifier.xIndex, identifier.yIndex),
+    color: getColor(cellValue),
     label,
     value: cellValue,
     formattedValue,
