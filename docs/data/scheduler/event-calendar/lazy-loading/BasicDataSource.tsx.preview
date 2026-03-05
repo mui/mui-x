@@ -1,5 +1,4 @@
 <EventCalendarPremium
-  events={[]}
   dataSource={{ getEvents, updateEvents }}
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
