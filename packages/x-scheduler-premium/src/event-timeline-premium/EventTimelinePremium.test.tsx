@@ -16,6 +16,7 @@ import {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
+import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
 const baseResources: SchedulerResource[] = [
   { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
@@ -47,7 +48,7 @@ describe('<EventTimelinePremium />', () => {
     visibleDate?: TemporalSupportedObject;
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;
-    localeText?: Partial<import('@mui/x-scheduler/models').EventTimelineLocaleText>;
+    localeText?: Partial<EventTimelineLocaleText>;
   }) {
     return render(
       <EventTimelinePremium
