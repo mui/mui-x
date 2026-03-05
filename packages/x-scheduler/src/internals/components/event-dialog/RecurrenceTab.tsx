@@ -296,9 +296,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
     const byDay = controlled.rruleDraft.byDay ?? [];
-    const next = byDay.includes(dayCode)
-      ? byDay.filter((d) => d !== dayCode)
-      : [...byDay, dayCode];
+    const next = byDay.includes(dayCode) ? byDay.filter((d) => d !== dayCode) : [...byDay, dayCode];
     setControlled((prev) => ({
       ...prev,
       rruleDraft: { ...prev.rruleDraft, byDay: next },
@@ -447,7 +445,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           </Select>
         </FormControl>
 
-        <RepeatSectionFieldset aria-label={localeText.recurrenceRepeatLabel} className={classes.eventDialogRepeatSectionFieldset}>
+        <RepeatSectionFieldset
+          aria-label={localeText.recurrenceRepeatLabel}
+          className={classes.eventDialogRepeatSectionFieldset}
+        >
           <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>
             {localeText.recurrenceRepeatLabel}
           </SectionHeaderTitle>
