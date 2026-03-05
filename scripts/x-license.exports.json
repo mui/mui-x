@@ -1,19 +1,6 @@
 [
-  { "name": "APP_TYPES", "kind": "Variable" },
-  { "name": "AppType", "kind": "TypeAlias" },
-  { "name": "KeyVersion", "kind": "TypeAlias" },
-  { "name": "LICENSE_MODELS", "kind": "Variable" },
-  { "name": "LicenseDetails", "kind": "Interface" },
   { "name": "LicenseInfo", "kind": "Class" },
-  { "name": "LicenseModel", "kind": "TypeAlias" },
-  { "name": "LicenseStatus", "kind": "TypeAlias" },
-  { "name": "MuiLicenseInfo", "kind": "Interface" },
   { "name": "muiXTelemetrySettings", "kind": "Variable" },
-  { "name": "NullableLicenseDetails", "kind": "TypeAlias" },
-  { "name": "PLAN_SCOPES", "kind": "Variable" },
-  { "name": "PLAN_VERSIONS", "kind": "Variable" },
-  { "name": "PlanScope", "kind": "TypeAlias" },
-  { "name": "PlanVersion", "kind": "TypeAlias" },
   { "name": "Unstable_LicenseInfoProvider", "kind": "Function" },
   { "name": "Unstable_LicenseInfoProviderProps", "kind": "Interface" }
 ]
