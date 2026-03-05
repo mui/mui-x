@@ -27,7 +27,7 @@ const TimeHeaderCell = styled('div', {
   alignItems: 'center',
   flexDirection: 'column',
   '&:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -40,7 +40,7 @@ const DayLabel = styled('div', {
   fontWeight: theme.typography.fontWeightMedium,
   display: 'flex',
   justifyContent: 'center',
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const WeekDaysRow = styled('div', {
@@ -59,12 +59,12 @@ const WeekDayCell = styled('time', {
   textAlign: 'center',
   margin: 0,
   fontSize: theme.typography.body2.fontSize,
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   '&[data-weekend]': {
-    color: theme.palette.error.main,
+    color: (theme.vars || theme).palette.error.main,
   },
   '&:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 

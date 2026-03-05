@@ -27,7 +27,7 @@ const EventTimelinePremiumContentRoot = styled('section', {
   slot: 'Content',
 })(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   flexGrow: 1,
   width: '100%',
 }));
@@ -48,7 +48,7 @@ const EventTimelinePremiumTitleSubGridWrapper = styled('div', {
   slot: 'TitleSubGridWrapper',
 })(({ theme }) => ({
   gridColumn: 1,
-  borderRight: `1px solid ${theme.palette.divider}`,
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   display: 'grid',
   gridTemplateRows: 'subgrid',
   gridRow: '1 / -1',
@@ -68,7 +68,7 @@ const EventTimelinePremiumTitleSubGridHeaderRow = styled(TimelineGrid.Row, {
   name: 'MuiEventTimeline',
   slot: 'TitleSubGridHeaderRow',
 })(({ theme }) => ({
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   gridRow: 1,
   gridColumn: 1,
 }));
@@ -110,7 +110,7 @@ const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelineGrid.Row, {
   name: 'MuiEventTimeline',
   slot: 'EventsSubGridHeaderRow',
 })(({ theme }) => ({
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   gridRow: 1,
 }));
 
@@ -127,7 +127,7 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
   padding: theme.spacing(2, 0),
   alignContent: 'start',
   '&:not(:last-of-type)': {
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
