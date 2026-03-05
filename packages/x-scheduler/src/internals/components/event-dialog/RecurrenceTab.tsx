@@ -457,7 +457,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           </Select>
         </FormControl>
 
-        <RepeatSectionFieldset aria-label={localeText.recurrenceRepeatLabel}>
+        <RepeatSectionFieldset aria-label={localeText.recurrenceRepeatLabel} className={classes.eventDialogRepeatSectionFieldset}>
           <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>
             {localeText.recurrenceRepeatLabel}
           </SectionHeaderTitle>
