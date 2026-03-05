@@ -24,14 +24,25 @@ import {
   ChartsToolbarPrintExportTrigger,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
+import { useXScale } from '@mui/x-charts/hooks';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import Checkbox from '@mui/material/Checkbox';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json'; // Source: Yahoo Finance
+import Select from '@mui/material/Select';
+import ohlcv from '../dataset/ibkr-2025-ohlcv.json'; // Source: Yahoo Finance
 
-const xData = sp500ohlcv.map((entry) => new Date(Date.parse(entry.date)));
+const dividends = [
+  { date: '2025-02-28T00:00:00', amount: 0.0625 },
+  { date: '2025-05-30T00:00:00', amount: 0.08 },
+  { date: '2025-08-29T00:00:00', amount: 0.08 },
+  { date: '2025-12-01T00:00:00', amount: 0.08 },
+];
+const stockSplits = [{ date: '2025-06-18T00:00:00', ratio: 4 }];
 
-const ohlcData: Array<OHLCValueType> = sp500ohlcv.map((entry) => [
+const xData = ohlcv.map((entry) => new Date(Date.parse(entry.date)));
+
+const ohlcData: Array<OHLCValueType> = ohlcv.map((entry) => [
   entry.open,
   entry.high,
   entry.low,
@@ -39,20 +50,18 @@ const ohlcData: Array<OHLCValueType> = sp500ohlcv.map((entry) => [
 ]);
 
 // Extract volume data
-const volumeData = sp500ohlcv.map((entry) => entry.volume);
+const volumeData = ohlcv.map((entry) => entry.volume);
 
-// Calculate 20-day moving average from closing prices
-const movingAverage: number[] = [];
-const windowSize = 20;
-for (let i = 0; i < sp500ohlcv.length; i += 1) {
-  if (i < windowSize - 1) {
-    movingAverage.push(null as any);
-  } else {
-    const sum = sp500ohlcv
+function calcMovingAverage(windowSize: number): Array<number | null> {
+  return ohlcv.map((_, i) => {
+    if (i < windowSize - 1) {
+      return null;
+    }
+    const sum = ohlcv
       .slice(i - windowSize + 1, i + 1)
       .reduce((acc, entry) => acc + entry.close, 0);
-    movingAverage.push(sum / windowSize);
-  }
+    return sum / windowSize;
+  });
 }
 
 const formatVolume = (value: number) =>
@@ -79,6 +88,17 @@ export default function CandlestickOverview() {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
   const theme = useTheme();
+  const [movingAverageWindow, setMovingAverageWindow] = React.useState<
+    20 | 50 | null
+  >(20);
+  const [visibleAnnotations, setVisibleAnnotations] = React.useState<
+    Array<'dividends' | 'splits'>
+  >(['dividends', 'splits']);
+  const movingAverageData = React.useMemo(
+    () =>
+      movingAverageWindow !== null ? calcMovingAverage(movingAverageWindow) : null,
+    [movingAverageWindow],
+  );
 
   const volumeBarColorGetter = ({ dataIndex }: { dataIndex: number }) => {
     if (dataIndex === 0) {
@@ -87,7 +107,7 @@ export default function CandlestickOverview() {
 
     // Color the volume bar green if the closing price is higher than or equal to the previous day's close,
     // red otherwise. This is how Yahoo Finance colors their volume bars.
-    return sp500ohlcv[dataIndex].close >= sp500ohlcv[dataIndex - 1].close
+    return ohlcv[dataIndex].close >= ohlcv[dataIndex - 1].close
       ? theme.palette.success.main
       : theme.palette.error.main;
   };
@@ -99,15 +119,19 @@ export default function CandlestickOverview() {
           id: 'ohlc',
           type: 'ohlc',
           data: ohlcData,
-          label: 'S&P 500',
+          label: 'IBKR',
         },
-        {
-          id: 'moving-average',
-          type: 'line',
-          data: movingAverage,
-          label: '20-day Moving Average',
-          color: '#42a5f5',
-        },
+        ...(movingAverageData !== null
+          ? [
+              {
+                id: 'moving-average',
+                type: 'line' as const,
+                data: movingAverageData,
+                label: `${movingAverageWindow}-day Moving Average`,
+                color: '#42a5f5',
+              },
+            ]
+          : []),
         {
           id: 'volume',
           type: 'bar',
@@ -150,7 +174,12 @@ export default function CandlestickOverview() {
       height={400}
     >
       <ChartsWrapper>
-        <CandlestickToolbar />
+        <CandlestickToolbar
+          movingAverageWindow={movingAverageWindow}
+          onMovingAverageWindowChange={setMovingAverageWindow}
+          visibleAnnotations={visibleAnnotations}
+          onVisibleAnnotationsChange={setVisibleAnnotations}
+        />
         <ChartsLayerContainer>
           <ChartsSvgLayer>
             <ChartsGrid horizontal vertical />
@@ -162,6 +191,10 @@ export default function CandlestickOverview() {
             <g clipPath={`url(#${clipPathId})`}>
               <BarPlot renderer="svg-batch" />
               <LinePlot />
+              <CandlestickAnnotations
+                showDividends={visibleAnnotations.includes('dividends')}
+                showSplits={visibleAnnotations.includes('splits')}
+              />
               <ChartsAxisHighlight x="line" y="line" />
             </g>
             <ChartsClipPath id={clipPathId} />
@@ -177,7 +210,17 @@ export default function CandlestickOverview() {
   );
 }
 
-function CandlestickToolbar() {
+function CandlestickToolbar({
+  movingAverageWindow,
+  onMovingAverageWindowChange,
+  visibleAnnotations,
+  onVisibleAnnotationsChange,
+}: {
+  movingAverageWindow: 20 | 50 | null;
+  onMovingAverageWindowChange: (value: 20 | 50 | null) => void;
+  visibleAnnotations: Array<'dividends' | 'splits'>;
+  onVisibleAnnotationsChange: (value: Array<'dividends' | 'splits'>) => void;
+}) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const menuId = useId();
@@ -190,6 +233,58 @@ function CandlestickToolbar() {
 
   return (
     <Toolbar>
+      <Select
+        size="small"
+        variant="standard"
+        value={movingAverageWindow ?? 'none'}
+        onChange={(event) => {
+          const val = event.target.value;
+          onMovingAverageWindowChange(
+            val === 'none' ? null : (Number(val) as 20 | 50),
+          );
+        }}
+        sx={{ minWidth: 120, marginLeft: 1, marginRight: 1 }}
+        disableUnderline
+      >
+        <MenuItem value="none">MA: Off</MenuItem>
+        <MenuItem value={20}>MA: 20-day</MenuItem>
+        <MenuItem value={50}>MA: 50-day</MenuItem>
+      </Select>
+      <Select
+        multiple
+        size="small"
+        variant="standard"
+        value={visibleAnnotations}
+        onChange={(event) => {
+          onVisibleAnnotationsChange(
+            event.target.value as Array<'dividends' | 'splits'>,
+          );
+        }}
+        renderValue={(selected) => {
+          if (selected.length === 0) {
+            return 'Annotations: Off';
+          }
+          if (selected.length === 2) {
+            return 'Annotations: All';
+          }
+          return selected[0] === 'dividends' ? 'Dividends' : 'Stock Splits';
+        }}
+        sx={{ minWidth: 140, marginLeft: 1, marginRight: 1 }}
+        disableUnderline
+        displayEmpty
+      >
+        <MenuItem value="dividends">
+          <Checkbox
+            size="small"
+            checked={visibleAnnotations.includes('dividends')}
+          />
+          Dividends
+        </MenuItem>
+        <MenuItem value="splits">
+          <Checkbox size="small" checked={visibleAnnotations.includes('splits')} />
+          Stock Splits
+        </MenuItem>
+      </Select>
       <ToolbarButton
         id={buttonId}
         aria-controls={menuId}
@@ -279,7 +374,7 @@ function CandlestickTooltip() {
           <span>C:{formatTooltipDollarValue(ohlcItem.value![3])}</span>
           <span>V:{formatVolume(volumeItem.value!)}</span>
         </Stack>
-        {movingAverageItem.value != null && (
+        {movingAverageItem?.value != null && (
           <Stack
             sx={(theme) => ({
               width: 'min-content',
@@ -293,5 +388,77 @@ function CandlestickTooltip() {
         )}
       </Stack>
     </foreignObject>
+  );
+}
+
+function CandlestickAnnotations({
+  showDividends,
+  showSplits,
+}: {
+  showDividends: boolean;
+  showSplits: boolean;
+}) {
+  const drawingArea = useDrawingArea();
+  const xScale = useXScale<'band'>();
+  const bandwidth = xScale.bandwidth();
+
+  const getX = (dateStr: string): number | null => {
+    const match = xData.find((d) => d.getTime() === Date.parse(dateStr));
+    if (!match) {
+      return null;
+    }
+    const pos = xScale(match);
+    return pos === undefined ? null : pos + bandwidth / 2;
+  };
+
+  return (
+    <g>
+      {showDividends &&
+        dividends.map(({ date, amount }) => {
+          const x = getX(date);
+          if (x === null) {
+            return null;
+          }
+          return (
+            <g key={`dividend-${date}`}>
+              <line
+                x1={x}
+                y1={drawingArea.top}
+                x2={x}
+                y2={drawingArea.top + drawingArea.height}
+                stroke="#4caf50"
+                strokeWidth={1}
+                strokeDasharray="4 2"
+              />
+              <text x={x + 4} y={drawingArea.top + 14} fontSize={10} fill="#4caf50">
+                D ${amount}
+              </text>
+            </g>
+          );
+        })}
+      {showSplits &&
+        stockSplits.map(({ date, ratio }) => {
+          const x = getX(date);
+          if (x === null) {
+            return null;
+          }
+          return (
+            <g key={`split-${date}`}>
+              <line
+                x1={x}
+                y1={drawingArea.top}
+                x2={x}
+                y2={drawingArea.top + drawingArea.height}
+                stroke="#9c27b0"
+                strokeWidth={1}
+                strokeDasharray="4 2"
+              />
+              <text x={x + 4} y={drawingArea.top + 14} fontSize={10} fill="#9c27b0">
+                Split {ratio}:1
+              </text>
+            </g>
+          );
+        })}
+    </g>
   );
 }
