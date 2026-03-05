@@ -12,4 +12,4 @@ export type {
   LicenseModel,
   PlanScope,
 } from './utils';
-export { muiXTelemetrySettings } from '@mui/x-telemetry';
+export { muiXTelemetrySettings } from './telemetry';

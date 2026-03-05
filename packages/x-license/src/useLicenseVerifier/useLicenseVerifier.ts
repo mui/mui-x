@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { sendMuiXTelemetryEvent, muiXTelemetryEvents } from '@mui/x-telemetry';
+import { sendMuiXTelemetryEvent, muiXTelemetryEvents } from '../telemetry';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {

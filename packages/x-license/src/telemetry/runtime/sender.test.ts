@@ -1,21 +1,11 @@
 import { vi } from 'vitest';
-import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { isJSDOM } from '@mui/x-internals/platform';
-import telemetryContext from '../context';
+import { muiXTelemetrySettings } from '..';
 import { getTelemetryEnvConfig } from './config';
 
-vi.mock('../context', () => ({
-  default: {
-    config: { isInitialized: true },
-    traits: {
-      machineId: 'test-machine-id',
-      projectId: 'test-project-id',
-      sessionId: 'test-session-id',
-      anonymousId: 'test-anonymous-id',
-      isCI: false,
-      isDocker: false,
-    },
-  },
+const mockGetTelemetryContext = vi.fn();
+vi.mock('./get-context', () => ({
+  default: (...args: any[]) => mockGetTelemetryContext(...args),
 }));
 
 const testEvent = {
@@ -24,6 +14,21 @@ const testEvent = {
   context: {},
 };
 
+function createMockContext(overrides: Record<string, any> = {}) {
+  return {
+    config: { isInitialized: true },
+    traits: {
+      machineId: 'test-machine-id',
+      projectId: 'test-project-id',
+      sessionId: 'test-session-id',
+      anonymousId: 'test-anonymous-id',
+      isCI: false,
+      isDocker: false,
+      ...overrides,
+    },
+  };
+}
+
 describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
 
@@ -31,7 +36,8 @@ describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
     vi.stubEnv('NODE_ENV', 'development');
     fetchSpy = vi.fn().mockResolvedValue(new Response('ok', { status: 200 }));
     vi.stubGlobal('fetch', fetchSpy);
-    telemetryContext.traits.isCI = false;
+    mockGetTelemetryContext.mockReset();
+    mockGetTelemetryContext.mockResolvedValue(createMockContext());
     // Reset env config cache
     getTelemetryEnvConfig(true);
   });
@@ -66,7 +72,7 @@ describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
   });
 
   it('should not send telemetry in CI environments', async () => {
-    telemetryContext.traits.isCI = true;
+    mockGetTelemetryContext.mockResolvedValue(createMockContext({ isCI: true }));
 
     const { default: sendMuiXTelemetryEvent } = await import('./sender');
     await sendMuiXTelemetryEvent(testEvent);

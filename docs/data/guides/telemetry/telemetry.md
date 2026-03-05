@@ -1,6 +1,6 @@
 ---
 title: MUI X Telemetry guide
-packageName: '@mui/x-telemetry'
+packageName: '@mui/x-license'
 ---
 
 # MUI X Telemetry guide [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -40,7 +40,7 @@ Telemetry collection is specifically associated with the usage of paid MUI X Pr
 ## Telemetry in development mode only
 
 MUI X Telemetry is designed to operate exclusively during development.
-In production builds of your application, telemetry is entirely removed, ensuring no data collection in your live environment and almost no runtime overhead ([proof](https://bundlephobia.com/package/@mui/x-telemetry)).
+In production builds of your application, telemetry is entirely removed, ensuring no data collection in your live environment and almost no runtime overhead.
 This guarantees that your production application's performance and behavior remain unaffected.
 
 :::info

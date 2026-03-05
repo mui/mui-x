@@ -8,14 +8,14 @@ import getAnonymousProjectId from './get-project-id';
 import getAnonymousMachineId from './get-machine-id';
 import { TelemetryStorage } from './storage';
 
-const dirname =
+const buildRoot =
   typeof __dirname === 'string'
-    ? __dirname // cjs build in root dir
+    ? path.resolve(__dirname, '..', '..') // cjs: build/telemetry/postinstall -> build
     : (() => {
         const filename = fileURLToPath(import.meta.url);
 
-        // esm build in `esm` directory, so we need to go up two levels
-        return path.dirname(path.dirname(filename));
+        // esm: build/esm/telemetry/postinstall/index.js -> build (4 levels up)
+        return path.dirname(path.dirname(path.dirname(path.dirname(filename))));
       })();
 
 (async () => {
@@ -52,7 +52,7 @@ const dirname =
   };
 
   const writeContextData = (filePath: string, format: (content: string) => string) => {
-    const targetPath = path.resolve(dirname, '..', filePath, 'context.js');
+    const targetPath = path.resolve(buildRoot, filePath, 'telemetry', 'context.js');
     fs.writeFileSync(targetPath, format(JSON.stringify(contextData, null, 2)));
   };
 

@@ -14,4 +14,11 @@ declare global {
     REACT_APP_MUI_X_TELEMETRY_DEBUG?: string;
     PUBLIC_MUI_X_TELEMETRY_DEBUG?: string;
   }
+
+  interface Process {
+    cwd(): string;
+    permission: {
+      has(scope: string): boolean;
+    };
+  }
 }
