@@ -32,7 +32,7 @@ The following team members contributed to this release:
 
 Same changes as in `@mui/x-data-grid@8.27.4`, plus:
 
-- [DataGridPro] Use `getRowId` prop to calculate the tree data row update (@arminmeh) (#21544) @github-actions[bot]
+- [DataGridPro] Use `getRowId` prop to calculate the tree data row update (#21544) @arminmeh
 
 #### `@mui/x-data-grid-premium@8.27.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -43,8 +43,8 @@ Same changes as in `@mui/x-data-grid-pro@8.27.4`.
 #### `@mui/x-charts@8.27.4`
 
 - [charts] Deprecate `ChartDataProvider` in favour of `ChartsDataProvider` (#21549) @JCQuintas
-- [charts] Rename `ChartContainer` to `ChartsContainer` (@JCQuintas) (#21186) @github-actions[bot]
-- [charts] Rename `ChartZoomSlider` to `ChartsZoomSlider` (@JCQuintas) (#21572) @github-actions[bot]
+- [charts] Rename `ChartContainer` to `ChartsContainer` (#21186) @JCQuintas
+- [charts] Rename `ChartZoomSlider` to `ChartsZoomSlider` (#21572) @JCQuintas
 
 #### `@mui/x-charts-pro@8.27.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
