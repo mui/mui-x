@@ -19,16 +19,22 @@ The `dataSource.getEvents(start, end)` method is called whenever the visible dat
 To enable lazy loading, pass a `dataSource` object with a `getEvents` method to the Event Calendar.
 The `getEvents` method receives a date range and should return a promise that resolves with the events for that range.
 
-The `events` prop serves as the initial state—pass an empty array when all events come from the server.
+When `dataSource` is provided, the `events` prop is ignored—all events are fetched through the data source.
 
 ```tsx
 <EventCalendarPremium
   events={[]}
-  dataSource={{ getEvents: async (start, end) => fetchEventsFromServer(start, end) }}
+  dataSource={{
+    getEvents: async (start, end) => fetchEventsFromServer(start, end),
+    updateEvents: async ({ created, updated, deleted }) => {
+      // Persist changes to the server
+      return { success: true };
+    },
+  }}
 />
 ```
 
-The `dataSource` object also accepts an `updateEvents` method to persist changes (created, updated, and deleted events) back to the server.
+The `updateEvents` method is called whenever events are created, updated, or deleted, letting you persist the changes back to the server.
 
 {{"demo": "BasicDataSource.js", "bg": "inline", "defaultCodeOpen": false}}
 
