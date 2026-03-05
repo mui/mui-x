@@ -26,7 +26,8 @@ const GridAggregationHeaderRoot = styled('div', {
     const { ownerState } = props;
     return [
       styles.aggregationColumnHeader,
-      styles[`aggregationColumnHeader--align${capitalize(ownerState.colDef.headerAlign)}`],
+      ownerState.colDef.headerAlign &&
+        styles[`aggregationColumnHeader--align${capitalize(ownerState.colDef.headerAlign)}`],
     ];
   },
 })<{ ownerState: OwnerState }>({
