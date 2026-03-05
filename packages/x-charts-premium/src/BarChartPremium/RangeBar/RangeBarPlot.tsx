@@ -8,7 +8,6 @@ import {
   type BarElementSlotProps,
   type BarElementSlots,
   barClasses,
-  barElementClasses,
   type BarLabelSlots,
   type BarLabelSlotProps,
 } from '@mui/x-charts/BarChart';
@@ -58,7 +57,7 @@ const RangeBarPlotRoot = styled('g', {
   name: 'MuiRangeBarPlot',
   slot: 'Root',
 })({
-  [`& .${barClasses.element}, & .${barElementClasses.root}`]: {
+  [`& .${barClasses.element}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   },
 });
