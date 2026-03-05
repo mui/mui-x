@@ -1205,4 +1205,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'promptIconContainer',
   'promptError',
   'promptAction',
+  'resizablePanelHandle',
+  'resizablePanelHandle--horizontal',
+  'resizablePanelHandle--vertical',
 ]);

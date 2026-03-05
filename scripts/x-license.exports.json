@@ -1,13 +1,6 @@
 [
-  { "name": "AppType", "kind": "TypeAlias" },
-  { "name": "KeyVersion", "kind": "TypeAlias" },
-  { "name": "LicenseDetails", "kind": "Interface" },
   { "name": "LicenseInfo", "kind": "Class" },
-  { "name": "LicenseModel", "kind": "TypeAlias" },
-  { "name": "LicenseStatus", "kind": "TypeAlias" },
-  { "name": "MuiLicenseInfo", "kind": "Interface" },
   { "name": "muiXTelemetrySettings", "kind": "Variable" },
-  { "name": "PlanScope", "kind": "TypeAlias" },
   { "name": "Unstable_LicenseInfoProvider", "kind": "Function" },
   { "name": "Unstable_LicenseInfoProviderProps", "kind": "Interface" }
 ]
