@@ -114,9 +114,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: [
       'columnHeader',
       'columnHeader--filter',
-      colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'columnHeader--alignRight',
+      colDef.headerAlign && `columnHeader--align${capitalize(colDef.headerAlign)}`,
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
