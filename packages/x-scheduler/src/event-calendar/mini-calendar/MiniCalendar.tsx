@@ -213,6 +213,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
           </MiniCalendarMonthLabel>
           <MiniCalendarNavigation className={classes.miniCalendarNavigation}>
             <IconButton
+              className={classes.miniCalendarPreviousButton}
               size="small"
               aria-label={localeText.miniCalendarGoToPreviousMonth}
               onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, -1))}
@@ -220,6 +221,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               <ChevronLeftIcon fontSize="small" />
             </IconButton>
             <IconButton
+              className={classes.miniCalendarNextButton}
               size="small"
               aria-label={localeText.miniCalendarGoToNextMonth}
               onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, 1))}

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';

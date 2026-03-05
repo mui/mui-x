@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-alpha.2",
   "author": "MUI Team",
   "description": "MUI X License verification.",
   "license": "SEE LICENSE IN LICENSE",
@@ -46,7 +46,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    "./internals": "./src/internals/index.ts"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
