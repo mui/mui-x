@@ -65,18 +65,12 @@ ruleTester.run('no-selector-default-parameters', rule, {
     {
       name: 'createSelector with destructured default',
       code: `createSelector(inputSelector, (data, { field = 'name' } = {}) => data)`,
-      errors: [
-        { messageId: 'no-default-param' },
-        { messageId: 'no-default-param' },
-      ],
+      errors: [{ messageId: 'no-default-param' }, { messageId: 'no-default-param' }],
     },
     {
       name: 'createSelector with multiple default params',
       code: `createSelector(inputSelector, (data, a = 1, b = 2) => data)`,
-      errors: [
-        { messageId: 'no-default-param' },
-        { messageId: 'no-default-param' },
-      ],
+      errors: [{ messageId: 'no-default-param' }, { messageId: 'no-default-param' }],
     },
   ],
 });

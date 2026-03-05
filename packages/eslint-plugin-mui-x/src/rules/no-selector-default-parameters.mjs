@@ -9,10 +9,7 @@ const rule = {
     schema: [],
   },
   create(context) {
-    const SELECTOR_FUNCTIONS = new Set([
-      'createSelector',
-      'createSelectorMemoized',
-    ]);
+    const SELECTOR_FUNCTIONS = new Set(['createSelector', 'createSelectorMemoized']);
 
     /**
      * Check if any parameters of a function node use default values (AssignmentPattern).
@@ -53,10 +50,7 @@ const rule = {
         return;
       }
       const lastArg = args[args.length - 1];
-      if (
-        lastArg.type === 'ArrowFunctionExpression' ||
-        lastArg.type === 'FunctionExpression'
-      ) {
+      if (lastArg.type === 'ArrowFunctionExpression' || lastArg.type === 'FunctionExpression') {
         checkFunctionParams(lastArg);
       }
     }
