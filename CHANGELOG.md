@@ -2,15 +2,15 @@
 
 ## 9.0.0-alpha.2
 
-_Mar 4, 2026_
+_Mar 5, 2026_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - ✅ Stabilize Sankey chart
 - 🐞 Bugfixes and internal improvements
 
 The following team members contributed to this release:
-@aemartos, @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @rita-codes, @siriwatknp
+@aemartos, @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -20,6 +20,7 @@ The following team members contributed to this release:
 - [DataGrid] Add `checkboxColDef` prop to customize the selection column (#21331) @michelengelen
 - [DataGrid] Format pagination numbers by default (#21117) @siriwatknp
 - [DataGrid] Prevent unnecessary row selection checkbox rerendering (#21570) @arminmeh
+- [DataGrid] Make GridScrollArea overrides resolver dynamic (#21532) @sai6855
 
 #### `@mui/x-data-grid-pro@9.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -58,6 +59,7 @@ Same changes as in `@mui/x-date-pickers@9.0.0-alpha.2`.
 - [charts] Rename `useSvgRef()` by `useChartsLayerContainerRef()` (#21494) @alexfauquette
 - [charts] Restore focus on last focused item (#21522) @alexfauquette
 - [charts] Warn users when controlled tooltip state does not match the trigger (#21520) @Copilot
+- [charts] Fix controlled tooltip position (#21603) @bernardobelchior
 
 #### `@mui/x-charts-pro@9.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -91,11 +93,6 @@ Internal changes.
 - [docs] Add backticks and parentheses to all functions and hooks (DX-173) (#21496) @mapache-salvaje
 - [docs] Remove mentions of `mySvgRef` (#21559) @bernardobelchior
 - [docs] Update Roadmap section in the docs  (#20892) @alelthomas
-- [docs] Add supported timezones section (#21508) @flaviendelangle
-- [docs] Always control the events in demos without lazy loading (#21493) @flaviendelangle
-- [docs] Remove warning saying that the package is not published (#21521) @flaviendelangle
-- [docs] Use RRULE string format in docs instead of object format (#21510) @flaviendelangle
-- [docs] Use the right default view for timeline `company-roadmap` dataset (#21517) @flaviendelangle
 - [docs] Add tutorial and example app for aggregation with row grouping (DX-162) (#21102) @mapache-salvaje
 - [docs] Fix missing codemod docs (#21604) @JCQuintas
 
