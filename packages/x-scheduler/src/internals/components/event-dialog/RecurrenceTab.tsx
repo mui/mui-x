@@ -508,7 +508,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                       checked={controlled.rruleDraft.byDay?.includes(dayValue) ?? false}
                       disabled={customDisabled}
                       onChange={() => handleChangeWeeklyDays(dayValue)}
-                      inputProps={{ 'aria-label': ariaLabel }}
+                      slotProps={{ input: { 'aria-label': ariaLabel } }}
                     />
                   ))}
                 </RecurrenceSelectorContainer>
