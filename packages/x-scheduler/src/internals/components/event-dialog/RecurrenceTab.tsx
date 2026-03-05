@@ -140,11 +140,6 @@ const WeekDaySelectorCheckbox = styled(Checkbox, {
   margin: theme.spacing(0.5),
   border: 0,
   borderRadius: theme.shape.borderRadius,
-  minWidth: 0,
-  textAlign: 'center',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
   color: theme.palette.action.active,
   '&.Mui-checked': {
     color: theme.palette.text.primary,
