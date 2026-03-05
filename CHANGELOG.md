@@ -20,7 +20,9 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@8.27.4`
 
-- [DataGrid] Prevent unnecessary row selection checkbox rerendering (@arminmeh) (#21571) @github-actions[bot]
+- [DataGrid] Prevent unnecessary row selection checkbox rerendering (#21571) @arminmeh
+- [DataGrid] Make GridScrollArea overrides resolver dynamic (#21612) @sai6855
+- [l10n] Improve Ukrainian (uk-UA) locale (#21381) @lion1963
 
 #### `@mui/x-data-grid-pro@8.27.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
