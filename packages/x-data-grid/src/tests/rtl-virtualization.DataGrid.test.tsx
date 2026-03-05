@@ -2,7 +2,6 @@ import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getCell } from 'test/utils/helperFn';
-import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Virtualization RTL', () => {
   const { render } = createRenderer();
@@ -19,7 +18,7 @@ describe('<DataGrid /> - Virtualization RTL', () => {
 
   // Total column width: 780px
 
-  describe.skipIf(isJSDOM)('RTL scroll clamping', () => {
+  describe('RTL scroll clamping', () => {
     // This test verifies the fix for issue https://github.com/mui/mui-x/issues/18274
     it('should not skip columns in RTL when columns fit in viewport', async () => {
       const rtlTheme = createTheme({ direction: 'rtl' });

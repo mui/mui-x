@@ -11,6 +11,8 @@ import {
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
+import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   EventDialogProvider,
   EventDialogTrigger,
@@ -104,6 +106,7 @@ const EventTimelinePremiumEventsSubGrid = styled(TimelineGrid.SubGrid, {
   display: 'grid',
   gridTemplateRows: 'subgrid',
   gridRow: '2 / -1',
+  gridColumn: 1,
 });
 
 const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelineGrid.Row, {
@@ -129,6 +132,33 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
+}));
+
+const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTimeIndicator, {
+  name: 'MuiEventTimeline',
+  slot: 'CurrentTimeIndicator',
+})(({ theme }) => ({
+  gridRow: '2 / -1',
+  gridColumn: 1,
+  marginLeft: 'calc(var(--unit-count) * var(--unit-width) * var(--x-position))',
+  width: 0,
+  zIndex: 2,
+  borderLeft: `2px solid ${theme.palette.primary.main}`,
+  pointerEvents: 'none',
+  position: 'relative',
+}));
+
+const EventTimelinePremiumCurrentTimeIndicatorCircle = styled('span', {
+  name: 'MuiEventTimeline',
+  slot: 'CurrentTimeIndicatorCircle',
+})(({ theme }) => ({
+  position: 'absolute',
+  top: -4,
+  left: -5,
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.primary.main,
 }));
 
 function EventRowContent({
@@ -193,7 +223,19 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   // Selector hooks
+  const adapter = useAdapter();
   const view = useStore(store, eventTimelinePremiumViewSelectors.view);
+  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const showCurrentTimeIndicatorSetting = useStore(
+    store,
+    schedulerNowSelectors.showCurrentTimeIndicator,
+  );
+  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const isNowInView = React.useMemo(
+    () => adapter.isWithinRange(now, [viewConfig.start, viewConfig.end]),
+    [adapter, now, viewConfig.start, viewConfig.end],
+  );
+  const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
   // Feature hooks
   let header: React.ReactNode;
@@ -259,6 +301,16 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                 </EventTimelinePremiumEventsSubGridRow>
               )}
             </EventTimelinePremiumEventsSubGrid>
+            {showCurrentTimeIndicator && (
+              <EventTimelinePremiumCurrentTimeIndicator
+                className={classes.currentTimeIndicator}
+                aria-hidden
+              >
+                <EventTimelinePremiumCurrentTimeIndicatorCircle
+                  className={classes.currentTimeIndicatorCircle}
+                />
+              </EventTimelinePremiumCurrentTimeIndicator>
+            )}
           </EventTimelinePremiumEventsSubGridWrapper>
         </EventTimelinePremiumGrid>
       </EventDialogProvider>
