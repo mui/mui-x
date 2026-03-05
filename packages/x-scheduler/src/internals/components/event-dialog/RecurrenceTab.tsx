@@ -505,9 +505,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                       className={classes.eventDialogWeekDaySelectorFormGroup}
                       icon={<span>{label}</span>}
                       checkedIcon={<span>{label}</span>}
-                      checked={
-                        (controlled.rruleDraft.byDay as RecurringEventWeekDayCode[] | undefined)?.includes(dayValue) ?? false
-                      }
+                      checked={controlled.rruleDraft.byDay?.includes(dayValue) ?? false}
                       disabled={customDisabled}
                       onChange={() => handleChangeWeeklyDays(dayValue)}
                       inputProps={{ 'aria-label': ariaLabel }}
