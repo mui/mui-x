@@ -14,7 +14,6 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import {
   RecurringEventFrequency,
@@ -42,12 +41,13 @@ const SectionHeaderTitle = styled(Typography, {
   color: theme.palette.text.secondary,
 }));
 
-const RecurrenceSelectorContainer = styled(Paper, {
+const RecurrenceSelectorContainer = styled('div', {
   name: 'MuiEventDialog',
   slot: 'RecurrenceSelectorContainer',
 })(({ theme }) => ({
   display: 'inline-flex',
   border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
   width: 'fit-content',
   maxWidth: '100%',
 }));
@@ -112,6 +112,7 @@ const RecurrenceSelectorToggleGroup = styled(ToggleButtonGroup, {
 })(({ theme }) => ({
   [`& .${toggleButtonGroupClasses.grouped}`]: {
     margin: theme.spacing(0.5),
+    padding: theme.spacing(0.75),
     border: 0,
     borderRadius: theme.shape.borderRadius,
     minWidth: 0,
@@ -142,7 +143,7 @@ const WeekDaySelectorCheckbox = styled(Checkbox, {
   color: theme.palette.action.active,
   '&.Mui-checked': {
     color: theme.palette.text.primary,
-    backgroundColor: theme.alpha(theme.palette.text.primary, theme.palette.action.selectedOpacity),
+    backgroundColor: theme.palette.action.selected,
   },
 }));
 
@@ -489,7 +490,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 </RepeatSectionLabel>
                 <RecurrenceSelectorContainer
-                  elevation={0}
+
                   className={classes.eventDialogRecurrenceSelectorContainer}
                   role="group"
                   aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
@@ -516,7 +517,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 </RepeatSectionLabel>
                 <RecurrenceSelectorContainer
-                  elevation={0}
+
                   className={classes.eventDialogRecurrenceSelectorContainer}
                 >
                   <RecurrenceSelectorToggleGroup
