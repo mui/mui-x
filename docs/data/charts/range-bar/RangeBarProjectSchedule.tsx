@@ -18,7 +18,7 @@ import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import { ScatterPlot, ScatterSeries } from '@mui/x-charts/ScatterChart';
-import { ChartDataProviderPremium } from '@mui/x-charts-premium/ChartDataProviderPremium';
+import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';
 
 const importantHappeningsLabels = [
   'Exploratory archaeology digs begin.',
@@ -213,7 +213,7 @@ export default function RangeBarProjectSchedule() {
   ];
 
   return (
-    <ChartDataProviderPremium
+    <ChartsDataProviderPremium
       dataset={bigDigDataset}
       xAxis={xAxis}
       yAxis={yAxis}
@@ -251,7 +251,7 @@ export default function RangeBarProjectSchedule() {
           ]}
         />
       </ChartsWrapper>
-    </ChartDataProviderPremium>
+    </ChartsDataProviderPremium>
   );
 }
 

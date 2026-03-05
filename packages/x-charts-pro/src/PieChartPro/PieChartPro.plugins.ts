@@ -15,7 +15,7 @@ import {
 export type PieChartProPluginSignatures = [
   UseChartTooltipSignature<'pie'>,
   UseChartInteractionSignature,
-  UseChartHighlightSignature,
+  UseChartHighlightSignature<'pie'>,
   UseChartVisibilityManagerSignature<'pie'>,
   UseChartKeyboardNavigationSignature,
   UseChartProExportSignature,
