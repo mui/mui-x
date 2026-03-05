@@ -176,95 +176,154 @@ describe('<EventDialogContent open />', () => {
     expect(onEventsChange.firstCall.firstArg).to.deep.equal([]);
   });
 
-  it('should handle read-only events and render ReadonlyContent', () => {
-    const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
+  describe('read-only events', () => {
+    it('should render ReadonlyContent', () => {
+      const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
 
-    const readOnlyOccurrence = EventBuilder.new(adapter)
-      .id(readOnlyEvent.id)
-      .title(readOnlyEvent.title)
-      .description(readOnlyEvent.description)
-      .span(readOnlyEvent.start, readOnlyEvent.end)
-      .readOnly(true)
-      .toOccurrence();
+      const readOnlyOccurrence = EventBuilder.new(adapter)
+        .id(readOnlyEvent.id)
+        .title(readOnlyEvent.title)
+        .description(readOnlyEvent.description)
+        .span(readOnlyEvent.start, readOnlyEvent.end)
+        .readOnly(true)
+        .toOccurrence();
 
-    render(
-      <EventCalendarProvider
-        events={[readOnlyEvent]}
-        resources={resources}
-        storeClass={PremiumTestStore}
-      >
-        <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
-      </EventCalendarProvider>,
-    );
+      render(
+        <EventCalendarProvider
+          events={[readOnlyEvent]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        </EventCalendarProvider>,
+      );
 
-    const dialogs = screen.getAllByRole('dialog');
-    const dialog = within(dialogs[dialogs.length - 1]);
+      const dialogs = screen.getAllByRole('dialog');
+      const dialog = within(dialogs[dialogs.length - 1]);
 
-    // Should display title as text, not in an input
-    expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
-    expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
+      // Should display title as text, not in an input
+      expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
+      expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
 
-    // Should display description as text, not in an input
-    expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
-    expect(dialog.queryByLabelText(/description/i)).to.equal(null);
+      // Should display description as text, not in an input
+      expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
+      expect(dialog.queryByLabelText(/description/i)).to.equal(null);
 
-    // Should not have date/time inputs
-    expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
+      // Should not have date/time inputs
+      expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
 
-    // Should not have all-day checkbox
-    expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
+      // Should not have all-day checkbox
+      expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
 
-    // Should not have resource/recurrence comboboxes
-    expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
-    expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
-  });
+      // Should not have resource/recurrence comboboxes
+      expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+      expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+    });
 
-  it('should handle read-only events if EventCalendar is read-only', () => {
-    const readOnlyOccurrence = EventBuilder.new(adapter)
-      .id(DEFAULT_EVENT.id)
-      .title(DEFAULT_EVENT.title)
-      .description(DEFAULT_EVENT.description)
-      .span(DEFAULT_EVENT.start, DEFAULT_EVENT.end)
-      .readOnly(true)
-      .toOccurrence();
+    it('should display recurrence label for recurring events', () => {
+      const recurringEventBuilder = EventBuilder.new(adapter)
+        .title('Daily Standup')
+        .singleDay('2025-05-26T09:00:00Z', 30)
+        .recurrent('DAILY')
+        .readOnly(true);
 
-    render(
-      <EventCalendarProvider
-        events={[DEFAULT_EVENT]}
-        resources={resources}
-        readOnly
-        storeClass={PremiumTestStore}
-      >
-        <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
-      </EventCalendarProvider>,
-    );
+      const recurringOccurrence = recurringEventBuilder.toOccurrence();
 
-    const dialogs = screen.getAllByRole('dialog');
-    const dialog = within(dialogs[dialogs.length - 1]);
+      render(
+        <EventCalendarProvider
+          events={[recurringEventBuilder.build()]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={recurringOccurrence} />
+        </EventCalendarProvider>,
+      );
 
-    // Should display title as text, not in an input
-    expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
-    expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
+      const dialogs = screen.getAllByRole('dialog');
+      const dialog = within(dialogs[dialogs.length - 1]);
 
-    // Should display description as text, not in an input
-    expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
-    expect(dialog.queryByLabelText(/description/i)).to.equal(null);
+      expect(dialog.getByText(/repeats daily/i)).not.to.equal(null);
+    });
 
-    // Should not have date/time inputs
-    expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
-    expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
+    it('should not display recurrence label for non-recurring events', () => {
+      const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
 
-    // Should not have all-day checkbox
-    expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
+      const readOnlyOccurrence = EventBuilder.new(adapter)
+        .id(readOnlyEvent.id)
+        .title(readOnlyEvent.title)
+        .description(readOnlyEvent.description)
+        .span(readOnlyEvent.start, readOnlyEvent.end)
+        .readOnly(true)
+        .toOccurrence();
 
-    // Should not have resource/recurrence comboboxes
-    expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
-    expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+      render(
+        <EventCalendarProvider
+          events={[readOnlyEvent]}
+          resources={resources}
+          storeClass={PremiumTestStore}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      const dialogs = screen.getAllByRole('dialog');
+      const dialog = within(dialogs[dialogs.length - 1]);
+
+      expect(dialog.queryByText(/repeats daily/i)).to.equal(null);
+      expect(dialog.queryByText(/repeats weekly/i)).to.equal(null);
+      expect(dialog.queryByText(/repeats monthly/i)).to.equal(null);
+      expect(dialog.queryByText(/repeats annually/i)).to.equal(null);
+      expect(dialog.queryByText(/custom repeat/i)).to.equal(null);
+      expect(dialog.queryByText(/don.?t repeat/i)).to.equal(null);
+    });
+
+    it('should render ReadonlyContent if EventCalendar is read-only', () => {
+      const readOnlyOccurrence = EventBuilder.new(adapter)
+        .id(DEFAULT_EVENT.id)
+        .title(DEFAULT_EVENT.title)
+        .description(DEFAULT_EVENT.description)
+        .span(DEFAULT_EVENT.start, DEFAULT_EVENT.end)
+        .readOnly(true)
+        .toOccurrence();
+
+      render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          readOnly
+          storeClass={PremiumTestStore}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      const dialogs = screen.getAllByRole('dialog');
+      const dialog = within(dialogs[dialogs.length - 1]);
+
+      // Should display title as text, not in an input
+      expect(dialog.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
+      expect(dialog.queryByLabelText(/event title/i)).to.equal(null);
+
+      // Should display description as text, not in an input
+      expect(dialog.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
+      expect(dialog.queryByLabelText(/description/i)).to.equal(null);
+
+      // Should not have date/time inputs
+      expect(dialog.queryByLabelText(/start date/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/end date/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/start time/i)).to.equal(null);
+      expect(dialog.queryByLabelText(/end time/i)).to.equal(null);
+
+      // Should not have all-day checkbox
+      expect(dialog.queryByRole('switch', { name: /all day/i })).to.equal(null);
+
+      // Should not have resource/recurrence comboboxes
+      expect(dialog.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+      expect(dialog.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
+    });
   });
 
   it('should handle a resource without an eventColor (fallback to default)', async () => {
@@ -1109,7 +1168,7 @@ describe('<EventDialogContent open />', () => {
 
           expect(updated.rrule).to.deep.include({ freq: 'YEARLY', interval: 3 });
           expect(updated.rrule?.count ?? undefined).to.equal(undefined);
-          expect(updated.rrule?.until).toEqualDateTime('2025-07-20T00:00:00.000Z');
+          expect(updated.rrule?.until).to.equal('2025-07-20T00:00:00.000Z');
         });
 
         it('should submit custom weekly with selected weekdays', async () => {

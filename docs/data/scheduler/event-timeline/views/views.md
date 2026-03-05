@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 ## Time view
 
 The `time` view displays a few days with hourly granularity—ideal for scheduling tasks within specific hours.

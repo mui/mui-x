@@ -120,21 +120,21 @@ When defined, the class is applied to the event root DOM element in all views (W
 
 ### Drag interactions
 
-Use the `draggable` property to mark an event as draggable to another point in time:
+Use the `draggable` property on the event model to prevent an event from being dragged to another point in time:
 
 ```ts
 const event = {
   // ...other properties
-  draggable: true,
+  draggable: false,
 };
 ```
 
-Use the `resizable` property to mark an event as resizable by dragging it's start or end edge:
+Use the `resizable` property on the event model to prevent an event from being resized by dragging its start or end edge:
 
 ```ts
 const event = {
   // ...other properties
-  resizable: true,
+  resizable: false,
   resizable: "start" // only the start edge is draggable.
   resizable: "end" // only the end edge is draggable.
 };
@@ -144,14 +144,29 @@ const event = {
 Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-timeline/drag-interactions/).
 :::
 
-### Recurring events
+### Read-only
 
-Use the `rrule` property to define an events recurring rule:
+Use the `readOnly` property to prevent an event from being modified:
 
 ```ts
 const event = {
   // ...other properties
-  rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
+  readOnly: true,
+};
+```
+
+:::success
+Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/#read-only).
+:::
+
+### Recurring events
+
+Use the `rrule` property to define an event's recurring rule:
+
+```ts
+const event = {
+  // ...other properties
+  rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TH',
 };
 ```
 
@@ -184,35 +199,3 @@ function Timeline() {
 ```
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Event creation
-
-Use the `eventCreation` prop to customize how newly created events are defined:
-
-### Disable event creation
-
-Pass `eventCreation={false}` to disable the event creation:
-
-```tsx
-<EventTimelinePremium eventCreation={false} />
-```
-
-### Custom default duration
-
-Pass a custom value to `eventCreation.duration` to change the default duration of newly created event:
-
-```tsx
-<EventTimelinePremium eventCreation={{ duration: 60 }} />
-```
-
-{{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Create event on click
-
-Set `eventCreation.interaction` to `"click"` to open the creation form when clicking a cell instead of double-clicking:
-
-```tsx
-<EventTimelinePremium eventCreation={{ interaction: 'click' }} />
-```
-
-{{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}

@@ -45,11 +45,14 @@ const FunnelSection = consumeSlots(
       variant = 'filled',
       ...other
     } = props;
-    const interactionProps = useInteractionItemProps({ type: 'funnel', seriesId, dataIndex });
-    const { isFaded, isHighlighted } = useItemHighlighted({
-      seriesId,
-      dataIndex,
-    });
+
+    const identifier = React.useMemo(
+      () => ({ type: 'funnel' as const, seriesId, dataIndex }),
+      [seriesId, dataIndex],
+    );
+
+    const interactionProps = useInteractionItemProps(identifier);
+    const { isFaded, isHighlighted } = useItemHighlighted(identifier);
 
     const isOutlined = variant === 'outlined';
 

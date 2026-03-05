@@ -27,8 +27,8 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
 
   return radarSeries.map((series) => {
     const seriesId = series.id;
-    const isSeriesHighlighted = isItemHighlighted({ seriesId });
-    const isSeriesFaded = !isSeriesHighlighted && isItemFaded({ seriesId });
+    const isSeriesHighlighted = isItemHighlighted({ type: 'radar', seriesId });
+    const isSeriesFaded = !isSeriesHighlighted && isItemFaded({ type: 'radar', seriesId });
     const getColor = getSeriesColorFn(series);
 
     return {
@@ -37,8 +37,8 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
       isSeriesHighlighted,
       isSeriesFaded,
       points: series.data.map((value, dataIndex) => {
-        const highlighted = isItemHighlighted({ seriesId, dataIndex });
-        const faded = !highlighted && isItemFaded({ seriesId, dataIndex });
+        const highlighted = isItemHighlighted({ type: 'radar', seriesId, dataIndex });
+        const faded = !highlighted && isItemFaded({ type: 'radar', seriesId, dataIndex });
 
         const r = radiusAxis[metrics[dataIndex]].scale(value)!;
         const angle = angles[dataIndex];

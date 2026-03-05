@@ -22,7 +22,6 @@ const DayHeaderCell = styled('div', {
   width: 'var(--days-cell-width)',
   textAlign: 'center',
   padding: theme.spacing(1),
-  boxSizing: 'border-box',
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',

@@ -23,7 +23,7 @@ import {
 export type PieChartPluginSignatures = [
   UseChartTooltipSignature<'pie'>,
   UseChartInteractionSignature,
-  UseChartHighlightSignature,
+  UseChartHighlightSignature<'pie'>,
   UseChartVisibilityManagerSignature<'pie'>,
   UseChartKeyboardNavigationSignature,
 ];

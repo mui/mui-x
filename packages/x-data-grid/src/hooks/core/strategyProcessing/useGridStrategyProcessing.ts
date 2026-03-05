@@ -115,13 +115,15 @@ export const useGridStrategyProcessing = (apiRef: RefObject<GridPrivateApiCommon
         GRID_STRATEGIES_PROCESSORS[processorName],
       );
       if (activeStrategy == null) {
-        throw new Error("Can't apply a strategy processor before defining an active strategy");
+        throw new Error(
+          "MUI X: Can't apply a strategy processor before defining an active strategy",
+        );
       }
 
       const groupCache = strategiesCache.current[processorName];
       if (!groupCache || !groupCache[activeStrategy]) {
         throw new Error(
-          `No processor found for processor "${processorName}" on strategy "${activeStrategy}"`,
+          `MUI X: No processor found for processor "${processorName}" on strategy "${activeStrategy}"`,
         );
       }
 

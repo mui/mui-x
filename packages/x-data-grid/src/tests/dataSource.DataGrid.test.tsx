@@ -12,7 +12,6 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { isJSDOM } from 'test/utils/skipIf';
 import { getCell } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 import { TestCache } from '../internals/utils';
@@ -21,8 +20,7 @@ const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
-// Needs layout
-describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
+describe('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
   const editRowSpy = spy();
@@ -41,10 +39,12 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     props: Partial<DataGridProps> & {
       shouldRequestsFail?: boolean;
       dataSetOptions?: Partial<typeof dataSetOptions>;
+      onFetchRows?: typeof fetchRowsSpy;
     },
   ) {
     apiRef = useGridApiRef();
-    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, ...other } = props;
+    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, onFetchRows, ...other } = props;
+    const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
     mockServer = useMockServer(
       dataSetOptionsProp ?? dataSetOptions,
       serverOptions,
@@ -64,7 +64,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
           });
 
           const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
-          fetchRowsSpy(url);
+          effectiveFetchRowsSpy(url);
           const getRowsResponse = await fetchRows(url);
 
           return {
@@ -78,7 +78,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
           return syncedRow;
         },
       };
-    }, [fetchRows, editRow]);
+    }, [fetchRows, editRow, effectiveFetchRowsSpy]);
 
     if (!mockServer.isReady) {
       return null;
@@ -300,6 +300,28 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       // Should not trigger another fetch since data is cached
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+    });
+  });
+
+  describe('Revalidation', () => {
+    it('should periodically revalidate the current query when dataSourceRevalidateMs is set', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestDataSource
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
+      });
+
+      localFetchRowsSpy.resetHistory();
+
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
       });
     });
   });

@@ -58,17 +58,14 @@ const lineChartsParams = {
     {
       label: 'French GDP per capita',
       data: FranceGDPperCapita,
-      showMark: false,
     },
     {
       label: 'German GDP per capita',
       data: GermanyGDPperCapita,
-      showMark: false,
     },
     {
       label: 'UK GDP per capita',
       data: UKGDPperCapita,
-      showMark: false,
     },
   ],
   height: 300,

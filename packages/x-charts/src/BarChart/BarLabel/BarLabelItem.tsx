@@ -118,6 +118,7 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
     ...other
   } = props;
   const { isFaded, isHighlighted } = useItemHighlighted({
+    type: 'bar',
     seriesId,
     dataIndex,
   });
@@ -149,6 +150,8 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
       height,
       placement: barLabelPlacement,
       className: classes.root,
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
     },
     ownerState,
   });
