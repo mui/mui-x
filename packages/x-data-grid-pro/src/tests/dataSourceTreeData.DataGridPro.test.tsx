@@ -602,4 +602,33 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       },
     );
   });
+
+  // https://github.com/mui/mui-x/issues/21357
+  it('should work with `getRowId` prop', async () => {
+    let counter = 0;
+    const { user } = render(
+      <TestDataSource
+        getRowId={(row) => row.customId}
+        transformGetRowsResponse={(rows) =>
+          rows.map((row) => {
+            counter += 1;
+            return { ...row, customId: `custom-${counter}` };
+          })
+        }
+      />,
+    );
+
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+    // Expand the first row
+    const cell = getCell(0, 0);
+    await user.click(within(cell).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
+    });
+
+    // Collapse the first row
+    await user.click(within(cell).getByRole('button'));
+  });
 });

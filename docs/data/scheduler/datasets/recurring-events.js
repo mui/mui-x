@@ -11,7 +11,7 @@ export const initialEvents = [
     end: '2025-06-30T09:00:00',
     title: 'MO to TH',
     resource: 'weekly',
-    rrule: { freq: 'WEEKLY', byDay: ['MO', 'TU', 'WE', 'TH'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH',
   },
   {
     id: 'weekly-mwf',
@@ -19,7 +19,7 @@ export const initialEvents = [
     end: '2025-06-30T09:30:00',
     title: 'MO, WE and FR',
     resource: 'weekly',
-    rrule: { freq: 'WEEKLY', byDay: ['MO', 'WE', 'FR'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=MO,WE,FR',
   },
   {
     id: 'weekly-weekend-block',
@@ -27,7 +27,7 @@ export const initialEvents = [
     end: '2025-07-05T12:00:00',
     title: 'SA and SU',
     resource: 'weekly',
-    rrule: { freq: 'WEEKLY', byDay: ['SA', 'SU'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=SA,SU',
   },
   {
     id: 'weekly-biweekly-thu',
@@ -35,7 +35,7 @@ export const initialEvents = [
     end: '2025-07-03T19:00:00',
     title: 'Biweekly TH',
     resource: 'weekly',
-    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TH',
   },
   {
     id: 'weekly-every-3-weeks-tu',
@@ -43,7 +43,7 @@ export const initialEvents = [
     end: '2025-07-01T16:00:00',
     title: 'Every 3 Weeks on TU',
     resource: 'weekly',
-    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['TU'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=3;BYDAY=TU',
   },
   // DAILY AND INTERVALS
   {
@@ -51,14 +51,14 @@ export const initialEvents = [
     start: '2025-06-30T06:00:00',
     end: '2025-06-30T06:30:00',
     title: 'Every 2 Days',
-    rrule: { freq: 'DAILY', interval: 2 },
+    rrule: 'FREQ=DAILY;INTERVAL=2',
   },
   {
     id: 'daily-every-3-days',
     start: '2025-07-01T05:00:00',
     end: '2025-07-01T05:30:00',
     title: 'Every 3 Days',
-    rrule: { freq: 'DAILY', interval: 3 },
+    rrule: 'FREQ=DAILY;INTERVAL=3',
   },
   // MONTHLY PATTERNS
   {
@@ -67,7 +67,7 @@ export const initialEvents = [
     end: '2025-06-30T11:00:00',
     title: '1st Monday of Month',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', byDay: ['1MO'] },
+    rrule: 'FREQ=MONTHLY;BYDAY=1MO',
   },
   {
     id: 'monthly-last-friday',
@@ -75,7 +75,7 @@ export const initialEvents = [
     end: '2025-07-04T17:00:00',
     title: 'Last Friday of Month',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', byDay: ['-1FR'] },
+    rrule: 'FREQ=MONTHLY;BYDAY=-1FR',
   },
   {
     id: 'monthly-15th',
@@ -83,7 +83,7 @@ export const initialEvents = [
     end: '2025-07-03T14:00:00',
     title: 'Monthly on 15th',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', byMonthDay: [15] },
+    rrule: 'FREQ=MONTHLY;BYMONTHDAY=15',
   },
   {
     id: 'monthly-20th-every-two-months',
@@ -91,7 +91,7 @@ export const initialEvents = [
     end: '2025-07-03T14:00:00',
     title: '20th every two months',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', interval: 2, byMonthDay: [20] },
+    rrule: 'FREQ=MONTHLY;INTERVAL=2;BYMONTHDAY=20',
   },
   {
     id: 'monthly-31st-only',
@@ -99,7 +99,7 @@ export const initialEvents = [
     end: '2025-07-03T14:00:00',
     title: '31st (skip short months)',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', byMonthDay: [31] },
+    rrule: 'FREQ=MONTHLY;BYMONTHDAY=31',
   },
   {
     id: 'monthly-every-2-months-2nd-thu',
@@ -107,7 +107,7 @@ export const initialEvents = [
     end: '2025-07-03T16:00:00',
     title: 'Every 2 Months on 2nd Thu',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', interval: 2, byDay: ['2TH'] },
+    rrule: 'FREQ=MONTHLY;INTERVAL=2;BYDAY=2TH',
   },
   // YEARLY PATTERNS
   {
@@ -116,7 +116,7 @@ export const initialEvents = [
     end: '2024-11-28T13:00:00',
     title: 'Yearly event',
     resource: 'yearly',
-    rrule: { freq: 'YEARLY' },
+    rrule: 'FREQ=YEARLY',
   },
   {
     id: 'yearly-leap-day',
@@ -124,7 +124,7 @@ export const initialEvents = [
     end: '2024-02-29T10:00:00',
     title: 'Yearly Leap Day Only',
     resource: 'yearly',
-    rrule: { freq: 'YEARLY' },
+    rrule: 'FREQ=YEARLY',
   },
   // ALL-DAY AND SPANNING EVENTS
   {
@@ -134,7 +134,7 @@ export const initialEvents = [
     title: 'First Saturday of the Month',
     allDay: true,
     resource: 'allday',
-    rrule: { freq: 'MONTHLY', byDay: ['1SA'] },
+    rrule: 'FREQ=MONTHLY;BYDAY=1SA',
   },
   {
     id: 'allday-oncall-7day-every-4-weeks',
@@ -143,7 +143,7 @@ export const initialEvents = [
     title: '7 days every 4 weeks',
     allDay: true,
     resource: 'allday',
-    rrule: { freq: 'WEEKLY', interval: 4, byDay: ['MO'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=4;BYDAY=MO',
   },
 ];
 

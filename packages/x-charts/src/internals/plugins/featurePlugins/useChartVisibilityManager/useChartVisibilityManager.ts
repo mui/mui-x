@@ -3,6 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { type ChartPlugin } from '../../models';
 import {
+  type VisibilityIdentifierWithType,
   type UseChartVisibilityManagerSignature,
   type VisibilityIdentifier,
 } from './useChartVisibilityManager.types';
@@ -35,7 +36,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
       visibilityMap: visibilityParamToMap(
-        params.hiddenItems.map((item) => instance.identifierWithType(item)),
+        params.hiddenItems.map((item) => instance.identifierWithType(item, 'visibility')),
         store.state.seriesConfig.config,
       ),
     });
@@ -43,26 +44,29 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 
   const hideItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = instance.serializeIdentifier(instance.identifierWithType(identifier));
+    const identifierWithType = instance.identifierWithType(identifier, 'visibility');
+    const id = instance.serializeIdentifier(identifierWithType);
 
     if (visibilityMap.has(id)) {
       return;
     }
 
     const newVisibilityMap = new Map(visibilityMap);
-    newVisibilityMap.set(id, identifier);
+    newVisibilityMap.set(id, identifierWithType);
 
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
       visibilityMap: newVisibilityMap,
     });
 
-    params.onHiddenItemsChange?.(Array.from(newVisibilityMap.values()));
+    const values: VisibilityIdentifierWithType[] = Array.from(newVisibilityMap.values());
+    params.onHiddenItemsChange?.(values);
   });
 
   const showItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = instance.serializeIdentifier(instance.identifierWithType(identifier));
+    const identifierWithType = instance.identifierWithType(identifier, 'visibility');
+    const id = instance.serializeIdentifier(identifierWithType);
 
     if (!visibilityMap.has(id)) {
       return;
@@ -76,17 +80,20 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
       visibilityMap: newVisibilityMap,
     });
 
-    params.onHiddenItemsChange?.(Array.from(newVisibilityMap.values()));
+    params.onHiddenItemsChange?.(
+      Array.from(newVisibilityMap.values()) as VisibilityIdentifierWithType[],
+    );
   });
 
   const toggleItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = instance.serializeIdentifier(instance.identifierWithType(identifier));
+    const identifierWithType = instance.identifierWithType(identifier, 'visibility');
+    const id = instance.serializeIdentifier(identifierWithType);
 
     if (visibilityMap.has(id)) {
-      showItem(identifier);
+      showItem(identifierWithType);
     } else {
-      hideItem(identifier);
+      hideItem(identifierWithType);
     }
   });
 
