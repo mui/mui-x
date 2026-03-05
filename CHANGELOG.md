@@ -12,7 +12,7 @@ _Mar 5, 2026_
 We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
-- 🌎 Improve Ukrainian (uk-UA) locale 
+- 🌎 Improve Ukrainian (uk-UA) locale
 
 Special thanks go out to this community member for their valuable contribution:
 @lion1963
