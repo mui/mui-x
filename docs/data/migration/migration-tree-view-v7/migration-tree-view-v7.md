@@ -144,7 +144,7 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 
 ## New API to customize the Tree Item
 
-The `ContentComponent` or `ContentProps` props of the `TreeItem` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook.
+The `ContentComponent` or `ContentProps` props of the `TreeItem` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem()` hook.
 
 Learn more about the anatomy of the Tree Items and the customization utilities provided on the [Tree Item Customization page](/x/react-tree-view/tree-item-customization/).
 
@@ -282,7 +282,7 @@ function CustomTreeItem(props) {
 }
 ```
 
-If you need to access the tree item model inside the render, you can use the new `useTreeItemModel` hook:
+If you need to access the tree item model inside the render, you can use the new `useTreeItemModel()` hook:
 
 ```diff
 +import { useTreeItemModel } from '@mui/x-tree-view/hooks';

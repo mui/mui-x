@@ -1,7 +1,7 @@
-import { addYears } from 'date-fns/addYears';
 import { screen } from '@mui/internal-test-utils';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
-import { clearLicenseStatusCache, generateLicense, LicenseInfo } from '@mui/x-license';
+import { LicenseInfo } from '@mui/x-license';
+import { TEST_LICENSE_KEY_PRO, clearLicenseStatusCache } from '@mui/x-license/internals';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
@@ -14,15 +14,7 @@ describe('<EventCalendarPremium /> - License', () => {
   });
 
   it('should throw out of scope error when using EventCalendarPremium with a pro license', () => {
-    LicenseInfo.setLicenseKey(
-      generateLicense({
-        expiryDate: addYears(new Date(), 1),
-        orderNumber: '123',
-        licenseModel: 'subscription',
-        planScope: 'pro',
-        planVersion: 'initial',
-      }),
-    );
+    LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PRO);
     expect(() =>
       render(
         <EventCalendarPremium

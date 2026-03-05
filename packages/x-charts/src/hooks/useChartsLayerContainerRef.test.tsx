@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
-import { isJSDOM } from 'test/utils/skipIf';
 import { useChartsLayerContainerRef } from './useChartsLayerContainerRef';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
 
 function UseChartsLayerContainerRef() {
   const ref = useChartsLayerContainerRef();
@@ -16,9 +15,7 @@ function UseChartsLayerContainerRef() {
 describe('useChartsLayerContainerRef', () => {
   const { render } = createRenderer();
 
-  // can't catch render errors in the browser for unknown reason
-  // tried try-catch + error boundary + window onError preventDefault
-  it.skipIf(!isJSDOM)('should throw an error when parent context not present', () => {
+  it('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
     const expectedError = [
@@ -35,16 +32,16 @@ describe('useChartsLayerContainerRef', () => {
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(
-      'MUI X Charts: Could not find the Chart context.',
+      'MUI X Charts: Could not find the Charts context. ',
     );
   });
 
   it('should not throw an error when parent context is present', async () => {
     function RenderDrawingProvider() {
       return (
-        <ChartProvider pluginParams={{ width: 200, height: 200 }}>
+        <ChartsProvider pluginParams={{ width: 200, height: 200 }}>
           <UseChartsLayerContainerRef />
-        </ChartProvider>
+        </ChartsProvider>
       );
     }
 

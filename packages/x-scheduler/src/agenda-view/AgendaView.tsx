@@ -220,13 +220,13 @@ export const AgendaView = React.memo(
             </DayHeaderCell>
             <EventsList className={classes.agendaViewEventsList}>
               {isLoading && (
-                <li>
+                <li className={classes.agendaViewEventListItem}>
                   <EventSkeleton data-variant="agenda" />
                 </li>
               )}
               {!isLoading &&
                 occurrences.map((occurrence) => (
-                  <li key={occurrence.key}>
+                  <li key={occurrence.key} className={classes.agendaViewEventListItem}>
                     <EventDialogTrigger occurrence={occurrence}>
                       <EventItem
                         occurrence={occurrence}

@@ -708,93 +708,6 @@ function createPrBody(newVersion) {
 }
 
 /**
- * Get all members of the mui/x team from GitHub
- * @param {string} [excludeUsername] - Username to exclude from the results (e.g., PR author)
- * @returns {Promise<string[]>} Array of GitHub usernames
- */
-async function getTeamMembers(excludeUsername) {
-  try {
-    console.log('Fetching members of the mui/x team...');
-
-    // Get team members
-    const { data: teams } = await octokit.rest.teams.list({
-      org: ORG,
-    });
-
-    // Find the x team
-    const xTeam = teams.find((team) => team.name.toLowerCase() === 'x');
-
-    if (!xTeam) {
-      console.warn('Warning: Could not find the mui/x team.');
-      return [];
-    }
-
-    // Get team members
-    const { data: members } = await octokit.rest.teams.listMembersInOrg({
-      org: ORG,
-      team_slug: xTeam.slug,
-    });
-
-    let usernames = members.map((member) => member.login);
-
-    // Filter out the excluded username if provided
-    if (excludeUsername) {
-      usernames = usernames.filter((username) => username !== excludeUsername);
-      console.log(`Filtered out PR author (${excludeUsername}) from team members.`);
-    }
-
-    console.log(`Found ${usernames.length} members in the mui/x team.`);
-
-    return usernames;
-  } catch (error) {
-    if (error.status === 403) {
-      console.error(
-        'Error: You do not have permission to access the mui/x team members.',
-        'You need admin permissions on the repo to view teams and team members.',
-        'Please add reviewers manually.',
-      );
-      return [];
-    }
-    console.error('Error fetching team members:', error.message);
-    if (error.response) {
-      console.error(`Status: ${error.response.status}`);
-      console.error('Response data:', error.response.data);
-    }
-    return [];
-  }
-}
-
-/**
- * Assign reviewers to a pull request
- * @param {number} prNumber - The PR number
- * @param {string[]} reviewers - Array of GitHub usernames to assign as reviewers
- * @returns {Promise<boolean>} Whether the operation was successful
- */
-async function assignReviewers(prNumber, reviewers) {
-  try {
-    console.log(`Assigning ${reviewers.length} reviewers to PR #${prNumber}...`);
-
-    // Assign reviewers
-    await octokit.rest.pulls.requestReviewers({
-      owner: ORG,
-      repo: REPO,
-      pull_number: prNumber,
-      reviewers,
-    });
-
-    console.log('Reviewers assigned successfully.');
-    return true;
-  } catch (error) {
-    console.error('Error assigning reviewers:', error.message);
-    if (error.response) {
-      console.error(`Status: ${error.response.status}`);
-      console.error('Response data:', error.response.data);
-    }
-    return false;
-  }
-}
-
-/**
  * Add labels to a pull request
  * @param {number} prNumber - The PR number
  * @param {string[]} labels - Array of label names to add to the PR
@@ -1077,20 +990,6 @@ async function main() {
       // Add 'release' label and a version label in the format 'v8.x'
       const versionLabel = majorVersionBranch(majorVersion);
       await addLabelsToPR(prNumber, ['release', versionLabel]);
-
-      // Step 2: Get all members of the 'mui/x' team from GitHub (excluding the PR author)
-      const teamMembers = await getTeamMembers(forkOwner);
-
-      if (teamMembers.length > 0) {
-        // Randomly select up to 15 team members as reviewers
-        const shuffledMembers = [...teamMembers].sort(() => 0.5 - Math.random());
-        const selectedReviewers = shuffledMembers.slice(0, Math.min(15, shuffledMembers.length));
-
-        console.log(`Randomly selected ${selectedReviewers.length} team members as reviewers.`);
-
-        // Assign the selected reviewers to the PR
-        await assignReviewers(prNumber, selectedReviewers);
-      }
     } catch (error) {
       console.error('Failed to create PR with Octokit or assign reviewers.');
       console.error(
