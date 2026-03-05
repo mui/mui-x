@@ -338,6 +338,7 @@
   { "name": "heatmapClasses", "kind": "Variable" },
   { "name": "HeatmapClasses", "kind": "Interface" },
   { "name": "HeatmapClassKey", "kind": "TypeAlias" },
+  { "name": "HeatmapData", "kind": "Class" },
   { "name": "HeatmapItemIdentifier", "kind": "TypeAlias" },
   { "name": "HeatmapItemIdentifierWithData", "kind": "TypeAlias" },
   { "name": "HeatmapPlot", "kind": "Function" },
