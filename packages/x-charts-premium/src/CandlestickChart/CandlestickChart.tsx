@@ -157,7 +157,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
             {children}
           </ChartsSvgLayer>
         </ChartsLayerContainer>
-        {!props.loading && <Tooltip trigger="axis" {...props.slotProps?.tooltip} />}
+        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartsDataProviderPremium>
   );
