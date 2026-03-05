@@ -199,7 +199,7 @@
     },
     {
       "name": "tooltip",
-      "description": "Custom component for the tooltip.",
+      "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
       "class": null
     },
