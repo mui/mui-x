@@ -136,7 +136,7 @@ const WeekDaySelectorCheckbox = styled(Checkbox, {
 })(({ theme }) => ({
   ...theme.typography.button,
   fontSize: theme.typography.pxToRem(13),
-  padding: 6,
+  padding: theme.spacing(0.75),
   margin: theme.spacing(0.5),
   border: 0,
   borderRadius: theme.shape.borderRadius,
