@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 5, 2026_
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 🌎 Improve Ukrainian (uk-UA) locale
@@ -18,7 +18,7 @@ Special thanks go out to this community member for their valuable contribution:
 @lion1963
 
 The following team members contributed to this release:
-@arminmeh, @dav-is, @JCQuintas, @sai6855
+@arminmeh, @brijeshb42, @dav-is, @JCQuintas, @sai6855
 
 ### Data Grid
 
@@ -59,6 +59,7 @@ Same changes as in `@mui/x-charts-pro@8.27.4`.
 - [code-infra] Add eslint rule to prevent `Math.random` in docs (#21505) (#21563) @JCQuintas
 - [code-infra] V8 Dedupe (#21561) @JCQuintas
 - [docs-infra] Apply Cookie Banner to v8.x Branch (#21448) @dav-is
+- [code-infra] Setup checkout to do full clone for non master branches (#21624) @brijeshb42
 
 ## 8.27.3
 
