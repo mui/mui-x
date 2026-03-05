@@ -16,6 +16,8 @@ Each candlestick represents a time period and shows where the price started, whe
 
 This makes it easier to understand overall trends, compare price movements, and see how buying and selling activity evolves.
 
+{{"demo": "CandlestickOverview.js"}}
+
 ## Basics
 
 Candlestick chart's series should contain a `data` property containing an array of open, high, low, and close (OHLC) prices for a given time period.
