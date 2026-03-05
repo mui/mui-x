@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
@@ -14,7 +15,11 @@ import {
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartSeriesConfigGetter } from '../internals/plugins/corePlugins/useChartSeries';
-import { type ItemTooltip, type ItemTooltipWithMultipleValues } from '../internals';
+import {
+  type ItemTooltip,
+  type ItemTooltipWithMultipleValues,
+} from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import { type ChartSeriesType } from '../models/seriesType/config';
 
 export interface ChartsItemTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -59,65 +64,100 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
             {seriesLabel}
           </Typography>
           <tbody>
-            {tooltipData.values.map((value) => (
-              <ChartsTooltipRow key={value.label} className={classes.row}>
-                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-                  {value.label}
-                </ChartsTooltipCell>
-                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-                  {Content ? (
-                    <Content
-                      item={
-                        /* TypeScript can't assert that the item's type is the same type as the `Content`, so we need to cast */
-                        value as ItemTooltipWithMultipleValues['values'][number]
-                      }
-                    />
-                  ) : (
-                    value.formattedValue
-                  )}
-                </ChartsTooltipCell>
-              </ChartsTooltipRow>
-            ))}
+            {Content ? (
+              <Content item={tooltipData} />
+            ) : (
+              <DefaultMultipleValueContent tooltipData={tooltipData} />
+            )}
           </tbody>
         </ChartsTooltipTable>
       </ChartsTooltipPaper>
     );
   }
 
-  const { color, label, formattedValue, markType, markShape } = tooltipData;
-
   return (
     <ChartsTooltipPaper sx={sx} className={classes.paper}>
       <ChartsTooltipTable className={classes.table}>
         <tbody>
-          <ChartsTooltipRow className={classes.row}>
-            <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-              <div className={classes.markContainer}>
-                <ChartsLabelMark
-                  type={markType}
-                  markShape={markShape}
-                  color={color}
-                  className={classes.mark}
-                />
-              </div>
-              {label}
-            </ChartsTooltipCell>
-            <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-              {Content ? (
-                <Content
-                  item={
-                    /* TypeScript can't assert that the item's type is the same type as the `Content`, so we need to cast */
-                    tooltipData as ItemTooltip<any>
-                  }
-                />
-              ) : (
-                formattedValue
-              )}
-            </ChartsTooltipCell>
-          </ChartsTooltipRow>
+          {Content ? (
+            <Content
+              item={
+                /* TypeScript can't assert that the item's type is the same type as the `Content`, so we need to cast */
+                tooltipData as ItemTooltip<any>
+              }
+            />
+          ) : (
+            <DefaultSingleValueContent classes={propClasses} tooltipData={tooltipData} />
+          )}
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
+  );
+}
+
+interface DefaultMultipleValueContentProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsTooltipClasses>;
+  tooltipData: ItemTooltipWithMultipleValues;
+}
+
+function DefaultMultipleValueContent({
+  classes: propClasses,
+  tooltipData,
+}: DefaultMultipleValueContentProps) {
+  const classes = useUtilityClasses(propClasses);
+
+  return (
+    <React.Fragment>
+      {tooltipData.values.map((value) => (
+        <ChartsTooltipRow key={value.label} className={classes.row}>
+          <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+            {value.label}
+          </ChartsTooltipCell>
+          <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+            {value.formattedValue}
+          </ChartsTooltipCell>
+        </ChartsTooltipRow>
+      ))}
+    </React.Fragment>
+  );
+}
+
+interface DefaultSingleValueContentProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsTooltipClasses>;
+  tooltipData: ItemTooltip<ChartSeriesType>;
+}
+
+function DefaultSingleValueContent({
+  classes: propClasses,
+  tooltipData,
+}: DefaultSingleValueContentProps) {
+  const { color, label, formattedValue, markType, markShape } = tooltipData;
+
+  const classes = useUtilityClasses(propClasses);
+
+  return (
+    <ChartsTooltipRow className={classes.row}>
+      <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+        <div className={classes.markContainer}>
+          <ChartsLabelMark
+            type={markType}
+            markShape={markShape}
+            color={color}
+            className={classes.mark}
+          />
+        </div>
+        {label}
+      </ChartsTooltipCell>
+      <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+        {formattedValue}
+      </ChartsTooltipCell>
+    </ChartsTooltipRow>
   );
 }
 

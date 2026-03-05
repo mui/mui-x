@@ -1,9 +1,6 @@
-import {
-  ChartsTooltipCell,
-  ChartsTooltipRow,
-  ChartsTooltipTable,
-} from '@mui/x-charts/ChartsTooltip';
+import * as React from 'react';
 import clsx from 'clsx';
+import { ChartsTooltipCell, ChartsTooltipRow } from '@mui/x-charts/ChartsTooltip';
 import {
   type AxisTooltipContentProps,
   type ItemTooltipContentProps,
@@ -18,56 +15,54 @@ export function OHLCTooltipContent(
   const classes = useUtilityClasses({});
   const { localeText } = useChartsLocalization();
 
-  if (item.value == null) {
-    return null;
-  }
-
   /* This can only happen if the series is a radar series, but this is a candlestick tooltip, so in
    * practice this will never happen.
    * We can remove this if/when we fix the multiples values in an item tooltip introduced with the
    * radar chart. */
-  if (typeof item.value === 'number') {
+  if ('values' in item) {
+    return null;
+  }
+
+  if (item.value == null) {
     return null;
   }
 
   const [open, high, low, close] = item.value;
 
   return (
-    <ChartsTooltipTable className={classes.table}>
-      <tbody>
-        <ChartsTooltipRow className={classes.row}>
-          <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-            {localeText.open}
-          </ChartsTooltipCell>
-          <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-            {open}
-          </ChartsTooltipCell>
-        </ChartsTooltipRow>
-        <ChartsTooltipRow className={classes.row}>
-          <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-            {localeText.high}
-          </ChartsTooltipCell>
-          <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-            {high}
-          </ChartsTooltipCell>
-        </ChartsTooltipRow>
-        <ChartsTooltipRow className={classes.row}>
-          <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-            {localeText.low}
-          </ChartsTooltipCell>
-          <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-            {low}
-          </ChartsTooltipCell>
-        </ChartsTooltipRow>
-        <ChartsTooltipRow className={classes.row}>
-          <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-            {localeText.close}
-          </ChartsTooltipCell>
-          <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-            {close}
-          </ChartsTooltipCell>
-        </ChartsTooltipRow>
-      </tbody>
-    </ChartsTooltipTable>
+    <React.Fragment>
+      <ChartsTooltipRow className={classes.row}>
+        <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+          {localeText.open}
+        </ChartsTooltipCell>
+        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+          {open}
+        </ChartsTooltipCell>
+      </ChartsTooltipRow>
+      <ChartsTooltipRow className={classes.row}>
+        <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+          {localeText.high}
+        </ChartsTooltipCell>
+        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+          {high}
+        </ChartsTooltipCell>
+      </ChartsTooltipRow>
+      <ChartsTooltipRow className={classes.row}>
+        <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+          {localeText.low}
+        </ChartsTooltipCell>
+        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+          {low}
+        </ChartsTooltipCell>
+      </ChartsTooltipRow>
+      <ChartsTooltipRow className={classes.row}>
+        <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+          {localeText.close}
+        </ChartsTooltipCell>
+        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+          {close}
+        </ChartsTooltipCell>
+      </ChartsTooltipRow>
+    </React.Fragment>
   );
 }

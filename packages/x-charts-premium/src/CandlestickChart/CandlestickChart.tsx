@@ -8,7 +8,11 @@ import {
 } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsGrid, type ChartsGridProps } from '@mui/x-charts/ChartsGrid';
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import {
+  ChartsTooltip,
+  type ChartsTooltipSlotProps,
+  type ChartsTooltipSlots,
+} from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import {
   ChartsOverlay,
@@ -38,24 +42,21 @@ import { CandlestickPlot, type CandlestickPlotProps } from './CandlestickPlot';
 import { useCandlestickChartProps } from './useCandlestickChartProps';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
 import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
-import { type CandlestickTooltipProps } from './CandlestickTooltip';
 
 export interface CandlestickChartSlots
-  extends ChartsAxisSlots, ChartsOverlaySlots, ChartsToolbarProSlots, Partial<ChartsSlots> {
-  /**
-   * Custom component for the tooltip.
-   * @default ChartsTooltipRoot
-   */
-  tooltip?: React.ElementType<CandlestickTooltipProps>;
-}
+  extends
+    ChartsAxisSlots,
+    ChartsOverlaySlots,
+    ChartsTooltipSlots,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlots> {}
 export interface CandlestickChartSlotProps
   extends
     ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
+    ChartsTooltipSlotProps,
     ChartsToolbarProSlotProps,
-    Partial<ChartsSlotProps> {
-  tooltip?: Partial<CandlestickTooltipProps>;
-}
+    Partial<ChartsSlotProps> {}
 
 export type OHLCSeries = MakeOptional<OHLCSeriesType, 'type'>;
 
@@ -156,7 +157,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
             {children}
           </ChartsSvgLayer>
         </ChartsLayerContainer>
-        {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
+        {!props.loading && <Tooltip trigger="axis" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartsDataProviderPremium>
   );

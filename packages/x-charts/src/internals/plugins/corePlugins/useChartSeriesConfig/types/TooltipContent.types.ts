@@ -13,5 +13,5 @@ export interface AxisTooltipContentProps<
 }
 
 export interface ItemTooltipContentProps<T extends ChartSeriesType> {
-  item: ItemTooltip<T> | ItemTooltipWithMultipleValues['values'][number];
+  item: ItemTooltip<T> | ItemTooltipWithMultipleValues;
 }
