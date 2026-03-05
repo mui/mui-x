@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import useId from '@mui/utils/useId';
 import { ChartsClipPath } from '@mui/x-charts-premium/ChartsClipPath';
@@ -18,8 +19,7 @@ import { useDrawingArea } from '@mui/x-charts-premium/hooks';
 import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { useTheme } from '@mui/material/styles'; // Source: Yahoo Finance
-import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json';
+import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json'; // Source: Yahoo Finance
 
 const xData = sp500ohlcv.map((entry) => new Date(Date.parse(entry.date)));
 

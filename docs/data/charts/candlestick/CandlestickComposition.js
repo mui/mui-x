@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import useId from '@mui/utils/useId';
 import { ChartsClipPath } from '@mui/x-charts-premium/ChartsClipPath';
@@ -66,21 +67,22 @@ const formatAsDollar = (value) =>
     maximumFractionDigits: 0,
   });
 
-const volumeBarColorGetter = ({ dataIndex }) => {
-  if (dataIndex === 0) {
-    return 'green';
-  }
-
-  // Color the volume bar green if the closing price is higher than or equal to the previous day's close,
-  // red otherwise. This is how Yahoo Finance colors their volume bars.
-  return sp500ohlcv[dataIndex].close >= sp500ohlcv[dataIndex - 1].close
-    ? 'green'
-    : 'red';
-};
-
 export default function CandlestickComposition() {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
+  const theme = useTheme();
+
+  const volumeBarColorGetter = ({ dataIndex }) => {
+    if (dataIndex === 0) {
+      return theme.palette.success.main;
+    }
+
+    // Color the volume bar green if the closing price is higher than or equal to the previous day's close,
+    // red otherwise. This is how Yahoo Finance colors their volume bars.
+    return sp500ohlcv[dataIndex].close >= sp500ohlcv[dataIndex - 1].close
+      ? theme.palette.success.main
+      : theme.palette.error.main;
+  };
 
   return (
     <ChartsDataProviderPremium
