@@ -2,8 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { Watermark } from '@mui/x-license/Watermark';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useExtractEventTimelinePremiumParameters,

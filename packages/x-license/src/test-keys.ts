@@ -1,7 +1,7 @@
 // =============================================================================
 // Test license keys for use in test suites.
 // All keys contain T=true in their payload and are rejected outside test environments.
-// Import via '@mui/x-license/test-keys'.
+// Import via '@mui/x-license/internals'.
 // =============================================================================
 
 /**
