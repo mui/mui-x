@@ -10,7 +10,7 @@ import {
 } from '@mui/x-charts/internals';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { ChartsWatermark, defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { useLicenseVerifier } from '@mui/x-license/internals';
 import {
   type ChartsSlotPropsPro,
   type ChartsSlotsPro,

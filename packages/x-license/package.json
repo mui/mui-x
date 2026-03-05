@@ -46,12 +46,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts",
-    "./Watermark": "./src/Watermark/index.ts",
-    "./useLicenseVerifier": "./src/useLicenseVerifier/index.ts",
-    "./verifyLicense": "./src/verifyLicense/index.ts",
-    "./utils": "./src/utils/index.ts",
-    "./test-keys": "./src/test-keys.ts"
+    "./internals": "./src/internals/index.ts"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
