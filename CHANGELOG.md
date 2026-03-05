@@ -5,6 +5,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.27.4
+
+_Mar 5, 2026_
+
+We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 🌎 Improve Ukrainian (uk-UA) locale
+
+Special thanks go out to this community member for their valuable contribution:
+@lion1963
+
+The following team members contributed to this release:
+@arminmeh, @brijeshb42, @dav-is, @JCQuintas, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.27.4`
+
+- [DataGrid] Prevent unnecessary row selection checkbox rerendering (#21571) @arminmeh
+- [DataGrid] Make `GridScrollArea` overrides resolver dynamic (#21612) @sai6855
+- [l10n] Improve Ukrainian (uk-UA) locale (#21381) @lion1963
+
+#### `@mui/x-data-grid-pro@8.27.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.27.4`, plus:
+
+- [DataGridPro] Use `getRowId` prop to calculate the tree data row update (#21544) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.27.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.27.4`.
+
+### Charts
+
+#### `@mui/x-charts@8.27.4`
+
+- [charts] Deprecate `ChartDataProvider` in favour of `ChartsDataProvider` (#21549) @JCQuintas
+- [charts] Rename `ChartContainer` to `ChartsContainer` (#21186) @JCQuintas
+- [charts] Rename `ChartZoomSlider` to `ChartsZoomSlider` (#21572) @JCQuintas
+
+#### `@mui/x-charts-pro@8.27.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.27.4`.
+
+#### `@mui/x-charts-premium@8.27.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.27.4`.
+
+### Core
+
+- [code-infra] Add eslint rule to prevent `Math.random` in docs (#21505) (#21563) @JCQuintas
+- [code-infra] V8 Dedupe (#21561) @JCQuintas
+- [docs-infra] Apply Cookie Banner to v8.x Branch (#21448) @dav-is
+- [code-infra] Setup checkout to do full clone for non master branches (#21624) @brijeshb42
+
 ## 8.27.3
 
 _Feb 25, 2026_
