@@ -969,7 +969,16 @@ export function getDataGridUtilityClass(slot: string): string {
 }
 
 /**
- * @ignore - do not document.
+ * Class groups for the MuiDataGrid component used in GridRootStyles overridesResolver.
+ *
+ * Splits classes into two groups to support style overrides:
+ * - `root`: classes applied directly to the root element (use `&.className` selector)
+ * - `children`: classes applied to child elements (use `& .className` selector)
+ *
+ * These are spread into the gridClasses utility object and used for CSS-in-JS overrides.
+ *
+ * Only include class names here that are NOT applied via `styled` components.
+ * For `styled` components, declare overrides directly in the component definition.
  */
 export const gridClassesOverrides = {
   root: [
