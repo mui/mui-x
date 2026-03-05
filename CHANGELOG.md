@@ -56,22 +56,6 @@ Same changes as in `@mui/x-charts@8.27.4`.
 
 Same changes as in `@mui/x-charts-pro@8.27.4`.
 
-### Tree View
-
-#### `@mui/x-tree-view@8.27.2`
-
-Internal changes.
-
-#### `@mui/x-tree-view-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@8.27.2`.
-
-### Codemod
-
-#### `@mui/x-codemod@8.27.0`
-
-Internal changes.
-
 ### Core
 
 - [code-infra] Add eslint rule to prevent `Math.random` in docs (#21505) (#21563) @JCQuintas
