@@ -59,5 +59,5 @@ export const useUtilityClasses = (ownerState: BarElementOwnerState) => {
     root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
-  return composeClasses(slots, getBarElementUtilityClass, classes as Partial<BarElementClasses>);
+  return composeClasses(slots, getBarElementUtilityClass, classes);
 };

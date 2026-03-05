@@ -65,5 +65,5 @@ export const useUtilityClasses = (ownerState: BarLabelOwnerState) => {
     ],
   };
 
-  return composeClasses(slots, getBarLabelUtilityClass, classes as Partial<BarLabelClasses>);
+  return composeClasses(slots, getBarLabelUtilityClass, classes);
 };
