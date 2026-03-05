@@ -7,9 +7,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.27.4
 
-_Mar 4, 2026_
+_Mar 5, 2026_
 
-We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 🌎 Improve Ukrainian (uk-UA) locale 
@@ -19,7 +19,7 @@ Special thanks go out to this community member for their valuable contribution:
 
 
 The following team members contributed to this release:
-@arminmeh, @dav-is, @JCQuintas
+@arminmeh, @dav-is, @JCQuintas, @sai6855
 
 ### Data Grid
 
@@ -27,6 +27,7 @@ The following team members contributed to this release:
 
 - [DataGrid] Prevent unnecessary row selection checkbox rerendering (#21571) @arminmeh
 - [DataGrid] Make GridScrollArea overrides resolver dynamic (#21612) @sai6855
+- [DataGrid] Make `GridScrollArea` overrides resolver dynamic (#21612) @sai6855
 - [l10n] Improve Ukrainian (uk-UA) locale (#21381) @lion1963
 
 #### `@mui/x-data-grid-pro@8.27.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
