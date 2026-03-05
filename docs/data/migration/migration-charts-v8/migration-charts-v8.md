@@ -317,6 +317,26 @@ This new type relies on the `xIndex`/`yIndex` to identify the cell instead of ju
  }
 ```
 
+The return type of the `useItemTooltip()` for heatmap got modified.
+Instead of returning the item from `data` with shape `[x, y, cellValue]`, it returns cell value.
+
+If the cell is empty, it returns `null`.
+
+Here is an example about how to get exactly the same info from `useItemTooltip()`.
+
+```diff
+ const { identifier, value } = useItemTooltip<'heatmap'>();
+
+ return {
+-  xIndex: value[0],
++  xIndex: identifier.xIndex,
+-  yIndex: value[1],
++  yIndex: identifier.yIndex,
+-  cellValue: value[2],
++  cellValue: value,
+ }
+```
+
 ## Legend
 
 ### `LegendItemParams` Modification
