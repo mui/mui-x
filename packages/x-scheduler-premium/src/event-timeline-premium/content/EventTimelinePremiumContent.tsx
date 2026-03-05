@@ -216,7 +216,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 ) {
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const { classes, localeText } = useEventTimelinePremiumStyledContext();
+  const { classes, localeText, resourceColumnLabel } = useEventTimelinePremiumStyledContext();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -271,7 +271,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               <EventTimelinePremiumTitleSubGridHeaderCell
                 className={classes.titleSubGridHeaderCell}
               >
-                {localeText.timelineResourceTitleHeader}
+                {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
               </EventTimelinePremiumTitleSubGridHeaderCell>
             </EventTimelinePremiumTitleSubGridHeaderRow>
             <EventTimelinePremiumTitleSubGrid className={classes.titleSubGrid}>

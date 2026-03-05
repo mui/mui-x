@@ -46,6 +46,8 @@ describe('<EventTimelinePremium />', () => {
     views?: EventTimelinePremiumView[];
     visibleDate?: TemporalSupportedObject;
     showCurrentTimeIndicator?: boolean;
+    resourceColumnLabel?: string;
+    localeText?: Partial<import('@mui/x-scheduler/models').EventTimelineLocaleText>;
   }) {
     return render(
       <EventTimelinePremium
@@ -55,6 +57,8 @@ describe('<EventTimelinePremium />', () => {
         view={options?.view ?? 'days'}
         views={options?.views ?? ['time', 'days', 'weeks', 'months', 'years']}
         showCurrentTimeIndicator={options?.showCurrentTimeIndicator}
+        resourceColumnLabel={options?.resourceColumnLabel}
+        localeText={options?.localeText}
       />,
     );
   }
@@ -261,6 +265,39 @@ describe('<EventTimelinePremium />', () => {
         `.${eventTimelinePremiumClasses.currentTimeIndicator}`,
       );
       expect(indicators.length).to.equal(0);
+    });
+  });
+
+  describe('resourceColumnLabel', () => {
+    it('should display "Resource title" by default', () => {
+      renderTimeline();
+
+      expect(screen.getByText('Resource title')).not.to.equal(null);
+    });
+
+    it('should display resourceColumnLabel value when provided', () => {
+      renderTimeline({ resourceColumnLabel: 'Team' });
+
+      expect(screen.getByText('Team')).not.to.equal(null);
+      expect(screen.queryByText('Resource title')).to.equal(null);
+    });
+
+    it('should take priority over localeText.timelineResourceTitleHeader', () => {
+      renderTimeline({
+        resourceColumnLabel: 'My Label',
+        localeText: { timelineResourceTitleHeader: 'Locale Label' },
+      });
+
+      expect(screen.getByText('My Label')).not.to.equal(null);
+      expect(screen.queryByText('Locale Label')).to.equal(null);
+    });
+
+    it('should fall back to localeText.timelineResourceTitleHeader when not set', () => {
+      renderTimeline({
+        localeText: { timelineResourceTitleHeader: 'Custom Locale' },
+      });
+
+      expect(screen.getByText('Custom Locale')).not.to.equal(null);
     });
   });
 
