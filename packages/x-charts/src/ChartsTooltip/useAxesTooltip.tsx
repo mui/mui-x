@@ -64,6 +64,7 @@ interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> 
   formattedValue: string;
   formattedLabel: string | null;
   markType: ChartsLabelMarkProps['type'];
+  markShape: ChartsLabelMarkProps['markShape'];
 }
 
 function defaultAxisTooltipConfig(
@@ -197,6 +198,10 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
+            markShape:
+              'showMark' in seriesToAdd && seriesToAdd.showMark
+                ? (seriesToAdd.shape ?? 'circle')
+                : undefined,
           });
         }
       });
@@ -243,6 +248,7 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
+            markShape: 'showMark' in seriesToAdd && seriesToAdd.showMark ? 'circle' : undefined,
           });
         }
       });
