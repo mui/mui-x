@@ -42,7 +42,7 @@ const PreferencesMenuListSubheader = styled(ListSubheader, {
   slot: 'PreferencesMenuListSubheader',
 })(({ theme }) => ({
   ...theme.typography.button,
-  color: theme.palette.text.disabled,
+  color: (theme.vars || theme).palette.text.disabled,
   paddingBottom: theme.spacing(1),
   backgroundColor: 'transparent',
 }));
