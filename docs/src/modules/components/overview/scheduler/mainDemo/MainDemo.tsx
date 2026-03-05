@@ -14,6 +14,14 @@ import { getNeutralVibesTheme } from '../theme/neutralVibesTheme';
 
 type CustomThemeName = 'default' | 'softEdges' | 'neutralVibes';
 
+// Use CSS variables to avoid first load light/dark blink.
+const darkThemeManagement = {
+  colorSchemes: { light: true, dark: true },
+  cssVariables: {
+    colorSchemeSelector: 'data-mui-color-scheme',
+  },
+};
+
 const themeOptions: { value: CustomThemeName; label: string }[] = [
   { value: 'default', label: 'Default theme' },
   { value: 'softEdges', label: 'Soft edges' },
@@ -33,19 +41,20 @@ export default function MainDemo() {
   };
 
   const mode = brandingTheme.palette.mode;
+  const baseTheme = createTheme(darkThemeManagement, { palette: { mode } });
+  const softEdgesTheme = getSoftEdgesTheme(mode);
+  const neutralVibesTheme = getNeutralVibesTheme(mode);
 
-  const theme = React.useMemo(() => {
-    const baseTheme = createTheme({ palette: { mode } });
-
-    switch (selectedTheme) {
+  const getThemeByName = (name: CustomThemeName) => {
+    switch (name) {
       case 'softEdges':
-        return getSoftEdgesTheme(mode);
+        return softEdgesTheme;
       case 'neutralVibes':
-        return getNeutralVibesTheme(mode);
+        return neutralVibesTheme;
       default:
         return baseTheme;
     }
-  }, [mode, selectedTheme]);
+  };
 
   return (
     <Stack spacing={1} sx={{ p: 1, width: '100%', mb: 6 }}>
@@ -72,7 +81,7 @@ export default function MainDemo() {
           ))}
         </Select>
       </Stack>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={getThemeByName(selectedTheme)}>
         {/* Demo content */}
         {selectedView === 'calendar' && (
           <Paper variant="outlined" elevation={0} sx={{ height: 600, width: '100%', p: 1 }}>
