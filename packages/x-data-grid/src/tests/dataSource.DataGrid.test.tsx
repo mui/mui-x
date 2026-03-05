@@ -12,7 +12,6 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { isJSDOM } from 'test/utils/skipIf';
 import { getCell } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 import { TestCache } from '../internals/utils';
@@ -21,8 +20,7 @@ const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
-// Needs layout
-describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
+describe('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
   const editRowSpy = spy();
