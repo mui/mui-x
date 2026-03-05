@@ -490,7 +490,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 </RepeatSectionLabel>
                 <RecurrenceSelectorContainer
-
                   className={classes.eventDialogRecurrenceSelectorContainer}
                   role="group"
                   aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
@@ -517,7 +516,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 </RepeatSectionLabel>
                 <RecurrenceSelectorContainer
-
                   className={classes.eventDialogRecurrenceSelectorContainer}
                 >
                   <RecurrenceSelectorToggleGroup
