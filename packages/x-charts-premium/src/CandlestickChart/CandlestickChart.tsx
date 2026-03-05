@@ -34,6 +34,11 @@ import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
+import {
+  ChartsLegend,
+  type ChartsLegendSlotProps,
+  type ChartsLegendSlots,
+} from '@mui/x-charts/ChartsLegend';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { type OHLCSeriesType } from '../models';
@@ -46,6 +51,7 @@ import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 export interface CandlestickChartSlots
   extends
     ChartsAxisSlots,
+    ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
     ChartsToolbarProSlots,
@@ -53,6 +59,7 @@ export interface CandlestickChartSlots
 export interface CandlestickChartSlotProps
   extends
     ChartsAxisSlotProps,
+    ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
     ChartsToolbarProSlotProps,
@@ -90,6 +97,10 @@ export interface CandlestickChartProps
    */
   showToolbar?: boolean;
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -126,6 +137,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
     overlayProps,
     chartsAxisProps,
     axisHighlightProps,
+    legendProps,
     children,
   } = useCandlestickChartProps(props);
   const { chartDataProviderPremiumProps, chartsSurfaceProps } = useChartsContainerPremiumProps<
@@ -142,6 +154,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsLayerContainer>
           <ChartsWebGLLayer>
             <CandlestickPlot {...candlestickPlotProps} />
