@@ -79,6 +79,15 @@ const EndsRadioGroup = styled(RadioGroup, {
   gap: 8,
 });
 
+const RepeatSectionFieldset = styled('fieldset', {
+  name: 'MuiEventDialog',
+  slot: 'RepeatSectionFieldset',
+})({
+  border: 0,
+  margin: 0,
+  padding: 0,
+});
+
 const RepeatSectionContent = styled('div', {
   name: 'MuiEventDialog',
   slot: 'RepeatSectionContent',
@@ -227,14 +236,15 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     setControlled((prev) => {
       // When switching frequency, clear byDay/byMonthDay to avoid stale values
       // from a different frequency leaking (e.g. monthly ordinal "2TU" into weekly)
-      const cleanDraft = { ...prev.rruleDraft, freq: newFrequency, byDay: [], byMonthDay: [] };
-
-      // When switching to MONTHLY, initialize byMonthDay with the current day of month
-      if (newFrequency === 'MONTHLY') {
-        cleanDraft.byMonthDay = [monthlyRef.dayOfMonth];
-      }
-
-      return { ...prev, rruleDraft: cleanDraft };
+      return {
+        ...prev,
+        rruleDraft: {
+          ...prev.rruleDraft,
+          freq: newFrequency,
+          byDay: [],
+          byMonthDay: newFrequency === 'MONTHLY' ? [monthlyRef.dayOfMonth] : [],
+        },
+      };
     });
   };
 
@@ -447,7 +457,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           </Select>
         </FormControl>
 
-        <fieldset aria-label={localeText.recurrenceRepeatLabel} style={{ border: 0, margin: 0, padding: 0 }}>
+        <RepeatSectionFieldset aria-label={localeText.recurrenceRepeatLabel}>
           <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>
             {localeText.recurrenceRepeatLabel}
           </SectionHeaderTitle>
@@ -491,6 +501,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 <RecurrenceSelectorContainer
                   elevation={0}
                   className={classes.eventDialogRecurrenceSelectorContainer}
+                  role="group"
+                  aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 >
                   {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
                     <WeekDaySelectorCheckbox
@@ -542,7 +554,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               </InlineRow>
             )}
           </RepeatSectionContent>
-        </fieldset>
+        </RepeatSectionFieldset>
 
         <FormControl component="fieldset" aria-label={localeText.recurrenceEndsLabel}>
           <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>
