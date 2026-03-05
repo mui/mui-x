@@ -29,7 +29,7 @@ export const ohlcSeriesConfig: ChartSeriesTypeConfig<'ohlc'> = {
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
-  // TODO: Actually implement highlight and fading
+  // TODO(#21630): Actually implement highlight and fading
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };
