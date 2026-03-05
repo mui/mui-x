@@ -13,13 +13,13 @@ const seriesProcessor: SeriesProcessor<'ohlc'> = (params) => {
   for (const id of seriesOrder) {
     const seriesData = series[id];
 
-    if (seriesData.data === undefined && process.env.NODE_ENV !== 'production') {
-      throw new Error(
-        [
-          `MUI X Charts: OHLC series with id='${id}' has no data.`,
-          'Provide a data property to the series.',
-        ].join('\n'),
-      );
+    if (process.env.NODE_ENV !== 'production') {
+      if (seriesData.data === undefined) {
+        throw new Error(
+          `MUI X Charts: OHLC series with id='${id}' has no data. \n` +
+            'Provide a data property to the series.',
+        );
+      }
     }
 
     completedSeries[id] = {
