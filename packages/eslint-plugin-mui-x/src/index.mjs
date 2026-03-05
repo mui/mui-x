@@ -1,4 +1,5 @@
 import noDirectStateAccess from './rules/no-direct-state-access.mjs';
+import noSelectorDefaultParameters from './rules/no-selector-default-parameters.mjs';
 
 export default /** @type {import('eslint').ESLint.Plugin} */ {
   meta: {
@@ -7,5 +8,6 @@ export default /** @type {import('eslint').ESLint.Plugin} */ {
   },
   rules: {
     'no-direct-state-access': noDirectStateAccess,
+    'no-selector-default-parameters': noSelectorDefaultParameters,
   },
 };
