@@ -35,7 +35,6 @@ const DayGridEventBaseStyles = (theme: any) => ({
   minWidth: 18,
   height: 'auto',
   cursor: 'pointer',
-  },
   position: 'relative',
   zIndex: 1,
   gridRow: 'var(--grid-row)',
