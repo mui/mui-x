@@ -111,7 +111,6 @@ Internal changes.
 - [code-infra] Upgrade test_unit to large resource class (#21558) @Janpot
 - [code-infra] Removed getTeamMembers function and usage from release script (#21605) @michelengelen
 
-
 ### Miscellaneous
 
 - [x-license] Add Q1-2026 plan version with quantity and appType support (#21574) @aemartos
