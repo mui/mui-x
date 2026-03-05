@@ -10,7 +10,6 @@ const seriesProcessor: SeriesProcessor<'heatmap'> = (params) => {
     const heatmapData = new HeatmapData();
     for (const [xIndex, yIndex, value] of data) {
       heatmapData.setValue(xIndex, yIndex, value);
-
     }
 
     defaultizedSeries[seriesId] = {
