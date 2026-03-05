@@ -11,29 +11,8 @@ type SeriesWithSeriesLegend = {
   color?: string;
 };
 
-type DataItemWithLegend = {
-  id?: number | string;
-  label?: LegendLabel;
-  labelMarkType?: SeriesLegendItemParams['markType'];
-  color?: string;
-};
-
-type SeriesWithDataLegend = {
-  data: DataItemWithLegend[];
-  labelMarkType?: SeriesLegendItemParams['markType'];
-};
-
 function isSeriesWithSeriesLegend(seriesItem: unknown): seriesItem is SeriesWithSeriesLegend {
   return typeof seriesItem === 'object' && seriesItem !== null && 'label' in seriesItem;
-}
-
-function isSeriesWithDataLegend(seriesItem: unknown): seriesItem is SeriesWithDataLegend {
-  return (
-    typeof seriesItem === 'object' &&
-    seriesItem !== null &&
-    'data' in seriesItem &&
-    Array.isArray(seriesItem.data)
-  );
 }
 
 /** One legend item per series (bar, line, scatter, rangeBar, radar). */
@@ -58,39 +37,6 @@ export function getSeriesLegendItems<T extends ChartSeriesType>(
       seriesId,
       color: seriesItem.color,
       label: formattedLabel,
-    });
-    return acc;
-  }, [] as SeriesLegendItemParams[]);
-}
-
-/** One legend item per data item (pie, funnel). */
-export function getDataItemLegendItems<T extends ChartSeriesType>(
-  type: T,
-  params: SeriesProcessorResult<T>,
-): SeriesLegendItemParams[] {
-  const { seriesOrder, series } = params;
-  return seriesOrder.reduce((acc, seriesId) => {
-    const seriesItem = series[seriesId];
-    if (!isSeriesWithDataLegend(seriesItem)) {
-      return acc;
-    }
-    seriesItem.data.forEach((item, dataIndex: number) => {
-      if (typeof item.color !== 'string') {
-        return;
-      }
-      const formattedLabel = getLabel(item.label, 'legend');
-      if (formattedLabel === undefined) {
-        return;
-      }
-      acc.push({
-        type,
-        markType: item.labelMarkType ?? seriesItem.labelMarkType,
-        seriesId,
-        itemId: item.id ?? dataIndex,
-        dataIndex,
-        color: item.color,
-        label: formattedLabel,
-      });
     });
     return acc;
   }, [] as SeriesLegendItemParams[]);
