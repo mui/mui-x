@@ -969,6 +969,7 @@ export function getDataGridUtilityClass(slot: string): string {
 }
 
 /**
+ * @ignore
  * Class overrides for the MuiDataGrid component used in the overridesResolver.
  * - `root`: classes applied directly to the root element (use `&.className` selector)
  * - `children`: classes applied to child elements (use `& .className` selector)
