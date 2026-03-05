@@ -33,9 +33,10 @@ export function HeatmapTooltipContent(props: HeatmapTooltipContentProps) {
   const { color, markType, identifier } = tooltipData;
 
   const value =
-    heatmapSeries.series[heatmapSeries.seriesOrder[0]].valueLookup
-      .get(identifier.xIndex)
-      ?.get(identifier.yIndex) ?? null;
+    heatmapSeries.series[heatmapSeries.seriesOrder[0]].heatmapData.getValue(
+      identifier.xIndex,
+      identifier.yIndex,
+    ) ?? null;
 
   if (value === null) {
     return null;

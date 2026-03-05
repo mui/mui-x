@@ -40,7 +40,7 @@ export default function getItemAtPosition(
     return undefined;
   }
 
-  const value = series?.series[series.seriesOrder[0]].valueLookup.get(xIndex)?.get(yIndex) ?? null;
+  const value = series?.series[series.seriesOrder[0]].heatmapData.getValue(xIndex, yIndex) ?? null;
 
   return {
     type: 'heatmap',

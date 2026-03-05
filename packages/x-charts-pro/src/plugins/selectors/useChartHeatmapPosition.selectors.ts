@@ -41,7 +41,7 @@ export const selectorHeatmapItemAtPosition = createSelector(
       const xIndex = getDataIndexForOrdinalScaleValue(xScale, svgPoint.x);
       const yIndex = getDataIndexForOrdinalScaleValue(yScale, svgPoint.y);
 
-      const value = aSeries.valueLookup.get(xIndex)?.get(yIndex) ?? null;
+      const value = aSeries.heatmapData.getValue(xIndex, yIndex);
 
       if (value !== null) {
         return {

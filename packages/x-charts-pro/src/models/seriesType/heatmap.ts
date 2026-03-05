@@ -9,8 +9,8 @@ export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
   extends
-    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
-    CartesianSeriesType {
+  Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
+  CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each cell in the heatmap.
@@ -69,6 +69,25 @@ export type HeatmapItemIdentifierWithData = HeatmapItemIdentifier & {
   value: number | null;
 };
 
+export class HeatmapData {
+  private lookup: Map<number, Map<number, number>>;
+
+  constructor() {
+    this.lookup = new Map();
+  }
+
+  setValue(xIndex: number, yIndex: number, value: number): void {
+    if (!this.lookup.has(xIndex)) {
+      this.lookup.set(xIndex, new Map());
+    }
+    this.lookup.get(xIndex)!.set(yIndex, value);
+  }
+
+  getValue(xIndex: number, yIndex: number): number | null {
+    return this.lookup.get(xIndex)?.get(yIndex) ?? null;
+  }
+}
+
 export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
   HeatmapSeriesType,
   CommonDefaultizedProps
@@ -76,5 +95,5 @@ export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
   /**
    * Map the `xIndex` and `yIndex` to the corresponding value of the cell.
    */
-  valueLookup: Map<number, Map<number, number>>;
+  heatmapData: HeatmapData;
 }
