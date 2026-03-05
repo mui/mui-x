@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './chart-zoom-slider.json';
+import jsonPageContent from './charts-zoom-slider.json';
 
 export default function Page(props) {
   const { descriptions } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/chart-zoom-slider',
+    'docsx/translations/api-docs/charts/charts-zoom-slider',
     false,
-    /\.\/chart-zoom-slider.*\.json$/,
+    /\.\/charts-zoom-slider.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
