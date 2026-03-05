@@ -19,7 +19,14 @@ import { useDrawingArea } from '@mui/x-charts-premium/hooks';
 import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { ChartsToolbarPro } from '@mui/x-charts-pro';
+import {
+  ChartsToolbarImageExportTrigger,
+  ChartsToolbarPrintExportTrigger,
+} from '@mui/x-charts-pro/ChartsToolbarPro';
+import { Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json'; // Source: Yahoo Finance
 
 const xData = sp500ohlcv.map((entry) => new Date(Date.parse(entry.date)));
@@ -68,7 +75,7 @@ const formatAsDollar = (value: number) =>
     maximumFractionDigits: 0,
   });
 
-export default function CandlestickComposition() {
+export default function CandlestickOverview() {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
   const theme = useTheme();
@@ -144,7 +151,6 @@ export default function CandlestickComposition() {
     >
       <ChartsWrapper>
         <CandlestickToolbar />
-        <ChartsToolbarPro />
         <ChartsLayerContainer>
           <ChartsSvgLayer>
             <ChartsGrid horizontal vertical />
@@ -172,7 +178,52 @@ export default function CandlestickComposition() {
 }
 
 function CandlestickToolbar() {
-  return <ChartsToolbarPro />;
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const open = Boolean(anchorEl);
+  const menuId = useId();
+  const buttonId = useId();
+
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => setAnchorEl(null);
+
+  return (
+    <Toolbar>
+      <ToolbarButton
+        id={buttonId}
+        aria-controls={menuId}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        size="small"
+        onClick={handleOpen}
+      >
+        <FileDownloadIcon fontSize="small" />
+      </ToolbarButton>
+      <Menu
+        id={menuId}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <ChartsToolbarPrintExportTrigger
+          render={<MenuItem dense />}
+          onClick={handleClose}
+        >
+          Print
+        </ChartsToolbarPrintExportTrigger>
+        <ChartsToolbarImageExportTrigger
+          render={<MenuItem dense />}
+          options={{ type: 'image/png' }}
+          onClick={handleClose}
+        >
+          Download as PNG
+        </ChartsToolbarImageExportTrigger>
+      </Menu>
+    </Toolbar>
+  );
 }
 
 function CandlestickTooltip() {
