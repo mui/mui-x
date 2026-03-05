@@ -196,7 +196,6 @@ export default defineConfig(
 
       // TODO(@Janpot) Fix issues and turn back on
       'mui/consistent-production-guard': 'off',
-      'mui-x/no-selector-default-parameters': 'error',
     },
   },
   // Test start
