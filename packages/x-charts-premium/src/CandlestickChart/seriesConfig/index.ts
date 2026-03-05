@@ -3,6 +3,8 @@ import {
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   type ChartSeriesTypeConfig,
+  createIsHighlighted,
+  createIsFaded,
 } from '@mui/x-charts/internals';
 import { getExtremumX, getExtremumY } from './extrema';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
@@ -27,6 +29,9 @@ export const ohlcSeriesConfig: ChartSeriesTypeConfig<'ohlc'> = {
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  // TODO: Actually implement highlight and fading
+  isHighlightedCreator: createIsHighlighted,
+  isFadedCreator: createIsFaded,
 };
 
 cartesianSeriesTypes.addType('ohlc');
