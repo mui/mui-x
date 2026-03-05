@@ -20,7 +20,6 @@ import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
 import { MiniCalendar } from './mini-calendar';
-import { schedulerTokens } from '../internals/utils/tokens';
 import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
 export interface EventCalendarRootProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,8 +33,6 @@ const EventCalendarRootStyled = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'Root',
 })(({ theme }) => ({
-  // CSS variable tokens
-  ...schedulerTokens,
   // Layout
   boxSizing: 'border-box',
   '*, *::before, *::after': {
@@ -61,7 +58,7 @@ const EventCalendarSidePanel = styled('aside', {
   flexDirection: 'column',
   gap: theme.spacing(2),
   border: '1px solid',
-  borderColor: theme.palette.divider,
+  borderColor: (theme.vars || theme).palette.divider,
   borderRadius: theme.shape.borderRadius,
   maxHeight: '100%',
   overflowY: 'hidden',
