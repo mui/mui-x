@@ -300,19 +300,14 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
-    setControlled((prev) => {
-      const currentDays = (prev.rruleDraft.byDay ?? []) as RecurringEventWeekDayCode[];
-      const next = currentDays.includes(dayCode)
-        ? currentDays.filter((d) => d !== dayCode)
-        : [...currentDays, dayCode];
-      return {
-        ...prev,
-        rruleDraft: {
-          ...prev.rruleDraft,
-          byDay: next,
-        },
-      };
-    });
+    const byDay = controlled.rruleDraft.byDay ?? [];
+    const next = byDay.includes(dayCode)
+      ? byDay.filter((d) => d !== dayCode)
+      : [...byDay, dayCode];
+    setControlled((prev) => ({
+      ...prev,
+      rruleDraft: { ...prev.rruleDraft, byDay: next },
+    }));
   };
 
   const handleChangeMonthlyGroup = (next: string[]) => {
