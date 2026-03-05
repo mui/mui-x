@@ -82,8 +82,9 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
           {Content ? (
             <Content
               item={
-                /* TypeScript can't assert that the item's type is the same type as the `Content`, so we need to cast */
-                tooltipData as ItemTooltip<any>
+                /* TypeScript can't guarantee that the item's series type is the same as the Content's series type,
+                 * so we need to cast */
+                tooltipData as any
               }
             />
           ) : (

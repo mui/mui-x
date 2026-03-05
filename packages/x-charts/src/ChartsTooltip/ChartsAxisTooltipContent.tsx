@@ -82,10 +82,19 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
                     : null;
 
                 if (Content) {
-                  return <Content item={item} />;
+                  return (
+                    <Content
+                      key={item.seriesId}
+                      item={
+                        /* TypeScript can't guarantee that the item's series type is the same as the Content's series type,
+                         * so we need to cast */
+                        item as any
+                      }
+                    />
+                  );
                 }
 
-                return <DefaultContent item={item} />;
+                return <DefaultContent key={item.seriesId} item={item} />;
               })}
             </tbody>
           </ChartsTooltipTable>
