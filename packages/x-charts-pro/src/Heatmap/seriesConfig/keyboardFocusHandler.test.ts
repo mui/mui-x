@@ -16,7 +16,6 @@ const state = {
             data: [
               [0, 0, 15],
               [0, 1, 10],
-              [1, 0, 20],
               [1, 1, 25],
             ] as const,
           },
@@ -45,7 +44,6 @@ const state = {
   },
 };
 
-// Define some constants for test cases with pattern `cell_[rowIndex][colIndex]_[isEmptyCharts]`
 const cell_00 = {
   type: 'heatmap',
   seriesId: 'heatmap-1',
