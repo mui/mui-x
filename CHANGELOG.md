@@ -40,16 +40,6 @@ Same changes as in `@mui/x-data-grid@8.27.4`, plus:
 
 Same changes as in `@mui/x-data-grid-pro@8.27.4`.
 
-### Date and Time Pickers
-
-#### `@mui/x-date-pickers@8.27.2`
-
-Internal changes.
-
-#### `@mui/x-date-pickers-pro@8.27.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-date-pickers@8.27.2`.
-
 ### Charts
 
 #### `@mui/x-charts@8.27.4`
