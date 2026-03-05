@@ -17,7 +17,6 @@ We'd like to extend a big thank you to the 5 contributors who made this release 
 Special thanks go out to this community member for their valuable contribution:
 @lion1963
 
-
 The following team members contributed to this release:
 @arminmeh, @dav-is, @JCQuintas, @sai6855
 
