@@ -11,17 +11,17 @@ import {
   type ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { ChartAxisZoomSliderPreview } from './ChartAxisZoomSliderPreview';
+import { ChartsAxisZoomSliderPreview } from './ChartsAxisZoomSliderPreview';
 import {
   ZOOM_SLIDER_ACTIVE_TRACK_SIZE,
   ZOOM_SLIDER_SIZE,
   ZOOM_SLIDER_TRACK_SIZE,
 } from './constants';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
-import { ChartAxisZoomSliderTrack } from './ChartAxisZoomSliderTrack';
-import { ChartAxisZoomSliderActiveTrack } from './ChartAxisZoomSliderActiveTrack';
+import { ChartsAxisZoomSliderTrack } from './ChartsAxisZoomSliderTrack';
+import { ChartsAxisZoomSliderActiveTrack } from './ChartsAxisZoomSliderActiveTrack';
 
-interface ChartZoomSliderProps {
+interface ChartsZoomSliderProps {
   /**
    * The ID of the axis this overview refers to.
    */
@@ -36,7 +36,7 @@ interface ChartZoomSliderProps {
  * Renders the zoom slider for a specific axis.
  * @internal
  */
-export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderProps) {
+export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSliderProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
   const zoomData = store.use(selectorChartAxisZoomData, axisId);
@@ -96,7 +96,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   const backgroundRectOffset = (sliderSize - ZOOM_SLIDER_TRACK_SIZE) / 2;
 
   const track = showPreview ? (
-    <ChartAxisZoomSliderPreview
+    <ChartsAxisZoomSliderPreview
       axisId={axisId}
       axisDirection={axisDirection}
       reverse={reverse}
@@ -106,7 +106,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
       width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_PREVIEW_SIZE}
     />
   ) : (
-    <ChartAxisZoomSliderTrack
+    <ChartsAxisZoomSliderTrack
       x={axisDirection === 'x' ? 0 : backgroundRectOffset}
       y={axisDirection === 'x' ? backgroundRectOffset : 0}
       height={axisDirection === 'x' ? ZOOM_SLIDER_TRACK_SIZE : drawingArea.height}
@@ -124,7 +124,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   return (
     <g data-charts-zoom-slider transform={`translate(${x} ${y})`} style={{ touchAction: 'none' }}>
       {track}
-      <ChartAxisZoomSliderActiveTrack
+      <ChartsAxisZoomSliderActiveTrack
         zoomData={zoomData}
         axisId={axisId}
         axisPosition={axisPosition}
