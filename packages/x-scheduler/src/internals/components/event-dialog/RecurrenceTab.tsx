@@ -127,7 +127,7 @@ const WeekDaySelectorCheckbox = styled(Checkbox, {
 })(({ theme }) => ({
   ...theme.typography.button,
   fontSize: theme.typography.pxToRem(13),
-  padding: 7,
+  padding: 6,
   margin: theme.spacing(0.5),
   border: 0,
   borderRadius: theme.shape.borderRadius,
@@ -225,25 +225,16 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       return;
     }
     setControlled((prev) => {
+      // When switching frequency, clear byDay/byMonthDay to avoid stale values
+      // from a different frequency leaking (e.g. monthly ordinal "2TU" into weekly)
+      const cleanDraft = { ...prev.rruleDraft, freq: newFrequency, byDay: [], byMonthDay: [] };
+
       // When switching to MONTHLY, initialize byMonthDay with the current day of month
-      if (
-        newFrequency === 'MONTHLY' &&
-        !prev.rruleDraft.byDay?.length &&
-        !prev.rruleDraft.byMonthDay?.length
-      ) {
-        return {
-          ...prev,
-          rruleDraft: {
-            ...prev.rruleDraft,
-            freq: newFrequency,
-            byMonthDay: [monthlyRef.dayOfMonth],
-          },
-        };
+      if (newFrequency === 'MONTHLY') {
+        cleanDraft.byMonthDay = [monthlyRef.dayOfMonth];
       }
-      return {
-        ...prev,
-        rruleDraft: { ...prev.rruleDraft, freq: newFrequency },
-      };
+
+      return { ...prev, rruleDraft: cleanDraft };
     });
   };
 
@@ -456,7 +447,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           </Select>
         </FormControl>
 
-        <FormControl component="fieldset" aria-label={localeText.recurrenceRepeatLabel}>
+        <fieldset aria-label={localeText.recurrenceRepeatLabel} style={{ border: 0, margin: 0, padding: 0 }}>
           <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>
             {localeText.recurrenceRepeatLabel}
           </SectionHeaderTitle>
@@ -497,27 +488,25 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 <RepeatSectionLabel className={classes.eventDialogRepeatSectionLabel}>
                   {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 </RepeatSectionLabel>
-                <FormControl component="fieldset">
-                  <RecurrenceSelectorContainer
-                    elevation={0}
-                    className={classes.eventDialogRecurrenceSelectorContainer}
-                  >
-                    {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
-                      <WeekDaySelectorCheckbox
-                        key={dayValue}
-                        className={classes.eventDialogWeekDaySelectorFormGroup}
-                        icon={<span>{label}</span>}
-                        checkedIcon={<span>{label}</span>}
-                        checked={
-                          (controlled.rruleDraft.byDay as RecurringEventWeekDayCode[] | undefined)?.includes(dayValue) ?? false
-                        }
-                        disabled={customDisabled}
-                        onChange={() => handleChangeWeeklyDays(dayValue)}
-                        inputProps={{ 'aria-label': ariaLabel }}
-                      />
-                    ))}
-                  </RecurrenceSelectorContainer>
-                </FormControl>
+                <RecurrenceSelectorContainer
+                  elevation={0}
+                  className={classes.eventDialogRecurrenceSelectorContainer}
+                >
+                  {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
+                    <WeekDaySelectorCheckbox
+                      key={dayValue}
+                      className={classes.eventDialogWeekDaySelectorFormGroup}
+                      icon={<span>{label}</span>}
+                      checkedIcon={<span>{label}</span>}
+                      checked={
+                        (controlled.rruleDraft.byDay as RecurringEventWeekDayCode[] | undefined)?.includes(dayValue) ?? false
+                      }
+                      disabled={customDisabled}
+                      onChange={() => handleChangeWeeklyDays(dayValue)}
+                      inputProps={{ 'aria-label': ariaLabel }}
+                    />
+                  ))}
+                </RecurrenceSelectorContainer>
               </InlineRow>
             )}
 
@@ -553,7 +542,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               </InlineRow>
             )}
           </RepeatSectionContent>
-        </FormControl>
+        </fieldset>
 
         <FormControl component="fieldset" aria-label={localeText.recurrenceEndsLabel}>
           <SectionHeaderTitle variant="subtitle2" className={classes.eventDialogSectionHeaderTitle}>
