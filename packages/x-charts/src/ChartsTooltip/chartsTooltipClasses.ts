@@ -50,7 +50,7 @@ export const chartsTooltipClasses: ChartsTooltipClasses = generateUtilityClasses
   ],
 );
 
-export const useUtilityClasses = (classes?: Partial<ChartsTooltipClasses>) => {
+export const useChartsTooltipUtilityClasses = (classes?: Partial<ChartsTooltipClasses>) => {
   const slots = {
     root: ['root'],
     paper: ['paper'],
