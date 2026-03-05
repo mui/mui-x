@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import Checkbox from '@mui/material/Checkbox';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
@@ -47,7 +48,6 @@ const RecurrenceSelectorContainer = styled(Paper, {
 })(({ theme }) => ({
   display: 'inline-flex',
   border: `1px solid ${theme.palette.divider}`,
-  flexWrap: 'wrap',
   width: 'fit-content',
   maxWidth: '100%',
 }));
@@ -118,6 +118,28 @@ const RecurrenceSelectorToggleGroup = styled(ToggleButtonGroup, {
   [`& .${toggleButtonGroupClasses.middleButton}, & .${toggleButtonGroupClasses.lastButton}`]: {
     marginLeft: -1,
     borderLeft: '1px solid transparent',
+  },
+}));
+
+const WeekDaySelectorCheckbox = styled(Checkbox, {
+  name: 'MuiEventDialog',
+  slot: 'WeekDaySelectorFormGroup',
+})(({ theme }) => ({
+  ...theme.typography.button,
+  fontSize: theme.typography.pxToRem(13),
+  padding: 7,
+  margin: theme.spacing(0.5),
+  border: 0,
+  borderRadius: theme.shape.borderRadius,
+  minWidth: 0,
+  textAlign: 'center',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  color: theme.palette.action.active,
+  '&.Mui-checked': {
+    color: theme.palette.text.primary,
+    backgroundColor: theme.alpha(theme.palette.text.primary, theme.palette.action.selectedOpacity),
   },
 }));
 
@@ -276,14 +298,20 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     }));
   };
 
-  const handleChangeWeeklyDays = (next: RecurringEventWeekDayCode[]) => {
-    setControlled((prev) => ({
-      ...prev,
-      rruleDraft: {
-        ...prev.rruleDraft,
-        byDay: next,
-      },
-    }));
+  const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
+    setControlled((prev) => {
+      const currentDays = (prev.rruleDraft.byDay ?? []) as RecurringEventWeekDayCode[];
+      const next = currentDays.includes(dayCode)
+        ? currentDays.filter((d) => d !== dayCode)
+        : [...currentDays, dayCode];
+      return {
+        ...prev,
+        rruleDraft: {
+          ...prev.rruleDraft,
+          byDay: next,
+        },
+      };
+    });
   };
 
   const handleChangeMonthlyGroup = (next: string[]) => {
@@ -469,25 +497,27 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 <RepeatSectionLabel className={classes.eventDialogRepeatSectionLabel}>
                   {localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
                 </RepeatSectionLabel>
-                <RecurrenceSelectorContainer
-                  elevation={0}
-                  className={classes.eventDialogRecurrenceSelectorContainer}
-                >
-                  <RecurrenceSelectorToggleGroup
-                    className={classes.eventDialogRecurrenceSelectorToggleGroup}
-                    size="small"
-                    value={controlled.rruleDraft.byDay}
-                    onChange={(_, newValue) => handleChangeWeeklyDays(newValue)}
-                    disabled={customDisabled}
-                    aria-label={localeText.recurrenceWeeklyMonthlySpecificInputsLabel}
+                <FormControl component="fieldset">
+                  <RecurrenceSelectorContainer
+                    elevation={0}
+                    className={classes.eventDialogRecurrenceSelectorContainer}
                   >
                     {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
-                      <ToggleButton key={dayValue} aria-label={ariaLabel} value={dayValue}>
-                        {label}
-                      </ToggleButton>
+                      <WeekDaySelectorCheckbox
+                        key={dayValue}
+                        className={classes.eventDialogWeekDaySelectorFormGroup}
+                        icon={<span>{label}</span>}
+                        checkedIcon={<span>{label}</span>}
+                        checked={
+                          (controlled.rruleDraft.byDay as RecurringEventWeekDayCode[] | undefined)?.includes(dayValue) ?? false
+                        }
+                        disabled={customDisabled}
+                        onChange={() => handleChangeWeeklyDays(dayValue)}
+                        inputProps={{ 'aria-label': ariaLabel }}
+                      />
                     ))}
-                  </RecurrenceSelectorToggleGroup>
-                </RecurrenceSelectorContainer>
+                  </RecurrenceSelectorContainer>
+                </FormControl>
               </InlineRow>
             )}
 

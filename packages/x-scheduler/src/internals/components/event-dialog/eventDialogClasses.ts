@@ -59,6 +59,8 @@ export interface EventDialogClasses {
   eventDialogRepeatSectionContent: string;
   /** Styles applied to the event dialog recurrence selector toggle group element. */
   eventDialogRecurrenceSelectorToggleGroup: string;
+  /** Styles applied to the event dialog week day selector form group element. */
+  eventDialogWeekDaySelectorFormGroup: string;
   /** Styles applied to the event dialog frequency select element. */
   eventDialogFrequencySelect: string;
   /** Styles applied to the event dialog small number field element. */
@@ -120,6 +122,7 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogEndsRadioGroup',
   'eventDialogRepeatSectionContent',
   'eventDialogRecurrenceSelectorToggleGroup',
+  'eventDialogWeekDaySelectorFormGroup',
   'eventDialogFrequencySelect',
   'eventDialogSmallNumberField',
   'eventDialogTabsContainer',
@@ -167,6 +170,7 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogEndsRadioGroup: ['eventDialogEndsRadioGroup'],
   eventDialogRepeatSectionContent: ['eventDialogRepeatSectionContent'],
   eventDialogRecurrenceSelectorToggleGroup: ['eventDialogRecurrenceSelectorToggleGroup'],
+  eventDialogWeekDaySelectorFormGroup: ['eventDialogWeekDaySelectorFormGroup'],
   eventDialogFrequencySelect: ['eventDialogFrequencySelect'],
   eventDialogSmallNumberField: ['eventDialogSmallNumberField'],
   eventDialogTabsContainer: ['eventDialogTabsContainer'],
