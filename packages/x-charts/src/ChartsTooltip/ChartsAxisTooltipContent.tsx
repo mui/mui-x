@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { type SxProps, type Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
-import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { type ChartsTooltipClasses, useChartsTooltipUtilityClasses } from './chartsTooltipClasses';
 import {
   ChartsTooltipCell,
   ChartsTooltipPaper,
   ChartsTooltipRow,
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
-import { type SeriesItem, useAxesTooltip } from './useAxesTooltip';
+import { useAxesTooltip } from './useAxesTooltip';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartSeriesConfigGetter } from '../internals/plugins/corePlugins/useChartSeries';
@@ -18,6 +18,7 @@ import {
   type CartesianChartSeriesType,
   type PolarChartSeriesType,
 } from '../models/seriesType/config';
+import { type AxisTooltipContentProps } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 export interface ChartsAxisTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -37,7 +38,7 @@ export interface ChartsAxisTooltipContentProps {
 
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   const { sort } = props;
-  const classes = useUtilityClasses(props.classes);
+  const classes = useChartsTooltipUtilityClasses(props.classes);
   const store = useStore();
 
   const getSeriesConfig = store.use(selectorChartSeriesConfigGetter);
@@ -85,6 +86,7 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
                   return (
                     <Content
                       key={item.seriesId}
+                      classes={props.classes}
                       item={
                         /* TypeScript can't guarantee that the item's series type is the same as the Content's series type,
                          * so we need to cast */
@@ -94,7 +96,7 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
                   );
                 }
 
-                return <DefaultContent key={item.seriesId} item={item} />;
+                return <DefaultContent key={item.seriesId} classes={props.classes} item={item} />;
               })}
             </tbody>
           </ChartsTooltipTable>
@@ -104,18 +106,10 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   );
 }
 
-interface DefaultContentProps<T extends CartesianChartSeriesType | PolarChartSeriesType> {
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<ChartsTooltipClasses>;
-  item: SeriesItem<T>;
-}
-
 function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesType>(
-  props: DefaultContentProps<T>,
+  props: AxisTooltipContentProps<T>,
 ) {
-  const classes = useUtilityClasses(props.classes);
+  const classes = useChartsTooltipUtilityClasses(props.classes);
   const { item } = props;
 
   if (item.formattedValue == null) {

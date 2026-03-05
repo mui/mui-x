@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { type SxProps, type Theme } from '@mui/material/styles';
-import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { type ChartsTooltipClasses, useChartsTooltipUtilityClasses } from './chartsTooltipClasses';
 import { useInternalItemTooltip } from './useItemTooltip';
 import {
   ChartsTooltipCell,
@@ -17,6 +17,7 @@ import { useStore } from '../internals/store/useStore';
 import { selectorChartSeriesConfigGetter } from '../internals/plugins/corePlugins/useChartSeries';
 import {
   type ItemTooltip,
+  type ItemTooltipContentProps,
   type ItemTooltipWithMultipleValues,
 } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { type ChartSeriesType } from '../models/seriesType/config';
@@ -37,7 +38,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   const store = useStore();
   const getSeriesConfig = store.use(selectorChartSeriesConfigGetter);
 
-  const classes = useUtilityClasses(propClasses);
+  const classes = useChartsTooltipUtilityClasses(propClasses);
 
   if (!tooltipData) {
     return null;
@@ -65,9 +66,9 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
           </Typography>
           <tbody>
             {Content ? (
-              <Content item={tooltipData} />
+              <Content classes={propClasses} item={tooltipData} />
             ) : (
-              <DefaultMultipleValueContent tooltipData={tooltipData} />
+              <DefaultMultipleValueContent classes={propClasses} item={tooltipData} />
             )}
           </tbody>
         </ChartsTooltipTable>
@@ -81,6 +82,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
         <tbody>
           {Content ? (
             <Content
+              classes={propClasses}
               item={
                 /* TypeScript can't guarantee that the item's series type is the same as the Content's series type,
                  * so we need to cast */
@@ -88,7 +90,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
               }
             />
           ) : (
-            <DefaultSingleValueContent classes={propClasses} tooltipData={tooltipData} />
+            <DefaultSingleValueContent classes={propClasses} item={tooltipData} />
           )}
         </tbody>
       </ChartsTooltipTable>
@@ -96,23 +98,19 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   );
 }
 
-interface DefaultMultipleValueContentProps {
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<ChartsTooltipClasses>;
-  tooltipData: ItemTooltipWithMultipleValues;
+interface DefaultMultipleValueContentProps extends ItemTooltipContentProps<'radar'> {
+  item: ItemTooltipWithMultipleValues;
 }
 
 function DefaultMultipleValueContent({
   classes: propClasses,
-  tooltipData,
+  item,
 }: DefaultMultipleValueContentProps) {
-  const classes = useUtilityClasses(propClasses);
+  const classes = useChartsTooltipUtilityClasses(propClasses);
 
   return (
     <React.Fragment>
-      {tooltipData.values.map((value) => (
+      {item.values.map((value) => (
         <ChartsTooltipRow key={value.label} className={classes.row}>
           <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
             {value.label}
@@ -126,21 +124,19 @@ function DefaultMultipleValueContent({
   );
 }
 
-interface DefaultSingleValueContentProps {
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<ChartsTooltipClasses>;
-  tooltipData: ItemTooltip<ChartSeriesType>;
+interface DefaultSingleValueContentProps<
+  T extends ChartSeriesType,
+> extends ItemTooltipContentProps<T> {
+  item: ItemTooltip<T>;
 }
 
-function DefaultSingleValueContent({
+function DefaultSingleValueContent<T extends ChartSeriesType>({
   classes: propClasses,
-  tooltipData,
-}: DefaultSingleValueContentProps) {
-  const { color, label, formattedValue, markType, markShape } = tooltipData;
+  item,
+}: DefaultSingleValueContentProps<T>) {
+  const { color, label, formattedValue, markType, markShape } = item;
 
-  const classes = useUtilityClasses(propClasses);
+  const classes = useChartsTooltipUtilityClasses(propClasses);
 
   return (
     <ChartsTooltipRow className={classes.row}>

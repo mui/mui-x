@@ -6,13 +6,13 @@ import {
   type ItemTooltipContentProps,
 } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
-import { useUtilityClasses } from '../CandlestickTooltip/Candlestick.classes';
+import { useChartsTooltipUtilityClasses } from '@mui/x-charts/internals';
 
 export function OHLCTooltipContent(
   props: AxisTooltipContentProps<'ohlc'> | ItemTooltipContentProps<'ohlc'>,
 ) {
   const { item } = props;
-  const classes = useUtilityClasses({});
+  const classes = useChartsTooltipUtilityClasses(props.classes);
   const { localeText } = useChartsLocalization();
 
   /* This can only happen if the series is a radar series, but this is a candlestick tooltip, so in
