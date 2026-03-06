@@ -11,7 +11,7 @@ import {
 } from '@mui/x-charts/internals';
 import { type ChartsDataProviderProps } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { useLicenseVerifier } from '@mui/x-license/internals';
 import {
   type ChartsSlotPropsPro,
   type ChartsSlotsPro,
