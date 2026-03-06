@@ -94,7 +94,9 @@ export const usePicker = <
    */
   const [triggerElement, triggerRef] = React.useState<HTMLElement | null>(null);
   const popupRef = React.useRef<HTMLElement>(null);
-  const internalFieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
+  const internalFieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(
+    null,
+  );
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
 

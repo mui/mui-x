@@ -158,7 +158,7 @@ MobileTimePicker.propTypes = {
   /**
    * Ref to the field component.
    */
-  fieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  fieldRef: PropTypes.object,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.

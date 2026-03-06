@@ -33,7 +33,7 @@
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
-    "fieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "fieldRef": { "type": { "name": "object" } },
     "fixedWeekNumber": { "type": { "name": "number" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
