@@ -127,6 +127,24 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
+   * The index or type of the section to focus when the field is focused.
+   * If `undefined`/`null`, the first section will be focused.
+   */
+  initialFocusedSection: PropTypes.oneOfType([
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
+    PropTypes.number,
+  ]),
+  /**
    * Maximal selectable date.
    * @default 2099-12-31
    */

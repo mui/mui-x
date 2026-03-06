@@ -75,6 +75,17 @@ Otherwise, the section(s) might be selected on the wrong input.
 
 {{"demo": "ControlledSelectedSectionsMultiInputRangeField.js", "defaultCodeOpen": false }}
 
+### Focus a specific section on focus
+
+Use the `initialFocusedSection` prop to control which section should be focused when the field is focused.
+By default, the first section is focused.
+
+If you provide a string of type `FieldSectionType`, the first section with that name will be selected.
+If you provide `"all"`, all the sections will be selected.
+If you provide a number, the section at this index will be selected.
+
+{{"demo": "FocusedSectionOnFocus.js"}}
+
 ### Clearable behavior
 
 You can use the `clearable` prop to enable the clearing behavior on a field. You can also add an event handler using the `onClear` callback prop.
