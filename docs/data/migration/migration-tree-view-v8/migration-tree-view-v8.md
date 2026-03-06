@@ -23,7 +23,7 @@ In `package.json`, change the version of the Tree View package to `latest`.
 +"@mui/x-tree-view-pro": "latest",
 ```
 
-Since `v9` is a major release, it contains changes that affect the public API.
+The `v9` major release contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
 
