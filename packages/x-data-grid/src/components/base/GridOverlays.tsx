@@ -73,8 +73,7 @@ export function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysPr
   let height: React.CSSProperties['height'] = Math.max(
     dimensions.viewportOuterSize.height -
       dimensions.topContainerHeight -
-      dimensions.bottomContainerHeight -
-      (dimensions.hasScrollX ? dimensions.scrollbarSize : 0),
+      dimensions.bottomContainerHeight,
     0,
   );
 
