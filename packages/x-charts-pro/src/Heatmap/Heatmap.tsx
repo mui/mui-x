@@ -5,7 +5,6 @@ import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsAxis, type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   type ChartsAxisSlots,
   type ChartsAxisSlotProps,
@@ -26,6 +25,7 @@ import {
   type ChartsLegendSlots,
 } from '@mui/x-charts/ChartsLegend';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
+import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { type ChartContainerProProps } from '../ChartContainerPro';
 import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
@@ -41,6 +41,7 @@ import {
 } from '../ChartsToolbarPro/Toolbar.types';
 import { FocusedHeatmapCell } from './FocusedHeatmapCell';
 import { useHeatmapProps } from './useHeatmapProps';
+import { ChartsSvgLayer } from '../ChartsSvgLayer';
 
 export interface HeatmapSlots
   extends
@@ -176,17 +177,19 @@ const Heatmap = React.forwardRef(function Heatmap(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface sx={sx}>
-          <g {...clipPathGroupProps}>
-            <HeatmapPlot {...heatmapPlotProps} />
-            <FocusedHeatmapCell />
-            <ChartsOverlay {...overlayProps} />
-          </g>
-          <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} />
-          <ChartsBrushOverlay />
-          {children}
-        </ChartsSurface>
+        <ChartsLayerContainer>
+          <ChartsSvgLayer sx={sx}>
+            <g {...clipPathGroupProps}>
+              <HeatmapPlot {...heatmapPlotProps} />
+              <FocusedHeatmapCell />
+              <ChartsOverlay {...overlayProps} />
+            </g>
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsClipPath {...clipPathProps} />
+            <ChartsBrushOverlay />
+            {children}
+          </ChartsSvgLayer>
+        </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
@@ -248,10 +251,19 @@ Heatmap.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['heatmap']).isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -304,7 +316,7 @@ Heatmap.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -380,13 +392,21 @@ Heatmap.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['heatmap']),
-    xIndex: PropTypes.number.isRequired,
-    yIndex: PropTypes.number.isRequired,
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['heatmap']).isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

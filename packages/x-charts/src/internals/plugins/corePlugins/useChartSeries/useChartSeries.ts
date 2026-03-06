@@ -27,7 +27,11 @@ export function createIdentifierWithType(state: UseChartSeriesState) {
     const type = state.series.idToType.get(identifier.seriesId);
 
     if (type === undefined) {
-      throw new Error(`MUI X Charts: id "${identifier.seriesId}" is not a series id.`);
+      throw new Error(
+        `MUI X Charts: The id "${identifier.seriesId}" is not associated with any series. ` +
+          'This may indicate the series was not properly registered or the id is incorrect. ' +
+          'Verify the series id matches one defined in your chart configuration.',
+      );
     }
     return { ...identifier, type } as RetrunedType<SeriesType, Item>;
   }

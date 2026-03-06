@@ -29,10 +29,10 @@ const AgendaViewRoot = styled('div', {
   slot: 'AgendaView',
 })(({ theme }) => ({
   width: '100%',
-  height: '100%',
+  maxHeight: '100%',
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
-  overflowY: 'scroll',
+  overflowY: 'auto',
   position: 'relative',
 }));
 
@@ -220,13 +220,13 @@ export const AgendaView = React.memo(
             </DayHeaderCell>
             <EventsList className={classes.agendaViewEventsList}>
               {isLoading && (
-                <li>
+                <li className={classes.agendaViewEventListItem}>
                   <EventSkeleton data-variant="agenda" />
                 </li>
               )}
               {!isLoading &&
                 occurrences.map((occurrence) => (
-                  <li key={occurrence.key}>
+                  <li key={occurrence.key} className={classes.agendaViewEventListItem}>
                     <EventDialogTrigger occurrence={occurrence}>
                       <EventItem
                         occurrence={occurrence}

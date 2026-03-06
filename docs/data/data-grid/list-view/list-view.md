@@ -32,7 +32,7 @@ const listViewColDef: GridListViewColDef = {
 
 ## Responsive list view with media query
 
-Use the `useMediaQuery` hook from `@mui/material` to enable the list view feature at a specified breakpoint.
+Use the `useMediaQuery()` hook from `@mui/material` to enable the list view feature at a specified breakpoint.
 The demo below automatically switches to a list layout when the viewport width is below the `md` breakpoint.
 
 {{"demo": "ListViewMediaQuery.js", "bg": "inline"}}

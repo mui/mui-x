@@ -40,16 +40,12 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   padding: theme.spacing(0.5, 1, 0.5, 1),
   display: 'flex',
   flexDirection: 'column',
-  boxSizing: 'border-box',
   gap: theme.spacing(0.25),
   justifyContent: 'flex-start',
   alignContent: 'flex-start',
   minHeight: 11.5,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
-  },
-  '&[data-draggable]': {
-    cursor: 'grab',
   },
   '&[data-under-hour="true"]': {
     flexDirection: 'row',
@@ -278,7 +274,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       <TimeGridEventPlaceholder
         aria-hidden={true}
         data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-        data-draggable={isDraggable || undefined}
         data-recurrent={isRecurring || undefined}
         data-under-fifteen-minutes={isLessThan15Minutes || undefined}
         data-palette={color}
@@ -297,7 +292,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-      data-draggable={isDraggable || undefined}
       data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
       data-palette={color}

@@ -15,7 +15,8 @@
       "key": "faded",
       "className": "MuiPieArc-faded",
       "description": "Styles applied to the root element when faded.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "focusIndicator",
@@ -27,7 +28,8 @@
       "key": "highlighted",
       "className": "MuiPieArc-highlighted",
       "description": "Styles applied to the root element when highlighted.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "root",

@@ -28,11 +28,9 @@ export class TreeViewJSXItemsPlugin {
 
     if (currentOwner != null && currentOwner !== ownerToken) {
       throw new Error(
-        [
-          'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-          `Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
-        ].join('\n'),
+        `MUI X: The Tree View component requires all items to have a unique \`id\` property.
+Alternatively, you can use the \`getItemId\` prop to specify a custom id for each item.
+Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
       );
     }
 

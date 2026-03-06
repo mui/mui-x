@@ -4,6 +4,7 @@ const seriesId = 'id1';
 const dataIndex = 1;
 
 const itemData = {
+  type: 'bar' as const,
   seriesId,
   dataIndex,
 };
