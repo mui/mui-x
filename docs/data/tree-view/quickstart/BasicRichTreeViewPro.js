@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 
 const MUI_X_PRODUCTS = [
   {
@@ -38,10 +38,10 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-export default function BasicRichTreeView() {
+export default function BasicRichTreeViewPro() {
   return (
     <Box sx={{ minHeight: 352, minWidth: 250 }}>
-      <RichTreeView items={MUI_X_PRODUCTS} />
+      <RichTreeViewPro items={MUI_X_PRODUCTS} />
     </Box>
   );
 }

@@ -51,14 +51,16 @@ const fetchData = async (_parentId?: string): Promise<ItemType[]> => {
 
 export function FetchChildren() {
   return (
-    <RichTreeViewPro
-      items={[]}
-      dataSource={{
-        getChildrenCount: (item) => item?.childrenCount as number,
-        getTreeItems: fetchData,
-      }}
-      dataSourceCache={cache}
-    />
+    <div style={{ width: 300, height: 240 }}>
+      <RichTreeViewPro
+        items={[]}
+        dataSource={{
+          getChildrenCount: (item) => item?.childrenCount as number,
+          getTreeItems: fetchData,
+        }}
+        dataSourceCache={cache}
+      />
+    </div>
   );
 }
 
