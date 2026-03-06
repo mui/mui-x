@@ -11,5 +11,5 @@ export * from './PieArcLabel';
 export * from './getPieCoordinates';
 export * from './PieChart.plugins';
 
-export { pieClasses } from './pieClasses';
+export { pieClasses, getPieUtilityClass } from './pieClasses';
 export type { PieClasses, PieClassKey } from './pieClasses';

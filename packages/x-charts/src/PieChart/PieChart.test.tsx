@@ -1,6 +1,6 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/charts/describeConformance';
-import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
+import { pieArcClasses, pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { CHART_SELECTOR } from '../tests/constants';
 
 describe('<PieChart />', () => {
@@ -40,7 +40,7 @@ describe('<PieChart />', () => {
       <PieChart height={100} width={100} series={[{ data: [{ id: 0, value: 10 }] }]} hideLegend />,
     );
 
-    const pieArc = document.querySelector(`.${pieArcClasses.root}`)!;
+    const pieArc = document.querySelector(`.${pieClasses.arc}`)!;
     await user.hover(pieArc);
 
     expect(await screen.findByRole('tooltip')).toBeVisible();
@@ -55,7 +55,7 @@ describe('<PieChart />', () => {
       <PieChart height={100} width={100} series={[{ data: [{ id: 0, value: 10 }] }]} hideLegend />,
     );
 
-    const pieArc = document.querySelector(`.${pieArcClasses.root}`)!;
+    const pieArc = document.querySelector(`.${pieClasses.arc}`)!;
     await user.hover(pieArc);
 
     expect(await screen.findByRole('tooltip')).toBeVisible();
