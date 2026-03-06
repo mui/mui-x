@@ -21,7 +21,10 @@ export interface BarElementSlotProps {
   bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
-export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted' | 'isFocused'> &
+export type BarElementProps = Omit<
+  BarElementOwnerState,
+  'isFaded' | 'isHighlighted' | 'isFocused'
+> &
   Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
     /**
      * The props used for each component slot.
