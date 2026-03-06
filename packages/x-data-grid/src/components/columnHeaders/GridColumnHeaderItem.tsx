@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
 import useId from '@mui/utils/useId';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -76,9 +77,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'columnHeader',
-      colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'columnHeader--alignRight',
+      colDef.headerAlign && `columnHeader--align${capitalize(colDef.headerAlign)}`,
       isColumnSortable && 'columnHeader--sortable',
       isDragging && 'columnHeader--moving',
       isColumnSorted && 'columnHeader--sorted',
