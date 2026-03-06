@@ -70,6 +70,9 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiScatterChart'];
   };
   MuiScatter?: {};
+  MuiRadarChart?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiRadarChart'];
+  };
   MuiGauge?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiGauge'];
   };
