@@ -93,7 +93,7 @@ See [Virtualization—Layout](/x/react-tree-view/rich-tree-view/virtualization/#
 ### Item height
 
 The three Tree View components now support a new `itemHeight` prop to customize the height each item takes.
-For `RichTreeViewPro`, this prop is set to `32px` by default because the component needs to be able to calculate the position of every item in order to virtualize them.
+For `RichTreeViewPro`, this prop defaults to `32px` because virtualization requires each item to have a fixed, known height in order to calculate scroll positions and determine which items are visible in the viewport.
 
 You can customize it using the `itemHeight` prop:
 
