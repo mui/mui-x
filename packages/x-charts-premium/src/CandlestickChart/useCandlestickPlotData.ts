@@ -39,12 +39,12 @@ export function useCandlestickPlotData(
   );
 
   return React.useMemo(() => {
-    const rectCenters = new Float32Array(series.data.length * 2);
-    const rectHeights = new Float32Array(series.data.length);
-    const lineCenters = new Float32Array(series.data.length * 2);
-    const lineHeights = new Float32Array(series.data.length);
+    const candleCenters = new Float32Array(series.data.length * 2);
+    const candleHeights = new Float32Array(series.data.length);
+    const wickCenters = new Float32Array(series.data.length * 2);
+    const wickHeights = new Float32Array(series.data.length);
     const candleColors = new Float32Array(series.data.length * 4);
-    const lineColors = new Float32Array(series.data.length * 4);
+    const wickColors = new Float32Array(series.data.length * 4);
     const xDomain = xScale.domain();
 
     for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
@@ -68,13 +68,13 @@ export function useCandlestickPlotData(
       ].sort();
       const [lineBottom, lineTop] = [yScale(low) - drawingArea.top, yScale(high) - drawingArea.top];
 
-      rectCenters[dataIndex * 2] = x;
-      rectCenters[dataIndex * 2 + 1] = (rectTop + rectBottom) / 2;
-      rectHeights[dataIndex] = rectTop - rectBottom;
+      candleCenters[dataIndex * 2] = x;
+      candleCenters[dataIndex * 2 + 1] = (rectTop + rectBottom) / 2;
+      candleHeights[dataIndex] = rectTop - rectBottom;
 
-      lineCenters[dataIndex * 2] = rectCenters[dataIndex * 2];
-      lineCenters[dataIndex * 2 + 1] = (lineTop + lineBottom) / 2;
-      lineHeights[dataIndex] = lineTop - lineBottom;
+      wickCenters[dataIndex * 2] = candleCenters[dataIndex * 2];
+      wickCenters[dataIndex * 2 + 1] = (lineTop + lineBottom) / 2;
+      wickHeights[dataIndex] = lineTop - lineBottom;
 
       if (close >= open) {
         // Bullish - green
@@ -90,10 +90,10 @@ export function useCandlestickPlotData(
         candleColors[dataIndex * 4 + 3] = bearishColor[3];
       }
 
-      lineColors[dataIndex * 4] = lineColor[0];
-      lineColors[dataIndex * 4 + 1] = lineColor[1];
-      lineColors[dataIndex * 4 + 2] = lineColor[2];
-      lineColors[dataIndex * 4 + 3] = lineColor[3];
+      wickColors[dataIndex * 4] = lineColor[0];
+      wickColors[dataIndex * 4 + 1] = lineColor[1];
+      wickColors[dataIndex * 4 + 2] = lineColor[2];
+      wickColors[dataIndex * 4 + 3] = lineColor[3];
 
       const identifier = { type: 'ohlc', seriesId: series.id, dataIndex } as const;
       const highlighted = isHighlighted(identifier);
@@ -105,22 +105,22 @@ export function useCandlestickPlotData(
         candleColors[dataIndex * 4 + 1] *= HIGHLIGHT_BRIGHTNESS;
         candleColors[dataIndex * 4 + 2] *= HIGHLIGHT_BRIGHTNESS;
 
-        lineColors[dataIndex * 4] *= HIGHLIGHT_BRIGHTNESS;
-        lineColors[dataIndex * 4 + 1] *= HIGHLIGHT_BRIGHTNESS;
-        lineColors[dataIndex * 4 + 2] *= HIGHLIGHT_BRIGHTNESS;
+        wickColors[dataIndex * 4] *= HIGHLIGHT_BRIGHTNESS;
+        wickColors[dataIndex * 4 + 1] *= HIGHLIGHT_BRIGHTNESS;
+        wickColors[dataIndex * 4 + 2] *= HIGHLIGHT_BRIGHTNESS;
       } else if (faded) {
         candleColors[dataIndex * 4 + 3] *= FADE_OPACITY;
-        lineColors[dataIndex * 4 + 3] *= FADE_OPACITY;
+        wickColors[dataIndex * 4 + 3] *= FADE_OPACITY;
       }
     }
 
     return {
-      rectCenters,
-      rectHeights,
-      lineCenters,
-      lineHeights,
+      candleCenters,
+      candleHeights,
       candleColors,
-      lineColors,
+      wickCenters,
+      wickHeights,
+      wickColors,
     };
   }, [
     bearishColor,
