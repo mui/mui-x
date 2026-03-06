@@ -25,7 +25,9 @@
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "shape": { "type": { "description": "MarkShape" }, "default": "'circle'" },
-    "showMark": { "type": { "description": "boolean | ((params: ShowMarkParams) =&gt; boolean)" } },
+    "showMark": {
+      "type": { "description": "boolean | 'last' | ((params: ShowMarkParams) =&gt; boolean)" }
+    },
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },

@@ -237,18 +237,20 @@ The `baseline` should not be used with stacked areas, as it will not work as exp
 ### Optimization
 
 To show mark elements, use `showMark` series property.
-It accepts a boolean or a callback.
+It accepts:
+
+- a boolean to show or hide all the marks
+- `'last'`: only show mark on the last value
+- `(params: ShowMarkParams) => boolean` a callback for custom behavior
+
 The next example shows how to use it to display only one mark every two data points.
+
+{{"demo": "ShowMarkOptions.js"}}
 
 When a value is highlighted, a mark is rendered for that given value.
 If the charts already have some marks (due to `showMark=true`) the highlight one will be on top of others.
 
 This behavior can be removed with the `disableHighlight` series property or at the root of the line chart with a `disableLineItemHighlight` prop.
-
-In this example, you have one mark for every value with an even index.
-The highlighted data has a mark regardless if it has an even or odd index.
-
-{{"demo": "MarkOptimization.js"}}
 
 ### CSS
 

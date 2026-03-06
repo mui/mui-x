@@ -37,7 +37,7 @@
       "description": "The shape of the mark elements.<br />Using &#39;circle&#39; renders a <code>&amp;lt;circle /&amp;gt;</code> element, while all other options render a <code>&amp;lt;path /&amp;gt;</code> instead. The path causes a small decrease in performance."
     },
     "showMark": {
-      "description": "Define which items of the series should display a mark.<br />If can be a boolean that applies to all items.<br />Or a callback that gets some item properties and returns true if the item should be displayed."
+      "description": "Define which items of the series should display a mark.<br />If can be a boolean that applies to all items.<br />Or a callback that gets some item properties and returns true if the item should be displayed.<br />If set to <code>&#39;last&#39;</code>, only the last data point will display a mark."
     },
     "stack": {
       "description": "The key that identifies the stacking group.<br />Series with the same <code>stack</code> property will be stacked together."
