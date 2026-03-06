@@ -16,6 +16,8 @@ export const BarLabelComponent = styled('text', {
   overridesResolver: (_, styles) => [
     { [`&.${barLabelClasses.faded}`]: styles.faded },
     { [`&.${barLabelClasses.highlighted}`]: styles.highlighted },
+    { [`&[data-faded]`]: styles.faded },
+    { [`&[data-highlighted]`]: styles.highlighted },
     styles.root,
   ],
 })(({ theme }) => ({

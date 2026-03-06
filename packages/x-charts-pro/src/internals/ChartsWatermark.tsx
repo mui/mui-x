@@ -1,8 +1,7 @@
 'use client';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import type { MuiCommercialPackageName } from '@mui/x-license/utils';
-import { Watermark } from '@mui/x-license/Watermark';
+import { Watermark, type MuiCommercialPackageName } from '@mui/x-license/internals';
 import { useChartsLayerContainerRef } from '../hooks';
 
 const releaseInfo = '__RELEASE_INFO__';

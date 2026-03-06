@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -83,7 +83,7 @@ describe('<BarChart />', () => {
         { wrapper },
       );
 
-      const bar = document.querySelector(`.${barElementClasses.root}`)!;
+      const bar = document.querySelector(`.${barClasses.element}`)!;
       await user.pointer({ target: bar, coords: { x: 200, y: 200 } });
 
       expect(await screen.findByRole('tooltip')).toBeVisible();
@@ -113,7 +113,7 @@ describe('<BarChart />', () => {
         { wrapper },
       );
 
-      const bar = document.querySelector(`.${barElementClasses.root}`)!;
+      const bar = document.querySelector(`.${barClasses.element}`)!;
 
       await user.pointer({ target: bar, coords: { x: 200, y: 200 } });
 
@@ -147,7 +147,7 @@ describe('<BarChart />', () => {
         { wrapper },
       );
 
-      const bars = document.querySelectorAll(`.${barElementClasses.root}`);
+      const bars = document.querySelectorAll(`.${barClasses.element}`);
 
       await user.pointer({ target: bars[0] });
 
