@@ -18,7 +18,7 @@ export default function SchedulerCommunityOrPremium() {
             'Free forever under MIT license. Includes core features such as resource management, multiple views, or drag and drop.'
           }
           premiumDescription={
-            'Requires a commercial license. Includes additional features such as recurrent events, lazy loading, and virtualization, as well as premium components such as the Event Timeline.'
+            'Requires a commercial license. Includes additional features such as recurring events, lazy loading, and virtualization, as well as premium components such as the Event Timeline.'
           }
         />
       </Stack>
