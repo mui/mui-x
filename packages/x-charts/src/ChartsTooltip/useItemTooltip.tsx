@@ -19,6 +19,7 @@ import { type AxisId } from '../models/axis';
 
 export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
+export type UseSeriesTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
 
 export function useInternalItemTooltip<T extends ChartSeriesType>():
   | (T extends 'radar' ? ItemTooltipWithMultipleValues<T> : ItemTooltip<T>)
@@ -98,7 +99,17 @@ export const useItemTooltip = <T extends Exclude<ChartSeriesType, 'radar'>>() =>
 /**
  * Contains an object per value with their content and the label of the associated metric.
  * @returns The tooltip item configs
+ * @deprecated Use `useSeriesTooltip` instead.
  */
 export const useRadarItemTooltip = () => {
   return useInternalItemTooltip<'radar'>() as UseRadarItemTooltipReturnValue | null;
+};
+
+/**
+ * Returns tooltip data for the hovered series, containing all data points with their content and labels.
+ * Only available for radar charts.
+ * @returns The series tooltip config, or null if no series is hovered.
+ */
+export const useSeriesTooltip = () => {
+  return useInternalItemTooltip<'radar'>() as UseSeriesTooltipReturnValue | null;
 };
