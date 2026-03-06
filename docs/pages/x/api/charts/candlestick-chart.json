@@ -32,6 +32,7 @@
         "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'ohlc' }&gt;"
       }
     },
+    "hideLegend": { "type": { "name": "bool" } },
     "highlightedAxis": {
       "type": {
         "name": "arrayOf",
@@ -179,6 +180,12 @@
     },
     { "name": "baseButton", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null },
+    {
+      "name": "legend",
+      "description": "Custom rendering of the legend.",
+      "default": "ChartsLegend",
+      "class": null
+    },
     {
       "name": "loadingOverlay",
       "description": "Overlay component rendered when the chart is in a loading state.",

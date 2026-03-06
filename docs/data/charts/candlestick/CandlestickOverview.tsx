@@ -9,7 +9,6 @@ import { BarPlot } from '@mui/x-charts-premium/BarChart';
 import { ChartsXAxis } from '@mui/x-charts-premium/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts-premium/ChartsYAxis';
 import { SeriesItem, useAxesTooltip } from '@mui/x-charts-premium/ChartsTooltip';
-import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
 import { OHLCValueType } from '@mui/x-charts-premium/models';
 import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';
 import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';
@@ -202,7 +201,6 @@ export default function CandlestickOverview() {
             <ChartsYAxis axisId="price" />
             <ChartsYAxis axisId="volume" />
             <CandlestickTooltip />
-            <ChartsLegend />
           </ChartsSvgLayer>
         </ChartsLayerContainer>
       </ChartsWrapper>
@@ -243,12 +241,13 @@ function CandlestickToolbar({
             val === 'none' ? null : (Number(val) as 20 | 50),
           );
         }}
+        renderValue={() => 'Moving Average'}
         sx={{ minWidth: 120, marginLeft: 1, marginRight: 1 }}
         disableUnderline
       >
-        <MenuItem value="none">MA: Off</MenuItem>
-        <MenuItem value={20}>MA: 20-day</MenuItem>
-        <MenuItem value={50}>MA: 50-day</MenuItem>
+        <MenuItem value="none">Off</MenuItem>
+        <MenuItem value={20}>20-day</MenuItem>
+        <MenuItem value={50}>50-day</MenuItem>
       </Select>
       <Select
         multiple
@@ -260,16 +259,8 @@ function CandlestickToolbar({
             event.target.value as Array<'dividends' | 'splits'>,
           );
         }}
-        renderValue={(selected) => {
-          if (selected.length === 0) {
-            return 'Annotations: Off';
-          }
-          if (selected.length === 2) {
-            return 'Annotations: All';
-          }
-          return selected[0] === 'dividends' ? 'Dividends' : 'Stock Splits';
-        }}
-        sx={{ minWidth: 140, marginLeft: 1, marginRight: 1 }}
+        renderValue={() => 'Annotations'}
+        sx={{ minWidth: 120, marginLeft: 1, marginRight: 1 }}
         disableUnderline
         displayEmpty
       >
