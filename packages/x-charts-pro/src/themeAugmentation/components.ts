@@ -18,6 +18,11 @@ export interface ChartsProComponents<Theme = unknown> {
   MuiScatterChartPro?: {
     defaultProps?: ComponentsProps['MuiScatterChartPro'];
   };
+  // SankeyChart components
+  MuiSankeyChart?: {
+    defaultProps?: ComponentsProps['MuiSankeyChart'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiSankeyChart'];
+  };
 }
 
 declare module '@mui/material/styles' {

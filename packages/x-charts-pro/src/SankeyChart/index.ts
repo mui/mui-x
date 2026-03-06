@@ -19,7 +19,13 @@ export * from './sankey.types';
 export * from './sankeySlots.types';
 export * from './sankeyHighlightHooks';
 export * from '../hooks/useSankeySeries';
-export { type SankeyPlotClasses, sankeyPlotClasses } from './sankeyClasses';
+export {
+  type SankeyPlotClasses,
+  sankeyPlotClasses,
+  sankeyClasses,
+  getSankeyUtilityClass,
+} from './sankeyClasses';
+export type { SankeyClassKey, SankeyClasses } from './sankeyClasses';
 export { SankeyTooltip, SankeyTooltipContent } from './SankeyTooltip';
 export type {
   SankeyTooltipProps,
