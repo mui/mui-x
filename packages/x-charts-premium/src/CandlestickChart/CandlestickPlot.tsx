@@ -100,7 +100,7 @@ function CandlestickWebGLPlotImpl({
     gl.useProgram(wickProgram);
     logWebGLErrors(gl);
     gl.bindVertexArray(wickVaoRef.current);
-    gl.drawArraysInstanced(gl.LINES, 0, 2, dataLength);
+    gl.drawArraysInstanced(gl.LINES, 0, 2, dataLength * 2);
 
     // This isn't a hook
     // eslint-disable-next-line react-compiler/react-compiler
