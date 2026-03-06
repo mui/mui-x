@@ -9,6 +9,7 @@ import {
   useStore,
 } from '@mui/x-charts/internals';
 import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.types';
+import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyNodeElementProps {
   /**
@@ -60,6 +61,8 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);
 
+    const classes = useUtilityClasses();
+
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
       onClick?.(event, identifier);
     });
@@ -72,7 +75,7 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
     }
 
     return (
-      <g ref={ref} data-node={node.id}>
+      <g ref={ref} data-node={node.id} className={classes.node}>
         <rect
           x={node.x0}
           y={node.y0}
