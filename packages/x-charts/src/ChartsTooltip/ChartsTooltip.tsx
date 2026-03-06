@@ -38,7 +38,7 @@ function ChartsTooltip<T extends TriggerOptions>(props: ChartsTooltipProps<T>) {
 
   if (trigger === 'axis') {
     children = <ChartsAxisTooltipContent classes={classes} sort={sort} />;
-  } else {
+  } else if (trigger === 'series') {
     children = <ChartsSeriesTooltipContent classes={classes} />;
   }
 
