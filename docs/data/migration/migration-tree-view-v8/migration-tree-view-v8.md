@@ -101,7 +101,7 @@ You can customize it using the `itemHeight` prop:
 <RichTreeViewPro items={items} itemHeight={48} />
 ```
 
-If your items have different heights, you can pass `itemHeight={null}` to remove the height restriction.
+If you have custom tree items with elements that require variable item heights - such as avatars or multi-line labels - you can pass `itemHeight={null}` to remove the height restriction.
 This requires disabling virtualization:
 
 ```tsx
