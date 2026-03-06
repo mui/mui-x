@@ -291,11 +291,12 @@ ChartsTooltip.propTypes = {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse;
+   * - 'series': Shows all data points of the hovered series;
    * - 'axis': Shows values associated with the hovered x value;
    * - 'none': Does not display tooltip.
    * @default 'axis'
    */
-  trigger: PropTypes.oneOf(['axis', 'item', 'none']),
+  trigger: PropTypes.oneOf(['axis', 'item', 'series', 'none']),
 } as any;
 
 export { ChartsTooltip };

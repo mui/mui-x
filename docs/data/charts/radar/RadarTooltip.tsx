@@ -19,11 +19,11 @@ export default function RadarTooltip() {
         />
       </Box>
       <Box sx={{ maxWidth: 300 }}>
-        <Typography sx={{ textAlign: 'center' }}>Item</Typography>
+        <Typography sx={{ textAlign: 'center' }}>Series</Typography>
         <RadarChart
           {...radarChartsParams}
           highlight="series"
-          slotProps={{ tooltip: { trigger: 'item' } }}
+          slotProps={{ tooltip: { trigger: 'series' } }}
         />
       </Box>
     </Stack>

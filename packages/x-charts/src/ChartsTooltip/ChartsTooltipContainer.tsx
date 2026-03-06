@@ -43,7 +43,7 @@ function getIsOpenSelector(
   if (shouldPreventBecauseOfBrush) {
     return selectorReturnFalse;
   }
-  if (trigger === 'item') {
+  if (trigger === 'item' || trigger === 'series') {
     return selectorChartsTooltipItemIsDefined;
   }
   if (axisSystem === 'polar') {
@@ -57,6 +57,7 @@ function getIsOpenSelector(
 
 const defaultAnchorByTrigger = {
   item: 'node',
+  series: 'node',
   axis: 'chart',
   none: 'pointer',
 } as const;
@@ -87,7 +88,8 @@ export interface ChartsTooltipContainerProps<
 > extends Partial<PopperProps> {
   /**
    * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse;
+   * - 'item': Shows data about the item below the mouse. Deprecated for radar series, use 'series' instead;
+   * - 'series': Shows all data points of the hovered series. Only available for radar series;
    * - 'axis': Shows values associated with the hovered x value;
    * - 'none': Does not display tooltip.
    * @default 'axis'
@@ -111,7 +113,7 @@ export interface ChartsTooltipContainerProps<
    * Determine if the tooltip should be placed on the pointer location or on the node.
    * @default 'pointer'
    */
-  anchor?: T extends 'item'
+  anchor?: T extends 'item' | 'series'
     ? 'pointer' | 'node'
     : T extends 'axis'
       ? 'pointer' | 'chart'
@@ -163,7 +165,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     const isItemControlled = store.state.tooltip?.itemIsControlled ?? false;
     const isAxisControlled = store.state.controlledCartesianAxisTooltip !== undefined;
 
-    if (trigger !== 'item' && isItemControlled) {
+    if (trigger !== 'item' && trigger !== 'series' && isItemControlled) {
       warnOnce(
         [
           `MUI X Charts: The \`tooltipItem\` prop is provided, but the tooltip trigger is set to '${trigger}'.`,
@@ -582,11 +584,12 @@ ChartsTooltipContainer.propTypes = {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse;
+   * - 'series': Shows all data points of the hovered series;
    * - 'axis': Shows values associated with the hovered x value;
    * - 'none': Does not display tooltip.
    * @default 'axis'
    */
-  trigger: PropTypes.oneOf(['axis', 'item', 'none']),
+  trigger: PropTypes.oneOf(['axis', 'item', 'series', 'none']),
 } as any;
 
 export { ChartsTooltipContainer };
