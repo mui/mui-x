@@ -23,6 +23,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiHeatmapChart: {
+      styleOverrides: {
+        cell: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiHeatmapChart class key
+        constent: { color: 'red' },
+      },
+    },
     MuiHeatmap: {
       defaultProps: {
         title: 'toto',
