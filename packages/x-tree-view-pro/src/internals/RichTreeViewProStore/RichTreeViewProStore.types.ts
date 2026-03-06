@@ -91,7 +91,7 @@ export interface RichTreeViewProStoreParameters<
    */
   domStructure?: TreeViewDOMStructure;
   /**
-   * If `true`, the virtualization is disabled.
+   * If `true`, virtualization is disabled.
    * @default false
    */
   disableVirtualization?: boolean;
