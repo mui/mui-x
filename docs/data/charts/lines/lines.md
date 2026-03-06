@@ -44,9 +44,12 @@ Here is a plot of the evolution of world electricity production by source.
 
 {{"demo": "LineDataset.js"}}
 
-### Area
+### Area and marks
 
 You can fill the area of the line by setting the series' `area` property to `true`.
+
+You can display marks on the line by setting the series' `showMark` property to `true`.
+More details are available in the [marks section](#marks).
 
 {{"demo": "BasicArea.js"}}
 
@@ -234,7 +237,7 @@ The `baseline` should not be used with stacked areas, as it will not work as exp
 
 {{"demo": "AreaBaseline.js"}}
 
-### Optimization
+### Marks
 
 To show mark elements, use `showMark` series property.
 It accepts a boolean or a callback.
@@ -249,6 +252,10 @@ In this example, you have one mark for every value with an even index.
 The highlighted data has a mark regardless if it has an even or odd index.
 
 {{"demo": "MarkOptimization.js"}}
+
+:::info
+For line charts with many data points, removing or reducing the number of marks can significantly improve its performance and readability.
+:::
 
 ### CSS
 
