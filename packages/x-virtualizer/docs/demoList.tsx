@@ -1,7 +1,8 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import Box from '@mui/material/Box';
-import { useVirtualizer, Virtualizer, LayoutList } from '@mui/x-virtualizer';
+import { useVirtualizerList, LayoutList } from '@mui/x-virtualizer';
+import type { VirtualizerList as VirtualizerListType } from '@mui/x-virtualizer';
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
@@ -11,7 +12,7 @@ const items = Array.from({ length: 1000 }, (_, index) => ({
 }));
 const range = { firstRowIndex: 0, lastRowIndex: items.length };
 
-const VirtualizerContext = React.createContext(null as unknown as Virtualizer);
+const VirtualizerContext = React.createContext(null as unknown as VirtualizerListType);
 
 function List() {
   const refs = {
@@ -19,7 +20,7 @@ function List() {
     scroller: React.useRef<HTMLDivElement>(null),
   };
   const layout = useLazyRef(() => new LayoutList(refs)).current;
-  const virtualizer = useVirtualizer({
+  const virtualizer = useVirtualizerList({
     layout,
     dimensions: {
       rowHeight: 48,

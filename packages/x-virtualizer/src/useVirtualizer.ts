@@ -30,6 +30,8 @@ import {
 /* eslint-disable jsdoc/require-returns-type */
 
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
+export type VirtualizerList = ReturnType<typeof useVirtualizerList>;
+export type VirtualizerGrid = ReturnType<typeof useVirtualizerGrid>;
 export type VirtualScrollerCompat<L extends Layout = Layout> = Virtualization.State<L>['getters'];
 
 export type BaseState<L extends Layout = Layout> = Virtualization.State<L> & Dimensions.State;
@@ -135,6 +137,86 @@ export type ParamsWithDefaults = RequiredFields<
 
 const FEATURES = [Dimensions, Virtualization, Colspan, Rowspan, Keyboard] as const;
 
+/**
+ * Placeholder feature for list-only virtualization.
+ * Provides no-op implementations of the colspan/rowspan API so that `inputsSelector`
+ * (which calls `getHiddenCellsOrigin` unconditionally) doesn't throw when those
+ * features are not included. The real `createSpanningAPI()` still throws when
+ * colspan/rowspan is used without the proper feature in the grid hook.
+ */
+const SpanningPlaceholder = {
+  initialize: () => ({}),
+  use: () => ({
+    getCellColSpanInfo: () => undefined as any,
+    calculateColSpan: () => {},
+    getHiddenCellsOrigin: () => ({}) as Record<any, Record<number, number>>,
+  }),
+} as const;
+
+const LIST_FEATURES = [Dimensions, Virtualization, SpanningPlaceholder] as const;
+
+/**
+ * Parameters for the list-only virtualizer hook.
+ * A subset of {@link VirtualizerParams} without grid-specific fields (columns, pinned rows/columns, colspan, etc.).
+ * Use this with {@link useVirtualizerList} when only list virtualization is needed, to avoid bundling
+ * grid-only features like colspan, rowspan and keyboard navigation.
+ */
+export type VirtualizerListParams<L extends Layout = Layout> = {
+  layout: L;
+
+  dimensions: DimensionsParams;
+  virtualization: VirtualizationParams;
+
+  /** current page rows */
+  rows: RowEntry[];
+  /** current page range */
+  range: { firstRowIndex: integer; lastRowIndex: integer } | null;
+  rowCount: integer;
+
+  resizeThrottleMs?: number;
+  onResize?: (lastSize: Size) => void;
+  onWheel?: (event: React.WheelEvent) => void;
+  onTouchMove?: (event: React.TouchEvent) => void;
+  onRenderContextChange?: (c: RenderContext) => void;
+  onScrollChange?: (
+    scrollPosition: { top: number; left: number },
+    nextRenderContext: RenderContext,
+  ) => void;
+
+  scrollReset?: any;
+
+  renderRow: VirtualizerParams<L>['renderRow'];
+};
+
+/**
+ * A simplified virtualizer hook that only includes list features (dimensions and virtualization).
+ * Use this instead of {@link useVirtualizerGrid} when column virtualization, colspan, rowspan,
+ * and keyboard navigation are not needed, to reduce bundle size.
+ * @see {@link useVirtualizerGrid} for the full-featured grid virtualizer.
+ */
+export const useVirtualizerList = <L extends Layout = Layout>(params: VirtualizerListParams<L>) => {
+  const paramsWithDefault = mergeDefaults<ParamsWithDefaults>(params, DEFAULT_PARAMS);
+
+  const store = useLazyRef(() => {
+    return new Store(
+      LIST_FEATURES.map((f) => f.initialize(paramsWithDefault)).reduce(
+        (state, partial) => Object.assign(state, partial),
+        {},
+      ) as Dimensions.State & Virtualization.State<L>,
+    );
+  }).current;
+
+  const api = {} as Dimensions.API & Virtualization.API;
+  for (const feature of LIST_FEATURES) {
+    Object.assign(api, feature.use(store as any, paramsWithDefault, api as any));
+  }
+
+  return {
+    store,
+    api,
+  };
+};
+
 export const useVirtualizer = <L extends Layout = Layout>(params: VirtualizerParams<L>) => {
   const paramsWithDefault = mergeDefaults<ParamsWithDefaults>(params, DEFAULT_PARAMS);
 
@@ -161,6 +243,8 @@ export const useVirtualizer = <L extends Layout = Layout>(params: VirtualizerPar
     api,
   };
 };
+
+export const useVirtualizerGrid = useVirtualizer;
 
 function mergeDefaults<T>(params: any, defaults: any): T {
   const result = { ...params };
