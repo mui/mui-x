@@ -1,4 +1,4 @@
-import 'docs/src/modules/components/bootstrap';
+import 'docsx/src/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/data/pages'; // DO NOT REMOVE
 import { postProcessImport } from 'docsx/src/modules/utils/postProcessImport';
@@ -9,19 +9,19 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
-import PageContext from 'docs/src/modules/components/PageContext';
-import { AnalyticsProvider } from 'docs/src/modules/components/AnalyticsProvider';
-import DemoContext from 'docs/src/modules/components/DemoContext';
-import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
+import PageContext from '@mui/docs/PageContext';
+import { AnalyticsProvider } from '@mui/docs/AnalyticsProvider';
+import DemoContext from '@mui/docs/DemoContext';
+import GoogleAnalytics from '@mui/docs/GoogleAnalytics';
 import { CodeCopyProvider } from '@mui/docs/CodeCopy';
-import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
-import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
-import { CodeStylingProvider } from 'docs/src/modules/utils/codeStylingSolution';
-import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
-import createEmotionCache from 'docs/src/createEmotionCache';
-import findActivePage from 'docs/src/modules/utils/findActivePage';
-import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
-import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
+import { ThemeProvider } from '@mui/docs/ThemeContext';
+import { CodeVariantProvider } from '@mui/docs/codeVariant';
+import { CodeStylingProvider } from '@mui/docs/codeStyling';
+import DocsStyledEngineProvider from '@mui/docs/StyledEngineProvider';
+import createEmotionCache from '@mui/docs/createEmotionCache';
+import findActivePage from '@mui/docs/findActivePage';
+import { pathnameToLanguage } from '@mui/docs/helpers';
+import getProductInfoFromUrl from '@mui/docs/getProductInfoFromUrl';
 import { DocsProvider } from '@mui/docs/DocsProvider';
 import { mapTranslations } from '@mui/docs/i18n';
 import { Inter, Roboto } from 'next/font/google';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
+import SectionHeadline from '@mui/docs/SectionHeadline';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
