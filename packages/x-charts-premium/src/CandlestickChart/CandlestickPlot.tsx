@@ -6,7 +6,6 @@ import {
   useRegisterPointerInteractions,
 } from '@mui/x-charts/internals';
 import { useXScale, useYScale } from '@mui/x-charts/hooks';
-import { useTheme } from '@mui/material/styles';
 import { type DefaultizedOHLCSeriesType } from '../models';
 import { useOHLCSeriesContext } from '../hooks/useOHLCSeries';
 import {
@@ -19,7 +18,6 @@ import { candlestickRectFragmentShader, candlestickRectVertexShader } from './re
 import { candlestickLineFragmentShader, candlestickLineVertexShader } from './lineShaders';
 import { selectorCandlestickItemAtPosition } from '../plugins/selectors/useChartCandlestickPosition.selectors';
 import { useCandlestickPlotData } from './useCandlestickPlotData';
-import { parseColor } from '../utils/webgl/parseColor';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
 import { useWebGLContext } from '../ChartsWebGLLayer';
 import { checkCandlestickScaleErrors } from './checkCandlestickScaleErrors';
@@ -157,19 +155,10 @@ function CandlestickWebGLPlotImpl({
     gl.uniform1f(gl.getUniformLocation(lineProgram, 'u_candle_width'), candleWidth);
   }, [candleWidth, gl, lineProgram, rectProgram]);
 
-  const theme = useTheme();
-  const lineColor = theme.palette.text.primary;
-  React.useEffect(() => {
-    const lineColorComponents = parseColor(lineColor);
-
-    // eslint-disable-next-line react-compiler/react-compiler
-    gl.useProgram(lineProgram);
-    gl.uniform4f(gl.getUniformLocation(lineProgram, 'u_color'), ...lineColorComponents);
-  }, [gl, lineProgram, lineColor]);
-
   const plotData = useCandlestickPlotData(drawingArea, series, xScale, yScale);
   React.useEffect(() => {
-    const { rectCenters, rectHeights, lineCenters, lineHeights, colors } = plotData;
+    const { rectCenters, rectHeights, lineCenters, lineHeights, candleColors, lineColors } =
+      plotData;
 
     // Setup rect attributes
     // eslint-disable-next-line react-compiler/react-compiler
@@ -198,12 +187,12 @@ function CandlestickWebGLPlotImpl({
 
     // Color attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, candleColors, gl.STATIC_DRAW);
 
-    const colorLocation = gl.getAttribLocation(rectProgram, 'a_color');
-    gl.enableVertexAttribArray(colorLocation);
-    gl.vertexAttribPointer(colorLocation, 4, gl.FLOAT, false, 0, 0);
-    gl.vertexAttribDivisor(colorLocation, 1); // One per instance
+    const candleColorLocation = gl.getAttribLocation(rectProgram, 'a_color');
+    gl.enableVertexAttribArray(candleColorLocation);
+    gl.vertexAttribPointer(candleColorLocation, 4, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribDivisor(candleColorLocation, 1); // One per instance
 
     gl.bindVertexArray(null);
 
@@ -238,6 +227,15 @@ function CandlestickWebGLPlotImpl({
     gl.enableVertexAttribArray(lineHeightLocation);
     gl.vertexAttribPointer(lineHeightLocation, 1, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(lineHeightLocation, 1); // One per instance
+
+    // Color attribute
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, lineColors, gl.STATIC_DRAW);
+
+    const lineColorLocation = gl.getAttribLocation(lineProgram, 'a_wick_color');
+    gl.enableVertexAttribArray(lineColorLocation);
+    gl.vertexAttribPointer(lineColorLocation, 4, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribDivisor(lineColorLocation, 1); // One per instance
 
     gl.bindVertexArray(null);
 

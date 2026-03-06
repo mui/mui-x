@@ -158,7 +158,6 @@ export default function CandlestickComposition() {
             <ChartsClipPath id={clipPathId} />
             <ChartsXAxis />
             <ChartsYAxis axisId="price" />
-            <ChartsYAxis axisId="volume" />
             <CandlestickTooltip />
             <ChartsLegend />
           </ChartsSvgLayer>

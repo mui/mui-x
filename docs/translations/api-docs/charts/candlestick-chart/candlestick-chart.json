@@ -26,6 +26,9 @@
     "highlightedAxis": {
       "description": "The controlled axis highlight. Identified by the axis id, and data index."
     },
+    "highlightedItem": {
+      "description": "The highlighted item. Used when the highlight is controlled."
+    },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
@@ -59,6 +62,15 @@
         "hiddenItems": {
           "name": "hiddenItems",
           "description": "The new list of hidden identifiers."
+        }
+      }
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": {
+        "highlightedItem": {
+          "name": "highlightedItem",
+          "description": "The newly highlighted item."
         }
       }
     },

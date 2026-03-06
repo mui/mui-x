@@ -1,10 +1,18 @@
 import * as React from 'react';
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
-import { type D3ContinuousScale } from '@mui/x-charts/internals';
+import {
+  type D3ContinuousScale,
+  selectorChartsIsFadedCallback,
+  selectorChartsIsHighlightedCallback,
+  useStore,
+} from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
 import type { DefaultizedOHLCSeriesType } from '../models';
 import { parseColor } from '../utils/webgl/parseColor';
+
+const FADE_OPACITY = 0.3;
+const HIGHLIGHT_BRIGHTNESS = 1.2;
 
 export function useCandlestickPlotData(
   drawingArea: ChartDrawingArea,
@@ -13,7 +21,14 @@ export function useCandlestickPlotData(
   yScale: D3ContinuousScale,
 ) {
   const theme = useTheme();
+  const store = useStore();
+  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
+  const isFaded = store.use(selectorChartsIsFadedCallback);
 
+  const lineColor = React.useMemo(
+    () => parseColor(theme.palette.text.primary),
+    [theme.palette.text.primary],
+  );
   const bullishColor = React.useMemo(
     () => parseColor(theme.palette.success.main),
     [theme.palette.success.main],
@@ -28,7 +43,8 @@ export function useCandlestickPlotData(
     const rectHeights = new Float32Array(series.data.length);
     const lineCenters = new Float32Array(series.data.length * 2);
     const lineHeights = new Float32Array(series.data.length);
-    const colors = new Float32Array(series.data.length * 4);
+    const candleColors = new Float32Array(series.data.length * 4);
+    const lineColors = new Float32Array(series.data.length * 4);
     const xDomain = xScale.domain();
 
     for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
@@ -36,7 +52,7 @@ export function useCandlestickPlotData(
 
       if (datum === null) {
         // Set alpha to 0 to hide the candle
-        colors[dataIndex * 4 + 3] = 0.0;
+        candleColors[dataIndex * 4 + 3] = 0.0;
         continue;
       }
 
@@ -62,16 +78,39 @@ export function useCandlestickPlotData(
 
       if (close >= open) {
         // Bullish - green
-        colors[dataIndex * 4] = bullishColor[0];
-        colors[dataIndex * 4 + 1] = bullishColor[1];
-        colors[dataIndex * 4 + 2] = bullishColor[2];
-        colors[dataIndex * 4 + 3] = bullishColor[3];
+        candleColors[dataIndex * 4] = bullishColor[0];
+        candleColors[dataIndex * 4 + 1] = bullishColor[1];
+        candleColors[dataIndex * 4 + 2] = bullishColor[2];
+        candleColors[dataIndex * 4 + 3] = bullishColor[3];
       } else {
         // Bearish - red
-        colors[dataIndex * 4] = bearishColor[0];
-        colors[dataIndex * 4 + 1] = bearishColor[1];
-        colors[dataIndex * 4 + 2] = bearishColor[2];
-        colors[dataIndex * 4 + 3] = bearishColor[3];
+        candleColors[dataIndex * 4] = bearishColor[0];
+        candleColors[dataIndex * 4 + 1] = bearishColor[1];
+        candleColors[dataIndex * 4 + 2] = bearishColor[2];
+        candleColors[dataIndex * 4 + 3] = bearishColor[3];
+      }
+
+      lineColors[dataIndex * 4] = lineColor[0];
+      lineColors[dataIndex * 4 + 1] = lineColor[1];
+      lineColors[dataIndex * 4 + 2] = lineColor[2];
+      lineColors[dataIndex * 4 + 3] = lineColor[3];
+
+      const identifier = { type: 'ohlc', seriesId: series.id, dataIndex } as const;
+      const highlighted = isHighlighted(identifier);
+      const faded = isFaded(identifier);
+
+      if (highlighted) {
+        // Mimics CSS's filter: brightness(1.2), which multiplies the RGB values by 1.2, without affecting the alpha channel
+        candleColors[dataIndex * 4] *= HIGHLIGHT_BRIGHTNESS;
+        candleColors[dataIndex * 4 + 1] *= HIGHLIGHT_BRIGHTNESS;
+        candleColors[dataIndex * 4 + 2] *= HIGHLIGHT_BRIGHTNESS;
+
+        lineColors[dataIndex * 4] *= HIGHLIGHT_BRIGHTNESS;
+        lineColors[dataIndex * 4 + 1] *= HIGHLIGHT_BRIGHTNESS;
+        lineColors[dataIndex * 4 + 2] *= HIGHLIGHT_BRIGHTNESS;
+      } else if (faded) {
+        candleColors[dataIndex * 4 + 3] *= FADE_OPACITY;
+        lineColors[dataIndex * 4 + 3] *= FADE_OPACITY;
       }
     }
 
@@ -80,7 +119,20 @@ export function useCandlestickPlotData(
       rectHeights,
       lineCenters,
       lineHeights,
-      colors,
+      candleColors,
+      lineColors,
     };
-  }, [bearishColor, bullishColor, drawingArea.left, drawingArea.top, series.data, xScale, yScale]);
+  }, [
+    bearishColor,
+    bullishColor,
+    drawingArea.left,
+    drawingArea.top,
+    isFaded,
+    isHighlighted,
+    lineColor,
+    series.data,
+    series.id,
+    xScale,
+    yScale,
+  ]);
 }

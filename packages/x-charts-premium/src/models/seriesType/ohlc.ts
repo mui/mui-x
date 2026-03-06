@@ -14,9 +14,7 @@ import { type DefaultizedProps } from '@mui/x-internals/types';
 export type OHLCValueType = [number, number, number, number];
 
 export interface OHLCSeriesType
-  extends
-    Omit<CommonSeriesType<OHLCValueType | null, 'ohlc'>, 'highlightScope'>,
-    CartesianSeriesType {
+  extends CommonSeriesType<OHLCValueType | null, 'ohlc'>, CartesianSeriesType {
   type: 'ohlc';
   /**
    * The OHLC data points.

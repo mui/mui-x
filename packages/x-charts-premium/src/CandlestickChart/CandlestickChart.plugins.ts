@@ -8,6 +8,8 @@ import {
   useChartInteraction,
   useChartCartesianAxis,
   useChartVisibilityManager,
+  useChartHighlight,
+  type UseChartHighlightSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -20,6 +22,7 @@ export type CandlestickChartPluginSignatures = [
   UseChartTooltipSignature<'ohlc'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'ohlc'>,
+  UseChartHighlightSignature<'ohlc'>,
   UseChartProZoomSignature,
   UseChartVisibilityManagerSignature<'ohlc'>,
   UseChartProExportSignature,
@@ -30,6 +33,7 @@ export const CANDLESTICK_CHART_PLUGINS: ConvertSignaturesIntoPlugins<Candlestick
     useChartTooltip,
     useChartInteraction,
     useChartCartesianAxis,
+    useChartHighlight,
     useChartProZoom,
     useChartVisibilityManager,
     useChartProExport,
