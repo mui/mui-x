@@ -1,5 +1,5 @@
 // language=Glsl
-export const candlestickRectVertexShader = /* glsl */ `
+export const candleVertexShader = /* glsl */ `
   precision mediump float;
 
   attribute vec2 a_position;
@@ -26,7 +26,7 @@ export const candlestickRectVertexShader = /* glsl */ `
 `;
 
 // language=Glsl
-export const candlestickRectFragmentShader = /* glsl */ `
+export const candleFragmentShader = /* glsl */ `
   precision mediump float;
 
   varying vec4 v_color;

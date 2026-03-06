@@ -1,5 +1,5 @@
 // language=Glsl
-export const candlestickLineVertexShader = /* glsl */ `
+export const wickVertexShader = /* glsl */ `
   precision mediump float;
 
   attribute vec4 a_wick_color;
@@ -22,7 +22,7 @@ export const candlestickLineVertexShader = /* glsl */ `
   }
 `;
 // language=Glsl
-export const candlestickLineFragmentShader = /* glsl */ `
+export const wickFragmentShader = /* glsl */ `
   precision mediump float;
 
   varying vec4 v_color;
