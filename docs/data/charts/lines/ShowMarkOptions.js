@@ -20,12 +20,15 @@ const showMarkLabel = {
 };
 
 export default function ShowMarkOptions() {
-  const [showMarkOption, setShowMarkOption] = React.useState('all');
+  const [showMarkOption, setShowMarkOption] = React.useState('even');
   return (
-    <Stack alignItems="center">
+    <Stack width="100%">
       <TextField
+        select
+        label="showMark"
         value={showMarkOption}
         onChange={(event) => setShowMarkOption(event.target.value)}
+        sx={{ width: 200 }}
       >
         <MenuItem value="all">All</MenuItem>
         <MenuItem value="none">None</MenuItem>
@@ -43,6 +46,7 @@ export default function ShowMarkOptions() {
         height={300}
       />
       <HighlightedCode
+        language="jsx"
         code={`series={[{
   // ...
   showMark: ${showMarkLabel[showMarkOption]}
