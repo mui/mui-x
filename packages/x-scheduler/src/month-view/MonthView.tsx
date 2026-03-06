@@ -100,7 +100,6 @@ const MonthViewBody = styled('div', {
   display: 'grid',
   gridAutoRows: '1fr',
   position: 'relative',
-  flexGrow: 1,
 });
 
 const CELL_PADDING = 5; // theme.spacing(0.5) * 2
