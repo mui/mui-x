@@ -19,5 +19,6 @@ export interface PickerFieldPrivateContextValue extends Pick<
   | 'selectedSections'
   | 'onSelectedSectionsChange'
 > {
-  fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
+  internalFieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
+  fieldRef?: React.RefObject<FieldRef<any> | null>;
 }

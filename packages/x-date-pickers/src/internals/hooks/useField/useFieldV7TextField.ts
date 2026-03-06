@@ -63,7 +63,7 @@ export const useFieldV7TextField = <
     readOnly = false,
     autoFocus = false,
     focused: focusedProp,
-    unstableFieldRef,
+    fieldRef,
   } = internalPropsWithDefaults;
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
@@ -249,7 +249,7 @@ Learn more about the field accessible DOM structure on the MUI documentation: ht
     syncSelectionToDOM({ focused, domGetters, stateResponse });
   });
 
-  React.useImperativeHandle(unstableFieldRef, () => ({
+  React.useImperativeHandle(fieldRef, () => ({
     getSections: () => state.sections,
     getActiveSectionIndex: () => getActiveSectionIndex(sectionListRef),
     setSelectedSections: (newSelectedSections) => {
@@ -265,6 +265,7 @@ Learn more about the field accessible DOM structure on the MUI documentation: ht
     },
     focusField,
     isFieldFocused: () => isFieldFocused(sectionListRef),
+    clearValue,
   }));
 
   return {

@@ -81,8 +81,8 @@ export function useMultiInputRangeField<
     enableAccessibleFieldDOMStructure,
     autoFocus,
     referenceDate,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
+    startFieldRef,
+    endFieldRef,
   } = internalPropsWithDefaults;
 
   const { value, handleValueChange, timezone } = useControlledValue({
@@ -106,8 +106,8 @@ export function useMultiInputRangeField<
   const selectedSectionsResponse = useMultiInputRangeFieldSelectedSections({
     selectedSections,
     onSelectedSectionsChange,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
+    startFieldRef,
+    endFieldRef,
   });
 
   const sharedInternalProps = {

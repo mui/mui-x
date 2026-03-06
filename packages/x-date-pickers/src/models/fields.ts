@@ -131,6 +131,10 @@ export interface FieldRef<TValue extends PickerValidValue> {
    * @returns {boolean} `true` if the field is focused.
    */
   isFieldFocused: () => boolean;
+  /**
+   * Clears the field.
+   */
+  clearValue: () => void;
 }
 
 export type FieldSelectedSections = number | FieldSectionType | null | 'all';
