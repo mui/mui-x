@@ -10,6 +10,11 @@ export interface ChartsProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiLineChartPro'];
   };
   // Heatmap components
+  MuiHeatmapChart?: {
+    defaultProps?: ComponentsProps['MuiHeatmap'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmapChart'];
+  };
+  /** @deprecated Use `MuiHeatmapChart` instead. */
   MuiHeatmap?: {
     defaultProps?: ComponentsProps['MuiHeatmap'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmap'];

@@ -7,3 +7,5 @@ export type { HeatmapCellProps } from './internals/HeatmapCell';
 export * from './HeatmapTooltip';
 export * from './Heatmap.plugins';
 export * from './heatmapClasses';
+export { heatmapChartClasses, getHeatmapChartUtilityClass } from './heatmapChartClasses';
+export type { HeatmapChartClassKey, HeatmapChartClasses } from './heatmapChartClasses';

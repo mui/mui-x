@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import composeClasses from '@mui/utils/composeClasses';
 import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
-import { getHeatmapUtilityClass } from './heatmapClasses';
-import { HeatmapCell, type HeatmapItemOwnerState } from './internals/HeatmapCell';
+import { type HeatmapCellOwnerState, useUtilityClasses } from './heatmapChartClasses';
+import { useDeprecatedUtilityClasses } from './heatmapClasses';
+import { HeatmapCell } from './internals/HeatmapCell';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
 export interface HeatmapItemSlots {
@@ -53,16 +53,8 @@ export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
   y: number;
   width: number;
   height: number;
-  ownerState: HeatmapItemOwnerState;
+  ownerState: HeatmapCellOwnerState;
 }
-
-const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
-  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
-  const slots = {
-    cell: ['cell', `series-${seriesId}`, isFaded && 'faded', isHighlighted && 'highlighted'],
-  };
-  return composeClasses(slots, getHeatmapUtilityClass, classes);
-};
 
 /**
  * @ignore - internal component.
@@ -94,15 +86,16 @@ function HeatmapItem(props: HeatmapItemProps) {
     skipInteractionItemProps,
   );
 
-  const ownerState = {
+  const ownerState: HeatmapCellOwnerState = {
     seriesId,
     dataIndex,
     color,
-    value,
     isFaded,
     isHighlighted,
   };
+
   const classes = useUtilityClasses(ownerState);
+  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Cell = slots?.cell ?? HeatmapCell;
   const cellProps = useSlotProps({
@@ -117,7 +110,7 @@ function HeatmapItem(props: HeatmapItemProps) {
     externalForwardedProps: { ...other },
     externalSlotProps: slotProps.cell,
     ownerState,
-    className: classes.cell,
+    className: `${classes.cell} ${deprecatedClasses.cell}`,
   });
 
   return <Cell {...cellProps} />;
