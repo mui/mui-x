@@ -9,6 +9,11 @@ import {
   renderEditDateCell,
   renderEditInputCell,
   renderEditSingleSelectCell,
+  renderEditMultiSelectCell,
+  GridMultiSelectCell,
+  type GridMultiSelectCellProps,
+  GridEditMultiSelectCell,
+  type GridEditMultiSelectCellProps,
 } from '@mui/x-data-grid-pro';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, spyApi, sleep } from 'test/utils/helperFn';
@@ -711,6 +716,308 @@ describe('<DataGridPro /> - Edit components', () => {
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal(true);
+    });
+  });
+
+  // multiSelect tests require browser environment for chip rendering and column defaults
+  describe('column type: multiSelect', () => {
+    const valueOptions = ['Option 1', 'Option 2', 'Option 3'];
+
+    beforeEach(() => {
+      defaultData.rows = [{ id: 0, tags: ['Option 1'] }];
+      defaultData.columns = [
+        {
+          field: 'tags',
+          type: 'multiSelect',
+          editable: true,
+          valueOptions,
+        },
+      ];
+    });
+
+    it('should render autocomplete on edit mode', async () => {
+      const { user } = render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      expect(listbox).not.to.equal(null);
+    });
+
+    it('should display all options', async () => {
+      const { user } = render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      const options = within(listbox).getAllByRole('option');
+      expect(options).to.have.length(3);
+      expect(options[0]).to.have.text('Option 1');
+      expect(options[1]).to.have.text('Option 2');
+      expect(options[2]).to.have.text('Option 3');
+    });
+
+    it('should call setEditCellValue with array when selecting option', async () => {
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      const option2 = within(listbox).getByRole('option', { name: 'Option 2' });
+      await user.click(option2);
+
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.deep.equal(['Option 1', 'Option 2']);
+    });
+
+    it('should not close dropdown after selecting option (disableCloseOnSelect)', async () => {
+      const { user } = render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      const option2 = within(listbox).getByRole('option', { name: 'Option 2' });
+      await user.click(option2);
+
+      // Listbox should still be visible
+      expect(screen.queryByRole('listbox')).not.to.equal(null);
+    });
+
+    it('should cancel editing on Escape', async () => {
+      const { user } = render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+
+      await user.keyboard('{Escape}');
+
+      await waitFor(() => {
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      });
+    });
+
+    it('should work with object value options', async () => {
+      defaultData.columns = [
+        {
+          field: 'tags',
+          type: 'multiSelect',
+          editable: true,
+          valueOptions: [
+            { value: 1, label: 'One' },
+            { value: 2, label: 'Two' },
+            { value: 3, label: 'Three' },
+          ],
+        },
+      ];
+      defaultData.rows = [{ id: 0, tags: [1] }];
+
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      const optionTwo = within(listbox).getByRole('option', { name: 'Two' });
+      await user.click(optionTwo);
+
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.deep.equal([1, 2]);
+    });
+
+    it('should work with dynamic valueOptions function', async () => {
+      const getValueOptions = spy(() => ['Dynamic 1', 'Dynamic 2']);
+
+      defaultData.columns = [
+        {
+          field: 'tags',
+          type: 'multiSelect',
+          editable: true,
+          valueOptions: getValueOptions,
+        },
+      ];
+      defaultData.rows = [{ id: 0, tags: ['Dynamic 1'] }];
+
+      const { user } = render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      const options = within(listbox).getAllByRole('option');
+      expect(options).to.have.length(2);
+      expect(options[0]).to.have.text('Dynamic 1');
+      expect(options[1]).to.have.text('Dynamic 2');
+    });
+
+    it('should call onValueChange if defined', async () => {
+      const onValueChange = spy();
+
+      defaultData.columns[0].renderEditCell = (params) =>
+        renderEditMultiSelectCell({ ...params, onValueChange });
+
+      const { user } = render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      const option2 = within(listbox).getByRole('option', { name: 'Option 2' });
+      await user.click(option2);
+
+      expect(onValueChange.callCount).to.be.greaterThan(0);
+      expect(onValueChange.lastCall.args[1]).to.deep.equal(['Option 1', 'Option 2']);
+    });
+
+    it('should work with null initial value', async () => {
+      defaultData.rows = [{ id: 0, tags: null }];
+
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      await user.click(within(listbox).getByRole('option', { name: 'Option 1' }));
+
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.deep.equal(['Option 1']);
+    });
+
+    it('should deselect option when clicking selected option', async () => {
+      defaultData.rows = [{ id: 0, tags: ['Option 1', 'Option 2'] }];
+
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      const option1 = within(listbox).getByRole('option', { name: 'Option 1' });
+      await user.click(option1);
+
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.deep.equal(['Option 2']);
+    });
+
+    it('should commit value when clicking outside', async () => {
+      const processRowUpdate = spy((newRow: any) => newRow);
+      const { user } = render(
+        <div>
+          <TestCase processRowUpdate={processRowUpdate} />
+          <div id="outside-grid" />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      const listbox = await screen.findByRole('listbox');
+      await user.click(within(listbox).getByRole('option', { name: 'Option 2' }));
+
+      await user.click(document.getElementById('outside-grid')!);
+
+      await waitFor(() => {
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      });
+      expect(processRowUpdate.lastCall.args[0].tags).to.deep.equal(['Option 1', 'Option 2']);
+    });
+
+    describe('slotProps.chip as function', () => {
+      it('should apply chip props from function for string valueOptions in view mode', () => {
+        const chipFn = (option: string) => ({ className: `chip-${option.replace(/\s/g, '-')}` });
+
+        defaultData.rows = [{ id: 0, tags: ['Option 1', 'Option 2'] }];
+        defaultData.columns = [
+          {
+            field: 'tags',
+            type: 'multiSelect',
+            valueOptions,
+            renderCell: (params) => (
+              <GridMultiSelectCell
+                {...(params as GridMultiSelectCellProps)}
+                slotProps={{ chip: chipFn }}
+              />
+            ),
+          },
+        ];
+
+        render(<TestCase />);
+
+        const cell = getCell(0, 0);
+        expect(cell.querySelector('.chip-Option-1')).not.to.equal(null);
+        expect(cell.querySelector('.chip-Option-2')).not.to.equal(null);
+      });
+
+      it('should apply chip props from function for object valueOptions in view mode', () => {
+        const chipFn = (option: { value: number; label: string }) => ({
+          className: `chip-${option.label}`,
+        });
+
+        defaultData.rows = [{ id: 0, tags: [1, 3] }];
+        defaultData.columns = [
+          {
+            field: 'tags',
+            type: 'multiSelect',
+            valueOptions: [
+              { value: 1, label: 'One' },
+              { value: 2, label: 'Two' },
+              { value: 3, label: 'Three' },
+            ],
+            renderCell: (params) => (
+              <GridMultiSelectCell
+                {...(params as GridMultiSelectCellProps)}
+                slotProps={{ chip: chipFn }}
+              />
+            ),
+          },
+        ];
+
+        render(<TestCase />);
+
+        const cell = getCell(0, 0);
+        expect(cell.querySelector('.chip-One')).not.to.equal(null);
+        expect(cell.querySelector('.chip-Three')).not.to.equal(null);
+      });
+
+      it('should apply chip props from function for object valueOptions in edit mode', async () => {
+        const chipFn = (option: { value: number; label: string }) => ({
+          className: `chip-${option.label}`,
+        });
+
+        defaultData.rows = [{ id: 0, tags: [1, 2] }];
+        defaultData.columns = [
+          {
+            field: 'tags',
+            type: 'multiSelect',
+            editable: true,
+            valueOptions: [
+              { value: 1, label: 'One' },
+              { value: 2, label: 'Two' },
+            ],
+            renderEditCell: (params) => (
+              <GridEditMultiSelectCell
+                {...(params as GridEditMultiSelectCellProps)}
+                slotProps={{ chip: chipFn }}
+              />
+            ),
+          },
+        ];
+
+        const { user } = render(<TestCase />);
+
+        const cell = getCell(0, 0);
+        await user.dblClick(cell);
+
+        const editRoot = cell.querySelector('.MuiDataGrid-editMultiSelectCell')!;
+        expect(editRoot.querySelector('.chip-One')).not.to.equal(null);
+        expect(editRoot.querySelector('.chip-Two')).not.to.equal(null);
+      });
     });
   });
 });

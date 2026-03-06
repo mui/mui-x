@@ -382,6 +382,7 @@
   { "name": "GridMenuParams", "kind": "Interface" },
   { "name": "GridMenuProps", "kind": "Interface" },
   { "name": "GridMoreVertIcon", "kind": "Variable" },
+  { "name": "GridMultiSelectColDef", "kind": "Interface" },
   { "name": "GridMultiSelectionApi", "kind": "Interface" },
   { "name": "GridNoColumnsOverlay", "kind": "Variable" },
   { "name": "GridNoRowsOverlay", "kind": "Variable" },
