@@ -555,6 +555,29 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
       ids: new Set(currentSelection.ids),
     };
     const selectionManager = createRowSelectionManager(newSelectionModel);
+    const hasVisibleSelectableDescendant = (nodeId: GridRowId): boolean => {
+      const node = rowTree[nodeId];
+      if (!node) {
+        return false;
+      }
+
+      // Only consider nodes that are present (not filtered out) when using client-side filtering.
+      if (props.filterMode !== 'server' && filteredRowsLookup[nodeId] === false) {
+        return false;
+      }
+
+      if (node.type !== 'group') {
+        return Boolean(rowsLookup[nodeId]) && apiRef.current.isRowSelectable(nodeId);
+      }
+
+      for (let i = 0; i < node.children.length; i += 1) {
+        if (hasVisibleSelectableDescendant(node.children[i])) {
+          return true;
+        }
+      }
+
+      return false;
+    };
 
     let hasChanged = false;
     for (const id of currentSelection.ids) {
@@ -578,7 +601,13 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
           continue;
         }
         // Keep previously selected tree data parents selected if all their children are filtered out
-        if (!node.children.every((childId) => filteredRowsLookup[childId] === false)) {
+        // or not selectable.
+        if (
+          node.children.some(
+            (childId) =>
+              filteredRowsLookup[childId] !== false && hasVisibleSelectableDescendant(childId),
+          )
+        ) {
           selectionManager.unselect(id);
           hasChanged = true;
         }
