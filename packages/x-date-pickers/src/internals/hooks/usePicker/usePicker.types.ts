@@ -108,7 +108,7 @@ export interface UsePickerNonStaticProps extends Omit<
   /**
    * Ref to the field component.
    */
-  fieldRef?: React.RefObject<FieldRef<any>>;
+  fieldRef?: React.RefObject<FieldRef<any> | null>;
   /**
    * If `true`, the Picker will close after submitting the full date.
    * @default false

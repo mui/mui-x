@@ -84,8 +84,8 @@ You can also customize the icon you want to be displayed inside the clear `IconB
 
 {{"demo": "CustomizeClearIcon.js"}}
 
-#### Imperative clear
+#### Imperative API
 
-You can also clear the field's value programmatically using the `clearValue` method of the `fieldRef`.
+You can also interact with the field's value or sections programmatically using the `clearValue`, `focusField`, and other methods of the `fieldRef` (or `startFieldRef` and `endFieldRef` for multi-input fields).
 
 {{"demo": "ImperativeClear.js"}}

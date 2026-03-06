@@ -1,9 +1,0 @@
-<DateField label="DateField" fieldRef={fieldRef} />
-<Button
-  variant="outlined"
-  onClick={() => {
-    fieldRef.current?.clearValue();
-  }}
->
-  Clear Value
-</Button>
