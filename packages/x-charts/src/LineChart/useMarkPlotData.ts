@@ -67,6 +67,17 @@ export function useMarkPlotData(
           continue;
         }
 
+        // Find the index of the last non-null data point for the 'last' option.
+        let lastNonNullIndex = -1;
+        if (showMark === 'last') {
+          for (let i = data.length - 1; i >= 0; i -= 1) {
+            if (data[i] != null) {
+              lastNonNullIndex = i;
+              break;
+            }
+          }
+        }
+
         if (!(xAxisId in xAxes) || !(yAxisId in yAxes)) {
           continue;
         }
@@ -78,13 +89,12 @@ export function useMarkPlotData(
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
             throw new Error(
-              `MUI X Charts: ${
-                xAxisId === DEFAULT_X_AXIS_KEY
-                  ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisId}"`
+              `MUI X Charts: ${xAxisId === DEFAULT_X_AXIS_KEY
+                ? 'The first `xAxis`'
+                : `The x-axis with id "${xAxisId}"`
               } should have a data property to be able to display a line plot. ` +
-                'The x-axis data defines the positions for each point in the line. ' +
-                'Provide a data array to the x-axis configuration.',
+              'The x-axis data defines the positions for each point in the line. ' +
+              'Provide a data array to the x-axis configuration.',
             );
           }
         }
@@ -95,42 +105,55 @@ export function useMarkPlotData(
         const marks: MarkPlotDataPoint[] = [];
 
         if (xData) {
-          for (let index = 0; index < xData.length; index += 1) {
-            const x = xData[index];
-            const value = data[index] == null ? null : visibleStackedData[index][1];
-
-            if (value === null) {
-              continue;
+          if (showMark === 'last') {
+            if (lastNonNullIndex !== -1) {
+              marks.push({
+                x: xScale(xData[lastNonNullIndex]),
+                y: yScale(visibleStackedData[lastNonNullIndex]?.[1])!,
+                index: lastNonNullIndex,
+                color: colorGetter(lastNonNullIndex),
+              });
             }
+          }
 
-            // The line fade animation move all the values to the min.
-            // So we need to do the same with mark in order for it to look nice.
-            const y = yScale(hidden ? (yScale.domain()[0] as number) : value)!;
-            const xPos = xScale(x);
+          else {
+            for (let index = 0; index < xData.length; index += 1) {
+              const x = xData[index];
+              const value = data[index] == null ? null : visibleStackedData[index][1];
 
-            if (!instance.isPointInside(xPos, y)) {
-              continue;
-            }
+              if (value === null) {
+                continue;
+              }
 
-            if (showMark !== true) {
-              const shouldInclude = showMark({
+              // The line fade animation move all the values to the min.
+              // So we need to do the same with mark in order for it to look nice.
+              const y = yScale(hidden ? (yScale.domain()[0] as number) : value)!;
+              const xPos = xScale(x);
+
+              if (!instance.isPointInside(xPos, y)) {
+                continue;
+              }
+
+              if (showMark !== true) {
+                const shouldInclude = showMark({
+                  x: xPos,
+                  y,
+                  index,
+                  position: x,
+                  value,
+                });
+                if (!shouldInclude) {
+                  continue;
+                }
+              }
+
+              marks.push({
                 x: xPos,
                 y,
                 index,
-                position: x,
-                value,
+                color: colorGetter(index),
               });
-              if (!shouldInclude) {
-                continue;
-              }
             }
-
-            marks.push({
-              x: xPos,
-              y,
-              index,
-              color: colorGetter(index),
-            });
           }
         }
 
