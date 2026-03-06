@@ -66,7 +66,7 @@ const PickersSlideTransitionRoot = styled(TransitionGroup, {
   overridesResolver: (_, styles) =>
     elementOverrides.reduce(
       (acc, key) => {
-        acc.push({ [`&.${pickersSlideTransitionClasses[key]}`]: styles[key] });
+        acc.push({ [`.${pickersSlideTransitionClasses[key]}`]: styles[key] });
         return acc;
       },
       [styles.root],
