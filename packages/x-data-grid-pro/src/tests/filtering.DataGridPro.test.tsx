@@ -233,9 +233,9 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
 
-    const select = screen.getByRole('combobox', { name: 'Columns' });
+    const select = screen.getByRole('combobox', { name: 'Column' });
     fireEvent.mouseDown(select);
-    const listbox = screen.getByRole('listbox', { name: 'Columns' });
+    const listbox = screen.getByRole('listbox', { name: 'Column' });
     const availableColumns = within(listbox).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
   });
