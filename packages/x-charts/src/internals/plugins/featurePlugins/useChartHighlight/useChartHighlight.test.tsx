@@ -16,7 +16,7 @@ describe('highlight', () => {
   });
 
   it('should set highlight when keyboard move focus', async () => {
-    const { user } = render(
+    const { container, user } = render(
       <BarChart
         height={100}
         width={100}
@@ -112,7 +112,7 @@ describe('highlight', () => {
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   it.skipIf(isJSDOM)('should call onHighlightChange when leaving the highlightedItem', async () => {
     const handleHighlight = spy();
-    const { user } = render(
+    const { container, user } = render(
       <BarChart
         height={400}
         width={400}
