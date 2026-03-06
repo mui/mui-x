@@ -145,10 +145,7 @@ function getTickLabels(
       return [];
     }
 
-    const scale =
-      scaleType === 'band'
-        ? scaleBand(data, [0, 1])
-        : scalePoint(data, [0, 1]);
+    const scale = scaleType === 'band' ? scaleBand(data, [0, 1]) : scalePoint(data, [0, 1]);
 
     const labels = data.map((value) => {
       if (valueFormatter) {
