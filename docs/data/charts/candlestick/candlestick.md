@@ -53,7 +53,7 @@ Similar to other chart types, candlestick charts can be composed using multiple 
 In this example, we demonstrate how to create a candlestick chart that displays the volume of trades as a bar chart, as well as the 20-day moving average, shown as a line chart.
 
 :::info
-When using composition, you need to set a scale type for the x-axis. 
+When using composition, you need to set a scale type for the x-axis.
 
 A candlestick series requires a band x-axis, so you need to set the `scaleType` of the x-axis to `band`.
 :::
