@@ -92,13 +92,13 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
 
       '&:active': {},
       '&:hover': {
-        backgroundColor: theme.palette.action.hover,
+        backgroundColor: (theme.vars || theme).palette.action.hover,
       },
       [`& .${eventCalendarClasses.dayGridEventTime}`]: {
-        color: theme.palette.text.secondary,
+        color: (theme.vars || theme).palette.text.secondary,
       },
       [`& .${eventCalendarClasses.dayGridEventTitle}`]: {
-        color: theme.palette.text.primary,
+        color: (theme.vars || theme).palette.text.primary,
       },
     },
   }),
@@ -150,7 +150,7 @@ const DayGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'DayGridEventRecurringIcon',
 })(({ theme }) => ({
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   fontSize: '1rem',
   justifySelf: 'flex-end',
 }));
@@ -187,7 +187,7 @@ const DayGridEventCardWrapper = styled('div', {
   flexGrow: 1,
   '@container (width < 300px)': {
     gap: theme.spacing(0.5),
-    [`& ${DayGridEventTitle}`]: {
+    [`& .${eventCalendarClasses.dayGridEventTitle}`]: {
       marginInlineStart: theme.spacing(0.5),
       paddingInlineEnd: theme.spacing(1.5),
     },
