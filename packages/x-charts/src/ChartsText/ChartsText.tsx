@@ -56,6 +56,7 @@ function ChartsText(props: ChartsTextProps) {
       textAnchor={textAnchor}
       dominantBaseline={dominantBaseline}
       style={style}
+      aria-hidden
     >
       {wordsByLines.map((line, index) => (
         <tspan
