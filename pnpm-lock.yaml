@@ -1808,8 +1808,8 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
-        specifier: ^2.1.2
-        version: 2.1.2
+        specifier: ^2.1.5
+        version: 2.1.5
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.6
@@ -2632,8 +2632,8 @@ packages:
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
 
-  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.2':
-    resolution: {integrity: sha512-6BgAUxSNbQFiG3uqNxf53cDQADn5mSeh/JsQzCHo46GPQnVWIJk77zWC8yZ++0Mfg1ECy02zNrbniF7SgHAhXQ==}
+  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.5':
+    resolution: {integrity: sha512-InLvVhZAHPBfv3CxuG4AfOQuhNJjaFy69YBfodPMWtRFQNQAKa9Yb3vL9Ho6qsD9qKUBuJa4A5k7QddaXQ4Eyw==}
 
   '@atlaskit/pragmatic-drag-and-drop-unit-testing@1.1.1':
     resolution: {integrity: sha512-ZkJ0UuNzIbgvkmYYbgN8D7obv1yx7QzkpzBgrKrEYiZ2B9YTLY6kgRdoSI5REuY07/yzEtyFbYe+r8MvMe9Zsw==}
@@ -12520,7 +12520,7 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
-  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.2':
+  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.5':
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop': 1.7.7
       '@babel/runtime': 7.28.6
