@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
+import Checkbox from '@mui/material/Checkbox';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import useId from '@mui/utils/useId';
 import { ChartsClipPath } from '@mui/x-charts-premium/ChartsClipPath';
 import { CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';
@@ -14,21 +20,15 @@ import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProvi
 import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';
 import { ChartsAxisHighlight } from '@mui/x-charts-premium/ChartsAxisHighlight';
 import { ChartsGrid } from '@mui/x-charts-premium/ChartsGrid';
-import { useDrawingArea } from '@mui/x-charts-premium/hooks';
+import { useDrawingArea, useXScale } from '@mui/x-charts-premium/hooks';
 import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
-import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
-import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
+import { ChartsLayerContainer } from '@mui/x-charts-premium/ChartsLayerContainer';
+import { ChartsSvgLayer } from '@mui/x-charts-premium/ChartsSvgLayer';
 import {
   ChartsToolbarImageExportTrigger,
   ChartsToolbarPrintExportTrigger,
-} from '@mui/x-charts-pro/ChartsToolbarPro';
-import { Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
-import { useXScale } from '@mui/x-charts/hooks';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import Checkbox from '@mui/material/Checkbox';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+} from '@mui/x-charts-premium/ChartsToolbarPro';
+import { Toolbar, ToolbarButton } from '@mui/x-charts-premium/Toolbar';
 import ohlcv from '../dataset/ibkr-2025-ohlcv.json'; // Source: Yahoo Finance
 
 const dividends = [
@@ -84,6 +84,18 @@ const formatAsDollar = (value: number) =>
   });
 
 export default function CandlestickOverview() {
+  return (
+    <Stack width="100%">
+      <Typography variant="h6" textAlign="center" mb={1}>
+        Interactive Brokers Stock Price - 2025
+      </Typography>
+      <Chart />
+      <Typography variant="caption">Source: Yahoo Finance</Typography>
+    </Stack>
+  );
+}
+
+function Chart() {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
   const theme = useTheme();
