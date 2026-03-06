@@ -1,0 +1,30 @@
+{
+  "name": "benchmark-tool",
+  "scripts": {
+    "benchmark": "vitest run",
+    "ci:compare": "tsx -C import ci-scripts/compare-benchmarks.ts",
+    "ci:store-baseline": "tsx -C import ci-scripts/store-baseline.ts"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.1.0",
+    "@emotion/cache": "catalog:",
+    "@emotion/react": "catalog:",
+    "@emotion/styled": "catalog:",
+    "@mui/material": "^7.1.0",
+    "@mui/x-charts": "workspace:*",
+    "@mui/x-charts-pro": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.18",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "execa": "9.6.1",
+    "tsx": "catalog:",
+    "typescript": "^5.8.3",
+    "vitest": "catalog:"
+  }
+}

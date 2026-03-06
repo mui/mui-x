@@ -1,7 +1,7 @@
 /.git
 pnpm-lock.yaml
 netlify/functions
-/docs/.next
+.next
 /docs/export
 /docs/pages/playground/
 /lerna.json
