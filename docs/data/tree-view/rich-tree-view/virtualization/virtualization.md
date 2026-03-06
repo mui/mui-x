@@ -70,7 +70,7 @@ In other words, if the container has no child elements, then it still must have 
 :::success
 When to use:
 
-- You want the Rich Tree View to take its content height, but with a minimum or maximum height constraints.
+- You want the Rich Tree View to take its content's height, but with a minimum or maximum height constraints.
 - You want the Rich Tree View height to be dynamic, and use item virtualization when items do not fit the Rich Tree View viewport.
 
 When not to use:
