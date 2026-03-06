@@ -504,7 +504,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
             if (params.groupKeys!.length === 0) {
               const shouldReverse =
                 params.sortModel[0]?.field === 'name' && params.sortModel[0]?.sort === 'desc';
-              const rows = shouldReverse ? [...rootRows].reverse() : rootRows;
+              const rows = shouldReverse ? rootRows.toReversed() : rootRows;
               return { rows, rowCount: rows.length };
             }
 
