@@ -83,3 +83,9 @@ For **multi-input** range fields the clearable behavior is not supported yet.
 You can also customize the icon you want to be displayed inside the clear `IconButton`.
 
 {{"demo": "CustomizeClearIcon.js"}}
+
+#### Imperative clear
+
+You can also clear the field's value programmatically using the `clearValue` method of the `fieldRef`.
+
+{{"demo": "ImperativeClear.js"}}
