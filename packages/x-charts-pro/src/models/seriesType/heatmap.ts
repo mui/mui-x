@@ -9,11 +9,12 @@ export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
   extends
-    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter'>,
+    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
     CartesianSeriesType {
   type: 'heatmap';
   /**
-   * Data associated to each bar.
+   * Data associated to each cell in the heatmap.
+   * Each entry is a tuple [xIndex, yIndex, value].
    */
   data?: readonly HeatmapValueType[];
   /**
@@ -24,10 +25,22 @@ export interface HeatmapSeriesType
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * Formatter used to render values in tooltip or other data display.
+   * @param {number | null} value The series' value to render. null if no value associated ot the cell.
+   * @param {{ xIndex: number; yIndex: number}} context The rendering context of the value.
+   * @param {number} context.xIndex The x index of the cell the value belongs to.
+   * @param {number} context.yIndex The y index of the cell the value belongs to.
+   * @returns {string | null} The string to display or null if the value should not be shown.
+   */
+  valueFormatter?: (
+    value: number | null,
+    context: { xIndex: number; yIndex: number },
+  ) => string | null;
 }
 
 /**
- * An object that allows to identify a single bar.
+ * An object that allows to identify a single cell.
  * Used for item interaction
  */
 export type HeatmapItemIdentifier = {
@@ -36,11 +49,6 @@ export type HeatmapItemIdentifier = {
    * The id of the series the cell belongs to.
    */
   seriesId: DefaultizedHeatmapSeriesType['id'];
-  /**
-   * The data index of the cell.
-   * Is defined only if some data is associated to the cell.
-   */
-  dataIndex?: number;
   /**
    * The x index of the cell. Useful to identify the cell position in the heatmap even if there is no data.
    */
@@ -51,7 +59,43 @@ export type HeatmapItemIdentifier = {
   yIndex: number;
 };
 
+/**
+ * The cell identifier with the associated data value.
+ */
+export type HeatmapItemIdentifierWithData = HeatmapItemIdentifier & {
+  /**
+   * The value of the cell. Null if there is no data associated.
+   */
+  value: number | null;
+};
+
+export class HeatmapData {
+  private lookup: Map<number, Map<number, number>>;
+
+  constructor(data: readonly HeatmapValueType[]) {
+    this.lookup = new Map();
+    for (const [xIndex, yIndex, value] of data) {
+      if (!valueLookup.has(xIndex)) {
+        valueLookup.set(xIndex, new Map<number, number>());
+      }
+
+      if (!valueLookup.get(xIndex)!.has(yIndex)) {
+        valueLookup.get(xIndex)!.set(yIndex, value);
+      }
+    }
+  }
+
+  getValue(xIndex: number, yIndex: number): number | null {
+    return this.lookup.get(xIndex)?.get(yIndex) ?? null;
+  }
+}
+
 export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
   HeatmapSeriesType,
   CommonDefaultizedProps
-> {}
+> {
+  /**
+   * Map the `xIndex` and `yIndex` to the corresponding value of the cell.
+   */
+  heatmapData: HeatmapData;
+}
