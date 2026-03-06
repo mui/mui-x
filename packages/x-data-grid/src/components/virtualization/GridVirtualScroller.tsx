@@ -61,9 +61,10 @@ const Scroller = styled('div', {
   height: '100%',
   flexGrow: 1,
   overflow: 'scroll',
-  scrollbarWidth: 'none' /* Firefox */,
   display: 'flex',
   flexDirection: 'column',
+
+  scrollbarWidth: 'none' /* Firefox */,
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
   },
@@ -74,6 +75,18 @@ const Scroller = styled('div', {
 
   // See https://github.com/mui/mui-x/issues/10547
   zIndex: 0,
+});
+
+const Viewport = styled('div')({
+  position: 'sticky',
+  top: 0,
+  left: 0,
+  overflow: 'hidden',
+
+  scrollbarWidth: 'none' /* Firefox */,
+  '&::-webkit-scrollbar': {
+    display: 'none' /* Safari and Chrome */,
+  },
 });
 
 const hasPinnedRightSelector = (apiRef: RefObject<GridApiCommunity>) =>
@@ -106,15 +119,19 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const {
     getContainerProps,
     getScrollerProps,
+    getViewportProps,
     getContentProps,
     getPositionerProps,
     getScrollbarVerticalProps,
     getScrollbarHorizontalProps,
     getRows,
     getScrollAreaProps,
+    getContainerVerticalProps,
   } = virtualScroller;
 
   const rows = getRows(undefined, gridRowTreeSelector(apiRef));
+
+  const containerVerticalProps = getContainerVerticalProps();
 
   return (
     <Container className={classes.root} {...getContainerProps()} ownerState={ownerState}>
@@ -123,31 +140,33 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <GridScrollArea scrollDirection="up" {...getScrollAreaProps()} />
       <GridScrollArea scrollDirection="down" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
-        <TopContainer>
-          {!rootProps.listView && <GridHeaders />}
-          <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
-        </TopContainer>
-
-        {overlayType && (
-          <GridOverlayWrapper
-            overlayType={overlayType}
-            loadingOverlayVariant={loadingOverlayVariant}
-          >
-            <Overlay {...rootProps.slotProps?.[overlayType]} />
-          </GridOverlayWrapper>
-        )}
-
         <Content {...getContentProps()}>
-          <RenderZone role="rowgroup" {...getPositionerProps()}>
-            {rows}
-            {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
-          </RenderZone>
-        </Content>
+          <Viewport {...getViewportProps()}>
+            <TopContainer {...containerVerticalProps}>
+              {!rootProps.listView && <GridHeaders />}
+              <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
+            </TopContainer>
 
-        {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
-        <rootProps.slots.bottomContainer>
-          <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
-        </rootProps.slots.bottomContainer>
+            {overlayType && (
+              <GridOverlayWrapper
+                overlayType={overlayType}
+                loadingOverlayVariant={loadingOverlayVariant}
+              >
+                <Overlay {...rootProps.slotProps?.[overlayType]} />
+              </GridOverlayWrapper>
+            )}
+
+            <RenderZone role="rowgroup" {...getPositionerProps()}>
+              {rows}
+              {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
+            </RenderZone>
+
+            {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
+            <rootProps.slots.bottomContainer {...containerVerticalProps}>
+              <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+            </rootProps.slots.bottomContainer>
+          </Viewport>
+        </Content>
       </Scroller>
       {hasScrollX && (
         <React.Fragment>

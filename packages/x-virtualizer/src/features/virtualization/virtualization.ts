@@ -68,6 +68,10 @@ const selectors = (() => {
   const firstRowIndexSelector = createSelector(
     (state: BaseState) => state.virtualization.renderContext.firstRowIndex,
   );
+  const scrollPositionSelector = createSelector(
+    (state: BaseState) => state.virtualization.scrollPosition,
+  );
+
   return {
     store: createSelector((state: BaseState) => state.virtualization),
     renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
@@ -79,7 +83,22 @@ const selectors = (() => {
       (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
     ),
     context: createSelector((state: BaseState) => state.virtualization.context),
-    scrollPosition: createSelector((state: BaseState) => state.virtualization.scrollPosition),
+    scrollPosition: scrollPositionSelector,
+    pinnedLeftOffsetSelector: createSelector(
+      scrollPositionSelector,
+      (scrollPosition) => scrollPosition.current.left,
+    ),
+    pinnedRightOffsetSelector: createSelector(
+      scrollPositionSelector,
+      Dimensions.selectors.dimensions,
+      Dimensions.selectors.columnsTotalWidth,
+      Dimensions.selectors.needsVerticalScrollbar,
+      (scrollPosition, dimensions, columnsTotalWidth, needsVerticalScrollbar) =>
+        columnsTotalWidth -
+        dimensions.viewportOuterSize.width -
+        scrollPosition.current.left +
+        (needsVerticalScrollbar ? dimensions.scrollbarSize : 0),
+    ),
   };
 })();
 

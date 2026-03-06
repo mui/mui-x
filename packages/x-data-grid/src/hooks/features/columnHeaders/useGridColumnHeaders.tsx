@@ -297,7 +297,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
         className={gridClasses['row--borderBottom']}
-        style={{ height: headerHeight }}
+        style={{ height: headerHeight, '--height': `${headerHeight}px` } as React.CSSProperties}
       >
         {leftRenderContext &&
           getColumnHeaders(
@@ -470,7 +470,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           role="row"
           aria-rowindex={depth + 1}
           ownerState={rootProps}
-          style={{ height: groupHeaderHeight }}
+          style={
+            {
+              height: groupHeaderHeight,
+              '--height': `${groupHeaderHeight}px`,
+            } as React.CSSProperties
+          }
         >
           {leftRenderContext &&
             getColumnGroupHeaders({

@@ -24,9 +24,10 @@ const VirtualScrollerRenderZoneRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScrollerRenderZone',
 })<{ ownerState: OwnerState }>({
-  position: 'absolute',
+  // position: 'absolute',
   display: 'flex', // Prevents margin collapsing when using `getRowSpacing`
   flexDirection: 'column',
+  width: 'fit-content',
 });
 
 const GridVirtualScrollerRenderZone = forwardRef<

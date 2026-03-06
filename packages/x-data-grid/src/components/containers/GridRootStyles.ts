@@ -469,9 +469,10 @@ export const GridRootStyles = styled('div', {
       backgroundColor: hoverBackground,
     },
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
-      position: 'sticky',
+      position: 'absolute',
       zIndex: 40, // Should be above the column separator
       background: vars.header.background.base,
+      height: 'var(--height)',
     },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
@@ -608,6 +609,7 @@ export const GridRootStyles = styled('div', {
     /* Row styles */
     [`.${c.row}`]: {
       display: 'flex',
+      // position: 'relative',
       width: 'var(--DataGrid-rowWidth)',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
 
@@ -628,7 +630,6 @@ export const GridRootStyles = styled('div', {
         backgroundColor: 'transparent',
       },
       '&.Mui-selected': selectedStyles,
-      position: 'relative',
     },
 
     /* Cell styles */
@@ -762,7 +763,7 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
     },
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
-      position: 'sticky',
+      position: 'absolute',
       zIndex: 30,
       background: vars.cell.background.pinned,
       '&.Mui-selected': {
@@ -846,9 +847,10 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       backgroundColor: headerBackground,
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
-        position: 'sticky',
+        position: 'absolute',
         zIndex: 40, // Should be above the column separator
         right: 0,
+        height: 'var(--height)',
       },
     },
     [`& .${c.filler}`]: {
