@@ -1,9 +1,9 @@
 import { getLabel, type LegendGetter } from '@mui/x-charts/internals';
-import type { LegendItemParams } from '@mui/x-charts/ChartsLegend';
+import type { SeriesLegendItemParams } from '@mui/x-charts/ChartsLegend';
 
 const legendGetter: LegendGetter<'ohlc'> = (params) => {
   const { seriesOrder, series } = params;
-  return seriesOrder.reduce((acc, seriesId) => {
+  return seriesOrder.reduce<SeriesLegendItemParams[]>((acc, seriesId) => {
     const formattedLabel = getLabel(series[seriesId].label, 'legend');
 
     if (formattedLabel === undefined) {
@@ -19,7 +19,7 @@ const legendGetter: LegendGetter<'ohlc'> = (params) => {
     });
 
     return acc;
-  }, [] as LegendItemParams[]);
+  }, []);
 };
 
 export default legendGetter;
