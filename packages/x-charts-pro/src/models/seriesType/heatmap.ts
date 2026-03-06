@@ -72,15 +72,17 @@ export type HeatmapItemIdentifierWithData = HeatmapItemIdentifier & {
 export class HeatmapData {
   private lookup: Map<number, Map<number, number>>;
 
-  constructor() {
+  constructor(data: readonly HeatmapValueType[]) {
     this.lookup = new Map();
-  }
+    for (const [xIndex, yIndex, value] of data) {
+      if (!valueLookup.has(xIndex)) {
+        valueLookup.set(xIndex, new Map<number, number>());
+      }
 
-  setValue(xIndex: number, yIndex: number, value: number): void {
-    if (!this.lookup.has(xIndex)) {
-      this.lookup.set(xIndex, new Map());
+      if (!valueLookup.get(xIndex)!.has(yIndex)) {
+        valueLookup.get(xIndex)!.set(yIndex, value);
+      }
     }
-    this.lookup.get(xIndex)!.set(yIndex, value);
   }
 
   getValue(xIndex: number, yIndex: number): number | null {

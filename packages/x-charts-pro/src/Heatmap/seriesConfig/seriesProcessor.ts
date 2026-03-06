@@ -7,10 +7,7 @@ const seriesProcessor: SeriesProcessor<'heatmap'> = (params) => {
   const defaultizedSeries: Record<SeriesId, DefaultizedHeatmapSeriesType> = {};
   Object.keys(series).forEach((seriesId) => {
     const data = series[seriesId].data ?? [];
-    const heatmapData = new HeatmapData();
-    for (const [xIndex, yIndex, value] of data) {
-      heatmapData.setValue(xIndex, yIndex, value);
-    }
+    const heatmapData = new HeatmapData(data);
 
     defaultizedSeries[seriesId] = {
       // Defaultize the data and the value formatter.
