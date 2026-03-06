@@ -10,7 +10,6 @@ import {
   getSeriesUnfadedDataIndex,
   isSeriesFaded,
   isSeriesHighlighted,
-  isBatchRenderingSeriesType,
 } from './highlightStates';
 import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
@@ -222,9 +221,6 @@ export const selectorChartIsSeriesHighlighted = createSelector(
     item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
-    if (!isBatchRenderingSeriesType(item?.type)) {
-      return false;
-    }
     return isSeriesHighlighted(scope, item, seriesId);
   },
 );
@@ -237,9 +233,6 @@ export const selectorChartIsSeriesFaded = createSelector(
     item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
-    if (!isBatchRenderingSeriesType(item?.type)) {
-      return false;
-    }
     return isSeriesFaded(scope, item, seriesId);
   },
 );
@@ -252,9 +245,6 @@ export const selectorChartSeriesUnfadedItem = createSelector(
     item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
-    if (!isBatchRenderingSeriesType(item?.type)) {
-      return null;
-    }
     return getSeriesUnfadedDataIndex(scope, item, seriesId);
   },
 );
@@ -267,9 +257,6 @@ export const selectorChartSeriesHighlightedItem = createSelector(
     item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
-    if (!isBatchRenderingSeriesType(item?.type)) {
-      return null;
-    }
     return getSeriesHighlightedDataIndex(scope, item, seriesId);
   },
 );

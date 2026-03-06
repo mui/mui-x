@@ -115,6 +115,12 @@ export const nbNOLocaleText: Partial<ChartsLocaleText> = {
   chartConfigurationOptionStepAfter: 'Steg Etter',
   chartConfigurationOptionBumpX: 'Dunke X',
   chartConfigurationOptionBumpY: 'Dunke Y',
+
+  // OHLC/Candlestick
+  // open: 'Open',
+  // high: 'High',
+  // low: 'Low',
+  // close: 'Close',
 };
 
 export const nbNO = getChartsLocalization(nbNOLocaleText);

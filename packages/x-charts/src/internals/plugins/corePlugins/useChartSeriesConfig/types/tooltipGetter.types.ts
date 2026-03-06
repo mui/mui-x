@@ -16,27 +16,21 @@ import {
 import { type ChartsLabelMarkProps } from '../../../../../ChartsLabel/ChartsLabelMark';
 import { type ColorGetter } from './colorProcessor.types';
 
-export interface ItemTooltip<T extends ChartSeriesType> {
+export interface ItemTooltipValue<T extends ChartSeriesType> {
   /**
-   * An object that identifies the item to display.
-   */
-  identifier: SeriesItemIdentifierWithType<T>;
-  /**
-   * The color associated with the item.
-   */
-  color: string;
-  /**
-   * The item label.
+   * The metric label.
    */
   label: string | undefined;
   /**
-   * The item value.
+   * The value.
    */
   value: ChartsSeriesConfig[T]['valueType'];
   /**
    * The value formatted with context set to "tooltip".
    */
-  formattedValue: string | null;
+  formattedValue: NonNullable<ChartsSeriesConfig[T]['valueType']> extends Array<unknown>
+    ? Array<string | null>
+    : string | null;
   /**
    * The series mark type.
    */
@@ -47,32 +41,22 @@ export interface ItemTooltip<T extends ChartSeriesType> {
   markShape?: ChartsLabelMarkProps['markShape'];
 }
 
+export interface ItemTooltip<T extends ChartSeriesType> extends ItemTooltipValue<T> {
+  /**
+   * An object that identifies the item to display.
+   */
+  identifier: SeriesItemIdentifierWithType<T>;
+  /**
+   * The color associated with the item.
+   */
+  color: string;
+}
+
 export type ItemTooltipWithMultipleValues<T extends 'radar' = 'radar'> = Pick<
   ItemTooltip<T>,
   'identifier' | 'color' | 'label' | 'markType' | 'markShape'
 > & {
-  values: {
-    /**
-     * The metric label.
-     */
-    label: string | undefined;
-    /**
-     * The value.
-     */
-    value: ChartsSeriesConfig[T]['valueType'];
-    /**
-     * The value formatted with context set to "tooltip".
-     */
-    formattedValue: string | null;
-    /**
-     * The series mark type.
-     */
-    markType: ChartsLabelMarkProps['type'];
-    /**
-     * The series mark shape.
-     */
-    markShape?: ChartsLabelMarkProps['markShape'];
-  }[];
+  values: ItemTooltipValue<T>[];
 };
 
 export interface TooltipGetterAxesConfig {

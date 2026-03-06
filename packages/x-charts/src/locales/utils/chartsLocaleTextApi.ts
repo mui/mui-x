@@ -420,6 +420,23 @@ export interface ChartsLocaleText {
    * Label for the "Bump Y" interpolation option.
    */
   chartConfigurationOptionBumpY: string;
+
+  /**
+   * Label for the "Open" value in the context of an OHLC/Candlestick chart.
+   */
+  open: string;
+  /**
+   * Label for the "High" value in the context of an OHLC/Candlestick chart.
+   */
+  high: string;
+  /**
+   * Label for the "Low" value in the context of an OHLC/Candlestick chart.
+   */
+  low: string;
+  /**
+   * Label for the "Close" value in the context of an OHLC/Candlestick chart.
+   */
+  close: string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

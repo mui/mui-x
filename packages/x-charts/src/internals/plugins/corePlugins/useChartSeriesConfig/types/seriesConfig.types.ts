@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import type { SeriesProcessor } from './seriesProcessor.types';
 import type {
   CartesianChartSeriesType,
@@ -20,6 +21,7 @@ import { type GetItemAtPosition } from './getItemAtPosition.types';
 import { type UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
 import { type UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
 import { type HighlightCreator } from '../../../featurePlugins/useChartHighlight/highlightCreator.types';
+import { type AxisTooltipContentProps, type ItemTooltipContentProps } from './TooltipContent.types';
 
 export type ChartSeriesTypeRequiredPlugins<TSeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[TSeriesType] extends { axisType: 'cartesian' }
@@ -37,6 +39,7 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   colorProcessor: ColorProcessor<TSeriesType>;
   legendGetter: LegendGetter<TSeriesType>;
   tooltipGetter: TooltipGetter<TSeriesType>;
+  ItemTooltipContent?: React.ComponentType<ItemTooltipContentProps<TSeriesType>>;
   tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
   keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
@@ -61,6 +64,7 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;
       yExtremumGetter: CartesianExtremumGetter<TSeriesType>;
       axisTooltipGetter?: AxisTooltipGetter<TSeriesType, 'x' | 'y'>;
+      AxisTooltipContent?: React.ComponentType<AxisTooltipContentProps<TSeriesType>>;
     }
   : {}) &
   (TSeriesType extends PolarChartSeriesType
@@ -68,6 +72,7 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
         rotationExtremumGetter: PolarExtremumGetter<TSeriesType>;
         radiusExtremumGetter: PolarExtremumGetter<TSeriesType>;
         axisTooltipGetter?: AxisTooltipGetter<TSeriesType, 'rotation' | 'radius'>;
+        AxisTooltipContent?: React.ComponentType<AxisTooltipContentProps<TSeriesType>>;
       }
     : {});
 

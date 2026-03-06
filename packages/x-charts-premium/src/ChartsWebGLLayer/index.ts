@@ -1,1 +1,1 @@
-export { ChartsWebGLLayer } from './ChartsWebGLLayer';
+export * from './ChartsWebGLLayer';

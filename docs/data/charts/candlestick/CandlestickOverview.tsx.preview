@@ -1,0 +1,5 @@
+<Typography variant="h6" textAlign="center" mb={1}>
+  Interactive Brokers Stock Price - 2025
+</Typography>
+<Chart />
+<Typography variant="caption">Source: Yahoo Finance</Typography>

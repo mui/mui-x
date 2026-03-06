@@ -7,7 +7,7 @@ import {
 import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import type { ChartsContainerPremiumProps } from './ChartsContainerPremium';
-import type { ChartDataProviderPremiumProps } from '../ChartDataProviderPremium';
+import type { ChartsDataProviderPremiumProps } from '../ChartsDataProviderPremium';
 
 export type UseChartsContainerPremiumPropsReturnValue<
   TSeries extends ChartSeriesType,
@@ -16,7 +16,7 @@ export type UseChartsContainerPremiumPropsReturnValue<
   UseChartsContainerPropsReturnValue<TSeries, TSignatures>,
   'chartsSurfaceProps' | 'children'
 > & {
-  chartDataProviderPremiumProps: ChartDataProviderPremiumProps<TSeries, TSignatures>;
+  chartDataProviderPremiumProps: ChartsDataProviderPremiumProps<TSeries, TSignatures>;
 };
 
 export function useChartsContainerPremiumProps<
@@ -41,7 +41,7 @@ export function useChartsContainerPremiumProps<
   const chartDataProviderPremiumProps = {
     ...chartDataProviderProProps,
     plugins: plugins ?? DEFAULT_PLUGINS,
-  } as unknown as ChartDataProviderPremiumProps<TSeries, TSignatures>;
+  } as unknown as ChartsDataProviderPremiumProps<TSeries, TSignatures>;
 
   return {
     chartDataProviderPremiumProps,
