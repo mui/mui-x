@@ -237,7 +237,12 @@ The `baseline` should not be used with stacked areas, as it will not work as exp
 ### Optimization
 
 To show mark elements, use `showMark` series property.
-It accepts a boolean or a callback.
+It accepts:
+
+- a boolean to show or hide all the marks
+- `'last'`: only show mark on the last value
+- `(dataIndex: number) => boolean` a callback for custom behavior
+
 The next example shows how to use it to display only one mark every two data points.
 
 When a value is highlighted, a mark is rendered for that given value.
