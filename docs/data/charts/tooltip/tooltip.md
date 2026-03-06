@@ -15,9 +15,12 @@ If you're composing a custom component, use the `ChartsTooltip` component.
 
 You can trigger the tooltip with two kinds of events:
 
-- `'item'`: When you hover over an item on the chart, the tooltip displays data about that specific item
+- `'item'`: When you hover over an item on the chart, the tooltip displays data about that specific item.
+  Does not work for radar series.
 - `'axis'`: Your mouse position is associated with a value of the x-axis.
   The tooltip displays data about all series at that specific x value
+- `'series'`: When you hover over a series on the chart, the tooltip displays data about that specific series.
+  Only works radar series.
 - `'none'`: Disables the tooltip
 
 To pass this trigger attribute to the tooltip, use `slotProps.tooltip.trigger`.
