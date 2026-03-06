@@ -1194,9 +1194,9 @@ describe('<EventDialogContent open />', () => {
           await user.click(freqCombo);
           await user.click(await screen.findByRole('option', { name: /weeks/i }));
 
-          // Select Monday and Friday in the weekly day toggles
-          await user.click(screen.getByRole('button', { name: /monday/i }));
-          await user.click(screen.getByRole('button', { name: /friday/i }));
+          // Select Monday and Friday in the weekly day checkboxes
+          await user.click(screen.getByRole('checkbox', { name: /monday/i }));
+          await user.click(screen.getByRole('checkbox', { name: /friday/i }));
 
           await user.click(screen.getByRole('button', { name: /save changes/i }));
 
