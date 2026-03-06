@@ -50,7 +50,7 @@ export type BarElementProps = Omit<
 
 function BarElement(props: BarElementProps) {
   const {
-    seriesId,
+    id,
     dataIndex,
     classes: innerClasses,
     color,
@@ -70,8 +70,8 @@ function BarElement(props: BarElementProps) {
     ...other
   } = props;
   const itemIdentifier = React.useMemo(
-    () => ({ type: 'bar' as const, seriesId, dataIndex }),
-    [seriesId, dataIndex],
+    () => ({ type: 'bar' as const, seriesId: id, dataIndex }),
+    [id, dataIndex],
   );
   const interactionProps = useInteractionItemProps(itemIdentifier);
   const { isFaded, isHighlighted } = useItemHighlighted(itemIdentifier);
@@ -79,15 +79,15 @@ function BarElement(props: BarElementProps) {
     React.useMemo(
       () => ({
         type: 'bar',
-        seriesId,
+        seriesId: id,
         dataIndex,
       }),
-      [seriesId, dataIndex],
+      [id, dataIndex],
     ),
   );
 
   const ownerState = {
-    seriesId,
+    id,
     dataIndex,
     classes: innerClasses,
     color,
@@ -107,7 +107,7 @@ function BarElement(props: BarElementProps) {
     externalForwardedProps: other,
     additionalProps: {
       ...interactionProps,
-      seriesId,
+      id,
       dataIndex,
       color,
       x,
@@ -129,7 +129,7 @@ function BarElement(props: BarElementProps) {
     ownerState,
   });
 
-  return <Bar {...barProps} ownerState={ownerState} />;
+  return <Bar {...barProps} />;
 }
 
 BarElement.propTypes = {
@@ -139,6 +139,7 @@ BarElement.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   /**

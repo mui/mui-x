@@ -11,8 +11,7 @@ export interface AnimatedRangeBarElementProps extends BarProps {
 }
 
 export function AnimatedRangeBarElement(props: AnimatedRangeBarElementProps) {
-  const { ownerState, skipAnimation, seriesId, dataIndex, xOrigin, yOrigin, hidden, ...other } =
-    props;
+  const { ownerState, skipAnimation, id, dataIndex, xOrigin, yOrigin, hidden, ...other } = props;
 
   const animatedProps = useAnimateRangeBar(props);
 

@@ -94,7 +94,7 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
               return (
                 <BarElement
                   key={dataIndex}
-                  seriesId={seriesId}
+                  id={seriesId}
                   dataIndex={dataIndex}
                   color={color}
                   skipAnimation={skipAnimation ?? false}
