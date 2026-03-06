@@ -8,7 +8,11 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
 import { type SeriesId } from '../models';
+import { useUtilityClasses as usePieUtilityClasses } from './pieClasses';
 
+/**
+ * @deprecated Use `PieClasses` from `./pieClasses` instead.
+ */
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
   root: string;
@@ -31,6 +35,9 @@ export interface PieArcLabelClasses {
   series: string;
 }
 
+/**
+ * @deprecated Use `PieClassKey` from `./pieClasses` instead.
+ */
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
 interface PieArcLabelOwnerState {
@@ -42,10 +49,16 @@ interface PieArcLabelOwnerState {
   classes?: Partial<PieArcLabelClasses>;
 }
 
+/**
+ * @deprecated Use `getPieUtilityClass` from `./pieClasses` instead.
+ */
 export function getPieArcLabelUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArcLabel', slot);
 }
 
+/**
+ * @deprecated Use `pieClasses` from `./pieClasses` instead.
+ */
 export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('MuiPieArcLabel', [
   'root',
   'highlighted',
@@ -54,6 +67,9 @@ export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('Mu
   'series',
 ]);
 
+/**
+ * @deprecated Use `useUtilityClasses` from `./pieClasses` instead.
+ */
 const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
@@ -134,7 +150,8 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       isHighlighted,
       skipAnimation,
     };
-    const classes = useUtilityClasses(ownerState);
+    const classes = usePieUtilityClasses(ownerState);
+    const deprecatedClasses = useUtilityClasses(ownerState);
 
     const animatedProps = useAnimatePieArcLabel({
       cornerRadius,
@@ -149,7 +166,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
 
     return (
       <PieArcLabelRoot
-        className={classes.root}
+        className={`${classes.arcLabel} ${deprecatedClasses.root}`}
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
         {...other}
