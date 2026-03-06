@@ -150,7 +150,7 @@ describe('BarChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
-      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarElement-root');
+      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarChart-element');
 
       expect(
         Array.from(rectangles).map((rectangle) => rectangle.getAttribute('cursor')),
@@ -179,7 +179,7 @@ describe('BarChart - click event', () => {
         </div>,
       );
 
-      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarElement-root');
+      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarChart-element');
 
       await user.click(rectangles[0]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
