@@ -23,6 +23,11 @@ In the following example, the resource column header and loading text are custom
 
 {{"demo": "CustomLocaleTextTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::info
+You can also customize the resource column header using the [`resourceColumnLabel`](/x/react-scheduler/event-timeline/resources/#resource-column-label) prop.
+When provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
+:::
+
 ## Locale text
 
 You can use the theme to configure the locale text and replace the default locale:
