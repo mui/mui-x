@@ -2,6 +2,7 @@
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
+import { ChartsSeriesTooltipContent } from './ChartsSeriesTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipContainer, type ChartsTooltipContainerProps } from './ChartsTooltipContainer';
 import { useUtilityClasses } from './chartsTooltipClasses';
@@ -33,13 +34,17 @@ function ChartsTooltip<T extends TriggerOptions>(props: ChartsTooltipProps<T>) {
 
   const classes = useUtilityClasses(propClasses);
 
+  let children = <ChartsItemTooltipContent classes={classes} />;
+
+  if (trigger === 'axis') {
+    children = <ChartsAxisTooltipContent classes={classes} sort={sort} />;
+  } else if (trigger === 'series') {
+    children = <ChartsSeriesTooltipContent classes={classes} />;
+  }
+
   return (
     <ChartsTooltipContainer {...containerProps} trigger={trigger} classes={propClasses}>
-      {trigger === 'axis' ? (
-        <ChartsAxisTooltipContent classes={classes} sort={sort} />
-      ) : (
-        <ChartsItemTooltipContent classes={classes} />
-      )}
+      {children}
     </ChartsTooltipContainer>
   );
 }
@@ -291,11 +296,12 @@ ChartsTooltip.propTypes = {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse;
+   * - 'series': Shows all data points of the hovered series;
    * - 'axis': Shows values associated with the hovered x value;
    * - 'none': Does not display tooltip.
    * @default 'axis'
    */
-  trigger: PropTypes.oneOf(['axis', 'item', 'none']),
+  trigger: PropTypes.oneOf(['axis', 'item', 'series', 'none']),
 } as any;
 
 export { ChartsTooltip };

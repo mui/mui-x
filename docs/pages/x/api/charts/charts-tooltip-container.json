@@ -83,7 +83,7 @@
     "trigger": {
       "type": {
         "name": "enum",
-        "description": "'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none'"
+        "description": "'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'series'<br>&#124;&nbsp;'none'"
       },
       "default": "'axis'"
     }

@@ -1,0 +1,77 @@
+{
+  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
+  "name": "ChartsSeriesTooltipContent",
+  "imports": [
+    "import { ChartsSeriesTooltipContent } from '@mui/x-charts/ChartsTooltip';",
+    "import { ChartsSeriesTooltipContent } from '@mui/x-charts';",
+    "import { ChartsSeriesTooltipContent } from '@mui/x-charts-pro';",
+    "import { ChartsSeriesTooltipContent } from '@mui/x-charts-premium';"
+  ],
+  "classes": [
+    {
+      "key": "axisValueCell",
+      "className": "MuiChartsSeriesTooltipContent-axisValueCell",
+      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell",
+      "className": "MuiChartsSeriesTooltipContent-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiChartsSeriesTooltipContent-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiChartsSeriesTooltipContent-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markContainer",
+      "className": "MuiChartsSeriesTooltipContent-markContainer",
+      "description": "Styles applied to the markContainer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiChartsSeriesTooltipContent-paper",
+      "description": "Styles applied to the paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsSeriesTooltipContent-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiChartsSeriesTooltipContent-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiChartsSeriesTooltipContent-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiChartsSeriesTooltipContent-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChartsSeriesTooltipContent",
+  "filename": "/packages/x-charts/src/ChartsTooltip/ChartsSeriesTooltipContent.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
+  "cssComponent": false
+}

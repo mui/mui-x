@@ -51,7 +51,7 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   return mousePosition;
 }
 
-export type TriggerOptions = 'item' | 'axis' | 'none';
+export type TriggerOptions = 'item' | 'axis' | 'series' | 'none';
 
 export function utcFormatter(v: string | number | Date): string {
   if (v instanceof Date) {

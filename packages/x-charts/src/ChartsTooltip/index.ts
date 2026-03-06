@@ -5,12 +5,17 @@ export { getChartsTooltipUtilityClass, chartsTooltipClasses } from './chartsTool
 
 export * from './ChartsAxisTooltipContent';
 export * from './ChartsItemTooltipContent';
+export * from './ChartsSeriesTooltipContent';
 
 export * from './ChartsTooltipTable';
 
 export type { ItemTooltip } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-export type { UseItemTooltipReturnValue, UseRadarItemTooltipReturnValue } from './useItemTooltip';
-export { useItemTooltip, useRadarItemTooltip } from './useItemTooltip';
+export type {
+  UseItemTooltipReturnValue,
+  UseRadarItemTooltipReturnValue,
+  UseSeriesTooltipReturnValue,
+} from './useItemTooltip';
+export { useItemTooltip, useRadarItemTooltip, useSeriesTooltip } from './useItemTooltip';
 export * from './useAxesTooltip';
 
 export { useMouseTracker } from './utils';

@@ -99,7 +99,7 @@ Like other charts, the radar chart [tooltip](/x/react-charts/tooltip/) can be cu
 The `trigger` prop of the `tooltip` slot accepts the following values:
 
 - `'axis'`—the user's mouse position is associated with a metric. The tooltip displays data about all series along this specific metric.
-- `'item'`—when the user's mouse hovers over a radar area, the tooltip displays data about this series.
+- `'series'`—when the user's mouse hovers over a radar area, the tooltip displays data about this series.
 - `'none'`—disable the tooltip.
 
 {{"demo": "RadarTooltip.js" }}
