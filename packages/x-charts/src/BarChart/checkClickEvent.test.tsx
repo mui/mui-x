@@ -1,6 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
 
@@ -150,7 +150,7 @@ describe('BarChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
-      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarChart-element');
+      const rectangles = document.querySelectorAll<HTMLElement>(`rect.${barClasses.element}`);
 
       expect(
         Array.from(rectangles).map((rectangle) => rectangle.getAttribute('cursor')),
@@ -179,7 +179,7 @@ describe('BarChart - click event', () => {
         </div>,
       );
 
-      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarChart-element');
+      const rectangles = document.querySelectorAll<HTMLElement>(`rect.${barClasses.element}`);
 
       await user.click(rectangles[0]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
