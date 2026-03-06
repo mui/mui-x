@@ -173,7 +173,7 @@ function Chart() {
         {
           id: 'price',
           valueFormatter: formatAsDollar,
-          width: 48,
+          width: 32,
           position: 'right',
         },
         {
@@ -183,6 +183,7 @@ function Chart() {
         },
       ]}
       height={400}
+      margin={{ top: 8, bottom: 0, left: 0, right: 0 }}
     >
       <ChartsWrapper>
         <CandlestickToolbar
