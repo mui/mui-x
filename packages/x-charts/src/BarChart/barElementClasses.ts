@@ -48,9 +48,9 @@ export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiB
  * @deprecated Use `useBarElementUtilityClasses` from `./barClasses` instead.
  */
 export const useUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes, id, isHighlighted, isFaded } = ownerState;
+  const { classes, seriesId, isHighlighted, isFaded } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getBarElementUtilityClass, classes);

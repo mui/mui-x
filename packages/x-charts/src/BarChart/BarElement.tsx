@@ -21,7 +21,7 @@ export interface BarElementSlotProps {
   bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
-export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
+export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted' | 'isFocused'> &
   Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
     /**
      * The props used for each component slot.
@@ -47,7 +47,7 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
 
 function BarElement(props: BarElementProps) {
   const {
-    id,
+    seriesId,
     dataIndex,
     classes: innerClasses,
     color,
@@ -67,8 +67,8 @@ function BarElement(props: BarElementProps) {
     ...other
   } = props;
   const itemIdentifier = React.useMemo(
-    () => ({ type: 'bar' as const, seriesId: id, dataIndex }),
-    [id, dataIndex],
+    () => ({ type: 'bar' as const, seriesId, dataIndex }),
+    [seriesId, dataIndex],
   );
   const interactionProps = useInteractionItemProps(itemIdentifier);
   const { isFaded, isHighlighted } = useItemHighlighted(itemIdentifier);
@@ -76,15 +76,15 @@ function BarElement(props: BarElementProps) {
     React.useMemo(
       () => ({
         type: 'bar',
-        seriesId: id,
+        seriesId,
         dataIndex,
       }),
-      [id, dataIndex],
+      [seriesId, dataIndex],
     ),
   );
 
   const ownerState = {
-    id,
+    seriesId,
     dataIndex,
     classes: innerClasses,
     color,
@@ -104,7 +104,7 @@ function BarElement(props: BarElementProps) {
     externalForwardedProps: other,
     additionalProps: {
       ...interactionProps,
-      id,
+      seriesId,
       dataIndex,
       color,
       x,
@@ -126,7 +126,7 @@ function BarElement(props: BarElementProps) {
     ownerState,
   });
 
-  return <Bar {...barProps} />;
+  return <Bar {...barProps} ownerState={ownerState} />;
 }
 
 BarElement.propTypes = {
@@ -136,7 +136,6 @@ BarElement.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   /**
