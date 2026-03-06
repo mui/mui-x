@@ -3,7 +3,8 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { type DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { type D3Scale } from '../models/axis';
-import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
+import { useUtilityClasses } from './scatterClasses';
+import type { ScatterClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
@@ -145,7 +146,7 @@ export function BatchScatter(props: BatchScatterProps) {
   const seriesUnfadedItem = store.use(selectorChartSeriesUnfadedItem, series.id);
   const highlightedModifier = 1.2;
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
-  const classes = useUtilityClasses(inClasses);
+  const classes = useUtilityClasses({ classes: inClasses });
 
   const siblings: React.ReactNode[] = [];
   if (seriesHighlightedItem != null) {
@@ -184,7 +185,7 @@ export function BatchScatter(props: BatchScatterProps) {
   return (
     <React.Fragment>
       <Group
-        className={classes.root}
+        className={classes.series}
         data-series={series.id}
         data-faded={isSeriesFaded || undefined}
         data-highlighted={isSeriesHighlighted || undefined}

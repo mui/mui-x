@@ -17,7 +17,8 @@ import {
 } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
 import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
+import { useUtilityClasses } from './scatterClasses';
+import type { ScatterClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
 import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
@@ -102,10 +103,10 @@ function Scatter(props: ScatterProps) {
     ownerState: {},
   });
 
-  const classes = useUtilityClasses(inClasses);
+  const classes = useUtilityClasses({ classes: inClasses });
 
   return (
-    <g data-series={series.id} className={classes.root}>
+    <g data-series={series.id} className={classes.series}>
       {scatterPlotData.map((dataPoint) => {
         const isItemHighlighted = isHighlighted(dataPoint);
         const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
@@ -113,6 +114,7 @@ function Scatter(props: ScatterProps) {
         return (
           <Marker
             key={dataPoint.id ?? dataPoint.dataIndex}
+            className={classes.marker}
             dataIndex={dataPoint.dataIndex}
             color={colorGetter(dataPoint.dataIndex)}
             isHighlighted={isItemHighlighted}

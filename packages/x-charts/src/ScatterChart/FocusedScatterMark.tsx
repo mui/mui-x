@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { getValueToPositionMapper, useScatterSeriesContext, useXAxes, useYAxes } from '../hooks';
+import { useUtilityClasses } from './scatterClasses';
 
 export function FocusedScatterMark(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
@@ -24,6 +25,8 @@ export function FocusedScatterMark(props: React.SVGAttributes<SVGRectElement>) {
   const getXPosition = getValueToPositionMapper(xAxis[xAxisId].scale);
   const getYPosition = getValueToPositionMapper(yAxis[yAxisId].scale);
 
+  const classes = useUtilityClasses();
+
   const scatterPoint = series.data[focusedItem.dataIndex];
   const x = getXPosition(scatterPoint.x);
   const y = getYPosition(scatterPoint.y);
@@ -31,6 +34,7 @@ export function FocusedScatterMark(props: React.SVGAttributes<SVGRectElement>) {
 
   return (
     <rect
+      className={classes.focusedMark}
       fill="none"
       stroke={(theme.vars ?? theme).palette.text.primary}
       strokeWidth={2}
