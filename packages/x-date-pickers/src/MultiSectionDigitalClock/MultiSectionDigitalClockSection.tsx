@@ -20,7 +20,7 @@ import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '../internals/constants/dimensions';
-import { getFocusedListItemIndex } from '../internals/utils/utils';
+import { getActiveElement, getFocusedListItemIndex } from '../internals/utils/utils';
 import { FormProps } from '../internals/models/formProps';
 import { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
@@ -41,6 +41,7 @@ export interface MultiSectionDigitalClockSectionProps<TSectionValue extends numb
   active?: boolean;
   skipDisabled?: boolean;
   role?: string;
+  clockContainerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
@@ -158,8 +159,12 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       slots,
       slotProps,
       skipDisabled,
+      clockContainerRef,
       ...other
     } = props;
+
+    const previousAutoFocus = React.useRef<boolean | undefined>(undefined);
+    const previousActiveState = React.useRef<boolean | undefined>(undefined);
 
     const { ownerState: pickerOwnerState } = usePickerPrivateContext();
     const ownerState: MultiSectionDigitalClockSectionOwnerState = {
@@ -178,9 +183,22 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       const activeItem = containerRef.current.querySelector<HTMLElement>(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
-      if (active && autoFocus && activeItem) {
+
+      const containerElem = clockContainerRef?.current ?? containerRef.current;
+      const hasFocus = containerElem.contains(getActiveElement(containerRef.current));
+      const focusedChanged =
+        previousAutoFocus.current !== autoFocus || previousActiveState.current !== active;
+
+      // Only focus when autoFocus/active props change or when focus is already inside the container
+      const shouldFocus = active && autoFocus && activeItem && (focusedChanged || hasFocus);
+
+      if (shouldFocus) {
         activeItem.focus();
       }
+
+      previousAutoFocus.current = autoFocus;
+      previousActiveState.current = active;
+
       if (!activeItem || previousActive.current === activeItem) {
         return;
       }
