@@ -117,6 +117,7 @@ MultiInputTimeRangeField.propTypes = {
    * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
+  endFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -243,6 +244,7 @@ MultiInputTimeRangeField.propTypes = {
     PropTypes.object,
     PropTypes.string,
   ]),
+  startFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   style: PropTypes.object,
   /**
    * The system prop, which allows defining system overrides as well as additional CSS styles.
@@ -260,8 +262,6 @@ MultiInputTimeRangeField.propTypes = {
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
-  unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * If `true`, the CSS flexbox `gap` is used instead of applying `margin` to children.
    *

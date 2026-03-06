@@ -94,7 +94,7 @@ export const usePicker = <
    */
   const [triggerElement, triggerRef] = React.useState<HTMLElement | null>(null);
   const popupRef = React.useRef<HTMLElement>(null);
-  const fieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
+  const internalFieldRef = React.useRef<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>(null);
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
 
@@ -125,7 +125,12 @@ export const usePicker = <
     getStepNavigation,
   });
 
-  const clearValue = useEventCallback(() => setValue(valueManager.emptyValue, { source: 'view' }));
+  const clearValue = useEventCallback(() => {
+    if (internalFieldRef.current) {
+      internalFieldRef.current.clearValue();
+    }
+    setValue(valueManager.emptyValue, { source: 'view' });
+  });
 
   const setValueToToday = useEventCallback(() =>
     setValue(valueManager.getTodayValue(adapter, timezone, valueType), {
@@ -188,10 +193,10 @@ export const usePicker = <
     if (currentViewMode === 'field' && state.open) {
       setOpen(false);
       setTimeout(() => {
-        fieldRef?.current?.setSelectedSections(view);
+        internalFieldRef?.current?.setSelectedSections(view);
         // focusing the input before the range selection is done
         // calling it outside of timeout results in an inconsistent behavior between Safari And Chrome
-        fieldRef?.current?.focusField(view);
+        internalFieldRef?.current?.focusField(view);
       });
     }
   }, [view]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -374,14 +379,16 @@ export const usePicker = <
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
-      fieldRef,
+      internalFieldRef,
+      fieldRef: props.fieldRef,
     }),
     [
       formatDensity,
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
-      fieldRef,
+      internalFieldRef,
+      props.fieldRef,
     ],
   );
 

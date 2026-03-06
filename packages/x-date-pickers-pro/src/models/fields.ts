@@ -25,8 +25,8 @@ export interface MultiInputFieldSlotRootProps {
 }
 
 export interface MultiInputFieldRefs {
-  unstableStartFieldRef?: React.Ref<FieldRef<PickerValue>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<PickerValue>>;
+  startFieldRef?: React.Ref<FieldRef<PickerValue>>;
+  endFieldRef?: React.Ref<FieldRef<PickerValue>>;
 }
 
 export interface RangeFieldSeparatorProps {

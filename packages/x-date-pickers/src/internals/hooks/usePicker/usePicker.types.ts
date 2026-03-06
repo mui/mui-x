@@ -99,7 +99,11 @@ export interface UsePickerBaseProps<
 /**
  * Props used to handle the value of non-static Pickers.
  */
-export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextValue, 'fieldRef'> {
+export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextValue, 'fieldRef' | 'internalFieldRef'> {
+  /**
+   * Ref to the field component.
+   */
+  fieldRef?: React.Ref<FieldRef<any>>;
   /**
    * If `true`, the Picker will close after submitting the full date.
    * @default false
