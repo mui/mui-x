@@ -810,12 +810,26 @@ export const useGridRowEditing = (
     Array.from(ids).forEach((id) => {
       const params = rowModesModel[id] ?? { mode: GridRowModes.View };
       const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;
-      const originalId = rowsLookup[id] ? apiRef.current.getRowId(rowsLookup[id]) : id;
+      const row = rowsLookup[id];
+      const originalId = row ? apiRef.current.getRowId(row) : id;
       if (params.mode === GridRowModes.Edit && prevMode === GridRowModes.View) {
         updateStateToStartRowEditMode({ id: originalId, ...params });
       } else if (params.mode === GridRowModes.View && prevMode === GridRowModes.Edit) {
-        updateStateToStopRowEditMode({ id: originalId, ...params });
+        if (row) {
+          updateStateToStopRowEditMode({ id: originalId, ...params });
+        } else {
+          updateRowInRowModesModel(id, null);
+          updateOrDeleteRowState(id, null);
+          delete prevRowValuesLookup.current[id];
+        }
       }
     });
-  }, [apiRef, rowModesModel, updateStateToStartRowEditMode, updateStateToStopRowEditMode]);
+  }, [
+    apiRef,
+    rowModesModel,
+    updateOrDeleteRowState,
+    updateStateToStartRowEditMode,
+    updateStateToStopRowEditMode,
+    updateRowInRowModesModel,
+  ]);
 };
