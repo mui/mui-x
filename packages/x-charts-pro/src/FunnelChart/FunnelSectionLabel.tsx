@@ -2,7 +2,9 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { consumeSlots, type SeriesId } from '@mui/x-charts/internals';
-import { type FunnelSectionClasses, useLabelUtilityClasses } from './funnelSectionClasses';
+import clsx from 'clsx';
+import { type FunnelSectionClasses, useLabelUtilityClasses as useDeprecatedLabelUtilityClasses } from './funnelSectionClasses';
+import { useUtilityClasses } from './funnelClasses';
 
 export interface FunnelSectionLabelConfig {
   x: number;
@@ -29,7 +31,7 @@ const FunnelSectionLabel = consumeSlots(
   'MuiFunnelSectionLabel',
   'funnelSectionLabel',
   {
-    classesResolver: useLabelUtilityClasses,
+    classesResolver: useDeprecatedLabelUtilityClasses,
   },
   React.forwardRef(function FunnelSectionLabel(
     props: FunnelSectionLabelProps,
@@ -37,6 +39,8 @@ const FunnelSectionLabel = consumeSlots(
   ) {
     const { classes, color, onClick, className, label, seriesId, dataIndex, ...other } = props;
     const theme = useTheme();
+
+    const newClasses = useUtilityClasses();
 
     return (
       <text
@@ -51,7 +55,7 @@ const FunnelSectionLabel = consumeSlots(
         fontStyle={theme.typography.body2.fontStyle}
         fontVariant={theme.typography.body2.fontVariant}
         fill={(theme.vars || theme)?.palette?.text?.primary}
-        className={classes?.label}
+        className={clsx(newClasses.sectionLabel, classes?.label)}
         x={label.x}
         y={label.y}
         textAnchor={label.textAnchor ?? 'middle'}

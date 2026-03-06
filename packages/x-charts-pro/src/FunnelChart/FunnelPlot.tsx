@@ -7,6 +7,7 @@ import { type FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
 import { type FunnelPlotSlotExtension } from './funnelPlotSlots.types';
+import { useUtilityClasses } from './funnelClasses';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
 import { getFunnelCurve, type Point } from './curves';
 import { FunnelSectionLabel } from './FunnelSectionLabel';
@@ -135,9 +136,10 @@ function FunnelPlot(props: FunnelPlotProps) {
   const { onItemClick, ...other } = props;
 
   const data = useAggregatedData();
+  const classes = useUtilityClasses();
 
   return (
-    <React.Fragment>
+    <g className={classes.root}>
       {data.map((series) => {
         if (series.length === 0) {
           return null;
@@ -190,7 +192,7 @@ function FunnelPlot(props: FunnelPlotProps) {
           </g>
         );
       })}
-    </React.Fragment>
+    </g>
   );
 }
 
