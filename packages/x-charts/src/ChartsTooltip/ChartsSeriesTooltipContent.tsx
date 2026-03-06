@@ -1,0 +1,85 @@
+'use client';
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
+import Typography from '@mui/material/Typography';
+import { type SxProps, type Theme } from '@mui/material/styles';
+import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { useSeriesTooltip } from './useItemTooltip';
+import {
+  ChartsTooltipCell,
+  ChartsTooltipPaper,
+  ChartsTooltipRow,
+  ChartsTooltipTable,
+} from './ChartsTooltipTable';
+import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
+
+export interface ChartsSeriesTooltipContentClasses extends ChartsTooltipClasses {}
+
+export interface ChartsSeriesTooltipContentProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsTooltipClasses>;
+  sx?: SxProps<Theme>;
+}
+
+function ChartsSeriesTooltipContent(props: ChartsSeriesTooltipContentProps) {
+  const { classes: propClasses, sx } = props;
+  const tooltipData = useSeriesTooltip();
+
+  const classes = useUtilityClasses(propClasses);
+
+  if (!tooltipData) {
+    return null;
+  }
+
+  const { label: seriesLabel, color, markType, markShape } = tooltipData;
+
+  return (
+    <ChartsTooltipPaper sx={sx} className={classes.paper}>
+      <ChartsTooltipTable className={classes.table}>
+        <Typography component="caption">
+          <div className={classes.markContainer}>
+            <ChartsLabelMark
+              type={markType}
+              markShape={markShape}
+              color={color}
+              className={classes.mark}
+            />
+          </div>
+          {seriesLabel}
+        </Typography>
+        <tbody>
+          {tooltipData.values.map(({ formattedValue, label }) => (
+            <ChartsTooltipRow key={label} className={classes.row}>
+              <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+                {label}
+              </ChartsTooltipCell>
+              <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+                {formattedValue}
+              </ChartsTooltipCell>
+            </ChartsTooltipRow>
+          ))}
+        </tbody>
+      </ChartsTooltipTable>
+    </ChartsTooltipPaper>
+  );
+}
+
+ChartsSeriesTooltipContent.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { ChartsSeriesTooltipContent };

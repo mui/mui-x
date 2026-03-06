@@ -5,6 +5,7 @@ export { getChartsTooltipUtilityClass, chartsTooltipClasses } from './chartsTool
 
 export * from './ChartsAxisTooltipContent';
 export * from './ChartsItemTooltipContent';
+export * from './ChartsSeriesTooltipContent';
 
 export * from './ChartsTooltipTable';
 

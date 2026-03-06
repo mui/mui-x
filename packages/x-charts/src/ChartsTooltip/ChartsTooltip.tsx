@@ -2,6 +2,7 @@
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
+import { ChartsSeriesTooltipContent } from './ChartsSeriesTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipContainer, type ChartsTooltipContainerProps } from './ChartsTooltipContainer';
 import { useUtilityClasses } from './chartsTooltipClasses';
@@ -33,13 +34,17 @@ function ChartsTooltip<T extends TriggerOptions>(props: ChartsTooltipProps<T>) {
 
   const classes = useUtilityClasses(propClasses);
 
+  let children = <ChartsItemTooltipContent classes={classes} />;
+
+  if (trigger === 'axis') {
+    children = <ChartsAxisTooltipContent classes={classes} sort={sort} />;
+  } else {
+    children = <ChartsSeriesTooltipContent classes={classes} />;
+  }
+
   return (
     <ChartsTooltipContainer {...containerProps} trigger={trigger} classes={propClasses}>
-      {trigger === 'axis' ? (
-        <ChartsAxisTooltipContent classes={classes} sort={sort} />
-      ) : (
-        <ChartsItemTooltipContent classes={classes} />
-      )}
+      {children}
     </ChartsTooltipContainer>
   );
 }

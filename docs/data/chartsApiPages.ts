@@ -112,6 +112,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsReferenceLine',
   },
   {
+    pathname: '/x/api/charts/charts-series-tooltip-content',
+    title: 'ChartsSeriesTooltipContent',
+  },
+  {
     pathname: '/x/api/charts/charts-surface',
     title: 'ChartsSurface',
   },
