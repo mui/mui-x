@@ -56,13 +56,17 @@ export interface ChartsComponents<Theme = unknown> {
   };
   MuiLineChart?: {
     defaultProps?: ComponentsProps['MuiLineChart'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiLineChart'];
   };
+  /** @deprecated Use `MuiLineChart` instead. */
   MuiAreaElement?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiAreaElement'];
   };
+  /** @deprecated Use `MuiLineChart` instead. */
   MuiLineElement?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiLineElement'];
   };
+  /** @deprecated Use `MuiLineChart` instead. */
   MuiMarkElement?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiMarkElement'];
   };

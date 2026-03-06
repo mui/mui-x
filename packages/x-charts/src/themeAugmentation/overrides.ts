@@ -5,6 +5,7 @@ import { type BarElementClassKey } from '../BarChart/barElementClasses';
 import { type ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
 import { type ChartsGridClassKey } from '../ChartsGrid';
 import { type ChartsTooltipClassKey } from '../ChartsTooltip';
+import { type LineClassKey } from '../LineChart/lineClasses';
 import {
   type AreaElementClassKey,
   type LineElementClassKey,
@@ -31,8 +32,12 @@ export interface ChartsComponentNameToClassKey {
   MuiBarLabel: BarLabelClassKey;
 
   // LineChart components
+  MuiLineChart: LineClassKey;
+  /** @deprecated Use `MuiLineChart` instead. */
   MuiAreaElement: AreaElementClassKey;
+  /** @deprecated Use `MuiLineChart` instead. */
   MuiLineElement: LineElementClassKey;
+  /** @deprecated Use `MuiLineChart` instead. */
   MuiMarkElement: MarkElementClassKey;
 
   // ScatterChart components
