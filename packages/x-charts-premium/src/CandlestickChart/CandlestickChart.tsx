@@ -266,6 +266,10 @@ CandlestickChart.propTypes = {
     ]).isRequired,
   ),
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend: PropTypes.bool,
+  /**
    * The controlled axis highlight.
    * Identified by the axis id, and data index.
    */

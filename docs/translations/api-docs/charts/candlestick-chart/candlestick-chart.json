@@ -22,6 +22,7 @@
     "hiddenItems": {
       "description": "List of hidden series and/or items.<br>Different chart types use different keys."
     },
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedAxis": {
       "description": "The controlled axis highlight. Identified by the axis id, and data index."
     },
@@ -118,6 +119,7 @@
     "axisTickLabel": "Custom component for tick label.",
     "baseButton": "",
     "baseIconButton": "",
+    "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "toolbar": "Custom component for the toolbar.",
