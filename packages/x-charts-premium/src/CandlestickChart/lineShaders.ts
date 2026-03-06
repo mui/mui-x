@@ -2,6 +2,7 @@
 export const candlestickLineVertexShader = /* glsl */ `
   precision mediump float;
 
+  attribute vec4 a_wick_color;
   attribute vec2 a_position;
   attribute vec2 a_center;
   attribute float a_height;
@@ -16,6 +17,7 @@ export const candlestickLineVertexShader = /* glsl */ `
     vec2 position = center + a_position * vec2(0, a_height) / 2.0;
     vec2 clipSpace = (position / u_resolution) * 2.0 - 1.0;
 
+    v_color = a_wick_color;
     gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
   }
 `;
@@ -23,9 +25,9 @@ export const candlestickLineVertexShader = /* glsl */ `
 export const candlestickLineFragmentShader = /* glsl */ `
   precision mediump float;
 
-  uniform vec4 u_color;
+  varying vec4 v_color;
 
   void main() {
-    gl_FragColor = u_color;
+    gl_FragColor = v_color;
   }
 `;

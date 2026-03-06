@@ -39,6 +39,12 @@
         "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
+    "highlightedItem": {
+      "type": {
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'ohlc' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+      }
+    },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
@@ -72,6 +78,13 @@
       "signature": {
         "type": "function(hiddenItems: Array<VisibilityIdentifierWithType>) => void",
         "describedArgs": ["hiddenItems"]
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
+        "describedArgs": ["highlightedItem"]
       }
     },
     "onHighlightedAxisChange": {
