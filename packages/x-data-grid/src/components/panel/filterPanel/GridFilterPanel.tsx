@@ -292,7 +292,11 @@ const GridFilterPanel = forwardRef<HTMLDivElement, GridFilterPanelProps>(
             {!disableRemoveAllButton && validFilters.length > 0 ? (
               <rootProps.slots.baseButton
                 onClick={handleRemoveAll}
-                startIcon={<rootProps.slots.filterPanelRemoveAllIcon />}
+                startIcon={
+                  <rootProps.slots.filterPanelDeleteAllIcon ??
+                  rootProps.slots.filterPanelRemoveAllIcon
+                />
+                }
                 {...rootProps.slotProps?.baseButton}
               >
                 {apiRef.current.getLocaleText('filterPanelRemoveAll')}
