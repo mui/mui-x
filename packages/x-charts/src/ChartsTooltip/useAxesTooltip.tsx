@@ -181,9 +181,10 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
             )(dataIndex) ?? '';
 
           const value = seriesToAdd.data[dataIndex] ?? null;
-          const formattedValue = (seriesToAdd.valueFormatter as any)(value, {
-            dataIndex,
-          });
+          const formatValue = seriesToAdd.valueFormatter as any;
+          const formattedValue = Array.isArray(value)
+            ? value.map((v) => formatValue(v, { dataIndex }))
+            : formatValue(value, { dataIndex });
           const formattedLabel = getLabel(seriesToAdd.label, 'tooltip') ?? null;
 
           tooltipAxes[tooltipItemIndex].seriesItems.push({

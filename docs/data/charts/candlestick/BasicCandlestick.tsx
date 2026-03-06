@@ -14,9 +14,10 @@ const data: Array<OHLCValueType> = sp500.map((entry) => [
 export default function BasicCandlestick() {
   return (
     <CandlestickChart
-      xAxis={[{ data: xData, zoom: { minSpan: 1, filterMode: 'discard' } }]}
-      series={[{ data }]}
+      xAxis={[{ id: 'x', data: xData, zoom: { minSpan: 1, filterMode: 'discard' } }]}
+      series={[{ data, label: 'S&P500', valueFormatter: (v) => `$${v.toFixed(2)}` }]}
       height={400}
+      tooltipAxis={[{ axisId: 'x', dataIndex: 0 }]}
     />
   );
 }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { type SxProps, type Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
+import * as React from 'react';
 import { type ChartsTooltipClasses, useChartsTooltipUtilityClasses } from './chartsTooltipClasses';
 import {
   ChartsTooltipCell,
@@ -116,6 +117,35 @@ function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesTyp
     return null;
   }
 
+  const { formattedValue } = item;
+
+  if (Array.isArray(formattedValue)) {
+    return formattedValue.map((v, index) => (
+      <ChartsTooltipRow key={index} className={classes.row}>
+        {index === 0 && (
+          <ChartsTooltipCell
+            className={clsx(classes.labelCell, classes.cell)}
+            component="th"
+            rowSpan={formattedValue.length}
+          >
+            <div className={classes.markContainer}>
+              <ChartsLabelMark
+                type={item.markType}
+                markShape={item.markShape}
+                color={item.color}
+                className={classes.mark}
+              />
+            </div>
+            {item.formattedLabel || null}
+          </ChartsTooltipCell>
+        )}
+        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+          {v}
+        </ChartsTooltipCell>
+      </ChartsTooltipRow>
+    ));
+  }
+
   return (
     <ChartsTooltipRow className={classes.row}>
       <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
@@ -130,7 +160,7 @@ function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesTyp
         {item.formattedLabel || null}
       </ChartsTooltipCell>
       <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-        {item.formattedValue}
+        {formattedValue}
       </ChartsTooltipCell>
     </ChartsTooltipRow>
   );

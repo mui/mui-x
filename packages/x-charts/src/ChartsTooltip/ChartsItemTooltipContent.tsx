@@ -140,7 +140,11 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
 
   return (
     <ChartsTooltipRow className={classes.row}>
-      <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+      <ChartsTooltipCell
+        className={clsx(classes.labelCell, classes.cell)}
+        component="th"
+        rowSpan={Array.isArray(formattedValue) ? formattedValue.length : 1}
+      >
         <div className={classes.markContainer}>
           <ChartsLabelMark
             type={markType}
@@ -151,6 +155,17 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
         </div>
         {label}
       </ChartsTooltipCell>
+      {Array.isArray(formattedValue) ? (
+        formattedValue.map((v) => (
+          <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+            {v}
+          </ChartsTooltipCell>
+        ))
+      ) : (
+        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+          {formattedValue}
+        </ChartsTooltipCell>
+      )}
       <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
         {formattedValue}
       </ChartsTooltipCell>

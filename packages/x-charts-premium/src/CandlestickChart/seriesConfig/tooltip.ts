@@ -14,7 +14,9 @@ const tooltipGetter: TooltipGetter<'ohlc'> = (params) => {
     return null;
   }
 
-  const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
+  const formattedValue = value.map((v) =>
+    series.valueFormatter(v, { dataIndex: identifier.dataIndex }),
+  );
 
   return {
     identifier,
