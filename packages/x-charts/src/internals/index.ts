@@ -1,6 +1,4 @@
 // Components
-import { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
-
 export * from './components/ChartsAxesGradients';
 export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
