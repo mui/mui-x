@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { CHART_SELECTOR } from '../../../../tests/constants';
 
 describe('highlight', () => {
@@ -12,7 +12,7 @@ describe('highlight', () => {
       <BarChart height={100} width={100} skipAnimation series={[{ id: 'A', data: [50, 100] }]} />,
     );
 
-    expect(document.querySelector(`.${barElementClasses.highlighted}`)).to.equal(null);
+    expect(document.querySelector(`[data-highlighted]`)).to.equal(null);
   });
 
   it('should set highlight when keyboard move focus', async () => {
@@ -27,12 +27,12 @@ describe('highlight', () => {
       />,
     );
 
-    const svg = document.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-    const firstBar = document.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
+    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+    const firstBar = container.querySelector(
+      `[data-series="A"] .${barClasses.element}:nth-child(1)`,
     );
-    const secondBar = document.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
+    const secondBar = container.querySelector(
+      `[data-series="A"] .${barClasses.element}:nth-child(2)`,
     );
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
@@ -44,8 +44,42 @@ describe('highlight', () => {
     expect(secondBar!.getAttribute('data-highlighted')).to.equal(null);
   });
 
-  it('should keep highlight on the controlled focused even if arrow navigation is used', async () => {
-    const { user } = render(
+  it.skipIf(isJSDOM)(
+    'should keep highlight on the controlled focused even if arrow navigation is used',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={100}
+          width={100}
+          skipAnimation
+          margin={0}
+          series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
+          enableKeyboardNavigation
+          highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
+        />,
+      );
+
+      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+      const firstBar = container.querySelector(
+        `[data-series="A"] .${barClasses.element}:nth-child(1)`,
+      );
+      const secondBar = container.querySelector(
+        `[data-series="A"] .${barClasses.element}:nth-child(2)`,
+      );
+
+      expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
+      expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
+
+      await user.click(svg);
+      await user.keyboard('[ArrowRight]');
+
+      expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
+      expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
+    },
+  );
+
+  it.skipIf(isJSDOM)('should support highlight without series `type` provided', async () => {
+    const { container, user } = render(
       <BarChart
         height={100}
         width={100}
@@ -57,12 +91,12 @@ describe('highlight', () => {
       />,
     );
 
-    const svg = document.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-    const firstBar = document.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
+    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+    const firstBar = container.querySelector(
+      `[data-series="A"] .${barClasses.element}:nth-child(1)`,
     );
-    const secondBar = document.querySelector(
-      `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
+    const secondBar = container.querySelector(
+      `[data-series="A"] .${barClasses.element}:nth-child(2)`,
     );
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
@@ -94,7 +128,7 @@ describe('highlight', () => {
       />,
     );
 
-    const bars = document.querySelectorAll(`.${barElementClasses.root}`);
+    const bars = container.querySelectorAll(`.${barClasses.element}`);
 
     await user.pointer({ target: bars[0] });
 
