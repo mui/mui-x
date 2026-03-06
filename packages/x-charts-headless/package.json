@@ -1,0 +1,46 @@
+{
+  "name": "@mui/x-charts-headless",
+  "version": "0.0.1",
+  "description": "Framework-agnostic base charting library for MUI X Charts",
+  "author": "MUI Team",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/react-charts/",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui-org"
+  },
+  "scripts": {
+    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
+    "build:modern": "node ../../scripts/build.mjs modern",
+    "build:node": "node ../../scripts/build.mjs node",
+    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:copy-files": "node ../../scripts/copyFiles.mjs",
+    "build:types": "node ../../scripts/buildTypes.mjs",
+    "typescript": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
+    "@mui/x-charts-vendor": "workspace:^",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-charts": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {},
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
