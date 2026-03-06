@@ -21,7 +21,7 @@ export interface BarClasses {
 export type BarClassKey = keyof BarClasses;
 
 export interface BarElementOwnerState {
-  seriesId: SeriesId;
+  id: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
