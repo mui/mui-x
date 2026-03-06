@@ -78,7 +78,7 @@ const EventDialogTabsContainer = styled('div', {
   name: 'MuiEventDialog',
   slot: 'TabsContainer',
 })(({ theme }) => ({
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const EventDialogTabs = styled(Tabs, {

@@ -1,6 +1,6 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
-import { clearLicenseStatusCache } from '@mui/x-license/useLicenseVerifier';
+import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { BarChartPremium } from './BarChartPremium';
 
 describe('<BarChartPremium /> - License', () => {

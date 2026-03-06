@@ -34,7 +34,7 @@ const MonthViewRoot = styled('div', {
   width: '100%',
   height: '100%',
   borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
@@ -64,7 +64,7 @@ const MonthViewHeader = styled(CalendarGrid.HeaderRow, {
   gridTemplateColumns: ownerState.showWeekNumber
     ? `${FIXED_CELL_WIDTH}px repeat(auto-fit, minmax(0, 1fr))`
     : 'repeat(auto-fit, minmax(0, 1fr))',
-  borderBlockEnd: `1px solid ${theme.palette.divider}`,
+  borderBlockEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
@@ -76,7 +76,7 @@ const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
   fontSize: theme.typography.body2.fontSize,
   lineHeight: '18px',
   '&:not(:first-of-type)': {
-    borderInlineStart: `1px solid ${theme.palette.divider}`,
+    borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -88,7 +88,7 @@ const MonthViewWeekHeaderCell = styled('div', {
   textAlign: 'center',
   fontSize: theme.typography.caption.fontSize,
   lineHeight: '18px',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   fontStyle: 'italic',
 }));
 
@@ -99,7 +99,6 @@ const MonthViewBody = styled('div', {
   flex: 1,
   display: 'grid',
   gridAutoRows: '1fr',
-  maxHeight: '100%',
   position: 'relative',
 });
 

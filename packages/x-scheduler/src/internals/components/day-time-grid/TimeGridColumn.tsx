@@ -19,17 +19,17 @@ const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridColumn',
 })(({ theme }) => ({
-  borderInlineStart: `1px solid ${theme.palette.divider}`,
+  borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   flexGrow: 1,
   flexShrink: 0,
   flexBasis: 0,
   minWidth: 0,
   position: 'relative',
   '&[data-weekend]': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: (theme.vars || theme).palette.action.hover,
   },
   ':last-of-type': {
-    borderInlineEnd: `1px solid ${theme.palette.divider}`,
+    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -54,7 +54,7 @@ const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator
   left: 0,
   right: -1,
   height: 0,
-  borderTop: `2px solid ${theme.palette.primary.main}`,
+  borderTop: `2px solid ${(theme.vars || theme).palette.primary.main}`,
 }));
 
 const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
@@ -68,7 +68,7 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
   width: 8,
   height: 8,
   borderRadius: '50%',
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: (theme.vars || theme).palette.primary.main,
 }));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
