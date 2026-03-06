@@ -37,7 +37,7 @@ export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
         const seriesData = processedSeries[seriesType as ChartSeriesType];
         seriesData?.seriesOrder?.forEach((seriesId) => {
           const seriesItem = seriesData?.series[seriesId];
-          if (seriesItem?.highlightScope !== undefined) {
+          if ('highlightScope' in seriesItem && seriesItem?.highlightScope !== undefined) {
             map[seriesType]?.set(seriesId, seriesItem.highlightScope);
           }
         });
