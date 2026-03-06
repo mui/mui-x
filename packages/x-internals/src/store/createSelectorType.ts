@@ -1,11 +1,24 @@
 import type { Selector } from 'reselect';
 
+/**
+ * Checks if a function type has any optional or default parameters.
+ * Default parameters break memoization because `Function.length` ignores them,
+ * causing incorrect `argsLength` calculation in `createSelectorMemoized`.
+ */
+type HasOptionalParams<F extends (...args: any[]) => any> =
+  Parameters<F> extends Required<Parameters<F>> ? false : true;
+
 export type CreateSelectorFunction = <
   const Args extends any[],
   const Selectors extends ReadonlyArray<Selector<any>>,
   const Combiner extends (...args: readonly [...ReturnTypes<Selectors>, ...Args]) => any,
 >(
-  ...items: [...Selectors, Combiner]
+  ...items: HasOptionalParams<Combiner> extends true
+    ? [
+        ...Selectors,
+        error: 'Combiner cannot have optional or default parameters as they break memoization via Function.length',
+      ]
+    : [...Selectors, Combiner]
 ) => (
   ...args: Selectors['length'] extends 0
     ? MergeParams<ReturnTypes<Selectors>, Parameters<Combiner>>

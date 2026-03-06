@@ -26,7 +26,7 @@ function indexGetter(
 export const selectChartsInteractionAxisIndex = (
   value: number | null,
   axes: ComputeResult<ChartsAxisProps>,
-  id?: AxisId,
+  id: AxisId | undefined,
 ) => {
   if (value === null) {
     return null;
@@ -106,7 +106,7 @@ export const selectorChartsInteractionXAxisValue = createSelector(
   selectorChartsInteractionPointerX,
   selectorChartXAxis,
   selectorChartsInteractionXAxisIndex,
-  (x, xAxes, xIndex, id?: AxisId) => {
+  (x, xAxes, xIndex, id: AxisId | undefined) => {
     if (x === null || xAxes.axisIds.length === 0) {
       return null;
     }
@@ -118,7 +118,7 @@ export const selectorChartsInteractionYAxisValue = createSelector(
   selectorChartsInteractionPointerY,
   selectorChartYAxis,
   selectorChartsInteractionYAxisIndex,
-  (y, yAxes, yIndex, id?: AxisId) => {
+  (y, yAxes, yIndex, id: AxisId | undefined) => {
     if (y === null || yAxes.axisIds.length === 0) {
       return null;
     }

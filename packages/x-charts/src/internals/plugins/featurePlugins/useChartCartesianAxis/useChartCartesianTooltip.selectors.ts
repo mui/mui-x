@@ -152,7 +152,7 @@ export const selectorChartsTooltipAxisPosition = createSelectorMemoized(
     xAxes: ComputeResult<ChartsXAxisProps>,
     yAxes: ComputeResult<ChartsYAxisProps>,
     drawingArea: ChartDrawingArea,
-    placement?: 'top' | 'bottom' | 'left' | 'right',
+    placement: 'top' | 'bottom' | 'left' | 'right' | undefined,
   ) {
     if (xAxesIdentifiers.length === 0 && yAxesIdentifiers.length === 0) {
       return null;
