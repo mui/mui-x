@@ -27,7 +27,7 @@ export function useNextMonthDisabled(
     const lastEnabledMonth = adapter.startOfMonth(
       disableFuture && adapter.isBefore(now, maxDate) ? now : maxDate,
     );
-    return !adapter.isAfter(lastEnabledMonth, month);
+    return !adapter.isAfter(lastEnabledMonth, adapter.startOfMonth(month));
   }, [disableFuture, maxDate, month, adapter, timezone]);
 }
 
@@ -46,7 +46,7 @@ export function usePreviousMonthDisabled(
     const firstEnabledMonth = adapter.startOfMonth(
       disablePast && adapter.isAfter(now, minDate) ? now : minDate,
     );
-    return !adapter.isBefore(firstEnabledMonth, month);
+    return !adapter.isBefore(firstEnabledMonth, adapter.startOfMonth(month));
   }, [disablePast, minDate, month, adapter, timezone]);
 }
 
