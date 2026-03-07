@@ -1,4 +1,12 @@
-import type { ChatCustomMessagePartMap, ChatDataPartMap, ChatToolDefinitionMap } from './chat-type-registry';
+import type { ChatCustomMessagePartMap, ChatDataPartMap } from './chat-type-registry';
+import type {
+  ChatDataPartTypePattern,
+  ChatKnownDataPartType,
+  ChatKnownToolName,
+  ChatRegisteredDataPartType,
+  ChatToolInput,
+  ChatToolOutput,
+} from './chat-type-helpers';
 
 export type ChatMessagePartStatus = 'streaming' | 'done';
 
@@ -35,13 +43,7 @@ export interface ChatSourceDocumentMessagePart {
   text?: string;
 }
 
-export type ChatDataPartType = `data-${string}`;
-
-type ChatRegisteredDataPartType = Extract<keyof ChatDataPartMap, ChatDataPartType>;
-
-type ChatKnownDataPartType = [ChatRegisteredDataPartType] extends [never]
-  ? ChatDataPartType
-  : ChatRegisteredDataPartType;
+export type ChatDataPartType = ChatDataPartTypePattern;
 
 export interface ChatFallbackDataMessagePart<TType extends ChatKnownDataPartType = ChatKnownDataPartType> {
   type: TType;
@@ -84,26 +86,6 @@ export interface ChatToolApproval {
   approved: boolean;
   reason?: string;
 }
-
-type ChatRegisteredToolName = Extract<keyof ChatToolDefinitionMap, string>;
-
-type ChatKnownToolName = [ChatRegisteredToolName] extends [never] ? string : ChatRegisteredToolName;
-
-type ChatToolDefinitionFor<TToolName extends string> = TToolName extends keyof ChatToolDefinitionMap
-  ? ChatToolDefinitionMap[TToolName]
-  : never;
-
-type ChatToolInput<TToolName extends string> = [ChatToolDefinitionFor<TToolName>] extends [never]
-  ? unknown
-  : ChatToolDefinitionFor<TToolName> extends { input: infer TInput }
-    ? TInput
-    : unknown;
-
-type ChatToolOutput<TToolName extends string> = [ChatToolDefinitionFor<TToolName>] extends [never]
-  ? unknown
-  : ChatToolDefinitionFor<TToolName> extends { output: infer TOutput }
-    ? TOutput
-    : unknown;
 
 export interface ChatToolInvocation<TToolName extends ChatKnownToolName = ChatKnownToolName> {
   toolCallId: string;

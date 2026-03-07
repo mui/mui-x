@@ -119,10 +119,52 @@ describe('x-chat package scaffold', () => {
       },
     };
 
+    const inputChunk: Chatbox.ToolInputAvailableChunk<'search'> = {
+      type: 'tool-input-available',
+      toolCallId: 'tool-1',
+      toolName: 'search',
+      input: {
+        query: 'weather',
+      },
+    };
+
+    const outputChunk: Chatbox.ToolOutputAvailableChunk<'search'> = {
+      type: 'tool-output-available',
+      toolCallId: 'tool-1',
+      output: {
+        results: [{ title: 'Forecast', url: 'https://example.com' }],
+      },
+    };
+
+    const weatherChunk: Extract<Chatbox.MessageChunk, { type: 'data-weather' }> = {
+      type: 'data-weather',
+      data: {
+        city: 'Prague',
+        temperatureC: 12,
+      },
+    };
+
+    const metadataChunk: Chatbox.MessageMetadataChunk = {
+      type: 'message-metadata',
+      metadata: {
+        traceId: 'trace-2',
+      },
+    };
+
+    const envelope: Chatbox.StreamEnvelope = {
+      eventId: 'evt-1',
+      sequence: 1,
+      chunk: inputChunk,
+    };
+
     expect(message.metadata?.traceId).toBe('trace-1');
     expect(message.author?.metadata?.isStaff).toBe(true);
     expect(toolPart.toolInvocation.input?.query).toBe('weather');
     expect(dataPart.data.city).toBe('Prague');
     expect(conversation.metadata?.workspaceId).toBe('workspace-1');
+    expect(outputChunk.output.results[0].title).toBe('Forecast');
+    expect(weatherChunk.data.temperatureC).toBe(12);
+    expect(metadataChunk.metadata.traceId).toBe('trace-2');
+    expect(envelope.chunk.type).toBe('tool-input-available');
   });
 });
