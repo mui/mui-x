@@ -27,6 +27,27 @@ declare module '@mui/x-chat-headless/types' {
       options: string[];
     };
   }
+
+  interface ChatToolDefinitionMap {
+    search: {
+      input: {
+        query: string;
+      };
+      output: {
+        results: Array<{
+          title: string;
+          url: string;
+        }>;
+      };
+    };
+  }
+
+  interface ChatDataPartMap {
+    'data-weather': {
+      city: string;
+      temperatureC: number;
+    };
+  }
 }
 
 describe('x-chat package scaffold', () => {
@@ -46,6 +67,35 @@ describe('x-chat package scaffold', () => {
       options: ['A', 'B'],
     };
 
+    const textPart: Chatbox.TextMessagePart = {
+      type: 'text',
+      text: 'Hello',
+      state: 'done',
+    };
+
+    const toolPart: Chatbox.ToolMessagePart<'search'> = {
+      type: 'tool',
+      toolInvocation: {
+        toolCallId: 'tool-1',
+        toolName: 'search',
+        state: 'output-available',
+        input: {
+          query: 'weather',
+        },
+        output: {
+          results: [{ title: 'Forecast', url: 'https://example.com' }],
+        },
+      },
+    };
+
+    const dataPart: Extract<Chatbox.MessagePart, { type: 'data-weather' }> = {
+      type: 'data-weather',
+      data: {
+        city: 'Prague',
+        temperatureC: 12,
+      },
+    };
+
     const message: Chatbox.Message = {
       id: 'm1',
       role: 'assistant',
@@ -59,7 +109,7 @@ describe('x-chat package scaffold', () => {
           isStaff: true,
         },
       },
-      parts: [customPart],
+      parts: [textPart, toolPart, dataPart, customPart],
     };
 
     const conversation: Chatbox.Conversation = {
@@ -71,6 +121,8 @@ describe('x-chat package scaffold', () => {
 
     expect(message.metadata?.traceId).toBe('trace-1');
     expect(message.author?.metadata?.isStaff).toBe(true);
+    expect(toolPart.toolInvocation.input?.query).toBe('weather');
+    expect(dataPart.data.city).toBe('Prague');
     expect(conversation.metadata?.workspaceId).toBe('workspace-1');
   });
 });
