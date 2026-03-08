@@ -1,7 +1,10 @@
 export type * from '@mui/x-chat-headless/types';
+export type * from '@mui/x-chat-headless/adapters';
+export type * from '@mui/x-chat-headless/renderers';
 
 export type {
   ChatAbortMessageChunk as AbortMessageChunk,
+  ChatInternalState as InternalState,
   ChatBuiltInMessagePart as BuiltInMessagePart,
   ChatConversation as Conversation,
   ChatConversationMetadata as ConversationMetadata,
@@ -23,7 +26,9 @@ export type {
   ChatMessagePart as MessagePart,
   ChatMessagePartStatus as MessagePartStatus,
   ChatMessageStatus as MessageStatus,
+  ChatPublicState as PublicState,
   ConversationReadState as ReadState,
+  ChatRealtimeEvent as RealtimeEvent,
   ChatReasoningDeltaChunk as ReasoningDeltaChunk,
   ChatReasoningEndChunk as ReasoningEndChunk,
   ChatReasoningMessagePart as ReasoningMessagePart,
@@ -55,3 +60,14 @@ export type {
   ChatUser as User,
   ChatUserMetadata as UserMetadata,
 } from '@mui/x-chat-headless/types';
+
+export type {
+  ChatAdapter as Adapter,
+  PaginationDirection,
+} from '@mui/x-chat-headless/adapters';
+
+export type {
+  ChatPartRenderer as PartRenderer,
+  ChatPartRendererMap as PartRendererMap,
+  ChatPartRendererProps as PartRendererProps,
+} from '@mui/x-chat-headless/renderers';
