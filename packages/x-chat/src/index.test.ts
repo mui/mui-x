@@ -4,6 +4,10 @@ import * as headlessDirect from '@mui/x-chat-headless';
 import * as chatTypes from '@mui/x-chat/types';
 import * as unstyledBridge from '@mui/x-chat/unstyled';
 import * as unstyledDirect from '@mui/x-chat-unstyled';
+import type {
+  ChatAdapter as HeadlessAdapter,
+  ChatPartRendererMap as HeadlessPartRendererMap,
+} from '@mui/x-chat/headless';
 import type * as Chatbox from '@mui/x-chat/types';
 
 declare module '@mui/x-chat-headless/types' {
@@ -157,6 +161,85 @@ describe('x-chat package scaffold', () => {
       chunk: inputChunk,
     };
 
+    const adapter: HeadlessAdapter<number> = {
+      async listConversations({ cursor, query } = {}) {
+        expect(cursor).toBeUndefined();
+        expect(query).toBeUndefined();
+
+        return {
+          conversations: [conversation],
+          cursor: 2,
+          hasMore: true,
+        };
+      },
+      async listMessages({ conversationId, cursor, direction }) {
+        expect(conversationId).toBe('c1');
+        expect(cursor).toBe(2);
+        expect(direction).toBe('backward');
+
+        return {
+          messages: [message],
+          cursor: 1,
+          hasMore: false,
+        };
+      },
+      async sendMessage({ conversationId, message: currentMessage, messages, signal }) {
+        expect(conversationId).toBe('c1');
+        expect(currentMessage.id).toBe('m1');
+        expect(messages).toHaveLength(1);
+        expect(signal).toBeInstanceOf(AbortSignal);
+
+        return new ReadableStream<Chatbox.MessageChunk>({
+          start(controller) {
+            controller.enqueue({
+              type: 'start',
+              messageId: currentMessage.id,
+            });
+            controller.close();
+          },
+        });
+      },
+      subscribe({ onEvent }) {
+        onEvent({
+          type: 'message-added',
+          message,
+        });
+
+        return () => {};
+      },
+    };
+
+    const rendererMap: HeadlessPartRendererMap = {
+      text: ({ part: currentPart }) => currentPart.text,
+      poll: ({ part: currentPart }) => currentPart.question,
+      tool: ({ part: currentPart }) => currentPart.toolInvocation.toolName,
+    };
+
+    const rendererAliasMap: Chatbox.PartRendererMap = rendererMap;
+
+    const publicState: Chatbox.PublicState<number> = {
+      conversations: [conversation],
+      activeConversationId: 'c1',
+      messages: [message],
+      messageCount: 1,
+      isStreaming: false,
+      hasMoreHistory: true,
+      historyCursor: 2,
+      error: null,
+    };
+
+    const realtimeEvent: Chatbox.RealtimeEvent = {
+      type: 'typing',
+      conversationId: 'c1',
+      userId: 'u1',
+      isTyping: true,
+    };
+
+    const onFinish: Chatbox.ChatOnFinish = ({ finishReason, isError }) => {
+      expect(isError).toBe(false);
+      expect(finishReason).toBe('stop');
+    };
+
     expect(message.metadata?.traceId).toBe('trace-1');
     expect(message.author?.metadata?.isStaff).toBe(true);
     expect(toolPart.toolInvocation.input?.query).toBe('weather');
@@ -166,5 +249,18 @@ describe('x-chat package scaffold', () => {
     expect(weatherChunk.data.temperatureC).toBe(12);
     expect(metadataChunk.metadata.traceId).toBe('trace-2');
     expect(envelope.chunk.type).toBe('tool-input-available');
+    expect(rendererAliasMap.text?.({ part: textPart, message, index: 0 })).toBe('Hello');
+    expect(publicState.historyCursor).toBe(2);
+    expect(realtimeEvent.type).toBe('typing');
+    expect(adapter.subscribe).toBeDefined();
+
+    onFinish({
+      message,
+      messages: [message],
+      isAbort: false,
+      isDisconnect: false,
+      isError: false,
+      finishReason: 'stop',
+    });
   });
 });
