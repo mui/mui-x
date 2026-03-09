@@ -506,7 +506,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/time-range-picker',
                 title: 'Time Range Picker',
-                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/time-range-field',
@@ -787,7 +786,6 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-tree-view/rich-tree-view/editing',
             title: 'Label editing',
-            newFeature: true,
           },
           {
             pathname: '/x/react-tree-view/rich-tree-view/virtualization',
@@ -797,9 +795,8 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',
-            newFeature: true,
           },
-          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro', newFeature: true },
+          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro' },
         ],
       },
       {
