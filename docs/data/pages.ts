@@ -838,10 +838,10 @@ const pages: MuiPage[] = [
             pathname: '/x/migration/migration-charts-v8',
             title: 'Breaking changes: Charts',
           },
-          // {
-          //   pathname: '/x/migration/migration-tree-view-v8',
-          //   title: 'Breaking changes: Tree View',
-          // },
+          {
+            pathname: '/x/migration/migration-tree-view-v8',
+            title: 'Breaking changes: Tree View',
+          },
         ],
       },
       {
