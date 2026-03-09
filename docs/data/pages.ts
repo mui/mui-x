@@ -661,7 +661,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/candlestick',
             title: 'Candlestick',
             plan: 'premium',
-            newFeature: true,
+            unstable: true,
           },
           {
             pathname: '/x/react-charts/#planned-charts',

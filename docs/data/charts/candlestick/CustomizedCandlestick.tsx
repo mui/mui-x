@@ -1,5 +1,5 @@
 import {
-  CandlestickChart,
+  Unstable_CandlestickChart as CandlestickChart,
   type CandlestickChartProps,
 } from '@mui/x-charts-premium/CandlestickChart';
 import { OHLCValueType } from '@mui/x-charts-premium/models';
