@@ -165,6 +165,25 @@ describe('ChatStore', () => {
     });
   });
 
+  it('setMessages deduplicates duplicate ids and keeps the first-seen order with the latest model', () => {
+    const store = new ChatStore();
+
+    store.setMessages([
+      message1,
+      message2,
+      {
+        ...message1,
+        status: 'sent',
+      },
+    ]);
+
+    expect(store.state.messageIds).toEqual(['m1', 'm2']);
+    expect(store.state.messagesById.m1).toEqual({
+      ...message1,
+      status: 'sent',
+    });
+  });
+
   it('setConversations replaces normalized conversation state only', () => {
     const store = new ChatStore({
       defaultMessages: [message1],
@@ -180,6 +199,25 @@ describe('ChatStore', () => {
     expect(store.state.messageIds).toEqual(['m1']);
     expect(store.state.messagesById).toEqual({
       m1: message1,
+    });
+  });
+
+  it('setConversations deduplicates duplicate ids and keeps the first-seen order with the latest model', () => {
+    const store = new ChatStore();
+
+    store.setConversations([
+      conversation1,
+      conversation2,
+      {
+        ...conversation1,
+        title: 'General updated',
+      },
+    ]);
+
+    expect(store.state.conversationIds).toEqual(['c1', 'c2']);
+    expect(store.state.conversationsById.c1).toEqual({
+      ...conversation1,
+      title: 'General updated',
     });
   });
 
@@ -207,6 +245,25 @@ describe('ChatStore', () => {
     store.setComposerValue('Draft message');
 
     expect(store.state.composerValue).toBe('Draft message');
+  });
+
+  it('ignores empty or missing-id transitions that should be no-ops', () => {
+    const store = new ChatStore({
+      defaultMessages: [message1],
+      defaultConversations: [conversation1],
+    });
+
+    const initialState = store.state;
+
+    store.prependMessages([]);
+    store.removeMessage('missing');
+    store.updateMessage('missing', {
+      status: 'error',
+    });
+
+    expect(store.state).toBe(initialState);
+    expect(store.state.messageIds).toEqual(['m1']);
+    expect(store.state.conversationIds).toEqual(['c1']);
   });
 
   it('updateStateFromParameters resyncs controlled models', () => {

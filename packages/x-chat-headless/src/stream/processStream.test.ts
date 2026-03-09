@@ -232,6 +232,106 @@ describe('processStream', () => {
     expect(onData).toHaveBeenCalledWith(dataPart);
   });
 
+  it('appends source and file parts without disturbing the message order', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        { type: 'source-url', sourceId: 'source-url-1', url: 'https://mui.com', title: 'MUI' },
+        {
+          type: 'source-document',
+          sourceId: 'source-document-1',
+          title: 'Docs excerpt',
+          text: 'The answer came from docs.',
+        },
+        {
+          type: 'file',
+          mediaType: 'image/png',
+          url: 'https://mui.com/logo.png',
+          filename: 'logo.png',
+        },
+        { type: 'finish', messageId: 'a1' },
+      ]),
+    );
+
+    expect(store.state.messagesById.a1.parts).toEqual([
+      { type: 'source-url', sourceId: 'source-url-1', url: 'https://mui.com', title: 'MUI' },
+      {
+        type: 'source-document',
+        sourceId: 'source-document-1',
+        title: 'Docs excerpt',
+        text: 'The answer came from docs.',
+      },
+      {
+        type: 'file',
+        mediaType: 'image/png',
+        url: 'https://mui.com/logo.png',
+        filename: 'logo.png',
+      },
+    ]);
+  });
+
+  it('merges approval and error tool states into a single persistent invocation', async () => {
+    const store = new ChatStore();
+    const onToolCall = vi.fn();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        {
+          type: 'tool-approval-request',
+          toolCallId: 'tool-1',
+          toolName: 'search',
+          input: { query: 'weather' },
+        },
+        { type: 'tool-input-error', toolCallId: 'tool-1', errorText: 'Invalid tool payload' },
+        { type: 'tool-output-error', toolCallId: 'tool-1', errorText: 'Tool execution failed' },
+        { type: 'tool-output-denied', toolCallId: 'tool-1', reason: 'Needs approval' },
+        { type: 'finish', messageId: 'a1' },
+      ]),
+      { onToolCall },
+    );
+
+    const toolPart = store.state.messagesById.a1.parts[0] as ChatToolMessagePart<'search'>;
+    expect(toolPart.type).toBe('tool');
+    expect(toolPart.toolInvocation.input).toEqual({ query: 'weather' });
+    expect(toolPart.toolInvocation.errorText).toBe('Tool execution failed');
+    expect(toolPart.toolInvocation.approval).toEqual({
+      approved: false,
+      reason: 'Needs approval',
+    });
+    expect(toolPart.toolInvocation.state).toBe('output-denied');
+    expect(onToolCall).toHaveBeenCalledTimes(4);
+    expect(onToolCall.mock.calls.at(0)?.[0].toolCall.state).toBe('approval-requested');
+    expect(onToolCall.mock.calls.at(-1)?.[0].toolCall.state).toBe('output-denied');
+  });
+
+  it('keeps multiple parts in a single assistant response', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+        { type: 'text-end', id: 'text-1' },
+        { type: 'reasoning-delta', id: 'reasoning-1', delta: 'Thinking' },
+        { type: 'reasoning-end', id: 'reasoning-1' },
+        { type: 'text-delta', id: 'text-2', delta: ' world' },
+        { type: 'finish', messageId: 'a1' },
+      ]),
+    );
+
+    expect(store.state.messagesById.a1.parts).toEqual([
+      { type: 'text', text: 'Hello', state: 'done' },
+      { type: 'reasoning', text: 'Thinking', state: 'done' },
+      { type: 'text', text: ' world', state: 'done' },
+    ]);
+  });
+
   it('handles abort terminal chunks without surfacing a stream error', async () => {
     const store = new ChatStore();
 
@@ -355,6 +455,7 @@ describe('processStream', () => {
 
   it('rethrows read errors after storing stream failure state', async () => {
     const store = new ChatStore();
+    const onFinish = vi.fn();
     let didEnqueueStart = false;
 
     const stream = new ReadableStream<ChatMessageChunk>({
@@ -369,8 +470,57 @@ describe('processStream', () => {
       },
     });
 
-    await expect(processStream(store, stream)).rejects.toThrow('boom');
+    await expect(processStream(store, stream, { onFinish })).rejects.toThrow('boom');
     expect(store.state.messagesById.a1.status).toBe('error');
     expect(store.state.error?.message).toBe('boom');
+    expect(onFinish).toHaveBeenCalledTimes(1);
+    expect(onFinish.mock.calls[0][0]).toMatchObject({
+      isAbort: false,
+      isDisconnect: false,
+      isError: true,
+    });
+  });
+
+  it('calls onFinish exactly once for finish and abort terminal chunks', async () => {
+    const finishOnSuccess = vi.fn();
+    const successStore = new ChatStore();
+
+    await processStream(
+      successStore,
+      createStream([
+        { type: 'start', messageId: 'success' },
+        { type: 'text-delta', id: 'text-1', delta: 'done' },
+        { type: 'finish', messageId: 'success', finishReason: 'stop' },
+      ]),
+      { onFinish: finishOnSuccess },
+    );
+
+    expect(finishOnSuccess).toHaveBeenCalledTimes(1);
+    expect(finishOnSuccess.mock.calls[0][0]).toMatchObject({
+      finishReason: 'stop',
+      isAbort: false,
+      isDisconnect: false,
+      isError: false,
+    });
+
+    const finishOnAbort = vi.fn();
+    const abortedStore = new ChatStore();
+
+    await processStream(
+      abortedStore,
+      createStream([
+        { type: 'start', messageId: 'aborted' },
+        { type: 'text-delta', id: 'text-1', delta: 'cancel me' },
+        { type: 'abort', messageId: 'aborted' },
+      ]),
+      { onFinish: finishOnAbort },
+    );
+
+    expect(finishOnAbort).toHaveBeenCalledTimes(1);
+    expect(finishOnAbort.mock.calls[0][0]).toMatchObject({
+      isAbort: true,
+      isDisconnect: false,
+      isError: false,
+    });
   });
 });
