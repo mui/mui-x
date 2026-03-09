@@ -5,18 +5,24 @@ import type { UseChartHighlightSignature } from '../useChartHighlight';
 import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
-export interface UseChartKeyboardNavigationInstance {}
+export interface UseChartKeyboardNavigationInstance { }
 
 export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {
     item: null | FocusedItemIdentifier<ChartSeriesType>;
     isFocused: boolean;
-    enableKeyboardNavigation: boolean;
+    /**
+     * Indicates whether keyboard navigation is enabled or not.
+     */
+    enabled: boolean;
   };
 }
 
 type UseChartKeyboardNavigationParameters = {
-  enableKeyboardNavigation?: boolean;
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation?: boolean;
 };
 
 export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{

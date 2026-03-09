@@ -34,7 +34,6 @@ describe('useChartKeyboardNavigation', () => {
         skipAnimation
         margin={0}
         series={[{ id: 'A', data: [50, 100] }]}
-        enableKeyboardNavigation
       />,
     );
 
@@ -56,7 +55,6 @@ describe('useChartKeyboardNavigation', () => {
         skipAnimation
         margin={0}
         series={[{ id: 'A', data: [50, 100] }]}
-        enableKeyboardNavigation
       />,
     );
 
@@ -82,8 +80,7 @@ describe('useChartKeyboardNavigation', () => {
           skipAnimation
           margin={0}
           series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-          enableKeyboardNavigation
-        />,
+          />,
       );
 
       const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
