@@ -9,7 +9,7 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsWebGLLayer } from '@mui/x-charts-premium/ChartsWebGLLayer';
-import { CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';
+import { Unstable_CandlestickPlot as CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';
 
 const ohlcData = [
   [100, 110, 95, 105],
