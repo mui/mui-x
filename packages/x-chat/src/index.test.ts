@@ -7,6 +7,8 @@ import * as unstyledDirect from '@mui/x-chat-unstyled';
 import { ChatStore as HeadlessChatStore } from '@mui/x-chat/headless';
 import { chatSelectors as headlessBridgeSelectors } from '@mui/x-chat/headless';
 import { chatSelectors as headlessDirectSelectors } from '@mui/x-chat-headless';
+import { processStream as headlessBridgeProcessStream } from '@mui/x-chat/headless';
+import { processStream as headlessDirectProcessStream } from '@mui/x-chat-headless';
 import type {
   ChatAdapter as HeadlessAdapter,
   ChatPartRendererMap as HeadlessPartRendererMap,
@@ -66,6 +68,7 @@ describe('x-chat package scaffold', () => {
     expect(Object.keys(headlessBridge)).toEqual(Object.keys(headlessDirect));
     expect(Object.keys(unstyledBridge)).toEqual(Object.keys(unstyledDirect));
     expect(headlessBridgeSelectors).toBe(headlessDirectSelectors);
+    expect(headlessBridgeProcessStream).toBe(headlessDirectProcessStream);
 
     const store = new HeadlessChatStore();
     expect(store.state.messageIds).toEqual([]);
