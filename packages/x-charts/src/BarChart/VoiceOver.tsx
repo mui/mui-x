@@ -26,15 +26,15 @@ function formatMessage(params: UseFocusedBarDataReturn): string {
 }
 
 const visuallyHiddenStyle: React.CSSProperties = {
-  position: 'absolute',
-  width: 1,
-  height: 1,
-  padding: 0,
-  margin: -1,
-  overflow: 'hidden',
-  clip: 'rect(0, 0, 0, 0)',
-  whiteSpace: 'nowrap',
   borderWidth: 0,
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  position: 'absolute',
+  inset: 0,
+  padding: 0,
+  outline: 'none',
+  pointerEvents: 'none',
 };
 
 export interface BarVoiceOverProps {
@@ -78,6 +78,9 @@ export function BarVoiceOver(props: BarVoiceOverProps) {
           'aria-labelledby',
           i === 0 ? `voiceover-${chartId}-1` : `voiceover-${chartId}-2`,
         );
+        div.style.width = '100%';
+        div.style.height = '100%';
+        div.style.outline = 'none';
         container.appendChild(div);
       }
     }
@@ -98,17 +101,26 @@ export function BarVoiceOver(props: BarVoiceOverProps) {
       const inactiveTextDiv = container.children[inactiveIndex] as HTMLDivElement;
 
       // Both get text update
-      activeTextDiv.setAttribute('aria-label', message ?? '');
-      inactiveTextDiv.setAttribute('aria-label', message ?? '');
+      activeTextDiv.textContent = message ?? '';
+      inactiveTextDiv.textContent = message ?? '';
 
       activeDiv.setAttribute('aria-hidden', 'false');
-      inactiveDiv.setAttribute('aria-hidden', 'true');
+      activeDiv.setAttribute(
+        'aria-labelledby',
+        activeIndex === 0 ? `voiceover-${chartId}-1` : `voiceover-${chartId}-2`,
+      );
       activeDiv.setAttribute('tabindex', '0');
+
+      inactiveDiv.setAttribute('aria-hidden', 'true');
+      inactiveDiv.setAttribute(
+        'aria-labelledby',
+        activeIndex === 0 ? `voiceover-${chartId}-1` : `voiceover-${chartId}-2`,
+      );
       inactiveDiv.removeAttribute('tabindex');
 
       activeDiv.focus();
     }
   }, [message, chartId]);
 
-  return <div role="presentation" ref={containerRef} style={visuallyHiddenStyle} />;
+  return <div role="presentation" tabIndex={-1} ref={containerRef} style={visuallyHiddenStyle} />;
 }
