@@ -32,7 +32,7 @@
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
     "itemHeight": {
-      "description": "Sets the height in pixel of an item. If not provided, no height restriction is applied to the tree item content element."
+      "description": "Sets the height in pixel of an item. Set to <code>null</code> to explicitly remove any item height restriction when items have different heights."
     },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {

@@ -2,8 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { Watermark } from '@mui/x-license/Watermark';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useExtractEventTimelinePremiumParameters,
@@ -15,7 +14,6 @@ import {
   eventDialogSlots,
   EventDialogStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-  schedulerTokens,
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
@@ -44,6 +42,8 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     titleCellRow: ['titleCellRow'],
     titleCell: ['titleCell'],
     titleCellLegendColor: ['titleCellLegendColor'],
+    currentTimeIndicator: ['currentTimeIndicator'],
+    currentTimeIndicatorCircle: ['currentTimeIndicatorCircle'],
     event: ['event'],
     eventPlaceholder: ['eventPlaceholder'],
     eventResizeHandler: ['eventResizeHandler'],
@@ -81,7 +81,6 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
-  ...schedulerTokens,
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
   '--weeks-cell-width': 'calc(64px * 7)',
@@ -121,7 +120,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
 
-  const { localeText, apiRef, ...other } = forwardedProps;
+  const { localeText, resourceColumnLabel, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const mergedLocaleText = React.useMemo(
@@ -130,8 +129,8 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   );
 
   const timelineStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ classes, localeText: mergedLocaleText, resourceColumnLabel }),
+    [classes, mergedLocaleText, resourceColumnLabel],
   );
 
   const dialogStyledContextValue = React.useMemo(

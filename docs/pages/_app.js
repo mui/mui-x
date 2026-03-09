@@ -229,6 +229,13 @@ function AppWrapper(props) {
             href: `${languagePrefix}${productIdMap[id].subpath}/`,
           };
         }
+        // TODO: remove this once we have a v8.mui.com subdomain
+        if (version === 'v8') {
+          return {
+            text: version,
+            href: `https://mui.com${languagePrefix}${productIdMap[id].subpath}/`,
+          };
+        }
         return {
           text: version,
           href: `https://${version}.mui.com${languagePrefix}${productIdMap[id].subpath}/`,

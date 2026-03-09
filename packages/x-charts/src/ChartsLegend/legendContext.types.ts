@@ -39,6 +39,7 @@ export interface SeriesLegendItemParams
    */
   type: ChartSeriesType;
   markType: ChartsLabelMarkProps['type'];
+  markShape?: ChartsLabelMarkProps['markShape'];
 }
 
 export interface SeriesLegendItemContext extends LegendItemContextBase {

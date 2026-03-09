@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -32,7 +32,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const isItemSelectionDisabled = (item: TreeViewBaseItem) =>
+const isItemSelectionDisabled = (item: TreeViewDefaultItemModelProperties) =>
   !!item.children && item.children.length > 0;
 
 export default function SelectableItems() {
