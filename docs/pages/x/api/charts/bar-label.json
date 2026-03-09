@@ -29,35 +29,39 @@
   ],
   "classes": [
     {
-      "key": "animate",
-      "className": "MuiBarLabel-animate",
-      "description": "Styles applied to the root element if it is animated.",
+      "key": "element",
+      "className": "MuiBarLabel-element",
+      "description": "Styles applied to an individual bar element.",
       "isGlobal": false
     },
     {
-      "key": "faded",
-      "className": "MuiBarLabel-faded",
-      "description": "Styles applied to the root element if it is faded.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "key": "label",
+      "className": "MuiBarLabel-label",
+      "description": "Styles applied to an individual bar label.",
+      "isGlobal": false
     },
     {
-      "key": "highlighted",
-      "className": "MuiBarLabel-highlighted",
-      "description": "Styles applied to the root element if it is highlighted.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "key": "labelAnimate",
+      "className": "MuiBarLabel-labelAnimate",
+      "description": "Styles applied to a bar label when it is animated.",
+      "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiBarLabel-root",
-      "description": "Styles applied to the root element.",
+      "description": "Styles applied to the bar plot element.",
       "isGlobal": false
     },
     {
       "key": "series",
       "className": "MuiBarLabel-series",
-      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${barLabelClasses.series}-${seriesId}`.",
+      "description": "Styles applied to the group surrounding a series' bar elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "seriesLabels",
+      "className": "MuiBarLabel-seriesLabels",
+      "description": "Styles applied to the group surrounding a series' labels.",
       "isGlobal": false
     }
   ],
