@@ -6,30 +6,31 @@ components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent, Sankey
 
 # Charts - Sankey [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Sankey charts are great for visualizing flows between different elements.</p>
+<p class="description">Show flows between nodes as connected links with proportional widths.</p>
 
 ## Overview
 
-The Sankey chart is a type of flow diagram that visualizes the flow of data between different nodes.
+A Sankey chart is a flow diagram that shows how values move between nodes.
+Links connect source nodes to target nodes, and link width represents the flow magnitude.
 
 {{"demo": "SankeyOverview.js"}}
 
 ## Basics
 
-The Sankey chart requires a specific data structure with two main parts: `nodes` and `links`.
+The Sankey chart expects a data structure with `nodes` and `links`.
 
-- The `nodes` array is optional but allows the customization of individual nodes.
-- The `links` array defines the connections between nodes and must specify `source`, `target`, and `value`.
+- `nodes`: optional array for customizing individual nodes (labels, colors)
+- `links`: required array of connections, each with `source`, `target`, and `value`
 
 ### Automatic nodes
 
-If a node is referenced in `links` but not defined in the `nodes` array, it is automatically created with the ID as the label.
+If a node appears in `links` but not in `nodes`, it is created automatically with its ID as the label.
 
 {{"demo": "SankeyBasicDataStructure.js"}}
 
 ### Explicit nodes
 
-When an explicit node definition is provided, it allows customizing labels and colors for each node.
+When you define nodes in the `nodes` array, you can set labels and colors for each.
 
 {{"demo": "SankeyDetailedDataStructure.js"}}
 
@@ -37,103 +38,91 @@ When an explicit node definition is provided, it allows customizing labels and c
 
 ### Default node styles
 
-Default styles can be applied to all nodes using the `nodeOptions` prop:
+Use the `nodeOptions` prop to apply default styles to all nodes.
 
 {{"demo": "SankeyNodeStyling.js"}}
 
 ### Default link styles
 
-Default styles can be applied to all links using the `linkOptions` prop:
+Use the `linkOptions` prop to apply default styles to all links.
 
 {{"demo": "SankeyLinkStyling.js"}}
 
 ### Link color keywords
 
-Link colors can use special keyword values to automatically inherit colors from their connected nodes:
+Link colors can use `'source'` to inherit from the source node or `'target'` to inherit from the target node.
 
-- `'source'` - The link inherits the color of its source node
-- `'target'` - The link inherits the color of its target node
-
-This feature works for both individual link colors and the default link color in `linkOptions`:
+This works for individual link colors and for the default in `linkOptions`.
 
 {{"demo": "SankeyLinkKeywordColors.js"}}
 
 ### Node alignment
 
-The node alignment determines how nodes are positioned within the Sankey chart. The layout follows these principles:
+Node alignment controls how nodes are positioned.
+The layout groups nodes into columns based on the graph structure.
+Source nodes are always left of their targets.
+Some nodes have fixed positions (from the graph topology).
+Others can be placed in different columns depending on alignment.
 
-- Nodes are grouped into columns based on the graph structure
-- Source nodes always appear to the left of their target nodes
-- Some nodes have fixed positions (determined by the graph topology), while others can be positioned more flexibly (affected by alignment)
+In the demo below:
 
-For example, in the demonstration below:
-
-- Nodes A, B, D, G, I, and K have fixed positions because moving them would require creating a new column
-- Node E can be placed in either the first or second column
-- Node F is flexible and can be positioned in columns 4, 5, or 6
+- Nodes A, B, D, G, I, and K have fixed positions (moving them would add a column)
+- Node E can sit in the first or second column
+- Node F can sit in columns 4, 5, or 6
 
 {{"demo": "SankeyNodeAlignment.js"}}
 
 ### Curve correction
 
-The `curveCorrection` prop adjusts the look of the links between nodes by modifying the x-coordinate of the control points in the curve function.
-In some instances, this creates better-looking connections but is dependent on the graph layout, and is especially impacted by the chart height.
-
-Higher values create plumper links, while lower values create thinner connections. The default value is `10`.
+The `curveCorrection` prop adjusts how links look by changing the x-coordinate of curve control points.
+The result depends on the graph layout and chart height.
+Higher values make links thicker, and lower values make them thinner.
+The default is `10`.
 
 {{"demo": "SankeyCurveCorrection.js"}}
 
 ## Value formatting
 
-You can customize how values are displayed in tooltips and labels using the `valueFormatter` prop.
-This function receives the numeric value and a context object that provides information about what type of element is being formatted.
+Use the `valueFormatter` prop to customize how values appear in tooltips and labels.
+The formatter receives the numeric value and a context object.
+The context has `location` (`'tooltip'` or `'label'`), `type` (`'node'` or `'link'`), and for nodes `nodeId`, for links `sourceId` and `targetId`.
 
-The context object contains:
-
-- `location`: either `'tooltip'` or `'label'` to indicate where the formatted value is used
-- `type`: either `'node'` or `'link'` to indicate what is being formatted
-- `nodeId`: for nodes, the ID of the node being formatted
-- `sourceId` and `targetId`: for links, the IDs of the source and target nodes
-
-In the following demo, the value formatter adds relevant units to the values.
-And when pointer is on top of a node, it display "total" to the tooltip.
+The demo below adds units to values and shows "total" when the pointer is over a node.
 
 {{"demo": "SankeyValueFormatter.js"}}
 
 ## Sorting
 
-Nodes are displayed in the same order as they are defined in the `nodes` array.
-If a `nodes` array isn't provided, nodes are rendered according to the order in which they are referenced in the `links` array.
-
-To dynamically customize the order, use the sorting functions for the element that needs sorting.
+Nodes render in the order of the `nodes` array.
+If `nodes` is not provided, they render in the order they appear in `links`.
+Use the sorting options to change the order.
 
 ### Node sorting
 
-The `nodeOptions.sort` property controls the vertical order of nodes within each column.
+The `nodeOptions.sort` property controls the vertical order of nodes in each column.
+It accepts:
 
-It accepts the following values:
-
-- A **function** that receives two `SankeyLayoutNode` objects and returns a number (similar to [`Array.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn))
-- `'auto'` (default): Uses the automatic sorting behavior, which aims to minimize links crossing each other
-- `'fixed'`: Preserves the order from the `nodes` array, disabling automatic sorting
+- A function that receives two `SankeyLayoutNode` objects and returns a number (like [`Array.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn))
+- `'auto'` (default): automatic sorting to reduce link crossings
+- `'fixed'`: keep the order from the `nodes` array
 
 {{"demo": "SankeyNodeSorting.js"}}
 
 ### Link sorting
 
-The `linkOptions.sort` property controls the order of links emanating from each node.
+The `linkOptions.sort` property controls the order of links leaving each node.
+It accepts:
 
-It accepts the following values:
-
-- A **function** that receives two `SankeyLayoutLink` objects and returns a number
-- `'auto'` (default): Uses the automatic sorting behavior, which aims to minimize links crossing each other
-- `'fixed'`: Preserves the order from the `links` array, disabling automatic sorting
+- A function that receives two `SankeyLayoutLink` objects and returns a number
+- `'auto'` (default): automatic sorting to reduce link crossings
+- `'fixed'`: keep the order from the `links` array
 
 {{"demo": "SankeyLinkSorting.js"}}
 
 ## Layout iterations
 
-The `iterations` prop controls how many times the layout algorithm runs to optimize node positioning. More iterations generally result in better layouts but take longer to compute.
+The `iterations` prop sets how many times the layout algorithm runs.
+More iterations usually improve the layout but take longer.
 
 {{"demo": "SankeyIterations.js"}}
 
@@ -141,53 +130,51 @@ The `iterations` prop controls how many times the layout algorithm runs to optim
 
 ### Click event
 
-You can use the `onNodeClick` and `onLinkClick` props to handle click events on both nodes and links in the Sankey chart. The callback receives the mouse event and a `SankeyNodeIdentifierWithData` or `SankeyLinkIdentifierWithData` respectively, both of which contain information about the clicked item.
-
-The `SankeyItemIdentifierWithData` type is a union of `SankeyNodeIdentifierWithData` and `SankeyLinkIdentifierWithData`, allowing you to handle both types of items in a single callback if needed.
+Use the `onNodeClick` and `onLinkClick` props to handle clicks on nodes and links.
+Each callback receives the mouse event and an identifier object (`SankeyNodeIdentifierWithData` or `SankeyLinkIdentifierWithData`) with details about the clicked item.
+Use `SankeyItemIdentifierWithData` when handling both in one callback.
 
 {{"demo": "SankeyClick.js"}}
 
 ### Highlighting
 
-You can highlight nodes and links by hovering over them or by controlling the highlighting programmatically. When an item is highlighted, other items can be faded out to improve focus.
+You can highlight nodes and links by hovering or programmatically.
+When an item is highlighted, others can be faded to improve focus.
 
 {{"demo": "SankeyHighlighting.js"}}
 
-The highlighting behavior is configured separately for nodes and links through their respective options:
+Highlighting is configured separately for nodes and links.
 
 #### Node highlighting
 
-Configure node highlighting behavior using `nodeOptions.highlight` and `nodeOptions.fade`:
+Use `nodeOptions.highlight` and `nodeOptions.fade`:
 
-- `nodeOptions.highlight`: Controls what gets highlighted when selecting a node
-  - `'nodes'`: Highlight only the selected node
-  - `'links'`: Highlight all links connected to the selected node
-  - `'incoming'`: Highlight only incoming links to the selected node
-  - `'outgoing'`: Highlight only outgoing links from the selected node
-  - `'none'`: Disable node highlighting
-- `nodeOptions.fade`: Controls the fade effect
-  - `'global'`: Fade all non-highlighted items when a node is highlighted
-  - `'none'`: No fade effect
+- `nodeOptions.highlight`: what to highlight when a node is selected
+  - `'nodes'`: only the selected node
+  - `'links'`: all links connected to the node
+  - `'incoming'`: only incoming links
+  - `'outgoing'`: only outgoing links
+  - `'none'`: no highlighting
+- `nodeOptions.fade`: `'global'` fades non-highlighted items, `'none'` turns fade off
 
 #### Link highlighting
 
-Configure link highlighting behavior using `linkOptions.highlight` and `linkOptions.fade`:
+Use `linkOptions.highlight` and `linkOptions.fade`:
 
-- `linkOptions.highlight`: Controls what gets highlighted when selecting a link
-  - `'links'`: Highlight only the selected link
-  - `'nodes'`: Highlight both source and target nodes of the selected link
-  - `'source'`: Highlight only the source node of the selected link
-  - `'target'`: Highlight only the target node of the selected link
-  - `'none'`: Disable link highlighting
-- `linkOptions.fade`: Controls the fade effect
-  - `'global'`: Fade all non-highlighted items when a link is highlighted
-  - `'none'`: No fade effect
+- `linkOptions.highlight`: what to highlight when a link is selected
+  - `'links'`: only the selected link
+  - `'nodes'`: source and target nodes
+  - `'source'`: only the source node
+  - `'target'`: only the target node
+  - `'none'`: no highlighting
+- `linkOptions.fade`: `'global'` or `'none'`
 
 ### Controlled highlighting
 
-You can control the highlighting externally using the `highlightedItem` and `onHighlightChange` props. This is useful when you want to programmatically highlight specific nodes or links, or synchronize highlighting with other UI elements.
+Use the `highlightedItem` and `onHighlightChange` props to control highlighting from outside.
+This helps when you want to highlight specific items programmatically or sync with other UI.
 
-The `highlightedItem` prop accepts either a `SankeyNodeIdentifier` or a `SankeyLinkIdentifier`:
+The `highlightedItem` prop accepts a `SankeyNodeIdentifier` or `SankeyLinkIdentifier`:
 
 For nodes:
 
@@ -212,38 +199,32 @@ For links:
 }
 ```
 
-The `onHighlightChange` callback is called whenever the highlighted item changes (either through user interaction or programmatic control), allowing you to keep your state synchronized.
+The `onHighlightChange` callback runs when the highlighted item changes (from user interaction or programmatic control).
 
 {{"demo": "SankeyControlledHighlight.js"}}
 
 ## Tooltip
 
-The Sankey chart has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
+The Sankey chart has an item tooltip that you can customize as described in the [Tooltip](/x/react-charts/tooltip/) documentation.
+The Sankey tooltip differs only in its default content.
 
-The only difference of the Sankey Tooltip is its default content.
-You can import the default tooltip, or only its content as follows:
+Import the default tooltip or its content:
 
 ```js
-import { SankeyTooltip, SankeyTooltipContent } from '@mui/x-charts/SankeyChart',
+import { SankeyTooltip, SankeyTooltipContent } from '@mui/x-charts/SankeyChart';
 ```
 
 ## Composition
 
-Use the `<SankeyDataProvider />` to provide `series` props for composition.
+Use `SankeyDataProvider` to supply the `series` prop when composing a custom chart.
 
-In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
+In addition to the shared components available for [composition](/x/react-charts/composition/), you can use:
 
-- For items:
-  - `<SankeyNodePlot />` renders all the sankey nodes.
-  - `<SankeyLinkPlot />` renders all the sankey links.
-- For items label:
-  - `<SankeyNodeLabelPlot />` renders the nodes label.
-  - `<SankeyLinkLabelPlot />` renders the links label.
-- For keyboard interaction:
-  - `<FocusedSankeyNode />` renders the focus visual element for node
-  - `<FocusedSankeyLink />` renders the focus visual element for link
+- For items: `SankeyNodePlot`, `SankeyLinkPlot`
+- For labels: `SankeyNodeLabelPlot`, `SankeyLinkLabelPlot`
+- For keyboard: `FocusedSankeyNode`, `FocusedSankeyLink`
 
-Here's how the Sankey Chart is composed:
+The following code shows how the Sankey chart is built:
 
 ```jsx
 <SankeyDataProvider series={series as SankeySeriesType[]} {...chartDataProviderProProps}>
