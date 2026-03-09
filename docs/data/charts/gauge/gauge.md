@@ -35,9 +35,9 @@ Use `valueMin` and `valueMax` to change the range.
 
 Use these props to change the arc shape:
 
-- `startAngle` and `endAngle` — angle range in degrees
-- `innerRadius` and `outerRadius` — arc radii, as a pixel value or a percentage string (e.g. `'50%'`)
-- `cornerRadius` — corner rounding, as a pixel value or percentage string
+- `startAngle` and `endAngle`: angle range in degrees
+- `innerRadius` and `outerRadius`: arc radii, as a pixel value or a percentage string (such as `'50%'`)
+- `cornerRadius`: corner rounding, as a pixel value or percentage string
 
 {{"demo": "ArcPlayground.js", "bg": "playground", "hideToolbar": true }}
 
