@@ -3,7 +3,12 @@ import { spy } from 'sinon';
 import { act } from '@mui/internal-test-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { FieldRef } from '@mui/x-date-pickers/models';
-import { createPickerRenderer, adapterToUse, getFieldInputRoot, expectFieldValueV7 } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  getFieldInputRoot,
+  expectFieldValueV7,
+} from 'test/utils/pickers';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<DateField /> - fieldRef', () => {
@@ -45,7 +50,6 @@ describe('<DateField /> - fieldRef', () => {
   it('should allow to focus the field and update the selected section with focusField', () => {
     const fieldRef = React.createRef<FieldRef<PickerValue>>();
     render(<DateField fieldRef={fieldRef} />);
-    const fieldRoot = getFieldInputRoot();
 
     act(() => {
       fieldRef.current?.focusField(1);
@@ -60,7 +64,6 @@ describe('<DateField /> - fieldRef', () => {
   it('should allow to update the selected sections with setSelectedSections', () => {
     const fieldRef = React.createRef<FieldRef<PickerValue>>();
     render(<DateField fieldRef={fieldRef} />);
-    const fieldRoot = getFieldInputRoot();
 
     act(() => {
       fieldRef.current?.focusField();

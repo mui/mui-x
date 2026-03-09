@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  DateRangePicker
-} from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import type { MultiInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -40,7 +38,10 @@ export default function ImperativeClear() {
             Using <code>fieldRef</code> to clear the value and focus the field.
           </Typography>
           <Stack direction="row" spacing={2} alignItems="center">
-            <DatePicker fieldRef={fieldRef} slotProps={{ textField: { fullWidth: true } }} />
+            <DatePicker
+              fieldRef={fieldRef}
+              slotProps={{ textField: { fullWidth: true } }}
+            />
             <Button
               variant="outlined"
               onClick={() => fieldRef.current?.clearValue()}
@@ -61,9 +62,12 @@ export default function ImperativeClear() {
         <Divider />
 
         <Stack spacing={2}>
-          <Typography variant="h6">Single Input Range Picker (DateRangeField)</Typography>
+          <Typography variant="h6">
+            Single Input Range Picker (DateRangeField)
+          </Typography>
           <Typography variant="body2">
-            Using <code>fieldRef</code> to clear the value of a single-input range picker.
+            Using <code>fieldRef</code> to clear the value of a single-input range
+            picker.
           </Typography>
           <Stack direction="row" spacing={2} alignItems="center">
             <DateRangePicker
@@ -83,10 +87,12 @@ export default function ImperativeClear() {
         <Divider />
 
         <Stack spacing={2}>
-          <Typography variant="h6">Multi Input Range Picker (DateRangeField)</Typography>
+          <Typography variant="h6">
+            Multi Input Range Picker (DateRangeField)
+          </Typography>
           <Typography variant="body2">
-            Using <code>startFieldRef</code> and <code>endFieldRef</code> to clear specific fields
-            programmatically in a multi-input range picker.
+            Using <code>startFieldRef</code> and <code>endFieldRef</code> to clear
+            specific fields programmatically in a multi-input range picker.
           </Typography>
           <DateRangePicker
             slots={{ field: CustomMultiInputDateRangeField }}
@@ -103,7 +109,11 @@ export default function ImperativeClear() {
             >
               Clear Start
             </Button>
-            <Button variant="outlined" onClick={() => endFieldRef.current?.clearValue()} fullWidth>
+            <Button
+              variant="outlined"
+              onClick={() => endFieldRef.current?.clearValue()}
+              fullWidth
+            >
               Clear End
             </Button>
           </Stack>
@@ -115,7 +125,11 @@ export default function ImperativeClear() {
             >
               Focus Start
             </Button>
-            <Button variant="outlined" onClick={() => endFieldRef.current?.focusField()} fullWidth>
+            <Button
+              variant="outlined"
+              onClick={() => endFieldRef.current?.focusField()}
+              fullWidth
+            >
               Focus End
             </Button>
           </Stack>
