@@ -744,7 +744,6 @@
   { "name": "UseScatterSeriesReturnValue", "kind": "TypeAlias" },
   { "name": "useSeries", "kind": "Function" },
   { "name": "useUtilityClasses", "kind": "Variable" },
-  { "name": "useWebGLContext", "kind": "Function" },
   { "name": "useXAxes", "kind": "Function" },
   { "name": "useXAxis", "kind": "Function" },
   { "name": "useXAxisCoordinates", "kind": "Function" },

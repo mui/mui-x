@@ -103,6 +103,7 @@ function CanvasPositioner({ children }: React.PropsWithChildren) {
         position: 'absolute',
         inset: 0,
         pointerEvents: 'none',
+        /* Ensures the canvas occupies the same space as the SVG */
         maxWidth: svgWidth,
         maxHeight: svgHeight,
         width: '100%',

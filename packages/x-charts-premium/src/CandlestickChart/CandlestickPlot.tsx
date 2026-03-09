@@ -19,7 +19,7 @@ import { wickFragmentShader, wickVertexShader } from './wickShaders';
 import { selectorCandlestickItemAtPosition } from '../plugins/selectors/useChartCandlestickPosition.selectors';
 import { useCandlestickPlotData } from './useCandlestickPlotData';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
-import { useWebGLContext } from '../ChartsWebGLLayer';
+import { useWebGLContext } from '../ChartsWebGLLayer/ChartsWebGLLayer';
 import { checkCandlestickScaleErrors } from './checkCandlestickScaleErrors';
 
 export interface CandlestickPlotProps {}
