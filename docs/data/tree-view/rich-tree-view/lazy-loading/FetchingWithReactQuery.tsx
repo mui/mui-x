@@ -5,7 +5,6 @@ import {
   randomId,
   randomBoolean,
 } from '@mui/x-data-grid-generator';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import {
   QueryClient,
   QueryClientProvider,
@@ -14,11 +13,12 @@ import {
 
 const queryClient = new QueryClient();
 
-type ItemType = TreeViewBaseItem<{
+type ItemType = {
   id: string;
   label: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+};
 
 const items: ItemType[] = [];
 

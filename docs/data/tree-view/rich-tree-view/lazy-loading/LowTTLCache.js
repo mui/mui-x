@@ -1,6 +1,5 @@
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 
 const fetchData = async () => {

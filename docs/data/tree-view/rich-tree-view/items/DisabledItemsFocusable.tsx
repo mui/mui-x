@@ -3,14 +3,14 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
-type MuiXProduct = TreeViewBaseItem<{
+type MuiXProduct = {
   id: string;
   label: string;
   disabled?: boolean;
-}>;
+  children?: MuiXProduct[];
+};
 
 const MUI_X_PRODUCTS: MuiXProduct[] = [
   {

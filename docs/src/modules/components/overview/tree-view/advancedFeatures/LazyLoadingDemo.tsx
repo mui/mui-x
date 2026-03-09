@@ -4,14 +4,14 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId, randomBoolean } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import DemoWrapper from '../../DemoWrapper';
 
-type ItemType = TreeViewBaseItem<{
+type ItemType = {
   id: string;
   label: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+};
 
 export const initialItems: ItemType[] = [
   { id: '1', label: 'Amy Harris', childrenCount: randomInt(1, 5) },
