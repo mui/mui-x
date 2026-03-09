@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import {
   AreaElement,
-  areaElementClasses,
   type AreaElementProps,
   type AreaElementSlotProps,
   type AreaElementSlots,
@@ -15,6 +14,7 @@ import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useAreaPlotData } from './useAreaPlotData';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import { lineClasses, useUtilityClasses } from './lineClasses';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -39,7 +39,7 @@ const AreaPlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
 })({
-  [`& .${areaElementClasses.root}`]: {
+  [`& .${lineClasses.area}`]: {
     transitionProperty: 'opacity, fill',
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -70,9 +70,10 @@ function AreaPlot(props: AreaPlotProps) {
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
+  const classes = useUtilityClasses();
 
   return (
-    <AreaPlotRoot {...other}>
+    <AreaPlotRoot className={classes.root} {...other}>
       {completedData.map(
         ({ d, seriesId, color, area, gradientId }) =>
           !!area && (
