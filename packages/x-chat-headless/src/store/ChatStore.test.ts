@@ -52,6 +52,24 @@ describe('ChatStore', () => {
     expect(store.state.error).toBeNull();
   });
 
+  it('uses controlled values instead of defaults during construction', () => {
+    const store = new ChatStore({
+      messages: [message2],
+      defaultMessages: [message1],
+      conversations: [conversation2],
+      defaultConversations: [conversation1],
+      activeConversationId: 'c2',
+      defaultActiveConversationId: 'c1',
+      composerValue: 'Controlled draft',
+      defaultComposerValue: 'Default draft',
+    });
+
+    expect(store.state.messageIds).toEqual(['m2']);
+    expect(store.state.conversationIds).toEqual(['c2']);
+    expect(store.state.activeConversationId).toBe('c2');
+    expect(store.state.composerValue).toBe('Controlled draft');
+  });
+
   it('addMessage appends new ids and updates duplicate ids without reordering', () => {
     const store = new ChatStore({
       defaultMessages: [message1],
@@ -134,6 +152,19 @@ describe('ChatStore', () => {
     ]);
   });
 
+  it('setMessages replaces the normalized message state', () => {
+    const store = new ChatStore({
+      defaultMessages: [message1],
+    });
+
+    store.setMessages([message2]);
+
+    expect(store.state.messageIds).toEqual(['m2']);
+    expect(store.state.messagesById).toEqual({
+      m2: message2,
+    });
+  });
+
   it('setConversations replaces normalized conversation state only', () => {
     const store = new ChatStore({
       defaultMessages: [message1],
@@ -168,6 +199,83 @@ describe('ChatStore', () => {
     expect(store.state.activeConversationId).toBe('c1');
     expect(store.state.isStreaming).toBe(true);
     expect(store.state.error).toEqual(error);
+  });
+
+  it('setComposerValue updates the composer model', () => {
+    const store = new ChatStore();
+
+    store.setComposerValue('Draft message');
+
+    expect(store.state.composerValue).toBe('Draft message');
+  });
+
+  it('updateStateFromParameters resyncs controlled models', () => {
+    const store = new ChatStore({
+      messages: [message1],
+      conversations: [conversation1],
+      activeConversationId: 'c1',
+      composerValue: 'Draft one',
+    });
+
+    store.addMessage(message2);
+    store.setConversations([conversation2]);
+    store.setActiveConversation('c2');
+    store.setComposerValue('Draft two');
+
+    store.updateStateFromParameters({
+      messages: [message1],
+      conversations: [conversation1],
+      activeConversationId: 'c1',
+      composerValue: 'Draft one',
+    });
+
+    expect(store.state.messageIds).toEqual(['m1']);
+    expect(store.state.conversationIds).toEqual(['c1']);
+    expect(store.state.activeConversationId).toBe('c1');
+    expect(store.state.composerValue).toBe('Draft one');
+  });
+
+  it('updateStateFromParameters ignores default model changes after initialization', () => {
+    const store = new ChatStore({
+      defaultMessages: [message1],
+      defaultConversations: [conversation1],
+      defaultActiveConversationId: 'c1',
+      defaultComposerValue: 'Draft one',
+    });
+
+    store.updateStateFromParameters({
+      defaultMessages: [message2],
+      defaultConversations: [conversation2],
+      defaultActiveConversationId: 'c2',
+      defaultComposerValue: 'Draft two',
+    });
+
+    expect(store.state.messageIds).toEqual(['m1']);
+    expect(store.state.conversationIds).toEqual(['c1']);
+    expect(store.state.activeConversationId).toBe('c1');
+    expect(store.state.composerValue).toBe('Draft one');
+  });
+
+  it('registerStoreEffect fires only when the selected slice changes', () => {
+    const store = new ChatStore({
+      defaultMessages: [message1],
+    });
+    const changes: string[] = [];
+
+    const unsubscribe = store.registerStoreEffect(
+      (state) => state.composerValue,
+      (previous, next) => {
+        changes.push(`${previous}->${next}`);
+      },
+    );
+
+    store.setComposerValue('Draft one');
+    store.setComposerValue('Draft one');
+    store.setComposerValue('Draft two');
+    unsubscribe();
+    store.setComposerValue('Draft three');
+
+    expect(changes).toEqual(['->Draft one', 'Draft one->Draft two']);
   });
 
   it('resetMessages clears message and history state without affecting conversations or composer state', () => {
