@@ -16,6 +16,7 @@ export const schedulerOtherSelectors = {
    * The default event color used when no color is specified on the event or its resource.
    */
   defaultEventColor: createSelector((state: State) => state.eventColor),
+  adapter: createSelector((state: State) => state.adapter),
   displayTimezone: createSelector((state: State) => state.displayTimezone),
   plan: createSelector((state: State) => state.plan),
   areRecurringEventsAvailable: createSelector((state: State) => state.plan === 'premium'),

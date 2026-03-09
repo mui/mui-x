@@ -10,7 +10,7 @@ import Menu from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   eventCalendarPreferenceSelectors,
@@ -75,7 +75,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { classes, localeText } = useEventCalendarStyledContext();
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
