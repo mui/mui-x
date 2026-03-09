@@ -316,11 +316,31 @@ This new type relies on the `xIndex`/`yIndex` to identify the cell instead of ju
  {
   type: 'heatmap';
   seriesId: SeriesId;
-  dataIndex?: number;
+-  dataIndex?: number;
 -  xIndex?: number;
 +  xIndex: number;
 -  yIndex?: number;
 +  yIndex: number;
+ }
+```
+
+The return type of the `useItemTooltip()` for heatmap series was modified.
+Instead of returning an object where the `value` was a `[x, y, cellValue]` tuple, it now returns cell value directly.
+
+If the cell is empty, it returns `null`.
+
+Here is an example about how to get exactly the same info from `useItemTooltip()`.
+
+```diff
+ const { identifier, value } = useItemTooltip<'heatmap'>();
+
+ return {
+-  xIndex: value[0],
++  xIndex: identifier.xIndex,
+-  yIndex: value[1],
++  yIndex: identifier.yIndex,
+-  cellValue: value[2],
++  cellValue: value,
  }
 ```
 

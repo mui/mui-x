@@ -118,7 +118,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, xIndex: number, yIndex: number }"
+        "description": "{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
       }
     },
     "width": { "type": { "name": "number" } },

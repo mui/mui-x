@@ -3,7 +3,6 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 const MUI_X_PRODUCTS = [
