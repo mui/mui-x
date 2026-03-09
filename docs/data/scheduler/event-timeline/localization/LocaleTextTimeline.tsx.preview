@@ -1,8 +1,11 @@
-<EventTimelinePremium
-  events={events}
-  resources={resources}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
-  localeText={frFR.components.MuiEventTimeline.defaultProps.localeText}
-  defaultView="months"
-/>
+<ThemeProvider theme={theme}>
+  <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+    <EventTimelinePremium
+      events={events}
+      resources={resources}
+      defaultVisibleDate={defaultVisibleDate}
+      onEventsChange={setEvents}
+      defaultView="months"
+    />
+  </div>
+</ThemeProvider>

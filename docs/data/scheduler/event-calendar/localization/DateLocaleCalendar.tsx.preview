@@ -1,9 +1,11 @@
-<EventCalendar
-  events={events}
-  resources={resources}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
-  localeText={frFR.components.MuiEventCalendar.defaultProps.localeText}
-  dateLocale={fr}
-  defaultPreferences={{ isSidePanelOpen: false }}
-/>
+<ThemeProvider theme={theme}>
+  <div style={{ height: '600px', width: '100%' }}>
+    <EventCalendar
+      events={events}
+      resources={resources}
+      defaultVisibleDate={defaultVisibleDate}
+      onEventsChange={setEvents}
+      defaultPreferences={{ isSidePanelOpen: false }}
+    />
+  </div>
+</ThemeProvider>
