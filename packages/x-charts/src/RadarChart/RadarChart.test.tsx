@@ -4,6 +4,7 @@ import { RadarChart, type RadarChartProps } from '@mui/x-charts/RadarChart';
 import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
+import { chartsTooltipClasses } from '../ChartsTooltip';
 
 const radarConfig: RadarChartProps = {
   height: 100,
@@ -65,8 +66,7 @@ describe('<RadarChart />', () => {
   it.skipIf(isJSDOM)(
     'should show tooltip on keyboard navigation and update on arrow keys',
     async () => {
-      const cellSelector =
-        '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th, .MuiChartsTooltip-root caption';
+      const cellSelector = `.${chartsTooltipClasses.cell}, .${chartsTooltipClasses.root} caption`;
 
       const { user, container } = render(
         <RadarChart
