@@ -90,7 +90,9 @@ export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
 }) =>
   | (TSeriesType extends 'radar'
       ? ItemTooltipWithMultipleValues<TSeriesType>
-      : ItemTooltip<TSeriesType>)
+      : TSeriesType extends 'heatmap'
+        ? Omit<ItemTooltip<TSeriesType>, 'value'> & { value: number | null }
+        : ItemTooltip<TSeriesType>)
   | null;
 
 /**
