@@ -3,7 +3,7 @@ import { useStore } from '@base-ui/utils/store/useStore';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from '@mui/x-scheduler-headless/internals';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { timelineOccurrencePlaceholderSelectors } from '../../event-timeline-premium-selectors';

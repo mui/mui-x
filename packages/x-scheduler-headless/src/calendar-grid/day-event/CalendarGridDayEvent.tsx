@@ -8,7 +8,7 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
-import { useAdapterContext } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
   schedulerEventSelectors,

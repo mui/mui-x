@@ -12,7 +12,7 @@ import {
 } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
   EventDialogProvider,
   EventDialogTrigger,

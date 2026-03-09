@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { sortEventOccurrences } from '../sort-event-occurrences';
 import { SchedulerEventOccurrence, SchedulerEventOccurrencePlaceholder } from '../models';
-import { useAdapterContext, Adapter } from '../use-adapter';
+import { Adapter } from '../use-adapter';
+import { useAdapterContext } from '../use-adapter-context';
 
 /**
  * Places event occurrences for a timeline UI.

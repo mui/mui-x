@@ -6,7 +6,7 @@ import {
   getOccurrencesFromEvents,
   GetOccurrencesFromEventsParameters,
 } from '../internals/utils/event-utils';
-import { useAdapterContext } from '../use-adapter/useAdapter';
+import { useAdapterContext } from '../use-adapter-context';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,

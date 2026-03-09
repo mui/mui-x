@@ -5,7 +5,7 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { useAdapterContext } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
 import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
 import { useEventCreation } from '../../internals/utils/useEventCreation';

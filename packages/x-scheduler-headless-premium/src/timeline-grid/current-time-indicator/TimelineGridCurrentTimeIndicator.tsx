@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useElementPositionInCollection } from '@mui/x-scheduler-headless/internals';
 import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';

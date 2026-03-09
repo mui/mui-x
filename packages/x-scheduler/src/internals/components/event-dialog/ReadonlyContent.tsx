@@ -13,7 +13,7 @@ import {
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import EventDialogHeader from './EventDialogHeader';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { getRecurrenceLabel, hasProp } from './utils';

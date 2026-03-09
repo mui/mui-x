@@ -25,7 +25,7 @@ import {
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import { StandaloneEvent } from '../../standalone-event';
-import { useAdapterContext } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,

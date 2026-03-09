@@ -11,7 +11,7 @@ import {
 import { SchedulerEventId, TemporalSupportedObject } from '../../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
-import { useAdapterContext } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 
 export function useDraggableEvent(
   parameters: useDraggableEvent.Parameters,

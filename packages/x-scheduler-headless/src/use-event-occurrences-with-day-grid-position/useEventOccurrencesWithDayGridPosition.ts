@@ -5,7 +5,7 @@ import {
   SchedulerProcessedDate,
 } from '../models';
 import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { useAdapterContext } from '../use-adapter/useAdapter';
+import { useAdapterContext } from '../use-adapter-context';
 import { sortEventOccurrences } from '../sort-event-occurrences';
 
 /**

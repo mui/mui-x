@@ -11,7 +11,7 @@ import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
-import { useAdapterContext } from '../../use-adapter/useAdapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
