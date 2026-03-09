@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { UnstableTemporalAdapterDateFns } from '../base-ui-copy/temporal-adapter-date-fns';
