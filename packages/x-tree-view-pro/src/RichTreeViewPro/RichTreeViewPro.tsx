@@ -233,7 +233,7 @@ RichTreeViewPro.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * If `true`, the virtualization is disabled.
+   * If `true`, virtualization is disabled.
    * @default false
    */
   disableVirtualization: PropTypes.bool,
