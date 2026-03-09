@@ -106,6 +106,10 @@ export interface BarChartProps
    * @default false
    */
   showToolbar?: boolean;
+  /**
+   * Reference to the layer container element.
+   */
+  layerContainerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 /**
@@ -148,7 +152,10 @@ const BarChart = React.forwardRef(function BarChart(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsLayerContainer className={chartsSurfaceProps.className} ref={ref}>
+        <ChartsLayerContainer
+          className={chartsSurfaceProps.className}
+          ref={props.layerContainerRef}
+        >
           <BarVoiceOver />
           <ChartsSvgLayer {...chartsSurfaceProps}>
             <g aria-hidden>
