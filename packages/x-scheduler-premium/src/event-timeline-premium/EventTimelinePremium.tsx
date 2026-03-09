@@ -120,7 +120,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
 
-  const { localeText, apiRef, ...other } = forwardedProps;
+  const { localeText, resourceColumnLabel, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const mergedLocaleText = React.useMemo(
@@ -129,8 +129,8 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   );
 
   const timelineStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ classes, localeText: mergedLocaleText, resourceColumnLabel }),
+    [classes, mergedLocaleText, resourceColumnLabel],
   );
 
   const dialogStyledContextValue = React.useMemo(
