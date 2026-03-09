@@ -19,7 +19,9 @@
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" }, "isProPlan": true },
     "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" },
+      "type": {
+        "description": "(value: number | null, context: { xIndex: number; yIndex: number }) =&gt; string | null"
+      },
       "isProPlan": true
     },
     "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },
