@@ -6,8 +6,6 @@ import type {
   ChatDynamicToolInvocation,
   ChatDynamicToolMessagePart,
   ChatMessagePart,
-  ChatReasoningMessagePart,
-  ChatTextMessagePart,
   ChatToolInvocation,
   ChatToolMessagePart,
 } from '../types/chat-message-parts';
@@ -61,10 +59,6 @@ function isDynamicToolChunk(
   chunk: ChatToolInputStartChunk | ChatToolInputAvailableChunk | ChatToolApprovalRequestChunk,
 ) {
   return 'dynamic' in chunk && chunk.dynamic === true;
-}
-
-function getMessages(store: ChatStore<any>) {
-  return store.state.messageIds.map((id) => store.state.messagesById[id]).filter(Boolean);
 }
 
 function getOrCreateMessage(
@@ -182,7 +176,7 @@ function updateMessage(
 
 function findLastStreamingPartIndex(
   parts: ChatMessagePart[],
-  type: ChatTextMessagePart['type'] | ChatReasoningMessagePart['type'],
+  type: 'text' | 'reasoning',
 ) {
   for (let index = parts.length - 1; index >= 0; index -= 1) {
     const part = parts[index];
@@ -226,7 +220,7 @@ export async function processStream<Cursor = string>(
     if (options.onFinish) {
       await options.onFinish({
         message: getFinishMessage(store, targetMessageId, options.conversationId, result.status),
-        messages: getMessages(store),
+        messages: store.state.messageIds.map((id) => store.state.messagesById[id]).filter(Boolean),
         isAbort: result.isAbort,
         isDisconnect: result.isDisconnect,
         isError: result.isError,
@@ -286,6 +280,22 @@ export async function processStream<Cursor = string>(
     return error;
   };
 
+  const handleAbort = (): Promise<ProcessStreamResult> => {
+    if (targetMessageId) {
+      finalizeMessage('cancelled');
+    }
+
+    store.setStreaming(false);
+
+    return finish({
+      messageId: targetMessageId,
+      status: 'cancelled',
+      isAbort: true,
+      isDisconnect: false,
+      isError: false,
+    });
+  };
+
   const resolveTextLikePartIndex = (
     partType: 'text' | 'reasoning',
     streamId: string,
@@ -331,13 +341,10 @@ export async function processStream<Cursor = string>(
     let updatedInvocation: ChatToolInvocation | ChatDynamicToolInvocation | undefined;
 
     updateMessageParts(store, message.id, (parts) => {
-      const partIndex = parts.findIndex((part) => {
-        if (part.type === 'tool' || part.type === 'dynamic-tool') {
-          return part.toolInvocation.toolCallId === toolCallId;
-        }
-
-        return false;
-      });
+      const partIndex = parts.findIndex((part) =>
+        (part.type === 'tool' || part.type === 'dynamic-tool') &&
+        part.toolInvocation.toolCallId === toolCallId,
+      );
 
       if (partIndex === -1) {
         if (!getInitialToolPart) {
@@ -346,21 +353,13 @@ export async function processStream<Cursor = string>(
 
         const initialPart = getInitialToolPart();
         updatedInvocation = updateInvocation(initialPart.toolInvocation) as typeof initialPart.toolInvocation;
-        const nextPart =
-          initialPart.type === 'tool'
-            ? ({ ...initialPart, toolInvocation: updatedInvocation } as ChatMessagePart)
-            : ({ ...initialPart, toolInvocation: updatedInvocation } as ChatMessagePart);
-
-        return [...parts, nextPart];
+        return [...parts, { ...initialPart, toolInvocation: updatedInvocation } as ChatMessagePart];
       }
 
       const currentPart = parts[partIndex] as ChatToolMessagePart | ChatDynamicToolMessagePart;
       updatedInvocation = updateInvocation(currentPart.toolInvocation) as typeof currentPart.toolInvocation;
       const nextParts = [...parts];
-      nextParts[partIndex] =
-        currentPart.type === 'tool'
-          ? ({ ...currentPart, toolInvocation: updatedInvocation } as ChatMessagePart)
-          : ({ ...currentPart, toolInvocation: updatedInvocation } as ChatMessagePart);
+      nextParts[partIndex] = { ...currentPart, toolInvocation: updatedInvocation } as ChatMessagePart;
 
       return nextParts;
     });
@@ -397,68 +396,16 @@ export async function processStream<Cursor = string>(
         store.setStreaming(false);
         return;
 
-      case 'text-start': {
-        const partIndex = resolveTextLikePartIndex('text', chunk.id, textPartIndexesByStreamId);
-
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
-          const currentPart = parts[partIndex];
-
-          if (currentPart?.type !== 'text' || currentPart.state === 'streaming') {
-            return parts;
-          }
-
-          const nextParts = [...parts];
-          nextParts[partIndex] = { ...currentPart, state: 'streaming' };
-          return nextParts;
-        });
-        return;
-      }
-
-      case 'text-delta': {
-        const partIndex = resolveTextLikePartIndex('text', chunk.id, textPartIndexesByStreamId);
-
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
-          const currentPart = parts[partIndex];
-
-          if (currentPart?.type !== 'text') {
-            return parts;
-          }
-
-          const nextParts = [...parts];
-          nextParts[partIndex] = {
-            ...currentPart,
-            text: `${currentPart.text}${chunk.delta}`,
-            state: 'streaming',
-          };
-          return nextParts;
-        });
-        return;
-      }
-
-      case 'text-end': {
-        const partIndex = resolveTextLikePartIndex('text', chunk.id, textPartIndexesByStreamId);
-
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
-          const currentPart = parts[partIndex];
-
-          if (currentPart?.type !== 'text' || currentPart.state === 'done') {
-            return parts;
-          }
-
-          const nextParts = [...parts];
-          nextParts[partIndex] = { ...currentPart, state: 'done' };
-          return nextParts;
-        });
-        return;
-      }
-
+      case 'text-start':
       case 'reasoning-start': {
-        const partIndex = resolveTextLikePartIndex('reasoning', chunk.id, reasoningPartIndexesByStreamId);
+        const partType = chunk.type === 'text-start' ? 'text' as const : 'reasoning' as const;
+        const indexMap = partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
+        const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
 
         updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
           const currentPart = parts[partIndex];
 
-          if (currentPart?.type !== 'reasoning' || currentPart.state === 'streaming') {
+          if (currentPart?.type !== partType || currentPart.state === 'streaming') {
             return parts;
           }
 
@@ -469,13 +416,16 @@ export async function processStream<Cursor = string>(
         return;
       }
 
+      case 'text-delta':
       case 'reasoning-delta': {
-        const partIndex = resolveTextLikePartIndex('reasoning', chunk.id, reasoningPartIndexesByStreamId);
+        const partType = chunk.type === 'text-delta' ? 'text' as const : 'reasoning' as const;
+        const indexMap = partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
+        const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
 
         updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
           const currentPart = parts[partIndex];
 
-          if (currentPart?.type !== 'reasoning') {
+          if (currentPart?.type !== partType) {
             return parts;
           }
 
@@ -490,13 +440,16 @@ export async function processStream<Cursor = string>(
         return;
       }
 
+      case 'text-end':
       case 'reasoning-end': {
-        const partIndex = resolveTextLikePartIndex('reasoning', chunk.id, reasoningPartIndexesByStreamId);
+        const partType = chunk.type === 'text-end' ? 'text' as const : 'reasoning' as const;
+        const indexMap = partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
+        const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
 
         updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
           const currentPart = parts[partIndex];
 
-          if (currentPart?.type !== 'reasoning' || currentPart.state === 'done') {
+          if (currentPart?.type !== partType || currentPart.state === 'done') {
             return parts;
           }
 
@@ -768,32 +721,12 @@ export async function processStream<Cursor = string>(
 
   try {
     if (aborted) {
-      store.setStreaming(false);
-      const result = await finish({
-        messageId: targetMessageId,
-        status: 'cancelled',
-        isAbort: true,
-        isDisconnect: false,
-        isError: false,
-      });
-      return result;
+      return handleAbort();
     }
 
     while (true) {
       if (aborted) {
-        if (targetMessageId) {
-          finalizeMessage('cancelled');
-        }
-
-        store.setStreaming(false);
-
-        return finish({
-          messageId: targetMessageId,
-          status: 'cancelled',
-          isAbort: true,
-          isDisconnect: false,
-          isError: false,
-        });
+        return handleAbort();
       }
 
       const { done, value } = await reader.read();
@@ -810,19 +743,7 @@ export async function processStream<Cursor = string>(
     }
 
     if (aborted) {
-      if (targetMessageId) {
-        finalizeMessage('cancelled');
-      }
-
-      store.setStreaming(false);
-
-      return finish({
-        messageId: targetMessageId,
-        status: 'cancelled',
-        isAbort: true,
-        isDisconnect: false,
-        isError: false,
-      });
+      return handleAbort();
     }
 
     if (didReceiveTerminalChunk) {
@@ -859,19 +780,7 @@ export async function processStream<Cursor = string>(
     });
   } catch (error) {
     if (aborted) {
-      if (targetMessageId) {
-        finalizeMessage('cancelled');
-      }
-
-      store.setStreaming(false);
-
-      return finish({
-        messageId: targetMessageId,
-        status: 'cancelled',
-        isAbort: true,
-        isDisconnect: false,
-        isError: false,
-      });
+      return handleAbort();
     }
 
     const streamError =
