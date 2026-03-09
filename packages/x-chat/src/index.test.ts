@@ -5,6 +5,8 @@ import * as chatTypes from '@mui/x-chat/types';
 import * as unstyledBridge from '@mui/x-chat/unstyled';
 import * as unstyledDirect from '@mui/x-chat-unstyled';
 import { ChatStore as HeadlessChatStore } from '@mui/x-chat/headless';
+import { chatSelectors as headlessBridgeSelectors } from '@mui/x-chat/headless';
+import { chatSelectors as headlessDirectSelectors } from '@mui/x-chat-headless';
 import type {
   ChatAdapter as HeadlessAdapter,
   ChatPartRendererMap as HeadlessPartRendererMap,
@@ -63,9 +65,11 @@ describe('x-chat package scaffold', () => {
     expect(unstyledBridge).toBeDefined();
     expect(Object.keys(headlessBridge)).toEqual(Object.keys(headlessDirect));
     expect(Object.keys(unstyledBridge)).toEqual(Object.keys(unstyledDirect));
+    expect(headlessBridgeSelectors).toBe(headlessDirectSelectors);
 
     const store = new HeadlessChatStore();
     expect(store.state.messageIds).toEqual([]);
+    expect(headlessBridgeSelectors.messageCount(store.state)).toBe(0);
   });
 
   it('type-checks the public Chatbox namespace facade', () => {
