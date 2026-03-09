@@ -28,6 +28,5 @@ describe('date-utils', () => {
       expect(adapterFr.format(date, 'weekday')).to.equal('lundi');
       expect(adapterFr.format(date, 'monthFullLetter')).to.equal('janvier');
     });
-
   });
 });
