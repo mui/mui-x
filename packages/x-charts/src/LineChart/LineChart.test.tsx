@@ -222,97 +222,88 @@ describe('<LineChart />', () => {
   });
 
   describe('theme style overrides', () => {
-    it.skipIf(isJSDOM)(
-      'should apply MuiAreaPlot style overrides from the theme',
-      () => {
-        const theme = createTheme({
-          components: {
-            MuiAreaPlot: {
-              styleOverrides: {
-                root: {
-                  opacity: 0.5,
-                },
+    it.skipIf(isJSDOM)('should apply MuiAreaPlot style overrides from the theme', () => {
+      const theme = createTheme({
+        components: {
+          MuiAreaPlot: {
+            styleOverrides: {
+              root: {
+                opacity: 0.5,
               },
             },
           },
-        });
+        },
+      });
 
-        render(
-          <ThemeProvider theme={theme}>
-            <LineChart
-              {...config}
-              series={[{ dataKey: 'v1', id: 's1', area: true }]}
-              xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            />
-          </ThemeProvider>,
-        );
+      render(
+        <ThemeProvider theme={theme}>
+          <LineChart
+            {...config}
+            series={[{ dataKey: 'v1', id: 's1', area: true }]}
+            xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+          />
+        </ThemeProvider>,
+      );
 
-        const areaPlotRoot = document.querySelector<HTMLElement>('.MuiAreaPlot-root');
+      const areaPlotRoot = document.querySelector<HTMLElement>('.MuiAreaPlot-root');
 
-        expect(areaPlotRoot).toHaveComputedStyle({ opacity: '0.5' });
-      },
-    );
+      expect(areaPlotRoot).toHaveComputedStyle({ opacity: '0.5' });
+    });
 
-    it.skipIf(isJSDOM)(
-      'should apply MuiLinePlot style overrides from the theme',
-      () => {
-        const theme = createTheme({
-          components: {
-            MuiLinePlot: {
-              styleOverrides: {
-                root: {
-                  opacity: 0.5,
-                },
+    it.skipIf(isJSDOM)('should apply MuiLinePlot style overrides from the theme', () => {
+      const theme = createTheme({
+        components: {
+          MuiLinePlot: {
+            styleOverrides: {
+              root: {
+                opacity: 0.5,
               },
             },
           },
-        });
+        },
+      });
 
-        render(
-          <ThemeProvider theme={theme}>
-            <LineChart
-              {...config}
-              series={[{ dataKey: 'v1', id: 's1' }]}
-              xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            />
-          </ThemeProvider>,
-        );
+      render(
+        <ThemeProvider theme={theme}>
+          <LineChart
+            {...config}
+            series={[{ dataKey: 'v1', id: 's1' }]}
+            xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+          />
+        </ThemeProvider>,
+      );
 
-        const linePlotRoot = document.querySelector<HTMLElement>('.MuiLinePlot-root');
+      const linePlotRoot = document.querySelector<HTMLElement>('.MuiLinePlot-root');
 
-        expect(linePlotRoot).toHaveComputedStyle({ opacity: '0.5' });
-      },
-    );
+      expect(linePlotRoot).toHaveComputedStyle({ opacity: '0.5' });
+    });
 
-    it.skipIf(isJSDOM)(
-      'should apply MuiMarkPlot style overrides from the theme',
-      () => {
-        const theme = createTheme({
-          components: {
-            MuiMarkPlot: {
-              styleOverrides: {
-                root: {
-                  opacity: 0.5,
-                },
+    it.skipIf(isJSDOM)('should apply MuiMarkPlot style overrides from the theme', () => {
+      const theme = createTheme({
+        components: {
+          MuiMarkPlot: {
+            styleOverrides: {
+              root: {
+                opacity: 0.5,
               },
             },
           },
-        });
+        },
+      });
 
-        render(
-          <ThemeProvider theme={theme}>
-            <LineChart
-              {...config}
-              series={[{ dataKey: 'v1', id: 's1', showMark: true }]}
-              xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            />
-          </ThemeProvider>,
-        );
+      render(
+        <ThemeProvider theme={theme}>
+          <LineChart
+            {...config}
+            series={[{ dataKey: 'v1', id: 's1', showMark: true }]}
+            xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+          />
+        </ThemeProvider>,
+      );
 
-        const markPlotRoot = document.querySelector<HTMLElement>('.MuiMarkPlot-root');
+      const markPlotRoot = document.querySelector<HTMLElement>('.MuiMarkPlot-root');
 
-        expect(markPlotRoot).toHaveComputedStyle({ opacity: '0.5' });
-      },
-    );
+      expect(markPlotRoot).toHaveComputedStyle({ opacity: '0.5' });
+    });
   });
 });
