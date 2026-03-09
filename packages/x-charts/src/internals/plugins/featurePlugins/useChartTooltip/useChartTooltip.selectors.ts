@@ -132,7 +132,7 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
     series: ProcessedSeries<T>,
     seriesLayout: SeriesLayout<T>,
     axesConfig: TooltipPositionGetterAxesConfig,
-    placement: 'top' | 'bottom' | 'left' | 'right' = 'top',
+    placement: 'top' | 'bottom' | 'left' | 'right',
   ) {
     if (!identifier) {
       return null;

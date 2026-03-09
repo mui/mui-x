@@ -118,8 +118,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   dayTimeGrid: string;
   /** Styles applied to the day time grid header element. */
   dayTimeGridHeader: string;
-  /** Styles applied to the day time grid header row element. */
-  dayTimeGridHeaderRow: string;
+  /** Styles applied to day time grid header cell elements. */
+  dayTimeGridHeaderCell: string;
   /** Styles applied to the day time grid all day events grid element. */
   dayTimeGridAllDayEventsGrid: string;
   /** Styles applied to the day time grid all day events row element. */
@@ -214,6 +214,54 @@ export interface EventCalendarClasses extends EventDialogClasses {
   eventItemCardContent: string;
   /** Styles applied to event item lines clamp elements. */
   eventItemLinesClamp: string;
+  /** Styles applied to the more events popover header element. */
+  moreEventsPopoverHeader: string;
+  /** Styles applied to the more events popover title element. */
+  moreEventsPopoverTitle: string;
+  /** Styles applied to the more events popover body element. */
+  moreEventsPopoverBody: string;
+  /** Styles applied to the event drag preview element. */
+  eventDragPreview: string;
+  /** Styles applied to the standalone event element. */
+  standaloneEvent: string;
+  /** Styles applied to the agenda view event list item elements. */
+  agendaViewEventListItem: string;
+  /** Styles applied to the side panel collapse element. */
+  sidePanelCollapse: string;
+  /** Styles applied to the side panel divider element. */
+  sidePanelDivider: string;
+  /** Styles applied to the header toolbar side panel toggle button element. */
+  headerToolbarSidePanelToggle: string;
+  /** Styles applied to the header toolbar previous button element. */
+  headerToolbarPreviousButton: string;
+  /** Styles applied to the header toolbar today button element. */
+  headerToolbarTodayButton: string;
+  /** Styles applied to the header toolbar next button element. */
+  headerToolbarNextButton: string;
+  /** Styles applied to the preferences menu button element. */
+  preferencesMenuButton: string;
+  /** Styles applied to the preferences menu list element. */
+  preferencesMenuList: string;
+  /** Styles applied to the preferences menu list item icon elements. */
+  preferencesMenuListItemIcon: string;
+  /** Styles applied to the preferences menu list subheader elements. */
+  preferencesMenuListSubheader: string;
+  /** Styles applied to the preferences menu item elements. */
+  preferencesMenuItem: string;
+  /** Styles applied to the preferences menu divider elements. */
+  preferencesMenuDivider: string;
+  /** Styles applied to the preferences menu list item text elements. */
+  preferencesMenuListItemText: string;
+  /** Styles applied to the view switcher button element. */
+  viewSwitcherButton: string;
+  /** Styles applied to the view switcher menu element. */
+  viewSwitcherMenu: string;
+  /** Styles applied to the mini calendar previous button element. */
+  miniCalendarPreviousButton: string;
+  /** Styles applied to the mini calendar next button element. */
+  miniCalendarNextButton: string;
+  /** Styles applied to the more events popover element. */
+  moreEventsPopover: string;
 }
 
 export type EventCalendarClassKey = keyof EventCalendarClasses;
@@ -280,7 +328,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayTimeGridContainer',
     'dayTimeGrid',
     'dayTimeGridHeader',
-    'dayTimeGridHeaderRow',
+    'dayTimeGridHeaderCell',
     'dayTimeGridAllDayEventsGrid',
     'dayTimeGridAllDayEventsRow',
     'dayTimeGridAllDayEventsCell',
@@ -328,6 +376,30 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'resourceLegendColor',
     'eventItemCardContent',
     'eventItemLinesClamp',
+    'moreEventsPopoverHeader',
+    'moreEventsPopoverTitle',
+    'moreEventsPopoverBody',
+    'eventDragPreview',
+    'standaloneEvent',
+    'agendaViewEventListItem',
+    'sidePanelCollapse',
+    'sidePanelDivider',
+    'headerToolbarSidePanelToggle',
+    'headerToolbarPreviousButton',
+    'headerToolbarTodayButton',
+    'headerToolbarNextButton',
+    'preferencesMenuButton',
+    'preferencesMenuList',
+    'preferencesMenuListItemIcon',
+    'preferencesMenuListSubheader',
+    'preferencesMenuItem',
+    'preferencesMenuDivider',
+    'preferencesMenuListItemText',
+    'viewSwitcherButton',
+    'viewSwitcherMenu',
+    'miniCalendarPreviousButton',
+    'miniCalendarNextButton',
+    'moreEventsPopover',
     ...eventDialogClassKeys,
   ],
 );
@@ -388,7 +460,7 @@ const slots = {
   dayTimeGridContainer: ['dayTimeGridContainer'],
   dayTimeGrid: ['dayTimeGrid'],
   dayTimeGridHeader: ['dayTimeGridHeader'],
-  dayTimeGridHeaderRow: ['dayTimeGridHeaderRow'],
+  dayTimeGridHeaderCell: ['dayTimeGridHeaderCell'],
   dayTimeGridAllDayEventsGrid: ['dayTimeGridAllDayEventsGrid'],
   dayTimeGridAllDayEventsRow: ['dayTimeGridAllDayEventsRow'],
   dayTimeGridAllDayEventsCell: ['dayTimeGridAllDayEventsCell'],
@@ -436,6 +508,30 @@ const slots = {
   resourceLegendColor: ['resourceLegendColor'],
   eventItemCardContent: ['eventItemCardContent'],
   eventItemLinesClamp: ['eventItemLinesClamp'],
+  moreEventsPopoverHeader: ['moreEventsPopoverHeader'],
+  moreEventsPopoverTitle: ['moreEventsPopoverTitle'],
+  moreEventsPopoverBody: ['moreEventsPopoverBody'],
+  eventDragPreview: ['eventDragPreview'],
+  standaloneEvent: ['standaloneEvent'],
+  agendaViewEventListItem: ['agendaViewEventListItem'],
+  sidePanelCollapse: ['sidePanelCollapse'],
+  sidePanelDivider: ['sidePanelDivider'],
+  headerToolbarSidePanelToggle: ['headerToolbarSidePanelToggle'],
+  headerToolbarPreviousButton: ['headerToolbarPreviousButton'],
+  headerToolbarTodayButton: ['headerToolbarTodayButton'],
+  headerToolbarNextButton: ['headerToolbarNextButton'],
+  preferencesMenuButton: ['preferencesMenuButton'],
+  preferencesMenuList: ['preferencesMenuList'],
+  preferencesMenuListItemIcon: ['preferencesMenuListItemIcon'],
+  preferencesMenuListSubheader: ['preferencesMenuListSubheader'],
+  preferencesMenuItem: ['preferencesMenuItem'],
+  preferencesMenuDivider: ['preferencesMenuDivider'],
+  preferencesMenuListItemText: ['preferencesMenuListItemText'],
+  viewSwitcherButton: ['viewSwitcherButton'],
+  viewSwitcherMenu: ['viewSwitcherMenu'],
+  miniCalendarPreviousButton: ['miniCalendarPreviousButton'],
+  miniCalendarNextButton: ['miniCalendarNextButton'],
+  moreEventsPopover: ['moreEventsPopover'],
   ...eventDialogSlots,
 };
 

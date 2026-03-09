@@ -29,7 +29,7 @@ const SectionHeaderTitle = styled(Typography, {
   slot: 'SectionHeaderTitle',
 })(({ theme }) => ({
   textTransform: 'uppercase',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 const DateTimeFieldsContainer = styled('div', {

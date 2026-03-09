@@ -9,13 +9,13 @@ import {
   randomBoolean,
 } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
-type ItemType = TreeViewBaseItem<{
+type ItemType = {
   id: string;
   label: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+};
 
 function getSliderAriaValueText(value: number) {
   return `${value}°C`;
@@ -44,7 +44,7 @@ export default function BasicLazyLoading() {
   };
 
   return (
-    <Box sx={{ width: '300px' }}>
+    <Box sx={{ width: 300 }}>
       <Box sx={{ width: 250 }}>
         <Typography id="latency-slider" gutterBottom>
           Loading latency: {latency} (ms)
@@ -62,13 +62,15 @@ export default function BasicLazyLoading() {
           valueLabelDisplay="auto"
         />
       </Box>
-      <RichTreeViewPro
-        items={[]}
-        dataSource={{
-          getChildrenCount: (item) => item?.childrenCount as number,
-          getTreeItems: fetchData,
-        }}
-      />
+      <div style={{ height: 240, width: '100%' }}>
+        <RichTreeViewPro
+          items={[]}
+          dataSource={{
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: fetchData,
+          }}
+        />
+      </div>
     </Box>
   );
 }

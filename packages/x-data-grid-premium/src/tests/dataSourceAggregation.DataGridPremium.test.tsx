@@ -15,9 +15,8 @@ import {
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
-import { isJSDOM } from 'test/utils/skipIf';
 
-describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
+describe('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;

@@ -107,7 +107,7 @@ Line plots only support numeric and null values.`,
         : series[id].data!;
       const hidden = !isItemVisible?.({ type: 'line', seriesId: id });
       completedSeries[id] = {
-        labelMarkType: 'line',
+        labelMarkType: 'line+mark',
         ...series[id],
         data,
         valueFormatter: series[id].valueFormatter ?? lineValueFormatter,

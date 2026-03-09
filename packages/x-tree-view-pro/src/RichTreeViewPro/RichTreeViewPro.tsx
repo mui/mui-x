@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import composeClasses from '@mui/utils/composeClasses';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { Watermark } from '@mui/x-license/Watermark';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   TreeViewProvider,
   RichTreeViewItems,
@@ -103,6 +102,15 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     parameters,
     forwardedProps,
   } = useExtractRichTreeViewProParameters(props);
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (parameters.itemHeight === null && !parameters.disableVirtualization) {
+      warnOnce([
+        'MUI X: `itemHeight={null}` is not compatible with virtualization.',
+        'Please use `disableVirtualization` when using `itemHeight={null}`.',
+      ]);
+    }
+  }
 
   // Context hooks
   const store = useTreeViewStore(RichTreeViewProStore, parameters);
@@ -225,10 +233,15 @@ RichTreeViewPro.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
+   * If `true`, virtualization is disabled.
+   * @default false
+   */
+  disableVirtualization: PropTypes.bool,
+  /**
    * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
    * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
    * Nested DOM structure is not compatible with collapse / expansion animations.
-   * @default 'flat' when using virtualization, 'nested' otherwise
+   * @default 'flat'
    */
   domStructure: PropTypes.oneOf(['flat', 'nested']),
   /**
@@ -310,7 +323,8 @@ RichTreeViewPro.propTypes = {
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Sets the height in pixel of an item.
-   * If not provided, no height restriction is applied to the tree item content element.
+   * Set to `null` to explicitly remove any item height restriction when items have different heights (not compatible with virtualization).
+   * @default 32
    */
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
@@ -420,13 +434,6 @@ RichTreeViewPro.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Whether virtualization is enabled.
-   * If true, the DOM structure will be set to 'flat'.
-   * If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization.
-   * @default false
-   */
-  virtualization: PropTypes.bool,
 } as any;
 
 export { RichTreeViewPro };

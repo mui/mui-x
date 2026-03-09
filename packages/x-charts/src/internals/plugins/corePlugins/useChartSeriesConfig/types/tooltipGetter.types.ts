@@ -41,11 +41,15 @@ export interface ItemTooltip<T extends ChartSeriesType> {
    * The series mark type.
    */
   markType: ChartsLabelMarkProps['type'];
+  /**
+   * The series mark shape.
+   */
+  markShape?: ChartsLabelMarkProps['markShape'];
 }
 
 export type ItemTooltipWithMultipleValues<T extends 'radar' = 'radar'> = Pick<
   ItemTooltip<T>,
-  'identifier' | 'color' | 'label' | 'markType'
+  'identifier' | 'color' | 'label' | 'markType' | 'markShape'
 > & {
   values: {
     /**
@@ -64,6 +68,10 @@ export type ItemTooltipWithMultipleValues<T extends 'radar' = 'radar'> = Pick<
      * The series mark type.
      */
     markType: ChartsLabelMarkProps['type'];
+    /**
+     * The series mark shape.
+     */
+    markShape?: ChartsLabelMarkProps['markShape'];
   }[];
 };
 
@@ -82,7 +90,9 @@ export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
 }) =>
   | (TSeriesType extends 'radar'
       ? ItemTooltipWithMultipleValues<TSeriesType>
-      : ItemTooltip<TSeriesType>)
+      : TSeriesType extends 'heatmap'
+        ? Omit<ItemTooltip<TSeriesType>, 'value'> & { value: number | null }
+        : ItemTooltip<TSeriesType>)
   | null;
 
 /**

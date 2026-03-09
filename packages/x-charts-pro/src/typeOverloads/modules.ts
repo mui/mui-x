@@ -8,6 +8,7 @@ import type {
 } from '../FunnelChart/funnel.types';
 import type {
   HeatmapItemIdentifier,
+  HeatmapItemIdentifierWithData,
   HeatmapSeriesType,
   DefaultizedHeatmapSeriesType,
   HeatmapValueType,
@@ -29,7 +30,7 @@ declare module '@mui/x-charts/internals' {
       seriesLayout: {};
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
-      itemIdentifierWithData: HeatmapItemIdentifier;
+      itemIdentifierWithData: HeatmapItemIdentifierWithData;
       valueType: HeatmapValueType;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;

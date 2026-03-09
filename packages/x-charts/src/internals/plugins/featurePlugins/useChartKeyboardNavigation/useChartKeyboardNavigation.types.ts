@@ -10,6 +10,7 @@ export interface UseChartKeyboardNavigationInstance {}
 export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {
     item: null | FocusedItemIdentifier<ChartSeriesType>;
+    isFocused: boolean;
     enableKeyboardNavigation: boolean;
   };
 }
