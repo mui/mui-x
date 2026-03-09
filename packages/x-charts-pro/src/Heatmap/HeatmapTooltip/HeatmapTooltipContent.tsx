@@ -32,18 +32,12 @@ export function HeatmapTooltipContent(props: HeatmapTooltipContentProps) {
 
   const { color, markType, identifier } = tooltipData;
 
-  const value =
-    heatmapSeries.series[heatmapSeries.seriesOrder[0]].heatmapData.getValue(
-      identifier.xIndex,
-      identifier.yIndex,
-    ) ?? null;
+  const thisSeries = heatmapSeries.series[heatmapSeries.seriesOrder[0]];
+  const value = thisSeries.heatmapData.getValue(identifier.xIndex, identifier.yIndex) ?? null;
 
   if (value === null) {
     return null;
   }
-
-  const { series, seriesOrder } = heatmapSeries;
-  const seriesId = seriesOrder[0];
 
   const { xIndex, yIndex } = identifier;
   const formattedX =
@@ -52,13 +46,11 @@ export function HeatmapTooltipContent(props: HeatmapTooltipContentProps) {
       scale: xAxis.scale,
     }) ?? xAxis.data![xIndex].toLocaleString();
   const formattedY =
-    yAxis.valueFormatter?.(yAxis.data![yIndex], {
-      location: 'tooltip',
-      scale: yAxis.scale,
-    }) ?? yAxis.data![yIndex].toLocaleString();
-  const formattedValue = series[seriesId].valueFormatter(value, { xIndex, yIndex });
+    yAxis.valueFormatter?.(yAxis.data![yIndex], { location: 'tooltip', scale: yAxis.scale }) ??
+    yAxis.data![yIndex].toLocaleString();
+  const formattedValue = thisSeries.valueFormatter(value, { xIndex, yIndex });
 
-  const seriesLabel = getLabel(series[seriesId].label, 'tooltip');
+  const seriesLabel = getLabel(thisSeries.label, 'tooltip');
 
   return (
     <ChartsTooltipPaper className={classes.paper}>

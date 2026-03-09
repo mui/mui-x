@@ -9,8 +9,8 @@ export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
   extends
-    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
-    CartesianSeriesType {
+  Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
+  CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each cell in the heatmap.
@@ -26,8 +26,8 @@ export interface HeatmapSeriesType
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
-   * Formatter used to render values in tooltip or other data display.
-   * @param {number | null} value The series' value to render. null if no value associated ot the cell.
+   * Function that formats values to be displayed in a tooltip.
+   * @param {number | null} value The series' value to render. Can be `null` if the cell doesn't contain any value.
    * @param {{ xIndex: number; yIndex: number}} context The rendering context of the value.
    * @param {number} context.xIndex The x index of the cell the value belongs to.
    * @param {number} context.yIndex The y index of the cell the value belongs to.
@@ -70,23 +70,23 @@ export type HeatmapItemIdentifierWithData = HeatmapItemIdentifier & {
 };
 
 export class HeatmapData {
-  private lookup: Map<number, Map<number, number>>;
+  private valueLookup: Map<number, Map<number, number>>;
 
   constructor(data: readonly HeatmapValueType[]) {
-    this.lookup = new Map();
+    this.valueLookup = new Map();
     for (const [xIndex, yIndex, value] of data) {
-      if (!valueLookup.has(xIndex)) {
-        valueLookup.set(xIndex, new Map<number, number>());
+      let column = this.valueLookup.get(xIndex);
+      if (!column) {
+        column = new Map<number, number>()
+        this.valueLookup.set(xIndex, column);
       }
 
-      if (!valueLookup.get(xIndex)!.has(yIndex)) {
-        valueLookup.get(xIndex)!.set(yIndex, value);
-      }
+      column.set(yIndex, value);
     }
   }
 
   getValue(xIndex: number, yIndex: number): number | null {
-    return this.lookup.get(xIndex)?.get(yIndex) ?? null;
+    return this.valueLookup.get(xIndex)?.get(yIndex) ?? null;
   }
 }
 
@@ -95,7 +95,7 @@ export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
   CommonDefaultizedProps
 > {
   /**
-   * Map the `xIndex` and `yIndex` to the corresponding value of the cell.
+   * Maps the `xIndex` and `yIndex` to the corresponding value of the cell.
    */
   heatmapData: HeatmapData;
 }
