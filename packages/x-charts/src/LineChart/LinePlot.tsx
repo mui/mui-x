@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import {
   LineElement,
-  lineElementClasses,
   type LineElementProps,
   type LineElementSlotProps,
   type LineElementSlots,
@@ -15,6 +14,7 @@ import { useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useLinePlotData } from './useLinePlotData';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import { lineClasses, useUtilityClasses } from './lineClasses';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -36,10 +36,10 @@ export interface LinePlotProps
 }
 
 const LinePlotRoot = styled('g', {
-  name: 'MuiAreaPlot',
+  name: 'MuiLinePlot',
   slot: 'Root',
 })({
-  [`& .${lineElementClasses.root}`]: {
+  [`& .${lineClasses.line}`]: {
     transitionProperty: 'opacity, fill',
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -69,8 +69,10 @@ function LinePlot(props: LinePlotProps) {
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
+  const classes = useUtilityClasses();
+
   return (
-    <LinePlotRoot {...other}>
+    <LinePlotRoot className={classes.root} {...other}>
       {completedData.map(({ d, seriesId, color, gradientId, hidden }) => {
         return (
           <LineElement

@@ -296,14 +296,12 @@ HeatmapPremium.propTypes = {
    */
   tooltipItem: PropTypes.oneOfType([
     PropTypes.shape({
-      dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['heatmap']).isRequired,
       xIndex: PropTypes.number.isRequired,
       yIndex: PropTypes.number.isRequired,
     }),
     PropTypes.shape({
-      dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
       xIndex: PropTypes.number.isRequired,
       yIndex: PropTypes.number.isRequired,

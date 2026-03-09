@@ -13,6 +13,8 @@ import {
   TEST_KEY_EXPIRED_30DAYS,
   TEST_KEY_PRO_SUBSCRIPTION_FUTURE,
   TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE,
+  TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
+  TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
 } from '../test-keys';
 
 const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
@@ -135,6 +137,29 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
         planVersion: 'Q3-2024',
         planScope: 'premium',
         licenseKey: TEST_LICENSE_KEY_PREMIUM,
+        ok: [
+          'x-data-grid-pro',
+          'x-data-grid-premium',
+          'x-date-pickers-pro',
+          'x-charts-pro',
+          'x-charts-premium',
+          'x-tree-view-pro',
+        ],
+        notOk: [],
+        notInInitial: [],
+      },
+      {
+        planVersion: 'Q1-2026',
+        planScope: 'pro',
+        licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
+        ok: ['x-data-grid-pro', 'x-date-pickers-pro', 'x-charts-pro', 'x-tree-view-pro'],
+        notOk: ['x-charts-premium', 'x-data-grid-premium'],
+        notInInitial: [],
+      },
+      {
+        planVersion: 'Q1-2026',
+        planScope: 'premium',
+        licenseKey: TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
         ok: [
           'x-data-grid-pro',
           'x-data-grid-premium',

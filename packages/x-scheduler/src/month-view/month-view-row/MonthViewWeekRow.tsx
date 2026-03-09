@@ -23,7 +23,7 @@ const MonthViewRow = styled(CalendarGrid.DayRow, {
     gridTemplateColumns: `${FIXED_CELL_WIDTH}px repeat(auto-fit, minmax(0, 1fr))`,
   },
   '&:not(:last-child)': {
-    borderBlockEnd: `1px solid ${theme.palette.divider}`,
+    borderBlockEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -35,7 +35,7 @@ const MonthViewWeekNumberCell = styled('div', {
   textAlign: 'center',
   fontSize: theme.typography.caption.fontSize,
   lineHeight: '18px',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {

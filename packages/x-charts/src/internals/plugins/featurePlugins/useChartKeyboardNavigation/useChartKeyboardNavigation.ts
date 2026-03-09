@@ -16,10 +16,27 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 }) => {
   const { chartsLayerContainerRef } = instance;
   const removeFocus = useEventCallback(function removeFocus() {
-    if (store.state.keyboardNavigation.item !== null) {
+    if (store.state.keyboardNavigation.isFocused) {
       store.set('keyboardNavigation', {
         ...store.state.keyboardNavigation,
-        item: null,
+        isFocused: false,
+      });
+    }
+  });
+
+  const restoreFocus = useEventCallback(function restoreFocus() {
+    if (!store.state.keyboardNavigation.isFocused) {
+      store.update({
+        ...(store.state.highlight && {
+          highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
+        }),
+        ...(store.state.interaction && {
+          interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
+        }),
+        keyboardNavigation: {
+          ...store.state.keyboardNavigation,
+          isFocused: true,
+        },
       });
     }
   });
@@ -77,11 +94,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
     element.addEventListener('keydown', keyboardHandler);
     element.addEventListener('blur', removeFocus);
+    element.addEventListener('focus', restoreFocus);
     return () => {
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('blur', removeFocus);
+      element.removeEventListener('focus', restoreFocus);
     };
-  }, [chartsLayerContainerRef, removeFocus, params.enableKeyboardNavigation, store]);
+  }, [chartsLayerContainerRef, removeFocus, restoreFocus, params.enableKeyboardNavigation, store]);
 
   useEnhancedEffect(() => {
     if (
@@ -100,6 +119,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 useChartKeyboardNavigation.getInitialState = (params) => ({
   keyboardNavigation: {
     item: null,
+    isFocused: false,
     enableKeyboardNavigation: !!params.enableKeyboardNavigation,
   },
 });

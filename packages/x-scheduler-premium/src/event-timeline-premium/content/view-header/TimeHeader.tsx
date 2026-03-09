@@ -25,7 +25,7 @@ const TimeHeaderCell = styled('div', {
   alignItems: 'center',
   flexDirection: 'column',
   '&:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -38,7 +38,7 @@ const DayLabel = styled('time', {
   fontWeight: theme.typography.fontWeightMedium,
   display: 'flex',
   justifyContent: 'center',
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const TimeCellsRow = styled('div', {
@@ -63,7 +63,7 @@ const TimeLabel = styled('time', {
   slot: 'TimeHeaderTimeLabel',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
