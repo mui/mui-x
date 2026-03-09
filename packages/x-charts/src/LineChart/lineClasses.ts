@@ -16,6 +16,12 @@ export interface LineClasses {
   markAnimate: string;
   /** Styles applied to the highlight element. */
   highlight: string;
+  /** Styles applied to the AreaPlot root element. */
+  areaPlot: string;
+  /** Styles applied to the LinePlot root element. */
+  linePlot: string;
+  /** Styles applied to the MarkPlot root element. */
+  markPlot: string;
 }
 
 export type LineClassKey = keyof LineClasses;
@@ -39,6 +45,9 @@ export const lineClasses: LineClasses = generateUtilityClasses('MuiLineChart', [
   'mark',
   'markAnimate',
   'highlight',
+  'areaPlot',
+  'linePlot',
+  'markPlot',
 ]);
 
 export interface UseUtilityClassesOptions {
@@ -54,6 +63,9 @@ export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
     line: ['line'],
     mark: ['mark', !skipAnimation && 'markAnimate'],
     highlight: ['highlight'],
+    areaPlot: ['areaPlot'],
+    linePlot: ['linePlot'],
+    markPlot: ['markPlot'],
   };
 
   return composeClasses(slots, getLineUtilityClass, classes);

@@ -72,7 +72,7 @@ function LinePlot(props: LinePlotProps) {
   const classes = useUtilityClasses();
 
   return (
-    <LinePlotRoot className={classes.root} {...other}>
+    <LinePlotRoot className={`${classes.root} ${classes.linePlot}`} {...other}>
       {completedData.map(({ d, seriesId, color, gradientId, hidden }) => {
         return (
           <LineElement

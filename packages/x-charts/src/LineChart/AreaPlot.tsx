@@ -73,7 +73,7 @@ function AreaPlot(props: AreaPlotProps) {
   const classes = useUtilityClasses();
 
   return (
-    <AreaPlotRoot className={classes.root} {...other}>
+    <AreaPlotRoot className={`${classes.root} ${classes.areaPlot}`} {...other}>
       {completedData.map(
         ({ d, seriesId, color, area, gradientId }) =>
           !!area && (

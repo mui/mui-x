@@ -16,6 +16,7 @@ import { type AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useChartContext } from '../context/ChartProvider';
 import { useMarkPlotData } from './useMarkPlotData';
+import { useUtilityClasses } from './lineClasses';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -89,9 +90,10 @@ function MarkPlot(props: MarkPlotProps) {
   }, [xAxisHighlightIndexes]);
 
   const completedData = useMarkPlotData(xAxis, yAxis);
+  const classes = useUtilityClasses();
 
   return (
-    <MarkPlotRoot {...other}>
+    <MarkPlotRoot className={`${classes.root} ${classes.markPlot}`} {...other}>
       {completedData.map(({ seriesId, clipId, shape, xAxisId, marks, hidden }) => {
         const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
