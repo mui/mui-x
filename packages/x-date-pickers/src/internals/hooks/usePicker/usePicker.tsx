@@ -128,6 +128,9 @@ export const usePicker = <
   });
 
   const clearValue = useEventCallback(() => {
+    if (value === null && internalFieldRef.current?.clearValue) {
+      internalFieldRef.current.clearValue();
+    }
     setValue(valueManager.emptyValue, { source: 'view' });
   });
 
