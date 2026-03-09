@@ -21,7 +21,7 @@ export interface LineClasses {
 export type LineClassKey = keyof LineClasses;
 
 export interface MarkElementOwnerState {
-  seriesId: SeriesId;
+  id: SeriesId;
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<LineClasses>;

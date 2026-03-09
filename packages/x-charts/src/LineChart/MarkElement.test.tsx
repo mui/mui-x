@@ -29,7 +29,7 @@ describe.for([
     render(
       <TestWrapper>
         <MarkElementComponent
-          seriesId="s1"
+          id="s1"
           dataIndex={0}
           x={10}
           y={10}
@@ -48,7 +48,7 @@ describe.for([
     render(
       <TestWrapper>
         <MarkElementComponent
-          seriesId="s1"
+          id="s1"
           dataIndex={2}
           x={10}
           y={10}
@@ -67,7 +67,7 @@ describe.for([
     render(
       <TestWrapper>
         <MarkElementComponent
-          seriesId="s1"
+          id="s1"
           dataIndex={0}
           x={10}
           y={10}
@@ -87,7 +87,7 @@ describe.for([
     render(
       <TestWrapper>
         <MarkElementComponent
-          seriesId="s1"
+          id="s1"
           dataIndex={0}
           x={10}
           y={10}

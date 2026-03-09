@@ -50,9 +50,9 @@ export const lineHighlightElementClasses: LineHighlightElementClasses = generate
  * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
  */
 const useDeprecatedUtilityClasses = (
-  ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'seriesId'>,
+  ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'id'>,
 ) => {
-  const { classes, seriesId } = ownerState;
+  const { classes, id } = ownerState;
   const slots = {
     root: ['root', `series-${id}`],
   };

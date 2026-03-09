@@ -64,7 +64,7 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
  * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
  */
 const useDeprecatedUtilityClasses = (ownerState: AreaElementOwnerState) => {
-  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted } = ownerState;
   const slots = {
     root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
@@ -150,7 +150,7 @@ function AreaElement(props: AreaElementProps) {
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
-      'data-series-id': seriesId,
+      'data-series-id': id,
     },
     className: `${classes.area} ${deprecatedClasses.root}`,
     ownerState,

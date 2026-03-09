@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { describeConformance } from 'test/utils/charts/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { screen } from '@mui/internal-test-utils';
 import * as React from 'react';

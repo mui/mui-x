@@ -66,7 +66,7 @@ export const lineElementClasses: LineElementClasses = generateUtilityClasses('Mu
  * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
  */
 const useDeprecatedUtilityClasses = (ownerState: LineElementOwnerState) => {
-  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted } = ownerState;
   const slots = {
     root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
@@ -155,7 +155,7 @@ function LineElement(props: LineElementProps) {
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
-      'data-series-id': seriesId,
+      'data-series-id': id,
     },
     className: `${classes.line} ${deprecatedClasses.root}`,
     ownerState,
