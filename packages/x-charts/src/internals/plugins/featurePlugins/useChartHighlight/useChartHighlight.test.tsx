@@ -23,7 +23,6 @@ describe('highlight', () => {
         skipAnimation
         margin={0}
         series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-        enableKeyboardNavigation
       />,
     );
 
@@ -54,8 +53,7 @@ describe('highlight', () => {
           skipAnimation
           margin={0}
           series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-          enableKeyboardNavigation
-          highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
+            highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
         />,
       );
 
@@ -86,7 +84,6 @@ describe('highlight', () => {
         skipAnimation
         margin={0}
         series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-        enableKeyboardNavigation
         highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
       />,
     );
