@@ -15,8 +15,8 @@ export default function LocaleTextCalendar() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
-    <ThemeProvider theme={theme}>
-      <div style={{ height: '600px', width: '100%' }}>
+    <div style={{ height: '600px', width: '100%' }}>
+      <ThemeProvider theme={theme}>
         <EventCalendar
           events={events}
           resources={resources}
@@ -24,7 +24,7 @@ export default function LocaleTextCalendar() {
           onEventsChange={setEvents}
           defaultPreferences={{ isSidePanelOpen: false }}
         />
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </div>
   );
 }

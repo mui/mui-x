@@ -16,8 +16,8 @@ export default function DateLocaleTimeline() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <ThemeProvider theme={theme}>
-      <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+      <ThemeProvider theme={theme}>
         <EventTimelinePremium
           events={events}
           resources={resources}
@@ -25,7 +25,7 @@ export default function DateLocaleTimeline() {
           onEventsChange={setEvents}
           defaultView="months"
         />
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </div>
   );
 }
