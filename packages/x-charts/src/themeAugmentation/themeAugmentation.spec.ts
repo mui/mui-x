@@ -99,11 +99,11 @@ createTheme({
         // @ts-expect-error invalid MuiBarChart prop
         someRandomProp: true,
       },
-      // styleOverrides: {
-      //   root: { backgroundColor: 'red' },
-      //   // @ts-expect-error invalid MuiBarChart class key
-      //   constent: { color: 'red' },
-      // },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiBarChart class key
+        constent: { color: 'red' },
+      },
     },
     MuiBarElement: {
       styleOverrides: {
