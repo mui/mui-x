@@ -1,6 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
 import * as React from 'react';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { ChartsContainer } from '@mui/x-charts';
+import { ChartsContainerProps } from '@mui/x-charts/ChartsContainer';
+
+import { ChartApi } from '@mui/x-charts/context';
 
 // Use this space to add tests that touch multiple codemods in the preset-safe package
 // It is important to ensure that the codemods don't conflict with each other
@@ -14,6 +19,7 @@ import * as React from 'react';
   <Heatmap hideLegend series={[{}]} />
   <HeatmapPremium hideLegend {...otherProps} />
   <PieArc seriesId="test" />
+  <SankeyChart series={{}} />
   <LineChart series={[{
     data: [1, 2, 3],
     showMark: true,
@@ -23,4 +29,5 @@ import * as React from 'react';
     data: [1, 2, 3],
     showMark: true,
   }]} />
+  <ChartsContainer />
 </div>;

@@ -17,6 +17,76 @@ This is a reference guide for upgrading `@mui/x-charts` from v8 to v9.
 This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-charts-v8/migration-charts-v8.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
 :::
 
+## Prepare for the migration
+
+We highly recommend updating `@mui/x-charts` and `@mui/x-charts-pro` to the latest v8 version before migrating to v9.
+This will help you resolve deprecation warnings at your own pace, reducing the number of changes needed when upgrading.
+
+Below is a list of deprecated APIs that have alternatives in the latest minor of v8. We recommend you move from these deprecated APIs before upgrading to v9 to ease the migration.
+Items marked with ✅ are handled by the [codemod](#run-codemods).
+
+### Component and type renames (Chart → Charts) ✅
+
+The `Chart` prefix has been renamed to `Charts` (with an S) to align with other components.
+
+| Deprecated                             | Replacement                             |
+| :------------------------------------- | :-------------------------------------- |
+| `ChartContainer`                       | `ChartsContainer`                       |
+| `ChartContainerProps`                  | `ChartsContainerProps`                  |
+| `ChartContainerSlots`                  | `ChartsContainerSlots`                  |
+| `ChartContainerSlotProps`              | `ChartsContainerSlotProps`              |
+| `useChartContainerProps()`             | `useChartsContainerProps()`             |
+| `UseChartContainerPropsReturnValue`    | `UseChartsContainerPropsReturnValue`    |
+| `ChartContainerPro`                    | `ChartsContainerPro`                    |
+| `ChartContainerProProps`               | `ChartsContainerProProps`               |
+| `ChartContainerProSlots`               | `ChartsContainerProSlots`               |
+| `ChartContainerProSlotProps`           | `ChartsContainerProSlotProps`           |
+| `useChartContainerProProps()`          | `useChartsContainerProProps()`          |
+| `UseChartContainerProPropsReturnValue` | `UseChartsContainerProPropsReturnValue` |
+| `ChartZoomSlider`                      | `ChartsZoomSlider`                      |
+| `ChartAxisZoomSliderThumbClasses`      | `ChartsAxisZoomSliderThumbClasses`      |
+| `ChartAxisZoomSliderThumbClassKey`     | `ChartsAxisZoomSliderThumbClassKey`     |
+| `chartAxisZoomSliderThumbClasses`      | `chartsAxisZoomSliderThumbClasses`      |
+| `ChartAxisZoomSliderTrackClasses`      | `ChartsAxisZoomSliderTrackClasses`      |
+| `ChartAxisZoomSliderTrackClassKey`     | `ChartsAxisZoomSliderTrackClassKey`     |
+| `chartAxisZoomSliderTrackClasses`      | `chartsAxisZoomSliderTrackClasses`      |
+
+### CSS class deprecations (`highlighted` / `faded`)
+
+The highlighted and faded CSS state classes are deprecated across all chart element types.
+Use `[data-highlighted]` and `[data-faded]` attribute selectors instead.
+
+This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkElement`, `PieArc`, `PieArcLabel`, `RadarSeriesPlot`, `Heatmap`, and `FunnelSection`.
+
+```diff
+-`.MuiBarElement-root.MuiBarElement-highlighted`
++`.MuiBarElement-root[data-highlighted]`
+
+-`.MuiBarElement-root.MuiBarElement-faded`
++`.MuiBarElement-root[data-faded]`
+```
+
+### Unstable exports are now stable
+
+- `Unstable_RadarChart` → `RadarChart`
+- `Unstable_RadarDataProvider` → `RadarDataProvider`
+- `Unstable_FunnelChart` → `FunnelChart`
+- `Unstable_SankeyChart` → `SankeyChart`
+
+### Props
+
+- The `barLabel` prop on `BarPlot` and `BarChartPro` is deprecated. Use `barLabel` in the series definition instead.
+- The `message` prop on `ChartsOverlay` is deprecated. Use the [localization](/x/react-charts/localization/) keys `loading` and `noData` instead.
+- The `disableHover` prop on scatter series is deprecated. Disable the highlight or the tooltip separately instead.
+- The `onAxisClick` prop on `Heatmap` is deprecated. Use `onItemClick` instead.
+- The `components` and `componentsProps` props on `ChartsTooltip`, `HeatmapTooltip`, and `SankeyTooltip` are deprecated. Use `slots` and `slotProps` instead.
+
+### Other
+
+- The `useMouseTracker()` hook is deprecated. Use vanilla JavaScript to track the mouse position instead.
+- The `itemId` property in `SeriesLegendItemContext` is deprecated. Use `dataIndex` instead.
+- The `innerRadius` and `outerRadius` params in `useAnimatePieArcLabel` are deprecated. Use `arcLabelRadius` instead.
+
 ## Start using the new release
 
 In `package.json`, change the version of the charts package to `latest`.
@@ -174,9 +244,9 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
-### Rename `useAxisTooltip` hook
+### Rename `useAxisTooltip()` hook
 
-The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
+The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
 
 The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
 
@@ -382,7 +452,7 @@ If you're using these classes manually in your styles, update them accordingly:
 ### `data-has-focused-item` attribute removed
 
 The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
-If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem` hook instead.
+If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem()` hook instead.
 
 ```ts
 const focusedItem = useFocusedItem();
@@ -394,6 +464,10 @@ const hasFocusedItem = focusedItem !== null;
 The `ChartsSurface` component is now comprised of `ChartsLayerContainer` and `ChartsSvgLayer`.
 As a consequence, it is no longer possible to style the component using the `MuiChartsSurface` theme key.
 If you want to style the layer container, you can use `MuiChartsLayerContainer` instead, and for the SVG layer, use `MuiChartsSvgLayer`.
+
+### Rename `useSvgRef()` by `useChartsLayerContainerRef()`
+
+The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a ref to the `ChartsLayerContainer`.
 
 ### Ref target
 
@@ -428,12 +502,31 @@ Internally this change looks like this.
 
 ## Typescript
 
-### Remove default generic of `SeriesItemIdentifier`
+### Identifiers are now generics
 
-In v9 the argument of `SeriesItemIdentifier` is now required.
+In v9 we introduce generics to our identifiers.
+
+This will allow you to get the correct type according to the series you're using.
+
+#### Remove default generic of `SeriesItemIdentifier`
+
+The argument of `SeriesItemIdentifier` is now required.
 
 It accepts an union of series types.
 For example:
 
 - `SeriesItemIdentifier<'bar'>` for a BarChart.
 - `SeriesItemIdentifier<'bar' | 'line'>` if you compose bar and line series.
+
+#### Add generic to `HighlightScope`
+
+The `HighlightScope` is now a generic and require its argument the same way `SeriesItemIdentifier` does.
+
+#### Replace `HighlightItemData` by `HighlightItemIdentifier<SeriesType>`
+
+The `HighlightItemData` type was replaced by `HighlightItemIdentifier<SeriesType>`.
+
+The main difference from the `SeriesItemIdentifier` is the ability to identify a whole series.
+
+For example, in a `SeriesItemIdentifier<'bar'>` the `dataIndex` is required since it identifies an item of the series.
+A `HighlightItemIdentifier<'bar'>` can identify a data point, which requires a `dataIndex`, but also an entire series, in which case the `dataIndex` is optional.

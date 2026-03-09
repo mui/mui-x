@@ -76,10 +76,18 @@ createTheme({
         constent: { color: 'red' },
       },
     },
+    MuiChartsDataProvider: {
+      defaultProps: {
+        experimentalFeatures: { preferStrictDomainInLineCharts: true },
+        // @ts-expect-error invalid MuiChartsDataProvider prop
+        someRandomProp: true,
+      },
+    },
+    // @deprecated Use MuiChartsDataProvider instead
     MuiChartDataProvider: {
       defaultProps: {
         experimentalFeatures: { preferStrictDomainInLineCharts: true },
-        // @ts-expect-error invalid MuiChartsSurface prop
+        // @ts-expect-error invalid MuiChartDataProvider prop
         someRandomProp: true,
       },
     },
@@ -91,11 +99,11 @@ createTheme({
         // @ts-expect-error invalid MuiBarChart prop
         someRandomProp: true,
       },
-      // styleOverrides: {
-      //   root: { backgroundColor: 'red' },
-      //   // @ts-expect-error invalid MuiBarChart class key
-      //   constent: { color: 'red' },
-      // },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiBarChart class key
+        constent: { color: 'red' },
+      },
     },
     MuiBarElement: {
       styleOverrides: {

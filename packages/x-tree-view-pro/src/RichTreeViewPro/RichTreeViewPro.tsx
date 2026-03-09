@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import composeClasses from '@mui/utils/composeClasses';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   TreeViewProvider,
   RichTreeViewItems,

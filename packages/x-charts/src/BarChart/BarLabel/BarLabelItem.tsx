@@ -2,7 +2,8 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { useUtilityClasses } from './barLabelClasses';
+import { useUtilityClasses } from '../barClasses';
+import { useUtilityClasses as useDeprecatedUtilityClasses } from './barLabelClasses';
 import { type BarLabelOwnerState, type BarItem, type BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
 import { BarLabel, type BarLabelProps } from './BarLabel';
@@ -118,6 +119,7 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
     ...other
   } = props;
   const { isFaded, isHighlighted } = useItemHighlighted({
+    type: 'bar',
     seriesId,
     dataIndex,
   });
@@ -133,6 +135,7 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
     layout,
   };
   const classes = useUtilityClasses(ownerState);
+  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Component = slots?.barLabel ?? BarLabel;
 
@@ -148,7 +151,7 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
       width,
       height,
       placement: barLabelPlacement,
-      className: classes.root,
+      className: `${classes.label} ${deprecatedClasses.root}`,
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
     },

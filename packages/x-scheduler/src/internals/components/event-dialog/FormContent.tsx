@@ -9,7 +9,6 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
 import {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
@@ -74,6 +73,13 @@ const EventDialogForm = styled('form', {
   flex: 1,
   minHeight: 0,
 });
+
+const EventDialogTabsContainer = styled('div', {
+  name: 'MuiEventDialog',
+  slot: 'TabsContainer',
+})(({ theme }) => ({
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+}));
 
 const EventDialogTabs = styled(Tabs, {
   name: 'MuiEventDialog',
@@ -252,12 +258,20 @@ export function FormContent(props: FormContentProps) {
           />
         </EventDialogHeader>
         {showRecurrence && (
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <EventDialogTabsContainer className={classes.eventDialogTabsContainer}>
             <EventDialogTabs value={tabValue} onChange={handleTabChange}>
-              <Tab label={localeText.generalTabLabel} value="general" />
-              <Tab label={localeText.recurrenceTabLabel} value="recurrence" />
+              <Tab
+                className={classes.eventDialogTab}
+                label={localeText.generalTabLabel}
+                value="general"
+              />
+              <Tab
+                className={classes.eventDialogTab}
+                label={localeText.recurrenceTabLabel}
+                value="recurrence"
+              />
             </EventDialogTabs>
-          </Box>
+          </EventDialogTabsContainer>
         )}
         <GeneralTab
           occurrence={occurrence}
@@ -275,12 +289,17 @@ export function FormContent(props: FormContentProps) {
             value={tabValue}
           />
         )}
-        <Divider />
+        <Divider className={classes.eventDialogFormDivider} />
         <FormActions className={classes.eventDialogFormActions}>
-          <Button color="error" type="button" onClick={handleDelete}>
+          <Button
+            className={classes.eventDialogDeleteButton}
+            color="error"
+            type="button"
+            onClick={handleDelete}
+          >
             {localeText.deleteEvent}
           </Button>
-          <Button variant="contained" type="submit">
+          <Button className={classes.eventDialogSaveButton} variant="contained" type="submit">
             {localeText.saveChanges}
           </Button>
         </FormActions>

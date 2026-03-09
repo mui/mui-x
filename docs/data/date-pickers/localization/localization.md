@@ -137,7 +137,7 @@ The interactive CLI will guide you through the process of selecting the packages
 
 ## Access the translations in slots and subcomponents
 
-You can use the `usePickerTranslations` hook to access the translations in your custom components.
+You can use the `usePickerTranslations()` hook to access the translations in your custom components.
 
 ```tsx
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
