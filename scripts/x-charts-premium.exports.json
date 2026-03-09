@@ -717,7 +717,7 @@
   { "name": "UseScatterSeriesContextReturnValue", "kind": "TypeAlias" },
   { "name": "UseScatterSeriesReturnValue", "kind": "TypeAlias" },
   { "name": "useSeries", "kind": "Function" },
-  { "name": "useSeriesTooltip", "kind": "Variable" },
+  { "name": "useSeriesTooltip", "kind": "Function" },
   { "name": "UseSeriesTooltipReturnValue", "kind": "TypeAlias" },
   { "name": "useUtilityClasses", "kind": "Variable" },
   { "name": "useXAxes", "kind": "Function" },
