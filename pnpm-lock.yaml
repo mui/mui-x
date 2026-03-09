@@ -1837,6 +1837,9 @@ importers:
       tabbable:
         specifier: ^6.3.0
         version: 6.3.0
+      use-sync-external-store:
+        specifier: 'catalog:'
+        version: 1.6.0(react@19.2.3)
     devDependencies:
       '@date-fns/tz':
         specifier: 'catalog:'

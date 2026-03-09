@@ -340,7 +340,7 @@ describe('EventCalendar', () => {
       const monthView = withinMonthView();
 
       // In French, Monday is "lundi"
-      // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view
+      // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view (mini calendar also has column headers)
       expect(monthView.getByRole('columnheader', { name: /lundi/i })).not.to.equal(null);
     });
   });
