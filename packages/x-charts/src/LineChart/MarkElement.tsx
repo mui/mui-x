@@ -94,7 +94,7 @@ function MarkElement(props: MarkElementProps) {
     isFaded,
     skipAnimation,
   };
-  const classes = useLineUtilityClasses({ skipAnimation });
+  const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
   const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   return (
@@ -114,6 +114,8 @@ function MarkElement(props: MarkElementProps) {
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      data-series-id={seriesId}
+      data-index={dataIndex}
       opacity={hidden ? 0 : 1}
       strokeWidth={2}
       stroke={color}

@@ -142,7 +142,7 @@ function AreaElement(props: AreaElementProps) {
     isFaded,
     isHighlighted,
   };
-  const classes = useLineUtilityClasses();
+  const classes = useLineUtilityClasses({ classes: innerClasses });
   const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Area = slots?.area ?? AnimatedArea;
@@ -155,6 +155,7 @@ function AreaElement(props: AreaElementProps) {
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
+      'data-series-id': seriesId,
     },
     className: `${classes.area} ${deprecatedClasses.root}`,
     ownerState,

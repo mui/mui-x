@@ -90,7 +90,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     isFaded,
     skipAnimation,
   };
-  const classes = useLineUtilityClasses({ skipAnimation });
+  const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
   const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   return (
@@ -109,6 +109,8 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      data-series-id={seriesId}
+      data-index={dataIndex}
       opacity={hidden ? 0 : 1}
     />
   );

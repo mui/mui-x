@@ -149,7 +149,7 @@ function LineElement(props: LineElementProps) {
     isHighlighted,
     hidden,
   };
-  const classes = useLineUtilityClasses();
+  const classes = useLineUtilityClasses({ classes: innerClasses });
   const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Line = slots?.line ?? AnimatedLine;
@@ -162,6 +162,7 @@ function LineElement(props: LineElementProps) {
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
+      'data-series-id': seriesId,
     },
     className: `${classes.line} ${deprecatedClasses.root}`,
     ownerState,
