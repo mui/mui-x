@@ -1,1 +1,1 @@
-export { useAdapterContext } from './useAdapterContext';
+export * from './useAdapterContext';
