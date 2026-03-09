@@ -28,6 +28,7 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }

@@ -6,6 +6,7 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
     },

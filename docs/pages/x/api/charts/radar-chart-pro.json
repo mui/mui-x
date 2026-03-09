@@ -16,6 +16,7 @@
       "default": "rainbowSurgePalette"
     },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
