@@ -60,8 +60,8 @@ See the [DOM structure](/x/react-tree-view/rich-tree-view/items/#dom-structure) 
 ## Layout
 
 :::error
-When virtualization is enabled, the Rich Tree View has no intrinsic dimensions: you must set the dimensions using one of the approaches below or else it may not display correctly.
-By default, the virtualized Rich Tree View fills the space of its parent container, so that container must have intrinsic dimensions.
+When virtualization is enabled, the Tree View has no intrinsic dimensions: you must set the dimensions using one of the approaches below or else it may not display correctly.
+By default, the virtualized Tree View fills the space of its parent container, so that container must have intrinsic dimensions.
 In other words, if the container has no child elements, then it still must have non-zero dimensions.
 :::
 
@@ -70,18 +70,18 @@ In other words, if the container has no child elements, then it still must have 
 :::success
 When to use:
 
-- You want the Rich Tree View to take its content's height, but with a minimum or maximum height constraints.
-- You want the Rich Tree View height to be dynamic, and use item virtualization when items do not fit the Rich Tree View viewport.
+- You want the Tree View to take its content's height, but with a minimum or maximum height constraints.
+- You want the Tree View height to be dynamic, and use item virtualization when items do not fit the Tree View viewport.
 
 When not to use:
 
-- You want the Rich Tree View to always take the height of its content, with no vertical scrollbar, and no item virtualization.
+- You want the Tree View to always take the height of its content, with no vertical scrollbar, and no item virtualization.
   In this case, use the `disableVirtualization` prop.
 
 :::
 
-The Rich Tree View can be placed inside a flex container with `flex-direction: column`.
-Without setting the minimum and maximum height, the Rich Tree View takes as much space as it needs to display all rows.
+The Tree View can be placed inside a flex container with `flex-direction: column`.
+Without setting the minimum and maximum height, the Tree View takes as much space as it needs to display all rows.
 
 :::warning
 Consider setting `maxHeight` on the flex parent container, otherwise item virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
@@ -91,18 +91,18 @@ Consider setting `maxHeight` on the flex parent container, otherwise item virtua
 
 ### Minimum and maximum height
 
-In the demo below, the Rich Tree View is placed inside a flex container with a minimum height of `200px` and a maximum height of `400px` and adapts its height when the number of items changes.
+In the demo below, the Tree View is placed inside a flex container with a minimum height of `200px` and a maximum height of `400px` and adapts its height when the number of items changes.
 
 {{"demo": "MinMaxHeightRichTreeView.js", "bg": "inline"}}
 
 ## Percentage dimensions
 
-When using percentages (%) for height or width, make sure that the Rich Tree View's parent container has intrinsic dimensions.
+When using percentages (%) for height or width, make sure that the Tree View's parent container has intrinsic dimensions.
 Browsers adjust the element based on a percentage of its parent's size.
 If the parent has no size, the percentage will be zero.
 
 ## Predefined dimensions
 
-You can predefine dimensions for the parent of the Rich Tree View.
+You can predefine dimensions for the parent of the Tree View.
 
 {{"demo": "FixedSizeRichTreeView.js", "bg": "inline"}}
