@@ -9,8 +9,8 @@ export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
   extends
-  Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
-  CartesianSeriesType {
+    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
+    CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each cell in the heatmap.
@@ -77,7 +77,7 @@ export class HeatmapData {
     for (const [xIndex, yIndex, value] of data) {
       let column = this.valueLookup.get(xIndex);
       if (!column) {
-        column = new Map<number, number>()
+        column = new Map<number, number>();
         this.valueLookup.set(xIndex, column);
       }
 
