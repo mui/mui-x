@@ -53,7 +53,7 @@ describe('highlight', () => {
           skipAnimation
           margin={0}
           series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-            highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
+          highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
         />,
       );
 

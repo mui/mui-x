@@ -5,7 +5,7 @@ import type { UseChartHighlightSignature } from '../useChartHighlight';
 import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
-export interface UseChartKeyboardNavigationInstance { }
+export interface UseChartKeyboardNavigationInstance {}
 
 export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {

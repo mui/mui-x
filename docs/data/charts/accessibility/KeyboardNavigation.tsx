@@ -81,13 +81,7 @@ function Chart<T extends ChartType = ChartType>({
 }) {
   switch (type) {
     case 'scatter':
-      return (
-        <ScatterChart
-          ref={chartRef}
-          height={300}
-          series={scatterSeries}
-        />
-      );
+      return <ScatterChart ref={chartRef} height={300} series={scatterSeries} />;
     case 'line':
       return (
         <LineChart

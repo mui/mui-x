@@ -240,7 +240,6 @@ Removes the `enableKeyboardNavigation` props set to `true` since it's now the de
  />
 ```
 
-
 ## v8.0.0
 
 ### 🚀 `preset-safe` for v8.0.0

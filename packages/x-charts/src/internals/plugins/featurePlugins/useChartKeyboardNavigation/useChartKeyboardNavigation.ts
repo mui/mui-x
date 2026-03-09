@@ -103,9 +103,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   }, [chartsLayerContainerRef, removeFocus, restoreFocus, params.disableKeyboardNavigation, store]);
 
   useEnhancedEffect(() => {
-    if (
-      store.state.keyboardNavigation.enabled !== !params.disableKeyboardNavigation
-    ) {
+    if (store.state.keyboardNavigation.enabled !== !params.disableKeyboardNavigation) {
       store.set('keyboardNavigation', {
         ...store.state.keyboardNavigation,
         enabled: !params.disableKeyboardNavigation,
