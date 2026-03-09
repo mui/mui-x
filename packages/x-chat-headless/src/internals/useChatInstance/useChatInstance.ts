@@ -3,12 +3,13 @@ import * as React from 'react';
 import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { chatSelectors } from '../../selectors';
-import { ChatStore, type ChatStoreParameters, type ControlledModel } from '../../store';
+import {
+  ChatStore,
+  type ChatStoreParameters,
+  type ControlledModel,
+  type ChatStoreConstructor,
+} from '../../store';
 import type { ChatInternalState } from '../../types';
-
-export interface ChatStoreConstructor<Cursor = string> {
-  new (parameters: ChatStoreParameters<Cursor>): ChatStore<Cursor>;
-}
 
 export function useChatInstance<Cursor = string>(
   parameters: ChatStoreParameters<Cursor>,

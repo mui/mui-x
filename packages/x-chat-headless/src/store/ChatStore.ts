@@ -20,6 +20,10 @@ export interface ChatStoreParameters<Cursor = string> {
 
 export type ControlledModel = 'messages' | 'conversations' | 'activeConversationId' | 'composerValue';
 
+export interface ChatStoreConstructor<Cursor = string> {
+  new (parameters: ChatStoreParameters<Cursor>): ChatStore<Cursor>;
+}
+
 function applyModelInitialValue<T>(controlledValue: T | undefined, defaultValue: T | undefined, fallback: T): T {
   if (controlledValue !== undefined) {
     return controlledValue;

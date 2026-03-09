@@ -1,0 +1,205 @@
+import * as React from 'react';
+import { act, renderHook } from '@mui/internal-test-utils';
+import { clearWarningsCache } from '@mui/x-internals/warning';
+import { spy } from 'sinon';
+import type { ChatAdapter } from './adapters';
+import { useChatRuntimeContext } from './internals/useChatRuntimeContext';
+import type { ChatPartRendererMap } from './renderers';
+import { ChatStore, type ChatStoreParameters } from './store';
+import type { ChatConversation, ChatMessage } from './types/chat-entities';
+import { ChatProvider, type ChatProviderProps } from './ChatProvider';
+import { useChatStoreContext } from './use-chat-store-context';
+
+const message1: ChatMessage = {
+  id: 'm1',
+  role: 'user',
+  parts: [{ type: 'text', text: 'Hello' }],
+};
+
+const message2: ChatMessage = {
+  id: 'm2',
+  role: 'assistant',
+  status: 'sent',
+  parts: [{ type: 'text', text: 'Hi' }],
+};
+
+const conversation1: ChatConversation = {
+  id: 'c1',
+  title: 'General',
+};
+
+function createAdapter(): ChatAdapter {
+  return {
+    async sendMessage() {
+      return new ReadableStream({
+        start(controller) {
+          controller.close();
+        },
+      });
+    },
+  };
+}
+
+function createProviderWrapper(initialProps: Omit<ChatProviderProps, 'children'>) {
+  let currentProps = initialProps;
+
+  function Wrapper({ children }: React.PropsWithChildren) {
+    return <ChatProvider {...currentProps}>{children}</ChatProvider>;
+  }
+
+  return {
+    Wrapper,
+    setProps(nextProps: Omit<ChatProviderProps, 'children'>) {
+      currentProps = nextProps;
+    },
+  };
+}
+
+describe('ChatProvider', () => {
+  beforeEach(() => {
+    clearWarningsCache();
+  });
+
+  it('provides the chat store through context', () => {
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter(),
+      defaultMessages: [message1],
+    });
+    const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+    expect(result.current.state.messageIds).toEqual(['m1']);
+  });
+
+  it('returns null from useChatStoreContext(true) outside the provider and throws otherwise', () => {
+    const { result } = renderHook(() => useChatStoreContext(true));
+
+    expect(result.current).toBe(null);
+    expect(() => renderHook(() => useChatStoreContext())).toThrow(
+      'MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component',
+    );
+  });
+
+  it('creates the store once, resyncs controlled props, and exposes runtime context values', () => {
+    const adapter = createAdapter();
+    const onToolCall = spy();
+    const onFinish = spy();
+    const onData = spy();
+    const onError = spy();
+    const partRenderers: ChatPartRendererMap = {
+      text: ({ part }) => part.text,
+    };
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter,
+      messages: [message1],
+      activeConversationId: 'c1',
+      partRenderers,
+      onToolCall,
+      onFinish,
+      onData,
+      onError,
+    });
+    const { result, rerender } = renderHook(
+      () => ({
+        store: useChatStoreContext(),
+        runtime: useChatRuntimeContext(),
+      }),
+      { wrapper: Wrapper },
+    );
+
+    const initialStore = result.current.store;
+
+    expect(result.current.store.state.messageIds).toEqual(['m1']);
+    expect(result.current.store.state.activeConversationId).toBe('c1');
+    expect(result.current.runtime.adapter).toBe(adapter);
+    expect(result.current.runtime.onToolCall).toBe(onToolCall);
+    expect(result.current.runtime.onFinish).toBe(onFinish);
+    expect(result.current.runtime.onData).toBe(onData);
+    expect(result.current.runtime.onError).toBe(onError);
+    expect(result.current.runtime.partRenderers).toBe(partRenderers);
+
+    setProps({
+      adapter,
+      messages: [message1, message2],
+      activeConversationId: 'c2',
+      partRenderers,
+      onToolCall,
+      onFinish,
+      onData,
+      onError,
+    });
+    rerender();
+
+    expect(result.current.store).toBe(initialStore);
+    expect(result.current.store.state.messageIds).toEqual(['m1', 'm2']);
+    expect(result.current.store.state.activeConversationId).toBe('c2');
+  });
+
+  it('calls uncontrolled onChange callbacks for internal store mutations', () => {
+    const onMessagesChange = spy();
+    const onConversationsChange = spy();
+    const onActiveConversationChange = spy();
+    const onComposerValueChange = spy();
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter(),
+      onMessagesChange,
+      onConversationsChange,
+      onActiveConversationChange,
+      onComposerValueChange,
+    });
+    const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.addMessage(message1);
+      result.current.setConversations([conversation1]);
+      result.current.setActiveConversation('c1');
+      result.current.setComposerValue('Draft one');
+    });
+
+    expect(onMessagesChange.callCount).toBe(1);
+    expect(onMessagesChange.lastCall.args[0]).toEqual([message1]);
+    expect(onConversationsChange.callCount).toBe(1);
+    expect(onConversationsChange.lastCall.args[0]).toEqual([conversation1]);
+    expect(onActiveConversationChange.callCount).toBe(1);
+    expect(onActiveConversationChange.lastCall.args[0]).toBe('c1');
+    expect(onComposerValueChange.callCount).toBe(1);
+    expect(onComposerValueChange.lastCall.args[0]).toBe('Draft one');
+  });
+
+  it('warns when switching a provider model from controlled to uncontrolled', () => {
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: createAdapter(),
+      messages: [message1] as ChatMessage[] | undefined,
+    });
+    const { rerender } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+    expect(() => {
+      setProps({
+        adapter: createAdapter(),
+        messages: undefined,
+      });
+      rerender();
+    }).toErrorDev(
+      'MUI X Chat: A component is changing the controlled messages state of ChatProvider to be uncontrolled.',
+    );
+  });
+
+  it('supports overriding the store class', () => {
+    class TestStore extends ChatStore {
+      static instances: TestStore[] = [];
+
+      public constructor(parameters: ChatStoreParameters) {
+        super(parameters);
+        TestStore.instances.push(this);
+      }
+    }
+
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter(),
+      storeClass: TestStore,
+    });
+    const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+    expect(result.current).toBeInstanceOf(TestStore);
+    expect(TestStore.instances).toHaveLength(1);
+  });
+});
