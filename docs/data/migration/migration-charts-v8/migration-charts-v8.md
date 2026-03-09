@@ -493,6 +493,13 @@ The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a 
 
 The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
 
+## Keyboard navigation ✅
+
+The keyboard navigation is no enabled by default.
+If you used `enableKeyboardNavigation` prop, you can remove it.
+
+To disable this feature, use the prop `disableKeyboardNavigation`.
+
 ## Props propagation
 
 The `ref` for single component charts like `<LineChart />` is now propagated to the root element instead of the SVG element.
