@@ -50,13 +50,15 @@ export function FetchChildren() {
   };
 
   return (
-    <RichTreeViewPro
-      items={items}
-      dataSource={{
-        getChildrenCount: (item) => item?.childrenCount as number,
-        getTreeItems: fetchTreeItems,
-      }}
-    />
+    <div style={{ width: 300, height: 240 }}>
+      <RichTreeViewPro
+        items={items}
+        dataSource={{
+          getChildrenCount: (item) => item?.childrenCount as number,
+          getTreeItems: fetchTreeItems,
+        }}
+      />
+    </div>
   );
 }
 
