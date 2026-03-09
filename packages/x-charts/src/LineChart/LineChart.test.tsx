@@ -3,6 +3,22 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { screen } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { isJSDOM } from 'test/utils/skipIf';
+
+const config = {
+  dataset: [
+    { x: 10, v1: 0, v2: 10 },
+    { x: 20, v1: 5, v2: 8 },
+    { x: 30, v1: 8, v2: 5 },
+    { x: 40, v1: 10, v2: 0 },
+  ],
+  margin: { top: 0, left: 0, bottom: 0, right: 0 },
+  xAxis: [{ position: 'none' }],
+  yAxis: [{ position: 'none' }],
+  width: 400,
+  height: 400,
+} as const;
 
 describe('<LineChart />', () => {
   const { render } = createRenderer();
@@ -71,5 +87,232 @@ describe('<LineChart />', () => {
 
     const labelY = await screen.findByText('250');
     expect(labelY).toBeVisible();
+  });
+
+  describe('data-series-id', () => {
+    it('should add data-series-id to area elements', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', area: true },
+            { dataKey: 'v2', id: 's2', area: true },
+          ]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
+
+      expect(areas[0].getAttribute('data-series-id')).to.equal('s1');
+      expect(areas[1].getAttribute('data-series-id')).to.equal('s2');
+    });
+
+    it('should add data-series-id to line elements', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1' },
+            { dataKey: 'v2', id: 's2' },
+          ]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
+
+      expect(lines[0].getAttribute('data-series-id')).to.equal('s1');
+      expect(lines[1].getAttribute('data-series-id')).to.equal('s2');
+    });
+
+    it('should add data-series-id to mark elements', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 's1', showMark: true },
+            { dataKey: 'v2', id: 's2', showMark: true },
+          ]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+
+      // First 4 marks belong to s1, next 4 to s2
+      for (let i = 0; i < 4; i += 1) {
+        expect(marks[i].getAttribute('data-series-id')).to.equal('s1');
+      }
+      for (let i = 4; i < 8; i += 1) {
+        expect(marks[i].getAttribute('data-series-id')).to.equal('s2');
+      }
+    });
+  });
+
+  describe('data-index', () => {
+    it('should add data-index to mark elements', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', showMark: true }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+
+      expect(marks[0].getAttribute('data-index')).to.equal('0');
+      expect(marks[1].getAttribute('data-index')).to.equal('1');
+      expect(marks[2].getAttribute('data-index')).to.equal('2');
+      expect(marks[3].getAttribute('data-index')).to.equal('3');
+    });
+  });
+
+  describe('classes', () => {
+    it('should apply MuiLineChart classes to area elements', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', area: true }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const areas = document.querySelectorAll<HTMLElement>('path.MuiLineChart-area');
+
+      expect(areas.length).to.equal(1);
+    });
+
+    it('should apply MuiLineChart classes to line elements', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1' }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineChart-line');
+
+      expect(lines.length).to.equal(1);
+    });
+
+    it('should apply MuiLineChart classes to mark elements', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', showMark: true }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const marks = document.querySelectorAll<HTMLElement>('.MuiLineChart-mark');
+
+      expect(marks.length).to.equal(4);
+    });
+  });
+
+  describe('Plot root elements', () => {
+    it('should apply MuiLineChart-root class to AreaPlot root', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', area: true }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const areaPlotRoots = document.querySelectorAll<HTMLElement>('.MuiLineChart-root');
+
+      expect(areaPlotRoots.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('theme style overrides', () => {
+    it.skipIf(isJSDOM)(
+      'should apply MuiAreaPlot style overrides from the theme',
+      () => {
+        const theme = createTheme({
+          components: {
+            MuiAreaPlot: {
+              styleOverrides: {
+                root: {
+                  opacity: 0.5,
+                },
+              },
+            },
+          },
+        });
+
+        render(
+          <ThemeProvider theme={theme}>
+            <LineChart
+              {...config}
+              series={[{ dataKey: 'v1', id: 's1', area: true }]}
+              xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+            />
+          </ThemeProvider>,
+        );
+
+        const areaPlotRoot = document.querySelector<HTMLElement>('.MuiAreaPlot-root');
+
+        expect(areaPlotRoot).toHaveComputedStyle({ opacity: '0.5' });
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should apply MuiLinePlot style overrides from the theme',
+      () => {
+        const theme = createTheme({
+          components: {
+            MuiLinePlot: {
+              styleOverrides: {
+                root: {
+                  opacity: 0.5,
+                },
+              },
+            },
+          },
+        });
+
+        render(
+          <ThemeProvider theme={theme}>
+            <LineChart
+              {...config}
+              series={[{ dataKey: 'v1', id: 's1' }]}
+              xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+            />
+          </ThemeProvider>,
+        );
+
+        const linePlotRoot = document.querySelector<HTMLElement>('.MuiLinePlot-root');
+
+        expect(linePlotRoot).toHaveComputedStyle({ opacity: '0.5' });
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should apply MuiMarkPlot style overrides from the theme',
+      () => {
+        const theme = createTheme({
+          components: {
+            MuiMarkPlot: {
+              styleOverrides: {
+                root: {
+                  opacity: 0.5,
+                },
+              },
+            },
+          },
+        });
+
+        render(
+          <ThemeProvider theme={theme}>
+            <LineChart
+              {...config}
+              series={[{ dataKey: 'v1', id: 's1', showMark: true }]}
+              xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+            />
+          </ThemeProvider>,
+        );
+
+        const markPlotRoot = document.querySelector<HTMLElement>('.MuiMarkPlot-root');
+
+        expect(markPlotRoot).toHaveComputedStyle({ opacity: '0.5' });
+      },
+    );
   });
 });
