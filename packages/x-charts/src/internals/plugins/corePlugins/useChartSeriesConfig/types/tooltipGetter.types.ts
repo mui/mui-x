@@ -24,7 +24,7 @@ export interface ItemTooltipValue<SeriesType extends ChartSeriesType> {
   /**
    * The value.
    */
-  value: ChartsSeriesConfig[SeriesType]['valueType'];
+  value: SeriesType extends 'heatmap' ? number | null : ChartsSeriesConfig[SeriesType]['valueType'];
   /**
    * The value formatted with context set to "tooltip".
    */
@@ -39,7 +39,9 @@ export interface ItemTooltipValue<SeriesType extends ChartSeriesType> {
   markShape?: ChartsLabelMarkProps['markShape'];
 }
 
-export interface ItemTooltip<SeriesType extends ChartSeriesType> extends ItemTooltipValue<SeriesType> {
+export interface ItemTooltip<
+  SeriesType extends ChartSeriesType,
+> extends ItemTooltipValue<SeriesType> {
   /**
    * An object that identifies the item to display.
    */
@@ -72,9 +74,7 @@ export type TooltipGetter<SeriesType extends ChartSeriesType> = (params: {
 }) =>
   | (SeriesType extends 'radar'
       ? ItemTooltipWithMultipleValues<SeriesType>
-      : SeriesType extends 'heatmap'
-        ? Omit<ItemTooltip<SeriesType>, 'value'> & { value: number | null }
-        : ItemTooltip<SeriesType>)
+      : ItemTooltip<SeriesType>)
   | null;
 
 /**
