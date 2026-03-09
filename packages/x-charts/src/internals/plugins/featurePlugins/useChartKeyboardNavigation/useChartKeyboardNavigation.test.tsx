@@ -1,6 +1,6 @@
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer, act } from '@mui/internal-test-utils/createRenderer';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { CHART_SELECTOR } from '../../../../tests/constants';
 
 describe('useChartKeyboardNavigation', () => {
@@ -88,10 +88,10 @@ describe('useChartKeyboardNavigation', () => {
 
       const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
       const firstBar = container.querySelector(
-        `[data-series="A"] .${barElementClasses.root}:nth-child(1)`,
+        `[data-series="A"] .${barClasses.element}:nth-child(1)`,
       );
       const secondBar = container.querySelector(
-        `[data-series="A"] .${barElementClasses.root}:nth-child(2)`,
+        `[data-series="A"] .${barClasses.element}:nth-child(2)`,
       );
 
       await user.click(svg);
