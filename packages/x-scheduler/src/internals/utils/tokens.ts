@@ -387,26 +387,3 @@ export const getPaletteVariants = (theme: Theme) => {
     } as CSSObject,
   }));
 };
-
-/**
- * CSS variable tokens for the scheduler.
- * These are applied to root components (EventCalendar, standalone views).
- */
-export const schedulerTokens: CSSObject = {
-  // Gray scale (using MUI grey)
-  '--gray-1': grey[50],
-  '--gray-2': grey[100],
-  '--gray-3': grey[200],
-  '--gray-4': grey[300],
-  '--gray-5': grey[400],
-  '--gray-6': grey[500],
-  '--gray-7': grey[600],
-  '--gray-8': grey[700],
-  '--gray-9': grey[800],
-  '--gray-10': grey[900],
-
-  // Semantic aliases
-  '--border-color': grey[200],
-  '--weekend-background': grey[100],
-  '--surface': 'white',
-};

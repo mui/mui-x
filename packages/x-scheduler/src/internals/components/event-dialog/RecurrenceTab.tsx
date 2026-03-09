@@ -38,7 +38,7 @@ const SectionHeaderTitle = styled(Typography, {
   slot: 'SectionHeaderTitle',
 })(({ theme }) => ({
   textTransform: 'uppercase',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 const RecurrenceSelectorContainer = styled(Paper, {
@@ -46,7 +46,7 @@ const RecurrenceSelectorContainer = styled(Paper, {
   slot: 'RecurrenceSelectorContainer',
 })(({ theme }) => ({
   display: 'inline-flex',
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   flexWrap: 'wrap',
   width: 'fit-content',
   maxWidth: '100%',
@@ -56,7 +56,7 @@ const RadioButtonLabel = styled(FormControlLabel, {
   name: 'MuiEventDialog',
   slot: 'RadioButtonLabel',
 })(({ theme }) => ({
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   [`& .${formControlLabelClasses.label}`]: {
     minWidth: 60,
   },
@@ -66,7 +66,7 @@ const RepeatSectionLabel = styled(FormLabel, {
   name: 'MuiEventDialog',
   slot: 'RepeatSectionLabel',
 })(({ theme }) => ({
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   minWidth: 60,
 }));
 
