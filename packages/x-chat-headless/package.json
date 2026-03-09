@@ -35,7 +35,8 @@
     "directory": "packages/x-chat-headless"
   },
   "dependencies": {
-    "@babel/runtime": "catalog:"
+    "@babel/runtime": "catalog:",
+    "@mui/x-internals": "workspace:*"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
