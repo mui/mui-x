@@ -324,8 +324,8 @@ This new type relies on the `xIndex`/`yIndex` to identify the cell instead of ju
  }
 ```
 
-The return type of the `useItemTooltip()` for heatmap got modified.
-Instead of returning the item from `data` with shape `[x, y, cellValue]`, it returns cell value.
+The return type of the `useItemTooltip()` for heatmap series was modified.
+Instead of returning an object where the `value` was a `[x, y, cellValue]` tuple, it now returns cell value directly.
 
 If the cell is empty, it returns `null`.
 
