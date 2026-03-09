@@ -38,7 +38,6 @@ const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
 const MONOREPO_ALIASES = {
   '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
-  '@mui/internal-markdown': path.resolve(MONOREPO_PATH, './packages/markdown'),
 };
 
 function loadPkg(pkgPath: string): { version: string } {
