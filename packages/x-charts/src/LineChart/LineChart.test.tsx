@@ -1,6 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { screen } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -101,7 +101,7 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
+      const areas = document.querySelectorAll<HTMLElement>(`.${lineClasses.area}`);
 
       expect(areas[0].getAttribute('data-series-id')).to.equal('s1');
       expect(areas[1].getAttribute('data-series-id')).to.equal('s2');
@@ -118,7 +118,7 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
+      const lines = document.querySelectorAll<HTMLElement>(`.${lineClasses.line}`);
 
       expect(lines[0].getAttribute('data-series-id')).to.equal('s1');
       expect(lines[1].getAttribute('data-series-id')).to.equal('s2');
@@ -135,7 +135,7 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>(`.${lineClasses.mark}`);
 
       // First 4 marks belong to s1, next 4 to s2
       for (let i = 0; i < 4; i += 1) {
@@ -156,7 +156,7 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>(`.${lineClasses.mark}`);
 
       expect(marks[0].getAttribute('data-index')).to.equal('0');
       expect(marks[1].getAttribute('data-index')).to.equal('1');
@@ -174,7 +174,7 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const areas = document.querySelectorAll<HTMLElement>('path.MuiLineChart-area');
+      const areas = document.querySelectorAll<HTMLElement>(`.${lineClasses.area}`);
 
       expect(areas.length).to.equal(1);
     });
@@ -187,7 +187,7 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineChart-line');
+      const lines = document.querySelectorAll<HTMLElement>(`.${lineClasses.line}`);
 
       expect(lines.length).to.equal(1);
     });
@@ -200,7 +200,7 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const marks = document.querySelectorAll<HTMLElement>('.MuiLineChart-mark');
+      const marks = document.querySelectorAll<HTMLElement>(`.${lineClasses.mark}`);
 
       expect(marks.length).to.equal(4);
     });
@@ -215,7 +215,7 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const areaPlotRoots = document.querySelectorAll<HTMLElement>('.MuiLineChart-root');
+      const areaPlotRoots = document.querySelectorAll<HTMLElement>(`.${lineClasses.root}`);
 
       expect(areaPlotRoots.length).toBeGreaterThan(0);
     });
@@ -228,7 +228,7 @@ describe('<LineChart />', () => {
           MuiAreaPlot: {
             styleOverrides: {
               root: {
-                opacity: 0.5,
+                strokeDashoffset: 10,
               },
             },
           },
@@ -245,9 +245,10 @@ describe('<LineChart />', () => {
         </ThemeProvider>,
       );
 
-      const areaPlotRoot = document.querySelector<HTMLElement>('.MuiAreaPlot-root');
-
-      expect(areaPlotRoot).toHaveComputedStyle({ opacity: '0.5' });
+      const area = document.querySelector<SVGElement>(`.${lineClasses.area}`);
+      expect(area).not.to.equal(null);
+      const areaPlotRoot = area!.parentElement;
+      expect(areaPlotRoot).toHaveComputedStyle({ strokeDashoffset: '10px' });
     });
 
     it.skipIf(isJSDOM)('should apply MuiLinePlot style overrides from the theme', () => {
@@ -256,7 +257,7 @@ describe('<LineChart />', () => {
           MuiLinePlot: {
             styleOverrides: {
               root: {
-                opacity: 0.5,
+                strokeDashoffset: 10,
               },
             },
           },
@@ -273,9 +274,10 @@ describe('<LineChart />', () => {
         </ThemeProvider>,
       );
 
-      const linePlotRoot = document.querySelector<HTMLElement>('.MuiLinePlot-root');
-
-      expect(linePlotRoot).toHaveComputedStyle({ opacity: '0.5' });
+      const line = document.querySelector<SVGElement>(`.${lineClasses.line}`);
+      expect(line).not.to.equal(null);
+      const linePlotRoot = line!.parentElement;
+      expect(linePlotRoot).toHaveComputedStyle({ strokeDashoffset: '10px' });
     });
 
     it.skipIf(isJSDOM)('should apply MuiMarkPlot style overrides from the theme', () => {
@@ -284,7 +286,7 @@ describe('<LineChart />', () => {
           MuiMarkPlot: {
             styleOverrides: {
               root: {
-                opacity: 0.5,
+                strokeDashoffset: 10,
               },
             },
           },
@@ -301,9 +303,11 @@ describe('<LineChart />', () => {
         </ThemeProvider>,
       );
 
-      const markPlotRoot = document.querySelector<HTMLElement>('.MuiMarkPlot-root');
-
-      expect(markPlotRoot).toHaveComputedStyle({ opacity: '0.5' });
+      const mark = document.querySelector<SVGElement>(`.${lineClasses.mark}`);
+      expect(mark).not.to.equal(null);
+      // mark -> series group <g> -> MarkPlotRoot
+      const markPlotRoot = mark!.parentElement?.parentElement;
+      expect(markPlotRoot).toHaveComputedStyle({ strokeDashoffset: '10px' });
     });
   });
 });
