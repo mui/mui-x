@@ -7,12 +7,22 @@ import * as unstyledDirect from '@mui/x-chat-unstyled';
 import { ChatProvider as HeadlessBridgeChatProvider } from '@mui/x-chat/headless';
 import { ChatStore as HeadlessChatStore } from '@mui/x-chat/headless';
 import { chatSelectors as headlessBridgeSelectors } from '@mui/x-chat/headless';
+import { useChatStatus as headlessBridgeUseChatStatus } from '@mui/x-chat/headless';
+import { useConversation as headlessBridgeUseConversation } from '@mui/x-chat/headless';
+import { useConversations as headlessBridgeUseConversations } from '@mui/x-chat/headless';
+import { useMessage as headlessBridgeUseMessage } from '@mui/x-chat/headless';
+import { useMessageIds as headlessBridgeUseMessageIds } from '@mui/x-chat/headless';
 import { useChatStore as headlessBridgeUseChatStore } from '@mui/x-chat/headless';
 import { useChatStoreContext as headlessBridgeUseChatStoreContext } from '@mui/x-chat/headless';
 import { ChatProvider as HeadlessDirectChatProvider } from '@mui/x-chat-headless';
 import { chatSelectors as headlessDirectSelectors } from '@mui/x-chat-headless';
 import { processStream as headlessBridgeProcessStream } from '@mui/x-chat/headless';
 import { processStream as headlessDirectProcessStream } from '@mui/x-chat-headless';
+import { useChatStatus as headlessDirectUseChatStatus } from '@mui/x-chat-headless';
+import { useConversation as headlessDirectUseConversation } from '@mui/x-chat-headless';
+import { useConversations as headlessDirectUseConversations } from '@mui/x-chat-headless';
+import { useMessage as headlessDirectUseMessage } from '@mui/x-chat-headless';
+import { useMessageIds as headlessDirectUseMessageIds } from '@mui/x-chat-headless';
 import { useChatStore as headlessDirectUseChatStore } from '@mui/x-chat-headless';
 import { useChatStoreContext as headlessDirectUseChatStoreContext } from '@mui/x-chat-headless';
 import type {
@@ -78,6 +88,11 @@ describe('x-chat package scaffold', () => {
     expect(HeadlessBridgeChatProvider).toBe(HeadlessDirectChatProvider);
     expect(headlessBridgeUseChatStore).toBe(headlessDirectUseChatStore);
     expect(headlessBridgeUseChatStoreContext).toBe(headlessDirectUseChatStoreContext);
+    expect(headlessBridgeUseMessageIds).toBe(headlessDirectUseMessageIds);
+    expect(headlessBridgeUseMessage).toBe(headlessDirectUseMessage);
+    expect(headlessBridgeUseConversations).toBe(headlessDirectUseConversations);
+    expect(headlessBridgeUseConversation).toBe(headlessDirectUseConversation);
+    expect(headlessBridgeUseChatStatus).toBe(headlessDirectUseChatStatus);
 
     const store = new HeadlessChatStore();
     expect(store.state.messageIds).toEqual([]);
