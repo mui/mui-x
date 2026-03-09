@@ -133,7 +133,7 @@ const RecurrenceSelectorToggleGroup = styled(ToggleButtonGroup, {
 
 const WeekDaySelectorCheckbox = styled(Checkbox, {
   name: 'MuiEventDialog',
-  slot: 'WeekDaySelectorFormGroup',
+  slot: 'WeekDaySelectorCheckbox',
 })(({ theme }) => ({
   ...theme.typography.button,
   fontSize: theme.typography.pxToRem(13),
@@ -497,7 +497,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   {weeklyDayItems.map(({ value: dayValue, ariaLabel, label }) => (
                     <WeekDaySelectorCheckbox
                       key={dayValue}
-                      className={classes.eventDialogWeekDaySelectorFormGroup}
+                      className={classes.eventDialogWeekDaySelectorCheckbox}
                       icon={<span>{label}</span>}
                       checkedIcon={<span>{label}</span>}
                       checked={controlled.rruleDraft.byDay?.includes(dayValue) ?? false}
