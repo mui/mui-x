@@ -7,11 +7,13 @@ import * as unstyledDirect from '@mui/x-chat-unstyled';
 import { ChatProvider as HeadlessBridgeChatProvider } from '@mui/x-chat/headless';
 import { ChatStore as HeadlessChatStore } from '@mui/x-chat/headless';
 import { chatSelectors as headlessBridgeSelectors } from '@mui/x-chat/headless';
+import { useChatStore as headlessBridgeUseChatStore } from '@mui/x-chat/headless';
 import { useChatStoreContext as headlessBridgeUseChatStoreContext } from '@mui/x-chat/headless';
 import { ChatProvider as HeadlessDirectChatProvider } from '@mui/x-chat-headless';
 import { chatSelectors as headlessDirectSelectors } from '@mui/x-chat-headless';
 import { processStream as headlessBridgeProcessStream } from '@mui/x-chat/headless';
 import { processStream as headlessDirectProcessStream } from '@mui/x-chat-headless';
+import { useChatStore as headlessDirectUseChatStore } from '@mui/x-chat-headless';
 import { useChatStoreContext as headlessDirectUseChatStoreContext } from '@mui/x-chat-headless';
 import type {
   ChatAdapter as HeadlessAdapter,
@@ -74,6 +76,7 @@ describe('x-chat package scaffold', () => {
     expect(headlessBridgeSelectors).toBe(headlessDirectSelectors);
     expect(headlessBridgeProcessStream).toBe(headlessDirectProcessStream);
     expect(HeadlessBridgeChatProvider).toBe(HeadlessDirectChatProvider);
+    expect(headlessBridgeUseChatStore).toBe(headlessDirectUseChatStore);
     expect(headlessBridgeUseChatStoreContext).toBe(headlessDirectUseChatStoreContext);
 
     const store = new HeadlessChatStore();

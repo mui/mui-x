@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { act, renderHook } from '@mui/internal-test-utils';
+import { useStore } from '@mui/x-internals/store';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { spy } from 'sinon';
 import type { ChatAdapter } from './adapters';
 import { useChatRuntimeContext } from './internals/useChatRuntimeContext';
+import { useChatStore } from './hooks';
 import type { ChatPartRendererMap } from './renderers';
+import { chatSelectors } from './selectors';
 import { ChatStore, type ChatStoreParameters } from './store';
 import type { ChatConversation, ChatMessage } from './types/chat-entities';
 import { ChatProvider, type ChatProviderProps } from './ChatProvider';
@@ -77,6 +80,47 @@ describe('ChatProvider', () => {
     expect(() => renderHook(() => useChatStoreContext())).toThrow(
       'MUI X Chat: useChatStoreContext must be used within a <ChatProvider> component',
     );
+  });
+
+  it('returns the store from useChatStore and preserves the provider instance across rerenders', () => {
+    const defaultMessages = [message1];
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: createAdapter(),
+      defaultMessages,
+    });
+    const { result, rerender } = renderHook(() => useChatStore(), { wrapper: Wrapper });
+
+    const initialStore = result.current;
+
+    expect(result.current.state.messageIds).toEqual(['m1']);
+
+    setProps({
+      adapter: createAdapter(),
+      defaultMessages,
+    });
+    rerender();
+
+    expect(result.current).toBe(initialStore);
+  });
+
+  it('throws from useChatStore outside the provider', () => {
+    expect(() => renderHook(() => useChatStore())).toThrow(
+      'MUI X Chat: useChatStore must be used within a <ChatProvider> component',
+    );
+  });
+
+  it('supports pairing useChatStore with useStore and chatSelectors', () => {
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter(),
+      defaultMessages: [message1],
+    });
+    const { result } = renderHook(() => {
+      const store = useChatStore();
+
+      return useStore(store, chatSelectors.messageCount);
+    }, { wrapper: Wrapper });
+
+    expect(result.current).toBe(1);
   });
 
   it('creates the store once, resyncs controlled props, and exposes runtime context values', () => {
