@@ -18,7 +18,7 @@ export interface ChatStoreParameters<Cursor = string> {
   onComposerValueChange?: (value: string) => void;
 }
 
-type ControlledModel = 'messages' | 'conversations' | 'activeConversationId' | 'composerValue';
+export type ControlledModel = 'messages' | 'conversations' | 'activeConversationId' | 'composerValue';
 
 function applyModelInitialValue<T>(controlledValue: T | undefined, defaultValue: T | undefined, fallback: T): T {
   if (controlledValue !== undefined) {
@@ -32,45 +32,28 @@ function applyModelInitialValue<T>(controlledValue: T | undefined, defaultValue:
   return fallback;
 }
 
-function normalizeMessages(messages: ChatMessage[]) {
-  const messageIds: string[] = [];
-  const messagesById: Record<string, ChatMessage> = {};
-  const seenMessageIds = new Set<string>();
+function normalizeById<T extends { id: string }>(items: T[]): { ids: string[]; byId: Record<string, T> } {
+  const ids: string[] = [];
+  const byId: Record<string, T> = {};
+  const seen = new Set<string>();
 
-  for (const message of messages) {
-    messagesById[message.id] = message;
+  for (const item of items) {
+    byId[item.id] = item;
 
-    if (!seenMessageIds.has(message.id)) {
-      seenMessageIds.add(message.id);
-      messageIds.push(message.id);
+    if (!seen.has(item.id)) {
+      seen.add(item.id);
+      ids.push(item.id);
     }
   }
 
-  return { messageIds, messagesById };
-}
-
-function normalizeConversations(conversations: ChatConversation[]) {
-  const conversationIds: string[] = [];
-  const conversationsById: Record<string, ChatConversation> = {};
-  const seenConversationIds = new Set<string>();
-
-  for (const conversation of conversations) {
-    conversationsById[conversation.id] = conversation;
-
-    if (!seenConversationIds.has(conversation.id)) {
-      seenConversationIds.add(conversation.id);
-      conversationIds.push(conversation.id);
-    }
-  }
-
-  return { conversationIds, conversationsById };
+  return { ids, byId };
 }
 
 function deriveStateFromParameters<Cursor = string>(parameters: ChatStoreParameters<Cursor>) {
-  const { messageIds, messagesById } = normalizeMessages(
+  const { ids: messageIds, byId: messagesById } = normalizeById(
     applyModelInitialValue(parameters.messages, parameters.defaultMessages, []),
   );
-  const { conversationIds, conversationsById } = normalizeConversations(
+  const { ids: conversationIds, byId: conversationsById } = normalizeById(
     applyModelInitialValue(parameters.conversations, parameters.defaultConversations, []),
   );
 
@@ -124,7 +107,9 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     const newState: Partial<ChatInternalState<Cursor>> = {};
 
     if (parameters.messages !== undefined && (parameters.messages !== this.parameters.messages || this.dirtyControlledModels.has('messages'))) {
-      Object.assign(newState, normalizeMessages(parameters.messages));
+      const { ids: messageIds, byId: messagesById } = normalizeById(parameters.messages);
+      newState.messageIds = messageIds;
+      newState.messagesById = messagesById;
       this.dirtyControlledModels.delete('messages');
     }
 
@@ -133,7 +118,9 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       (parameters.conversations !== this.parameters.conversations ||
         this.dirtyControlledModels.has('conversations'))
     ) {
-      Object.assign(newState, normalizeConversations(parameters.conversations));
+      const { ids: conversationIds, byId: conversationsById } = normalizeById(parameters.conversations);
+      newState.conversationIds = conversationIds;
+      newState.conversationsById = conversationsById;
       this.dirtyControlledModels.delete('conversations');
     }
 
@@ -254,7 +241,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
   };
 
   public setMessages = (messages: ChatMessage[]) => {
-    const { messageIds, messagesById } = normalizeMessages(messages);
+    const { ids: messageIds, byId: messagesById } = normalizeById(messages);
 
     this.dirtyControlledModels.add('messages');
     this.update({
@@ -264,7 +251,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
   };
 
   public setConversations = (conversations: ChatConversation[]) => {
-    const { conversationIds, conversationsById } = normalizeConversations(conversations);
+    const { ids: conversationIds, byId: conversationsById } = normalizeById(conversations);
 
     this.dirtyControlledModels.add('conversations');
     this.update({
