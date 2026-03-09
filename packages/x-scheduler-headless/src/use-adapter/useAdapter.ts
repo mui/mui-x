@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { fr } from 'date-fns/locale/fr';
 import { TemporalSupportedObject } from '../models';
 import { UnstableTemporalAdapterDateFns } from '../base-ui-copy/temporal-adapter-date-fns';
@@ -39,7 +40,7 @@ export function useAdapterContext() {
     [store],
   );
 
-  return React.useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
 /**
