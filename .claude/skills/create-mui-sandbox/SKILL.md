@@ -108,11 +108,15 @@ agent-browser click "@eN"  # Replace @eN with actual ref from snapshot
 
 # Get forked URL
 sleep 5
-agent-browser get url
+FORKED_URL=$(agent-browser get url)
 # Output: https://stackblitz.com/edit/<project-id>?file=src%2FDemo.tsx
 
 # Cleanup
+agent-browser close
 kill $SERVER_PID 2>/dev/null
+
+# Open shareable URL in default browser
+open "$FORKED_URL"
 ```
 
 ### If NOT requested
