@@ -32,10 +32,10 @@ export interface ChartsDataProviderProSlots extends ChartsSlotsPro {}
 export interface ChartsDataProviderProSlotProps extends ChartsSlotPropsPro {}
 
 export type ChartsDataProviderProProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartsDataProviderProps<TSeries, TSignatures> &
-  ChartsProviderProps<TSeries, TSignatures>['pluginParams'] & {
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = ChartsDataProviderProps<SeriesType, TSignatures> &
+  ChartsProviderProps<SeriesType, TSignatures>['pluginParams'] & {
     /**
      * Slots to customize charts' components.
      */
@@ -77,9 +77,9 @@ export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line
  * ```
  */
 function ChartsDataProviderPro<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsDataProviderProProps<TSeries, TSignatures>) {
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+>(props: ChartsDataProviderProProps<SeriesType, TSignatures>) {
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartsDataProviderProProps({
       ...props,
