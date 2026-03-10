@@ -46,20 +46,20 @@ const EventTimelinePremiumGrid = styled(TimelineGrid.Root, {
   alignItems: 'stretch',
 });
 
-const EventTimelinePremiumTitleSubGridHeaderRow = styled(TimelineGrid.Row, {
+const EventTimelinePremiumHeaderRow = styled(TimelineGrid.Row, {
   name: 'MuiEventTimeline',
-  slot: 'TitleSubGridHeaderRow',
+  slot: 'HeaderRow',
 })(({ theme }) => ({
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   gridRow: 1,
-  gridColumn: 1,
-  overflowX: 'hidden',
+  gridColumn: '1 / -1',
+  display: 'grid',
+  gridTemplateColumns: 'subgrid',
 }));
 
-const EventTimelinePremiumTitleSubGridHeaderCell = styled(TimelineGrid.Cell, {
+const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   name: 'MuiEventTimeline',
-  slot: 'TitleSubGridHeaderCell',
+  slot: 'TitleHeaderCell',
 })(({ theme }) => ({
   fontWeight: theme.typography.fontWeightMedium,
   padding: theme.spacing(1),
@@ -67,15 +67,14 @@ const EventTimelinePremiumTitleSubGridHeaderCell = styled(TimelineGrid.Cell, {
   fontSize: theme.typography.body2.fontSize,
   alignItems: 'flex-end',
   height: '100%',
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  overflowX: 'hidden',
 }));
 
-const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelineGrid.Row, {
+const EventTimelinePremiumEventsHeaderCell = styled(TimelineGrid.Cell, {
   name: 'MuiEventTimeline',
-  slot: 'EventsSubGridHeaderRow',
-})(({ theme }) => ({
-  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  gridRow: 1,
-  gridColumn: 2,
+  slot: 'EventsHeaderCell',
+})(({
   overflowX: 'hidden',
 }));
 
@@ -393,23 +392,21 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           className={classes.grid}
           style={{ '--unit-width': `var(--${view}-cell-width)` } as React.CSSProperties}
         >
-          <EventTimelinePremiumTitleSubGridHeaderRow
-            ref={titleHeaderRef}
-            className={classes.titleSubGridHeaderRow}
-          >
-            <EventTimelinePremiumTitleSubGridHeaderCell
-              className={classes.titleSubGridHeaderCell}
+          <EventTimelinePremiumHeaderRow className={classes.headerRow}>
+            <EventTimelinePremiumTitleHeaderCell
+              ref={titleHeaderRef}
+              className={classes.titleHeaderCell}
             >
               {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
-            </EventTimelinePremiumTitleSubGridHeaderCell>
-          </EventTimelinePremiumTitleSubGridHeaderRow>
-          <EventTimelinePremiumEventsSubGridHeaderRow
-            ref={eventsHeaderRef}
-            className={classes.eventsSubGridHeaderRow}
-          >
-            <TimelineGrid.Cell>{header}</TimelineGrid.Cell>
-          </EventTimelinePremiumEventsSubGridHeaderRow>
-          <EventTimelinePremiumBodyScroller>
+            </EventTimelinePremiumTitleHeaderCell>
+            <EventTimelinePremiumEventsHeaderCell
+              ref={eventsHeaderRef}
+              className={classes.eventsHeaderCell}
+            >
+              {header}
+            </EventTimelinePremiumEventsHeaderCell>
+          </EventTimelinePremiumHeaderRow>
+          <EventTimelinePremiumBodyScroller role="presentation">
             <EventTimelinePremiumTitleSubGrid ref={titleSubGridRef} className={classes.titleSubGrid}>
               {(resourceId) => (
                 <EventTimelinePremiumTitleCell key={resourceId} resourceId={resourceId} />
@@ -417,6 +414,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             </EventTimelinePremiumTitleSubGrid>
             <EventTimelinePremiumEventsSubGridWrapper
               ref={eventsScrollerRef}
+              role="presentation"
               className={classes.eventsSubGridWrapper}
             >
               <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid}>
@@ -448,10 +446,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               )}
             </EventTimelinePremiumEventsSubGridWrapper>
           </EventTimelinePremiumBodyScroller>
-          <EventTimelinePremiumTitleScrollbar ref={titleScrollbarRef}>
+          <EventTimelinePremiumTitleScrollbar ref={titleScrollbarRef} aria-hidden>
             <div ref={titleScrollbarSpacerRef} style={{ height: 1 }} />
           </EventTimelinePremiumTitleScrollbar>
-          <EventTimelinePremiumEventsScrollbar ref={eventsScrollbarRef}>
+          <EventTimelinePremiumEventsScrollbar ref={eventsScrollbarRef} aria-hidden>
             <div
               style={{
                 width: 'calc(var(--unit-count) * var(--unit-width))',
