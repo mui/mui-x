@@ -26,7 +26,7 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
 export const selectorChartsItemIsFocused = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState, item: FocusedItemIdentifier<ChartSeriesType>) =>
-    keyboardNavigationState?.isFocused && keyboardNavigationState?.item != null &&
+    keyboardNavigationState?.isFocused===true && keyboardNavigationState?.item != null &&
     fastObjectShallowCompare(keyboardNavigationState.item, item),
 );
 

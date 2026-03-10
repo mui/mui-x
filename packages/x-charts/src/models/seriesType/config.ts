@@ -112,6 +112,7 @@ export interface ChartsSeriesConfig {
     };
     highlightIdentifier: {
       type: 'scatter';
+      seriesId: SeriesId;
       dataIndex?: number;
     };
   };

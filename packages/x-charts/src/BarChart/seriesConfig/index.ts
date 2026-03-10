@@ -26,6 +26,7 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
   descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
