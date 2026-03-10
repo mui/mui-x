@@ -28,6 +28,7 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
   descriptionGetter,
+  keyboardFocusHandler,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };
