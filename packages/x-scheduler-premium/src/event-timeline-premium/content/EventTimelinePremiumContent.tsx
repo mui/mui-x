@@ -87,7 +87,6 @@ const EventTimelinePremiumBodyScroller = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'subgrid',
   gridTemplateRows: 'repeat(var(--row-count, 0), auto) minmax(auto, 1fr)',
-  alignItems: 'stretch',
   overflowY: 'auto',
   overflowX: 'hidden',
   scrollbarWidth: 'thin',
@@ -103,6 +102,7 @@ const EventTimelinePremiumTitleSubGrid = styled(TimelineGrid.SubGrid, {
   gridRow: '1 / -1',
   borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflowX: 'auto',
+  overflowY: 'clip',
   scrollbarWidth: 'none',
   '&::-webkit-scrollbar': { display: 'none' },
 }));
@@ -193,7 +193,7 @@ const EventTimelinePremiumEventsScrollbar = styled('div', {
 })({
   gridRow: 3,
   gridColumn: 2,
-  overflowX: 'scroll',
+  overflowX: 'auto',
   overflowY: 'hidden',
   scrollbarWidth: 'thin',
 });
