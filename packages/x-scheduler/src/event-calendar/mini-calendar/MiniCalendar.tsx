@@ -69,10 +69,10 @@ const MiniCalendarWeekdayCell = styled('span', {
   slot: 'MiniCalendarWeekdayCell',
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   padding: theme.spacing(0.5, 0),
   '&[data-weekend]': {
-    color: theme.palette.error.main,
+    color: (theme.vars || theme).palette.error.main,
   },
 }));
 
@@ -116,28 +116,32 @@ const MiniCalendarDayButton = styled('button', {
   background: 'none',
   cursor: 'pointer',
   fontSize: theme.typography.caption.fontSize,
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   padding: 0,
   '&:hover': {
-    backgroundColor: alpha(theme.palette.primary.main, 0.08),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.08)`
+      : alpha(theme.palette.primary.main, 0.08),
   },
   '&:focus-visible': {
-    outline: `2px solid ${theme.palette.primary.main}`,
+    outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
     outlineOffset: 2,
   },
   '&[data-other-month]': {
-    color: theme.palette.text.disabled,
+    color: (theme.vars || theme).palette.text.disabled,
   },
   '&[data-today]:not([data-active])': {
     fontWeight: theme.typography.fontWeightBold,
-    color: theme.palette.primary.main,
-    backgroundColor: alpha(theme.palette.primary.main, 0.15),
+    color: (theme.vars || theme).palette.primary.main,
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.15)`
+      : alpha(theme.palette.primary.main, 0.15),
   },
   '&[data-active]': {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
   '&[data-today][data-active]': {
@@ -213,6 +217,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
           </MiniCalendarMonthLabel>
           <MiniCalendarNavigation className={classes.miniCalendarNavigation}>
             <IconButton
+              className={classes.miniCalendarPreviousButton}
               size="small"
               aria-label={localeText.miniCalendarGoToPreviousMonth}
               onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, -1))}
@@ -220,6 +225,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               <ChevronLeftIcon fontSize="small" />
             </IconButton>
             <IconButton
+              className={classes.miniCalendarNextButton}
               size="small"
               aria-label={localeText.miniCalendarGoToNextMonth}
               onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, 1))}

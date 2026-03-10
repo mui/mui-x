@@ -7,14 +7,14 @@ import {
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { isPolarSeriesType } from '../../../isPolar';
 
-const axisExtremumCallback = <TSeriesType extends PolarChartSeriesType>(
+const axisExtremumCallback = <SeriesType extends PolarChartSeriesType>(
   acc: PolarExtremumGetterResult,
-  chartType: TSeriesType,
+  chartType: SeriesType,
   axis: AxisConfig,
   axisDirection: 'rotation' | 'radius',
-  seriesConfig: ChartSeriesConfig<TSeriesType>,
+  seriesConfig: ChartSeriesConfig<SeriesType>,
   axisIndex: number,
-  formattedSeries: ProcessedSeries<TSeriesType>,
+  formattedSeries: ProcessedSeries<SeriesType>,
 ): PolarExtremumGetterResult => {
   const getter =
     axisDirection === 'rotation'
@@ -34,12 +34,12 @@ const axisExtremumCallback = <TSeriesType extends PolarChartSeriesType>(
   return [Math.min(minChartTypeData, minData), Math.max(maxChartTypeData, maxData)];
 };
 
-export const getAxisExtremum = <TSeriesType extends PolarChartSeriesType>(
+export const getAxisExtremum = <SeriesType extends PolarChartSeriesType>(
   axis: AxisConfig,
   axisDirection: 'rotation' | 'radius',
-  seriesConfig: ChartSeriesConfig<TSeriesType>,
+  seriesConfig: ChartSeriesConfig<SeriesType>,
   axisIndex: number,
-  formattedSeries: ProcessedSeries<TSeriesType>,
+  formattedSeries: ProcessedSeries<SeriesType>,
 ) => {
   const polarSeriesTypes = Object.keys(seriesConfig).filter(isPolarSeriesType);
 
@@ -47,7 +47,7 @@ export const getAxisExtremum = <TSeriesType extends PolarChartSeriesType>(
     (acc, charType) =>
       axisExtremumCallback(
         acc,
-        charType as TSeriesType,
+        charType as SeriesType,
         axis,
         axisDirection,
         seriesConfig,

@@ -86,11 +86,11 @@ export type ComputeResult<T extends ChartsAxisProps> = {
   axisIds: AxisId[];
 };
 
-type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
+type ComputeCommonParams<SeriesType extends ChartSeriesType = ChartSeriesType> = {
   scales: Record<AxisId, D3Scale>;
   drawingArea: ChartDrawingArea;
-  formattedSeries: ProcessedSeries<T>;
-  seriesConfig: ChartSeriesConfig<T>;
+  formattedSeries: ProcessedSeries<SeriesType>;
+  seriesConfig: ChartSeriesConfig<SeriesType>;
   zoomMap?: Map<AxisId, ZoomData>;
   domains: Record<
     AxisId,
@@ -143,19 +143,19 @@ function recalculateOffsets(
   return result;
 }
 
-export function computeAxisValue<T extends ChartSeriesType>(
-  options: ComputeCommonParams<T> & {
+export function computeAxisValue<SeriesType extends ChartSeriesType>(
+  options: ComputeCommonParams<SeriesType> & {
     axis?: DefaultedYAxis[];
     axisDirection: 'y';
   },
 ): ComputeResult<ChartsYAxisProps>;
-export function computeAxisValue<T extends ChartSeriesType>(
-  options: ComputeCommonParams<T> & {
+export function computeAxisValue<SeriesType extends ChartSeriesType>(
+  options: ComputeCommonParams<SeriesType> & {
     axis?: DefaultedXAxis[];
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsXAxisProps>;
-export function computeAxisValue<T extends ChartSeriesType>({
+export function computeAxisValue<SeriesType extends ChartSeriesType>({
   scales,
   drawingArea,
   formattedSeries,
@@ -166,7 +166,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   domains,
   autoSizes,
   axesGap = 0,
-}: ComputeCommonParams<T> & {
+}: ComputeCommonParams<SeriesType> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
 }) {

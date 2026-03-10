@@ -21,44 +21,7 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {
-    "disabled": {
-      "description": "State class applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the content element",
-      "conditions": "the item is disabled",
-      "deprecationInfo": "Use the <code>data-disabled</code> attribute instead."
-    },
-    "editable": {
-      "description": "State class applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the content element",
-      "conditions": "the item is editable",
-      "deprecationInfo": "Use the <code>data-editable</code> attribute instead."
-    },
-    "editing": {
-      "description": "State class applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the content element",
-      "conditions": "the item is being edited",
-      "deprecationInfo": "Use the <code>data-editing</code> attribute instead."
-    },
-    "expanded": {
-      "description": "State class applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the content element",
-      "conditions": "the item is expanded",
-      "deprecationInfo": "Use the <code>data-expanded</code> attribute instead."
-    },
-    "focused": {
-      "description": "State class applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the content element",
-      "conditions": "the item is focused",
-      "deprecationInfo": "Use the <code>data-focused</code> attribute instead."
-    },
-    "selected": {
-      "description": "State class applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the content element",
-      "conditions": "the item is selected",
-      "deprecationInfo": "Use the <code>data-selected</code> attribute instead."
-    }
-  },
+  "classDescriptions": {},
   "slotDescriptions": {
     "checkbox": "The component that renders the item checkbox for selection.",
     "collapseIcon": "The icon used to collapse the item.",

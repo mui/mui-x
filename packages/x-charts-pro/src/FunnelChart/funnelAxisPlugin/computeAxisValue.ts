@@ -74,10 +74,10 @@ export type ComputeResult<T extends ChartsAxisProps> = {
   axisIds: string[];
 };
 
-type ComputeCommonParams<T extends ChartSeriesType = 'funnel'> = {
+type ComputeCommonParams<SeriesType extends ChartSeriesType = 'funnel'> = {
   drawingArea: ChartDrawingArea;
-  formattedSeries: ProcessedSeries<T>;
-  seriesConfig: ChartSeriesConfig<T>;
+  formattedSeries: ProcessedSeries<SeriesType>;
+  seriesConfig: ChartSeriesConfig<SeriesType>;
   gap: number;
   autoSizes?: Record<AxisId, number>;
 };

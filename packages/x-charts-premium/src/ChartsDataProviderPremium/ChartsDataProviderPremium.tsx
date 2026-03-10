@@ -10,7 +10,7 @@ import {
 } from '@mui/x-charts/internals';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { ChartsWatermark, defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { useLicenseVerifier } from '@mui/x-license/internals';
 import {
   type ChartsSlotPropsPro,
   type ChartsSlotsPro,
@@ -21,18 +21,21 @@ import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderPremiumProps } from './useChartsDataProviderPremiumProps';
 
-const releaseInfo = '__RELEASE_INFO__';
-const packageIdentifier = 'x-charts-premium';
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: (process.env as any).MUI_VERSION,
+  name: 'x-charts-premium' as const,
+};
 
 export interface ChartsDataProviderPremiumSlots extends ChartsSlotsPro {}
 
 export interface ChartsDataProviderPremiumSlotProps extends ChartsSlotPropsPro {}
 
 export type ChartsDataProviderPremiumProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartsDataProviderProProps<TSeries, TSignatures> &
-  ChartsProviderProps<TSeries, TSignatures>['pluginParams'] & {
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = ChartsDataProviderProProps<SeriesType, TSignatures> &
+  ChartsProviderProps<SeriesType, TSignatures>['pluginParams'] & {
     /**
      * Slots to customize charts' components.
      */
@@ -78,9 +81,9 @@ export const defaultSeriesConfigPremium: ChartSeriesConfig<
  * ```
  */
 function ChartsDataProviderPremium<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsDataProviderPremiumProps<TSeries, TSignatures>) {
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+>(props: ChartsDataProviderPremiumProps<SeriesType, TSignatures>) {
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartsDataProviderPremiumProps({
       ...props,
@@ -88,7 +91,7 @@ function ChartsDataProviderPremium<
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 
-  useLicenseVerifier(packageIdentifier, releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   return (
     <ChartsProvider {...chartProviderProps}>
@@ -101,7 +104,7 @@ function ChartsDataProviderPremium<
           {children}
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>
-      <ChartsWatermark packageName={packageIdentifier} />
+      <ChartsWatermark packageInfo={packageInfo} />
     </ChartsProvider>
   );
 }

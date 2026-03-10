@@ -68,7 +68,6 @@ describe('<PieChart />', () => {
   it('should show focus indicator when navigating with keyboard', async () => {
     const { container, user } = render(
       <PieChart
-        enableKeyboardNavigation
         height={100}
         width={100}
         series={[
@@ -107,7 +106,6 @@ describe('<PieChart />', () => {
   it('should only show focus indicator for the focused series', async () => {
     const { container, user } = render(
       <PieChart
-        enableKeyboardNavigation
         height={400}
         width={400}
         series={[

@@ -13,13 +13,20 @@ import {
   TEST_KEY_EXPIRED_30DAYS,
   TEST_KEY_PRO_SUBSCRIPTION_FUTURE,
   TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE,
+  TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
+  TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
 } from '../test-keys';
 
 const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
 const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
 function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
-  const licenseStatus = useLicenseVerifier(props.packageName || 'x-date-pickers-pro', RELEASE_INFO);
+  const packageInfo = {
+    releaseDate: RELEASE_INFO,
+    version: '9.0.0',
+    name: props.packageName || ('x-date-pickers-pro' as MuiCommercialPackageName),
+  };
+  const licenseStatus = useLicenseVerifier(packageInfo);
   return <div data-testid="status">Status: {licenseStatus.status}</div>;
 }
 
@@ -54,7 +61,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
       }).toErrorDev(['MUI X: Missing license key']);
     });
 
-    it('should detect an override of a valid license key in the context', () => {
+    it('should detect an override of a license key in the context', () => {
       LicenseInfo.setLicenseKey('');
 
       expect(() => {
@@ -63,9 +70,9 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
             <TestComponent />
           </LicenseInfoProvider>,
         );
-      }).not.toErrorDev();
+      }).toErrorDev(['MUI X: License key version mismatch.']);
 
-      expect(screen.getByTestId('status')).to.have.text('Status: Valid');
+      expect(screen.getByTestId('status')).to.have.text('Status: NotValidForPackage');
     });
 
     it('should throw if the license is expired by more than a 30 days', () => {
@@ -104,15 +111,20 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
         planVersion: 'initial',
         planScope: 'pro',
         licenseKey: TEST_KEY_PRO_SUBSCRIPTION_FUTURE,
-        ok: ['x-data-grid-pro', 'x-date-pickers-pro'],
-        notOk: ['x-charts-premium', 'x-data-grid-premium'],
+        // Scope check fires before the v8 plan version check
+        outOfScope: ['x-charts-premium', 'x-data-grid-premium'],
+        // NotAvailableInInitialProPlan fires before the v8 plan version check
         notInInitial: ['x-charts-pro', 'x-tree-view-pro'],
+        // All remaining packages hit the v8 plan version check
+        notValidForPackage: ['x-data-grid-pro', 'x-date-pickers-pro'],
       },
       {
         planVersion: 'initial',
         planScope: 'premium',
         licenseKey: TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE,
-        ok: [
+        outOfScope: [],
+        notInInitial: [],
+        notValidForPackage: [
           'x-data-grid-pro',
           'x-data-grid-premium',
           'x-date-pickers-pro',
@@ -120,22 +132,27 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
           'x-charts-premium',
           'x-tree-view-pro',
         ],
-        notOk: [],
-        notInInitial: [],
       },
       {
         planVersion: 'Q3-2024',
         planScope: 'pro',
         licenseKey: TEST_LICENSE_KEY_PRO,
-        ok: ['x-data-grid-pro', 'x-date-pickers-pro', 'x-charts-pro', 'x-tree-view-pro'],
-        notOk: ['x-charts-premium', 'x-data-grid-premium'],
+        outOfScope: ['x-charts-premium', 'x-data-grid-premium'],
         notInInitial: [],
+        notValidForPackage: [
+          'x-data-grid-pro',
+          'x-date-pickers-pro',
+          'x-charts-pro',
+          'x-tree-view-pro',
+        ],
       },
       {
         planVersion: 'Q3-2024',
         planScope: 'premium',
         licenseKey: TEST_LICENSE_KEY_PREMIUM,
-        ok: [
+        outOfScope: [],
+        notInInitial: [],
+        notValidForPackage: [
           'x-data-grid-pro',
           'x-data-grid-premium',
           'x-date-pickers-pro',
@@ -143,27 +160,35 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
           'x-charts-premium',
           'x-tree-view-pro',
         ],
-        notOk: [],
+      },
+      {
+        planVersion: 'Q1-2026',
+        planScope: 'pro',
+        licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
+        outOfScope: ['x-charts-premium', 'x-data-grid-premium'],
         notInInitial: [],
+        notValidForPackage: [],
+      },
+      {
+        planVersion: 'Q1-2026',
+        planScope: 'premium',
+        licenseKey: TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
+        outOfScope: [],
+        notInInitial: [],
+        notValidForPackage: [],
       },
     ] as const;
 
     it.each(planCombinations)(
-      'should work for plan $planVersion with scope $planScope',
-      ({ licenseKey, ok, notOk, notInInitial }) => {
+      'should reject v8 plan $planVersion with scope $planScope',
+      ({ licenseKey, outOfScope, notInInitial, notValidForPackage }) => {
         // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
         // eslint-disable-next-line no-useless-concat
         process.env['NODE_' + 'ENV'] = 'development';
 
         LicenseInfo.setLicenseKey(licenseKey);
 
-        ok.forEach((packageName) => {
-          expect(() => {
-            render(<TestComponent packageName={packageName} />);
-          }, packageName).not.toErrorDev();
-        });
-
-        notOk.forEach((packageName) => {
+        outOfScope.forEach((packageName) => {
           expect(() => {
             render(<TestComponent packageName={packageName} />);
           }, packageName).to.toErrorDev(['MUI X: License key plan mismatch.']);
@@ -173,6 +198,12 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
           expect(() => {
             render(<TestComponent packageName={packageName} />);
           }, packageName).to.toErrorDev(['MUI X: Component not included in your license.']);
+        });
+
+        notValidForPackage.forEach((packageName) => {
+          expect(() => {
+            render(<TestComponent packageName={packageName} />);
+          }, packageName).to.toErrorDev(['MUI X: License key version mismatch.']);
         });
       },
     );

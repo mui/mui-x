@@ -4,5 +4,6 @@ export { TimelineGridEventRow as EventRow } from './event-row/TimelineGridEventR
 export { TimelineGridEvent as Event } from './event/TimelineGridEvent';
 export { TimelineGridEventPlaceholder as EventPlaceholder } from './event-placeholder/TimelineGridEventPlaceholder';
 export { TimelineGridEventResizeHandler as EventResizeHandler } from './event-resize-handler/TimelineGridEventResizeHandler';
+export { TimelineGridCurrentTimeIndicator as CurrentTimeIndicator } from './current-time-indicator/TimelineGridCurrentTimeIndicator';
 export { TimelineGridRow as Row } from './row/TimelineGridRow';
 export { TimelineGridCell as Cell } from './cell/TimelineGridCell';
