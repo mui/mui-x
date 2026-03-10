@@ -7,7 +7,10 @@ export interface ScatterClasses {
   root: string;
   /** Styles applied to the group surrounding a series' scatter elements. */
   series: string;
-  /** Styles applied to an individual scatter marker element. */
+  /**
+   * Styles applied to an individual scatter marker element.
+   * Not applied when using the `svg-batch` renderer.
+   */
   marker: string;
   /** Styles applied to the focused scatter mark element. */
   focusedMark: string;
