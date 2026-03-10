@@ -4,8 +4,6 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SeriesId } from '../models/seriesType/common';
 
 export interface LineClasses {
-  /** Styles applied to the line plot element. */
-  root: string;
   /** Styles applied to the area element. */
   area: string;
   /** Styles applied to the line element. */
@@ -16,6 +14,12 @@ export interface LineClasses {
   markAnimate: string;
   /** Styles applied to the highlight element. */
   highlight: string;
+  /** Styles applied to the AreaPlot root element. */
+  areaPlot: string;
+  /** Styles applied to the LinePlot root element. */
+  linePlot: string;
+  /** Styles applied to the MarkPlot root element. */
+  markPlot: string;
 }
 
 export type LineClassKey = keyof LineClasses;
@@ -33,12 +37,14 @@ export function getLineUtilityClass(slot: string) {
 }
 
 export const lineClasses: LineClasses = generateUtilityClasses('MuiLineChart', [
-  'root',
   'area',
   'line',
   'mark',
   'markAnimate',
   'highlight',
+  'areaPlot',
+  'linePlot',
+  'markPlot',
 ]);
 
 export interface UseUtilityClassesOptions {
@@ -49,11 +55,13 @@ export interface UseUtilityClassesOptions {
 export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
   const { skipAnimation, classes } = options ?? {};
   const slots = {
-    root: ['root'],
     area: ['area'],
     line: ['line'],
     mark: ['mark', !skipAnimation && 'markAnimate'],
     highlight: ['highlight'],
+    areaPlot: ['areaPlot'],
+    linePlot: ['linePlot'],
+    markPlot: ['markPlot'],
   };
 
   return composeClasses(slots, getLineUtilityClass, classes);
