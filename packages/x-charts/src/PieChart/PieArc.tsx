@@ -9,7 +9,6 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { type SeriesId } from '../models';
 import { type PieArcOwnerState, useUtilityClasses as usePieUtilityClasses } from './pieClasses';
 
 export { type PieArcOwnerState };
@@ -83,7 +82,7 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
 const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
+  overridesResolver: (_, styles) => styles.arc,
 })<{ ownerState: PieArcOwnerState }>({
   transitionProperty: 'opacity, fill, filter',
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
