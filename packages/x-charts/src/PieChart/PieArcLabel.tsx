@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -141,6 +142,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       isFaded,
       skipAnimation,
       hidden,
+      className,
       ...other
     } = props;
 
@@ -168,7 +170,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
 
     return (
       <PieArcLabelRoot
-        className={`${classes.arcLabel} ${!skipAnimation ? classes.animate : ''} ${deprecatedClasses.root}`}
+        className={clsx(classes.arcLabel, !skipAnimation && classes.animate, deprecatedClasses.root, className)}
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
         {...other}
