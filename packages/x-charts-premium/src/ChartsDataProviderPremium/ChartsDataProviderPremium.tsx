@@ -21,8 +21,7 @@ import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderPremiumProps } from './useChartsDataProviderPremiumProps';
 
-const releaseInfo = '__RELEASE_INFO__';
-const packageIdentifier = 'x-charts-premium';
+const packageInfo = { releaseDate: '__RELEASE_INFO__', version: process.env.MUI_VERSION!, name: 'x-charts-premium' as const };
 
 export interface ChartsDataProviderPremiumSlots extends ChartsSlotsPro {}
 
@@ -88,7 +87,7 @@ function ChartsDataProviderPremium<
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 
-  useLicenseVerifier(packageIdentifier, releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   return (
     <ChartsProvider {...chartProviderProps}>
@@ -101,7 +100,7 @@ function ChartsDataProviderPremium<
           {children}
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>
-      <ChartsWatermark packageName={packageIdentifier} />
+      <ChartsWatermark packageInfo={packageInfo} />
     </ChartsProvider>
   );
 }

@@ -21,8 +21,7 @@ import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/
 import { useChartsDataProviderProProps } from './useChartsDataProviderProProps';
 import { ChartsWatermark } from '../internals/ChartsWatermark';
 
-const releaseInfo = '__RELEASE_INFO__';
-const packageIdentifier = 'x-charts-pro';
+const packageInfo = { releaseDate: '__RELEASE_INFO__', version: process.env.MUI_VERSION!, name: 'x-charts-pro' as const };
 
 export interface ChartsDataProviderProSlots extends ChartsSlotsPro {}
 
@@ -84,7 +83,7 @@ function ChartsDataProviderPro<
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 
-  useLicenseVerifier(packageIdentifier, releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   return (
     <ChartsProvider {...chartProviderProps}>
@@ -97,7 +96,7 @@ function ChartsDataProviderPro<
           {children}
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>
-      <ChartsWatermark packageName={packageIdentifier} />
+      <ChartsWatermark packageInfo={packageInfo} />
     </ChartsProvider>
   );
 }
