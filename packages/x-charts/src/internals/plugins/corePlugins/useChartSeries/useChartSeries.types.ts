@@ -55,16 +55,16 @@ export type UseChartSeriesDefaultizedParameters<T extends ChartSeriesType = Char
     theme: 'light' | 'dark';
   };
 
-export type ProcessedSeries<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
-  [type in TSeriesTypes]?: SeriesProcessorResult<type>;
+export type ProcessedSeries<SeriesType extends ChartSeriesType = ChartSeriesType> = {
+  [type in SeriesType]?: SeriesProcessorResult<type>;
 };
 
-export type SeriesLayout<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
-  [type in TSeriesTypes]?: SeriesLayoutGetterResult<type>;
+export type SeriesLayout<SeriesType extends ChartSeriesType = ChartSeriesType> = {
+  [type in SeriesType]?: SeriesLayoutGetterResult<type>;
 };
 
-export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
-  [type in TSeriesTypes]?: SeriesProcessorParams<type>;
+export type DefaultizedSeriesGroups<SeriesType extends ChartSeriesType = ChartSeriesType> = {
+  [type in SeriesType]?: SeriesProcessorParams<type>;
 };
 
 export type SeriesIdToType = ReadonlyMap<SeriesId, ChartSeriesType>;
