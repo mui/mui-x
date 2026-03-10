@@ -82,7 +82,10 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiScatterChart'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiScatterChart'];
   };
-  MuiScatter?: {};
+  /** @deprecated Use `MuiScatterChart` instead. */
+  MuiScatter?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiScatterChart'];
+  };
   MuiGauge?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiGauge'];
   };
