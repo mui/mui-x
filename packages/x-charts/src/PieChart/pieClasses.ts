@@ -14,6 +14,8 @@ export interface PieClasses {
   arc: string;
   /** Styles applied to an individual pie arc label element. */
   arcLabel: string;
+  /** Styles applied when animation is not skipped. */
+  animate: string;
 }
 
 export type PieClassKey = keyof PieClasses;
@@ -38,6 +40,7 @@ export const pieClasses: PieClasses = generateUtilityClasses('MuiPieChart', [
   'seriesLabels',
   'arc',
   'arcLabel',
+  'animate',
 ]);
 
 export const useUtilityClasses = (options?: { classes?: Partial<PieClasses> }) => {
@@ -48,6 +51,7 @@ export const useUtilityClasses = (options?: { classes?: Partial<PieClasses> }) =
     seriesLabels: ['seriesLabels'],
     arc: ['arc'],
     arcLabel: ['arcLabel'],
+    animate: ['animate'],
   };
 
   return composeClasses(slots, getPieUtilityClass, classes);

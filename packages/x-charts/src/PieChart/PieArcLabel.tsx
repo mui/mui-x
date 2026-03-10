@@ -8,7 +8,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
 import { type SeriesId } from '../models';
-import { useUtilityClasses as usePieUtilityClasses } from './pieClasses';
+import { pieClasses, useUtilityClasses as usePieUtilityClasses } from './pieClasses';
 
 /**
  * @deprecated Use `PieClasses` from `./pieClasses` instead.
@@ -26,7 +26,9 @@ export interface PieArcLabelClasses {
    * @deprecated Use `[data-faded]` selector instead.
    */
   faded: string;
-  /** Styles applied to the root element when animation is not skipped. */
+  /** Styles applied to the root element when animation is not skipped.
+   * @deprecated Use the `animate` class from `./pieClasses` instead.
+   */
   animate: string;
   /**
    * Styles applied to the root element for a specified series.
@@ -99,7 +101,7 @@ const PieArcLabelRoot = styled('text', {
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
   transitionProperty: 'opacity',
   transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
-  [`&.${pieArcLabelClasses.animate}`]: {
+  [`&.${pieClasses.animate}`]: {
     animationDuration: `${ANIMATION_DURATION_MS}ms`,
   },
   '@keyframes animate-opacity': {
@@ -166,7 +168,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
 
     return (
       <PieArcLabelRoot
-        className={`${classes.arcLabel} ${deprecatedClasses.root}`}
+        className={`${classes.arcLabel} ${!skipAnimation ? classes.animate : ''} ${deprecatedClasses.root}`}
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
         {...other}
