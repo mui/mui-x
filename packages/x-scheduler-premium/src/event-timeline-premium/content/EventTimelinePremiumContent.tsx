@@ -74,9 +74,9 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
 const EventTimelinePremiumEventsHeaderCell = styled(TimelineGrid.Cell, {
   name: 'MuiEventTimeline',
   slot: 'EventsHeaderCell',
-})(({
+})({
   overflowX: 'hidden',
-}));
+});
 
 const EventTimelinePremiumBodyScroller = styled('div', {
   name: 'MuiEventTimeline',
@@ -407,7 +407,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             </EventTimelinePremiumEventsHeaderCell>
           </EventTimelinePremiumHeaderRow>
           <EventTimelinePremiumBodyScroller role="presentation">
-            <EventTimelinePremiumTitleSubGrid ref={titleSubGridRef} className={classes.titleSubGrid}>
+            <EventTimelinePremiumTitleSubGrid
+              ref={titleSubGridRef}
+              className={classes.titleSubGrid}
+            >
               {(resourceId) => (
                 <EventTimelinePremiumTitleCell key={resourceId} resourceId={resourceId} />
               )}
