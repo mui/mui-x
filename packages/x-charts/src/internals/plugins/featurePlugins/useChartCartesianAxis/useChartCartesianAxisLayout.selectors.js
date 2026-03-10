@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.selectorChartCartesianAxesGap = exports.selectorChartRawYAxis = exports.selectorChartRawXAxis = exports.selectorChartCartesianAxisState = void 0;
+var selectorChartCartesianAxisState = function (state) { return state.cartesianAxis; };
+exports.selectorChartCartesianAxisState = selectorChartCartesianAxisState;
+var selectorChartRawXAxis = function (state) { var _a; return (_a = state.cartesianAxis) === null || _a === void 0 ? void 0 : _a.x; };
+exports.selectorChartRawXAxis = selectorChartRawXAxis;
+var selectorChartRawYAxis = function (state) { var _a; return (_a = state.cartesianAxis) === null || _a === void 0 ? void 0 : _a.y; };
+exports.selectorChartRawYAxis = selectorChartRawYAxis;
+var selectorChartCartesianAxesGap = function (state) { var _a, _b; return (_b = (_a = state.cartesianAxis) === null || _a === void 0 ? void 0 : _a.axesGap) !== null && _b !== void 0 ? _b : 0; };
+exports.selectorChartCartesianAxesGap = selectorChartCartesianAxesGap;
