@@ -63,7 +63,11 @@ import {
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 import { dateRangePickerDay2Classes } from '../DateRangePickerDay2';
 
-const packageInfo = { releaseDate: '__RELEASE_INFO__', version: (process.env as any).MUI_VERSION, name: 'x-date-pickers-pro' as const };
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: (process.env as any).MUI_VERSION,
+  name: 'x-date-pickers-pro' as const,
+};
 
 const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',

@@ -21,7 +21,11 @@ import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/
 import { useChartsDataProviderProProps } from './useChartsDataProviderProProps';
 import { ChartsWatermark } from '../internals/ChartsWatermark';
 
-const packageInfo = { releaseDate: '__RELEASE_INFO__', version: (process.env as any).MUI_VERSION, name: 'x-charts-pro' as const };
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: (process.env as any).MUI_VERSION,
+  name: 'x-charts-pro' as const,
+};
 
 export interface ChartsDataProviderProSlots extends ChartsSlotsPro {}
 

@@ -274,7 +274,11 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     ...other
   } = props;
 
-  useLicenseVerifier({ releaseDate: '__RELEASE_INFO__', version: (process.env as any).MUI_VERSION, name: 'x-date-pickers-pro' });
+  useLicenseVerifier({
+    releaseDate: '__RELEASE_INFO__',
+    version: (process.env as any).MUI_VERSION,
+    name: 'x-date-pickers-pro',
+  });
   const adapter = usePickerAdapter();
 
   const shouldRenderHighlight = isHighlighting && !outsideCurrentMonth;

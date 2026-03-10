@@ -35,7 +35,11 @@ const configuration: GridConfiguration<GridPrivateApiPro> = {
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };
-const packageInfo = { releaseDate: '__RELEASE_INFO__', version: (process.env as any).MUI_VERSION, name: 'x-data-grid-pro' as const };
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: (process.env as any).MUI_VERSION,
+  name: 'x-data-grid-pro' as const,
+};
 const watermark = <Watermark packageInfo={packageInfo} />;
 
 const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(

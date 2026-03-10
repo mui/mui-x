@@ -21,7 +21,11 @@ const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
 const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
 function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
-  const packageInfo = { releaseDate: RELEASE_INFO, version: '9.0.0', name: props.packageName || 'x-date-pickers-pro' as MuiCommercialPackageName };
+  const packageInfo = {
+    releaseDate: RELEASE_INFO,
+    version: '9.0.0',
+    name: props.packageName || ('x-date-pickers-pro' as MuiCommercialPackageName),
+  };
   const licenseStatus = useLicenseVerifier(packageInfo);
   return <div data-testid="status">Status: {licenseStatus.status}</div>;
 }

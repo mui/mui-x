@@ -10,10 +10,7 @@ export type PlanVersion = (typeof PLAN_VERSIONS)[number];
  * This can be reused for future major version gates
  * (e.g. v10 could set its own max plan version).
  */
-export function isPlanVersionOlderOrEqual(
-  planVersion: string,
-  maxVersion: PlanVersion,
-): boolean {
+export function isPlanVersionOlderOrEqual(planVersion: string, maxVersion: PlanVersion): boolean {
   const index = PLAN_VERSIONS.indexOf(planVersion as PlanVersion);
   const maxIndex = PLAN_VERSIONS.indexOf(maxVersion);
   return index !== -1 && index <= maxIndex;

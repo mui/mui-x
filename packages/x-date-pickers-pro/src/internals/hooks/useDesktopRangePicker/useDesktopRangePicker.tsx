@@ -32,7 +32,11 @@ export const useDesktopRangePicker = <
   steps,
   ...pickerParams
 }: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
-  useLicenseVerifier({ releaseDate: '__RELEASE_INFO__', version: (process.env as any).MUI_VERSION, name: 'x-date-pickers-pro' });
+  useLicenseVerifier({
+    releaseDate: '__RELEASE_INFO__',
+    version: (process.env as any).MUI_VERSION,
+    name: 'x-date-pickers-pro',
+  });
 
   const { slots, slotProps, inputRef, localeText } = props;
 

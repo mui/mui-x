@@ -23,7 +23,11 @@ import {
 } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 
-const packageInfo = { releaseDate: '__RELEASE_INFO__', version: (process.env as any).MUI_VERSION, name: 'x-scheduler-premium' as const };
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: (process.env as any).MUI_VERSION,
+  name: 'x-scheduler-premium' as const,
+};
 const watermark = <Watermark packageInfo={packageInfo} />;
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
