@@ -32,6 +32,7 @@ const EventTimelinePremiumContentRoot = styled('section', {
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
   flexGrow: 1,
   width: '100%',
+  overflow: 'hidden',
 }));
 
 const EventTimelinePremiumGrid = styled(TimelineGrid.Root, {
@@ -40,30 +41,9 @@ const EventTimelinePremiumGrid = styled(TimelineGrid.Root, {
 })({
   height: '100%',
   display: 'grid',
-  gridTemplateColumns: 'minmax(100px, auto) minmax(0, 1fr)',
-  gridTemplateRows: 'auto repeat(var(--row-count, 0), auto) minmax(auto, 1fr)',
+  gridTemplateColumns: 'minmax(100px, 30%) minmax(0, 1fr)',
+  gridTemplateRows: 'auto 1fr auto',
   alignItems: 'stretch',
-});
-
-const EventTimelinePremiumTitleSubGridWrapper = styled('div', {
-  name: 'MuiEventTimeline',
-  slot: 'TitleSubGridWrapper',
-})(({ theme }) => ({
-  gridColumn: 1,
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
-  display: 'grid',
-  gridTemplateRows: 'subgrid',
-  gridRow: '1 / -1',
-}));
-
-const EventTimelinePremiumTitleSubGrid = styled(TimelineGrid.SubGrid, {
-  name: 'MuiEventTimeline',
-  slot: 'TitleSubGrid',
-})({
-  gridColumn: 1,
-  display: 'grid',
-  gridTemplateRows: 'subgrid',
-  gridRow: '2 / -1',
 });
 
 const EventTimelinePremiumTitleSubGridHeaderRow = styled(TimelineGrid.Row, {
@@ -71,8 +51,10 @@ const EventTimelinePremiumTitleSubGridHeaderRow = styled(TimelineGrid.Row, {
   slot: 'TitleSubGridHeaderRow',
 })(({ theme }) => ({
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   gridRow: 1,
   gridColumn: 1,
+  overflowX: 'hidden',
 }));
 
 const EventTimelinePremiumTitleSubGridHeaderCell = styled(TimelineGrid.Cell, {
@@ -87,12 +69,53 @@ const EventTimelinePremiumTitleSubGridHeaderCell = styled(TimelineGrid.Cell, {
   height: '100%',
 }));
 
+const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelineGrid.Row, {
+  name: 'MuiEventTimeline',
+  slot: 'EventsSubGridHeaderRow',
+})(({ theme }) => ({
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  gridRow: 1,
+  gridColumn: 2,
+  overflowX: 'hidden',
+}));
+
+const EventTimelinePremiumBodyScroller = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'BodyScroller',
+})({
+  gridColumn: '1 / -1',
+  gridRow: 2,
+  display: 'grid',
+  gridTemplateColumns: 'subgrid',
+  gridTemplateRows: 'repeat(var(--row-count, 0), auto) minmax(auto, 1fr)',
+  alignItems: 'stretch',
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  scrollbarWidth: 'thin',
+});
+
+const EventTimelinePremiumTitleSubGrid = styled(TimelineGrid.SubGrid, {
+  name: 'MuiEventTimeline',
+  slot: 'TitleSubGrid',
+})(({ theme }) => ({
+  gridColumn: 1,
+  display: 'grid',
+  gridTemplateRows: 'subgrid',
+  gridRow: '1 / -1',
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  overflowX: 'auto',
+  scrollbarWidth: 'none',
+  '&::-webkit-scrollbar': { display: 'none' },
+}));
+
 const EventTimelinePremiumEventsSubGridWrapper = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'EventsSubGridWrapper',
 })({
   overflowX: 'auto',
-  scrollbarWidth: 'thin',
+  overflowY: 'clip',
+  scrollbarWidth: 'none',
+  '&::-webkit-scrollbar': { display: 'none' },
   gridColumn: 2,
   display: 'grid',
   gridTemplateRows: 'subgrid',
@@ -105,17 +128,9 @@ const EventTimelinePremiumEventsSubGrid = styled(TimelineGrid.SubGrid, {
 })({
   display: 'grid',
   gridTemplateRows: 'subgrid',
-  gridRow: '2 / -1',
+  gridRow: '1 / -1',
   gridColumn: 1,
 });
-
-const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelineGrid.Row, {
-  name: 'MuiEventTimeline',
-  slot: 'EventsSubGridHeaderRow',
-})(({ theme }) => ({
-  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  gridRow: 1,
-}));
 
 const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
   name: 'MuiEventTimeline',
@@ -138,7 +153,7 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   name: 'MuiEventTimeline',
   slot: 'CurrentTimeIndicator',
 })(({ theme }) => ({
-  gridRow: '2 / -1',
+  gridRow: '1 / -1',
   gridColumn: 1,
   marginLeft: 'calc(var(--unit-count) * var(--unit-width) * var(--x-position))',
   width: 0,
@@ -160,6 +175,29 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled('span', {
   borderRadius: '50%',
   backgroundColor: theme.palette.primary.main,
 }));
+
+const EventTimelinePremiumTitleScrollbar = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'TitleScrollbar',
+})(({ theme }) => ({
+  gridRow: 3,
+  gridColumn: 1,
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  scrollbarWidth: 'thin',
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+}));
+
+const EventTimelinePremiumEventsScrollbar = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'EventsScrollbar',
+})({
+  gridRow: 3,
+  gridColumn: 2,
+  overflowX: 'scroll',
+  overflowY: 'hidden',
+  scrollbarWidth: 'thin',
+});
 
 function EventRowContent({
   resourceId,
@@ -210,6 +248,59 @@ function EventRowContent({
   );
 }
 
+/**
+ * Sets up bi-directional scroll sync between a content area and a scrollbar widget,
+ * plus an optional header element that follows the content's scrollLeft.
+ */
+function useSyncedHorizontalScroll(
+  contentRef: React.RefObject<HTMLElement | null>,
+  scrollbarRef: React.RefObject<HTMLElement | null>,
+  headerRef?: React.RefObject<HTMLElement | null>,
+) {
+  React.useEffect(() => {
+    const content = contentRef.current;
+    const scrollbar = scrollbarRef.current;
+    if (!content || !scrollbar) {
+      return undefined;
+    }
+
+    let syncing = false;
+
+    const handleContentScroll = () => {
+      if (syncing) return;
+      syncing = true;
+      const { scrollLeft } = content;
+      scrollbar.scrollLeft = scrollLeft;
+      if (headerRef?.current) {
+        headerRef.current.scrollLeft = scrollLeft;
+      }
+      requestAnimationFrame(() => {
+        syncing = false;
+      });
+    };
+
+    const handleScrollbarScroll = () => {
+      if (syncing) return;
+      syncing = true;
+      const { scrollLeft } = scrollbar;
+      content.scrollLeft = scrollLeft;
+      if (headerRef?.current) {
+        headerRef.current.scrollLeft = scrollLeft;
+      }
+      requestAnimationFrame(() => {
+        syncing = false;
+      });
+    };
+
+    content.addEventListener('scroll', handleContentScroll, { passive: true });
+    scrollbar.addEventListener('scroll', handleScrollbarScroll, { passive: true });
+    return () => {
+      content.removeEventListener('scroll', handleContentScroll);
+      scrollbar.removeEventListener('scroll', handleScrollbarScroll);
+    };
+  }, [contentRef, scrollbarRef, headerRef]);
+}
+
 export const EventTimelinePremiumContent = React.forwardRef(function EventTimelinePremiumContent(
   props: EventTimelinePremiumContentProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -220,6 +311,13 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
+  const eventsHeaderRef = React.useRef<HTMLDivElement | null>(null);
+  const eventsScrollerRef = React.useRef<HTMLDivElement | null>(null);
+  const eventsScrollbarRef = React.useRef<HTMLDivElement | null>(null);
+  const titleHeaderRef = React.useRef<HTMLDivElement | null>(null);
+  const titleSubGridRef = React.useRef<HTMLDivElement | null>(null);
+  const titleScrollbarRef = React.useRef<HTMLDivElement | null>(null);
+  const titleScrollbarSpacerRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   // Selector hooks
@@ -236,6 +334,31 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     [adapter, now, viewConfig.start, viewConfig.end],
   );
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
+
+  // Sync horizontal scroll: events body ↔ events scrollbar + events header
+  useSyncedHorizontalScroll(eventsScrollerRef, eventsScrollbarRef, eventsHeaderRef);
+
+  // Sync horizontal scroll: title body ↔ title scrollbar + title header
+  useSyncedHorizontalScroll(titleSubGridRef, titleScrollbarRef, titleHeaderRef);
+
+  // Keep title scrollbar spacer width in sync with title content width
+  React.useEffect(() => {
+    const subgrid = titleSubGridRef.current;
+    const spacer = titleScrollbarSpacerRef.current;
+    if (!subgrid || !spacer) {
+      return undefined;
+    }
+    const updateWidth = () => {
+      spacer.style.width = `${subgrid.scrollWidth}px`;
+    };
+    updateWidth();
+    if (typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(subgrid);
+    return () => observer.disconnect();
+  }, []);
 
   // Feature hooks
   let header: React.ReactNode;
@@ -266,52 +389,72 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           className={classes.grid}
           style={{ '--unit-width': `var(--${view}-cell-width)` } as React.CSSProperties}
         >
-          <EventTimelinePremiumTitleSubGridWrapper className={classes.titleSubGridWrapper}>
-            <EventTimelinePremiumTitleSubGridHeaderRow className={classes.titleSubGridHeaderRow}>
-              <EventTimelinePremiumTitleSubGridHeaderCell
-                className={classes.titleSubGridHeaderCell}
-              >
-                {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
-              </EventTimelinePremiumTitleSubGridHeaderCell>
-            </EventTimelinePremiumTitleSubGridHeaderRow>
-            <EventTimelinePremiumTitleSubGrid className={classes.titleSubGrid}>
+          <EventTimelinePremiumTitleSubGridHeaderRow
+            ref={titleHeaderRef}
+            className={classes.titleSubGridHeaderRow}
+          >
+            <EventTimelinePremiumTitleSubGridHeaderCell
+              className={classes.titleSubGridHeaderCell}
+            >
+              {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
+            </EventTimelinePremiumTitleSubGridHeaderCell>
+          </EventTimelinePremiumTitleSubGridHeaderRow>
+          <EventTimelinePremiumEventsSubGridHeaderRow
+            ref={eventsHeaderRef}
+            className={classes.eventsSubGridHeaderRow}
+          >
+            <TimelineGrid.Cell>{header}</TimelineGrid.Cell>
+          </EventTimelinePremiumEventsSubGridHeaderRow>
+          <EventTimelinePremiumBodyScroller>
+            <EventTimelinePremiumTitleSubGrid ref={titleSubGridRef} className={classes.titleSubGrid}>
               {(resourceId) => (
                 <EventTimelinePremiumTitleCell key={resourceId} resourceId={resourceId} />
               )}
             </EventTimelinePremiumTitleSubGrid>
-          </EventTimelinePremiumTitleSubGridWrapper>
-          <EventTimelinePremiumEventsSubGridWrapper className={classes.eventsSubGridWrapper}>
-            <EventTimelinePremiumEventsSubGridHeaderRow className={classes.eventsSubGridHeaderRow}>
-              <TimelineGrid.Cell>{header}</TimelineGrid.Cell>
-            </EventTimelinePremiumEventsSubGridHeaderRow>
-            <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid}>
-              {(resourceId) => (
-                <EventTimelinePremiumEventsSubGridRow
-                  key={resourceId}
-                  resourceId={resourceId}
-                  className={classes.eventsSubGridRow}
+            <EventTimelinePremiumEventsSubGridWrapper
+              ref={eventsScrollerRef}
+              className={classes.eventsSubGridWrapper}
+            >
+              <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid}>
+                {(resourceId) => (
+                  <EventTimelinePremiumEventsSubGridRow
+                    key={resourceId}
+                    resourceId={resourceId}
+                    className={classes.eventsSubGridRow}
+                  >
+                    {({ occurrences, placeholder }) => (
+                      <EventRowContent
+                        resourceId={resourceId}
+                        occurrences={occurrences}
+                        placeholder={placeholder}
+                      />
+                    )}
+                  </EventTimelinePremiumEventsSubGridRow>
+                )}
+              </EventTimelinePremiumEventsSubGrid>
+              {showCurrentTimeIndicator && (
+                <EventTimelinePremiumCurrentTimeIndicator
+                  className={classes.currentTimeIndicator}
+                  aria-hidden
                 >
-                  {({ occurrences, placeholder }) => (
-                    <EventRowContent
-                      resourceId={resourceId}
-                      occurrences={occurrences}
-                      placeholder={placeholder}
-                    />
-                  )}
-                </EventTimelinePremiumEventsSubGridRow>
+                  <EventTimelinePremiumCurrentTimeIndicatorCircle
+                    className={classes.currentTimeIndicatorCircle}
+                  />
+                </EventTimelinePremiumCurrentTimeIndicator>
               )}
-            </EventTimelinePremiumEventsSubGrid>
-            {showCurrentTimeIndicator && (
-              <EventTimelinePremiumCurrentTimeIndicator
-                className={classes.currentTimeIndicator}
-                aria-hidden
-              >
-                <EventTimelinePremiumCurrentTimeIndicatorCircle
-                  className={classes.currentTimeIndicatorCircle}
-                />
-              </EventTimelinePremiumCurrentTimeIndicator>
-            )}
-          </EventTimelinePremiumEventsSubGridWrapper>
+            </EventTimelinePremiumEventsSubGridWrapper>
+          </EventTimelinePremiumBodyScroller>
+          <EventTimelinePremiumTitleScrollbar ref={titleScrollbarRef}>
+            <div ref={titleScrollbarSpacerRef} style={{ height: 1 }} />
+          </EventTimelinePremiumTitleScrollbar>
+          <EventTimelinePremiumEventsScrollbar ref={eventsScrollbarRef}>
+            <div
+              style={{
+                width: 'calc(var(--unit-count) * var(--unit-width))',
+                height: 1,
+              }}
+            />
+          </EventTimelinePremiumEventsScrollbar>
         </EventTimelinePremiumGrid>
       </EventDialogProvider>
     </EventTimelinePremiumContentRoot>
