@@ -16,6 +16,8 @@ export interface PieClasses {
   arcLabel: string;
   /** Styles applied when animation is not skipped. */
   animate: string;
+  /** Styles applied to the focused pie arc element. */
+  focusIndicator: string;
 }
 
 export type PieClassKey = keyof PieClasses;
@@ -41,6 +43,7 @@ export const pieClasses: PieClasses = generateUtilityClasses('MuiPieChart', [
   'arc',
   'arcLabel',
   'animate',
+  'focusIndicator',
 ]);
 
 export const useUtilityClasses = (options?: { classes?: Partial<PieClasses> }) => {
@@ -52,6 +55,7 @@ export const useUtilityClasses = (options?: { classes?: Partial<PieClasses> }) =
     arc: ['arc'],
     arcLabel: ['arcLabel'],
     animate: ['animate'],
+    focusIndicator: ['focusIndicator'],
   };
 
   return composeClasses(slots, getPieUtilityClass, classes);
