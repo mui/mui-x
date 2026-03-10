@@ -325,6 +325,23 @@ async function main() {
 
       await page.close();
     });
+
+    it('should export a chart as PNG when page is zoomed in', async () => {
+      const route = '/docs-charts-export/ExportChartAsImage';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedInPNG.png`);
+
+      page = await newTestPage(browser, { deviceScaleFactor: 1.25 });
+      await navigateToTest(route);
+
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Export Image' }).click();
+
+      const download = await downloadPromise;
+
+      await download.saveAs(screenshotPath);
+
+      await page.close();
+    });
   });
 }
 
