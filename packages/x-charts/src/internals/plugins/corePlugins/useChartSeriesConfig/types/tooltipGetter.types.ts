@@ -45,7 +45,7 @@ export interface ItemTooltip<
   /**
    * An object that identifies the item to display.
    */
-  identifier: SeriesItemIdentifierWithType<T>;
+  identifier: SeriesItemIdentifierWithType<SeriesType>;
   /**
    * The color associated with the item.
    */
