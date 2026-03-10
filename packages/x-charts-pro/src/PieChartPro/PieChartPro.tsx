@@ -148,7 +148,10 @@ PieChartPro.propTypes = {
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

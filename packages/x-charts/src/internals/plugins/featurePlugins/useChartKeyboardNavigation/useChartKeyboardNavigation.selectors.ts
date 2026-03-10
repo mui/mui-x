@@ -45,7 +45,7 @@ export const selectorChartsFocusedItem = createSelector(
 
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
   selectKeyboardNavigation,
-  (keyboardNavigationState) => !!keyboardNavigationState?.enableKeyboardNavigation,
+  (keyboardNavigationState) => !!keyboardNavigationState?.enabled,
 );
 
 /**

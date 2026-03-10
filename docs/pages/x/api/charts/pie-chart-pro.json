@@ -9,6 +9,7 @@
       "default": "rainbowSurgePalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
