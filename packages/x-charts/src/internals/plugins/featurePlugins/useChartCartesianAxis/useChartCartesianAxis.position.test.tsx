@@ -203,7 +203,7 @@ describe('useChartCartesianAxis - positions', () => {
         margin={20}
         height={300}
         width={300}
-      />
+      />,
     );
 
     const axesRoot = await document.querySelectorAll(`.${axisClasses.root}`);
