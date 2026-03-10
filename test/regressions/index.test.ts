@@ -218,6 +218,23 @@ async function main() {
       await download.saveAs(screenshotPath);
     });
 
+    it('should export a chart as PNG when page is zoomed out', async () => {
+      const route = '/docs-charts-export/ExportChartAsImage';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedOutPNG.png`);
+
+      await navigateToTest(route);
+
+      const cdpSession = await page.context().newCDPSession(page);
+      await cdpSession.send('Emulation.setPageScaleFactor', { pageScaleFactor: 0.8 });
+
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Export Image' }).click();
+
+      const download = await downloadPromise;
+
+      await download.saveAs(screenshotPath);
+    });
+
     describe('print preview', () => {
       /* These tests do not properly clean up after themselves, so moving them to their own describe block to close the
        * page after every test. */
