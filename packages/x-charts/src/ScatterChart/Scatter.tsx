@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type ScatterMarkerSlotProps, type ScatterMarkerSlots } from './ScatterMarker.types';
 import {
@@ -114,7 +115,7 @@ function Scatter(props: ScatterProps) {
         return (
           <Marker
             key={dataPoint.id ?? dataPoint.dataIndex}
-            className={classes.marker}
+            className={clsx(classes.marker, markerProps.className)}
             dataIndex={dataPoint.dataIndex}
             color={colorGetter(dataPoint.dataIndex)}
             isHighlighted={isItemHighlighted}

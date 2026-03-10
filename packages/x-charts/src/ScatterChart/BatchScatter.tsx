@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { type DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { type D3Scale } from '../models/axis';
@@ -24,6 +25,7 @@ export interface BatchScatterProps {
   color: string;
   colorGetter?: ColorGetter<'scatter'>;
   classes?: Partial<ScatterClasses>;
+  className?: string;
 }
 
 const MAX_POINTS_PER_PATH = 1000;
@@ -137,7 +139,7 @@ const Group = styled('g', {
  * You can read about all the limitations [here](https://mui.com/x/react-charts/scatter/#performance).
  */
 export function BatchScatter(props: BatchScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
+  const { series, xScale, yScale, color, colorGetter, classes: inClasses, className } = props;
 
   const { store } = useChartContext<[UseChartHighlightSignature<'scatter'>]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
@@ -185,7 +187,7 @@ export function BatchScatter(props: BatchScatterProps) {
   return (
     <React.Fragment>
       <Group
-        className={classes.series}
+        className={clsx(classes.series, className)}
         data-series={series.id}
         data-faded={isSeriesFaded || undefined}
         data-highlighted={isSeriesHighlighted || undefined}

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
@@ -20,7 +21,8 @@ export interface ScatterPlotSlotProps extends ScatterSlotProps {
 
 export type RendererType = 'svg-single' | 'svg-batch';
 
-export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
+export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'classes'> {
+  className?: string;
   /**
    * Overridable component slots.
    * @default {}
@@ -58,12 +60,12 @@ const ScatterPlotRoot = styled('g', {
  * - [ScatterPlot API](https://mui.com/x/api/charts/scatter-plot/)
  */
 function ScatterPlot(props: ScatterPlotProps) {
-  const { slots, slotProps, onItemClick, renderer } = props;
+  const { slots, slotProps, onItemClick, renderer, className, classes: inClasses } = props;
   const seriesData = useScatterSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
-  const classes = useUtilityClasses();
+  const classes = useUtilityClasses({ classes: inClasses });
 
   if (seriesData === undefined) {
     return null;
@@ -74,12 +76,11 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-
   const DefaultScatterItems = renderer === 'svg-batch' ? BatchScatter : Scatter;
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
   return (
-    <ScatterPlotRoot className={classes.root}>
+    <ScatterPlotRoot className={clsx(classes.root, className)}>
       {seriesOrder.map((seriesId) => {
         const { id, xAxisId, yAxisId, zAxisId, color, hidden } = series[seriesId];
 
