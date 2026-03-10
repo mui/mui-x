@@ -29,27 +29,27 @@ import {
 } from './featurePlugins/useChartVisibilityManager';
 import { useChartTooltip, type UseChartTooltipSignature } from './featurePlugins/useChartTooltip';
 
-export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
+export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartCartesianAxisSignature<TSeries>,
+  UseChartCartesianAxisSignature<SeriesType>,
   UseChartPolarAxisSignature,
-  UseChartTooltipSignature<TSeries>,
+  UseChartTooltipSignature<SeriesType>,
   UseChartInteractionSignature,
-  UseChartHighlightSignature<TSeries>,
-  UseChartVisibilityManagerSignature<TSeries>,
+  UseChartHighlightSignature<SeriesType>,
+  UseChartVisibilityManagerSignature<SeriesType>,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
 ];
 
-export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
+export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature<TSeries>,
+  UseChartTooltipSignature<SeriesType>,
   UseChartInteractionSignature,
-  UseChartCartesianAxisSignature<TSeries>,
-  UseChartHighlightSignature<TSeries>,
-  UseChartVisibilityManagerSignature<TSeries>,
+  UseChartCartesianAxisSignature<SeriesType>,
+  UseChartHighlightSignature<SeriesType>,
+  UseChartVisibilityManagerSignature<SeriesType>,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
 ];

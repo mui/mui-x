@@ -22,25 +22,25 @@ export interface UseChartTooltipInstance {
   removeTooltipItem: (itemToRemove?: SeriesItemIdentifierWithType<ChartSeriesType>) => void;
 }
 
-export interface UseChartTooltipParameters<TSeries extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartTooltipParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
   /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem?: SeriesItemIdentifier<TSeries> | SeriesItemIdentifierWithType<TSeries> | null;
+  tooltipItem?: SeriesItemIdentifier<SeriesType> | SeriesItemIdentifierWithType<SeriesType> | null;
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
-  onTooltipItemChange?: (tooltipItem: SeriesItemIdentifierWithType<TSeries> | null) => void;
+  onTooltipItemChange?: (tooltipItem: SeriesItemIdentifierWithType<SeriesType> | null) => void;
 }
 
 export type UseChartTooltipDefaultizedParameters<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-> = DefaultizedProps<UseChartTooltipParameters<TSeries>, 'tooltipItem'>;
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> = DefaultizedProps<UseChartTooltipParameters<SeriesType>, 'tooltipItem'>;
 
-export interface UseChartTooltipState<TSeries extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartTooltipState<SeriesType extends ChartSeriesType = ChartSeriesType> {
   tooltip: {
     /**
      * Indicates if the tooltip item is controlled.
@@ -49,14 +49,14 @@ export interface UseChartTooltipState<TSeries extends ChartSeriesType = ChartSer
     /**
      * The item currently under the pointer.
      */
-    item: null | SeriesItemIdentifierWithType<TSeries>;
+    item: null | SeriesItemIdentifierWithType<SeriesType>;
   };
 }
 
-export type UseChartTooltipSignature<TSeries extends ChartSeriesType = ChartSeriesType> =
+export type UseChartTooltipSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     instance: UseChartTooltipInstance;
     state: UseChartTooltipState;
-    params: UseChartTooltipParameters<TSeries>;
-    defaultizedParams: UseChartTooltipDefaultizedParameters<TSeries>;
+    params: UseChartTooltipParameters<SeriesType>;
+    defaultizedParams: UseChartTooltipDefaultizedParameters<SeriesType>;
   }>;
