@@ -4,6 +4,7 @@ import type { ChatAdapter } from '../../adapters';
 import type { ChatPartRendererMap } from '../../renderers';
 import type { ChatOnData, ChatOnFinish, ChatOnToolCall } from '../../types';
 import type { ChatError } from '../../types/chat-error';
+import type { ChatRuntimeActions } from '../useChatController';
 
 export interface ChatRuntimeContextValue<Cursor = string> {
   adapter: ChatAdapter<Cursor>;
@@ -12,6 +13,7 @@ export interface ChatRuntimeContextValue<Cursor = string> {
   onData?: ChatOnData;
   onError?: (error: ChatError) => void;
   partRenderers?: ChatPartRendererMap;
+  actions: ChatRuntimeActions<Cursor>;
 }
 
 export const ChatRuntimeContext = React.createContext<ChatRuntimeContextValue<any> | null>(null);

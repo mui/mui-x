@@ -221,6 +221,30 @@ describe('ChatStore', () => {
     });
   });
 
+  it('addConversation, updateConversation, and removeConversation keep normalized ordering consistent', () => {
+    const store = new ChatStore({
+      defaultConversations: [conversation1],
+    });
+
+    store.addConversation(conversation2);
+    store.addConversation({
+      ...conversation1,
+      title: 'General updated',
+    });
+    store.updateConversation('c2', {
+      title: 'Support updated',
+    });
+    store.removeConversation('c1');
+
+    expect(store.state.conversationIds).toEqual(['c2']);
+    expect(store.state.conversationsById).toEqual({
+      c2: {
+        ...conversation2,
+        title: 'Support updated',
+      },
+    });
+  });
+
   it('setActiveConversation, setStreaming, and setError update their flags', () => {
     const store = new ChatStore();
     const error: ChatError = {
@@ -237,6 +261,18 @@ describe('ChatStore', () => {
     expect(store.state.activeConversationId).toBe('c1');
     expect(store.state.isStreaming).toBe(true);
     expect(store.state.error).toEqual(error);
+  });
+
+  it('setHistoryState updates history cursor and pagination flags', () => {
+    const store = new ChatStore();
+
+    store.setHistoryState({
+      cursor: 'cursor-1',
+      hasMore: true,
+    });
+
+    expect(store.state.historyCursor).toBe('cursor-1');
+    expect(store.state.hasMoreHistory).toBe(true);
   });
 
   it('setComposerValue updates the composer model', () => {

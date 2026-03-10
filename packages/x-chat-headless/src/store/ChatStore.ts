@@ -264,6 +264,54 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     });
   };
 
+  public addConversation = (conversation: ChatConversation) => {
+    const nextConversationIds = this.state.conversationsById[conversation.id]
+      ? this.state.conversationIds
+      : [...this.state.conversationIds, conversation.id];
+
+    this.dirtyControlledModels.add('conversations');
+    this.update({
+      conversationIds: nextConversationIds,
+      conversationsById: {
+        ...this.state.conversationsById,
+        [conversation.id]: conversation,
+      },
+    });
+  };
+
+  public updateConversation = (id: string, patch: Partial<ChatConversation>) => {
+    const currentConversation = this.state.conversationsById[id];
+
+    if (!currentConversation) {
+      return;
+    }
+
+    this.dirtyControlledModels.add('conversations');
+    this.update({
+      conversationsById: {
+        ...this.state.conversationsById,
+        [id]: {
+          ...currentConversation,
+          ...patch,
+        },
+      },
+    });
+  };
+
+  public removeConversation = (id: string) => {
+    if (!this.state.conversationsById[id]) {
+      return;
+    }
+
+    const { [id]: _removedConversation, ...conversationsById } = this.state.conversationsById;
+
+    this.dirtyControlledModels.add('conversations');
+    this.update({
+      conversationIds: this.state.conversationIds.filter((conversationId) => conversationId !== id),
+      conversationsById,
+    });
+  };
+
   public setActiveConversation = (id: string | undefined) => {
     this.dirtyControlledModels.add('activeConversationId');
     this.set('activeConversationId', id);
@@ -280,6 +328,19 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
 
   public setError = (error: ChatError | null) => {
     this.set('error', error);
+  };
+
+  public setHistoryState = ({
+    cursor,
+    hasMore,
+  }: {
+    cursor: Cursor | undefined;
+    hasMore: boolean;
+  }) => {
+    this.update({
+      historyCursor: cursor,
+      hasMoreHistory: hasMore,
+    });
   };
 
   public resetMessages = () => {

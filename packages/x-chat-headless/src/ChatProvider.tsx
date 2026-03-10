@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { ChatAdapter } from './adapters';
+import { useChatController } from './internals/useChatController';
 import { useChatInstance } from './internals/useChatInstance';
 import {
   ChatRuntimeContext,
@@ -40,6 +41,14 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     ...parameters
   } = props;
   const store = useChatInstance(parameters, storeClass);
+  const actions = useChatController({
+    store,
+    adapter,
+    onToolCall,
+    onFinish,
+    onData,
+    onError,
+  });
 
   const runtimeContextValue = React.useMemo<ChatRuntimeContextValue<Cursor>>(
     () => ({
@@ -49,8 +58,9 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       onData,
       onError,
       partRenderers,
+      actions,
     }),
-    [adapter, onToolCall, onFinish, onData, onError, partRenderers],
+    [actions, adapter, onToolCall, onFinish, onData, onError, partRenderers],
   );
 
   return (

@@ -1,6 +1,7 @@
 import type { ChatDraftAttachment, ChatMessage, ChatConversation } from '../types/chat-entities';
 import type { ChatRealtimeEvent } from '../types/chat-realtime';
 import type { ChatMessageChunk, ChatStreamEnvelope } from '../types/chat-stream';
+import type { ChatAddToolApproveResponseInput } from '../types/chat-callbacks';
 
 export type PaginationDirection = 'forward' | 'backward';
 
@@ -86,6 +87,8 @@ export interface ChatAdapter<Cursor = string> {
   subscribe?(input: ChatSubscribeInput): Promise<ChatSubscriptionCleanup> | ChatSubscriptionCleanup;
 
   loadMore?(cursor?: Cursor): Promise<ChatLoadMoreResult<Cursor>>;
+
+  addToolApprovalResponse?(input: ChatAddToolApproveResponseInput): Promise<void>;
 
   stop?(): void;
 }

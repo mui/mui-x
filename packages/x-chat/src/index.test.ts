@@ -7,6 +7,7 @@ import * as unstyledDirect from '@mui/x-chat-unstyled';
 import { ChatProvider as HeadlessBridgeChatProvider } from '@mui/x-chat/headless';
 import { ChatStore as HeadlessChatStore } from '@mui/x-chat/headless';
 import { chatSelectors as headlessBridgeSelectors } from '@mui/x-chat/headless';
+import { useChat as headlessBridgeUseChat } from '@mui/x-chat/headless';
 import { useChatStatus as headlessBridgeUseChatStatus } from '@mui/x-chat/headless';
 import { useConversation as headlessBridgeUseConversation } from '@mui/x-chat/headless';
 import { useConversations as headlessBridgeUseConversations } from '@mui/x-chat/headless';
@@ -18,6 +19,7 @@ import { ChatProvider as HeadlessDirectChatProvider } from '@mui/x-chat-headless
 import { chatSelectors as headlessDirectSelectors } from '@mui/x-chat-headless';
 import { processStream as headlessBridgeProcessStream } from '@mui/x-chat/headless';
 import { processStream as headlessDirectProcessStream } from '@mui/x-chat-headless';
+import { useChat as headlessDirectUseChat } from '@mui/x-chat-headless';
 import { useChatStatus as headlessDirectUseChatStatus } from '@mui/x-chat-headless';
 import { useConversation as headlessDirectUseConversation } from '@mui/x-chat-headless';
 import { useConversations as headlessDirectUseConversations } from '@mui/x-chat-headless';
@@ -88,6 +90,7 @@ describe('x-chat package scaffold', () => {
     expect(HeadlessBridgeChatProvider).toBe(HeadlessDirectChatProvider);
     expect(headlessBridgeUseChatStore).toBe(headlessDirectUseChatStore);
     expect(headlessBridgeUseChatStoreContext).toBe(headlessDirectUseChatStoreContext);
+    expect(headlessBridgeUseChat).toBe(headlessDirectUseChat);
     expect(headlessBridgeUseMessageIds).toBe(headlessDirectUseMessageIds);
     expect(headlessBridgeUseMessage).toBe(headlessDirectUseMessage);
     expect(headlessBridgeUseConversations).toBe(headlessDirectUseConversations);
