@@ -65,7 +65,7 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const packageInfo = { releaseDate: '__RELEASE_INFO__', version: process.env.MUI_VERSION!, name: 'x-tree-view-pro' as const };
+const packageInfo = { releaseDate: '__RELEASE_INFO__', version: (process.env as any).MUI_VERSION, name: 'x-tree-view-pro' as const };
 
 /**
  *

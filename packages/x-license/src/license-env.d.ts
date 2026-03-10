@@ -1,7 +1,6 @@
 export {};
 
 declare global {
-  interface MUIEnv {
-    MUI_VERSION?: string;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface MUIEnv {}
 }

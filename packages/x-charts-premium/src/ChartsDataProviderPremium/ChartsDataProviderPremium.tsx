@@ -21,7 +21,7 @@ import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderPremiumProps } from './useChartsDataProviderPremiumProps';
 
-const packageInfo = { releaseDate: '__RELEASE_INFO__', version: process.env.MUI_VERSION!, name: 'x-charts-premium' as const };
+const packageInfo = { releaseDate: '__RELEASE_INFO__', version: (process.env as any).MUI_VERSION, name: 'x-charts-premium' as const };
 
 export interface ChartsDataProviderPremiumSlots extends ChartsSlotsPro {}
 
