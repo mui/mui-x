@@ -7,21 +7,22 @@ import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { type SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
+import type { HighlightState } from '../../hooks/useItemHighlighted';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
-  isHighlighted: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
+  getHighlightState: (item: HighlightItemIdentifierWithType<'radar'> | null) => HighlightState;
   point: { x: number; y: number };
   fillArea?: boolean;
   color: string;
 }
 
 export function getCircleProps(params: GetCirclePropsParams): React.SVGProps<SVGCircleElement> {
-  const { isHighlighted, isFaded, seriesId, classes, point, fillArea, color } = params;
-  const isItemHighlighted = isHighlighted({ type: 'radar', seriesId });
-  const isItemFaded = !isItemHighlighted && isFaded({ type: 'radar', seriesId });
+  const { getHighlightState, seriesId, classes, point, fillArea, color } = params;
+  const highlightState = getHighlightState({ type: 'radar', seriesId });
+  const isItemHighlighted = highlightState === 'highlighted';
+  const isItemFaded = highlightState === 'faded';
 
   return {
     cx: point.x,
@@ -42,7 +43,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   const seriesCoordinates = useRadarSeriesData(props.seriesId);
 
   const classes = useUtilityClasses(props.classes);
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightedGetter();
 
   return (
     <React.Fragment>
@@ -61,8 +62,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   point,
                   color: point.color,
                   fillArea,
-                  isFaded,
-                  isHighlighted,
+                  getHighlightState,
                   classes,
                 })}
                 pointerEvents={onItemClick ? undefined : 'none'}

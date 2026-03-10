@@ -87,7 +87,7 @@ function Scatter(props: ScatterProps) {
   const isVoronoiEnabled = store.use(selectorChartsIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightedGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
 
@@ -107,8 +107,9 @@ function Scatter(props: ScatterProps) {
   return (
     <g data-series={series.id} className={classes.root}>
       {scatterPlotData.map((dataPoint) => {
-        const isItemHighlighted = isHighlighted(dataPoint);
-        const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
+        const highlightState = getHighlightState(dataPoint);
+        const isItemHighlighted = highlightState === 'highlighted';
+        const isItemFaded = highlightState === 'faded';
 
         return (
           <Marker

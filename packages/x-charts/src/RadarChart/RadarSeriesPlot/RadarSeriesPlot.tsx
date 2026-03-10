@@ -14,7 +14,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightedGetter();
 
   const classes = useUtilityClasses(inClasses);
 
@@ -36,8 +36,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                     points,
                     color,
                     fillArea,
-                    isFaded,
-                    isHighlighted,
+                    getHighlightState,
                     classes,
                   })}
                   onClick={(event) =>
@@ -60,8 +59,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       point,
                       color: point.color,
                       fillArea,
-                      isFaded,
-                      isHighlighted,
+                      getHighlightState,
                       classes,
                     })}
                     onClick={(event) =>
