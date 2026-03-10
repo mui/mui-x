@@ -541,12 +541,16 @@ export const useGridRowEditing = (
         delete prevRowValuesLookup.current[id];
       };
 
-      if (ignoreModifications) {
+      if (ignoreModifications && apiRef.current.getRow(id)) {
         finishRowEditMode();
         return;
       }
 
       const editingState = gridEditRowsStateSelector(apiRef);
+      if (!editingState[id]) {
+        finishRowEditMode();
+        return;
+      }
       const row = prevRowValuesLookup.current[id];
 
       const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
@@ -615,7 +619,9 @@ export const useGridRowEditing = (
         try {
           Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
-              apiRef.current.updateRows([finalRowUpdate]);
+              if (apiRef.current.getRow(id)) {
+                apiRef.current.updateRows([finalRowUpdate]);
+              }
               finishRowEditMode();
             })
             .catch(handleError);
@@ -623,7 +629,9 @@ export const useGridRowEditing = (
           handleError(errorThrown);
         }
       } else {
-        apiRef.current.updateRows([rowUpdate]);
+        if (apiRef.current.getRow(id)) {
+          apiRef.current.updateRows([rowUpdate]);
+        }
         finishRowEditMode();
       }
     },
@@ -810,18 +818,11 @@ export const useGridRowEditing = (
     Array.from(ids).forEach((id) => {
       const params = rowModesModel[id] ?? { mode: GridRowModes.View };
       const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;
-      const row = rowsLookup[id];
-      const originalId = row ? apiRef.current.getRowId(row) : id;
+      const originalId = rowsLookup[id] ? apiRef.current.getRowId(rowsLookup[id]) : id;
       if (params.mode === GridRowModes.Edit && prevMode === GridRowModes.View) {
         updateStateToStartRowEditMode({ id: originalId, ...params });
       } else if (params.mode === GridRowModes.View && prevMode === GridRowModes.Edit) {
-        if (row) {
-          updateStateToStopRowEditMode({ id: originalId, ...params });
-        } else {
-          updateRowInRowModesModel(id, null);
-          updateOrDeleteRowState(id, null);
-          delete prevRowValuesLookup.current[id];
-        }
+        updateStateToStopRowEditMode({ id: originalId, ...params });
       }
     });
   }, [
