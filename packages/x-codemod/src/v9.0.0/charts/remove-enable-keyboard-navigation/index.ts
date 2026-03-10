@@ -38,6 +38,20 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     root,
     componentNames,
     props: ['enableKeyboardNavigation'],
+    shouldRemove: (attribute) => {
+      // Only remove the prop if it's not explicitly set to false or a variable that could be false.
+      if (attribute.value === null) {
+        return true;
+      }
+
+      if (attribute.value?.type === 'JSXExpressionContainer') {
+        if (attribute.value.expression.type === 'BooleanLiteral') {
+          return attribute.value.expression.value !== false;
+        }
+        // If it's an expression, we can't be sure of its value, so we keep it.
+      }
+      return false;
+    },
     j,
   });
 
