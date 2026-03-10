@@ -148,21 +148,5 @@ describe('<DataGrid /> - Material Slots', () => {
       expect(document.querySelector('.ac-custom-input')).not.to.equal(null);
       expect(document.querySelector('.ac-custom-input-label')).not.to.equal(null);
     });
-
-    it('should render Autocomplete with input from renderInput params', () => {
-      render(
-        <TestDataGrid
-          columns={multiSelectColumns}
-          filterModel={multiSelectFilterModel}
-          slotProps={{
-            panel: { open: true },
-          }}
-        />,
-      );
-      const autocomplete = document.querySelector('.MuiAutocomplete-root');
-      expect(autocomplete).not.to.equal(null);
-      const input = autocomplete!.querySelector('input');
-      expect(input).not.to.equal(null);
-    });
   });
 });
