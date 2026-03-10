@@ -121,7 +121,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 ) {
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventDialog' });
-  const { style, anchorRef, occurrence, onClose, open, ...other } = props;
+  const { style, anchorRef, occurrence, onClose, open, slots, slotProps, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
   const { classes } = useEventDialogStyledContext();
@@ -140,9 +140,10 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       aria-labelledby="event-dialog-title"
       aria-modal="false"
       className={classes.eventDialog}
-      slots={{ paper: PaperComponent }}
+      slots={{ paper: PaperComponent, ...slots }}
       slotProps={{
         paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,
+        ...slotProps,
       }}
       {...other}
     >
