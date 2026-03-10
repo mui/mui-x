@@ -66,7 +66,14 @@ const useAggregatedData = () => {
  * - [AreaPlot API](https://mui.com/x/api/charts/area-plot/)
  */
 function AreaPlot(props: AreaPlotProps) {
-  const { slots, slotProps, onItemClick, skipAnimation: inSkipAnimation, className, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    onItemClick,
+    skipAnimation: inSkipAnimation,
+    className,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 

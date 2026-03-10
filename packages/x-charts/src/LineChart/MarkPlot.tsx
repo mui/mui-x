@@ -66,7 +66,14 @@ const MarkPlotRoot = styled('g', {
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, className, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    className,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 

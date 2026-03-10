@@ -65,7 +65,14 @@ const useAggregatedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, className, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    className,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
