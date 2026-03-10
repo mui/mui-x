@@ -149,7 +149,7 @@ function LineElement(props: LineElementProps) {
     isHighlighted,
     hidden,
   };
-  const classes = useLineUtilityClasses({ classes: innerClasses });
+  const classes = useLineUtilityClasses();
   const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Line = slots?.line ?? AnimatedLine;
