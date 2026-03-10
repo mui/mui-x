@@ -10,14 +10,14 @@ import { deg2rad } from '../../../angleConversion';
 import { getGraphemeCount } from '../../../getGraphemeCount';
 import { getScale } from '../../../getScale';
 import { scaleBand, scalePoint } from '../../../scales';
+import { AXIS_LABEL_DEFAULT_HEIGHT } from '../../../../constants';
 import {
   AXIS_AUTO_SIZE_PADDING,
   AXIS_AUTO_SIZE_MIN,
   AXIS_AUTO_SIZE_TICK_SIZE,
   AXIS_AUTO_SIZE_TICK_LABEL_GAP,
   AXIS_AUTO_SIZE_GROUP_GAP,
-  AXIS_LABEL_DEFAULT_HEIGHT,
-} from '../../../../constants';
+} from './autoSizeConstants';
 
 /**
  * Checks if an axis has groups defined.
@@ -68,8 +68,8 @@ export interface AxisAutoSizeResult {
 
 /**
  * The maximum number of labels to measure for band/point scales.
- * We only need the widest label to determine auto-size, so we pick a small set of
- * candidates using label length as a proxy for visual width instead of measuring all.
+ * We only need the widest and tallest labels to determine auto-size, so we pick a small set of
+ * candidates using grapheme count as a proxy for visual width instead of measuring all.
  */
 const MAX_AUTO_SIZE_CANDIDATES = 5;
 
@@ -171,15 +171,18 @@ function getTickLabels(
 
   const valuesToMeasure = minVal === maxVal ? [minVal] : [minVal, maxVal];
 
+  const tickFormat = scale.tickFormat(valuesToMeasure.length);
+
   return valuesToMeasure.map((value) => {
+    const defaultTickLabel = tickFormat(value as any);
     if (valueFormatter) {
       return valueFormatter(value, {
         location: 'tick',
         scale,
-        defaultTickLabel: `${value}`,
+        defaultTickLabel,
       });
     }
-    return scale.tickFormat(valuesToMeasure.length)(value as any);
+    return defaultTickLabel;
   });
 }
 
