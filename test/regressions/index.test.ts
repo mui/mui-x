@@ -323,7 +323,7 @@ async function main() {
 
       await download.saveAs(screenshotPath);
 
-      await page.pause();
+      await page.close();
     });
   });
 }
