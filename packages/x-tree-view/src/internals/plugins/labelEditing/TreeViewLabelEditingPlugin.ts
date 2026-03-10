@@ -39,11 +39,9 @@ export class TreeViewLabelEditingPlugin {
   public updateItemLabel = (itemId: TreeViewItemId, label: string) => {
     if (!label) {
       throw new Error(
-        [
-          'MUI X: The Tree View component requires all items to have a `label` property.',
-          'The label of an item cannot be empty.',
-          itemId,
-        ].join('\n'),
+        `MUI X: The Tree View component requires all items to have a \`label\` property.
+The label of an item cannot be empty.
+Item ID: ${itemId}`,
       );
     }
 

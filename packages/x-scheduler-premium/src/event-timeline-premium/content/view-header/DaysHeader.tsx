@@ -22,13 +22,12 @@ const DayHeaderCell = styled('div', {
   width: 'var(--days-cell-width)',
   textAlign: 'center',
   padding: theme.spacing(1),
-  boxSizing: 'border-box',
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(0.5),
   '&:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -47,9 +46,9 @@ const WeekDay = styled('span', {
 })(({ theme }) => ({
   margin: 0,
   fontSize: theme.typography.body2.fontSize,
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   '&[data-weekend]': {
-    color: theme.palette.error.main,
+    color: (theme.vars || theme).palette.error.main,
   },
 }));
 
@@ -60,7 +59,7 @@ const DayNumber = styled('span', {
   margin: 0,
   fontSize: theme.typography.body2.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
 }));
 
 const MonthStart = styled('div', {
@@ -68,8 +67,8 @@ const MonthStart = styled('div', {
   slot: 'DaysHeaderMonthStart',
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
-  color: theme.palette.text.secondary,
-  background: theme.palette.grey[100],
+  color: (theme.vars || theme).palette.text.secondary,
+  background: (theme.vars || theme).palette.grey[100],
   height: '100%',
   margin: 0,
   position: 'absolute',

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
@@ -17,6 +18,9 @@ import {
 } from '@mui/x-scheduler/internals';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
+const releaseInfo = '__RELEASE_INFO__';
+const watermark = <Watermark packageName="x-scheduler-premium" releaseInfo={releaseInfo} />;
+
 /**
  * Premium version of EventCalendar with lazy loading support.
  * Uses EventCalendarPremiumStore which extends EventCalendarStore with lazy loading plugin.
@@ -31,6 +35,7 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   // Use the same theme name to share theme customizations with base EventCalendar
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
+  useLicenseVerifier('x-scheduler-premium', releaseInfo);
 
   const {
     parameters,
@@ -64,7 +69,9 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
           <EventDialogProvider>
-            <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+            <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+              {watermark}
+            </EventCalendarRoot>
           </EventDialogProvider>
         </EventDialogStyledContext.Provider>
       </EventCalendarStyledContext.Provider>

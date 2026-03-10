@@ -12,7 +12,7 @@ export const useInteractionAllItemProps = (
 ) => {
   const { instance } =
     useChartContext<
-      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+      [UseChartInteractionSignature, UseChartHighlightSignature<'radar'>, UseChartTooltipSignature]
     >();
 
   const results = React.useMemo(() => {

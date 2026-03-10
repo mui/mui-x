@@ -30,12 +30,19 @@ const PreferencesMenuRoot = styled('div', {
   slot: 'PreferencesMenu',
 })({});
 
-const PreferencesListSubheader = styled(ListSubheader, {
+const PreferencesMenuListItemIcon = styled(ListItemIcon, {
   name: 'MuiEventCalendar',
-  slot: 'PreferencesListSubheader',
+  slot: 'PreferencesMenuListItemIcon',
+})({
+  justifyContent: 'flex-end',
+});
+
+const PreferencesMenuListSubheader = styled(ListSubheader, {
+  name: 'MuiEventCalendar',
+  slot: 'PreferencesMenuListSubheader',
 })(({ theme }) => ({
   ...theme.typography.button,
-  color: theme.palette.text.disabled,
+  color: (theme.vars || theme).palette.text.disabled,
   paddingBottom: theme.spacing(1),
   backgroundColor: 'transparent',
 }));
@@ -137,6 +144,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       className={clsx(props.className, classes.preferencesMenu)}
     >
       <IconButton
+        className={classes.preferencesMenuButton}
         aria-label={localeText.preferencesMenu}
         onClick={handleClick}
         aria-controls={open ? 'preferences-menu' : undefined}
@@ -146,6 +154,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         <SettingsOutlined />
       </IconButton>
       <Menu
+        className={classes.preferencesMenuList}
         id="preferences-menu"
         anchorEl={anchorEl}
         open={open}
@@ -160,6 +169,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       >
         {visibleOptions.map((option) => (
           <MenuItem
+            className={classes.preferencesMenuItem}
             key={option.configKey}
             onClick={(event) => {
               handleToggle(
@@ -169,55 +179,70 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
               );
             }}
           >
-            <ListItemText>{option.label}</ListItemText>
+            <ListItemText className={classes.preferencesMenuListItemText}>
+              {option.label}
+            </ListItemText>
             {preferences[option.preferenceKey] && (
-              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+              <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
                 <CheckIcon fontSize="small" />
-              </ListItemIcon>
+              </PreferencesMenuListItemIcon>
             )}
           </MenuItem>
         ))}
-        {showTimeFormatSubmenu && visibleOptions.length > 0 && <Divider />}
+        {showTimeFormatSubmenu && visibleOptions.length > 0 && (
+          <Divider className={classes.preferencesMenuDivider} />
+        )}
         {showTimeFormatSubmenu && (
-          <PreferencesListSubheader>{localeText.timeFormat}</PreferencesListSubheader>
+          <PreferencesMenuListSubheader className={classes.preferencesMenuListSubheader}>
+            {localeText.timeFormat}
+          </PreferencesMenuListSubheader>
         )}
         {showTimeFormatSubmenu && (
           <MenuItem
+            className={classes.preferencesMenuItem}
             onClick={(event) => {
               handleTimeFormatChange('12', event.nativeEvent);
             }}
           >
-            <ListItemText>{localeText.amPm12h}</ListItemText>
+            <ListItemText className={classes.preferencesMenuListItemText}>
+              {localeText.amPm12h}
+            </ListItemText>
             {preferences.ampm && (
-              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+              <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
                 <CheckIcon fontSize="small" />
-              </ListItemIcon>
+              </PreferencesMenuListItemIcon>
             )}
           </MenuItem>
         )}
         {showTimeFormatSubmenu && (
           <MenuItem
+            className={classes.preferencesMenuItem}
             onClick={(event) => {
               handleTimeFormatChange('24', event.nativeEvent);
             }}
           >
-            <ListItemText>{localeText.hour24h}</ListItemText>
+            <ListItemText className={classes.preferencesMenuListItemText}>
+              {localeText.hour24h}
+            </ListItemText>
             {!preferences.ampm && (
-              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+              <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
                 <CheckIcon fontSize="small" />
-              </ListItemIcon>
+              </PreferencesMenuListItemIcon>
             )}
           </MenuItem>
         )}
-        {showSpecificOptions && (visibleOptions.length > 0 || showTimeFormatSubmenu) && <Divider />}
+        {showSpecificOptions && (visibleOptions.length > 0 || showTimeFormatSubmenu) && (
+          <Divider className={classes.preferencesMenuDivider} />
+        )}
         {showSpecificOptions && (
-          <PreferencesListSubheader>
+          <PreferencesMenuListSubheader className={classes.preferencesMenuListSubheader}>
             {localeText.viewSpecificOptions(currentView)}
-          </PreferencesListSubheader>
+          </PreferencesMenuListSubheader>
         )}
         {showSpecificOptions &&
           visibleViewSpecificOptions.map((option) => (
             <MenuItem
+              className={classes.preferencesMenuItem}
               key={option.configKey}
               onClick={(event) => {
                 handleToggle(
@@ -227,11 +252,13 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
                 );
               }}
             >
-              <ListItemText>{option.label}</ListItemText>
+              <ListItemText className={classes.preferencesMenuListItemText}>
+                {option.label}
+              </ListItemText>
               {preferences[option.preferenceKey] && (
-                <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+                <PreferencesMenuListItemIcon className={classes.preferencesMenuListItemIcon}>
                   <CheckIcon fontSize="small" />
-                </ListItemIcon>
+                </PreferencesMenuListItemIcon>
               )}
             </MenuItem>
           ))}

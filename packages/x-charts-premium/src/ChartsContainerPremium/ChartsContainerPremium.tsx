@@ -30,7 +30,7 @@ type ChartsContainerPremiumComponent = <
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
- * This is a combination of both the `ChartDataProviderPremium` and `ChartsSurface` components.
+ * This is a combination of both the `ChartsDataProviderPremium` and `ChartsSurface` components.
  *
  * Demos:
  *
@@ -54,7 +54,7 @@ type ChartsContainerPremiumComponent = <
 const ChartsContainerPremium = React.forwardRef(function ChartsContainerPremium<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerPremiumProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+>(props: ChartsContainerPremiumProps<TSeries, TSignatures>, ref: React.Ref<HTMLDivElement>) {
   const { chartDataProviderPremiumProps, children, chartsSurfaceProps } =
     useChartsContainerPremiumProps<TSeries, TSignatures>(props);
 

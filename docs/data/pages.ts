@@ -423,6 +423,11 @@ const pages: MuiPage[] = [
         subheader: 'Tutorials',
         children: [
           { pathname: '/x/react-data-grid/tutorials/server-side-data', title: 'Server-side data' },
+          {
+            pathname: '/x/react-data-grid/tutorials/aggregation-row-grouping',
+            title: 'Aggregation and row grouping',
+            plan: 'premium',
+          },
         ],
       },
     ],
@@ -501,7 +506,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/time-range-picker',
                 title: 'Time Range Picker',
-                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/time-range-field',
@@ -652,7 +656,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
             ],
           },
-          { pathname: '/x/react-charts/sankey', plan: 'pro', unstable: true },
+          { pathname: '/x/react-charts/sankey', plan: 'pro' },
           {
             pathname: '/x/react-charts/#planned-charts',
             title: 'Future Components',
@@ -782,7 +786,6 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-tree-view/rich-tree-view/editing',
             title: 'Label editing',
-            newFeature: true,
           },
           {
             pathname: '/x/react-tree-view/rich-tree-view/virtualization',
@@ -792,9 +795,8 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',
-            newFeature: true,
           },
-          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro', newFeature: true },
+          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro' },
         ],
       },
       {
@@ -827,7 +829,7 @@ const pages: MuiPage[] = [
         pathname: '/x/migration-v9',
         subheader: 'Upgrade to v9',
         children: [
-          // { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
+          { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
           // {
           //   pathname: '/x/migration/migration-pickers-v8',
           //   title: 'Breaking changes: Date and Time Pickers',
@@ -836,10 +838,10 @@ const pages: MuiPage[] = [
             pathname: '/x/migration/migration-charts-v8',
             title: 'Breaking changes: Charts',
           },
-          // {
-          //   pathname: '/x/migration/migration-tree-view-v8',
-          //   title: 'Breaking changes: Tree View',
-          // },
+          {
+            pathname: '/x/migration/migration-tree-view-v8',
+            title: 'Breaking changes: Tree View',
+          },
         ],
       },
       {

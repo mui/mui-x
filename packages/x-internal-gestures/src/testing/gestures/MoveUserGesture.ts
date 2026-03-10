@@ -16,7 +16,7 @@ export const move = async (
   const { target, pointer, distance, duration = 500, steps = 10, angle = 0 } = options;
 
   if (!target) {
-    throw new Error('Target element is required for move gesture');
+    throw new Error('MUI X: Target element is required for move gesture');
   }
 
   if (distance <= 0) {

@@ -15,6 +15,7 @@ import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
 import { useChartContext } from '../context/ChartProvider';
 import {
   selectorIsItemVisibleGetter,
+  type VisibilityIdentifierWithType,
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 import { useStore } from '../internals/store/useStore';
@@ -127,7 +128,7 @@ const ChartsLegend = consumeSlots(
               type: item.type,
               seriesId: item.seriesId,
               dataIndex: item.dataIndex,
-            });
+            } as VisibilityIdentifierWithType);
           }
         },
     );
@@ -166,6 +167,7 @@ const ChartsLegend = consumeSlots(
                     className={classes?.mark}
                     color={item.color}
                     type={item.markType}
+                    markShape={item.markShape}
                   />
                   <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
                 </button>
@@ -175,6 +177,7 @@ const ChartsLegend = consumeSlots(
                     className={classes?.mark}
                     color={item.color}
                     type={item.markType}
+                    markShape={item.markShape}
                   />
                   <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
                 </div>

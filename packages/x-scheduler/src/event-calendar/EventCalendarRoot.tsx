@@ -20,13 +20,9 @@ import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
 import { MiniCalendar } from './mini-calendar';
-import { schedulerTokens } from '../internals/utils/tokens';
 import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
-export interface EventCalendarRootProps extends Omit<
-  React.HTMLAttributes<HTMLDivElement>,
-  'children'
-> {
+export interface EventCalendarRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -37,14 +33,15 @@ const EventCalendarRootStyled = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'Root',
 })(({ theme }) => ({
-  // CSS variable tokens
-  ...schedulerTokens,
   // Layout
   boxSizing: 'border-box',
+  '*, *::before, *::after': {
+    boxSizing: 'inherit',
+  },
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
   height: '100%',
   minHeight: 0,
   overflow: 'hidden',
@@ -61,7 +58,7 @@ const EventCalendarSidePanel = styled('aside', {
   flexDirection: 'column',
   gap: theme.spacing(2),
   border: '1px solid',
-  borderColor: theme.palette.divider,
+  borderColor: (theme.vars || theme).palette.divider,
   borderRadius: theme.shape.borderRadius,
   maxHeight: '100%',
   overflowY: 'hidden',
@@ -73,7 +70,7 @@ const EventCalendarMainPanel = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   flexGrow: 1,
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
   minHeight: 0,
 
   '&[data-view="month"]': {
@@ -89,12 +86,9 @@ const EventCalendarContent = styled('section', {
   display: 'flex',
   flex: 1,
   overflow: 'auto',
-  height: 'fit-content',
+  height: '100%',
   maxHeight: '100%',
-  '&[data-view="month"]': {
-    height: '100%',
-    maxHeight: '100%',
-  },
+
   '&[data-side-panel-open="false"]': {
     gridColumn: '1 / -1',
   },
@@ -107,7 +101,7 @@ const EventCalendarContent = styled('section', {
  */
 export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarRootProps>(
   function EventCalendarRoot(props, forwardedRef) {
-    const { className, ...other } = props;
+    const { children, className, ...other } = props;
 
     const store = useEventCalendarStoreContext();
     const { classes } = useEventCalendarStyledContext();
@@ -145,10 +139,14 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
         <HeaderToolbar />
 
         <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
-          <Collapse in={isSidePanelOpen} orientation="horizontal">
+          <Collapse
+            in={isSidePanelOpen}
+            orientation="horizontal"
+            className={classes.sidePanelCollapse}
+          >
             <EventCalendarSidePanel className={classes.sidePanel}>
               <MiniCalendar />
-              <Divider />
+              <Divider className={classes.sidePanelDivider} />
               <ResourcesLegend />
             </EventCalendarSidePanel>
           </Collapse>
@@ -163,6 +161,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
           </EventCalendarContent>
         </EventCalendarMainPanel>
         <ErrorContainer />
+        {children}
       </EventCalendarRootStyled>
     );
   },

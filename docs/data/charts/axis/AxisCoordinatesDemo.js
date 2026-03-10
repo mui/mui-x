@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
@@ -28,7 +28,7 @@ const colors = [
 
 export default function AxisCoordinatesDemo() {
   return (
-    <ChartContainer
+    <ChartsContainer
       series={[
         {
           type: 'line',
@@ -67,7 +67,7 @@ export default function AxisCoordinatesDemo() {
       <ChartsXAxis axisId="x-top" />
       <ChartsYAxis axisId="y-left" />
       <ChartsYAxis axisId="y-right" />
-    </ChartContainer>
+    </ChartsContainer>
   );
 }
 

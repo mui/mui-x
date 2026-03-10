@@ -6,7 +6,7 @@ import {
   LinePlot,
   MarkPlot,
 } from '@mui/x-charts/LineChart';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
@@ -144,12 +144,13 @@ export default function LineWithUncertaintyArea() {
 
   return (
     <Box sx={{ width: '100%', height: 200 }}>
-      <ChartContainer
+      <ChartsContainer
         series={[
           {
             type: 'line',
             data: [1, 2, 3, 4, 1, 2, 3, 4, 5],
             valueFormatter: (v, i) => `${v}${i.dataIndex > 5 ? ' (estimated)' : ''}`,
+            showMark: true,
           },
         ]}
         xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6, 7, 8] }]}
@@ -179,7 +180,7 @@ export default function LineWithUncertaintyArea() {
         </g>
         <ChartsTooltip />
         <ChartsClipPath id={clipPathId} />
-      </ChartContainer>
+      </ChartsContainer>
     </Box>
   );
 }
