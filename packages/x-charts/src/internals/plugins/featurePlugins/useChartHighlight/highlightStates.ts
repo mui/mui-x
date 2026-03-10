@@ -1,26 +1,11 @@
 import type { HighlightItemIdentifier, SeriesId } from '../../../../models/seriesType';
-import type {
-  ChartsSeriesConfig,
-  ChartSeriesType,
-  HighlightScope,
-} from '../../../../models/seriesType/config';
+import type { ChartsSeriesConfig, HighlightScope } from '../../../../models/seriesType/config';
 
-const batchRenderingSeries = new Set<SeriesTypeWithBatchRendering>([
-  'bar',
-  'rangeBar',
-  'line',
-] as unknown as SeriesTypeWithBatchRendering[]);
 type SeriesTypeWithBatchRendering =
   | 'bar'
   | 'line'
   // Conditional type to add 'rangeBar' if it exists in ChartsSeriesConfig
   | (ChartsSeriesConfig extends { rangeBar: any } ? 'rangeBar' : never);
-
-export function isBatchRenderingSeriesType(
-  type: ChartSeriesType | undefined,
-): type is SeriesTypeWithBatchRendering {
-  return batchRenderingSeries.has(type as SeriesTypeWithBatchRendering);
-}
 
 export function isSeriesHighlighted<SeriesType extends SeriesTypeWithBatchRendering>(
   scope: Partial<HighlightScope<SeriesType>> | null,
