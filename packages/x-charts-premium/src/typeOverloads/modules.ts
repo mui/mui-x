@@ -1,5 +1,5 @@
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type { CommonHighlightScope, SeriesColor } from '@mui/x-charts/internals';
+import type { CommonHighlightScope, ComputedXAxis, ComputedYAxis, SeriesColor } from '@mui/x-charts/internals';
 import type { RangeBarValueType, RangeBarSeriesType } from '../models';
 import type {
   DefaultizedRangeBarSeriesType,
@@ -24,6 +24,12 @@ declare module '@mui/x-charts/internals' {
       valueType: RangeBarValueType | null;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: RangeBarItemIdentifier;
+        xAxis: ComputedXAxis;
+        yAxis: ComputedYAxis;
+        series: DefaultizedRangeBarSeriesType;
+      };
     };
   }
 }
