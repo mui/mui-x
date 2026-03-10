@@ -142,7 +142,7 @@ function AreaElement(props: AreaElementProps) {
     isFaded,
     isHighlighted,
   };
-  const classes = useLineUtilityClasses({ classes: innerClasses });
+  const classes = useLineUtilityClasses();
   const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Area = slots?.area ?? AnimatedArea;
