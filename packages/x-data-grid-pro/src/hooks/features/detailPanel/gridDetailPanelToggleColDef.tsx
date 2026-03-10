@@ -30,5 +30,5 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   },
   rowSpanValueGetter: (_, row, __, apiRef) => gridRowIdSelector(apiRef, row),
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
-  renderHeader: ({ colDef }) => <div aria-label={colDef.headerName} />,
+  renderHeader: ({ colDef }) => <div aria-label={colDef.headerName} role="presentation" />,
 };

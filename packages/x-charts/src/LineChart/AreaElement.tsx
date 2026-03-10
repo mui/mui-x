@@ -10,7 +10,11 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
 import { type SeriesId } from '../models/seriesType/common';
+import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
+/**
+ * @deprecated Use `LineClasses` from `./lineClasses` instead.
+ */
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
   root: string;
@@ -31,6 +35,9 @@ export interface AreaElementClasses {
   series: string;
 }
 
+/**
+ * @deprecated Use `LineClassKey` from `./lineClasses` instead.
+ */
 export type AreaElementClassKey = keyof AreaElementClasses;
 
 export interface AreaElementOwnerState {
@@ -42,10 +49,16 @@ export interface AreaElementOwnerState {
   classes?: Partial<AreaElementClasses>;
 }
 
+/**
+ * @deprecated Use `getLineUtilityClass` from `./lineClasses` instead.
+ */
 export function getAreaElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiAreaElement', slot);
 }
 
+/**
+ * @deprecated Use `lineClasses` from `./lineClasses` instead.
+ */
 export const areaElementClasses: AreaElementClasses = generateUtilityClasses('MuiAreaElement', [
   'root',
   'highlighted',
@@ -53,7 +66,10 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
   'series',
 ]);
 
-const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
+/**
+ * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
+ */
+const useDeprecatedUtilityClasses = (ownerState: AreaElementOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
     root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
@@ -126,7 +142,8 @@ function AreaElement(props: AreaElementProps) {
     isFaded,
     isHighlighted,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useLineUtilityClasses();
+  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Area = slots?.area ?? AnimatedArea;
   const areaProps = useSlotProps({
@@ -138,8 +155,9 @@ function AreaElement(props: AreaElementProps) {
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
+      'data-series-id': seriesId,
     },
-    className: classes.root,
+    className: `${classes.area} ${deprecatedClasses.root}`,
     ownerState,
   });
 

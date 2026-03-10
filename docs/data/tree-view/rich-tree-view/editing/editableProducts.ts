@@ -1,12 +1,11 @@
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-
 type Editable = {
   editable?: boolean;
   id: string;
   label: string;
+  children?: Editable[];
 };
 
-export const MUI_X_PRODUCTS: TreeViewBaseItem<Editable>[] = [
+export const MUI_X_PRODUCTS: Editable[] = [
   {
     id: 'grid',
     label: 'Data Grid',
