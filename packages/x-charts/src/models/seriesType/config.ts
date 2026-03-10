@@ -158,26 +158,30 @@ export type StackableChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
-export type ChartSeries<SeriesType extends ChartSeriesType> = ChartsSeriesConfig[SeriesType]['seriesInput'];
+export type ChartSeries<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType]['seriesInput'];
 
-export type ChartSeriesDefaultized<SeriesType extends ChartSeriesType> = ChartsSeriesConfig[SeriesType] extends {
-  canBeStacked: true;
-}
-  ? ChartsSeriesConfig[SeriesType]['series'] & {
-      visibleStackedData: [number, number][];
-      stackedData: [number, number][];
-    }
-  : ChartsSeriesConfig[SeriesType]['series'];
+export type ChartSeriesDefaultized<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends {
+    canBeStacked: true;
+  }
+    ? ChartsSeriesConfig[SeriesType]['series'] & {
+        visibleStackedData: [number, number][];
+        stackedData: [number, number][];
+      }
+    : ChartsSeriesConfig[SeriesType]['series'];
 
-export type ChartSeriesLayout<SeriesType extends ChartSeriesType> = ChartsSeriesConfig[SeriesType] extends any
-  ? ChartsSeriesConfig[SeriesType]['seriesLayout']
-  : never;
+export type ChartSeriesLayout<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends any
+    ? ChartsSeriesConfig[SeriesType]['seriesLayout']
+    : never;
 
 export type DatasetElementType<T> = {
   [key: string]: T;
 };
 export type DatasetType<T = unknown> = DatasetElementType<T>[];
 
-export type HighlightScope<SeriesType extends ChartSeriesType> = ChartsSeriesConfig[SeriesType] extends any
-  ? ChartsSeriesConfig[SeriesType]['highlightScope']
-  : never;
+export type HighlightScope<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends any
+    ? ChartsSeriesConfig[SeriesType]['highlightScope']
+    : never;

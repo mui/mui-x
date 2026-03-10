@@ -39,21 +39,22 @@ export interface UseChartSeriesParameters<SeriesType extends ChartSeriesType = C
   theme?: 'light' | 'dark';
 }
 
-export type UseChartSeriesDefaultizedParameters<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  UseChartSeriesParameters<SeriesType> & {
-    /**
-     * The array of series to display.
-     * Each type of series has its own specificity.
-     * Please refer to the appropriate docs page to learn more about it.
-     */
-    series: Readonly<AllSeriesType<SeriesType>[]>;
-    /**
-     * Color palette used to colorize multiple series.
-     * @default rainbowSurgePalette
-     */
-    colors: ChartsColorPalette;
-    theme: 'light' | 'dark';
-  };
+export type UseChartSeriesDefaultizedParameters<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> = UseChartSeriesParameters<SeriesType> & {
+  /**
+   * The array of series to display.
+   * Each type of series has its own specificity.
+   * Please refer to the appropriate docs page to learn more about it.
+   */
+  series: Readonly<AllSeriesType<SeriesType>[]>;
+  /**
+   * Color palette used to colorize multiple series.
+   * @default rainbowSurgePalette
+   */
+  colors: ChartsColorPalette;
+  theme: 'light' | 'dark';
+};
 
 export type ProcessedSeries<SeriesType extends ChartSeriesType = ChartSeriesType> = {
   [type in SeriesType]?: SeriesProcessorResult<type>;

@@ -10,7 +10,10 @@ import type { ChartSeriesConfig } from '../types';
  * @returns {string} A unique string representation of the identifier.
  * @throws Will throw an error if no serializer is found for the given series type.
  */
-export const serializeIdentifier = <SeriesType extends ChartSeriesType, U extends { type: SeriesType }>(
+export const serializeIdentifier = <
+  SeriesType extends ChartSeriesType,
+  U extends { type: SeriesType },
+>(
   seriesConfig: ChartSeriesConfig<SeriesType>,
   identifier: U,
 ): string => {

@@ -9,7 +9,9 @@ export type ColorProcessorsConfig<SeriesType extends ChartSeriesType> = {
   [Key in SeriesType]?: ColorProcessor<Key>;
 };
 
-export function useColorProcessor<SeriesType extends ChartSeriesType>(seriesType: SeriesType): ColorProcessor<SeriesType>;
+export function useColorProcessor<SeriesType extends ChartSeriesType>(
+  seriesType: SeriesType,
+): ColorProcessor<SeriesType>;
 export function useColorProcessor(): ColorProcessorsConfig<ChartSeriesType>;
 export function useColorProcessor(seriesType?: ChartSeriesType) {
   const store = useStore();
@@ -20,7 +22,8 @@ export function useColorProcessor(seriesType?: ChartSeriesType) {
     (Object.keys(seriesConfig) as ChartSeriesType[]).forEach(
       <SeriesType extends ChartSeriesType>(seriesT: SeriesType) => {
         // @ts-expect-error https://github.com/microsoft/TypeScript/issues/61555
-        rep[seriesT as SeriesType] = seriesConfig[seriesT].colorProcessor as ColorProcessor<SeriesType>;
+        rep[seriesT as SeriesType] = seriesConfig[seriesT]
+          .colorProcessor as ColorProcessor<SeriesType>;
       },
     );
     return rep;

@@ -21,7 +21,9 @@ import {
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature<ChartSeriesType>> = (state) =>
   state.highlight;
 
-type HighlightLookUp<SeriesType extends ChartSeriesType> = { [K in SeriesType]?: Map<SeriesId, HighlightScope<K>> };
+type HighlightLookUp<SeriesType extends ChartSeriesType> = {
+  [K in SeriesType]?: Map<SeriesId, HighlightScope<K>>;
+};
 
 export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
   selectorChartSeriesProcessed,

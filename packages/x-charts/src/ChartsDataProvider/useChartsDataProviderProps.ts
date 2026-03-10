@@ -41,7 +41,10 @@ export const useChartsDataProviderProps = <
       theme: theme.palette.mode,
       seriesConfig,
       ...other,
-    } as MergeSignaturesProperty<[...ChartCorePluginSignatures<SeriesType>, ...TSignatures], 'params'>,
+    } as MergeSignaturesProperty<
+      [...ChartCorePluginSignatures<SeriesType>, ...TSignatures],
+      'params'
+    >,
   };
 
   return {

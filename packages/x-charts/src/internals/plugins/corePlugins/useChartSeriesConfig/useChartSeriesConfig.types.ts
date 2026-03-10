@@ -7,7 +7,9 @@ import {
 } from '../../../../models/seriesType';
 import { type VisibilityIdentifierWithType } from '../../featurePlugins/useChartVisibilityManager';
 
-export interface UseChartSeriesConfigParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartSeriesConfigParameters<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> {
   /**
    * The configuration for the series types.
    * This is used to define how each series type should be processed, colored, and displayed.
@@ -15,10 +17,11 @@ export interface UseChartSeriesConfigParameters<SeriesType extends ChartSeriesTy
   seriesConfig?: ChartSeriesConfig<SeriesType>;
 }
 
-export type UseChartSeriesConfigDefaultizedParameters<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  UseChartSeriesConfigParameters<SeriesType> & {
-    seriesConfig: ChartSeriesConfig<SeriesType>;
-  };
+export type UseChartSeriesConfigDefaultizedParameters<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> = UseChartSeriesConfigParameters<SeriesType> & {
+  seriesConfig: ChartSeriesConfig<SeriesType>;
+};
 
 export interface UseChartSeriesConfigState<SeriesType extends ChartSeriesType = ChartSeriesType> {
   seriesConfig: {
