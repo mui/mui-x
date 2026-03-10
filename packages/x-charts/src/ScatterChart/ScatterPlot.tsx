@@ -8,8 +8,7 @@ import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
-import { scatterClasses, useUtilityClasses } from './scatterClasses';
-import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import { useUtilityClasses } from './scatterClasses';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -46,13 +45,7 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
 const ScatterPlotRoot = styled('g', {
   name: 'MuiScatterPlot',
   slot: 'Root',
-})({
-  [`& .${scatterClasses.marker}`]: {
-    transitionProperty: 'opacity, fill',
-    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
-  },
-});
+})();
 
 /**
  * Demos:
@@ -70,6 +63,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
+  const classes = useUtilityClasses();
 
   if (seriesData === undefined) {
     return null;
@@ -80,7 +74,6 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-  const classes = useUtilityClasses();
 
   const DefaultScatterItems = renderer === 'svg-batch' ? BatchScatter : Scatter;
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
