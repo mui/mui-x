@@ -9,7 +9,7 @@ components: CandlestickChart, CandlestickPlot
 <p class="description">A candlestick chart is used to visualize price movement over time.</p>
 
 :::warning
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+This feature is in preview. It is not yet ready for production use, and its API, visuals and behavior may change in future minor or patch releases.
 :::
 
 ## Overview
