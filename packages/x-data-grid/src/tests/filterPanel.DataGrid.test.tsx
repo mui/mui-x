@@ -500,7 +500,8 @@ describe('<DataGrid /> - Filter panel', () => {
   // See https://github.com/mui/mui-x/issues/21404
   (['string', 'singleSelect'] as const).forEach((type) => {
     it(`should forward InputComponentProps for ${type} isAnyOf operator`, () => {
-      const operators = type === 'string' ? getGridStringOperators() : getGridSingleSelectOperators();
+      const operators =
+        type === 'string' ? getGridStringOperators() : getGridSingleSelectOperators();
       render(
         <TestCase
           columns={[
