@@ -349,7 +349,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       return undefined;
     }
     const updateWidth = () => {
-      spacer.style.width = `${subgrid.scrollWidth}px`;
+      if (subgrid.scrollWidth > subgrid.clientWidth) {
+        spacer.style.width = `${subgrid.scrollWidth}px`;
+      } else {
+        spacer.style.width = '';
+      }
     };
     updateWidth();
     if (typeof ResizeObserver === 'undefined') {
