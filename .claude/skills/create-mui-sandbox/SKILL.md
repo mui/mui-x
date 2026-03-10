@@ -193,12 +193,12 @@ User-provided component. Must export default.
 ### src/index.tsx
 
 ```tsx
-import * as React from "react";
-import * as ReactDOM from "react-dom/client";
-import { StyledEngineProvider } from "@mui/material/styles";
-import Demo from "./Demo";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
+import { StyledEngineProvider } from '@mui/material/styles';
+import Demo from './Demo';
 
-ReactDOM.createRoot(document.querySelector("#root")!).render(
+ReactDOM.createRoot(document.querySelector('#root')!).render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <Demo />
@@ -222,10 +222,7 @@ ReactDOM.createRoot(document.querySelector("#root")!).render(
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
     />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   </head>
   <body>
     <div id="root"></div>
@@ -309,11 +306,11 @@ ReactDOM.createRoot(document.querySelector("#root")!).render(
 ### vite.config.ts
 
 ```ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  define: { "process.env": {} },
+  define: { 'process.env': {} },
 });
 ```
