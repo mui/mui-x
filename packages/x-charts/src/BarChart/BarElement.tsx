@@ -74,7 +74,9 @@ function BarElement(props: BarElementProps) {
     [seriesId, dataIndex],
   );
   const interactionProps = useInteractionItemProps(itemIdentifier);
-  const { isFaded, isHighlighted } = useItemHighlighted(itemIdentifier);
+  const highlightState = useItemHighlighted(itemIdentifier);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
   const isFocused = useIsItemFocused(
     React.useMemo(
       () => ({

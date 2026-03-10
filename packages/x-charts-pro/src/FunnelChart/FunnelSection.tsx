@@ -52,7 +52,9 @@ const FunnelSection = consumeSlots(
     );
 
     const interactionProps = useInteractionItemProps(identifier);
-    const { isFaded, isHighlighted } = useItemHighlighted(identifier);
+    const highlightState = useItemHighlighted(identifier);
+    const isHighlighted = highlightState === 'highlighted';
+    const isFaded = highlightState === 'faded';
 
     const isOutlined = variant === 'outlined';
 

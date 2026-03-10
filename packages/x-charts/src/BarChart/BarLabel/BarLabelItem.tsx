@@ -118,11 +118,13 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
     hidden,
     ...other
   } = props;
-  const { isFaded, isHighlighted } = useItemHighlighted({
+  const highlightState = useItemHighlighted({
     type: 'bar',
     seriesId,
     dataIndex,
   });
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
 
   const ownerState = {
     seriesId,

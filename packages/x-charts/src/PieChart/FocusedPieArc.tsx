@@ -25,7 +25,9 @@ export function FocusedPieArc(
   const focusedItem = useFocusedItem();
   const pieSeriesLayout = usePieSeriesLayout();
 
-  const { isHighlighted, isFaded } = useItemHighlighted(focusedItem);
+  const highlightState = useItemHighlighted(focusedItem);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
   const pieSeries = usePieSeriesContext();
 
   if (focusedItem === null || focusedItem.type !== 'pie' || !pieSeries) {
