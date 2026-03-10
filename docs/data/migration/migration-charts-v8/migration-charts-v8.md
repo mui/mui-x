@@ -244,6 +244,33 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
+### `useItemHighlighted()` return type changed
+
+The `useItemHighlighted()` hook no longer returns an object with `isHighlighted` and `isFaded` booleans.
+It now returns a `HighlightState` union type: `'highlighted' | 'faded' | 'none'`.
+
+```diff
+-const { isHighlighted, isFaded } = useItemHighlighted(identifier);
++const highlightState = useItemHighlighted(identifier);
++const isHighlighted = highlightState === 'highlighted';
++const isFaded = highlightState === 'faded';
+```
+
+### `useItemHighlightedGetter()` return type changed
+
+The `useItemHighlightedGetter()` hook no longer returns an object with `isHighlighted` and `isFaded` callbacks.
+It now returns a single callback that returns a `HighlightState` union type.
+
+```diff
+-const { isHighlighted, isFaded } = useItemHighlightedGetter();
+-const isItemHighlighted = isHighlighted(item);
+-const isItemFaded = !isItemHighlighted && isFaded(item);
++const getHighlightState = useItemHighlightedGetter();
+
++const isItemHighlighted = (item) => getHighlightState(item) === 'highlighted'
++const isItemFaded = (item) => getHighlightState(item) === 'faded'
+```
+
 ### Rename `useAxisTooltip()` hook
 
 The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
