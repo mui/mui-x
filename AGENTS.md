@@ -74,6 +74,50 @@ pnpm proptypes # generate PropTypes
 pnpm docs:api # generate/update the API documentation
 ```
 
+## Error Messages
+
+These guidelines only apply for errors thrown from public packages.
+
+Every error message must:
+
+1. **Say what happened** - Describe the problem clearly
+2. **Say why it's a problem** - Explain the consequence
+3. **Point toward how to solve it** - Give actionable guidance
+
+Format:
+
+<!-- markdownlint-disable MD038 -->
+
+- Prefix with `MUI X:` (for internal or generic packages) and `MUI X PackageName:` (for example, `MUI X Charts:` or `MUI X Data Grid:`) for specific packages
+- Use string concatenation for readability
+- Include a documentation link when applicable (`https://mui.com/x/...`)
+
+Example:
+
+```tsx
+throw new Error(
+  `MUI X Charts: The series configuration is missing a required serializer.
+This prevents the chart from identifying series items correctly.
+Ensure each series type registers its serializer in the seriesConfig.`,
+);
+```
+
+### Error Minifier
+
+Use the `/* minify-error-disabled */` comment to de-activate the babel plugin for small error messages:
+
+```tsx
+throw /* minify-error-disabled */ new Error(`MUI X: Unreachable`);
+```
+
+The minifier works with both `Error` and `TypeError` constructors.
+
+### After Adding/Updating Errors
+
+Run `pnpm extract-error-codes` to update `docs/public/static/error-codes.json`.
+
+**Important:** If the update created a new error code, but the new and original message have the same number of arguments and semantics haven't changed, update the original error in `error-codes.json` instead of creating a new code.
+
 ## Other scripts
 
 Refer to `package.json` for other available scripts.

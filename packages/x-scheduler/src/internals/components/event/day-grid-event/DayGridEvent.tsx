@@ -24,6 +24,11 @@ import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 
+const ARROW_DEPTH = 8; // px - depth of the chevron point
+const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
+const RIGHT_ARROW_CLIP = `polygon(0 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, 0 100%)`;
+const BOTH_ARROWS_CLIP = `polygon(${ARROW_DEPTH}px 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
+
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
   borderRadius: theme.shape.borderRadius * 0.75,
@@ -53,13 +58,27 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
     ...(DayGridEventBaseStyles(theme) as any),
     '&[data-variant="filled"]': {
       backgroundColor: 'var(--event-surface-bold)',
-      color: 'var(--event-on-surface-bold)',
       '&:active': {},
       '&:hover': {
         backgroundColor: 'var(--event-surface-bold-hover)',
       },
       [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
         color: 'var(--event-on-surface-bold)',
+      },
+      '&[data-starting-before-edge]': {
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
+        clipPath: LEFT_ARROW_CLIP,
+        paddingLeft: ARROW_DEPTH + 8,
+      },
+      '&[data-ending-after-edge]': {
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+        clipPath: RIGHT_ARROW_CLIP,
+        paddingRight: ARROW_DEPTH + 8,
+      },
+      '&[data-starting-before-edge][data-ending-after-edge]': {
+        clipPath: BOTH_ARROWS_CLIP,
       },
     },
     '&[data-variant="invisible"]': {
@@ -72,13 +91,7 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
 
       '&:active': {},
       '&:hover': {
-        backgroundColor: theme.palette.action.hover,
-      },
-      [`& .${eventCalendarClasses.dayGridEventTime}`]: {
-        color: theme.palette.text.secondary,
-      },
-      [`& .${eventCalendarClasses.dayGridEventTitle}`]: {
-        color: theme.palette.text.primary,
+        backgroundColor: (theme.vars || theme).palette.action.hover,
       },
     },
   }),
@@ -105,6 +118,12 @@ const DayGridEventTitle = styled('p', {
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
   flexGrow: 1,
+  '[data-variant="filled"] &': {
+    color: 'var(--event-on-surface-bold)',
+  },
+  '[data-variant="compact"] &': {
+    color: (theme.vars || theme).palette.text.primary,
+  },
 }));
 
 const DayGridEventTime = styled('time', {
@@ -124,13 +143,16 @@ const DayGridEventTime = styled('time', {
       display: 'none',
     },
   },
+  '[data-variant="compact"] &': {
+    color: (theme.vars || theme).palette.text.secondary,
+  },
 }));
 
 const DayGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'DayGridEventRecurringIcon',
 })(({ theme }) => ({
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   fontSize: '1rem',
   justifySelf: 'flex-end',
 }));
@@ -167,7 +189,7 @@ const DayGridEventCardWrapper = styled('div', {
   flexGrow: 1,
   '@container (width < 300px)': {
     gap: theme.spacing(0.5),
-    [`& ${DayGridEventTitle}`]: {
+    [`& .${eventCalendarClasses.dayGridEventTitle}`]: {
       marginInlineStart: theme.spacing(0.5),
       paddingInlineEnd: theme.spacing(1.5),
     },
@@ -300,20 +322,22 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                   : localeText.noResourceAriaLabel
               }
             />
-            <DayGridEventLinesClamp
-              className={classes.dayGridEventLinesClamp}
-              style={{ '--number-of-lines': 1 } as React.CSSProperties}
-            >
-              <DayGridEventCardContent className={classes.dayGridEventCardContent}>
+
+            <DayGridEventCardContent className={classes.dayGridEventCardContent}>
+              <DayGridEventLinesClamp
+                className={classes.dayGridEventLinesClamp}
+                style={{ '--number-of-lines': 1 } as React.CSSProperties}
+              >
                 <DayGridEventTime className={classes.dayGridEventTime}>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
                   <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
-                </DayGridEventTime>
+                </DayGridEventTime>{' '}
                 <DayGridEventTitle className={classes.dayGridEventTitle} as="span">
                   {occurrence.title}
                 </DayGridEventTitle>
-              </DayGridEventCardContent>
-            </DayGridEventLinesClamp>
+              </DayGridEventLinesClamp>
+            </DayGridEventCardContent>
+
             {isRecurring && (
               <DayGridEventRecurringIcon
                 className={classes.dayGridEventRecurringIcon}
@@ -324,7 +348,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
           </DayGridEventCardWrapper>
         );
       default:
-        throw new Error('MUI: Unsupported variant provided to EventItem component.');
+        throw new Error(
+          'MUI X Scheduler: Unsupported variant provided to DayGridEvent component. ' +
+            'The DayGridEvent component only supports specific variant values. ' +
+            'Check the component documentation for supported variants.',
+        );
     }
   }, [
     variant,

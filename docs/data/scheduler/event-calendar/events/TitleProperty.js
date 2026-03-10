@@ -9,14 +9,14 @@ const initialEvents = [
     start: '2025-07-02T09:00:00',
     end: '2025-07-02T09:30:00',
     name: 'Daily Standup',
-    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',
   },
   {
     id: 'work-retro',
     start: '2025-07-01T16:00:00',
     end: '2025-07-01T17:00:00',
     name: 'Team Retrospective',
-    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TU',
   },
 ];
 

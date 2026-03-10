@@ -66,7 +66,7 @@ export function useLicenseVerifier(
 
     sendMuiXTelemetryEvent(
       muiXTelemetryEvents.licenseVerification(
-        { licenseKey },
+        { licenseKey, xLicenseClientVersion: process.env.MUI_VERSION },
         {
           packageName,
           packageReleaseInfo: releaseInfo,

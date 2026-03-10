@@ -1,5 +1,241 @@
 # Changelog
 
+## 9.0.0-alpha.2
+
+_Mar 5, 2026_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- ✅ Stabilize Sankey chart
+- 🐞 Bugfixes and internal improvements
+
+The following team members contributed to this release:
+@aemartos, @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @sai6855, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.0-alpha.2`
+
+- [dataGrid] Fix keyboard nav with single-row checkbox selection (#21149) @mj12albert
+- [DataGrid] Add `checkboxColDef` prop to customize the selection column (#21331) @michelengelen
+- [DataGrid] Format pagination numbers by default (#21117) @siriwatknp
+- [DataGrid] Prevent unnecessary row selection checkbox rerendering (#21570) @arminmeh
+- [DataGrid] Make GridScrollArea overrides resolver dynamic (#21532) @sai6855
+
+#### `@mui/x-data-grid-pro@9.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.0-alpha.2`, plus:
+
+- [DataGridPro] Use `getRowId` prop to calculate the tree data row update (#21540) @arminmeh
+
+#### `@mui/x-data-grid-premium@9.0.0-alpha.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.0.0-alpha.2`
+
+- [pickers] Add `keepOpenDuringFieldFocus` prop (#20782) @michelengelen
+
+#### `@mui/x-date-pickers-pro@9.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.0-alpha.2`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.0-alpha.2`
+
+- [charts] Add `ChartsLayerContainer` component (#21264) @bernardobelchior
+- [charts] Add codemod for `ChartsContainer` rename (#21504) @JCQuintas
+- [charts] Add codemod for `ChartsDataProvider` rename (#21552) @JCQuintas
+- [charts] Add codemod for `ChartsZoomSlider` rename (#21597) @JCQuintas
+- [charts] Base the highlight items on the item identifiers (#21161) @alexfauquette
+- [charts] Deprecate `ChartDataProvider` in favour of `ChartsDataProvider` (#21191) @JCQuintas
+- [charts] Deprecate `highlighted` and `faded` classes (#21476) @alexfauquette
+- [charts] Migrate to latest v8 warning (#21518) @JCQuintas
+- [charts] Rename `ChartZoomSlider` to `ChartsZoomSlider` (#21553) @JCQuintas
+- [charts] Rename `WebGl` to `WebGL` (#21524) @JCQuintas
+- [charts] Rename `useSvgRef()` by `useChartsLayerContainerRef()` (#21494) @alexfauquette
+- [charts] Restore focus on last focused item (#21522) @alexfauquette
+- [charts] Warn users when controlled tooltip state does not match the trigger (#21520) @Copilot
+- [charts] Fix controlled tooltip position (#21603) @bernardobelchior
+
+#### `@mui/x-charts-pro@9.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.0-alpha.2`, plus:
+
+- [charts-pro] Center the watermark (#21550) @alexfauquette
+- [charts-pro] Stabilize `SankeyChart` API (#21133) @Copilot
+
+#### `@mui/x-charts-premium@9.0.0-alpha.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.0-alpha.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.0-alpha.2`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.0-alpha.2`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.0-alpha.2`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add backticks and parentheses to all functions and hooks (DX-173) (#21496) @mapache-salvaje
+- [docs] Remove mentions of `mySvgRef` (#21559) @bernardobelchior
+- [docs] Update Roadmap section in the docs  (#20892) @alelthomas
+- [docs] Add tutorial and example app for aggregation with row grouping (DX-162) (#21102) @mapache-salvaje
+- [docs] Fix missing codemod docs (#21604) @JCQuintas
+
+### Core
+
+- [code-infra] Add eslint rule to prevent `Math.random` in docs (#21505) @JCQuintas
+- [code-infra] Avoid static props for pageContent (#21038) @Janpot
+- [code-infra] Isolate `date-pickers-pro` in the browser tests (#21383) @Janpot
+- [code-infra] Remove `--coverage` (#21410) @Janpot
+- [code-infra] Remove unneeded `skipIf`s (#21569) @JCQuintas
+- [code-infra] Remove vale as a workspace dependency (#21489) @brijeshb42
+- [code-infra] Remove x-charts-vendor from nextjs processing (#21534) @brijeshb42
+- [code-infra] Set BASE_BRANCH env var in CircleCI config (#21548) @brijeshb42
+- [code-infra] Setup error code extraction (#21469) @brijeshb42
+- [code-infra] Setup flat build for packages (#21029) @brijeshb42
+- [code-infra] Upgrade test_unit to large resource class (#21558) @Janpot
+- [code-infra] Removed getTeamMembers function and usage from release script (#21605) @michelengelen
+
+### Miscellaneous
+
+- [x-license] Add Q1-2026 plan version with quantity and appType support (#21574) @aemartos
+- [x-license] Add v3 key format support, centralize test keys, and trim public API (#21485) @aemartos
+- [x-telemetry] telemetry opt-out by default, remove conf dependency (#21470) @aemartos
+- [x-telemetry] test: mock context module directly in sender tests (#21546) @aemartos
+
+## 9.0.0-alpha.1
+
+_Feb 26, 2026_
+
+We'd like to extend a big thank you to the 18 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Improved dynamic data support and cache invalidation in lazy loading for Data Grid Pro
+- ⌨️ Keyboard support for selecting day, month, and year in Date Pickers
+- 📊 Axis tooltip sorting and control improvements in Charts
+- 🐞 Bugfixes and internal improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@EllGree, @lion1963
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @brijeshb42, @cherniavskii, @dav-is, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @sai6855, @siriwatknp, @ZeeshanTamboli
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.0-alpha.1`
+
+- [DataGrid] Forward rest props in `GridFilterInputMultipleValue` (#21407) @siriwatknp
+- [DataGrid] Preserve key input during row edit when using `rowModesModel` (#20759) @michelengelen
+- [DataGrid] Remove double rtl inversion logic for columns pinning (#21371) @siriwatknp
+
+#### `@mui/x-data-grid-pro@9.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.0-alpha.1`, plus:
+
+- [DataGridPro] Fix number input visibility in header filters (#21328) @michelengelen
+- [DataGridPro] Improve dynamic data support and cache invalidation in lazy loading (#21282) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@9.0.0-alpha.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.0.0-alpha.1`
+
+- [DatePicker] Add keyboard support for selecting day, month, and year (#20859) @michelengelen
+
+#### `@mui/x-date-pickers-pro@9.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.0-alpha.1`, plus:
+
+- [DateRangePicker] Fix timezone update issue leading to `invalidRange` error (#20863) @michelengelen
+
+### Charts
+
+#### `@mui/x-charts@9.0.0-alpha.1`
+
+- [charts] Add `sort` props to the axis tooltip (#21293) @alexfauquette
+- [charts] Controll axis tooltip (#21351) @alexfauquette
+- [charts] De duplicate keyboard focus handler function (#21267) @sai6855
+- [charts] Make `type` optional in identifiers (#21311) @alexfauquette
+- [charts] Move ref to the root component (#21396) @alexfauquette
+- [charts] Refactor loading and no data overlays to use a shared OverlayText component (#21414) @sai6855
+- [charts] Require series ids to be unique (#21330) @alexfauquette
+- [charts] Set `showMark` as `false` by default (#21373) @alexfauquette
+- [charts] Use `createGetNextIndexFocusedItem()` util in Funnel and RangeBar charts (#21390) @sai6855
+- [charts] Remove unnecessary string concatenation (#21418) @sai6855
+
+#### `@mui/x-charts-pro@9.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.0-alpha.1`.
+
+#### `@mui/x-charts-premium@9.0.0-alpha.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.0-alpha.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.0-alpha.1`
+
+- [tree view] Focus item sibling on unmount instead of the 1st item (#21254) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@9.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.0-alpha.1`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.0-alpha.1`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix external 301s (#21377) @Janpot
+- [docs] Show premium in the overview (#21343) @alexfauquette
+- [docs][charts] Revise the useLegend hook doc (#21352) @mapache-salvaje
+- [docs][charts] Revise the axis hooks doc (#21317) @mapache-salvaje
+- [docs][charts] Revise the scale hooks doc (#21316) @mapache-salvaje
+- [docs][charts] Revise the series hooks doc (#21353) @mapache-salvaje
+- [docs][charts] Revise the useDataset doc (#21336) @mapache-salvaje
+- [docs][charts] Revise the useDrawingArea doc (#21333) @mapache-salvaje
+
+### Core
+
+- [core] Update docs deploy script to the `docs-next` branch (#21341) @siriwatknp
+- [code-infra] Cleanup unused babel plugins (#21453) @brijeshb42
+- [code-infra] Do not append `x` to the last version for the compare API (#21408) @arminmeh
+- [code-infra] Upgrade react-docgen to v8 X (#21155) @JCQuintas
+- [code-infra] Modernize codemod (#21096) @JCQuintas
+- [docs-infra] Fix current version detection logic (#21417) @cherniavskii
+- [docs-infra] Reapply Cookie Banner (#21281) @dav-is
+- [internal] Headless filtering plugin (#21302) @arminmeh
+- [internal] Headless pagination plugin (#21183) @arminmeh
+- [internal] Headless virtualization followups (#21327) @cherniavskii
+- [internal] Keep cached data for disabled pipe processors (#21348) @arminmeh
+- [internal] Remove autoprefixer package (#21440) @ZeeshanTamboli
+
+### Miscellaneous
+
+- [l10n] Fix Czech (csCZ) locale: sort/filter labels are swapped (#21400) @EllGree
+- [l10n] Improve Ukrainian (uk-UA) locale (#21366) @lion1963
+
 ## 9.0.0-alpha.0
 
 _Feb 16, 2026_

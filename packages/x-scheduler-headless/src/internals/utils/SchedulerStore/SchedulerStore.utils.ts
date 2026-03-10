@@ -312,7 +312,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
   | 'eventModelStructure'
   | 'eventModelList'
 > {
-  const { events, eventModelStructure } = parameters;
+  const { events = EMPTY_ARRAY, eventModelStructure } = parameters;
 
   const eventIdList: SchedulerEventId[] = [];
   const eventModelLookup = new Map<SchedulerEventId, TEvent>();

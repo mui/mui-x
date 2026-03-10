@@ -10,13 +10,23 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
 import { type SeriesId } from '../models/seriesType/common';
+import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
+/**
+ * @deprecated Use `LineClasses` from `./lineClasses` instead.
+ */
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when highlighted. */
+  /**
+   * Styles applied to the root element when highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element when faded. */
+  /**
+   * Styles applied to the root element when faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
@@ -25,6 +35,9 @@ export interface AreaElementClasses {
   series: string;
 }
 
+/**
+ * @deprecated Use `LineClassKey` from `./lineClasses` instead.
+ */
 export type AreaElementClassKey = keyof AreaElementClasses;
 
 export interface AreaElementOwnerState {
@@ -36,10 +49,16 @@ export interface AreaElementOwnerState {
   classes?: Partial<AreaElementClasses>;
 }
 
+/**
+ * @deprecated Use `getLineUtilityClass` from `./lineClasses` instead.
+ */
 export function getAreaElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiAreaElement', slot);
 }
 
+/**
+ * @deprecated Use `lineClasses` from `./lineClasses` instead.
+ */
 export const areaElementClasses: AreaElementClasses = generateUtilityClasses('MuiAreaElement', [
   'root',
   'highlighted',
@@ -47,7 +66,10 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
   'series',
 ]);
 
-const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
+/**
+ * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
+ */
+const useDeprecatedUtilityClasses = (ownerState: AreaElementOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
     root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
@@ -108,10 +130,9 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId });
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId,
-  });
+  const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
+  const interactionProps = useInteractionItemProps(identifier);
+  const { isFaded, isHighlighted } = useItemHighlighted(identifier);
 
   const ownerState = {
     seriesId,
@@ -121,7 +142,8 @@ function AreaElement(props: AreaElementProps) {
     isFaded,
     isHighlighted,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useLineUtilityClasses({ classes: innerClasses });
+  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Area = slots?.area ?? AnimatedArea;
   const areaProps = useSlotProps({
@@ -131,8 +153,11 @@ function AreaElement(props: AreaElementProps) {
       ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
+      'data-series-id': seriesId,
     },
-    className: classes.root,
+    className: `${classes.area} ${deprecatedClasses.root}`,
     ownerState,
   });
 
