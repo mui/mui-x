@@ -2,10 +2,7 @@ import * as React from 'react';
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
 import { type ChartDrawingArea, useZColorScale } from '@mui/x-charts/hooks';
-import {
-  selectorChartsHighlightStateCallback,
-  useStore,
-} from '@mui/x-charts/internals';
+import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
 import { parseColor } from '../../utils/webgl/parseColor';
 
 export function useHeatmapPlotData(
@@ -49,7 +46,12 @@ export function useHeatmapPlotData(
       colors[dataIndex * 4 + 2] = rgbColor[2];
       colors[dataIndex * 4 + 3] = 1.0;
 
-      const highlightState = getHighlightState({ type: 'heatmap', seriesId: series.id, xIndex, yIndex });
+      const highlightState = getHighlightState({
+        type: 'heatmap',
+        seriesId: series.id,
+        xIndex,
+        yIndex,
+      });
       if (highlightState === 'highlighted') {
         saturations[dataIndex] = 0.2;
       } else if (highlightState === 'faded') {

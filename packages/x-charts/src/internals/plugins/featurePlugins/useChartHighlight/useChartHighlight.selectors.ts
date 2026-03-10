@@ -115,7 +115,9 @@ const selectorChartsHighlightStateCallbackImpl = createSelectorMemoized(
  */
 export function selectorChartsHighlightStateCallback<SeriesType extends ChartSeriesType>(
   state: Parameters<typeof selectorChartsHighlightStateCallbackImpl>[0],
-): (item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null) => HighlightState {
+): (
+  item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
+) => HighlightState {
   return selectorChartsHighlightStateCallbackImpl(state);
 }
 
