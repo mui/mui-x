@@ -1,29 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useFocusedBarData, type UseFocusedBarDataReturn } from './useFocusedBarData';
 import { useChartId } from '../hooks';
-
-function formatMessage(params: UseFocusedBarDataReturn): string {
-  const { axis, series } = params;
-
-  const parts: string[] = [];
-
-  if (series.label) {
-    parts.push(typeof series.label === 'function' ? series.label('tooltip') : series.label);
-  }
-
-  if (axis.label) {
-    parts.push(`${axis.label}: ${axis.value.toString()}`);
-  } else {
-    parts.push(axis.value.toString());
-  }
-
-  if (series.value !== null) {
-    parts.push(`Value: ${series.value}`);
-  }
-
-  return parts.join(', ');
-}
+import { useDescription } from './useDescription';
 
 const visuallyHiddenStyle: React.CSSProperties = {
   borderWidth: 0,
@@ -37,20 +15,13 @@ const visuallyHiddenStyle: React.CSSProperties = {
   pointerEvents: 'none',
 };
 
-export interface BarVoiceOverProps {
-  format?: (params: UseFocusedBarDataReturn) => string | null;
-}
-
-export function BarVoiceOver(props: BarVoiceOverProps) {
-  const data = useFocusedBarData();
+export function ChartsAccessibilityProxy() {
+  const message = useDescription();
   const chartId = useChartId();
 
   const currentFormatRef = React.useRef<string | null>(null);
   const currentIndexRef = React.useRef<number>(0);
   const containerRef = React.useRef(null);
-  const { format = formatMessage } = props;
-
-  const message = data ? format(data) : null;
 
   React.useEffect(() => {
     const container = containerRef.current as HTMLDivElement | null;

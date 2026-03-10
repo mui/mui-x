@@ -15,6 +15,7 @@ import { useChartContext } from '../context/ChartProvider';
 import { useSvgRef } from '../hooks';
 // eslint-disable-next-line import/no-cycle
 import { ChartsSurface } from '../ChartsSurface';
+import { ChartsAccessibilityProxy } from '../ChartsAccessibilityProxy';
 
 const ChartsLayerContainerDiv = styled('div', {
   name: 'MuiChartsLayerContainer',
@@ -101,6 +102,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
         }}
         {...other}
       >
+        <ChartsAccessibilityProxy />
         {children}
       </ChartsLayerContainerDiv>
     );

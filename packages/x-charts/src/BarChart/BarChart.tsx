@@ -31,7 +31,6 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { BarChartPluginSignatures } from './BarChart.plugins';
 import { FocusedBar } from './FocusedBar';
-import { BarVoiceOver } from './VoiceOver';
 import { ChartsLayerContainer } from '../ChartsLayerContainer';
 import { ChartsSvgLayer } from '../ChartsSvgLayer';
 
@@ -156,7 +155,6 @@ const BarChart = React.forwardRef(function BarChart(
           className={chartsSurfaceProps.className}
           ref={props.layerContainerRef}
         >
-          <BarVoiceOver />
           <ChartsSvgLayer {...chartsSurfaceProps}>
             <g aria-hidden>
               <ChartsGrid {...gridProps} />
