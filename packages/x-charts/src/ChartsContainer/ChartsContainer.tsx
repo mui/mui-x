@@ -47,11 +47,11 @@ export type ChartsContainerProps<
  * ```
  */
 const ChartsContainer = React.forwardRef(function ChartsContainer<
-  TSeries extends ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerProps<TSeries, TSignatures>, ref: React.Ref<HTMLDivElement>) {
+  SeriesType extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+>(props: ChartsContainerProps<SeriesType, TSignatures>, ref: React.Ref<HTMLDivElement>) {
   const { chartDataProviderProps, children, chartsSurfaceProps } = useChartsContainerProps<
-    TSeries,
+    SeriesType,
     TSignatures
   >(props);
 
@@ -62,8 +62,8 @@ const ChartsContainer = React.forwardRef(function ChartsContainer<
       </ChartsSurface>
     </ChartsDataProvider>
   );
-}) as <TSeries extends ChartSeriesType>(
-  props: ChartsContainerProps<TSeries> & { ref?: React.ForwardedRef<HTMLDivElement> },
+}) as <SeriesType extends ChartSeriesType>(
+  props: ChartsContainerProps<SeriesType> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.JSX.Element;
 
 // @ts-ignore
@@ -287,7 +287,7 @@ ChartsContainer.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
