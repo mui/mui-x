@@ -65,6 +65,110 @@ describe('<PieChart />', () => {
     expect(screen.queryByRole('tooltip')).to.equal(null);
   });
 
+  describe('classes', () => {
+    it('should apply root class to the pie plot', () => {
+      const { container } = render(
+        <PieChart
+          height={100}
+          width={100}
+          series={[{ data: [{ id: 'A', value: 100 }] }]}
+          hideLegend
+        />,
+      );
+
+      expect(container.querySelector(`.${pieClasses.root}`)).toBeTruthy();
+    });
+
+    it('should apply series class to each series group', () => {
+      const { container } = render(
+        <PieChart
+          height={100}
+          width={100}
+          series={[
+            { data: [{ id: 'A', value: 100 }] },
+            { data: [{ id: 'B', value: 200 }] },
+          ]}
+          hideLegend
+        />,
+      );
+
+      const seriesGroups = container.querySelectorAll(`.${pieClasses.series}`);
+      expect(seriesGroups.length).to.equal(2);
+    });
+
+    it('should apply arc class to each pie arc element', () => {
+      const { container } = render(
+        <PieChart
+          height={100}
+          width={100}
+          series={[
+            {
+              data: [
+                { id: 'A', value: 100 },
+                { id: 'B', value: 200 },
+              ],
+            },
+          ]}
+          hideLegend
+        />,
+      );
+
+      const arcs = container.querySelectorAll(`.${pieClasses.arc}`);
+      expect(arcs.length).to.equal(2);
+    });
+
+    it('should apply arcLabel class to each pie arc label element', () => {
+      const { container } = render(
+        <PieChart
+          height={100}
+          width={100}
+          series={[
+            {
+              arcLabel: 'value',
+              data: [
+                { id: 'A', value: 100 },
+                { id: 'B', value: 200 },
+              ],
+            },
+          ]}
+          hideLegend
+        />,
+      );
+
+      const arcLabels = container.querySelectorAll(`.${pieClasses.arcLabel}`);
+      expect(arcLabels.length).to.equal(2);
+    });
+
+    it('should apply focusIndicator class to the focused arc', async () => {
+      const { container, user } = render(
+        <PieChart
+          height={100}
+          width={100}
+          series={[
+            {
+              data: [
+                { id: 0, value: 10 },
+                { id: 1, value: 20 },
+              ],
+            },
+          ]}
+          hideLegend
+        />,
+      );
+
+      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+
+      // by default does not show focus indicator
+      expect(container.querySelector(`.${pieClasses.focusIndicator}`)).not.toBeTruthy();
+
+      // focus the chart and navigate
+      await user.click(svg);
+      await user.keyboard('{ArrowRight}');
+
+      expect(container.querySelector(`.${pieClasses.focusIndicator}`)).toBeTruthy();
+    });
+  });
+
   it('should show focus indicator when navigating with keyboard', async () => {
     const { container, user } = render(
       <PieChart

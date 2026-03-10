@@ -162,6 +162,19 @@ createTheme({
         constent: { color: 'red' },
       },
     },
+    // PieChart components
+    MuiPieChart: {
+      defaultProps: {
+        title: 'toto',
+        // @ts-expect-error invalid MuiPieChart prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiPieChart class key
+        constent: { color: 'red' },
+      },
+    },
     // ScatterChart components
     MuiScatterChart: {
       defaultProps: {
