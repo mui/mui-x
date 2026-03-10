@@ -59,6 +59,17 @@ export function showNotAvailableInInitialProPlanError() {
   ]);
 }
 
+export function showLicenseKeyVersionMismatchError() {
+  showError([
+    'MUI X: License key version mismatch.',
+    '',
+    'The license key you are using is not compatible with the version of the MUI X packages installed.',
+    'This happens when using a license key from a previous major version (e.g. a v8 license with v9 packages).',
+    '',
+    'To solve the issue, you can upgrade your license at https://mui.com/r/x-get-license or install an older version of the MUI X packages that is compatible with your license key.',
+  ]);
+}
+
 export function showMissingLicenseKeyError({
   plan,
   packageName,
