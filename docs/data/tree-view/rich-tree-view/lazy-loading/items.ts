@@ -1,11 +1,11 @@
 import { randomInt } from '@mui/x-data-grid-generator/services';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
-export type ItemType = TreeViewBaseItem<{
+export type ItemType = {
   id: string;
   label: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+};
 
 export const initialItems: ItemType[] = [
   { id: '1', label: 'Amy Harris', childrenCount: randomInt(1, 5) },

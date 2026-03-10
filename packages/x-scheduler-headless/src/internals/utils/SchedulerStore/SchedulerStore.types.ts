@@ -178,8 +178,9 @@ export interface SchedulerDataSource<TEvent extends object> {
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
+   * @default []
    */
-  events: readonly TEvent[];
+  events?: readonly TEvent[];
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -280,7 +281,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   readOnly?: boolean;
   /**
    * Data source for fetching events asynchronously.
-   * If provided, the `events` prop will be ignored.
+   * When provided, events are fetched through the data source instead of the `events` prop.
    */
   dataSource?: SchedulerDataSource<TEvent>;
   /*

@@ -306,6 +306,27 @@ This improves consistency across chart components and developer experience.
  />
 ```
 
+### Theme style overrides use `cell` slot
+
+The `MuiHeatmap` theme style overrides now correctly use the `cell` key instead of `arc`.
+Previously, the `overridesResolver` was incorrectly referencing `styles.arc` due to a copy-paste error.
+If you were using `arc` as a workaround, update it to `cell`.
+
+```diff
+ const theme = createTheme({
+   components: {
+     MuiHeatmap: {
+       styleOverrides: {
+-        arc: {
++        cell: {
+           fill: 'red',
+         },
+       },
+     },
+   },
+ });
+```
+
 ### New identifier structure
 
 The heatmap identifier type has been modified as follows.
@@ -316,11 +337,31 @@ This new type relies on the `xIndex`/`yIndex` to identify the cell instead of ju
  {
   type: 'heatmap';
   seriesId: SeriesId;
-  dataIndex?: number;
+-  dataIndex?: number;
 -  xIndex?: number;
 +  xIndex: number;
 -  yIndex?: number;
 +  yIndex: number;
+ }
+```
+
+The return type of the `useItemTooltip()` for heatmap series was modified.
+Instead of returning an object where the `value` was a `[x, y, cellValue]` tuple, it now returns cell value directly.
+
+If the cell is empty, it returns `null`.
+
+Here is an example about how to get exactly the same info from `useItemTooltip()`.
+
+```diff
+ const { identifier, value } = useItemTooltip<'heatmap'>();
+
+ return {
+-  xIndex: value[0],
++  xIndex: identifier.xIndex,
+-  yIndex: value[1],
++  yIndex: identifier.yIndex,
+-  cellValue: value[2],
++  cellValue: value,
  }
 ```
 
@@ -472,6 +513,13 @@ The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a 
 ### Ref target
 
 The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
+
+## Keyboard navigation ✅
+
+The keyboard navigation is no enabled by default.
+If you used `enableKeyboardNavigation` prop, you can remove it.
+
+To disable this feature, use the prop `disableKeyboardNavigation`.
 
 ## Props propagation
 

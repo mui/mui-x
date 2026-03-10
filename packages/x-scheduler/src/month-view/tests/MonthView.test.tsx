@@ -129,11 +129,11 @@ describe('<MonthView />', () => {
         .title('Grid Row Test')
         .build(),
       EventBuilder.new()
-        .span('2025-05-14T00:00:00Z', '2025-05-16T23:59:59Z', { allDay: true })
+        .span('2025-05-08T00:00:00Z', '2025-05-10T23:59:59Z', { allDay: true })
         .title('Three Day Event')
         .build(),
       EventBuilder.new()
-        .span('2025-05-06T00:00:00Z', '2025-05-16T23:59:59Z', { allDay: true })
+        .span('2025-05-19T00:00:00Z', '2025-05-27T23:59:59Z', { allDay: true })
         .title('Multiple week event')
         .build(),
     ];

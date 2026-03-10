@@ -10,7 +10,6 @@ import {
   getSeriesUnfadedDataIndex,
   isSeriesFaded,
   isSeriesHighlighted,
-  isBatchRenderingSeriesType,
 } from './highlightStates';
 import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
@@ -22,7 +21,9 @@ import {
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature<ChartSeriesType>> = (state) =>
   state.highlight;
 
-type HighlightLookUp<T extends ChartSeriesType> = { [K in T]?: Map<SeriesId, HighlightScope<K>> };
+type HighlightLookUp<SeriesType extends ChartSeriesType> = {
+  [K in SeriesType]?: Map<SeriesId, HighlightScope<K>>;
+};
 
 export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
   selectorChartSeriesProcessed,
@@ -30,7 +31,7 @@ export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
     const map: HighlightLookUp<ChartSeriesType> = {};
 
     (Object.keys(processedSeries) as ChartSeriesType[]).forEach(
-      <T extends ChartSeriesType>(seriesType: T) => {
+      <SeriesType extends ChartSeriesType>(seriesType: SeriesType) => {
         map[seriesType] = new Map();
         const seriesData = processedSeries[seriesType as ChartSeriesType];
         seriesData?.seriesOrder?.forEach((seriesId) => {
@@ -222,9 +223,6 @@ export const selectorChartIsSeriesHighlighted = createSelector(
     item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
-    if (!isBatchRenderingSeriesType(item?.type)) {
-      return false;
-    }
     return isSeriesHighlighted(scope, item, seriesId);
   },
 );
@@ -237,9 +235,6 @@ export const selectorChartIsSeriesFaded = createSelector(
     item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
-    if (!isBatchRenderingSeriesType(item?.type)) {
-      return false;
-    }
     return isSeriesFaded(scope, item, seriesId);
   },
 );
@@ -252,9 +247,6 @@ export const selectorChartSeriesUnfadedItem = createSelector(
     item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
-    if (!isBatchRenderingSeriesType(item?.type)) {
-      return null;
-    }
     return getSeriesUnfadedDataIndex(scope, item, seriesId);
   },
 );
@@ -267,9 +259,6 @@ export const selectorChartSeriesHighlightedItem = createSelector(
     item: HighlightItemIdentifierWithType<SeriesType> | null,
     seriesId: SeriesId,
   ) {
-    if (!isBatchRenderingSeriesType(item?.type)) {
-      return null;
-    }
     return getSeriesHighlightedDataIndex(scope, item, seriesId);
   },
 );
