@@ -12,24 +12,16 @@
   ],
   "classes": [
     {
-      "key": "faded",
-      "className": "MuiPieArc-faded",
-      "description": "Styles applied to the root element when faded.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "focusIndicator",
-      "className": "MuiPieArc-focusIndicator",
-      "description": "Styles applied to the focus indicator element.",
+      "key": "arc",
+      "className": "MuiPieArc-arc",
+      "description": "Styles applied to an individual pie arc element.",
       "isGlobal": false
     },
     {
-      "key": "highlighted",
-      "className": "MuiPieArc-highlighted",
-      "description": "Styles applied to the root element when highlighted.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "key": "arcLabel",
+      "className": "MuiPieArc-arcLabel",
+      "description": "Styles applied to an individual pie arc label element.",
+      "isGlobal": false
     },
     {
       "key": "root",
@@ -40,7 +32,13 @@
     {
       "key": "series",
       "className": "MuiPieArc-series",
-      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${pieArcClasses.series}-${seriesId}`.",
+      "description": "Styles applied to the `g` element that contains all pie arcs of a series.",
+      "isGlobal": false
+    },
+    {
+      "key": "seriesLabels",
+      "className": "MuiPieArc-seriesLabels",
+      "description": "Styles applied to the `g` element that contains all pie arc labels of a series.",
       "isGlobal": false
     }
   ],
