@@ -207,7 +207,7 @@ describe('<LineChart />', () => {
   });
 
   describe('Plot root elements', () => {
-    it('should apply MuiLineChart-root and MuiLineChart-areaPlot classes to AreaPlot root', () => {
+    it('should apply MuiLineChart-areaPlot class to AreaPlot root', () => {
       render(
         <LineChart
           {...config}
@@ -218,10 +218,9 @@ describe('<LineChart />', () => {
       const areaPlotRoot = document.querySelector<HTMLElement>(`.${lineClasses.areaPlot}`);
 
       expect(areaPlotRoot).not.to.equal(null);
-      expect(areaPlotRoot!.classList.contains(lineClasses.root)).to.equal(true);
     });
 
-    it('should apply MuiLineChart-root and MuiLineChart-linePlot classes to LinePlot root', () => {
+    it('should apply MuiLineChart-linePlot class to LinePlot root', () => {
       render(
         <LineChart
           {...config}
@@ -232,10 +231,9 @@ describe('<LineChart />', () => {
       const linePlotRoot = document.querySelector<HTMLElement>(`.${lineClasses.linePlot}`);
 
       expect(linePlotRoot).not.to.equal(null);
-      expect(linePlotRoot!.classList.contains(lineClasses.root)).to.equal(true);
     });
 
-    it('should apply MuiLineChart-root and MuiLineChart-markPlot classes to MarkPlot root', () => {
+    it('should apply MuiLineChart-markPlot class to MarkPlot root', () => {
       render(
         <LineChart
           {...config}
@@ -246,7 +244,6 @@ describe('<LineChart />', () => {
       const markPlotRoot = document.querySelector<HTMLElement>(`.${lineClasses.markPlot}`);
 
       expect(markPlotRoot).not.to.equal(null);
-      expect(markPlotRoot!.classList.contains(lineClasses.root)).to.equal(true);
     });
   });
 
