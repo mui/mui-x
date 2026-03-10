@@ -100,7 +100,48 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
     }
   >;
   autoSizes?: Record<AxisId, number>;
+  axesGap?: number;
 };
+
+/**
+ * Recalculates axis offsets using actual resolved sizes (including auto-sizes).
+ * This is needed because offsets from defaultizeAxis use placeholder values for auto-sized axes.
+ */
+function recalculateOffsets(
+  allAxis: readonly DefaultedAxis[],
+  autoSizes: Record<AxisId, number> | undefined,
+  axisDirection: 'x' | 'y',
+  axesGap: number,
+): Record<AxisId, number> {
+  const offsets: Record<string, number> = {};
+  const result: Record<AxisId, number> = {};
+
+  for (const axis of allAxis) {
+    const position = axis.position;
+    if (!position) {
+      continue;
+    }
+
+    offsets[position] ??= 0;
+    result[axis.id] = offsets[position];
+
+    if (position !== 'none') {
+      const size = resolveAxisSize(
+        axis as DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>,
+        autoSizes,
+        axisDirection,
+      );
+      offsets[position] += size + axesGap;
+
+      const zoom = (axis as DefaultedXAxis | DefaultedYAxis).zoom;
+      if (zoom?.slider.enabled) {
+        offsets[position] += zoom.slider.size;
+      }
+    }
+  }
+
+  return result;
+}
 
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
@@ -124,6 +165,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomMap,
   domains,
   autoSizes,
+  axesGap = 0,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -142,6 +184,8 @@ export function computeAxisValue<T extends ChartSeriesType>({
     allAxis[0].id,
   );
 
+  const resolvedOffsets = recalculateOffsets(allAxis, autoSizes, axisDirection, axesGap);
+
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
@@ -157,6 +201,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const resolvedSize = resolveAxisSize(axis, autoSizes, axisDirection);
 
     const data = axis.data ?? [];
+    const resolvedOffset = resolvedOffsets[axis.id] ?? axis.offset ?? 0;
 
     if (isOrdinalScale(scale)) {
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
@@ -168,11 +213,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
         const barGapRatio = ignoreGapRatios ? 0 : (axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO);
 
         completeAxis[axis.id] = {
-          offset: 0,
           categoryGapRatio,
           barGapRatio,
           triggerTooltip,
           ...axis,
+          offset: resolvedOffset,
           ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
           data,
           /* Doing this here is technically wrong, but acceptable in practice.
@@ -192,9 +237,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
       if (isPointScaleConfig(axis)) {
         completeAxis[axis.id] = {
-          offset: 0,
           triggerTooltip,
           ...axis,
+          offset: resolvedOffset,
           ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
           data,
           scale,
@@ -226,9 +271,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const scaleType = continuousAxis.scaleType ?? ('linear' as const);
 
     completeAxis[axis.id] = {
-      offset: 0,
       triggerTooltip,
       ...continuousAxis,
+      offset: resolvedOffset,
       // Override height/width with resolved numeric value (in case 'auto' was set)
       ...(axisDirection === 'x' ? { height: resolvedSize } : { width: resolvedSize }),
       data,

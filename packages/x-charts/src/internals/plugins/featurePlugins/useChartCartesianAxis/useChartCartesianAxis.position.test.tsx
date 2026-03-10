@@ -141,6 +141,89 @@ describe('useChartCartesianAxis - positions', () => {
     },
   );
 
+  it.skipIf(isJSDOM)(
+    'should stack auto-size axes using computed sizes instead of defaults',
+    async () => {
+      // Regression test: when multiple axes use `width: 'auto'` at the same position,
+      // the offset of the second axis should be based on the actual auto-computed size
+      // of the first, not the default placeholder size.
+      render(
+        <BarChart
+          xAxis={[{ data: ['a', 'b'] }]}
+          yAxis={[
+            { width: 'auto', position: 'left' },
+            { min: 0, max: 100, width: 'auto', position: 'left' },
+          ]}
+          series={[{ data: [1, 200000000000000] }]}
+          margin={0}
+          height={300}
+          width={300}
+        />,
+      );
+
+      const axesRoot = await document.querySelectorAll(`.${axisClasses.root}`);
+      // 1 x-axis + 2 y-axes
+      expect(axesRoot).toHaveLength(3);
+
+      // For left y-axes, transform is translate(drawingArea.left - offset, 0).
+      // The first axis (offset=0) has the largest tx, the second axis is further left.
+      // transform format: matrix(a, b, c, d, tx, ty)
+      const getTx = (transform: string) => {
+        const match = transform.match(/matrix\(([^)]+)\)/);
+        return match ? Number(match[1].split(',')[4].trim()) : NaN;
+      };
+
+      const yAxis1Tx = getTx(getComputedStyle(axesRoot[1]).transform);
+      const yAxis2Tx = getTx(getComputedStyle(axesRoot[2]).transform);
+
+      // The first y-axis (offset=0) should be closer to the chart (larger tx).
+      // The second y-axis should be further left (smaller tx).
+      expect(yAxis1Tx).toBeGreaterThan(yAxis2Tx);
+
+      // The offset difference (yAxis1Tx - yAxis2Tx) equals the auto-computed width
+      // of the first axis. For small numbers "0" to "10", this should be less than
+      // the default width of 45px, proving the offset uses the actual auto-computed size.
+      const firstAxisAutoWidth = yAxis1Tx - yAxis2Tx;
+      expect(firstAxisAutoWidth).toBeGreaterThan(0);
+      expect(firstAxisAutoWidth).toBeLessThan(45);
+    },
+  );
+
+  it.skipIf(isJSDOM)('should stack mixed auto-size and fixed-size axes correctly', async () => {
+    // Regression test: mixing auto-size and fixed-size axes at the same position
+    // should correctly compute offsets for all axes.
+    render(
+      <BarChart
+        xAxis={[{ data: ['a', 'b'] }]}
+        yAxis={[
+          { min: 0, max: 100, width: 30, position: 'left' },
+          { id: 'value', width: 'auto', position: 'left' },
+        ]}
+        series={[{ data: [1, 2000000000], yAxisId: 'value' }]}
+        margin={20}
+        height={300}
+        width={300}
+      />
+    );
+
+    const axesRoot = await document.querySelectorAll(`.${axisClasses.root}`);
+    expect(axesRoot).toHaveLength(3);
+
+    const getTx = (transform: string) => {
+      const match = transform.match(/matrix\(([^)]+)\)/);
+      return match ? Number(match[1].split(',')[4].trim()) : NaN;
+    };
+
+    const yAxis1Tx = getTx(getComputedStyle(axesRoot[1]).transform);
+    const yAxis2Tx = getTx(getComputedStyle(axesRoot[2]).transform);
+
+    // The offset difference equals the auto-computed width of the first axis.
+    // For small numbers "0" to "10", this should be less than the default 45px.
+    const firstAxisAutoWidth = yAxis1Tx - yAxis2Tx;
+    expect(firstAxisAutoWidth).toBeGreaterThan(0);
+    expect(firstAxisAutoWidth).toBeLessThan(45);
+  });
+
   it.skipIf(isJSDOM)('should add extra space for preview', async () => {
     render(
       <BarChart

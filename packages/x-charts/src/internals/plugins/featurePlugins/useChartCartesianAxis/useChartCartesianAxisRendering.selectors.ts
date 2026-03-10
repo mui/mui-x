@@ -28,6 +28,7 @@ import {
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
+  selectorChartCartesianAxesGap,
 } from './useChartCartesianAxisLayout.selectors';
 import {
   selectorChartXAxisAutoSizes,
@@ -501,6 +502,7 @@ export const selectorChartXAxis = createSelectorMemoized(
   selectorChartXAxisWithDomains,
   selectorChartXScales,
   selectorChartXAxisAutoSizes,
+  selectorChartCartesianAxesGap,
 
   function selectorChartXAxis(
     drawingArea,
@@ -510,6 +512,7 @@ export const selectorChartXAxis = createSelectorMemoized(
     { axes, domains },
     scales,
     autoSizes,
+    axesGap,
   ) {
     return computeAxisValue({
       scales,
@@ -521,6 +524,7 @@ export const selectorChartXAxis = createSelectorMemoized(
       zoomMap,
       domains,
       autoSizes,
+      axesGap,
     });
   },
 );
@@ -533,6 +537,7 @@ export const selectorChartYAxis = createSelectorMemoized(
   selectorChartYAxisWithDomains,
   selectorChartYScales,
   selectorChartYAxisAutoSizes,
+  selectorChartCartesianAxesGap,
 
   function selectorChartYAxis(
     drawingArea,
@@ -542,6 +547,7 @@ export const selectorChartYAxis = createSelectorMemoized(
     { axes, domains },
     scales,
     autoSizes,
+    axesGap,
   ) {
     return computeAxisValue({
       scales,
@@ -553,6 +559,7 @@ export const selectorChartYAxis = createSelectorMemoized(
       zoomMap,
       domains,
       autoSizes,
+      axesGap,
     });
   },
 );
