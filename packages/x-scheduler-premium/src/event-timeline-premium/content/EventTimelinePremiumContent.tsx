@@ -265,13 +265,17 @@ function useSyncedHorizontalScroll(
 
     let syncing = false;
 
+    const header = headerRef?.current;
+
     const handleContentScroll = () => {
-      if (syncing) return;
+      if (syncing) {
+        return;
+      }
       syncing = true;
       const { scrollLeft } = content;
       scrollbar.scrollLeft = scrollLeft;
-      if (headerRef?.current) {
-        headerRef.current.scrollLeft = scrollLeft;
+      if (header) {
+        header.scrollLeft = scrollLeft;
       }
       requestAnimationFrame(() => {
         syncing = false;
@@ -279,12 +283,14 @@ function useSyncedHorizontalScroll(
     };
 
     const handleScrollbarScroll = () => {
-      if (syncing) return;
+      if (syncing) {
+        return;
+      }
       syncing = true;
       const { scrollLeft } = scrollbar;
       content.scrollLeft = scrollLeft;
-      if (headerRef?.current) {
-        headerRef.current.scrollLeft = scrollLeft;
+      if (header) {
+        header.scrollLeft = scrollLeft;
       }
       requestAnimationFrame(() => {
         syncing = false;
