@@ -99,7 +99,7 @@ With the required props and parameters in place, server-side pivoting should now
 {{"demo": "ServerSidePivotingDataGrid.js", "bg": "inline"}}
 
 :::info
-The Data Source demos use a `useMockServer` utility function to simulate server-side data fetching.
+The Data Source demos use a `useMockServer()` utility function to simulate server-side data fetching.
 In a real-world scenario, you would replace this with your own server-side data-fetching logic.
 
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
@@ -198,7 +198,7 @@ The result of `valueGetter()` is used to get the group value that is used for so
 In pivot mode, it's often useful to group data by year or quarter.
 For server-side pivoting, the Data Grid does not add any derived columns automatically, unlike [client-side pivoting](/x/react-data-grid/pivoting/#derived-columns-in-pivot-mode), because it is not known which aggregation capabilities are available on your server.
 
-Use the `getPivotDerivedColumn()` prop to add supported derived columns.
+Use the `getPivotDerivedColumn` prop to add supported derived columns.
 This prop is called for each original column and returns an array of derived columns, or `undefined` if no derived columns are needed.
 
 :::success

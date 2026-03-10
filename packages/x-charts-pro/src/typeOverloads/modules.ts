@@ -1,5 +1,12 @@
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type { AxisId, CommonHighlightScope, ComputedXAxis, ComputedYAxis, ZoomOptions } from '@mui/x-charts/internals';
+import type {
+  AxisId,
+  CommonHighlightScope,
+  SeriesId,
+  ComputedXAxis,
+  ComputedYAxis,
+  ZoomOptions,
+} from '@mui/x-charts/internals';
 import type {
   DefaultizedFunnelSeriesType,
   FunnelItemIdentifier,
@@ -8,6 +15,7 @@ import type {
 } from '../FunnelChart/funnel.types';
 import type {
   HeatmapItemIdentifier,
+  HeatmapItemIdentifierWithData,
   HeatmapSeriesType,
   DefaultizedHeatmapSeriesType,
   HeatmapValueType,
@@ -29,7 +37,7 @@ declare module '@mui/x-charts/internals' {
       seriesLayout: {};
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
-      itemIdentifierWithData: HeatmapItemIdentifier;
+      itemIdentifierWithData: HeatmapItemIdentifierWithData;
       valueType: HeatmapValueType;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;
@@ -38,6 +46,12 @@ declare module '@mui/x-charts/internals' {
         xAxis: ComputedXAxis;
         yAxis: ComputedYAxis;
         series: DefaultizedHeatmapSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'heatmap';
+        seriesId: SeriesId;
+        xIndex: number;
+        yIndex: number;
       };
     };
     funnel: {
@@ -58,6 +72,11 @@ declare module '@mui/x-charts/internals' {
         yAxis: ComputedYAxis;
         series: DefaultizedFunnelSeriesType;
       };
+      highlightIdentifier: {
+        type: 'funnel';
+        seriesId: SeriesId;
+        dataIndex?: number;
+      };
     };
     sankey: {
       seriesInput: DefaultizedSankeySeriesType;
@@ -74,6 +93,7 @@ declare module '@mui/x-charts/internals' {
         identifier: SankeyItemIdentifier;
         series: DefaultizedSankeySeriesType;
       };
+      highlightIdentifier: SankeyItemIdentifier;
     };
   }
 

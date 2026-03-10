@@ -1,5 +1,11 @@
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type { CommonHighlightScope, ComputedXAxis, ComputedYAxis, SeriesColor } from '@mui/x-charts/internals';
+import type {
+  CommonHighlightScope,
+  SeriesColor,
+  SeriesId,
+  ComputedXAxis,
+  ComputedYAxis,
+} from '@mui/x-charts/internals';
 import type { RangeBarValueType, RangeBarSeriesType } from '../models';
 import type {
   DefaultizedRangeBarSeriesType,
@@ -29,6 +35,11 @@ declare module '@mui/x-charts/internals' {
         xAxis: ComputedXAxis;
         yAxis: ComputedYAxis;
         series: DefaultizedRangeBarSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'rangeBar';
+        seriesId: SeriesId;
+        dataIndex?: number;
       };
     };
   }

@@ -55,14 +55,40 @@ export interface EventDialogClasses {
   eventDialogRepeatSectionLabel: string;
   /** Styles applied to the event dialog ends radio group element. */
   eventDialogEndsRadioGroup: string;
+  /** Styles applied to the event dialog repeat section fieldset element. */
+  eventDialogRepeatSectionFieldset: string;
   /** Styles applied to the event dialog repeat section content element. */
   eventDialogRepeatSectionContent: string;
   /** Styles applied to the event dialog recurrence selector toggle group element. */
   eventDialogRecurrenceSelectorToggleGroup: string;
+  /** Styles applied to the event dialog week day selector form group element. */
+  eventDialogWeekDaySelectorCheckbox: string;
   /** Styles applied to the event dialog frequency select element. */
   eventDialogFrequencySelect: string;
   /** Styles applied to the event dialog small number field element. */
   eventDialogSmallNumberField: string;
+  /** Styles applied to the event dialog tabs container element. */
+  eventDialogTabsContainer: string;
+  /** Styles applied to the event dialog tab elements. */
+  eventDialogTab: string;
+  /** Styles applied to the event dialog form divider element. */
+  eventDialogFormDivider: string;
+  /** Styles applied to the event dialog delete button element. */
+  eventDialogDeleteButton: string;
+  /** Styles applied to the event dialog save button element. */
+  eventDialogSaveButton: string;
+  /** Styles applied to the event dialog close action button element. */
+  eventDialogCloseAction: string;
+  /** Styles applied to the event dialog date time icon element. */
+  eventDialogDateTimeIcon: string;
+  /** Styles applied to the event dialog date time label element. */
+  eventDialogDateTimeLabel: string;
+  /** Styles applied to the event dialog recurrence icon element. */
+  eventDialogRecurrenceIcon: string;
+  /** Styles applied to the event dialog recurrence label element. */
+  eventDialogRecurrenceLabel: string;
+  /** Styles applied to the event dialog description label element. */
+  eventDialogDescriptionLabel: string;
 }
 
 export type EventDialogClassKey = keyof EventDialogClasses;
@@ -96,10 +122,23 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogRadioButtonLabel',
   'eventDialogRepeatSectionLabel',
   'eventDialogEndsRadioGroup',
+  'eventDialogRepeatSectionFieldset',
   'eventDialogRepeatSectionContent',
   'eventDialogRecurrenceSelectorToggleGroup',
+  'eventDialogWeekDaySelectorCheckbox',
   'eventDialogFrequencySelect',
   'eventDialogSmallNumberField',
+  'eventDialogTabsContainer',
+  'eventDialogTab',
+  'eventDialogFormDivider',
+  'eventDialogDeleteButton',
+  'eventDialogSaveButton',
+  'eventDialogCloseAction',
+  'eventDialogDateTimeIcon',
+  'eventDialogDateTimeLabel',
+  'eventDialogRecurrenceIcon',
+  'eventDialogRecurrenceLabel',
+  'eventDialogDescriptionLabel',
 ];
 
 // Create a slots object for reuse in useUtilityClasses (avoids duplication in EventCalendar.tsx and EventTimelinePremium.tsx)
@@ -132,8 +171,21 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogRadioButtonLabel: ['eventDialogRadioButtonLabel'],
   eventDialogRepeatSectionLabel: ['eventDialogRepeatSectionLabel'],
   eventDialogEndsRadioGroup: ['eventDialogEndsRadioGroup'],
+  eventDialogRepeatSectionFieldset: ['eventDialogRepeatSectionFieldset'],
   eventDialogRepeatSectionContent: ['eventDialogRepeatSectionContent'],
   eventDialogRecurrenceSelectorToggleGroup: ['eventDialogRecurrenceSelectorToggleGroup'],
+  eventDialogWeekDaySelectorCheckbox: ['eventDialogWeekDaySelectorCheckbox'],
   eventDialogFrequencySelect: ['eventDialogFrequencySelect'],
   eventDialogSmallNumberField: ['eventDialogSmallNumberField'],
+  eventDialogTabsContainer: ['eventDialogTabsContainer'],
+  eventDialogTab: ['eventDialogTab'],
+  eventDialogFormDivider: ['eventDialogFormDivider'],
+  eventDialogDeleteButton: ['eventDialogDeleteButton'],
+  eventDialogSaveButton: ['eventDialogSaveButton'],
+  eventDialogCloseAction: ['eventDialogCloseAction'],
+  eventDialogDateTimeIcon: ['eventDialogDateTimeIcon'],
+  eventDialogDateTimeLabel: ['eventDialogDateTimeLabel'],
+  eventDialogRecurrenceIcon: ['eventDialogRecurrenceIcon'],
+  eventDialogRecurrenceLabel: ['eventDialogRecurrenceLabel'],
+  eventDialogDescriptionLabel: ['eventDialogDescriptionLabel'],
 };

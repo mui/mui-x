@@ -16,7 +16,7 @@ export interface UseChartKeyboardNavigationState {
     /**
      * If `false` the focus is ignored, but we keep the item in the state to be able to restore it when focus is active again.
      */
-    focusIsActive: boolean;
+    isFocused: boolean;
     /**
      * Whether keyboard navigation is enabled.
      */
@@ -35,7 +35,7 @@ export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{
   state: UseChartKeyboardNavigationState;
   optionalDependencies: [
     UseChartInteractionSignature,
-    UseChartHighlightSignature,
+    UseChartHighlightSignature<ChartSeriesType>,
     UseChartCartesianAxisSignature,
   ];
 }>;

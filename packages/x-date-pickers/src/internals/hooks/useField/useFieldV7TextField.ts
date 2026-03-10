@@ -214,16 +214,14 @@ export const useFieldV7TextField = <
   React.useEffect(() => {
     if (sectionListRef.current == null) {
       throw new Error(
-        [
-          'MUI X: The `sectionListRef` prop has not been initialized by `PickersSectionList`',
-          'You probably tried to pass a component to the `textField` slot that contains an `<input />` element instead of a `PickersSectionList`.',
-          '',
-          'If you want to keep using an `<input />` HTML element for the editing, please add the `enableAccessibleFieldDOMStructure={false}` prop to your Picker or Field component:',
-          '',
-          '<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />',
-          '',
-          'Learn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element',
-        ].join('\n'),
+        `MUI X: The \`sectionListRef\` prop has not been initialized by \`PickersSectionList\`
+You probably tried to pass a component to the \`textField\` slot that contains an \`<input />\` element instead of a \`PickersSectionList\`.
+
+If you want to keep using an \`<input />\` HTML element for the editing, please add the \`enableAccessibleFieldDOMStructure={false}\` prop to your Picker or Field component:
+
+<DatePicker enableAccessibleFieldDOMStructure={false} slots={{ textField: MyCustomTextField }} />
+
+Learn more about the field accessible DOM structure on the MUI documentation: https://mui.com/x/react-date-pickers/fields/#fields-to-edit-a-single-element`,
       );
     }
 

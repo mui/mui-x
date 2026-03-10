@@ -1,10 +1,4 @@
-import {
-  useRadiusAxes,
-  useRotationAxes,
-  useSeries,
-  useXAxes,
-  useYAxes,
-} from '../hooks';
+import { useRadiusAxes, useRotationAxes, useSeries, useXAxes, useYAxes } from '../hooks';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';

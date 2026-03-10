@@ -1,6 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { type LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
@@ -47,6 +48,11 @@ export interface MarkPlotProps
   ) => void;
 }
 
+const MarkPlotRoot = styled('g', {
+  name: 'MuiMarkPlot',
+  slot: 'Root',
+})({});
+
 /**
  * Demos:
  *
@@ -85,12 +91,14 @@ function MarkPlot(props: MarkPlotProps) {
   const completedData = useMarkPlotData(xAxis, yAxis);
 
   return (
-    <g {...other}>
+    <MarkPlotRoot {...other}>
       {completedData.map(({ seriesId, clipId, shape, xAxisId, marks, hidden }) => {
         const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
-        const isSeriesHighlighted = isHighlighted({ seriesId });
-        const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
+        const identifier = { type: 'line' as const, seriesId };
+
+        const isSeriesHighlighted = isHighlighted(identifier);
+        const isSeriesFaded = !isSeriesHighlighted && isFaded(identifier);
 
         return (
           <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
@@ -119,7 +127,7 @@ function MarkPlot(props: MarkPlotProps) {
           </g>
         );
       })}
-    </g>
+    </MarkPlotRoot>
   );
 }
 

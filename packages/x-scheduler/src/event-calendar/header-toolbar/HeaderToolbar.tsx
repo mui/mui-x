@@ -8,7 +8,6 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import MenuOpen from '@mui/icons-material/MenuOpen';
 import Menu from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -42,10 +41,13 @@ const HeaderToolbarActions = styled('div', {
   gap: theme.spacing(2),
 }));
 
-const HeaderToolbarDateNavigator = styled(ButtonGroup, {
+const HeaderToolbarDateNavigator = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'HeaderToolbarDateNavigator',
-})({});
+})(({ theme }) => ({
+  display: 'flex',
+  gap: theme.spacing(2),
+}));
 
 const HeaderToolbarLeftElement = styled('div', {
   name: 'MuiEventCalendar',
@@ -99,6 +101,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         className={classes.headerToolbarLeftElement}
       >
         <IconButton
+          className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
           onClick={(event) =>
             store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
@@ -110,22 +113,27 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
         </HeaderToolbarLabel>
-      </HeaderToolbarLeftElement>
-      <HeaderToolbarActions className={classes.headerToolbarActions}>
-        <PreferencesMenu />
-
         <HeaderToolbarDateNavigator className={classes.headerToolbarDateNavigator}>
-          <Button
+          <IconButton
+            className={classes.headerToolbarPreviousButton}
             onClick={store.goToPreviousVisibleDate}
             aria-label={localeText.previousTimeSpan(view)}
           >
             <ChevronLeft />
-          </Button>
-          <Button onClick={store.goToToday}>{localeText.today}</Button>
-          <Button onClick={store.goToNextVisibleDate} aria-label={localeText.nextTimeSpan(view)}>
+          </IconButton>
+          <IconButton
+            className={classes.headerToolbarNextButton}
+            onClick={store.goToNextVisibleDate}
+            aria-label={localeText.nextTimeSpan(view)}
+          >
             <ChevronRight />
-          </Button>
+          </IconButton>
         </HeaderToolbarDateNavigator>
+      </HeaderToolbarLeftElement>
+      <HeaderToolbarActions className={classes.headerToolbarActions}>
+        <PreferencesMenu />
+
+        <Button onClick={store.goToToday}>{localeText.today}</Button>
         {showViewSwitcher && (
           <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
         )}

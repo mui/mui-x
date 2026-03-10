@@ -16,8 +16,14 @@ import type {
   PieSeriesLayout,
 } from './pie';
 import type { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
-import type { SeriesColor } from './common';
-import type { ChartsRadiusAxisProps, ChartsRotationAxisProps, ComputedXAxis, ComputedYAxis, PolarAxisDefaultized } from '../axis';
+import type { SeriesColor, SeriesId } from './common';
+import type {
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+  ComputedXAxis,
+  ComputedYAxis,
+  PolarAxisDefaultized,
+} from '../axis';
 import type { CommonHighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 
 export interface ChartsSeriesConfig {
@@ -26,7 +32,7 @@ export interface ChartsSeriesConfig {
      * Series type when passed to the formatter (some ids are given default values to simplify the DX)
      */
     seriesInput: DefaultizedProps<BarSeriesType, 'id'> &
-    MakeRequired<SeriesColor<number | null>, 'color'>;
+      MakeRequired<SeriesColor<number | null>, 'color'>;
     /**
      * Series type when stored in the context (with all the preprocessing added))
      */
@@ -40,7 +46,13 @@ export interface ChartsSeriesConfig {
      * Series typing such that the one user need to provide
      */
     seriesProp: BarSeriesType;
+    /**
+     * The minimal information to identify a specific item in the series.
+     */
     itemIdentifier: BarItemIdentifier;
+    /**
+     * The minimal information to identify a specific item in the series. Plus the data associated to it.
+     */
     itemIdentifierWithData: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
@@ -52,10 +64,15 @@ export interface ChartsSeriesConfig {
       yAxis: ComputedYAxis;
       series: DefaultizedBarSeriesType;
     };
+    highlightIdentifier: {
+      type: 'bar';
+      seriesId: SeriesId;
+      dataIndex?: number | undefined;
+    };
   };
   line: {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
-    MakeRequired<SeriesColor<number | null>, 'color'>;
+      MakeRequired<SeriesColor<number | null>, 'color'>;
     series: DefaultizedLineSeriesType;
     seriesLayout: {};
     seriesProp: LineSeriesType;
@@ -71,10 +88,15 @@ export interface ChartsSeriesConfig {
       yAxis: ComputedYAxis;
       series: DefaultizedLineSeriesType;
     };
+    highlightIdentifier: {
+      type: 'line';
+      seriesId: SeriesId;
+      dataIndex?: number;
+    };
   };
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
-    MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
+      MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
     series: DefaultizedScatterSeriesType;
     seriesLayout: {};
     seriesProp: ScatterSeriesType;
@@ -85,9 +107,12 @@ export interface ChartsSeriesConfig {
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: ScatterItemIdentifier;
-      xAxis: ComputedXAxis;
       yAxis: ComputedYAxis;
       series: DefaultizedScatterSeriesType;
+    };
+    highlightIdentifier: {
+      type: 'scatter';
+      dataIndex?: number;
     };
   };
   pie: {
@@ -107,10 +132,15 @@ export interface ChartsSeriesConfig {
       identifier: PieItemIdentifier;
       series: DefaultizedPieSeriesType;
     };
+    highlightIdentifier: {
+      type: 'pie';
+      seriesId: SeriesId;
+      dataIndex?: number;
+    };
   };
   radar: {
     seriesInput: DefaultizedProps<RadarSeriesType, 'id'> &
-    MakeRequired<SeriesColor<number>, 'color'>;
+      MakeRequired<SeriesColor<number>, 'color'>;
     series: DefaultizedRadarSeriesType;
     seriesLayout: {};
     seriesProp: RadarSeriesType;
@@ -125,17 +155,25 @@ export interface ChartsSeriesConfig {
       radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
       series: DefaultizedRadarSeriesType;
     };
+    highlightIdentifier: {
+      type: 'radar';
+      seriesId: SeriesId;
+      dataIndex?: number;
+    };
   };
 }
 
+/**
+ * All the existing series types.
+ */
 export type ChartSeriesType = keyof ChartsSeriesConfig;
 
 export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
     [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { axisType: 'cartesian' }
-    ? Key
-    : never;
+      ? Key
+      : never;
   }[ChartSeriesType]
 >;
 
@@ -159,9 +197,9 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
   canBeStacked: true;
 }
   ? ChartsSeriesConfig[T]['series'] & {
-    visibleStackedData: [number, number][];
-    stackedData: [number, number][];
-  }
+      visibleStackedData: [number, number][];
+      stackedData: [number, number][];
+    }
   : ChartsSeriesConfig[T]['series'];
 
 export type ChartSeriesLayout<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends any

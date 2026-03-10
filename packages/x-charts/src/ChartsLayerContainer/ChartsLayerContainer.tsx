@@ -12,7 +12,7 @@ import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/
 import { type UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartContext } from '../context/ChartProvider';
-import { useSvgRef } from '../hooks';
+import { useChartsLayerContainerRef } from '../hooks';
 // eslint-disable-next-line import/no-cycle
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsAccessibilityProxy } from '../ChartsAccessibilityProxy';
@@ -44,7 +44,7 @@ export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {
 }
 
 /**
- * A component that contains the chart layers, such as `<ChartsSvgLayer>`, and `<ChartsWebGlLayer>`.
+ * A component that contains the chart layers, such as `<ChartsSvgLayer>`, and `<ChartsWebGLLayer>`.
  * It is responsible for positioning itself and providing the dimensions and interaction context to its children layers.
  */
 const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(
@@ -61,8 +61,8 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
     const { children, ...other } = themeProps;
 
-    const svgRef = useSvgRef();
-    const handleRef = useForkRef(svgRef, ref);
+    const chartsLayerContainerRef = useChartsLayerContainerRef();
+    const handleRef = useForkRef(chartsLayerContainerRef, ref);
 
     if (process.env.NODE_ENV !== 'production') {
       React.Children.forEach(children, (child) => {
