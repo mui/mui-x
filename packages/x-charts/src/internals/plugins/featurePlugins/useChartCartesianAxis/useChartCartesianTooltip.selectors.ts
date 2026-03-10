@@ -34,6 +34,20 @@ const selectorChartControlledCartesianAxisTooltip = (
 
 const EMPTY_ARRAY: AxisItemIdentifier[] = [];
 
+function getKeyboardAxisTooltip(
+  keyboardIndex: AxisItemIdentifier | undefined,
+  axes: ComputeResult<ChartsAxisProps>,
+): AxisItemIdentifier[] {
+  if (keyboardIndex === undefined) {
+    return EMPTY_ARRAY;
+  }
+  const axis = axes.axis[keyboardIndex.axisId];
+  if (!axis?.triggerTooltip) {
+    return EMPTY_ARRAY;
+  }
+  return [keyboardIndex];
+}
+
 /**
  * Get x-axis ids and corresponding data index that should be display in the tooltip.
  */
@@ -62,14 +76,7 @@ export const selectorChartsInteractionTooltipXAxes = createSelectorMemoizedWithO
     }
 
     if (lastInteraction === 'keyboard') {
-      if (keyboardIndex === undefined) {
-        return EMPTY_ARRAY;
-      }
-      const axis = axes.axis[keyboardIndex.axisId];
-      if (!axis?.triggerTooltip) {
-        return EMPTY_ARRAY;
-      }
-      return [keyboardIndex];
+      return getKeyboardAxisTooltip(keyboardIndex, axes);
     }
 
     if (value === null) {
@@ -116,14 +123,7 @@ export const selectorChartsInteractionTooltipYAxes = createSelectorMemoizedWithO
     }
 
     if (lastInteraction === 'keyboard') {
-      if (keyboardIndex === undefined) {
-        return EMPTY_ARRAY;
-      }
-      const axis = axes.axis[keyboardIndex.axisId];
-      if (!axis?.triggerTooltip) {
-        return EMPTY_ARRAY;
-      }
-      return [keyboardIndex];
+      return getKeyboardAxisTooltip(keyboardIndex, axes);
     }
 
     if (value === null) {
