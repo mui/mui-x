@@ -41,7 +41,7 @@ const EventTimelinePremiumGrid = styled(TimelineGrid.Root, {
 })({
   height: '100%',
   display: 'grid',
-  gridTemplateColumns: 'minmax(100px, 30%) minmax(0, 1fr)',
+  gridTemplateColumns: 'fit-content(30%) minmax(0, 1fr)',
   gridTemplateRows: 'auto 1fr auto',
   alignItems: 'stretch',
 });
