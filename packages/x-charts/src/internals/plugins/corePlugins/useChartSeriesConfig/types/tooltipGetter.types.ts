@@ -16,11 +16,11 @@ import {
 import { type ChartsLabelMarkProps } from '../../../../../ChartsLabel/ChartsLabelMark';
 import { type ColorGetter } from './colorProcessor.types';
 
-export interface ItemTooltip<T extends ChartSeriesType> {
+export interface ItemTooltip<SeriesType extends ChartSeriesType> {
   /**
    * An object that identifies the item to display.
    */
-  identifier: SeriesItemIdentifierWithType<T>;
+  identifier: SeriesItemIdentifierWithType<SeriesType>;
   /**
    * The color associated with the item.
    */
@@ -32,7 +32,7 @@ export interface ItemTooltip<T extends ChartSeriesType> {
   /**
    * The item value.
    */
-  value: ChartsSeriesConfig[T]['valueType'];
+  value: ChartsSeriesConfig[SeriesType]['valueType'];
   /**
    * The value formatted with context set to "tooltip".
    */
