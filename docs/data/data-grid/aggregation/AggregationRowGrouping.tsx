@@ -14,8 +14,6 @@ export default function AggregationRowGrouping() {
     rowLength: 10000,
   });
 
-  console.log(data);
-
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
     initialState: {
