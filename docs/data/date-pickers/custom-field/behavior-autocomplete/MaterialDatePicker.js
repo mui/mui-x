@@ -79,7 +79,7 @@ function AutocompleteField(props) {
                     </React.Fragment>
                   ),
                 }),
-              }
+              },
             }}
           />
         );

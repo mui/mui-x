@@ -95,7 +95,7 @@ function ExportMenu() {
         slotProps={{
           list: {
             'aria-labelledby': 'export-menu-trigger',
-          }
+          },
         }}
       >
         <ExportCsv render={<MenuItem />}>Download as CSV</ExportCsv>

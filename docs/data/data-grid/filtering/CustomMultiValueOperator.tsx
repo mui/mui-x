@@ -82,7 +82,7 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
         onChange={handleUpperFilterChange}
         type="number"
         slotProps={{
-          input: applying ? { endAdornment: <SyncIcon /> } : {}
+          input: applying ? { endAdornment: <SyncIcon /> } : {},
         }}
       />
     </Box>

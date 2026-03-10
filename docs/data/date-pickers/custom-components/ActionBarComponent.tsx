@@ -143,7 +143,7 @@ function CustomActionBar(props: PickersActionBarProps) {
         slotProps={{
           list: {
             'aria-labelledby': `picker-actions-${id}`,
-          }
+          },
         }}
       >
         {menuItems}

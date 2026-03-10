@@ -31,7 +31,7 @@ export function RenameDialog(props) {
         paper: {
           component: 'form',
           onSubmit: handleSave,
-        }
+        },
       }}
     >
       {params && (

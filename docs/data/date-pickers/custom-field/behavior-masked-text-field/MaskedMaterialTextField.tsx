@@ -158,7 +158,7 @@ function MaskedDateField(props: DatePickerFieldProps) {
               </IconButton>
             </InputAdornment>
           ),
-        }
+        },
       }}
     />
   );

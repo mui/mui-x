@@ -50,7 +50,7 @@ function CustomToolbar() {
         slotProps={{
           list: {
             'aria-labelledby': 'density-menu-trigger',
-          }
+          },
         }}
       >
         {DENISTY_OPTIONS.map((option) => (

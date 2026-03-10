@@ -120,7 +120,7 @@ function EditAction(props: Pick<GridRowParams, 'row'>) {
           paper: {
             component: 'form',
             onSubmit: handleSave,
-          }
+          },
         }}
       >
         <DialogTitle>Edit Employee</DialogTitle>

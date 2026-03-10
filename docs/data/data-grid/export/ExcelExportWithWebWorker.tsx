@@ -22,9 +22,12 @@ export default function ExcelExportWithWebWorker() {
 
   return (
     <Box sx={{ height: 520, width: '100%' }}>
-      <Snackbar open={inProgress} slots={{
-        transition: SlideTransition
-      }}>
+      <Snackbar
+        open={inProgress}
+        slots={{
+          transition: SlideTransition,
+        }}
+      >
         <Alert severity="info" icon={<CircularProgress size={24} />}>
           Exporting Excel file...
         </Alert>

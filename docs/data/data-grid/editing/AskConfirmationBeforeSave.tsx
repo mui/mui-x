@@ -121,7 +121,7 @@ export default function AskConfirmationBeforeSave() {
         maxWidth="xs"
         open={!!promiseArguments}
         slotProps={{
-          transition: { onEntered: handleEntered }
+          transition: { onEntered: handleEntered },
         }}
       >
         <DialogTitle>Are you sure?</DialogTitle>

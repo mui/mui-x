@@ -154,7 +154,7 @@ function MaskedDateField(props) {
               </IconButton>
             </InputAdornment>
           ),
-        }
+        },
       }}
     />
   );

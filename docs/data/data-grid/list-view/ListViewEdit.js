@@ -112,7 +112,7 @@ function EditAction(props) {
           paper: {
             component: 'form',
             onSubmit: handleSave,
-          }
+          },
         }}
       >
         <DialogTitle>Edit Employee</DialogTitle>

@@ -51,7 +51,7 @@ function ReadOnlyDateField(props: DatePickerFieldProps) {
           readOnly: true,
           endAdornment: <CalendarIcon color="action" />,
           sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
-        }
+        },
       }}
     />
   );
