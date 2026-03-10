@@ -38,7 +38,6 @@ export function FocusedPieArc(
   const series = pieSeries?.series[focusedItem.seriesId];
   const { center, radius } = pieSeriesLayout[focusedItem.seriesId];
 
-
   if (!series || !center || !radius) {
     return null;
   }

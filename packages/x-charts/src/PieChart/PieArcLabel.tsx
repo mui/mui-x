@@ -170,7 +170,12 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
 
     return (
       <PieArcLabelRoot
-        className={clsx(classes.arcLabel, !skipAnimation && classes.animate, deprecatedClasses.root, className)}
+        className={clsx(
+          classes.arcLabel,
+          !skipAnimation && classes.animate,
+          deprecatedClasses.root,
+          className,
+        )}
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
         {...other}

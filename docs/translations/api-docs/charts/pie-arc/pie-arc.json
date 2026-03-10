@@ -7,6 +7,7 @@
     }
   },
   "classDescriptions": {
+    "animate": { "description": "Styles applied when animation is not skipped." },
     "arc": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "an individual pie arc element"
@@ -14,6 +15,10 @@
     "arcLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "an individual pie arc label element"
+    },
+    "focusIndicator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the focused pie arc element"
     },
     "root": { "description": "Styles applied to the root element." },
     "series": {
