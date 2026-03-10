@@ -17,6 +17,7 @@ import { type KeyboardFocusHandler } from '../../../featurePlugins/useChartKeybo
 import { type IdentifierSerializer } from './identifierSerializer.types';
 import { type IdentifierCleaner } from './identifierCleaner.types';
 import { type GetItemAtPosition } from './getItemAtPosition.types';
+import { type DescriptionGetter } from './descriptionGetter.types';
 import { type UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
 import { type UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
 
@@ -53,6 +54,7 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
    */
   identifierCleaner: IdentifierCleaner<TSeriesType>;
   getItemAtPosition?: GetItemAtPosition<TSeriesType>;
+  descriptionGetter?: DescriptionGetter<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;
