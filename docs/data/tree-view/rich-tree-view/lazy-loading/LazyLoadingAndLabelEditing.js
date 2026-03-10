@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 
@@ -42,7 +41,7 @@ export default function LazyLoadingAndLabelEditing() {
   };
 
   return (
-    <Box sx={{ width: '300px' }}>
+    <div style={{ width: 300, height: 240 }}>
       <RichTreeViewPro
         items={[]}
         apiRef={apiRef}
@@ -54,6 +53,6 @@ export default function LazyLoadingAndLabelEditing() {
         }}
         dataSourceCache={customCache}
       />
-    </Box>
+    </div>
   );
 }

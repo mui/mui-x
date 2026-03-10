@@ -43,10 +43,13 @@ export interface ChartsComponents<Theme = unknown> {
   };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiBarChart'];
   };
+  /** @deprecated Use `MuiBarChart` instead. */
   MuiBarElement?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiBarElement'];
   };
+  /** @deprecated Use `MuiBarChart` instead. */
   MuiBarLabel?: {
     defaultProps?: ComponentsProps['MuiBarLabel'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiBarLabel'];
@@ -54,12 +57,24 @@ export interface ChartsComponents<Theme = unknown> {
   MuiLineChart?: {
     defaultProps?: ComponentsProps['MuiLineChart'];
   };
+  MuiAreaPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiAreaPlot'];
+  };
+  MuiLinePlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiLinePlot'];
+  };
+  MuiMarkPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMarkPlot'];
+  };
+  /** @deprecated Use `MuiAreaPlot` instead. */
   MuiAreaElement?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiAreaElement'];
   };
+  /** @deprecated Use `MuiLinePlot` instead. */
   MuiLineElement?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiLineElement'];
   };
+  /** @deprecated Use `MuiMarkPlot` instead. */
   MuiMarkElement?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiMarkElement'];
   };
