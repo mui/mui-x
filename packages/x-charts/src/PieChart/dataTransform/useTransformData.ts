@@ -5,7 +5,7 @@ import {
   type DefaultizedPieSeriesType,
   type DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
 import { getModifiedArcProperties } from './getModifiedArcProperties';
 
@@ -35,7 +35,7 @@ export function useTransformData(
 ) {
   const { id: seriesId, data, faded, highlighted } = series;
 
-  const getHighlightState = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
   const isItemFocused = useIsItemFocusedGetter();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(

@@ -256,16 +256,18 @@ It now returns a `HighlightState` union type: `'highlighted' | 'faded' | 'none'`
 +const isFaded = highlightState === 'faded';
 ```
 
-### `useItemHighlightedGetter()` return type changed
+### `useItemHighlightedGetter()` replaced by `useItemHighlightStateGetter()`
 
-The `useItemHighlightedGetter()` hook no longer returns an object with `isHighlighted` and `isFaded` callbacks.
-It now returns a single callback that returns a `HighlightState` union type.
+The `useItemHighlightedGetter()` hook is replaced by `useItemHighlightStateGetter()`.
+instead of returning an object with two callbacks `isHighlighted()` and `isFaded()`.
+It now returns a single callback `(item) => HighlightState`.
+With `HighlightState` the union type: `'highlighted' | 'faded' | 'none'`
 
 ```diff
 -const { isHighlighted, isFaded } = useItemHighlightedGetter();
 -const isItemHighlighted = isHighlighted(item);
 -const isItemFaded = !isItemHighlighted && isFaded(item);
-+const getHighlightState = useItemHighlightedGetter();
++const getHighlightState = useItemHighlightStateGetter();
 
 +const isItemHighlighted = (item) => getHighlightState(item) === 'highlighted'
 +const isItemFaded = (item) => getHighlightState(item) === 'faded'

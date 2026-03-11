@@ -1,7 +1,7 @@
 import { useRotationScale } from '../../hooks/useScale';
 import { useRadarSeries } from '../../hooks/useRadarSeries';
 import { useRadiusAxes } from '../../hooks/useAxis';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { type SeriesId } from '../../models/seriesType/common';
 import { type UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
@@ -19,7 +19,7 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
 
   const radarSeries = useRadarSeries(querySeriesId === undefined ? undefined : [querySeriesId]);
 
-  const getHighlightState = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
 
   const metrics = (rotationScale?.domain() as (string | number)[]) ?? [];
 

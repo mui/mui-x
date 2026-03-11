@@ -17,7 +17,7 @@ type UseItemHighlightedParams<SeriesType extends ChartSeriesType = ChartSeriesTy
  * A hook to check the highlighted state of the item.
  * This function already calculates that an item is not faded if it is highlighted.
  *
- * If you need fine control over the state, use the `useItemHighlightedGetter` hook instead.
+ * If you need fine control over the state, use the `useItemHighlightStateGetter` hook instead.
  *
  * @param {HighlightItemIdentifierWithType<SeriesType> | null} item is the item to check
  * @returns {HighlightState} the state of the item

@@ -11,7 +11,7 @@ import {
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { type D3Scale } from '../models/axis';
-import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
+import { useItemHighlightStateGetter } from '../hooks/useItemHighlightStateGetter';
 import {
   selectorChartsIsVoronoiEnabled,
   type UseChartClosestPointSignature,
@@ -89,7 +89,7 @@ function Scatter(props: ScatterProps) {
   const isVoronoiEnabled = store.use(selectorChartsIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
-  const getHighlightState = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
 

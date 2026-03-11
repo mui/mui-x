@@ -526,7 +526,7 @@
   { "name": "useFocusedItem", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },
   { "name": "useItemHighlighted", "kind": "Function" },
-  { "name": "useItemHighlightedGetter", "kind": "Function" },
+  { "name": "useItemHighlightStateGetter", "kind": "Function" },
   { "name": "useItemTooltip", "kind": "Variable" },
   { "name": "UseItemTooltipReturnValue", "kind": "TypeAlias" },
   { "name": "useLegend", "kind": "Function" },

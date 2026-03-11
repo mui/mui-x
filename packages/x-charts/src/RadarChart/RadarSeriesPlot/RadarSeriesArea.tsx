@@ -5,7 +5,7 @@ import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
 import type { HighlightState } from '../../hooks/useItemHighlighted';
@@ -48,7 +48,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const getHighlightState = useItemHighlightedGetter<'radar'>();
+  const getHighlightState = useItemHighlightStateGetter<'radar'>();
 
   const classes = useUtilityClasses(props.classes);
   return (

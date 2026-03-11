@@ -11,7 +11,7 @@ import { type ChartSeriesType } from '../models/seriesType/config';
  *
  * @returns {(item: HighlightItemIdentifierWithType | null) => HighlightState} callback to get the highlight state of an item.
  */
-export function useItemHighlightedGetter<SeriesType extends ChartSeriesType>() {
+export function useItemHighlightStateGetter<SeriesType extends ChartSeriesType>() {
   const store = useStore<[UseChartHighlightSignature<SeriesType>]>();
 
   const getHighlightState = store.use(selectorChartsHighlightStateCallback);

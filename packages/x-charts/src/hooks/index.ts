@@ -18,7 +18,7 @@ export * from './useBarSeries';
 export * from './useLineSeries';
 export * from './useRadarSeries';
 export * from './useItemHighlighted';
-export * from './useItemHighlightedGetter';
+export * from './useItemHighlightStateGetter';
 export * from './useLegend';
 export { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';
 export * from './animation';

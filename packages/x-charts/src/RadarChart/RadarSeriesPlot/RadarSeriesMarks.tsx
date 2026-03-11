@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { type SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
@@ -43,7 +43,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   const seriesCoordinates = useRadarSeriesData(props.seriesId);
 
   const classes = useUtilityClasses(props.classes);
-  const getHighlightState = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
 
   return (
     <React.Fragment>
