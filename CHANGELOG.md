@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 11, 2026_
 
-We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
@@ -22,6 +22,7 @@ We'd like to extend a big thank you to the 6 contributors who made this release 
 - [DataGrid] Remove double rtl inversion logic for columns pinning (#21443) @siriwatknp
 - [DataGrid] Add missing `resizablePanelHandle` classes to `gridClasses` object (#21632) @sai6855
 - [DataGrid] Refactor `headerAlign` style calls (#21633) @sai6855
+- [DataGrid] Fix keyboard navigation with single-row checkbox selection (#21529) @mj12albert
 
 #### `@mui/x-data-grid-pro@8.27.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
