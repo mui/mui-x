@@ -1,8 +1,13 @@
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { type SeriesId } from '../models/seriesType/common';
+import type { MarkElementOwnerState } from './lineClasses';
 
+export { type MarkElementOwnerState };
+
+/**
+ * @deprecated Use `LineClasses` from `./lineClasses` instead.
+ */
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
   root: string;
@@ -19,20 +24,21 @@ export interface MarkElementClasses {
   series: string;
 }
 
+/**
+ * @deprecated Use `LineClassKey` from `./lineClasses` instead.
+ */
 export type MarkElementClassKey = keyof MarkElementClasses;
 
-export interface MarkElementOwnerState {
-  id: SeriesId;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<MarkElementClasses>;
-  skipAnimation?: boolean;
-}
-
+/**
+ * @deprecated Use `getLineUtilityClass` from `./lineClasses` instead.
+ */
 export function getMarkElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiMarkElement', slot);
 }
 
+/**
+ * @deprecated Use `lineClasses` from `./lineClasses` instead.
+ */
 export const markElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
   'root',
   'highlighted',
@@ -41,6 +47,9 @@ export const markElementClasses: MarkElementClasses = generateUtilityClasses('Mu
   'series',
 ]);
 
+/**
+ * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
+ */
 export const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
   const { classes, id, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
