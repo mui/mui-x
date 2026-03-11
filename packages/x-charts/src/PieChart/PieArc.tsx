@@ -9,8 +9,13 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { type PieItemId } from '../models';
+import { type PieArcOwnerState, useUtilityClasses as usePieUtilityClasses } from './pieClasses';
 
+export { type PieArcOwnerState };
+
+/**
+ * @deprecated Use `PieClasses` from `./pieClasses` instead.
+ */
 export interface PieArcClasses {
   /** Styles applied to the root element. */
   root: string;
@@ -27,23 +32,21 @@ export interface PieArcClasses {
   focusIndicator: string;
 }
 
+/**
+ * @deprecated Use `PieClassKey` from `./pieClasses` instead.
+ */
 export type PieArcClassKey = keyof PieArcClasses;
 
-interface PieArcOwnerState {
-  id: PieItemId;
-  dataIndex: number;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  isFocused: boolean;
-  stroke?: string;
-  classes?: Partial<PieArcClasses>;
-}
-
+/**
+ * @deprecated Use `getPieUtilityClass` from `./pieClasses` instead.
+ */
 export function getPieArcUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArc', slot);
 }
 
+/**
+ * @deprecated Use `pieClasses` from `./pieClasses` instead.
+ */
 export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', [
   'root',
   'highlighted',
@@ -52,6 +55,9 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
   'focusIndicator',
 ]);
 
+/**
+ * @deprecated Use `useUtilityClasses` from `./pieClasses` instead.
+ */
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   const { classes, id, isFaded, isHighlighted, dataIndex } = ownerState;
   const slots = {
@@ -70,7 +76,6 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
 const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
 })<{ ownerState: PieArcOwnerState }>({
   transitionProperty: 'opacity, fill, filter',
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
@@ -132,7 +137,8 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     isHighlighted,
     isFocused,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = usePieUtilityClasses(ownerState);
+  const deprecatedClasses = useUtilityClasses(ownerState);
 
   const interactionProps = useInteractionItemProps(
     { type: 'pie', seriesId: id, dataIndex },
@@ -154,10 +160,10 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
-      className={clsx(classes.root, className)}
-      fill={ownerState.color}
-      opacity={ownerState.isFaded ? 0.3 : 1}
-      filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+      className={clsx(classes.arc, deprecatedClasses.root, className)}
+      fill={color}
+      opacity={isFaded ? 0.3 : 1}
+      filter={isHighlighted ? 'brightness(120%)' : 'none'}
       stroke={stroke}
       strokeWidth={1}
       strokeLinejoin="round"
