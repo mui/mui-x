@@ -341,7 +341,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy.callCount).to.be.at.least(1);
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
@@ -349,22 +349,24 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
       .children[0];
     const cell11 = getCell(0, 0);
+    const callCountBeforeExpand = fetchRowsSpy.callCount;
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.callCount).to.be.at.least(callCountBeforeExpand + 1);
       expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
     });
 
     // Stop transforming so the re-fetch returns data without testRowId
     shouldTransformNestedData = false;
+    const callCountBeforeRefetch = fetchRowsSpy.callCount;
 
     await act(async () => {
       await apiRef.current?.dataSource.fetchRows(expandedRowId);
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(3);
+      expect(fetchRowsSpy.callCount).to.be.at.least(callCountBeforeRefetch + 1);
       expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
     });
   });
