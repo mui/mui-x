@@ -271,10 +271,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        scrollPosition: { current: { ...scrollPosition.current } },
-      });
       return renderContext;
     }
 
@@ -312,11 +308,15 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         updateRenderContext(nextRenderContext);
       });
 
-      scrollTimeout.start(1000, triggerUpdateRenderContext);
-    } else {
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        scrollPosition: { current: { ...scrollPosition.current } },
+      const lastContextScrollTop = scrollPosition.current.top;
+      const lastContextScrollLeft = scrollPosition.current.left;
+      scrollTimeout.start(1000, () => {
+        if (
+          scrollPosition.current.top !== lastContextScrollTop ||
+          scrollPosition.current.left !== lastContextScrollLeft
+        ) {
+          triggerUpdateRenderContext();
+        }
       });
     }
 
