@@ -6,7 +6,7 @@ _Mar 11, 2026_
 
 We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🐞 Bugfixes and internal improvements
 
 The following team members contributed to this release:
 @aemartos, @alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @sai6855, @siriwatknp
