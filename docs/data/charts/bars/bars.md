@@ -195,8 +195,8 @@ To customize the position of the bar label, set a series' `barLabelPlacement` pr
 
 - `center`: the label is centered on the bar.
 - `outside`: the label is placed after the end of the bar, from the point of view of the origin.
-For a vertical positive bar, the label is above its top edge.
-For a horizontal negative bar, the label is to the left of its leftmost limit.
+  For a vertical positive bar, the label is above its top edge.
+  For a horizontal negative bar, the label is to the left of its leftmost limit.
 
 {{"demo": "BarLabelPlacement.js"}}
 
@@ -242,7 +242,7 @@ There is a slight difference between the `event` of `onItemClick` and `onAxisCli
 
 - For `onItemClick` the event is a React synthetic mouse event emitted by the bar component.
 - For `onAxisClick` the event is a native mouse event emitted by the SVG component.
-:::
+  :::
 
 If you're composing a custom component, you can incorporate click events as shown in the code snippet below.
 Note that `onAxisClick` can handle both bar and line series if you mix them.
