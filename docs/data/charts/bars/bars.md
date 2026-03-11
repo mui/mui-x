@@ -168,8 +168,8 @@ This effectively reveals the gradient depending on the bar's value, as the gradi
 
 In the example below, there are two gradients:
 
-- The series `color` property references the gradient with `gradientUnits="objectBoundingBox"`, which is applied to the tooltip, legend, and other elements that reference the series color.
-- The bar's `fill` property is overridden using CSS to reference the gradient with `gradientUnits="userSpaceOnUse"`.
+1. The series `color` property references the gradient with `gradientUnits="objectBoundingBox"`, which is applied to the tooltip, legend, and other elements that reference the series color.
+2. The bar's `fill` property is overridden using CSS to reference the gradient with `gradientUnits="userSpaceOnUse"`.
 
 The first gradient is used for elements showing the whole gradient, such as tooltips and legend.
 The second one is shown in the bars themselves that display the part of the gradient that corresponds to their value.
