@@ -296,6 +296,12 @@ PieChart.propTypes = {
     ]).isRequired,
   ),
   /**
+   * Reference to the layer container element.
+   */
+  layerContainerRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
+  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
