@@ -10,7 +10,7 @@ import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { warnOnce } from '@mui/x-internals/warning';
 import { type TriggerOptions, useIsFineMainPointer } from './utils';
-import { type ChartsTooltipClasses, useChartsTooltipUtilityClasses } from './chartsTooltipClasses';
+import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsLastInteraction,
@@ -186,7 +186,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const chartsLayerContainerRef = useChartsLayerContainerRef();
   const anchorRef = React.useRef<HTMLDivElement | null>(null);
 
-  const classes = useChartsTooltipUtilityClasses(propClasses);
+  const classes = useUtilityClasses(propClasses);
 
   const pointerType = store.use(selectorChartsPointerType);
   const isFineMainPointer = useIsFineMainPointer();

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { type SxProps, type Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
-import { type ChartsTooltipClasses, useChartsTooltipUtilityClasses } from './chartsTooltipClasses';
+import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import {
   ChartsTooltipCell,
   ChartsTooltipPaper,
@@ -38,7 +38,7 @@ export interface ChartsAxisTooltipContentProps {
 
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   const { sort } = props;
-  const classes = useChartsTooltipUtilityClasses(props.classes);
+  const classes = useUtilityClasses(props.classes);
   const store = useStore();
 
   const getSeriesConfig = store.use(selectorChartSeriesConfigGetter);
@@ -109,7 +109,7 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
 function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesType>(
   props: AxisTooltipContentProps<T>,
 ) {
-  const classes = useChartsTooltipUtilityClasses(props.classes);
+  const classes = useUtilityClasses(props.classes);
   const { item } = props;
 
   if (item.formattedValue == null) {

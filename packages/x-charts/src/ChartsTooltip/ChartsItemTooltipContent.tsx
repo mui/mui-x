@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { type SxProps, type Theme } from '@mui/material/styles';
-import { type ChartsTooltipClasses, useChartsTooltipUtilityClasses } from './chartsTooltipClasses';
+import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useInternalItemTooltip } from './useItemTooltip';
 import {
   ChartsTooltipCell,
@@ -38,7 +38,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   const store = useStore();
   const getSeriesConfig = store.use(selectorChartSeriesConfigGetter);
 
-  const classes = useChartsTooltipUtilityClasses(propClasses);
+  const classes = useUtilityClasses(propClasses);
 
   if (!tooltipData) {
     return null;
@@ -106,7 +106,7 @@ function DefaultMultipleValueContent({
   classes: propClasses,
   item,
 }: DefaultMultipleValueContentProps) {
-  const classes = useChartsTooltipUtilityClasses(propClasses);
+  const classes = useUtilityClasses(propClasses);
 
   return (
     <React.Fragment>
@@ -136,7 +136,7 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
 }: DefaultSingleValueContentProps<T>) {
   const { color, label, formattedValue, markType, markShape } = item;
 
-  const classes = useChartsTooltipUtilityClasses(propClasses);
+  const classes = useUtilityClasses(propClasses);
 
   return (
     <ChartsTooltipRow className={classes.row}>

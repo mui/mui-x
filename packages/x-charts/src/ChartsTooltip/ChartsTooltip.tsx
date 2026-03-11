@@ -4,7 +4,7 @@ import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipContainer, type ChartsTooltipContainerProps } from './ChartsTooltipContainer';
-import { useChartsTooltipUtilityClasses } from './chartsTooltipClasses';
+import { useUtilityClasses } from './chartsTooltipClasses';
 import { type TriggerOptions } from './utils';
 
 export type ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> = T extends TriggerOptions
@@ -31,7 +31,7 @@ export type ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> = T ex
 function ChartsTooltip<T extends TriggerOptions>(props: ChartsTooltipProps<T>) {
   const { classes: propClasses, trigger = 'axis', sort, ...containerProps } = props;
 
-  const classes = useChartsTooltipUtilityClasses(propClasses);
+  const classes = useUtilityClasses(propClasses);
 
   return (
     <ChartsTooltipContainer {...containerProps} trigger={trigger} classes={propClasses}>
