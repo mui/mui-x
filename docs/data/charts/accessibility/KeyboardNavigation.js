@@ -80,18 +80,11 @@ export default function KeyboardNavigation() {
 function Chart({ chartRef, type }) {
   switch (type) {
     case 'scatter':
-      return (
-        <ScatterChart
-          layerContainerRef={chartRef}
-          height={300}
-          series={scatterSeries}
-        />
-      );
-
+      return <ScatterChart ref={chartRef} height={300} series={scatterSeries} />;
     case 'line':
       return (
         <LineChart
-          layerContainerRef={chartRef}
+          ref={chartRef}
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
           series={series}
@@ -102,7 +95,7 @@ function Chart({ chartRef, type }) {
     case 'bar':
       return (
         <BarChart
-          layerContainerRef={chartRef}
+          ref={chartRef}
           height={300}
           xAxis={[
             { data: data.map((p) => Math.round(p.x1)).toSorted((a, b) => a - b) },
@@ -115,7 +108,7 @@ function Chart({ chartRef, type }) {
     case 'pie':
       return (
         <PieChart
-          layerContainerRef={chartRef}
+          ref={chartRef}
           series={[
             {
               arcLabel: 'value',

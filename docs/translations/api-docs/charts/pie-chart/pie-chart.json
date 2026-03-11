@@ -24,7 +24,6 @@
     "initialHiddenItems": {
       "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
-    "layerContainerRef": { "description": "Reference to the layer container element." },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
     "margin": {

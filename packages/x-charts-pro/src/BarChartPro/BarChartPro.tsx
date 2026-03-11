@@ -325,12 +325,6 @@ BarChartPro.propTypes = {
     }),
   ),
   /**
-   * Reference to the layer container element.
-   */
-  layerContainerRef: PropTypes.shape({
-    current: PropTypes.object,
-  }),
-  /**
    * The direction of the bar elements.
    * @default 'vertical'
    */

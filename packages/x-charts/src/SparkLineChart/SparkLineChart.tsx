@@ -626,12 +626,6 @@ SparkLineChart.propTypes = {
     ]).isRequired,
   ),
   /**
-   * Reference to the layer container element.
-   */
-  layerContainerRef: PropTypes.shape({
-    current: PropTypes.object,
-  }),
-  /**
    * Localized text for chart components.
    */
   localeText: PropTypes.object,

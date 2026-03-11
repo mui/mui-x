@@ -65,7 +65,6 @@
         "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     },
-    "layerContainerRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "layout": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
       "default": "'vertical'"

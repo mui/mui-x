@@ -60,7 +60,6 @@
         "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     },
-    "layerContainerRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {

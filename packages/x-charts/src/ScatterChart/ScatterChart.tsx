@@ -164,7 +164,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps} ref={props.layerContainerRef}>
+        <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
           <ChartsGrid {...gridProps} />
           <g data-drawing-container>
@@ -343,12 +343,6 @@ ScatterChart.propTypes = {
       }),
     ]).isRequired,
   ),
-  /**
-   * Reference to the layer container element.
-   */
-  layerContainerRef: PropTypes.shape({
-    current: PropTypes.object,
-  }),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false

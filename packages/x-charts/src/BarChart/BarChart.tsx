@@ -105,10 +105,6 @@ export interface BarChartProps
    * @default false
    */
   showToolbar?: boolean;
-  /**
-   * Reference to the layer container element.
-   */
-  layerContainerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 /**
@@ -151,10 +147,7 @@ const BarChart = React.forwardRef(function BarChart(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsLayerContainer
-          className={chartsSurfaceProps.className}
-          ref={props.layerContainerRef}
-        >
+        <ChartsLayerContainer className={chartsSurfaceProps.className}>
           <ChartsSvgLayer {...chartsSurfaceProps}>
             <g aria-hidden>
               <ChartsGrid {...gridProps} />
@@ -356,12 +349,6 @@ BarChart.propTypes = {
       }),
     ]).isRequired,
   ),
-  /**
-   * Reference to the layer container element.
-   */
-  layerContainerRef: PropTypes.shape({
-    current: PropTypes.object,
-  }),
   /**
    * The direction of the bar elements.
    * @default 'vertical'
