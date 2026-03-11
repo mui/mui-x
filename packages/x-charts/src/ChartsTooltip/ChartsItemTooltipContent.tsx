@@ -14,11 +14,11 @@ import {
 } from './ChartsTooltipTable';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartSeriesConfigGetter } from '../internals/plugins/corePlugins/useChartSeries';
 import {
   type ItemTooltip,
   type ItemTooltipContentProps,
   type ItemTooltipWithMultipleValues,
+  selectorChartSeriesConfig,
 } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { type ChartSeriesType } from '../models/seriesType/config';
 
@@ -36,7 +36,7 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   const { classes: propClasses, sx } = props;
   const tooltipData = useInternalItemTooltip();
   const store = useStore();
-  const getSeriesConfig = store.use(selectorChartSeriesConfigGetter);
+  const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const classes = useUtilityClasses(propClasses);
 
@@ -44,9 +44,9 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
     return null;
   }
 
-  const seriesConfig = getSeriesConfig(tooltipData.identifier.seriesId);
+  const config = seriesConfig[tooltipData.identifier.type];
   const ItemTooltipContent =
-    seriesConfig && 'ItemTooltipContent' in seriesConfig ? seriesConfig.ItemTooltipContent : null;
+    config && 'ItemTooltipContent' in config ? config.ItemTooltipContent : null;
 
   if ('values' in tooltipData) {
     const { label: seriesLabel, color, markType, markShape } = tooltipData;
