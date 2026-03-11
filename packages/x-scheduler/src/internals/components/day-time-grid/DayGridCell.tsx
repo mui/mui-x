@@ -33,7 +33,7 @@ const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
   minHeight: `calc(var(--row-count, 0) * ${EVENT_HEIGHT}px + ${theme.spacing(0.5)})`,
 
   '&[data-weekend]': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: (theme.vars || theme).palette.action.hover,
   },
 }));
 

@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 The default locale of MUI X is English (United States).
 To use other locales, follow the instructions below.
 
@@ -26,6 +22,11 @@ in the GitHub repository.
 In the following example, the resource column header and loading text are customized.
 
 {{"demo": "CustomLocaleTextTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+You can also customize the resource column header using the [`resourceColumnLabel`](/x/react-scheduler/event-timeline/resources/#resource-column-label) prop.
+When provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
+:::
 
 ## Locale text
 

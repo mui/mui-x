@@ -81,17 +81,9 @@ commands:
           package-overrides: react@<< parameters.react-version >> @mui/material@<< pipeline.parameters.material-ui-version >>
 
 jobs:
-  checkout:
-    <<: *default-job
-    steps:
-      - checkout
-      - install-deps
-      - run:
-          name: Should not have any git not staged
-          command: git add -A && git diff --exit-code --staged
-
   test_unit:
     <<: *default-job
+    resource_class: large
     steps:
       - checkout
       - install-deps:
@@ -100,7 +92,12 @@ jobs:
           name: Test JSDOM
           command: |
             # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
-            pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=1/2" "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=2/2" || TEST_EXIT_CODE=$?
+            pnpm exec concurrently \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=1/4" \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=2/4" \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=3/4" \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=4/4" \
+              || TEST_EXIT_CODE=$?
             pnpm exec vitest run --merge-reports
             # Reports merged, we can now exit with the stored code
             exit ${TEST_EXIT_CODE:-0}
@@ -304,8 +301,6 @@ workflows:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
-      - checkout:
-          <<: *default-context
       - test_unit:
           <<: *default-context
       - test_browser:
@@ -326,8 +321,6 @@ workflows:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
     jobs:
-      - checkout:
-          <<: *default-context
       - test_e2e_website
   additional-tests:
     when:

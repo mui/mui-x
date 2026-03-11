@@ -39,7 +39,7 @@ The first part is to get the SVG total height.
 Which can be done with the `useDrawingArea()` hook.
 It's useful to define the `<linearGradient />` as a vector that goes from the top to the bottom of our SVG container.
 
-Then to define where the gradient should switch from one color to another, you can use the `useYScale` hook to get the y coordinate of value 0.
+Then to define where the gradient should switch from one color to another, you can use the `useYScale()` hook to get the y coordinate of value 0.
 
 :::info
 The `<stop />` offset is a ratio of gradient vector.

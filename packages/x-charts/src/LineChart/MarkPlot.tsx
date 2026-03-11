@@ -1,6 +1,8 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { type LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
@@ -15,6 +17,7 @@ import { type AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useChartContext } from '../context/ChartProvider';
 import { useMarkPlotData } from './useMarkPlotData';
+import { useUtilityClasses } from './lineClasses';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -47,6 +50,11 @@ export interface MarkPlotProps
   ) => void;
 }
 
+const MarkPlotRoot = styled('g', {
+  name: 'MuiMarkPlot',
+  slot: 'Root',
+})({});
+
 /**
  * Demos:
  *
@@ -58,7 +66,14 @@ export interface MarkPlotProps
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    className,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
@@ -83,14 +98,17 @@ function MarkPlot(props: MarkPlotProps) {
   }, [xAxisHighlightIndexes]);
 
   const completedData = useMarkPlotData(xAxis, yAxis);
+  const classes = useUtilityClasses();
 
   return (
-    <g {...other}>
+    <MarkPlotRoot className={clsx(classes.markPlot, className)} {...other}>
       {completedData.map(({ seriesId, clipId, shape, xAxisId, marks, hidden }) => {
         const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
-        const isSeriesHighlighted = isHighlighted({ seriesId });
-        const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
+        const identifier = { type: 'line' as const, seriesId };
+
+        const isSeriesHighlighted = isHighlighted(identifier);
+        const isSeriesFaded = !isSeriesHighlighted && isFaded(identifier);
 
         return (
           <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
@@ -119,7 +137,7 @@ function MarkPlot(props: MarkPlotProps) {
           </g>
         );
       })}
-    </g>
+    </MarkPlotRoot>
   );
 }
 

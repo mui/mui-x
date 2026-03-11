@@ -23,7 +23,7 @@ export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
 export const HeatmapCell = styled('rect', {
   name: 'MuiHeatmap',
   slot: 'Cell',
-  overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
+  overridesResolver: (_, styles) => styles.cell,
 })<{ ownerState: HeatmapItemOwnerState }>(({ ownerState }) => ({
   filter:
     (ownerState.isHighlighted && 'saturate(120%)') ||

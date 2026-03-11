@@ -43,6 +43,13 @@ The `Chart` prefix has been renamed to `Charts` (with an S) to align with other 
 | `ChartContainerProSlotProps`           | `ChartsContainerProSlotProps`           |
 | `useChartContainerProProps()`          | `useChartsContainerProProps()`          |
 | `UseChartContainerProPropsReturnValue` | `UseChartsContainerProPropsReturnValue` |
+| `ChartZoomSlider`                      | `ChartsZoomSlider`                      |
+| `ChartAxisZoomSliderThumbClasses`      | `ChartsAxisZoomSliderThumbClasses`      |
+| `ChartAxisZoomSliderThumbClassKey`     | `ChartsAxisZoomSliderThumbClassKey`     |
+| `chartAxisZoomSliderThumbClasses`      | `chartsAxisZoomSliderThumbClasses`      |
+| `ChartAxisZoomSliderTrackClasses`      | `ChartsAxisZoomSliderTrackClasses`      |
+| `ChartAxisZoomSliderTrackClassKey`     | `ChartsAxisZoomSliderTrackClassKey`     |
+| `chartAxisZoomSliderTrackClasses`      | `chartsAxisZoomSliderTrackClasses`      |
 
 ### CSS class deprecations (`highlighted` / `faded`)
 
@@ -64,7 +71,7 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 - `Unstable_RadarChart` → `RadarChart`
 - `Unstable_RadarDataProvider` → `RadarDataProvider`
 - `Unstable_FunnelChart` → `FunnelChart`
-<!-- - `Unstable_SankeyChart` → `SankeyChart` -->
+- `Unstable_SankeyChart` → `SankeyChart`
 
 ### Props
 
@@ -237,9 +244,9 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
-### Rename `useAxisTooltip` hook
+### Rename `useAxisTooltip()` hook
 
-The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
+The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
 
 The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
 
@@ -299,6 +306,27 @@ This improves consistency across chart components and developer experience.
  />
 ```
 
+### Theme style overrides use `cell` slot
+
+The `MuiHeatmap` theme style overrides now correctly use the `cell` key instead of `arc`.
+Previously, the `overridesResolver` was incorrectly referencing `styles.arc` due to a copy-paste error.
+If you were using `arc` as a workaround, update it to `cell`.
+
+```diff
+ const theme = createTheme({
+   components: {
+     MuiHeatmap: {
+       styleOverrides: {
+-        arc: {
++        cell: {
+           fill: 'red',
+         },
+       },
+     },
+   },
+ });
+```
+
 ### New identifier structure
 
 The heatmap identifier type has been modified as follows.
@@ -309,11 +337,31 @@ This new type relies on the `xIndex`/`yIndex` to identify the cell instead of ju
  {
   type: 'heatmap';
   seriesId: SeriesId;
-  dataIndex?: number;
+-  dataIndex?: number;
 -  xIndex?: number;
 +  xIndex: number;
 -  yIndex?: number;
 +  yIndex: number;
+ }
+```
+
+The return type of the `useItemTooltip()` for heatmap series was modified.
+Instead of returning an object where the `value` was a `[x, y, cellValue]` tuple, it now returns cell value directly.
+
+If the cell is empty, it returns `null`.
+
+Here is an example about how to get exactly the same info from `useItemTooltip()`.
+
+```diff
+ const { identifier, value } = useItemTooltip<'heatmap'>();
+
+ return {
+-  xIndex: value[0],
++  xIndex: identifier.xIndex,
+-  yIndex: value[1],
++  yIndex: identifier.yIndex,
+-  cellValue: value[2],
++  cellValue: value,
  }
 ```
 
@@ -445,7 +493,7 @@ If you're using these classes manually in your styles, update them accordingly:
 ### `data-has-focused-item` attribute removed
 
 The `data-has-focused-item` data attribute has been removed from the root `<svg>` element rendered by `ChartsSurface`.
-If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem` hook instead.
+If you were relying on this attribute to check whether a chart item is focused, use the `useFocusedItem()` hook instead.
 
 ```ts
 const focusedItem = useFocusedItem();
@@ -465,6 +513,13 @@ The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a 
 ### Ref target
 
 The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
+
+## Keyboard navigation ✅
+
+The keyboard navigation is no enabled by default.
+If you used `enableKeyboardNavigation` prop, you can remove it.
+
+To disable this feature, use the prop `disableKeyboardNavigation`.
 
 ## Props propagation
 
@@ -495,12 +550,31 @@ Internally this change looks like this.
 
 ## Typescript
 
-### Remove default generic of `SeriesItemIdentifier`
+### Identifiers are now generics
 
-In v9 the argument of `SeriesItemIdentifier` is now required.
+In v9 we introduce generics to our identifiers.
+
+This will allow you to get the correct type according to the series you're using.
+
+#### Remove default generic of `SeriesItemIdentifier`
+
+The argument of `SeriesItemIdentifier` is now required.
 
 It accepts an union of series types.
 For example:
 
 - `SeriesItemIdentifier<'bar'>` for a BarChart.
 - `SeriesItemIdentifier<'bar' | 'line'>` if you compose bar and line series.
+
+#### Add generic to `HighlightScope`
+
+The `HighlightScope` is now a generic and require its argument the same way `SeriesItemIdentifier` does.
+
+#### Replace `HighlightItemData` by `HighlightItemIdentifier<SeriesType>`
+
+The `HighlightItemData` type was replaced by `HighlightItemIdentifier<SeriesType>`.
+
+The main difference from the `SeriesItemIdentifier` is the ability to identify a whole series.
+
+For example, in a `SeriesItemIdentifier<'bar'>` the `dataIndex` is required since it identifies an item of the series.
+A `HighlightItemIdentifier<'bar'>` can identify a data point, which requires a `dataIndex`, but also an entire series, in which case the `dataIndex` is optional.

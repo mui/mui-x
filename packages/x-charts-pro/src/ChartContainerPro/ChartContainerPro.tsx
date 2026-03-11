@@ -22,9 +22,9 @@ export type ChartContainerProSlotProps = ChartsContainerProSlotProps;
  * @deprecated Use `ChartsContainerProProps` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartContainerProProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartsContainerProProps<TSeries, TSignatures>;
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = ChartsContainerProProps<SeriesType, TSignatures>;
 
 /**
  * @deprecated Use `ChartsContainerPro` instead. We added S to the charts prefix to align with other components.
