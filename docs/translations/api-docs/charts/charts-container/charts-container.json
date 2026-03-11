@@ -1,5 +1,5 @@
 {
-  "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartDataProvider` and `ChartsSurface` components.",
+  "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartsDataProvider` and `ChartsSurface` components.",
   "propDescriptions": {
     "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },

@@ -271,7 +271,7 @@ importers:
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/monorepo':
         specifier: github:mui/material-ui#v7.x
-        version: https://codeload.github.com/mui/material-ui/tar.gz/9d2778010b0bc3d53d4d7ea5d6c94a044a70db74(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
+        version: https://codeload.github.com/mui/material-ui/tar.gz/d13a72d0e71b4d073ba630b8329291e2c1e5f412(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.7(@types/react@19.2.7)(react@19.2.3)
@@ -4432,9 +4432,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/9d2778010b0bc3d53d4d7ea5d6c94a044a70db74':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/9d2778010b0bc3d53d4d7ea5d6c94a044a70db74}
-    version: 7.3.8
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d13a72d0e71b4d073ba630b8329291e2c1e5f412':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/d13a72d0e71b4d073ba630b8329291e2c1e5f412}
+    version: 7.3.9
     engines: {node: '>=22.18.0', pnpm: 10.28.2}
 
   '@mui/private-theming@5.17.1':
@@ -8128,6 +8128,7 @@ packages:
   git-raw-commits@3.0.0:
     resolution: {integrity: sha512-b5OHmZ3vAgGrDn/X0kS+9qCfNKWe4K/jFnhwzVWWg0/k5eLa3060tZShrRg8Dja5kPc+YjS0Gc6y7cRr44Lpjw==}
     engines: {node: '>=14'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-remote-origin-url@2.0.0:
@@ -8137,6 +8138,7 @@ packages:
   git-semver-tags@5.0.1:
     resolution: {integrity: sha512-hIvOeZwRbQ+7YEUmCkHqo8FOLQZCEn18yevLHADlFPZY02KJGsu5FZt9YW/lybfK2uhWFI7Qg/07LekJiTv7iA==}
     engines: {node: '>=14'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-up@7.0.0:
@@ -14751,7 +14753,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
       '@types/react': 19.2.7
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/9d2778010b0bc3d53d4d7ea5d6c94a044a70db74(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d13a72d0e71b4d073ba630b8329291e2c1e5f412(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
     dependencies:
       '@netlify/functions': 5.1.2
       '@slack/bolt': 4.6.0(@types/express@5.0.3)

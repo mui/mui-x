@@ -3,7 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { type BarElementOwnerState, useUtilityClasses } from './barElementClasses';
+import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
+import { useUtilityClasses as useDeprecatedUtilityClasses } from './barElementClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
@@ -20,7 +21,10 @@ export interface BarElementSlotProps {
   bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
-export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
+export type BarElementProps = Omit<
+  BarElementOwnerState,
+  'isFaded' | 'isHighlighted' | 'isFocused'
+> &
   Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
     /**
      * The props used for each component slot.
@@ -93,6 +97,7 @@ function BarElement(props: BarElementProps) {
   };
 
   const classes = useUtilityClasses(ownerState);
+  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Bar = slots?.bar ?? AnimatedBarElement;
 
@@ -120,7 +125,7 @@ function BarElement(props: BarElementProps) {
       layout,
       hidden,
     },
-    className: classes.root,
+    className: `${classes.element} ${deprecatedClasses.root}`,
     ownerState,
   });
 

@@ -47,9 +47,9 @@ import { useSeries, useLegend, ... } from '@mui/x-charts-premium/hooks';
 All charts hooks must be used within a chart context.
 This means a component using those hook should follow one of the below mentioned structure:
 
-1. a `slot` of a chart component
-2. a child of a chart component
-3. a child of the `<ChartDataProvider />`
+1. A slot of a chart component
+2. A child of a chart component
+3. A child of the `ChartsDataProvider` component
 
 For example if you create a component `<CustomLegend />` that uses the `useLegend()` hook, you could use it as follow:
 
@@ -65,13 +65,13 @@ For example if you create a component `<CustomLegend />` that uses the `useLegen
   <CustomLegend /> {/* useLegend works here */}
 </LineChart>
 
-// ✅ Correct usage with composition API
-<ChartDataProvider series={[...]}>
+// ✅ Correct usage when composing a custom chart
+<ChartsDataProvider series={[...]}>
   <ChartsSurface>
     <LinePlot />
   </ChartsSurface>
-  <CustomLegend /> {/* useLegend works here */}
-</ChartDataProvider>
+  <CustomLegend /> {/* useLegend() works here */}
+</ChartsDataProvider>
 ```
 
 ```jsx

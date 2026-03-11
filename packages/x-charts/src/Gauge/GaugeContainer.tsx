@@ -61,7 +61,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
         height: inHeight,
         margin: defaultizeMargin(margin, { left: 10, right: 10, top: 10, bottom: 10 }),
       }}
-      plugins={[]}
+      plugins={[] as any}
     >
       <GaugeProvider
         value={value}
