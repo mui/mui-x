@@ -1,6 +1,8 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { pieArcClasses, pieClasses, PieChart } from '@mui/x-charts/PieChart';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
 
 describe('<PieChart />', () => {
@@ -258,5 +260,67 @@ describe('<PieChart />', () => {
     // Should still only have one focus indicator
     const focusIndicators3 = container.querySelectorAll(`.${pieArcClasses.focusIndicator}`);
     expect(focusIndicators3.length).to.equal(1);
+  });
+
+  describe('theme style overrides', () => {
+    it.skipIf(isJSDOM)('should apply MuiPieArcPlot style overrides from the theme', () => {
+      const theme = createTheme({
+        components: {
+          MuiPieArcPlot: {
+            styleOverrides: {
+              root: {
+                strokeDashoffset: 10,
+              },
+            },
+          },
+        },
+      });
+
+      render(
+        <ThemeProvider theme={theme}>
+          <PieChart
+            height={100}
+            width={100}
+            series={[{ data: [{ id: 'A', value: 100 }] }]}
+            hideLegend
+          />
+        </ThemeProvider>,
+      );
+
+      const arc = document.querySelector<SVGElement>(`.${pieClasses.arc}`);
+      expect(arc).not.to.equal(null);
+      const pieArcPlotRoot = arc!.parentElement;
+      expect(pieArcPlotRoot).toHaveComputedStyle({ strokeDashoffset: '10px' });
+    });
+
+    it.skipIf(isJSDOM)('should apply MuiPieArcLabelPlot style overrides from the theme', () => {
+      const theme = createTheme({
+        components: {
+          MuiPieArcLabelPlot: {
+            styleOverrides: {
+              root: {
+                strokeDashoffset: 10,
+              },
+            },
+          },
+        },
+      });
+
+      render(
+        <ThemeProvider theme={theme}>
+          <PieChart
+            height={100}
+            width={100}
+            series={[{ arcLabel: 'value', data: [{ id: 'A', value: 100 }] }]}
+            hideLegend
+          />
+        </ThemeProvider>,
+      );
+
+      const arcLabel = document.querySelector<SVGElement>(`.${pieClasses.arcLabel}`);
+      expect(arcLabel).not.to.equal(null);
+      const pieArcLabelPlotRoot = arcLabel!.parentElement;
+      expect(pieArcLabelPlotRoot).toHaveComputedStyle({ strokeDashoffset: '10px' });
+    });
   });
 });
