@@ -10,9 +10,10 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'ohlc'> = (params) =>
   if (!identifier || identifier.dataIndex === undefined) {
     return null;
   }
+
   const itemSeries = series.ohlc?.series[identifier.seriesId];
 
-  if (series.ohlc == null || itemSeries == null) {
+  if (itemSeries == null) {
     return null;
   }
 

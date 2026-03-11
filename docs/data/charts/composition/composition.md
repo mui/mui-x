@@ -327,7 +327,7 @@ If you're not using the axis highlight or the tooltip, consider disabling this f
 ## Layering
 
 Use `ChartsLayerContainer`, `ChartsSvgLayer` and `ChartsWebGLLayer` to create multiple layers of elements that share the same coordinate system.
-This is useful for managing the vertical stacking of alternating SVG and WebGL elements.
+This is useful for managing the depth ordering of alternating SVG and WebGL elements.
 
 In the example below, we create three layers:
 

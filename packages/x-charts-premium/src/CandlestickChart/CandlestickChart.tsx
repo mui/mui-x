@@ -155,12 +155,15 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
+        {/* FIXME: Decide how to spread chartsSurfaceProps */}
         <ChartsLayerContainer>
+          <ChartsSvgLayer>
+            <ChartsGrid {...gridProps} />
+          </ChartsSvgLayer>
           <ChartsWebGLLayer>
             <CandlestickPlot {...candlestickPlotProps} />
           </ChartsWebGLLayer>
-          <ChartsSvgLayer {...chartsSurfaceProps}>
-            <ChartsGrid {...gridProps} />
+          <ChartsSvgLayer>
             <g {...clipPathGroupProps}>
               <ChartsOverlay {...overlayProps} />
               <ChartsAxisHighlight {...axisHighlightProps} />
