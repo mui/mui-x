@@ -46,15 +46,17 @@ export const pieClasses: PieClasses = generateUtilityClasses('MuiPieChart', [
   'focusIndicator',
 ]);
 
-export const useUtilityClasses = (options?: { classes?: Partial<PieClasses> }) => {
-  const { classes } = options ?? {};
+export const useUtilityClasses = (options?: {
+  classes?: Partial<PieClasses>;
+  skipAnimation?: boolean;
+}) => {
+  const { classes, skipAnimation } = options ?? {};
   const slots = {
     root: ['root'],
     series: ['series'],
     seriesLabels: ['seriesLabels'],
     arc: ['arc'],
-    arcLabel: ['arcLabel'],
-    animate: ['animate'],
+    arcLabel: ['arcLabel', !skipAnimation && 'animate'],
     focusIndicator: ['focusIndicator'],
   };
 

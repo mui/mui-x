@@ -172,7 +172,6 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       <PieArcLabelRoot
         className={clsx(
           classes.arcLabel,
-          !skipAnimation && classes.animate,
           deprecatedClasses.root,
           className,
         )}
