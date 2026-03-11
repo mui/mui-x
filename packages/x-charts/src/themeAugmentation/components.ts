@@ -82,14 +82,6 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiPieChart'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPieChart'];
   };
-  /** @deprecated Use `MuiPieChart` instead. */
-  MuiPieArc?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPieArc'];
-  };
-  /** @deprecated Use `MuiPieChart` instead. */
-  MuiPieArcLabel?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPieArcLabel'];
-  };
   MuiScatterChart?: {
     defaultProps?: ComponentsProps['MuiScatterChart'];
   };
