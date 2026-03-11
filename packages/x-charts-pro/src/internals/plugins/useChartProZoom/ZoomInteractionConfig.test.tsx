@@ -474,6 +474,72 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   });
 
   describe('Zoom on brush', () => {
+    it('should not zoom on brush when required keys are not pressed', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: [{ type: 'brush', requiredKeys: ['Control'] }],
+            pan: [],
+          }}
+        />,
+        options,
+      );
+
+      const initialTicks = getAxisTickValues('x');
+      expect(initialTicks).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      // Brush without Control key - should not zoom
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      // Brush with Control key - should zoom
+      await user.keyboard('{Control>}');
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+      ]);
+      await user.keyboard('{/Control}');
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.mock.calls.length).to.equal(1);
+      expect(getAxisTickValues('x')).to.deep.equal(['C', 'D']);
+    });
+
     it('should zoom into the brushed area on x-axis', async () => {
       const onZoomChange = vi.fn();
       const { user } = render(
