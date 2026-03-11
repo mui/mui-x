@@ -11,11 +11,20 @@ import { type CandlestickPlotData } from './useCandlestickPlotData';
 export class CandlestickWebGLProgram {
   private readonly shaders: WebGLShader[] = [];
 
+  // Candle program and buffers. If you add more WebGL resources, remember to dispose of them in the dispose() method.
   private readonly candleProgram: WebGLProgram;
   private readonly candleVao: WebGLVertexArrayObject;
+  private readonly candleCentersBuffer: WebGLBuffer;
+  private readonly candleHeightsBuffer: WebGLBuffer;
+  private readonly candleColorsBuffer: WebGLBuffer;
 
+  // Wick program and buffers. If you add more WebGL resources, remember to dispose of them in the dispose() method.
   private readonly wickProgram: WebGLProgram;
   private readonly wickVao: WebGLVertexArrayObject;
+  private readonly wickVerticesBuffer: WebGLBuffer;
+  private readonly wickCentersBuffer: WebGLBuffer;
+  private readonly wickHeightsBuffer: WebGLBuffer;
+  private readonly wickColorsBuffer: WebGLBuffer;
 
   constructor(private gl: WebGL2RenderingContext) {
     /* Enable blending for transparency
@@ -28,12 +37,19 @@ export class CandlestickWebGLProgram {
     this.shaders.push(candleProg.fragmentShader);
     this.shaders.push(candleProg.vertexShader);
     this.candleVao = this.gl.createVertexArray();
+    this.candleCentersBuffer = this.gl.createBuffer();
+    this.candleHeightsBuffer = this.gl.createBuffer();
+    this.candleColorsBuffer = this.gl.createBuffer();
 
     const wickProg = initializeProgram(this.gl, wickVertexShader, wickFragmentShader);
     this.wickProgram = wickProg.program;
     this.shaders.push(wickProg.fragmentShader);
     this.shaders.push(wickProg.vertexShader);
     this.wickVao = this.gl.createVertexArray();
+    this.wickVerticesBuffer = this.gl.createBuffer();
+    this.wickCentersBuffer = this.gl.createBuffer();
+    this.wickHeightsBuffer = this.gl.createBuffer();
+    this.wickColorsBuffer = this.gl.createBuffer();
   }
 
   setResolution(width: number, height: number) {
@@ -71,7 +87,7 @@ export class CandlestickWebGLProgram {
     bindQuadBuffer(this.gl, this.candleProgram, uploadQuadBuffer(this.gl));
 
     // Center attribute
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.candleCentersBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, candleCenters, this.gl.STATIC_DRAW);
 
     const candleCenterLocation = this.gl.getAttribLocation(this.candleProgram, 'a_center');
@@ -80,7 +96,7 @@ export class CandlestickWebGLProgram {
     this.gl.vertexAttribDivisor(candleCenterLocation, 1); // One per instance
 
     // Height attribute
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.candleHeightsBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, candleHeights, this.gl.STATIC_DRAW);
 
     const candleHeightLocation = this.gl.getAttribLocation(this.candleProgram, 'a_height');
@@ -89,7 +105,7 @@ export class CandlestickWebGLProgram {
     this.gl.vertexAttribDivisor(candleHeightLocation, 1); // One per instance
 
     // Color attribute
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.candleColorsBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, candleColors, this.gl.STATIC_DRAW);
 
     const candleColorLocation = this.gl.getAttribLocation(this.candleProgram, 'a_color');
@@ -105,15 +121,14 @@ export class CandlestickWebGLProgram {
 
     const wickVertices = new Float32Array([0, -1, 0, 1]);
 
-    const buffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.wickVerticesBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, wickVertices, this.gl.STATIC_DRAW);
 
     const aPosition = this.gl.getAttribLocation(this.wickProgram, 'a_position');
     this.gl.enableVertexAttribArray(aPosition);
     this.gl.vertexAttribPointer(aPosition, 2, this.gl.FLOAT, false, 0, 0);
 
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.wickCentersBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, wickCenters, this.gl.STATIC_DRAW);
 
     const wickCenterLocation = this.gl.getAttribLocation(this.wickProgram, 'a_center');
@@ -122,7 +137,7 @@ export class CandlestickWebGLProgram {
     this.gl.vertexAttribDivisor(wickCenterLocation, 1); // One per instance
 
     // Height attribute
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.wickHeightsBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, wickHeights, this.gl.STATIC_DRAW);
 
     const wickHeightLocation = this.gl.getAttribLocation(this.wickProgram, 'a_height');
@@ -131,7 +146,7 @@ export class CandlestickWebGLProgram {
     this.gl.vertexAttribDivisor(wickHeightLocation, 1); // One per instance
 
     // Color attribute
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.gl.createBuffer());
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.wickColorsBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, wickColors, this.gl.STATIC_DRAW);
 
     const wickColorLocation = this.gl.getAttribLocation(this.wickProgram, 'a_wick_color');
@@ -161,9 +176,16 @@ export class CandlestickWebGLProgram {
   dispose() {
     this.gl.deleteProgram(this.candleProgram);
     this.gl.deleteVertexArray(this.candleVao);
+    this.gl.deleteBuffer(this.candleCentersBuffer);
+    this.gl.deleteBuffer(this.candleHeightsBuffer);
+    this.gl.deleteBuffer(this.candleColorsBuffer);
 
     this.gl.deleteProgram(this.wickProgram);
     this.gl.deleteVertexArray(this.wickVao);
+    this.gl.deleteBuffer(this.wickVerticesBuffer);
+    this.gl.deleteBuffer(this.wickCentersBuffer);
+    this.gl.deleteBuffer(this.wickHeightsBuffer);
+    this.gl.deleteBuffer(this.wickColorsBuffer);
 
     this.shaders.forEach((shader) => this.gl.deleteShader(shader));
   }
