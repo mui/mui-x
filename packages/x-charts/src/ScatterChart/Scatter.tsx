@@ -11,7 +11,7 @@ import {
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { type D3Scale } from '../models/axis';
-import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
+import { useItemHighlightStateGetter } from '../hooks/useItemHighlightStateGetter';
 import {
   selectorChartsIsVoronoiEnabled,
   type UseChartClosestPointSignature,
@@ -89,7 +89,7 @@ function Scatter(props: ScatterProps) {
   const isVoronoiEnabled = store.use(selectorChartsIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
 
@@ -109,8 +109,9 @@ function Scatter(props: ScatterProps) {
   return (
     <g data-series={series.id} className={classes.series}>
       {scatterPlotData.map((dataPoint) => {
-        const isItemHighlighted = isHighlighted(dataPoint);
-        const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
+        const highlightState = getHighlightState(dataPoint);
+        const isItemHighlighted = highlightState === 'highlighted';
+        const isItemFaded = highlightState === 'faded';
 
         return (
           <Marker
