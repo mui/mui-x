@@ -293,6 +293,14 @@ If you were relying on marks being visible by default, explicitly set `showMark`
  />
 ```
 
+### Default `shape` changed
+
+The `shape` was set to `'circle'` by default.
+Now it alternate across series according ot the following order:
+`'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, `'wye'`.
+
+This modification improves accessibility for color blind people.
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
