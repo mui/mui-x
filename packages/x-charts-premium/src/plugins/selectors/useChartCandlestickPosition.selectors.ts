@@ -13,7 +13,7 @@ export const selectorCandlestickItemAtPosition = createSelector(
   selectorChartXAxis,
   selectorChartYAxis,
   selectorChartSeriesProcessed,
-  function selectorHeatmapItemAtPosition(
+  function selectorCandlestickItemAtPosition(
     { axis: xAxes, axisIds: xAxisIds },
     { axis: yAxes, axisIds: yAxisIds },
     processedSeries,

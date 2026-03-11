@@ -99,7 +99,7 @@
       }
     },
     "series": {
-      "description": "The series to display in the bar chart. An array of OHLCSeries objects."
+      "description": "The series to display in the candlestick chart. An array of OHLCSeries objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {

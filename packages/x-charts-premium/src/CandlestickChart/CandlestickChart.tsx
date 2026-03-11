@@ -77,7 +77,7 @@ export interface CandlestickChartProps
     Omit<CandlestickPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
-   * The series to display in the bar chart.
+   * The series to display in the candlestick chart.
    * An array of [[OHLCSeries]] objects.
    */
   series: ReadonlyArray<OHLCSeries>;
@@ -416,7 +416,7 @@ CandlestickChart.propTypes = {
    */
   onZoomChange: PropTypes.func,
   /**
-   * The series to display in the bar chart.
+   * The series to display in the candlestick chart.
    * An array of [[OHLCSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
