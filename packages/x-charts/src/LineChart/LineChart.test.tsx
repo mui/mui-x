@@ -207,7 +207,7 @@ describe('<LineChart />', () => {
   });
 
   describe('Plot root elements', () => {
-    it('should apply MuiLineChart-root class to AreaPlot root', () => {
+    it('should apply MuiLineChart-areaPlot class to AreaPlot root', () => {
       render(
         <LineChart
           {...config}
@@ -215,9 +215,35 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const areaPlotRoots = document.querySelectorAll<HTMLElement>(`.${lineClasses.root}`);
+      const areaPlotRoot = document.querySelector<HTMLElement>(`.${lineClasses.areaPlot}`);
 
-      expect(areaPlotRoots.length).toBeGreaterThan(0);
+      expect(areaPlotRoot).not.to.equal(null);
+    });
+
+    it('should apply MuiLineChart-linePlot class to LinePlot root', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1' }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const linePlotRoot = document.querySelector<HTMLElement>(`.${lineClasses.linePlot}`);
+
+      expect(linePlotRoot).not.to.equal(null);
+    });
+
+    it('should apply MuiLineChart-markPlot class to MarkPlot root', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', showMark: true }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const markPlotRoot = document.querySelector<HTMLElement>(`.${lineClasses.markPlot}`);
+
+      expect(markPlotRoot).not.to.equal(null);
     });
   });
 

@@ -14,15 +14,15 @@ export interface ChartsContainerPremiumSlots {}
 export interface ChartsContainerPremiumSlotProps {}
 
 export type ChartsContainerPremiumProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartDataProviderPremiumProps<TSeries, TSignatures> & ChartsSurfaceProps;
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = ChartDataProviderPremiumProps<SeriesType, TSignatures> & ChartsSurfaceProps;
 
 type ChartsContainerPremiumComponent = <
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
-  props: ChartsContainerPremiumProps<TSeries, TSignatures> & {
+  props: ChartsContainerPremiumProps<SeriesType, TSignatures> & {
     ref?: React.ForwardedRef<SVGSVGElement>;
   },
 ) => React.JSX.Element;
@@ -52,14 +52,14 @@ type ChartsContainerPremiumComponent = <
  * ```
  */
 const ChartsContainerPremium = React.forwardRef(function ChartsContainerPremium<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerPremiumProps<TSeries, TSignatures>, ref: React.Ref<HTMLDivElement>) {
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+>(props: ChartsContainerPremiumProps<SeriesType, TSignatures>, ref: React.Ref<HTMLDivElement>) {
   const { chartDataProviderPremiumProps, children, chartsSurfaceProps } =
-    useChartsContainerPremiumProps<TSeries, TSignatures>(props);
+    useChartsContainerPremiumProps<SeriesType, TSignatures>(props);
 
   return (
-    <ChartDataProviderPremium<TSeries, TSignatures> {...chartDataProviderPremiumProps}>
+    <ChartDataProviderPremium<SeriesType, TSignatures> {...chartDataProviderPremiumProps}>
       <ChartsSurface {...chartsSurfaceProps} ref={ref}>
         {children}
       </ChartsSurface>

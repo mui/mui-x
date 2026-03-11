@@ -18,14 +18,14 @@ export type ChartContextValue<
  * @deprecated Use `ChartsPluginParams` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartPluginParams<
-  TSeriesType extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
-> = ChartsPluginParams<TSeriesType, TSignatures>;
+> = ChartsPluginParams<SeriesType, TSignatures>;
 
 /**
  * @deprecated Use `ChartsProviderProps` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartProviderProps<
-  TSeriesType extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
-> = ChartsProviderProps<TSeriesType, TSignatures>;
+> = ChartsProviderProps<SeriesType, TSignatures>;
