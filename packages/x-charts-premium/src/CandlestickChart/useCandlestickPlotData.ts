@@ -14,12 +14,21 @@ import { parseColor } from '../utils/webgl/parseColor';
 const FADE_OPACITY = 0.3;
 const HIGHLIGHT_BRIGHTNESS = 1.2;
 
+export interface CandlestickPlotData {
+  candleCenters: Float32Array;
+  candleHeights: Float32Array;
+  candleColors: Float32Array;
+  wickCenters: Float32Array;
+  wickHeights: Float32Array;
+  wickColors: Float32Array;
+}
+
 export function useCandlestickPlotData(
   drawingArea: ChartDrawingArea,
   series: DefaultizedOHLCSeriesType,
   xScale: ScaleBand<{ toString(): string }>,
   yScale: D3ContinuousScale,
-) {
+): CandlestickPlotData {
   const theme = useTheme();
   const store = useStore();
   const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
