@@ -42,7 +42,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     onAxisClick,
     onAreaClick,
     onMarkClick,
-    enableKeyboardNavigation,
+    disableKeyboardNavigation,
     className,
     ...other
   } = props;
@@ -60,7 +60,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     onHighlightChange,
     skipAnimation,
     onAxisClick,
-    enableKeyboardNavigation,
+    disableKeyboardNavigation,
     plugins: RADAR_PLUGINS,
   };
 

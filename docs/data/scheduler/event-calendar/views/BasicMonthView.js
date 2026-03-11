@@ -11,7 +11,7 @@ export default function BasicMonthView() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '650px', width: '100%' }}>
+    <div style={{ height: '500px', width: '100%' }}>
       <StandaloneMonthView
         events={events}
         resources={resources}

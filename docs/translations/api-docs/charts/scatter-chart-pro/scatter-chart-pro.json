@@ -16,6 +16,9 @@
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
+    },
     "disableVoronoi": {
       "description": "If true, the interaction will not use the Voronoi cell and fall back to hover events."
     },

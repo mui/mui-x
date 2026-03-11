@@ -22,7 +22,7 @@ const MoreEventsPopoverHeader = styled('div', {
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: theme.spacing(1),
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
 const MoreEventsPopoverTitle = styled(Typography, {
@@ -31,7 +31,7 @@ const MoreEventsPopoverTitle = styled(Typography, {
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   lineHeight: 1.5,
   margin: 0,
 }));

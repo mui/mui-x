@@ -117,7 +117,7 @@ describe('Heatmap - onItemClick', () => {
     expect(onItemClick).toHaveBeenLastCalledWith(expect.anything(), {
       type: 'heatmap',
       seriesId: '0',
-      dataIndex: 5,
+      value: 6,
       xIndex: 1,
       yIndex: 2,
     });
