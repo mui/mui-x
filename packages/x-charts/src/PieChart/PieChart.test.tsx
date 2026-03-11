@@ -152,6 +152,7 @@ describe('<PieChart />', () => {
     it('should apply focusIndicator class to the focused arc', async () => {
       const { container, user } = render(
         <PieChart
+          enableKeyboardNavigation
           height={100}
           width={100}
           series={[
