@@ -63,6 +63,7 @@ export const useChartsContainerProps = <
     onHiddenItemsChange,
     hiddenItems,
     initialHiddenItems,
+    layerContainerRef,
     ...other
   } = props as ChartsContainerProps<SeriesType, AllPluginSignatures<SeriesType>>;
 

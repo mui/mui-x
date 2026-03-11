@@ -55,8 +55,8 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     >();
     const propsWidth = store.use(selectorChartPropsWidth);
     const propsHeight = store.use(selectorChartPropsHeight);
+
     const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
-    const [isFocusable, setIsFocusable] = React.useState(isKeyboardNavigationEnabled);
 
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
     const { children, ...other } = themeProps;
@@ -84,25 +84,9 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
         ref={handleRef}
         ownerState={{ width: propsWidth, height: propsHeight }}
         role="presentation"
-        tabIndex={isKeyboardNavigationEnabled && isFocusable ? 0 : undefined}
-        onFocus={(event) => {
-          if (event.target === event.currentTarget) {
-            const element = event.target.querySelector('[tabindex="0"]') as HTMLElement | null;
-            setIsFocusable(false);
-            element?.focus();
-          }
-        }}
-        onBlur={(event) => {
-          if (
-            event.relatedTarget !== null &&
-            !event.currentTarget.contains(event.relatedTarget as Node)
-          ) {
-            setIsFocusable(true);
-          }
-        }}
         {...other}
       >
-        <ChartsAccessibilityProxy />
+        {isKeyboardNavigationEnabled && <ChartsAccessibilityProxy />}
         {children}
       </ChartsLayerContainerDiv>
     );

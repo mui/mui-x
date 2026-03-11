@@ -1,7 +1,6 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
-import { CHART_SELECTOR } from '../tests/constants';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();
@@ -82,13 +81,11 @@ describe('<PieChart />', () => {
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-
     // by default does not show focus indicator
     expect(container.querySelector(`.${pieArcClasses.focusIndicator}`)).not.toBeTruthy();
 
     // focus the chart
-    await user.click(svg);
+    await user.keyboard('{Tab}');
 
     // Focus the first arc
     await user.keyboard('{ArrowRight}');
@@ -132,10 +129,8 @@ describe('<PieChart />', () => {
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-
     // focus the chart
-    await user.click(svg);
+    await user.keyboard('{Tab}');
 
     // Focus the first arc of series-1
     await user.keyboard('{ArrowRight}');

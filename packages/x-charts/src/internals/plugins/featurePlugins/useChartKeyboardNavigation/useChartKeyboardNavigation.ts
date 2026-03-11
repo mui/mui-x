@@ -94,13 +94,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
     element.addEventListener('keydown', keyboardHandler);
     element.addEventListener('focusout', removeFocus);
-    element.addEventListener('blur', removeFocus);
-    element.addEventListener('focus', restoreFocus);
+    element.addEventListener('focusin', restoreFocus);
     return () => {
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('focusout', removeFocus);
-      element.removeEventListener('blur', removeFocus);
-      element.removeEventListener('focus', restoreFocus);
+      element.removeEventListener('focusin', restoreFocus);
     };
   }, [chartsLayerContainerRef, removeFocus, restoreFocus, params.disableKeyboardNavigation, store]);
 

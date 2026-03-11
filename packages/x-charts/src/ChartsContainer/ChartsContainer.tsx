@@ -20,7 +20,13 @@ export interface ChartsContainerSlotProps extends ChartsDataProviderSlotProps {}
 export type ChartsContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
-> = Omit<ChartsDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
+> = Omit<ChartsDataProviderProps<SeriesType, TSignatures>, 'children'> &
+  ChartsSurfaceProps & {
+    /**
+     * Reference to the layer container element.
+     */
+    layerContainerRef?: React.RefObject<HTMLDivElement | null>;
+  };
 
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.

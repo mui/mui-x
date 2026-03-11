@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
@@ -26,7 +26,7 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
 export const selectorChartsItemIsFocused = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState, item: FocusedItemIdentifier<ChartSeriesType>) =>
-    keyboardNavigationState?.isFocused===true && keyboardNavigationState?.item != null &&
+    keyboardNavigationState?.isFocused === true && keyboardNavigationState?.item != null &&
     fastObjectShallowCompare(keyboardNavigationState.item, item),
 );
 
@@ -93,10 +93,10 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
   createSelectAxisHighlight('y'),
 );
 
-export const selectorChartsKeyboardItem = createSelector(
+export const selectorChartsKeyboardItem = createSelectorMemoized(
   selectKeyboardNavigation,
   function selectorChartsKeyboardItem(keyboardState) {
-    if (keyboardState?.isFocused  !== true || keyboardState?.item == null) {
+    if (keyboardState?.isFocused !== true || keyboardState?.item == null) {
       return null;
     }
     const { type, seriesId } = keyboardState.item;

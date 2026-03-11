@@ -120,6 +120,7 @@ const PieChart = React.forwardRef(function PieChart(
     onHighlightChange,
     className,
     showToolbar,
+    layerContainerRef,
     ...other
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_PIE_CHART_MARGIN);
@@ -161,7 +162,7 @@ const PieChart = React.forwardRef(function PieChart(
             slotProps={slotProps}
           />
         )}
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSurface {...chartsSurfaceProps} ref={layerContainerRef}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
           <FocusedPieArc />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />

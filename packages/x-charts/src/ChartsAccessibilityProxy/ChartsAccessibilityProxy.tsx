@@ -41,7 +41,7 @@ export function ChartsAccessibilityProxy() {
       // The divs with the message content
       for (let i = 0; i < 2; i += 1) {
         const div = document.createElement('div');
-        if (i === (currentIndexRef.current + 1) % 2) {
+        if (i === (currentIndexRef.current + 1) % 2 && message) {
           div.setAttribute('tabindex', '0');
         }
         div.setAttribute('role', 'img');
@@ -80,7 +80,9 @@ export function ChartsAccessibilityProxy() {
         'aria-labelledby',
         activeIndex === 0 ? `voiceover-${chartId}-1` : `voiceover-${chartId}-2`,
       );
-      activeDiv.setAttribute('tabindex', '0');
+      if (message) {
+        activeDiv.setAttribute('tabindex', '0');
+      }
 
       inactiveDiv.setAttribute('aria-hidden', 'true');
       inactiveDiv.setAttribute(
@@ -93,5 +95,12 @@ export function ChartsAccessibilityProxy() {
     }
   }, [message, chartId]);
 
-  return <div role="presentation" tabIndex={-1} ref={containerRef} style={visuallyHiddenStyle} />;
+  return (
+    <div
+      role="presentation"
+      tabIndex={message ? undefined : 0}
+      ref={containerRef}
+      style={visuallyHiddenStyle}
+    />
+  );
 }
