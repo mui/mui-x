@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { isJSDOM } from 'test/utils/skipIf';
 import { ChartsWebGLLayer, useWebGLContext } from './ChartsWebGLLayer';
 
 describe('<WebGLProvider />', () => {
