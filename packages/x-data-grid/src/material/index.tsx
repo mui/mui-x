@@ -476,23 +476,21 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
             {...textFieldRest}
             {...baseTextFieldRest}
             slotProps={{
-              ...(textFieldSlotProps as any),
-              ...(baseTextFieldSlotProps as any),
               htmlInput: {
                 ...htmlInputProps,
-                ...(textFieldSlotProps as any)?.htmlInput,
-                ...(baseTextFieldSlotProps as any)?.htmlInput,
+                ...textFieldSlotProps?.htmlInput,
+                ...baseTextFieldSlotProps?.htmlInput,
               },
               input: {
                 ...transformInputProps(InputProps as any, false),
-                ...(textFieldSlotProps as any)?.input,
-                ...(baseTextFieldSlotProps as any)?.input,
+                ...textFieldSlotProps?.input,
+                ...baseTextFieldSlotProps?.input,
               },
               inputLabel: {
                 shrink: true,
                 ...InputLabelProps,
-                ...(textFieldSlotProps as any)?.inputLabel,
-                ...(baseTextFieldSlotProps as any)?.inputLabel,
+                ...textFieldSlotProps?.inputLabel,
+                ...baseTextFieldSlotProps?.inputLabel,
               },
             }}
           />
