@@ -110,6 +110,7 @@
   { "name": "ChartDrawingArea", "kind": "TypeAlias" },
   { "name": "ChartPremiumApi", "kind": "TypeAlias" },
   { "name": "ChartProApi", "kind": "TypeAlias" },
+  { "name": "ChartsAccessibilityProxy", "kind": "Function" },
   { "name": "ChartsAxis", "kind": "Function" },
   { "name": "chartsAxisClasses", "kind": "Variable" },
   { "name": "ChartsAxisClasses", "kind": "Interface" },

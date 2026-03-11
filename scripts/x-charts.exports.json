@@ -82,6 +82,7 @@
   { "name": "ChartDataProviderSlotProps", "kind": "TypeAlias" },
   { "name": "ChartDataProviderSlots", "kind": "TypeAlias" },
   { "name": "ChartDrawingArea", "kind": "TypeAlias" },
+  { "name": "ChartsAccessibilityProxy", "kind": "Function" },
   { "name": "ChartsAxis", "kind": "Function" },
   { "name": "chartsAxisClasses", "kind": "Variable" },
   { "name": "ChartsAxisClasses", "kind": "Interface" },

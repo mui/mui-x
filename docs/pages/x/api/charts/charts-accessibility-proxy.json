@@ -1,0 +1,16 @@
+{
+  "props": {},
+  "name": "ChartsAccessibilityProxy",
+  "imports": [
+    "import { ChartsAccessibilityProxy } from '@mui/x-charts/ChartsAccessibilityProxy';",
+    "import { ChartsAccessibilityProxy } from '@mui/x-charts';",
+    "import { ChartsAccessibilityProxy } from '@mui/x-charts-pro';",
+    "import { ChartsAccessibilityProxy } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsAccessibilityProxy",
+  "filename": "/packages/x-charts/src/ChartsAccessibilityProxy/ChartsAccessibilityProxy.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/accessibility/\">Charts - Accessibility</a></li>\n<li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
+  "cssComponent": false
+}
