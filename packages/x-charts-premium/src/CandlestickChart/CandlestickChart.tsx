@@ -156,7 +156,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         {/* FIXME: Decide how to spread chartsSurfaceProps */}
-        <ChartsLayerContainer>
+        <ChartsLayerContainer className={chartsSurfaceProps.className}>
           <ChartsSvgLayer>
             <ChartsGrid {...gridProps} />
           </ChartsSvgLayer>
