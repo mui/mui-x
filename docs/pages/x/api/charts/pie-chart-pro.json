@@ -31,6 +31,7 @@
         "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
       }
     },
+    "layerContainerRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
