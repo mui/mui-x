@@ -24,6 +24,7 @@ export interface BatchScatterProps {
   yScale: D3Scale;
   color: string;
   colorGetter?: ColorGetter<'scatter'>;
+  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ScatterClasses>;
   className?: string;
 }
@@ -139,7 +140,7 @@ const Group = styled('g', {
  * You can read about all the limitations [here](https://mui.com/x/react-charts/scatter/#performance).
  */
 export function BatchScatter(props: BatchScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, classes: inClasses, className } = props;
+  const { series, xScale, yScale, color, colorGetter, className } = props;
 
   const { store } = useChartContext<[UseChartHighlightSignature<'scatter'>]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
@@ -148,7 +149,7 @@ export function BatchScatter(props: BatchScatterProps) {
   const seriesUnfadedItem = store.use(selectorChartSeriesUnfadedItem, series.id);
   const highlightedModifier = 1.2;
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
-  const classes = useUtilityClasses({ classes: inClasses });
+  const classes = useUtilityClasses(props);
 
   const siblings: React.ReactNode[] = [];
   if (seriesHighlightedItem != null) {
