@@ -25,9 +25,9 @@ const YearLabel = styled('div', {
   fontSize: theme.typography.body2.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
   gridRow: 1,
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   '&:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -39,9 +39,9 @@ const MonthLabel = styled('div', {
   width: 'calc(var(--days-in-month) * var(--months-cell-width))',
   padding: theme.spacing(1),
   textAlign: 'center',
-  borderRight: `1px solid ${theme.palette.divider}`,
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   fontSize: theme.typography.body2.fontSize,
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {

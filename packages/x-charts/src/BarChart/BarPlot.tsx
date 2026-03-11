@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { barElementClasses } from './barElementClasses';
 import { type BarElementSlotProps, type BarElementSlots } from './BarElement';
 import { type BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
@@ -11,7 +10,7 @@ import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
-import { useUtilityClasses } from './barClasses';
+import { barClasses, useUtilityClasses } from './barClasses';
 import type { BarItem, BarLabelContext } from './BarLabel';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { IndividualBarPlot } from './IndividualBarPlot';
@@ -75,7 +74,7 @@ const BarPlotRoot = styled('g', {
   name: 'MuiBarPlot',
   slot: 'Root',
 })({
-  [`& .${barElementClasses.root}`]: {
+  [`& .${barClasses.element}`]: {
     transitionProperty: 'opacity, fill',
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,

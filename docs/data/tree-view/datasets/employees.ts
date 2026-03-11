@@ -1,6 +1,6 @@
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 
-export const EMPLOYEES_DATASET: TreeViewBaseItem[] = [
+export const EMPLOYEES_DATASET: TreeViewDefaultItemModelProperties[] = [
   {
     id: '0',
     label: 'Sarah',

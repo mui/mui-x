@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
 import { PieArc, pieArcClasses, type PieArcProps } from './PieArc';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
+import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { getModifiedArcProperties } from './dataTransform/getModifiedArcProperties';
 
 export function FocusedPieArc(
@@ -25,7 +25,9 @@ export function FocusedPieArc(
   const focusedItem = useFocusedItem();
   const pieSeriesLayout = usePieSeriesLayout();
 
-  const { isHighlighted, isFaded } = useItemHighlighted(focusedItem);
+  const highlightState = useItemHighlightState(focusedItem);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
   const pieSeries = usePieSeriesContext();
 
   if (focusedItem === null || focusedItem.type !== 'pie' || !pieSeries) {

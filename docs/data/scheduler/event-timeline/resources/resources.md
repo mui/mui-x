@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 ## Define resources
 
 Use the `resources` prop to define the list of resources the events can be associated to and the `resource` property on the event model to link an event to its resource:
@@ -163,6 +159,16 @@ const resource = {
 
 :::success
 Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/#read-only).
+:::
+
+## Resource column label
+
+Use the `resourceColumnLabel` prop to customize the header of the resource column:
+
+{{"demo": "ResourceColumnLabel.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+When both are provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
 :::
 
 ## Store data in custom properties

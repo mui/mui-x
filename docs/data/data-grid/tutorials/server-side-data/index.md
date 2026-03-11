@@ -836,13 +836,13 @@ function EmployeeDataGrid() {
 
 **What's happening here:**
 
-- `getRows` is an async function that the grid calls whenever it needs data
+- `getRows()` is an async function that the grid calls whenever it needs data
 - `params` contains all the information about what data the grid needs
 - Wrap it in `React.useMemo` to prevent recreating the function on every render
 
 ### 11. Build the URL parameters
 
-Inside `getRows`, construct the API call with the grid's current state:
+Inside `getRows()`, construct the API call with the grid's current state:
 
 ```tsx
 const dataSource: GridDataSource = useMemo(

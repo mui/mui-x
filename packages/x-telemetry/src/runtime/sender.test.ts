@@ -1,21 +1,11 @@
 import { vi } from 'vitest';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { isJSDOM } from '@mui/x-internals/platform';
+import telemetryContext from '../context';
 import { getTelemetryEnvConfig } from './config';
 
-const mockGetTelemetryContext = vi.fn();
-vi.mock('./get-context', () => ({
-  default: (...args: any[]) => mockGetTelemetryContext(...args),
-}));
-
-const testEvent = {
-  eventName: 'test.event',
-  payload: { foo: 'bar' },
-  context: {},
-};
-
-function createMockContext(overrides: Record<string, any> = {}) {
-  return {
+vi.mock('../context', () => ({
+  default: {
     config: { isInitialized: true },
     traits: {
       machineId: 'test-machine-id',
@@ -24,10 +14,15 @@ function createMockContext(overrides: Record<string, any> = {}) {
       anonymousId: 'test-anonymous-id',
       isCI: false,
       isDocker: false,
-      ...overrides,
     },
-  };
-}
+  },
+}));
+
+const testEvent = {
+  eventName: 'test.event',
+  payload: { foo: 'bar' },
+  context: {},
+};
 
 describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
@@ -36,8 +31,7 @@ describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
     vi.stubEnv('NODE_ENV', 'development');
     fetchSpy = vi.fn().mockResolvedValue(new Response('ok', { status: 200 }));
     vi.stubGlobal('fetch', fetchSpy);
-    mockGetTelemetryContext.mockReset();
-    mockGetTelemetryContext.mockResolvedValue(createMockContext());
+    telemetryContext.traits.isCI = false;
     // Reset env config cache
     getTelemetryEnvConfig(true);
   });
@@ -72,7 +66,7 @@ describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
   });
 
   it('should not send telemetry in CI environments', async () => {
-    mockGetTelemetryContext.mockResolvedValue(createMockContext({ isCI: true }));
+    telemetryContext.traits.isCI = true;
 
     const { default: sendMuiXTelemetryEvent } = await import('./sender');
     await sendMuiXTelemetryEvent(testEvent);
