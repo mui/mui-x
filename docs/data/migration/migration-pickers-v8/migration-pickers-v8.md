@@ -44,17 +44,7 @@ If you were passing a custom `dialog` slot, you need to update it to use `slots`
 +  slotProps,
    ...props
  }) {
-   return (
-     <Dialog
-       {...props}
--      TransitionComponent={TransitionComponent}
--      TransitionProps={TransitionProps}
--      PaperComponent={PaperComponent}
--      PaperProps={PaperProps}
-+      slots={slots}
-+      slotProps={slotProps}
-     />
-   );
+   // …your custom dialog implementation
  }
 
  <MobileDatePicker slots={{ dialog: CustomDialog }} />
