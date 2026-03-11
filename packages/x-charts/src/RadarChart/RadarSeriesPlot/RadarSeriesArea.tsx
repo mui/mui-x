@@ -7,9 +7,8 @@ import { getAreaPath } from './getAreaPath';
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import type { SeriesId } from '../../models/seriesType';
+import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
 import type { HighlightState } from '../../hooks/useItemHighlighted';
-import type { HighlightItemIdentifierWithType } from '../../models/seriesType';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {

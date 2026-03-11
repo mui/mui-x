@@ -121,136 +121,29 @@ export function selectorChartsHighlightStateCallback<SeriesType extends ChartSer
   return selectorChartsHighlightStateCallbackImpl(state);
 }
 
-const alwaysFalse = (): boolean => false;
-
-const selectorChartsIsHighlightedCallbackImpl = createSelectorMemoized(
-  selectorChartsHighlightScope,
-  selectorChartsHighlightedItem,
-  selectorChartSeriesConfig,
-  function selectorChartsIsHighlightedCallbackCombiner<SeriesType extends ChartSeriesType>(
-    highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
-    seriesConfig: ChartSeriesConfig<SeriesType>,
-  ) {
-    if (highlightedItem === null || highlightScope === null) {
-      return alwaysFalse;
-    }
-    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isHighlightedCreator(
-      highlightScope,
-      highlightedItem,
-    );
-  },
-);
-
-/**
- * Returns a callback to test if an item is highlighted.
- * Uses an explicit function declaration so that TypeScript preserves
- * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
- * allowing module augmentation from pro/premium packages to extend the accepted types.
- * @deprecated Use `selectorChartsHighlightStateCallback` instead.
- */
-export function selectorChartsIsHighlightedCallback<SeriesType extends ChartSeriesType>(
-  state: Parameters<typeof selectorChartsIsHighlightedCallbackImpl>[0],
-): (item: HighlightItemIdentifierWithType<SeriesType> | null) => boolean {
-  return selectorChartsIsHighlightedCallbackImpl(state);
-}
-
-const selectorChartsIsFadedCallbackImpl = createSelectorMemoized(
-  selectorChartsHighlightScope,
-  selectorChartsHighlightedItem,
-  selectorChartSeriesConfig,
-  function selectorChartsIsFadedCallbackCombiner<SeriesType extends ChartSeriesType>(
-    highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
-    seriesConfig: ChartSeriesConfig<SeriesType>,
-  ) {
-    if (highlightedItem === null || highlightScope === null) {
-      return alwaysFalse;
-    }
-    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isFadedCreator(
-      highlightScope,
-      highlightedItem,
-    );
-  },
-);
-
-/**
- * Returns a callback to test if an item is faded.
- * Uses an explicit function declaration so that TypeScript preserves
- * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
- * allowing module augmentation from pro/premium packages to extend the accepted types.
- * @deprecated Use `selectorChartsHighlightStateCallback` instead.
- */
-export function selectorChartsIsFadedCallback<SeriesType extends ChartSeriesType>(
-  state: Parameters<typeof selectorChartsIsFadedCallbackImpl>[0],
-): (item: HighlightItemIdentifierWithType<SeriesType> | null) => boolean {
-  return selectorChartsIsFadedCallbackImpl(state);
-}
-
-const selectorChartsIsHighlightedImpl = createSelector(
-  selectorChartsHighlightScope,
-  selectorChartsHighlightedItem,
-  selectorChartSeriesConfig,
-  function selectorChartsIsHighlightedCombiner<SeriesType extends ChartSeriesType>(
-    highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
-    seriesConfig: ChartSeriesConfig<SeriesType>,
+const selectorChartsHighlightStateImpl = createSelectorMemoized(
+  selectorChartsHighlightStateCallback,
+  function selectorChartsHighlightStateCombiner<SeriesType extends ChartSeriesType>(
+    getHighlightState: (
+      item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
+    ) => HighlightState,
     item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
-  ) {
-    if (highlightedItem === null || highlightScope === null) {
-      return false;
-    }
-    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isHighlightedCreator(
-      highlightScope,
-      highlightedItem,
-    )(item);
+  ): HighlightState {
+    return getHighlightState(item);
   },
 );
 
 /**
- * Test if an item is highlighted.
+ * Returns the highlight state of an item.
  * Uses an explicit function declaration so that TypeScript preserves
  * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
  * allowing module augmentation from pro/premium packages to extend the accepted types.
  */
-export function selectorChartsIsHighlighted<SeriesType extends ChartSeriesType>(
-  state: Parameters<typeof selectorChartsIsHighlightedImpl>[0],
-  item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
-): boolean {
-  return selectorChartsIsHighlightedImpl(state, item);
-}
-
-const selectorChartsIsFadedImpl = createSelector(
-  selectorChartsHighlightScope,
-  selectorChartsHighlightedItem,
-  selectorChartSeriesConfig,
-  function selectorChartsIsFadedCombiner<SeriesType extends ChartSeriesType>(
-    highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
-    seriesConfig: ChartSeriesConfig<SeriesType>,
-    item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
-  ) {
-    if (highlightedItem === null || highlightScope === null) {
-      return false;
-    }
-    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isFadedCreator(
-      highlightScope,
-      highlightedItem,
-    )(item);
-  },
-);
-
-/**
- * Test if an item is faded.
- * Uses an explicit function declaration so that TypeScript preserves
- * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
- * allowing module augmentation from pro/premium packages to extend the accepted types.
- */
-export function selectorChartsIsFaded<SeriesType extends ChartSeriesType>(
-  state: Parameters<typeof selectorChartsIsFadedImpl>[0],
-  item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
-): boolean {
-  return selectorChartsIsFadedImpl(state, item);
+export function selectorChartsHighlightState(
+  state: Parameters<typeof selectorChartsHighlightStateImpl>[0],
+  item: Parameters<typeof selectorChartsHighlightStateImpl>[1],
+): HighlightState {
+  return selectorChartsHighlightStateImpl(state, item);
 }
 
 // ==========================================================================================

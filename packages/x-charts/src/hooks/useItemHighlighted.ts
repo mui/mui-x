@@ -1,10 +1,7 @@
 'use client';
 
 import { useStore } from '../internals/store/useStore';
-import {
-  selectorChartsIsFaded,
-  selectorChartsIsHighlighted,
-} from '../internals/plugins/featurePlugins/useChartHighlight';
+import { selectorChartsHighlightState } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
 import type { HighlightItemIdentifierWithType } from '../models/seriesType';
 import type { ChartSeriesType } from '../models/seriesType/config';
@@ -30,14 +27,5 @@ export function useItemHighlighted<SeriesType extends ChartSeriesType = ChartSer
 ): UseItemHighlightedReturnType {
   const store = useStore<[UseChartHighlightSignature<SeriesType>]>();
 
-  const isHighlighted = store.use(selectorChartsIsHighlighted, item);
-  const isFaded = store.use(selectorChartsIsFaded, item);
-
-  if (isHighlighted) {
-    return 'highlighted';
-  }
-  if (isFaded) {
-    return 'faded';
-  }
-  return 'none';
+  return store.use(selectorChartsHighlightState, item);
 }
