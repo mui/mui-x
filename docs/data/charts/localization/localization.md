@@ -1,7 +1,7 @@
 ---
 title: Charts - Localization
 productId: x-charts
-components: ChartsLocalizationProvider, ChartDataProvider, ChartsContainer
+components: ChartsLocalizationProvider, ChartsDataProvider, ChartsContainer
 ---
 
 # Charts - Localization
