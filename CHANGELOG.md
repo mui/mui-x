@@ -5,6 +5,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.27.5
+
+_Mar 11, 2026_
+
+We'd like to extend a big thank you to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@bernardobelchior, @JCQuintas, @MBilalShafi, @michelengelen, @mj12albert, @sai6855, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.27.5`
+
+- [DataGrid] Fix crash when `rows` and `rowModesModel` are updated simultaneously (#21684) @michelengelen
+- [DataGrid] Forward rest props in `GridFilterInputMultipleValue` (#21444) @siriwatknp
+- [DataGrid] Remove double rtl inversion logic for columns pinning (#21443) @siriwatknp
+- [DataGrid] Add missing `resizablePanelHandle` classes to `gridClasses` object (#21632) @sai6855
+- [DataGrid] Refactor `headerAlign` style calls (#21633) @sai6855
+- [DataGrid] Fix keyboard navigation with single-row checkbox selection (#21529) @mj12albert
+
+#### `@mui/x-data-grid-pro@8.27.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.27.5`, plus:
+
+- [DataGridPro] Add `role="presentation"` to detail panel toggle header content (#21691) @michelengelen
+- [DataGridPro] Fix sorting not reflected in nested server-side data (#21641) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.27.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.27.5`.
+
+### Charts
+
+#### `@mui/x-charts@8.27.5`
+
+- [charts] Refactor `BarChart` classes structure (#21601) (#21644) @JCQuintas
+- [charts] Refactor `LineChart` classes structure (#21672) @JCQuintas
+- [charts] Refactor `ScatterChart` classes structure (#21706) @JCQuintas
+
+#### `@mui/x-charts-pro@8.27.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.27.5`, plus:
+
+- [charts-pro] Fix image export truncated when page is zoomed out (#21696) @bernardobelchior
+
+#### `@mui/x-charts-premium@8.27.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.27.5`.
+
+### Docs
+
+- [docs] Fix `AssistantWithDataSource` demo crashing (#21631) @sai6855
+- [docs] Move Range Bar Chart to existing charts (#21122) @bernardobelchior
+
+### Core
+
+- [code-infra] Fix datagrid test flakyness (#21657) @JCQuintas
+- [code-infra] Removed `getTeamMembers` function and usage from the release script (#21608) @michelengelen
+
+### Miscellaneous
+
+- [test] Add missing tests for forwarding props to filter operators in DataGrid (#21700) @siriwatknp
+
 ## 8.27.4
 
 _Mar 5, 2026_
