@@ -2,9 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
 import {
   LineElement,
-  lineElementClasses,
   type LineElementProps,
   type LineElementSlotProps,
   type LineElementSlots,
@@ -15,6 +15,7 @@ import { useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useLinePlotData } from './useLinePlotData';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import { lineClasses, useUtilityClasses } from './lineClasses';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -36,10 +37,10 @@ export interface LinePlotProps
 }
 
 const LinePlotRoot = styled('g', {
-  name: 'MuiAreaPlot',
+  name: 'MuiLinePlot',
   slot: 'Root',
 })({
-  [`& .${lineElementClasses.root}`]: {
+  [`& .${lineClasses.line}`]: {
     transitionProperty: 'opacity, fill',
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -64,13 +65,22 @@ const useAggregatedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    className,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
+  const classes = useUtilityClasses();
+
   return (
-    <LinePlotRoot {...other}>
+    <LinePlotRoot className={clsx(classes.linePlot, className)} {...other}>
       {completedData.map(({ d, seriesId, color, gradientId, hidden }) => {
         return (
           <LineElement
