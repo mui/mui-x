@@ -13,6 +13,9 @@ We'd like to extend a big thank you to the 7 contributors who made this release 
 
 - 🐞 Bugfixes
 
+The following team members contributed to this release:
+@bernardobelchior, @JCQuintas, @MBilalShafi, @michelengelen, @mj12albert, @sai6855, @siriwatknp
+
 ### Data Grid
 
 #### `@mui/x-data-grid@8.27.5`
@@ -41,7 +44,7 @@ Same changes as in `@mui/x-data-grid-pro@8.27.5`.
 
 - [charts] Refactor `BarChart` classes structure (#21601) (#21644) @JCQuintas
 - [charts] Refactor `LineChart` classes structure (#21672) @JCQuintas
-[charts] Refactor `ScatterChart` classes structure (#21706) @JCQuintas
+- [charts] Refactor `ScatterChart` classes structure (#21706) @JCQuintas
 
 #### `@mui/x-charts-pro@8.27.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
