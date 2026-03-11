@@ -3,6 +3,9 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import type { BarLabelOwnerState } from './BarLabel.types';
 
+/**
+ * @deprecated Use `BarClasses` from `../barClasses` instead.
+ */
 export interface BarLabelClasses {
   /** Styles applied to the root element. */
   root: string;
@@ -19,12 +22,21 @@ export interface BarLabelClasses {
   series: string;
 }
 
+/**
+ * @deprecated Use `BarClassKey` from `../barClasses` instead.
+ */
 export type BarLabelClassKey = keyof BarLabelClasses;
 
+/**
+ * @deprecated Use `getBarUtilityClass` from `../barClasses` instead.
+ */
 export function getBarLabelUtilityClass(slot: string) {
   return generateUtilityClass('MuiBarLabel', slot);
 }
 
+/**
+ * @deprecated Use `barClasses` from `../barClasses` instead.
+ */
 export const barLabelClasses = generateUtilityClasses('MuiBarLabel', [
   'root',
   'highlighted',
@@ -32,6 +44,9 @@ export const barLabelClasses = generateUtilityClasses('MuiBarLabel', [
   'animate',
 ]);
 
+/**
+ * @deprecated Use `useBarLabelUtilityClasses` from `../barClasses` instead.
+ */
 export const useUtilityClasses = (ownerState: BarLabelOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
