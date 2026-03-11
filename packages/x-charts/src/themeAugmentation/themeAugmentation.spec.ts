@@ -182,11 +182,11 @@ createTheme({
         // @ts-expect-error invalid MuiScatterChart prop
         someRandomProp: true,
       },
-      // styleOverrides: {
-      //   root: { backgroundColor: 'red' },
-      //   // @ts-expect-error invalid MuiScatterChart class key
-      //   constent: { color: 'red' },
-      // },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiScatterChart class key
+        constent: { color: 'red' },
+      },
     },
   },
 });
