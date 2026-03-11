@@ -74,7 +74,7 @@ Same changes as in `@mui/x-charts-pro@9.0.0-alpha.3`.
 #### `@mui/x-tree-view@9.0.0-alpha.3`
 
 - [tree view] Remove deprecated APIs (#21591) @flaviendelangle
-- [TreeView] Fix collapsed children not selected with `selectionPropagation.descendants` in `SimpleTreeView` (#21253) @flaviendelangle
+- [tree view] Fix collapsed children not selected with `selectionPropagation.descendants` in `SimpleTreeView` (#21253) @flaviendelangle
 
 #### `@mui/x-tree-view-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
