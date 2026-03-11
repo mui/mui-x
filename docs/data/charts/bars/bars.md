@@ -6,7 +6,7 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 # Charts - Bars
 
-<p class="description">Compare discrete categories and quantities using bar length and a common baseline.</p>
+<p class="description">Use bar charts to compare discrete categories and quantities using bar length and a common baseline.</p>
 
 ## Overview
 
