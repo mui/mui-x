@@ -84,10 +84,7 @@ describe('<PieChart />', () => {
         <PieChart
           height={100}
           width={100}
-          series={[
-            { data: [{ id: 'A', value: 100 }] },
-            { data: [{ id: 'B', value: 200 }] },
-          ]}
+          series={[{ data: [{ id: 'A', value: 100 }] }, { data: [{ id: 'B', value: 200 }] }]}
           hideLegend
         />,
       );
