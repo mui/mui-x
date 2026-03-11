@@ -5,6 +5,7 @@ import type { ChatAdapter } from '../adapters';
 import { ChatProvider, type ChatProviderProps } from '../ChatProvider';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import { useChat } from './useChat';
+import { useChatStore } from './useChatStore';
 
 function createStream(values: any[] = []): ReadableStream<any> {
   return new ReadableStream({
@@ -140,6 +141,263 @@ describe('useChat', () => {
 
     expect(adapter.stop).toHaveBeenCalledTimes(1);
     expect(result.current.messages[0]?.status).toBe('cancelled');
+  });
+
+  it('stores the active stream abort controller on state and clears it after stopStreaming', async () => {
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createPendingStream()),
+      stop: vi.fn(),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+    });
+    const { result } = renderHook(
+      () => ({
+        chat: useChat(),
+        store: useChatStore(),
+      }),
+      { wrapper: Wrapper },
+    );
+
+    act(() => {
+      void result.current.chat.sendMessage({
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'First' }],
+      });
+    });
+
+    await waitFor(() => {
+      expect(result.current.store.state.activeStreamAbortController).toBeInstanceOf(AbortController);
+    });
+
+    act(() => {
+      result.current.chat.stopStreaming();
+    });
+
+    await waitFor(() => {
+      expect(result.current.store.state.activeStreamAbortController).toBeNull();
+    });
+
+    expect(adapter.stop).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not create duplicate streams in Strict Mode when sendMessage is triggered from an effect', async () => {
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createPendingStream()),
+    });
+    const wrapper = ({ children }: React.PropsWithChildren) => (
+      <React.StrictMode>
+        <ChatProvider adapter={adapter}>{children}</ChatProvider>
+      </React.StrictMode>
+    );
+    const { result, unmount } = renderHook(
+      () => {
+        const chat = useChat();
+
+        React.useEffect(() => {
+          void chat.sendMessage({
+            conversationId: 'c1',
+            parts: [{ type: 'text', text: 'Hello from effect' }],
+          });
+        }, [chat.sendMessage]);
+
+        return chat;
+      },
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(result.current.isStreaming).toBe(true);
+    });
+
+    expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+
+    unmount();
+  });
+
+  it('assembles streamed assistant parts end-to-end from envelopes and batched deltas', async () => {
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () =>
+        createStream([
+          {
+            eventId: 'evt-1',
+            sequence: 1,
+            chunk: { type: 'start', messageId: 'assistant-1' },
+          },
+          {
+            eventId: 'evt-2',
+            sequence: 2,
+            chunk: { type: 'reasoning-delta', id: 'reasoning-1', delta: 'Thinking' },
+          },
+          {
+            eventId: 'evt-4',
+            sequence: 4,
+            chunk: { type: 'text-delta', id: 'text-1', delta: ' world' },
+          },
+          {
+            eventId: 'evt-3',
+            sequence: 3,
+            chunk: { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+          },
+          {
+            eventId: 'evt-4',
+            sequence: 4,
+            chunk: { type: 'text-delta', id: 'text-1', delta: ' world' },
+          },
+          {
+            eventId: 'evt-5',
+            sequence: 5,
+            chunk: { type: 'text-end', id: 'text-1' },
+          },
+          {
+            eventId: 'evt-6',
+            sequence: 6,
+            chunk: { type: 'tool-input-start', toolCallId: 'tool-1', toolName: 'search' },
+          },
+          {
+            eventId: 'evt-7',
+            sequence: 7,
+            chunk: {
+              type: 'tool-input-available',
+              toolCallId: 'tool-1',
+              toolName: 'search',
+              input: { query: 'weather' },
+            },
+          },
+          {
+            eventId: 'evt-8',
+            sequence: 8,
+            chunk: {
+              type: 'tool-output-available',
+              toolCallId: 'tool-1',
+              output: { results: ['sunny'] },
+            },
+          },
+          {
+            eventId: 'evt-9',
+            sequence: 9,
+            chunk: {
+              type: 'source-url',
+              sourceId: 'source-url-1',
+              url: 'https://mui.com',
+              title: 'MUI',
+            },
+          },
+          {
+            eventId: 'evt-10',
+            sequence: 10,
+            chunk: {
+              type: 'source-document',
+              sourceId: 'source-document-1',
+              title: 'Docs',
+              text: 'The answer came from docs.',
+            },
+          },
+          {
+            eventId: 'evt-11',
+            sequence: 11,
+            chunk: {
+              type: 'file',
+              mediaType: 'image/png',
+              url: 'https://mui.com/logo.png',
+              filename: 'logo.png',
+            },
+          },
+          {
+            eventId: 'evt-12',
+            sequence: 12,
+            chunk: {
+              type: 'data-weather',
+              id: 'data-1',
+              data: { city: 'Prague', temperatureC: 12 },
+            },
+          },
+          {
+            eventId: 'evt-13',
+            sequence: 13,
+            chunk: { type: 'start-step' },
+          },
+          {
+            eventId: 'evt-14',
+            sequence: 14,
+            chunk: { type: 'finish-step' },
+          },
+          {
+            eventId: 'evt-15',
+            sequence: 15,
+            chunk: { type: 'message-metadata', metadata: { traceId: 'trace-1' } },
+          },
+          {
+            eventId: 'evt-16',
+            sequence: 16,
+            chunk: { type: 'finish', messageId: 'assistant-1', finishReason: 'stop' },
+          },
+        ]),
+      ),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      streamFlushInterval: 32,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await act(async () => {
+      await result.current.sendMessage({
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'Hello' }],
+      });
+    });
+
+    expect(result.current.messages).toEqual([
+      expect.objectContaining({
+        conversationId: 'c1',
+        role: 'user',
+        status: 'sent',
+        parts: [{ type: 'text', text: 'Hello' }],
+      }),
+      {
+        id: 'assistant-1',
+        conversationId: 'c1',
+        role: 'assistant',
+        status: 'sent',
+        metadata: { traceId: 'trace-1' },
+        parts: [
+          { type: 'reasoning', text: 'Thinking', state: 'done' },
+          { type: 'text', text: 'Hello world', state: 'done' },
+          {
+            type: 'tool',
+            toolInvocation: {
+              toolCallId: 'tool-1',
+              toolName: 'search',
+              input: { query: 'weather' },
+              output: { results: ['sunny'] },
+              preliminary: undefined,
+              state: 'output-available',
+            },
+          },
+          { type: 'source-url', sourceId: 'source-url-1', url: 'https://mui.com', title: 'MUI' },
+          {
+            type: 'source-document',
+            sourceId: 'source-document-1',
+            title: 'Docs',
+            text: 'The answer came from docs.',
+          },
+          {
+            type: 'file',
+            mediaType: 'image/png',
+            url: 'https://mui.com/logo.png',
+            filename: 'logo.png',
+          },
+          {
+            type: 'data-weather',
+            id: 'data-1',
+            data: { city: 'Prague', temperatureC: 12 },
+            transient: undefined,
+          },
+          { type: 'step-start' },
+        ],
+      },
+    ]);
   });
 
   it('loads conversations on mount and applies realtime message, read, and presence events', async () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ChatStore } from './ChatStore';
-import type { ChatConversation, ChatMessage } from '../types/chat-entities';
+import type { ChatConversation, ChatDraftAttachment, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 
 const message1: ChatMessage = {
@@ -25,6 +25,17 @@ const conversation2: ChatConversation = {
   id: 'c2',
   title: 'Support',
 };
+
+function createAttachment(
+  overrides: Partial<ChatDraftAttachment> = {},
+): ChatDraftAttachment {
+  return {
+    localId: 'a1',
+    file: new File(['hello'], 'hello.txt', { type: 'text/plain' }),
+    status: 'queued',
+    ...overrides,
+  };
+}
 
 describe('ChatStore', () => {
   it('normalizes default messages and conversations during construction', () => {
@@ -281,6 +292,33 @@ describe('ChatStore', () => {
     store.setComposerValue('Draft message');
 
     expect(store.state.composerValue).toBe('Draft message');
+  });
+
+  it('setComposerAttachments, addComposerAttachment, removeComposerAttachment, and clearComposer update draft state', () => {
+    const store = new ChatStore({
+      defaultComposerValue: 'Draft message',
+    });
+    const attachment1 = createAttachment();
+    const attachment2 = createAttachment({
+      localId: 'a2',
+      file: new File(['world'], 'world.txt', { type: 'text/plain' }),
+    });
+
+    store.setComposerAttachments([attachment1]);
+    expect(store.state.composerAttachments).toEqual([attachment1]);
+
+    store.addComposerAttachment(attachment2);
+    expect(store.state.composerAttachments).toEqual([attachment1, attachment2]);
+
+    store.removeComposerAttachment('missing');
+    expect(store.state.composerAttachments).toEqual([attachment1, attachment2]);
+
+    store.removeComposerAttachment('a1');
+    expect(store.state.composerAttachments).toEqual([attachment2]);
+
+    store.clearComposer();
+    expect(store.state.composerValue).toBe('');
+    expect(store.state.composerAttachments).toEqual([]);
   });
 
   it('ignores empty or missing-id transitions that should be no-ops', () => {

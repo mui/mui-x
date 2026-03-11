@@ -20,6 +20,11 @@ export interface ChatProviderProps<Cursor = string> extends ChatStoreParameters<
   onFinish?: ChatOnFinish;
   onData?: ChatOnData;
   onError?: (error: ChatError) => void;
+  /**
+   * Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store.
+   * @default 16
+   */
+  streamFlushInterval?: number;
   partRenderers?: ChatPartRendererMap;
   /**
    * The store class to use for this provider.
@@ -36,6 +41,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     onFinish,
     onData,
     onError,
+    streamFlushInterval,
     partRenderers,
     storeClass,
     ...parameters
@@ -48,6 +54,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     onFinish,
     onData,
     onError,
+    streamFlushInterval,
   });
 
   const runtimeContextValue = React.useMemo<ChatRuntimeContextValue<Cursor>>(

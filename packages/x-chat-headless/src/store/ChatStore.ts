@@ -1,5 +1,5 @@
 import { Store } from '@mui/x-internals/store';
-import type { ChatConversation, ChatMessage } from '../types/chat-entities';
+import type { ChatConversation, ChatDraftAttachment, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type { ChatInternalState } from '../types/chat-state';
 
@@ -96,6 +96,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       activeConversationId,
       messageIds,
       messagesById,
+      activeStreamAbortController: null,
       isStreaming: false,
       hasMoreHistory: false,
       historyCursor: undefined,
@@ -322,8 +323,40 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.set('composerValue', value);
   };
 
+  public setComposerAttachments = (attachments: ChatDraftAttachment[]) => {
+    this.set('composerAttachments', attachments);
+  };
+
+  public addComposerAttachment = (attachment: ChatDraftAttachment) => {
+    this.setComposerAttachments([...this.state.composerAttachments, attachment]);
+  };
+
+  public removeComposerAttachment = (localId: string) => {
+    const nextAttachments = this.state.composerAttachments.filter(
+      (attachment) => attachment.localId !== localId,
+    );
+
+    if (nextAttachments.length === this.state.composerAttachments.length) {
+      return;
+    }
+
+    this.setComposerAttachments(nextAttachments);
+  };
+
+  public clearComposer = () => {
+    this.dirtyControlledModels.add('composerValue');
+    this.update({
+      composerValue: '',
+      composerAttachments: [],
+    });
+  };
+
   public setStreaming = (value: boolean) => {
     this.set('isStreaming', value);
+  };
+
+  public setActiveStreamAbortController = (value: AbortController | null) => {
+    this.set('activeStreamAbortController', value);
   };
 
   public setError = (error: ChatError | null) => {
@@ -348,6 +381,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.update({
       messageIds: [],
       messagesById: {},
+      activeStreamAbortController: null,
       isStreaming: false,
       hasMoreHistory: false,
       historyCursor: undefined,

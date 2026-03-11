@@ -22,6 +22,7 @@ export interface ProcessStreamOptions {
   conversationId?: string;
   messageId?: string;
   signal?: AbortSignal;
+  flushInterval?: number;
   onData?: ChatOnData;
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
@@ -35,6 +36,8 @@ export interface ProcessStreamResult {
   isDisconnect: boolean;
   isError: boolean;
 }
+
+const DEFAULT_STREAM_FLUSH_INTERVAL = 16;
 
 function createStreamError(message: string, details?: Record<string, unknown>): ChatError {
   return {
@@ -207,6 +210,15 @@ export async function processStream<Cursor = string>(
   const bufferedChunksBySequence = new Map<number, ChatMessageChunk>();
   const textPartIndexesByStreamId = new Map<string, number>();
   const reasoningPartIndexesByStreamId = new Map<string, number>();
+  const flushInterval = Math.max(0, options.flushInterval ?? DEFAULT_STREAM_FLUSH_INTERVAL);
+  let pendingTextLikeDelta:
+    | {
+        partType: 'text' | 'reasoning';
+        streamId: string;
+        delta: string;
+      }
+    | null = null;
+  let pendingTextLikeDeltaTimer: ReturnType<typeof setTimeout> | null = null;
 
   const reader = stream.getReader();
 
@@ -327,6 +339,81 @@ export async function processStream<Cursor = string>(
     return nextIndex;
   };
 
+  const clearPendingTextLikeDeltaTimer = () => {
+    if (pendingTextLikeDeltaTimer) {
+      clearTimeout(pendingTextLikeDeltaTimer);
+      pendingTextLikeDeltaTimer = null;
+    }
+  };
+
+  const applyTextLikeDelta = (
+    partType: 'text' | 'reasoning',
+    streamId: string,
+    delta: string,
+  ) => {
+    const indexMap = partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
+    const partIndex = resolveTextLikePartIndex(partType, streamId, indexMap);
+
+    updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
+      const currentPart = parts[partIndex];
+
+      if (currentPart?.type !== partType) {
+        return parts;
+      }
+
+      const nextParts = [...parts];
+      nextParts[partIndex] = {
+        ...currentPart,
+        text: `${currentPart.text}${delta}`,
+        state: 'streaming',
+      };
+      return nextParts;
+    });
+  };
+
+  const flushPendingTextLikeDelta = () => {
+    if (!pendingTextLikeDelta) {
+      return;
+    }
+
+    const { partType, streamId, delta } = pendingTextLikeDelta;
+    pendingTextLikeDelta = null;
+    clearPendingTextLikeDeltaTimer();
+    applyTextLikeDelta(partType, streamId, delta);
+  };
+
+  const scheduleTextLikeDelta = (
+    partType: 'text' | 'reasoning',
+    streamId: string,
+    delta: string,
+  ) => {
+    if (
+      pendingTextLikeDelta &&
+      (pendingTextLikeDelta.partType !== partType || pendingTextLikeDelta.streamId !== streamId)
+    ) {
+      flushPendingTextLikeDelta();
+    }
+
+    if (!pendingTextLikeDelta) {
+      pendingTextLikeDelta = {
+        partType,
+        streamId,
+        delta,
+      };
+
+      clearPendingTextLikeDeltaTimer();
+      pendingTextLikeDeltaTimer = setTimeout(() => {
+        flushPendingTextLikeDelta();
+      }, flushInterval);
+      return;
+    }
+
+    pendingTextLikeDelta = {
+      ...pendingTextLikeDelta,
+      delta: `${pendingTextLikeDelta.delta}${delta}`,
+    };
+  };
+
   const withToolInvocation = async (
     toolCallId: string,
     getInitialToolPart:
@@ -371,6 +458,10 @@ export async function processStream<Cursor = string>(
 
   const processChunk = async (chunk: ChatMessageChunk) => {
     didReceiveAnyChunk = true;
+
+    if (chunk.type !== 'text-delta' && chunk.type !== 'reasoning-delta') {
+      flushPendingTextLikeDelta();
+    }
 
     switch (chunk.type) {
       case 'start':
@@ -419,24 +510,13 @@ export async function processStream<Cursor = string>(
       case 'text-delta':
       case 'reasoning-delta': {
         const partType = chunk.type === 'text-delta' ? 'text' as const : 'reasoning' as const;
-        const indexMap = partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
-        const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
 
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
-          const currentPart = parts[partIndex];
+        if (flushInterval > 0) {
+          scheduleTextLikeDelta(partType, chunk.id, chunk.delta);
+          return;
+        }
 
-          if (currentPart?.type !== partType) {
-            return parts;
-          }
-
-          const nextParts = [...parts];
-          nextParts[partIndex] = {
-            ...currentPart,
-            text: `${currentPart.text}${chunk.delta}`,
-            state: 'streaming',
-          };
-          return nextParts;
-        });
+        applyTextLikeDelta(partType, chunk.id, chunk.delta);
         return;
       }
 
@@ -721,6 +801,7 @@ export async function processStream<Cursor = string>(
 
   try {
     if (aborted) {
+      flushPendingTextLikeDelta();
       return handleAbort();
     }
 
@@ -743,10 +824,12 @@ export async function processStream<Cursor = string>(
     }
 
     if (aborted) {
+      flushPendingTextLikeDelta();
       return handleAbort();
     }
 
     if (didReceiveTerminalChunk) {
+      flushPendingTextLikeDelta();
       const finalStatus = store.state.messagesById[targetMessageId ?? '']?.status;
       return finish({
         messageId: targetMessageId,
@@ -759,6 +842,7 @@ export async function processStream<Cursor = string>(
     }
 
     if (didReceiveAnyChunk) {
+      flushPendingTextLikeDelta();
       failStream('Stream closed before a terminal chunk was received.');
 
       return finish({
@@ -780,9 +864,11 @@ export async function processStream<Cursor = string>(
     });
   } catch (error) {
     if (aborted) {
+      flushPendingTextLikeDelta();
       return handleAbort();
     }
 
+    flushPendingTextLikeDelta();
     const streamError =
       error instanceof Error ? error : new Error('Stream processing failed.');
 
@@ -798,6 +884,7 @@ export async function processStream<Cursor = string>(
     throw error;
   } finally {
     options.signal?.removeEventListener('abort', abortListener);
+    clearPendingTextLikeDeltaTimer();
     reader.releaseLock();
   }
 }

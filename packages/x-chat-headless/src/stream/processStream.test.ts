@@ -94,6 +94,45 @@ describe('processStream', () => {
     ]);
   });
 
+  it('batches consecutive text deltas when a flush interval is provided', async () => {
+    const createTrackedStore = () => {
+      const trackedStore = new ChatStore();
+      let updateMessageCallCount = 0;
+      const originalUpdateMessage = trackedStore.updateMessage;
+
+      trackedStore.updateMessage = ((id, patch) => {
+        updateMessageCallCount += 1;
+        originalUpdateMessage(id, patch);
+      }) as typeof trackedStore.updateMessage;
+
+      return {
+        store: trackedStore,
+        getUpdateMessageCallCount: () => updateMessageCallCount,
+      };
+    };
+    const batched = createTrackedStore();
+    const unbatched = createTrackedStore();
+    const streamValues: Array<ChatMessageChunk | ChatStreamEnvelope> = [
+      { type: 'start', messageId: 'a1' },
+      { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+      { type: 'text-delta', id: 'text-1', delta: ' ' },
+      { type: 'text-delta', id: 'text-1', delta: 'world' },
+      { type: 'finish', messageId: 'a1' },
+    ];
+
+    await processStream(batched.store, createStream([...streamValues]), {
+      flushInterval: 50,
+    });
+    await processStream(unbatched.store, createStream([...streamValues]), {
+      flushInterval: 0,
+    });
+
+    expect(batched.getUpdateMessageCallCount()).toBeLessThan(unbatched.getUpdateMessageCallCount());
+    expect(batched.store.state.messagesById.a1.parts).toEqual([
+      { type: 'text', text: 'Hello world', state: 'done' },
+    ]);
+  });
+
   it('accepts chunks before start when a target message id is provided', async () => {
     const store = new ChatStore();
 

@@ -18,6 +18,7 @@ export interface ChatInternalState<Cursor = string> {
   activeConversationId?: string;
   messageIds: string[];
   messagesById: Record<string, ChatMessage>;
+  activeStreamAbortController: AbortController | null;
   isStreaming: boolean;
   hasMoreHistory: boolean;
   historyCursor?: Cursor;

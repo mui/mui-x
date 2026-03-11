@@ -46,6 +46,7 @@ interface UseChatControllerParameters<Cursor = string> {
   onFinish?: ChatOnFinish;
   onData?: ChatOnData;
   onError?: (error: ChatError) => void;
+  streamFlushInterval?: number;
 }
 
 function getMessages(store: ChatStore<any>): ChatMessage[] {
@@ -210,6 +211,7 @@ export function useChatController<Cursor = string>({
   onFinish,
   onData,
   onError,
+  streamFlushInterval,
 }: UseChatControllerParameters<Cursor>): ChatRuntimeActions<Cursor> {
   const runtimeRef = React.useRef({
     adapter,
@@ -217,8 +219,8 @@ export function useChatController<Cursor = string>({
     onFinish,
     onData,
     onError,
+    streamFlushInterval,
   });
-  const activeStreamAbortControllerRef = React.useRef<AbortController | null>(null);
   const assistantMessageIdByUserMessageIdRef = React.useRef(new Map<string, string>());
   const skipNextConversationEffectRef = React.useRef(false);
   const conversationLoadRequestIdRef = React.useRef(0);
@@ -229,6 +231,7 @@ export function useChatController<Cursor = string>({
     onFinish,
     onData,
     onError,
+    streamFlushInterval,
   };
 
   const setRuntimeError = React.useCallback(
@@ -243,10 +246,10 @@ export function useChatController<Cursor = string>({
   );
 
   const stopStreaming = React.useCallback(() => {
-    activeStreamAbortControllerRef.current?.abort();
-    activeStreamAbortControllerRef.current = null;
+    store.state.activeStreamAbortController?.abort();
+    store.setActiveStreamAbortController(null);
     runtimeRef.current.adapter.stop?.();
-  }, []);
+  }, [store]);
 
   const loadConversationMessages = React.useCallback(
     async (
@@ -334,7 +337,7 @@ export function useChatController<Cursor = string>({
       store.setError(null);
 
       const abortController = new AbortController();
-      activeStreamAbortControllerRef.current = abortController;
+      store.setActiveStreamAbortController(abortController);
 
       try {
         const stream = await runtimeRef.current.adapter.sendMessage({
@@ -348,6 +351,7 @@ export function useChatController<Cursor = string>({
         const result = await processStream(store, stream, {
           conversationId,
           signal: abortController.signal,
+          flushInterval: runtimeRef.current.streamFlushInterval,
           onToolCall: runtimeRef.current.onToolCall,
           onFinish: runtimeRef.current.onFinish,
           onData: runtimeRef.current.onData,
@@ -399,8 +403,8 @@ export function useChatController<Cursor = string>({
         );
         store.setStreaming(false);
       } finally {
-        if (activeStreamAbortControllerRef.current === abortController) {
-          activeStreamAbortControllerRef.current = null;
+        if (store.state.activeStreamAbortController === abortController) {
+          store.setActiveStreamAbortController(null);
         }
       }
     },
@@ -724,10 +728,11 @@ export function useChatController<Cursor = string>({
 
   React.useEffect(
     () => () => {
-      activeStreamAbortControllerRef.current?.abort();
+      store.state.activeStreamAbortController?.abort();
+      store.setActiveStreamAbortController(null);
       runtimeRef.current.adapter.stop?.();
     },
-    [],
+    [store],
   );
 
   return React.useMemo(
