@@ -37,6 +37,11 @@ export const useZoomOnBrush = (
 
     instance.updateZoomInteractionListeners('brush', {
       requiredKeys: config!.requiredKeys,
+      pointerMode: config!.pointerMode,
+      pointerOptions: {
+        mouse: config!.mouse,
+        touch: config!.touch,
+      },
     });
   }, [isZoomOnBrushEnabled, config, instance]);
 

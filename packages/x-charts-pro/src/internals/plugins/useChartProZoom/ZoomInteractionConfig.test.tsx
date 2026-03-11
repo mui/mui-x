@@ -584,6 +584,70 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       // Should have zoomed in, so 'A' should not be visible anymore
       expect(ticksAfterZoom).to.deep.equal(['C', 'D']);
     });
+
+    it('should only zoom on brush with mouse when pointerMode is mouse', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: [{ type: 'brush', pointerMode: 'mouse' }],
+            pan: [],
+          }}
+        />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      // Touch brush - should not zoom
+      await user.pointer([
+        {
+          keys: '[TouchA>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          pointerName: 'TouchA',
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+        {
+          keys: '[/TouchA]',
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      // Mouse brush - should zoom
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.mock.calls.length).to.equal(1);
+      expect(getAxisTickValues('x')).to.deep.equal(['C', 'D']);
+    });
   });
 
   describe('Pan on wheel (side scrolling)', () => {
