@@ -525,7 +525,7 @@
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useFocusedItem", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },
-  { "name": "useItemHighlighted", "kind": "Function" },
+  { "name": "useItemHighlightState", "kind": "Function" },
   { "name": "useItemHighlightStateGetter", "kind": "Function" },
   { "name": "useItemTooltip", "kind": "Variable" },
   { "name": "UseItemTooltipReturnValue", "kind": "TypeAlias" },

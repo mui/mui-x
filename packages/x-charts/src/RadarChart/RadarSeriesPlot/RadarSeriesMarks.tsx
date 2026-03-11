@@ -7,7 +7,7 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { type SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
-import type { HighlightState } from '../../hooks/useItemHighlighted';
+import type { HighlightState } from '../../hooks/useItemHighlightState';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;

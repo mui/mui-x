@@ -703,7 +703,7 @@
   { "name": "UseHeatmapSeriesContextReturnValue", "kind": "TypeAlias" },
   { "name": "UseHeatmapSeriesReturnValue", "kind": "TypeAlias" },
   { "name": "useIsZoomInteracting", "kind": "Function" },
-  { "name": "useItemHighlighted", "kind": "Function" },
+  { "name": "useItemHighlightState", "kind": "Function" },
   { "name": "useItemHighlightStateGetter", "kind": "Function" },
   { "name": "useItemTooltip", "kind": "Variable" },
   { "name": "UseItemTooltipReturnValue", "kind": "TypeAlias" },

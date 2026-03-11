@@ -7,7 +7,7 @@ import { type ChartSeriesType } from '../models/seriesType/config';
 /**
  * A hook to get a callback that returns the highlight state of an item.
  *
- * If you're interested by a single item, consider using `useItemHighlighted`.
+ * If you're interested by a single item, consider using `useItemHighlightState`.
  *
  * @returns {(item: HighlightItemIdentifierWithType | null) => HighlightState} callback to get the highlight state of an item.
  */

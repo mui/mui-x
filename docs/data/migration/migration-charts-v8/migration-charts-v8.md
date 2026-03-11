@@ -244,14 +244,15 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
-### `useItemHighlighted()` return type changed
+### `useItemHighlighted()` replaced by `useItemHighlightState()`
 
-The `useItemHighlighted()` hook no longer returns an object with `isHighlighted` and `isFaded` booleans.
+The `useItemHighlighted()` hook is replaced by `useItemHighlightState()`.
+Instead of returning an object with `isHighlighted` and `isFaded` booleans.
 It now returns a `HighlightState` union type: `'highlighted' | 'faded' | 'none'`.
 
 ```diff
 -const { isHighlighted, isFaded } = useItemHighlighted(identifier);
-+const highlightState = useItemHighlighted(identifier);
++const highlightState = useItemHighlightState(identifier);
 +const isHighlighted = highlightState === 'highlighted';
 +const isFaded = highlightState === 'faded';
 ```

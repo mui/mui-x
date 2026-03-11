@@ -22,7 +22,7 @@ type UseItemHighlightedParams<SeriesType extends ChartSeriesType = ChartSeriesTy
  * @param {HighlightItemIdentifierWithType<SeriesType> | null} item is the item to check
  * @returns {HighlightState} the state of the item
  */
-export function useItemHighlighted<SeriesType extends ChartSeriesType = ChartSeriesType>(
+export function useItemHighlightState<SeriesType extends ChartSeriesType = ChartSeriesType>(
   item: UseItemHighlightedParams<SeriesType>,
 ): UseItemHighlightedReturnType {
   const store = useStore<[UseChartHighlightSignature<SeriesType>]>();

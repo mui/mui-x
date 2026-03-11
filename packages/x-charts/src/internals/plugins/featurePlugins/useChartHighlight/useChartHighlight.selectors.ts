@@ -17,7 +17,7 @@ import {
   type ChartSeriesConfig,
   selectorChartSeriesConfig,
 } from '../../corePlugins/useChartSeriesConfig';
-import { type HighlightState } from '../../../../hooks/useItemHighlighted';
+import { type HighlightState } from '../../../../hooks/useItemHighlightState';
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature<ChartSeriesType>> = (state) =>
   state.highlight;
