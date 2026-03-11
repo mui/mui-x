@@ -45,11 +45,13 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
   }
 
   const seriesConfig = getSeriesConfig(tooltipData.identifier.seriesId);
-  const Content =
+  const ItemTooltipContent =
     seriesConfig && 'ItemTooltipContent' in seriesConfig ? seriesConfig.ItemTooltipContent : null;
 
   if ('values' in tooltipData) {
     const { label: seriesLabel, color, markType, markShape } = tooltipData;
+    const Content = ItemTooltipContent ?? DefaultMultipleValueContent;
+
     return (
       <ChartsTooltipPaper sx={sx} className={classes.paper}>
         <ChartsTooltipTable className={classes.table}>
@@ -65,33 +67,27 @@ function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
             {seriesLabel}
           </Typography>
           <tbody>
-            {Content ? (
-              <Content classes={propClasses} item={tooltipData} />
-            ) : (
-              <DefaultMultipleValueContent classes={propClasses} item={tooltipData} />
-            )}
+            <Content classes={propClasses} item={tooltipData} />
           </tbody>
         </ChartsTooltipTable>
       </ChartsTooltipPaper>
     );
   }
 
+  const Content = ItemTooltipContent ?? DefaultSingleValueContent;
+
   return (
     <ChartsTooltipPaper sx={sx} className={classes.paper}>
       <ChartsTooltipTable className={classes.table}>
         <tbody>
-          {Content ? (
-            <Content
-              classes={propClasses}
-              item={
-                /* TypeScript can't guarantee that the item's series type is the same as the Content's series type,
-                 * so we need to cast */
-                tooltipData as any
-              }
-            />
-          ) : (
-            <DefaultSingleValueContent classes={propClasses} item={tooltipData} />
-          )}
+          <Content
+            classes={propClasses}
+            item={
+              /* TypeScript can't guarantee that the item's series type is the same as the Content's series type,
+               * so we need to cast */
+              tooltipData as any
+            }
+          />
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
