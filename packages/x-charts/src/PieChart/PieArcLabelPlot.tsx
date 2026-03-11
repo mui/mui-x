@@ -52,17 +52,17 @@ export interface PieArcLabelPlotSlotProps {
 
 export interface PieArcLabelPlotProps
   extends
-  Pick<
-    DefaultizedPieSeriesType,
-    | 'data'
-    | 'faded'
-    | 'highlighted'
-    | 'cornerRadius'
-    | 'paddingAngle'
-    | 'arcLabel'
-    | 'arcLabelMinAngle'
-  >,
-  ComputedPieRadius {
+    Pick<
+      DefaultizedPieSeriesType,
+      | 'data'
+      | 'faded'
+      | 'highlighted'
+      | 'cornerRadius'
+      | 'paddingAngle'
+      | 'arcLabel'
+      | 'arcLabelMinAngle'
+    >,
+    ComputedPieRadius {
   /**
    * The id of this series.
    */
