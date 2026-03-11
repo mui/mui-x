@@ -312,8 +312,8 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       const lastContextScrollLeft = scrollPosition.current.left;
       scrollTimeout.start(1000, () => {
         if (
-          scrollPosition.current.top !== lastContextScrollTop ||
-          scrollPosition.current.left !== lastContextScrollLeft
+          scrollPosition.current.top === lastContextScrollTop &&
+          scrollPosition.current.left === lastContextScrollLeft
         ) {
           triggerUpdateRenderContext();
         }
