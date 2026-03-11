@@ -736,7 +736,7 @@ Heatmap.propTypes = {
         }),
         PropTypes.shape({
           pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,
