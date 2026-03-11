@@ -185,7 +185,7 @@ PieArc.propTypes = {
   cornerRadius: PropTypes.number.isRequired,
   dataIndex: PropTypes.number.isRequired,
   endAngle: PropTypes.number.isRequired,
-  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isFocused: PropTypes.bool.isRequired,
