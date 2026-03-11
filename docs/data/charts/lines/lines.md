@@ -11,9 +11,8 @@ components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHigh
 ## Overview
 
 Line charts work well when you want to show how values change over a continuous dimension such as time or a measurement scale.
-
 They emphasize trends, patterns, and fluctuations, so they are useful for exploring relationships, spotting cycles, or tracking performance over time.
-Each line usually represents one series, so you can easily compare multiple variables or groups.
+Each line usually represents one series, so you can compare multiple variables or groups at a glance.
 
 {{"demo": "LineOverview.js"}}
 
@@ -21,13 +20,13 @@ Each line usually represents one series, so you can easily compare multiple vari
 
 ### Data format
 
-A line chart series should include a `data` property with an array of numbers.
+A line chart series must include a `data` property with an array of numbers.
 That array holds the y-values.
 
 Use the `xAxis` prop to specify x-values.
 The axis can use any `scaleType`, and its `data` should have the same length as the series.
 
-By default, those y-values are paired with integers starting from 0 (0, 1, 2, 3, ...).
+By default, those y-values are paired with integers starting from 0 (0, 1, 2, 3, …).
 
 {{"demo": "BasicLineChart.js"}}
 
@@ -37,7 +36,6 @@ When your data lives in an array of objects, use the `dataset` prop.
 It accepts an array of objects, for example `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
 
 Use the `dataKey` property to reference that data from your series and axis definitions.
-
 For example, `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
 
 The demo below plots the evolution of world electricity production by source.
@@ -54,17 +52,17 @@ Set the series `area` property to `true` to fill the area under the line.
 
 A y-axis with a log scale cannot plot a line that crosses zero, and it cannot plot an area chart, because the logarithm of zero is undefined.
 
-See the [symlog scale](/x/react-charts/axis/#symlog-scale) section for a workaround.
+See [Axis—Symlog scale](/x/react-charts/axis/#symlog-scale) for a workaround.
 
 ### Stacking
 
-Add a `stack` property to each line series (a string value).
+You can use the `stack` string property to group line series into stacks.
 Series that share the same `stack` value are stacked on top of each other.
 
 Use the `stackOffset` and `stackOrder` properties to control how stacking works.
 By default, series are stacked in the order you define them, with positive values above 0 and negative values below 0.
 
-See the [stacking documentation](/x/react-charts/stacking/) for details.
+See [Stacking](/x/react-charts/stacking/) for details.
 
 {{"demo": "StackedAreas.js"}}
 
@@ -75,10 +73,10 @@ For example, if your data ranges from 2 to 195, the axis shows 0 to 200.
 You can change this with the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
 
 :::info
-The current default behavior can lead to empty space on left/right of the line chart.
-To fix that issue, future major version will default the x-axis domain limit to `'strict'`.
+The current default behavior can leave empty space at the left and right edges of the line chart.
 
-To test this behavior, add the `experimentalFeatures` prop to your chart with `preferStrictDomainInLineCharts: true` value.
+To fix that issue, future major version will default the x-axis domain limit to `'strict'`.
+You can test this behavior by passing the `experimentalFeatures` prop to your chart with `preferStrictDomainInLineCharts: true`.
 You can also enable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
 
 ```js
@@ -103,7 +101,7 @@ A line series can have fewer data points than the axis.
 Use `null` values when you have partial data or series that start at different points.
 
 By default, the tooltip omits series that have no value at the hovered position.
-To show something for missing values, use `valueFormatter` to return a string when the value is `null` or `undefined`.
+To show a tooltip for missing values, use `valueFormatter` to return a string when the value is `null` or `undefined`.
 
 {{"demo": "DifferentLength.js"}}
 
@@ -127,7 +125,7 @@ The following code draws a line for x between 2 and 4.
 ### Connect missing points
 
 Set the `connectNulls` property on a line series to continue the curve across points whose value is `null`.
-That links two segments with a gap of `null` values in between.
+This links two segments with a gap of `null` values in between.
 The curve is not extrapolated before the first non-null point or after the last one.
 
 {{"demo": "ConnectNulls.js"}}
@@ -136,10 +134,10 @@ The curve is not extrapolated before the first non-null point or after the last 
 
 Line charts provide several click handlers:
 
-- `onAreaClick` when a specific area is clicked.
-- `onLineClick` when a specific line is clicked.
-- `onMarkClick` when a specific mark is clicked.
-- `onAxisClick` when anywhere in the chart is clicked.
+- `onAreaClick` when a specific area is clicked
+- `onLineClick` when a specific line is clicked
+- `onMarkClick` when a specific mark is clicked
+- `onAxisClick` when the chart background is clicked
 
 Each handler receives the same signature:
 
@@ -153,7 +151,7 @@ const clickHandler = (
 {{"demo": "LineClick.js"}}
 
 :::info
-There is a small difference between the `event` passed to `onAxisClick` and the others:
+The `event` differs slightly between `onAxisClick` and the others:
 
 - For `onAxisClick`, it is the native mouse event from the SVG element.
 - For the rest, it is a React synthetic mouse event from the area, line, or mark component.
@@ -162,7 +160,7 @@ There is a small difference between the `event` passed to `onAxisClick` and the 
 
 ### Composition
 
-If you are composing a custom component, you can receive these click events as follows.
+If you're composing a custom component, you can receive these click events as follows.
 Note that `onAxisClick` runs for both bar and line series when you mix them.
 
 ```jsx
@@ -179,15 +177,15 @@ Note that `onAxisClick` runs for both bar and line series when you mix them.
 
 Use the `grid` prop to add a grid behind the chart.
 
-See the [Axis—Grid](/x/react-charts/axis/#grid) section for details.
+See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 
 ### Color scale
 
-As with other chart types, you can change [series colors](/x/react-charts/styling/#colors) per series or via the color palette.
+As with other chart types, you can set [series colors](/x/react-charts/styling/#colors) for individual series or use the color palette.
 
-You can also drive color from the axes with `colorMap`, which maps axis values to colors.
+You can also derive colors from axis values with `colorMap`, which maps axis values to colors.
 Line charts resolve color in this order:
 
 1. The y-axis color
@@ -205,7 +203,18 @@ Ordinal color config is not yet supported for line charts.
 ### Interpolation
 
 Use the `curve` property to choose how the line is drawn between points.
-It accepts one of: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`, `'bumpX'`, and `'bumpY'`.
+It accepts one of:
+
+- `'catmullRom'`
+- `'linear'`
+- `'monotoneX'`
+- `'monotoneY'`
+- `'natural'`
+- `'step'`
+- `'stepBefore'`
+- `'stepAfter'`
+- `'bumpX'`
+- `'bumpY'`
 
 You can set `curve` per series, so different series can use different interpolations.
 
@@ -213,16 +222,16 @@ You can set `curve` per series, so different series can use different interpolat
 
 #### Expanding steps
 
-For step interpolations (`curve` set to `'step'`, `'stepBefore'`, or `'stepAfter'`), the line expands to cover the full band width to simplify composing line and area charts.
+For step interpolations (when `curve` is set to `'step'`, `'stepBefore'`, or `'stepAfter'`), the line expands to cover the full band width to simplify composing line and area charts.
 
-Set the `strictStepCurve` series property to turn off this behavior.
+Use the `strictStepCurve` series property to turn off this behavior.
 
 {{"demo": "ExpandingStep.js"}}
 
 ### Baseline
 
 The area chart uses the y-axis value `0` as the baseline by default.
-That works well as a reference, but you may want a different baseline.
+That works well as a reference, but your use case may call for a different baseline.
 
 Set `baseline` to `"min"` or `"max"` to fill the area above or below the line.
 You can also set `baseline` to a number to fix the baseline at a specific value.
@@ -240,11 +249,11 @@ It accepts a boolean or a callback.
 The demo below uses a callback to show a mark only every two data points.
 
 When a value is highlighted, a mark is drawn for that value.
-If the chart already shows marks (for example with `showMark={true}`), the highlight mark is drawn on top.
+If the chart already shows marks (`showMark={true}`), the highlight mark is drawn on top.
 
-Turn off this behavior with the `disableHighlight` series property or the `disableLineItemHighlight` prop on the line chart.
+You can turn off this behavior with the `disableHighlight` series property or the `disableLineItemHighlight` prop on the line chart.
 
-In the demo, there is one mark for every value with an even index.
+The demo shows one mark for every value with an even index.
 The highlighted point always shows a mark, whether its index is even or odd.
 
 {{"demo": "MarkOptimization.js"}}
@@ -252,13 +261,13 @@ The highlighted point always shows a mark, whether its index is even or odd.
 ### CSS
 
 Line plots use three elements: `LineElement`, `AreaElement`, and `MarkElement`.
-Target them with the CSS classes `.MuiLineElement-root`, `.MuiAreaElement-root`, and `.MuiMarkElement-root`.
+You can target them with the CSS classes `.MuiLineElement-root`, `.MuiAreaElement-root`, and `.MuiMarkElement-root`.
 
 To target a specific series, use the `data-series` attribute.
 
 In the demo below, each line uses a custom dash style and marks are hidden.
 The area for Germany's GDP uses a custom gradient.
-The gradient is defined as a child of the chart (for example, `myGradient` referenced in `fill`).
+The gradient is defined as a child of the chart (`myGradient` referenced in `fill`).
 
 ```jsx
 <LineChart
@@ -285,8 +294,7 @@ With `skipAnimation` set, the chart renders without animation.
 
 :::warning
 If you add or remove series interactively, give each series an `id`.
-
-Otherwise the chart cannot tell whether you are updating, removing, or adding a series, and the animation can behave incorrectly.
+Otherwise the chart cannot tell whether you are updating, removing, or adding a series, and the animation may not behave as expected.
 :::
 
 ```jsx
@@ -304,17 +312,17 @@ Otherwise the chart cannot tell whether you are updating, removing, or adding a 
 
 ## Composition
 
-Use `ChartsDataProvider` to supply `series`, `xAxis`, and `yAxis` when composing a custom chart.
+When composing a custom chart, use `ChartsDataProvider` to supply `series`, `xAxis`, and `yAxis`.
 
 In addition to the shared components described in [Composition](/x/react-charts/composition/), you can use:
 
-- `AreaPlot` to draw series areas.
-- `LinePlot` to draw series lines.
-- `MarkPlot` to draw series marks.
-- `LineHighlightPlot` to draw the larger mark at the highlighted value.
-- `FocusedLineMark` to draw a focus ring when a data point is focused.
+- `AreaPlot` to draw series areas
+- `LinePlot` to draw series lines
+- `MarkPlot` to draw series marks
+- `LineHighlightPlot` to draw the larger mark at the highlighted value
+- `FocusedLineMark` to draw a focus ring when a data point is focused
 
-The following shows how the line chart is built from these pieces:
+The example below shows how the line chart is built from these pieces:
 
 ```jsx
 <ChartsDataProvider>
