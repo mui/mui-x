@@ -53,7 +53,8 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
             xIndex,
             yIndex,
           };
-
+          const highlightState = getHighlightState(item);
+          
           return (
             <MemoHeatmapItem
               key={`${xIndex}_${yIndex}`}
@@ -69,8 +70,8 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
               value={value}
               slots={props.slots}
               slotProps={props.slotProps}
-              isHighlighted={getHighlightState(item) === 'highlighted'}
-              isFaded={getHighlightState(item) === 'faded'}
+              isHighlighted={highlightState === 'highlighted'}
+              isFaded={highlightState === 'faded'}
               borderRadius={props.borderRadius}
             />
           );
