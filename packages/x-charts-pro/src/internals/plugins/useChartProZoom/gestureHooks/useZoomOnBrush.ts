@@ -30,6 +30,16 @@ export const useZoomOnBrush = (
     instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
   }, [isZoomOnBrushEnabled, instance]);
 
+  React.useEffect(() => {
+    if (!isZoomOnBrushEnabled) {
+      return;
+    }
+
+    instance.updateZoomInteractionListeners('brush', {
+      requiredKeys: config!.requiredKeys,
+    });
+  }, [isZoomOnBrushEnabled, config, instance]);
+
   // Zoom on brush
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;

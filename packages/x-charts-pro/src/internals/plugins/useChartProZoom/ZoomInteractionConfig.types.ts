@@ -144,7 +144,7 @@ export type BrushInteraction = Unpack<
   {
     type: 'brush';
   } & NoModeProp &
-    NoKeysProp
+    AllKeysProp
 >;
 
 export type AnyInteraction = {
