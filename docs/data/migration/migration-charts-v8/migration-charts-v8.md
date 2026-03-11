@@ -262,7 +262,7 @@ It now returns a `HighlightState` union type: `'highlighted' | 'faded' | 'none'`
 The `useItemHighlightedGetter()` hook is replaced by `useItemHighlightStateGetter()`.
 instead of returning an object with two callbacks `isHighlighted()` and `isFaded()`.
 It now returns a single callback `(item) => HighlightState`.
-With `HighlightState` the union type: `'highlighted' | 'faded' | 'none'`
+The `HighlightState` type is the union of the following variants: `'highlighted' | 'faded' | 'none'`
 
 ```diff
 -const { isHighlighted, isFaded } = useItemHighlightedGetter();
