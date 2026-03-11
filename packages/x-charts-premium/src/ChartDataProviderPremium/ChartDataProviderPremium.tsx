@@ -25,9 +25,9 @@ export type ChartDataProviderPremiumSlotProps = ChartsDataProviderPremiumSlotPro
  * @deprecated Use `ChartsDataProviderPremiumProps` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartDataProviderPremiumProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartsDataProviderPremiumProps<TSeries, TSignatures>;
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = ChartsDataProviderPremiumProps<SeriesType, TSignatures>;
 
 /**
  * @deprecated Use `ChartsDataProviderPremium` instead. We added S to the charts prefix to align with other components.

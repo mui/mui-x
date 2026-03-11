@@ -81,13 +81,10 @@ function Chart<T extends ChartType = ChartType>({
 }) {
   switch (type) {
     case 'scatter':
-      return (
-        <ScatterChart enableKeyboardNavigation height={300} series={scatterSeries} />
-      );
+      return <ScatterChart height={300} series={scatterSeries} />;
     case 'line':
       return (
         <LineChart
-          enableKeyboardNavigation
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
           series={series}
@@ -98,7 +95,6 @@ function Chart<T extends ChartType = ChartType>({
       return (
         <BarChart
           layerContainerRef={chartRef}
-          enableKeyboardNavigation
           height={300}
           xAxis={[
             { data: data.map((p) => Math.round(p.x1)).toSorted((a, b) => a - b) },
@@ -110,7 +106,6 @@ function Chart<T extends ChartType = ChartType>({
     case 'pie':
       return (
         <PieChart
-          enableKeyboardNavigation
           series={[
             {
               arcLabel: 'value',
