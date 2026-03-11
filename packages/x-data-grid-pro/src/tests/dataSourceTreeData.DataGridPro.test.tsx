@@ -319,17 +319,16 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   });
 
   it('should remove stale rows when re-fetching expanded nested rows', async () => {
-    let hasTransformedTheNestedData = false;
+    let shouldTransformNestedData = true;
     const testRowId = 'test-nested-row-id-1';
     const transformGetRowsResponse = (
       rows: GridGetRowsResponse['rows'],
       params: GridGetRowsParams,
     ) => {
-      if (params.groupKeys?.length !== 1 || hasTransformedTheNestedData) {
+      if (params.groupKeys?.length !== 1 || !shouldTransformNestedData) {
         return rows;
       }
 
-      hasTransformedTheNestedData = true;
       return rows.map((row, index) => {
         if (index === 1) {
           return { ...row, id: testRowId, name: `${row.name}-updated` };
@@ -356,6 +355,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(2);
       expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
     });
+
+    // Stop transforming so the re-fetch returns data without testRowId
+    shouldTransformNestedData = false;
 
     await act(async () => {
       await apiRef.current?.dataSource.fetchRows(expandedRowId);
