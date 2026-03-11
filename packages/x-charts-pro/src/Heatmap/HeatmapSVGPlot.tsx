@@ -54,7 +54,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
             yIndex,
           };
           const highlightState = getHighlightState(item);
-          
+
           return (
             <MemoHeatmapItem
               key={`${xIndex}_${yIndex}`}
