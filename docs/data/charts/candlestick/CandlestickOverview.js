@@ -183,7 +183,7 @@ function Chart() {
         },
       ]}
       height={400}
-      margin={{ top: 8, bottom: 0, left: 0, right: 0 }}
+      margin={{ top: 8, bottom: 0, left: 8, right: 0 }}
     >
       <ChartsWrapper>
         <CandlestickToolbar
