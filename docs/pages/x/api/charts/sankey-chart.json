@@ -6,6 +6,7 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
     },
@@ -49,7 +50,7 @@
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "type": "function(tooltipItem: SeriesItemIdentifier<SeriesType> | null) => void",
         "describedArgs": ["tooltipItem"]
       }
     },

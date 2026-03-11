@@ -35,12 +35,6 @@ function ReadOnlyDateField(props: DatePickerFieldProps) {
           : pickerContext.value.format(pickerContext.fieldFormat)
       }
       placeholder={parsedFormat}
-      InputProps={{
-        ref: pickerContext.triggerRef,
-        readOnly: true,
-        endAdornment: <CalendarIcon color="action" />,
-        sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
-      }}
       error={hasValidationError}
       focused={pickerContext.open}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
@@ -49,6 +43,14 @@ function ReadOnlyDateField(props: DatePickerFieldProps) {
       ref={pickerContext.rootRef}
       name={pickerContext.name}
       label={pickerContext.label}
+      slotProps={{
+        input: {
+          ref: pickerContext.triggerRef,
+          readOnly: true,
+          endAdornment: <CalendarIcon color="action" />,
+          sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
+        },
+      }}
     />
   );
 }

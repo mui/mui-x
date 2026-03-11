@@ -13,10 +13,10 @@ import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/
 import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 
 export const useChartsDataProviderProps = <
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
-  inProps: ChartsDataProviderProps<TSeries, TSignatures> & ChartsLocalizationProviderProps,
+  inProps: ChartsDataProviderProps<SeriesType, TSignatures> & ChartsLocalizationProviderProps,
 ) => {
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const themedProps = useThemeProps({ props: inProps, name: 'MuiChartDataProvider' });
@@ -35,13 +35,16 @@ export const useChartsDataProviderProps = <
 
   const theme = useTheme();
 
-  const chartProviderProps: ChartsProviderProps<TSeries, TSignatures> = {
-    plugins: plugins as ChartsProviderProps<TSeries, TSignatures>['plugins'],
+  const chartProviderProps: ChartsProviderProps<SeriesType, TSignatures> = {
+    plugins: plugins as ChartsProviderProps<SeriesType, TSignatures>['plugins'],
     pluginParams: {
       theme: theme.palette.mode,
       seriesConfig,
       ...other,
-    } as MergeSignaturesProperty<[...ChartCorePluginSignatures<TSeries>, ...TSignatures], 'params'>,
+    } as MergeSignaturesProperty<
+      [...ChartCorePluginSignatures<SeriesType>, ...TSignatures],
+      'params'
+    >,
   };
 
   return {
