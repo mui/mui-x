@@ -110,8 +110,8 @@ When the series `data` array is shorter than the axis `data`, values outside the
 
 The following code draws a line for x between 2 and 4.
 
-- For x &lt; 2, values are `null`, so the line is not drawn.
-- For x &gt; 4, values are `undefined`, so the line is not drawn.
+- For x<2, values are `null`, so the line is not drawn.
+- For x>4, values are `undefined`, so the line is not drawn.
 
 ```jsx
 <LineChart
