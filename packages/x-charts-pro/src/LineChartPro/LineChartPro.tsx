@@ -2198,7 +2198,7 @@ LineChartPro.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
