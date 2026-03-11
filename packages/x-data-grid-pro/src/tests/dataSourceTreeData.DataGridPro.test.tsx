@@ -319,55 +319,56 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   });
 
   it('should remove stale rows when re-fetching expanded nested rows', async () => {
-    let shouldTransformNestedData = true;
-    const testRowId = 'test-nested-row-id-1';
+    const staleRowId = 'stale-nested-row-id';
+    // Ref-like object to control transform behavior from the test body.
+    // This avoids mutable flags inside the callback that can be flipped
+    // by extra calls from strict mode or concurrent fetches.
+    const transform: {
+      current: (rows: GridGetRowsResponse['rows'], params: GridGetRowsParams) => GridGetRowsResponse['rows'];
+    } = {
+      current: (rows) => rows,
+    };
     const transformGetRowsResponse = (
       rows: GridGetRowsResponse['rows'],
       params: GridGetRowsParams,
-    ) => {
-      if (params.groupKeys?.length !== 1 || !shouldTransformNestedData) {
-        return rows;
-      }
+    ) => transform.current(rows, params);
 
-      return rows.map((row, index) => {
-        if (index === 1) {
-          return { ...row, id: testRowId, name: `${row.name}-updated` };
-        }
-        return row;
-      });
-    };
     const { user } = render(
       <TestDataSource dataSourceCache={null} transformGetRowsResponse={transformGetRowsResponse} />,
     );
 
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.at.least(1);
-    });
-
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
+    // Set transform to inject a custom row into nested data
+    transform.current = (rows, params) => {
+      if (params.groupKeys?.length !== 1) {
+        return rows;
+      }
+      return rows.map((row, index) =>
+        index === 1 ? { ...row, id: staleRowId, name: `${row.name}-stale` } : row,
+      );
+    };
+
+    // Expand the first row — nested fetch will include the stale row
     const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
       .children[0];
-    const cell11 = getCell(0, 0);
-    const callCountBeforeExpand = fetchRowsSpy.callCount;
-    await user.click(within(cell11).getByRole('button'));
+    await user.click(within(getCell(0, 0)).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.at.least(callCountBeforeExpand + 1);
-      expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
+      expect(apiRef.current!.state.rows.tree[staleRowId]).not.to.equal(undefined);
     });
 
-    // Stop transforming so the re-fetch returns data without testRowId
-    shouldTransformNestedData = false;
-    const callCountBeforeRefetch = fetchRowsSpy.callCount;
+    // Reset transform to return unmodified data (stale row no longer present)
+    transform.current = (rows) => rows;
 
+    // Re-fetch the same expanded row
     await act(async () => {
       await apiRef.current?.dataSource.fetchRows(expandedRowId);
     });
 
+    // The stale row should have been removed from the tree
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.at.least(callCountBeforeRefetch + 1);
-      expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
+      expect(apiRef.current!.state.rows.tree[staleRowId]).to.equal(undefined);
     });
   });
 
