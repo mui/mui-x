@@ -82,7 +82,6 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
 const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.arc,
 })<{ ownerState: PieArcOwnerState }>({
   transitionProperty: 'opacity, fill, filter',
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,

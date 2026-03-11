@@ -261,7 +261,6 @@
   { "name": "getPieArcLabelUtilityClass", "kind": "Function" },
   { "name": "getPieArcUtilityClass", "kind": "Function" },
   { "name": "getPieCoordinates", "kind": "Function" },
-  { "name": "getPieUtilityClass", "kind": "Function" },
   { "name": "getReferenceLineUtilityClass", "kind": "Function" },
   { "name": "getValueToPositionMapper", "kind": "Function" },
   { "name": "greenPalette", "kind": "Variable" },
