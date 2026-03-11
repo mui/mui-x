@@ -17,7 +17,7 @@ import {
   type UseChartClosestPointSignature,
 } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
-import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import { type ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { useUtilityClasses } from './scatterClasses';
 import type { ScatterClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';

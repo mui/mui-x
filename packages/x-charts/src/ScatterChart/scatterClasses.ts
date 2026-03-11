@@ -19,7 +19,7 @@ export interface ScatterClasses {
 export type ScatterClassKey = keyof ScatterClasses;
 
 export function getScatterUtilityClass(slot: string) {
-  return generateUtilityClass('MuiScatter', slot);
+  return generateUtilityClass('MuiScatterChart', slot);
 }
 
 export const scatterClasses: ScatterClasses = generateUtilityClasses('MuiScatterChart', [

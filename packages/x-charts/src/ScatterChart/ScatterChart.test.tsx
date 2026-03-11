@@ -1,5 +1,5 @@
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
-import { describeConformance } from 'test/utils/charts/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart, scatterClasses } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
