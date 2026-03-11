@@ -21,11 +21,11 @@ export interface PieArcPlotSlotProps {
 
 export interface PieArcPlotProps
   extends
-    Pick<
-      DefaultizedPieSeriesType,
-      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
-    >,
-    ComputedPieRadius {
+  Pick<
+    DefaultizedPieSeriesType,
+    'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
+  >,
+  ComputedPieRadius {
   /**
    * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }

@@ -6,7 +6,7 @@ import { useFocusedItem } from '../hooks/useFocusedItem';
 import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
 import { PieArc, pieArcClasses, type PieArcProps } from './PieArc';
 import { useUtilityClasses } from './pieClasses';
-import { useItemHighlightState } from '../hooks/useItemHighlightState';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { getModifiedArcProperties } from './dataTransform/getModifiedArcProperties';
 
 export function FocusedPieArc(
@@ -55,7 +55,7 @@ export function FocusedPieArc(
       skipInteraction
       skipAnimation
       stroke={(theme.vars ?? theme).palette.text.primary}
-      seriesId={series.id}
+      id={series.id}
       className={clsx(classes.focusIndicator, pieArcClasses.focusIndicator)}
       dataIndex={focusedItem.dataIndex}
       isFaded={false}

@@ -23,7 +23,7 @@ export interface PieClasses {
 export type PieClassKey = keyof PieClasses;
 
 export interface PieArcOwnerState {
-  seriesId: SeriesId;
+  id: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;

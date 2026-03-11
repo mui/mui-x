@@ -82,7 +82,7 @@ const PieArcRoot = styled('path', {
   transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
 });
 
-export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
+export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'id' | 'ref'> &
   PieArcOwnerState & {
     cornerRadius: number;
     endAngle: number;
@@ -185,7 +185,7 @@ PieArc.propTypes = {
   cornerRadius: PropTypes.number.isRequired,
   dataIndex: PropTypes.number.isRequired,
   endAngle: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isFocused: PropTypes.bool.isRequired,
