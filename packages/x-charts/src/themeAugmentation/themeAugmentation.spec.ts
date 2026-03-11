@@ -163,15 +163,17 @@ createTheme({
       },
     },
     // PieChart components
-    MuiPieChart: {
-      defaultProps: {
-        title: 'toto',
-        // @ts-expect-error invalid MuiPieChart prop
-        someRandomProp: true,
-      },
+    MuiPieArcPlot: {
       styleOverrides: {
         root: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiPieChart class key
+        // @ts-expect-error invalid MuiPieArcPlot class key
+        constent: { color: 'red' },
+      },
+    },
+    MuiPieArcLabelPlot: {
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiPieArcLabelPlot class key
         constent: { color: 'red' },
       },
     },
