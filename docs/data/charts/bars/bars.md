@@ -242,7 +242,8 @@ There is a slight difference between the `event` of `onItemClick` and `onAxisCli
 
 - For `onItemClick` the event is a React synthetic mouse event emitted by the bar component.
 - For `onAxisClick` the event is a native mouse event emitted by the SVG component.
-  :::
+
+:::
 
 If you're composing a custom component, you can incorporate click events as shown in the code snippet below.
 Note that `onAxisClick` can handle both bar and line series if you mix them.
