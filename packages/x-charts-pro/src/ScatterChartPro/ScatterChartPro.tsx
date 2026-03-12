@@ -194,11 +194,14 @@ ScatterChartPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
    * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
    */
   disableVoronoi: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -373,7 +376,7 @@ ScatterChartPro.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**

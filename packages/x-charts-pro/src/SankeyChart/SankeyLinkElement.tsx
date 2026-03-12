@@ -2,13 +2,9 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
-import {
-  selectorChartsIsFaded,
-  selectorChartsIsHighlighted,
-  useInteractionItemProps,
-  useStore,
-} from '@mui/x-charts/internals';
+import { useInteractionItemProps } from '@mui/x-charts/internals';
 import type { SankeyLayoutLink, SankeyLinkIdentifierWithData } from './sankey.types';
+import { useSankeyLinkHighlightState } from './sankeyHighlightHooks';
 import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyLinkElementProps {
@@ -41,7 +37,6 @@ export interface SankeyLinkElementProps {
 export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElementProps>(
   function SankeyLinkElement(props, ref) {
     const { link, opacity = 0.4, onClick, seriesId } = props;
-    const store = useStore();
 
     const identifier: SankeyLinkIdentifierWithData = {
       type: 'sankey',
@@ -52,8 +47,9 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
       link,
     };
 
-    const isHighlighted = store.use(selectorChartsIsHighlighted, identifier);
-    const isFaded = store.use(selectorChartsIsFaded, identifier);
+    const highlightState = useSankeyLinkHighlightState(identifier);
+    const isFaded = highlightState === 'faded';
+    const isHighlighted = highlightState === 'highlighted';
 
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);

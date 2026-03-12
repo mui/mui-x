@@ -1,6 +1,6 @@
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChart, scatterClasses } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
 
@@ -169,5 +169,28 @@ describe('<ScatterChart />', () => {
     render(<ScatterChart series={[]} width={100} height={100} xAxis={[]} yAxis={[]} />);
 
     expect(screen.getByText('No data to display')).toBeVisible();
+  });
+
+  describe('classes', () => {
+    it('should apply scatterClasses.root to the ScatterPlot root element', () => {
+      render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
+      const root = document.querySelector<HTMLElement>(`.${scatterClasses.root}`);
+
+      expect(root).not.to.equal(null);
+    });
+
+    it('should apply scatterClasses.series to series group elements', () => {
+      render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
+      const seriesGroups = document.querySelectorAll<HTMLElement>(`.${scatterClasses.series}`);
+
+      expect(seriesGroups.length).to.equal(1);
+    });
+
+    it('should apply scatterClasses.marker to scatter marker elements', () => {
+      render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
+      const markers = document.querySelectorAll<HTMLElement>(`.${scatterClasses.marker}`);
+
+      expect(markers.length).to.equal(5);
+    });
   });
 });

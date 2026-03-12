@@ -1,9 +1,11 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { type DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { type D3Scale } from '../models/axis';
-import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
+import { useUtilityClasses } from './scatterClasses';
+import type { ScatterClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
@@ -22,7 +24,9 @@ export interface BatchScatterProps {
   yScale: D3Scale;
   color: string;
   colorGetter?: ColorGetter<'scatter'>;
+  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ScatterClasses>;
+  className?: string;
 }
 
 const MAX_POINTS_PER_PATH = 1000;
@@ -136,7 +140,7 @@ const Group = styled('g', {
  * You can read about all the limitations [here](https://mui.com/x/react-charts/scatter/#performance).
  */
 export function BatchScatter(props: BatchScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
+  const { series, xScale, yScale, color, colorGetter, className } = props;
 
   const { store } = useChartContext<[UseChartHighlightSignature<'scatter'>]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
@@ -145,7 +149,7 @@ export function BatchScatter(props: BatchScatterProps) {
   const seriesUnfadedItem = store.use(selectorChartSeriesUnfadedItem, series.id);
   const highlightedModifier = 1.2;
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
-  const classes = useUtilityClasses(inClasses);
+  const classes = useUtilityClasses(props);
 
   const siblings: React.ReactNode[] = [];
   if (seriesHighlightedItem != null) {
@@ -184,7 +188,7 @@ export function BatchScatter(props: BatchScatterProps) {
   return (
     <React.Fragment>
       <Group
-        className={classes.root}
+        className={clsx(classes.series, className)}
         data-series={series.id}
         data-faded={isSeriesFaded || undefined}
         data-highlighted={isSeriesHighlighted || undefined}
