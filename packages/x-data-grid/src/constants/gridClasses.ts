@@ -1067,6 +1067,7 @@ export const gridClassesOverrides = {
     'row',
     'row--borderBottom',
     'row--detailPanelExpanded',
+    // TODO v9: Rename to `cell--dragging`
     'row--dragging',
     'row--dynamicHeight',
     'row--editable',
