@@ -2,14 +2,14 @@
 
 ## 9.0.0-alpha.3
 
-_Mar 11, 2026_
+_Mar 12, 2026_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes and internal improvements
 
 The following team members contributed to this release:
-@aemartos, @alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @sai6855, @siriwatknp
+@aemartos, @alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @rita-codes, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -35,7 +35,6 @@ Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.3`.
 #### `@mui/x-date-pickers@9.0.0-alpha.3`
 
 - [pickers] Refactor `DateRangePickerDay` overrides to use a centralized `elementOverrides` object (#21426) @sai6855
-- [docs] Remove `New` flag on Tree View and Date and Time Pickers features released before v9 alpha (#21585) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -78,7 +77,7 @@ Same changes as in `@mui/x-charts-pro@9.0.0-alpha.3`.
 - Remove `status` from content slot props returned by `getContentProps()` (use `data-*` attributes; `status` on `useTreeItem` return value is unchanged)
 - Remove deprecated CSS state classes from `treeItemClasses`: `expanded`, `selected`, `focused`, `disabled`, `editable`, `editing` (use `[data-expanded]`, `[data-selected]`, etc.)
 - The `<RichTreeViewPro />` component has now virtualization enabled by default.
-- The items used inside the  `<RichTreeViewPro />` now have a default height of `32px`.
+- The items used inside the `<RichTreeViewPro />` now have a default height of `32px`.
 - The events of the `<RichTreeViewPro />` are now rendered as a flat list instead of a nested tree.
 
 #### `@mui/x-tree-view@9.0.0-alpha.3`
@@ -102,7 +101,8 @@ Internal changes.
 
 - [docs] Fix `AssistantWithDataSource` demo crashing (#21555) @sai6855
 - [docs] Remove `Preview` pill from Sankey (#21623) @bernardobelchior
-- [docs] Migrate internal Material UI deprecated APIs (#21680) @siriwatknp
+- [docs] Migrate internal Material UI deprecated APIs (#21680) @siriwatknp
+- [docs] Remove `New` flag on Tree View and Date and Time Pickers features released before v9 alpha (#21585) @flaviendelangle
 
 ### Core
 
