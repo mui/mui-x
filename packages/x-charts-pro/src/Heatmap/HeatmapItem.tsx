@@ -61,7 +61,6 @@ export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
 function HeatmapItem(props: HeatmapItemProps) {
   const {
     seriesId,
-    dataIndex,
     color,
     value,
     isHighlighted = false,
@@ -87,7 +86,6 @@ function HeatmapItem(props: HeatmapItemProps) {
 
   const ownerState: HeatmapCellOwnerState = {
     seriesId,
-    dataIndex,
     color,
     isFaded,
     isHighlighted,
@@ -121,7 +119,6 @@ HeatmapItem.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   color: PropTypes.string.isRequired,
-  dataIndex: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
