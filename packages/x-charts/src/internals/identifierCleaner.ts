@@ -1,5 +1,5 @@
-import type { SeriesId, SeriesItemIdentifierWithType } from '../models';
-import type { SeriesTypeWithDataIndex } from '../models/seriesType/config';
+import type { SeriesId } from '../models';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 /**
  * Cleans an identifier by extracting only type, seriesId, and dataIndex properties.
@@ -10,13 +10,10 @@ import type { SeriesTypeWithDataIndex } from '../models/seriesType/config';
  * properties (like heatmap's xIndex/yIndex) must provide their own cleaner.
  */
 export const identifierCleanerSeriesIdDataIndex = <
-  SeriesType extends SeriesTypeWithDataIndex,
->(identifier: {
-  type: SeriesType;
-  seriesId: SeriesId;
-  dataIndex?: number;
-}): SeriesItemIdentifierWithType<SeriesType> => {
-  // @ts-expect-error we need to trust the output type here, since SeriesType is generic
+  T extends { type: ChartSeriesType; seriesId: SeriesId; dataIndex?: number },
+>(
+  identifier: T,
+): Pick<T, 'type' | 'seriesId' | 'dataIndex'> => {
   return {
     type: identifier.type,
     seriesId: identifier.seriesId,
