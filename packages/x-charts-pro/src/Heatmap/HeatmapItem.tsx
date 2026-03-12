@@ -20,7 +20,6 @@ export interface HeatmapItemSlotProps {
 }
 
 export interface HeatmapItemProps {
-  dataIndex: number;
   seriesId: SeriesId;
   value: number;
   width: number;

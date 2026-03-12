@@ -16,7 +16,6 @@ export type HeatmapChartClassKey = keyof HeatmapChartClasses;
 
 export interface HeatmapCellOwnerState {
   seriesId: SeriesId;
-  dataIndex: number;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;

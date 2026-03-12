@@ -38,7 +38,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
         <RegisterHeatmapPointerInteractions />
       ) : null}
       <g>
-        {seriesToDisplay.data.map(([xIndex, yIndex, value], dataIndex) => {
+        {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
           const x = xScale(xDomain[xIndex]);
           const y = yScale(yDomain[yIndex]);
           const color = colorScale?.(value);
@@ -65,7 +65,6 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
               xIndex={xIndex}
               yIndex={yIndex}
               color={color}
-              dataIndex={dataIndex}
               seriesId={series.seriesOrder[0]}
               value={value}
               slots={props.slots}
