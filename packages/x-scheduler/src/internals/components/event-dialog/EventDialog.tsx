@@ -142,7 +142,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       className={classes.eventDialog}
       slotProps={{
         paper: {
-          component: PaperComponent,
+          as: PaperComponent,
           className: classes.eventDialogPaper,
           anchorRef,
           dragHandlerRef,
