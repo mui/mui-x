@@ -108,7 +108,7 @@ function initializeState(params: ParamsWithDefaults) {
         {} as Record<string, Record<string, any>>,
       ),
       context: {},
-      scrollPosition: { current: ScrollPosition.EMPTY },
+      scrollPosition: { current: { ...ScrollPosition.EMPTY } },
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled

@@ -63,7 +63,7 @@ export type PinnedRowPosition = keyof PinnedRows;
 
 export type ScrollPosition = { top: number; left: number };
 export const ScrollPosition = {
-  EMPTY: { top: 0, left: 0 },
+  EMPTY: Object.freeze({ top: 0, left: 0 }),
   equals: (a: ScrollPosition, b: ScrollPosition) => a.top === b.top && a.left === b.left,
 };
 
