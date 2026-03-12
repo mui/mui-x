@@ -71,6 +71,16 @@ Same changes as in `@mui/x-charts-pro@9.0.0-alpha.3`.
 
 ### Tree View
 
+#### Breaking changes
+
+- Remove `TreeViewBaseItem` type (use `TreeViewDefaultItemModelProperties` or a custom interface)
+- Remove `useTreeViewApiRef` hook (use `useRichTreeViewApiRef`, `useSimpleTreeViewApiRef`, or `useRichTreeViewProApiRef`)
+- Remove `status` from content slot props returned by `getContentProps()` (use `data-*` attributes; `status` on `useTreeItem` return value is unchanged)
+- Remove deprecated CSS state classes from `treeItemClasses`: `expanded`, `selected`, `focused`, `disabled`, `editable`, `editing` (use `[data-expanded]`, `[data-selected]`, etc.)
+- The `<RichTreeViewPro />` component has now virtualization enabled by default.
+- The items used inside the  `<RichTreeViewPro />` now have a default height of `32px`.
+- The events of the `<RichTreeViewPro />` are now rendered as a flat list instead of a nested tree.
+
 #### `@mui/x-tree-view@9.0.0-alpha.3`
 
 - [tree view] Remove deprecated APIs (#21591) @flaviendelangle
