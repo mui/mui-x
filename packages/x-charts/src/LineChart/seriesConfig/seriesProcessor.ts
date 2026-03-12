@@ -45,8 +45,8 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
         `MUI X Charts: Line series with id="${id}" has no data. ` +
-        'The chart cannot render this series without data. ' +
-        'Provide a data property to the series or use the dataset prop.',
+          'The chart cannot render this series without data. ' +
+          'Provide a data property to the series or use the dataset prop.',
       );
     }
 
@@ -57,8 +57,8 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
         if (!dataKey) {
           throw new Error(
             `MUI X Charts: Line series with id="${id}" has no data and no dataKey. ` +
-            'When using the dataset prop, each series must have a dataKey to identify which dataset column to use. ' +
-            'Add a dataKey property to the series configuration.',
+              'When using the dataset prop, each series must have a dataKey to identify which dataset column to use. ' +
+              'Add a dataKey property to the series configuration.',
           );
         }
 
@@ -114,9 +114,9 @@ Line plots only support numeric and null values.`,
       const dataKey = series[id].dataKey;
       const data = dataKey
         ? dataset!.map((d) => {
-          const value = d[dataKey];
-          return typeof value === 'number' ? value : null;
-        })
+            const value = d[dataKey];
+            return typeof value === 'number' ? value : null;
+          })
         : series[id].data!;
       const hidden = !isItemVisible?.({ type: 'line', seriesId: id });
       completedSeries[id] = {
