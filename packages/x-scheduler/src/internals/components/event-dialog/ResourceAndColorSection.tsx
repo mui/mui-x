@@ -25,6 +25,13 @@ import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
 const NO_RESOURCE_VALUE = '';
 
+const ResourceMenuItem = styled(MenuItem, {
+  name: 'MuiEventDialog',
+  slot: 'ResourceMenuItem',
+})(({ theme }) => ({
+  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-indent) * ${theme.spacing(2)})`,
+}));
+
 const ResourceMenuColorDot = styled('span', {
   name: 'MuiEventDialog',
   slot: 'ResourceMenuColorDot',
@@ -188,14 +195,15 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
 
             // Inside a group, depth 0 (root) and depth 1 (direct children) are
             // at the same level. Depth 2+ gets indentation based on (depth - 1).
-            const indentLevel = resourceOption.depth - 1;
+            const indentLevel = Math.max(0, resourceOption.depth - 1);
 
             items.push(
-              <MenuItem
+              <ResourceMenuItem
                 key={resourceOption.value ?? NO_RESOURCE_VALUE}
                 value={resourceOption.value ?? NO_RESOURCE_VALUE}
                 aria-label={resourceOption.label}
-                sx={indentLevel > 0 ? { pl: 2 * indentLevel + 2 } : undefined}
+                className={classes.eventDialogResourceMenuItem}
+                style={{ '--resource-indent': indentLevel } as React.CSSProperties}
               >
                 <ListItemIcon>
                   <ResourceMenuColorDot
@@ -205,7 +213,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
                   />
                 </ListItemIcon>
                 <ListItemText>{resourceOption.label}</ListItemText>
-              </MenuItem>,
+              </ResourceMenuItem>,
             );
 
             return items;
