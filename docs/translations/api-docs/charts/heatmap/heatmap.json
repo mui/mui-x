@@ -120,7 +120,8 @@
     },
     "series": {
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${heatmapClasses.series}-${seriesId}</code>.",
-      "nodeName": "the root element for a specified series"
+      "nodeName": "the root element for a specified series",
+      "deprecationInfo": "Use <code>[data-series=&quot;${seriesId}&quot;]</code> selector instead."
     }
   },
   "slotDescriptions": {
