@@ -29,6 +29,7 @@ function createControlledStream() {
   const ready = new Promise<ReadableStreamDefaultController<any>>((resolve) => {
     resolveReady = resolve;
   });
+  const cancel = vi.fn();
 
   return {
     stream: new ReadableStream({
@@ -36,7 +37,9 @@ function createControlledStream() {
         controllerRef = controller;
         resolveReady?.(controller);
       },
+      cancel,
     }),
+    cancel,
     async enqueue(value: any) {
       (controllerRef ?? (await ready)).enqueue(value);
     },
@@ -238,6 +241,63 @@ describe('useChat', () => {
     unmount();
   });
 
+  it('aborts an active stream during unmount and clears the pending controller', async () => {
+    const controlledStream = createControlledStream();
+    const stop = vi.fn();
+    let signalRef: AbortSignal | undefined;
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async ({ signal }) => {
+        signalRef = signal;
+        return controlledStream.stream;
+      }),
+      stop,
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+    });
+    const { result, unmount } = renderHook(
+      () => ({
+        chat: useChat(),
+        store: useChatStore(),
+      }),
+      { wrapper: Wrapper },
+    );
+
+    let sendPromise!: Promise<void>;
+
+    act(() => {
+      sendPromise = result.current.chat.sendMessage({
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'Stream on unmount' }],
+      });
+    });
+
+    await waitFor(() => {
+      expect(result.current.chat.isStreaming).toBe(true);
+      expect(result.current.store.state.activeStreamAbortController).toBeInstanceOf(AbortController);
+    });
+
+    const store = result.current.store;
+    const userMessageId = result.current.chat.messages[0]?.id;
+
+    unmount();
+
+    await sendPromise;
+
+    expect(signalRef?.aborted).toBe(true);
+    expect(stop).toHaveBeenCalledTimes(1);
+    expect(controlledStream.cancel).toHaveBeenCalledTimes(1);
+    expect(store.state.activeStreamAbortController).toBeNull();
+    expect(store.state.isStreaming).toBe(false);
+    expect(store.state.messageIds).toEqual([userMessageId]);
+    expect(store.state.messagesById[userMessageId ?? '']).toEqual(
+      expect.objectContaining({
+        id: userMessageId,
+        status: 'cancelled',
+      }),
+    );
+  });
+
   it('assembles streamed assistant parts end-to-end from envelopes and batched deltas', async () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async () =>
@@ -423,9 +483,16 @@ describe('useChat', () => {
     ]);
   });
 
-  it('loads conversations on mount and applies realtime message, read, and presence events', async () => {
+  it('loads conversations on mount, subscribes to realtime events, and handles every event type', async () => {
     const cleanup = vi.fn();
     let onEvent: ((event: any) => void) | undefined;
+    const initialThreadMessage: ChatMessage = {
+      id: 'm1',
+      conversationId: 'c1',
+      role: 'assistant',
+      status: 'sent',
+      parts: [{ type: 'text', text: 'Loaded thread' }],
+    };
     const initialConversation: ChatConversation = {
       id: 'c1',
       title: 'General',
@@ -437,6 +504,11 @@ describe('useChat', () => {
       listConversations: vi.fn(async () => ({
         conversations: [initialConversation],
       })),
+      listMessages: vi.fn(async ({ conversationId }) => ({
+        messages: conversationId === 'c1' ? [initialThreadMessage] : [],
+        cursor: undefined,
+        hasMore: false,
+      })),
       subscribe: vi.fn(({ onEvent: currentOnEvent }) => {
         onEvent = currentOnEvent;
         return cleanup;
@@ -444,23 +516,63 @@ describe('useChat', () => {
     });
     const { Wrapper } = createProviderWrapper({
       adapter,
+      defaultActiveConversationId: 'c1',
     });
     const { result, unmount } = renderHook(() => useChat(), { wrapper: Wrapper });
 
     await waitFor(() => {
       expect(result.current.conversations).toHaveLength(1);
+      expect(result.current.messages).toEqual([initialThreadMessage]);
     });
+
+    expect(adapter.listConversations).toHaveBeenCalledTimes(1);
+    expect(adapter.subscribe).toHaveBeenCalledTimes(1);
 
     act(() => {
       onEvent?.({
-        type: 'message-added',
+        type: 'message-updated',
         message: {
-          id: 'm1',
+          ...initialThreadMessage,
+          parts: [{ type: 'text', text: 'Updated thread' }],
+        } satisfies ChatMessage,
+      });
+      onEvent?.({
+        type: 'message-updated',
+        message: {
+          id: 'm2',
           conversationId: 'c1',
           role: 'assistant',
           status: 'sent',
-          parts: [{ type: 'text', text: 'Hi' }],
+          parts: [{ type: 'text', text: 'Added via update' }],
         } satisfies ChatMessage,
+      });
+      onEvent?.({
+        type: 'message-removed',
+        messageId: 'm2',
+        conversationId: 'c1',
+      });
+      onEvent?.({
+        type: 'conversation-added',
+        conversation: {
+          id: 'c2',
+          title: 'Support',
+          unreadCount: 1,
+        } satisfies ChatConversation,
+      });
+      onEvent?.({
+        type: 'conversation-updated',
+        conversation: {
+          id: 'c2',
+          title: 'Support updated',
+          unreadCount: 2,
+        } satisfies ChatConversation,
+      });
+      onEvent?.({
+        type: 'conversation-updated',
+        conversation: {
+          id: 'c3',
+          title: 'Sales',
+        } satisfies ChatConversation,
       });
       onEvent?.({
         type: 'read',
@@ -479,14 +591,51 @@ describe('useChat', () => {
       });
     });
 
-    expect(result.current.messages).toHaveLength(1);
-    expect(result.current.conversations[0]).toEqual({
-      id: 'c1',
-      title: 'General',
-      unreadCount: 0,
-      readState: 'read',
-      participants: [{ id: 'u1', displayName: 'Alex', isOnline: true }],
+    expect(result.current.messages).toEqual([
+      {
+        ...initialThreadMessage,
+        parts: [{ type: 'text', text: 'Updated thread' }],
+      },
+    ]);
+    expect(result.current.conversations).toEqual([
+      {
+        id: 'c1',
+        title: 'General',
+        unreadCount: 0,
+        readState: 'read',
+        participants: [{ id: 'u1', displayName: 'Alex', isOnline: true }],
+      },
+      {
+        id: 'c2',
+        title: 'Support updated',
+        unreadCount: 2,
+      },
+      {
+        id: 'c3',
+        title: 'Sales',
+      },
+    ]);
+
+    act(() => {
+      onEvent?.({
+        type: 'conversation-removed',
+        conversationId: 'c1',
+      });
     });
+
+    expect(result.current.activeConversationId).toBeUndefined();
+    expect(result.current.messages).toEqual([]);
+    expect(result.current.conversations).toEqual([
+      {
+        id: 'c2',
+        title: 'Support updated',
+        unreadCount: 2,
+      },
+      {
+        id: 'c3',
+        title: 'Sales',
+      },
+    ]);
 
     unmount();
 

@@ -31,6 +31,11 @@ const conversation1: ChatConversation = {
   title: 'General',
 };
 
+const conversation2: ChatConversation = {
+  id: 'c2',
+  title: 'Support',
+};
+
 function createAdapter(): ChatAdapter {
   return {
     async sendMessage() {
@@ -63,7 +68,7 @@ describe('ChatProvider', () => {
     clearWarningsCache();
   });
 
-  it('provides the chat store through context', () => {
+  it('renders children and provides the chat store through context', () => {
     const { Wrapper } = createProviderWrapper({
       adapter: createAdapter(),
       defaultMessages: [message1],
@@ -159,7 +164,8 @@ describe('ChatProvider', () => {
     expect(result.current.runtime.onFinish).toBe(onFinish);
     expect(result.current.runtime.onData).toBe(onData);
     expect(result.current.runtime.onError).toBe(onError);
-    expect(result.current.runtime.partRenderers).toBe(partRenderers);
+    expect(result.current.runtime.partRenderers).toEqual(partRenderers);
+    expect(result.current.runtime.partRenderers).not.toBe(partRenderers);
 
     setProps({
       adapter,
@@ -176,6 +182,15 @@ describe('ChatProvider', () => {
     expect(result.current.store).toBe(initialStore);
     expect(result.current.store.state.messageIds).toEqual(['m1', 'm2']);
     expect(result.current.store.state.activeConversationId).toBe('c2');
+  });
+
+  it('provides an empty concrete renderer registry when no custom renderers are passed', () => {
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter(),
+    });
+    const { result } = renderHook(() => useChatRuntimeContext(), { wrapper: Wrapper });
+
+    expect(result.current.partRenderers).toEqual({});
   });
 
   it('calls uncontrolled onChange callbacks for internal store mutations', () => {
@@ -209,6 +224,57 @@ describe('ChatProvider', () => {
     expect(onComposerValueChange.lastCall.args[0]).toBe('Draft one');
   });
 
+  it('resyncs controlled models after internal mutations and keeps the parent values authoritative', () => {
+    const onMessagesChange = spy();
+    const onConversationsChange = spy();
+    const onActiveConversationChange = spy();
+    const onComposerValueChange = spy();
+    const controlledMessages = [message1];
+    const controlledConversations = [conversation1];
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: createAdapter(),
+      messages: controlledMessages,
+      conversations: controlledConversations,
+      activeConversationId: 'c1',
+      composerValue: 'Draft one',
+      onMessagesChange,
+      onConversationsChange,
+      onActiveConversationChange,
+      onComposerValueChange,
+    });
+    const { result, rerender } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.addMessage(message2);
+      result.current.setConversations([conversation2]);
+      result.current.setActiveConversation('c2');
+      result.current.setComposerValue('Draft two');
+    });
+
+    expect(onMessagesChange.lastCall.args[0]).toEqual([message1, message2]);
+    expect(onConversationsChange.lastCall.args[0]).toEqual([conversation2]);
+    expect(onActiveConversationChange.lastCall.args[0]).toBe('c2');
+    expect(onComposerValueChange.lastCall.args[0]).toBe('Draft two');
+
+    setProps({
+      adapter: createAdapter(),
+      messages: controlledMessages,
+      conversations: controlledConversations,
+      activeConversationId: 'c1',
+      composerValue: 'Draft one',
+      onMessagesChange,
+      onConversationsChange,
+      onActiveConversationChange,
+      onComposerValueChange,
+    });
+    rerender();
+
+    expect(result.current.state.messageIds).toEqual(['m1']);
+    expect(result.current.state.conversationIds).toEqual(['c1']);
+    expect(result.current.state.activeConversationId).toBe('c1');
+    expect(result.current.state.composerValue).toBe('Draft one');
+  });
+
   it('warns when switching a provider model from controlled to uncontrolled', () => {
     const { Wrapper, setProps } = createProviderWrapper({
       adapter: createAdapter(),
@@ -224,6 +290,24 @@ describe('ChatProvider', () => {
       rerender();
     }).toErrorDev(
       'MUI X Chat: A component is changing the controlled messages state of ChatProvider to be uncontrolled.',
+    );
+  });
+
+  it('warns when switching a provider model from uncontrolled to controlled', () => {
+    const { Wrapper, setProps } = createProviderWrapper({
+      adapter: createAdapter(),
+      messages: undefined,
+    });
+    const { rerender } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+    expect(() => {
+      setProps({
+        adapter: createAdapter(),
+        messages: [message1],
+      });
+      rerender();
+    }).toErrorDev(
+      'MUI X Chat: A component is changing the uncontrolled messages state of ChatProvider to be controlled.',
     );
   });
 
