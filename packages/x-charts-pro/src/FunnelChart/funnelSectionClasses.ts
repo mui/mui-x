@@ -29,6 +29,7 @@ export interface FunnelSectionClasses {
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${funnelSectionClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series]` selector instead.
    */
   series: string;
 }
