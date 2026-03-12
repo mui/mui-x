@@ -61,15 +61,15 @@ const ResourcesLegendItemName = styled(Typography, {
 interface ResourcesLegendItemProps {
   resource: SchedulerResource;
   isVisible: boolean;
-  depth: number;
   onToggle: (resourceId: string, event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function ResourcesLegendItem(props: ResourcesLegendItemProps) {
-  const { resource, isVisible, depth, onToggle } = props;
+  const { resource, isVisible, onToggle } = props;
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resource.id);
+  const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resource.id);
 
   return (
     <ResourcesLegendItemRoot
@@ -108,7 +108,6 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   const store = useEventCalendarStoreContext();
   const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
-  const resourceDepthLookup = useStore(store, schedulerResourceSelectors.resourceDepthLookup);
   const parentIdLookup = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   const handleToggle = useStableCallback(
@@ -151,7 +150,6 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
           key={resource.id}
           resource={resource}
           isVisible={visibleResources[resource.id] !== false}
-          depth={resourceDepthLookup.get(resource.id) ?? 0}
           onToggle={handleToggle}
         />
       ))}
