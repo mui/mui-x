@@ -147,6 +147,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+  const { className: chartsLayerContainerClassName, ...chartsSvgLayerProps } = chartsSurfaceProps;
 
   return (
     <ChartsDataProviderPremium<'ohlc', CandlestickChartPluginSignatures>
@@ -155,15 +156,14 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        {/* FIXME: Decide how to spread chartsSurfaceProps */}
-        <ChartsLayerContainer className={chartsSurfaceProps.className}>
+        <ChartsLayerContainer className={chartsLayerContainerClassName}>
           <ChartsSvgLayer>
             <ChartsGrid {...gridProps} />
           </ChartsSvgLayer>
           <ChartsWebGLLayer>
             <CandlestickPlot {...candlestickPlotProps} />
           </ChartsWebGLLayer>
-          <ChartsSvgLayer>
+          <ChartsSvgLayer {...chartsSvgLayerProps}>
             <g {...clipPathGroupProps}>
               <ChartsOverlay {...overlayProps} />
               <ChartsAxisHighlight {...axisHighlightProps} />
