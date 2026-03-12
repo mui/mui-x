@@ -5,6 +5,7 @@ import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
 import type { SankeyLayoutLink, SankeyLinkIdentifierWithData } from './sankey.types';
 import { useSankeyLinkHighlightState } from './sankeyHighlightHooks';
+import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyLinkElementProps {
   /**
@@ -53,6 +54,8 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);
 
+    const classes = useUtilityClasses();
+
     const handleClick = useEventCallback((event: React.MouseEvent<SVGPathElement>) => {
       onClick?.(event, identifier);
     });
@@ -71,6 +74,7 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     return (
       <path
         ref={ref}
+        className={classes.link}
         d={link.path}
         fill={link.color}
         opacity={finalOpacity}

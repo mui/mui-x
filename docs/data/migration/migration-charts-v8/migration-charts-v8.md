@@ -367,6 +367,23 @@ If you were using `arc` as a workaround, update it to `cell`.
  });
 ```
 
+## Sankey
+
+### Removed group
+
+The DOM structure got simplified by removing the group wrapping each nodes.
+It's `data-node` attribute got moved to the `rect` associated to it.
+
+```diff
+-<g data-node="nodeId-A">
+   <rect
++    data-node="nodeId-A"
+     x="20"
+     /* ... */
+   />
+-</g>
+```
+
 ### New identifier structure
 
 The heatmap identifier type has been modified as follows.
