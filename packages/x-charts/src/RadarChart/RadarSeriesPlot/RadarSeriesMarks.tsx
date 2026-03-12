@@ -8,7 +8,7 @@ import {
   useUtilityClasses as useDeprecatedUtilityClasses,
 } from './radarSeriesPlotClasses';
 import { useUtilityClasses } from '../radarClasses';
-import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
+import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { type SeriesId } from '../../models/seriesType/common';
 import { type HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
 
@@ -52,7 +52,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
     area: `${newClasses.seriesArea} ${deprecatedClasses.area}`,
     mark: `${newClasses.seriesMark} ${deprecatedClasses.mark}`,
   };
-  const getHighlightState = useItemHighlightStateGetter();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
   return (
     <React.Fragment>

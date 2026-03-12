@@ -4,7 +4,7 @@ import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import { useUtilityClasses as useDeprecatedUtilityClasses } from './radarSeriesPlotClasses';
 import { useUtilityClasses } from '../radarClasses';
-import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
+import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';

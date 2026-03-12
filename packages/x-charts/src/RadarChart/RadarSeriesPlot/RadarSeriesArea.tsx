@@ -9,7 +9,7 @@ import {
   useUtilityClasses as useDeprecatedUtilityClasses,
 } from './radarSeriesPlotClasses';
 import { useUtilityClasses } from '../radarClasses';
-import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
+import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import { type SeriesId } from '../../models/seriesType/common';
 import { type HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
