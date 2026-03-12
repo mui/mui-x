@@ -23,6 +23,29 @@ function createPendingStream() {
   });
 }
 
+function createControlledStream() {
+  let controllerRef: ReadableStreamDefaultController<any> | null = null;
+  let resolveReady: ((controller: ReadableStreamDefaultController<any>) => void) | null = null;
+  const ready = new Promise<ReadableStreamDefaultController<any>>((resolve) => {
+    resolveReady = resolve;
+  });
+
+  return {
+    stream: new ReadableStream({
+      start(controller) {
+        controllerRef = controller;
+        resolveReady?.(controller);
+      },
+    }),
+    async enqueue(value: any) {
+      (controllerRef ?? (await ready)).enqueue(value);
+    },
+    async close() {
+      (controllerRef ?? (await ready)).close();
+    },
+  };
+}
+
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
@@ -694,6 +717,273 @@ describe('useChat', () => {
         },
       ],
     });
+  });
+
+  it('completes the tool approval flow from request to approved output', async () => {
+    const controlledStream = createControlledStream();
+    const addToolApprovalResponse = vi.fn(async () => {});
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => controlledStream.stream),
+      addToolApprovalResponse,
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    let sendPromise!: Promise<void>;
+
+    act(() => {
+      sendPromise = result.current.sendMessage({
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'Search weather' }],
+      });
+    });
+
+    await waitFor(() => {
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+    });
+
+    await act(async () => {
+      await controlledStream.enqueue({ type: 'start', messageId: 'assistant-1' });
+      await controlledStream.enqueue({
+        type: 'tool-approval-request',
+        toolCallId: 'tool-1',
+        toolName: 'search',
+        input: { query: 'weather' },
+      });
+    });
+
+    await waitFor(() => {
+      expect(result.current.messages).toHaveLength(2);
+      expect(result.current.messages[1]).toEqual(
+        expect.objectContaining({
+          id: 'assistant-1',
+          conversationId: 'c1',
+          role: 'assistant',
+          parts: [
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId: 'tool-1',
+                toolName: 'search',
+                input: { query: 'weather' },
+                state: 'approval-requested',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    await act(async () => {
+      await result.current.addToolApprovalResponse({
+        id: 'tool-1',
+        approved: true,
+        reason: 'Approved',
+      });
+    });
+
+    expect(addToolApprovalResponse).toHaveBeenCalledWith({
+      id: 'tool-1',
+      approved: true,
+      reason: 'Approved',
+    });
+
+    expect(result.current.messages[1]).toEqual(
+      expect.objectContaining({
+        id: 'assistant-1',
+        parts: [
+          {
+            type: 'tool',
+            toolInvocation: {
+              toolCallId: 'tool-1',
+              toolName: 'search',
+              input: { query: 'weather' },
+              state: 'approval-responded',
+              approval: {
+                approved: true,
+                reason: 'Approved',
+              },
+            },
+          },
+        ],
+      }),
+    );
+
+    await act(async () => {
+      await controlledStream.enqueue({
+        type: 'tool-output-available',
+        toolCallId: 'tool-1',
+        output: { results: ['sunny'] },
+      });
+      await controlledStream.enqueue({ type: 'finish', messageId: 'assistant-1', finishReason: 'stop' });
+      await controlledStream.close();
+      await sendPromise;
+    });
+
+    expect(result.current.messages).toEqual([
+      expect.objectContaining({
+        conversationId: 'c1',
+        role: 'user',
+        status: 'sent',
+        parts: [{ type: 'text', text: 'Search weather' }],
+      }),
+      {
+        id: 'assistant-1',
+        conversationId: 'c1',
+        role: 'assistant',
+        status: 'sent',
+        parts: [
+          {
+            type: 'tool',
+            toolInvocation: {
+              toolCallId: 'tool-1',
+              toolName: 'search',
+              input: { query: 'weather' },
+              output: { results: ['sunny'] },
+              preliminary: undefined,
+              state: 'output-available',
+              approval: {
+                approved: true,
+                reason: 'Approved',
+              },
+            },
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('completes the tool approval flow from request to denied output', async () => {
+    const controlledStream = createControlledStream();
+    const addToolApprovalResponse = vi.fn(async () => {});
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => controlledStream.stream),
+      addToolApprovalResponse,
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    let sendPromise!: Promise<void>;
+
+    act(() => {
+      sendPromise = result.current.sendMessage({
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'Run search' }],
+      });
+    });
+
+    await waitFor(() => {
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+    });
+
+    await act(async () => {
+      await controlledStream.enqueue({ type: 'start', messageId: 'assistant-1' });
+      await controlledStream.enqueue({
+        type: 'tool-approval-request',
+        toolCallId: 'tool-1',
+        toolName: 'search',
+        input: { query: 'weather' },
+      });
+    });
+
+    await waitFor(() => {
+      expect(result.current.messages[1]).toEqual(
+        expect.objectContaining({
+          id: 'assistant-1',
+          parts: [
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId: 'tool-1',
+                toolName: 'search',
+                input: { query: 'weather' },
+                state: 'approval-requested',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    await act(async () => {
+      await result.current.addToolApprovalResponse({
+        id: 'tool-1',
+        approved: false,
+        reason: 'User denied',
+      });
+    });
+
+    expect(addToolApprovalResponse).toHaveBeenCalledWith({
+      id: 'tool-1',
+      approved: false,
+      reason: 'User denied',
+    });
+
+    expect(result.current.messages[1]).toEqual(
+      expect.objectContaining({
+        id: 'assistant-1',
+        parts: [
+          {
+            type: 'tool',
+            toolInvocation: {
+              toolCallId: 'tool-1',
+              toolName: 'search',
+              input: { query: 'weather' },
+              state: 'approval-responded',
+              approval: {
+                approved: false,
+                reason: 'User denied',
+              },
+            },
+          },
+        ],
+      }),
+    );
+
+    await act(async () => {
+      await controlledStream.enqueue({
+        type: 'tool-output-denied',
+        toolCallId: 'tool-1',
+        reason: 'Needs approval',
+      });
+      await controlledStream.enqueue({ type: 'finish', messageId: 'assistant-1', finishReason: 'stop' });
+      await controlledStream.close();
+      await sendPromise;
+    });
+
+    expect(result.current.messages).toEqual([
+      expect.objectContaining({
+        conversationId: 'c1',
+        role: 'user',
+        status: 'sent',
+        parts: [{ type: 'text', text: 'Run search' }],
+      }),
+      {
+        id: 'assistant-1',
+        conversationId: 'c1',
+        role: 'assistant',
+        status: 'sent',
+        parts: [
+          {
+            type: 'tool',
+            toolInvocation: {
+              toolCallId: 'tool-1',
+              toolName: 'search',
+              input: { query: 'weather' },
+              state: 'output-denied',
+              approval: {
+                approved: false,
+                reason: 'Needs approval',
+              },
+            },
+          },
+        ],
+      },
+    ]);
   });
 
   it('surfaces send errors through state and onError', async () => {
