@@ -4,7 +4,10 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps, useStore } from '@mui/x-charts/internals';
 import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.types';
-import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
+import {
+  selectorIsNodeHighlighted,
+  selectorIsSankeyItemFaded,
+} from './plugins/useSankeyHighlight.selectors';
 import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyNodeElementProps {
