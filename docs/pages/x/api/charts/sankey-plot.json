@@ -23,6 +23,18 @@
   ],
   "classes": [
     {
+      "key": "link",
+      "className": "MuiSankeyPlot-link",
+      "description": "Styles applied to an individual link element.",
+      "isGlobal": false
+    },
+    {
+      "key": "linkLabel",
+      "className": "MuiSankeyPlot-linkLabel",
+      "description": "Styles applied to an individual link label element.",
+      "isGlobal": false
+    },
+    {
       "key": "linkLabels",
       "className": "MuiSankeyPlot-linkLabels",
       "description": "Styles applied to the link label container.",
@@ -32,6 +44,18 @@
       "key": "links",
       "className": "MuiSankeyPlot-links",
       "description": "Styles applied to the links container.",
+      "isGlobal": false
+    },
+    {
+      "key": "node",
+      "className": "MuiSankeyPlot-node",
+      "description": "Styles applied to an individual node element.",
+      "isGlobal": false
+    },
+    {
+      "key": "nodeLabel",
+      "className": "MuiSankeyPlot-nodeLabel",
+      "description": "Styles applied to an individual node label element.",
       "isGlobal": false
     },
     {

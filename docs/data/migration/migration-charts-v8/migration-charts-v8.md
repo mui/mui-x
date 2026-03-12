@@ -323,6 +323,16 @@ If you were relying on marks being visible by default, explicitly set `showMark`
  />
 ```
 
+### Default `shape` changed
+
+In v8, the `shape` was set to `'circle'` by default.
+Now it alternates across series according to the following order:
+`'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, `'wye'`.
+
+This modification improves accessibility for color blind people.
+
+If you want to keep the previous behavior, set the `shape` property to `'circle'` on all series.
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
@@ -355,6 +365,23 @@ If you were using `arc` as a workaround, update it to `cell`.
      },
    },
  });
+```
+
+## Sankey
+
+### Removed group
+
+The DOM structure got simplified by removing the group wrapping each nodes.
+It's `data-node` attribute got moved to the `rect` associated to it.
+
+```diff
+-<g data-node="nodeId-A">
+   <rect
++    data-node="nodeId-A"
+     x="20"
+     /* ... */
+   />
+-</g>
 ```
 
 ### New identifier structure

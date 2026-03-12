@@ -9,6 +9,17 @@ import {
 import { type SeriesId } from '../../models/seriesType/common';
 import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import type { DefaultizedLineSeriesType } from '../../models';
+import type { MarkShape } from '../../models/seriesType/line';
+
+const defaultShapes: MarkShape[] = [
+  'circle',
+  'square',
+  'diamond',
+  'cross',
+  'star',
+  'triangle',
+  'wye',
+];
 
 const lineValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedLineSeriesType['valueFormatter'];
@@ -17,16 +28,18 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
+  const idToIndex: Map<SeriesId, number> = new Map();
   // Create a data set with format adapted to d3
   const d3Dataset: DatasetType<number | null> = (dataset as DatasetType<number | null>) ?? [];
-  seriesOrder.forEach((id) => {
+  seriesOrder.forEach((id, seriesIndex) => {
+    idToIndex.set(id, seriesIndex);
     const data = series[id].data;
     if (data !== undefined) {
-      data.forEach((value, index) => {
-        if (d3Dataset.length <= index) {
+      data.forEach((value, dataIndex) => {
+        if (d3Dataset.length <= dataIndex) {
           d3Dataset.push({ [id]: value });
         } else {
-          d3Dataset[index][id] = value;
+          d3Dataset[dataIndex][id] = value;
         }
       });
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
@@ -109,6 +122,7 @@ Line plots only support numeric and null values.`,
       completedSeries[id] = {
         labelMarkType: 'line+mark',
         ...series[id],
+        shape: series[id].shape ?? defaultShapes[(idToIndex.get(id) ?? 0) % defaultShapes.length],
         data,
         valueFormatter: series[id].valueFormatter ?? lineValueFormatter,
         hidden,
