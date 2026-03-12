@@ -151,7 +151,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     }
 
     // Collect all specifiers from all declarations, deduplicating by name
-    const allSpecifiers: typeof paths[0]['node']['specifiers'] = [];
+    const allSpecifiers: (typeof paths)[0]['node']['specifiers'] = [];
     const seenNames = new Set<string>();
 
     paths.forEach((importPath) => {
@@ -170,7 +170,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
     // Keep the first declaration with all specifiers, remove the rest
     paths[0].node.specifiers = allSpecifiers;
-    for (let i = 1; i < paths.length; i++) {
+    for (let i = 1; i < paths.length; i += 1) {
       j(paths[i]).remove();
     }
   });
