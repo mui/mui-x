@@ -9,7 +9,7 @@ import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
 import { type SeriesId } from '../models/seriesType/common';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
+import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 /**
@@ -138,7 +138,9 @@ function LineElement(props: LineElementProps) {
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
 
   const interactionProps = useInteractionItemProps(identifier);
-  const { isFaded, isHighlighted } = useItemHighlighted(identifier);
+  const highlightState = useItemHighlightState(identifier);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
 
   const ownerState = {
     seriesId,
@@ -149,7 +151,7 @@ function LineElement(props: LineElementProps) {
     isHighlighted,
     hidden,
   };
-  const classes = useLineUtilityClasses({ classes: innerClasses });
+  const classes = useLineUtilityClasses();
   const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Line = slots?.line ?? AnimatedLine;

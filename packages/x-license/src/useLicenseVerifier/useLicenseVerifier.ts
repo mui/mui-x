@@ -11,10 +11,11 @@ import {
   showLicenseKeyPlanMismatchError,
   showExpiredPackageVersionError,
   showNotAvailableInInitialProPlanError,
+  showLicenseKeyVersionMismatchError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
-import { MuiCommercialPackageName } from '../utils/commercialPackages';
+import { MuiCommercialPackageName, CommercialPackageInfo } from '../utils/commercialPackages';
 
 export const sharedLicenseStatuses: {
   [packageName in MuiCommercialPackageName]?: {
@@ -37,15 +38,13 @@ export function clearLicenseStatusCache() {
   }
 }
 
-export function useLicenseVerifier(
-  packageName: MuiCommercialPackageName,
-  releaseInfo: string,
-): {
+export function useLicenseVerifier(packageInfo: CommercialPackageInfo): {
   status: LicenseStatus;
 } {
   const { key: contextKey } = React.useContext(MuiLicenseInfoContext);
   return React.useMemo(() => {
     const licenseKey = contextKey ?? LicenseInfo.getLicenseKey();
+    const { name: packageName, releaseDate, version: packageVersion } = packageInfo;
 
     // Cache the response to not trigger the error twice.
     if (
@@ -57,19 +56,18 @@ export function useLicenseVerifier(
 
     const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({
-      releaseInfo,
+      packageInfo,
       licenseKey,
-      packageName,
     });
 
     const fullPackageName = `@mui/${packageName}`;
 
     sendMuiXTelemetryEvent(
       muiXTelemetryEvents.licenseVerification(
-        { licenseKey, xLicenseClientVersion: process.env.MUI_VERSION },
+        { licenseKey, xLicenseClientVersion: packageVersion },
         {
           packageName,
-          packageReleaseInfo: releaseInfo,
+          packageReleaseInfo: releaseDate,
           licenseStatus: licenseStatus?.status,
         },
       ),
@@ -91,11 +89,13 @@ export function useLicenseVerifier(
       showExpiredAnnualLicenseKeyError({ plan, ...licenseStatus.meta });
     } else if (licenseStatus.status === LICENSE_STATUS.ExpiredVersion) {
       showExpiredPackageVersionError({ packageName: fullPackageName });
+    } else if (licenseStatus.status === LICENSE_STATUS.NotValidForPackage) {
+      showLicenseKeyVersionMismatchError();
     } else if (process.env.NODE_ENV !== 'production') {
       throw new Error('missing status handler');
     }
 
     sharedLicenseStatuses[packageName] = { key: licenseKey, licenseVerifier: licenseStatus };
     return licenseStatus;
-  }, [packageName, releaseInfo, contextKey]);
+  }, [packageInfo, contextKey]);
 }

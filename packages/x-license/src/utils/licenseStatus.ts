@@ -8,6 +8,7 @@ export enum LICENSE_STATUS {
   Valid = 'Valid',
   OutOfScope = 'OutOfScope',
   NotAvailableInInitialProPlan = 'NotAvailableInInitialProPlan',
+  NotValidForPackage = 'NotValidForPackage',
 }
 
 export type LicenseStatus = keyof typeof LICENSE_STATUS;
