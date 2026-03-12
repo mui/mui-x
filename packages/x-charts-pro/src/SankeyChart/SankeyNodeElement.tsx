@@ -74,23 +74,24 @@ export const SankeyNodeElement = React.forwardRef<SVGRectElement, SankeyNodeElem
     }
 
     return (
-      <rect
-        x={node.x0}
-        y={node.y0}
-        width={nodeWidth}
-        height={nodeHeight}
-        fill={node.color}
-        opacity={opacity}
-        onClick={onClick ? handleClick : undefined}
-        cursor={onClick ? 'pointer' : 'default'}
-        stroke="none"
-        data-highlighted={isHighlighted || undefined}
-        data-faded={isFaded || undefined}
-        ref={ref}
-        data-node={node.id}
-        className={classes.node}
-        {...interactionProps}
-      />
+      <g ref={ref} data-node={node.id}>
+        <rect
+          x={node.x0}
+          y={node.y0}
+          width={nodeWidth}
+          height={nodeHeight}
+          fill={node.color}
+          opacity={opacity}
+          onClick={onClick ? handleClick : undefined}
+          cursor={onClick ? 'pointer' : 'default'}
+          stroke="none"
+          data-highlighted={isHighlighted || undefined}
+          data-faded={isFaded || undefined}
+          className={classes.node}
+          {...interactionProps}
+        />
+      </g>
+
     );
   },
 );
