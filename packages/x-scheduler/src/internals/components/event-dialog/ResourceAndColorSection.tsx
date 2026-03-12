@@ -95,7 +95,6 @@ interface ResourceOptionType {
   label: string;
   value: string | null;
   eventColor: SchedulerEventColor;
-  depth: number;
   isGroupRoot: boolean;
   indentLevel: number;
 }
@@ -135,7 +134,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     return [
-      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor, depth: 0, isGroupRoot: false, indentLevel: 0 },
+      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor, isGroupRoot: false, indentLevel: 0 },
       ...resources.map((resource) => {
         const depth = resourceDepthLookup.get(resource.id) ?? 0;
         const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
@@ -143,7 +142,6 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           label: resource.title,
           value: resource.id,
           eventColor: resource.eventColor ?? eventDefaultColor,
-          depth,
           isGroupRoot: depth === 0 && hasChildren,
           indentLevel: Math.max(0, depth - 1),
         };
