@@ -23,21 +23,16 @@ createTheme({
         someRandomProp: true,
       },
     },
-    MuiHeatmapChart: {
-      styleOverrides: {
-        cell: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiHeatmapChart class key
-        constent: { color: 'red' },
-      },
-    },
     MuiHeatmap: {
       defaultProps: {
         title: 'toto',
         // @ts-expect-error invalid MuiChartsAxis prop
         someRandomProp: true,
       },
+    },
+    MuiHeatmapPlot: {
       styleOverrides: {
-        highlighted: { backgroundColor: 'red' },
+        root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiChartsAxis class key
         constent: { color: 'red' },
       },

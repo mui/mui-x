@@ -9,16 +9,15 @@ export interface ChartsProComponents<Theme = unknown> {
   MuiLineChartPro?: {
     defaultProps?: ComponentsProps['MuiLineChartPro'];
   };
+
   // Heatmap components
-  MuiHeatmapChart?: {
-    defaultProps?: ComponentsProps['MuiHeatmap'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmapChart'];
-  };
-  /** @deprecated Use `MuiHeatmapChart` instead. */
   MuiHeatmap?: {
     defaultProps?: ComponentsProps['MuiHeatmap'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmap'];
   };
+  MuiHeatmapPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmapPlot'];
+  };
+
   // ScatterChartPro components
   MuiScatterChartPro?: {
     defaultProps?: ComponentsProps['MuiScatterChartPro'];
@@ -26,5 +25,5 @@ export interface ChartsProComponents<Theme = unknown> {
 }
 
 declare module '@mui/material/styles' {
-  interface Components<Theme = unknown> extends ChartsProComponents<Theme> {}
+  interface Components<Theme = unknown> extends ChartsProComponents<Theme> { }
 }

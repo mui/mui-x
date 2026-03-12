@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import {
   selectorChartsHighlightStateCallback,
@@ -14,6 +15,11 @@ import { type HeatmapRendererPlotProps } from './Heatmap.types';
 import { type HighlightItemIdentifierWithType } from '../models';
 
 const MemoHeatmapItem = React.memo(HeatmapItem);
+
+const HeatmapPlotRoot = styled('g', {
+  name: 'MuiHeatmapPlot',
+  slot: 'Root',
+})();
 
 export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   const store = useStore();
@@ -37,7 +43,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
       {shouldRegisterPointerInteractionsGlobally(props.slots, props.slotProps) ? (
         <RegisterHeatmapPointerInteractions />
       ) : null}
-      <g data-series={seriesToDisplay.id}>
+      <HeatmapPlotRoot data-series={seriesToDisplay.id}>
         {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
           const x = xScale(xDomain[xIndex]);
           const y = yScale(yDomain[yIndex]);
@@ -75,7 +81,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
             />
           );
         })}
-      </g>
+      </HeatmapPlotRoot>
     </React.Fragment>
   );
 }
