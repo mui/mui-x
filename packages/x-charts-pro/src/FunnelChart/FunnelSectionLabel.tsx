@@ -20,6 +20,11 @@ export interface FunnelSectionLabelProps extends Omit<
 > {
   classes?: Partial<FunnelSectionClasses>;
   label: FunnelSectionLabelConfig;
+  /**
+   * Indicate if the section is filled or outlined.
+   * Can be used to apply different styles to the label.
+   */
+  variant?: 'filled' | 'outlined';
   seriesId: SeriesId;
   dataIndex: number;
 }
@@ -37,10 +42,20 @@ const FunnelSectionLabel = consumeSlots(
     props: FunnelSectionLabelProps,
     ref: React.Ref<SVGTextElement>,
   ) {
-    const { classes, color, onClick, className, label, seriesId, dataIndex, ...other } = props;
+    const {
+      classes,
+      color,
+      onClick,
+      className,
+      label,
+      variant = 'filled',
+      seriesId,
+      dataIndex,
+      ...other
+    } = props;
     const theme = useTheme();
 
-    const newClasses = useUtilityClasses();
+    const newClasses = useUtilityClasses({ variant });
 
     return (
       <text

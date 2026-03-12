@@ -174,7 +174,7 @@ function FunnelPlot(props: FunnelPlotProps) {
 
         return (
           <g data-series={series[0].seriesId} key={series[0].seriesId}>
-            {series.map(({ id, label, seriesId, dataIndex }) => {
+            {series.map(({ id, label, seriesId, dataIndex, variant }) => {
               if (!label || !label.value) {
                 return null;
               }
@@ -185,6 +185,7 @@ function FunnelPlot(props: FunnelPlotProps) {
                   label={label}
                   dataIndex={dataIndex}
                   seriesId={seriesId}
+                  variant={variant}
                   {...other}
                 />
               );

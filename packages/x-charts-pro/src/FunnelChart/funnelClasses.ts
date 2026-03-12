@@ -37,6 +37,8 @@ export const funnelClasses: FunnelClasses = generateUtilityClasses('MuiFunnelCha
   'sectionFilled',
   'sectionOutlined',
   'sectionLabel',
+  'sectionLabelFilled',
+  'sectionLabelOutlined',
 ]);
 
 export interface UseUtilityClassesOptions {
@@ -49,7 +51,7 @@ export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
   const slots = {
     root: ['root'],
     section: ['section', variant === 'filled' && 'sectionFilled', variant === 'outlined' && 'sectionOutlined'],
-    sectionLabel: ['sectionLabel'],
+    sectionLabel: ['sectionLabel', variant === 'filled' && 'sectionLabelFilled', variant === 'outlined' && 'sectionLabelOutlined'],
   };
 
   return composeClasses(slots, getFunnelUtilityClass, classes);
