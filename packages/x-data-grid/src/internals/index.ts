@@ -206,6 +206,7 @@ export {
   isCopyShortcut,
   isUndoShortcut,
   isRedoShortcut,
+  isFillDownShortcut,
 } from '../utils/keyboardUtils';
 export * from '../utils/utils';
 export { exportAs } from '../utils/exportAs';

@@ -58,6 +58,8 @@ const elementOverrides = {
     'cell--rangeLeft',
     'cell--rangeRight',
     'cell--rangeTop',
+    'cell--withFillHandle',
+    'cell--fillPreview',
     'cell--selectionMode',
     'cell--textCenter',
     'cell--textLeft',
@@ -646,6 +648,26 @@ export const GridRootStyles = styled('div', {
       textOverflow: 'ellipsis',
       '&.Mui-selected': selectedStyles,
     },
+    /* Default range border styles using box-shadow to avoid layout shift */
+    [`& .${c.cell}.Mui-selected`]: {
+      '--range-top': '0 0 0 0 transparent',
+      '--range-bottom': '0 0 0 0 transparent',
+      '--range-left': '0 0 0 0 transparent',
+      '--range-right': '0 0 0 0 transparent',
+      boxShadow: 'var(--range-top), var(--range-bottom), var(--range-left), var(--range-right)',
+    },
+    [`& .${c['cell--rangeTop']}`]: {
+      '--range-top': `inset 0 2px 0 0 ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--rangeBottom']}`]: {
+      '--range-bottom': `inset 0 -2px 0 0 ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--rangeLeft']}`]: {
+      '--range-left': `inset 2px 0 0 0 ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--rangeRight']}`]: {
+      '--range-right': `inset -2px 0 0 0 ${vars.colors.interactive.focus}`,
+    },
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
@@ -874,6 +896,39 @@ export const GridRootStyles = styled('div', {
       [`& .${c.pinnedRows}`]: {
         display: 'none',
       },
+    },
+    /* Fill handle styles */
+    [`& .${c['cell--withFillHandle']}`]: {
+      position: 'relative',
+      overflow: 'visible',
+      '&::after': {
+        content: '""',
+        position: 'absolute',
+        bottom: -4,
+        right: -4,
+        width: 7,
+        height: 7,
+        backgroundColor: vars.colors.interactive.focus,
+        borderRadius: '50%',
+        boxShadow: `0 0 0 2px ${vars.colors.background.base}`,
+        cursor: 'crosshair',
+        zIndex: 50,
+      },
+    },
+    [`& .${c['cell--fillPreview']}`]: {
+      backgroundColor: `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`,
+    },
+    [`& .${c['cell--fillPreviewTop']}`]: {
+      borderTop: `1px dashed ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--fillPreviewBottom']}`]: {
+      borderBottom: `1px dashed ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--fillPreviewLeft']}`]: {
+      borderLeft: `1px dashed ${vars.colors.interactive.focus}`,
+    },
+    [`& .${c['cell--fillPreviewRight']}`]: {
+      borderRight: `1px dashed ${vars.colors.interactive.focus}`,
     },
     [`& .${c['row--beingDragged']}`]: {
       color: vars.colors.foreground.disabled,
