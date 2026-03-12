@@ -244,6 +244,36 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
+### `useItemHighlighted()` replaced by `useItemHighlightState()`
+
+The `useItemHighlighted()` hook is replaced by `useItemHighlightState()`.
+Instead of returning an object with `isHighlighted` and `isFaded` booleans.
+It now returns a `HighlightState` union type: `'highlighted' | 'faded' | 'none'`.
+
+```diff
+-const { isHighlighted, isFaded } = useItemHighlighted(identifier);
++const highlightState = useItemHighlightState(identifier);
++const isHighlighted = highlightState === 'highlighted';
++const isFaded = highlightState === 'faded';
+```
+
+### `useItemHighlightedGetter()` replaced by `useItemHighlightStateGetter()`
+
+The `useItemHighlightedGetter()` hook is replaced by `useItemHighlightStateGetter()`.
+instead of returning an object with two callbacks `isHighlighted()` and `isFaded()`.
+It now returns a single callback `(item) => HighlightState`.
+The `HighlightState` type is the union of the following variants: `'highlighted' | 'faded' | 'none'`
+
+```diff
+-const { isHighlighted, isFaded } = useItemHighlightedGetter();
+-const isItemHighlighted = isHighlighted(item);
+-const isItemFaded = !isItemHighlighted && isFaded(item);
++const getHighlightState = useItemHighlightStateGetter();
+
++const isItemHighlighted = (item) => getHighlightState(item) === 'highlighted'
++const isItemFaded = (item) => getHighlightState(item) === 'faded'
+```
+
 ### Rename `useAxisTooltip()` hook
 
 The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
@@ -292,6 +322,16 @@ If you were relying on marks being visible by default, explicitly set `showMark`
    ]}
  />
 ```
+
+### Default `shape` changed
+
+In v8, the `shape` was set to `'circle'` by default.
+Now it alternates across series according to the following order:
+`'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, `'wye'`.
+
+This modification improves accessibility for color blind people.
+
+If you want to keep the previous behavior, set the `shape` property to `'circle'` on all series.
 
 ## Heatmap
 

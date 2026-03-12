@@ -1,5 +1,127 @@
 # Changelog
 
+## 9.0.0-alpha.3
+
+_Mar 12, 2026_
+
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes and internal improvements
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @rita-codes, @sai6855, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.0-alpha.3`
+
+- [DataGrid] Fix crash when `rows` and `rowModesModel` are updated simultaneously (#21265) @michelengelen
+- [DataGrid] Add missing `resizablePanelHandle` classes to `gridClasses` object (#21538) @sai6855
+- [DataGrid] Refactor `headerAlign` style calls (#21541) @sai6855
+
+#### `@mui/x-data-grid-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.0-alpha.3`, plus:
+
+- [DataGridPro] Add `role="presentation"` to detail panel toggle header content (#21634) @michelengelen
+- [DataGridPro] Fix sorting not reflected in nested server-side data (#21619) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@9.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.0.0-alpha.3`
+
+- [pickers] Refactor `DateRangePickerDay` overrides to use a centralized `elementOverrides` object (#21426) @sai6855
+- [pickers] Migrate from deprecated props for `PickersModalDialog` (#21702) @siriwatknp
+
+#### `@mui/x-date-pickers-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.0-alpha.3`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.0-alpha.3`
+
+- [charts] Differentiate Line Plot roots classes (#21679) @JCQuintas
+- [charts] Enable keyboard navigation by default (#21675) @alexfauquette
+- [charts] Fix keyboard tooltip radar (#21667) @alexfauquette
+- [charts] Fix selector default parameter (#21638) @JCQuintas
+- [charts] Fix tooltip blink between node and pointer anchor (#21611) @alexfauquette
+- [charts] Let tooltip and legend reflect the line shape (#21475) @alexfauquette
+- [charts] Refactor `BarChart` classes structure (#21601) @JCQuintas
+- [charts] Refactor `LineChart` classes structure (#21648) @JCQuintas
+- [charts] Refactor `ScatterChart` classes structure (#21651) @JCQuintas
+- [charts] Refactor `PieChart` classes structure (#21649) @JCQuintas
+- [charts] Remove batch rendering checks in highlight selectors (#21646) @bernardobelchior
+- [charts] Standardize generic arg names to `SeriesType` (#21694) @alexfauquette
+- [charts] Simplify highlight hooks return types (#21695) @alexfauquette
+
+#### `@mui/x-charts-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.0-alpha.3`, plus:
+
+- [charts-pro] Fix heatmap style override from `arc` to `cell` (#21693) @Copilot
+- [charts-pro] Fix image export truncated when page is zoomed out (#21685) @bernardobelchior
+- [charts-pro] Speed-up heatmap cell search with an index lookup (#21130) @alexfauquette
+- [charts-pro] Fix heatmap highlight not working (#21710) @Copilot
+
+#### `@mui/x-charts-premium@9.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.0-alpha.3`, plus:
+
+- [charts-premium] Re-enable WebGL tests (#21708) @bernardobelchior
+
+### Tree View
+
+#### Breaking changes
+
+- Remove `TreeViewBaseItem` type (use `TreeViewDefaultItemModelProperties` or a custom interface)
+- Remove `useTreeViewApiRef` hook (use `useRichTreeViewApiRef`, `useSimpleTreeViewApiRef`, or `useRichTreeViewProApiRef`)
+- Remove `status` from content slot props returned by `getContentProps()` (use `data-*` attributes; `status` on `useTreeItem` return value is unchanged)
+- Remove deprecated CSS state classes from `treeItemClasses`: `expanded`, `selected`, `focused`, `disabled`, `editable`, `editing` (use `[data-expanded]`, `[data-selected]`, etc.)
+- The `<RichTreeViewPro />` component has now virtualization enabled by default.
+- The items used inside the `<RichTreeViewPro />` now have a default height of `32px`.
+- The events of the `<RichTreeViewPro />` are now rendered as a flat list instead of a nested tree.
+
+#### `@mui/x-tree-view@9.0.0-alpha.3`
+
+- [tree view] Remove deprecated APIs (#21591) @flaviendelangle
+- [tree view] Fix collapsed children not selected with `selectionPropagation.descendants` in `SimpleTreeView` (#21253) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.0-alpha.3`, plus:
+
+- [RichTreeViewPro] Make the virtualization opt-out and port the layout doc from the data grid (#21461) @flaviendelangle
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.0-alpha.3`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix `AssistantWithDataSource` demo crashing (#21555) @sai6855
+- [docs] Remove `Preview` pill from Sankey (#21623) @bernardobelchior
+- [docs] Migrate internal Material UI deprecated APIs (#21680) @siriwatknp
+- [docs] Remove `New` flag on Tree View and Date and Time Pickers features released before v9 alpha (#21585) @flaviendelangle
+
+### Core
+
+- [code-infra] Remove checkout step (#21688) @Janpot
+- [code-infra] Fix contributor generation in changelog (#21718) @brijeshb42
+- [docs-infra] Do not point to non-existent v8 subdomain (#21640) @cherniavskii
+
+### Miscellaneous
+
+- [test] Add missing tests for forwarding props to filter operators in DataGrid (#21441) @siriwatknp
+- [x-license] Export additional license types and constants (#21625) @aemartos
+- [x-license] Refactor license verification to accept package info object and add v9 version gating (#21690) @aemartos
+
 ## 9.0.0-alpha.2
 
 _Mar 5, 2026_
@@ -92,7 +214,7 @@ Internal changes.
 
 - [docs] Add backticks and parentheses to all functions and hooks (DX-173) (#21496) @mapache-salvaje
 - [docs] Remove mentions of `mySvgRef` (#21559) @bernardobelchior
-- [docs] Update Roadmap section in the docs  (#20892) @alelthomas
+- [docs] Update Roadmap section in the docs (#20892) @alelthomas
 - [docs] Add tutorial and example app for aggregation with row grouping (DX-162) (#21102) @mapache-salvaje
 - [docs] Fix missing codemod docs (#21604) @JCQuintas
 
