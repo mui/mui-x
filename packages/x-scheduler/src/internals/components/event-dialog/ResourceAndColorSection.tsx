@@ -32,6 +32,11 @@ const ResourceMenuItem = styled(MenuItem, {
   paddingLeft: `calc(${theme.spacing(2)} + var(--resource-indent) * ${theme.spacing(2)})`,
 }));
 
+const ResourceMenuListSubheader = styled(ListSubheader, {
+  name: 'MuiEventDialog',
+  slot: 'ResourceMenuListSubheader',
+})({});
+
 const ResourceMenuColorDot = styled('span', {
   name: 'MuiEventDialog',
   slot: 'ResourceMenuColorDot',
@@ -187,7 +192,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
         >
           {resourcesOptions.flatMap((resourceOption) => {
-            const items = [];
+            const items: React.ReactNode[] = [];
 
             if (resourceOption.showDivider) {
               items.push(<Divider key={`divider-${resourceOption.value}`} />);
@@ -195,9 +200,12 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
 
             if (resourceOption.isGroupRoot) {
               items.push(
-                <ListSubheader key={`header-${resourceOption.value}`}>
+                <ResourceMenuListSubheader
+                  key={`header-${resourceOption.value}`}
+                  className={classes.eventDialogResourceMenuListSubheader}
+                >
                   {resourceOption.label.toUpperCase()}
-                </ListSubheader>,
+                </ResourceMenuListSubheader>,
               );
             }
 
