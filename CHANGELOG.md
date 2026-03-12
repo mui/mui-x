@@ -35,7 +35,7 @@ Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.3`.
 #### `@mui/x-date-pickers@9.0.0-alpha.3`
 
 - [pickers] Refactor `DateRangePickerDay` overrides to use a centralized `elementOverrides` object (#21426) @sai6855
-- [tree view][pickers] Remove `New` flag on features released before v9 alpha (#21585) @flaviendelangle
+- [docs] Remove `New` flag on Tree View and Date and Time Pickers features released before v9 alpha (#21585) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -103,7 +103,6 @@ Internal changes.
 - [docs] Fix `AssistantWithDataSource` demo crashing (#21555) @sai6855
 - [docs] Remove `Preview` pill from Sankey (#21623) @bernardobelchior
 - [docs] Migrate internal Material UI deprecated APIs (#21680) @siriwatknp
-- [docs] Add an overview page for the Scheduler (#21523) @noraleonte
 
 ### Core
 
