@@ -9,6 +9,17 @@ import {
 import { type SeriesId } from '../../models/seriesType/common';
 import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import type { DefaultizedLineSeriesType } from '../../models';
+import type { MarkShape } from '../../models/seriesType/line';
+
+const defaultShapes: MarkShape[] = [
+  'circle',
+  'square',
+  'diamond',
+  'cross',
+  'star',
+  'triangle',
+  'wye',
+];
 
 const lineValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedLineSeriesType['valueFormatter'];
@@ -109,6 +120,7 @@ Line plots only support numeric and null values.`,
       completedSeries[id] = {
         labelMarkType: 'line+mark',
         ...series[id],
+        shape: series[id].shape ?? defaultShapes[index % defaultShapes.length],
         data,
         valueFormatter: series[id].valueFormatter ?? lineValueFormatter,
         hidden,
