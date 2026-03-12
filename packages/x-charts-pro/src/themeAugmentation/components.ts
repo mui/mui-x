@@ -22,6 +22,14 @@ export interface ChartsProComponents<Theme = unknown> {
   MuiScatterChartPro?: {
     defaultProps?: ComponentsProps['MuiScatterChartPro'];
   };
+
+  // SankeyChart components
+  MuiSankeyChart?: {
+    defaultProps?: ComponentsProps['MuiSankeyChart'];
+  };
+  MuiSankeyPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiSankeyPlot'];
+  };
 }
 
 declare module '@mui/material/styles' {

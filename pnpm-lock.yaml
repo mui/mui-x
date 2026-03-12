@@ -1837,6 +1837,9 @@ importers:
       tabbable:
         specifier: ^6.3.0
         version: 6.3.0
+      use-sync-external-store:
+        specifier: 'catalog:'
+        version: 1.6.0(react@19.2.3)
     devDependencies:
       '@date-fns/tz':
         specifier: 'catalog:'
@@ -2244,6 +2247,9 @@ importers:
       '@types/semver':
         specifier: 'catalog:'
         version: 7.7.1
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
       dayjs:
         specifier: 'catalog:'
         version: 1.11.18
@@ -4452,7 +4458,7 @@ packages:
   '@mui/base@5.0.0-beta.40-1':
     resolution: {integrity: sha512-agKXuNNy0bHUmeU7pNmoZwNFr7Hiyhojkb9+2PVyDG5+6RafYuyMgbrav8CndsB7KUc/U51JAw9vKNDLYBzaUA==}
     engines: {node: '>=12.0.0'}
-    deprecated: This package has been replaced by @base-ui/react
+    deprecated: This package has been replaced by @base-ui-components/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
