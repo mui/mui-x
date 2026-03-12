@@ -31,14 +31,13 @@ Described below are the steps needed to migrate from `v8` to `v9`.
 
 ### Dialog slot
 
-The `dialog` slot no longer receives the deprecated `TransitionComponent`, `TransitionProps`, `PaperComponent`, and `PaperProps` props.
+The `dialog` slot no longer receives the deprecated `TransitionComponent`, `TransitionProps`, and `PaperProps` props.
 If you were passing a custom `dialog` slot, you need to update it to use `slots` and `slotProps` instead:
 
 ```diff
  function CustomDialog({
 -  TransitionComponent,
 -  TransitionProps,
--  PaperComponent,
 -  PaperProps,
 +  slots,
 +  slotProps,
