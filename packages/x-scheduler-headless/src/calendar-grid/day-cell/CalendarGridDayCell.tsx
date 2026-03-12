@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useDayCellDropTarget } from './useDayCellDropTarget';
 import { CalendarGridDayCellContext } from './CalendarGridDayCellContext';
@@ -24,7 +24,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     ...elementProps
   } = componentProps;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
 
