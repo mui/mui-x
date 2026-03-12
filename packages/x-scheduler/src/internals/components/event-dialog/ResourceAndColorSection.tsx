@@ -187,7 +187,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
         >
           {resourcesOptions.flatMap((resourceOption) => {
-            const items: React.ReactNode[] = [];
+            const items = [];
 
             if (resourceOption.showDivider) {
               items.push(<Divider key={`divider-${resourceOption.value}`} />);
