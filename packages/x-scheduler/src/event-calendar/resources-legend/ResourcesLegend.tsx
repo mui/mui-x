@@ -115,27 +115,24 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
     (resourceId: string, event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
 
+      // Read the raw (non-propagated) state so that toggling a parent
+      // does not snapshot propagated child visibility into explicit state.
+      // The visibleMap selector handles parent→child propagation automatically.
+      const rawVisibleResources = store.state.visibleResources;
+      const newVisibleResources = { ...rawVisibleResources, [resourceId]: checked };
+
       // When checking a child, also enable all its ancestors so it becomes
       // effectively visible (visibleMap hides children of hidden parents).
-      const ancestorsToEnable = new Set<string>();
       if (checked) {
         let currentId = parentIdLookup.get(resourceId) ?? null;
         while (currentId != null) {
-          if (visibleResources[currentId] === false) {
-            ancestorsToEnable.add(currentId);
+          if (rawVisibleResources[currentId] === false) {
+            newVisibleResources[currentId] = true;
           }
           currentId = parentIdLookup.get(currentId) ?? null;
         }
       }
 
-      const newVisibleResources = Object.fromEntries(
-        resources.map((res) => [
-          res.id,
-          res.id === resourceId
-            ? checked
-            : ancestorsToEnable.has(res.id) || visibleResources[res.id] !== false,
-        ]),
-      );
       store.setVisibleResources(newVisibleResources, event.nativeEvent);
     },
   );
