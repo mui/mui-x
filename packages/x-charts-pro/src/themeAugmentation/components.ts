@@ -25,5 +25,5 @@ export interface ChartsProComponents<Theme = unknown> {
 }
 
 declare module '@mui/material/styles' {
-  interface Components<Theme = unknown> extends ChartsProComponents<Theme> { }
+  interface Components<Theme = unknown> extends ChartsProComponents<Theme> {}
 }
