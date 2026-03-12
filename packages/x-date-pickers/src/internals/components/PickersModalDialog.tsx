@@ -82,7 +82,6 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
   const { dismissViews, onPopperExited } = usePickerPrivateContext();
 
   const Dialog = slots?.dialog ?? PickersModalDialogRoot;
-  const Transition = slots?.mobileTransition ?? Fade;
 
   return (
     <Dialog
@@ -92,10 +91,16 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
         onPopperExited?.();
       }}
       {...slotProps?.dialog}
-      TransitionComponent={Transition}
-      TransitionProps={slotProps?.mobileTransition}
       PaperComponent={slots?.mobilePaper}
-      PaperProps={slotProps?.mobilePaper}
+      slots={{
+        transition: slots?.mobileTransition ?? Fade,
+        ...slotProps?.dialog?.slots,
+      }}
+      slotProps={{
+        transition: slotProps?.mobileTransition,
+        paper: slotProps?.mobilePaper,
+        ...slotProps?.dialog?.slotProps,
+      }}
     >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
     </Dialog>
