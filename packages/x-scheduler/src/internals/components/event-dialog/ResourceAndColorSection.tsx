@@ -144,7 +144,14 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
     );
 
     return [
-      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor, isGroupRoot: false, indentLevel: 0, showDivider: false },
+      {
+        label: localeText.labelNoResource,
+        value: null,
+        eventColor: eventDefaultColor,
+        isGroupRoot: false,
+        indentLevel: 0,
+        showDivider: false,
+      },
       ...resources.map((resource) => {
         const depth = resourceDepthLookup.get(resource.id) ?? 0;
         const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
@@ -158,7 +165,13 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
         };
       }),
     ];
-  }, [resources, resourceDepthLookup, childrenIdLookup, localeText.labelNoResource, eventDefaultColor]);
+  }, [
+    resources,
+    resourceDepthLookup,
+    childrenIdLookup,
+    localeText.labelNoResource,
+    eventDefaultColor,
+  ]);
 
   const resource = React.useMemo(
     () =>
