@@ -1,10 +1,9 @@
 import { type HeatmapClassKey } from '../Heatmap';
-import { type FunnelClassKey } from '../FunnelChart/funnelClasses';
 import { type FunnelSectionClasses } from '../FunnelChart/funnelSectionClasses';
 
 export interface ChartsProComponentNameToClassKey {
   // FunnelChart components
-  MuiFunnelChart: FunnelClassKey;
+  MuiFunnelChart: 'section' | 'sectionLabel';
   /** @deprecated Use `MuiFunnelChart` instead. */
   MuiFunnelSection: keyof FunnelSectionClasses;
 

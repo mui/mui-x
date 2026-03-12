@@ -6,10 +6,15 @@ export interface ChartsProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiFunnelChart'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiFunnelChart'];
   };
-  /** @deprecated Use `MuiFunnelChart` instead. */
   MuiFunnelSection?: {
+    /** @deprecated Use `MuiFunnelChart` instead. */
     styleOverrides?: ComponentsOverrides<Theme>['MuiFunnelSection'];
+    defaultProps?: ComponentsProps['MuiFunnelSection'];
   };
+  MuiFunnelSectionLabel?: {
+    defaultProps?: ComponentsProps['MuiFunnelSection'];
+  };
+
   // BarChartPro components
   MuiBarChartPro?: {
     defaultProps?: ComponentsProps['MuiBarChartPro'];

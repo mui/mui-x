@@ -16,8 +16,8 @@ export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>,
 }
 
 export const FunnelSectionPath = styled('path', {
-  slot: 'internal',
-  shouldForwardProp: undefined,
+  name: 'MuiFunnelChart',
+  slot: 'Section',
 })(() => ({
   transition:
     'opacity 0.2s ease-in, fill 0.2s ease-in, fill-opacity 0.2s ease-in, filter 0.2s ease-in',

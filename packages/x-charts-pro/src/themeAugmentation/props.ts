@@ -2,6 +2,9 @@ import { type ScatterChartProProps } from '../ScatterChartPro';
 import { type BarChartProProps } from '../BarChartPro';
 import { type HeatmapProps } from '../Heatmap/Heatmap';
 import { type LineChartProProps } from '../LineChartPro';
+import { type FunnelChartProps } from '../FunnelChart';
+import { type FunnelSectionProps } from '../FunnelChart/FunnelSection';
+import { type FunnelSectionLabelProps } from '../FunnelChart/FunnelSectionLabel';
 
 export interface ChartsProComponentsPropsList {
   // BarChartPro components
@@ -12,6 +15,11 @@ export interface ChartsProComponentsPropsList {
   MuiHeatmap: HeatmapProps;
   // ScatterChartPro components
   MuiScatterChartPro: ScatterChartProProps;
+
+  // FunnelChart components
+  MuiFunnelChart: FunnelChartProps;
+  MuiFunnelSection: FunnelSectionProps;
+  MuiFunnelSectionLabel: FunnelSectionLabelProps;
 }
 
 declare module '@mui/material/styles' {

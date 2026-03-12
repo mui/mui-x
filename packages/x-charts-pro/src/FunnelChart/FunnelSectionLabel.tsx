@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { consumeSlots, type SeriesId } from '@mui/x-charts/internals';
 import clsx from 'clsx';
 import { type FunnelSectionClasses, useLabelUtilityClasses as useDeprecatedLabelUtilityClasses } from './funnelSectionClasses';
@@ -28,6 +28,14 @@ export interface FunnelSectionLabelProps extends Omit<
   seriesId: SeriesId;
   dataIndex: number;
 }
+
+export const FunnelSectionLabelText = styled('text', {
+  name: 'MuiFunnelChart',
+  slot: 'SectionLabel',
+})(() => ({
+  transition:
+    'opacity 0.2s ease-in, fill 0.2s ease-in, fill-opacity 0.2s ease-in, filter 0.2s ease-in',
+}));
 
 /**
  * @ignore - internal component.
@@ -58,7 +66,7 @@ const FunnelSectionLabel = consumeSlots(
     const newClasses = useUtilityClasses({ variant });
 
     return (
-      <text
+      <FunnelSectionLabelText
         stroke="none"
         pointerEvents="none"
         fontFamily={theme.typography.body2.fontFamily}
@@ -79,7 +87,7 @@ const FunnelSectionLabel = consumeSlots(
         ref={ref}
       >
         {label.value}
-      </text>
+      </FunnelSectionLabelText>
     );
   }),
 );
