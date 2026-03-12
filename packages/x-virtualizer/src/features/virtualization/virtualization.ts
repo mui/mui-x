@@ -271,6 +271,12 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
+      // Mutate in place to keep the store data fresh for imperative reads
+      // (e.g. getScrollPosition(), GridScrollArea drag handlers) without
+      // triggering re-renders in subscribers.
+      const storeScrollPosition = store.state.virtualization.scrollPosition.current;
+      storeScrollPosition.top = scrollPosition.current.top;
+      storeScrollPosition.left = scrollPosition.current.left;
       return renderContext;
     }
 
@@ -308,16 +314,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         updateRenderContext(nextRenderContext);
       });
 
-      const lastContextScrollTop = scrollPosition.current.top;
-      const lastContextScrollLeft = scrollPosition.current.left;
-      scrollTimeout.start(1000, () => {
-        if (
-          scrollPosition.current.top === lastContextScrollTop &&
-          scrollPosition.current.left === lastContextScrollLeft
-        ) {
-          triggerUpdateRenderContext();
-        }
-      });
+      scrollTimeout.start(1000, triggerUpdateRenderContext);
+    } else {
+      const storeScrollPosition = store.state.virtualization.scrollPosition.current;
+      storeScrollPosition.top = scrollPosition.current.top;
+      storeScrollPosition.left = scrollPosition.current.left;
     }
 
     return nextRenderContext;
