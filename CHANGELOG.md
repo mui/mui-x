@@ -35,7 +35,7 @@ Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.3`.
 #### `@mui/x-date-pickers@9.0.0-alpha.3`
 
 - [pickers] Refactor `DateRangePickerDay` overrides to use a centralized `elementOverrides` object (#21426) @sai6855
-- [pickers] migrate from deprecated props for `PickersModalDialog` (#21702) @siriwatknp
+- [pickers] Migrate from deprecated props for `PickersModalDialog` (#21702) @siriwatknp
 
 #### `@mui/x-date-pickers-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
