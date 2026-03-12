@@ -97,6 +97,7 @@ interface ResourceOptionType {
   eventColor: SchedulerEventColor;
   isGroupRoot: boolean;
   indentLevel: number;
+  showDivider: boolean;
 }
 
 function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
@@ -133,8 +134,12 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   const eventDefaultColor = useStore(store, schedulerOtherSelectors.defaultEventColor);
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
+    const hasNesting = resources.some(
+      (resource) => (childrenIdLookup.get(resource.id)?.length ?? 0) > 0,
+    );
+
     return [
-      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor, isGroupRoot: false, indentLevel: 0 },
+      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor, isGroupRoot: false, indentLevel: 0, showDivider: false },
       ...resources.map((resource) => {
         const depth = resourceDepthLookup.get(resource.id) ?? 0;
         const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
@@ -144,6 +149,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           eventColor: resource.eventColor ?? eventDefaultColor,
           isGroupRoot: depth === 0 && hasChildren,
           indentLevel: Math.max(0, depth - 1),
+          showDivider: hasNesting && depth === 0,
         };
       }),
     ];
@@ -180,13 +186,14 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           }
           renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
         >
-          {resourcesOptions.flatMap((resourceOption, index) => {
+          {resourcesOptions.flatMap((resourceOption) => {
             const items: React.ReactNode[] = [];
 
+            if (resourceOption.showDivider) {
+              items.push(<Divider key={`divider-${resourceOption.value}`} />);
+            }
+
             if (resourceOption.isGroupRoot) {
-              if (index > 0) {
-                items.push(<Divider key={`divider-${resourceOption.value}`} />);
-              }
               items.push(
                 <ListSubheader key={`header-${resourceOption.value}`}>
                   {resourceOption.label.toUpperCase()}
