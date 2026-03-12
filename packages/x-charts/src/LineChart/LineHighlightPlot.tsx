@@ -124,8 +124,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
                 color={colorGetter(highlightedIndex)}
                 x={x}
                 y={y}
-                shape={shape}
-                {...(!showMark ? { shape: 'circle', r: 4 } : {})}
+                {...(!showMark ? { shape: 'circle', r: 4 } : { shape })}
                 {...slotProps?.lineHighlight}
               />
             );
