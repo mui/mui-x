@@ -5,32 +5,37 @@ createTheme({
     MuiBarChartPro: {
       defaultProps: {
         title: 'toto',
-        // @ts-expect-error invalid MuiChartsAxis prop
+        // @ts-expect-error invalid MuiBarChartPro prop
         someRandomProp: true,
       },
     },
     MuiLineChartPro: {
       defaultProps: {
         title: 'toto',
-        // @ts-expect-error invalid MuiChartsAxis prop
+        // @ts-expect-error invalid MuiLineChartPro prop
         someRandomProp: true,
       },
     },
     MuiScatterChartPro: {
       defaultProps: {
         title: 'toto',
-        // @ts-expect-error invalid MuiChartsAxis prop
+        // @ts-expect-error invalid MuiScatterChartPro prop
         someRandomProp: true,
       },
     },
     MuiHeatmap: {
       defaultProps: {
         title: 'toto',
-        // @ts-expect-error invalid MuiChartsAxis prop
+        // @ts-expect-error invalid MuiHeatmap prop
         someRandomProp: true,
       },
       styleOverrides: {
         highlighted: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiHeatmap class key
+        constent: { color: 'red' },
+      },
+    },
+
     // FunnelChart components
     MuiFunnelChart: {
       defaultProps: {
