@@ -1,7 +1,7 @@
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useLicenseVerifier } from '../useLicenseVerifier';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { MuiCommercialPackageName } from '../utils/commercialPackages';
+import { CommercialPackageInfo } from '../utils/commercialPackages';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
@@ -28,13 +28,12 @@ function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
 }
 
 interface WatermarkProps {
-  packageName: MuiCommercialPackageName;
-  releaseInfo: string;
+  packageInfo: CommercialPackageInfo;
 }
 
 function Watermark(props: WatermarkProps) {
-  const { packageName, releaseInfo } = props;
-  const licenseStatus = useLicenseVerifier(packageName, releaseInfo);
+  const { packageInfo } = props;
+  const licenseStatus = useLicenseVerifier(packageInfo);
 
   if (licenseStatus.status === LICENSE_STATUS.Valid) {
     return null;

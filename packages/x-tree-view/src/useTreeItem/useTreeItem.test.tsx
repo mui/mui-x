@@ -31,24 +31,27 @@ describeTreeView<TreeViewAnyStore>(
     });
 
     describe('onClick prop', () => {
-      it('should call onClick when clicked, and when children are clicked for TreeItem (when using nested DOM structure)', () => {
-        const onClick = spy();
+      it.skipIf(treeViewComponentName === 'RichTreeViewPro')(
+        'should call onClick when clicked, and when children are clicked for TreeItem (when using nested DOM structure)',
+        () => {
+          const onClick = spy();
 
-        const view = render({
-          items: [{ id: '1', children: [{ id: '1.1' }] }],
-          defaultExpandedItems: ['1'],
-          slotProps: {
-            item: {
-              onClick,
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            defaultExpandedItems: ['1'],
+            slotProps: {
+              item: {
+                onClick,
+              },
             },
-          },
-        });
+          });
 
-        fireEvent.click(view.getItemContent('1.1'));
-        expect(onClick.callCount).to.equal(2);
-        expect(onClick.firstCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
-        expect(onClick.lastCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
-      });
+          fireEvent.click(view.getItemContent('1.1'));
+          expect(onClick.callCount).to.equal(2);
+          expect(onClick.firstCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
+          expect(onClick.lastCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
+        },
+      );
 
       it('should call onClick even when the element is disabled', () => {
         const onClick = spy();

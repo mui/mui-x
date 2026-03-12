@@ -22,6 +22,9 @@
     "disableClipping": {
       "description": "When <code>true</code>, the chart&#39;s drawing area will not be clipped and elements within can visually overflow the chart."
     },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
+    },
     "disableVoronoi": { "description": "If true, the voronoi interaction are ignored." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
