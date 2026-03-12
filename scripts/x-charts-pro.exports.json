@@ -333,6 +333,7 @@
   { "name": "Heatmap", "kind": "Variable" },
   { "name": "HEATMAP_PLUGINS", "kind": "Variable" },
   { "name": "HeatmapCell", "kind": "Variable" },
+  { "name": "HeatmapCellOwnerState", "kind": "Interface" },
   { "name": "HeatmapCellProps", "kind": "Interface" },
   { "name": "heatmapClasses", "kind": "Variable" },
   { "name": "HeatmapClasses", "kind": "Interface" },
