@@ -3,7 +3,10 @@ import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { consumeSlots, type SeriesId } from '@mui/x-charts/internals';
 import clsx from 'clsx';
-import { type FunnelSectionClasses, useLabelUtilityClasses as useDeprecatedLabelUtilityClasses } from './funnelSectionClasses';
+import {
+  type FunnelSectionClasses,
+  useLabelUtilityClasses as useDeprecatedLabelUtilityClasses,
+} from './funnelSectionClasses';
 import { useUtilityClasses } from './funnelClasses';
 
 export interface FunnelSectionLabelConfig {

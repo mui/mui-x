@@ -4,7 +4,10 @@ import { styled } from '@mui/material/styles';
 import { useInteractionItemProps, type SeriesId, consumeSlots } from '@mui/x-charts/internals';
 import { useItemHighlightState } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
-import { type FunnelSectionClasses, useUtilityClasses as useDeprecatedUtilityClasses } from './funnelSectionClasses';
+import {
+  type FunnelSectionClasses,
+  useUtilityClasses as useDeprecatedUtilityClasses,
+} from './funnelSectionClasses';
 import { useUtilityClasses } from './funnelClasses';
 
 export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref'> {

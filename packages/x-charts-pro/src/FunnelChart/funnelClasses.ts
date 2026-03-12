@@ -50,8 +50,16 @@ export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
   const { variant, classes } = options ?? {};
   const slots = {
     root: ['root'],
-    section: ['section', variant === 'filled' && 'sectionFilled', variant === 'outlined' && 'sectionOutlined'],
-    sectionLabel: ['sectionLabel', variant === 'filled' && 'sectionLabelFilled', variant === 'outlined' && 'sectionLabelOutlined'],
+    section: [
+      'section',
+      variant === 'filled' && 'sectionFilled',
+      variant === 'outlined' && 'sectionOutlined',
+    ],
+    sectionLabel: [
+      'sectionLabel',
+      variant === 'filled' && 'sectionLabelFilled',
+      variant === 'outlined' && 'sectionLabelOutlined',
+    ],
   };
 
   return composeClasses(slots, getFunnelUtilityClass, classes);
