@@ -13,6 +13,7 @@ import { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeat
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 import { type HeatmapRendererPlotProps } from './Heatmap.types';
 import { type HighlightItemIdentifierWithType } from '../models';
+import { heatmapClasses } from './heatmapClasses';
 
 const MemoHeatmapItem = React.memo(HeatmapItem);
 
@@ -43,7 +44,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
       {shouldRegisterPointerInteractionsGlobally(props.slots, props.slotProps) ? (
         <RegisterHeatmapPointerInteractions />
       ) : null}
-      <HeatmapPlotRoot data-series={seriesToDisplay.id}>
+      <HeatmapPlotRoot className={heatmapClasses.root} data-series={seriesToDisplay.id}>
         {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
           const x = xScale(xDomain[xIndex]);
           const y = yScale(yDomain[yIndex]);
