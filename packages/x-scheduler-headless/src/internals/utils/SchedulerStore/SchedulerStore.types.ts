@@ -178,8 +178,9 @@ export interface SchedulerDataSource<TEvent extends object> {
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
+   * @default []
    */
-  events: readonly TEvent[];
+  events?: readonly TEvent[];
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -237,7 +238,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   ) => void;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
-   * @default false
+   * @default true
    */
   areEventsDraggable?: boolean;
   /**
@@ -246,7 +247,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * If `false`, the events are not resizable.
    * If `"start"`, only the start can be resized.
    * If `"end"`, only the end can be resized.
-   * @default false
+   * @default true
    */
   areEventsResizable?: boolean | SchedulerEventSide;
   /**
@@ -280,7 +281,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   readOnly?: boolean;
   /**
    * Data source for fetching events asynchronously.
-   * If provided, the `events` prop will be ignored.
+   * When provided, events are fetched through the data source instead of the `events` prop.
    */
   dataSource?: SchedulerDataSource<TEvent>;
   /*

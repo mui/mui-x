@@ -6,14 +6,14 @@ import {
   selectorHeatmapItemAtPosition,
 } from '@mui/x-charts-pro/internals';
 import { HeatmapWebGLPlot } from './HeatmapWebGLPlot';
-import { ChartsWebGlLayer } from '../../ChartsWebGlLayer';
+import { ChartsWebGLLayer } from '../../ChartsWebGLLayer';
 
 export function HeatmapWebGLRenderer({ borderRadius }: HeatmapRendererPlotProps) {
   useRegisterPointerInteractions(selectorHeatmapItemAtPosition);
 
   return (
-    <ChartsWebGlLayer>
+    <ChartsWebGLLayer>
       <HeatmapWebGLPlot borderRadius={borderRadius} />
-    </ChartsWebGlLayer>
+    </ChartsWebGLLayer>
   );
 }

@@ -18,20 +18,18 @@ import {
   TreeItemCheckbox,
   TreeItemProps,
 } from '@mui/x-tree-view/TreeItem';
-import {
-  TreeViewBaseItem,
-  TreeViewCancellableEventHandler,
-} from '@mui/x-tree-view/models';
+import { TreeViewCancellableEventHandler } from '@mui/x-tree-view/models';
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 
-type ItemType = TreeViewBaseItem<{
+type ItemType = {
   id: string;
   label: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+};
 
 const LATENCY_MS = 300;
 
@@ -113,7 +111,7 @@ export default function ApiMethodUpdateItemChildren() {
   };
 
   return (
-    <Box sx={{ width: '300px' }}>
+    <div style={{ width: 300, height: 240 }}>
       <RichTreeViewPro
         items={[]}
         dataSource={{
@@ -122,6 +120,6 @@ export default function ApiMethodUpdateItemChildren() {
         }}
         slots={{ item: CustomTreeItem }}
       />
-    </Box>
+    </div>
   );
 }

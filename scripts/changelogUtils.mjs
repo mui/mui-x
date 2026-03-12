@@ -143,9 +143,21 @@ function getContributors(commits = []) {
     contributors: new Set(),
     team: new Set(),
   };
-  for (const { author } of commits) {
-    if (!author || author.login.endsWith('[bot]')) {
-      break;
+  const warnUsers = new Map();
+  for (const commitItem of commits) {
+    const { author, commit } = commitItem;
+    if (!author || author.login === 'renovate[bot]') {
+      continue;
+    }
+    if (author.login === 'github-actions[bot]') {
+      // extract author name from commit message if the commit is made by github-actions bot
+      const authorNameMatch = commit.message.match(/@([a-zA-Z0-9-]+)/);
+      if (authorNameMatch) {
+        const username = `@${authorNameMatch[1]}`;
+        community.team.add(username);
+        warnUsers.set(commit.message.split('\n')[0].trim(), username);
+      }
+      continue;
     }
     const username = `@${author.login}`;
     if (author.association === 'team') {
@@ -155,6 +167,17 @@ function getContributors(commits = []) {
     } else {
       community.contributors.add(username);
     }
+  }
+  if (warnUsers.size > 0) {
+    console.warn(
+      `The following commits were made by github-actions[bot] and attributed to users based on the commit message:\n${Array.from(
+        warnUsers.entries(),
+      )
+        .map(([commitMessage, username]) => `- ${commitMessage}: ${username}`)
+        .join('\n')}
+Please verify that these attributions are correct. They have been added to the team members group.
+`,
+    );
   }
   return community;
 }

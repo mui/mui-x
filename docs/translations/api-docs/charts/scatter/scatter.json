@@ -18,6 +18,19 @@
       }
     }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "classDescriptions": {
+    "focusedMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the focused scatter mark element"
+    },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scatter plot element"
+    },
+    "series": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group surrounding a series&#39; scatter elements"
+    }
+  },
   "slotDescriptions": { "marker": "The component that renders the marker for a scatter point." }
 }

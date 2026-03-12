@@ -27,7 +27,7 @@ export default function ErrorManagement() {
   };
 
   return (
-    <Stack spacing={2} sx={{ width: '300px' }}>
+    <Stack spacing={2} sx={{ width: 300 }}>
       <Button
         onClick={() => setFailRequests((prev) => !prev)}
         variant="outlined"
@@ -35,13 +35,15 @@ export default function ErrorManagement() {
       >
         {failRequests ? 'Resolve requests' : 'Fail Requests'}
       </Button>
-      <RichTreeViewPro
-        items={initialItems}
-        dataSource={{
-          getChildrenCount: (item) => item?.childrenCount,
-          getTreeItems: fetchData,
-        }}
-      />
+      <div style={{ width: '100%', height: 240 }}>
+        <RichTreeViewPro
+          items={initialItems}
+          dataSource={{
+            getChildrenCount: (item) => item?.childrenCount,
+            getTreeItems: fetchData,
+          }}
+        />
+      </div>
     </Stack>
   );
 }
