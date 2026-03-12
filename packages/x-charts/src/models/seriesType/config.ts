@@ -144,6 +144,17 @@ export type CartesianChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
+/**
+ * Extracts series types whose itemIdentifier includes a `dataIndex` property.
+ * This prevents accidentally using dataIndex-based cleaners/serializers
+ * for series types that use different identifier properties (e.g., heatmap uses xIndex/yIndex).
+ */
+export type SeriesTypeWithDataIndex = {
+  [K in ChartSeriesType]: 'dataIndex' extends keyof ChartsSeriesConfig[K]['itemIdentifier']
+    ? K
+    : never;
+}[ChartSeriesType];
+
 export type PolarChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
