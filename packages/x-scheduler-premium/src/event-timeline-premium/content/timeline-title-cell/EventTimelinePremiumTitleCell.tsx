@@ -13,7 +13,7 @@ const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.Row, {
   slot: 'TitleCellRow',
 })(({ theme }) => ({
   padding: theme.spacing(2),
-  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth, 0) * ${theme.spacing(2)})`,
+  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ${theme.spacing(2)})`,
   alignContent: 'start',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,

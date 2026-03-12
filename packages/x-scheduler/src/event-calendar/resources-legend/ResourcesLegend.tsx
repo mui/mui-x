@@ -41,7 +41,7 @@ const ResourcesLegendItemRoot = styled(FormControlLabel, {
 })(({ theme }) => ({
   marginLeft: 0,
   marginRight: 0,
-  paddingLeft: `calc(var(--resource-depth, 0) * ${theme.spacing(2)})`,
+  paddingLeft: `calc(var(--resource-depth) * ${theme.spacing(2)})`,
   '& .MuiCheckbox-root': {
     color: 'var(--event-main)',
     '&.Mui-checked': {
