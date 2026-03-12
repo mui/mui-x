@@ -2,8 +2,7 @@ import * as React from 'react';
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import {
   type D3ContinuousScale,
-  selectorChartsIsFadedCallback,
-  selectorChartsIsHighlightedCallback,
+  selectorChartsHighlightStateCallback,
   useStore,
 } from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
@@ -31,8 +30,7 @@ export function useCandlestickPlotData(
 ): CandlestickPlotData {
   const theme = useTheme();
   const store = useStore();
-  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
-  const isFaded = store.use(selectorChartsIsFadedCallback);
+  const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
   const lineColor = React.useMemo(
     () => parseColor(theme.palette.text.primary),
@@ -119,8 +117,9 @@ export function useCandlestickPlotData(
       }
 
       const identifier = { type: 'ohlc', seriesId: series.id, dataIndex } as const;
-      const highlighted = isHighlighted(identifier);
-      const faded = isFaded(identifier);
+      const highlightState = getHighlightState(identifier);
+      const highlighted = highlightState === 'highlighted';
+      const faded = highlightState === 'faded';
 
       if (highlighted) {
         // Mimics CSS's filter: brightness(1.2), which multiplies the RGB values by 1.2, without affecting the alpha channel
@@ -155,8 +154,7 @@ export function useCandlestickPlotData(
     bullishColor,
     drawingArea.left,
     drawingArea.top,
-    isFaded,
-    isHighlighted,
+    getHighlightState,
     lineColor,
     series.data,
     series.id,
