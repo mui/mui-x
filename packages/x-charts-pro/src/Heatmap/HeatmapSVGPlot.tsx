@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import {
-  selectorChartsIsFadedCallback,
-  selectorChartsIsHighlightedCallback,
+  selectorChartsHighlightStateCallback,
   useStore,
   useRegisterPointerInteractions,
 } from '@mui/x-charts/internals';
@@ -23,8 +22,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   const colorScale = useZColorScale()!;
   const series = useHeatmapSeriesContext();
 
-  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
-  const isFaded = store.use(selectorChartsIsFadedCallback);
+  const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();
@@ -55,6 +53,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
             xIndex,
             yIndex,
           };
+          const highlightState = getHighlightState(item);
 
           return (
             <MemoHeatmapItem
@@ -71,8 +70,8 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
               value={value}
               slots={props.slots}
               slotProps={props.slotProps}
-              isHighlighted={isHighlighted(item)}
-              isFaded={isFaded(item)}
+              isHighlighted={highlightState === 'highlighted'}
+              isFaded={highlightState === 'faded'}
               borderRadius={props.borderRadius}
             />
           );
