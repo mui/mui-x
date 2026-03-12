@@ -4,7 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
 import { type HeatmapCellOwnerState, useUtilityClasses } from './heatmapChartClasses';
 import { useDeprecatedUtilityClasses } from './heatmapClasses';
-import { HeatmapCell } from './internals/HeatmapCell';
+import { HeatmapCell, type HeatmapCellProps } from './HeatmapCell';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
 export interface HeatmapItemSlots {
@@ -45,14 +45,6 @@ export interface HeatmapItemProps {
    * @default {}
    */
   slots?: HeatmapItemSlots;
-}
-
-export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  ownerState: HeatmapCellOwnerState;
 }
 
 /**
