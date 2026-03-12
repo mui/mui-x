@@ -327,7 +327,6 @@
   { "name": "getPieArcUtilityClass", "kind": "Function" },
   { "name": "getPieCoordinates", "kind": "Function" },
   { "name": "getReferenceLineUtilityClass", "kind": "Function" },
-  { "name": "getSankeyUtilityClass", "kind": "Function" },
   { "name": "getValueToPositionMapper", "kind": "Function" },
   { "name": "greenPalette", "kind": "Variable" },
   { "name": "greenPaletteDark", "kind": "Variable" },
