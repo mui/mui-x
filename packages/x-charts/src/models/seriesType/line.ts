@@ -119,7 +119,7 @@ export type LineItemIdentifier = {
 
 export interface DefaultizedLineSeriesType extends DefaultizedProps<
   LineSeriesType,
-  CommonDefaultizedProps | 'color'
+  CommonDefaultizedProps | 'color' | 'shape'
 > {
   hidden: boolean;
 }
