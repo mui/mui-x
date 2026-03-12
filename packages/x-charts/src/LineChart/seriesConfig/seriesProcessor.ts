@@ -28,23 +28,25 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
+  const idToIndex: Map<SeriesId, number> = new Map();
   // Create a data set with format adapted to d3
   const d3Dataset: DatasetType<number | null> = (dataset as DatasetType<number | null>) ?? [];
-  seriesOrder.forEach((id) => {
+  seriesOrder.forEach((id, seriesIndex) => {
+    idToIndex.set(id, seriesIndex);
     const data = series[id].data;
     if (data !== undefined) {
-      data.forEach((value, index) => {
-        if (d3Dataset.length <= index) {
+      data.forEach((value, dataIndex) => {
+        if (d3Dataset.length <= dataIndex) {
           d3Dataset.push({ [id]: value });
         } else {
-          d3Dataset[index][id] = value;
+          d3Dataset[dataIndex][id] = value;
         }
       });
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
         `MUI X Charts: Line series with id="${id}" has no data. ` +
-          'The chart cannot render this series without data. ' +
-          'Provide a data property to the series or use the dataset prop.',
+        'The chart cannot render this series without data. ' +
+        'Provide a data property to the series or use the dataset prop.',
       );
     }
 
@@ -55,8 +57,8 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
         if (!dataKey) {
           throw new Error(
             `MUI X Charts: Line series with id="${id}" has no data and no dataKey. ` +
-              'When using the dataset prop, each series must have a dataKey to identify which dataset column to use. ' +
-              'Add a dataKey property to the series configuration.',
+            'When using the dataset prop, each series must have a dataKey to identify which dataset column to use. ' +
+            'Add a dataKey property to the series configuration.',
           );
         }
 
@@ -112,15 +114,15 @@ Line plots only support numeric and null values.`,
       const dataKey = series[id].dataKey;
       const data = dataKey
         ? dataset!.map((d) => {
-            const value = d[dataKey];
-            return typeof value === 'number' ? value : null;
-          })
+          const value = d[dataKey];
+          return typeof value === 'number' ? value : null;
+        })
         : series[id].data!;
       const hidden = !isItemVisible?.({ type: 'line', seriesId: id });
       completedSeries[id] = {
         labelMarkType: 'line+mark',
         ...series[id],
-        shape: series[id].shape ?? defaultShapes[index % defaultShapes.length],
+        shape: series[id].shape ?? defaultShapes[(idToIndex.get(id) ?? 0) % defaultShapes.length],
         data,
         valueFormatter: series[id].valueFormatter ?? lineValueFormatter,
         hidden,
