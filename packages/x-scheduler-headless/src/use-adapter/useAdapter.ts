@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { fr } from 'date-fns/locale/fr';
 import { TemporalSupportedObject } from '../models';
 import { UnstableTemporalAdapterDateFns } from '../base-ui-copy/temporal-adapter-date-fns';
 import { TemporalAdapter } from '../base-ui-copy/types';
@@ -15,25 +14,6 @@ export function useAdapter(dateLocale?: DateLocale) {
     [dateLocale],
   );
 }
-
-/**
- * @internal Test-only helper — creates an English adapter.
- */
-export function createTestAdapterEn() {
-  return new UnstableTemporalAdapterDateFns();
-}
-
-/**
- * @internal Test-only helper — creates a French adapter.
- */
-export function createTestAdapterFr() {
-  return new UnstableTemporalAdapterDateFns({ locale: fr });
-}
-
-/**
- * @internal Test-only helper — exposes the French date-fns locale for use as a `dateLocale` prop value.
- */
-export const testDateLocaleFr: DateLocale = fr;
 
 /**
  * Checks if the given date is a weekend (Saturday or Sunday).
