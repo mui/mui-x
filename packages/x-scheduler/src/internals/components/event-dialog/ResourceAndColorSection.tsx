@@ -96,6 +96,8 @@ interface ResourceOptionType {
   value: string | null;
   eventColor: SchedulerEventColor;
   depth: number;
+  isGroupRoot: boolean;
+  indentLevel: number;
 }
 
 function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
@@ -133,15 +135,21 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     return [
-      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor, depth: 0 },
-      ...resources.map((resource) => ({
-        label: resource.title,
-        value: resource.id,
-        eventColor: resource.eventColor ?? eventDefaultColor,
-        depth: resourceDepthLookup.get(resource.id) ?? 0,
-      })),
+      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor, depth: 0, isGroupRoot: false, indentLevel: 0 },
+      ...resources.map((resource) => {
+        const depth = resourceDepthLookup.get(resource.id) ?? 0;
+        const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
+        return {
+          label: resource.title,
+          value: resource.id,
+          eventColor: resource.eventColor ?? eventDefaultColor,
+          depth,
+          isGroupRoot: depth === 0 && hasChildren,
+          indentLevel: Math.max(0, depth - 1),
+        };
+      }),
     ];
-  }, [resources, resourceDepthLookup, localeText.labelNoResource, eventDefaultColor]);
+  }, [resources, resourceDepthLookup, childrenIdLookup, localeText.labelNoResource, eventDefaultColor]);
 
   const resource = React.useMemo(
     () =>
@@ -175,14 +183,9 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
         >
           {resourcesOptions.flatMap((resourceOption, index) => {
-            const hasChildren =
-              resourceOption.value != null &&
-              (childrenIdLookup.get(resourceOption.value)?.length ?? 0) > 0;
-            const isGroupRoot = resourceOption.depth === 0 && hasChildren;
-
             const items: React.ReactNode[] = [];
 
-            if (isGroupRoot) {
+            if (resourceOption.isGroupRoot) {
               if (index > 0) {
                 items.push(<Divider key={`divider-${resourceOption.value}`} />);
               }
@@ -193,17 +196,13 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
               );
             }
 
-            // Inside a group, depth 0 (root) and depth 1 (direct children) are
-            // at the same level. Depth 2+ gets indentation based on (depth - 1).
-            const indentLevel = Math.max(0, resourceOption.depth - 1);
-
             items.push(
               <ResourceMenuItem
                 key={resourceOption.value ?? NO_RESOURCE_VALUE}
                 value={resourceOption.value ?? NO_RESOURCE_VALUE}
                 aria-label={resourceOption.label}
                 className={classes.eventDialogResourceMenuItem}
-                style={{ '--resource-indent': indentLevel } as React.CSSProperties}
+                style={{ '--resource-indent': resourceOption.indentLevel } as React.CSSProperties}
               >
                 <ListItemIcon>
                   <ResourceMenuColorDot
