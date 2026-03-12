@@ -9,6 +9,8 @@ export interface UseChatStatusValue {
   isStreaming: boolean;
   hasMoreHistory: boolean;
   error: ChatError | null;
+  /** IDs of users currently typing in the active conversation. */
+  typingUserIds: string[];
 }
 
 export function useChatStatus(): UseChatStatusValue {
@@ -16,13 +18,15 @@ export function useChatStatus(): UseChatStatusValue {
   const isStreaming = useStore(store, chatSelectors.isStreaming);
   const hasMoreHistory = useStore(store, chatSelectors.hasMoreHistory);
   const error = useStore(store, chatSelectors.error);
+  const typingUserIds = useStore(store, chatSelectors.typingUserIds);
 
   return React.useMemo(
     () => ({
       isStreaming,
       hasMoreHistory,
       error,
+      typingUserIds,
     }),
-    [error, hasMoreHistory, isStreaming],
+    [error, hasMoreHistory, isStreaming, typingUserIds],
   );
 }

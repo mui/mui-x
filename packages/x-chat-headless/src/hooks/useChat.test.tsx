@@ -5,6 +5,7 @@ import type { ChatAdapter } from '../adapters';
 import { ChatProvider, type ChatProviderProps } from '../ChatProvider';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import { useChat } from './useChat';
+import { useChatStatus } from './useChatStatus';
 import { useChatStore } from './useChatStore';
 
 function createStream(values: any[] = []): ReadableStream<any> {
@@ -1174,5 +1175,58 @@ describe('useChat', () => {
       },
     });
     expect(onError).toHaveBeenCalledWith(result.current.error);
+  });
+
+  it('typing realtime events update useChatStatus.typingUserIds for the active conversation', async () => {
+    let onEvent: ((event: any) => void) | undefined;
+    const adapter = createAdapter({
+      listConversations: vi.fn(async () => ({ conversations: [] })),
+      subscribe: vi.fn(({ onEvent: handler }) => {
+        onEvent = handler;
+        return () => {};
+      }),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      defaultActiveConversationId: 'c1',
+    });
+    const { result } = renderHook(
+      () => ({ chat: useChat(), status: useChatStatus() }),
+      { wrapper: Wrapper },
+    );
+
+    await waitFor(() => {
+      expect(adapter.subscribe).toHaveBeenCalledTimes(1);
+    });
+
+    expect(result.current.status.typingUserIds).toEqual([]);
+
+    // u1 starts typing in the active conversation
+    act(() => {
+      onEvent?.({ type: 'typing', conversationId: 'c1', userId: 'u1', isTyping: true });
+    });
+
+    expect(result.current.status.typingUserIds).toEqual(['u1']);
+
+    // u2 also starts typing
+    act(() => {
+      onEvent?.({ type: 'typing', conversationId: 'c1', userId: 'u2', isTyping: true });
+    });
+
+    expect(result.current.status.typingUserIds).toEqual(['u1', 'u2']);
+
+    // Typing in a different conversation does not appear in the active conversation
+    act(() => {
+      onEvent?.({ type: 'typing', conversationId: 'c2', userId: 'u3', isTyping: true });
+    });
+
+    expect(result.current.status.typingUserIds).toEqual(['u1', 'u2']);
+
+    // u1 stops typing
+    act(() => {
+      onEvent?.({ type: 'typing', conversationId: 'c1', userId: 'u1', isTyping: false });
+    });
+
+    expect(result.current.status.typingUserIds).toEqual(['u2']);
   });
 });

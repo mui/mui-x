@@ -170,6 +170,7 @@ describe('selector hooks', () => {
       isStreaming: false,
       hasMoreHistory: false,
       error: null,
+      typingUserIds: [],
     });
 
     act(() => {
@@ -192,6 +193,7 @@ describe('selector hooks', () => {
       isStreaming: false,
       hasMoreHistory: true,
       error: null,
+      typingUserIds: [],
     });
 
     act(() => {
@@ -206,6 +208,58 @@ describe('selector hooks', () => {
       isStreaming: true,
       hasMoreHistory: true,
       error: streamError,
+      typingUserIds: [],
     });
+  });
+
+  it('useChatStatus.typingUserIds reflects typing events for the active conversation and ignores message updates', () => {
+    const store = new ChatStore({
+      defaultMessages: [userMessage],
+      defaultActiveConversationId: 'c1',
+    });
+    const wrapper = createStoreWrapper(store);
+    const statusHook = renderHook(() => useRenderCount(useChatStatus()), { wrapper });
+
+    expect(statusHook.result.current.value.typingUserIds).toEqual([]);
+
+    // Setting a user typing in the active conversation triggers a rerender
+    act(() => {
+      store.setTypingUser('c1', 'u1', true);
+    });
+
+    expect(statusHook.result.current.renderCount).toBe(2);
+    expect(statusHook.result.current.value.typingUserIds).toEqual(['u1']);
+
+    // A second user starts typing
+    act(() => {
+      store.setTypingUser('c1', 'u2', true);
+    });
+
+    expect(statusHook.result.current.renderCount).toBe(3);
+    expect(statusHook.result.current.value.typingUserIds).toEqual(['u1', 'u2']);
+
+    // Typing in a different conversation does not affect the active conversation's typingUserIds
+    const renderCountBeforeOtherConv = statusHook.result.current.renderCount;
+    act(() => {
+      store.setTypingUser('c2', 'u3', true);
+    });
+
+    expect(statusHook.result.current.renderCount).toBe(renderCountBeforeOtherConv + 1);
+    expect(statusHook.result.current.value.typingUserIds).toEqual(['u1', 'u2']);
+
+    // u1 stops typing
+    act(() => {
+      store.setTypingUser('c1', 'u1', false);
+    });
+
+    expect(statusHook.result.current.value.typingUserIds).toEqual(['u2']);
+
+    // A plain message update does not change typingUserIds reference
+    const typingIdsBeforeMessageUpdate = statusHook.result.current.value.typingUserIds;
+    act(() => {
+      store.addMessage(assistantMessage);
+    });
+
+    expect(statusHook.result.current.value.typingUserIds).toBe(typingIdsBeforeMessageUpdate);
   });
 });

@@ -96,11 +96,13 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       activeConversationId,
       messageIds,
       messagesById,
+      typingByConversation: {},
       activeStreamAbortController: null,
       isStreaming: false,
       hasMoreHistory: false,
       historyCursor: undefined,
       composerValue,
+      composerIsComposing: false,
       composerAttachments: [],
       error: null,
     });
@@ -318,9 +320,31 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.set('activeConversationId', id);
   };
 
+  public setTypingUser = (conversationId: string, userId: string, isTyping: boolean) => {
+    const current = this.state.typingByConversation[conversationId] ?? {};
+
+    if (current[userId] === isTyping) {
+      return;
+    }
+
+    this.update({
+      typingByConversation: {
+        ...this.state.typingByConversation,
+        [conversationId]: {
+          ...current,
+          [userId]: isTyping,
+        },
+      },
+    });
+  };
+
   public setComposerValue = (value: string) => {
     this.dirtyControlledModels.add('composerValue');
     this.set('composerValue', value);
+  };
+
+  public setComposerIsComposing = (value: boolean) => {
+    this.set('composerIsComposing', value);
   };
 
   public setComposerAttachments = (attachments: ChatDraftAttachment[]) => {
@@ -347,6 +371,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.dirtyControlledModels.add('composerValue');
     this.update({
       composerValue: '',
+      composerIsComposing: false,
       composerAttachments: [],
     });
   };

@@ -18,6 +18,7 @@ import type { ChatConversation, ChatDraftAttachment } from '../../types/chat-ent
 import type { ChatError } from '../../types/chat-error';
 import type { ChatMessagePart } from '../../types/chat-message-parts';
 import type { ChatRealtimeEvent } from '../../types/chat-realtime';
+import { createLocalId } from '../createLocalId';
 
 export interface UseChatSendMessageInput {
   id?: string;
@@ -78,10 +79,6 @@ function getErrorMessage(
   error: unknown,
 ): string {
   return error instanceof Error && error.message ? error.message : fallbackMessage;
-}
-
-function createMessageId() {
-  return crypto.randomUUID();
 }
 
 function findAssistantMessageIdsForRetry(
@@ -414,7 +411,7 @@ export function useChatController<Cursor = string>({
   const sendMessage = React.useCallback<ChatRuntimeActions<Cursor>['sendMessage']>(
     async (input) => {
       const message: ChatMessage = {
-        id: input.id ?? createMessageId(),
+        id: input.id ?? createLocalId(),
         conversationId: input.conversationId ?? store.state.activeConversationId,
         role: 'user',
         parts: input.parts,
@@ -626,6 +623,7 @@ export function useChatController<Cursor = string>({
           applyReadUpdate(store, event);
           return;
         case 'typing':
+          store.setTypingUser(event.conversationId, event.userId, event.isTyping);
           return;
         default:
       }

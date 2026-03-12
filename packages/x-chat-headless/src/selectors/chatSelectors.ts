@@ -49,4 +49,23 @@ export const chatSelectors = {
   ),
   composerValue: createSelector((state: State) => state.composerValue),
   composerAttachments: createSelector((state: State) => state.composerAttachments),
+  /**
+   * Returns the IDs of users currently typing in the given conversation.
+   * If no conversationId argument is provided, falls back to the active conversation.
+   */
+  typingUserIds: createSelectorMemoized(
+    (state: State) => state.typingByConversation,
+    (state: State) => state.activeConversationId,
+    (typingByConversation, activeConversationId, conversationId?: string): string[] => {
+      const id = conversationId ?? activeConversationId;
+      if (!id) {
+        return [];
+      }
+      const byUser = typingByConversation[id];
+      if (!byUser) {
+        return [];
+      }
+      return Object.keys(byUser).filter((userId) => byUser[userId]);
+    },
+  ),
 } as const;
