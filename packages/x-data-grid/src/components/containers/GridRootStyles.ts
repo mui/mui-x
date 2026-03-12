@@ -636,22 +636,22 @@ export const GridRootStyles = styled('div', {
       flex: '0 0 auto',
       height: 'var(--height)',
       width: 'var(--width)',
-      display:'flex',
-      alignItems:'center',
+      display: 'flex',
+      alignItems: 'center',
       lineHeight: 'inherit', // -1px for the border
-    
+
       boxSizing: 'border-box',
       borderTop: `1px solid var(--rowBorderColor)`,
-      minWidth:0,
+      minWidth: 0,
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       '&.Mui-selected': selectedStyles,
     },
-   
+
     [`& .${c.cell} > *`]: {
-      display: 'block',  
-      flex: '1 1 auto',     
+      display: 'block',
+      flex: '1 1 auto',
       minWidth: '0',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
