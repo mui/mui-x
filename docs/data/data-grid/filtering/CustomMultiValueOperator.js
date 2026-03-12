@@ -75,7 +75,9 @@ function InputNumberInterval(props) {
         value={Number(filterValueState[1])}
         onChange={handleUpperFilterChange}
         type="number"
-        InputProps={applying ? { endAdornment: <SyncIcon /> } : {}}
+        slotProps={{
+          input: applying ? { endAdornment: <SyncIcon /> } : {},
+        }}
       />
     </Box>
   );

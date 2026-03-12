@@ -16,11 +16,11 @@ import {
 import { type ChartsLabelMarkProps } from '../../../../../ChartsLabel/ChartsLabelMark';
 import { type ColorGetter } from './colorProcessor.types';
 
-export interface ItemTooltip<T extends ChartSeriesType> {
+export interface ItemTooltip<SeriesType extends ChartSeriesType> {
   /**
    * An object that identifies the item to display.
    */
-  identifier: SeriesItemIdentifierWithType<T>;
+  identifier: SeriesItemIdentifierWithType<SeriesType>;
   /**
    * The color associated with the item.
    */
@@ -32,7 +32,7 @@ export interface ItemTooltip<T extends ChartSeriesType> {
   /**
    * The item value.
    */
-  value: ChartsSeriesConfig[T]['valueType'];
+  value: ChartsSeriesConfig[SeriesType]['valueType'];
   /**
    * The value formatted with context set to "tooltip".
    */
@@ -82,26 +82,28 @@ export interface TooltipGetterAxesConfig {
   radius?: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
 }
 
-export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
-  series: ChartSeriesDefaultized<TSeriesType>;
+export type TooltipGetter<SeriesType extends ChartSeriesType> = (params: {
+  series: ChartSeriesDefaultized<SeriesType>;
   axesConfig: TooltipGetterAxesConfig;
-  getColor: ColorGetter<TSeriesType>;
-  identifier: SeriesItemIdentifierWithType<TSeriesType> | null;
+  getColor: ColorGetter<SeriesType>;
+  identifier: SeriesItemIdentifierWithType<SeriesType> | null;
 }) =>
-  | (TSeriesType extends 'radar'
-      ? ItemTooltipWithMultipleValues<TSeriesType>
-      : ItemTooltip<TSeriesType>)
+  | (SeriesType extends 'radar'
+      ? ItemTooltipWithMultipleValues<SeriesType>
+      : SeriesType extends 'heatmap'
+        ? Omit<ItemTooltip<SeriesType>, 'value'> & { value: number | null }
+        : ItemTooltip<SeriesType>)
   | null;
 
 /**
  * If `axisId` is set to undefined, the default axis will be used.
  *
- * @param {Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>} series A map of series ID to their series configuration.
+ * @param {Record<SeriesId, ChartSeriesDefaultized<SeriesType>>} series A map of series ID to their series configuration.
  * @returns {{ direction: Directions; axisId: AxisId | undefined }[]} an array of the axes that should trigger the tooltip.
  */
 export type AxisTooltipGetter<
-  TSeriesType extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   Directions extends 'x' | 'y' | 'rotation' | 'radius' = 'x' | 'y',
 > = (
-  series: Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>,
+  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType>>,
 ) => { direction: Directions; axisId: AxisId | undefined }[];

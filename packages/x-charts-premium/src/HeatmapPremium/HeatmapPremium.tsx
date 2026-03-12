@@ -133,7 +133,10 @@ HeatmapPremium.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -232,7 +235,7 @@ HeatmapPremium.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -296,14 +299,12 @@ HeatmapPremium.propTypes = {
    */
   tooltipItem: PropTypes.oneOfType([
     PropTypes.shape({
-      dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['heatmap']).isRequired,
       xIndex: PropTypes.number.isRequired,
       yIndex: PropTypes.number.isRequired,
     }),
     PropTypes.shape({
-      dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
       xIndex: PropTypes.number.isRequired,
       yIndex: PropTypes.number.isRequired,

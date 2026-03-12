@@ -255,7 +255,6 @@ export const useTreeItem = <TStore extends TreeViewAnyStore = DefaultStore>(
       ref: handleContentRef,
       onClick: createContentHandleClick(externalEventHandlers),
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
-      status,
     };
 
     (['expanded', 'selected', 'focused', 'disabled', 'editing', 'editable'] as const).forEach(

@@ -1,13 +1,12 @@
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-
 export type Employee = {
   editable?: boolean;
   id: string;
   firstName: string;
   lastName: string;
+  children?: Employee[];
 };
 
-export const EMPLOYEES: TreeViewBaseItem<Employee>[] = [
+export const EMPLOYEES: Employee[] = [
   {
     id: '1',
     firstName: 'Jane',

@@ -31,6 +31,7 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
@@ -87,7 +88,7 @@
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "type": "function(tooltipItem: SeriesItemIdentifier<SeriesType> | null) => void",
         "describedArgs": ["tooltipItem"]
       }
     },
@@ -121,7 +122,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, xIndex: number, yIndex: number }"
+        "description": "{ seriesId: string, type: 'heatmap', xIndex: number, yIndex: number }<br>&#124;&nbsp;{ seriesId: string, xIndex: number, yIndex: number }"
       }
     },
     "width": { "type": { "name": "number" } },

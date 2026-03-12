@@ -55,10 +55,14 @@ export interface EventDialogClasses {
   eventDialogRepeatSectionLabel: string;
   /** Styles applied to the event dialog ends radio group element. */
   eventDialogEndsRadioGroup: string;
+  /** Styles applied to the event dialog repeat section fieldset element. */
+  eventDialogRepeatSectionFieldset: string;
   /** Styles applied to the event dialog repeat section content element. */
   eventDialogRepeatSectionContent: string;
   /** Styles applied to the event dialog recurrence selector toggle group element. */
   eventDialogRecurrenceSelectorToggleGroup: string;
+  /** Styles applied to the event dialog week day selector form group element. */
+  eventDialogWeekDaySelectorCheckbox: string;
   /** Styles applied to the event dialog frequency select element. */
   eventDialogFrequencySelect: string;
   /** Styles applied to the event dialog small number field element. */
@@ -118,8 +122,10 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogRadioButtonLabel',
   'eventDialogRepeatSectionLabel',
   'eventDialogEndsRadioGroup',
+  'eventDialogRepeatSectionFieldset',
   'eventDialogRepeatSectionContent',
   'eventDialogRecurrenceSelectorToggleGroup',
+  'eventDialogWeekDaySelectorCheckbox',
   'eventDialogFrequencySelect',
   'eventDialogSmallNumberField',
   'eventDialogTabsContainer',
@@ -165,8 +171,10 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogRadioButtonLabel: ['eventDialogRadioButtonLabel'],
   eventDialogRepeatSectionLabel: ['eventDialogRepeatSectionLabel'],
   eventDialogEndsRadioGroup: ['eventDialogEndsRadioGroup'],
+  eventDialogRepeatSectionFieldset: ['eventDialogRepeatSectionFieldset'],
   eventDialogRepeatSectionContent: ['eventDialogRepeatSectionContent'],
   eventDialogRecurrenceSelectorToggleGroup: ['eventDialogRecurrenceSelectorToggleGroup'],
+  eventDialogWeekDaySelectorCheckbox: ['eventDialogWeekDaySelectorCheckbox'],
   eventDialogFrequencySelect: ['eventDialogFrequencySelect'],
   eventDialogSmallNumberField: ['eventDialogSmallNumberField'],
   eventDialogTabsContainer: ['eventDialogTabsContainer'],
