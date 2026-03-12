@@ -4,6 +4,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
+import ListSubheader from '@mui/material/ListSubheader';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -86,6 +88,7 @@ interface ResourceOptionType {
   label: string;
   value: string | null;
   eventColor: SchedulerEventColor;
+  depth: number;
 }
 
 function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
@@ -117,18 +120,21 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
 
   // Selector hooks
   const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
+  const resourceDepthLookup = useStore(store, schedulerResourceSelectors.resourceDepthLookup);
+  const childrenIdLookup = useStore(store, schedulerResourceSelectors.childrenIdLookup);
   const eventDefaultColor = useStore(store, schedulerOtherSelectors.defaultEventColor);
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     return [
-      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor },
+      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor, depth: 0 },
       ...resources.map((resource) => ({
         label: resource.title,
         value: resource.id,
         eventColor: resource.eventColor ?? eventDefaultColor,
+        depth: resourceDepthLookup.get(resource.id) ?? 0,
       })),
     ];
-  }, [resources, localeText.labelNoResource, eventDefaultColor]);
+  }, [resources, resourceDepthLookup, localeText.labelNoResource, eventDefaultColor]);
 
   const resource = React.useMemo(
     () =>
@@ -161,22 +167,49 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           }
           renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
         >
-          {resourcesOptions.map((resourceOption) => (
-            <MenuItem
-              key={resourceOption.value ?? NO_RESOURCE_VALUE}
-              value={resourceOption.value ?? NO_RESOURCE_VALUE}
-              aria-label={resourceOption.label}
-            >
-              <ListItemIcon>
-                <ResourceMenuColorDot
-                  className={classes.eventDialogResourceMenuColorDot}
-                  data-palette={resourceOption.eventColor}
-                  data-no-resource={Boolean(resourceOption.value === null)}
-                />
-              </ListItemIcon>
-              <ListItemText>{resourceOption.label}</ListItemText>
-            </MenuItem>
-          ))}
+          {resourcesOptions.flatMap((resourceOption, index) => {
+            const hasChildren =
+              resourceOption.value != null &&
+              (childrenIdLookup.get(resourceOption.value)?.length ?? 0) > 0;
+            const isGroupRoot = resourceOption.depth === 0 && hasChildren;
+
+            const items: React.ReactNode[] = [];
+
+            if (isGroupRoot) {
+              if (index > 0) {
+                items.push(<Divider key={`divider-${resourceOption.value}`} />);
+              }
+              items.push(
+                <ListSubheader key={`header-${resourceOption.value}`}>
+                  {resourceOption.label.toUpperCase()}
+                </ListSubheader>,
+              );
+            }
+
+            // Inside a group, depth 0 (root) and depth 1 (direct children) are
+            // at the same level. Depth 2+ gets indentation based on (depth - 1).
+            const indentLevel = resourceOption.depth - 1;
+
+            items.push(
+              <MenuItem
+                key={resourceOption.value ?? NO_RESOURCE_VALUE}
+                value={resourceOption.value ?? NO_RESOURCE_VALUE}
+                aria-label={resourceOption.label}
+                sx={indentLevel > 0 ? { pl: 2 * indentLevel + 2 } : undefined}
+              >
+                <ListItemIcon>
+                  <ResourceMenuColorDot
+                    className={classes.eventDialogResourceMenuColorDot}
+                    data-palette={resourceOption.eventColor}
+                    data-no-resource={Boolean(resourceOption.value === null)}
+                  />
+                </ListItemIcon>
+                <ListItemText>{resourceOption.label}</ListItemText>
+              </MenuItem>,
+            );
+
+            return items;
+          })}
         </Select>
       </FormControl>
       <ColorSelectionContainer role="radiogroup" aria-label={localeText.colorPickerLabel}>

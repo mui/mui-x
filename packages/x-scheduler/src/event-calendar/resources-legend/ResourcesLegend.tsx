@@ -41,6 +41,7 @@ const ResourcesLegendItemRoot = styled(FormControlLabel, {
 })(({ theme }) => ({
   marginLeft: 0,
   marginRight: 0,
+  paddingLeft: `calc(var(--resource-depth, 0) * ${theme.spacing(2)})`,
   '& .MuiCheckbox-root': {
     color: 'var(--event-main)',
     '&.Mui-checked': {
@@ -60,11 +61,12 @@ const ResourcesLegendItemName = styled(Typography, {
 interface ResourcesLegendItemProps {
   resource: SchedulerResource;
   isVisible: boolean;
+  depth: number;
   onToggle: (resourceId: string, event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function ResourcesLegendItem(props: ResourcesLegendItemProps) {
-  const { resource, isVisible, onToggle } = props;
+  const { resource, isVisible, depth, onToggle } = props;
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resource.id);
@@ -72,6 +74,7 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
   return (
     <ResourcesLegendItemRoot
       className={classes.resourcesLegendItem}
+      style={{ '--resource-depth': Math.min(depth, 2) } as React.CSSProperties}
       data-palette={eventColor}
       control={
         <Checkbox
@@ -103,15 +106,34 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
 ) {
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
+  const resourceDepthLookup = useStore(store, schedulerResourceSelectors.resourceDepthLookup);
+  const parentIdLookup = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   const handleToggle = useStableCallback(
     (resourceId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+      const checked = event.target.checked;
+
+      // When checking a child, also enable all its ancestors so it becomes
+      // effectively visible (visibleMap hides children of hidden parents).
+      const ancestorsToEnable = new Set<string>();
+      if (checked) {
+        let currentId = parentIdLookup.get(resourceId) ?? null;
+        while (currentId != null) {
+          if (visibleResources[currentId] === false) {
+            ancestorsToEnable.add(currentId);
+          }
+          currentId = parentIdLookup.get(currentId) ?? null;
+        }
+      }
+
       const newVisibleResources = Object.fromEntries(
         resources.map((res) => [
           res.id,
-          res.id === resourceId ? event.target.checked : visibleResources[res.id] !== false,
+          res.id === resourceId
+            ? checked
+            : ancestorsToEnable.has(res.id) || visibleResources[res.id] !== false,
         ]),
       );
       store.setVisibleResources(newVisibleResources, event.nativeEvent);
@@ -137,6 +159,7 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
           key={resource.id}
           resource={resource}
           isVisible={visibleResources[resource.id] !== false}
+          depth={resourceDepthLookup.get(resource.id) ?? 0}
           onToggle={handleToggle}
         />
       ))}
