@@ -4,12 +4,12 @@
 
 _Mar 12, 2026_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes and internal improvements
 
 The following team members contributed to this release:
-@aemartos, @alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @rita-codes, @sai6855, @siriwatknp
+@aemartos, @alexfauquette, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @rita-codes, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -35,6 +35,7 @@ Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.3`.
 #### `@mui/x-date-pickers@9.0.0-alpha.3`
 
 - [pickers] Refactor `DateRangePickerDay` overrides to use a centralized `elementOverrides` object (#21426) @sai6855
+- [pickers] migrate from deprecated props for `PickersModalDialog` (#21702) @siriwatknp
 
 #### `@mui/x-date-pickers-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -53,8 +54,10 @@ Same changes as in `@mui/x-date-pickers@9.0.0-alpha.3`.
 - [charts] Refactor `BarChart` classes structure (#21601) @JCQuintas
 - [charts] Refactor `LineChart` classes structure (#21648) @JCQuintas
 - [charts] Refactor `ScatterChart` classes structure (#21651) @JCQuintas
+- [charts] Refactor `PieChart` classes structure (#21649) @JCQuintas
 - [charts] Remove batch rendering checks in highlight selectors (#21646) @bernardobelchior
 - [charts] Standardize generic arg names to `SeriesType` (#21694) @alexfauquette
+- [charts] Simplify highlight hooks return types (#21695) @alexfauquette
 
 #### `@mui/x-charts-pro@9.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -63,10 +66,13 @@ Same changes as in `@mui/x-charts@9.0.0-alpha.3`, plus:
 - [charts-pro] Fix heatmap style override from `arc` to `cell` (#21693) @Copilot
 - [charts-pro] Fix image export truncated when page is zoomed out (#21685) @bernardobelchior
 - [charts-pro] Speed-up heatmap cell search with an index lookup (#21130) @alexfauquette
+- [charts-pro] Fix heatmap highlight not working (#21710) @Copilot
 
 #### `@mui/x-charts-premium@9.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@9.0.0-alpha.3`.
+Same changes as in `@mui/x-charts-pro@9.0.0-alpha.3`, plus:
+
+- [charts-premium] Re-enable WebGL tests (#21708) @bernardobelchior
 
 ### Tree View
 
@@ -107,6 +113,7 @@ Internal changes.
 ### Core
 
 - [code-infra] Remove checkout step (#21688) @Janpot
+- [code-infra] Fix contributor generation in changelog (#21718) @brijeshb42
 - [docs-infra] Do not point to non-existent v8 subdomain (#21640) @cherniavskii
 
 ### Miscellaneous
