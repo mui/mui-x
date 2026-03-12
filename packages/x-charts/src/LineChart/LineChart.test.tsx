@@ -1,7 +1,8 @@
-import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, fireEvent } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { screen } from '@mui/internal-test-utils';
+import { vi } from 'vitest';
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -39,6 +40,39 @@ describe('<LineChart />', () => {
 
     expect(screen.getByText('No data to display')).toBeVisible();
   });
+  it('should display a single mark when showMark is "last"', () => {
+    render(
+      <LineChart
+        width={500}
+        height={300}
+        series={[{ data: [10, 20, 30, 40, 50], showMark: 'last' }]}
+        xAxis={[{ data: [0, 1, 2, 3, 4] }]}
+      />,
+    );
+
+    const marks = document.querySelectorAll('.MuiMarkElement-root');
+    expect(marks.length).to.equal(1);
+  });
+
+  it('should display the mark on the last non-null item when showMark is "last"', () => {
+    const onMarkClick = vi.fn();
+    render(
+      <LineChart
+        width={500}
+        height={300}
+        series={[{ data: [10, 20, 30, null, null], showMark: 'last' }]}
+        xAxis={[{ data: [0, 1, 2, 3, 4] }]}
+        onMarkClick={onMarkClick}
+      />,
+    );
+
+    const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+    expect(marks.length).to.equal(1);
+
+    fireEvent.click(marks[0]);
+    expect(onMarkClick.mock.lastCall?.[1]).to.deep.include({ dataIndex: 2 });
+  });
+
   it('should support dataset with missing values', async () => {
     const dataset = [
       {

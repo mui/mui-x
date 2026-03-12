@@ -68,8 +68,9 @@ export interface LineSeriesType
    * Define which items of the series should display a mark.
    * If can be a boolean that applies to all items.
    * Or a callback that gets some item properties and returns true if the item should be displayed.
+   * If set to `'last'`, only the last data point will display a mark.
    */
-  showMark?: boolean | ((params: ShowMarkParams) => boolean);
+  showMark?: boolean | 'last' | ((params: ShowMarkParams) => boolean);
   /**
    * The shape of the mark elements.
    * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
