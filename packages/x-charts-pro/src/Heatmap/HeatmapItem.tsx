@@ -2,8 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
-import { type HeatmapCellOwnerState, useUtilityClasses } from './heatmapClasses';
-import { HeatmapCell, type HeatmapCellProps } from './HeatmapCell';
+import { useUtilityClasses } from './heatmapClasses';
+import { HeatmapCell, type HeatmapCellOwnerState, type HeatmapCellProps } from './HeatmapCell';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
 export interface HeatmapItemSlots {

@@ -262,6 +262,12 @@
       "isDeprecated": true
     },
     {
+      "key": "root",
+      "className": "MuiHeatmap-root",
+      "description": "Styles applied to the heatmap plot root element.",
+      "isGlobal": false
+    },
+    {
       "key": "series",
       "className": "MuiHeatmap-series",
       "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${heatmapClasses.series}-${seriesId}`.",

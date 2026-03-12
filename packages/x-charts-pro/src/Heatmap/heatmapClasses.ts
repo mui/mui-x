@@ -1,15 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { type SeriesId } from '@mui/x-charts/models';
-
-export interface HeatmapCellOwnerState {
-  seriesId: SeriesId;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<HeatmapClasses>;
-}
+import type { HeatmapCellOwnerState } from './HeatmapCell';
 
 export interface HeatmapClasses {
   /** Styles applied to the heatmap plot root element. */

@@ -1,11 +1,18 @@
 import { styled } from '@mui/material/styles';
 import type * as React from 'react';
-import type { HeatmapCellOwnerState } from './heatmapClasses';
+import type { SeriesId } from '../models';
+import type { HeatmapClasses } from './heatmapClasses';
 
-export { type HeatmapCellOwnerState };
+export interface HeatmapCellOwnerState {
+  seriesId: SeriesId;
+  color: string;
+  isFaded: boolean;
+  isHighlighted: boolean;
+  classes?: Partial<HeatmapClasses>;
+}
 
 /**
- * @deprecated Use `HeatmapCellOwnerState` from `./heatmapClasses` instead.
+ * @deprecated Use `HeatmapCellOwnerState` instead.
  */
 export type HeatmapItemOwnerState = HeatmapCellOwnerState;
 

@@ -118,6 +118,10 @@
       "conditions": "highlighted",
       "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
     },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the heatmap plot root element"
+    },
     "series": {
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${heatmapClasses.series}-${seriesId}</code>.",
       "nodeName": "the root element for a specified series",
