@@ -91,7 +91,6 @@ export const SankeyNodeElement = React.forwardRef<SVGRectElement, SankeyNodeElem
           {...interactionProps}
         />
       </g>
-
     );
   },
 );
