@@ -1,7 +1,5 @@
-import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 
 const fetchData = async () => {
@@ -22,7 +20,7 @@ const lowTTLCache = new DataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 second
 
 export default function LowTTLCache() {
   return (
-    <Box sx={{ width: '300px' }}>
+    <div style={{ width: 300, height: 240 }}>
       <RichTreeViewPro
         items={[]}
         dataSource={{
@@ -31,6 +29,6 @@ export default function LowTTLCache() {
         }}
         dataSourceCache={lowTTLCache}
       />
-    </Box>
+    </div>
   );
 }

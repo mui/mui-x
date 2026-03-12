@@ -51,7 +51,7 @@ export default defineConfig({
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
-    LICENSE_DISABLE_CHECK: 'false',
+    __ALLOW_TEST_LICENSES__: 'true',
   },
   esbuild: {
     minifyIdentifiers: false,
@@ -78,6 +78,10 @@ export default defineConfig({
             }
           : {
               launchOptions: {
+                args: [
+                  // Enable GPU so WebGL2 is enabled in browser tests
+                  '--enable-gpu',
+                ],
                 // Required for tests which use scrollbars.
                 ignoreDefaultArgs: ['--hide-scrollbars'],
               },

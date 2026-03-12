@@ -9,7 +9,7 @@ import { type ScatterChartProps } from '../ScatterChart/ScatterChart';
 import { type PieChartProps } from '../PieChart/PieChart';
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models/axis';
 import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
-import { type ChartDataProviderProps } from '../ChartDataProvider';
+import { type ChartsDataProviderProps } from '../ChartsDataProvider';
 import { type ChartsLayerContainerProps } from '../ChartsLayerContainer';
 import { type ChartsSvgLayerProps } from '../ChartsSvgLayer';
 
@@ -24,7 +24,10 @@ export interface ChartsComponentsPropsList {
   MuiChartsLayerContainer: ChartsLayerContainerProps;
   MuiChartsSvgLayer: ChartsSvgLayerProps;
 
-  MuiChartDataProvider: ChartDataProviderProps;
+  MuiChartsDataProvider: ChartsDataProviderProps;
+
+  /** @deprecated Use `MuiChartsDataProvider` instead. */
+  MuiChartDataProvider: ChartsDataProviderProps;
 
   // BarChart components
   MuiBarChart: BarChartProps;

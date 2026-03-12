@@ -2,7 +2,7 @@ import getBaseConfig from '@mui/internal-code-infra/babel-config';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import generateReleaseInfo from './packages/x-license/generateReleaseInfo.js';
+import generateReleaseInfo from './scripts/generateReleaseInfo.mjs';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -67,16 +67,14 @@ export default function getBabelConfig(api) {
           ],
         },
       ]);
-    }
-  }
 
-  if (process.env.BABEL_ENV || process.env.NODE_ENV === 'test') {
-    baseConfig.plugins.push([
-      'babel-plugin-transform-replace-expressions',
-      {
-        replace: [['LICENSE_DISABLE_CHECK', 'false']],
-      },
-    ]);
+      baseConfig.plugins.push([
+        'babel-plugin-transform-replace-expressions',
+        {
+          replace: [['__ALLOW_TEST_LICENSES__', 'false']],
+        },
+      ]);
+    }
   }
 
   baseConfig.plugins.unshift(['@babel/plugin-transform-object-rest-spread', { loose: true }]);

@@ -11,7 +11,6 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { PieChart } from '@mui/x-charts/PieChart';
-
 import scatterDataset from '../dataset/random/scatterParallel.json';
 
 const barChartsParams = {
@@ -61,7 +60,7 @@ const pieChartsParams = {
 };
 
 function CustomLine(props) {
-  const { d, ownerState, className, ...other } = props;
+  const { d, ownerState, skipAnimation, className, ...other } = props;
 
   return (
     <React.Fragment>

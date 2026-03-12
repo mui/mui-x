@@ -578,6 +578,81 @@ storeClasses.forEach((storeClass) => {
         const result = schedulerResourceSelectors.defaultEventColor(state, 'non-existent');
         expect(result).to.equal(state.eventColor);
       });
+
+      it('should inherit eventColor from parent resource when child has no eventColor', () => {
+        const resources = [
+          {
+            id: 'parent-resource',
+            title: 'Parent Resource',
+            eventColor: 'purple' as const,
+            children: [{ id: 'child-resource', title: 'Child Resource' }],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.defaultEventColor(state, 'child-resource');
+        expect(result).to.equal('purple');
+      });
+
+      it('should use child resource eventColor over parent when both are defined', () => {
+        const resources = [
+          {
+            id: 'parent-resource',
+            title: 'Parent Resource',
+            eventColor: 'purple' as const,
+            children: [
+              {
+                id: 'child-resource',
+                title: 'Child Resource',
+                eventColor: 'blue' as const,
+              },
+            ],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.defaultEventColor(state, 'child-resource');
+        expect(result).to.equal('blue');
+      });
+
+      it('should inherit eventColor from grandparent when parent and child do not define it', () => {
+        const resources = [
+          {
+            id: 'grandparent-resource',
+            title: 'Grandparent Resource',
+            eventColor: 'purple' as const,
+            children: [
+              {
+                id: 'parent-resource',
+                title: 'Parent Resource',
+                children: [{ id: 'grandchild-resource', title: 'Grandchild Resource' }],
+              },
+            ],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.defaultEventColor(state, 'grandchild-resource');
+        expect(result).to.equal('purple');
+      });
+
+      it('should use nearest ancestor eventColor over more distant ancestor', () => {
+        const resources = [
+          {
+            id: 'grandparent-resource',
+            title: 'Grandparent Resource',
+            eventColor: 'purple' as const,
+            children: [
+              {
+                id: 'parent-resource',
+                title: 'Parent Resource',
+                eventColor: 'blue' as const,
+                children: [{ id: 'grandchild-resource', title: 'Grandchild Resource' }],
+              },
+            ],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.defaultEventColor(state, 'grandchild-resource');
+        expect(result).to.equal('blue');
+      });
     });
   });
 });

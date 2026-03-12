@@ -1,17 +1,17 @@
-import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
-const fetchData = async (): Promise<
-  TreeViewBaseItem<{
-    id: string;
-    label: string;
-    childrenCount?: number;
-  }>[]
-> => {
+type ItemType = {
+  id: string;
+  label: string;
+  childrenCount?: number;
+  children?: ItemType[];
+};
+
+const fetchData = async (): Promise<ItemType[]> => {
   const rows = Array.from({ length: 10 }, () => ({
     id: randomId(),
     label: randomName({}, {}),
@@ -48,7 +48,7 @@ export default function LazyLoadingAndLabelEditing() {
   };
 
   return (
-    <Box sx={{ width: '300px' }}>
+    <div style={{ width: 300, height: 240 }}>
       <RichTreeViewPro
         items={[]}
         apiRef={apiRef}
@@ -60,6 +60,6 @@ export default function LazyLoadingAndLabelEditing() {
         }}
         dataSourceCache={customCache}
       />
-    </Box>
+    </div>
   );
 }

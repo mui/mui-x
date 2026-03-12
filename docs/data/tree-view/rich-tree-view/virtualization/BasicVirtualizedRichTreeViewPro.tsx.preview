@@ -1,5 +1,1 @@
-<RichTreeViewPro
-  items={items}
-  defaultExpandedItems={defaultExpandedItems}
-  virtualization
-/>
+<RichTreeViewPro items={items} defaultExpandedItems={defaultExpandedItems} />

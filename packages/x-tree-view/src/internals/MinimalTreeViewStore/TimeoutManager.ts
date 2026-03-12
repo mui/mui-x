@@ -14,7 +14,7 @@ export class TimeoutManager {
   };
 
   startInterval = (key: string, delay: number, fn: Function) => {
-    this.clearTimeout(key);
+    this.clearInterval(key);
     const id = setInterval(
       fn,
       delay,

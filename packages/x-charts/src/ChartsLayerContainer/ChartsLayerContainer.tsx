@@ -42,7 +42,7 @@ export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {
 }
 
 /**
- * A component that contains the chart layers, such as `<ChartsSvgLayer>`, and `<ChartsWebGlLayer>`.
+ * A component that contains the chart layers, such as `<ChartsSvgLayer>`, and `<ChartsWebGLLayer>`.
  * It is responsible for positioning itself and providing the dimensions and interaction context to its children layers.
  */
 const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(

@@ -2,10 +2,10 @@ import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import { TransitionProps } from '@mui/material/transitions';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import { useSpring, animated } from '@react-spring/web';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'grid',
     label: 'Data Grid',

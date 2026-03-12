@@ -238,7 +238,10 @@ Heatmap.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -251,10 +254,19 @@ Heatmap.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['heatmap']).isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -307,7 +319,7 @@ Heatmap.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -328,7 +340,7 @@ Heatmap.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -383,13 +395,19 @@ Heatmap.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['heatmap']),
-    xIndex: PropTypes.number.isRequired,
-    yIndex: PropTypes.number.isRequired,
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['heatmap']).isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      xIndex: PropTypes.number.isRequired,
+      yIndex: PropTypes.number.isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -717,8 +735,8 @@ Heatmap.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,
