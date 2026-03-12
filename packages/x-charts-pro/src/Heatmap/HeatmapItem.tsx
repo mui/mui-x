@@ -80,6 +80,7 @@ function HeatmapItem(props: HeatmapItemProps) {
     color,
     isFaded,
     isHighlighted,
+    value,
   };
 
   const classes = useUtilityClasses(ownerState);

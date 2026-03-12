@@ -9,6 +9,7 @@ export interface HeatmapCellOwnerState {
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<HeatmapClasses>;
+  value: number;
 }
 
 /**
