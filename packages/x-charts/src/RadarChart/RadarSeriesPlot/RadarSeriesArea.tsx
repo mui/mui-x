@@ -4,7 +4,11 @@ import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
-import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
+import {
+  type RadarSeriesPlotClasses,
+  useUtilityClasses as useDeprecatedUtilityClasses,
+} from './radarSeriesPlotClasses';
+import { useUtilityClasses } from '../radarClasses';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import { type SeriesId } from '../../models/seriesType/common';
@@ -48,7 +52,13 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
-  const classes = useUtilityClasses(props.classes);
+  const newClasses = useUtilityClasses();
+  const deprecatedClasses = useDeprecatedUtilityClasses(props.classes);
+  const classes = {
+    ...deprecatedClasses,
+    area: `${newClasses.seriesArea} ${deprecatedClasses.area}`,
+    mark: `${newClasses.seriesMark} ${deprecatedClasses.mark}`,
+  };
   return (
     <React.Fragment>
       {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea, hidden }, seriesIndex) => {
