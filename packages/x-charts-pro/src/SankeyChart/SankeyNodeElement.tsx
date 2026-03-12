@@ -30,7 +30,7 @@ export interface SankeyNodeElementProps {
 /**
  * @ignore - internal component.
  */
-export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElementProps>(
+export const SankeyNodeElement = React.forwardRef<SVGRectElement, SankeyNodeElementProps>(
   function SankeyNodeElement(props, ref) {
     const { node, onClick, seriesId } = props;
 
@@ -71,22 +71,23 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
     }
 
     return (
-      <g ref={ref} data-node={node.id} className={classes.node}>
-        <rect
-          x={node.x0}
-          y={node.y0}
-          width={nodeWidth}
-          height={nodeHeight}
-          fill={node.color}
-          opacity={opacity}
-          onClick={onClick ? handleClick : undefined}
-          cursor={onClick ? 'pointer' : 'default'}
-          stroke="none"
-          data-highlighted={isHighlighted || undefined}
-          data-faded={isFaded || undefined}
-          {...interactionProps}
-        />
-      </g>
+      <rect
+        x={node.x0}
+        y={node.y0}
+        width={nodeWidth}
+        height={nodeHeight}
+        fill={node.color}
+        opacity={opacity}
+        onClick={onClick ? handleClick : undefined}
+        cursor={onClick ? 'pointer' : 'default'}
+        stroke="none"
+        data-highlighted={isHighlighted || undefined}
+        data-faded={isFaded || undefined}
+        ref={ref}
+        data-node={node.id}
+        className={classes.node}
+        {...interactionProps}
+      />
     );
   },
 );
