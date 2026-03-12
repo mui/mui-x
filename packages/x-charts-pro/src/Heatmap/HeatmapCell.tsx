@@ -1,11 +1,11 @@
 import { styled } from '@mui/material/styles';
 import type * as React from 'react';
-import type { HeatmapCellOwnerState } from './heatmapChartClasses';
+import type { HeatmapCellOwnerState } from './heatmapClasses';
 
 export { type HeatmapCellOwnerState };
 
 /**
- * @deprecated Use `HeatmapCellOwnerState` from `./heatmapChartClasses` instead.
+ * @deprecated Use `HeatmapCellOwnerState` from `./heatmapClasses` instead.
  */
 export type HeatmapItemOwnerState = HeatmapCellOwnerState;
 

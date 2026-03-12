@@ -2,8 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
-import { type HeatmapCellOwnerState, useUtilityClasses } from './heatmapChartClasses';
-import { useDeprecatedUtilityClasses } from './heatmapClasses';
+import { type HeatmapCellOwnerState, useUtilityClasses } from './heatmapClasses';
 import { HeatmapCell, type HeatmapCellProps } from './HeatmapCell';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
@@ -84,7 +83,6 @@ function HeatmapItem(props: HeatmapItemProps) {
   };
 
   const classes = useUtilityClasses(ownerState);
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Cell = slots?.cell ?? HeatmapCell;
   const cellProps = useSlotProps({
@@ -99,7 +97,7 @@ function HeatmapItem(props: HeatmapItemProps) {
     externalForwardedProps: { ...other },
     externalSlotProps: slotProps.cell,
     ownerState,
-    className: `${classes.cell} ${deprecatedClasses.cell}`,
+    className: classes.cell,
   });
 
   return <Cell {...cellProps} />;

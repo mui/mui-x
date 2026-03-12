@@ -357,18 +357,6 @@ If you were using `arc` as a workaround, update it to `cell`.
  });
 ```
 
-### `HeatmapCell` is now exported
-
-The `HeatmapCell` component, which is used as the default `slots.cell`, is now exported from `@mui/x-charts-pro`.
-Previously, only the `HeatmapCellProps` type was exported.
-
-If you were importing `HeatmapCellProps` from the internal path, update the import:
-
-```diff
--import type { HeatmapCellProps } from '@mui/x-charts-pro/Heatmap/internals/HeatmapCell';
-+import type { HeatmapCellProps } from '@mui/x-charts-pro';
-```
-
 ### New identifier structure
 
 The heatmap identifier type has been modified as follows.

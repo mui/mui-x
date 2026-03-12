@@ -1,14 +1,19 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import type { HeatmapCellOwnerState } from './heatmapChartClasses';
+import { type SeriesId } from '@mui/x-charts/models';
 
-export { type HeatmapCellOwnerState };
+export interface HeatmapCellOwnerState {
+  seriesId: SeriesId;
+  color: string;
+  isFaded: boolean;
+  isHighlighted: boolean;
+  classes?: Partial<HeatmapClasses>;
+}
 
-/**
- * @deprecated Use `HeatmapChartClasses` from `./heatmapChartClasses` instead.
- */
 export interface HeatmapClasses {
+  /** Styles applied to the heatmap plot root element. */
+  root: string;
   /** Styles applied to the heatmap cells. */
   cell: string;
   /**
@@ -29,14 +34,8 @@ export interface HeatmapClasses {
   series: string;
 }
 
-/**
- * @deprecated Use `HeatmapChartClassKey` from `./heatmapChartClasses` instead.
- */
 export type HeatmapClassKey = keyof HeatmapClasses;
 
-/**
- * @deprecated Use `getHeatmapChartUtilityClass` from `./heatmapChartClasses` instead.
- */
 export function getHeatmapUtilityClass(slot: string) {
   // Those should be common to all charts
   if (['highlighted', 'faded'].includes(slot)) {
@@ -45,22 +44,16 @@ export function getHeatmapUtilityClass(slot: string) {
   return generateUtilityClass('MuiHeatmap', slot);
 }
 
-/**
- * @deprecated Use `heatmapChartClasses` from `./heatmapChartClasses` instead.
- */
 export const heatmapClasses: HeatmapClasses = {
-  ...generateUtilityClasses('MuiHeatmap', ['cell', 'series']),
+  ...generateUtilityClasses('MuiHeatmap', ['root', 'cell', 'series']),
   highlighted: 'Charts-highlighted',
   faded: 'Charts-faded',
 };
 
-/**
- * @deprecated Use `useUtilityClasses` from `./heatmapChartClasses` instead.
- * @internal
- */
-export const useDeprecatedUtilityClasses = (ownerState: HeatmapCellOwnerState) => {
+export const useUtilityClasses = (ownerState: HeatmapCellOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
+    root: ['root'],
     cell: ['cell', `series-${seriesId}`, isFaded && 'faded', isHighlighted && 'highlighted'],
   };
   return composeClasses(slots, getHeatmapUtilityClass, classes);
