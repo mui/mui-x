@@ -6,7 +6,7 @@ components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ChartsWrappe
 
 # Charts - Scatter
 
-<p class="description">Plot two variables as points on a surface to show relationships, correlations, and outliers.</p>
+<p class="description">Scatter charts plot two variables as points to reveal relationships, correlations, and outliers.</p>
 
 ## Overview
 
@@ -29,7 +29,7 @@ Add an optional `id` when you need better optimization (for example, with animat
 When your data lives in an array of objects, use the `dataset` prop.
 It accepts an array of objects, for example `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
 
-Scatter series use a different pattern than other charts: set the `datasetKeys` property, an object with required `x` and `y` keys.
+Scatter series use a different pattern than other charts: use the `datasetKeys` property with an object that has required `x` and `y` keys.
 You can also include optional `id` and `z` keys.
 
 {{"demo": "ScatterDataset.js"}}
@@ -40,9 +40,9 @@ Scatter points can be small, so the chart does not require the pointer to be exa
 When the pointer is in the drawing area, the closest point is used for the tooltip and highlights.
 The chart uses [Voronoi cells](https://en.wikipedia.org/wiki/Voronoi_diagram) to map the pointer position to the nearest element.
 
-Use the `voronoiMaxRadius` prop to set a maximum radius.
+Use the `voronoiMaxRadius` prop with a number to limit how far the pointer can be from a point for selection.
 If the pointer is farther than that from any point, no item is selected.
-Set `voronoiMaxRadius` to `"item"` to trigger interactions only when the pointer is directly over a point, instead of using Voronoi cells.
+Use `voronoiMaxRadius` with `"item"` to trigger interactions only when the pointer is directly over a point, instead of using Voronoi cells.
 
 {{"demo": "VoronoiInteraction.js"}}
 
@@ -107,7 +107,7 @@ See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) 
 
 Use the `grid` prop to add a grid behind the chart.
 
-See the [Axis—Grid](/x/react-charts/axis/#grid) section for details.
+See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 
@@ -115,9 +115,9 @@ See the [Axis—Grid](/x/react-charts/axis/#grid) section for details.
 
 Target scatter markers with these CSS selectors:
 
-- `[data-series='<series ID>']` — the group of markers for the series with that ID
-- `[data-highlighted=true]` — markers in the highlighted state
-- `[data-faded=true]` — markers in the faded state
+- `[data-series='<series ID>']`: the group of markers for the series with that ID
+- `[data-highlighted=true]`: markers in the highlighted state
+- `[data-faded=true]`: markers in the faded state
 
 Use the `scatterClasses.root` class to select all marker groups.
 
@@ -129,7 +129,7 @@ The demo below customizes the highlighted style by series.
 
 Pass a component to the `marker` slot to customize the shape of scatter points.
 
-To keep the legend and tooltip in sync with the custom shape, set the `labelMarkType` property on each series, as in the demo below.
+To keep the legend and tooltip in sync with the custom shape, set the `labelMarkType` property on each series, as shown in the demo below.
 
 {{"demo": "ScatterCustomShape.js"}}
 
@@ -142,7 +142,7 @@ For circles, `markerSize` is the radius in pixels.
 
 ## Plot customization
 
-You can customize how data is plotted by passing custom components as `children` of `ScatterChart`.
+To customize how data is plotted, pass custom components as children of `ScatterChart`.
 
 Use the `useScatterSeries()` hook to read a scatter chart's series from your custom component.
 It returns the series order and details for each series (data points, color, and so on).
@@ -156,7 +156,7 @@ See [Custom components](/x/react-charts/components/) for more ways to customize 
 Scatter charts can have many points, which can slow down rendering.
 By default, points are drawn with SVG `circle` elements, which may be slow for large datasets.
 
-Set the `renderer` prop to `"svg-batch"` to draw circles in a more efficient way.
+Use the `renderer` prop with `"svg-batch"` to draw circles in a more efficient way.
 This mode has some limitations:
 
 - You cannot style individual circles with CSS
@@ -179,7 +179,7 @@ Use `ChartsDataProvider` to supply `series`, `xAxis`, and `yAxis` when composing
 
 In addition to the shared components described in [Composition](/x/react-charts/composition/), you can use `ScatterPlot` to draw the scatter points.
 
-The following shows how the scatter chart is built:
+The snippet below shows how the scatter chart is built:
 
 ```jsx
 <ChartsDataProvider>
