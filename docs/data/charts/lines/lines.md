@@ -38,7 +38,7 @@ It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, 
 You can reuse this data when defining the series and axes by using the `dataKey` property.
 For example, `xAxis={[{ dataKey: 'x' }]}` or `series={[{ dataKey: 'y' }]}`.
 
-The example below plots the evolution of world electricity production by source.
+The demo below plots the evolution of world electricity production by source.
 
 {{"demo": "LineDataset.js"}}
 
@@ -139,7 +139,7 @@ Line charts provide several click handlers:
 - `onMarkClick` when a specific mark is clicked
 - `onAxisClick` when the chart background is clicked
 
-They all provide the following signature:
+Each handler receives the same signature:
 
 ```js
 const clickHandler = (
@@ -246,14 +246,14 @@ Do not use `baseline` with stacked areas; the result will not match expectations
 
 Use the `showMark` series property to show mark elements.
 It accepts a boolean or a callback.
-The example below uses a callback to show a mark only every two data points.
+The demo below uses a callback to show a mark only every two data points.
 
 When a value is highlighted, a mark is drawn for that value.
 If the chart already shows marks (`showMark={true}`), the highlight mark is drawn on top.
 
 You can turn off this behavior with the `disableHighlight` series property or the `disableLineItemHighlight` prop on the line chart.
 
-The example below shows one mark for every value with an even index.
+The demo shows one mark for every value with an even index.
 The highlighted point always shows a mark, whether its index is even or odd.
 
 {{"demo": "MarkOptimization.js"}}
@@ -265,7 +265,7 @@ Line plots use three elements: `LineElement`, `AreaElement`, and `MarkElement`.
 You can target them with the CSS classes `.MuiLineElement-root`, `.MuiAreaElement-root`, and `.MuiMarkElement-root`.
 To target a specific series, use the `data-series` attribute.
 
-In the example below, each line uses a custom dash style and marks are hidden.
+In the demo below, each line uses a custom dash style and marks are hidden.
 The area for Germany's GDP uses a custom gradient.
 The gradient is defined as a child of the chart (`myGradient` referenced in `fill`).
 
