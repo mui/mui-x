@@ -50,8 +50,8 @@ describe('EventCalendar', () => {
   });
 
   it('should allow to show / hide resources using the UI', async () => {
-    const sportResource = ResourceBuilder.new().id('1').title('Sport').build();
-    const workResource = ResourceBuilder.new().id('2').title('Work').build();
+    const sportResource = ResourceBuilder.new().title('Sport').build();
+    const workResource = ResourceBuilder.new().title('Work').build();
 
     const event1WithResource = EventBuilder.new()
       .title('Running')

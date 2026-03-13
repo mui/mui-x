@@ -174,11 +174,9 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should include children immediately after their parent', () => {
-      const child1 = ResourceBuilder.new().id('C1').title('Child One').build();
-      const child2 = ResourceBuilder.new().id('C2').title('Child Two').build();
+      const child1 = ResourceBuilder.new().build();
+      const child2 = ResourceBuilder.new().build();
       const parent = ResourceBuilder.new()
-        .id('P')
-        .title('Parent')
         // intentionally unordered
         .children([child1, child2])
         .build();
@@ -194,7 +192,7 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
-      expect(response.map((item) => item.resource.id)).to.deep.equal(['P', 'C1', 'C2']);
+      expect(response.map((item) => item.resource.id)).to.deep.equal([parent.id, child1.id, child2.id]);
       expect(response[2].occurrences).to.have.length(1);
       expect(response[2].occurrences[0].id).to.equal(event.id);
     });
@@ -219,14 +217,14 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should handle deep nested resource trees', () => {
-      const c = ResourceBuilder.new().id('C').title('C').build();
-      const b = ResourceBuilder.new().id('B').title('B').children([c]).build();
-      const a = ResourceBuilder.new().id('A').title('A').children([b]).build();
-      const root = ResourceBuilder.new().id('R').title('Root').children([a]).build();
+      const grandchild = ResourceBuilder.new().build();
+      const child = ResourceBuilder.new().children([grandchild]).build();
+      const parent = ResourceBuilder.new().children([child]).build();
+      const root = ResourceBuilder.new().children([parent]).build();
 
       const event = EventBuilder.new()
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-        .resource(c)
+        .resource(grandchild)
         .build();
 
       const state = getEventTimelinePremiumStateFromParameters({
@@ -235,18 +233,18 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
-      expect(response.map((r) => r.resource.id)).to.deep.equal(['R', 'A', 'B', 'C']);
+      expect(response.map((r) => r.resource.id)).to.deep.equal([root.id, parent.id, child.id, grandchild.id]);
       expect(response[3].occurrences[0].id).to.equal(event.id);
     });
 
     it('should leave occurrences empty when events fall outside the date range', () => {
-      const R1 = ResourceBuilder.new().id('R1').title('Resource 1').build();
+      const resource = ResourceBuilder.new().build();
 
-      const event = EventBuilder.new().singleDay('2024-03-01T09:00:00Z').resource(R1).build();
+      const event = EventBuilder.new().singleDay('2024-03-01T09:00:00Z').resource(resource).build();
 
       const state = getEventTimelinePremiumStateFromParameters({
         events: [event],
-        resources: [R1],
+        resources: [resource],
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 

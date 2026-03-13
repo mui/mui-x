@@ -19,8 +19,8 @@ import {
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
-const engineering = ResourceBuilder.new().id('resource-1').title('Engineering').eventColor('blue').build();
-const design = ResourceBuilder.new().id('resource-2').title('Design').eventColor('teal').build();
+const engineering = ResourceBuilder.new().title('Engineering').eventColor('blue').build();
+const design = ResourceBuilder.new().title('Design').eventColor('teal').build();
 
 const baseResources: SchedulerResource[] = [engineering, design];
 

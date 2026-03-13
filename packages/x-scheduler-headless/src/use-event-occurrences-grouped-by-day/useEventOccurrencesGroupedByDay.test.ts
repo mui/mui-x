@@ -13,12 +13,12 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     processDate(adapter.date(day2Str, 'default'), adapter),
   ];
 
-  const rA = ResourceBuilder.new().id('Resource A').build();
-  const rB = ResourceBuilder.new().id('Resource B').build();
+  const resourceA = ResourceBuilder.new().build();
+  const resourceB = ResourceBuilder.new().build();
 
   const visible: Record<string, boolean> = {
-    [rA.id]: true,
-    [rB.id]: true,
+    [resourceA.id]: true,
+    [resourceB.id]: true,
   };
 
   function run(events: SchedulerProcessedEvent[]) {
@@ -63,12 +63,12 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should exclude events whose resource is not visible', () => {
-    const rX = ResourceBuilder.new().id('Resource X').build();
-    const visibilityWithHidden: Record<string, boolean> = { ...visible, [rX.id]: false };
+    const hiddenResource = ResourceBuilder.new().build();
+    const visibilityWithHidden: Record<string, boolean> = { ...visible, [hiddenResource.id]: false };
 
-    const visibleEvent = EventBuilder.new(adapter).resource(rA).singleDay(day1Str).toProcessed();
+    const visibleEvent = EventBuilder.new(adapter).resource(resourceA).singleDay(day1Str).toProcessed();
 
-    const invisibleEvent = EventBuilder.new(adapter).resource(rX).singleDay(day1Str).toProcessed();
+    const invisibleEvent = EventBuilder.new(adapter).resource(hiddenResource).singleDay(day1Str).toProcessed();
 
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
