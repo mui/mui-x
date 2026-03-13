@@ -3,35 +3,54 @@ import * as headlessBridge from '@mui/x-chat/headless';
 import * as headlessDirect from '@mui/x-chat-headless';
 import * as chatTypes from '@mui/x-chat/types';
 import * as unstyledBridge from '@mui/x-chat/unstyled';
+import * as unstyledChatBridge from '@mui/x-chat/unstyled/chat';
+import * as unstyledConversationListBridge from '@mui/x-chat/unstyled/conversation-list';
 import * as unstyledDirect from '@mui/x-chat-unstyled';
+import * as unstyledChatDirect from '@mui/x-chat-unstyled/chat';
+import * as unstyledConversationListDirect from '@mui/x-chat-unstyled/conversation-list';
+import { Chat as UnstyledBridgeChat, ChatLayout as UnstyledBridgeChatLayout, ChatRoot as UnstyledBridgeChatRoot } from '@mui/x-chat/unstyled/chat';
+import {
+  ConversationList as UnstyledBridgeConversationList,
+  ConversationListRoot as UnstyledBridgeConversationListRoot,
+} from '@mui/x-chat/unstyled/conversation-list';
+import { Chat as UnstyledDirectChat, ChatLayout as UnstyledDirectChatLayout, ChatRoot as UnstyledDirectChatRoot } from '@mui/x-chat-unstyled/chat';
+import {
+  ConversationList as UnstyledDirectConversationList,
+  ConversationListRoot as UnstyledDirectConversationListRoot,
+} from '@mui/x-chat-unstyled/conversation-list';
 import { ChatProvider as HeadlessBridgeChatProvider } from '@mui/x-chat/headless';
-import { ChatStore as HeadlessChatStore } from '@mui/x-chat/headless';
 import { chatSelectors as headlessBridgeSelectors } from '@mui/x-chat/headless';
 import { useChat as headlessBridgeUseChat } from '@mui/x-chat/headless';
 import { useChatComposer as headlessBridgeUseChatComposer } from '@mui/x-chat/headless';
+import { useChatPartRenderer as headlessBridgeUseChatPartRenderer } from '@mui/x-chat/headless';
 import { useChatStatus as headlessBridgeUseChatStatus } from '@mui/x-chat/headless';
 import { useConversation as headlessBridgeUseConversation } from '@mui/x-chat/headless';
 import { useConversations as headlessBridgeUseConversations } from '@mui/x-chat/headless';
 import { useMessage as headlessBridgeUseMessage } from '@mui/x-chat/headless';
 import { useMessageIds as headlessBridgeUseMessageIds } from '@mui/x-chat/headless';
 import { useChatStore as headlessBridgeUseChatStore } from '@mui/x-chat/headless';
-import { useChatStoreContext as headlessBridgeUseChatStoreContext } from '@mui/x-chat/headless';
 import { ChatProvider as HeadlessDirectChatProvider } from '@mui/x-chat-headless';
 import { chatSelectors as headlessDirectSelectors } from '@mui/x-chat-headless';
-import { processStream as headlessBridgeProcessStream } from '@mui/x-chat/headless';
-import { processStream as headlessDirectProcessStream } from '@mui/x-chat-headless';
 import { useChat as headlessDirectUseChat } from '@mui/x-chat-headless';
 import { useChatComposer as headlessDirectUseChatComposer } from '@mui/x-chat-headless';
+import { useChatPartRenderer as headlessDirectUseChatPartRenderer } from '@mui/x-chat-headless';
 import { useChatStatus as headlessDirectUseChatStatus } from '@mui/x-chat-headless';
 import { useConversation as headlessDirectUseConversation } from '@mui/x-chat-headless';
 import { useConversations as headlessDirectUseConversations } from '@mui/x-chat-headless';
 import { useMessage as headlessDirectUseMessage } from '@mui/x-chat-headless';
 import { useMessageIds as headlessDirectUseMessageIds } from '@mui/x-chat-headless';
 import { useChatStore as headlessDirectUseChatStore } from '@mui/x-chat-headless';
-import { useChatStoreContext as headlessDirectUseChatStoreContext } from '@mui/x-chat-headless';
 import type {
+  ChatAddToolApproveResponseInput as HeadlessAddToolApproveResponseInput,
   ChatAdapter as HeadlessAdapter,
+  ChatMessage as HeadlessMessage,
+  ChatMessageChunk as HeadlessMessageChunk,
+  ChatMessagePart as HeadlessMessagePart,
+  ChatProviderProps as HeadlessChatProviderProps,
   ChatPartRendererMap as HeadlessPartRendererMap,
+  ChatPublicState as HeadlessPublicState,
+  ChatRealtimeEvent as HeadlessRealtimeEvent,
+  ChatToolInvocation as HeadlessToolInvocation,
 } from '@mui/x-chat/headless';
 import type * as Chatbox from '@mui/x-chat/types';
 
@@ -81,28 +100,58 @@ declare module '@mui/x-chat-headless/types' {
 
 describe('x-chat package scaffold', () => {
   it('resolves the root, bridge, and type entry points', () => {
+    const expectedHeadlessRuntimeExports = [
+      'ChatProvider',
+      'chatSelectors',
+      'useChat',
+      'useChatComposer',
+      'useChatPartRenderer',
+      'useChatStatus',
+      'useChatStore',
+      'useConversation',
+      'useConversations',
+      'useMessage',
+      'useMessageIds',
+    ];
+    const headlessBridgeRuntime = headlessBridge as Record<string, unknown>;
+    const headlessDirectRuntime = headlessDirect as Record<string, unknown>;
+
     expect(chat).toBeDefined();
     expect(chatTypes).toBeDefined();
     expect(headlessBridge).toBeDefined();
     expect(unstyledBridge).toBeDefined();
-    expect(Object.keys(headlessBridge)).toEqual(Object.keys(headlessDirect));
+    expect(Object.keys(headlessBridge).sort()).toEqual(expectedHeadlessRuntimeExports);
+    expect(Object.keys(headlessDirect).sort()).toEqual(expectedHeadlessRuntimeExports);
     expect(Object.keys(unstyledBridge)).toEqual(Object.keys(unstyledDirect));
+    expect(Object.keys(unstyledChatBridge).sort()).toEqual(Object.keys(unstyledChatDirect).sort());
+    expect(Object.keys(unstyledConversationListBridge).sort()).toEqual(
+      Object.keys(unstyledConversationListDirect).sort(),
+    );
     expect(headlessBridgeSelectors).toBe(headlessDirectSelectors);
-    expect(headlessBridgeProcessStream).toBe(headlessDirectProcessStream);
     expect(HeadlessBridgeChatProvider).toBe(HeadlessDirectChatProvider);
     expect(headlessBridgeUseChatStore).toBe(headlessDirectUseChatStore);
-    expect(headlessBridgeUseChatStoreContext).toBe(headlessDirectUseChatStoreContext);
     expect(headlessBridgeUseChat).toBe(headlessDirectUseChat);
     expect(headlessBridgeUseChatComposer).toBe(headlessDirectUseChatComposer);
+    expect(headlessBridgeUseChatPartRenderer).toBe(headlessDirectUseChatPartRenderer);
     expect(headlessBridgeUseMessageIds).toBe(headlessDirectUseMessageIds);
     expect(headlessBridgeUseMessage).toBe(headlessDirectUseMessage);
     expect(headlessBridgeUseConversations).toBe(headlessDirectUseConversations);
     expect(headlessBridgeUseConversation).toBe(headlessDirectUseConversation);
     expect(headlessBridgeUseChatStatus).toBe(headlessDirectUseChatStatus);
-
-    const store = new HeadlessChatStore();
-    expect(store.state.messageIds).toEqual([]);
-    expect(headlessBridgeSelectors.messageCount(store.state)).toBe(0);
+    expect(headlessBridgeRuntime.ChatStore).toBeUndefined();
+    expect(headlessBridgeRuntime.processStream).toBeUndefined();
+    expect(headlessBridgeRuntime.useChatStoreContext).toBeUndefined();
+    expect(headlessDirectRuntime.ChatStore).toBeUndefined();
+    expect(headlessDirectRuntime.processStream).toBeUndefined();
+    expect(headlessDirectRuntime.useChatStoreContext).toBeUndefined();
+    expect(UnstyledBridgeChat).toBe(UnstyledDirectChat);
+    expect(UnstyledBridgeChatRoot).toBe(UnstyledDirectChatRoot);
+    expect(UnstyledBridgeChatLayout).toBe(UnstyledDirectChatLayout);
+    expect(UnstyledBridgeChat.Root).toBe(UnstyledBridgeChatRoot);
+    expect(UnstyledBridgeChat.Layout).toBe(UnstyledBridgeChatLayout);
+    expect(UnstyledBridgeConversationList).toBe(UnstyledDirectConversationList);
+    expect(UnstyledBridgeConversationListRoot).toBe(UnstyledDirectConversationListRoot);
+    expect(UnstyledBridgeConversationList.Root).toBe(UnstyledBridgeConversationListRoot);
   });
 
   it('type-checks the public Chatbox namespace facade', () => {
@@ -257,6 +306,18 @@ describe('x-chat package scaffold', () => {
     };
 
     const rendererAliasMap: Chatbox.PartRendererMap = rendererMap;
+    const approvalResponseInput: HeadlessAddToolApproveResponseInput = {
+      id: 'approval-1',
+      approved: true,
+    };
+    const messageAlias: HeadlessMessage = message;
+    const messagePartAlias: HeadlessMessagePart = textPart;
+    const toolInvocationAlias: HeadlessToolInvocation<'search'> = toolPart.toolInvocation;
+    const messageChunkAlias: HeadlessMessageChunk = outputChunk;
+    const providerProps: HeadlessChatProviderProps<number> = {
+      adapter,
+      children: null,
+    };
 
     const publicState: Chatbox.PublicState<number> = {
       conversations: [conversation],
@@ -268,6 +329,7 @@ describe('x-chat package scaffold', () => {
       historyCursor: 2,
       error: null,
     };
+    const publicStateAlias: HeadlessPublicState<number> = publicState;
 
     const realtimeEvent: Chatbox.RealtimeEvent = {
       type: 'typing',
@@ -275,6 +337,7 @@ describe('x-chat package scaffold', () => {
       userId: 'u1',
       isTyping: true,
     };
+    const realtimeEventAlias: HeadlessRealtimeEvent = realtimeEvent;
 
     const onFinish: Chatbox.ChatOnFinish = ({ finishReason, isError }) => {
       expect(isError).toBe(false);
@@ -287,12 +350,18 @@ describe('x-chat package scaffold', () => {
     expect(dataPart.data.city).toBe('Prague');
     expect(conversation.metadata?.workspaceId).toBe('workspace-1');
     expect(outputChunk.output.results[0].title).toBe('Forecast');
+    expect(approvalResponseInput.approved).toBe(true);
+    expect(messageAlias.id).toBe('m1');
+    expect(messagePartAlias.type).toBe('text');
+    expect(toolInvocationAlias.toolName).toBe('search');
+    expect(messageChunkAlias.type).toBe('tool-output-available');
+    expect(providerProps.adapter).toBe(adapter);
     expect(weatherChunk.data.temperatureC).toBe(12);
     expect(metadataChunk.metadata.traceId).toBe('trace-2');
     expect(envelope.chunk.type).toBe('tool-input-available');
     expect(rendererAliasMap.text?.({ part: textPart, message, index: 0 })).toBe('Hello');
-    expect(publicState.historyCursor).toBe(2);
-    expect(realtimeEvent.type).toBe('typing');
+    expect(publicStateAlias.historyCursor).toBe(2);
+    expect(realtimeEventAlias.type).toBe('typing');
     expect(adapter.subscribe).toBeDefined();
 
     onFinish({
