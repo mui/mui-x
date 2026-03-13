@@ -19,7 +19,7 @@ Scatter charts are often used for statistical analysis, scientific data, and per
 ## Basics
 
 A scatter chart series must contain a `data` property with an array of objects.
-Each object must have `x` and `y`.
+Each object must have `x` and `y` properties.
 Add an optional `id` when you need better optimization (for example, with animations).
 
 {{"demo": "BasicScatter.js"}}
