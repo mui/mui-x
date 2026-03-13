@@ -78,6 +78,12 @@ export interface ChartsComponents<Theme = unknown> {
   MuiMarkElement?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiMarkElement'];
   };
+  MuiPieArcPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPieArcPlot'];
+  };
+  MuiPieArcLabelPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPieArcLabelPlot'];
+  };
   MuiScatterChart?: {
     defaultProps?: ComponentsProps['MuiScatterChart'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiScatterChart'];
@@ -85,6 +91,9 @@ export interface ChartsComponents<Theme = unknown> {
   /** @deprecated Use `MuiScatterChart` instead. */
   MuiScatter?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiScatterChart'];
+  };
+  MuiRadarChart?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiRadarChart'];
   };
   MuiGauge?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiGauge'];

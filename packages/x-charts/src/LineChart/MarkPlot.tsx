@@ -7,7 +7,7 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { type LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
 import { MarkElement, type MarkElementProps } from './MarkElement';
-import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
+import { useItemHighlightStateGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import {
   selectorChartsHighlightXAxisIndex,
@@ -81,7 +81,7 @@ function MarkPlot(props: MarkPlotProps) {
   const { yAxis } = useYAxes();
 
   const { store } = useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
   const xAxisHighlightIndexes = store.use(selectorChartsHighlightXAxisIndex);
 
   const highlightedItems = React.useMemo(() => {
@@ -107,8 +107,9 @@ function MarkPlot(props: MarkPlotProps) {
 
         const identifier = { type: 'line' as const, seriesId };
 
-        const isSeriesHighlighted = isHighlighted(identifier);
-        const isSeriesFaded = !isSeriesHighlighted && isFaded(identifier);
+        const seriesHighlightState = getHighlightState(identifier);
+        const isSeriesHighlighted = seriesHighlightState === 'highlighted';
+        const isSeriesFaded = seriesHighlightState === 'faded';
 
         return (
           <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
