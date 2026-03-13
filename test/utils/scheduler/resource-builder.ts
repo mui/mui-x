@@ -32,47 +32,38 @@ export class ResourceBuilder {
   // Field setters
   // ─────────────────────────────────────────────
 
-  /** Set a custom id. */
   id(id: SchedulerResourceId) {
     this.resource.id = id;
     return this;
   }
 
-  /** Set the title. */
   title(title: string) {
     this.resource.title = title;
     return this;
   }
 
-  /** Set the event color palette. */
   eventColor(color: SchedulerEventColor) {
     this.resource.eventColor = color;
     return this;
   }
 
-  /** Mark events as draggable (defaults to true when called). */
   areEventsDraggable(v = true) {
     this.resource.areEventsDraggable = v;
     return this;
   }
 
-  /** Set events resizable behavior (defaults to true when called). */
   areEventsResizable(v: boolean | SchedulerEventSide = true) {
     this.resource.areEventsResizable = v;
     return this;
   }
 
-  /** Mark events as read-only (defaults to true when called). */
   areEventsReadOnly(v = true) {
     this.resource.areEventsReadOnly = v;
     return this;
   }
 
-  /** Set child resources. Accepts builders or raw SchedulerResource objects. */
-  children(children: Array<ResourceBuilder | SchedulerResource>) {
-    this.resource.children = children.map((child) =>
-      child instanceof ResourceBuilder ? child.build() : child,
-    );
+  children(children: SchedulerResource[]) {
+    this.resource.children = children;
     return this;
   }
 
@@ -80,7 +71,6 @@ export class ResourceBuilder {
   // Build
   // ─────────────────────────────────────────────
 
-  /** Returns the built SchedulerResource. */
   build(): SchedulerResource {
     return this.resource;
   }
