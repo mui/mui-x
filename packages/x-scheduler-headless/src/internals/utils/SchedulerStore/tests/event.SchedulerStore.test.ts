@@ -474,15 +474,15 @@ storeClasses.forEach((storeClass) => {
 
       it('should paste a copied event and emit onEventsChange with the updated list (only changes resource)', () => {
         const onEventsChange = spy();
-        const r1 = ResourceBuilder.new().id('resource-1');
-        const r2 = ResourceBuilder.new().id('resource-2');
+        const r1 = ResourceBuilder.new().id('resource-1').build();
+        const r2 = ResourceBuilder.new().id('resource-2').build();
         const event = EventBuilder.new().resource(r1).build();
 
         const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          resource: r2.getId(),
+          resource: r2.id,
         });
 
         expect(onEventsChange.calledOnce).to.equal(true);
@@ -491,7 +491,7 @@ storeClasses.forEach((storeClass) => {
           {
             ...event,
             id: createdEventId,
-            resource: r2.getId(),
+            resource: r2.id,
             extractedFromId: event.id,
           },
         ]);
@@ -544,15 +544,15 @@ storeClasses.forEach((storeClass) => {
 
       it('should paste a cut event and emit onEventsChange with the updated list (only changes resource)', () => {
         const onEventsChange = spy();
-        const r1 = ResourceBuilder.new().id('resource-1');
-        const r2 = ResourceBuilder.new().id('resource-2');
+        const r1 = ResourceBuilder.new().id('resource-1').build();
+        const r2 = ResourceBuilder.new().id('resource-2').build();
         const event = EventBuilder.new().resource(r1).build();
 
         const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          resource: r2.getId(),
+          resource: r2.id,
         });
 
         expect(onEventsChange.calledOnce).to.equal(true);
@@ -560,7 +560,7 @@ storeClasses.forEach((storeClass) => {
           {
             ...event,
             id: createdEventId,
-            resource: r2.getId(),
+            resource: r2.id,
           },
         ]);
       });

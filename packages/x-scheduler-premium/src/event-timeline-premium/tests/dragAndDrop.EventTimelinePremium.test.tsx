@@ -13,10 +13,10 @@ import {
 } from 'test/utils/scheduler';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 
-const r1 = ResourceBuilder.new().id('r1').title('Engineering');
-const r2 = ResourceBuilder.new().id('r2').title('Design');
+const r1 = ResourceBuilder.new().id('r1').title('Engineering').build();
+const r2 = ResourceBuilder.new().id('r2').title('Design').build();
 
-const resources: SchedulerResource[] = [r1.build(), r2.build()];
+const resources: SchedulerResource[] = [r1, r2];
 
 /**
  * Returns the timeline event row for a given resource id.

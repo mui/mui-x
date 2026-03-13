@@ -32,8 +32,8 @@ class PremiumTestStore extends ExtendableEventCalendarStore<any, any> {
   }
 }
 
-const r1 = ResourceBuilder.new().id('r1').title('Work').eventColor('blue');
-const r2 = ResourceBuilder.new().id('r2').title('Personal').eventColor('teal');
+const r1 = ResourceBuilder.new().id('r1').title('Work').eventColor('blue').build();
+const r2 = ResourceBuilder.new().id('r2').title('Personal').eventColor('teal').build();
 
 const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .title('Running')
@@ -42,7 +42,7 @@ const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .resource(r2)
   .build();
 
-const resources: SchedulerResource[] = [r1.build(), r2.build()];
+const resources: SchedulerResource[] = [r1, r2];
 
 describe('<EventDialogContent open />', () => {
   const anchor = document.createElement('button');
@@ -321,12 +321,12 @@ describe('<EventDialogContent open />', () => {
   it('should handle a resource without an eventColor (fallback to default)', async () => {
     const onEventsChange = spy();
 
-    const r3 = ResourceBuilder.new().id('r3').title('NoColor');
-    const resourcesNoColor: SchedulerResource[] = [r1.build(), r2.build(), r3.build()];
+    const r3 = ResourceBuilder.new().id('r3').title('NoColor').build();
+    const resourcesNoColor: SchedulerResource[] = [r1, r2, r3];
 
     const eventWithNoResourceColor: SchedulerEvent = {
       ...DEFAULT_EVENT,
-      resource: r3.getId(),
+      resource: r3.id,
     };
 
     const eventWithNoResourceColorOccurrence = EventBuilder.new(adapter)

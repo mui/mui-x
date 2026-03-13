@@ -19,10 +19,10 @@ import {
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
-const engineering = ResourceBuilder.new().id('resource-1').title('Engineering').eventColor('blue');
-const design = ResourceBuilder.new().id('resource-2').title('Design').eventColor('teal');
+const engineering = ResourceBuilder.new().id('resource-1').title('Engineering').eventColor('blue').build();
+const design = ResourceBuilder.new().id('resource-2').title('Design').eventColor('teal').build();
 
-const baseResources: SchedulerResource[] = [engineering.build(), design.build()];
+const baseResources: SchedulerResource[] = [engineering, design];
 
 const event1 = EventBuilder.new().singleDay('2025-07-03T09:00:00Z').resource(engineering).build();
 const event2 = EventBuilder.new()

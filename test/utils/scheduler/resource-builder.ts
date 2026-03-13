@@ -78,15 +78,6 @@ export class ResourceBuilder {
   }
 
   // ─────────────────────────────────────────────
-  // Accessors
-  // ─────────────────────────────────────────────
-
-  /** Lightweight accessor for the resource id (used by EventBuilder). */
-  getId(): SchedulerResourceId {
-    return this.resource.id;
-  }
-
-  // ─────────────────────────────────────────────
   // Build
   // ─────────────────────────────────────────────
 
