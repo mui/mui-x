@@ -11,10 +11,8 @@ export default function BasicDataSource() {
   return (
     <div style={{ height: '700px', width: '100%' }}>
       <EventCalendarPremium
-        events={[]}
         dataSource={{ getEvents, updateEvents }}
         resources={resources}
-        areEventsDraggable
         defaultVisibleDate={defaultVisibleDate}
         defaultPreferences={{ isSidePanelOpen: false }}
       />

@@ -1,7 +1,7 @@
 import { TemporalTimezone } from '../../../base-ui-copy/types';
 import { processDate } from '../../../process-date';
 import {
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
@@ -42,7 +42,7 @@ const YEARLY_MAX_ATTEMPTS = 8;
 class RecurringEventExpander {
   private readonly dataTimezone: SchedulerProcessedEvent['dataTimezone'];
 
-  private readonly rule: RecurringEventRecurrenceRule;
+  private readonly rule: SchedulerProcessedEventRecurrenceRule;
 
   /*
    * Day anchor for RRULE math (BYDAY/COUNT), always in data timezone.
@@ -127,7 +127,11 @@ class RecurringEventExpander {
     const hasCount = typeof this.rule.count === 'number' && this.rule.count > 0;
     const hasUntil = !!this.rule.until;
     if (hasCount && hasUntil) {
-      throw new Error('MUI: The recurring rule cannot have both the count and until properties.');
+      throw new Error(
+        'MUI X Scheduler: The recurring rule cannot have both count and until properties. ' +
+          'A recurrence rule should specify either a count (number of occurrences) or an until date, but not both. ' +
+          'Remove one of these properties from the recurrence rule.',
+      );
     }
 
     switch (this.rule.freq) {
@@ -144,7 +148,9 @@ class RecurringEventExpander {
       case 'MONTHLY': {
         if (this.rule.byDay?.length && this.rule.byMonthDay?.length) {
           throw new Error(
-            'MUI: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
+            'MUI X Scheduler: Monthly recurrences cannot have both byDay and byMonthDay properties. ' +
+              'Specify either specific weekdays (byDay) or specific dates (byMonthDay), but not both. ' +
+              'Remove one of these properties from the recurrence rule.',
           );
         }
 
@@ -162,7 +168,9 @@ class RecurringEventExpander {
         // Any use of BYMONTH, BYMONTHDAY, BYDAY, or multiple values is not allowed.
         if (this.rule.byMonth?.length || this.rule.byMonthDay?.length || this.rule.byDay?.length) {
           throw new Error(
-            'MUI: The yearly recurrences only support exact same date recurrence (month/day of DTSTART).',
+            'MUI X Scheduler: Yearly recurrences only support exact same date recurrence. ' +
+              'The yearly frequency repeats on the same month and day as DTSTART. ' +
+              'Remove byMonth, byMonthDay, and byDay properties for yearly recurrence.',
           );
         }
 

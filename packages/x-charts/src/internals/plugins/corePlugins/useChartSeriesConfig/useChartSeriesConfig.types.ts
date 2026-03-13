@@ -1,24 +1,31 @@
 import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesConfig } from './types/seriesConfig.types';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import {
+  type HighlightItemIdentifierWithType,
+  type SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
+import { type VisibilityIdentifierWithType } from '../../featurePlugins/useChartVisibilityManager';
 
-export interface UseChartSeriesConfigParameters<T extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartSeriesConfigParameters<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> {
   /**
    * The configuration for the series types.
    * This is used to define how each series type should be processed, colored, and displayed.
    */
-  seriesConfig?: ChartSeriesConfig<T>;
+  seriesConfig?: ChartSeriesConfig<SeriesType>;
 }
 
-export type UseChartSeriesConfigDefaultizedParameters<T extends ChartSeriesType = ChartSeriesType> =
-  UseChartSeriesConfigParameters<T> & {
-    seriesConfig: ChartSeriesConfig<T>;
-  };
+export type UseChartSeriesConfigDefaultizedParameters<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> = UseChartSeriesConfigParameters<SeriesType> & {
+  seriesConfig: ChartSeriesConfig<SeriesType>;
+};
 
-export interface UseChartSeriesConfigState<T extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartSeriesConfigState<SeriesType extends ChartSeriesType = ChartSeriesType> {
   seriesConfig: {
-    config: ChartSeriesConfig<T>;
+    config: ChartSeriesConfig<SeriesType>;
   };
 }
 
@@ -26,9 +33,23 @@ export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
   identifier: T,
 ) => string;
 
-export type CleanIdentifierFunction = <T extends { type: ChartSeriesType }>(
-  identifier: T,
-) => SeriesItemIdentifierWithType<T['type']>;
+export type CleanIdentifierFunction = {
+  // Overloads for different identifier types
+  <SeriesType extends ChartSeriesType, Item extends SeriesItemIdentifierWithType<SeriesType>>(
+    identifier: Item,
+    typeOfIdentifier: 'seriesItem',
+  ): Item;
+
+  <SeriesType extends ChartSeriesType, Item extends HighlightItemIdentifierWithType<SeriesType>>(
+    identifier: Item,
+    typeOfIdentifier: 'highlightItem',
+  ): Item;
+
+  <SeriesType extends ChartSeriesType, Item extends VisibilityIdentifierWithType<SeriesType>>(
+    identifier: Item,
+    typeOfIdentifier: 'visibility',
+  ): Item;
+};
 
 export interface UseChartSeriesConfigInstance {
   /**
@@ -48,10 +69,10 @@ export interface UseChartSeriesConfigInstance {
   cleanIdentifier: CleanIdentifierFunction;
 }
 
-export type UseChartSeriesConfigSignature<T extends ChartSeriesType = ChartSeriesType> =
+export type UseChartSeriesConfigSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
-    params: UseChartSeriesConfigParameters<T>;
-    defaultizedParams: UseChartSeriesConfigDefaultizedParameters<T>;
-    state: UseChartSeriesConfigState<T>;
+    params: UseChartSeriesConfigParameters<SeriesType>;
+    defaultizedParams: UseChartSeriesConfigDefaultizedParameters<SeriesType>;
+    state: UseChartSeriesConfigState<SeriesType>;
     instance: UseChartSeriesConfigInstance;
   }>;

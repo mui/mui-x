@@ -25,7 +25,7 @@ const MUI_X_PRODUCTS = [
     label: 'Charts',
     children: [
       { id: 'charts-community', label: '@mui/x-charts' },
-      { id: 'charts-pro', label: '@mui/charts-pro' },
+      { id: 'charts-pro', label: '@mui/x-charts-pro' },
     ],
   },
   {

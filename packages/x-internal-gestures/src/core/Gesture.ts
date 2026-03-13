@@ -238,11 +238,11 @@ export abstract class Gesture<GestureName extends string> {
    */
   constructor(options: GestureOptions<GestureName>) {
     if (!options || !options.name) {
-      throw new Error('Gesture must be initialized with a valid name.');
+      throw new Error('MUI X: Gesture must be initialized with a valid name.');
     }
     if (options.name in eventList) {
       throw new Error(
-        `Gesture can't be created with a native event name. Tried to use "${options.name}". Please use a custom name instead.`,
+        `MUI X: Gesture can't be created with a native event name. Tried to use "${options.name}". Please use a custom name instead.`,
       );
     }
 

@@ -5,7 +5,8 @@ import { useStore } from '@base-ui/utils/store';
 import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
@@ -19,17 +20,17 @@ const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridColumn',
 })(({ theme }) => ({
-  borderInlineStart: `1px solid ${theme.palette.divider}`,
+  borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   flexGrow: 1,
   flexShrink: 0,
   flexBasis: 0,
   minWidth: 0,
   position: 'relative',
   '&[data-weekend]': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: (theme.vars || theme).palette.action.hover,
   },
   ':last-of-type': {
-    borderInlineEnd: `1px solid ${theme.palette.divider}`,
+    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -54,7 +55,7 @@ const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator
   left: 0,
   right: -1,
   height: 0,
-  borderTop: `2px solid ${theme.palette.primary.main}`,
+  borderTop: `2px solid ${(theme.vars || theme).palette.primary.main}`,
 }));
 
 const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
@@ -68,13 +69,13 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
   width: 8,
   height: 8,
   borderRadius: '50%',
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: (theme.vars || theme).palette.primary.main,
 }));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);

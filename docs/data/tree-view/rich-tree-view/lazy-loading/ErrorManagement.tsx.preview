@@ -5,10 +5,12 @@
 >
   {failRequests ? 'Resolve requests' : 'Fail Requests'}
 </Button>
-<RichTreeViewPro
-  items={initialItems}
-  dataSource={{
-    getChildrenCount: (item) => item?.childrenCount as number,
-    getTreeItems: fetchData,
-  }}
-/>
+<div style={{ width: '100%', height: 240 }}>
+  <RichTreeViewPro
+    items={initialItems}
+    dataSource={{
+      getChildrenCount: (item) => item?.childrenCount as number,
+      getTreeItems: fetchData,
+    }}
+  />
+</div>

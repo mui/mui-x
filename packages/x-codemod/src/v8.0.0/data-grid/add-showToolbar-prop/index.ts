@@ -17,11 +17,11 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // Find relevant DataGrid imports
   const importedDataGrids = new Set();
   root.find(j.ImportDeclaration).forEach((path) => {
-    if (dataGridSources.has(path.node.source.value as string)) {
+    if (dataGridSources.has(path.node.source.value?.toString() ?? '')) {
       path.node.specifiers?.forEach((specifier) => {
         if (
           specifier.type === 'ImportSpecifier' &&
-          dataGridComponents.has(specifier.imported.name)
+          dataGridComponents.has(specifier.imported.name.toString())
         ) {
           const localName = (specifier as ImportSpecifier).local?.name;
           if (localName) {

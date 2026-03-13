@@ -1,5 +1,5 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 import { getWeekDayCode } from './internal-utils';
 
@@ -37,10 +37,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
     it('includes last day defined by "until" but excludes the following day', () => {
       const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
-      const until = adapter.date('2025-01-05T23:59:59Z', 'default');
       const event = EventBuilder.new()
         .singleDay('2025-01-01T09:00:00Z')
-        .rrule({ freq: 'DAILY', interval: 1, until })
+        .rrule({ freq: 'DAILY', interval: 1, until: '2025-01-05T23:59:59Z' })
         .toProcessed();
 
       const result = getRecurringEventOccurrencesForVisibleDays(
@@ -187,7 +186,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           freq: 'MONTHLY',
           interval: 1,
           byMonthDay: [10],
-          until: adapter.date('2025-01-31T23:59:59Z', 'default'),
+          until: '2025-01-31T23:59:59Z',
         })
         .toProcessed();
 
@@ -304,7 +303,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
       const event = EventBuilder.new()
         .singleDay('2025-01-10T00:00:00Z')
-        .rrule({ freq: 'WEEKLY', byDay: ['1MO'] } as RecurringEventRecurrenceRule)
+        .rrule({ freq: 'WEEKLY', byDay: ['1MO'] } as SchedulerEventRecurrenceRule)
         .toProcessed();
 
       expect(() =>

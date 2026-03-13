@@ -106,7 +106,7 @@ describe('<DataGridPremium /> - Row spanning', () => {
   }
 
   // See https://github.com/mui/mui-x/issues/14691
-  it.skipIf(isJSDOM)('should not throw when initializing an aggregation model', async () => {
+  it('should not throw when initializing an aggregation model', async () => {
     expect(() =>
       render(
         <TestDataGrid

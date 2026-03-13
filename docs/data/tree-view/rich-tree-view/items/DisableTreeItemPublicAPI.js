@@ -8,9 +8,15 @@ import { TreeItem, TreeItemContent } from '@mui/x-tree-view/TreeItem';
 import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
-function CustomContent({ children, toggleItemDisabled, disabled, ...props }) {
+function CustomContent({
+  children,
+  toggleItemDisabled,
+  disabled,
+  status,
+  ...props
+}) {
   return (
-    <TreeItemContent {...props}>
+    <TreeItemContent {...props} status={status}>
       {children}
 
       <IconButton
@@ -49,6 +55,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
         content: {
           toggleItemDisabled,
           disabled: status.disabled,
+          status,
         },
       }}
     />

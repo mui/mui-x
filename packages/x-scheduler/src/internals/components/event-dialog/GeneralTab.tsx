@@ -13,7 +13,7 @@ import {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
@@ -29,7 +29,7 @@ const SectionHeaderTitle = styled(Typography, {
   slot: 'SectionHeaderTitle',
 })(({ theme }) => ({
   textTransform: 'uppercase',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 const DateTimeFieldsContainer = styled('div', {
@@ -68,7 +68,7 @@ export function GeneralTab(props: GeneralTabProps) {
   const { occurrence, errors, setErrors, controlled, setControlled, value } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 

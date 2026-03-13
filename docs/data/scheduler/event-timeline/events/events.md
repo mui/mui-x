@@ -120,21 +120,21 @@ When defined, the class is applied to the event root DOM element in all views (W
 
 ### Drag interactions
 
-Use the `draggable` property to mark an event as draggable to another point in time:
+Use the `draggable` property on the event model to prevent an event from being dragged to another point in time:
 
 ```ts
 const event = {
   // ...other properties
-  draggable: true,
+  draggable: false,
 };
 ```
 
-Use the `resizable` property to mark an event as resizable by dragging it's start or end edge:
+Use the `resizable` property on the event model to prevent an event from being resized by dragging its start or end edge:
 
 ```ts
 const event = {
   // ...other properties
-  resizable: true,
+  resizable: false,
   resizable: "start" // only the start edge is draggable.
   resizable: "end" // only the end edge is draggable.
 };
@@ -161,12 +161,12 @@ Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-
 
 ### Recurring events
 
-Use the `rrule` property to define an events recurring rule:
+Use the `rrule` property to define an event's recurring rule:
 
 ```ts
 const event = {
   // ...other properties
-  rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
+  rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TH',
 };
 ```
 

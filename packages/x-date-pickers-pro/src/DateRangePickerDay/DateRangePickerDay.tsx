@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useLicenseVerifier } from '@mui/x-license';
+import { useLicenseVerifier } from '@mui/x-license/internals';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
@@ -78,42 +78,37 @@ const startBorderStyle = {
   borderBottomLeftRadius: '50%',
 };
 
+const elementOverrides = {
+  root: [
+    'rangeIntervalDayHighlight',
+    'rangeIntervalDayHighlightStart',
+    'rangeIntervalDayHighlightEnd',
+    'firstVisibleCell',
+    'lastVisibleCell',
+    'startOfMonth',
+    'endOfMonth',
+    'outsideCurrentMonth',
+    'hiddenDayFiller',
+  ],
+  rangeIntervalPreview: [
+    'rangeIntervalDayPreview',
+    'rangeIntervalDayPreviewStart',
+    'rangeIntervalDayPreviewEnd',
+  ],
+  day: ['notSelectedDate', 'dayOutsideRangeInterval', 'dayInsideRangeInterval'],
+} as const;
+
 const DateRangePickerDayRoot = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'Root',
-  overridesResolver: (_, styles) => [
-    {
-      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]:
-        styles.rangeIntervalDayHighlight,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightStart}`]:
-        styles.rangeIntervalDayHighlightStart,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]:
-        styles.rangeIntervalDayHighlightEnd,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.firstVisibleCell}`]: styles.firstVisibleCell,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.lastVisibleCell}`]: styles.lastVisibleCell,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.startOfMonth}`]: styles.startOfMonth,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.endOfMonth}`]: styles.endOfMonth,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.outsideCurrentMonth}`]: styles.outsideCurrentMonth,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.hiddenDayFiller}`]: styles.hiddenDayFiller,
-    },
-    styles.root,
-  ],
+  overridesResolver: (_, styles) => {
+    const overrides = [styles.root];
+    elementOverrides.root.forEach((key) => {
+      overrides.push({ [`&.${dateRangePickerDayClasses[key]}`]: styles[key] });
+    });
+
+    return overrides;
+  },
 })<{ ownerState: DateRangePickerDayOwnerState }>(({ theme }) => ({
   variants: [
     {
@@ -169,18 +164,14 @@ const DateRangePickerDayRoot = styled('div', {
 const DateRangePickerDayRangeIntervalPreview = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'RangeIntervalPreview',
-  overridesResolver: (_, styles) => [
-    { [`&.${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: styles.rangeIntervalDayPreview },
-    {
-      [`&.${dateRangePickerDayClasses.rangeIntervalDayPreviewStart}`]:
-        styles.rangeIntervalDayPreviewStart,
-    },
-    {
-      [`&.${dateRangePickerDayClasses.rangeIntervalDayPreviewEnd}`]:
-        styles.rangeIntervalDayPreviewEnd,
-    },
-    styles.rangeIntervalPreview,
-  ],
+  overridesResolver: (_, styles) => {
+    const overrides = [styles.rangeIntervalPreview];
+    elementOverrides.rangeIntervalPreview.forEach((key) => {
+      overrides.push({ [`&.${dateRangePickerDayClasses[key]}`]: styles[key] });
+    });
+
+    return overrides;
+  },
 })<{ ownerState: DateRangePickerDayOwnerState }>(({ theme }) => ({
   // replace default day component margin with transparent border to avoid jumping on preview
   border: '2px solid transparent',
@@ -222,12 +213,14 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
 const DateRangePickerDayDay = styled(PickersDay, {
   name: 'MuiDateRangePickerDay',
   slot: 'Day',
-  overridesResolver: (_, styles) => [
-    { [`&.${dateRangePickerDayClasses.dayInsideRangeInterval}`]: styles.dayInsideRangeInterval },
-    { [`&.${dateRangePickerDayClasses.dayOutsideRangeInterval}`]: styles.dayOutsideRangeInterval },
-    { [`&.${dateRangePickerDayClasses.notSelectedDate}`]: styles.notSelectedDate },
-    styles.day,
-  ],
+  overridesResolver: (_, styles) => {
+    const overrides = [styles.day];
+    elementOverrides.day.forEach((key) => {
+      overrides.push({ [`&.${dateRangePickerDayClasses[key]}`]: styles[key] });
+    });
+
+    return overrides;
+  },
 })<{
   ownerState: DateRangePickerDayOwnerState;
 }>({
@@ -281,7 +274,11 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     ...other
   } = props;
 
-  useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
+  useLicenseVerifier({
+    releaseDate: '__RELEASE_INFO__',
+    version: process.env.MUI_VERSION!,
+    name: 'x-date-pickers-pro',
+  });
   const adapter = usePickerAdapter();
 
   const shouldRenderHighlight = isHighlighting && !outsideCurrentMonth;

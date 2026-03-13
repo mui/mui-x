@@ -1,13 +1,12 @@
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-
 type TreeItemType = {
   id: string;
   label: string;
   disabled?: boolean;
   editable?: boolean;
+  children?: TreeItemType[];
 };
 
-export const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemType>[] = [
+export const MUI_X_PRODUCTS: TreeItemType[] = [
   {
     id: 'grid',
     label: 'Data Grid',
