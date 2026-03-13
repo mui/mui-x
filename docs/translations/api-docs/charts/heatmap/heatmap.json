@@ -10,6 +10,9 @@
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -115,9 +118,14 @@
       "conditions": "highlighted",
       "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
     },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the heatmap plot root element"
+    },
     "series": {
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${heatmapClasses.series}-${seriesId}</code>.",
-      "nodeName": "the root element for a specified series"
+      "nodeName": "the root element for a specified series",
+      "deprecationInfo": "Use <code>[data-series=&quot;${seriesId}&quot;]</code> selector instead."
     }
   },
   "slotDescriptions": {

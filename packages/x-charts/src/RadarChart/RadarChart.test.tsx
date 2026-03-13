@@ -77,7 +77,6 @@ describe('<RadarChart />', () => {
             { data: [11, 16, 21], label: 'Series 2' },
           ]}
           slotProps={{ tooltip: { trigger: 'item' } }}
-          enableKeyboardNavigation
         />,
       );
 

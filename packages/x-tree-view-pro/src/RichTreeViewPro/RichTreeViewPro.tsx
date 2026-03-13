@@ -65,7 +65,11 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const releaseInfo = '__RELEASE_INFO__';
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-tree-view-pro' as const,
+};
 
 /**
  *
@@ -83,7 +87,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 >(inProps: RichTreeViewProProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
 
-  useLicenseVerifier('x-tree-view-pro', releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -145,7 +149,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
           ownerState={props}
           rootRef={handleRef}
         />
-        <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
+        <Watermark packageInfo={packageInfo} />
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );

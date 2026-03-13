@@ -1,7 +1,7 @@
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useLicenseVerifier } from '../useLicenseVerifier';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { MuiCommercialPackageName } from '../utils/commercialPackages';
+import { CommercialPackageInfo } from '../utils/commercialPackages';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
@@ -18,6 +18,8 @@ function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
       return 'MUI X Product not covered by plan';
     case LICENSE_STATUS.NotFound:
       return 'MUI X Missing license key';
+    case LICENSE_STATUS.NotValidForPackage:
+      return 'MUI X License key version mismatch';
     default:
       throw new Error(
         'MUI X: Unhandled license status encountered in watermark display. ' +
@@ -28,13 +30,12 @@ function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
 }
 
 interface WatermarkProps {
-  packageName: MuiCommercialPackageName;
-  releaseInfo: string;
+  packageInfo: CommercialPackageInfo;
 }
 
 function Watermark(props: WatermarkProps) {
-  const { packageName, releaseInfo } = props;
-  const licenseStatus = useLicenseVerifier(packageName, releaseInfo);
+  const { packageInfo } = props;
+  const licenseStatus = useLicenseVerifier(packageInfo);
 
   if (licenseStatus.status === LICENSE_STATUS.Valid) {
     return null;
