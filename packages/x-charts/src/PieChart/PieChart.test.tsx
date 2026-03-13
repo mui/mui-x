@@ -3,7 +3,6 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { pieArcClasses, pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();
@@ -155,13 +154,11 @@ describe('<PieChart />', () => {
         />,
       );
 
-      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
-
       // by default does not show focus indicator
       expect(container.querySelector(`.${pieClasses.focusIndicator}`)).not.toBeTruthy();
 
       // focus the chart and navigate
-      await user.click(svg);
+      await user.keyboard('{Tab}');
       await user.keyboard('{ArrowRight}');
 
       expect(container.querySelector(`.${pieClasses.focusIndicator}`)).toBeTruthy();
