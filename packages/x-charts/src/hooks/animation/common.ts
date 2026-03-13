@@ -15,7 +15,7 @@ export function createInterpolator<
 >(from: T, to: T): (t: number) => T {
   const interpolators: Partial<Record<keyof T, (t: number) => any>> = {};
   (Object.keys(to) as (keyof T)[]).forEach((key) => {
-    interpolators[key] = interpolateNumber(from[key], to[key]);
+    interpolators[key] = interpolateNumber(from[key] as number, to[key] as number);
   });
 
   return (t: number) => {
