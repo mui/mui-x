@@ -167,6 +167,7 @@ const ChartsLegend = consumeSlots(
                     className={classes?.mark}
                     color={item.color}
                     type={item.markType}
+                    markShape={item.markShape}
                   />
                   <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
                 </button>
@@ -176,6 +177,7 @@ const ChartsLegend = consumeSlots(
                     className={classes?.mark}
                     color={item.color}
                     type={item.markType}
+                    markShape={item.markShape}
                   />
                   <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
                 </div>

@@ -11,12 +11,18 @@ export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {
     item: null | FocusedItemIdentifier<ChartSeriesType>;
     isFocused: boolean;
-    enableKeyboardNavigation: boolean;
+    /**
+     * Indicates whether keyboard navigation is enabled or not.
+     */
+    enabled: boolean;
   };
 }
 
 type UseChartKeyboardNavigationParameters = {
-  enableKeyboardNavigation?: boolean;
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation?: boolean;
 };
 
 export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{

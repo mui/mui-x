@@ -49,7 +49,7 @@ const EventDialogPaper = styled(Paper, {
   height: 'fit-content',
   overflow: 'hidden',
   '&[data-dragging]': {
-    outline: `1px solid ${theme.palette.primary.light}`,
+    outline: `1px solid ${(theme.vars || theme).palette.primary.light}`,
   },
 }));
 

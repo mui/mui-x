@@ -1,15 +1,15 @@
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 type ExtendedTreeItemProps = {
   editable?: boolean;
   id: string;
   label: string;
+  children?: ExtendedTreeItemProps[];
 };
 
-const MUI_X_PRODUCTS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
+const MUI_X_PRODUCTS: ExtendedTreeItemProps[] = [
   {
     id: 'grid',
     label: 'Data Grid',

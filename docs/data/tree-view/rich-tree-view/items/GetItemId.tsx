@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
-type MuiXProduct = TreeViewBaseItem<{
+type MuiXProduct = {
   internalId: string;
   label: string;
-}>;
+  children?: MuiXProduct[];
+};
 
 const MUI_X_PRODUCTS: MuiXProduct[] = [
   {

@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import {
   randomInt,
   randomName,
@@ -25,7 +24,7 @@ const fetchData = async () => {
 
 export default function LazyLoadingInitialState() {
   return (
-    <Box sx={{ width: '300px' }}>
+    <div style={{ width: 300, height: 240 }}>
       <RichTreeViewPro
         items={initialItems}
         dataSource={{
@@ -33,6 +32,6 @@ export default function LazyLoadingInitialState() {
           getTreeItems: fetchData,
         }}
       />
-    </Box>
+    </div>
   );
 }

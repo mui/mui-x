@@ -56,14 +56,15 @@ For example the element highlight, or tooltip will be impacted by the feature.
 Those modifications will not be considered as breaking changes and so be added during minor or patch versions.
 :::
 
-Set `enableKeyboardNavigation` to `true` to enable the keyboard navigation on your charts.
-You can also enable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
+The keyboard navigation is enabled by default on all charts.
+You can disable it by setting `disableKeyboardNavigation` to `true`.
+You can also disable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
 
 ```js
 components: {
   MuiChartDataProvider: {
     defaultProps: {
-      enableKeyboardNavigation: true
+      disableKeyboardNavigation: true
     },
   },
 }
