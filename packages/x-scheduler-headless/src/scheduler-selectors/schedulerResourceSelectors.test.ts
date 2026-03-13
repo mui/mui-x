@@ -543,6 +543,126 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('resourceDepthLookup', () => {
+      it('should return an empty map when there are no resources', () => {
+        const state = new storeClass.Value({ events: [] }, adapter).state;
+        const result = schedulerResourceSelectors.resourceDepthLookup(state);
+        expect(result.size).to.equal(0);
+      });
+
+      it('should return depth 0 for flat resources', () => {
+        const resources = [
+          { id: 'resource-1', title: 'Resource 1' },
+          { id: 'resource-2', title: 'Resource 2' },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.resourceDepthLookup(state);
+        expect(result.get('resource-1')).to.equal(0);
+        expect(result.get('resource-2')).to.equal(0);
+      });
+
+      it('should return correct depths for single-level nesting', () => {
+        const resources = [
+          {
+            id: 'parent-1',
+            title: 'Parent 1',
+            children: [
+              { id: 'child-1', title: 'Child 1' },
+              { id: 'child-2', title: 'Child 2' },
+            ],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.resourceDepthLookup(state);
+        expect(result.get('parent-1')).to.equal(0);
+        expect(result.get('child-1')).to.equal(1);
+        expect(result.get('child-2')).to.equal(1);
+      });
+
+      it('should return correct depths for multi-level nesting', () => {
+        const resources = [
+          {
+            id: 'grandparent',
+            title: 'Grandparent',
+            children: [
+              {
+                id: 'parent',
+                title: 'Parent',
+                children: [{ id: 'child', title: 'Child' }],
+              },
+            ],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.resourceDepthLookup(state);
+        expect(result.get('grandparent')).to.equal(0);
+        expect(result.get('parent')).to.equal(1);
+        expect(result.get('child')).to.equal(2);
+      });
+
+      it('should return same reference when inputs have not changed', () => {
+        const resources = [
+          {
+            id: 'parent-1',
+            title: 'Parent 1',
+            children: [{ id: 'child-1', title: 'Child 1' }],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result1 = schedulerResourceSelectors.resourceDepthLookup(state);
+        const result2 = schedulerResourceSelectors.resourceDepthLookup(state);
+        expect(result1).to.equal(result2);
+      });
+    });
+
+    describe('resourceDepth', () => {
+      it('should return 0 for a root resource', () => {
+        const resources = [{ id: 'resource-1', title: 'Resource 1' }];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.resourceDepth(state, 'resource-1');
+        expect(result).to.equal(0);
+      });
+
+      it('should return 1 for a child resource', () => {
+        const resources = [
+          {
+            id: 'parent',
+            title: 'Parent',
+            children: [{ id: 'child', title: 'Child' }],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.resourceDepth(state, 'child');
+        expect(result).to.equal(1);
+      });
+
+      it('should return 2 for a grandchild resource', () => {
+        const resources = [
+          {
+            id: 'grandparent',
+            title: 'Grandparent',
+            children: [
+              {
+                id: 'parent',
+                title: 'Parent',
+                children: [{ id: 'child', title: 'Child' }],
+              },
+            ],
+          },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.resourceDepth(state, 'child');
+        expect(result).to.equal(2);
+      });
+
+      it('should return 0 for a non-existent resource', () => {
+        const resources = [{ id: 'resource-1', title: 'Resource 1' }];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        const result = schedulerResourceSelectors.resourceDepth(state, 'non-existent');
+        expect(result).to.equal(0);
+      });
+    });
+
     describe('defaultEventColor', () => {
       it('should return state eventColor when resourceId is null', () => {
         const resources = [{ id: 'resource-1', title: 'Resource 1', eventColor: 'red' }];
