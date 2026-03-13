@@ -1,6 +1,5 @@
 import { type ChartPluginSignature } from '../../models';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ChartExperimentalFeatures {}
 
 export interface UseChartExperimentalFeaturesParameters {
