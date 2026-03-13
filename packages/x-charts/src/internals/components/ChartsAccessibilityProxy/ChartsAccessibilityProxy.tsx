@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useChartId } from '../hooks';
+import { useChartId } from '../../../hooks/useChartId';
 import { useDescription } from './useDescription';
 
 /**

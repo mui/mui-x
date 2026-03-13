@@ -2,7 +2,6 @@
 productId: x-charts
 title: Charts - Accessibility
 packageName: '@mui/x-charts'
-components: ChartsAccessibilityProxy
 ---
 
 # Charts - Accessibility

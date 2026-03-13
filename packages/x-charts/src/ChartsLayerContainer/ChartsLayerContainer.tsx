@@ -15,7 +15,7 @@ import { useChartContext } from '../context/ChartProvider';
 import { useChartsLayerContainerRef } from '../hooks';
 // eslint-disable-next-line import/no-cycle
 import { ChartsSurface } from '../ChartsSurface';
-import { ChartsAccessibilityProxy } from '../ChartsAccessibilityProxy';
+import { ChartsAccessibilityProxy } from '../internals/components/ChartsAccessibilityProxy';
 
 const ChartsLayerContainerDiv = styled('div', {
   name: 'MuiChartsLayerContainer',

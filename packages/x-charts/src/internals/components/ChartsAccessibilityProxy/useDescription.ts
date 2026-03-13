@@ -1,9 +1,9 @@
-import { useRadiusAxes, useRotationAxes, useSeries, useXAxes, useYAxes } from '../hooks';
-import { useFocusedItem } from '../hooks/useFocusedItem';
-import { useStore } from '../internals/store/useStore';
-import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { isCartesianSeries } from '../internals/isCartesian';
-import { isPolarSeriesType } from '../internals/isPolar';
+import { useRadiusAxes, useRotationAxes, useSeries, useXAxes, useYAxes } from '../../../hooks';
+import { useFocusedItem } from '../../../hooks/useFocusedItem';
+import { useStore } from '../../store/useStore';
+import { selectorChartSeriesConfig } from '../../plugins/corePlugins/useChartSeriesConfig';
+import { isCartesianSeries } from '../../isCartesian';
+import { isPolarSeriesType } from '../../isPolar';
 
 /**
  * Get the message associated to the focused item.

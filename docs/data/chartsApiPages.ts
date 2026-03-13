@@ -44,10 +44,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
-    pathname: '/x/api/charts/charts-accessibility-proxy',
-    title: 'ChartsAccessibilityProxy',
-  },
-  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
