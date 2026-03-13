@@ -99,7 +99,7 @@
       }
     },
     "series": {
-      "description": "The series to display in the candlestick chart. An array of OHLCSeries objects."
+      "description": "The series to display in the candlestick chart. An array of OHLCSeries objects.<br>Currently, only one OHLC series is supported. If would like to display more than one OHLC series, open an issue at <a href=\"https://github.com/mui/mui-x\">https://github.com/mui/mui-x</a> explaining your use case."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {

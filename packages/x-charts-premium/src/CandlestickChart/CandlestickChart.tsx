@@ -79,6 +79,9 @@ export interface CandlestickChartProps
   /**
    * The series to display in the candlestick chart.
    * An array of [[OHLCSeries]] objects.
+   *
+   * Currently, only one OHLC series is supported. If would like to display more than one OHLC
+   * series, open an issue at https://github.com/mui/mui-x explaining your use case.
    */
   series: ReadonlyArray<OHLCSeries>;
   /**
@@ -421,6 +424,9 @@ CandlestickChart.propTypes = {
   /**
    * The series to display in the candlestick chart.
    * An array of [[OHLCSeries]] objects.
+   *
+   * Currently, only one OHLC series is supported. If would like to display more than one OHLC
+   * series, open an issue at https://github.com/mui/mui-x explaining your use case.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
