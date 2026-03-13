@@ -70,6 +70,7 @@ function HeatmapItem(props: HeatmapItemProps) {
 
   const ownerState: HeatmapCellOwnerState = {
     seriesId,
+    dataIndex,
     color,
     isFaded,
     isHighlighted,

@@ -7,11 +7,12 @@ import type { HeatmapClasses } from './heatmapClasses';
 
 export interface HeatmapCellOwnerState {
   seriesId: SeriesId;
+  dataIndex: number;
   color: string;
+  value: number;
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<HeatmapClasses>;
-  value: number;
 }
 
 /**
@@ -64,6 +65,7 @@ HeatmapCell.propTypes = {
   ownerState: PropTypes.shape({
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
+    dataIndex: PropTypes.number.isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
