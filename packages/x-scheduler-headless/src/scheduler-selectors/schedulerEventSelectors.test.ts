@@ -1,4 +1,8 @@
-import { EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
+import {
+  EventBuilder,
+  ResourceBuilder,
+  getEventCalendarStateFromParameters,
+} from 'test/utils/scheduler';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 
@@ -123,101 +127,110 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should return true when resource.areEventsDraggable is true and event has no draggable property', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1').areEventsDraggable();
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsDraggable: true }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         areEventsDraggable: false,
       });
       expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(true);
     });
 
     it('should return false when resource.areEventsDraggable is false and event has no draggable property', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsDraggable(false);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsDraggable: false }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         areEventsDraggable: true,
       });
       expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(false);
     });
 
     it('should use event.draggable over resource.areEventsDraggable when both are defined', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsDraggable(false);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').draggable(true).build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsDraggable: false }],
+        events: [EventBuilder.new().id('event-1').resource(r1).draggable(true).build()],
+        resources: [r1.build()],
         areEventsDraggable: false,
       });
       expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(true);
     });
 
     it('should return false when event.draggable is false even if resource.areEventsDraggable is true', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1').areEventsDraggable();
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').draggable(false).build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsDraggable: true }],
+        events: [EventBuilder.new().id('event-1').resource(r1).draggable(false).build()],
+        resources: [r1.build()],
         areEventsDraggable: true,
       });
       expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(false);
     });
 
     it('should fall back to areEventsDraggable when resource has no areEventsDraggable property', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1');
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1' }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         areEventsDraggable: true,
       });
       expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(true);
     });
 
     it('should inherit areEventsDraggable from ancestor resource when child resource does not define it', () => {
+      const childResource = ResourceBuilder.new().id('child-resource').title('Child Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .areEventsDraggable()
+        .children([childResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
-        resources: [
-          {
-            id: 'parent-resource',
-            title: 'Parent Resource',
-            areEventsDraggable: true,
-            children: [{ id: 'child-resource', title: 'Child Resource' }],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(childResource).build()],
+        resources: [parentResource.build()],
         areEventsDraggable: false,
       });
       expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(true);
     });
 
     it('should use child resource areEventsDraggable over parent resource when both are defined', () => {
+      const childResource = ResourceBuilder.new()
+        .id('child-resource')
+        .title('Child Resource')
+        .areEventsDraggable(false);
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .areEventsDraggable()
+        .children([childResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
-        resources: [
-          {
-            id: 'parent-resource',
-            title: 'Parent Resource',
-            areEventsDraggable: true,
-            children: [
-              { id: 'child-resource', title: 'Child Resource', areEventsDraggable: false },
-            ],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(childResource).build()],
+        resources: [parentResource.build()],
         areEventsDraggable: true,
       });
       expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(false);
     });
 
     it('should inherit areEventsDraggable from grandparent resource when parent and child do not define it', () => {
+      const grandchildResource = ResourceBuilder.new()
+        .id('grandchild-resource')
+        .title('Grandchild Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .children([grandchildResource]);
+      const grandparentResource = ResourceBuilder.new()
+        .id('grandparent-resource')
+        .title('Grandparent Resource')
+        .areEventsDraggable()
+        .children([parentResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('grandchild-resource').build()],
-        resources: [
-          {
-            id: 'grandparent-resource',
-            title: 'Grandparent Resource',
-            areEventsDraggable: true,
-            children: [
-              {
-                id: 'parent-resource',
-                title: 'Parent Resource',
-                children: [{ id: 'grandchild-resource', title: 'Grandchild Resource' }],
-              },
-            ],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(grandchildResource).build()],
+        resources: [grandparentResource.build()],
         areEventsDraggable: false,
       });
       expect(schedulerEventSelectors.isDraggable(state, 'event-1')).to.equal(true);
@@ -350,9 +363,10 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should return true when resource.areEventsResizable is true and event has no resizable property', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1').areEventsResizable();
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsResizable: true }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         areEventsResizable: false,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(true);
@@ -360,9 +374,13 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should return false when resource.areEventsResizable is false and event has no resizable property', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsResizable(false);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsResizable: false }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         areEventsResizable: true,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(false);
@@ -370,9 +388,13 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should return true for start side when resource.areEventsResizable is "start" and event has no resizable property', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsResizable('start');
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsResizable: 'start' }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         areEventsResizable: false,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(true);
@@ -380,9 +402,13 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should return true for end side when resource.areEventsResizable is "end" and event has no resizable property', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsResizable('end');
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsResizable: 'end' }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         areEventsResizable: false,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(false);
@@ -390,9 +416,13 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should use event.resizable over resource.areEventsResizable when both are defined', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsResizable(false);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').resizable(true).build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsResizable: false }],
+        events: [EventBuilder.new().id('event-1').resource(r1).resizable(true).build()],
+        resources: [r1.build()],
         areEventsResizable: false,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(true);
@@ -400,9 +430,10 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should return false when event.resizable is false even if resource.areEventsResizable is true', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1').areEventsResizable();
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').resizable(false).build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsResizable: true }],
+        events: [EventBuilder.new().id('event-1').resource(r1).resizable(false).build()],
+        resources: [r1.build()],
         areEventsResizable: true,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(false);
@@ -410,9 +441,10 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should fall back to areEventsResizable when resource has no areEventsResizable property', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1');
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1' }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         areEventsResizable: true,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(true);
@@ -420,11 +452,13 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should handle event.resizable "start" overriding resource.areEventsResizable "end"', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsResizable('end');
       const state = getEventCalendarStateFromParameters({
-        events: [
-          EventBuilder.new().id('event-1').resource('resource-1').resizable('start').build(),
-        ],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsResizable: 'end' }],
+        events: [EventBuilder.new().id('event-1').resource(r1).resizable('start').build()],
+        resources: [r1.build()],
         areEventsResizable: false,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(true);
@@ -432,16 +466,15 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should inherit areEventsResizable from ancestor resource when child resource does not define it', () => {
+      const childResource = ResourceBuilder.new().id('child-resource').title('Child Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .areEventsResizable()
+        .children([childResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
-        resources: [
-          {
-            id: 'parent-resource',
-            title: 'Parent Resource',
-            areEventsResizable: true,
-            children: [{ id: 'child-resource', title: 'Child Resource' }],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(childResource).build()],
+        resources: [parentResource.build()],
         areEventsResizable: false,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(true);
@@ -449,18 +482,18 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should use child resource areEventsResizable over parent resource when both are defined', () => {
+      const childResource = ResourceBuilder.new()
+        .id('child-resource')
+        .title('Child Resource')
+        .areEventsResizable(false);
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .areEventsResizable()
+        .children([childResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
-        resources: [
-          {
-            id: 'parent-resource',
-            title: 'Parent Resource',
-            areEventsResizable: true,
-            children: [
-              { id: 'child-resource', title: 'Child Resource', areEventsResizable: false },
-            ],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(childResource).build()],
+        resources: [parentResource.build()],
         areEventsResizable: true,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(false);
@@ -468,22 +501,21 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should inherit areEventsResizable from grandparent resource when parent and child do not define it', () => {
+      const grandchildResource = ResourceBuilder.new()
+        .id('grandchild-resource')
+        .title('Grandchild Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .children([grandchildResource]);
+      const grandparentResource = ResourceBuilder.new()
+        .id('grandparent-resource')
+        .title('Grandparent Resource')
+        .areEventsResizable()
+        .children([parentResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('grandchild-resource').build()],
-        resources: [
-          {
-            id: 'grandparent-resource',
-            title: 'Grandparent Resource',
-            areEventsResizable: true,
-            children: [
-              {
-                id: 'parent-resource',
-                title: 'Parent Resource',
-                children: [{ id: 'grandchild-resource', title: 'Grandchild Resource' }],
-              },
-            ],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(grandchildResource).build()],
+        resources: [grandparentResource.build()],
         areEventsResizable: false,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(true);
@@ -491,16 +523,15 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should inherit side-specific areEventsResizable from parent resource', () => {
+      const childResource = ResourceBuilder.new().id('child-resource').title('Child Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .areEventsResizable('start')
+        .children([childResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
-        resources: [
-          {
-            id: 'parent-resource',
-            title: 'Parent Resource',
-            areEventsResizable: 'start',
-            children: [{ id: 'child-resource', title: 'Child Resource' }],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(childResource).build()],
+        resources: [parentResource.build()],
         areEventsResizable: false,
       });
       expect(schedulerEventSelectors.isResizable(state, 'event-1', 'start')).to.equal(true);
@@ -526,104 +557,106 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should return resource eventColor when event has no color', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1').eventColor('purple');
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', eventColor: 'purple' }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         eventColor: 'teal',
       });
       expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('purple');
     });
 
     it('should use event color over resource eventColor when both are defined', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1').eventColor('purple');
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').color('red').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', eventColor: 'purple' }],
+        events: [EventBuilder.new().id('event-1').resource(r1).color('red').build()],
+        resources: [r1.build()],
         eventColor: 'teal',
       });
       expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('red');
     });
 
     it('should fall back to state eventColor when resource has no eventColor', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1');
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1' }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         eventColor: 'teal',
       });
       expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('teal');
     });
 
     it('should inherit eventColor from ancestor resource when child resource does not define it', () => {
+      const childResource = ResourceBuilder.new().id('child-resource').title('Child Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .eventColor('purple')
+        .children([childResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
-        resources: [
-          {
-            id: 'parent-resource',
-            title: 'Parent Resource',
-            eventColor: 'purple',
-            children: [{ id: 'child-resource', title: 'Child Resource' }],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(childResource).build()],
+        resources: [parentResource.build()],
         eventColor: 'teal',
       });
       expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('purple');
     });
 
     it('should use child resource eventColor over parent resource when both are defined', () => {
+      const childResource = ResourceBuilder.new()
+        .id('child-resource')
+        .title('Child Resource')
+        .eventColor('blue');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .eventColor('purple')
+        .children([childResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
-        resources: [
-          {
-            id: 'parent-resource',
-            title: 'Parent Resource',
-            eventColor: 'purple',
-            children: [{ id: 'child-resource', title: 'Child Resource', eventColor: 'blue' }],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(childResource).build()],
+        resources: [parentResource.build()],
         eventColor: 'teal',
       });
       expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('blue');
     });
 
     it('should inherit eventColor from grandparent resource when parent and child do not define it', () => {
+      const grandchildResource = ResourceBuilder.new()
+        .id('grandchild-resource')
+        .title('Grandchild Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .children([grandchildResource]);
+      const grandparentResource = ResourceBuilder.new()
+        .id('grandparent-resource')
+        .title('Grandparent Resource')
+        .eventColor('purple')
+        .children([parentResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('grandchild-resource').build()],
-        resources: [
-          {
-            id: 'grandparent-resource',
-            title: 'Grandparent Resource',
-            eventColor: 'purple',
-            children: [
-              {
-                id: 'parent-resource',
-                title: 'Parent Resource',
-                children: [{ id: 'grandchild-resource', title: 'Grandchild Resource' }],
-              },
-            ],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(grandchildResource).build()],
+        resources: [grandparentResource.build()],
         eventColor: 'teal',
       });
       expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('purple');
     });
 
     it('should use nearest ancestor eventColor over more distant ancestor', () => {
+      const grandchildResource = ResourceBuilder.new()
+        .id('grandchild-resource')
+        .title('Grandchild Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .eventColor('blue')
+        .children([grandchildResource]);
+      const grandparentResource = ResourceBuilder.new()
+        .id('grandparent-resource')
+        .title('Grandparent Resource')
+        .eventColor('purple')
+        .children([parentResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('grandchild-resource').build()],
-        resources: [
-          {
-            id: 'grandparent-resource',
-            title: 'Grandparent Resource',
-            eventColor: 'purple',
-            children: [
-              {
-                id: 'parent-resource',
-                title: 'Parent Resource',
-                eventColor: 'blue',
-                children: [{ id: 'grandchild-resource', title: 'Grandchild Resource' }],
-              },
-            ],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(grandchildResource).build()],
+        resources: [grandparentResource.build()],
         eventColor: 'teal',
       });
       expect(schedulerEventSelectors.color(state, 'event-1')).to.equal('blue');
@@ -654,42 +687,56 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should return true when resource.areEventsReadOnly is true and event has no readOnly property', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1').areEventsReadOnly();
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsReadOnly: true }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);
     });
 
     it('should return false when resource.areEventsReadOnly is false and event has no readOnly property', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsReadOnly(false);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsReadOnly: false }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(false);
     });
 
     it('should use resource.areEventsReadOnly over component readOnly when both are defined', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsReadOnly(false);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsReadOnly: false }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         readOnly: true,
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(false);
     });
 
     it('should use event.readOnly over resource.areEventsReadOnly when both are defined', () => {
+      const r1 = ResourceBuilder.new()
+        .id('resource-1')
+        .title('Resource 1')
+        .areEventsReadOnly(false);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').readOnly().build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1', areEventsReadOnly: false }],
+        events: [EventBuilder.new().id('event-1').resource(r1).readOnly().build()],
+        resources: [r1.build()],
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);
     });
 
     it('should fall back to component readOnly when resource has no areEventsReadOnly property', () => {
+      const r1 = ResourceBuilder.new().id('resource-1').title('Resource 1');
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').build()],
-        resources: [{ id: 'resource-1', title: 'Resource 1' }],
+        events: [EventBuilder.new().id('event-1').resource(r1).build()],
+        resources: [r1.build()],
         readOnly: true,
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);
@@ -704,54 +751,54 @@ describe('schedulerEventSelectors', () => {
     });
 
     it('should inherit areEventsReadOnly from ancestor resource when child resource does not define it', () => {
+      const childResource = ResourceBuilder.new().id('child-resource').title('Child Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .areEventsReadOnly()
+        .children([childResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
-        resources: [
-          {
-            id: 'parent-resource',
-            title: 'Parent Resource',
-            areEventsReadOnly: true,
-            children: [{ id: 'child-resource', title: 'Child Resource' }],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(childResource).build()],
+        resources: [parentResource.build()],
         readOnly: false,
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);
     });
 
     it('should use child resource areEventsReadOnly over parent resource when both are defined', () => {
+      const childResource = ResourceBuilder.new()
+        .id('child-resource')
+        .title('Child Resource')
+        .areEventsReadOnly(false);
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .areEventsReadOnly()
+        .children([childResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('child-resource').build()],
-        resources: [
-          {
-            id: 'parent-resource',
-            title: 'Parent Resource',
-            areEventsReadOnly: true,
-            children: [{ id: 'child-resource', title: 'Child Resource', areEventsReadOnly: false }],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(childResource).build()],
+        resources: [parentResource.build()],
         readOnly: true,
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(false);
     });
 
     it('should inherit areEventsReadOnly from grandparent resource when parent and child do not define it', () => {
+      const grandchildResource = ResourceBuilder.new()
+        .id('grandchild-resource')
+        .title('Grandchild Resource');
+      const parentResource = ResourceBuilder.new()
+        .id('parent-resource')
+        .title('Parent Resource')
+        .children([grandchildResource]);
+      const grandparentResource = ResourceBuilder.new()
+        .id('grandparent-resource')
+        .title('Grandparent Resource')
+        .areEventsReadOnly()
+        .children([parentResource]);
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('grandchild-resource').build()],
-        resources: [
-          {
-            id: 'grandparent-resource',
-            title: 'Grandparent Resource',
-            areEventsReadOnly: true,
-            children: [
-              {
-                id: 'parent-resource',
-                title: 'Parent Resource',
-                children: [{ id: 'grandchild-resource', title: 'Grandchild Resource' }],
-              },
-            ],
-          },
-        ],
+        events: [EventBuilder.new().id('event-1').resource(grandchildResource).build()],
+        resources: [grandparentResource.build()],
         readOnly: false,
       });
       expect(schedulerEventSelectors.isReadOnly(state, 'event-1')).to.equal(true);

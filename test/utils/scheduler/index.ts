@@ -8,6 +8,7 @@ export * from './SchedulerStoreRunner';
 export * from './StoreSpy';
 export * from './state';
 export * from './event-builder';
+export * from './resource-builder';
 export * from './storeClasses';
 export * from './dom-queries';
 export * from './dnd';

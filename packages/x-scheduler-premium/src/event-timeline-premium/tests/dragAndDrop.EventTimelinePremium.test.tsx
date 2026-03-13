@@ -6,16 +6,17 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  ResourceBuilder,
   simulateDragAndDrop,
   mockElementBounds,
   getResizeHandle,
 } from 'test/utils/scheduler';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 
-const resources: SchedulerResource[] = [
-  { id: 'r1', title: 'Engineering' },
-  { id: 'r2', title: 'Design' },
-];
+const r1 = ResourceBuilder.new().id('r1').title('Engineering');
+const r2 = ResourceBuilder.new().id('r2').title('Design');
+
+const resources: SchedulerResource[] = [r1.build(), r2.build()];
 
 /**
  * Returns the timeline event row for a given resource id.
@@ -53,7 +54,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .id('event-1')
       .title('Team Standup')
       .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource('r1')
+      .resource(r1)
       .draggable(true)
       .build();
 
@@ -95,7 +96,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .id('event-2')
       .title('Design Review')
       .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource('r1')
+      .resource(r1)
       .draggable(true)
       .build();
 
@@ -140,7 +141,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .id('event-1')
       .title('Team Standup')
       .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource('r1')
+      .resource(r1)
       .resizable(true)
       .build();
 
@@ -189,7 +190,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       .id('event-1')
       .title('Team Standup')
       .singleDay('2025-07-03T09:00:00Z', 60)
-      .resource('r1')
+      .resource(r1)
       .resizable(true)
       .build();
 

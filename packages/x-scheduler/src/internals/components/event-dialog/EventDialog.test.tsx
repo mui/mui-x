@@ -4,6 +4,7 @@ import {
   adapter,
   createSchedulerRenderer,
   EventBuilder,
+  ResourceBuilder,
   SchedulerStoreRunner,
   StateWatcher,
   StoreSpy,
@@ -12,7 +13,6 @@ import {
 import { screen, within } from '@mui/internal-test-utils';
 import {
   SchedulerResource,
-  SchedulerResourceId,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -32,25 +32,17 @@ class PremiumTestStore extends ExtendableEventCalendarStore<any, any> {
   }
 }
 
+const r1 = ResourceBuilder.new().id('r1').title('Work').eventColor('blue');
+const r2 = ResourceBuilder.new().id('r2').title('Personal').eventColor('teal');
+
 const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .title('Running')
   .description('Morning run')
   .singleDay('2025-05-26T07:30:00Z', 45)
-  .resource('r2')
+  .resource(r2)
   .build();
 
-const resources: SchedulerResource[] = [
-  {
-    id: 'r1',
-    title: 'Work',
-    eventColor: 'blue',
-  },
-  {
-    id: 'r2',
-    title: 'Personal',
-    eventColor: 'teal',
-  },
-];
+const resources: SchedulerResource[] = [r1.build(), r2.build()];
 
 describe('<EventDialogContent open />', () => {
   const anchor = document.createElement('button');
@@ -65,7 +57,7 @@ describe('<EventDialogContent open />', () => {
       .title(DEFAULT_EVENT.title)
       .description(DEFAULT_EVENT.description)
       .span(DEFAULT_EVENT.start, DEFAULT_EVENT.end)
-      .resource(DEFAULT_EVENT.resource as SchedulerResourceId)
+      .resource(r2)
       .toOccurrence(),
     onClose: () => {},
   };
@@ -329,15 +321,12 @@ describe('<EventDialogContent open />', () => {
   it('should handle a resource without an eventColor (fallback to default)', async () => {
     const onEventsChange = spy();
 
-    const resourcesNoColor: SchedulerResource[] = [
-      { id: 'r1', title: 'Work', eventColor: 'blue' },
-      { id: 'r2', title: 'Personal', eventColor: 'teal' },
-      { id: 'r3', title: 'NoColor' },
-    ];
+    const r3 = ResourceBuilder.new().id('r3').title('NoColor');
+    const resourcesNoColor: SchedulerResource[] = [r1.build(), r2.build(), r3.build()];
 
     const eventWithNoResourceColor: SchedulerEvent = {
       ...DEFAULT_EVENT,
-      resource: 'r3',
+      resource: r3.getId(),
     };
 
     const eventWithNoResourceColorOccurrence = EventBuilder.new(adapter)
@@ -345,7 +334,7 @@ describe('<EventDialogContent open />', () => {
       .title(eventWithNoResourceColor.title)
       .description(eventWithNoResourceColor.description)
       .span(eventWithNoResourceColor.start, eventWithNoResourceColor.end)
-      .resource(eventWithNoResourceColor.resource as SchedulerResourceId)
+      .resource(r3)
       .toOccurrence();
 
     render(
@@ -693,7 +682,7 @@ describe('<EventDialogContent open />', () => {
         .title('Daily standup')
         .description('sync')
         .singleDay('2025-06-11T10:00:00Z', 30)
-        .resource('r2')
+        .resource(r2)
         .recurrent('DAILY')
         .build();
       const originalRecurringEventOccurrence = EventBuilder.new(adapter)

@@ -1,5 +1,4 @@
 import {
-  SchedulerResourceId,
   RecurringEventPresetKey,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-headless/models';
@@ -16,6 +15,7 @@ import { getWeekDayCode } from '@mui/x-scheduler-headless/internals/utils/recurr
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
 import { adapter as defaultAdapter } from './adapters';
+import { ResourceBuilder } from './resource-builder';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
 export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
@@ -79,9 +79,9 @@ export class EventBuilder {
     return this;
   }
 
-  /** Associate a resource id. */
-  resource(resourceId?: SchedulerResourceId) {
-    this.event.resource = resourceId;
+  /** Associate a resource from a ResourceBuilder instance. */
+  resource(builder: ResourceBuilder) {
+    this.event.resource = builder.getId();
     return this;
   }
 
