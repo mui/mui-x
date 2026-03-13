@@ -56,7 +56,6 @@ export interface ScatterChartProProps
       | 'onItemClick'
       | 'slots'
       | 'slotProps'
-      | 'experimentalFeatures'
       | 'highlightedAxis'
       | 'onHighlightedAxisChange'
     > {
@@ -202,6 +201,10 @@ ScatterChartPro.propTypes = {
    * @default false
    */
   disableVoronoi: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * Option to display a cartesian grid in the background.
    */

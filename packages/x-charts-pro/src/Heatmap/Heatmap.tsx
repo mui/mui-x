@@ -86,7 +86,6 @@ export interface HeatmapProps
       | 'skipAnimation'
       | 'slots'
       | 'slotProps'
-      | 'experimentalFeatures'
       | 'highlightedAxis'
       | 'onHighlightedAxisChange'
       | 'seriesConfig'
@@ -242,6 +241,10 @@ Heatmap.propTypes = {
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

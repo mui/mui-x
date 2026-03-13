@@ -78,7 +78,6 @@ createTheme({
     },
     MuiChartsDataProvider: {
       defaultProps: {
-        experimentalFeatures: { preferStrictDomainInLineCharts: true },
         // @ts-expect-error invalid MuiChartsDataProvider prop
         someRandomProp: true,
       },
@@ -86,7 +85,6 @@ createTheme({
     // @deprecated Use MuiChartsDataProvider instead
     MuiChartDataProvider: {
       defaultProps: {
-        experimentalFeatures: { preferStrictDomainInLineCharts: true },
         // @ts-expect-error invalid MuiChartDataProvider prop
         someRandomProp: true,
       },

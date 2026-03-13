@@ -1,11 +1,7 @@
 import { type ChartPluginSignature } from '../../models';
 
-export interface ChartExperimentalFeatures {
-  /**
-   * Default domainLimit to strict for line chart x-axis.
-   */
-  preferStrictDomainInLineCharts?: boolean;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ChartExperimentalFeatures {}
 
 export interface UseChartExperimentalFeaturesParameters {
   /**

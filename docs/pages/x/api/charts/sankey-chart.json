@@ -7,9 +7,7 @@
       "default": "rainbowSurgePalette"
     },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
-    },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {
