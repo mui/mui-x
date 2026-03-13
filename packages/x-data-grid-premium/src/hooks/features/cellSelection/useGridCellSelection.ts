@@ -1115,8 +1115,7 @@ export const useGridCellSelection = (
 
     // Check if this is a single-row multi-column selection
     const isSingleRowMultiColumn =
-      selectedCells.length > 1 &&
-      [...cellsByField.values()].every((cells) => cells.length === 1);
+      selectedCells.length > 1 && [...cellsByField.values()].every((cells) => cells.length === 1);
 
     if (isSingleRowMultiColumn) {
       // All cells are in the same row — extend down by one row
@@ -1285,8 +1284,7 @@ export const useGridCellSelection = (
     }
 
     // Check if single-column multi-row selection (extend right by one column)
-    const isSingleColumnMultiRow =
-      [...cellsByRow.values()].every((cells) => cells.length === 1);
+    const isSingleColumnMultiRow = [...cellsByRow.values()].every((cells) => cells.length === 1);
 
     if (isSingleColumnMultiRow) {
       const firstCell = selectedCells[0];
