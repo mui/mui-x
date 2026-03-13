@@ -43,6 +43,33 @@ export function resolveResourceProperty<T>(
   return fallback;
 }
 
+const resourceDepthLookupSelector = createSelectorMemoized(
+  resourceParentIdLookupSelector,
+  (state: State) => state.processedResourceLookup,
+  (parentLookup, processedResourceLookup) => {
+    const result: Map<SchedulerResourceId, number> = new Map();
+    const cache = new Map<string, number>();
+
+    const getDepth = (resourceId: string): number => {
+      const cached = cache.get(resourceId);
+      if (cached !== undefined) {
+        return cached;
+      }
+
+      const parentId = parentLookup.get(resourceId);
+      const depth = parentId ? getDepth(parentId) + 1 : 0;
+      cache.set(resourceId, depth);
+      return depth;
+    };
+
+    for (const resourceId of processedResourceLookup.keys()) {
+      result.set(resourceId, getDepth(resourceId));
+    }
+
+    return result;
+  },
+);
+
 export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
@@ -104,6 +131,12 @@ export const schedulerResourceSelectors = {
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   ),
   resourceParentIdLookup: resourceParentIdLookupSelector,
+  resourceDepthLookup: resourceDepthLookupSelector,
+  resourceDepth: createSelector(
+    resourceDepthLookupSelector,
+    (resourceDepthLookup, resourceId: SchedulerResourceId) =>
+      resourceDepthLookup.get(resourceId) ?? 0,
+  ),
   idList: createSelector((state: State) => state.resourceIdList),
   visibleMap: createSelectorMemoized(
     (state: State) => state.visibleResources,

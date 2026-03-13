@@ -89,14 +89,14 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `latest`.
+In `package.json`, change the version of the charts package to `next`.
 
 ```diff
 -"@mui/x-charts": "^8.x.x",
-+"@mui/x-charts": "latest",
++"@mui/x-charts": "next",
 
 -"@mui/x-charts-pro": "^8.x.x",
-+"@mui/x-charts-pro": "latest",
++"@mui/x-charts-pro": "next",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
