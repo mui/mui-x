@@ -1,7 +1,7 @@
 import type * as React from 'react';
-import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from './useAnimate';
 import type { BarLabelProps } from '../../BarChart';
+import { createInterpolator } from './common';
 
 type UseAnimateBarLabelParams = Pick<
   BarLabelProps,
@@ -12,21 +12,10 @@ type UseAnimateBarLabelParams = Pick<
 type UseAnimateBarLabelReturn = {
   ref: React.Ref<SVGTextElement>;
 } & Pick<BarLabelProps, 'x' | 'y' | 'width' | 'height'>;
-type BarLabelInterpolatedProps = Pick<UseAnimateBarLabelParams, 'x' | 'y' | 'width' | 'height'>;
-
-function barLabelPropsInterpolator(from: BarLabelInterpolatedProps, to: BarLabelInterpolatedProps) {
-  const interpolateX = interpolateNumber(from.x, to.x);
-  const interpolateY = interpolateNumber(from.y, to.y);
-  const interpolateWidth = interpolateNumber(from.width, to.width);
-  const interpolateHeight = interpolateNumber(from.height, to.height);
-
-  return (t: number) => ({
-    x: interpolateX(t),
-    y: interpolateY(t),
-    width: interpolateWidth(t),
-    height: interpolateHeight(t),
-  });
-}
+export type BarLabelInterpolatedProps = Pick<
+  UseAnimateBarLabelParams,
+  'x' | 'y' | 'width' | 'height'
+>;
 
 /**
  * Animates a bar label from the start of the axis (x-axis for vertical layout, y-axis for horizontal layout) to the
@@ -55,7 +44,7 @@ export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateB
   };
 
   return useAnimate(currentProps, {
-    createInterpolator: barLabelPropsInterpolator,
+    createInterpolator: createInterpolator<BarLabelInterpolatedProps>,
     transformProps: (p) => p,
     applyProps(element, animatedProps) {
       element.setAttribute('x', animatedProps.x.toString());
