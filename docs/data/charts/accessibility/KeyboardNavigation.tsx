@@ -68,8 +68,7 @@ export default function KeyboardNavigation() {
             const element = chartRef.current?.querySelector(
               '[tabindex="0"]',
             ) as HTMLElement;
-            console.log(chartRef.current, element);
-            element.focus();
+            element?.focus();
           }}
           variant="contained"
         >
