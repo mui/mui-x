@@ -1,17 +1,12 @@
 import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { getDateKey, TimeoutManager } from '@mui/x-scheduler-headless/internals';
+import { RequestStatus } from '@mui/x-internals/requestStatus';
 
 const MAX_CONCURRENT_REQUESTS = 3;
 const MAX_QUEUED_REQUESTS = 3;
 const DEBOUNCE_MS = 150;
 
-export enum RequestStatus {
-  QUEUED,
-  PENDING,
-  SETTLED,
-  UNKNOWN,
-}
 
 export interface DateRange {
   start: TemporalSupportedObject;

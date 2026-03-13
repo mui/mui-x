@@ -1,4 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
+import { RequestStatus } from '@mui/x-internals/requestStatus';
 import {
   GRID_ROOT_GROUP_ID,
   type GridGroupNode,
@@ -10,12 +11,6 @@ import type { GridPrivateApiPro } from '../../../models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
-export enum RequestStatus {
-  QUEUED,
-  PENDING,
-  SETTLED,
-  UNKNOWN,
-}
 
 /**
  * Fetches row children from the server with option to limit the number of concurrent requests

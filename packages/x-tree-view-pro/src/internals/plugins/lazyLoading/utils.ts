@@ -1,14 +1,9 @@
 import { TreeViewItemId } from '@mui/x-tree-view/models';
+import { RequestStatus } from '@mui/x-internals/requestStatus';
 import { TreeViewLazyLoadingPlugin } from './TreeViewLazyLoadingPlugin';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
-export enum RequestStatus {
-  QUEUED,
-  PENDING,
-  SETTLED,
-  UNKNOWN,
-}
 
 /**
  * Fetches row children from the server with option to limit the number of concurrent requests
