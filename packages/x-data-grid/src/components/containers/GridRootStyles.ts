@@ -649,7 +649,7 @@ export const GridRootStyles = styled('div', {
       '&.Mui-selected': selectedStyles,
     },
 
-    [`& .${c.cell} > *`]: {
+    [`& .${c.cell} > span`]: {
       display: 'block',
       flex: '1 1 auto',
       minWidth: '0',
