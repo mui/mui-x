@@ -144,6 +144,17 @@ export type CartesianChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
+/**
+ * Extracts series types whose itemIdentifier includes a `dataIndex` property.
+ * This prevents accidentally using dataIndex-based cleaners/serializers
+ * for series types that use different identifier properties (e.g., heatmap uses xIndex/yIndex).
+ */
+export type SeriesTypeWithDataIndex = {
+  [K in ChartSeriesType]: 'dataIndex' extends keyof ChartsSeriesConfig[K]['itemIdentifier']
+    ? K
+    : never;
+}[ChartSeriesType];
+
 export type PolarChartSeriesType = keyof Pick<
   ChartsSeriesConfig,
   {
@@ -158,26 +169,30 @@ export type StackableChartSeriesType = keyof Pick<
   }[ChartSeriesType]
 >;
 
-export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T]['seriesInput'];
+export type ChartSeries<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType]['seriesInput'];
 
-export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
-  canBeStacked: true;
-}
-  ? ChartsSeriesConfig[T]['series'] & {
-      visibleStackedData: [number, number][];
-      stackedData: [number, number][];
-    }
-  : ChartsSeriesConfig[T]['series'];
+export type ChartSeriesDefaultized<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends {
+    canBeStacked: true;
+  }
+    ? ChartsSeriesConfig[SeriesType]['series'] & {
+        visibleStackedData: [number, number][];
+        stackedData: [number, number][];
+      }
+    : ChartsSeriesConfig[SeriesType]['series'];
 
-export type ChartSeriesLayout<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends any
-  ? ChartsSeriesConfig[T]['seriesLayout']
-  : never;
+export type ChartSeriesLayout<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends any
+    ? ChartsSeriesConfig[SeriesType]['seriesLayout']
+    : never;
 
 export type DatasetElementType<T> = {
   [key: string]: T;
 };
 export type DatasetType<T = unknown> = DatasetElementType<T>[];
 
-export type HighlightScope<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends any
-  ? ChartsSeriesConfig[T]['highlightScope']
-  : never;
+export type HighlightScope<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends any
+    ? ChartsSeriesConfig[SeriesType]['highlightScope']
+    : never;

@@ -7,11 +7,13 @@ import * as renameChartZoomSlider from '../rename-chart-zoom-slider';
 import * as replaceHeatmapHideLegend from '../replace-heatmap-hide-legend-false';
 import * as renameSankeyChart from '../rename-sankey-chart';
 import * as replaceShowMarkDefault from '../replace-show-mark-default';
+import * as removeEnableKeyboardNavigation from '../remove-enable-keyboard-navigation';
 
 const allModules = [
   // Add other transforms here as they are created
   replaceHeatmapHideLegend,
   replaceShowMarkDefault,
+  removeEnableKeyboardNavigation,
   renameIdToSeriesId,
   renameChartApiImport,
   renameSankeyChart,

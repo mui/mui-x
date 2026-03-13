@@ -4,26 +4,31 @@ import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
-import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import {
+  type RadarSeriesPlotClasses,
+  useUtilityClasses as useDeprecatedUtilityClasses,
+} from './radarSeriesPlotClasses';
+import { useUtilityClasses } from '../radarClasses';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import type { HighlightItemIdentifierWithType, SeriesId } from '../../models/seriesType';
+import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
+import type { HighlightState } from '../../hooks/useItemHighlightState';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
-  isHighlighted: (item: HighlightItemIdentifierWithType<'radar'> | null) => boolean;
+  getHighlightState: (item: HighlightItemIdentifierWithType<'radar'> | null) => HighlightState;
   points: { x: number; y: number }[];
   fillArea?: boolean;
   color: string;
 }
 
 export function getPathProps(params: GetPathPropsParams) {
-  const { isHighlighted, isFaded, seriesId, classes, points, fillArea, color } = params;
-  const isItemHighlighted = isHighlighted({ type: 'radar', seriesId });
-  const isItemFaded = !isItemHighlighted && isFaded({ type: 'radar', seriesId });
+  const { getHighlightState, seriesId, classes, points, fillArea, color } = params;
+  const highlightState = getHighlightState({ type: 'radar', seriesId });
+  const isItemHighlighted = highlightState === 'highlighted';
+  const isItemFaded = highlightState === 'faded';
 
   return {
     d: getAreaPath(points),
@@ -47,9 +52,15 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { isFaded, isHighlighted } = useItemHighlightedGetter<'radar'>();
+  const getHighlightState = useItemHighlightStateGetter<'radar'>();
 
-  const classes = useUtilityClasses(props.classes);
+  const newClasses = useUtilityClasses();
+  const deprecatedClasses = useDeprecatedUtilityClasses(props.classes);
+  const classes = {
+    ...deprecatedClasses,
+    area: `${newClasses.seriesArea} ${deprecatedClasses.area}`,
+    mark: `${newClasses.seriesMark} ${deprecatedClasses.mark}`,
+  };
   return (
     <React.Fragment>
       {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea, hidden }, seriesIndex) => {
@@ -65,8 +76,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               points,
               color,
               fillArea,
-              isFaded,
-              isHighlighted,
+              getHighlightState,
               classes,
             })}
             onClick={(event) =>

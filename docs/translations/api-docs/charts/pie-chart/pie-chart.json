@@ -5,6 +5,9 @@
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },

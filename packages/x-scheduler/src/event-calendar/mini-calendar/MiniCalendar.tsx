@@ -6,7 +6,8 @@ import { alpha, styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   schedulerNowSelectors,
@@ -156,7 +157,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
   function MiniCalendar(props, forwardedRef) {
     const { className, ...other } = props;
 
-    const adapter = useAdapter();
+    const adapter = useAdapterContext();
     const store = useEventCalendarStoreContext();
     const { classes, localeText } = useEventCalendarStyledContext();
 

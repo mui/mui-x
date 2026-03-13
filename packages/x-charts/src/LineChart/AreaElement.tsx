@@ -7,7 +7,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
+import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
 import { type SeriesId } from '../models/seriesType/common';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
@@ -132,7 +132,9 @@ function AreaElement(props: AreaElementProps) {
 
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
   const interactionProps = useInteractionItemProps(identifier);
-  const { isFaded, isHighlighted } = useItemHighlighted(identifier);
+  const highlightState = useItemHighlightState(identifier);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
 
   const ownerState = {
     seriesId,
@@ -142,7 +144,7 @@ function AreaElement(props: AreaElementProps) {
     isFaded,
     isHighlighted,
   };
-  const classes = useLineUtilityClasses({ classes: innerClasses });
+  const classes = useLineUtilityClasses();
   const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Area = slots?.area ?? AnimatedArea;

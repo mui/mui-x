@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import type { SankeyLayoutNode } from './sankey.types';
 import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
 import type { SeriesId } from '../models';
+import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyNodeLabelProps {
   /**
@@ -38,6 +39,8 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
 
     const labelAnchor = isRightSide ? 'start' : 'end';
 
+    const classes = useUtilityClasses();
+
     const highlightState = useSankeyNodeHighlightState(
       React.useMemo(
         () => ({
@@ -64,6 +67,7 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
     return (
       <text
         ref={ref}
+        className={classes.nodeLabel}
         x={labelX}
         y={(y0 + y1) / 2}
         textAnchor={labelAnchor}
