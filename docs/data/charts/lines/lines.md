@@ -23,7 +23,7 @@ Each line usually represents one series, so you can compare multiple variables o
 A line chart series must include a `data` property with an array of numbers.
 That array holds the y-values.
 
-Use the `xAxis` prop to specify x-values.
+Specify x-values by setting the `data` property in the `xAxis` prop.
 The axis can use any `scaleType`, and its `data` should have the same length as the series.
 
 By default, those y-values are paired with integers starting from 0 (0, 1, 2, 3, …).
@@ -36,7 +36,7 @@ When your data lives in an array of objects, use the `dataset` prop.
 It accepts an array of objects, for example `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
 
 Use the `dataKey` property to reference that data from your series and axis definitions.
-For example, `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+For example, `xAxis={[{ dataKey: 'x' }]}` or `series={[{ dataKey: 'y' }]}`.
 
 The demo below plots the evolution of world electricity production by source.
 
