@@ -53,6 +53,7 @@ const useUtilityClasses = (
 
 const styleArg = ({ theme }: { theme: Theme }) => ({
   ...theme.typography.caption,
+  display: 'block',
   width: DAY_SIZE,
   height: DAY_SIZE,
   borderRadius: '50%',
