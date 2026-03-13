@@ -1,9 +1,9 @@
 import { useRadiusAxes, useRotationAxes, useSeries, useXAxes, useYAxes } from '../../../hooks';
-import { useFocusedItem } from '../../../hooks/useFocusedItem';
 import { useStore } from '../../store/useStore';
 import { selectorChartSeriesConfig } from '../../plugins/corePlugins/useChartSeriesConfig';
 import { isCartesianSeries } from '../../isCartesian';
 import { isPolarSeriesType } from '../../isPolar';
+import { selectorChartsFocusedOrToFocusedItem } from '../../plugins/featurePlugins/useChartKeyboardNavigation';
 
 /**
  * Get the message associated to the focused item.
@@ -11,7 +11,7 @@ import { isPolarSeriesType } from '../../isPolar';
  */
 export function useDescription(): string | null {
   const store = useStore();
-  const focusedItem = useFocusedItem();
+  const focusedItem = store.use(selectorChartsFocusedOrToFocusedItem);
   const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const seriesState = useSeries();

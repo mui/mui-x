@@ -43,6 +43,16 @@ export const selectorChartsFocusedItem = createSelector(
     keyboardNavigationState?.isFocused === true ? (keyboardNavigationState?.item ?? null) : null,
 );
 
+/**
+ * The item that is either
+ * - currently focused 
+ * - will be focused when user focuses the chart
+ */
+export const selectorChartsFocusedOrToFocusedItem = createSelector(
+  selectKeyboardNavigation,
+  (keyboardNavigationState) => keyboardNavigationState?.item ?? null,
+);
+
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState) => !!keyboardNavigationState?.enabled,
