@@ -13,11 +13,11 @@ New and experimental features are prefixed with `unstable_` and may be removed, 
 ## How to use the API object
 
 The API object is accessible through the `apiRef` variable.
-To access this variable, use `useGridApiContext` (inside `DataGrid`) or `useGridApiRef` (outside `DataGrid`).
+To access this variable, use `useGridApiContext()` (inside `DataGrid`) or `useGridApiRef()` (outside `DataGrid`).
 
 ### Inside the Data Grid
 
-To access the API object inside component slots or inside renders (for instance, `renderCell` or `renderHeader`), use the `useGridApiContext` hook.
+To access the API object inside component slots or inside renders (for instance, `renderCell()` or `renderHeader()`), use the `useGridApiContext()` hook.
 The snippet below renders `Button` inside the Grid's `GridToolbarContainer`:
 
 ```tsx
@@ -33,14 +33,14 @@ function CustomToolbar() {
 ```
 
 :::info
-You don't need to initialize the API object using `useGridApiRef` to be able to use it inside Data Grid components.
+You don't need to initialize the API object using `useGridApiRef()` to be able to use it inside Data Grid components.
 :::
 
 {{"demo": "UseGridApiContext.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Outside the Data Grid
 
-When using the API object outside Data Grid components, you must initialize it using the `useGridApiRef` hook.
+When using the API object outside Data Grid components, you must initialize it using the `useGridApiRef()` hook.
 You can then pass it to the `apiRef` prop on the `DataGrid`:
 
 ```tsx

@@ -18,17 +18,20 @@ import {
   generateOccurrenceFromEvent,
   useElementPositionInCollection,
 } from '@mui/x-scheduler-headless/internals';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
 
 const overflowStateAttributesMapping = {
-  startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
-  endingAfterEdge: (value: boolean) => (value ? { 'data-ending-after-edge': '' } : null),
+  startingBeforeEdge: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.startingBeforeEdge]: '' } : null,
+  endingAfterEdge: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.endingAfterEdge]: '' } : null,
 };
 
 export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
@@ -56,7 +59,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const isInteractive = true;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
   const { getCursorPositionInElementMs } = useTimelineGridEventRowContext();
 

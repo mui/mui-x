@@ -3,9 +3,12 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
+import {
+  TreeViewDefaultItemModelProperties,
+  TreeViewItemId,
+} from '@mui/x-tree-view/models';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -37,7 +40,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 
 const getAllItemItemIds = () => {
   const ids: TreeViewItemId[] = [];
-  const registerItemId = (item: TreeViewBaseItem) => {
+  const registerItemId = (item: TreeViewDefaultItemModelProperties) => {
     ids.push(item.id);
     item.children?.forEach(registerItemId);
   };

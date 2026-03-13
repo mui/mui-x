@@ -28,7 +28,9 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
 
   useEnhancedEffect(() => {
     if (store.state.tooltip.item !== params.tooltipItem) {
-      const newItem = params.tooltipItem ? instance.identifierWithType(params.tooltipItem) : null;
+      const newItem = params.tooltipItem
+        ? instance.identifierWithType(params.tooltipItem, 'seriesItem')
+        : null;
 
       if (
         store.state.tooltip.item === null || newItem === null
@@ -42,7 +44,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
   }, [store, instance, params.tooltipItem]);
 
   const removeTooltipItem = useEventCallback(function removeTooltipItem(
-    itemToRemove?: SeriesItemIdentifier<ChartSeriesType>,
+    itemToRemove?: SeriesItemIdentifier<SeriesType>,
   ) {
     const prevItem = store.state.tooltip.item;
 
@@ -50,7 +52,11 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
       return; // Already null, nothing to do
     }
 
-    if (!itemToRemove || fastObjectShallowCompare(prevItem, itemToRemove)) {
+    if (
+      !itemToRemove ||
+      instance.serializeIdentifier(prevItem) ===
+        instance.serializeIdentifier(instance.identifierWithType(itemToRemove, 'seriesItem'))
+    ) {
       // Remove the item is either
       // - no item provided, so we unconditionally remove it
       // - the provided item matches the current one

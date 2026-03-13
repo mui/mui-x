@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAdapter } from '../../use-adapter/useAdapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
 
 // Fixed 24h grid (visual time, not real-time duration)
@@ -10,7 +10,7 @@ export function useElementPositionInCollection(
 ): useElementPositionInCollection.ReturnValue {
   const { start, end, collectionStart, collectionEnd } = parameters;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
 
   return React.useMemo(() => {
     const startDayIndex = adapter.differenceInDays(

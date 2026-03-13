@@ -15,7 +15,6 @@ import {
   getFieldSectionsContainer,
   getTextbox,
 } from 'test/utils/pickers';
-import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -481,43 +480,40 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     // test:unit does not call `blur` when focusing another element.
-    it.skipIf(isJSDOM)(
-      'should call onClose when blur the current field without prior change (multi input field)',
-      async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+    it('should call onClose when blur the current field without prior change (multi input field)', async () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
 
-        const { user } = render(
-          <React.Fragment>
-            <DesktopDateRangePicker
-              onChange={onChange}
-              onAccept={onAccept}
-              onClose={onClose}
-              slots={{ field: MultiInputDateRangeField }}
-            />
-            <button type="button" id="test">
-              focus me
-            </button>
-          </React.Fragment>,
-        );
+      const { user } = render(
+        <React.Fragment>
+          <DesktopDateRangePicker
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            slots={{ field: MultiInputDateRangeField }}
+          />
+          <button type="button" id="test">
+            focus me
+          </button>
+        </React.Fragment>,
+      );
 
-        await openPickerAsync(user, {
-          type: 'date-range',
-          initialFocus: 'start',
-          fieldType: 'multi-input',
-        });
-        expect(screen.getByRole('tooltip')).toBeVisible();
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'multi-input',
+      });
+      expect(screen.getByRole('tooltip')).toBeVisible();
 
-        await act(async () => document.querySelector<HTMLButtonElement>('#test')!.focus());
+      await act(async () => document.querySelector<HTMLButtonElement>('#test')!.focus());
 
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
-        await waitFor(() => {
-          expect(onClose.callCount).to.equal(1);
-        });
-      },
-    );
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      await waitFor(() => {
+        expect(onClose.callCount).to.equal(1);
+      });
+    });
 
     it('should call onClose and onAccept when blur the current field (multi input field)', async () => {
       const onChange = spy();

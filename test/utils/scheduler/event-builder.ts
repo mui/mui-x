@@ -5,6 +5,7 @@ import {
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
+  SchedulerEventColor,
   SchedulerEventCreationProperties,
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -123,6 +124,11 @@ export class EventBuilder {
   /** Set the display timezone for processed events. */
   withDisplayTimezone(timezone: TemporalTimezone) {
     this.displayTimezone = timezone;
+    return this;
+  }
+
+  color(color: SchedulerEventColor) {
+    this.event.color = color;
     return this;
   }
 
