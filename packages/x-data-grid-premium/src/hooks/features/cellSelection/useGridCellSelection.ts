@@ -9,6 +9,7 @@ import {
   getTotalHeaderHeight,
   getVisibleRows,
   isFillDownShortcut,
+  isFillRightShortcut,
   isNavigationKey,
   serializeCellValue,
   useGridRegisterPipeProcessor,
@@ -1112,6 +1113,60 @@ export const useGridCellSelection = (
       return;
     }
 
+    // Check if this is a single-row multi-column selection
+    const isSingleRowMultiColumn =
+      selectedCells.length > 1 &&
+      [...cellsByField.values()].every((cells) => cells.length === 1);
+
+    if (isSingleRowMultiColumn) {
+      // All cells are in the same row — extend down by one row
+      const firstCell = selectedCells[0];
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(firstCell.id);
+      const nextRowIndex = rowIndex + 1;
+      if (nextRowIndex >= visibleRows.rows.length) {
+        return;
+      }
+      const nextRowId = visibleRows.rows[nextRowIndex].id;
+
+      apiRef.current.publishEvent('clipboardPasteStart', { data: fillDownSourceData });
+
+      const cellUpdater = new CellValueUpdater({
+        apiRef,
+        processRowUpdate: props.processRowUpdate,
+        onProcessRowUpdateError: props.onProcessRowUpdateError,
+        getRowId: props.getRowId,
+      });
+
+      const newSelectionModel: Record<GridRowId, Record<string, boolean>> = {};
+      for (const [field, cells] of cellsByField) {
+        const colDef = apiRef.current.getColumn(field);
+        if (!colDef?.editable) {
+          continue;
+        }
+        const sourceValue = serializeCellForClipboard(cells[0].id, field);
+        cellUpdater.updateCell({ rowId: nextRowId, field, pastedCellValue: sourceValue });
+        if (!newSelectionModel[nextRowId]) {
+          newSelectionModel[nextRowId] = {};
+        }
+        newSelectionModel[nextRowId][field] = true;
+      }
+
+      cellUpdater.applyUpdates();
+      apiRef.current.setCellSelectionModel(newSelectionModel);
+
+      // Focus first editable cell in the filled row
+      const firstEditableField = [...cellsByField.keys()].find(
+        (f) => apiRef.current.getColumn(f)?.editable,
+      );
+      if (firstEditableField) {
+        const colIndex = apiRef.current.getColumnIndex(firstEditableField);
+        apiRef.current.scrollToIndexes({ rowIndex: nextRowIndex, colIndex });
+        apiRef.current.setCellFocus(nextRowId, firstEditableField);
+        cellWithVirtualFocus.current = { id: nextRowId, field: firstEditableField };
+      }
+      return;
+    }
+
     let cellUpdater: CellValueUpdater | null = null;
 
     // Multiple cells selected: for each column, top row = source, remaining = targets
@@ -1162,11 +1217,174 @@ export const useGridCellSelection = (
     cellUpdater?.applyUpdates();
   });
 
+  // Fill handle: Ctrl+R to fill right
+  const handleFillRightKeyDown = useEventCallback<
+    [GridEventLookup['cellKeyDown']['params'], GridEventLookup['cellKeyDown']['event']],
+    void
+  >((_params, event) => {
+    if (!isFillRightShortcut(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    (event as any).defaultMuiPrevented = true;
+
+    const selectedCells = apiRef.current.getSelectedCellsAsArray();
+    if (selectedCells.length === 0) {
+      return;
+    }
+
+    const visibleColumns = apiRef.current.getVisibleColumns();
+    const columnFieldToIndex = new Map(visibleColumns.map((col, i) => [col.field, i]));
+
+    // Group selected cells by row
+    const cellsByRow = new Map<GridRowId, { id: GridRowId; field: string }[]>();
+    for (const cell of selectedCells) {
+      const list = cellsByRow.get(cell.id) ?? [];
+      list.push(cell);
+      cellsByRow.set(cell.id, list);
+    }
+
+    if (selectedCells.length === 1) {
+      // Single cell: extend selection right by one column and fill
+      const cell = selectedCells[0];
+      const colIndex = columnFieldToIndex.get(cell.field) ?? -1;
+      const nextColIndex = colIndex + 1;
+      if (nextColIndex >= visibleColumns.length) {
+        return;
+      }
+      const nextField = visibleColumns[nextColIndex].field;
+      const nextColDef = apiRef.current.getColumn(nextField);
+      if (!nextColDef?.editable) {
+        return;
+      }
+
+      const sourceValue = serializeCellForClipboard(cell.id, cell.field);
+
+      apiRef.current.publishEvent('clipboardPasteStart', {
+        data: [[sourceValue]],
+      });
+
+      const cellUpdater = new CellValueUpdater({
+        apiRef,
+        processRowUpdate: props.processRowUpdate,
+        onProcessRowUpdateError: props.onProcessRowUpdateError,
+        getRowId: props.getRowId,
+      });
+
+      cellUpdater.updateCell({ rowId: cell.id, field: nextField, pastedCellValue: sourceValue });
+      cellUpdater.applyUpdates();
+
+      // Move selection and focus to the filled cell
+      apiRef.current.setCellSelectionModel({ [cell.id]: { [nextField]: true } });
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(cell.id);
+      apiRef.current.scrollToIndexes({ rowIndex, colIndex: nextColIndex });
+      apiRef.current.setCellFocus(cell.id, nextField);
+      cellWithVirtualFocus.current = { id: cell.id, field: nextField };
+      return;
+    }
+
+    // Check if single-column multi-row selection (extend right by one column)
+    const isSingleColumnMultiRow =
+      [...cellsByRow.values()].every((cells) => cells.length === 1);
+
+    if (isSingleColumnMultiRow) {
+      const firstCell = selectedCells[0];
+      const colIndex = columnFieldToIndex.get(firstCell.field) ?? -1;
+      const nextColIndex = colIndex + 1;
+      if (nextColIndex >= visibleColumns.length) {
+        return;
+      }
+      const nextField = visibleColumns[nextColIndex].field;
+      const nextColDef = apiRef.current.getColumn(nextField);
+      if (!nextColDef?.editable) {
+        return;
+      }
+
+      apiRef.current.publishEvent('clipboardPasteStart', {
+        data: [...cellsByRow.entries()].map(([, cells]) => [
+          serializeCellForClipboard(cells[0].id, cells[0].field),
+        ]),
+      });
+
+      const cellUpdater = new CellValueUpdater({
+        apiRef,
+        processRowUpdate: props.processRowUpdate,
+        onProcessRowUpdateError: props.onProcessRowUpdateError,
+        getRowId: props.getRowId,
+      });
+
+      const newSelectionModel: Record<GridRowId, Record<string, boolean>> = {};
+      for (const [rowId, cells] of cellsByRow) {
+        const sourceValue = serializeCellForClipboard(cells[0].id, cells[0].field);
+        cellUpdater.updateCell({ rowId, field: nextField, pastedCellValue: sourceValue });
+        if (!newSelectionModel[rowId]) {
+          newSelectionModel[rowId] = {};
+        }
+        newSelectionModel[rowId][nextField] = true;
+      }
+
+      cellUpdater.applyUpdates();
+      apiRef.current.setCellSelectionModel(newSelectionModel);
+      return;
+    }
+
+    // Multiple cells per row: for each row, leftmost = source, rest = targets
+    let cellUpdater: CellValueUpdater | null = null;
+
+    for (const [rowId, cells] of cellsByRow) {
+      // Sort cells by column index
+      const sortedCells = cells
+        .map((cell) => ({ ...cell, colIndex: columnFieldToIndex.get(cell.field) ?? 0 }))
+        .sort((a, b) => a.colIndex - b.colIndex);
+
+      if (sortedCells.length < 2) {
+        continue;
+      }
+
+      const sourceCell = sortedCells[0];
+      const sourceValue = serializeCellForClipboard(sourceCell.id, sourceCell.field);
+
+      if (!cellUpdater) {
+        apiRef.current.publishEvent('clipboardPasteStart', {
+          data: [...cellsByRow.entries()].map(([, rowCells]) => {
+            const sorted = rowCells
+              .map((c) => ({ ...c, colIndex: columnFieldToIndex.get(c.field) ?? 0 }))
+              .sort((a, b) => a.colIndex - b.colIndex);
+            return [serializeCellForClipboard(sorted[0].id, sorted[0].field)];
+          }),
+        });
+        cellUpdater = new CellValueUpdater({
+          apiRef,
+          processRowUpdate: props.processRowUpdate,
+          onProcessRowUpdateError: props.onProcessRowUpdateError,
+          getRowId: props.getRowId,
+        });
+      }
+
+      // Fill all cells to the right of the source
+      for (let i = 1; i < sortedCells.length; i += 1) {
+        const colDef = apiRef.current.getColumn(sortedCells[i].field);
+        if (!colDef?.editable) {
+          continue;
+        }
+        cellUpdater.updateCell({
+          rowId,
+          field: sortedCells[i].field,
+          pastedCellValue: sourceValue,
+        });
+      }
+    }
+
+    cellUpdater?.applyUpdates();
+  });
+
   useGridEvent(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleFillHandleMouseDown));
   useGridEvent(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
   useGridEvent(apiRef, 'cellFocusIn', runIfCellSelectionIsEnabled(handleCellFocusIn));
   useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleCellKeyDown));
   useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleFillKeyDown));
+  useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleFillRightKeyDown));
   useGridEvent(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleCellMouseDown));
   useGridEvent(apiRef, 'cellMouseOver', runIfCellSelectionIsEnabled(handleCellMouseOver));
 
