@@ -19,6 +19,7 @@ export interface HeatmapItemSlotProps {
 }
 
 export interface HeatmapItemProps {
+  dataIndex: number;
   seriesId: SeriesId;
   value: number;
   width: number;
@@ -46,6 +47,7 @@ export interface HeatmapItemProps {
 function HeatmapItem(props: HeatmapItemProps) {
   const {
     seriesId,
+    dataIndex,
     color,
     value,
     isHighlighted = false,
