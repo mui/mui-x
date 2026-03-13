@@ -3,7 +3,11 @@ import * as React from 'react';
 import { useChartId } from '../hooks';
 import { useDescription } from './useDescription';
 
-const visuallyHiddenStyle: React.CSSProperties = {
+/**
+ * Make the proxy looks like a layer.
+ * Having a non-zero size is important for some screen readers to announce the content.
+ */
+const fullSizeLayerStyle: React.CSSProperties = {
   borderWidth: 0,
   width: '100%',
   height: '100%',
@@ -15,6 +19,14 @@ const visuallyHiddenStyle: React.CSSProperties = {
   pointerEvents: 'none',
 };
 
+
+// The proxy is implemented by having two divs with the same content, and toggling the visibility of each one when the content changes.
+// The idea is to imitate the behavior of the focus moving from a list element to another, but with the minimal number of DOM elements.
+
+/**
+ * This component provides an accessibility proxy for charts.
+ * It uses two divs to let screen readers announce the focused content when it changes.
+ */
 export function ChartsAccessibilityProxy() {
   const message = useDescription();
   const chartId = useChartId();
@@ -100,7 +112,7 @@ export function ChartsAccessibilityProxy() {
       role="presentation"
       tabIndex={message ? undefined : 0}
       ref={containerRef}
-      style={visuallyHiddenStyle}
+      style={fullSizeLayerStyle}
     />
   );
 }

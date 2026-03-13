@@ -27,12 +27,11 @@ import {
 } from '../ChartsOverlay/ChartsOverlay';
 import { useBarChartProps } from './useBarChartProps';
 import { ChartDataProvider } from '../ChartDataProvider';
+import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { BarChartPluginSignatures } from './BarChart.plugins';
 import { FocusedBar } from './FocusedBar';
-import { ChartsLayerContainer } from '../ChartsLayerContainer';
-import { ChartsSvgLayer } from '../ChartsSvgLayer';
 
 export interface BarChartSlots
   extends
@@ -147,22 +146,18 @@ const BarChart = React.forwardRef(function BarChart(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsLayerContainer className={chartsSurfaceProps.className}>
-          <ChartsSvgLayer {...chartsSurfaceProps}>
-            <g aria-hidden>
-              <ChartsGrid {...gridProps} />
-              <g {...clipPathGroupProps}>
-                <BarPlot {...barPlotProps} />
-                <ChartsOverlay {...overlayProps} />
-                <ChartsAxisHighlight {...axisHighlightProps} />
-                <FocusedBar />
-              </g>
-              <ChartsAxis {...chartsAxisProps} />
-              <ChartsClipPath {...clipPathProps} />
-              {children}
-            </g>
-          </ChartsSvgLayer>
-        </ChartsLayerContainer>
+        <ChartsSurface {...chartsSurfaceProps} aria-hidden>
+          <ChartsGrid {...gridProps} />
+          <g {...clipPathGroupProps}>
+            <BarPlot {...barPlotProps} />
+            <ChartsOverlay {...overlayProps} />
+            <ChartsAxisHighlight {...axisHighlightProps} />
+            <FocusedBar />
+          </g>
+          <ChartsAxis {...chartsAxisProps} />
+          <ChartsClipPath {...clipPathProps} />
+          {children}
+        </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProvider>

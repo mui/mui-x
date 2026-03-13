@@ -55,7 +55,6 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     >();
     const propsWidth = store.use(selectorChartPropsWidth);
     const propsHeight = store.use(selectorChartPropsHeight);
-
     const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
 
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
