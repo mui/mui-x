@@ -79,37 +79,37 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should group single occurrence under a resource', () => {
-      const R1 = ResourceBuilder.new().id('R1').title('Resource 1').build();
+      const resource = ResourceBuilder.new().build();
 
       const event = EventBuilder.new()
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-        .resource(R1)
+        .resource(resource)
         .build();
 
       const state = getEventTimelinePremiumStateFromParameters({
         events: [event],
-        resources: [R1],
+        resources: [resource],
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response).to.have.length(1);
-      expect(response[0].resource.id).to.equal(R1.id);
+      expect(response[0].resource.id).to.equal(resource.id);
       expect(response[0].occurrences).to.have.length(1);
       expect(response[0].occurrences[0].id).to.equal(event.id);
     });
 
     it('should return empty occurrences for resources without matching events', () => {
-      const R1 = ResourceBuilder.new().id('R1').title('Resource 1').build();
-      const R2 = ResourceBuilder.new().id('R2').title('Resource 2').build();
+      const resource1 = ResourceBuilder.new().build();
+      const resource2 = ResourceBuilder.new().build();
 
       const event = EventBuilder.new()
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-        .resource(R1)
+        .resource(resource1)
         .build();
 
       const state = getEventTimelinePremiumStateFromParameters({
         events: [event],
-        resources: [R1, R2],
+        resources: [resource1, resource2],
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
@@ -118,13 +118,13 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should sort resources alphabetically by title', () => {
-      const R1 = ResourceBuilder.new().id('Z').title('Zoo').build();
-      const R2 = ResourceBuilder.new().id('A').title('Alpha').build();
-      const R3 = ResourceBuilder.new().id('M').title('Moon').build();
+      const zoo = ResourceBuilder.new().title('Zoo').build();
+      const alpha = ResourceBuilder.new().title('Alpha').build();
+      const moon = ResourceBuilder.new().title('Moon').build();
 
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        resources: [R1, R3, R2],
+        resources: [zoo, moon, alpha],
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
@@ -132,20 +132,20 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should group multiple occurrences under the same resource', () => {
-      const R1 = ResourceBuilder.new().id('R1').title('Alpha').build();
+      const resource = ResourceBuilder.new().build();
 
       const event1 = EventBuilder.new()
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-        .resource(R1)
+        .resource(resource)
         .build();
       const event2 = EventBuilder.new()
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-        .resource(R1)
+        .resource(resource)
         .build();
 
       const state = getEventTimelinePremiumStateFromParameters({
         events: [event1, event2],
-        resources: [R1],
+        resources: [resource],
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
@@ -155,17 +155,17 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should ignore occurrences that have no resource id', () => {
-      const R1 = ResourceBuilder.new().id('R1').title('Resource 1').build();
+      const resource = ResourceBuilder.new().build();
 
       const event1 = EventBuilder.new().singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR).build();
       const event2 = EventBuilder.new()
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-        .resource(R1)
+        .resource(resource)
         .build();
 
       const state = getEventTimelinePremiumStateFromParameters({
         events: [event1, event2],
-        resources: [R1],
+        resources: [resource],
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
@@ -200,19 +200,19 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should not include a resource in the list when visibleResources marks it as false', () => {
-      const R1 = ResourceBuilder.new().id('R1').title('Resource 1').build();
+      const resource = ResourceBuilder.new().build();
 
       const event = EventBuilder.new()
         .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-        .resource(R1)
+        .resource(resource)
         .build();
 
       const state = getEventTimelinePremiumStateFromParameters({
         events: [event],
-        resources: [R1],
+        resources: [resource],
       });
       // TODO: Use props.defaultVisibleResources when available
-      state.visibleResources = { [R1.id]: false };
+      state.visibleResources = { [resource.id]: false };
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response).to.have.length(0);
