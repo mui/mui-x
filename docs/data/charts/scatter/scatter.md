@@ -6,7 +6,7 @@ components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ChartsWrappe
 
 # Charts - Scatter
 
-<p class="description">Scatter charts plot two variables as points to reveal relationships, correlations, and outliers.</p>
+<p class="description">Use scatter charts to plot two variables as points and reveal relationships, correlations, and outliers.</p>
 
 ## Overview
 
@@ -26,8 +26,8 @@ Add an optional `id` when you need better optimization (for example, with animat
 
 ### Using a dataset
 
-When your data lives in an array of objects, use the `dataset` prop.
-It accepts an array of objects, for example `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
 
 Scatter series use a different pattern than other charts: use the `datasetKeys` property with an object that has required `x` and `y` keys.
 You can also include optional `id` and `z` keys.
@@ -49,7 +49,7 @@ Use `voronoiMaxRadius` with `"item"` to trigger interactions only when the point
 ## Click event
 
 The scatter chart provides an `onItemClick` handler for clicks on a specific point.
-It uses this signature:
+It uses the following signature:
 
 ```js
 const onItemClick = (
@@ -68,10 +68,10 @@ Otherwise, click behavior matches the [interaction section](#interaction), and t
 
 ### Color scale
 
-As with other chart types, you can change [series colors](/x/react-charts/styling/#colors) per series or via the color palette.
+As with other charts, you can modify the [series colors](/x/react-charts/styling/#colors) either directly, or with the color palette.
 
-You can also drive color from the axes with `colorMap`, which maps axis values to colors.
-Scatter charts resolve color in this order:
+You can also modify the color by using the axes' `colorMap`, which maps values to colors.
+Scatter charts use the following, in order of priority:
 
 1. The z-axis color
 2. The y-axis color
@@ -99,13 +99,13 @@ You can set the z value in three ways:
 
 :::
 
-See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for `colorMap` options.
+See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
 
 {{"demo": "ColorScale.js"}}
 
 ### Grid
 
-Use the `grid` prop to add a grid behind the chart.
+You can add a grid in the background of the chart with the `grid` prop.
 
 See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
@@ -113,7 +113,7 @@ See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
 ### CSS
 
-Target scatter markers with these CSS selectors:
+You can customize the scatter chart elements using CSS selectors:
 
 - `[data-series='<series ID>']`: the group of markers for the series with that ID
 - `[data-highlighted=true]`: markers in the highlighted state
@@ -121,7 +121,7 @@ Target scatter markers with these CSS selectors:
 
 Use the `scatterClasses.root` class to select all marker groups.
 
-The demo below customizes the highlighted style by series.
+The example below customizes the highlighted style by series.
 
 {{"demo": "ScatterCSSSelectors.js"}}
 
@@ -129,7 +129,7 @@ The demo below customizes the highlighted style by series.
 
 Pass a component to the `marker` slot to customize the shape of scatter points.
 
-To keep the legend and tooltip in sync with the custom shape, set the `labelMarkType` property on each series, as shown in the demo below.
+To keep the legend and tooltip in sync with the custom shape, set the `labelMarkType` property on each series, as shown in the example below.
 
 {{"demo": "ScatterCustomShape.js"}}
 
@@ -157,7 +157,7 @@ Scatter charts can have many points, which can slow down rendering.
 By default, points are drawn with SVG `circle` elements, which may be slow for large datasets.
 
 Set the `renderer` prop to `"svg-batch"` to draw circles in a more efficient way.
-This mode has some limitations:
+This has some trade-offs:
 
 - You cannot style individual circles with CSS
 - The `marker` slot cannot be overridden
@@ -169,7 +169,7 @@ Behavior also differs in a few ways:
 - Rendering order may change, so overlapping circles can appear at different depths than with the default renderer
 - When `disableVoronoi` is `true`, `onItemClick` does not run, because it depends on the Voronoi logic
 
-The demo below uses the `renderer` prop to render 16,000 points with better performance.
+The example below uses the `renderer` prop to render 16,000 points with better performance.
 
 {{"demo": "ScatterBatchRenderer.js"}}
 
@@ -179,7 +179,7 @@ Use `ChartsDataProvider` to supply `series`, `xAxis`, and `yAxis` when composing
 
 In addition to the shared components described in [Composition](/x/react-charts/composition/), you can use `ScatterPlot` to draw the scatter points.
 
-The following shows how the scatter chart is built:
+Here's how the scatter chart is composed:
 
 ```jsx
 <ChartsDataProvider>
