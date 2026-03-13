@@ -37,7 +37,7 @@ const configuration: GridConfiguration<GridPrivateApiPro> = {
 };
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
-  version: (process.env as any).MUI_VERSION,
+  version: process.env.MUI_VERSION!,
   name: 'x-data-grid-pro' as const,
 };
 const watermark = <Watermark packageInfo={packageInfo} />;

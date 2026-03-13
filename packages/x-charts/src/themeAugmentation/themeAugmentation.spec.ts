@@ -162,6 +162,21 @@ createTheme({
         constent: { color: 'red' },
       },
     },
+    // PieChart components
+    MuiPieArcPlot: {
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiPieArcPlot class key
+        constent: { color: 'red' },
+      },
+    },
+    MuiPieArcLabelPlot: {
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiPieArcLabelPlot class key
+        constent: { color: 'red' },
+      },
+    },
     // ScatterChart components
     MuiScatterChart: {
       defaultProps: {
