@@ -16,12 +16,13 @@
       "default": "rainbowSurgePalette"
     },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -33,13 +34,16 @@
       "default": "'axis'"
     },
     "highlightedItem": {
-      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
+      "type": {
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+      }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -67,14 +71,14 @@
     "onHiddenItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "type": "function(hiddenItems: Array<VisibilityIdentifierWithType>) => void",
         "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },
@@ -88,7 +92,7 @@
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "type": "function(tooltipItem: SeriesItemIdentifier<SeriesType> | null) => void",
         "describedArgs": ["tooltipItem"]
       }
     },
@@ -115,8 +119,8 @@
     },
     "tooltipItem": {
       "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: string, type?: 'radar' }"
+        "name": "union",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -164,7 +168,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiRadarChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/RadarChart/RadarChart.tsx",

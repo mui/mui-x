@@ -2,9 +2,7 @@
 import * as React from 'react';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import {
-  type HighlightItemData,
-  selectorChartsIsFadedCallback,
-  selectorChartsIsHighlightedCallback,
+  selectorChartsHighlightStateCallback,
   useStore,
   useRegisterPointerInteractions,
 } from '@mui/x-charts/internals';
@@ -13,6 +11,7 @@ import { HeatmapItem } from './HeatmapItem';
 import { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 import { type HeatmapRendererPlotProps } from './Heatmap.types';
+import { type HighlightItemIdentifierWithType } from '../models';
 
 const MemoHeatmapItem = React.memo(HeatmapItem);
 
@@ -23,8 +22,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   const colorScale = useZColorScale()!;
   const series = useHeatmapSeriesContext();
 
-  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
-  const isFaded = store.use(selectorChartsIsFadedCallback);
+  const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();
@@ -49,10 +47,13 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
             return null;
           }
 
-          const item: HighlightItemData = {
+          const item: HighlightItemIdentifierWithType<'heatmap'> = {
+            type: 'heatmap',
             seriesId: seriesToDisplay.id,
-            dataIndex,
+            xIndex,
+            yIndex,
           };
+          const highlightState = getHighlightState(item);
 
           return (
             <MemoHeatmapItem
@@ -69,8 +70,8 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
               value={value}
               slots={props.slots}
               slotProps={props.slotProps}
-              isHighlighted={isHighlighted(item)}
-              isFaded={isFaded(item)}
+              isHighlighted={highlightState === 'highlighted'}
+              isFaded={highlightState === 'faded'}
               borderRadius={props.borderRadius}
             />
           );

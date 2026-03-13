@@ -20,8 +20,8 @@ describe('Core - EventCalendarStore', () => {
 
       const expectedState = {
         adapter,
-        areEventsDraggable: false,
-        areEventsResizable: false,
+        areEventsDraggable: true,
+        areEventsResizable: true,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,

@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 ## Initialize the preferences
 
 Use the `defaultPreferences` prop to initialize the preferences:

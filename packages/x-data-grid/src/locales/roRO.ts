@@ -204,10 +204,10 @@ const roROGrid: Partial<GridLocaleText> = {
   // }) => {
   //   const unknownRowCount = count == null || count === -1;
   //   if (!estimated) {
-  //     return `${from}–${to} of ${!unknownRowCount ? count : `more than ${to}`}`;
+  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
   //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${!unknownRowCount ? count : estimatedLabel}`;
+  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
+  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   // },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

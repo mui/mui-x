@@ -14,20 +14,37 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   store,
   instance,
 }) => {
-  const { svgRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const removeFocus = useEventCallback(function removeFocus() {
-    if (store.state.keyboardNavigation.item !== null) {
+    if (store.state.keyboardNavigation.isFocused) {
       store.set('keyboardNavigation', {
         ...store.state.keyboardNavigation,
-        item: null,
+        isFocused: false,
+      });
+    }
+  });
+
+  const restoreFocus = useEventCallback(function restoreFocus() {
+    if (!store.state.keyboardNavigation.isFocused) {
+      store.update({
+        ...(store.state.highlight && {
+          highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
+        }),
+        ...(store.state.interaction && {
+          interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
+        }),
+        keyboardNavigation: {
+          ...store.state.keyboardNavigation,
+          isFocused: true,
+        },
       });
     }
   });
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
 
-    if (!element || !params.enableKeyboardNavigation) {
+    if (!element || params.disableKeyboardNavigation) {
       return undefined;
     }
 
@@ -77,22 +94,20 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
     element.addEventListener('keydown', keyboardHandler);
     element.addEventListener('blur', removeFocus);
+    element.addEventListener('focus', restoreFocus);
     return () => {
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('blur', removeFocus);
+      element.removeEventListener('focus', restoreFocus);
     };
-  }, [svgRef, removeFocus, params.enableKeyboardNavigation, store]);
+  }, [chartsLayerContainerRef, removeFocus, restoreFocus, params.disableKeyboardNavigation, store]);
 
   useEnhancedEffect(() => {
-    if (
-      store.state.keyboardNavigation.enableKeyboardNavigation !== params.enableKeyboardNavigation
-    ) {
-      store.set('keyboardNavigation', {
-        ...store.state.keyboardNavigation,
-        enableKeyboardNavigation: !!params.enableKeyboardNavigation,
-      });
-    }
-  }, [store, params.enableKeyboardNavigation]);
+    store.set('keyboardNavigation', {
+      ...store.state.keyboardNavigation,
+      enabled: !params.disableKeyboardNavigation,
+    });
+  }, [store, params.disableKeyboardNavigation]);
 
   return {};
 };
@@ -100,10 +115,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 useChartKeyboardNavigation.getInitialState = (params) => ({
   keyboardNavigation: {
     item: null,
-    enableKeyboardNavigation: !!params.enableKeyboardNavigation,
+    isFocused: false,
+    enabled: !params.disableKeyboardNavigation,
   },
 });
 
 useChartKeyboardNavigation.params = {
-  enableKeyboardNavigation: true,
+  disableKeyboardNavigation: true,
 };

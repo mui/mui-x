@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store/useStore';
-import { useAdapter, Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
@@ -27,13 +28,13 @@ const YearLabel = styled('div', {
   fontSize: theme.typography.body2.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
   '&:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
 export function YearsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
 

@@ -1,5 +1,3 @@
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-
 export type ItemType =
   | 'horizontal_center'
   | 'bottom'
@@ -31,9 +29,10 @@ export type ExtendedTreeItemProps = {
   itemType: ItemType;
   id: IdType;
   label: string;
+  children?: ExtendedTreeItemProps[];
 };
 
-export const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
+export const ITEMS: ExtendedTreeItemProps[] = [
   {
     id: 'paper',
     label: 'Paper',

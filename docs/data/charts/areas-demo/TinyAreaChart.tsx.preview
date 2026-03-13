@@ -1,4 +1,4 @@
-<ChartContainer
+<ChartsContainer
   width={500}
   height={300}
   series={[
@@ -13,4 +13,4 @@
   xAxis={[{ scaleType: 'point', data: xLabels }]}
 >
   <AreaPlot />
-</ChartContainer>
+</ChartsContainer>

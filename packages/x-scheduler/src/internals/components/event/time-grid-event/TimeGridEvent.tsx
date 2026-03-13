@@ -47,14 +47,11 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
-  '&[data-draggable]': {
-    cursor: 'grab',
-  },
   '&[data-under-hour="true"]': {
     flexDirection: 'row',
   },
   '&[data-under-fifteen-minutes="true"]': {
-    padding: theme.spacing(0.05, 1),
+    padding: theme.spacing(0, 1),
   },
   '&:focus-visible': {
     outline: '2px solid var(--event-surface-accent)',
@@ -100,9 +97,13 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   containerType: 'size',
   minHeight: 11.5,
   '&[data-under-fifteen-minutes="true"]': {
-    padding: theme.spacing(0.05, 1),
+    padding: theme.spacing(0, 1),
   },
   variants: getPaletteVariants(theme),
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+  },
 }));
 
 const TimeGridEventTitle = styled(Typography, {
@@ -216,7 +217,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
-  const isLessThan15Minutes = durationMinutes < 15;
+  const isLessThan15Minutes = durationMinutes <= 15;
 
   const content = React.useMemo(() => {
     return (
@@ -277,7 +278,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       <TimeGridEventPlaceholder
         aria-hidden={true}
         data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-        data-draggable={isDraggable || undefined}
         data-recurrent={isRecurring || undefined}
         data-under-fifteen-minutes={isLessThan15Minutes || undefined}
         data-palette={color}
@@ -296,7 +296,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-      data-draggable={isDraggable || undefined}
       data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
       data-palette={color}

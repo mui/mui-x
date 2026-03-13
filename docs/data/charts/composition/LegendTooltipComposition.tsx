@@ -1,4 +1,4 @@
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
@@ -30,7 +30,7 @@ export default function LegendTooltipComposition() {
         alignItems: 'center',
       }}
     >
-      <ChartDataProvider
+      <ChartsDataProvider
         height={300}
         series={[{ type: 'line', data: pData, label: 'Sales Data', showMark: true }]}
         xAxis={[{ scaleType: 'point', data: xLabels }]}
@@ -46,7 +46,7 @@ export default function LegendTooltipComposition() {
           <MarkPlot />
           <ChartsAxisHighlight x="line" />
         </ChartsSurface>
-      </ChartDataProvider>
+      </ChartsDataProvider>
     </Box>
   );
 }

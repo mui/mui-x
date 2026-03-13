@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-alpha.3",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
   "license": "UNLICENSED",
@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build --flat",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -66,5 +66,8 @@
     ".": "./src/index.ts",
     "./services/static-data": "./src/services/static-data.ts",
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

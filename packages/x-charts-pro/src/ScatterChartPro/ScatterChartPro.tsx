@@ -19,7 +19,7 @@ import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
-import { ChartZoomSlider } from '../ChartZoomSlider';
+import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { type ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
@@ -123,7 +123,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
-          <ChartZoomSlider />
+          <ChartsZoomSlider />
           <ChartsGrid {...gridProps} />
           <g data-drawing-container>
             {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
@@ -194,11 +194,14 @@ ScatterChartPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
    * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
    */
   disableVoronoi: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -231,11 +234,18 @@ ScatterChartPro.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['scatter']),
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['scatter']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['scatter']),
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -245,10 +255,17 @@ ScatterChartPro.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['scatter']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -276,11 +293,18 @@ ScatterChartPro.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['scatter']),
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['scatter']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['scatter']),
+      }),
+    ]).isRequired,
   ),
   /**
    * The list of zoom data related to each axis.
@@ -326,13 +350,13 @@ ScatterChartPro.propTypes = {
   onAxisClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -352,7 +376,7 @@ ScatterChartPro.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -416,11 +440,17 @@ ScatterChartPro.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number.isRequired,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['scatter']),
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['scatter']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+    }),
+  ]),
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.
@@ -2156,8 +2186,8 @@ ScatterChartPro.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,

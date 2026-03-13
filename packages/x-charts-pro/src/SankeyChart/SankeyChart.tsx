@@ -103,7 +103,10 @@ SankeyChart.propTypes = {
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */
@@ -142,6 +145,27 @@ SankeyChart.propTypes = {
       targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       type: PropTypes.oneOf(['sankey']).isRequired,
     }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    }),
   ]),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -175,7 +199,7 @@ SankeyChart.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {SankeyHighlightItemData | null} highlightedItem The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -193,7 +217,7 @@ SankeyChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -222,11 +246,52 @@ SankeyChart.propTypes = {
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.shape({
-    seriesId: PropTypes.string.isRequired,
-    subType: PropTypes.oneOf(['link', 'node']).isRequired,
-    type: PropTypes.oneOf(['sankey']),
-  }),
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
