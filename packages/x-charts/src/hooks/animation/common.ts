@@ -1,4 +1,4 @@
-import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+import { interpolateNumber, interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import { type BarInterpolatedProps } from './useAnimateBar';
 import { type BarLabelInterpolatedProps } from './useAnimateBarLabel';
 import { type GaugeValueArcInterpolatedProps } from './useAnimateGaugeValueArc';
@@ -15,7 +15,11 @@ export function createInterpolator<
 >(from: T, to: T): (t: number) => T {
   const interpolators: Partial<Record<keyof T, (t: number) => any>> = {};
   (Object.keys(to) as (keyof T)[]).forEach((key) => {
-    interpolators[key] = interpolateNumber(from[key] as number, to[key] as number);
+    if (typeof from[key] === 'number' && typeof to[key] === 'number') {
+      interpolators[key] = interpolateNumber(from[key] as number, to[key] as number);
+    } else if (typeof from[key] === 'string' && typeof to[key] === 'string') {
+      interpolators[key] = interpolateString(from[key] as string, to[key] as string);
+    }
   });
 
   return (t: number) => {
