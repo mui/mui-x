@@ -6,7 +6,7 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot,
 
 # Charts - Pie
 
-<p class="description">Show parts of a whole as arcs or angles in a circle for quick comparison of proportions.</p>
+<p class="description">Use pie charts to show parts of a whole as arcs or angles in a circle for quick comparison of proportions.</p>
 
 ## Overview
 
@@ -22,7 +22,7 @@ The demo below compares survival rates of passengers by class on the Titanic.
 
 ## Basics
 
-A pie chart series must include a `data` property with an array of objects.
+Pie chart series must contain a `data` property with an array of objects.
 Each object is one slice and must have a `value` property.
 You can add optional properties such as `label`.
 
@@ -65,29 +65,29 @@ You can customize pie colors in two ways:
 
 Pie series shape is controlled by these properties:
 
-- `innerRadius` — distance from the center to the inner edge of the arc. Default is 0.
-- `outerRadius` — distance from the center to the outer edge of the arc. Default is the largest value that fits in the drawing area.
-- `arcLabelRadius` — distance from the center to the arc labels.
-- `paddingAngle` — angle in degrees between adjacent arcs.
-- `cornerRadius` — rounds the arc corners, similar to CSS `border-radius`.
-- `startAngle` / `endAngle` — angle range of the pie in degrees.
-- `cx` / `cy` — center of the pie. Default is the center of the drawing area.
+- `innerRadius`: distance from the center to the inner edge of the arc. Default is 0.
+- `outerRadius`: distance from the center to the outer edge of the arc. Default is the largest value that fits in the drawing area.
+- `arcLabelRadius`: distance from the center to the arc labels.
+- `paddingAngle`: angle in degrees between adjacent arcs.
+- `cornerRadius`: rounds the arc corners, similar to CSS `border-radius`.
+- `startAngle` / `endAngle`: angle range of the pie in degrees.
+- `cx` / `cy`: center of the pie. Default is the center of the drawing area.
 
 {{"demo": "PieShape.js", "hideToolbar": true, "bg": "playground"}}
 
 The following accept percentage strings (for example `'50%'`):
 
-- `innerRadius`, `outerRadius`, and `arcLabelRadius` — `'100%'` means the full radius that fits in the drawing area.
-- `cx` and `cy` — `'100%'` means the width or height of the drawing area.
+- `innerRadius`, `outerRadius`, and `arcLabelRadius`: `'100%'` means the full radius that fits in the drawing area.
+- `cx` and `cy`: `'100%'` means the width or height of the drawing area.
 
 ## Labels
 
 Set the `arcLabel` property on the series to show labels on the arcs.
 Pass a function that receives the arc's data object and returns the label string, or use one of these values:
 
-- `'value'` — the arc's raw value
-- `'formattedValue'` — the result of `valueFormatter` for the arc
-- `'label'` — the arc's `label` property, if present
+- `'value'`: the arc's raw value
+- `'formattedValue'`: the result of `valueFormatter()` for the arc
+- `'label'`: the arc's `label` property, if present
 
 Set `arcLabelMinAngle` so that arcs with an angle smaller than that value (in degrees) do not show a label.
 
@@ -96,7 +96,7 @@ Set `arcLabelMinAngle` so that arcs with an angle smaller than that value (in de
 ## Highlight
 
 Add the `highlightScope` property to a pie series to control highlighting.
-See the [highlighting page](/x/react-charts/highlighting/#highlighting-series) for how it works.
+See [Highlighting](/x/react-charts/highlighting/#highlighting-series) for details.
 
 Use the `.MuiPieArc-faded` and `.MuiPieArc-highlighted` CSS classes to style arcs when they are faded or highlighted.
 
@@ -124,7 +124,7 @@ const onItemClick = (
 
 ## CSS
 
-Use CSS to customize the elements that the pie chart renders.
+You can customize the pie chart elements using CSS selectors.
 
 The demo below uses the `data-series` attribute to select the outer series and reduce its opacity.
 
@@ -132,10 +132,9 @@ The demo below uses the `data-series` attribute to select the outer series and r
 
 ## Animation
 
-Chart containers respect the [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion) media query.
-You can also turn off animation by setting the `skipAnimation` prop to `true`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-With `skipAnimation` set, the chart renders without animation.
+When you set `skipAnimation` to `true`, the chart renders without animations.
 
 ```jsx
 // For a single component chart
@@ -151,11 +150,11 @@ With `skipAnimation` set, the chart renders without animation.
 
 ## Composition
 
-Use `ChartsDataProvider` to supply the `series` prop when composing a custom chart.
+Use `ChartsDataProvider` to provide the `series` prop for composition.
 
-In addition to the shared components described in [Composition](/x/react-charts/composition/), you can use `PiePlot` to draw the pie slices and their labels.
+In addition to the shared chart components available for [composition](/x/react-charts/composition/), you can use `PiePlot` to draw the pie slices and their labels.
 
-The following shows how the pie chart is built:
+Here's how the pie chart is composed:
 
 ```jsx
 <ChartsDataProvider plugins={PIE_CHART_PLUGINS}>
