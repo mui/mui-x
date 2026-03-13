@@ -13,7 +13,7 @@ type SeriesTypeWithLegendFields = {
     : never;
 }[ChartSeriesType];
 
-/** One legend item per series (bar, line, scatter, rangeBar, radar). */
+/** One legend item per series (bar, scatter, rangeBar, radar). */
 export function getSeriesLegendItems<T extends SeriesTypeWithLegendFields>(
   type: T,
   params: SeriesProcessorResult<T>,
