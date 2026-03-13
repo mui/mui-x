@@ -9,7 +9,7 @@ productId: x-charts
 
 ## Introduction
 
-This is a reference guide for upgrading `@mui/x-charts` from v8 to v9.
+This is a reference guide for upgrading `@mui/x-charts` and `@mui/x-charts-premium` from v8 to v9.
 
 <!-- Overall theme of this major, fixing API inconsistencies, improving customization, etc -->
 
@@ -19,7 +19,7 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 
 ## Prepare for the migration
 
-We highly recommend updating `@mui/x-charts` and `@mui/x-charts-pro` to the latest v8 version before migrating to v9.
+We highly recommend updating `@mui/x-charts`, `@mui/x-charts-pro`, and `@mui/x-charts-premium` to the latest v8 version before migrating to v9.
 This will help you resolve deprecation warnings at your own pace, reducing the number of changes needed when upgrading.
 
 Below is a list of deprecated APIs that have alternatives in the latest minor of v8. We recommend you move from these deprecated APIs before upgrading to v9 to ease the migration.
@@ -97,6 +97,9 @@ In `package.json`, change the version of the charts package to `next`.
 
 -"@mui/x-charts-pro": "^8.x.x",
 +"@mui/x-charts-pro": "next",
+
+-"@mui/x-charts-premium": "^8.x.x",
++"@mui/x-charts-premium": "next",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
