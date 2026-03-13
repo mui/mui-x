@@ -13,8 +13,8 @@ import {
 } from 'test/utils/scheduler';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 
-const engineering = ResourceBuilder.new().title('Engineering').build();
-const design = ResourceBuilder.new().title('Design').build();
+const engineering = ResourceBuilder.new().build();
+const design = ResourceBuilder.new().build();
 
 const resources: SchedulerResource[] = [engineering, design];
 

@@ -9,7 +9,6 @@ import {
  * Minimal resource builder for tests.
  *
  * Builds a valid SchedulerResource with sensible defaults.
- * No adapter needed — resources have no date fields.
  */
 export class ResourceBuilder {
   protected resource: SchedulerResource;

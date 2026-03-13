@@ -64,11 +64,20 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
 
   it('should exclude events whose resource is not visible', () => {
     const hiddenResource = ResourceBuilder.new().build();
-    const visibilityWithHidden: Record<string, boolean> = { ...visible, [hiddenResource.id]: false };
+    const visibilityWithHidden: Record<string, boolean> = {
+      ...visible,
+      [hiddenResource.id]: false,
+    };
 
-    const visibleEvent = EventBuilder.new(adapter).resource(resourceA).singleDay(day1Str).toProcessed();
+    const visibleEvent = EventBuilder.new(adapter)
+      .resource(resourceA)
+      .singleDay(day1Str)
+      .toProcessed();
 
-    const invisibleEvent = EventBuilder.new(adapter).resource(hiddenResource).singleDay(day1Str).toProcessed();
+    const invisibleEvent = EventBuilder.new(adapter)
+      .resource(hiddenResource)
+      .singleDay(day1Str)
+      .toProcessed();
 
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,

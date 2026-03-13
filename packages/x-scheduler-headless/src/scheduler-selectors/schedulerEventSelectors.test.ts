@@ -252,9 +252,7 @@ describe('schedulerEventSelectors', () => {
         events: [readOnlyEvent],
         areEventsResizable: true,
       });
-      expect(schedulerEventSelectors.isResizable(state, readOnlyEvent.id, 'start')).to.equal(
-        false,
-      );
+      expect(schedulerEventSelectors.isResizable(state, readOnlyEvent.id, 'start')).to.equal(false);
       expect(schedulerEventSelectors.isResizable(state, readOnlyEvent.id, 'end')).to.equal(false);
     });
 

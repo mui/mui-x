@@ -113,8 +113,10 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
-      expect(response[0].occurrences).to.have.length(1);
-      expect(response[1].occurrences).to.have.length(0);
+      const group1 = response.find((item) => item.resource.id === resource1.id)!;
+      const group2 = response.find((item) => item.resource.id === resource2.id)!;
+      expect(group1.occurrences).to.have.length(1);
+      expect(group2.occurrences).to.have.length(0);
     });
 
     it('should sort resources alphabetically by title', () => {
@@ -174,8 +176,9 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should include children immediately after their parent', () => {
-      const child1 = ResourceBuilder.new().build();
-      const child2 = ResourceBuilder.new().build();
+      // Titles control alphabetical sort order within the parent
+      const child1 = ResourceBuilder.new().title('A').build();
+      const child2 = ResourceBuilder.new().title('B').build();
       const parent = ResourceBuilder.new()
         // intentionally unordered
         .children([child1, child2])
@@ -192,7 +195,11 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
-      expect(response.map((item) => item.resource.id)).to.deep.equal([parent.id, child1.id, child2.id]);
+      expect(response.map((item) => item.resource.id)).to.deep.equal([
+        parent.id,
+        child1.id,
+        child2.id,
+      ]);
       expect(response[2].occurrences).to.have.length(1);
       expect(response[2].occurrences[0].id).to.equal(event.id);
     });
@@ -233,7 +240,12 @@ describe('schedulerOccurrenceSelectors', () => {
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
-      expect(response.map((r) => r.resource.id)).to.deep.equal([root.id, parent.id, child.id, grandchild.id]);
+      expect(response.map((r) => r.resource.id)).to.deep.equal([
+        root.id,
+        parent.id,
+        child.id,
+        grandchild.id,
+      ]);
       expect(response[3].occurrences[0].id).to.equal(event.id);
     });
 
