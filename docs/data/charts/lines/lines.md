@@ -20,7 +20,7 @@ Each line usually represents one series, so you can compare multiple variables o
 
 ### Data format
 
-A line chart series must include a `data` property with an array of numbers.
+Line chart series must contain a `data` property with an array of numbers.
 That array holds the y-values.
 
 Specify x-values by setting the `data` property in the `xAxis` prop.
@@ -32,13 +32,13 @@ By default, those y-values are paired with integers starting from 0 (0, 1, 2, 3,
 
 ### Using a dataset
 
-When your data lives in an array of objects, use the `dataset` prop.
-It accepts an array of objects, for example `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
 
-Use the `dataKey` property to reference that data from your series and axis definitions.
+You can reuse this data when defining the series and axes by using the `dataKey` property.
 For example, `xAxis={[{ dataKey: 'x' }]}` or `series={[{ dataKey: 'y' }]}`.
 
-The demo below plots the evolution of world electricity production by source.
+The example below plots the evolution of world electricity production by source.
 
 {{"demo": "LineDataset.js"}}
 
@@ -59,10 +59,10 @@ See [Axis—Symlog scale](/x/react-charts/axis/#symlog-scale) for a workaround.
 You can use the `stack` string property to group line series into stacks.
 Series that share the same `stack` value are stacked on top of each other.
 
-Use the `stackOffset` and `stackOrder` properties to control how stacking works.
-By default, series are stacked in the order you define them, with positive values above 0 and negative values below 0.
+You can use the `stackOffset` and `stackOrder` properties to define how the series is stacked.
+By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
 
-See [Stacking](/x/react-charts/stacking/) for details.
+See [Stacking](/x/react-charts/stacking/) for more details.
 
 {{"demo": "StackedAreas.js"}}
 
@@ -139,7 +139,7 @@ Line charts provide several click handlers:
 - `onMarkClick` when a specific mark is clicked
 - `onAxisClick` when the chart background is clicked
 
-Each handler receives the same signature:
+They all provide the following signature:
 
 ```js
 const clickHandler = (
@@ -175,7 +175,7 @@ Note that `onAxisClick` runs for both bar and line series when you mix them.
 
 ### Grid
 
-Use the `grid` prop to add a grid behind the chart.
+You can add a grid in the background of the chart with the `grid` prop.
 
 See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
@@ -183,16 +183,16 @@ See [Axis—Grid](/x/react-charts/axis/#grid) for details.
 
 ### Color scale
 
-As with other chart types, you can set [series colors](/x/react-charts/styling/#colors) for individual series or use the color palette.
+As with other charts, you can modify the [series color](/x/react-charts/styling/#colors) either directly, or with the color palette.
 
-You can also derive colors from axis values with `colorMap`, which maps axis values to colors.
-Line charts resolve color in this order:
+You can also modify the color by using the axes' `colorMap`, which maps values to colors.
+Line charts use the following, in order of priority:
 
 1. The y-axis color
 2. The x-axis color
 3. The series color
 
-See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for `colorMap` options.
+See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
 
 {{"demo": "ColorScale.js"}}
 
@@ -246,26 +246,26 @@ Do not use `baseline` with stacked areas; the result will not match expectations
 
 Use the `showMark` series property to show mark elements.
 It accepts a boolean or a callback.
-The demo below uses a callback to show a mark only every two data points.
+The example below uses a callback to show a mark only every two data points.
 
 When a value is highlighted, a mark is drawn for that value.
 If the chart already shows marks (`showMark={true}`), the highlight mark is drawn on top.
 
 You can turn off this behavior with the `disableHighlight` series property or the `disableLineItemHighlight` prop on the line chart.
 
-The demo shows one mark for every value with an even index.
+The example below shows one mark for every value with an even index.
 The highlighted point always shows a mark, whether its index is even or odd.
 
 {{"demo": "MarkOptimization.js"}}
 
 ### CSS
 
+You can customize the line chart elements using CSS selectors.
 Line plots use three elements: `LineElement`, `AreaElement`, and `MarkElement`.
 You can target them with the CSS classes `.MuiLineElement-root`, `.MuiAreaElement-root`, and `.MuiMarkElement-root`.
-
 To target a specific series, use the `data-series` attribute.
 
-In the demo below, each line uses a custom dash style and marks are hidden.
+In the example below, each line uses a custom dash style and marks are hidden.
 The area for Germany's GDP uses a custom gradient.
 The gradient is defined as a child of the chart (`myGradient` referenced in `fill`).
 
@@ -287,10 +287,9 @@ The gradient is defined as a child of the chart (`myGradient` referenced in `fil
 
 ## Animation
 
-Chart containers respect the [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion) media query.
-You can also turn off animation by setting the `skipAnimation` prop to `true`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-With `skipAnimation` set, the chart renders without animation.
+When you set `skipAnimation` to `true`, the chart renders without animations.
 
 :::warning
 If you add or remove series interactively, give each series an `id`.
@@ -312,17 +311,11 @@ Otherwise the chart cannot tell whether you are updating, removing, or adding a 
 
 ## Composition
 
-When composing a custom chart, use `ChartsDataProvider` to supply `series`, `xAxis`, and `yAxis`.
+Use `ChartsDataProvider` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
-In addition to the shared components described in [Composition](/x/react-charts/composition/), you can use:
+In addition to the shared chart components available for [composition](/x/react-charts/composition/), you can use `LinePlot`, `AreaPlot`, `MarkPlot`, `LineHighlightPlot`, and `FocusedLineMark` to draw the lines, areas, marks, and focus ring.
 
-- `AreaPlot` to draw series areas
-- `LinePlot` to draw series lines
-- `MarkPlot` to draw series marks
-- `LineHighlightPlot` to draw the larger mark at the highlighted value
-- `FocusedLineMark` to draw a focus ring when a data point is focused
-
-The example below shows how the line chart is built from these pieces:
+Here's how the line chart is composed:
 
 ```jsx
 <ChartsDataProvider>

@@ -38,7 +38,7 @@ If your data is stored in an array of objects, you can use the `dataset` helper 
 It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
 
 You can reuse this data when defining the series and axes by using the `dataKey` property.
-For example, `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+For example, `xAxis={[{ dataKey: 'x' }]}` or `series={[{ dataKey: 'y' }]}`.
 
 {{"demo": "BarsDataset.js"}}
 
