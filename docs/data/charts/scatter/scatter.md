@@ -156,7 +156,7 @@ See [Custom components](/x/react-charts/components/) for more ways to customize 
 Scatter charts can have many points, which can slow down rendering.
 By default, points are drawn with SVG `circle` elements, which may be slow for large datasets.
 
-Use the `renderer` prop with `"svg-batch"` to draw circles in a more efficient way.
+Set the `renderer` prop to `"svg-batch"` to draw circles in a more efficient way.
 This mode has some limitations:
 
 - You cannot style individual circles with CSS
@@ -179,7 +179,7 @@ Use `ChartsDataProvider` to supply `series`, `xAxis`, and `yAxis` when composing
 
 In addition to the shared components described in [Composition](/x/react-charts/composition/), you can use `ScatterPlot` to draw the scatter points.
 
-The snippet below shows how the scatter chart is built:
+The following shows how the scatter chart is built:
 
 ```jsx
 <ChartsDataProvider>
