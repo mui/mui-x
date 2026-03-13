@@ -6,6 +6,7 @@ import {
   EXTENSION_TEST_FILE,
   EXTENSION_TS,
 } from '@mui/internal-code-infra/eslint';
+import { fixupPluginRules } from '@eslint/compat';
 import eslintPluginConsistentName from 'eslint-plugin-consistent-default-export-name';
 import eslintPluginJsdoc from 'eslint-plugin-jsdoc';
 import eslintPluginMuiX from 'eslint-plugin-mui-x';
@@ -119,13 +120,16 @@ export default defineConfig(
     plugins: {
       jsdoc: eslintPluginJsdoc,
       'mui-x': eslintPluginMuiX,
-      'consistent-default-export-name': eslintPluginConsistentName,
+      'consistent-default-export-name': fixupPluginRules(eslintPluginConsistentName),
     },
     settings: {
       'import/resolver': {
         typescript: {
           project: ['tsconfig.json'],
         },
+      },
+      next: {
+        rootDir: 'docs',
       },
     },
     rules: {
@@ -361,7 +365,7 @@ export default defineConfig(
       'docs/data/**/{css,system,tailwind}/*',
     ],
     plugins: {
-      'consistent-default-export-name': eslintPluginConsistentName,
+      'consistent-default-export-name': fixupPluginRules(eslintPluginConsistentName),
     },
     rules: {
       'consistent-default-export-name/default-export-match-filename': ['error'],
