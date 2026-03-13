@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
@@ -65,7 +66,7 @@ HeatmapCell.propTypes = {
     color: PropTypes.string.isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
-    seriesId: PropTypes.string.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     value: PropTypes.number.isRequired,
   }).isRequired,
   width: PropTypes.number.isRequired,
