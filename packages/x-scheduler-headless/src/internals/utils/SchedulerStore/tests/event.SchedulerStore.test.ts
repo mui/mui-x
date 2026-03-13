@@ -544,14 +544,15 @@ storeClasses.forEach((storeClass) => {
 
       it('should paste a cut event and emit onEventsChange with the updated list (only changes resource)', () => {
         const onEventsChange = spy();
-        const resource = ResourceBuilder.new().build();
-        const event = EventBuilder.new().resource(ResourceBuilder.new().build()).build();
+        const resource1 = ResourceBuilder.new().build();
+        const resource2 = ResourceBuilder.new().build();
+        const event = EventBuilder.new().resource(resource1).build();
 
         const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
-          resource: resource.id,
+          resource: resource2.id,
         });
 
         expect(onEventsChange.calledOnce).to.equal(true);
@@ -559,7 +560,7 @@ storeClasses.forEach((storeClass) => {
           {
             ...event,
             id: createdEventId,
-            resource: resource.id,
+            resource: resource2.id,
           },
         ]);
       });
