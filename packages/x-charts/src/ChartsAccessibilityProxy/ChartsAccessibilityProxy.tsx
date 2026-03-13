@@ -19,7 +19,6 @@ const fullSizeLayerStyle: React.CSSProperties = {
   pointerEvents: 'none',
 };
 
-
 // The proxy is implemented by having two divs with the same content, and toggling the visibility of each one when the content changes.
 // The idea is to imitate the behavior of the focus moving from a list element to another, but with the minimal number of DOM elements.
 
