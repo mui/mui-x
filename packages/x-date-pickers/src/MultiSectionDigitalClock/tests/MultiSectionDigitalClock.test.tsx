@@ -204,7 +204,15 @@ describe('<MultiSectionDigitalClock />', () => {
                 );
               }}
             />
-            <MultiSectionDigitalClock autoFocus value={value} onChange={setValue} />
+            <MultiSectionDigitalClock
+              autoFocus
+              value={value}
+              onChange={(newValue) => {
+                if (newValue !== null) {
+                  setValue(newValue);
+                }
+              }}
+            />
           </React.Fragment>
         );
       }
