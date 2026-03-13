@@ -308,6 +308,41 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       vi.useRealTimers();
     });
 
+    it('should use the current viewport range when fetchRows is called via the API without params', async () => {
+      render(<TestDataSourceLazyLoader dataSourceCache={null} disableVirtualization={false} />);
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      // Scroll far enough so the viewport start is past the first page boundary
+      // (adjustRowParams aligns to pageSize=10, so firstRowIndex must be >= 10)
+      await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 30 }));
+
+      // Wait for the scroll-triggered fetches to complete
+      await waitFor(() => {
+        const lastUrl = fetchRowsSpy.lastCall?.args[0];
+        if (!lastUrl) {
+          return;
+        }
+        const params = new URL(lastUrl).searchParams;
+        expect(Number(params.get('start'))).to.be.greaterThan(0);
+      });
+
+      fetchRowsSpy.resetHistory();
+
+      // Call fetchRows without explicit params
+      act(() => {
+        apiRef.current?.dataSource.fetchRows();
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      // The request should use viewport-based start, not the default page 0
+      const searchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const start = Number(searchParams.get('start'));
+      expect(start).to.be.greaterThan(0);
+    });
+
     it('should periodically revalidate the current range when dataSourceRevalidateMs is set', async () => {
       const localFetchRowsSpy = spy();
       render(
