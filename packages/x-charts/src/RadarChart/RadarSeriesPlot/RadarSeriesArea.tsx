@@ -4,7 +4,11 @@ import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
-import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
+import {
+  type RadarSeriesPlotClasses,
+  useUtilityClasses as useDeprecatedUtilityClasses,
+} from './radarSeriesPlotClasses';
+import { useUtilityClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
@@ -50,7 +54,13 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
 
-  const classes = useUtilityClasses(props.classes);
+  const newClasses = useUtilityClasses();
+  const deprecatedClasses = useDeprecatedUtilityClasses(props.classes);
+  const classes = {
+    ...deprecatedClasses,
+    area: `${newClasses.seriesArea} ${deprecatedClasses.area}`,
+    mark: `${newClasses.seriesMark} ${deprecatedClasses.mark}`,
+  };
   return (
     <React.Fragment>
       {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea, hidden }, seriesIndex) => {

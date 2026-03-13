@@ -67,7 +67,7 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
-  version: (process.env as any).MUI_VERSION,
+  version: process.env.MUI_VERSION!,
   name: 'x-tree-view-pro' as const,
 };
 

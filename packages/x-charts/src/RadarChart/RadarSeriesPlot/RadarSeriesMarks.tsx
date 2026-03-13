@@ -3,8 +3,12 @@ import { clsx } from 'clsx';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
+import {
+  type RadarSeriesPlotClasses,
+  useUtilityClasses as useDeprecatedUtilityClasses,
+} from './radarSeriesPlotClasses';
+import { useUtilityClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
-import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { type SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
@@ -42,7 +46,13 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   const { seriesId, onItemClick, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(props.seriesId);
 
-  const classes = useUtilityClasses(props.classes);
+  const newClasses = useUtilityClasses();
+  const deprecatedClasses = useDeprecatedUtilityClasses(props.classes);
+  const classes = {
+    ...deprecatedClasses,
+    area: `${newClasses.seriesArea} ${deprecatedClasses.area}`,
+    mark: `${newClasses.seriesMark} ${deprecatedClasses.mark}`,
+  };
   const getHighlightState = useItemHighlightStateGetter();
 
   return (
