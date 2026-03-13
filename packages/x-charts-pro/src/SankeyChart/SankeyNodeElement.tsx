@@ -4,8 +4,11 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps, useStore } from '@mui/x-charts/internals';
 import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.types';
-import { selectorIsNodeHighlighted } from './plugins';
-import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
+import {
+  selectorIsNodeHighlighted,
+  selectorIsSankeyItemFaded,
+} from './plugins/useSankeyHighlight.selectors';
+import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyNodeElementProps {
   /**
@@ -30,7 +33,7 @@ export interface SankeyNodeElementProps {
 /**
  * @ignore - internal component.
  */
-export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElementProps>(
+export const SankeyNodeElement = React.forwardRef<SVGRectElement, SankeyNodeElementProps>(
   function SankeyNodeElement(props, ref) {
     const { node, onClick, seriesId } = props;
     const store = useStore();
@@ -57,6 +60,8 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);
 
+    const classes = useUtilityClasses();
+
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
       onClick?.(event, identifier);
     });
@@ -82,6 +87,7 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
           stroke="none"
           data-highlighted={isHighlighted || undefined}
           data-faded={isFaded || undefined}
+          className={classes.node}
           {...interactionProps}
         />
       </g>
