@@ -98,7 +98,6 @@ export default chartsApiPages;
       'x-charts/src/ScatterChart/BatchScatter.tsx',
       'x-charts/src/BarChart/BatchBarPlot.tsx',
       'x-charts/src/BarChart/IndividualBarPlot.tsx',
-      'x-charts-pro/src/Heatmap/HeatmapCell.tsx',
       'x-charts-pro/src/Heatmap/HeatmapSVGPlot.tsx',
       'x-charts-pro/src/SankeyChart/SankeyLinkPlot.tsx',
       'x-charts-pro/src/SankeyChart/SankeyNodePlot.tsx',

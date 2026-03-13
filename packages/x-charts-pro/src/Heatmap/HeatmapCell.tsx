@@ -1,5 +1,6 @@
+import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import type * as React from 'react';
 import type { SeriesId } from '../models';
 import type { HeatmapClasses } from './heatmapClasses';
 
@@ -25,11 +26,11 @@ export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
   ownerState: HeatmapCellOwnerState;
 }
 
-export const HeatmapCell = styled('rect', {
+const HeatmapCellRoot = styled('rect', {
   name: 'MuiHeatmap',
   slot: 'Cell',
   overridesResolver: (_, styles) => styles.cell,
-})<{ ownerState: HeatmapCellOwnerState }>(({ ownerState }) => ({
+})<HeatmapCellProps>(({ ownerState }) => ({
   filter:
     (ownerState.isHighlighted && 'saturate(120%)') ||
     (ownerState.isFaded && 'saturate(80%)') ||
@@ -37,3 +38,39 @@ export const HeatmapCell = styled('rect', {
   fill: ownerState.color,
   shapeRendering: 'crispEdges',
 }));
+
+/**
+ * Demos:
+ *
+ * - [Heatmap](https://mui.com/x/react-charts/heatmap/)
+ *
+ * API:
+ *
+ * - [HeatmapCell API](https://mui.com/x/api/charts/heatmap-cell/)
+ */
+const HeatmapCell = React.forwardRef<SVGRectElement, HeatmapCellProps>(
+  function HeatmapCell(props, ref) {
+    return <HeatmapCellRoot ref={ref} {...props} />;
+  },
+);
+
+HeatmapCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  height: PropTypes.number.isRequired,
+  ownerState: PropTypes.shape({
+    classes: PropTypes.object,
+    color: PropTypes.string.isRequired,
+    isFaded: PropTypes.bool.isRequired,
+    isHighlighted: PropTypes.bool.isRequired,
+    seriesId: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
+  }).isRequired,
+  width: PropTypes.number.isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+} as any;
+
+export { HeatmapCell };
