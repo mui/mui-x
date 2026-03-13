@@ -9,7 +9,7 @@ productId: x-charts
 
 ## Introduction
 
-This is a reference guide for upgrading `@mui/x-charts` and `@mui/x-charts-premium` from v8 to v9.
+This is a reference guide for upgrading `@mui/x-charts` from v8 to v9.
 
 <!-- Overall theme of this major, fixing API inconsistencies, improving customization, etc -->
 
