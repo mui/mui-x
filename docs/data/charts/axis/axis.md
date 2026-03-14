@@ -121,9 +121,9 @@ If you use composition you can pass these as props to the `<ChartsGrid />` compo
 ```jsx
 <BarChart grid={{ vertical: true }}>
 
-<ChartContainer>
+<ChartsContainer>
   <ChartsGrid vertical />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "GridDemo.js"}}
@@ -245,7 +245,7 @@ If two or more axes share the same `position`, they're displayed in the order th
 
 ### Coordinates
 
-You can obtain the coordinates of the axis by calling the `useXAxisCoordinates` or `useYAxisCoordinates` hooks.
+You can obtain the coordinates of the axis by calling the `useXAxisCoordinates()` or `useYAxisCoordinates()` hooks.
 
 Below is an example of how to use the these hooks to get the coordinates of several axes and render rectangles delineating their area.
 
@@ -254,10 +254,10 @@ Below is an example of how to use the these hooks to get the coordinates of seve
 ## Grouped axes
 
 To group `band` or `point` axes together, provide a `groups` property in the axis definition.
-This property expects an array of objects with a `getValue` function.
+This property expects an array of objects with a `getValue()` function.
 This feature is available for both x- and y-axes.
 
-The `getValue` function receives the axis data value and should return a group name.
+The `getValue()` function receives the axis data value and should return a group name.
 Each group name is used as-is, overriding any `valueFormatter` for the axis.
 Groups are displayed in the order they're defined in the `groups` array.
 
@@ -277,7 +277,7 @@ In the following demo, the y-axis is grouped by category and subcategory.
 
 You can customize the tick size for each group by providing a `tickSize` property in the `groups` array.
 The `tickSize` also affects the tick label position.
-Each item in the array corresponds to a group defined in the `getValue` function.
+Each item in the array corresponds to a group defined in the `getValue()` function.
 
 {{"demo": "GroupedAxesTickSize.js"}}
 
@@ -352,10 +352,10 @@ You can customize the value where the scale switches from linear to logarithmic 
 
 ## Composition
 
-If you're using composition, you must provide the axis settings in the `<ChartContainer />` using the `xAxis` and `yAxis` props.
+If you're using composition, you must provide the axis settings in the `<ChartsContainer />` using the `xAxis` and `yAxis` props.
 This provides all the scaling properties to its children, and lets you use the `<XAxis/>` and `<YAxis/>` components as children.
 
-In turn, those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
+In turn, those components require an `axisId` prop to link them to an axis you defined in the `<ChartsContainer />`.
 You can choose their position with the `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
 The props described in the [rendering playground above](/x/react-charts/axis/#rendering) are also available.
 

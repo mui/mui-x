@@ -10,7 +10,7 @@ Common conformance guidelines for accessibility include:
 - US:
   - [ADA](https://www.ada.gov/) - US Department of Justice
   - [Section 508](https://www.section508.gov/) - US federal agencies
-- Europe: [EAA](https://employment-social-affairs.ec.europa.eu/policies-and-activities/social-protection-social-inclusion/persons-disabilities/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en) (European Accessibility Act)
+- Europe: [EAA](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/european-accessibility-act-eaa_en) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
@@ -77,8 +77,8 @@ The two Data Grids below illustrate how the user experience is impacted by impro
 
 {{"demo": "FocusManagement.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If you customize cell rendering with the [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells) method, you become responsible for removing focusable elements from the page tab sequence.
-Use the `tabIndex` prop passed to the `renderCell` params to determine if the rendered cell has focus and, as a result, whether the inner elements should be removed from the tab sequence:
+If you customize cell rendering with the [`renderCell()`](/x/react-data-grid/column-definition/#rendering-cells) method, you become responsible for removing focusable elements from the page tab sequence.
+Use the `tabIndex` prop passed to the `renderCell()` params to determine if the rendered cell has focus and, as a result, whether the inner elements should be removed from the tab sequence:
 
 ```jsx
 renderCell: (params) => (

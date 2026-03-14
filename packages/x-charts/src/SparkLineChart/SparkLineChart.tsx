@@ -176,7 +176,7 @@ const SPARK_LINE_DEFAULT_MARGIN = 5;
  */
 const SparkLineChart = React.forwardRef(function SparkLineChart(
   props: SparkLineChartProps,
-  ref: React.Ref<SVGSVGElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const {
     xAxis: xAxisProps,
@@ -415,10 +415,13 @@ SparkLineChart.propTypes = {
    */
   disableClipping: PropTypes.bool,
   /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
    * If true, the voronoi interaction are ignored.
    */
   disableVoronoi: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -447,28 +450,53 @@ SparkLineChart.propTypes = {
     PropTypes.oneOfType([
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['line']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['scatter']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['pie']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['radar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['line']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['scatter']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['radar']),
       }),
     ]).isRequired,
   ),
@@ -486,10 +514,37 @@ SparkLineChart.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.string.isRequired,
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['line']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['scatter']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -520,28 +575,53 @@ SparkLineChart.propTypes = {
     PropTypes.oneOfType([
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['line']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['scatter']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['pie']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.string,
+        seriesId: PropTypes.string.isRequired,
         type: PropTypes.oneOf(['radar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['bar']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['line']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['scatter']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['pie']),
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.string.isRequired,
+        type: PropTypes.oneOf(['radar']),
       }),
     ]).isRequired,
   ),
@@ -574,13 +654,13 @@ SparkLineChart.propTypes = {
   onAxisClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -599,9 +679,17 @@ SparkLineChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onTooltipAxisChange: PropTypes.func,
+  /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -644,6 +732,16 @@ SparkLineChart.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
@@ -654,9 +752,17 @@ SparkLineChart.propTypes = {
       type: PropTypes.oneOf(['bar']).isRequired,
     }),
     PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.string.isRequired,
+    }),
+    PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['line']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,

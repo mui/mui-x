@@ -80,7 +80,7 @@ const StyledInputComponent = styled(GridFilterInputValue, {
   flex: 1,
   marginRight: vars.spacing(0.5),
   marginBottom: vars.spacing(-0.25),
-  '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
+  '& input[type="date"], & input[type="datetime-local"]': {
     '&[value=""]:not(:focus)': {
       color: 'transparent',
     },
@@ -114,9 +114,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: [
       'columnHeader',
       'columnHeader--filter',
-      colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'columnHeader--alignRight',
+      colDef.headerAlign && `columnHeader--align${capitalize(colDef.headerAlign)}`,
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',

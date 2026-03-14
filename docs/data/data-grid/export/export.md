@@ -76,7 +76,7 @@ If not, it exports all rows except the footers (filtered and sorted rows, accord
 
 ### Customizing the rows to export
 
-Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
+Alternatively, you can set the `getRowsToExport()` function and export any rows you want, as in the following example.
 The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
 
 | Selector                                       | Behavior                                                                                                                                                                                                                   |
@@ -97,7 +97,7 @@ When using [Row grouping](/x/react-data-grid/row-grouping/), it can be useful to
 
 ### Exported cells
 
-When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.
+When the value of a field is an object or a `renderCell()` is provided, the CSV export might not display the value correctly.
 You can provide a [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) with a string representation to be used.
 
 ```jsx
@@ -178,7 +178,7 @@ With media query, you have to start your `sx` object with `@media print` key, su
 />
 ```
 
-With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity).
+With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Cascade/Specificity).
 
 ```jsx
 // Default toolbar:

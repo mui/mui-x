@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import type { GridSlotProps } from '../../models/gridSlotsComponent';
 import { getDataGridUtilityClass } from '../../constants';
@@ -87,7 +87,7 @@ const GridQuickFilterTrigger = styled(ToolbarButton, {
 // Currently causes react-docgen to fail
 const GridQuickFilterTextField = styled(
   (_props: GridSlotProps['baseTextField']) => {
-    throw new Error('Failed assertion: should not be rendered');
+    throw new Error('MUI X: Failed assertion: should not be rendered');
   },
   {
     name: 'MuiDataGrid',

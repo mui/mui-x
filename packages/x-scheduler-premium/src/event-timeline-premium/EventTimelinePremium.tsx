@@ -2,48 +2,53 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import composeClasses from '@mui/utils/composeClasses';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { useStore } from '@base-ui/utils/store';
 import {
   useExtractEventTimelinePremiumParameters,
   useEventTimelinePremium,
 } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
-import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { eventDialogSlots, EventDialogClassesContext } from '@mui/x-scheduler/internals';
+import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
+import {
+  eventDialogSlots,
+  EventDialogStyledContext,
+  EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+} from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
 import {
   EventTimelinePremiumClasses,
   getEventTimelinePremiumUtilityClass,
 } from './eventTimelinePremiumClasses';
-import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
-// TODO: Remove these CSS imports during the MUI X migration
-import '../styles/index.css';
-import '../styles/colors.css';
-import '../styles/tokens.css';
+import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
+
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-scheduler-premium' as const,
+};
+const watermark = <Watermark packageInfo={packageInfo} />;
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
     root: ['root'],
-    headerToolbar: ['headerToolbar'],
     content: ['content'],
     grid: ['grid'],
-    titleSubGridWrapper: ['titleSubGridWrapper'],
+    headerRow: ['headerRow'],
+    titleHeaderCell: ['titleHeaderCell'],
+    eventsHeaderCell: ['eventsHeaderCell'],
     titleSubGrid: ['titleSubGrid'],
-    titleSubGridHeaderRow: ['titleSubGridHeaderRow'],
-    titleSubGridHeaderCell: ['titleSubGridHeaderCell'],
     eventsSubGridWrapper: ['eventsSubGridWrapper'],
     eventsSubGrid: ['eventsSubGrid'],
-    eventsSubGridHeaderRow: ['eventsSubGridHeaderRow'],
     eventsSubGridRow: ['eventsSubGridRow'],
     titleCellRow: ['titleCellRow'],
     titleCell: ['titleCell'],
     titleCellLegendColor: ['titleCellLegendColor'],
+    currentTimeIndicator: ['currentTimeIndicator'],
+    currentTimeIndicatorCircle: ['currentTimeIndicatorCircle'],
     event: ['event'],
+    eventPlaceholder: ['eventPlaceholder'],
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     timeHeader: ['timeHeader'],
@@ -81,24 +86,23 @@ const EventTimelinePremiumRoot = styled('div', {
 })(({ theme }) => ({
   '--time-cell-width': '64px',
   '--days-cell-width': '120px',
-  '--weeks-cell-width': '64px',
-  '--months-cell-width': '180px',
+  '--weeks-cell-width': 'calc(64px * 7)',
+  // Months view uses per-day units instead of per-month, so each column width = days in month × 6px
+  '--months-cell-width': '6px',
   '--years-cell-width': '200px',
+  boxSizing: 'border-box',
+  '*, *::before, *::after': {
+    boxSizing: 'inherit',
+  },
   display: 'flex',
   flexDirection: 'column',
-  padding: theme.spacing(2),
   gap: theme.spacing(2),
   height: '100%',
+  minHeight: 0,
+  overflow: 'hidden',
+  fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
 }));
-
-const EventTimelinePremiumHeaderToolbar = styled('header', {
-  name: 'MuiEventTimeline',
-  slot: 'HeaderToolbar',
-})({
-  display: 'flex',
-  justifyContent: 'flex-start',
-});
 
 export const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   TEvent extends object,
@@ -108,8 +112,9 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // We don't want the plan suffix in the theme, otherwise we couldn't share the theme entry across packages
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
+  useLicenseVerifier(packageInfo);
 
   const {
     parameters,
@@ -118,35 +123,38 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
 
-  const view = useStore(store, eventTimelinePremiumViewSelectors.view);
-  const views = useStore(store, eventTimelinePremiumViewSelectors.views);
+  const { localeText, resourceColumnLabel, apiRef, ...other } = forwardedProps;
+  useInitializeApiRef(store, apiRef);
 
-  const handleViewChange = (event: SelectChangeEvent) => {
-    store.setView(event.target.value as EventTimelinePremiumView, event as Event);
-  };
+  const mergedLocaleText = React.useMemo(
+    () => ({ ...EVENT_TIMELINE_DEFAULT_LOCALE_TEXT, ...localeText }),
+    [localeText],
+  );
+
+  const timelineStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText, resourceColumnLabel }),
+    [classes, mergedLocaleText, resourceColumnLabel],
+  );
+
+  const dialogStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
-      <EventTimelinePremiumClassesContext.Provider value={classes}>
-        <EventDialogClassesContext.Provider value={classes}>
+      <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
+        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
           <EventTimelinePremiumRoot
             ref={forwardedRef}
             className={clsx(classes.root, className)}
-            {...forwardedProps}
+            {...other}
           >
-            <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
-              <Select value={view} onChange={handleViewChange} size="small">
-                {views.map((viewItem) => (
-                  <MenuItem key={viewItem} value={viewItem}>
-                    {viewItem}
-                  </MenuItem>
-                ))}
-              </Select>
-            </EventTimelinePremiumHeaderToolbar>
             <EventTimelinePremiumContent />
+            {watermark}
           </EventTimelinePremiumRoot>
-        </EventDialogClassesContext.Provider>
-      </EventTimelinePremiumClassesContext.Provider>
+        </EventDialogStyledContext.Provider>
+      </EventTimelinePremiumStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;

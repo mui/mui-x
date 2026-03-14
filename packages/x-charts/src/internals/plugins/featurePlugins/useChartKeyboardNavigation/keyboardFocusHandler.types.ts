@@ -8,30 +8,30 @@ import type { ChartState } from '../../models/chart';
 import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 
 export type FocusedItemUpdater<
-  TSeriesType extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   OutputSeriesType extends ChartSeriesType = ChartSeriesType,
 > = (
-  currentItem: (TSeriesType extends any ? FocusedItemIdentifier<TSeriesType> : never) | null,
-  state: TSeriesType extends CartesianChartSeriesType
+  currentItem: (SeriesType extends any ? FocusedItemIdentifier<SeriesType> : never) | null,
+  state: SeriesType extends CartesianChartSeriesType
     ? Pick<
         ChartState<
           [UseChartKeyboardNavigationSignature],
           [UseChartCartesianAxisSignature],
-          TSeriesType
+          SeriesType
         >,
         'series' | 'cartesianAxis'
       >
-    : Pick<ChartState<[UseChartKeyboardNavigationSignature], [], TSeriesType>, 'series'>,
+    : Pick<ChartState<[UseChartKeyboardNavigationSignature], [], SeriesType>, 'series'>,
 ) => FocusedItemIdentifier<OutputSeriesType> | null;
 
 /**
  * Get the next focusable item in the chart.
- * @param {SeriesItemIdentifier<TSeriesType> | null} currentItem The current focused item.
+ * @param {SeriesItemIdentifierWithType<SeriesType> | null} currentItem The current focused item.
  * @param {KeyboardEvent} event The keyboard event that triggered the navigation.
  * @param {ChartState<[UseChartKeyboardNavigationSignature], []>} state The current chart state.
- * @returns {SeriesItemIdentifier<ChartSeriesType> | null} The next focusable item or null if none found.
+ * @returns {SeriesItemIdentifierWithType<ChartSeriesType> | null} The next focusable item or null if none found.
  */
 export type KeyboardFocusHandler<
-  TSeriesType extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   OutputSeriesType extends ChartSeriesType = ChartSeriesType,
-> = (event: KeyboardEvent) => FocusedItemUpdater<TSeriesType, OutputSeriesType> | null;
+> = (event: KeyboardEvent) => FocusedItemUpdater<SeriesType, OutputSeriesType> | null;

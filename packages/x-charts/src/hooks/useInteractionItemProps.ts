@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { type SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
 import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { SeriesItemIdentifier } from '../models/seriesType';
+import type { SeriesItemIdentifierWithType } from '../models/seriesType';
 import type { ChartInstance } from '../internals/plugins/models';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 
@@ -19,8 +18,8 @@ function onPointerDown(event: React.PointerEvent) {
   }
 }
 
-export const useInteractionItemProps = (
-  data: SeriesItemIdentifierWithData,
+export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
+  data: SeriesItemIdentifierWithType<SeriesType>,
   skip?: boolean,
 ): {
   onPointerEnter?: () => void;
@@ -29,18 +28,18 @@ export const useInteractionItemProps = (
 } => {
   const { instance } =
     useChartContext<
-      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+      [
+        UseChartInteractionSignature,
+        UseChartHighlightSignature<SeriesType>,
+        UseChartTooltipSignature,
+      ]
     >();
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
     instance.setLastUpdateSource('pointer');
     instance.setTooltipItem(data);
-    // TODO: uniformize sankey and other types to get a single plugin
-    instance.setHighlight(
-      // @ts-ignore
-      data.type === 'sankey' ? data : { seriesId: data.seriesId, dataIndex: data.dataIndex },
-    );
+    instance.setHighlight(data);
   });
 
   const onPointerLeave = useEventCallback(() => {
@@ -71,11 +70,11 @@ export const useInteractionItemProps = (
   );
 };
 
-export function getInteractionItemProps(
+export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
   instance: ChartInstance<
-    [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+    [UseChartInteractionSignature, UseChartHighlightSignature<SeriesType>, UseChartTooltipSignature]
   >,
-  item: SeriesItemIdentifier<ChartSeriesType>,
+  item: SeriesItemIdentifierWithType<SeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
@@ -87,10 +86,7 @@ export function getInteractionItemProps(
     }
     instance.setLastUpdateSource('pointer');
     instance.setTooltipItem(item);
-    instance.setHighlight(
-      // @ts-ignore
-      item.type === 'sankey' ? item : { seriesId: item.seriesId, dataIndex: item.dataIndex },
-    );
+    instance.setHighlight(item);
   }
 
   function onPointerLeave() {

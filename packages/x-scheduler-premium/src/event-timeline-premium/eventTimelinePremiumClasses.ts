@@ -5,26 +5,22 @@ import { EventDialogClasses, eventDialogClassKeys } from '@mui/x-scheduler/inter
 export interface EventTimelinePremiumClasses extends EventDialogClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the header toolbar element. */
-  headerToolbar: string;
   /** Styles applied to the content section element. */
   content: string;
   /** Styles applied to the grid element. */
   grid: string;
-  /** Styles applied to the title sub-grid wrapper element. */
-  titleSubGridWrapper: string;
+  /** Styles applied to the header row element. */
+  headerRow: string;
+  /** Styles applied to the title header cell element. */
+  titleHeaderCell: string;
+  /** Styles applied to the events header cell element. */
+  eventsHeaderCell: string;
   /** Styles applied to the title sub-grid element. */
   titleSubGrid: string;
-  /** Styles applied to the title sub-grid header row element. */
-  titleSubGridHeaderRow: string;
-  /** Styles applied to the title sub-grid header cell element. */
-  titleSubGridHeaderCell: string;
   /** Styles applied to the events sub-grid wrapper element. */
   eventsSubGridWrapper: string;
   /** Styles applied to the events sub-grid element. */
   eventsSubGrid: string;
-  /** Styles applied to the events sub-grid header row element. */
-  eventsSubGridHeaderRow: string;
   /** Styles applied to the events sub-grid row element. */
   eventsSubGridRow: string;
   /** Styles applied to the title cell row element. */
@@ -33,8 +29,14 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   titleCell: string;
   /** Styles applied to the title cell legend color element. */
   titleCellLegendColor: string;
+  /** Styles applied to the current time indicator element. */
+  currentTimeIndicator: string;
+  /** Styles applied to the current time indicator circle element. */
+  currentTimeIndicatorCircle: string;
   /** Styles applied to event elements. */
   event: string;
+  /** Styles applied to event placeholder elements. */
+  eventPlaceholder: string;
   /** Styles applied to event resize handler elements. */
   eventResizeHandler: string;
   /** Styles applied to event lines clamp elements. */
@@ -97,21 +99,22 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
   'MuiEventTimeline',
   [
     'root',
-    'headerToolbar',
     'content',
     'grid',
-    'titleSubGridWrapper',
+    'headerRow',
+    'titleHeaderCell',
+    'eventsHeaderCell',
     'titleSubGrid',
-    'titleSubGridHeaderRow',
-    'titleSubGridHeaderCell',
     'eventsSubGridWrapper',
     'eventsSubGrid',
-    'eventsSubGridHeaderRow',
     'eventsSubGridRow',
     'titleCellRow',
     'titleCell',
     'titleCellLegendColor',
+    'currentTimeIndicator',
+    'currentTimeIndicatorCircle',
     'event',
+    'eventPlaceholder',
     'eventResizeHandler',
     'eventLinesClamp',
     'timeHeader',

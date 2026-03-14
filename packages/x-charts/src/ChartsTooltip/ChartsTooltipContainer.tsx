@@ -8,6 +8,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { type PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { warnOnce } from '@mui/x-internals/warning';
 import { type TriggerOptions, useIsFineMainPointer } from './utils';
 import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
@@ -18,14 +19,16 @@ import {
 import {
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
+  type UseChartTooltipSignature,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
+import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartsInteractionAxisTooltip,
-  type UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+  selectorChartsTooltipAxisPosition,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianTooltip.selectors';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
-import { useSvgRef } from '../hooks';
+import { useChartsLayerContainerRef } from '../hooks';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
@@ -51,6 +54,23 @@ function getIsOpenSelector(
   }
   return selectorReturnFalse;
 }
+
+const defaultAnchorByTrigger = {
+  item: 'node',
+  axis: 'chart',
+  none: 'pointer',
+} as const;
+
+const getPositionSelectorByAnchor = (anchor: 'pointer' | 'node' | 'chart') => {
+  switch (anchor) {
+    case 'node':
+      return selectorChartsTooltipItemPosition;
+    case 'chart':
+      return selectorChartsTooltipAxisPosition;
+    default:
+      return selectorReturnNull;
+  }
+};
 
 type PopperSlots = NonNullable<PopperProps['slots']>;
 
@@ -91,7 +111,11 @@ export interface ChartsTooltipContainerProps<
    * Determine if the tooltip should be placed on the pointer location or on the node.
    * @default 'pointer'
    */
-  anchor?: 'pointer' | 'node';
+  anchor?: T extends 'item'
+    ? 'pointer' | 'node'
+    : T extends 'axis'
+      ? 'pointer' | 'chart'
+      : 'pointer';
   /**
    * Determines the tooltip position relatively to the anchor.
    */
@@ -130,10 +154,37 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     ...other
   } = props;
 
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartInteractionSignature]>();
+  const store =
+    useStore<
+      [UseChartCartesianAxisSignature, UseChartInteractionSignature, UseChartTooltipSignature]
+    >();
 
-  const svgRef = useSvgRef();
-  const anchorRef = React.useRef<SVGRectElement | null>(null);
+  if (process.env.NODE_ENV !== 'production') {
+    const isItemControlled = store.state.tooltip?.itemIsControlled ?? false;
+    const isAxisControlled = store.state.controlledCartesianAxisTooltip !== undefined;
+
+    if (trigger !== 'item' && isItemControlled) {
+      warnOnce(
+        [
+          `MUI X Charts: The \`tooltipItem\` prop is provided, but the tooltip trigger is set to '${trigger}'.`,
+          "The `tooltipItem` prop only has an effect when the tooltip trigger is 'item'.",
+        ],
+        'error',
+      );
+    }
+    if (trigger !== 'axis' && isAxisControlled) {
+      warnOnce(
+        [
+          `MUI X Charts: The \`tooltipAxis\` prop is provided, but the tooltip trigger is set to '${trigger}'.`,
+          "The `tooltipAxis` prop only has an effect when the tooltip trigger is 'axis'.",
+        ],
+        'error',
+      );
+    }
+  }
+
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
+  const anchorRef = React.useRef<HTMLDivElement | null>(null);
 
   const classes = useUtilityClasses(propClasses);
 
@@ -149,19 +200,16 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const isOpen = store.use(getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush));
 
   const lastInteraction = store.use(selectorChartsLastInteraction);
-  const computedAnchor = lastInteraction === 'keyboard' || pointerType === null ? 'node' : anchor;
 
-  const itemPosition = store.use(
-    trigger === 'item' && computedAnchor === 'node'
-      ? selectorChartsTooltipItemPosition
-      : selectorReturnNull,
-    position,
-  );
+  const pointerAnchorUnavailable = lastInteraction === 'keyboard' || pointerType === null;
+  const computedAnchor = pointerAnchorUnavailable ? defaultAnchorByTrigger[trigger] : anchor;
+
+  const itemPosition = store.use(getPositionSelectorByAnchor(computedAnchor), props.position);
 
   const isTooltipNodeAnchored = itemPosition !== null;
 
   React.useEffect(() => {
-    const svgElement = svgRef.current;
+    const svgElement = chartsLayerContainerRef.current;
     if (svgElement === null) {
       return () => {};
     }
@@ -189,7 +237,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       svgElement.removeEventListener('pointerenter', handlePointerEvent);
       pointerUpdate.clear();
     };
-  }, [svgRef, positionRef, isTooltipNodeAnchored]);
+  }, [chartsLayerContainerRef, positionRef, isTooltipNodeAnchored]);
 
   const pointerAnchorEl = React.useMemo(
     () => ({
@@ -246,24 +294,31 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   return (
     <React.Fragment>
-      {svgRef.current &&
+      {chartsLayerContainerRef.current &&
         ReactDOM.createPortal(
-          <rect
+          <div
             ref={anchorRef}
-            {...itemPosition}
-            display="hidden"
-            // On ios a rect with no width/height is not detectable by the popper.js
-            pointerEvents="none"
-            opacity={0}
-            width={1}
-            height={1}
+            style={{
+              position: 'absolute',
+              display: 'hidden',
+              left: itemPosition?.x ?? 0,
+              top: itemPosition?.y ?? 0,
+              pointerEvents: 'none',
+              opacity: 0,
+              // TODO: Is this true for a div as well?
+              // On ios a rect with no width/height is not detectable by the popper.js
+              width: 1,
+              height: 1,
+            }}
           />,
-          svgRef.current,
+          chartsLayerContainerRef.current,
         )}
       <NoSsr>
         {isOpen && (
           <ChartsTooltipRoot
             {...other}
+            // The key is here to make sure the tooltip uses the new anchor immediately.
+            key={itemPosition ? 'charts-anchored' : 'charts-pointer'}
             className={classes?.root}
             open={isOpen}
             placement={
@@ -349,10 +404,10 @@ ChartsTooltipContainer.propTypes = {
   container: PropTypes.oneOfType([
     (props, propName) => {
       if (props[propName] == null) {
-        return new Error(`Prop '${propName}' is required but wasn't specified`);
+        return new Error(`MUI X: Prop '${propName}' is required but wasn't specified`);
       }
       if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-        return new Error(`Expected prop '${propName}' to be of type Element`);
+        return new Error(`MUI X: Expected prop '${propName}' to be of type Element`);
       }
       return null;
     },

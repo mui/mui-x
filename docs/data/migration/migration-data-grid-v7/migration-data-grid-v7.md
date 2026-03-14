@@ -161,7 +161,7 @@ You have to import it from `@mui/x-license` instead:
   +const isRowSelected = rowSelectionManager.has(rowId);
   ```
 
-  There is also a `createRowSelectionManager` utility function that can be used to manage the row selection:
+  There is also a `createRowSelectionManager()` utility function that can be used to manage the row selection:
 
   ```ts
   const rowSelectionManager = createRowSelectionManager({
@@ -422,4 +422,4 @@ You have to import it from `@mui/x-license` instead:
 
 ### Bundling
 
-The Data Grid now requires a bundler that can handle CSS imports. See [Quickstart-Bundling](/x/react-data-grid/quickstart/#bundling) for more details.
+The Data Grid now requires a bundler that can handle CSS imports.

@@ -22,9 +22,16 @@ export interface ChartsAxisTooltipContentProps {
    */
   classes?: Partial<ChartsTooltipClasses>;
   sx?: SxProps<Theme>;
+  /**
+   * The sort in which series items are displayed in the tooltip.
+   * When set to `none`, series are sorted as they are provided in the series property. Otherwise they are sorted by their value.
+   * @default 'none'
+   */
+  sort?: 'none' | 'asc' | 'desc';
 }
 
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
+  const { sort } = props;
   const classes = useUtilityClasses(props.classes);
 
   const tooltipData = useAxesTooltip();
@@ -36,6 +43,22 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   return (
     <ChartsTooltipPaper sx={props.sx} className={classes.paper}>
       {tooltipData.map(({ axisId, mainAxis, axisValue, axisFormattedValue, seriesItems }) => {
+        const sortedItems =
+          sort && sort !== 'none'
+            ? [...seriesItems].sort((a, b) => {
+                const aValue = a.value?.valueOf();
+                const bValue = b.value?.valueOf();
+                if (typeof aValue !== 'number') {
+                  return 1;
+                }
+                if (typeof bValue !== 'number') {
+                  return -1;
+                }
+
+                return sort === 'asc' ? aValue - bValue : bValue - aValue;
+              })
+            : seriesItems;
+
         return (
           <ChartsTooltipTable className={classes.table} key={axisId}>
             {axisValue != null && !mainAxis.hideTooltip && (
@@ -43,30 +66,37 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
             )}
 
             <tbody>
-              {seriesItems.map(({ seriesId, color, formattedValue, formattedLabel, markType }) => {
-                if (formattedValue == null) {
-                  return null;
-                }
-                return (
-                  <ChartsTooltipRow key={seriesId} className={classes.row}>
-                    <ChartsTooltipCell
-                      className={clsx(classes.labelCell, classes.cell)}
-                      component="th"
-                    >
-                      <div className={classes.markContainer}>
-                        <ChartsLabelMark type={markType} color={color} className={classes.mark} />
-                      </div>
-                      {formattedLabel || null}
-                    </ChartsTooltipCell>
-                    <ChartsTooltipCell
-                      className={clsx(classes.valueCell, classes.cell)}
-                      component="td"
-                    >
-                      {formattedValue}
-                    </ChartsTooltipCell>
-                  </ChartsTooltipRow>
-                );
-              })}
+              {sortedItems.map(
+                ({ seriesId, color, formattedValue, formattedLabel, markType, markShape }) => {
+                  if (formattedValue == null) {
+                    return null;
+                  }
+                  return (
+                    <ChartsTooltipRow key={seriesId} className={classes.row}>
+                      <ChartsTooltipCell
+                        className={clsx(classes.labelCell, classes.cell)}
+                        component="th"
+                      >
+                        <div className={classes.markContainer}>
+                          <ChartsLabelMark
+                            type={markType}
+                            markShape={markShape}
+                            color={color}
+                            className={classes.mark}
+                          />
+                        </div>
+                        {formattedLabel || null}
+                      </ChartsTooltipCell>
+                      <ChartsTooltipCell
+                        className={clsx(classes.valueCell, classes.cell)}
+                        component="td"
+                      >
+                        {formattedValue}
+                      </ChartsTooltipCell>
+                    </ChartsTooltipRow>
+                  );
+                },
+              )}
             </tbody>
           </ChartsTooltipTable>
         );
@@ -89,6 +119,12 @@ ChartsAxisTooltipContent.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The sort in which series items are displayed in the tooltip.
+   * When set to `none`, series are sorted as they are provided in the series property. Otherwise they are sorted by their value.
+   * @default 'none'
+   */
+  sort: PropTypes.oneOf(['none', 'asc', 'desc']),
 } as any;
 
 export { ChartsAxisTooltipContent };

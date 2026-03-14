@@ -1,5 +1,58 @@
-import { SchedulerProcessedEvent, TemporalSupportedObject } from '../../models';
+import { TemporalTimezone, TemporalSupportedObject } from '../../base-ui-copy/types';
+import { SchedulerProcessedEvent } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
+
+/**
+ * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
+ * **without** the trailing `Z` (wall-time representation).
+ * Produces e.g. `yyyy'-'MM'-'dd'T'HH':'mm':'ss` for date-fns.
+ */
+export function getWallTimeIsoFormat(adapter: Adapter): string {
+  const f = adapter.formats;
+  const esc = adapter.escapedCharacters;
+  return [
+    f.yearPadded,
+    esc.start,
+    '-',
+    esc.end,
+    f.monthPadded,
+    esc.start,
+    '-',
+    esc.end,
+    f.dayOfMonthPadded,
+    esc.start,
+    'T',
+    esc.end,
+    f.hours24hPadded,
+    esc.start,
+    ':',
+    esc.end,
+    f.minutesPadded,
+    esc.start,
+    ':',
+    esc.end,
+    f.secondsPadded,
+  ].join('');
+}
+
+/**
+ * Converts a `TemporalSupportedObject` back to a string, respecting the
+ * original date format: instant strings (ending with `Z`) stay as UTC ISO
+ * strings, while wall-time strings (no `Z`) are formatted in the event's
+ * data timezone without the `Z` suffix.
+ */
+export function dateToEventString(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  originalString: string,
+  dataTimezone: TemporalTimezone,
+): string {
+  if (originalString.endsWith('Z')) {
+    return adapter.toJsDate(date).toISOString();
+  }
+  const dateInDataTz = adapter.setTimezone(date, dataTimezone);
+  return adapter.formatByString(dateInDataTz, getWallTimeIsoFormat(adapter));
+}
 
 export function mergeDateAndTime(
   adapter: Adapter,

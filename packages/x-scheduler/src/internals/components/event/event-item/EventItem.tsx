@@ -9,34 +9,40 @@ import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { EventItemProps } from './EventItem.types';
-import { useTranslations } from '../../../utils/TranslationsContext';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { schedulerPaletteStyles } from '../../../utils/tokens';
-import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
+import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'EventItemCard',
-})<{ 'data-variant'?: 'compact' | 'filled' | 'regular' }>(({ theme }) => ({
+})<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
-  '&[data-variant="compact"]': {
+  '&:hover': {
+    backgroundColor: (theme.vars || theme).palette.action.hover,
+  },
+
+  '&[data-variant="compact"], &[data-variant="regular"]': {
     containerType: 'inline-size',
     cursor: 'pointer',
     height: 'fit-content',
   },
   '&[data-variant="filled"]': {
-    backgroundColor: 'var(--event-color-3)',
-    color: 'var(--event-color-12)',
+    backgroundColor: 'var(--event-surface-bold)',
+    color: 'var(--event-on-surface-bold)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-bold-hover)',
+    },
   },
   '&[data-variant="regular"]': {
     cursor: 'pointer',
   },
-  ...schedulerPaletteStyles,
+  variants: getPaletteVariants(theme),
 }));
 
 const EventItemCardWrapper = styled('div', {
@@ -57,7 +63,7 @@ const EventItemTitle = styled('span', {
   slot: 'EventItemTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -68,7 +74,7 @@ const EventItemTime = styled('time', {
   slot: 'EventItemTime',
 })<{ 'data-compact'?: boolean }>(({ theme }) => ({
   display: 'inline-block',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -84,8 +90,7 @@ const EventItemRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'EventItemRecurringIcon',
 })(({ theme }) => ({
-  padding: theme.spacing(0.25),
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.primary,
 }));
 
 const ResourceLegendColor = styled('span', {
@@ -96,7 +101,7 @@ const ResourceLegendColor = styled('span', {
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-main)',
 });
 
 const EventItemCardContent = styled('p', {
@@ -139,9 +144,8 @@ export const EventItem = React.forwardRef(function EventItem(
   } = props;
 
   // Context hooks
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
 
   // State hooks
   const id = useId(idProp);
@@ -167,8 +171,8 @@ export const EventItem = React.forwardRef(function EventItem(
               role="img"
               aria-label={
                 resource?.title
-                  ? translations.resourceAriaLabel(resource.title)
-                  : translations.noResourceAriaLabel
+                  ? localeText.resourceAriaLabel(resource.title)
+                  : localeText.noResourceAriaLabel
               }
             />
             <EventItemLinesClamp
@@ -220,8 +224,8 @@ export const EventItem = React.forwardRef(function EventItem(
               role="img"
               aria-label={
                 resource?.title
-                  ? translations.resourceAriaLabel(resource.title)
-                  : translations.noResourceAriaLabel
+                  ? localeText.resourceAriaLabel(resource.title)
+                  : localeText.noResourceAriaLabel
               }
             />
             <EventItemLinesClamp
@@ -245,9 +249,13 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
       default:
-        throw new Error('MUI: Unsupported variant provided to EventItem component.');
+        throw new Error(
+          'MUI X Scheduler: Unsupported variant provided to EventItem component. ' +
+            'The EventItem component only supports specific variant values. ' +
+            'Check the component documentation for supported variants.',
+        );
     }
-  }, [variant, resource?.title, translations, formatTime, occurrence, isRecurring, classes]);
+  }, [variant, resource?.title, localeText, formatTime, occurrence, isRecurring, classes]);
 
   return (
     // TODO: Use button
@@ -273,9 +281,8 @@ function MultiDayDateLabel(props: {
 }) {
   const { occurrence, formatTime } = props;
 
-  const adapter = useAdapter();
-  const translations = useTranslations();
-  const classes = useEventCalendarClasses();
+  const adapter = useAdapterContext();
+  const { classes, localeText } = useEventCalendarStyledContext();
 
   if (
     !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
@@ -283,7 +290,7 @@ function MultiDayDateLabel(props: {
     const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
-        {translations.eventItemMultiDayLabel(
+        {localeText.eventItemMultiDayLabel(
           adapter.formatByString(occurrence.displayTimezone.end.value, format),
         )}
       </EventItemTime>
@@ -292,7 +299,7 @@ function MultiDayDateLabel(props: {
   if (occurrence.allDay) {
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
-        {translations.allDay}
+        {localeText.allDay}
       </EventItemTime>
     );
   }

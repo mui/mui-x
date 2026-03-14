@@ -88,7 +88,11 @@ export const useGridRowEditing = (
     (id: GridRowId, field: string) => {
       const params = apiRef.current.getCellParams(id, field);
       if (!apiRef.current.isCellEditable(params)) {
-        throw new Error(`MUI X: The cell with id=${id} and field=${field} is not editable.`);
+        throw new Error(
+          `MUI X Data Grid: The cell with id=${id} and field=${field} is not editable. ` +
+            'Cell editing requires the cell to be marked as editable. ' +
+            'Check the column definition and ensure editable is set to true, or verify the isCellEditable callback.',
+        );
       }
     },
     [apiRef],
@@ -97,7 +101,11 @@ export const useGridRowEditing = (
   const throwIfNotInMode = React.useCallback(
     (id: GridRowId, mode: GridRowModes) => {
       if (apiRef.current.getRowMode(id) !== mode) {
-        throw new Error(`MUI X: The row with id=${id} is not in ${mode} mode.`);
+        throw new Error(
+          `MUI X Data Grid: The row with id=${id} is not in ${mode} mode. ` +
+            'The operation requires the row to be in a specific editing mode. ' +
+            `Ensure the row is in ${mode} mode before performing this operation.`,
+        );
       }
     },
     [apiRef],
@@ -267,12 +275,15 @@ export const useGridRowEditing = (
             ...rowParams,
             field: params.field,
             reason,
+            // Only pass the pressed key when the row editing is controlled via `rowModesModel`.
+            // In uncontrolled mode, the default editor already inserts the character and passing it here would duplicate it.
+            key: rowModesModelProp && isPrintableKey(event) ? event.key : undefined,
           };
           apiRef.current.publishEvent('rowEditStart', newParams, event);
         }
       }
     },
-    [apiRef, hasFieldsWithErrors],
+    [apiRef, hasFieldsWithErrors, rowModesModelProp],
   );
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
@@ -285,12 +296,24 @@ export const useGridRowEditing = (
         reason === GridRowEditStartReasons.printableKeyDown ||
         reason === GridRowEditStartReasons.deleteKeyDown
       ) {
-        startRowEditModeParams.deleteValue = !!field;
+        // If the user typed a printable key, initialize the value with that key
+        // to avoid losing the first character when the component is controlled.
+        if (
+          rowModesModelProp &&
+          reason === GridRowEditStartReasons.printableKeyDown &&
+          params.key &&
+          field
+        ) {
+          startRowEditModeParams.initialValue = params.key;
+        } else {
+          // For Delete / Backspace or for uncontrolled row editing we clear the value
+          startRowEditModeParams.deleteValue = !!field;
+        }
       }
 
       apiRef.current.startRowEditMode(startRowEditModeParams);
     },
-    [apiRef],
+    [apiRef, rowModesModelProp],
   );
 
   const handleRowEditStop = React.useCallback<GridEventListener<'rowEditStop'>>(
@@ -518,12 +541,16 @@ export const useGridRowEditing = (
         delete prevRowValuesLookup.current[id];
       };
 
-      if (ignoreModifications) {
+      if (ignoreModifications && apiRef.current.getRow(id)) {
         finishRowEditMode();
         return;
       }
 
       const editingState = gridEditRowsStateSelector(apiRef);
+      if (!editingState[id]) {
+        finishRowEditMode();
+        return;
+      }
       const row = prevRowValuesLookup.current[id];
 
       const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
@@ -592,7 +619,9 @@ export const useGridRowEditing = (
         try {
           Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
-              apiRef.current.updateRows([finalRowUpdate]);
+              if (apiRef.current.getRow(id)) {
+                apiRef.current.updateRows([finalRowUpdate]);
+              }
               finishRowEditMode();
             })
             .catch(handleError);
@@ -600,7 +629,9 @@ export const useGridRowEditing = (
           handleError(errorThrown);
         }
       } else {
-        apiRef.current.updateRows([rowUpdate]);
+        if (apiRef.current.getRow(id)) {
+          apiRef.current.updateRows([rowUpdate]);
+        }
         finishRowEditMode();
       }
     },
@@ -794,5 +825,12 @@ export const useGridRowEditing = (
         updateStateToStopRowEditMode({ id: originalId, ...params });
       }
     });
-  }, [apiRef, rowModesModel, updateStateToStartRowEditMode, updateStateToStopRowEditMode]);
+  }, [
+    apiRef,
+    rowModesModel,
+    updateOrDeleteRowState,
+    updateStateToStartRowEditMode,
+    updateStateToStopRowEditMode,
+    updateRowInRowModesModel,
+  ]);
 };

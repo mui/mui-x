@@ -16,9 +16,17 @@ import {
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+
+export type SchedulerPlan = 'community' | 'premium';
 
 export interface SchedulerState<TEvent extends object = any> {
+  /**
+   * The plan of the scheduler instance.
+   * Derived from the `instanceName` of the store.
+   * Used to gate premium features like recurring events.
+   */
+  plan: SchedulerPlan;
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -170,8 +178,9 @@ export interface SchedulerDataSource<TEvent extends object> {
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
+   * @default []
    */
-  events: readonly TEvent[];
+  events?: readonly TEvent[];
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -229,7 +238,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   ) => void;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
-   * @default false
+   * @default true
    */
   areEventsDraggable?: boolean;
   /**
@@ -238,7 +247,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * If `false`, the events are not resizable.
    * If `"start"`, only the start can be resized.
    * If `"end"`, only the end can be resized.
-   * @default false
+   * @default true
    */
   areEventsResizable?: boolean | SchedulerEventSide;
   /**
@@ -262,7 +271,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * The color palette used for all events.
    * Can be overridden per resource using the `eventColor` property on the resource model.
    * Can be overridden per event using the `color` property on the event model.
-   * @default "jade"
+   * @default "teal"
    */
   eventColor?: SchedulerEventColor;
   /**
@@ -272,7 +281,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   readOnly?: boolean;
   /**
    * Data source for fetching events asynchronously.
-   * If provided, the `events` prop will be ignored.
+   * When provided, events are fetched through the data source instead of the `events` prop.
    */
   dataSource?: SchedulerDataSource<TEvent>;
   /*
@@ -296,6 +305,13 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default "default"
    */
   displayTimezone?: TemporalTimezone;
+  /**
+   * The locale object from `date-fns` used to format dates.
+   * This affects day names, month names, week start day, and other locale-dependent formatting.
+   * Import a locale from `date-fns/locale` and pass it to this prop.
+   * @default enUS (English)
+   */
+  dateLocale?: DateLocale;
 }
 
 /**
@@ -303,7 +319,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
  */
 export type UpdateRecurringEventParameters = {
   /**
-   * The start date of the occurrence affected by the update.
+   * The start date of the occurrence affected by the update before the update is applied.
    */
   occurrenceStart: TemporalSupportedObject;
   /**

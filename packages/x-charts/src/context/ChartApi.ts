@@ -23,9 +23,9 @@ export type PluginsPerSeriesType = {
  * @example ChartApi<'composition'>
  */
 export type ChartApi<
-  TSeries extends keyof PluginsPerSeriesType | undefined = undefined,
+  SeriesType extends keyof PluginsPerSeriesType | undefined = undefined,
   TSignatures extends readonly ChartAnyPluginSignature[] =
-    TSeries extends keyof PluginsPerSeriesType
-      ? PluginsPerSeriesType[TSeries]
+    SeriesType extends keyof PluginsPerSeriesType
+      ? PluginsPerSeriesType[SeriesType]
       : AllPluginSignatures,
 > = ChartPublicAPI<TSignatures>;

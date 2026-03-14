@@ -127,7 +127,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - ✅ The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector`.
 - ✅ The `gridVisibleSortedTopLevelRowEntriesSelector` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector`.
 - ✅ The `gridVisibleTopLevelRowCountSelector` selector was renamed to `gridFilteredTopLevelRowCountSelector`.
-- ✅ The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
+- ✅ The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators()` instead.
 - The `gridVisibleRowsSelector` selector was removed. Use `gridExpandedSortedRowIdsSelector` instead.
 - The `gridColumnsSelector` selector was removed. Use more specific grid columns selectors instead.
   ```diff
@@ -192,7 +192,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   />
   ```
 - The `componentError` event was removed. Use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary) to catch errors thrown during rendering.
-- The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
+- The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext()` or `useGridApiRef()` instead.
 - The `cellFocusIn` and `cellFocusOut` events are internal now. Use `slotProps.cell.onFocus` and `slotProps.cell.onBlur` props instead.
 
 :::info
@@ -284,7 +284,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridRowParams['getValue']` property was removed. Use `params.row` instead.
 - The `GridCellParams['getValue']` property was removed. Use `params.row` instead.
 - The default type of `GridCellParams['value']` was changed from `any` to `unknown`.
-- The `GridActionsCellProps['api']` property was removed. Use `useGridApiContext` hook instead to get `apiRef`.
+- The `GridActionsCellProps['api']` property was removed. Use `useGridApiContext()` hook instead to get `apiRef`.
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the `Row` slot anymore.
@@ -434,9 +434,9 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### Other exports
 
-- The `useGridApi` hook was removed. Use `apiRef.current` instead.
-- The `useGridState` hook was removed. Use `apiRef.current.state`, `apiRef.current.setState` and `apiRef.current.forceUpdate` instead.
-- The `getGridColDef` utility function was removed.
+- The `useGridApi()` hook was removed. Use `apiRef.current` instead.
+- The `useGridState()` hook was removed. Use `apiRef.current.state`, `apiRef.current.setState` and `apiRef.current.forceUpdate` instead.
+- The `getGridColDef()` utility function was removed.
 - The `GridColumns` type was removed. Use `GridColDef[]` instead.
 - The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
 - The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
@@ -445,7 +445,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
   If you use it to type `searchPredicate` - use `GridColumnsPanelProps['searchPredicate']` instead.
 
-  If you use it to type `getApplyFilterFn` - use `GridFilterOperator['getApplyFilterFn']` instead.
+  If you use it to type `getApplyFilterFn()` - use `GridFilterOperator['getApplyFilterFn']` instead.
 
 - The `GridHeaderPlaceholder` component was removed.
 - The `GridValueGetterFullParams` type was removed.
@@ -456,7 +456,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `filterPanelOperators` translation key was renamed to `filterPanelOperator`
 - The `MAX_PAGE_SIZE` constant was removed.
 - The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export was removed.
-- The `useGridScrollFn` hook was removed.
+- The `useGridScrollFn()` hook was removed.
 - The `GridCellParams` interface was changed. The row generic is now before the cell generic.
 
   ```diff
@@ -486,7 +486,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### Removals from the public API
 
-- The `getGridSingleSelectQuickFilterFn` function was removed.
+- The `getGridSingleSelectQuickFilterFn()` function was removed.
   You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.
 
 ## Rename `components` to `slots` (optional)
