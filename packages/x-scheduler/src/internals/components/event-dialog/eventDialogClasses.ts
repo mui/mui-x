@@ -41,6 +41,10 @@ export interface EventDialogClasses {
   eventDialogRecurrenceLabelContainer: string;
   /** Styles applied to the event dialog recurrence selector container element. */
   eventDialogRecurrenceSelectorContainer: string;
+  /** Styles applied to the event dialog resource menu item element. */
+  eventDialogResourceMenuItem: string;
+  /** Styles applied to the event dialog resource menu list subheader element. */
+  eventDialogResourceMenuListSubheader: string;
   /** Styles applied to the event dialog resource menu color dot element. */
   eventDialogResourceMenuColorDot: string;
   /** Styles applied to the event dialog resource menu color radio button element. */
@@ -113,6 +117,8 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogTabContent',
   'eventDialogDateTimeFieldsContainer',
   'eventDialogDateTimeFieldsRow',
+  'eventDialogResourceMenuItem',
+  'eventDialogResourceMenuListSubheader',
   'eventDialogResourceMenuColorDot',
   'eventDialogResourceMenuColorRadioButton',
   'eventDialogRecurrenceLabelContainer',
@@ -162,6 +168,8 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogTabContent: ['eventDialogTabContent'],
   eventDialogDateTimeFieldsContainer: ['eventDialogDateTimeFieldsContainer'],
   eventDialogDateTimeFieldsRow: ['eventDialogDateTimeFieldsRow'],
+  eventDialogResourceMenuItem: ['eventDialogResourceMenuItem'],
+  eventDialogResourceMenuListSubheader: ['eventDialogResourceMenuListSubheader'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
   eventDialogResourceMenuColorRadioButton: ['eventDialogResourceMenuColorRadioButton'],
   eventDialogRecurrenceLabelContainer: ['eventDialogRecurrenceLabelContainer'],
