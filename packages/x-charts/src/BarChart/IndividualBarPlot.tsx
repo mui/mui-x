@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type BarPlotSlotProps, type BarPlotSlots } from './BarPlot';
-import { type BarItemIdentifier } from '../models';
+import type { BarItemIdentifier } from '../models/seriesType/bar';
 import { BarElement } from './BarElement';
 import { type MaskData, type ProcessedBarSeriesData } from './types';
 import { useUtilityClasses } from './barClasses';

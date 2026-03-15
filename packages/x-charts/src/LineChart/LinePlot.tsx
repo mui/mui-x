@@ -11,7 +11,7 @@ import {
 } from './LineElement';
 import { type LineItemIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import { useXAxes, useYAxes } from '../hooks';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useLinePlotData } from './useLinePlotData';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';

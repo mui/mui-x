@@ -28,7 +28,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianTooltip.selectors';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
-import { useChartsLayerContainerRef } from '../hooks';
+import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 

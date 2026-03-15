@@ -1,4 +1,4 @@
-import { type ChartDrawingArea } from '../hooks';
+import type { ChartDrawingArea } from '../hooks/useDrawingArea';
 import { getPercentageValue } from '../internals/getPercentageValue';
 import { type DefaultizedPieSeriesType } from '../models/seriesType/pie';
 

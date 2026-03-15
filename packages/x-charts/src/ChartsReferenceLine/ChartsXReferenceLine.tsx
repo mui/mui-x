@@ -2,14 +2,15 @@
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
-import { useDrawingArea, useXScale } from '../hooks';
+import { useDrawingArea } from '../hooks/useDrawingArea';
+import { useXScale } from '../hooks/useScale';
 import {
   type CommonChartsReferenceLineProps,
   DEFAULT_SPACING,
   DEFAULT_SPACING_MIDDLE_OTHER_AXIS,
   ReferenceLineRoot,
 } from './common';
-import { ChartsText } from '../ChartsText';
+import { ChartsText } from '../ChartsText/ChartsText';
 import {
   type ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,

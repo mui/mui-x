@@ -1,7 +1,7 @@
 'use client';
 
 import useEventCallback from '@mui/utils/useEventCallback';
-import { type ChartPlugin } from '../../models';
+import type { ChartPlugin } from '../../models/plugin';
 import {
   type UseChartSeriesConfigSignature,
   type SerializeIdentifierFunction,

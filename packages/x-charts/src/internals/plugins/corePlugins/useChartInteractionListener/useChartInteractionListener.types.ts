@@ -14,7 +14,7 @@ import {
   type TapGestureOptions,
   type TurnWheelGestureOptions,
 } from '@mui/x-internal-gestures/core';
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models/plugin';
 
 export type ChartInteraction =
   | 'pan'

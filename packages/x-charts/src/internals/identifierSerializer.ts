@@ -1,4 +1,4 @@
-import type { SeriesId } from '../models';
+import { SeriesId } from '../models/seriesType/common';
 import type { SeriesTypeWithDataIndex } from '../models/seriesType/config';
 
 export const typeSerializer = (type: string) => `Type(${type})`;

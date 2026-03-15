@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { BarItemIdentifier } from '../models';
+import { BarItemIdentifier } from '../models/seriesType/bar';
 
 declare module '@mui/x-charts/BarChart' {
   export interface BarPlotProps {

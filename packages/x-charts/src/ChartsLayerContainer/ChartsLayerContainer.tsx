@@ -11,9 +11,9 @@ import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/
 import { type UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartContext } from '../context/ChartProvider';
-import { useChartsLayerContainerRef } from '../hooks';
+import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
 // eslint-disable-next-line import/no-cycle
-import { ChartsSurface } from '../ChartsSurface';
+import { ChartsSurface } from '../ChartsSurface/ChartsSurface';
 
 const ChartsLayerContainerDiv = styled('div', {
   name: 'MuiChartsLayerContainer',

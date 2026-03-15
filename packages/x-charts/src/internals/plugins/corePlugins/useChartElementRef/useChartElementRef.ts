@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { type ChartPlugin } from '../../models';
+import type { ChartPlugin } from '../../models/plugin';
 import { type UseChartElementRefSignature } from './useChartElementRef.types';
 
 export const useChartElementRef: ChartPlugin<UseChartElementRefSignature> = () => {

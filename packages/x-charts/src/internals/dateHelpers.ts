@@ -1,5 +1,5 @@
 import { type NumberValue, scaleTime } from '@mui/x-charts-vendor/d3-scale';
-import { type AxisConfig } from '../models';
+import type { AxisConfig } from '../models/axis';
 import { type ChartsAxisProps } from '../models/axis';
 
 /**

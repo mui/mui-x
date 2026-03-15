@@ -5,11 +5,11 @@ import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartsXAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
-import { ChartsText, type ChartsTextProps } from '../ChartsText';
+import { ChartsText, type ChartsTextProps } from '../ChartsText/ChartsText';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { defaultProps, useUtilityClasses } from './utilities';
-import { useDrawingArea } from '../hooks';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { getStringSize } from '../internals/domUtils';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 

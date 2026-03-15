@@ -4,21 +4,23 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar/Toolbar.types';
 import { BarPlot, type BarPlotProps, type BarPlotSlotProps, type BarPlotSlots } from './BarPlot';
-import { type ChartContainerProps } from '../ChartContainer';
+import type { ChartContainerProps } from '../ChartContainer/ChartContainer';
 import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis';
 import { type BarSeriesType } from '../models/seriesType/bar';
-import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip/ChartsTooltip';
 import {
   type ChartsTooltipSlots,
   type ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsLegend } from '../ChartsLegend/ChartsLegend';
+import type { ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend/chartsLegend.types';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight/ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight/ChartsAxisHighlight.types';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { type ChartsAxisSlots, type ChartsAxisSlotProps } from '../models/axis';
-import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
+import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid/ChartsGrid';
 import {
   ChartsOverlay,
   type ChartsOverlayProps,
@@ -26,10 +28,10 @@ import {
   type ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useBarChartProps } from './useBarChartProps';
-import { ChartDataProvider } from '../ChartDataProvider';
-import { ChartsSurface } from '../ChartsSurface';
+import { ChartDataProvider } from '../ChartDataProvider/ChartDataProvider';
+import { ChartsSurface } from '../ChartsSurface/ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartsWrapper } from '../ChartsWrapper';
+import { ChartsWrapper } from '../ChartsWrapper/ChartsWrapper';
 import type { BarChartPluginSignatures } from './BarChart.plugins';
 import { FocusedBar } from './FocusedBar';
 

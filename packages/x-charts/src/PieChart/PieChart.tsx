@@ -4,28 +4,24 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar/Toolbar.types';
 import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
-import { type ChartContainerProps } from '../ChartContainer';
+import type { ChartContainerProps } from '../ChartContainer/ChartContainer';
 import { type PieSeriesType } from '../models/seriesType';
-import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip/ChartsTooltip';
 import {
   type ChartsTooltipSlots,
   type ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsLegend } from '../ChartsLegend/ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend/chartsLegend.types';
 import { PiePlot, type PiePlotProps, type PiePlotSlotProps, type PiePlotSlots } from './PiePlot';
 import { type PieValueType } from '../models/seriesType/pie';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
-} from '../ChartsOverlay';
-import { ChartsSurface } from '../ChartsSurface';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { ChartsOverlay, type ChartsOverlayProps, type ChartsOverlaySlotProps, type ChartsOverlaySlots } from '../ChartsOverlay/ChartsOverlay';
+import { ChartsSurface } from '../ChartsSurface/ChartsSurface';
+import { ChartDataProvider } from '../ChartDataProvider/ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartsWrapper } from '../ChartsWrapper';
+import { ChartsWrapper } from '../ChartsWrapper/ChartsWrapper';
 import { PIE_CHART_PLUGINS, type PieChartPluginSignatures } from './PieChart.plugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 import { FocusedPieArc } from './FocusedPieArc';

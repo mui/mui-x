@@ -3,7 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { type RadarChartPluginSignatures } from './RadarChart.plugins';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsLegend } from '../ChartsLegend/ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend/chartsLegend.types';
 import {
   ChartsOverlay,
   type ChartsOverlayProps,
@@ -11,8 +12,8 @@ import {
   type ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
-import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartsWrapper, type ChartsWrapperProps } from '../ChartsWrapper';
+import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface/ChartsSurface';
+import { ChartsWrapper, type ChartsWrapperProps } from '../ChartsWrapper/ChartsWrapper';
 import { RadarGrid, type RadarGridProps } from './RadarGrid';
 import {
   RadarDataProvider,
@@ -21,13 +22,10 @@ import {
 import { RadarSeriesArea, RadarSeriesMarks, type RadarSeriesPlotProps } from './RadarSeriesPlot';
 import { RadarAxisHighlight, type RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
-import {
-  ChartsTooltip,
-  type ChartsTooltipSlotProps,
-  type ChartsTooltipSlots,
-} from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip/ChartsTooltip';
+import type { ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip/ChartTooltip.types';
 import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar/Toolbar.types';
 import { FocusedRadarMark } from './FocusedRadarMark';
 
 export interface RadarChartSlots

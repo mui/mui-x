@@ -3,12 +3,10 @@ import { useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartsDataProviderProps } from './ChartsDataProvider';
 import { type ChartsProviderProps } from '../context/ChartsProvider';
 import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
-import {
-  type ChartAnyPluginSignature,
-  type MergeSignaturesProperty,
-} from '../internals/plugins/models';
+import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import type { MergeSignaturesProperty } from '../internals/plugins/models/helpers';
 import { type ChartSeriesType } from '../models/seriesType/config';
-import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins/corePlugins';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 

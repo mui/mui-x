@@ -1,6 +1,6 @@
 'use client';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
-import { type ChartPlugin } from '../../models';
+import type { ChartPlugin } from '../../models/plugin';
 import type { UseChartSeriesState, UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { defaultizeSeries } from './processSeries';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useRadarMetricData } from './useRadarMetricData';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../../ChartsText/defaultTextPlacement';
-import { ChartsText } from '../../ChartsText';
+import { ChartsText } from '../../ChartsText/ChartsText';
 
 function RadarMetricLabels() {
   const { corners } = useRadarMetricData();

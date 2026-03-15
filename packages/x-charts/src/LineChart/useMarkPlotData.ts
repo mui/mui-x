@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useChartId } from '../hooks/useChartId';
-import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
+import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { cleanId } from '../internals/cleanId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { type SeriesId } from '../models/seriesType/common';
@@ -8,7 +10,7 @@ import {
   type ComputedAxisConfig,
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
+import type { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { type AxisId } from '../models/axis';
 import getColor from './seriesConfig/getColor';
 import { useChartContext } from '../context/ChartProvider';

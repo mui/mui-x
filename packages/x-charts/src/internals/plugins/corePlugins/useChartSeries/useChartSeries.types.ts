@@ -6,7 +6,7 @@ import type {
   SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models/plugin';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import {

@@ -4,9 +4,10 @@ import { type BarClassKey } from '../BarChart/barClasses';
 import { type BarLabelClassKey } from '../BarChart';
 import { type BarElementClassKey } from '../BarChart/barElementClasses';
 import { type ScatterClassKey } from '../ScatterChart/scatterClasses';
-import { type ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
-import { type ChartsGridClassKey } from '../ChartsGrid';
-import { type ChartsTooltipClassKey } from '../ChartsTooltip';
+import type { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight/chartsAxisHighlightClasses';
+import type { ChartsGridClassKey } from '../ChartsGrid/chartsGridClasses';
+
+import type { ChartsTooltipClassKey } from '../ChartsTooltip/chartsTooltipClasses';
 import type { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
 
 export interface ChartsComponentNameToClassKey {

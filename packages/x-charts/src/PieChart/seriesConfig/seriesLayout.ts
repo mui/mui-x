@@ -1,4 +1,4 @@
-import type { SeriesId } from '../../models';
+import { SeriesId } from '../../models/seriesType/common';
 import type { PieSeriesLayout } from '../../models/seriesType/pie';
 import type { SeriesLayoutGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { getPercentageValue } from '../../internals/getPercentageValue';

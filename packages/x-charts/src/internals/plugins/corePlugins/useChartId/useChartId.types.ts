@@ -1,4 +1,4 @@
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models/plugin';
 
 export interface UseChartIdParameters {
   /**

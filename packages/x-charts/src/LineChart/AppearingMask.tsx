@@ -4,7 +4,8 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { cleanId } from '../internals/cleanId';
-import { useChartId, useDrawingArea } from '../hooks';
+import { useChartId } from '../hooks/useChartId';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { type SeriesId } from '../models/seriesType/common';
 
 interface AppearingMaskProps {

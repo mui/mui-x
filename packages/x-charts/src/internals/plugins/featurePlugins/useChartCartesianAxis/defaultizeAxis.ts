@@ -7,7 +7,7 @@ import {
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
-import { type XAxis, type YAxis } from '../../../../models';
+import type { XAxis, YAxis } from '../../../../models/axis';
 import { type DefaultedXAxis, type DefaultedYAxis } from '../../../../models/axis';
 import { type DatasetType } from '../../../../models/seriesType/config';
 

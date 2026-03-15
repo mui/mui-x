@@ -1,13 +1,8 @@
 import { type Store } from '@mui/x-internals/store';
-import type {
-  ChartAnyPluginSignature,
-  ChartInstance,
-  ChartPublicAPI,
-  ChartState,
-  ConvertSignaturesIntoPlugins,
-  MergeSignaturesProperty,
-} from '../../internals/plugins/models';
-import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
+import type { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
+import type { ChartInstance, ChartPublicAPI, ChartState } from '../../internals/plugins/models/chart';
+import type { ConvertSignaturesIntoPlugins, MergeSignaturesProperty } from '../../internals/plugins/models/helpers';
+import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins/corePlugins';
 import type { UseChartBaseProps } from '../../internals/store/useCharts.types';
 import type { ChartSeriesType } from '../../models/seriesType/config';
 

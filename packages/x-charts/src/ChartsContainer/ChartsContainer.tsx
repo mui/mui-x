@@ -9,7 +9,7 @@ import {
   type ChartsDataProviderSlots,
 } from '../ChartsDataProvider';
 import { useChartsContainerProps } from './useChartsContainerProps';
-import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface/ChartsSurface';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 

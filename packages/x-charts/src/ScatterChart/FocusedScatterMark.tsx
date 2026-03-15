@@ -3,7 +3,9 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
-import { getValueToPositionMapper, useScatterSeriesContext, useXAxes, useYAxes } from '../hooks';
+import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
+import { useScatterSeriesContext } from '../hooks/useScatterSeries';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useUtilityClasses } from './scatterClasses';
 
 export function FocusedScatterMark({ className, ...props }: React.SVGAttributes<SVGRectElement>) {

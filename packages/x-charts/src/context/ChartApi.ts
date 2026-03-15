@@ -4,7 +4,7 @@ import type { ScatterChartPluginSignatures } from '../ScatterChart/ScatterChart.
 import type { LineChartPluginSignatures } from '../LineChart/LineChart.plugins';
 import type { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
 import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
-import type { ChartPublicAPI } from '../internals/plugins/models';
+import { ChartPublicAPI } from '../internals/plugins/models/chart';
 
 export type PluginsPerSeriesType = {
   line: LineChartPluginSignatures;

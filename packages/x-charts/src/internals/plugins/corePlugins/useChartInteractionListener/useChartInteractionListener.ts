@@ -11,7 +11,7 @@ import {
   TapGesture,
   TurnWheelGesture,
 } from '@mui/x-internal-gestures/core';
-import { type ChartPlugin } from '../../models';
+import type { ChartPlugin } from '../../models/plugin';
 import {
   type UseChartInteractionListenerSignature,
   type AddInteractionListener,

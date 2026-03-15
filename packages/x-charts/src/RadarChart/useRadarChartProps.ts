@@ -1,10 +1,10 @@
 'use client';
 import type { RadarChartProps } from './RadarChart';
-import { type ChartsOverlayProps } from '../ChartsOverlay';
-import { type ChartsLegendSlotExtension } from '../ChartsLegend';
-import type { ChartsWrapperProps } from '../ChartsWrapper';
+import type { ChartsOverlayProps } from '../ChartsOverlay/ChartsOverlay';
+import type { ChartsLegendSlotExtension } from '../ChartsLegend/chartsLegend.types';
+import { ChartsWrapperProps } from '../ChartsWrapper/ChartsWrapper';
 import { type RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
+import type { ChartsSurfaceProps } from '../ChartsSurface/ChartsSurface';
 import { type RadarGridProps } from './RadarGrid';
 import { RADAR_PLUGINS, type RadarChartPluginSignatures } from './RadarChart.plugins';
 import { type RadarSeriesAreaProps, type RadarSeriesMarksProps } from './RadarSeriesPlot';

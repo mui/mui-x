@@ -6,7 +6,7 @@ import {
 } from '../internals/plugins/corePlugins/useChartSeries';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useSeries } from './useSeries';
-import type { SeriesLegendItemParams } from '../ChartsLegend';
+import { SeriesLegendItemParams } from '../ChartsLegend/legendContext.types';
 import { useStore } from '../internals/store/useStore';
 import { type ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 

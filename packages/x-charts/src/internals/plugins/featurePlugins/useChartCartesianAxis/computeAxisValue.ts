@@ -1,6 +1,6 @@
 import { type ScaleBand, type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
-import { type ContinuousScaleName, type ScaleName } from '../../../../models';
+import type { ContinuousScaleName, ScaleName } from '../../../../models/axis';
 import {
   type ChartsXAxisProps,
   type ChartsAxisProps,
@@ -23,7 +23,7 @@ import { getColorScale, getOrdinalColorScale, getSequentialColorScale } from '..
 import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
-import type { ChartDrawingArea } from '../../../../hooks';
+import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { type ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { type ComputedAxisConfig } from './useChartCartesianAxis.types';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';

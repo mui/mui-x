@@ -6,7 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled, useTheme } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { useAnimatePieArc } from '../hooks';
+import { useAnimatePieArc } from '../hooks/animation/useAnimatePieArc';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { type PieArcOwnerState, useUtilityClasses as usePieUtilityClasses } from './pieClasses';

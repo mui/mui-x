@@ -1,4 +1,4 @@
-import { type AxisConfig } from '../../../../models';
+import type { AxisConfig } from '../../../../models/axis';
 import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type ChartSeriesConfig,

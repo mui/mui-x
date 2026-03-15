@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { type ChartPlugin } from '../../models';
+import type { ChartPlugin } from '../../models/plugin';
 import { type UseChartIdSignature } from './useChartId.types';
 import { createChartDefaultId } from './useChartId.utils';
 

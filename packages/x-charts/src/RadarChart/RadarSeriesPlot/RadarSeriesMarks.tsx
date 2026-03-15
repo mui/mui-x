@@ -10,7 +10,7 @@ import {
 import { useUtilityClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { type SeriesId } from '../../models/seriesType/common';
-import type { HighlightItemIdentifierWithType } from '../../models';
+import { HighlightItemIdentifierWithType } from '../../models/seriesType';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
 
 interface GetCirclePropsParams {

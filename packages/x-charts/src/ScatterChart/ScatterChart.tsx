@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar/Toolbar.types';
 import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
 import {
   ScatterPlot,
@@ -11,29 +11,26 @@ import {
   type ScatterPlotSlotProps,
   type ScatterPlotSlots,
 } from './ScatterPlot';
-import { type ChartContainerProps } from '../ChartContainer';
+import type { ChartContainerProps } from '../ChartContainer/ChartContainer';
 import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis';
 import { type ScatterSeriesType } from '../models/seriesType/scatter';
-import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip/ChartsTooltip';
 import {
   type ChartsTooltipSlots,
   type ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
-} from '../ChartsOverlay';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsLegend } from '../ChartsLegend/ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend/chartsLegend.types';
+import { ChartsOverlay, type ChartsOverlayProps, type ChartsOverlaySlotProps, type ChartsOverlaySlots } from '../ChartsOverlay/ChartsOverlay';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight/ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight/ChartsAxisHighlight.types';
 import { type ChartsAxisSlots, type ChartsAxisSlotProps } from '../models/axis';
-import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
+import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid/ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartDataProvider } from '../ChartDataProvider';
-import { ChartsSurface } from '../ChartsSurface';
-import { ChartsWrapper } from '../ChartsWrapper';
+import { ChartDataProvider } from '../ChartDataProvider/ChartDataProvider';
+import { ChartsSurface } from '../ChartsSurface/ChartsSurface';
+import { ChartsWrapper } from '../ChartsWrapper/ChartsWrapper';
 import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import type { ScatterChartPluginSignatures } from './ScatterChart.plugins';
 import { FocusedScatterMark } from './FocusedScatterMark';

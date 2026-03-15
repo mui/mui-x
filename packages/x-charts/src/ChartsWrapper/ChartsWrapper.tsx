@@ -5,14 +5,14 @@ import useForkRef from '@mui/utils/useForkRef';
 import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { useChartRootRef } from '../hooks/useChartRootRef';
-import { type Direction } from '../ChartsLegend';
-import { type Position } from '../models';
+import type { Direction } from '../ChartsLegend/direction';
+import type { Position } from '../models/position';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartPropsHeight,
   selectorChartPropsWidth,
 } from '../internals/plugins/corePlugins/useChartDimensions';
-import { chartsToolbarClasses } from '../Toolbar';
+import { chartsToolbarClasses } from '../Toolbar/chartToolbarClasses';
 
 export interface ChartsWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

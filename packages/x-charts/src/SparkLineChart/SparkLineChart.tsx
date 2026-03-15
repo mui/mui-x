@@ -6,16 +6,17 @@ import { ChartsClipPath } from '../ChartsClipPath';
 import { type ChartsColor, type ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
-import { type ChartContainerProps } from '../ChartContainer';
-import { ChartDataProvider } from '../ChartDataProvider';
-import { ChartsSurface } from '../ChartsSurface';
+import type { ChartContainerProps } from '../ChartContainer/ChartContainer';
+import { ChartDataProvider } from '../ChartDataProvider/ChartDataProvider';
+import { ChartsSurface } from '../ChartsSurface/ChartsSurface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip/ChartsTooltip';
 import type {
   ChartsTooltipSlots,
   ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight/ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight/ChartsAxisHighlight.types';
 import type { XAxis, YAxis } from '../models/axis';
 import type { LineSeriesType, BarSeriesType } from '../models/seriesType';
 import type { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';

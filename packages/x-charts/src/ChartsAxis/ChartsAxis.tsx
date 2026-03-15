@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import { type ChartsAxisSlotProps, type ChartsAxisSlots } from '../models/axis';
-import { useXAxes, useYAxes } from '../hooks';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 export type { ChartsAxisSlots, ChartsAxisSlotProps };
 

@@ -5,7 +5,7 @@ import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import type { ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleYAxisTicks } from './ChartsSingleYAxisTicks';
 import { ChartsGroupedYAxisTicks } from './ChartsGroupedYAxisTicks';
-import { ChartsText, type ChartsTextProps } from '../ChartsText';
+import { ChartsText, type ChartsTextProps } from '../ChartsText/ChartsText';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { isInfinity } from '../internals/isInfinity';
 import { useDrawingArea } from '../hooks/useDrawingArea';

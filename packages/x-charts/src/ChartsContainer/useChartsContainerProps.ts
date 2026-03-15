@@ -1,6 +1,6 @@
 'use client';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
-import { type ChartDataProviderProps } from '../ChartDataProvider';
+import type { ChartsSurfaceProps } from '../ChartsSurface/ChartsSurface';
+import type { ChartDataProviderProps } from '../ChartDataProvider/ChartDataProvider';
 import type { ChartsContainerProps } from './ChartsContainer';
 import { type ChartSeriesType } from '../models/seriesType/config';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';

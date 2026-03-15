@@ -1,7 +1,7 @@
 'use client';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
-import { type ChartPlugin } from '../../models';
+import type { ChartPlugin } from '../../models/plugin';
 import {
   type VisibilityIdentifierWithType,
   type UseChartVisibilityManagerSignature,

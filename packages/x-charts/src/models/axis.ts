@@ -17,7 +17,7 @@ import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-i
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
-import type { ChartsTextProps } from '../ChartsText';
+import { ChartsTextProps } from '../ChartsText/ChartsText';
 import type {
   ContinuousColorConfig,
   OrdinalColorConfig,

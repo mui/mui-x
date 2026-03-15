@@ -6,7 +6,7 @@ import type {
   SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models/plugin';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
 export type HighlightUpdateSource = 'pointer' | 'keyboard';

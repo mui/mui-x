@@ -3,7 +3,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { type ChartsYAxisProps } from '../models/axis';
-import { ChartsText, type ChartsTextProps } from '../ChartsText';
+import { ChartsText, type ChartsTextProps } from '../ChartsText/ChartsText';
 import { useYAxes } from '../hooks/useAxis';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { invertTextAnchor } from '../internals/invertTextAnchor';

@@ -1,11 +1,6 @@
-import { type ChartCorePluginSignatures } from '../plugins/corePlugins';
-import {
-  type ChartAnyPluginSignature,
-  type ChartPlugin,
-  type ChartPluginSignature,
-  type ConvertSignaturesIntoPlugins,
-  type MergeSignaturesProperty,
-} from '../plugins/models';
+import { type ChartCorePluginSignatures } from '../plugins/corePlugins/corePlugins';
+import type { ChartAnyPluginSignature, ChartPlugin, ChartPluginSignature } from '../plugins/models/plugin';
+import type { ConvertSignaturesIntoPlugins, MergeSignaturesProperty } from '../plugins/models/helpers';
 import { type UseChartBaseProps } from './useCharts.types';
 
 export const extractPluginParamsFromProps = <

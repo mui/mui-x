@@ -7,7 +7,8 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { type LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
 import { MarkElement, type MarkElementProps } from './MarkElement';
-import { useItemHighlightStateGetter, useXAxes, useYAxes } from '../hooks';
+import { useItemHighlightStateGetter } from '../hooks/useItemHighlightStateGetter';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import {
   selectorChartsHighlightXAxisIndex,

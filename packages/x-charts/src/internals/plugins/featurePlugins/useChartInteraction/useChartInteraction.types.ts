@@ -1,4 +1,4 @@
-import type { ChartPluginSignature } from '../../models';
+import { ChartPluginSignature } from '../../models/plugin';
 
 export type Coordinate = { x: number; y: number };
 

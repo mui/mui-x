@@ -1,9 +1,9 @@
 import { type BarLabelProps } from '../BarChart/BarLabel';
 import { type BarChartProps } from '../BarChart/BarChart';
-import { type ChartsGridProps } from '../ChartsGrid';
-import { type ChartsLegendProps } from '../ChartsLegend';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
-import { type ChartsTooltipProps } from '../ChartsTooltip';
+import type { ChartsGridProps } from '../ChartsGrid/ChartsGrid';
+import type { ChartsLegendProps } from '../ChartsLegend/ChartsLegend';
+import type { ChartsSurfaceProps } from '../ChartsSurface/ChartsSurface';
+import type { ChartsTooltipProps } from '../ChartsTooltip/ChartsTooltip';
 import { type LineChartProps } from '../LineChart/LineChart';
 import { type ScatterChartProps } from '../ScatterChart/ScatterChart';
 import { type PieChartProps } from '../PieChart/PieChart';

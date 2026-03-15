@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useChartsLayerContainerRef } from '../../../../hooks';
+import { useChartsLayerContainerRef } from '../../../../hooks/useChartsLayerContainerRef';
 import { type UseChartTooltipSignature } from '../../featurePlugins/useChartTooltip';
 import { type SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
@@ -11,7 +11,7 @@ import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 import { useStore } from '../../../store/useStore';
 import { useChartContext } from '../../../../context/ChartProvider';
 import { getChartPoint } from '../../../getChartPoint';
-import { type ChartState } from '../../models';
+import type { ChartState } from '../../models/chart';
 
 /**
  * Hook to get pointer interaction props for chart items.

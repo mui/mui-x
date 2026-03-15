@@ -5,7 +5,7 @@ import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
 import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { type ChartPlugin } from '../../models';
+import type { ChartPlugin } from '../../models/plugin';
 import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
@@ -17,7 +17,8 @@ import { getChartPoint } from '../../../getChartPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
-import { type ChartsAxisData, type SeriesId } from '../../../../models';
+import type { ChartsAxisData } from '../../../../models/axis';
+import type { SeriesId } from '../../../../models/seriesType/common';
 
 const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
 type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;

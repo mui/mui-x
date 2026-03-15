@@ -1,4 +1,4 @@
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models/plugin';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
 import {
   type ScaleName,

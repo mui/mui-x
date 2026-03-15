@@ -3,7 +3,7 @@ import {
   referenceLineClasses,
   type ChartsReferenceLineClasses,
 } from './chartsReferenceLineClasses';
-import { type ChartsTextStyle } from '../ChartsText';
+import type { ChartsTextStyle } from '../internals/getWordsByLines';
 import { type AxisId } from '../models/axis';
 
 export const DEFAULT_SPACING = 5;

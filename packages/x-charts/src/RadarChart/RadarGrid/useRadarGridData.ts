@@ -1,5 +1,5 @@
 import { useRotationScale } from '../../hooks/useScale';
-import { useRadiusAxes } from '../../hooks';
+import { useRadiusAxes } from '../../hooks/useAxis';
 import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,

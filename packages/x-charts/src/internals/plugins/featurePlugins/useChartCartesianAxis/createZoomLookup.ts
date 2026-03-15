@@ -1,9 +1,4 @@
-import {
-  type AxisConfig,
-  type ChartsXAxisProps,
-  type ChartsYAxisProps,
-  type ScaleName,
-} from '../../../../models';
+import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../../../models/axis';
 import { type AxisId } from '../../../../models/axis';
 import { defaultizeZoom } from './defaultizeZoom';
 import { type DefaultizedZoomOptions } from './useChartCartesianAxis.types';

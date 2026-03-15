@@ -1,6 +1,6 @@
 import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { isDefined } from '../../../isDefined';
-import { type AxisConfig } from '../../../../models';
+import type { AxisConfig } from '../../../../models/axis';
 import { type ExtremumFilter } from './useChartCartesianAxis.types';
 import { type GetZoomAxisFilters, type ZoomAxisFilters } from './zoom.types';
 

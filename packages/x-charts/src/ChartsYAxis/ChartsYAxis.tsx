@@ -6,7 +6,7 @@ import {
   type ChartsAxisSlots,
   type ChartsAxisSlotProps,
 } from '../models/axis';
-import { useYAxes } from '../hooks';
+import { useYAxes } from '../hooks/useAxis';
 import { ChartsYAxisImpl } from './ChartsYAxisImpl';
 
 export interface ChartsYAxisSlots extends ChartsAxisSlots {}

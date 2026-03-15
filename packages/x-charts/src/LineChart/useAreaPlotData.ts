@@ -4,8 +4,10 @@ import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { getCurveFactory } from '../internals/getCurve';
-import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
-import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
+import type { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
+import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { type SeriesId } from '../models/seriesType/common';
 

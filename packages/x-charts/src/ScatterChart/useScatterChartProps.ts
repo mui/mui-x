@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import { type ChartsAxisProps } from '../ChartsAxis';
-import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { type ChartsGridProps } from '../ChartsGrid';
-import { type ChartsLegendSlotExtension } from '../ChartsLegend';
-import { type ChartsOverlayProps } from '../ChartsOverlay';
-import { type ChartContainerProps } from '../ChartContainer';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight/ChartsAxisHighlight.types';
+import type { ChartsGridProps } from '../ChartsGrid/ChartsGrid';
+import type { ChartsLegendSlotExtension } from '../ChartsLegend/chartsLegend.types';
+import type { ChartsOverlayProps } from '../ChartsOverlay/ChartsOverlay';
+import type { ChartContainerProps } from '../ChartContainer/ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
-import type { ChartsWrapperProps } from '../ChartsWrapper';
+import { ChartsWrapperProps } from '../ChartsWrapper/ChartsWrapper';
 import { SCATTER_CHART_PLUGINS, type ScatterChartPluginSignatures } from './ScatterChart.plugins';
 import { type UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 

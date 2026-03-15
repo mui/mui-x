@@ -1,4 +1,4 @@
-import type { BarSeriesType } from '../models';
+import { BarSeriesType } from '../models/seriesType/bar';
 import type { SeriesId } from '../models/seriesType/common';
 
 export type AnimationData = {

@@ -1,4 +1,4 @@
-import type { SeriesLegendItemParams } from '../../../../../ChartsLegend';
+import type { SeriesLegendItemParams } from '../../../../../ChartsLegend/legendContext.types';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import type { SeriesProcessorResult } from './seriesProcessor.types';
 

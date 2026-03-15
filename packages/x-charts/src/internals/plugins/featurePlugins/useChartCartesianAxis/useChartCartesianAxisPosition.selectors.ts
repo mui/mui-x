@@ -5,7 +5,8 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { getBandSize } from '../../../../internals/getBandSize';
 import { isBandScale } from '../../../../internals/scaleGuards';
 import { getDataIndexForOrdinalScaleValue } from '../../../../internals/invertScale';
-import { type BarItemIdentifier, type SeriesId } from '../../../../models';
+import type { BarItemIdentifier } from '../../../../models/seriesType/bar';
+import type { SeriesId } from '../../../../models/seriesType/common';
 
 export const selectorBarItemAtPosition = createSelector(
   selectorChartXAxis,

@@ -16,7 +16,7 @@ import {
   type LinePlotSlotProps,
   type LinePlotSlots,
 } from './LinePlot';
-import { type ChartContainerProps } from '../ChartContainer';
+import type { ChartContainerProps } from '../ChartContainer/ChartContainer';
 import {
   MarkPlot,
   type MarkPlotProps,
@@ -25,13 +25,15 @@ import {
 } from './MarkPlot';
 import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { type LineSeriesType } from '../models/seriesType/line';
-import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip/ChartsTooltip';
 import {
   type ChartsTooltipSlots,
   type ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsLegend } from '../ChartsLegend/ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend/chartsLegend.types';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight/ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight/ChartsAxisHighlight.types';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { type ChartsAxisSlotProps, type ChartsAxisSlots } from '../models/axis';
 import {
@@ -39,20 +41,15 @@ import {
   type LineHighlightPlotSlots,
   type LineHighlightPlotSlotProps,
 } from './LineHighlightPlot';
-import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
-} from '../ChartsOverlay';
+import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid/ChartsGrid';
+import { ChartsOverlay, type ChartsOverlayProps, type ChartsOverlaySlotProps, type ChartsOverlaySlots } from '../ChartsOverlay/ChartsOverlay';
 import { useLineChartProps } from './useLineChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartDataProvider } from '../ChartDataProvider';
-import { ChartsSurface } from '../ChartsSurface';
-import { ChartsWrapper } from '../ChartsWrapper';
+import { ChartDataProvider } from '../ChartDataProvider/ChartDataProvider';
+import { ChartsSurface } from '../ChartsSurface/ChartsSurface';
+import { ChartsWrapper } from '../ChartsWrapper/ChartsWrapper';
 import type { LineChartPluginSignatures } from './LineChart.plugins';
-import type { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
+import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar/Toolbar.types';
 import { FocusedLineMark } from './FocusedLineMark';
 
 export interface LineChartSlots

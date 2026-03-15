@@ -1,5 +1,5 @@
 import { type ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
-import { type PieItemId } from '../models';
+import type { PieItemId } from '../models/seriesType/pie';
 import { type SeriesId } from '../models/seriesType/common';
 import type { ChartSeriesType } from '../models/seriesType/config';
 

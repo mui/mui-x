@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useDrawingArea, useXAxes, useYAxes } from '../../../hooks';
+import { useDrawingArea } from '../../../hooks/useDrawingArea';
+import { useXAxes, useYAxes } from '../../../hooks/useAxis';
 import ChartsPiecewiseGradient from './ChartsPiecewiseGradient';
 import ChartsContinuousGradient from './ChartsContinuousGradient';
 import ChartsContinuousGradientObjectBound from './ChartsContinuousGradientObjectBound';

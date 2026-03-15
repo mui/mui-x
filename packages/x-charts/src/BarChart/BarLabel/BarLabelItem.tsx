@@ -8,7 +8,7 @@ import { type BarLabelOwnerState, type BarItem, type BarLabelContext } from './B
 import { getBarLabel } from './getBarLabel';
 import { BarLabel, type BarLabelProps } from './BarLabel';
 import { useItemHighlightState } from '../../hooks/useItemHighlightState';
-import { type BarValueType } from '../../models';
+import type { BarValueType } from '../../models/seriesType/bar';
 
 export interface BarLabelSlots {
   /**

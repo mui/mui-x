@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import type { LineElementOwnerState } from './LineElement';
-import { useAnimateLine } from '../hooks';
+import { useAnimateLine } from '../hooks/animation/useAnimateLine';
 import { AppearingMask } from './AppearingMask';
 
 export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'> {

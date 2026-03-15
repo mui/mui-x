@@ -1,6 +1,6 @@
 import type { ChartAnyPluginSignature } from './plugin';
 import type { MergeSignaturesProperty } from './helpers';
-import type { ChartCorePluginSignatures } from '../corePlugins';
+import type { ChartCorePluginSignatures } from '../corePlugins/corePlugins';
 import type { ChartSeriesType } from '../../../models/seriesType/config';
 
 export type ChartInstance<

@@ -1,4 +1,4 @@
-import { type ChartsTextStyle } from '../ChartsText';
+import type { ChartsTextStyle } from './getWordsByLines';
 
 export function invertTextAnchor(
   textAnchor: ChartsTextStyle['textAnchor'],

@@ -8,7 +8,7 @@ import {
   type ChartsRotationAxisProps,
   type PolarAxisConfig,
 } from '../../models/axis';
-import { ChartDataProvider, type ChartDataProviderProps } from '../../ChartDataProvider';
+import { ChartDataProvider, type ChartDataProviderProps } from '../../ChartDataProvider/ChartDataProvider';
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import { radarSeriesConfig } from '../seriesConfig';
 import { type RadarConfig } from './radar.types';

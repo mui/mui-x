@@ -1,4 +1,4 @@
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models/plugin';
 import type { UseChartCartesianAxisSignature } from '../../featurePlugins/useChartCartesianAxis';
 
 export interface ChartMargin {

@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
-import { useXAxes, useYAxes } from '../hooks';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';

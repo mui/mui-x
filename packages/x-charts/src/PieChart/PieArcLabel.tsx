@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
-import { type SeriesId } from '../models';
+import type { SeriesId } from '../models/seriesType/common';
 import { pieClasses, useUtilityClasses as usePieUtilityClasses } from './pieClasses';
 
 /**

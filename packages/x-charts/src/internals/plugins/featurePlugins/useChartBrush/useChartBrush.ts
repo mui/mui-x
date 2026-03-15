@@ -4,7 +4,7 @@ import type { PanEvent } from '@mui/x-internal-gestures/core';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { getChartPoint } from '../../../getChartPoint';
-import { type ChartPlugin } from '../../models';
+import type { ChartPlugin } from '../../models/plugin';
 import { type UseChartBrushSignature, type Point } from './useChartBrush.types';
 import { selectorIsBrushEnabled } from './useChartBrush.selectors';
 

@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models/plugin';
 
 export interface UseChartElementRefInstance {
   /**

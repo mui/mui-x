@@ -1,5 +1,5 @@
 import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models/plugin';
 import { type DatasetType } from '../../../../models/seriesType/config';
 import { type AxisId } from '../../../../models/axis';
 import { type ZAxisConfig, type ZAxisDefaultized } from '../../../../models/z-axis';

@@ -9,7 +9,7 @@ import {
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { type AxisId } from '../../models/axis';
 import { type DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
-import { type ChartInstance } from '../../internals/plugins/models';
+import type { ChartInstance } from '../../internals/plugins/models/chart';
 import {
   selectorChartsInteractionRotationAxisIndex,
   selectorChartsInteractionRotationAxisValue,

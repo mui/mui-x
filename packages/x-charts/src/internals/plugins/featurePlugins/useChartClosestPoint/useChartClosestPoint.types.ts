@@ -1,7 +1,7 @@
 import type { ScatterItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models/plugin';
 import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 import { type UseChartHighlightSignature } from '../useChartHighlight';
 import { type UseChartInteractionSignature } from '../useChartInteraction';
