@@ -240,7 +240,9 @@ function useMessageListBehavior(parameters: {
   const topLoadInFlightRef = React.useRef(false);
   const resizeFrameRef = React.useRef(0);
   const [isAtBottom, setIsAtBottom] = React.useState(true);
+  const [unseenMessageCount, setUnseenMessageCount] = React.useState(0);
   const isAtBottomRef = React.useRef(true);
+  const unseenMessageCountRef = React.useRef(0);
   const setRootElement = React.useCallback((node: HTMLDivElement | null) => {
     rootRef.current = node;
   }, []);
@@ -262,6 +264,11 @@ function useMessageListBehavior(parameters: {
 
     return nextIsAtBottom;
   }, [estimatedItemSize]);
+
+  const updateUnseenMessageCount = React.useCallback((nextCount: number) => {
+    unseenMessageCountRef.current = nextCount;
+    setUnseenMessageCount((previous) => (previous === nextCount ? previous : nextCount));
+  }, []);
 
   const captureAnchor = React.useCallback(
     (ids: string[]): ScrollAnchor | null => {
@@ -327,8 +334,9 @@ function useMessageListBehavior(parameters: {
 
     root.scrollTop = root.scrollHeight;
     updateIsAtBottom();
+    updateUnseenMessageCount(0);
     anchorRef.current = captureAnchor(itemIdsRef.current);
-  }, [captureAnchor, updateIsAtBottom]);
+  }, [captureAnchor, updateIsAtBottom, updateUnseenMessageCount]);
 
   const registerRowElement = React.useCallback((id: string, element: HTMLDivElement | null) => {
     if (element == null) {
@@ -386,7 +394,11 @@ function useMessageListBehavior(parameters: {
     }
 
     anchorRef.current = captureAnchor(itemIdsRef.current);
-    updateIsAtBottom();
+    const nextIsAtBottom = updateIsAtBottom();
+
+    if (nextIsAtBottom) {
+      updateUnseenMessageCount(0);
+    }
 
     if (root.scrollTop > estimatedItemSize) {
       topReachedRef.current = false;
@@ -394,7 +406,13 @@ function useMessageListBehavior(parameters: {
     }
 
     void maybeLoadMoreHistory();
-  }, [captureAnchor, estimatedItemSize, maybeLoadMoreHistory, updateIsAtBottom]);
+  }, [
+    captureAnchor,
+    estimatedItemSize,
+    maybeLoadMoreHistory,
+    updateIsAtBottom,
+    updateUnseenMessageCount,
+  ]);
 
   React.useLayoutEffect(() => {
     updateIsAtBottom();
@@ -415,14 +433,29 @@ function useMessageListBehavior(parameters: {
 
       if (isAtBottomRef.current || lastAppendedMessage?.role === 'user') {
         scrollToBottom();
+      } else if (appendedIds.length > 0) {
+        updateUnseenMessageCount(unseenMessageCountRef.current + appendedIds.length);
       }
     }
 
-    updateIsAtBottom();
+    const nextIsAtBottom = updateIsAtBottom();
+
+    if (nextIsAtBottom) {
+      updateUnseenMessageCount(0);
+    }
+
     anchorRef.current = captureAnchor(itemIds);
     topReachedRef.current = false;
     previousItemIdsRef.current = itemIds;
-  }, [captureAnchor, itemIds, messageById, restoreAnchor, scrollToBottom, updateIsAtBottom]);
+  }, [
+    captureAnchor,
+    itemIds,
+    messageById,
+    restoreAnchor,
+    scrollToBottom,
+    updateIsAtBottom,
+    updateUnseenMessageCount,
+  ]);
 
   React.useEffect(() => {
     return () => {
@@ -433,9 +466,10 @@ function useMessageListBehavior(parameters: {
   const contextValue = React.useMemo(
     () => ({
       isAtBottom,
+      unseenMessageCount,
       scrollToBottom,
     }),
-    [isAtBottom, scrollToBottom],
+    [isAtBottom, scrollToBottom, unseenMessageCount],
   );
 
   return {

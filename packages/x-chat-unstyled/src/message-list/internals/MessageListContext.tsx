@@ -3,11 +3,13 @@ import * as React from 'react';
 
 export interface MessageListContextValue {
   isAtBottom: boolean;
+  unseenMessageCount: number;
   scrollToBottom(): void;
 }
 
 const MessageListContext = React.createContext<MessageListContextValue>({
   isAtBottom: true,
+  unseenMessageCount: 0,
   scrollToBottom: () => {},
 });
 
@@ -23,4 +25,3 @@ export function MessageListContextProvider(props: {
 export function useMessageListContext() {
   return React.useContext(MessageListContext);
 }
-

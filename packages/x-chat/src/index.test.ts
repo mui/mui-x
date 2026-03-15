@@ -6,6 +6,7 @@ import * as unstyledBridge from '@mui/x-chat/unstyled';
 import * as unstyledChatBridge from '@mui/x-chat/unstyled/chat';
 import * as unstyledComposerBridge from '@mui/x-chat/unstyled/composer';
 import * as unstyledConversationListBridge from '@mui/x-chat/unstyled/conversation-list';
+import * as unstyledIndicatorsBridge from '@mui/x-chat/unstyled/indicators';
 import * as unstyledMessageGroupBridge from '@mui/x-chat/unstyled/message-group';
 import * as unstyledMessageBridge from '@mui/x-chat/unstyled/message';
 import * as unstyledMessageListBridge from '@mui/x-chat/unstyled/message-list';
@@ -14,6 +15,7 @@ import * as unstyledDirect from '@mui/x-chat-unstyled';
 import * as unstyledChatDirect from '@mui/x-chat-unstyled/chat';
 import * as unstyledComposerDirect from '@mui/x-chat-unstyled/composer';
 import * as unstyledConversationListDirect from '@mui/x-chat-unstyled/conversation-list';
+import * as unstyledIndicatorsDirect from '@mui/x-chat-unstyled/indicators';
 import * as unstyledMessageGroupDirect from '@mui/x-chat-unstyled/message-group';
 import * as unstyledMessageDirect from '@mui/x-chat-unstyled/message';
 import * as unstyledMessageListDirect from '@mui/x-chat-unstyled/message-list';
@@ -33,6 +35,12 @@ import {
   ConversationListRoot as UnstyledBridgeConversationListRoot,
 } from '@mui/x-chat/unstyled/conversation-list';
 import { MessageGroup as UnstyledBridgeMessageGroup } from '@mui/x-chat/unstyled/message-group';
+import {
+  Indicators as UnstyledBridgeIndicators,
+  ScrollToBottomAffordance as UnstyledBridgeScrollToBottomAffordance,
+  TypingIndicator as UnstyledBridgeTypingIndicator,
+  UnreadMarker as UnstyledBridgeUnreadMarker,
+} from '@mui/x-chat/unstyled/indicators';
 import {
   MessageActions as UnstyledBridgeMessageActions,
   MessageAvatar as UnstyledBridgeMessageAvatar,
@@ -65,6 +73,12 @@ import {
   ConversationListRoot as UnstyledDirectConversationListRoot,
 } from '@mui/x-chat-unstyled/conversation-list';
 import { MessageGroup as UnstyledDirectMessageGroup } from '@mui/x-chat-unstyled/message-group';
+import {
+  Indicators as UnstyledDirectIndicators,
+  ScrollToBottomAffordance as UnstyledDirectScrollToBottomAffordance,
+  TypingIndicator as UnstyledDirectTypingIndicator,
+  UnreadMarker as UnstyledDirectUnreadMarker,
+} from '@mui/x-chat-unstyled/indicators';
 import {
   MessageActions as UnstyledDirectMessageActions,
   MessageAvatar as UnstyledDirectMessageAvatar,
@@ -194,6 +208,9 @@ describe('x-chat package scaffold', () => {
     expect(Object.keys(unstyledConversationListBridge).sort()).toEqual(
       Object.keys(unstyledConversationListDirect).sort(),
     );
+    expect(Object.keys(unstyledIndicatorsBridge).sort()).toEqual(
+      Object.keys(unstyledIndicatorsDirect).sort(),
+    );
     expect(Object.keys(unstyledMessageGroupBridge).sort()).toEqual(
       Object.keys(unstyledMessageGroupDirect).sort(),
     );
@@ -240,6 +257,15 @@ describe('x-chat package scaffold', () => {
     expect(UnstyledBridgeConversationList).toBe(UnstyledDirectConversationList);
     expect(UnstyledBridgeConversationListRoot).toBe(UnstyledDirectConversationListRoot);
     expect(UnstyledBridgeConversationList.Root).toBe(UnstyledBridgeConversationListRoot);
+    expect(UnstyledBridgeIndicators).toBe(UnstyledDirectIndicators);
+    expect(UnstyledBridgeTypingIndicator).toBe(UnstyledDirectTypingIndicator);
+    expect(UnstyledBridgeUnreadMarker).toBe(UnstyledDirectUnreadMarker);
+    expect(UnstyledBridgeScrollToBottomAffordance).toBe(UnstyledDirectScrollToBottomAffordance);
+    expect(UnstyledBridgeIndicators.TypingIndicator).toBe(UnstyledBridgeTypingIndicator);
+    expect(UnstyledBridgeIndicators.UnreadMarker).toBe(UnstyledBridgeUnreadMarker);
+    expect(UnstyledBridgeIndicators.ScrollToBottomAffordance).toBe(
+      UnstyledBridgeScrollToBottomAffordance,
+    );
     expect(UnstyledBridgeMessageGroup).toBe(UnstyledDirectMessageGroup);
     expect(UnstyledBridgeMessage).toBe(UnstyledDirectMessage);
     expect(UnstyledBridgeMessageAvatar).toBe(UnstyledDirectMessageAvatar);

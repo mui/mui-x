@@ -94,6 +94,12 @@ function BottomStateIndicator() {
   return <div data-testid="message-list-bottom-state">{String(isAtBottom)}</div>;
 }
 
+function UnseenCountIndicator() {
+  const { unseenMessageCount } = useMessageListContext();
+
+  return <div data-testid="message-list-unseen-count">{String(unseenMessageCount)}</div>;
+}
+
 const RootWithBottomState = React.forwardRef(function RootWithBottomState(
   props: React.PropsWithChildren<MessageListRootProps> & {
     ownerState?: {
@@ -133,12 +139,16 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
     <div ref={ref} {...other}>
       {children}
       <BottomStateIndicator />
+      <UnseenCountIndicator />
     </div>
   );
 });
 
-function ControlledMessageList(props: { virtualization?: boolean }) {
-  const { virtualization = false } = props;
+function ControlledMessageList(props: {
+  virtualization?: boolean;
+  slots?: MessageListRootProps['slots'];
+}) {
+  const { virtualization = false, slots } = props;
   const [messages, setMessages] = React.useState([
     createMessage('m1', 'assistant'),
     createMessage('m2', 'assistant'),
@@ -215,6 +225,7 @@ function ControlledMessageList(props: { virtualization?: boolean }) {
             </div>
           );
         }}
+        slots={slots}
         style={{ height: 160, overflowY: 'auto' }}
         virtualization={virtualization}
       />
@@ -475,6 +486,36 @@ describe('MessageListRoot', () => {
 
     await waitFor(() => {
       expect(log.scrollTop).toBe(0);
+    });
+  });
+
+  it.skipIf(isJSDOM)('tracks unseen appended messages while away from the bottom and resets at the bottom', async () => {
+    render(<ControlledMessageList slots={{ root: RootWithBottomState }} virtualization={false} />);
+
+    const log = screen.getByRole('log');
+
+    await waitFor(() => {
+      expect(log.scrollHeight).toBeGreaterThan(160);
+    });
+
+    act(() => {
+      log.scrollTop = 0;
+      fireEvent.scroll(log);
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
+    });
+
+    act(() => {
+      log.scrollTop = log.scrollHeight;
+      fireEvent.scroll(log);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('message-list-unseen-count')).to.have.text('0');
     });
   });
 
