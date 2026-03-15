@@ -1,6 +1,7 @@
 import * as chat from '@mui/x-chat';
 import * as headlessBridge from '@mui/x-chat/headless';
 import * as headlessDirect from '@mui/x-chat-headless';
+import * as themeAugmentation from '@mui/x-chat/themeAugmentation';
 import * as chatTypes from '@mui/x-chat/types';
 import * as unstyledBridge from '@mui/x-chat/unstyled';
 import * as unstyledChatBridge from '@mui/x-chat/unstyled/chat';
@@ -141,6 +142,11 @@ import type {
   ScrollToBottomAffordanceProps as UnstyledBridgeScrollToBottomAffordanceProps,
   ThreadHeaderProps as UnstyledBridgeThreadHeaderProps,
 } from '@mui/x-chat/unstyled';
+import type {
+  ChatBoxProps as ThemeAugmentationChatBoxProps,
+  ChatComponents as ThemeAugmentationChatComponents,
+  PaletteChat as ThemeAugmentationPaletteChat,
+} from '@mui/x-chat/themeAugmentation';
 import type * as Chatbox from '@mui/x-chat/types';
 
 declare module '@mui/x-chat-headless/types' {
@@ -257,8 +263,10 @@ describe('x-chat package scaffold', () => {
 
     expect(chat).toBeDefined();
     expect(chatTypes).toBeDefined();
+    expect(themeAugmentation).toBeDefined();
     expect(headlessBridge).toBeDefined();
     expect(unstyledBridge).toBeDefined();
+    expect(Object.keys(themeAugmentation)).toEqual([]);
     expect(Object.keys(headlessBridge).sort()).toEqual(expectedHeadlessRuntimeExports);
     expect(Object.keys(headlessDirect).sort()).toEqual(expectedHeadlessRuntimeExports);
     expect(Object.keys(unstyledBridge).sort()).toEqual(expectedUnstyledRuntimeExports);
@@ -547,6 +555,23 @@ describe('x-chat package scaffold', () => {
       adapter,
       children: null,
     };
+    const chatPalette: ThemeAugmentationPaletteChat = {
+      userMessageBg: '#1976d2',
+      composerFocusRing: '#0d47a1',
+    };
+    const chatComponents: ThemeAugmentationChatComponents = {
+      MuiChatBox: {
+        styleOverrides: {
+          root: {
+            color: 'red',
+          },
+        },
+      },
+    };
+    const chatBoxProps: ThemeAugmentationChatBoxProps<number> = {
+      adapter,
+      className: 'chat-box',
+    };
 
     const publicState: Chatbox.PublicState<number> = {
       conversations: [conversation],
@@ -618,6 +643,9 @@ describe('x-chat package scaffold', () => {
     expect(toolInvocationAlias.toolName).toBe('search');
     expect(messageChunkAlias.type).toBe('tool-output-available');
     expect(providerProps.adapter).toBe(adapter);
+    expect(chatPalette.userMessageBg).toBe('#1976d2');
+    expect(chatComponents.MuiChatBox?.styleOverrides?.root).toBeDefined();
+    expect(chatBoxProps.className).toBe('chat-box');
     expect(weatherChunk.data.temperatureC).toBe(12);
     expect(metadataChunk.metadata.traceId).toBe('trace-2');
     expect(envelope.chunk.type).toBe('tool-input-available');
