@@ -952,18 +952,8 @@ ScatterChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([
-          PropTypes.number,
-          PropTypes.shape({
-            valueOf: PropTypes.func.isRequired,
-          }),
-        ]),
-        min: PropTypes.oneOfType([
-          PropTypes.number,
-          PropTypes.shape({
-            valueOf: PropTypes.func.isRequired,
-          }),
-        ]),
+        max: PropTypes.any,
+        min: PropTypes.any,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1026,18 +1016,8 @@ ScatterChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([
-          PropTypes.number,
-          PropTypes.shape({
-            valueOf: PropTypes.func.isRequired,
-          }),
-        ]),
-        min: PropTypes.oneOfType([
-          PropTypes.number,
-          PropTypes.shape({
-            valueOf: PropTypes.func.isRequired,
-          }),
-        ]),
+        max: PropTypes.any,
+        min: PropTypes.any,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1601,18 +1581,8 @@ ScatterChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([
-          PropTypes.number,
-          PropTypes.shape({
-            valueOf: PropTypes.func.isRequired,
-          }),
-        ]),
-        min: PropTypes.oneOfType([
-          PropTypes.number,
-          PropTypes.shape({
-            valueOf: PropTypes.func.isRequired,
-          }),
-        ]),
+        max: PropTypes.any,
+        min: PropTypes.any,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1674,18 +1644,8 @@ ScatterChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([
-          PropTypes.number,
-          PropTypes.shape({
-            valueOf: PropTypes.func.isRequired,
-          }),
-        ]),
-        min: PropTypes.oneOfType([
-          PropTypes.number,
-          PropTypes.shape({
-            valueOf: PropTypes.func.isRequired,
-          }),
-        ]),
+        max: PropTypes.any,
+        min: PropTypes.any,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,

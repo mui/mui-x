@@ -5,6 +5,7 @@ import { useChatRuntimeContext } from '../internals/useChatRuntimeContext';
 import { chatSelectors } from '../selectors';
 import type { ChatDraftAttachment } from '../types/chat-entities';
 import type { ChatInternalState } from '../types/chat-state';
+import { createLocalId } from '../internals/createLocalId';
 import { useChatStore } from './useChatStore';
 
 export interface UseChatComposerValue {
@@ -18,13 +19,30 @@ export interface UseChatComposerValue {
   isSubmitting: boolean;
 }
 
-function createLocalId() {
-  return crypto.randomUUID();
+function createAttachmentPreviewUrl(file: File) {
+  if (!file.type.startsWith('image/')) {
+    return undefined;
+  }
+
+  if (typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function') {
+    return undefined;
+  }
+
+  return URL.createObjectURL(file);
+}
+
+function revokeAttachmentPreviewUrl(previewUrl: string) {
+  if (typeof URL === 'undefined' || typeof URL.revokeObjectURL !== 'function') {
+    return;
+  }
+
+  URL.revokeObjectURL(previewUrl);
 }
 
 export function useChatComposer<Cursor = string>(): UseChatComposerValue {
   const store = useChatStore<Cursor>();
   const { actions } = useChatRuntimeContext<Cursor>();
+  const ownedPreviewUrlsRef = React.useRef(new Map<string, string>());
   const selectComposerValue = chatSelectors.composerValue as (
     state: ChatInternalState<Cursor>,
   ) => ReturnType<typeof chatSelectors.composerValue>;
@@ -45,11 +63,43 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
     [store],
   );
 
+  React.useEffect(() => {
+    const activeAttachmentIds = new Set(attachments.map((attachment) => attachment.localId));
+
+    for (const [localId, previewUrl] of ownedPreviewUrlsRef.current.entries()) {
+      if (activeAttachmentIds.has(localId)) {
+        continue;
+      }
+
+      revokeAttachmentPreviewUrl(previewUrl);
+      ownedPreviewUrlsRef.current.delete(localId);
+    }
+  }, [attachments]);
+
+  React.useEffect(
+    () => () => {
+      for (const previewUrl of ownedPreviewUrlsRef.current.values()) {
+        revokeAttachmentPreviewUrl(previewUrl);
+      }
+
+      ownedPreviewUrlsRef.current.clear();
+    },
+    [],
+  );
+
   const addAttachment = React.useCallback(
     (file: File) => {
+      const localId = createLocalId();
+      const previewUrl = createAttachmentPreviewUrl(file);
+
+      if (previewUrl) {
+        ownedPreviewUrlsRef.current.set(localId, previewUrl);
+      }
+
       store.addComposerAttachment({
-        localId: createLocalId(),
+        localId,
         file,
+        previewUrl,
         status: 'queued',
       });
     },
@@ -71,7 +121,7 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
     const nextValue = store.state.composerValue;
     const nextAttachments = store.state.composerAttachments;
 
-    if (nextValue.trim() === '') {
+    if (store.state.isStreaming || store.state.composerIsComposing || nextValue.trim() === '') {
       return;
     }
 

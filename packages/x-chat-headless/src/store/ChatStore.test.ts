@@ -59,6 +59,7 @@ describe('ChatStore', () => {
     expect(store.state.hasMoreHistory).toBe(false);
     expect(store.state.historyCursor).toBeUndefined();
     expect(store.state.composerValue).toBe('');
+    expect(store.state.composerIsComposing).toBe(false);
     expect(store.state.composerAttachments).toEqual([]);
     expect(store.state.error).toBeNull();
   });
@@ -294,6 +295,16 @@ describe('ChatStore', () => {
     expect(store.state.composerValue).toBe('Draft message');
   });
 
+  it('setComposerIsComposing updates the composer composition flag', () => {
+    const store = new ChatStore();
+
+    store.setComposerIsComposing(true);
+    expect(store.state.composerIsComposing).toBe(true);
+
+    store.clearComposer();
+    expect(store.state.composerIsComposing).toBe(false);
+  });
+
   it('setComposerAttachments, addComposerAttachment, removeComposerAttachment, and clearComposer update draft state', () => {
     const store = new ChatStore({
       defaultComposerValue: 'Draft message',
@@ -316,8 +327,10 @@ describe('ChatStore', () => {
     store.removeComposerAttachment('a1');
     expect(store.state.composerAttachments).toEqual([attachment2]);
 
+    store.setComposerIsComposing(true);
     store.clearComposer();
     expect(store.state.composerValue).toBe('');
+    expect(store.state.composerIsComposing).toBe(false);
     expect(store.state.composerAttachments).toEqual([]);
   });
 

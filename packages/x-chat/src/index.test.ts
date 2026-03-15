@@ -4,20 +4,84 @@ import * as headlessDirect from '@mui/x-chat-headless';
 import * as chatTypes from '@mui/x-chat/types';
 import * as unstyledBridge from '@mui/x-chat/unstyled';
 import * as unstyledChatBridge from '@mui/x-chat/unstyled/chat';
+import * as unstyledComposerBridge from '@mui/x-chat/unstyled/composer';
 import * as unstyledConversationListBridge from '@mui/x-chat/unstyled/conversation-list';
+import * as unstyledMessageGroupBridge from '@mui/x-chat/unstyled/message-group';
+import * as unstyledMessageBridge from '@mui/x-chat/unstyled/message';
+import * as unstyledMessageListBridge from '@mui/x-chat/unstyled/message-list';
+import * as unstyledThreadBridge from '@mui/x-chat/unstyled/thread';
 import * as unstyledDirect from '@mui/x-chat-unstyled';
 import * as unstyledChatDirect from '@mui/x-chat-unstyled/chat';
+import * as unstyledComposerDirect from '@mui/x-chat-unstyled/composer';
 import * as unstyledConversationListDirect from '@mui/x-chat-unstyled/conversation-list';
+import * as unstyledMessageGroupDirect from '@mui/x-chat-unstyled/message-group';
+import * as unstyledMessageDirect from '@mui/x-chat-unstyled/message';
+import * as unstyledMessageListDirect from '@mui/x-chat-unstyled/message-list';
+import * as unstyledThreadDirect from '@mui/x-chat-unstyled/thread';
 import { Chat as UnstyledBridgeChat, ChatLayout as UnstyledBridgeChatLayout, ChatRoot as UnstyledBridgeChatRoot } from '@mui/x-chat/unstyled/chat';
+import {
+  Composer as UnstyledBridgeComposer,
+  ComposerAttachButton as UnstyledBridgeComposerAttachButton,
+  ComposerHelperText as UnstyledBridgeComposerHelperText,
+  ComposerInput as UnstyledBridgeComposerInput,
+  ComposerRoot as UnstyledBridgeComposerRoot,
+  ComposerSendButton as UnstyledBridgeComposerSendButton,
+  ComposerToolbar as UnstyledBridgeComposerToolbar,
+} from '@mui/x-chat/unstyled/composer';
 import {
   ConversationList as UnstyledBridgeConversationList,
   ConversationListRoot as UnstyledBridgeConversationListRoot,
 } from '@mui/x-chat/unstyled/conversation-list';
+import { MessageGroup as UnstyledBridgeMessageGroup } from '@mui/x-chat/unstyled/message-group';
+import {
+  MessageActions as UnstyledBridgeMessageActions,
+  MessageAvatar as UnstyledBridgeMessageAvatar,
+  Message as UnstyledBridgeMessage,
+  MessageContent as UnstyledBridgeMessageContent,
+  MessageMeta as UnstyledBridgeMessageMeta,
+  MessageRoot as UnstyledBridgeMessageRoot,
+} from '@mui/x-chat/unstyled/message';
+import {
+  MessageListDateDivider as UnstyledBridgeMessageListDateDivider,
+  MessageList as UnstyledBridgeMessageList,
+  MessageListRoot as UnstyledBridgeMessageListRoot,
+} from '@mui/x-chat/unstyled/message-list';
+import {
+  Thread as UnstyledBridgeThread,
+  ThreadRoot as UnstyledBridgeThreadRoot,
+} from '@mui/x-chat/unstyled/thread';
 import { Chat as UnstyledDirectChat, ChatLayout as UnstyledDirectChatLayout, ChatRoot as UnstyledDirectChatRoot } from '@mui/x-chat-unstyled/chat';
+import {
+  Composer as UnstyledDirectComposer,
+  ComposerAttachButton as UnstyledDirectComposerAttachButton,
+  ComposerHelperText as UnstyledDirectComposerHelperText,
+  ComposerInput as UnstyledDirectComposerInput,
+  ComposerRoot as UnstyledDirectComposerRoot,
+  ComposerSendButton as UnstyledDirectComposerSendButton,
+  ComposerToolbar as UnstyledDirectComposerToolbar,
+} from '@mui/x-chat-unstyled/composer';
 import {
   ConversationList as UnstyledDirectConversationList,
   ConversationListRoot as UnstyledDirectConversationListRoot,
 } from '@mui/x-chat-unstyled/conversation-list';
+import { MessageGroup as UnstyledDirectMessageGroup } from '@mui/x-chat-unstyled/message-group';
+import {
+  MessageActions as UnstyledDirectMessageActions,
+  MessageAvatar as UnstyledDirectMessageAvatar,
+  Message as UnstyledDirectMessage,
+  MessageContent as UnstyledDirectMessageContent,
+  MessageMeta as UnstyledDirectMessageMeta,
+  MessageRoot as UnstyledDirectMessageRoot,
+} from '@mui/x-chat-unstyled/message';
+import {
+  MessageListDateDivider as UnstyledDirectMessageListDateDivider,
+  MessageList as UnstyledDirectMessageList,
+  MessageListRoot as UnstyledDirectMessageListRoot,
+} from '@mui/x-chat-unstyled/message-list';
+import {
+  Thread as UnstyledDirectThread,
+  ThreadRoot as UnstyledDirectThreadRoot,
+} from '@mui/x-chat-unstyled/thread';
 import { ChatProvider as HeadlessBridgeChatProvider } from '@mui/x-chat/headless';
 import { chatSelectors as headlessBridgeSelectors } from '@mui/x-chat/headless';
 import { useChat as headlessBridgeUseChat } from '@mui/x-chat/headless';
@@ -124,9 +188,20 @@ describe('x-chat package scaffold', () => {
     expect(Object.keys(headlessDirect).sort()).toEqual(expectedHeadlessRuntimeExports);
     expect(Object.keys(unstyledBridge)).toEqual(Object.keys(unstyledDirect));
     expect(Object.keys(unstyledChatBridge).sort()).toEqual(Object.keys(unstyledChatDirect).sort());
+    expect(Object.keys(unstyledComposerBridge).sort()).toEqual(
+      Object.keys(unstyledComposerDirect).sort(),
+    );
     expect(Object.keys(unstyledConversationListBridge).sort()).toEqual(
       Object.keys(unstyledConversationListDirect).sort(),
     );
+    expect(Object.keys(unstyledMessageGroupBridge).sort()).toEqual(
+      Object.keys(unstyledMessageGroupDirect).sort(),
+    );
+    expect(Object.keys(unstyledMessageBridge).sort()).toEqual(Object.keys(unstyledMessageDirect).sort());
+    expect(Object.keys(unstyledMessageListBridge).sort()).toEqual(
+      Object.keys(unstyledMessageListDirect).sort(),
+    );
+    expect(Object.keys(unstyledThreadBridge).sort()).toEqual(Object.keys(unstyledThreadDirect).sort());
     expect(headlessBridgeSelectors).toBe(headlessDirectSelectors);
     expect(HeadlessBridgeChatProvider).toBe(HeadlessDirectChatProvider);
     expect(headlessBridgeUseChatStore).toBe(headlessDirectUseChatStore);
@@ -149,9 +224,42 @@ describe('x-chat package scaffold', () => {
     expect(UnstyledBridgeChatLayout).toBe(UnstyledDirectChatLayout);
     expect(UnstyledBridgeChat.Root).toBe(UnstyledBridgeChatRoot);
     expect(UnstyledBridgeChat.Layout).toBe(UnstyledBridgeChatLayout);
+    expect(UnstyledBridgeComposer).toBe(UnstyledDirectComposer);
+    expect(UnstyledBridgeComposerRoot).toBe(UnstyledDirectComposerRoot);
+    expect(UnstyledBridgeComposerInput).toBe(UnstyledDirectComposerInput);
+    expect(UnstyledBridgeComposerSendButton).toBe(UnstyledDirectComposerSendButton);
+    expect(UnstyledBridgeComposerAttachButton).toBe(UnstyledDirectComposerAttachButton);
+    expect(UnstyledBridgeComposerToolbar).toBe(UnstyledDirectComposerToolbar);
+    expect(UnstyledBridgeComposerHelperText).toBe(UnstyledDirectComposerHelperText);
+    expect(UnstyledBridgeComposer.Root).toBe(UnstyledBridgeComposerRoot);
+    expect(UnstyledBridgeComposer.Input).toBe(UnstyledBridgeComposerInput);
+    expect(UnstyledBridgeComposer.SendButton).toBe(UnstyledBridgeComposerSendButton);
+    expect(UnstyledBridgeComposer.AttachButton).toBe(UnstyledBridgeComposerAttachButton);
+    expect(UnstyledBridgeComposer.Toolbar).toBe(UnstyledBridgeComposerToolbar);
+    expect(UnstyledBridgeComposer.HelperText).toBe(UnstyledBridgeComposerHelperText);
     expect(UnstyledBridgeConversationList).toBe(UnstyledDirectConversationList);
     expect(UnstyledBridgeConversationListRoot).toBe(UnstyledDirectConversationListRoot);
     expect(UnstyledBridgeConversationList.Root).toBe(UnstyledBridgeConversationListRoot);
+    expect(UnstyledBridgeMessageGroup).toBe(UnstyledDirectMessageGroup);
+    expect(UnstyledBridgeMessage).toBe(UnstyledDirectMessage);
+    expect(UnstyledBridgeMessageAvatar).toBe(UnstyledDirectMessageAvatar);
+    expect(UnstyledBridgeMessageContent).toBe(UnstyledDirectMessageContent);
+    expect(UnstyledBridgeMessageMeta).toBe(UnstyledDirectMessageMeta);
+    expect(UnstyledBridgeMessageActions).toBe(UnstyledDirectMessageActions);
+    expect(UnstyledBridgeMessageRoot).toBe(UnstyledDirectMessageRoot);
+    expect(UnstyledBridgeMessage.Root).toBe(UnstyledBridgeMessageRoot);
+    expect(UnstyledBridgeMessage.Avatar).toBe(UnstyledBridgeMessageAvatar);
+    expect(UnstyledBridgeMessage.Content).toBe(UnstyledBridgeMessageContent);
+    expect(UnstyledBridgeMessage.Meta).toBe(UnstyledBridgeMessageMeta);
+    expect(UnstyledBridgeMessage.Actions).toBe(UnstyledBridgeMessageActions);
+    expect(UnstyledBridgeMessageList).toBe(UnstyledDirectMessageList);
+    expect(UnstyledBridgeMessageListDateDivider).toBe(UnstyledDirectMessageListDateDivider);
+    expect(UnstyledBridgeMessageListRoot).toBe(UnstyledDirectMessageListRoot);
+    expect(UnstyledBridgeMessageList.DateDivider).toBe(UnstyledBridgeMessageListDateDivider);
+    expect(UnstyledBridgeMessageList.Root).toBe(UnstyledBridgeMessageListRoot);
+    expect(UnstyledBridgeThread).toBe(UnstyledDirectThread);
+    expect(UnstyledBridgeThreadRoot).toBe(UnstyledDirectThreadRoot);
+    expect(UnstyledBridgeThread.Root).toBe(UnstyledBridgeThreadRoot);
   });
 
   it('type-checks the public Chatbox namespace facade', () => {

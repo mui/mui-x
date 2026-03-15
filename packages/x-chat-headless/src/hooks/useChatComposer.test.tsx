@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters';
 import { ChatProvider, type ChatProviderProps } from '../ChatProvider';
 import { useChatComposer } from './useChatComposer';
+import { useChatStore } from './useChatStore';
 
 function createStream(values: any[] = []): ReadableStream<any> {
   return new ReadableStream({
@@ -45,6 +46,46 @@ function createProviderWrapper(initialProps: Omit<ChatProviderProps, 'children'>
   };
 }
 
+function mockObjectUrlApis() {
+  let createCount = 0;
+  const createObjectURL = vi.fn((blob: Blob) => {
+    createCount += 1;
+    return `blob:${(blob as File).name}-${createCount}`;
+  });
+  const revokeObjectURL = vi.fn();
+  const originalCreateDescriptor = Object.getOwnPropertyDescriptor(URL, 'createObjectURL');
+  const originalRevokeDescriptor = Object.getOwnPropertyDescriptor(URL, 'revokeObjectURL');
+
+  Object.defineProperty(URL, 'createObjectURL', {
+    configurable: true,
+    writable: true,
+    value: createObjectURL,
+  });
+  Object.defineProperty(URL, 'revokeObjectURL', {
+    configurable: true,
+    writable: true,
+    value: revokeObjectURL,
+  });
+
+  return {
+    createObjectURL,
+    revokeObjectURL,
+    restore() {
+      if (originalCreateDescriptor) {
+        Object.defineProperty(URL, 'createObjectURL', originalCreateDescriptor);
+      } else {
+        Reflect.deleteProperty(URL, 'createObjectURL');
+      }
+
+      if (originalRevokeDescriptor) {
+        Object.defineProperty(URL, 'revokeObjectURL', originalRevokeDescriptor);
+      } else {
+        Reflect.deleteProperty(URL, 'revokeObjectURL');
+      }
+    },
+  };
+}
+
 describe('useChatComposer', () => {
   it('updates draft value and attachments and can clear them', () => {
     const { Wrapper } = createProviderWrapper({
@@ -62,6 +103,7 @@ describe('useChatComposer', () => {
     expect(result.current.attachments).toHaveLength(1);
     expect(result.current.attachments[0].file).toBe(attachmentFile);
     expect(result.current.attachments[0].status).toBe('queued');
+    expect(result.current.attachments[0].previewUrl).toBeUndefined();
 
     act(() => {
       result.current.removeAttachment(result.current.attachments[0].localId);
@@ -76,6 +118,45 @@ describe('useChatComposer', () => {
 
     expect(result.current.value).toBe('');
     expect(result.current.attachments).toEqual([]);
+  });
+
+  it('creates image preview URLs and revokes them when attachments are removed or cleared', () => {
+    const objectUrls = mockObjectUrlApis();
+
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter: createAdapter(),
+      });
+      const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+      const imageA = new File(['a'], 'a.png', { type: 'image/png' });
+      const imageB = new File(['b'], 'b.jpeg', { type: 'image/jpeg' });
+
+      act(() => {
+        result.current.addAttachment(imageA);
+        result.current.addAttachment(imageB);
+      });
+
+      expect(objectUrls.createObjectURL).toHaveBeenCalledTimes(2);
+      expect(result.current.attachments.map((attachment) => attachment.previewUrl)).toEqual([
+        'blob:a.png-1',
+        'blob:b.jpeg-2',
+      ]);
+
+      act(() => {
+        result.current.removeAttachment(result.current.attachments[0].localId);
+      });
+
+      expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:a.png-1');
+
+      act(() => {
+        result.current.clear();
+      });
+
+      expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:b.jpeg-2');
+      expect(result.current.attachments).toEqual([]);
+    } finally {
+      objectUrls.restore();
+    }
   });
 
   it('drives controlled composer values through onComposerValueChange', () => {
@@ -106,35 +187,43 @@ describe('useChatComposer', () => {
   });
 
   it('submits the composer draft through the runtime and clears it on success', async () => {
+    const objectUrls = mockObjectUrlApis();
     const adapter = createAdapter({
       sendMessage: vi.fn(async ({ conversationId, message, attachments }) => {
         expect(conversationId).toBe('c1');
         expect(message.parts).toEqual([{ type: 'text', text: 'Hello there' }]);
         expect(attachments).toHaveLength(1);
-        expect(attachments?.[0].file.name).toBe('hello.txt');
+        expect(attachments?.[0].file.name).toBe('hello.png');
 
         return createStream();
       }),
     });
-    const { Wrapper } = createProviderWrapper({
-      adapter,
-      defaultActiveConversationId: 'c1',
-    });
-    const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        defaultActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
 
-    act(() => {
-      result.current.setValue('Hello there');
-      result.current.addAttachment(new File(['hello'], 'hello.txt', { type: 'text/plain' }));
-    });
+      act(() => {
+        result.current.setValue('Hello there');
+        result.current.addAttachment(new File(['hello'], 'hello.png', { type: 'image/png' }));
+      });
 
-    await act(async () => {
-      await result.current.submit();
-    });
+      await act(async () => {
+        await result.current.submit();
+      });
 
-    expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
-    expect(result.current.value).toBe('');
-    expect(result.current.attachments).toEqual([]);
-    expect(result.current.isSubmitting).toBe(false);
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+      await waitFor(() => {
+        expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:hello.png-1');
+        expect(result.current.value).toBe('');
+        expect(result.current.attachments).toEqual([]);
+        expect(result.current.isSubmitting).toBe(false);
+      });
+    } finally {
+      objectUrls.restore();
+    }
   });
 
   it('preserves the draft when sendMessage fails', async () => {
@@ -184,6 +273,45 @@ describe('useChatComposer', () => {
     expect(adapter.sendMessage).not.toHaveBeenCalled();
   });
 
+  it('does not submit while IME composition is active', async () => {
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createStream()),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      defaultActiveConversationId: 'c1',
+    });
+    const { result } = renderHook(
+      () => ({
+        composer: useChatComposer(),
+        store: useChatStore(),
+      }),
+      { wrapper: Wrapper },
+    );
+
+    act(() => {
+      result.current.composer.setValue('Hello there');
+      result.current.store.setComposerIsComposing(true);
+    });
+
+    await act(async () => {
+      await result.current.composer.submit();
+    });
+
+    expect(adapter.sendMessage).not.toHaveBeenCalled();
+    expect(result.current.composer.value).toBe('Hello there');
+
+    act(() => {
+      result.current.store.setComposerIsComposing(false);
+    });
+
+    await act(async () => {
+      await result.current.composer.submit();
+    });
+
+    expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+  });
+
   it('reflects submission progress while the stream is active', async () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async () => createPendingStream()),
@@ -203,5 +331,26 @@ describe('useChatComposer', () => {
     await waitFor(() => {
       expect(result.current.isSubmitting).toBe(true);
     });
+  });
+
+  it('revokes owned preview URLs on unmount', () => {
+    const objectUrls = mockObjectUrlApis();
+
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter: createAdapter(),
+      });
+      const { result, unmount } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.addAttachment(new File(['hello'], 'hello.png', { type: 'image/png' }));
+      });
+
+      unmount();
+
+      expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:hello.png-1');
+    } finally {
+      objectUrls.restore();
+    }
   });
 });

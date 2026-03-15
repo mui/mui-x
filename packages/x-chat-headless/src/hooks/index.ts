@@ -1,5 +1,7 @@
 export * from './useChat';
 export * from './useChatComposer';
+export * from './useChatOnToolCall';
+export * from './useChatPartRenderer';
 export * from './useChatStore';
 export * from './useChatStatus';
 export * from './useConversation';

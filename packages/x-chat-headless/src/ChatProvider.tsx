@@ -8,6 +8,7 @@ import {
   type ChatRuntimeContextValue,
 } from './internals/useChatRuntimeContext';
 import type { ChatPartRendererMap } from './renderers';
+import { defaultPartRenderers } from './renderers/defaultPartRenderers';
 import { type ChatStoreConstructor, type ChatStoreParameters } from './store';
 import type { ChatOnData, ChatOnFinish, ChatOnToolCall } from './types';
 import type { ChatError } from './types/chat-error';
@@ -56,6 +57,13 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     onError,
     streamFlushInterval,
   });
+  const mergedPartRenderers = React.useMemo<ChatPartRendererMap>(
+    () => ({
+      ...defaultPartRenderers,
+      ...partRenderers,
+    }),
+    [partRenderers],
+  );
 
   const runtimeContextValue = React.useMemo<ChatRuntimeContextValue<Cursor>>(
     () => ({
@@ -64,10 +72,10 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       onFinish,
       onData,
       onError,
-      partRenderers,
+      partRenderers: mergedPartRenderers,
       actions,
     }),
-    [actions, adapter, onToolCall, onFinish, onData, onError, partRenderers],
+    [actions, adapter, mergedPartRenderers, onToolCall, onFinish, onData, onError],
   );
 
   return (

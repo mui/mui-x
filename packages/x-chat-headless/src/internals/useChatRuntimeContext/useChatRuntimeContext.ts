@@ -12,7 +12,7 @@ export interface ChatRuntimeContextValue<Cursor = string> {
   onFinish?: ChatOnFinish;
   onData?: ChatOnData;
   onError?: (error: ChatError) => void;
-  partRenderers?: ChatPartRendererMap;
+  partRenderers: ChatPartRendererMap;
   actions: ChatRuntimeActions<Cursor>;
 }
 
