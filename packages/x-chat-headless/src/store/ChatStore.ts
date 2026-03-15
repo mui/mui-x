@@ -53,6 +53,29 @@ function normalizeById<T extends { id: string }>(items: T[]): { ids: string[]; b
   return { ids, byId };
 }
 
+/**
+ * Returns `prevIds` when the two arrays contain the same strings in the same
+ * order, avoiding a new reference that would trigger downstream re-renders
+ * (e.g. `useMessageIds()`) when only message bodies changed.
+ */
+function stableIds(prevIds: string[], nextIds: string[]): string[] {
+  if (prevIds === nextIds) {
+    return prevIds;
+  }
+
+  if (prevIds.length !== nextIds.length) {
+    return nextIds;
+  }
+
+  for (let i = 0; i < prevIds.length; i += 1) {
+    if (prevIds[i] !== nextIds[i]) {
+      return nextIds;
+    }
+  }
+
+  return prevIds;
+}
+
 function deriveStateFromParameters<Cursor = string>(parameters: ChatStoreParameters<Cursor>) {
   const { ids: messageIds, byId: messagesById } = normalizeById(
     applyModelInitialValue(parameters.messages, parameters.defaultMessages, []),
@@ -115,7 +138,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
 
     if (parameters.messages !== undefined && (parameters.messages !== this.parameters.messages || this.dirtyControlledModels.has('messages'))) {
       const { ids: messageIds, byId: messagesById } = normalizeById(parameters.messages);
-      newState.messageIds = messageIds;
+      newState.messageIds = stableIds(this.state.messageIds, messageIds);
       newState.messagesById = messagesById;
       this.dirtyControlledModels.delete('messages');
     }
@@ -126,7 +149,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
         this.dirtyControlledModels.has('conversations'))
     ) {
       const { ids: conversationIds, byId: conversationsById } = normalizeById(parameters.conversations);
-      newState.conversationIds = conversationIds;
+      newState.conversationIds = stableIds(this.state.conversationIds, conversationIds);
       newState.conversationsById = conversationsById;
       this.dirtyControlledModels.delete('conversations');
     }
