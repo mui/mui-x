@@ -11,7 +11,7 @@ import type { ChartsOverlayProps } from '../ChartsOverlay/ChartsOverlay';
 import { type ChartsAxisProps } from '../ChartsAxis';
 import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight/ChartsAxisHighlight.types';
 import type { ChartsLegendSlotExtension } from '../ChartsLegend/chartsLegend.types';
-import { ChartsWrapperProps } from '../ChartsWrapper/ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper/ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { BAR_CHART_PLUGINS, type BarChartPluginSignatures } from './BarChart.plugins';
 

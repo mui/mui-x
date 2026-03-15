@@ -1,5 +1,5 @@
 'use client';
-import { ChartPlugin } from '../../models/plugin';
+import type { ChartPlugin } from '../../models/plugin';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartItemClickSignature } from './useChartItemClick.types';
 import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';

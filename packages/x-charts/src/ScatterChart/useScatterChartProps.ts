@@ -8,7 +8,7 @@ import type { ChartsOverlayProps } from '../ChartsOverlay/ChartsOverlay';
 import type { ChartContainerProps } from '../ChartContainer/ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
-import { ChartsWrapperProps } from '../ChartsWrapper/ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper/ChartsWrapper';
 import { SCATTER_CHART_PLUGINS, type ScatterChartPluginSignatures } from './ScatterChart.plugins';
 import { type UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 

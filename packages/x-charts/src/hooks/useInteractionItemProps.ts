@@ -6,7 +6,7 @@ import type { UseChartHighlightSignature } from '../internals/plugins/featurePlu
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { ChartSeriesType } from '../models/seriesType/config';
 import type { SeriesItemIdentifierWithType } from '../models/seriesType';
-import { ChartInstance } from '../internals/plugins/models/chart';
+import type { ChartInstance } from '../internals/plugins/models/chart';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 
 function onPointerDown(event: React.PointerEvent) {

@@ -2,7 +2,7 @@ import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsis
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { ChartPlugin, ChartPluginOptions } from '../../models/plugin';
+import type { ChartPlugin, ChartPluginOptions } from '../../models/plugin';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
 import type {
   SeriesItemIdentifier,

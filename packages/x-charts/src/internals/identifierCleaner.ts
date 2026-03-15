@@ -1,4 +1,4 @@
-import { SeriesId } from '../models/seriesType/common';
+import type { SeriesId } from '../models/seriesType/common';
 import type { ChartSeriesType } from '../models/seriesType/config';
 
 /**

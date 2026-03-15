@@ -14,7 +14,7 @@ import type { LineChartProps } from './LineChart';
 import { type LineHighlightPlotProps } from './LineHighlightPlot';
 import { type LinePlotProps } from './LinePlot';
 import { type MarkPlotProps } from './MarkPlot';
-import { ChartsWrapperProps } from '../ChartsWrapper/ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper/ChartsWrapper';
 import { LINE_CHART_PLUGINS, type LineChartPluginSignatures } from './LineChart.plugins';
 
 /**

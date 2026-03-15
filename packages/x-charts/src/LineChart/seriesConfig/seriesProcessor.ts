@@ -8,7 +8,7 @@ import {
 } from '../../models/seriesType/config';
 import { type SeriesId } from '../../models/seriesType/common';
 import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
-import { DefaultizedLineSeriesType } from '../../models/seriesType/line';
+import type { DefaultizedLineSeriesType } from '../../models/seriesType/line';
 import type { MarkShape } from '../../models/seriesType/line';
 
 const defaultShapes: MarkShape[] = [

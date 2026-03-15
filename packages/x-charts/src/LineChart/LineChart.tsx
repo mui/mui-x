@@ -49,7 +49,7 @@ import { ChartDataProvider } from '../ChartDataProvider/ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface/ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper/ChartsWrapper';
 import type { LineChartPluginSignatures } from './LineChart.plugins';
-import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar/Toolbar.types';
+import type { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar/Toolbar.types';
 import { FocusedLineMark } from './FocusedLineMark';
 
 export interface LineChartSlots

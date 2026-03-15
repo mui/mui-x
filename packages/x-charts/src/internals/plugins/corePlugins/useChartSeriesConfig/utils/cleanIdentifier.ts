@@ -1,4 +1,4 @@
-import { SeriesItemIdentifierWithType } from '../../../../../models/seriesType';
+import type { SeriesItemIdentifierWithType } from '../../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import type { ChartSeriesConfig } from '../types';
 
