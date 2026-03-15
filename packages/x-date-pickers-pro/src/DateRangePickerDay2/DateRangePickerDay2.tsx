@@ -93,18 +93,21 @@ const previewStyles = (theme: Theme) => ({
   right: 'calc(-1 * var(--PickerDay-horizontalMargin))',
 });
 
-const selectedDayStyles = (theme: Theme) => ({
-  color: (theme.vars || theme).palette.primary.contrastText,
-  backgroundColor: (theme.vars || theme).palette.primary.main,
-  fontWeight: theme.typography.fontWeightMedium,
-  '&:focus, &:hover': {
-    willChange: 'background-color',
-    backgroundColor: (theme.vars || theme).palette.primary.dark,
-  },
-  [`&.${dateRangePickerDay2Classes.disabled}`]: {
-    opacity: 0.6,
-  },
-});
+const selectedDayStyles = (theme: Theme) => {
+  const t = theme.vars || theme;
+  return {
+    color: t.palette.primary.contrastText,
+    backgroundColor: t.palette.primary.main,
+    fontWeight: theme.typography.fontWeightMedium,
+    '&:focus, &:hover': {
+      willChange: 'background-color',
+      backgroundColor: t.palette.primary.dark,
+    },
+    [`&.${dateRangePickerDay2Classes.disabled}`]: {
+      opacity: 0.6,
+    },
+  };
+};
 
 const DateRangePickerDay2Root = styled(ButtonBase, {
   name: 'MuiDateRangePickerDay2',
