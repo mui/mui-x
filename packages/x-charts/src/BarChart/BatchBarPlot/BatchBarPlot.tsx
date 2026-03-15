@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useChartsLayerContainerRef } from '../../hooks/useChartsLayerContainerRef';
-import { BarItemIdentifier } from '../../models/seriesType/bar';
+import type { BarItemIdentifier } from '../../models/seriesType/bar';
 import { type ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
 import { type IndividualBarPlotProps } from '../IndividualBarPlot';

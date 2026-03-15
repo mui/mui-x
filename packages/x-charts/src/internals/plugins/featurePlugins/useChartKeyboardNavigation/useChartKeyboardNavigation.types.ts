@@ -1,4 +1,4 @@
-import { ChartPluginSignature } from '../../models/plugin';
+import type { ChartPluginSignature } from '../../models/plugin';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 import type { UseChartHighlightSignature } from '../useChartHighlight';

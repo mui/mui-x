@@ -3,7 +3,7 @@ import type {
   ChartsPluginParams,
   ChartsProviderProps,
 } from '../ChartsProvider/ChartsProvider.types';
-import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
+import type { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
 import type { ChartSeriesType } from '../../models/seriesType/config';
 
 /**

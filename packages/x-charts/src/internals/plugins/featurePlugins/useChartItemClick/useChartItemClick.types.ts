@@ -1,4 +1,4 @@
-import { ChartPluginSignature } from '../../models/plugin';
+import type { ChartPluginSignature } from '../../models/plugin';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesTypeRequiredPlugins } from '../../corePlugins/useChartSeriesConfig';

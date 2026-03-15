@@ -1,5 +1,5 @@
 import type { DefaultizedProps } from '@mui/x-internals/types';
-import { ChartPluginSignature } from '../../models/plugin';
+import type { ChartPluginSignature } from '../../models/plugin';
 import type {
   SeriesItemIdentifier,
   SeriesItemIdentifierWithType,
