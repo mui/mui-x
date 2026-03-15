@@ -29,10 +29,9 @@ import {
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
-import { RequestStatus } from '@mui/x-internals/requestStatus';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { NestedDataManager, getGroupKeys } from './utils';
+import { NestedDataManager, getGroupKeys, RequestStatus } from './utils';
 import type {
   GridDataSourceApiBasePro,
   GridDataSourceApiPro,
