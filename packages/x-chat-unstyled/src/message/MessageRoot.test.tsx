@@ -134,6 +134,18 @@ const minimalMessage: ChatMessage = {
   ],
 };
 
+const errorMessage: ChatMessage = {
+  id: 'm3',
+  role: 'assistant',
+  status: 'error',
+  parts: [
+    {
+      type: 'text',
+      text: 'Error state',
+    },
+  ],
+};
+
 const CustomRoot = React.forwardRef(function CustomRoot(
   props: MessageRootProps & {
     ownerState?: {
@@ -340,6 +352,22 @@ describe('MessageRoot', () => {
     expect(screen.getByTestId('meta-slot')).to.have.attribute('data-status', 'streaming');
     expect(screen.getByTestId('actions-slot')).to.have.attribute('data-message-id', 'm1');
     expect(screen.getByRole('button', { name: 'Reply' })).not.to.equal(null);
+  });
+
+  it('passes the error ownerState flags for failed messages', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} defaultMessages={[errorMessage]}>
+        <MessageRoot messageId="m3" slots={{ root: CustomRoot }}>
+          <MessageMeta slots={{ root: CustomMeta }} />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('custom-message-root')).to.have.attribute('data-message-id', 'm3');
+    expect(screen.getByTestId('custom-message-root')).to.have.attribute('data-status', 'error');
+    expect(screen.getByTestId('custom-message-root')).to.have.attribute('data-streaming', 'false');
+    expect(screen.getByTestId('custom-message-root')).to.have.attribute('data-error', 'true');
+    expect(screen.getByTestId('custom-message-meta')).to.have.attribute('data-status', 'error');
   });
 
   it('hides the avatar for grouped follow-up messages', () => {

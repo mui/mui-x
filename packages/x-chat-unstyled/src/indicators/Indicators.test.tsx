@@ -274,6 +274,39 @@ describe('Indicators', () => {
     expect(screen.getByTestId('typing-indicator-root')).to.have.attribute('data-users', 'u3');
   });
 
+  it('TypingIndicator uses a polite live region by default', async () => {
+    let onEvent: ((event: ChatRealtimeEvent) => void) | undefined;
+    const adapter = createAdapter({
+      subscribe({ onEvent: nextOnEvent }) {
+        onEvent = nextOnEvent;
+        return () => {};
+      },
+    });
+
+    render(
+      <ChatRoot
+        adapter={adapter}
+        defaultActiveConversationId="c1"
+        defaultConversations={[
+          {
+            id: 'c1',
+            participants: [{ id: 'u1', displayName: 'Alice' }],
+          },
+        ]}
+      >
+        <TypingIndicator />
+      </ChatRoot>,
+    );
+
+    act(() => {
+      onEvent?.({ type: 'typing', conversationId: 'c1', userId: 'u1', isTyping: true });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Alice is typing')).to.have.attribute('aria-live', 'polite');
+    });
+  });
+
   it('UnreadMarker renders at the unread boundary derived from unreadCount', () => {
     render(
       <ChatRoot

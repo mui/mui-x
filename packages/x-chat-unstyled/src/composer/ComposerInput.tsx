@@ -3,6 +3,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
+import { useChat } from '@mui/x-chat-headless';
 import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerInputOwnerState } from './composer.types';
 
@@ -38,6 +39,7 @@ export const ComposerInput = React.forwardRef(function ComposerInput(
   ref: React.Ref<HTMLTextAreaElement>,
 ) {
   const { slots, slotProps, ...other } = props;
+  const { activeConversationId } = useChat();
   const composer = useComposerContext();
   const ownerState: ComposerInputOwnerState = {
     isSubmitting: composer.isSubmitting,
@@ -67,10 +69,35 @@ export const ComposerInput = React.forwardRef(function ComposerInput(
   const externalOnCompositionEnd = rootProps.onCompositionEnd as
     | React.CompositionEventHandler<HTMLTextAreaElement>
     | undefined;
+  const previousActiveConversationIdRef = React.useRef(activeConversationId);
 
   React.useLayoutEffect(() => {
     syncTextareaHeight(inputRef.current);
   }, [composer.value]);
+
+  React.useLayoutEffect(() => {
+    const previousActiveConversationId = previousActiveConversationIdRef.current;
+    previousActiveConversationIdRef.current = activeConversationId;
+
+    if (
+      inputRef.current == null ||
+      previousActiveConversationId == null ||
+      previousActiveConversationId === activeConversationId
+    ) {
+      return;
+    }
+
+    const activeElement = inputRef.current.ownerDocument.activeElement;
+
+    if (
+      activeElement == null ||
+      activeElement === inputRef.current.ownerDocument.body ||
+      activeElement === inputRef.current.ownerDocument.documentElement ||
+      !activeElement.isConnected
+    ) {
+      inputRef.current.focus();
+    }
+  }, [activeConversationId]);
 
   return (
     <Root
