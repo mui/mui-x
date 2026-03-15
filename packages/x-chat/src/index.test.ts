@@ -130,6 +130,17 @@ import type {
   ChatRealtimeEvent as HeadlessRealtimeEvent,
   ChatToolInvocation as HeadlessToolInvocation,
 } from '@mui/x-chat/headless';
+import type {
+  ChatRootProps as UnstyledBridgeChatRootProps,
+  ChatRootSlotProps as UnstyledBridgeChatRootSlotProps,
+  ChatRootSlots as UnstyledBridgeChatRootSlots,
+  ComposerInputProps as UnstyledBridgeComposerInputProps,
+  ConversationListItemSlots as UnstyledBridgeConversationListItemSlots,
+  MessageContentSlotProps as UnstyledBridgeMessageContentSlotProps,
+  MessageListRootHandle as UnstyledBridgeMessageListRootHandle,
+  ScrollToBottomAffordanceProps as UnstyledBridgeScrollToBottomAffordanceProps,
+  ThreadHeaderProps as UnstyledBridgeThreadHeaderProps,
+} from '@mui/x-chat/unstyled';
 import type * as Chatbox from '@mui/x-chat/types';
 
 declare module '@mui/x-chat-headless/types' {
@@ -191,8 +202,58 @@ describe('x-chat package scaffold', () => {
       'useMessage',
       'useMessageIds',
     ];
+    const expectedUnstyledRuntimeExports = [
+      'Chat',
+      'ChatLayout',
+      'ChatRoot',
+      'Composer',
+      'ComposerAttachButton',
+      'ComposerHelperText',
+      'ComposerInput',
+      'ComposerRoot',
+      'ComposerSendButton',
+      'ComposerToolbar',
+      'ConversationList',
+      'ConversationListItem',
+      'ConversationListItemAvatar',
+      'ConversationListItemMeta',
+      'ConversationListItemText',
+      'ConversationListRoot',
+      'Indicators',
+      'Message',
+      'MessageActions',
+      'MessageAvatar',
+      'MessageContent',
+      'MessageGroup',
+      'MessageList',
+      'MessageListDateDivider',
+      'MessageListRoot',
+      'MessageMeta',
+      'MessageRoot',
+      'ScrollToBottomAffordance',
+      'Thread',
+      'ThreadActions',
+      'ThreadHeader',
+      'ThreadRoot',
+      'ThreadSubtitle',
+      'ThreadTitle',
+      'TypingIndicator',
+      'UnreadMarker',
+      'getDefaultMessagePartRenderer',
+      'renderDefaultDataPart',
+      'renderDefaultDynamicToolPart',
+      'renderDefaultFilePart',
+      'renderDefaultReasoningPart',
+      'renderDefaultSourceDocumentPart',
+      'renderDefaultSourceUrlPart',
+      'renderDefaultStepStartPart',
+      'renderDefaultTextPart',
+      'renderDefaultToolPart',
+    ];
     const headlessBridgeRuntime = headlessBridge as Record<string, unknown>;
     const headlessDirectRuntime = headlessDirect as Record<string, unknown>;
+    const unstyledBridgeRuntime = unstyledBridge as Record<string, unknown>;
+    const unstyledDirectRuntime = unstyledDirect as Record<string, unknown>;
 
     expect(chat).toBeDefined();
     expect(chatTypes).toBeDefined();
@@ -200,7 +261,8 @@ describe('x-chat package scaffold', () => {
     expect(unstyledBridge).toBeDefined();
     expect(Object.keys(headlessBridge).sort()).toEqual(expectedHeadlessRuntimeExports);
     expect(Object.keys(headlessDirect).sort()).toEqual(expectedHeadlessRuntimeExports);
-    expect(Object.keys(unstyledBridge)).toEqual(Object.keys(unstyledDirect));
+    expect(Object.keys(unstyledBridge).sort()).toEqual(expectedUnstyledRuntimeExports);
+    expect(Object.keys(unstyledDirect).sort()).toEqual(expectedUnstyledRuntimeExports);
     expect(Object.keys(unstyledChatBridge).sort()).toEqual(Object.keys(unstyledChatDirect).sort());
     expect(Object.keys(unstyledComposerBridge).sort()).toEqual(
       Object.keys(unstyledComposerDirect).sort(),
@@ -286,6 +348,39 @@ describe('x-chat package scaffold', () => {
     expect(UnstyledBridgeThread).toBe(UnstyledDirectThread);
     expect(UnstyledBridgeThreadRoot).toBe(UnstyledDirectThreadRoot);
     expect(UnstyledBridgeThread.Root).toBe(UnstyledBridgeThreadRoot);
+    expect(unstyledBridgeRuntime.Chat).toBe(UnstyledBridgeChat);
+    expect(unstyledBridgeRuntime.ChatRoot).toBe(UnstyledBridgeChatRoot);
+    expect(unstyledBridgeRuntime.ChatLayout).toBe(UnstyledBridgeChatLayout);
+    expect(unstyledBridgeRuntime.ConversationList).toBe(UnstyledBridgeConversationList);
+    expect(unstyledBridgeRuntime.ConversationListRoot).toBe(UnstyledBridgeConversationListRoot);
+    expect(unstyledBridgeRuntime.Message).toBe(UnstyledBridgeMessage);
+    expect(unstyledBridgeRuntime.MessageRoot).toBe(UnstyledBridgeMessageRoot);
+    expect(unstyledBridgeRuntime.MessageList).toBe(UnstyledBridgeMessageList);
+    expect(unstyledBridgeRuntime.MessageListRoot).toBe(UnstyledBridgeMessageListRoot);
+    expect(unstyledBridgeRuntime.MessageListDateDivider).toBe(UnstyledBridgeMessageListDateDivider);
+    expect(unstyledBridgeRuntime.MessageGroup).toBe(UnstyledBridgeMessageGroup);
+    expect(unstyledBridgeRuntime.Thread).toBe(UnstyledBridgeThread);
+    expect(unstyledBridgeRuntime.ThreadRoot).toBe(UnstyledBridgeThreadRoot);
+    expect(unstyledBridgeRuntime.Composer).toBe(UnstyledBridgeComposer);
+    expect(unstyledBridgeRuntime.ComposerRoot).toBe(UnstyledBridgeComposerRoot);
+    expect(unstyledBridgeRuntime.Indicators).toBe(UnstyledBridgeIndicators);
+    expect(unstyledBridgeRuntime.TypingIndicator).toBe(UnstyledBridgeTypingIndicator);
+    expect(unstyledBridgeRuntime.UnreadMarker).toBe(UnstyledBridgeUnreadMarker);
+    expect(unstyledBridgeRuntime.ScrollToBottomAffordance).toBe(
+      UnstyledBridgeScrollToBottomAffordance,
+    );
+    expect(unstyledBridgeRuntime.getDefaultMessagePartRenderer).toBe(
+      unstyledDirectRuntime.getDefaultMessagePartRenderer,
+    );
+    expect(unstyledBridgeRuntime.renderDefaultTextPart).toBe(unstyledDirectRuntime.renderDefaultTextPart);
+    expect(unstyledBridgeRuntime.renderDefaultToolPart).toBe(unstyledDirectRuntime.renderDefaultToolPart);
+    expect(unstyledBridgeRuntime.renderDefaultDataPart).toBe(unstyledDirectRuntime.renderDefaultDataPart);
+    expect(unstyledBridgeRuntime.markChatLayoutPane).toBeUndefined();
+    expect(unstyledBridgeRuntime.ToolRenderer).toBeUndefined();
+    expect(unstyledBridgeRuntime.JsonBlock).toBeUndefined();
+    expect(unstyledDirectRuntime.markChatLayoutPane).toBeUndefined();
+    expect(unstyledDirectRuntime.ToolRenderer).toBeUndefined();
+    expect(unstyledDirectRuntime.JsonBlock).toBeUndefined();
   });
 
   it('type-checks the public Chatbox namespace facade', () => {
@@ -464,6 +559,39 @@ describe('x-chat package scaffold', () => {
       error: null,
     };
     const publicStateAlias: HeadlessPublicState<number> = publicState;
+    const unstyledChatRootProps: UnstyledBridgeChatRootProps<number> = {
+      adapter,
+      children: null,
+    };
+    const unstyledChatRootSlots: UnstyledBridgeChatRootSlots = {
+      root: 'section',
+    };
+    const chatRootSlotRoot = { id: 'chat-root' };
+    const unstyledChatRootSlotProps: UnstyledBridgeChatRootSlotProps = {
+      root: chatRootSlotRoot,
+    };
+    const unstyledComposerInputProps: UnstyledBridgeComposerInputProps = {
+      placeholder: 'Type a message',
+    };
+    const unstyledConversationListItemSlots: UnstyledBridgeConversationListItemSlots = {
+      root: 'button',
+    };
+    const messageContentSlotRoot = { className: 'message-content' };
+    const unstyledMessageContentSlotProps: UnstyledBridgeMessageContentSlotProps = {
+      root: messageContentSlotRoot,
+    };
+    const scrollToBottomRootSlot = { id: 'scroll-affordance' };
+    const unstyledScrollToBottomAffordanceProps: UnstyledBridgeScrollToBottomAffordanceProps = {
+      slotProps: {
+        root: scrollToBottomRootSlot,
+      },
+    };
+    const unstyledThreadHeaderProps: UnstyledBridgeThreadHeaderProps = {
+      role: 'banner',
+    };
+    const unstyledMessageListRootHandle: UnstyledBridgeMessageListRootHandle = {
+      scrollToBottom() {},
+    };
 
     const realtimeEvent: Chatbox.RealtimeEvent = {
       type: 'typing',
@@ -497,6 +625,15 @@ describe('x-chat package scaffold', () => {
     expect(publicStateAlias.historyCursor).toBe(2);
     expect(realtimeEventAlias.type).toBe('typing');
     expect(adapter.subscribe).toBeDefined();
+    expect(unstyledChatRootProps.adapter).toBe(adapter);
+    expect(unstyledChatRootSlots.root).toBe('section');
+    expect(chatRootSlotRoot.id).toBe('chat-root');
+    expect(unstyledComposerInputProps.placeholder).toBe('Type a message');
+    expect(unstyledConversationListItemSlots.root).toBe('button');
+    expect(messageContentSlotRoot.className).toBe('message-content');
+    expect(scrollToBottomRootSlot.id).toBe('scroll-affordance');
+    expect(unstyledThreadHeaderProps.role).toBe('banner');
+    unstyledMessageListRootHandle.scrollToBottom();
 
     onFinish({
       message,

@@ -19,9 +19,11 @@ function JsonBlock(props: { value: unknown }) {
   return <pre>{JSON.stringify(value, null, 2)}</pre>;
 }
 
-const renderTextPart: ChatPartRenderer<ChatTextMessagePart> = ({ part }) => <div>{part.text}</div>;
+export const renderDefaultTextPart: ChatPartRenderer<ChatTextMessagePart> = ({ part }) => (
+  <div>{part.text}</div>
+);
 
-const renderReasoningPart: ChatPartRenderer<ChatReasoningMessagePart> = ({ part }) => (
+export const renderDefaultReasoningPart: ChatPartRenderer<ChatReasoningMessagePart> = ({ part }) => (
   <details>
     <summary>Reasoning</summary>
     <div>{part.text}</div>
@@ -46,13 +48,15 @@ function ToolRenderer(props: {
   );
 }
 
-const renderToolPart: ChatPartRenderer<ChatToolMessagePart> = ({ part }) => <ToolRenderer part={part} />;
-
-const renderDynamicToolPart: ChatPartRenderer<ChatDynamicToolMessagePart> = ({ part }) => (
+export const renderDefaultToolPart: ChatPartRenderer<ChatToolMessagePart> = ({ part }) => (
   <ToolRenderer part={part} />
 );
 
-const renderFilePart: ChatPartRenderer<ChatFileMessagePart> = ({ part }) => {
+export const renderDefaultDynamicToolPart: ChatPartRenderer<ChatDynamicToolMessagePart> = ({
+  part,
+}) => <ToolRenderer part={part} />;
+
+export const renderDefaultFilePart: ChatPartRenderer<ChatFileMessagePart> = ({ part }) => {
   if (part.mediaType.startsWith('image/')) {
     return <img alt={part.filename ?? ''} src={part.url} />;
   }
@@ -60,46 +64,48 @@ const renderFilePart: ChatPartRenderer<ChatFileMessagePart> = ({ part }) => {
   return <a href={part.url}>{part.filename ?? part.url}</a>;
 };
 
-const renderSourceUrlPart: ChatPartRenderer<ChatSourceUrlMessagePart> = ({ part }) => (
-  <a href={part.url}>{part.title ?? part.url}</a>
-);
+export const renderDefaultSourceUrlPart: ChatPartRenderer<ChatSourceUrlMessagePart> = ({
+  part,
+}) => <a href={part.url}>{part.title ?? part.url}</a>;
 
-const renderSourceDocumentPart: ChatPartRenderer<ChatSourceDocumentMessagePart> = ({ part }) => (
+export const renderDefaultSourceDocumentPart: ChatPartRenderer<ChatSourceDocumentMessagePart> = ({
+  part,
+}) => (
   <div>
     {part.title ? <div>{part.title}</div> : null}
     {part.text ? <div>{part.text}</div> : null}
   </div>
 );
 
-const renderStepStartPart: ChatPartRenderer<ChatStepStartMessagePart> = () => (
+export const renderDefaultStepStartPart: ChatPartRenderer<ChatStepStartMessagePart> = () => (
   <div role="separator" />
 );
 
-const renderDataPart: ChatPartRenderer<Extract<ChatMessagePart, { type: `data-${string}` }>> = ({ part }) => (
-  <JsonBlock value={part.data} />
-);
+export const renderDefaultDataPart: ChatPartRenderer<
+  Extract<ChatMessagePart, { type: `data-${string}` }>
+> = ({ part }) => <JsonBlock value={part.data} />;
 
 export function getDefaultMessagePartRenderer(
   part: ChatMessagePart,
 ): ChatPartRenderer<any> | null {
   switch (part.type) {
     case 'text':
-      return renderTextPart;
+      return renderDefaultTextPart;
     case 'reasoning':
-      return renderReasoningPart;
+      return renderDefaultReasoningPart;
     case 'tool':
-      return renderToolPart;
+      return renderDefaultToolPart;
     case 'dynamic-tool':
-      return renderDynamicToolPart;
+      return renderDefaultDynamicToolPart;
     case 'file':
-      return renderFilePart;
+      return renderDefaultFilePart;
     case 'source-url':
-      return renderSourceUrlPart;
+      return renderDefaultSourceUrlPart;
     case 'source-document':
-      return renderSourceDocumentPart;
+      return renderDefaultSourceDocumentPart;
     case 'step-start':
-      return renderStepStartPart;
+      return renderDefaultStepStartPart;
     default:
-      return part.type.startsWith('data-') ? renderDataPart : null;
+      return part.type.startsWith('data-') ? renderDefaultDataPart : null;
   }
 }

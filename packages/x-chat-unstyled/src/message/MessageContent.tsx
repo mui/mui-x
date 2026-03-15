@@ -8,8 +8,8 @@ import {
   type ChatPartRenderer,
 } from '@mui/x-chat-headless';
 import { useChatOnToolCall } from '@mui/x-chat-headless/hooks';
+import { getDefaultMessagePartRenderer } from './defaultMessagePartRenderers';
 import { useMessageContext } from './internals/MessageContext';
-import { getDefaultMessagePartRenderer } from './internals/defaultMessagePartRenderers';
 import { type MessageContentOwnerState } from './message.types';
 
 export interface MessageContentSlots {
