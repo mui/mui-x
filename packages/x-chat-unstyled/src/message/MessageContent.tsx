@@ -136,8 +136,8 @@ function MessageRenderedPart(props: {
   const onToolCall = useChatOnToolCall();
   const Renderer = (
     customRenderer ??
-    localizedRenderer ??
     builtInRenderer ??
+    localizedRenderer ??
     defaultRenderer
   ) as ChatPartRenderer<ChatMessagePart> | null;
 

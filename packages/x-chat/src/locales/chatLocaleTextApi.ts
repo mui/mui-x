@@ -16,6 +16,11 @@ export interface ChatLocaleText {
   messageEditedLabel: string;
   messageDeletedLabel: string;
   messageReasoningLabel: string;
+  messageReasoningStreamingLabel: string;
+  messageToolInputLabel: string;
+  messageToolOutputLabel: string;
+  messageToolApproveButtonLabel: string;
+  messageToolDenyButtonLabel: string;
   conversationListNoConversationsLabel: string;
   conversationListSearchPlaceholder: string;
   unreadMarkerLabel: string;

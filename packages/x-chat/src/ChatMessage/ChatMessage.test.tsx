@@ -23,6 +23,7 @@ import type {
 } from './ChatMessage';
 import {
   ChatDateDivider,
+  ChatFilePartRenderer,
   ChatMessage,
   ChatMessageActions,
   ChatMessageAvatar,
@@ -30,6 +31,11 @@ import {
   ChatMessageGroup,
   ChatMessageMeta,
   ChatMessageRoot,
+  ChatReasoningPartRenderer,
+  ChatSourceDocumentPartRenderer,
+  ChatSourceUrlPartRenderer,
+  ChatToolPartRenderer,
+  createChatToolPartRenderer,
   createChatMarkdownTextPartRenderer,
   chatMessageClasses,
 } from './ChatMessage';
@@ -37,7 +43,7 @@ import {
 const { render } = createRenderer();
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-function createAdapter(): ChatAdapter {
+function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
       return new ReadableStream({
@@ -46,20 +52,22 @@ function createAdapter(): ChatAdapter {
         },
       });
     },
+    ...overrides,
   };
 }
 
 function createMessage(
   id: string,
   options: Partial<ChatMessageModel> & {
-    text: string;
+    parts?: ChatMessageModel['parts'];
+    text?: string;
   },
 ): ChatMessageModel {
-  const { text, ...message } = options;
+  const { parts, text = '', ...message } = options;
 
   return {
     id,
-    parts: [{ type: 'text', text }],
+    parts: parts ?? [{ type: 'text', text }],
     role: message.role ?? 'assistant',
     ...message,
   };
@@ -69,6 +77,7 @@ function renderChatMessage(
   ui: React.ReactElement,
   messages: ChatMessageModel[],
   options: {
+    adapter?: ChatAdapter;
     localeText?: Record<string, unknown>;
     partRenderers?: ChatPartRendererMap;
   } = {},
@@ -87,7 +96,7 @@ function renderChatMessage(
   return render(
     <ThemeProvider theme={theme}>
       <ChatRoot
-        adapter={createAdapter()}
+        adapter={options.adapter ?? createAdapter()}
         defaultMessages={messages}
         localeText={options.localeText}
         partRenderers={options.partRenderers}
@@ -481,6 +490,198 @@ describe('ChatMessage', () => {
     }
   });
 
+  it('renders styled reasoning, file, and source parts with Material defaults', () => {
+    renderChatMessage(
+      <ChatMessageRoot messageId="m1">
+        <ChatMessageContent />
+      </ChatMessageRoot>,
+      [
+        createMessage('m1', {
+          createdAt: '2026-03-15T09:00:00.000Z',
+          role: 'assistant',
+          parts: [
+            {
+              type: 'reasoning',
+              text: 'Investigating the issue',
+              state: 'streaming',
+            },
+            {
+              type: 'file',
+              mediaType: 'image/png',
+              url: 'https://example.com/image.png',
+              filename: 'image.png',
+            },
+            {
+              type: 'file',
+              mediaType: 'application/pdf',
+              url: 'https://example.com/spec.pdf',
+              filename: 'spec.pdf',
+            },
+            {
+              type: 'source-url',
+              sourceId: 'source-1',
+              url: 'https://mui.com',
+              title: 'MUI Docs',
+            },
+            {
+              type: 'source-document',
+              sourceId: 'source-2',
+              title: 'Internal spec',
+              text: 'Document excerpt',
+            },
+          ],
+        }),
+      ],
+      {
+        localeText: {
+          messageReasoningStreamingLabel: 'Thinking now',
+        },
+      },
+    );
+
+    const reasoning = screen.getByText('Thinking now').closest('details');
+
+    expect(reasoning).not.toBeNull();
+    expect(reasoning).to.have.attribute('open');
+    expect(screen.getByRole('img', { name: 'image.png' })).to.have.attribute(
+      'src',
+      'https://example.com/image.png',
+    );
+    expect(screen.getByRole('link', { name: 'spec.pdf' })).to.have.attribute(
+      'href',
+      'https://example.com/spec.pdf',
+    );
+    expect(screen.getByRole('link', { name: 'MUI Docs' })).to.have.attribute('href', 'https://mui.com');
+    expect(screen.getByText('Internal spec')).toBeVisible();
+    expect(screen.getByText('Document excerpt')).toBeVisible();
+  });
+
+  it('renders tool states, collapses long payloads, and forwards approval responses', async () => {
+    const addToolApprovalResponse = vi.fn(async () => {});
+
+    renderChatMessage(
+      <ChatMessageRoot messageId="m1">
+        <ChatMessageContent />
+      </ChatMessageRoot>,
+      [
+        createMessage('m1', {
+          createdAt: '2026-03-15T09:00:00.000Z',
+          role: 'assistant',
+          parts: [
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId: 'tool-approval',
+                toolName: 'search',
+                state: 'approval-requested',
+                input: {
+                  query: Array.from({ length: 40 }, (_, index) => `weather-${index + 1}`).join(' '),
+                },
+              },
+            },
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId: 'tool-output',
+                toolName: 'search',
+                state: 'output-available',
+                output: {
+                  results: Array.from({ length: 12 }, (_, index) => ({
+                    title: `Result ${index + 1}`,
+                    url: `https://example.com/${index + 1}`,
+                  })),
+                },
+              },
+            },
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId: 'tool-error',
+                toolName: 'search',
+                state: 'output-error',
+                errorText: 'Request failed',
+              },
+            },
+            {
+              type: 'dynamic-tool',
+              toolInvocation: {
+                toolCallId: 'tool-denied',
+                toolName: 'dynamic-search',
+                state: 'output-denied',
+                approval: {
+                  approved: false,
+                  reason: 'Manager approval required',
+                },
+              },
+            },
+          ],
+        }),
+      ],
+      {
+        adapter: createAdapter({ addToolApprovalResponse }),
+      },
+    );
+
+    expect(screen.getAllByText('Input')[0].closest('summary')).not.toBeNull();
+    expect(screen.getAllByText('Output')[0].closest('summary')).not.toBeNull();
+    expect(screen.getByText('Request failed')).toBeVisible();
+    expect(screen.getByText('Manager approval required')).toBeVisible();
+
+    await React.act(async () => {
+      screen.getByRole('button', { name: 'Approve' }).click();
+    });
+
+    await waitFor(() => {
+      expect(addToolApprovalResponse).toHaveBeenCalledWith({
+        id: 'tool-approval',
+        approved: true,
+      });
+    });
+  });
+
+  it('exports reusable non-text AI renderers for provider-level composition', () => {
+    renderChatMessage(
+      <ChatMessageRoot messageId="m1">
+        <ChatMessageContent />
+      </ChatMessageRoot>,
+      [
+        createMessage('m1', {
+          createdAt: '2026-03-15T09:00:00.000Z',
+          role: 'assistant',
+          parts: [
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId: 'tool-1',
+                toolName: 'search',
+                state: 'output-available',
+                output: {
+                  results: [{ title: 'Sunny', url: 'https://example.com/weather' }],
+                },
+              },
+            },
+          ],
+        }),
+      ],
+      {
+        partRenderers: {
+          tool: createChatToolPartRenderer({
+            slotProps: {
+              root: {
+                id: 'custom-tool-root',
+              },
+            },
+          }),
+        },
+      },
+    );
+
+    const customToolRoot = document.getElementById('custom-tool-root');
+
+    expect(customToolRoot).not.toBeNull();
+    expect(customToolRoot?.textContent ?? '').toContain('search');
+  });
+
   it('lets partRenderers.text replace the built-in markdown renderer', () => {
     renderChatMessage(
       <ChatMessageRoot messageId="m1">
@@ -535,6 +736,84 @@ describe('ChatMessage', () => {
 
     expect(document.getElementById('markdown-text-part')).not.toBeNull();
     expect(screen.getByText('composable').closest('code')).not.toBeNull();
+  });
+
+  it('exports standalone non-text renderer components', () => {
+    const toolMessage = createMessage('m-tool', {
+      role: 'assistant',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tool-standalone',
+            toolName: 'search',
+            state: 'output-available',
+            output: {
+              results: [{ title: 'Sunny', url: 'https://example.com/weather' }],
+            },
+          },
+        },
+      ],
+    });
+
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <ChatRoot adapter={createAdapter()} defaultMessages={[toolMessage]}>
+          <React.Fragment>
+            <ChatReasoningPartRenderer
+              index={0}
+              message={toolMessage}
+              onToolCall={undefined}
+              part={{ type: 'reasoning', text: 'Standalone reasoning', state: 'done' }}
+            />
+            <ChatToolPartRenderer
+              index={0}
+              message={toolMessage}
+              onToolCall={undefined}
+              part={toolMessage.parts[0] as any}
+            />
+            <ChatFilePartRenderer
+              index={0}
+              message={toolMessage}
+              onToolCall={undefined}
+              part={{
+                type: 'file',
+                mediaType: 'application/pdf',
+                url: 'https://example.com/file.pdf',
+                filename: 'file.pdf',
+              }}
+            />
+            <ChatSourceUrlPartRenderer
+              index={0}
+              message={toolMessage}
+              onToolCall={undefined}
+              part={{
+                type: 'source-url',
+                sourceId: 'source-url',
+                title: 'Standalone source',
+                url: 'https://example.com',
+              }}
+            />
+            <ChatSourceDocumentPartRenderer
+              index={0}
+              message={toolMessage}
+              onToolCall={undefined}
+              part={{
+                type: 'source-document',
+                sourceId: 'source-doc',
+                title: 'Standalone document',
+                text: 'Excerpt',
+              }}
+            />
+          </React.Fragment>
+        </ChatRoot>
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByText('Standalone reasoning')).toBeVisible();
+    expect(screen.getByText('Standalone source')).toBeVisible();
+    expect(screen.getByText('Standalone document')).toBeVisible();
+    expect(screen.getByText('file.pdf')).toBeVisible();
   });
 
   it.skipIf(isJSDOM)('reveals actions when focus moves inside the styled row', async () => {

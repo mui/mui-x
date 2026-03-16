@@ -221,6 +221,7 @@ describe('x-chat package scaffold', () => {
       'ChatComposerToolbar',
       'ChatConversations',
       'ChatDateDivider',
+      'ChatFilePartRenderer',
       'ChatMarkdownTextPart',
       'ChatMessage',
       'ChatMessageActions',
@@ -229,9 +230,13 @@ describe('x-chat package scaffold', () => {
       'ChatMessageGroup',
       'ChatMessageMeta',
       'ChatMessageRoot',
+      'ChatReasoningPartRenderer',
       'ChatScrollToBottomAffordance',
+      'ChatSourceDocumentPartRenderer',
+      'ChatSourceUrlPartRenderer',
       'ChatThread',
       'ChatTypingIndicator',
+      'ChatToolPartRenderer',
       'ChatUnreadMarker',
       'chatComposerClasses',
       'chatConversationsClasses',
@@ -240,7 +245,12 @@ describe('x-chat package scaffold', () => {
       'chatThreadClasses',
       'chatTypingIndicatorClasses',
       'chatUnreadMarkerClasses',
+      'createChatFilePartRenderer',
       'createChatMarkdownTextPartRenderer',
+      'createChatReasoningPartRenderer',
+      'createChatSourceDocumentPartRenderer',
+      'createChatSourceUrlPartRenderer',
+      'createChatToolPartRenderer',
       'getChatComposerUtilityClass',
       'getChatConversationsUtilityClass',
       'getChatMessageUtilityClass',
@@ -282,6 +292,7 @@ describe('x-chat package scaffold', () => {
     ];
     const expectedChatMessageSubpathExports = [
       'ChatDateDivider',
+      'ChatFilePartRenderer',
       'ChatMarkdownTextPart',
       'ChatMessage',
       'ChatMessageActions',
@@ -290,8 +301,17 @@ describe('x-chat package scaffold', () => {
       'ChatMessageGroup',
       'ChatMessageMeta',
       'ChatMessageRoot',
+      'ChatReasoningPartRenderer',
+      'ChatSourceDocumentPartRenderer',
+      'ChatSourceUrlPartRenderer',
+      'ChatToolPartRenderer',
       'chatMessageClasses',
+      'createChatFilePartRenderer',
       'createChatMarkdownTextPartRenderer',
+      'createChatReasoningPartRenderer',
+      'createChatSourceDocumentPartRenderer',
+      'createChatSourceUrlPartRenderer',
+      'createChatToolPartRenderer',
       'getChatMessageUtilityClass',
     ];
     const expectedHeadlessRuntimeExports = [
@@ -366,20 +386,20 @@ describe('x-chat package scaffold', () => {
     expect(themeAugmentation).toBeDefined();
     expect(headlessBridge).toBeDefined();
     expect(unstyledBridge).toBeDefined();
-    expect(Object.keys(chat).sort()).toEqual(expectedChatRuntimeExports);
-    expect(Object.keys(chatComposerSubpath).sort()).toEqual(expectedChatComposerSubpathExports);
+    expect(Object.keys(chat).sort()).toEqual(expectedChatRuntimeExports.slice().sort());
+    expect(Object.keys(chatComposerSubpath).sort()).toEqual(expectedChatComposerSubpathExports.slice().sort());
     expect(Object.keys(chatConversationsSubpath).sort()).toEqual(
-      expectedChatConversationsSubpathExports,
+      expectedChatConversationsSubpathExports.slice().sort(),
     );
-    expect(Object.keys(chatIndicatorsSubpath).sort()).toEqual(expectedChatIndicatorsSubpathExports);
-    expect(Object.keys(chatMessageSubpath).sort()).toEqual(expectedChatMessageSubpathExports);
-    expect(Object.keys(chatThreadSubpath).sort()).toEqual(expectedChatThreadSubpathExports);
+    expect(Object.keys(chatIndicatorsSubpath).sort()).toEqual(expectedChatIndicatorsSubpathExports.slice().sort());
+    expect(Object.keys(chatMessageSubpath).sort()).toEqual(expectedChatMessageSubpathExports.slice().sort());
+    expect(Object.keys(chatThreadSubpath).sort()).toEqual(expectedChatThreadSubpathExports.slice().sort());
     expect(Object.keys(themeAugmentation)).toEqual([]);
     expect(Object.keys(chatLocales).sort()).toEqual(['enUS', 'getChatLocalization']);
-    expect(Object.keys(headlessBridge).sort()).toEqual(expectedHeadlessRuntimeExports);
-    expect(Object.keys(headlessDirect).sort()).toEqual(expectedHeadlessRuntimeExports);
-    expect(Object.keys(unstyledBridge).sort()).toEqual(expectedUnstyledRuntimeExports);
-    expect(Object.keys(unstyledDirect).sort()).toEqual(expectedUnstyledRuntimeExports);
+    expect(Object.keys(headlessBridge).sort()).toEqual(expectedHeadlessRuntimeExports.slice().sort());
+    expect(Object.keys(headlessDirect).sort()).toEqual(expectedHeadlessRuntimeExports.slice().sort());
+    expect(Object.keys(unstyledBridge).sort()).toEqual(expectedUnstyledRuntimeExports.slice().sort());
+    expect(Object.keys(unstyledDirect).sort()).toEqual(expectedUnstyledRuntimeExports.slice().sort());
     expect(Object.keys(unstyledChatBridge).sort()).toEqual(Object.keys(unstyledChatDirect).sort());
     expect(Object.keys(unstyledComposerBridge).sort()).toEqual(
       Object.keys(unstyledComposerDirect).sort(),
@@ -531,11 +551,27 @@ describe('x-chat package scaffold', () => {
     expect(chat.ChatMessageActions).toBe(chatMessageSubpath.ChatMessageActions);
     expect(chat.ChatMessageGroup).toBe(chatMessageSubpath.ChatMessageGroup);
     expect(chat.ChatDateDivider).toBe(chatMessageSubpath.ChatDateDivider);
+    expect(chat.ChatFilePartRenderer).toBe(chatMessageSubpath.ChatFilePartRenderer);
     expect(chat.ChatMarkdownTextPart).toBe(chatMessageSubpath.ChatMarkdownTextPart);
+    expect(chat.ChatReasoningPartRenderer).toBe(chatMessageSubpath.ChatReasoningPartRenderer);
+    expect(chat.ChatSourceDocumentPartRenderer).toBe(chatMessageSubpath.ChatSourceDocumentPartRenderer);
+    expect(chat.ChatSourceUrlPartRenderer).toBe(chatMessageSubpath.ChatSourceUrlPartRenderer);
+    expect(chat.ChatToolPartRenderer).toBe(chatMessageSubpath.ChatToolPartRenderer);
     expect(chat.chatMessageClasses).toBe(chatMessageSubpath.chatMessageClasses);
+    expect(chat.createChatFilePartRenderer).toBe(chatMessageSubpath.createChatFilePartRenderer);
     expect(chat.createChatMarkdownTextPartRenderer).toBe(
       chatMessageSubpath.createChatMarkdownTextPartRenderer,
     );
+    expect(chat.createChatReasoningPartRenderer).toBe(
+      chatMessageSubpath.createChatReasoningPartRenderer,
+    );
+    expect(chat.createChatSourceDocumentPartRenderer).toBe(
+      chatMessageSubpath.createChatSourceDocumentPartRenderer,
+    );
+    expect(chat.createChatSourceUrlPartRenderer).toBe(
+      chatMessageSubpath.createChatSourceUrlPartRenderer,
+    );
+    expect(chat.createChatToolPartRenderer).toBe(chatMessageSubpath.createChatToolPartRenderer);
     expect(chat.getChatMessageUtilityClass).toBe(chatMessageSubpath.getChatMessageUtilityClass);
     expect(chat.ChatThread).toBe(chatThreadSubpath.ChatThread);
     expect(chat.chatThreadClasses).toBe(chatThreadSubpath.chatThreadClasses);
@@ -769,6 +805,11 @@ describe('x-chat package scaffold', () => {
       messageEditedLabel: 'Edited',
       messageDeletedLabel: 'Deleted',
       messageReasoningLabel: 'Reasoning',
+      messageReasoningStreamingLabel: 'Thinking...',
+      messageToolInputLabel: 'Input',
+      messageToolOutputLabel: 'Output',
+      messageToolApproveButtonLabel: 'Approve',
+      messageToolDenyButtonLabel: 'Deny',
       conversationListNoConversationsLabel: 'No conversations',
       conversationListSearchPlaceholder: 'Search conversations',
       unreadMarkerLabel: 'New messages',

@@ -17,6 +17,11 @@ export interface ChatLocaleText {
   messageEditedLabel: string;
   messageDeletedLabel: string;
   messageReasoningLabel: string;
+  messageReasoningStreamingLabel: string;
+  messageToolInputLabel: string;
+  messageToolOutputLabel: string;
+  messageToolApproveButtonLabel: string;
+  messageToolDenyButtonLabel: string;
   conversationListNoConversationsLabel: string;
   conversationListSearchPlaceholder: string;
   unreadMarkerLabel: string;
@@ -65,6 +70,11 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageEditedLabel: 'Edited',
   messageDeletedLabel: 'Deleted',
   messageReasoningLabel: 'Reasoning',
+  messageReasoningStreamingLabel: 'Thinking...',
+  messageToolInputLabel: 'Input',
+  messageToolOutputLabel: 'Output',
+  messageToolApproveButtonLabel: 'Approve',
+  messageToolDenyButtonLabel: 'Deny',
   conversationListNoConversationsLabel: 'No conversations',
   conversationListSearchPlaceholder: 'Search conversations',
   unreadMarkerLabel: 'New messages',

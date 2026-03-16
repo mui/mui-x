@@ -6,6 +6,29 @@ export interface ChatMessageClasses {
   avatar: string;
   content: string;
   bubble: string;
+  reasoning: string;
+  reasoningSummary: string;
+  reasoningContent: string;
+  tool: string;
+  toolHeader: string;
+  toolTitle: string;
+  toolState: string;
+  toolSection: string;
+  toolSectionContent: string;
+  toolError: string;
+  toolActions: string;
+  toolApproveButton: string;
+  toolDenyButton: string;
+  file: string;
+  filePreview: string;
+  fileLink: string;
+  fileName: string;
+  sourceUrl: string;
+  sourceUrlIcon: string;
+  sourceUrlLink: string;
+  sourceDocument: string;
+  sourceDocumentTitle: string;
+  sourceDocumentExcerpt: string;
   markdown: string;
   markdownContent: string;
   markdownHeading: string;
@@ -35,6 +58,29 @@ export const chatMessageClasses: ChatMessageClasses = generateUtilityClasses('Mu
   'avatar',
   'content',
   'bubble',
+  'reasoning',
+  'reasoningSummary',
+  'reasoningContent',
+  'tool',
+  'toolHeader',
+  'toolTitle',
+  'toolState',
+  'toolSection',
+  'toolSectionContent',
+  'toolError',
+  'toolActions',
+  'toolApproveButton',
+  'toolDenyButton',
+  'file',
+  'filePreview',
+  'fileLink',
+  'fileName',
+  'sourceUrl',
+  'sourceUrlIcon',
+  'sourceUrlLink',
+  'sourceDocument',
+  'sourceDocumentTitle',
+  'sourceDocumentExcerpt',
   'markdown',
   'markdownContent',
   'markdownHeading',
