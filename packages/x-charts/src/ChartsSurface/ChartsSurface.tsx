@@ -6,15 +6,25 @@ import * as React from 'react';
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import { ChartsSvgLayer } from '../ChartsSvgLayer';
 // eslint-disable-next-line import/no-cycle
-import { ChartsLayerContainer } from '../ChartsLayerContainer';
+import { ChartsLayerContainer, type ChartsLayerContainerProps } from '../ChartsLayerContainer';
 
-export interface ChartsSurfaceProps extends Omit<
-  React.SVGProps<SVGSVGElement>,
-  'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
-> {
+export interface ChartsSurfaceProps
+  extends
+    Omit<
+      React.SVGProps<SVGSVGElement>,
+      | 'id'
+      | 'children'
+      | 'className'
+      | 'height'
+      | 'width'
+      | 'cx'
+      | 'cy'
+      | 'viewBox'
+      | 'color'
+      | 'ref'
+    >,
+    Pick<ChartsLayerContainerProps, 'title' | 'desc'> {
   className?: string;
-  title?: string;
-  desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
 }
@@ -37,12 +47,17 @@ const ChartsSurface = React.forwardRef<HTMLDivElement, ChartsSurfaceProps>(funct
 ) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
-  const { children, className, ...other } = themeProps;
+  const { children, className, title, desc, ...other } = themeProps;
 
   const classes = useUtilityClasses();
 
   return (
-    <ChartsLayerContainer className={clsx(classes.root, className)} ref={ref}>
+    <ChartsLayerContainer
+      className={clsx(classes.root, className)}
+      ref={ref}
+      title={title}
+      desc={desc}
+    >
       <ChartsSvgLayer {...other}>{children}</ChartsSvgLayer>
     </ChartsLayerContainer>
   );
