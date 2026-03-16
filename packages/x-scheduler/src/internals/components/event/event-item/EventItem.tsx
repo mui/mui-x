@@ -9,7 +9,7 @@ import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { EventItemProps } from './EventItem.types';
@@ -281,7 +281,7 @@ function MultiDayDateLabel(props: {
 }) {
   const { occurrence, formatTime } = props;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes, localeText } = useEventCalendarStyledContext();
 
   if (

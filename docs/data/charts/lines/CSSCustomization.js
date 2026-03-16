@@ -55,7 +55,6 @@ export default function CSSCustomization() {
           area: true,
         },
       ]}
-      experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
       height={300}
     >
       <defs>

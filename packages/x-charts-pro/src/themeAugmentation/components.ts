@@ -7,8 +7,6 @@ export interface ChartsProComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiFunnelChart'];
   };
   MuiFunnelSection?: {
-    /** @deprecated Use `MuiFunnelChart` instead. */
-    styleOverrides?: ComponentsOverrides<Theme>['MuiFunnelSection'];
     defaultProps?: ComponentsProps['MuiFunnelSection'];
   };
   MuiFunnelSectionLabel?: {
@@ -23,14 +21,26 @@ export interface ChartsProComponents<Theme = unknown> {
   MuiLineChartPro?: {
     defaultProps?: ComponentsProps['MuiLineChartPro'];
   };
+
   // Heatmap components
   MuiHeatmap?: {
     defaultProps?: ComponentsProps['MuiHeatmap'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmap'];
   };
+  MuiHeatmapPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmapPlot'];
+  };
+
   // ScatterChartPro components
   MuiScatterChartPro?: {
     defaultProps?: ComponentsProps['MuiScatterChartPro'];
+  };
+
+  // SankeyChart components
+  MuiSankeyChart?: {
+    defaultProps?: ComponentsProps['MuiSankeyChart'];
+  };
+  MuiSankeyPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiSankeyPlot'];
   };
 }
 

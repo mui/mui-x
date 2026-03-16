@@ -138,6 +138,10 @@ HeatmapPremium.propTypes = {
    */
   disableKeyboardNavigation: PropTypes.bool,
   /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
@@ -220,7 +224,7 @@ HeatmapPremium.propTypes = {
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
    * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,
@@ -637,8 +641,8 @@ HeatmapPremium.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,

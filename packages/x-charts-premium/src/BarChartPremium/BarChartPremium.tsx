@@ -224,6 +224,10 @@ BarChartPremium.propTypes = {
    */
   disableKeyboardNavigation: PropTypes.bool,
   /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
+  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -2224,8 +2228,8 @@ BarChartPremium.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,

@@ -1,14 +1,16 @@
-import { type HeatmapClassKey } from '../Heatmap';
-import { type FunnelSectionClasses } from '../FunnelChart/funnelSectionClasses';
+import { type FunnelClasses } from '../FunnelChart';
+
+type ExtractSafe<T, U extends T> = T extends U ? T : never;
 
 export interface ChartsProComponentNameToClassKey {
   // FunnelChart components
-  MuiFunnelChart: 'section' | 'sectionLabel';
-  /** @deprecated Use `MuiFunnelChart` instead. */
-  MuiFunnelSection: keyof FunnelSectionClasses;
+  MuiFunnelChart: ExtractSafe<keyof FunnelClasses, 'section' | 'sectionLabel'>;
 
   // Heatmap components
-  MuiHeatmap: HeatmapClassKey;
+  MuiHeatmapPlot: 'root';
+
+  // SankeyChart components
+  MuiSankeyPlot: 'root';
 }
 
 declare module '@mui/material/styles' {

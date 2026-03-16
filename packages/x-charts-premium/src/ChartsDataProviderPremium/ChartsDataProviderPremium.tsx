@@ -23,7 +23,7 @@ import { useChartsDataProviderPremiumProps } from './useChartsDataProviderPremiu
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
-  version: (process.env as any).MUI_VERSION,
+  version: process.env.MUI_VERSION!,
   name: 'x-charts-premium' as const,
 };
 
@@ -126,12 +126,6 @@ ChartsDataProviderPremium.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
