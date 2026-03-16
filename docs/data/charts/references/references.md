@@ -17,6 +17,8 @@ There are three types of reference elements:
 - **Reference area**: A shaded region between two values on an axis.
 - **Reference point**: A marker placed at a specific coordinate.
 
+{{"demo": "ReferenceOverview.js"}}
+
 ## Reference line
 
 The `<ChartsReferenceLine />` component draws a horizontal or vertical line at a given value.
@@ -64,3 +66,9 @@ A reference point places a marker at a specific `(x, y)` coordinate by rendering
 The component uses the `useXScale()` and `useYScale()` hooks to convert data values into pixel coordinates.
 
 {{"demo": "ReferencePointBasic.js"}}
+
+## With Zoom
+
+The zoom 
+
+
