@@ -164,9 +164,7 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
     | 'filled'
     | 'outlined';
   const menuProps = {
-    PaperProps: {
-      onKeyDown,
-    },
+    slotProps: { paper: { onKeyDown } },
   } as Partial<MUIMenuProps>;
   if (onClose) {
     menuProps.onClose = onClose;
@@ -286,7 +284,7 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
         {...other}
         {...material}
         className={clsx(className, material?.className)}
-        inputProps={slotProps?.htmlInput}
+        slotProps={{ input: slotProps?.htmlInput }}
         ref={handleRef}
         touchRippleRef={rippleRef}
       />
@@ -300,7 +298,7 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
         <Checkbox
           {...other}
           {...material}
-          inputProps={slotProps?.htmlInput}
+          slotProps={{ input: slotProps?.htmlInput }}
           ref={handleRef}
           touchRippleRef={rippleRef}
         />
@@ -403,8 +401,6 @@ function BaseMenuItem(props: P['baseMenuItem']) {
 }
 
 function BaseTextField(props: P['baseTextField']) {
-  // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
-  // translate the pattern.
   const { slotProps, material, ...other } = props;
   const theme = useTheme();
   const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
@@ -416,11 +412,10 @@ function BaseTextField(props: P['baseTextField']) {
       size={computedSize as any}
       {...other}
       {...material}
-      inputProps={slotProps?.htmlInput}
-      InputProps={transformInputProps(slotProps?.input as any)}
-      InputLabelProps={{
-        shrink: true,
-        ...(slotProps as any)?.inputLabel,
+      slotProps={{
+        htmlInput: slotProps?.htmlInput,
+        input: transformInputProps(slotProps?.input as any),
+        inputLabel: { shrink: true, ...(slotProps as any)?.inputLabel },
       }}
     />
   );
@@ -454,7 +449,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
       isOptionEqualToValue={isOptionEqualToValue}
       value={value}
       onChange={onChange}
-      renderTags={(currentValue, getTagProps) =>
+      renderValue={(currentValue, getTagProps) =>
         currentValue.map((option, index) => {
           const { key, ...tagProps } = getTagProps({ index });
           return (
@@ -469,20 +464,35 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
         })
       }
       renderInput={(params) => {
-        const { inputProps, InputProps, InputLabelProps, ...inputRest } = params;
+        const { inputProps: htmlInputProps, InputProps, InputLabelProps, ...inputRest } = params;
+        const { slotProps: textFieldSlotProps, ...textFieldRest } = slotProps?.textField ?? {};
+        const { slotProps: baseTextFieldSlotProps, ...baseTextFieldRest } =
+          rootProps.slotProps?.baseTextField ?? {};
         return (
           <MUITextField
             {...inputRest}
             label={label}
             placeholder={placeholder}
-            inputProps={inputProps}
-            InputProps={transformInputProps(InputProps as any, false)}
-            InputLabelProps={{
-              shrink: true,
-              ...InputLabelProps,
+            {...textFieldRest}
+            {...baseTextFieldRest}
+            slotProps={{
+              htmlInput: {
+                ...htmlInputProps,
+                ...textFieldSlotProps?.htmlInput,
+                ...baseTextFieldSlotProps?.htmlInput,
+              },
+              input: {
+                ...transformInputProps(InputProps as any, false),
+                ...textFieldSlotProps?.input,
+                ...baseTextFieldSlotProps?.input,
+              },
+              inputLabel: {
+                shrink: true,
+                ...InputLabelProps,
+                ...textFieldSlotProps?.inputLabel,
+                ...baseTextFieldSlotProps?.inputLabel,
+              },
             }}
-            {...slotProps?.textField}
-            {...rootProps.slotProps?.baseTextField}
           />
         );
       }}
