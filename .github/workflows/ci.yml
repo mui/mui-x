@@ -13,6 +13,6 @@ permissions: {}
 jobs:
   continuous-releases:
     name: Continuous releases
-    uses: mui/mui-public/.github/workflows/ci-base.yml@0eed58c5bf2f7f3bfa60887e07808b0d6b4a078b
+    uses: mui/mui-public/.github/workflows/ci-base.yml@a95301d3d882e0f8c016f448a48721da2e293dae
     with:
       node-version: '22.18.0'
