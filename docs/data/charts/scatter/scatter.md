@@ -38,7 +38,6 @@ You can also include optional `id` and `z` keys.
 
 Scatter points can be small, so the chart does not require the pointer to be exactly over a point.
 When the pointer is in the drawing area, the closest point is used for the tooltip and highlights.
-The chart uses [Voronoi cells](https://en.wikipedia.org/wiki/Voronoi_diagram) to map the pointer position to the nearest element.
 
 Use the `voronoiMaxRadius` prop with a number to limit how far the pointer can be from a point for selection.
 If the pointer is farther than that from any point, no item is selected.
