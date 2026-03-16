@@ -262,7 +262,7 @@ The highlighted point always shows a mark, whether its index is even or odd.
 
 You can customize the line chart elements using CSS selectors.
 Line plots use three elements: `LineElement`, `AreaElement`, and `MarkElement`.
-You can target them with the CSS classes `.MuiLineElement-root`, `.MuiAreaElement-root`, and `.MuiMarkElement-root`.
+You can target them with the CSS classes `lineClasses.line`, `lineClasses.area`, and `lineClasses.mark`.
 To target a specific series, use the `data-series` attribute.
 
 In the demo below, each line uses a custom dash style and marks are hidden.
@@ -276,7 +276,11 @@ The gradient is defined as a child of the chart (`myGradient` referenced in `fil
       strokeDasharray: '10 5',
       strokeWidth: 4,
     },
-    '& .MuiAreaElement-root[data-series="Germany"]': {
+[`& .${lineClasses.line}`]: {
+strokeDasharray: '10 5',
+strokeWidth: 4,
+},
+[`& .${lineClasses.area}[data-series="Germany"]`]: {
       fill: "url('#myGradient')",
     },
   }}
