@@ -6,11 +6,11 @@ import { useMessageContext } from './internals/MessageContext';
 import { type MessageActionsOwnerState } from './message.types';
 
 export interface MessageActionsSlots {
-  root: React.ElementType;
+  actions: React.ElementType;
 }
 
 export interface MessageActionsSlotProps {
-  root?: SlotComponentProps<'div', {}, MessageActionsOwnerState>;
+  actions?: SlotComponentProps<'div', {}, MessageActionsOwnerState>;
 }
 
 export interface MessageActionsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,10 +34,10 @@ export const MessageActions = React.forwardRef(function MessageActions(
   } = props as MessageActionsProps & { ownerState?: MessageActionsOwnerState };
   const ownerState = useMessageContext();
   void ownerStateProp;
-  const Root = slots?.root ?? 'div';
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const Actions = slots?.actions ?? 'div';
+  const actionsProps = useSlotProps({
+    elementType: Actions,
+    externalSlotProps: slotProps?.actions,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -45,5 +45,5 @@ export const MessageActions = React.forwardRef(function MessageActions(
     },
   });
 
-  return <Root {...rootProps} />;
+  return <Actions {...actionsProps} />;
 }) as MessageActionsComponent;

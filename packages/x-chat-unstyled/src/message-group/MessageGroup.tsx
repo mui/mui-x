@@ -88,12 +88,12 @@ function getAuthorLabel(message: ChatMessage | null) {
 }
 
 export interface MessageGroupSlots {
-  root: React.ElementType;
+  group: React.ElementType;
   authorName: React.ElementType;
 }
 
 export interface MessageGroupSlotProps {
-  root?: SlotComponentProps<'div', {}, MessageGroupOwnerState>;
+  group?: SlotComponentProps<'div', {}, MessageGroupOwnerState>;
   authorName?: SlotComponentProps<'div', {}, MessageGroupOwnerState>;
 }
 
@@ -145,11 +145,11 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
     }),
     [isFirst, isLast, message?.author?.id, message?.role],
   );
-  const Root = slots?.root ?? 'div';
+  const Group = slots?.group ?? 'div';
   const AuthorName = slots?.authorName ?? 'div';
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const groupProps = useSlotProps({
+    elementType: Group,
+    externalSlotProps: slotProps?.group,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -164,7 +164,7 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const authorLabel = getAuthorLabel(message);
 
   return (
-    <Root {...rootProps}>
+    <Group {...groupProps}>
       {isFirst && authorLabel ? <AuthorName {...authorNameProps}>{authorLabel}</AuthorName> : null}
       <MessageRoot isGrouped={!isFirst} messageId={messageId}>
         {children ?? (
@@ -175,6 +175,6 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
           </React.Fragment>
         )}
       </MessageRoot>
-    </Root>
+    </Group>
   );
 }) as MessageGroupComponent;

@@ -35,12 +35,14 @@ function isSameCalendarDay(left: Date, right: Date) {
 }
 
 export interface MessageListDateDividerSlots {
-  root: React.ElementType;
+  divider: React.ElementType;
+  line: React.ElementType;
   label: React.ElementType;
 }
 
 export interface MessageListDateDividerSlotProps {
-  root?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
+  divider?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
+  line?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
   label?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
 }
 
@@ -93,17 +95,23 @@ export const MessageListDateDivider = React.forwardRef(function MessageListDateD
     }),
     [hasBoundary, label, messageId],
   );
-  const Root = slots?.root ?? 'div';
+  const Divider = slots?.divider ?? 'div';
+  const Line = slots?.line ?? 'div';
   const Label = slots?.label ?? 'div';
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const dividerProps = useSlotProps({
+    elementType: Divider,
+    externalSlotProps: slotProps?.divider,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
       ref,
       role: 'separator',
     },
+  });
+  const lineProps = useSlotProps({
+    elementType: Line,
+    externalSlotProps: slotProps?.line,
+    ownerState,
   });
   const labelProps = useSlotProps({
     elementType: Label,
@@ -116,8 +124,10 @@ export const MessageListDateDivider = React.forwardRef(function MessageListDateD
   }
 
   return (
-    <Root {...rootProps}>
+    <Divider {...dividerProps}>
+      <Line {...lineProps} />
       <Label {...labelProps}>{label}</Label>
-    </Root>
+      <Line {...lineProps} />
+    </Divider>
   );
 }) as MessageListDateDividerComponent;

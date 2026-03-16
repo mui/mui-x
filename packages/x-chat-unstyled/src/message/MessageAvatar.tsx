@@ -6,11 +6,11 @@ import { useMessageContext } from './internals/MessageContext';
 import { type MessageAvatarOwnerState } from './message.types';
 
 export interface MessageAvatarSlots {
-  root: React.ElementType;
+  avatar: React.ElementType;
 }
 
 export interface MessageAvatarSlotProps {
-  root?: SlotComponentProps<'div', {}, MessageAvatarOwnerState>;
+  avatar?: SlotComponentProps<'div', {}, MessageAvatarOwnerState>;
 }
 
 export interface MessageAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -37,14 +37,14 @@ export const MessageAvatar = React.forwardRef(function MessageAvatar(
   const displayName = ownerState.message?.author?.displayName;
   void ownerStateProp;
 
-  if (ownerState.isGrouped || !avatarUrl) {
+  if (ownerState.isGrouped || ownerState.role === 'system' || ownerState.message == null) {
     return null;
   }
 
-  const Root = slots?.root ?? 'div';
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const Avatar = slots?.avatar ?? 'div';
+  const avatarProps = useSlotProps({
+    elementType: Avatar,
+    externalSlotProps: slotProps?.avatar,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -52,9 +52,13 @@ export const MessageAvatar = React.forwardRef(function MessageAvatar(
     },
   });
 
+  if (avatarUrl == null && slots?.avatar == null) {
+    return null;
+  }
+
   return (
-    <Root {...rootProps}>
-      <img alt={displayName ?? ''} src={avatarUrl} />
-    </Root>
+    <Avatar {...avatarProps}>
+      {avatarUrl ? <img alt={displayName ?? ''} src={avatarUrl} /> : null}
+    </Avatar>
   );
 }) as MessageAvatarComponent;

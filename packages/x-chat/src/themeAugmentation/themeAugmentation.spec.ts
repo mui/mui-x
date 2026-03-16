@@ -57,7 +57,6 @@ createTheme({
     MuiChatThread: {
       defaultProps: {
         className: 'chat-thread',
-        renderItem: () => null,
       },
       styleOverrides: {
         root: {
@@ -66,6 +65,21 @@ createTheme({
         // @ts-expect-error invalid MuiChatThread class key
         header: {
           backgroundColor: 'blue',
+        },
+      },
+    },
+    MuiChatMessage: {
+      defaultProps: {
+        className: 'chat-message',
+        messageId: 'm1',
+      },
+      styleOverrides: {
+        root: {
+          color: 'red',
+        },
+        // @ts-expect-error invalid MuiChatMessage class key
+        bubble: {
+          color: 'blue',
         },
       },
     },

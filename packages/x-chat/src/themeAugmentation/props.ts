@@ -3,16 +3,17 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import type { ChatProviderProps } from '@mui/x-chat-headless';
 import type {
   ComposerRootProps as UnstyledComposerRootProps,
-  MessageRootProps as UnstyledMessageRootProps,
   ScrollToBottomAffordanceProps as UnstyledScrollToBottomAffordanceProps,
   TypingIndicatorProps as UnstyledTypingIndicatorProps,
   UnreadMarkerProps as UnstyledUnreadMarkerProps,
 } from '@mui/x-chat-unstyled';
 import type { ChatConversationsProps } from '../ChatConversations';
+import type { ChatMessageProps } from '../ChatMessage';
 import type { ChatThreadProps } from '../ChatThread';
 import type { ChatLocaleText } from '../locales';
 
 export type { ChatConversationsProps } from '../ChatConversations';
+export type { ChatMessageProps } from '../ChatMessage';
 export type { ChatThreadProps } from '../ChatThread';
 
 export interface ChatStyledFoundationProps {
@@ -30,8 +31,6 @@ export interface ChatBoxProps<Cursor = string>
 }
 
 export interface ChatComposerProps extends UnstyledComposerRootProps, ChatStyledFoundationProps {}
-
-export interface ChatMessageProps extends UnstyledMessageRootProps, ChatStyledFoundationProps {}
 
 export interface ChatTypingIndicatorProps
   extends UnstyledTypingIndicatorProps,

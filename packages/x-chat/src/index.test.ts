@@ -1,5 +1,6 @@
 import * as chat from '@mui/x-chat';
 import * as chatConversationsSubpath from '@mui/x-chat/ChatConversations';
+import * as chatMessageSubpath from '@mui/x-chat/ChatMessage';
 import * as chatThreadSubpath from '@mui/x-chat/ChatThread';
 import * as headlessBridge from '@mui/x-chat/headless';
 import * as chatLocales from '@mui/x-chat/locales';
@@ -148,6 +149,7 @@ import type {
 import type {
   ChatBoxProps as ThemeAugmentationChatBoxProps,
   ChatConversationsProps as ThemeAugmentationChatConversationsProps,
+  ChatMessageProps as ThemeAugmentationChatMessageProps,
   ChatComponents as ThemeAugmentationChatComponents,
   ChatThreadProps as ThemeAugmentationChatThreadProps,
   PaletteChat as ThemeAugmentationPaletteChat,
@@ -206,10 +208,20 @@ describe('x-chat package scaffold', () => {
   it('resolves the root, bridge, and type entry points', () => {
     const expectedChatRuntimeExports = [
       'ChatConversations',
+      'ChatDateDivider',
+      'ChatMessage',
+      'ChatMessageActions',
+      'ChatMessageAvatar',
+      'ChatMessageContent',
+      'ChatMessageGroup',
+      'ChatMessageMeta',
+      'ChatMessageRoot',
       'ChatThread',
       'chatConversationsClasses',
+      'chatMessageClasses',
       'chatThreadClasses',
       'getChatConversationsUtilityClass',
+      'getChatMessageUtilityClass',
       'getChatThreadUtilityClass',
     ];
     const expectedChatConversationsSubpathExports = [
@@ -221,6 +233,18 @@ describe('x-chat package scaffold', () => {
       'ChatThread',
       'chatThreadClasses',
       'getChatThreadUtilityClass',
+    ];
+    const expectedChatMessageSubpathExports = [
+      'ChatDateDivider',
+      'ChatMessage',
+      'ChatMessageActions',
+      'ChatMessageAvatar',
+      'ChatMessageContent',
+      'ChatMessageGroup',
+      'ChatMessageMeta',
+      'ChatMessageRoot',
+      'chatMessageClasses',
+      'getChatMessageUtilityClass',
     ];
     const expectedHeadlessRuntimeExports = [
       'ChatProvider',
@@ -298,6 +322,7 @@ describe('x-chat package scaffold', () => {
     expect(Object.keys(chatConversationsSubpath).sort()).toEqual(
       expectedChatConversationsSubpathExports,
     );
+    expect(Object.keys(chatMessageSubpath).sort()).toEqual(expectedChatMessageSubpathExports);
     expect(Object.keys(chatThreadSubpath).sort()).toEqual(expectedChatThreadSubpathExports);
     expect(Object.keys(themeAugmentation)).toEqual([]);
     expect(Object.keys(chatLocales).sort()).toEqual(['enUS', 'getChatLocalization']);
@@ -421,6 +446,16 @@ describe('x-chat package scaffold', () => {
     expect(chat.getChatConversationsUtilityClass).toBe(
       chatConversationsSubpath.getChatConversationsUtilityClass,
     );
+    expect(chat.ChatMessage).toBe(chatMessageSubpath.ChatMessage);
+    expect(chat.ChatMessageRoot).toBe(chatMessageSubpath.ChatMessageRoot);
+    expect(chat.ChatMessageAvatar).toBe(chatMessageSubpath.ChatMessageAvatar);
+    expect(chat.ChatMessageContent).toBe(chatMessageSubpath.ChatMessageContent);
+    expect(chat.ChatMessageMeta).toBe(chatMessageSubpath.ChatMessageMeta);
+    expect(chat.ChatMessageActions).toBe(chatMessageSubpath.ChatMessageActions);
+    expect(chat.ChatMessageGroup).toBe(chatMessageSubpath.ChatMessageGroup);
+    expect(chat.ChatDateDivider).toBe(chatMessageSubpath.ChatDateDivider);
+    expect(chat.chatMessageClasses).toBe(chatMessageSubpath.chatMessageClasses);
+    expect(chat.getChatMessageUtilityClass).toBe(chatMessageSubpath.getChatMessageUtilityClass);
     expect(chat.ChatThread).toBe(chatThreadSubpath.ChatThread);
     expect(chat.chatThreadClasses).toBe(chatThreadSubpath.chatThreadClasses);
     expect(chat.getChatThreadUtilityClass).toBe(chatThreadSubpath.getChatThreadUtilityClass);
@@ -621,9 +656,12 @@ describe('x-chat package scaffold', () => {
       className: 'chat-conversations',
       dense: true,
     };
+    const chatMessageProps: ThemeAugmentationChatMessageProps = {
+      className: 'chat-message',
+      messageId: 'm1',
+    };
     const chatThreadProps: ThemeAugmentationChatThreadProps = {
       className: 'chat-thread',
-      renderItem: () => null,
     };
     const chatLocaleText: ChatLocalesLocaleText = {
       composerInputPlaceholder: 'Type a message',
@@ -681,7 +719,7 @@ describe('x-chat package scaffold', () => {
     };
     const messageContentSlotRoot = { className: 'message-content' };
     const unstyledMessageContentSlotProps: UnstyledBridgeMessageContentSlotProps = {
-      root: messageContentSlotRoot,
+      content: messageContentSlotRoot,
     };
     const scrollToBottomRootSlot = { id: 'scroll-affordance' };
     const unstyledScrollToBottomAffordanceProps: UnstyledBridgeScrollToBottomAffordanceProps = {
@@ -726,6 +764,7 @@ describe('x-chat package scaffold', () => {
     expect(chatBoxProps.className).toBe('chat-box');
     expect(chatConversationsProps.className).toBe('chat-conversations');
     expect(chatConversationsProps.dense).toBe(true);
+    expect(chatMessageProps.messageId).toBe('m1');
     expect(chatThreadProps.className).toBe('chat-thread');
     expect(chatBoxProps.localeText?.composerSendButtonLabel).toBe('Send');
     expect(chatLocaleText.composerAttachButtonLabel).toBe('Add attachment');

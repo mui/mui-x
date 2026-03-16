@@ -4,6 +4,11 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import {
+  useChat,
+  useMessage,
+  type ChatMessage as ChatMessageModel,
+} from '@mui/x-chat-headless';
+import {
   MessageListRoot,
   ThreadActions,
   ThreadHeader,
@@ -24,6 +29,11 @@ import {
   type ThreadTitleSlotProps as UnstyledThreadTitleSlotProps,
   type ThreadTitleSlots as UnstyledThreadTitleSlots,
 } from '@mui/x-chat-unstyled';
+import {
+  ChatDateDivider,
+  ChatMessage as StyledChatMessage,
+  ChatMessageGroup,
+} from '../ChatMessage';
 import { styled, useChatThemeProps } from '../internals/material/chatStyled';
 import { chatCssVarKeys, getChatCssVars } from '../internals/material/chatThemeVars';
 import { chatThreadClasses, getChatThreadUtilityClass } from './chatThreadClasses';
@@ -58,11 +68,23 @@ export interface ChatThreadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   items?: UnstyledMessageListRootProps['items'];
   onReachTop?: UnstyledMessageListRootProps['onReachTop'];
   overscan?: UnstyledMessageListRootProps['overscan'];
-  renderItem: UnstyledMessageListRootProps['renderItem'];
+  renderItem?: UnstyledMessageListRootProps['renderItem'];
   slotProps?: ChatThreadSlotProps;
   slots?: Partial<ChatThreadSlots>;
   sx?: SxProps<Theme>;
   virtualization?: UnstyledMessageListRootProps['virtualization'];
+}
+
+function getCopyableText(message: ChatMessageModel | null) {
+  if (message == null) {
+    return '';
+  }
+
+  return message.parts
+    .filter((part): part is Extract<ChatMessageModel['parts'][number], { type: 'text' }> => part.type === 'text')
+    .map((part) => part.text)
+    .join('\n\n')
+    .trim();
 }
 
 function joinClassNames(...classNames: Array<string | undefined>) {
@@ -182,6 +204,70 @@ const ChatThreadMessageListContentSlot = styled('div', {
   },
 }));
 
+const ChatThreadActionButton = styled('button')(({ theme }) => ({
+  ...theme.typography.caption,
+  backgroundColor: 'transparent',
+  border: 0,
+  borderRadius: theme.shape.borderRadius,
+  color: theme.palette.text.secondary,
+  cursor: 'pointer',
+  padding: theme.spacing(0.5, 0.75),
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+    color: theme.palette.text.primary,
+  },
+  '&:focus-visible': {
+    outline: `2px solid var(${chatCssVarKeys.composerFocusRing})`,
+    outlineOffset: 2,
+  },
+}));
+
+function DefaultThreadRow(props: { id: string; index: number }) {
+  const { id, index } = props;
+  const { retry } = useChat();
+  const message = useMessage(id);
+  const copyableText = React.useMemo(() => getCopyableText(message), [message]);
+  const hasRetry = message?.role === 'user' && message.status === 'error';
+  const hasActions = Boolean(copyableText) || hasRetry;
+
+  const handleCopy = React.useCallback(async () => {
+    if (!copyableText || !navigator.clipboard?.writeText) {
+      return;
+    }
+
+    await navigator.clipboard.writeText(copyableText);
+  }, [copyableText]);
+
+  const handleRetry = React.useCallback(() => {
+    retry(id);
+  }, [id, retry]);
+
+  return (
+    <React.Fragment>
+      <ChatDateDivider index={index} messageId={id} />
+      <ChatMessageGroup index={index} messageId={id}>
+        <StyledChatMessage.Avatar />
+        <StyledChatMessage.Content />
+        <StyledChatMessage.Meta />
+        {hasActions ? (
+          <StyledChatMessage.Actions>
+            {copyableText ? (
+              <ChatThreadActionButton onClick={handleCopy} type="button">
+                Copy
+              </ChatThreadActionButton>
+            ) : null}
+            {hasRetry ? (
+              <ChatThreadActionButton onClick={handleRetry} type="button">
+                Retry
+              </ChatThreadActionButton>
+            ) : null}
+          </StyledChatMessage.Actions>
+        ) : null}
+      </ChatMessageGroup>
+    </React.Fragment>
+  );
+}
+
 function createDefaultRootSlot(sx: ChatThreadProps['sx']) {
   return React.forwardRef(function DefaultRoot(
     props: React.HTMLAttributes<HTMLDivElement> & {
@@ -239,6 +325,10 @@ export const ChatThread = React.forwardRef(function ChatThread(
   const MessageList = slots?.messageList ?? ChatThreadMessageListSlot;
   const MessageListScroller = slots?.messageListScroller ?? ChatThreadMessageListScrollerSlot;
   const MessageListContent = slots?.messageListContent ?? ChatThreadMessageListContentSlot;
+  const resolvedRenderItem = React.useCallback<NonNullable<ChatThreadProps['renderItem']>>(
+    ({ id, index }) => renderItem?.({ id, index }) ?? <DefaultThreadRow id={id} index={index} />,
+    [renderItem],
+  );
 
   return (
     <ThreadRoot
@@ -276,7 +366,7 @@ export const ChatThread = React.forwardRef(function ChatThread(
         items={items}
         onReachTop={onReachTop}
         overscan={overscan}
-        renderItem={renderItem}
+        renderItem={resolvedRenderItem}
         slotProps={{
           messageList: mergeSlotPropsWithClassName(slotProps?.messageList, chatThreadClasses.messageList),
           messageListScroller: mergeSlotPropsWithClassName(

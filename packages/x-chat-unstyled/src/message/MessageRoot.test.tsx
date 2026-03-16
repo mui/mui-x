@@ -226,6 +226,16 @@ function CustomContent(props: MessageContentProps & { ownerState?: { messageId: 
   );
 }
 
+function CustomBubble(props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: { role?: string } }) {
+  const { children, ownerState, ...other } = props;
+
+  return (
+    <div data-role={ownerState?.role ?? 'none'} data-testid="custom-message-bubble" {...other}>
+      {children}
+    </div>
+  );
+}
+
 function CustomMeta(props: MessageMetaProps & { ownerState?: { status?: string } }) {
   const {
     children,
@@ -241,6 +251,40 @@ function CustomMeta(props: MessageMetaProps & { ownerState?: { status?: string }
     <div data-status={ownerState?.status ?? 'none'} data-testid="custom-message-meta" {...other}>
       {children}
     </div>
+  );
+}
+
+function CustomTimestamp(props: React.HTMLAttributes<HTMLSpanElement> & { ownerState?: { status?: string } }) {
+  const { children, ownerState, ...other } = props;
+
+  return (
+    <span data-status={ownerState?.status ?? 'none'} data-testid="custom-message-timestamp" {...other}>
+      {children}
+    </span>
+  );
+}
+
+function CustomStatus(props: React.HTMLAttributes<HTMLSpanElement> & { ownerState?: { streaming: boolean } }) {
+  const { children, ownerState, ...other } = props;
+
+  return (
+    <span
+      data-streaming={String(ownerState?.streaming)}
+      data-testid="custom-message-status"
+      {...other}
+    >
+      {children}
+    </span>
+  );
+}
+
+function CustomEdited(props: React.HTMLAttributes<HTMLSpanElement> & { ownerState?: { error: boolean } }) {
+  const { children, ownerState, ...other } = props;
+
+  return (
+    <span data-error={String(ownerState?.error)} data-testid="custom-message-edited" {...other}>
+      {children}
+    </span>
   );
 }
 
@@ -296,7 +340,7 @@ describe('MessageRoot', () => {
     expect(screen.getByText('Document excerpt')).not.to.equal(null);
     expect(screen.getByTestId('message-content').textContent).to.contain('Prague');
     expect(screen.getByText('2026-03-14T10:00:00.000Z')).not.to.equal(null);
-    expect(screen.getByText('streaming')).not.to.equal(null);
+    expect(screen.getByText('Streaming')).not.to.equal(null);
     expect(screen.getByText('Edited')).not.to.equal(null);
     expect(screen.getByRole('button', { name: 'Reply' })).not.to.equal(null);
     expect(container.querySelector('[role="separator"]')).not.to.equal(null);
@@ -330,14 +374,55 @@ describe('MessageRoot', () => {
     expect(seenOnToolCall).toBe(onToolCall);
   });
 
+  it('uses localeText for reasoning, tool state, and message meta labels', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        defaultMessages={[fullMessage]}
+        localeText={{
+          messageReasoningLabel: 'Denken',
+          messageEditedLabel: 'Bearbeitet',
+          messageStatusLabel: () => 'Laeuft',
+          messageTimestampLabel: () => '14.03.2026 10:00',
+          toolStateLabel: (state) =>
+            state === 'output-available' ? 'Abgeschlossen' : 'Verweigert',
+        }}
+      >
+        <MessageRoot messageId="m1">
+          <MessageContent />
+          <MessageMeta />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('Denken')).not.to.equal(null);
+    expect(screen.getByText('Abgeschlossen')).not.to.equal(null);
+    expect(screen.getByText('Verweigert')).not.to.equal(null);
+    expect(screen.getByText('14.03.2026 10:00')).not.to.equal(null);
+    expect(screen.getByText('Laeuft')).not.to.equal(null);
+    expect(screen.getByText('Bearbeitet')).not.to.equal(null);
+  });
+
   it('supports replacing all compound root slots and passes ownerState through them', () => {
     render(
       <ChatRoot adapter={createAdapter()} defaultMessages={[fullMessage]}>
         <MessageRoot messageId="m1" slots={{ root: CustomRoot }}>
-          <MessageAvatar data-testid="avatar-slot" slots={{ root: CustomAvatar }} />
-          <MessageContent data-testid="content-slot" slots={{ root: CustomContent }} />
-          <MessageMeta data-testid="meta-slot" slots={{ root: CustomMeta }} />
-          <MessageActions data-testid="actions-slot" slots={{ root: CustomActions }}>
+          <MessageAvatar data-testid="avatar-slot" slots={{ avatar: CustomAvatar }} />
+          <MessageContent
+            data-testid="content-slot"
+            slots={{ bubble: CustomBubble, content: CustomContent }}
+          />
+          <MessageMeta
+            data-testid="meta-slot"
+            slotProps={{ edited: { 'data-extra': 'edited' } as any }}
+            slots={{
+              edited: CustomEdited,
+              meta: CustomMeta,
+              status: CustomStatus,
+              timestamp: CustomTimestamp,
+            }}
+          />
+          <MessageActions data-testid="actions-slot" slots={{ actions: CustomActions }}>
             <button type="button">Reply</button>
           </MessageActions>
         </MessageRoot>
@@ -349,7 +434,11 @@ describe('MessageRoot', () => {
     expect(screen.getByTestId('custom-message-root')).to.have.attribute('data-streaming', 'true');
     expect(screen.getByTestId('avatar-slot')).to.have.attribute('data-grouped', 'false');
     expect(screen.getByTestId('content-slot')).to.have.attribute('data-message-id', 'm1');
+    expect(screen.getByTestId('custom-message-bubble')).to.have.attribute('data-role', 'assistant');
     expect(screen.getByTestId('meta-slot')).to.have.attribute('data-status', 'streaming');
+    expect(screen.getByTestId('custom-message-timestamp')).to.have.attribute('data-status', 'streaming');
+    expect(screen.getByTestId('custom-message-status')).to.have.attribute('data-streaming', 'true');
+    expect(screen.getByTestId('custom-message-edited')).to.have.attribute('data-extra', 'edited');
     expect(screen.getByTestId('actions-slot')).to.have.attribute('data-message-id', 'm1');
     expect(screen.getByRole('button', { name: 'Reply' })).not.to.equal(null);
   });
@@ -358,7 +447,7 @@ describe('MessageRoot', () => {
     render(
       <ChatRoot adapter={createAdapter()} defaultMessages={[errorMessage]}>
         <MessageRoot messageId="m3" slots={{ root: CustomRoot }}>
-          <MessageMeta slots={{ root: CustomMeta }} />
+          <MessageMeta slots={{ meta: CustomMeta }} />
         </MessageRoot>
       </ChatRoot>,
     );

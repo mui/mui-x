@@ -3,21 +3,27 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import {
+  type ChatDynamicToolMessagePart,
   useChatPartRenderer,
   type ChatMessagePart,
   type ChatPartRenderer,
+  type ChatReasoningMessagePart,
+  type ChatToolMessagePart,
 } from '@mui/x-chat-headless';
 import { useChatOnToolCall } from '@mui/x-chat-headless/hooks';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDefaultMessagePartRenderer } from './defaultMessagePartRenderers';
 import { useMessageContext } from './internals/MessageContext';
 import { type MessageContentOwnerState } from './message.types';
 
 export interface MessageContentSlots {
-  root: React.ElementType;
+  content: React.ElementType;
+  bubble: React.ElementType;
 }
 
 export interface MessageContentSlotProps {
-  root?: SlotComponentProps<'div', {}, MessageContentOwnerState>;
+  content?: SlotComponentProps<'div', {}, MessageContentOwnerState>;
+  bubble?: SlotComponentProps<'div', {}, MessageContentOwnerState>;
 }
 
 export interface MessageContentProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -35,6 +41,46 @@ function DefaultPartFallback(props: { part: ChatMessagePart }) {
   return <div data-part-type={part.type} />;
 }
 
+function JsonBlock(props: { value: unknown }) {
+  const { value } = props;
+
+  return <pre>{JSON.stringify(value, null, 2)}</pre>;
+}
+
+function LocalizedReasoningPart(props: {
+  localeText: ReturnType<typeof useChatLocaleText>;
+  part: ChatReasoningMessagePart;
+}) {
+  const { localeText, part } = props;
+
+  return (
+    <details>
+      <summary>{localeText.messageReasoningLabel}</summary>
+      <div>{part.text}</div>
+    </details>
+  );
+}
+
+function LocalizedToolPart(props: {
+  localeText: ReturnType<typeof useChatLocaleText>;
+  part: ChatToolMessagePart | ChatDynamicToolMessagePart;
+}) {
+  const { localeText, part } = props;
+  const { toolInvocation } = part;
+  const stateLabel = localeText.toolStateLabel(toolInvocation.state);
+
+  return (
+    <div>
+      <div>{toolInvocation.title ?? toolInvocation.toolName}</div>
+      {stateLabel ? <div>{stateLabel}</div> : null}
+      {toolInvocation.input !== undefined ? <JsonBlock value={toolInvocation.input} /> : null}
+      {toolInvocation.output !== undefined ? <JsonBlock value={toolInvocation.output} /> : null}
+      {toolInvocation.approval !== undefined ? <JsonBlock value={toolInvocation.approval} /> : null}
+      {toolInvocation.errorText ? <div>{toolInvocation.errorText}</div> : null}
+    </div>
+  );
+}
+
 function MessageRenderedPart(props: {
   part: ChatMessagePart;
   index: number;
@@ -42,12 +88,40 @@ function MessageRenderedPart(props: {
 }) {
   const { part, index, message } = props;
   const customRenderer = useChatPartRenderer(part.type as ChatMessagePart['type']);
+  const localeText = useChatLocaleText();
+  const localizedRenderer = React.useMemo<ChatPartRenderer<ChatMessagePart> | null>(() => {
+    switch (part.type) {
+      case 'reasoning':
+        return ({ part: currentPart }) => (
+          <LocalizedReasoningPart
+            localeText={localeText}
+            part={currentPart as ChatReasoningMessagePart}
+          />
+        );
+      case 'tool':
+        return ({ part: currentPart }) => (
+          <LocalizedToolPart
+            localeText={localeText}
+            part={currentPart as ChatToolMessagePart}
+          />
+        );
+      case 'dynamic-tool':
+        return ({ part: currentPart }) => (
+          <LocalizedToolPart
+            localeText={localeText}
+            part={currentPart as ChatDynamicToolMessagePart}
+          />
+        );
+      default:
+        return null;
+    }
+  }, [localeText, part.type]);
   const defaultRenderer = React.useMemo(
     () => getDefaultMessagePartRenderer(part),
     [part],
   );
   const onToolCall = useChatOnToolCall();
-  const Renderer = (customRenderer ?? defaultRenderer) as ChatPartRenderer<ChatMessagePart> | null;
+  const Renderer = (customRenderer ?? localizedRenderer ?? defaultRenderer) as ChatPartRenderer<ChatMessagePart> | null;
 
   if (Renderer == null) {
     return <DefaultPartFallback part={part} />;
@@ -68,30 +142,38 @@ export const MessageContent = React.forwardRef(function MessageContent(
   } = props as MessageContentProps & { ownerState?: MessageContentOwnerState };
   const ownerState = useMessageContext();
   void ownerStateProp;
-  const Root = slots?.root ?? 'div';
+  const Content = slots?.content ?? 'div';
+  const Bubble = slots?.bubble ?? 'div';
   const message = ownerState.message;
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const contentProps = useSlotProps({
+    elementType: Content,
+    externalSlotProps: slotProps?.content,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
       ref,
     },
   });
+  const bubbleProps = useSlotProps({
+    elementType: Bubble,
+    externalSlotProps: slotProps?.bubble,
+    ownerState,
+  });
 
   return (
-    <Root {...rootProps}>
-      {message
-        ? message.parts.map((part, index) => (
-            <MessageRenderedPart
-              part={part}
-              index={index}
-              key={`${ownerState.messageId}-${index}-${part.type}`}
-              message={message}
-            />
-          ))
-        : null}
-    </Root>
+    <Content {...contentProps}>
+      <Bubble {...bubbleProps}>
+        {message
+          ? message.parts.map((part, index) => (
+              <MessageRenderedPart
+                part={part}
+                index={index}
+                key={`${ownerState.messageId}-${index}-${part.type}`}
+                message={message}
+              />
+            ))
+          : null}
+      </Bubble>
+    </Content>
   );
 }) as MessageContentComponent;

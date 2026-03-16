@@ -179,7 +179,7 @@ describe('MessageGroup', () => {
         ]}
       >
         <MessageGroup messageId="m1" />
-        <MessageGroup data-testid="group-root-m2" messageId="m2" slots={{ root: CustomRoot }}>
+        <MessageGroup data-testid="group-root-m2" messageId="m2" slots={{ group: CustomRoot }}>
           <div data-testid="custom-group-child">Custom child</div>
         </MessageGroup>
       </ChatRoot>,
@@ -211,14 +211,14 @@ describe('MessageGroup', () => {
           data-testid="group-root-m2"
           items={['m2', 'm1']}
           messageId="m2"
-          slots={{ authorName: CustomAuthorName, root: CustomRoot }}
+          slots={{ authorName: CustomAuthorName, group: CustomRoot }}
         />
         <MessageGroup
           data-testid="group-root-m1"
           groupingWindowMs={60_000}
           items={['m2', 'm1']}
           messageId="m1"
-          slots={{ root: CustomRoot }}
+          slots={{ group: CustomRoot }}
         />
       </ChatRoot>,
     );

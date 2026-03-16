@@ -87,6 +87,18 @@ function CustomLabel(
   );
 }
 
+function CustomLine(
+  props: React.HTMLAttributes<HTMLDivElement> & {
+    ownerState?: {
+      hasBoundary: boolean;
+    };
+  },
+) {
+  const { ownerState, ...other } = props;
+
+  return <div data-boundary={String(ownerState?.hasBoundary)} data-testid="custom-date-divider-line" {...other} />;
+}
+
 describe('MessageListDateDivider', () => {
   it('renders only on calendar day boundaries with the default ISO-style label', () => {
     const { rerender } = render(
@@ -148,13 +160,14 @@ describe('MessageListDateDivider', () => {
         <MessageListDateDivider
           formatDate={(date) => `Day ${date.toISOString().slice(8, 10)}`}
           messageId="m2"
-          slots={{ label: CustomLabel, root: CustomRoot }}
+          slots={{ divider: CustomRoot, label: CustomLabel, line: CustomLine }}
         />
       </ChatRoot>,
     );
 
     expect(screen.getByTestId('custom-date-divider-root')).to.have.attribute('data-boundary', 'true');
     expect(screen.getByTestId('custom-date-divider-root')).to.have.attribute('role', 'separator');
+    expect(screen.getAllByTestId('custom-date-divider-line')).to.have.length(2);
     expect(screen.getByTestId('custom-date-divider-label')).to.have.attribute('data-boundary', 'true');
     expect(screen.getByTestId('custom-date-divider-label')).to.have.text('Day 16');
   });

@@ -1,33 +1,16 @@
 export {
-  ChatConversations,
-  chatConversationsClasses,
-  getChatConversationsUtilityClass,
-} from './ChatConversations';
-export {
   ChatDateDivider,
   ChatMessage,
   ChatMessageActions,
   ChatMessageAvatar,
   ChatMessageContent,
   ChatMessageGroup,
-  ChatMessageMeta,
   ChatMessageRoot,
+  ChatMessageMeta,
   chatMessageClasses,
   getChatMessageUtilityClass,
 } from './ChatMessage';
-export {
-  ChatThread,
-  chatThreadClasses,
-  getChatThreadUtilityClass,
-} from './ChatThread';
 
-export type {
-  ChatConversationsClassKey,
-  ChatConversationsClasses,
-  ChatConversationsProps,
-  ChatConversationsSlotProps,
-  ChatConversationsSlots,
-} from './ChatConversations';
 export type {
   ChatDateDividerProps,
   ChatDateDividerSlotProps,
@@ -38,8 +21,6 @@ export type {
   ChatMessageAvatarProps,
   ChatMessageAvatarSlotProps,
   ChatMessageAvatarSlots,
-  ChatMessageClassKey,
-  ChatMessageClasses,
   ChatMessageContentProps,
   ChatMessageContentSlotProps,
   ChatMessageContentSlots,
@@ -49,17 +30,15 @@ export type {
   ChatMessageMetaProps,
   ChatMessageMetaSlotProps,
   ChatMessageMetaSlots,
-  ChatMessageProps,
   ChatMessageRootProps,
   ChatMessageRootSlotProps,
   ChatMessageRootSlots,
-  ChatMessageSlotProps,
-  ChatMessageSlots,
+  ChatMessageRootProps as ChatMessageProps,
+  ChatMessageRootSlotProps as ChatMessageSlotProps,
+  ChatMessageRootSlots as ChatMessageSlots,
 } from './ChatMessage';
+
 export type {
-  ChatThreadClassKey,
-  ChatThreadClasses,
-  ChatThreadProps,
-  ChatThreadSlotProps,
-  ChatThreadSlots,
-} from './ChatThread';
+  ChatMessageClassKey,
+  ChatMessageClasses,
+} from './chatMessageClasses';
