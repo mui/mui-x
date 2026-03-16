@@ -57,14 +57,10 @@ The component uses the `useXScale()` and `useYScale()` hooks to convert data val
 
 {{"demo": "ReferenceAreaBasic.js"}}
 
-## Reference point 🧪
+## Reference point
 
-:::warning
-The reference point component is not yet available.
-This section describes the planned API.
-:::
+A reference point places a marker at a specific `(x, y)` coordinate by rendering a `<circle />` element.
 
-The reference point places a marker at a specific (x, y) coordinate on the chart.
-This is useful for highlighting outliers, key milestones, or specific data values.
+The component uses the `useXScale()` and `useYScale()` hooks to convert data values into pixel coordinates.
 
 {{"demo": "ReferencePointBasic.js"}}
