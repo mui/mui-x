@@ -12,7 +12,7 @@ import data from '../dataset/random/scatterParallel.json';
 
 export default function VoronoiInteraction() {
   const [option, setOption] = React.useState('numeric');
-  const [voronoiMaxRadius, setVoronoiMaxRadius] = React.useState(25);
+  const [interactionMaxRadius, setVoronoiMaxRadius] = React.useState(25);
 
   const handleMaxRadiusChange = (event, newValue) => {
     if (typeof newValue !== 'number') {
@@ -25,12 +25,12 @@ export default function VoronoiInteraction() {
     <Stack direction="column" sx={{ width: '100%' }}>
       <ScatterChart
         height={300}
-        voronoiMaxRadius={
+        interactionMaxRadius={
           option === 'undefined'
             ? undefined
             : option === 'item'
               ? 'item'
-              : voronoiMaxRadius
+              : interactionMaxRadius
         }
         dataset={data}
         series={[
@@ -76,7 +76,7 @@ export default function VoronoiInteraction() {
           Numeric radius
         </Typography>
         <Slider
-          value={voronoiMaxRadius}
+          value={interactionMaxRadius}
           onChange={handleMaxRadiusChange}
           valueLabelDisplay="auto"
           min={1}

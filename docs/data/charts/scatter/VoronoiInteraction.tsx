@@ -14,7 +14,7 @@ export default function VoronoiInteraction() {
   const [option, setOption] = React.useState<'item' | 'undefined' | 'numeric'>(
     'numeric',
   );
-  const [voronoiMaxRadius, setVoronoiMaxRadius] = React.useState<number>(25);
+  const [interactionMaxRadius, setVoronoiMaxRadius] = React.useState<number>(25);
 
   const handleMaxRadiusChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue !== 'number') {
@@ -27,12 +27,12 @@ export default function VoronoiInteraction() {
     <Stack direction="column" sx={{ width: '100%' }}>
       <ScatterChart
         height={300}
-        voronoiMaxRadius={
+        interactionMaxRadius={
           option === 'undefined'
             ? undefined
             : option === 'item'
               ? 'item'
-              : voronoiMaxRadius
+              : interactionMaxRadius
         }
         dataset={data}
         series={[
@@ -82,7 +82,7 @@ export default function VoronoiInteraction() {
           Numeric radius
         </Typography>
         <Slider
-          value={voronoiMaxRadius}
+          value={interactionMaxRadius}
           onChange={handleMaxRadiusChange}
           valueLabelDisplay="auto"
           min={1}

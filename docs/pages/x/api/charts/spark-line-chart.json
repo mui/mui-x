@@ -61,6 +61,9 @@
         "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
       }
     },
+    "interactionMaxRadius": {
+      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
+    },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
@@ -153,7 +156,9 @@
       }
     },
     "voronoiMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
+      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>interactionMaxRadius</code> instead."
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {

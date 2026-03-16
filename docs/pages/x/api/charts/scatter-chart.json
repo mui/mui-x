@@ -55,6 +55,9 @@
         "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
+    "interactionMaxRadius": {
+      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
+    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
@@ -130,7 +133,9 @@
       }
     },
     "voronoiMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
+      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>interactionMaxRadius</code> instead."
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {

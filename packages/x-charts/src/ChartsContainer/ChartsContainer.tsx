@@ -223,6 +223,12 @@ ChartsContainer.propTypes = {
     ]).isRequired,
   ),
   /**
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  interactionMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
+  /**
    * Localized text for chart components.
    */
   localeText: PropTypes.object,
@@ -1077,6 +1083,7 @@ ChartsContainer.propTypes = {
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
+   * @deprecated Use `interactionMaxRadius` instead.
    */
   voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**

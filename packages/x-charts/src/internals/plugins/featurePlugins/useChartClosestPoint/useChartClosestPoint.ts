@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { warnOnce } from '@mui/x-internals/warning';
 import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { type ChartPlugin } from '../../models';
 import { type SeriesId } from '../../../../models/seriesType/common';
@@ -24,7 +25,20 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
-  const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
+  const { disableVoronoi, interactionMaxRadius, voronoiMaxRadius, onItemClick } = params;
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (voronoiMaxRadius !== undefined) {
+      warnOnce(
+        [
+          'MUI X Charts: The `voronoiMaxRadius` prop is deprecated. Use `interactionMaxRadius` instead.',
+        ],
+        'error',
+      );
+    }
+  }
+
+  const resolvedInteractionMaxRadius = interactionMaxRadius ?? voronoiMaxRadius;
 
   const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
   const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
@@ -78,7 +92,10 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
         const xAxisZoom = selectorChartAxisZoomData(store.state, xAxisId);
         const yAxisZoom = selectorChartAxisZoomData(store.state, yAxisId);
-        const maxRadius = voronoiMaxRadius === 'item' ? aSeries.markerSize : voronoiMaxRadius;
+        const maxRadius =
+          resolvedInteractionMaxRadius === 'item'
+            ? aSeries.markerSize
+            : resolvedInteractionMaxRadius;
 
         const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
         const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
@@ -204,7 +221,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     chartsLayerContainerRef,
     yAxis,
     xAxis,
-    voronoiMaxRadius,
+    resolvedInteractionMaxRadius,
     onItemClick,
     disableVoronoi,
     instance,
@@ -246,6 +263,7 @@ useChartClosestPoint.getInitialState = (params) => ({
 
 useChartClosestPoint.params = {
   disableVoronoi: true,
+  interactionMaxRadius: true,
   voronoiMaxRadius: true,
   onItemClick: true,
 };

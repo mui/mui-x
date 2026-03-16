@@ -26,6 +26,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     zAxis,
     series,
     axisHighlight,
+    interactionMaxRadius,
     voronoiMaxRadius,
     disableVoronoi,
     hideLegend,
@@ -67,6 +68,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     highlightedItem,
     onHighlightChange,
     disableVoronoi,
+    interactionMaxRadius,
     voronoiMaxRadius,
     onItemClick: useVoronoiOnItemClick
       ? (onItemClick as UseChartClosestPointSignature['params']['onItemClick'])
