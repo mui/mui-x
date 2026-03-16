@@ -224,7 +224,7 @@ describe('<MultiSectionDigitalClock />', () => {
       await user.keyboard('1');
 
       expect(document.activeElement).to.equal(input);
-      expect(input.value).to.equal('1');
+      expect((input as HTMLInputElement).value).to.equal('1');
     });
   });
 });
