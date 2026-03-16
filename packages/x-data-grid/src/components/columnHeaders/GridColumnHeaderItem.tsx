@@ -24,6 +24,7 @@ import type { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
 import { PinnedColumnPosition } from '../../internals/constants';
 import { attachPinnedStyle } from '../../internals/utils';
+import { usePinnedScrollOffset } from '../../hooks/utils/usePinnedScrollOffset';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -327,9 +328,16 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const label = colDef.headerName ?? colDef.field;
 
+  const pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition);
   const style = React.useMemo(
-    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
-    [pinnedPosition, pinnedOffset, props.style, isRtl],
+    () =>
+      attachPinnedStyle(
+        { ...props.style },
+        isRtl,
+        pinnedPosition,
+        pinnedOffset !== undefined ? pinnedOffset + pinnedScrollOffset : undefined,
+      ),
+    [pinnedPosition, pinnedOffset, pinnedScrollOffset, props.style, isRtl],
   );
 
   return (

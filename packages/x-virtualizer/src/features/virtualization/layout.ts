@@ -135,22 +135,30 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
     })),
 
     positionerProps: createSelectorMemoized(
+      Virtualization.selectors.layoutMode,
       Virtualization.selectors.offsetTop,
       Virtualization.selectors.scrollPosition,
-      (offsetTop, scrollPosition) => ({
+      (layoutMode, offsetTop, scrollPosition) => ({
         style: {
-          transform: `translate3d(${-scrollPosition.current.left}px, ${offsetTop - scrollPosition.current.top}px, 0)`,
+          transform:
+            layoutMode === 'uncontrolled'
+              ? `translate3d(0, ${offsetTop}px, 0)`
+              : `translate3d(${-scrollPosition.current.left}px, ${offsetTop - scrollPosition.current.top}px, 0)`,
         },
       }),
     ),
 
     containerVerticalProps: createSelectorMemoized(
+      Virtualization.selectors.layoutMode,
       Virtualization.selectors.scrollPosition,
-      (scrollPosition) => ({
-        style: {
-          transform: `translate3d(${-scrollPosition.current.left}px, 0, 0)`,
-        },
-      }),
+      (layoutMode, scrollPosition) =>
+        layoutMode === 'uncontrolled'
+          ? undefined
+          : {
+              style: {
+                transform: `translate3d(${-scrollPosition.current.left}px, 0, 0)`,
+              },
+            },
     ),
 
     scrollbarHorizontalProps: createSelectorMemoized(

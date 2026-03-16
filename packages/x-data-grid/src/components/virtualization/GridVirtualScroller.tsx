@@ -2,6 +2,8 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import clsx from 'clsx';
+import { Virtualization } from '@mui/x-virtualizer';
 import {
   gridHasBottomFillerSelector,
   gridHasScrollXSelector,
@@ -12,7 +14,7 @@ import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridOverlays } from '../../hooks/features/overlays/useGridOverlays';
 import { GridHeaders } from '../GridHeaders';
@@ -77,11 +79,24 @@ const Scroller = styled('div', {
   zIndex: 0,
 });
 
-const Viewport = styled('div')({
-  position: 'sticky',
-  top: 0,
-  left: 0,
-  overflow: 'hidden',
+const Viewport = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'internal-Viewport',
+})({
+  display: 'contents',
+
+  [`.${gridClasses['virtualizer--layoutControlled']} &`]: {
+    display: 'inline-block',
+    position: 'sticky',
+    top: 0,
+    left: 0,
+    overflow: 'hidden',
+
+    scrollbarWidth: 'none' /* Firefox */,
+    '&::-webkit-scrollbar': {
+      display: 'none' /* Safari and Chrome */,
+    },
+  },
 });
 
 const hasPinnedRightSelector = (apiRef: RefObject<GridApiCommunity>) =>
@@ -109,7 +124,11 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const virtualScroller = useGridVirtualizer().api.getters;
+  const virtualizer = useGridVirtualizer();
+  const virtualScroller = virtualizer.api.getters;
+  const layoutMode = virtualizer.store.use(Virtualization.selectors.layoutMode);
+
+  const hasContentFiller = layoutMode === 'uncontrolled';
 
   const {
     getContainerProps,
@@ -127,16 +146,24 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const rows = getRows(undefined, gridRowTreeSelector(apiRef));
 
   const containerVerticalProps = getContainerVerticalProps();
+  const contentProps = getContentProps();
 
   return (
-    <Container className={classes.root} {...getContainerProps()} ownerState={ownerState}>
+    <Container
+      className={clsx(
+        classes.root,
+        layoutMode === 'controlled' && gridClasses['virtualizer--layoutControlled'],
+      )}
+      {...getContainerProps()}
+      ownerState={ownerState}
+    >
       <GridScrollArea scrollDirection="left" {...getScrollAreaProps()} />
       <GridScrollArea scrollDirection="right" {...getScrollAreaProps()} />
       <GridScrollArea scrollDirection="up" {...getScrollAreaProps()} />
       <GridScrollArea scrollDirection="down" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
-        <Content {...getContentProps()}>
-          <Viewport className="VIEWPORT" {...getViewportProps()}>
+        <Content {...contentProps}>
+          <Viewport {...getViewportProps()}>
             <TopContainer {...containerVerticalProps}>
               {!rootProps.listView && <GridHeaders />}
               <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
@@ -156,7 +183,10 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
               {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
             </RenderZone>
 
+            {hasContentFiller && <div className="CONTENT_FILLER" {...contentProps} />}
+
             {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
+
             <rootProps.slots.bottomContainer {...containerVerticalProps}>
               <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
             </rootProps.slots.bottomContainer>

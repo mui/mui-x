@@ -608,6 +608,11 @@ export interface GridClasses {
    */
   'root--noToolbar': string;
   /**
+   * Styles applied to the root element when layout mode is "controlled".
+   * @ignore - do not document.
+   */
+  'virtualizer--layoutControlled': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -1112,6 +1117,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'root--densityCompact',
   'root--disableUserSelection',
   'root--noToolbar',
+  'virtualizer--layoutControlled',
   'row',
   'row--editable',
   'row--editing',

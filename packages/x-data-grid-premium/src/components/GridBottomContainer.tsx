@@ -29,9 +29,12 @@ const Element = styled('div', {
   slot: 'internal',
   shouldForwardProp: undefined,
 })({
-  position: 'absolute',
+  position: 'sticky',
   zIndex: 40,
   bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+  [`.${gridClasses['virtualizer--layoutControlled']} &`]: {
+    position: 'absolute',
+  },
 });
 
 export function GridBottomContainer(props: GridBottomContainerProps) {
