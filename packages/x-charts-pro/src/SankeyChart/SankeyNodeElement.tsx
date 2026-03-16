@@ -2,13 +2,10 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
-import {
-  selectorChartsIsFaded,
-  selectorChartsIsHighlighted,
-  useInteractionItemProps,
-  useStore,
-} from '@mui/x-charts/internals';
+import { useInteractionItemProps } from '@mui/x-charts/internals';
 import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.types';
+import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
+import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyNodeElementProps {
   /**
@@ -33,10 +30,9 @@ export interface SankeyNodeElementProps {
 /**
  * @ignore - internal component.
  */
-export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElementProps>(
+export const SankeyNodeElement = React.forwardRef<SVGRectElement, SankeyNodeElementProps>(
   function SankeyNodeElement(props, ref) {
     const { node, onClick, seriesId } = props;
-    const store = useStore();
 
     const x0 = node.x0 ?? 0;
     const y0 = node.y0 ?? 0;
@@ -54,11 +50,14 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
       node,
     };
 
-    const isHighlighted = store.use(selectorChartsIsHighlighted, identifier);
-    const isFaded = store.use(selectorChartsIsFaded, identifier);
+    const highlightState = useSankeyNodeHighlightState(identifier);
+    const isFaded = highlightState === 'faded';
+    const isHighlighted = highlightState === 'highlighted';
 
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);
+
+    const classes = useUtilityClasses();
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
       onClick?.(event, identifier);
@@ -72,22 +71,23 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
     }
 
     return (
-      <g ref={ref} data-node={node.id}>
-        <rect
-          x={node.x0}
-          y={node.y0}
-          width={nodeWidth}
-          height={nodeHeight}
-          fill={node.color}
-          opacity={opacity}
-          onClick={onClick ? handleClick : undefined}
-          cursor={onClick ? 'pointer' : 'default'}
-          stroke="none"
-          data-highlighted={isHighlighted || undefined}
-          data-faded={isFaded || undefined}
-          {...interactionProps}
-        />
-      </g>
+      <rect
+        x={node.x0}
+        y={node.y0}
+        width={nodeWidth}
+        height={nodeHeight}
+        fill={node.color}
+        opacity={opacity}
+        onClick={onClick ? handleClick : undefined}
+        cursor={onClick ? 'pointer' : 'default'}
+        stroke="none"
+        data-highlighted={isHighlighted || undefined}
+        data-faded={isFaded || undefined}
+        ref={ref}
+        data-node={node.id}
+        className={classes.node}
+        {...interactionProps}
+      />
     );
   },
 );

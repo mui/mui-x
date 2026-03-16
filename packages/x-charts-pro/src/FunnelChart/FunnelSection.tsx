@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useInteractionItemProps, type SeriesId, consumeSlots } from '@mui/x-charts/internals';
-import { useItemHighlighted } from '@mui/x-charts/hooks';
+import { useItemHighlightState } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
 import { type FunnelSectionClasses, useUtilityClasses } from './funnelSectionClasses';
 
@@ -52,7 +52,9 @@ const FunnelSection = consumeSlots(
     );
 
     const interactionProps = useInteractionItemProps(identifier);
-    const { isFaded, isHighlighted } = useItemHighlighted(identifier);
+    const highlightState = useItemHighlightState(identifier);
+    const isHighlighted = highlightState === 'highlighted';
+    const isFaded = highlightState === 'faded';
 
     const isOutlined = variant === 'outlined';
 

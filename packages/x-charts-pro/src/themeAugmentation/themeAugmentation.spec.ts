@@ -29,8 +29,10 @@ createTheme({
         // @ts-expect-error invalid MuiChartsAxis prop
         someRandomProp: true,
       },
+    },
+    MuiHeatmapPlot: {
       styleOverrides: {
-        highlighted: { backgroundColor: 'red' },
+        root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiChartsAxis class key
         constent: { color: 'red' },
       },

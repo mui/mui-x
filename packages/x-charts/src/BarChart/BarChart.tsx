@@ -56,10 +56,7 @@ export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 
 export interface BarChartProps
   extends
-    Omit<
-      ChartContainerProps<'bar', BarChartPluginSignatures>,
-      'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
-    >,
+    Omit<ChartContainerProps<'bar', BarChartPluginSignatures>, 'series' | 'plugins' | 'zAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -230,6 +227,10 @@ BarChart.propTypes = {
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * Option to display a cartesian grid in the background.
    */

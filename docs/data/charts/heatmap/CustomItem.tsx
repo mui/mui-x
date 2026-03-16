@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { Heatmap } from '@mui/x-charts-pro/Heatmap';
+import { Heatmap, type HeatmapCellProps } from '@mui/x-charts-pro/Heatmap';
 import { data } from './dumbData';
 
-function CustomCell(props: any) {
+function CustomCell(props: HeatmapCellProps) {
   const { x, y, width, height, ownerState, ...other } = props;
 
   return (

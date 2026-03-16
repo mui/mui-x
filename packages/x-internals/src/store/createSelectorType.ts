@@ -1,11 +1,24 @@
 import type { Selector } from 'reselect';
 
+/**
+ * The NoOptionalParams type is a utility type that checks if a function has optional or default parameters.
+ * If the function has optional or default parameters, it returns a string literal type with an error message.
+ * Otherwise, it returns the original function type.
+ *
+ * This is used to enforce that the combiner function passed to createSelector does not have optional or default parameters,
+ * as memoization relies on the Function.length property, which does not account for optional or default parameters.
+ */
+type NoOptionalParams<F extends Fn> =
+  Parameters<F> extends Required<Parameters<F>>
+    ? F
+    : 'Combiner cannot have optional or default parameters because memoization relies on Function.length';
+
 export type CreateSelectorFunction = <
   const Args extends any[],
   const Selectors extends ReadonlyArray<Selector<any>>,
   const Combiner extends (...args: readonly [...ReturnTypes<Selectors>, ...Args]) => any,
 >(
-  ...items: [...Selectors, Combiner]
+  ...items: [...Selectors, NoOptionalParams<Combiner>]
 ) => (
   ...args: Selectors['length'] extends 0
     ? MergeParams<ReturnTypes<Selectors>, Parameters<Combiner>>
