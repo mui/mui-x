@@ -83,6 +83,7 @@ const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
           instance.handleClick?.(event);
         }}
         ref={ref}
+        aria-hidden
       >
         {title && <title>{title}</title>}
         {desc && <desc>{desc}</desc>}

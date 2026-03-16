@@ -110,6 +110,7 @@ function CanvasPositioner({ children }: React.PropsWithChildren) {
         height: '100%',
         margin: 'auto',
       }}
+      aria-hidden
     >
       {children}
     </div>
