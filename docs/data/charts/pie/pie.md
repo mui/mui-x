@@ -14,7 +14,7 @@ A pie chart shows proportions of a whole so you can compare how much each catego
 You need:
 
 - One categorical dimension (each category is a slice)
-- One numeric value per category (sizes are converted to a share of the whole)
+- One numeric value per category (values are converted to a share of the whole)
 
 The demo below compares survival rates of passengers by class on the Titanic.
 
@@ -98,7 +98,7 @@ Set `arcLabelMinAngle` so that arcs with an angle smaller than that value (in de
 Add the `highlightScope` property to a pie series to control highlighting.
 See [Highlighting](/x/react-charts/highlighting/#highlighting-series) for details.
 
-Use the `.MuiPieArc-faded` and `.MuiPieArc-highlighted` CSS classes to style arcs when they are faded or highlighted.
+Use the `[data-faded=true]` and `[data-highlighted=true]` CSS selectors to style arcs when they are faded or highlighted.
 
 CSS works well for changing `color`, `stroke-width`, or `opacity`.
 To change the size of an arc when highlighted or faded, use the `highlighted` and `faded` properties to override `innerRadius`, `outerRadius`, or `cornerRadius`.
