@@ -78,7 +78,6 @@ createTheme({
     },
     MuiChartsDataProvider: {
       defaultProps: {
-        experimentalFeatures: { preferStrictDomainInLineCharts: true },
         // @ts-expect-error invalid MuiChartsDataProvider prop
         someRandomProp: true,
       },
@@ -86,7 +85,6 @@ createTheme({
     // @deprecated Use MuiChartsDataProvider instead
     MuiChartDataProvider: {
       defaultProps: {
-        experimentalFeatures: { preferStrictDomainInLineCharts: true },
         // @ts-expect-error invalid MuiChartDataProvider prop
         someRandomProp: true,
       },
@@ -162,6 +160,21 @@ createTheme({
         constent: { color: 'red' },
       },
     },
+    // PieChart components
+    MuiPieArcPlot: {
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiPieArcPlot class key
+        constent: { color: 'red' },
+      },
+    },
+    MuiPieArcLabelPlot: {
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiPieArcLabelPlot class key
+        constent: { color: 'red' },
+      },
+    },
     // ScatterChart components
     MuiScatterChart: {
       defaultProps: {
@@ -169,11 +182,11 @@ createTheme({
         // @ts-expect-error invalid MuiScatterChart prop
         someRandomProp: true,
       },
-      // styleOverrides: {
-      //   root: { backgroundColor: 'red' },
-      //   // @ts-expect-error invalid MuiScatterChart class key
-      //   constent: { color: 'red' },
-      // },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiScatterChart class key
+        constent: { color: 'red' },
+      },
     },
   },
 });

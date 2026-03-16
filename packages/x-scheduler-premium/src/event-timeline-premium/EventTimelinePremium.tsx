@@ -23,21 +23,24 @@ import {
 } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 
-const releaseInfo = '__RELEASE_INFO__';
-const watermark = <Watermark packageName="x-scheduler-premium" releaseInfo={releaseInfo} />;
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-scheduler-premium' as const,
+};
+const watermark = <Watermark packageInfo={packageInfo} />;
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
     root: ['root'],
     content: ['content'],
     grid: ['grid'],
-    titleSubGridWrapper: ['titleSubGridWrapper'],
+    headerRow: ['headerRow'],
+    titleHeaderCell: ['titleHeaderCell'],
+    eventsHeaderCell: ['eventsHeaderCell'],
     titleSubGrid: ['titleSubGrid'],
-    titleSubGridHeaderRow: ['titleSubGridHeaderRow'],
-    titleSubGridHeaderCell: ['titleSubGridHeaderCell'],
     eventsSubGridWrapper: ['eventsSubGridWrapper'],
     eventsSubGrid: ['eventsSubGrid'],
-    eventsSubGridHeaderRow: ['eventsSubGridHeaderRow'],
     eventsSubGridRow: ['eventsSubGridRow'],
     titleCellRow: ['titleCellRow'],
     titleCell: ['titleCell'],
@@ -111,7 +114,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   // We don't want the plan suffix in the theme, otherwise we couldn't share the theme entry across packages
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
-  useLicenseVerifier('x-scheduler-premium', releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   const {
     parameters,

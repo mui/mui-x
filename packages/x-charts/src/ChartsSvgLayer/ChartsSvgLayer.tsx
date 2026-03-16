@@ -50,7 +50,7 @@ const ChartsSvgLayerStyles = styled('svg', {
  */
 const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
   function ChartsSvgLayer(inProps, ref) {
-    const { store, instance } = useChartContext<
+    const { store } = useChartContext<
       [],
       [UseChartInteractionSignature, UseChartItemClickSignature]
     >();
@@ -70,18 +70,6 @@ const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         className={clsx(classes.root, className)}
         {...other}
-        onPointerEnter={(event) => {
-          other.onPointerEnter?.(event);
-          instance.handlePointerEnter?.(event);
-        }}
-        onPointerLeave={(event) => {
-          other.onPointerLeave?.(event);
-          instance.handlePointerLeave?.(event);
-        }}
-        onClick={(event) => {
-          other.onClick?.(event);
-          instance.handleClick?.(event);
-        }}
         ref={ref}
       >
         {title && <title>{title}</title>}

@@ -68,12 +68,7 @@ export interface ScatterChartProps
   extends
     Omit<
       ChartContainerProps<'scatter', ScatterChartPluginSignatures>,
-      | 'series'
-      | 'plugins'
-      | 'onItemClick'
-      | 'experimentalFeatures'
-      | 'highlightedAxis'
-      | 'onHighlightedAxisChange'
+      'series' | 'plugins' | 'onItemClick' | 'highlightedAxis' | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -231,11 +226,18 @@ ScatterChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
    * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
    */
   disableVoronoi: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -399,7 +401,7 @@ ScatterChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**

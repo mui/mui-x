@@ -56,10 +56,7 @@ export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 
 export interface BarChartProps
   extends
-    Omit<
-      ChartContainerProps<'bar', BarChartPluginSignatures>,
-      'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
-    >,
+    Omit<ChartContainerProps<'bar', BarChartPluginSignatures>, 'series' | 'plugins' | 'zAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -226,7 +223,14 @@ BarChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -413,7 +417,7 @@ BarChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
