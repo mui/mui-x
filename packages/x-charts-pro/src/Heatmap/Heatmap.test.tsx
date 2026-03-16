@@ -74,6 +74,63 @@ describe('<Heatmap /> - License', () => {
   });
 });
 
+describe('Heatmap - data attributes', () => {
+  const { render } = createRenderer();
+
+  const config = {
+    series: [
+      {
+        id: 'heat-1',
+        data: [
+          [0, 0, 1],
+          [0, 1, 2],
+          [1, 0, 3],
+          [1, 1, 4],
+        ],
+      },
+    ],
+    xAxis: [{ position: 'none' }],
+    yAxis: [{ position: 'none' }],
+    width: 300,
+    height: 300,
+    margin: { top: 0, left: 0, bottom: 0, right: 0 },
+  } as const;
+
+  it('should add data-series-id to cell elements', () => {
+    const { container } = render(<Heatmap {...config} />);
+
+    const cells = container.querySelectorAll<HTMLElement>(`.${heatmapClasses.cell}`);
+
+    cells.forEach((cell) => {
+      expect(cell.getAttribute('data-series-id')).to.equal('heat-1');
+    });
+  });
+
+  it('should add data-x-index to cell elements', () => {
+    const { container } = render(<Heatmap {...config} />);
+
+    const cells = container.querySelectorAll<HTMLElement>(`.${heatmapClasses.cell}`);
+
+    // Cells are rendered in data order: [0,0], [0,1], [1,0], [1,1]
+    expect(cells[0].getAttribute('data-x-index')).to.equal('0');
+    expect(cells[1].getAttribute('data-x-index')).to.equal('0');
+    expect(cells[2].getAttribute('data-x-index')).to.equal('1');
+    expect(cells[3].getAttribute('data-x-index')).to.equal('1');
+  });
+
+  it('should add data-y-index to cell elements', () => {
+    const { container } = render(<Heatmap {...config} />);
+
+    const cells = container.querySelectorAll<HTMLElement>(`.${heatmapClasses.cell}`);
+
+    // Cells are rendered in data order: [0,0], [0,1], [1,0], [1,1]
+    expect(cells[0].getAttribute('data-y-index')).to.equal('0');
+    expect(cells[1].getAttribute('data-y-index')).to.equal('1');
+    expect(cells[2].getAttribute('data-y-index')).to.equal('0');
+    expect(cells[3].getAttribute('data-y-index')).to.equal('1');
+  });
+});
+
 describe('Heatmap - onItemClick', () => {
   const { render } = createRenderer();
 

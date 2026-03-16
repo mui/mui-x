@@ -51,7 +51,7 @@ To fade the other item, set `highlightScope.fade` to `'global'`.
 {{"demo": "HighlightHeatmap.js"}}
 
 By default highlighted/faded effect is obtained by applying the CSS property `filter: saturate(...)` to cells.
-To modify this styling, use the `heatmapClasses.highlighted` and `heatmapClasses.faded` CSS classes to override the applied style.
+To modify this styling, use the `[data-highlighted]` and `[data-faded]` attribute selectors to override the applied style.
 
 In the following demo, we replace the highlight saturation by a border radius and reduce the saturation of the faded cells.
 
@@ -99,6 +99,18 @@ To display it set `hideLegend` to `false`.
 You can modify it with `slots.legend` and `slotProps.legend`.
 
 {{"demo": "HeatmapLegend.js"}}
+
+### Styling
+
+You can customize the heatmap cells using CSS selectors.
+
+Each cell element provides the following data attributes:
+
+- `[data-series-id]` — the ID of the series the cell belongs to.
+- `[data-x-index]` — the index of the cell along the x-axis.
+- `[data-y-index]` — the index of the cell along the y-axis.
+
+{{"demo": "StylingCells.js"}}
 
 ## Custom item
 

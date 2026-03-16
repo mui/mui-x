@@ -1,0 +1,12 @@
+<Heatmap
+  sx={{
+    // Turn the cell at x=2, y=3 orange
+    '& [data-x-index="2"][data-y-index="3"]': {
+      fill: 'orange',
+    },
+  }}
+  xAxis={[{ data: [1, 2, 3, 4] }]}
+  yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}
+  series={[{ data }]}
+  height={300}
+/>
