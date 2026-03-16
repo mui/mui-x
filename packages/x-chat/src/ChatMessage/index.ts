@@ -1,4 +1,5 @@
 export {
+  ChatMarkdownTextPart,
   ChatDateDivider,
   ChatMessage,
   ChatMessageActions,
@@ -7,11 +8,16 @@ export {
   ChatMessageGroup,
   ChatMessageRoot,
   ChatMessageMeta,
+  createChatMarkdownTextPartRenderer,
   chatMessageClasses,
   getChatMessageUtilityClass,
 } from './ChatMessage';
 
 export type {
+  ChatMarkdownTextPartProps,
+  ChatMarkdownTextPartRendererOptions,
+  ChatMarkdownTextPartSlotProps,
+  ChatMarkdownTextPartSlots,
   ChatDateDividerProps,
   ChatDateDividerSlotProps,
   ChatDateDividerSlots,

@@ -4,9 +4,13 @@ import {
   screen,
   waitFor,
 } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import type { ChatAdapter, ChatMessage as ChatMessageModel } from '@mui/x-chat-headless';
+import type {
+  ChatAdapter,
+  ChatMessage as ChatMessageModel,
+  ChatPartRendererMap,
+} from '@mui/x-chat-headless';
 import { ChatRoot } from '@mui/x-chat-unstyled';
 import type {
   ChatDateDividerProps,
@@ -26,6 +30,7 @@ import {
   ChatMessageGroup,
   ChatMessageMeta,
   ChatMessageRoot,
+  createChatMarkdownTextPartRenderer,
   chatMessageClasses,
 } from './ChatMessage';
 
@@ -60,7 +65,14 @@ function createMessage(
   };
 }
 
-function renderChatMessage(ui: React.ReactElement, messages: ChatMessageModel[]) {
+function renderChatMessage(
+  ui: React.ReactElement,
+  messages: ChatMessageModel[],
+  options: {
+    localeText?: Record<string, unknown>;
+    partRenderers?: ChatPartRendererMap;
+  } = {},
+) {
   const theme = createTheme({
     palette: {
       Chat: {
@@ -74,7 +86,12 @@ function renderChatMessage(ui: React.ReactElement, messages: ChatMessageModel[])
 
   return render(
     <ThemeProvider theme={theme}>
-      <ChatRoot adapter={createAdapter()} defaultMessages={messages}>
+      <ChatRoot
+        adapter={createAdapter()}
+        defaultMessages={messages}
+        localeText={options.localeText}
+        partRenderers={options.partRenderers}
+      >
         {ui}
       </ChatRoot>
     </ThemeProvider>,
@@ -365,6 +382,159 @@ describe('ChatMessage', () => {
 
     expect(screen.getByText('RTL message')).toBeVisible();
     expect(screen.getByText('RA')).toBeVisible();
+  });
+
+  it('renders markdown text parts with safe links, blockquotes, inline code, and images', () => {
+    renderChatMessage(
+      <ChatMessageRoot messageId="m1">
+        <ChatMessageContent />
+      </ChatMessageRoot>,
+      [
+        createMessage('m1', {
+          createdAt: '2026-03-15T09:00:00.000Z',
+          role: 'assistant',
+          text: `# Heading
+
+[Safe](https://mui.com)
+[Unsafe](javascript:alert(1))
+
+> Quoted text
+
+\`inline()\`
+
+![Preview](https://example.com/preview.png)
+
+<script>alert('xss')</script>`,
+        }),
+      ],
+    );
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Heading' })).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Safe' })).to.have.attribute('href', 'https://mui.com');
+    expect(screen.queryByRole('link', { name: 'Unsafe' })).toBeNull();
+    expect(screen.getByText('Unsafe')).toBeVisible();
+    expect(screen.getByText('Quoted text').closest('blockquote')).not.toBeNull();
+    expect(screen.getByText('inline()').closest('code')).not.toBeNull();
+    expect(screen.getByRole('img', { name: 'Preview' })).to.have.attribute(
+      'src',
+      'https://example.com/preview.png',
+    );
+    const markdownContent = screen
+      .getByRole('heading', { level: 1, name: 'Heading' })
+      .closest(`.${chatMessageClasses.markdownContent}`);
+
+    expect(markdownContent?.querySelector('script')).toBeNull();
+    expect(markdownContent?.textContent ?? '').not.toContain("alert('xss')");
+  });
+
+  it('renders fenced code blocks with localized copy labels and highlight fallback', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    const clipboardDescriptor = Object.getOwnPropertyDescriptor(window.navigator, 'clipboard');
+
+    Object.defineProperty(window.navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+
+    try {
+      renderChatMessage(
+        <ChatMessageRoot messageId="m1">
+          <ChatMessageContent />
+        </ChatMessageRoot>,
+        [
+          createMessage('m1', {
+            createdAt: '2026-03-15T09:00:00.000Z',
+            role: 'assistant',
+            text: '```tsx\nconst total = 1;\n```',
+          }),
+        ],
+        {
+          localeText: {
+            messageCopyCodeButtonLabel: 'Copy snippet',
+            messageCopiedCodeButtonLabel: 'Snippet copied',
+          },
+        },
+      );
+
+      expect(screen.getByText('tsx')).toBeVisible();
+      expect(screen.getByText('const total = 1;')).toBeVisible();
+
+      const copyButton = screen.getByRole('button', { name: 'Copy snippet' });
+      copyButton.click();
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Snippet copied' })).toBeVisible();
+      });
+
+      await waitFor(() => {
+        expect(document.querySelector('.shiki')).not.toBeNull();
+      });
+    } finally {
+      if (clipboardDescriptor) {
+        Object.defineProperty(window.navigator, 'clipboard', clipboardDescriptor);
+      } else {
+        Object.defineProperty(window.navigator, 'clipboard', {
+          configurable: true,
+          value: undefined,
+        });
+      }
+    }
+  });
+
+  it('lets partRenderers.text replace the built-in markdown renderer', () => {
+    renderChatMessage(
+      <ChatMessageRoot messageId="m1">
+        <ChatMessageContent />
+      </ChatMessageRoot>,
+      [
+        createMessage('m1', {
+          createdAt: '2026-03-15T09:00:00.000Z',
+          role: 'assistant',
+          text: '# Override me',
+        }),
+      ],
+      {
+        partRenderers: {
+          text: ({ part }) => <div data-testid="custom-text-part">{part.text.toUpperCase()}</div>,
+        },
+      },
+    );
+
+    expect(screen.getByTestId('custom-text-part')).to.have.text('# OVERRIDE ME');
+    expect(screen.queryByRole('heading', { level: 1, name: 'Override me' })).toBeNull();
+  });
+
+  it('exports a reusable markdown text renderer for provider-level composition', () => {
+    renderChatMessage(
+      <ChatMessageRoot messageId="m1">
+        <ChatMessageContent />
+      </ChatMessageRoot>,
+      [
+        createMessage('m1', {
+          createdAt: '2026-03-15T09:00:00.000Z',
+          role: 'assistant',
+          text: '`composable`',
+        }),
+      ],
+      {
+        partRenderers: {
+          text: createChatMarkdownTextPartRenderer({
+            localeText: {
+              messageCopyCodeButtonLabel: 'Copy snippet',
+              messageCopiedCodeButtonLabel: 'Snippet copied',
+            },
+            slotProps: {
+              root: {
+                id: 'markdown-text-part',
+              },
+            },
+          }),
+        },
+      },
+    );
+
+    expect(document.getElementById('markdown-text-part')).not.toBeNull();
+    expect(screen.getByText('composable').closest('code')).not.toBeNull();
   });
 
   it.skipIf(isJSDOM)('reveals actions when focus moves inside the styled row', async () => {

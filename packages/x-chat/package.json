@@ -38,7 +38,10 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/x-chat-headless": "workspace:*",
-    "@mui/x-chat-unstyled": "workspace:*"
+    "@mui/x-chat-unstyled": "workspace:*",
+    "react-markdown": "10.1.0",
+    "remark-gfm": "4.0.1",
+    "shiki": "4.0.2"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",

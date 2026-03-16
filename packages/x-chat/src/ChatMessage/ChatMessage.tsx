@@ -4,6 +4,10 @@ import Avatar from '@mui/material/Avatar';
 import type { SxProps, Theme } from '@mui/material/styles';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import type { SlotComponentProps } from '@mui/utils/types';
+import type {
+  ChatPartRenderer,
+  ChatTextMessagePart,
+} from '@mui/x-chat-headless';
 import {
   MessageActions as UnstyledMessageActions,
   MessageAvatar as UnstyledMessageAvatar,
@@ -44,7 +48,17 @@ import type {
 import type { MessageGroupOwnerState } from '@mui/x-chat-unstyled/message-group';
 import { styled, useChatThemeProps } from '../internals/material/chatStyled';
 import { chatCssVarKeys, getChatCssVars } from '../internals/material/chatThemeVars';
+import {
+  ChatMarkdownTextPart,
+  createChatMarkdownTextPartRenderer,
+} from './ChatMarkdownTextPart';
 import { chatMessageClasses, getChatMessageUtilityClass } from './chatMessageClasses';
+export type {
+  ChatMarkdownTextPartProps,
+  ChatMarkdownTextPartRendererOptions,
+  ChatMarkdownTextPartSlotProps,
+  ChatMarkdownTextPartSlots,
+} from './ChatMarkdownTextPart';
 
 function joinClassNames(...classNames: Array<string | undefined>) {
   return classNames.filter(Boolean).join(' ');
@@ -359,7 +373,7 @@ export interface ChatMessageAvatarProps
 export type ChatMessageContentSlots = UnstyledMessageContentSlots;
 export type ChatMessageContentSlotProps = UnstyledMessageContentSlotProps;
 export interface ChatMessageContentProps
-  extends Omit<UnstyledMessageContentProps, 'slotProps' | 'slots'> {
+  extends Omit<UnstyledMessageContentProps, 'resolveBuiltInPartRenderer' | 'slotProps' | 'slots'> {
   className?: string;
   slotProps?: ChatMessageContentSlotProps;
   slots?: Partial<ChatMessageContentSlots>;
@@ -463,6 +477,21 @@ export const ChatMessageContent = React.forwardRef(function ChatMessageContent(
   return (
     <UnstyledMessageContent
       ref={ref}
+      resolveBuiltInPartRenderer={(part, localeText) => {
+        if (part.type !== 'text') {
+          return null;
+        }
+
+        return (((rendererProps) => (
+          <ChatMarkdownTextPart
+            {...(rendererProps as Parameters<ChatPartRenderer<ChatTextMessagePart>>[0])}
+            localeText={{
+              messageCopiedCodeButtonLabel: localeText.messageCopiedCodeButtonLabel,
+              messageCopyCodeButtonLabel: localeText.messageCopyCodeButtonLabel,
+            }}
+          />
+        )) as ChatPartRenderer<any>);
+      }}
       slotProps={{
         bubble: mergeSlotPropsWithClassName(slotProps?.bubble, chatMessageClasses.bubble),
         content: mergeSlotPropsWithClassName(
@@ -610,4 +639,5 @@ export const ChatMessage = {
   Actions: ChatMessageActions,
 } as const;
 
+export { ChatMarkdownTextPart, createChatMarkdownTextPartRenderer };
 export { chatMessageClasses, getChatMessageUtilityClass };

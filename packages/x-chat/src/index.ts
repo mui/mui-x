@@ -26,6 +26,7 @@ export {
 } from './ChatConversations';
 export {
   ChatDateDivider,
+  ChatMarkdownTextPart,
   ChatMessage,
   ChatMessageActions,
   ChatMessageAvatar,
@@ -33,6 +34,7 @@ export {
   ChatMessageGroup,
   ChatMessageMeta,
   ChatMessageRoot,
+  createChatMarkdownTextPartRenderer,
   chatMessageClasses,
   getChatMessageUtilityClass,
 } from './ChatMessage';
@@ -92,6 +94,10 @@ export type {
   ChatDateDividerProps,
   ChatDateDividerSlotProps,
   ChatDateDividerSlots,
+  ChatMarkdownTextPartProps,
+  ChatMarkdownTextPartRendererOptions,
+  ChatMarkdownTextPartSlotProps,
+  ChatMarkdownTextPartSlots,
   ChatMessageActionsProps,
   ChatMessageActionsSlotProps,
   ChatMessageActionsSlots,

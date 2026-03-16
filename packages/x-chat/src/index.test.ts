@@ -221,6 +221,7 @@ describe('x-chat package scaffold', () => {
       'ChatComposerToolbar',
       'ChatConversations',
       'ChatDateDivider',
+      'ChatMarkdownTextPart',
       'ChatMessage',
       'ChatMessageActions',
       'ChatMessageAvatar',
@@ -239,6 +240,7 @@ describe('x-chat package scaffold', () => {
       'chatThreadClasses',
       'chatTypingIndicatorClasses',
       'chatUnreadMarkerClasses',
+      'createChatMarkdownTextPartRenderer',
       'getChatComposerUtilityClass',
       'getChatConversationsUtilityClass',
       'getChatMessageUtilityClass',
@@ -280,6 +282,7 @@ describe('x-chat package scaffold', () => {
     ];
     const expectedChatMessageSubpathExports = [
       'ChatDateDivider',
+      'ChatMarkdownTextPart',
       'ChatMessage',
       'ChatMessageActions',
       'ChatMessageAvatar',
@@ -288,6 +291,7 @@ describe('x-chat package scaffold', () => {
       'ChatMessageMeta',
       'ChatMessageRoot',
       'chatMessageClasses',
+      'createChatMarkdownTextPartRenderer',
       'getChatMessageUtilityClass',
     ];
     const expectedHeadlessRuntimeExports = [
@@ -527,7 +531,11 @@ describe('x-chat package scaffold', () => {
     expect(chat.ChatMessageActions).toBe(chatMessageSubpath.ChatMessageActions);
     expect(chat.ChatMessageGroup).toBe(chatMessageSubpath.ChatMessageGroup);
     expect(chat.ChatDateDivider).toBe(chatMessageSubpath.ChatDateDivider);
+    expect(chat.ChatMarkdownTextPart).toBe(chatMessageSubpath.ChatMarkdownTextPart);
     expect(chat.chatMessageClasses).toBe(chatMessageSubpath.chatMessageClasses);
+    expect(chat.createChatMarkdownTextPartRenderer).toBe(
+      chatMessageSubpath.createChatMarkdownTextPartRenderer,
+    );
     expect(chat.getChatMessageUtilityClass).toBe(chatMessageSubpath.getChatMessageUtilityClass);
     expect(chat.ChatThread).toBe(chatThreadSubpath.ChatThread);
     expect(chat.chatThreadClasses).toBe(chatThreadSubpath.chatThreadClasses);
@@ -756,6 +764,8 @@ describe('x-chat package scaffold', () => {
       composerInputAriaLabel: 'Message',
       composerSendButtonLabel: 'Send message',
       composerAttachButtonLabel: 'Add attachment',
+      messageCopyCodeButtonLabel: 'Copy code',
+      messageCopiedCodeButtonLabel: 'Copied',
       messageEditedLabel: 'Edited',
       messageDeletedLabel: 'Deleted',
       messageReasoningLabel: 'Reasoning',

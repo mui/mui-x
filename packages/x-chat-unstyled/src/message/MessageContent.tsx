@@ -12,6 +12,7 @@ import {
 } from '@mui/x-chat-headless';
 import { useChatOnToolCall } from '@mui/x-chat-headless/hooks';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import type { ChatLocaleText } from '../chat/internals/chatLocaleText';
 import { getDefaultMessagePartRenderer } from './defaultMessagePartRenderers';
 import { useMessageContext } from './internals/MessageContext';
 import { type MessageContentOwnerState } from './message.types';
@@ -27,6 +28,10 @@ export interface MessageContentSlotProps {
 }
 
 export interface MessageContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  resolveBuiltInPartRenderer?: (
+    part: ChatMessagePart,
+    localeText: ChatLocaleText,
+  ) => ChatPartRenderer<ChatMessagePart> | null;
   slots?: Partial<MessageContentSlots>;
   slotProps?: MessageContentSlotProps;
 }
@@ -85,8 +90,12 @@ function MessageRenderedPart(props: {
   part: ChatMessagePart;
   index: number;
   message: NonNullable<MessageContentOwnerState['message']>;
+  resolveBuiltInPartRenderer?: (
+    part: ChatMessagePart,
+    localeText: ChatLocaleText,
+  ) => ChatPartRenderer<ChatMessagePart> | null;
 }) {
-  const { part, index, message } = props;
+  const { part, index, message, resolveBuiltInPartRenderer } = props;
   const customRenderer = useChatPartRenderer(part.type as ChatMessagePart['type']);
   const localeText = useChatLocaleText();
   const localizedRenderer = React.useMemo<ChatPartRenderer<ChatMessagePart> | null>(() => {
@@ -120,8 +129,17 @@ function MessageRenderedPart(props: {
     () => getDefaultMessagePartRenderer(part),
     [part],
   );
+  const builtInRenderer = React.useMemo(
+    () => resolveBuiltInPartRenderer?.(part, localeText) ?? null,
+    [localeText, part, resolveBuiltInPartRenderer],
+  );
   const onToolCall = useChatOnToolCall();
-  const Renderer = (customRenderer ?? localizedRenderer ?? defaultRenderer) as ChatPartRenderer<ChatMessagePart> | null;
+  const Renderer = (
+    customRenderer ??
+    localizedRenderer ??
+    builtInRenderer ??
+    defaultRenderer
+  ) as ChatPartRenderer<ChatMessagePart> | null;
 
   if (Renderer == null) {
     return <DefaultPartFallback part={part} />;
@@ -136,6 +154,7 @@ export const MessageContent = React.forwardRef(function MessageContent(
 ) {
   const {
     ownerState: ownerStateProp,
+    resolveBuiltInPartRenderer,
     slots,
     slotProps,
     ...other
@@ -170,6 +189,7 @@ export const MessageContent = React.forwardRef(function MessageContent(
                 index={index}
                 key={`${ownerState.messageId}-${index}-${part.type}`}
                 message={message}
+                resolveBuiltInPartRenderer={resolveBuiltInPartRenderer}
               />
             ))
           : null}
