@@ -7,7 +7,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import RtlProvider from '@mui/system/RtlProvider';
 // It's not publicly exported, so, using a relative import
 import { ChartsLabelGradient } from './ChartsLabelGradient';
-import { CHART_SELECTOR } from '../tests/constants';
+const CHART_SELECTOR = 'svg:not([aria-hidden="true"])';
 
 describe('<ChartsLabelGradient />', () => {
   const { render } = createRenderer();
