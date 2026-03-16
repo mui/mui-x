@@ -9,6 +9,17 @@ export {
   getChatComposerUtilityClass,
 } from './ChatComposer';
 export {
+  ChatScrollToBottomAffordance,
+  ChatTypingIndicator,
+  ChatUnreadMarker,
+  chatScrollToBottomAffordanceClasses,
+  chatTypingIndicatorClasses,
+  chatUnreadMarkerClasses,
+  getChatScrollToBottomAffordanceUtilityClass,
+  getChatTypingIndicatorUtilityClass,
+  getChatUnreadMarkerUtilityClass,
+} from './ChatIndicators';
+export {
   ChatConversations,
   chatConversationsClasses,
   getChatConversationsUtilityClass,
@@ -31,6 +42,23 @@ export {
   getChatThreadUtilityClass,
 } from './ChatThread';
 
+export type {
+  ChatScrollToBottomAffordanceClassKey,
+  ChatScrollToBottomAffordanceClasses,
+  ChatScrollToBottomAffordanceProps,
+  ChatScrollToBottomAffordanceSlotProps,
+  ChatScrollToBottomAffordanceSlots,
+  ChatTypingIndicatorClassKey,
+  ChatTypingIndicatorClasses,
+  ChatTypingIndicatorProps,
+  ChatTypingIndicatorSlotProps,
+  ChatTypingIndicatorSlots,
+  ChatUnreadMarkerClassKey,
+  ChatUnreadMarkerClasses,
+  ChatUnreadMarkerProps,
+  ChatUnreadMarkerSlotProps,
+  ChatUnreadMarkerSlots,
+} from './ChatIndicators';
 export type {
   ChatComposerAttachButtonProps,
   ChatComposerAttachButtonSlotProps,

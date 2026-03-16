@@ -55,6 +55,7 @@ const CustomRoot = React.forwardRef(function CustomRoot(
     ownerState,
     getItemKey,
     items,
+    overlay,
     onReachTop,
     overscan,
     renderItem,
@@ -66,6 +67,7 @@ const CustomRoot = React.forwardRef(function CustomRoot(
   } = props;
   void getItemKey;
   void items;
+  void overlay;
   void onReachTop;
   void overscan;
   void renderItem;
@@ -115,6 +117,7 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
     ownerState,
     getItemKey,
     items,
+    overlay,
     onReachTop,
     overscan,
     renderItem,
@@ -126,6 +129,7 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
   } = props;
   void getItemKey;
   void items;
+  void overlay;
   void onReachTop;
   void overscan;
   void ownerState;
@@ -301,13 +305,50 @@ describe('MessageListRoot', () => {
       configurable: true,
       value: 640,
     });
+    const scrollTo = vi.fn(({ top }: { top: number }) => {
+      log.scrollTop = top;
+    });
+    Object.defineProperty(log, 'scrollTo', {
+      configurable: true,
+      value: scrollTo,
+    });
     log.scrollTop = 0;
 
     act(() => {
       handleRef.current!.scrollToBottom();
     });
 
+    expect(scrollTo).toHaveBeenCalledWith({
+      behavior: 'auto',
+      top: 640,
+    });
     expect(log.scrollTop).toBe(640);
+
+    act(() => {
+      handleRef.current!.scrollToBottom({ behavior: 'smooth' });
+    });
+
+    expect(scrollTo).toHaveBeenLastCalledWith({
+      behavior: 'smooth',
+      top: 640,
+    });
+  });
+
+  it('renders overlay content in the dedicated messageListOverlay slot', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        defaultMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'user')]}
+      >
+        <MessageListRoot
+          overlay={<div data-testid="message-list-overlay">Overlay</div>}
+          renderItem={({ id }) => <DefaultRenderItem id={id} />}
+          virtualization={false}
+        />
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('message-list-overlay')).to.have.text('Overlay');
   });
 
   it('fires onReachTop and loads more history when the list reaches the top edge', async () => {

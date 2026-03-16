@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatAdapter, ChatConversation, ChatMessage, ChatRealtimeEvent } from '@mui/x-chat-headless';
 import { ChatRoot } from '@mui/x-chat-unstyled';
 import type {
   MessageListRootProps,
@@ -17,7 +17,7 @@ import { chatThreadClasses } from './chatThreadClasses';
 const { render } = createRenderer();
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-function createAdapter(): ChatAdapter {
+function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
       return new ReadableStream({
@@ -26,6 +26,7 @@ function createAdapter(): ChatAdapter {
         },
       });
     },
+    ...overrides,
   };
 }
 
@@ -41,6 +42,7 @@ function renderChatThread(
   ui: React.ReactElement,
   options?: {
     adapter?: ChatAdapter;
+    conversations?: ChatConversation[];
     dark?: boolean;
     messages?: ChatMessage[];
     rtl?: boolean;
@@ -62,13 +64,15 @@ function renderChatThread(
         <ChatRoot
           adapter={options?.adapter ?? createAdapter()}
           defaultActiveConversationId="c1"
-          defaultConversations={[
-            {
-              id: 'c1',
-              subtitle: 'Alpha subtitle',
-              title: 'Alpha conversation',
-            },
-          ]}
+          defaultConversations={
+            options?.conversations ?? [
+              {
+                id: 'c1',
+                subtitle: 'Alpha subtitle',
+                title: 'Alpha conversation',
+              },
+            ]
+          }
           defaultMessages={
             options?.messages ??
             Array.from({ length: 24 }, (_, index) =>
@@ -137,6 +141,7 @@ const CustomMessageList = React.forwardRef(function CustomMessageList(
     estimatedItemSize,
     getItemKey,
     items,
+    overlay,
     onReachTop,
     overscan,
     ownerState,
@@ -149,6 +154,7 @@ const CustomMessageList = React.forwardRef(function CustomMessageList(
   void estimatedItemSize;
   void getItemKey;
   void items;
+  void overlay;
   void onReachTop;
   void overscan;
   void renderItem;
@@ -169,8 +175,45 @@ const CustomMessageList = React.forwardRef(function CustomMessageList(
   );
 });
 
+function ControlledChatThread() {
+  const [messages, setMessages] = React.useState(
+    Array.from({ length: 6 }, (_, index) =>
+      createMessage(`m${index + 1}`, index % 2 === 0 ? 'assistant' : 'user'),
+    ),
+  );
+
+  return (
+    <ChatRoot
+      adapter={createAdapter()}
+      defaultActiveConversationId="c1"
+      defaultConversations={[
+        {
+          id: 'c1',
+          subtitle: 'Alpha subtitle',
+          title: 'Alpha conversation',
+        },
+      ]}
+      messages={messages}
+    >
+      <button
+        onClick={() => {
+          setMessages((previous) => [
+            ...previous,
+            createMessage(`m${previous.length + 1}`, 'assistant'),
+          ]);
+        }}
+        type="button"
+      >
+        append assistant
+      </button>
+      <ChatThread slotProps={{ messageListScroller: { style: { height: 160 } } }} virtualization={false} />
+    </ChatRoot>
+  );
+}
+
 describe('ChatThread', () => {
   it('renders the default styled timeline with grouped rows, date dividers, and built-in actions', async () => {
+    let onEvent: ((event: ChatRealtimeEvent) => void) | undefined;
     const sendMessage = vi.fn(async () =>
       new ReadableStream({
         start(controller) {
@@ -179,6 +222,10 @@ describe('ChatThread', () => {
       }));
     const adapter: ChatAdapter = {
       sendMessage,
+      subscribe({ onEvent: nextOnEvent }) {
+        onEvent = nextOnEvent;
+        return () => {};
+      },
     };
 
     renderChatThread(
@@ -189,6 +236,15 @@ describe('ChatThread', () => {
       />,
       {
         adapter,
+        conversations: [
+          {
+            id: 'c1',
+            subtitle: 'Alpha subtitle',
+            title: 'Alpha conversation',
+            unreadCount: 1,
+            participants: [{ id: 'assistant-1', displayName: 'Assistant' }],
+          },
+        ],
         messages: [
           {
             author: { id: 'assistant-1', displayName: 'Assistant' },
@@ -223,6 +279,7 @@ describe('ChatThread', () => {
     expect(screen.getByRole('log')).to.have.attribute('aria-live', 'polite');
     expect(screen.getByText('First assistant message')).toBeVisible();
     expect(screen.getByText('Grouped follow-up')).toBeVisible();
+    expect(screen.getByText('New messages')).toBeVisible();
     expect(screen.getByText('2026-03-16')).toBeVisible();
     expect(screen.getByText('Streaming')).toBeVisible();
     expect(screen.getByText('AS')).toBeVisible();
@@ -232,6 +289,14 @@ describe('ChatThread', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
     await waitFor(() => {
       expect(sendMessage).toHaveBeenCalledTimes(1);
+    });
+
+    act(() => {
+      onEvent?.({ type: 'typing', conversationId: 'c1', userId: 'assistant-1', isTyping: true });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Assistant is typing')).toBeVisible();
     });
   });
 
@@ -272,6 +337,57 @@ describe('ChatThread', () => {
     expect(screen.getByRole('log')).toBeVisible();
     expect(screen.getByText('Alpha conversation')).toBeVisible();
     expect(screen.getByRole('button', { name: 'Archive' })).toBeVisible();
+  });
+
+  it('shows the default scroll-to-bottom affordance in the overlay when the thread is away from bottom', async () => {
+    render(
+      <ThemeProvider
+        theme={createTheme({
+          palette: {
+            Chat: {
+              composerBorder: '#d0d7de',
+            },
+          },
+        })}
+      >
+        <ControlledChatThread />
+      </ThemeProvider>,
+    );
+
+    const log = screen.getByRole('log');
+    Object.defineProperty(log, 'clientHeight', {
+      configurable: true,
+      value: 160,
+    });
+    Object.defineProperty(log, 'scrollHeight', {
+      configurable: true,
+      value: 320,
+    });
+    const scrollTo = vi.fn(({ top }: { top: number }) => {
+      log.scrollTop = top;
+    });
+    Object.defineProperty(log, 'scrollTo', {
+      configurable: true,
+      value: scrollTo,
+    });
+
+    act(() => {
+      log.scrollTop = 0;
+      fireEvent.scroll(log);
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' })).toBeVisible();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' }));
+
+    expect(scrollTo).toHaveBeenLastCalledWith({
+      behavior: 'smooth',
+      top: 320,
+    });
   });
 
   it.skipIf(isJSDOM)('uses the virtualized message list path by default', async () => {

@@ -125,6 +125,7 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
     ownerState,
     getItemKey,
     items,
+    overlay,
     onReachTop,
     overscan,
     renderItem,
@@ -137,6 +138,7 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
   void estimatedItemSize;
   void getItemKey;
   void items;
+  void overlay;
   void onReachTop;
   void overscan;
   void ownerState;

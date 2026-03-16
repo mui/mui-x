@@ -25,6 +25,7 @@ export interface ScrollToBottomAffordanceSlotProps {
 
 export interface ScrollToBottomAffordanceProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+  scrollBehavior?: ScrollBehavior;
   slots?: Partial<ScrollToBottomAffordanceSlots>;
   slotProps?: ScrollToBottomAffordanceSlotProps;
 }
@@ -37,7 +38,7 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
   props: ScrollToBottomAffordanceProps,
   ref: React.Ref<HTMLButtonElement>,
 ) {
-  const { slots, slotProps, ...other } = props;
+  const { scrollBehavior, slots, slotProps, ...other } = props;
   const { isAtBottom, scrollToBottom, unseenMessageCount } = useMessageListContext();
   const label = React.useMemo(
     () => createAriaLabel(unseenMessageCount),
@@ -63,7 +64,9 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
       type: 'button',
       'aria-label': label,
       onClick: () => {
-        scrollToBottom();
+        scrollToBottom({
+          behavior: scrollBehavior,
+        });
       },
     },
   });

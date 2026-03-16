@@ -10,6 +10,7 @@ export interface ChatThreadClasses {
   messageList: string;
   messageListScroller: string;
   messageListContent: string;
+  messageListOverlay: string;
 }
 
 export type ChatThreadClassKey = keyof ChatThreadClasses;
@@ -27,4 +28,5 @@ export const chatThreadClasses: ChatThreadClasses = generateUtilityClasses('MuiC
   'messageList',
   'messageListScroller',
   'messageListContent',
+  'messageListOverlay',
 ]);

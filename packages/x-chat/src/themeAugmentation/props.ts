@@ -2,10 +2,10 @@ import type * as React from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { ChatProviderProps } from '@mui/x-chat-headless';
 import type {
-  ScrollToBottomAffordanceProps as UnstyledScrollToBottomAffordanceProps,
-  TypingIndicatorProps as UnstyledTypingIndicatorProps,
-  UnreadMarkerProps as UnstyledUnreadMarkerProps,
-} from '@mui/x-chat-unstyled';
+  ChatScrollToBottomAffordanceProps as RealChatScrollToBottomAffordanceProps,
+  ChatTypingIndicatorProps as RealChatTypingIndicatorProps,
+  ChatUnreadMarkerProps as RealChatUnreadMarkerProps,
+} from '../ChatIndicators';
 import type { ChatConversationsProps } from '../ChatConversations';
 import type { ChatComposerProps as RealChatComposerProps } from '../ChatComposer';
 import type { ChatMessageProps } from '../ChatMessage';
@@ -32,15 +32,15 @@ export interface ChatBoxProps<Cursor = string>
 }
 
 export interface ChatTypingIndicatorProps
-  extends UnstyledTypingIndicatorProps,
+  extends RealChatTypingIndicatorProps,
     ChatStyledFoundationProps {}
 
 export interface ChatUnreadMarkerProps
-  extends UnstyledUnreadMarkerProps,
+  extends RealChatUnreadMarkerProps,
     ChatStyledFoundationProps {}
 
 export interface ChatScrollToBottomAffordanceProps
-  extends UnstyledScrollToBottomAffordanceProps,
+  extends RealChatScrollToBottomAffordanceProps,
     ChatStyledFoundationProps {}
 
 export interface ChatComponentsPropsList {

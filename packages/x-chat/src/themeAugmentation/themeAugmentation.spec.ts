@@ -68,6 +68,36 @@ createTheme({
         },
       },
     },
+    MuiChatTypingIndicator: {
+      defaultProps: {
+        className: 'chat-typing-indicator',
+      },
+      styleOverrides: {
+        root: {
+          color: 'red',
+        },
+      },
+    },
+    MuiChatUnreadMarker: {
+      defaultProps: {
+        messageId: 'm1',
+      },
+      styleOverrides: {
+        root: {
+          color: 'red',
+        },
+      },
+    },
+    MuiChatScrollToBottomAffordance: {
+      defaultProps: {
+        className: 'chat-scroll-affordance',
+      },
+      styleOverrides: {
+        root: {
+          color: 'red',
+        },
+      },
+    },
     MuiChatMessage: {
       defaultProps: {
         className: 'chat-message',

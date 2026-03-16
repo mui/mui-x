@@ -29,23 +29,26 @@ type ScrollAnchor = {
 type ChangeKind = 'none' | 'append' | 'prepend' | 'other';
 
 export interface MessageListRootHandle {
-  scrollToBottom(): void;
+  scrollToBottom(options?: { behavior?: ScrollBehavior }): void;
 }
 
 export interface MessageListRootSlots {
   messageList: React.ElementType;
   messageListScroller: React.ElementType;
   messageListContent: React.ElementType;
+  messageListOverlay: React.ElementType;
 }
 
 export interface MessageListRootSlotProps {
   messageList?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
   messageListScroller?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
   messageListContent?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListOverlay?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
 
 export interface MessageListRootProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   items?: string[];
+  overlay?: React.ReactNode;
   renderItem(params: { id: string; index: number }): React.ReactNode;
   getItemKey?: (id: string, index: number) => React.Key;
   estimatedItemSize?: number;
@@ -62,6 +65,7 @@ type MessageListRootComponent = ((
 
 interface MessageListViewProps {
   itemIds: string[];
+  overlay: React.ReactNode;
   renderItem: MessageListRootProps['renderItem'];
   getItemKey: NonNullable<MessageListRootProps['getItemKey']>;
   slots: Partial<MessageListRootSlots> | undefined;
@@ -329,14 +333,21 @@ function useMessageListBehavior(parameters: {
     return true;
   }, []);
 
-  const scrollToBottom = React.useCallback(() => {
+  const scrollToBottom = React.useCallback((options?: { behavior?: ScrollBehavior }) => {
     const root = rootRef.current;
 
     if (!root) {
       return;
     }
 
-    root.scrollTop = root.scrollHeight;
+    if (typeof root.scrollTo === 'function') {
+      root.scrollTo({
+        top: root.scrollHeight,
+        behavior: options?.behavior ?? 'auto',
+      });
+    } else {
+      root.scrollTop = root.scrollHeight;
+    }
     updateIsAtBottom();
     updateUnseenMessageCount(0);
     anchorRef.current = captureAnchor(itemIdsRef.current);
@@ -492,10 +503,11 @@ function useMessageListBehavior(parameters: {
 }
 
 function StaticMessageListView(props: MessageListViewProps) {
-  const { itemIds, renderItem, getItemKey, slots, slotProps, other, behavior } = props;
+  const { itemIds, overlay, renderItem, getItemKey, slots, slotProps, other, behavior } = props;
   const MessageList = slots?.messageList ?? 'div';
   const MessageListScroller = slots?.messageListScroller ?? 'div';
   const MessageListContent = slots?.messageListContent ?? 'div';
+  const MessageListOverlay = slots?.messageListOverlay ?? 'div';
   const messageListProps = useSlotProps({
     elementType: MessageList,
     externalSlotProps: slotProps?.messageList,
@@ -518,6 +530,11 @@ function StaticMessageListView(props: MessageListViewProps) {
     externalSlotProps: slotProps?.messageListContent,
     ownerState: behavior.ownerState,
   });
+  const messageListOverlayProps = useSlotProps({
+    elementType: MessageListOverlay,
+    externalSlotProps: slotProps?.messageListOverlay,
+    ownerState: behavior.ownerState,
+  });
 
   return (
     <MessageListContextProvider value={behavior.contextValue}>
@@ -537,6 +554,9 @@ function StaticMessageListView(props: MessageListViewProps) {
             ))}
           </MessageListContent>
         </MessageListScroller>
+        {overlay != null ? (
+          <MessageListOverlay {...messageListOverlayProps}>{overlay}</MessageListOverlay>
+        ) : null}
       </MessageList>
     </MessageListContextProvider>
   );
@@ -550,6 +570,7 @@ function VirtualizedMessageListView(
 ) {
   const {
     itemIds,
+    overlay,
     renderItem,
     getItemKey,
     slots,
@@ -601,6 +622,7 @@ function VirtualizedMessageListView(
   const MessageList = slots?.messageList ?? 'div';
   const MessageListScroller = slots?.messageListScroller ?? 'div';
   const MessageListContent = slots?.messageListContent ?? 'div';
+  const MessageListOverlay = slots?.messageListOverlay ?? 'div';
   const mergedRootRef = useForkRef(
     containerProps.ref as React.Ref<HTMLDivElement>,
     behavior.setRootElement,
@@ -628,6 +650,11 @@ function VirtualizedMessageListView(
     externalSlotProps: slotProps?.messageListContent,
     ownerState: behavior.ownerState,
   });
+  const messageListOverlayProps = useSlotProps({
+    elementType: MessageListOverlay,
+    externalSlotProps: slotProps?.messageListOverlay,
+    ownerState: behavior.ownerState,
+  });
   const renderedRows = virtualizer.api.getters.getRows();
 
   return (
@@ -638,6 +665,9 @@ function VirtualizedMessageListView(
           <div className="MessageList-positioner" {...positionerProps} />
           <MessageListContent {...messageListContentProps}>{renderedRows}</MessageListContent>
         </MessageListScroller>
+        {overlay != null ? (
+          <MessageListOverlay {...messageListOverlayProps}>{overlay}</MessageListOverlay>
+        ) : null}
       </MessageList>
     </MessageListContextProvider>
   );
@@ -649,6 +679,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
 ) {
   const {
     items: itemsProp,
+    overlay = null,
     renderItem,
     getItemKey = (id) => id,
     estimatedItemSize = DEFAULT_ESTIMATED_ITEM_SIZE,
@@ -694,6 +725,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
         behavior={behavior}
         getItemKey={getItemKey}
         itemIds={itemIds}
+        overlay={overlay}
         other={other}
         renderItem={renderItem}
         slotProps={slotProps}
@@ -708,6 +740,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
       estimatedItemSize={estimatedItemSize}
       getItemKey={getItemKey}
       itemIds={itemIds}
+      overlay={overlay}
       other={other}
       overscan={overscan}
       renderItem={renderItem}

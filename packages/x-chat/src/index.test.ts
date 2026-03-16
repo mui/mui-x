@@ -1,6 +1,7 @@
 import * as chat from '@mui/x-chat';
 import * as chatComposerSubpath from '@mui/x-chat/ChatComposer';
 import * as chatConversationsSubpath from '@mui/x-chat/ChatConversations';
+import * as chatIndicatorsSubpath from '@mui/x-chat/ChatIndicators';
 import * as chatMessageSubpath from '@mui/x-chat/ChatMessage';
 import * as chatThreadSubpath from '@mui/x-chat/ChatThread';
 import * as headlessBridge from '@mui/x-chat/headless';
@@ -153,7 +154,10 @@ import type {
   ChatConversationsProps as ThemeAugmentationChatConversationsProps,
   ChatMessageProps as ThemeAugmentationChatMessageProps,
   ChatComponents as ThemeAugmentationChatComponents,
+  ChatScrollToBottomAffordanceProps as ThemeAugmentationChatScrollToBottomAffordanceProps,
   ChatThreadProps as ThemeAugmentationChatThreadProps,
+  ChatTypingIndicatorProps as ThemeAugmentationChatTypingIndicatorProps,
+  ChatUnreadMarkerProps as ThemeAugmentationChatUnreadMarkerProps,
   PaletteChat as ThemeAugmentationPaletteChat,
 } from '@mui/x-chat/themeAugmentation';
 import type {
@@ -224,15 +228,24 @@ describe('x-chat package scaffold', () => {
       'ChatMessageGroup',
       'ChatMessageMeta',
       'ChatMessageRoot',
+      'ChatScrollToBottomAffordance',
       'ChatThread',
+      'ChatTypingIndicator',
+      'ChatUnreadMarker',
       'chatComposerClasses',
       'chatConversationsClasses',
       'chatMessageClasses',
+      'chatScrollToBottomAffordanceClasses',
       'chatThreadClasses',
+      'chatTypingIndicatorClasses',
+      'chatUnreadMarkerClasses',
       'getChatComposerUtilityClass',
       'getChatConversationsUtilityClass',
       'getChatMessageUtilityClass',
+      'getChatScrollToBottomAffordanceUtilityClass',
       'getChatThreadUtilityClass',
+      'getChatTypingIndicatorUtilityClass',
+      'getChatUnreadMarkerUtilityClass',
     ];
     const expectedChatComposerSubpathExports = [
       'ChatComposer',
@@ -248,6 +261,17 @@ describe('x-chat package scaffold', () => {
       'ChatConversations',
       'chatConversationsClasses',
       'getChatConversationsUtilityClass',
+    ];
+    const expectedChatIndicatorsSubpathExports = [
+      'ChatScrollToBottomAffordance',
+      'ChatTypingIndicator',
+      'ChatUnreadMarker',
+      'chatScrollToBottomAffordanceClasses',
+      'chatTypingIndicatorClasses',
+      'chatUnreadMarkerClasses',
+      'getChatScrollToBottomAffordanceUtilityClass',
+      'getChatTypingIndicatorUtilityClass',
+      'getChatUnreadMarkerUtilityClass',
     ];
     const expectedChatThreadSubpathExports = [
       'ChatThread',
@@ -343,6 +367,7 @@ describe('x-chat package scaffold', () => {
     expect(Object.keys(chatConversationsSubpath).sort()).toEqual(
       expectedChatConversationsSubpathExports,
     );
+    expect(Object.keys(chatIndicatorsSubpath).sort()).toEqual(expectedChatIndicatorsSubpathExports);
     expect(Object.keys(chatMessageSubpath).sort()).toEqual(expectedChatMessageSubpathExports);
     expect(Object.keys(chatThreadSubpath).sort()).toEqual(expectedChatThreadSubpathExports);
     expect(Object.keys(themeAugmentation)).toEqual([]);
@@ -474,6 +499,25 @@ describe('x-chat package scaffold', () => {
     expect(chat.chatConversationsClasses).toBe(chatConversationsSubpath.chatConversationsClasses);
     expect(chat.getChatConversationsUtilityClass).toBe(
       chatConversationsSubpath.getChatConversationsUtilityClass,
+    );
+    expect(chat.ChatTypingIndicator).toBe(chatIndicatorsSubpath.ChatTypingIndicator);
+    expect(chat.ChatUnreadMarker).toBe(chatIndicatorsSubpath.ChatUnreadMarker);
+    expect(chat.ChatScrollToBottomAffordance).toBe(
+      chatIndicatorsSubpath.ChatScrollToBottomAffordance,
+    );
+    expect(chat.chatTypingIndicatorClasses).toBe(chatIndicatorsSubpath.chatTypingIndicatorClasses);
+    expect(chat.chatUnreadMarkerClasses).toBe(chatIndicatorsSubpath.chatUnreadMarkerClasses);
+    expect(chat.chatScrollToBottomAffordanceClasses).toBe(
+      chatIndicatorsSubpath.chatScrollToBottomAffordanceClasses,
+    );
+    expect(chat.getChatTypingIndicatorUtilityClass).toBe(
+      chatIndicatorsSubpath.getChatTypingIndicatorUtilityClass,
+    );
+    expect(chat.getChatUnreadMarkerUtilityClass).toBe(
+      chatIndicatorsSubpath.getChatUnreadMarkerUtilityClass,
+    );
+    expect(chat.getChatScrollToBottomAffordanceUtilityClass).toBe(
+      chatIndicatorsSubpath.getChatScrollToBottomAffordanceUtilityClass,
     );
     expect(chat.ChatMessage).toBe(chatMessageSubpath.ChatMessage);
     expect(chat.ChatMessageRoot).toBe(chatMessageSubpath.ChatMessageRoot);
@@ -694,6 +738,16 @@ describe('x-chat package scaffold', () => {
       className: 'chat-message',
       messageId: 'm1',
     };
+    const chatTypingIndicatorProps: ThemeAugmentationChatTypingIndicatorProps = {
+      className: 'chat-typing-indicator',
+    };
+    const chatUnreadMarkerProps: ThemeAugmentationChatUnreadMarkerProps = {
+      messageId: 'm1',
+    };
+    const chatScrollToBottomAffordanceProps: ThemeAugmentationChatScrollToBottomAffordanceProps =
+      {
+        className: 'chat-scroll-affordance',
+      };
     const chatThreadProps: ThemeAugmentationChatThreadProps = {
       className: 'chat-thread',
     };
@@ -794,6 +848,9 @@ describe('x-chat package scaffold', () => {
     expect(messageChunkAlias.type).toBe('tool-output-available');
     expect(providerProps.adapter).toBe(adapter);
     expect(chatPalette.userMessageBg).toBe('#1976d2');
+    expect(chatTypingIndicatorProps.className).toBe('chat-typing-indicator');
+    expect(chatUnreadMarkerProps.messageId).toBe('m1');
+    expect(chatScrollToBottomAffordanceProps.className).toBe('chat-scroll-affordance');
     expect(chatComponents.MuiChatBox?.styleOverrides?.root).toBeDefined();
     expect(chatBoxProps.className).toBe('chat-box');
     expect(chatComposerProps.className).toBe('chat-composer');

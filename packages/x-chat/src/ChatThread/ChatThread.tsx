@@ -34,6 +34,11 @@ import {
   ChatMessage as StyledChatMessage,
   ChatMessageGroup,
 } from '../ChatMessage';
+import {
+  ChatScrollToBottomAffordance,
+  ChatTypingIndicator,
+  ChatUnreadMarker,
+} from '../ChatIndicators';
 import { styled, useChatThemeProps } from '../internals/material/chatStyled';
 import { chatCssVarKeys, getChatCssVars } from '../internals/material/chatThemeVars';
 import { chatThreadClasses, getChatThreadUtilityClass } from './chatThreadClasses';
@@ -47,6 +52,7 @@ export interface ChatThreadSlots {
   messageList: UnstyledMessageListRootSlots['messageList'];
   messageListScroller: UnstyledMessageListRootSlots['messageListScroller'];
   messageListContent: UnstyledMessageListRootSlots['messageListContent'];
+  messageListOverlay: UnstyledMessageListRootSlots['messageListOverlay'];
 }
 
 export interface ChatThreadSlotProps {
@@ -58,6 +64,7 @@ export interface ChatThreadSlotProps {
   messageList?: UnstyledMessageListRootSlotProps['messageList'];
   messageListScroller?: UnstyledMessageListRootSlotProps['messageListScroller'];
   messageListContent?: UnstyledMessageListRootSlotProps['messageListContent'];
+  messageListOverlay?: UnstyledMessageListRootSlotProps['messageListOverlay'];
 }
 
 export interface ChatThreadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -69,9 +76,11 @@ export interface ChatThreadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   onReachTop?: UnstyledMessageListRootProps['onReachTop'];
   overscan?: UnstyledMessageListRootProps['overscan'];
   renderItem?: UnstyledMessageListRootProps['renderItem'];
+  scrollToBottomAffordance?: React.ReactNode;
   slotProps?: ChatThreadSlotProps;
   slots?: Partial<ChatThreadSlots>;
   sx?: SxProps<Theme>;
+  typingIndicator?: React.ReactNode;
   virtualization?: UnstyledMessageListRootProps['virtualization'];
 }
 
@@ -179,6 +188,7 @@ const ChatThreadMessageListSlot = styled('div', {
   flexDirection: 'column',
   minHeight: 0,
   minWidth: 0,
+  position: 'relative',
 }));
 
 const ChatThreadMessageListScrollerSlot = styled('div', {
@@ -201,6 +211,23 @@ const ChatThreadMessageListContentSlot = styled('div', {
   paddingInline: theme.spacing(2),
   [`& > [data-message-list-row] + [data-message-list-row]`]: {
     marginBlockStart: theme.spacing(1.5),
+  },
+}));
+
+const ChatThreadMessageListOverlaySlot = styled('div', {
+  name: 'MuiChatThread',
+  slot: 'MessageListOverlay',
+})(({ theme }) => ({
+  alignItems: 'flex-end',
+  bottom: theme.spacing(2),
+  display: 'flex',
+  insetInlineEnd: theme.spacing(2),
+  justifyContent: 'flex-end',
+  pointerEvents: 'none',
+  position: 'absolute',
+  zIndex: 1,
+  '& > *': {
+    pointerEvents: 'auto',
   },
 }));
 
@@ -244,6 +271,7 @@ function DefaultThreadRow(props: { id: string; index: number }) {
 
   return (
     <React.Fragment>
+      <ChatUnreadMarker index={index} messageId={id} />
       <ChatDateDivider index={index} messageId={id} />
       <ChatMessageGroup index={index} messageId={id}>
         <StyledChatMessage.Avatar />
@@ -307,9 +335,11 @@ export const ChatThread = React.forwardRef(function ChatThread(
     onReachTop,
     overscan,
     renderItem,
+    scrollToBottomAffordance = <ChatScrollToBottomAffordance />,
     slotProps,
     slots,
     sx,
+    typingIndicator = <ChatTypingIndicator />,
     virtualization,
     ...other
   } = props;
@@ -325,6 +355,7 @@ export const ChatThread = React.forwardRef(function ChatThread(
   const MessageList = slots?.messageList ?? ChatThreadMessageListSlot;
   const MessageListScroller = slots?.messageListScroller ?? ChatThreadMessageListScrollerSlot;
   const MessageListContent = slots?.messageListContent ?? ChatThreadMessageListContentSlot;
+  const MessageListOverlay = slots?.messageListOverlay ?? ChatThreadMessageListOverlaySlot;
   const resolvedRenderItem = React.useCallback<NonNullable<ChatThreadProps['renderItem']>>(
     ({ id, index }) => renderItem?.({ id, index }) ?? <DefaultThreadRow id={id} index={index} />,
     [renderItem],
@@ -365,6 +396,7 @@ export const ChatThread = React.forwardRef(function ChatThread(
         getItemKey={getItemKey}
         items={items}
         onReachTop={onReachTop}
+        overlay={scrollToBottomAffordance}
         overscan={overscan}
         renderItem={resolvedRenderItem}
         slotProps={{
@@ -377,14 +409,20 @@ export const ChatThread = React.forwardRef(function ChatThread(
             slotProps?.messageListContent,
             chatThreadClasses.messageListContent,
           ),
+          messageListOverlay: mergeSlotPropsWithClassName(
+            slotProps?.messageListOverlay,
+            chatThreadClasses.messageListOverlay,
+          ),
         }}
         slots={{
           messageList: MessageList,
           messageListScroller: MessageListScroller,
           messageListContent: MessageListContent,
+          messageListOverlay: MessageListOverlay,
         }}
         virtualization={virtualization}
       />
+      {typingIndicator}
     </ThreadRoot>
   );
 });
