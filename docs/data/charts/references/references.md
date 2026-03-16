@@ -45,15 +45,15 @@ For example, you can create a dashed line with `lineStyle={{ strokeDasharray: '1
 
 {{"demo": "ReferenceLineStyled.js"}}
 
-## Reference area 🧪
+## Reference area
 
-:::warning
-The reference area component is not yet available.
-This section describes the planned API.
-:::
+A reference area highlights a range on the chart by rendering a `<rect />` element.
+Provide `x1`/`x2` for the horizontal bounds and `y1`/`y2` for the vertical bounds.
 
-The reference area highlights a range between two values, creating a shaded region on the chart.
-This is useful for indicating acceptable ranges, confidence intervals, or notable regions.
+Use the special values `"start"` and `"end"` to extend the area to the min or max of the axis domain.
+Omitted bounds also default to the full axis range.
+
+The component uses the `useXScale()` and `useYScale()` hooks to convert data values into pixel coordinates.
 
 {{"demo": "ReferenceAreaBasic.js"}}
 
