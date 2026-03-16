@@ -23,7 +23,7 @@ import { useChartsDataProviderPremiumProps } from './useChartsDataProviderPremiu
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
-  version: (process.env as any).MUI_VERSION,
+  version: process.env.MUI_VERSION!,
   name: 'x-charts-premium' as const,
 };
 

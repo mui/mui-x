@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
@@ -65,7 +65,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   const { open, anchor, occurrences, day, onClose } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
   const { subscribeCloseHandler } = useEventDialogContext();
 
