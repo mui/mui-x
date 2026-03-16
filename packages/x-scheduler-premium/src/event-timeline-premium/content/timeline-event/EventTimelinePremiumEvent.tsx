@@ -6,7 +6,11 @@ import { useId } from '@base-ui/utils/useId';
 import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
+import {
+  EventDragPreview,
+  getPaletteVariants,
+  useEventDialogContext,
+} from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
@@ -35,6 +39,16 @@ const EventTimelinePremiumEventRoot = styled('div', {
   },
   '&:hover': {
     backgroundColor: 'var(--event-surface-subtle-hover)',
+  },
+  '&[data-selected]': {
+    backgroundColor: 'var(--event-surface-selected)',
+    color: 'var(--event-on-surface-selected)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-selected-hover)',
+    },
+    '&::before': {
+      background: 'var(--event-surface-selected)',
+    },
   },
   [`&:hover .${eventTimelinePremiumClasses.eventResizeHandler}`]: {
     opacity: 1,
@@ -112,6 +126,9 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
+  const { data: dialogData } = useEventDialogContext();
+
+  const isSelected = dialogData != null && dialogData.id === occurrence.id;
 
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
@@ -139,6 +156,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       '--row-index': occurrence.position.firstIndex,
     } as React.CSSProperties,
     'data-palette': color,
+    'data-selected': isSelected || undefined,
     ...other,
   };
 

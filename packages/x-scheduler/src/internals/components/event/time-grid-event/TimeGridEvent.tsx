@@ -13,6 +13,7 @@ import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
+import { useEventDialogContext } from '../../event-dialog/EventDialog';
 
 const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   display: '-webkit-box',
@@ -59,6 +60,16 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   },
   '&:hover': {
     backgroundColor: 'var(--event-surface-subtle-hover)',
+  },
+  '&[data-selected]': {
+    backgroundColor: 'var(--event-surface-selected)',
+    color: 'var(--event-on-surface-selected)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-selected-hover)',
+    },
+    '&::before': {
+      background: 'var(--event-surface-selected)',
+    },
   },
   '&[role="button"]': {
     cursor: 'pointer',
@@ -121,6 +132,9 @@ const TimeGridEventTitle = styled(Typography, {
     fontSize: '11px',
     lineHeight: '11px',
   },
+  '[data-selected] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
   ...linesClampStyles(1),
 }));
 
@@ -132,6 +146,9 @@ const TimeGridEventTime = styled('time', {
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
+  '[data-selected] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
   '&[data-lines-clamp]': {
     ...linesClampStyles(1),
     paddingInlineEnd: theme.spacing(1.5),
@@ -154,6 +171,9 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   bottom: 3,
   padding: theme.spacing(0.25),
   color: 'var(--event-on-surface-subtle-secondary)',
+  '[data-selected] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
   '@container (max-width: 50px)': {
     display: 'none',
   },
@@ -196,6 +216,9 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
+  const { data: dialogData } = useEventDialogContext();
+
+  const isSelected = dialogData != null && dialogData.id === occurrence.id;
 
   // Selector hooks
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
@@ -299,6 +322,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
       data-palette={color}
+      data-selected={isSelected || undefined}
       {...sharedProps}
       className={clsx(classes.timeGridEvent, sharedProps.className)}
     >

@@ -14,6 +14,10 @@ export type ContextValue<TData> = {
   onClose: () => void;
   isOpen: boolean;
   /**
+   * The data associated with the currently open modal, or null if the modal is closed.
+   */
+  data: TData | null;
+  /**
    * A component can subscribe to a modal close event and react to it
    * e.g. Closing the `MoreEventsPopover` when an `EventDialog` closes
    */

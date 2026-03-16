@@ -55,8 +55,14 @@ export function createModal<TData>(config: CreateModalConfig) {
     }, []);
 
     const contextValue = React.useMemo(
-      () => ({ onOpen, onClose, isOpen: state.isOpen || false, subscribeCloseHandler }),
-      [onOpen, onClose, state.isOpen, subscribeCloseHandler],
+      () => ({
+        onOpen,
+        onClose,
+        isOpen: state.isOpen || false,
+        data: state.data,
+        subscribeCloseHandler,
+      }),
+      [onOpen, onClose, state.isOpen, state.data, subscribeCloseHandler],
     );
 
     return (

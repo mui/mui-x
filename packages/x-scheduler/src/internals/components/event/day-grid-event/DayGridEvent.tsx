@@ -23,6 +23,7 @@ import { useFormatTime } from '../../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
+import { useEventDialogContext } from '../../event-dialog/EventDialog';
 
 const ARROW_DEPTH = 8; // px - depth of the chevron point
 const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
@@ -62,6 +63,12 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       '&:hover': {
         backgroundColor: 'var(--event-surface-bold-hover)',
       },
+      '&[data-selected]': {
+        backgroundColor: 'var(--event-surface-selected)',
+        '&:hover': {
+          backgroundColor: 'var(--event-surface-selected-hover)',
+        },
+      },
       [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
         color: 'var(--event-on-surface-bold)',
       },
@@ -92,6 +99,12 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       '&:active': {},
       '&:hover': {
         backgroundColor: (theme.vars || theme).palette.action.hover,
+      },
+      '&[data-selected]': {
+        backgroundColor: 'var(--event-surface-subtle)',
+        '&:hover': {
+          backgroundColor: 'var(--event-surface-subtle-hover)',
+        },
       },
     },
   }),
@@ -124,6 +137,12 @@ const DayGridEventTitle = styled('p', {
   '[data-variant="compact"] &': {
     color: (theme.vars || theme).palette.text.primary,
   },
+  '[data-selected] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
+  '[data-variant="compact"][data-selected] &': {
+    color: 'var(--event-on-surface-subtle-primary)',
+  },
 }));
 
 const DayGridEventTime = styled('time', {
@@ -146,6 +165,12 @@ const DayGridEventTime = styled('time', {
   '[data-variant="compact"] &': {
     color: (theme.vars || theme).palette.text.secondary,
   },
+  '[data-selected] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
+  '[data-variant="compact"][data-selected] &': {
+    color: 'var(--event-on-surface-subtle-secondary)',
+  },
 }));
 
 const DayGridEventRecurringIcon = styled(RepeatRounded, {
@@ -155,6 +180,12 @@ const DayGridEventRecurringIcon = styled(RepeatRounded, {
   color: (theme.vars || theme).palette.text.primary,
   fontSize: '1rem',
   justifySelf: 'flex-end',
+  '[data-selected] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
+  '[data-variant="compact"][data-selected] &': {
+    color: 'var(--event-on-surface-bold)',
+  },
 }));
 
 const DayGridEventResizeHandler = styled(CalendarGrid.DayEventResizeHandler, {
@@ -266,6 +297,9 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
+  const { data: dialogData } = useEventDialogContext();
+
+  const isSelected = dialogData != null && dialogData.id === occurrence.id;
 
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
@@ -372,6 +406,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ref: forwardedRef,
     'data-variant': variant,
     'data-palette': color,
+    'data-selected': isSelected || undefined,
     style: {
       '--grid-row': occurrence.position.index,
       '--grid-column-span': occurrence.position.daySpan,
