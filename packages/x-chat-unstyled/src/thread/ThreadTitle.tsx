@@ -6,11 +6,11 @@ import { useThreadContext } from './internals/ThreadContext';
 import { type ThreadTitleOwnerState } from './thread.types';
 
 export interface ThreadTitleSlots {
-  root: React.ElementType;
+  title: React.ElementType;
 }
 
 export interface ThreadTitleSlotProps {
-  root?: SlotComponentProps<'div', {}, ThreadTitleOwnerState>;
+  title?: SlotComponentProps<'div', {}, ThreadTitleOwnerState>;
 }
 
 export interface ThreadTitleProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -36,10 +36,10 @@ export const ThreadTitle = React.forwardRef(function ThreadTitle(
   };
   const ownerState = useThreadContext();
   void ownerStateProp;
-  const Root = slots?.root ?? 'div';
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const Title = slots?.title ?? 'div';
+  const titleProps = useSlotProps({
+    elementType: Title,
+    externalSlotProps: slotProps?.title,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -47,5 +47,5 @@ export const ThreadTitle = React.forwardRef(function ThreadTitle(
     },
   });
 
-  return <Root {...rootProps}>{ownerState.conversation?.title ?? null}</Root>;
+  return <Title {...titleProps}>{ownerState.conversation?.title ?? null}</Title>;
 }) as ThreadTitleComponent;

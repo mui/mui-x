@@ -225,11 +225,11 @@ describe('ThreadRoot', () => {
         ]}
       >
         <ThreadRoot slots={{ root: CustomRoot }}>
-          <ThreadHeader slots={{ root: CustomHeader }}>
-            <ThreadTitle slots={{ root: CustomTitle }} />
-            <ThreadSubtitle slots={{ root: CustomSubtitle }} />
+          <ThreadHeader slots={{ header: CustomHeader }}>
+            <ThreadTitle slots={{ title: CustomTitle }} />
+            <ThreadSubtitle slots={{ subtitle: CustomSubtitle }} />
           </ThreadHeader>
-          <ThreadActions slots={{ root: CustomActions }}>
+          <ThreadActions slots={{ actions: CustomActions }}>
             <button type="button">Reply</button>
           </ThreadActions>
         </ThreadRoot>

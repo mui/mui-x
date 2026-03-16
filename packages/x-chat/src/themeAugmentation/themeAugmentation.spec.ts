@@ -9,6 +9,11 @@ createTheme({
       defaultProps: {
         adapter,
         className: 'chat-box',
+        localeText: {
+          composerSendButtonLabel: 'Send',
+        },
+        // @ts-expect-error unsupported alias
+        locale: {},
       },
       styleOverrides: {
         root: {
@@ -46,6 +51,21 @@ createTheme({
         // @ts-expect-error invalid MuiChatComposer class key
         toolbar: {
           borderColor: 'blue',
+        },
+      },
+    },
+    MuiChatThread: {
+      defaultProps: {
+        className: 'chat-thread',
+        renderItem: () => null,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid MuiChatThread class key
+        header: {
+          backgroundColor: 'blue',
         },
       },
     },

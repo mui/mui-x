@@ -6,11 +6,11 @@ import { useThreadContext } from './internals/ThreadContext';
 import { type ThreadSubtitleOwnerState } from './thread.types';
 
 export interface ThreadSubtitleSlots {
-  root: React.ElementType;
+  subtitle: React.ElementType;
 }
 
 export interface ThreadSubtitleSlotProps {
-  root?: SlotComponentProps<'div', {}, ThreadSubtitleOwnerState>;
+  subtitle?: SlotComponentProps<'div', {}, ThreadSubtitleOwnerState>;
 }
 
 export interface ThreadSubtitleProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -36,10 +36,10 @@ export const ThreadSubtitle = React.forwardRef(function ThreadSubtitle(
   };
   const ownerState = useThreadContext();
   void ownerStateProp;
-  const Root = slots?.root ?? 'div';
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const Subtitle = slots?.subtitle ?? 'div';
+  const subtitleProps = useSlotProps({
+    elementType: Subtitle,
+    externalSlotProps: slotProps?.subtitle,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -47,5 +47,5 @@ export const ThreadSubtitle = React.forwardRef(function ThreadSubtitle(
     },
   });
 
-  return <Root {...rootProps}>{ownerState.conversation?.subtitle ?? null}</Root>;
+  return <Subtitle {...subtitleProps}>{ownerState.conversation?.subtitle ?? null}</Subtitle>;
 }) as ThreadSubtitleComponent;

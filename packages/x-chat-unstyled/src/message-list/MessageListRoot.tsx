@@ -33,11 +33,15 @@ export interface MessageListRootHandle {
 }
 
 export interface MessageListRootSlots {
-  root: React.ElementType;
+  messageList: React.ElementType;
+  messageListScroller: React.ElementType;
+  messageListContent: React.ElementType;
 }
 
 export interface MessageListRootSlotProps {
-  root?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageList?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListScroller?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListContent?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
 
 export interface MessageListRootProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -489,10 +493,17 @@ function useMessageListBehavior(parameters: {
 
 function StaticMessageListView(props: MessageListViewProps) {
   const { itemIds, renderItem, getItemKey, slots, slotProps, other, behavior } = props;
-  const Root = slots?.root ?? 'div';
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const MessageList = slots?.messageList ?? 'div';
+  const MessageListScroller = slots?.messageListScroller ?? 'div';
+  const MessageListContent = slots?.messageListContent ?? 'div';
+  const messageListProps = useSlotProps({
+    elementType: MessageList,
+    externalSlotProps: slotProps?.messageList,
+    ownerState: behavior.ownerState,
+  });
+  const messageListScrollerProps = useSlotProps({
+    elementType: MessageListScroller,
+    externalSlotProps: slotProps?.messageListScroller,
     externalForwardedProps: other,
     ownerState: behavior.ownerState,
     additionalProps: {
@@ -502,22 +513,31 @@ function StaticMessageListView(props: MessageListViewProps) {
       onScroll: behavior.handleScroll,
     },
   });
+  const messageListContentProps = useSlotProps({
+    elementType: MessageListContent,
+    externalSlotProps: slotProps?.messageListContent,
+    ownerState: behavior.ownerState,
+  });
 
   return (
     <MessageListContextProvider value={behavior.contextValue}>
-      <Root {...rootProps}>
-        {itemIds.map((id, index) => (
-          <MessageListRenderedRow
-            getItemKey={getItemKey}
-            id={id}
-            index={index}
-            key={getItemKey(id, index)}
-            onRowResize={behavior.scheduleResizeRestore}
-            registerRowElement={behavior.registerRowElement}
-            renderItem={renderItem}
-          />
-        ))}
-      </Root>
+      <MessageList {...messageListProps}>
+        <MessageListScroller {...messageListScrollerProps}>
+          <MessageListContent {...messageListContentProps}>
+            {itemIds.map((id, index) => (
+              <MessageListRenderedRow
+                getItemKey={getItemKey}
+                id={id}
+                index={index}
+                key={getItemKey(id, index)}
+                onRowResize={behavior.scheduleResizeRestore}
+                registerRowElement={behavior.registerRowElement}
+                renderItem={renderItem}
+              />
+            ))}
+          </MessageListContent>
+        </MessageListScroller>
+      </MessageList>
     </MessageListContextProvider>
   );
 }
@@ -578,14 +598,21 @@ function VirtualizedMessageListView(
   const containerProps = virtualizer.store.use(LayoutList.selectors.containerProps);
   const contentProps = virtualizer.store.use(LayoutList.selectors.contentProps);
   const positionerProps = virtualizer.store.use(LayoutList.selectors.positionerProps);
-  const Root = slots?.root ?? 'div';
+  const MessageList = slots?.messageList ?? 'div';
+  const MessageListScroller = slots?.messageListScroller ?? 'div';
+  const MessageListContent = slots?.messageListContent ?? 'div';
   const mergedRootRef = useForkRef(
     containerProps.ref as React.Ref<HTMLDivElement>,
     behavior.setRootElement,
   );
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const messageListProps = useSlotProps({
+    elementType: MessageList,
+    externalSlotProps: slotProps?.messageList,
+    ownerState: behavior.ownerState,
+  });
+  const messageListScrollerProps = useSlotProps({
+    elementType: MessageListScroller,
+    externalSlotProps: slotProps?.messageListScroller,
     externalForwardedProps: other,
     ownerState: behavior.ownerState,
     additionalProps: {
@@ -596,17 +623,22 @@ function VirtualizedMessageListView(
       onScroll: behavior.handleScroll,
     },
   });
+  const messageListContentProps = useSlotProps({
+    elementType: MessageListContent,
+    externalSlotProps: slotProps?.messageListContent,
+    ownerState: behavior.ownerState,
+  });
   const renderedRows = virtualizer.api.getters.getRows();
 
   return (
     <MessageListContextProvider value={behavior.contextValue}>
-      <Root {...rootProps}>
-        <React.Fragment>
+      <MessageList {...messageListProps}>
+        <MessageListScroller {...messageListScrollerProps}>
           <div className="MessageList-filler" {...contentProps} />
           <div className="MessageList-positioner" {...positionerProps} />
-          {renderedRows}
-        </React.Fragment>
-      </Root>
+          <MessageListContent {...messageListContentProps}>{renderedRows}</MessageListContent>
+        </MessageListScroller>
+      </MessageList>
     </MessageListContextProvider>
   );
 }
@@ -630,8 +662,14 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
   const defaultItems = useMessageIds();
   const { hasMoreHistory, loadMoreHistory, messages } = useChat();
   const itemIds = itemsProp ?? defaultItems;
+  // Defer virtualization to after hydration so the first client render
+  // matches the server render (which always uses the static view).
+  const [isHydrated, setIsHydrated] = React.useState(false);
+  React.useEffect(() => {
+    setIsHydrated(true);
+  }, []);
   const virtualizationEnabled =
-    virtualization && typeof ResizeObserver !== 'undefined' && typeof window !== 'undefined';
+    virtualization && isHydrated && typeof ResizeObserver !== 'undefined';
   const behavior = useMessageListBehavior({
     itemIds,
     estimatedItemSize,

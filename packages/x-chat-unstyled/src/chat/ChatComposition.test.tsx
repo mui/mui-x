@@ -247,7 +247,7 @@ const ChatCompositionHarness = React.forwardRef(function ChatCompositionHarness(
                 </MessageGroup>
               </React.Fragment>
             )}
-            slots={{ root: RootWithAffordance }}
+            slots={{ messageList: RootWithAffordance }}
             style={{ height: 180, overflowY: 'auto' }}
             virtualization={false}
           />
@@ -318,6 +318,30 @@ describe('ChatComposition', () => {
     await waitFor(() => {
       expect(screen.getByTestId('message-action-c1-m1')).toHaveFocus();
       expect(screen.getByRole('log')).to.contain.text('assistant:c1-m3');
+    });
+  });
+
+  it.skipIf(isJSDOM)('keeps keyboard focus behavior stable under rtl direction', async () => {
+    const handleRef = React.createRef<ChatCompositionHandle>();
+    const view = render(
+      <div dir="rtl">
+        <ChatCompositionHarness includeBeforeAfterButtons ref={handleRef} />
+      </div>,
+    );
+
+    const beforeButton = screen.getByRole('button', { name: 'Before list' });
+    const composerInput = screen.getByTestId('composer-input');
+
+    beforeButton.focus();
+    await view.user.keyboard('{Tab}');
+    expect(screen.getByTestId('message-action-c1-m1')).toHaveFocus();
+
+    act(() => {
+      handleRef.current!.switchConversation('c2');
+    });
+
+    await waitFor(() => {
+      expect(composerInput).toHaveFocus();
     });
   });
 

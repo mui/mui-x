@@ -180,7 +180,7 @@ function ControlledMessageListWithAffordance() {
             {id}
           </div>
         )}
-        slots={{ root: RootWithAffordance }}
+        slots={{ messageList: RootWithAffordance }}
         style={{ height: 160, overflowY: 'auto' }}
         virtualization={false}
       />
@@ -305,6 +305,88 @@ describe('Indicators', () => {
     await waitFor(() => {
       expect(screen.getByText('Alice is typing')).to.have.attribute('aria-live', 'polite');
     });
+  });
+
+  it('uses localeText for typing, unread, and scroll affordance labels', async () => {
+    let onEvent: ((event: ChatRealtimeEvent) => void) | undefined;
+    const adapter = createAdapter({
+      subscribe({ onEvent: nextOnEvent }) {
+        onEvent = nextOnEvent;
+        return () => {};
+      },
+    });
+
+    render(
+      <ChatRoot
+        adapter={adapter}
+        defaultActiveConversationId="c1"
+        defaultConversations={[
+          {
+            id: 'c1',
+            participants: [{ id: 'u1', displayName: 'Alice' }],
+            unreadCount: 1,
+          },
+        ]}
+        defaultMessages={[createMessage('m1', 'assistant')]}
+        localeText={{
+          typingIndicatorLabel: (users) =>
+            `${users.map((user) => user.displayName ?? user.id).join(', ')} schreibt`,
+          unreadMarkerLabel: 'Neue Nachrichten',
+          scrollToBottomLabel: 'Nach unten',
+          scrollToBottomWithCountLabel: (count) => `Nach unten, ${count} neu`,
+        }}
+      >
+        <TypingIndicator />
+        <UnreadMarker messageId="m1" />
+      </ChatRoot>,
+    );
+
+    act(() => {
+      onEvent?.({ type: 'typing', conversationId: 'c1', userId: 'u1', isTyping: true });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Alice schreibt')).to.have.attribute('aria-live', 'polite');
+    });
+
+    expect(screen.getByText('Neue Nachrichten')).not.to.equal(null);
+
+    const scrollToBottom = vi.fn();
+    const { rerender } = render(
+      <MessageListContextProvider
+        value={{ isAtBottom: false, scrollToBottom, unseenMessageCount: 2 }}
+      >
+        <ChatRoot
+          adapter={createAdapter()}
+          localeText={{
+            scrollToBottomLabel: 'Nach unten',
+            scrollToBottomWithCountLabel: (count) => `Nach unten, ${count} neu`,
+          }}
+        >
+          <ScrollToBottomAffordance />
+        </ChatRoot>
+      </MessageListContextProvider>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Nach unten, 2 neu' })).to.have.text('Nach unten2');
+
+    rerender(
+      <MessageListContextProvider
+        value={{ isAtBottom: false, scrollToBottom, unseenMessageCount: 0 }}
+      >
+        <ChatRoot
+          adapter={createAdapter()}
+          localeText={{
+            scrollToBottomLabel: 'Nach unten',
+            scrollToBottomWithCountLabel: (count) => `Nach unten, ${count} neu`,
+          }}
+        >
+          <ScrollToBottomAffordance />
+        </ChatRoot>
+      </MessageListContextProvider>,
+    );
+
+    expect(screen.getByRole('button', { name: 'Nach unten' })).to.have.text('Nach unten');
   });
 
   it('UnreadMarker renders at the unread boundary derived from unreadCount', () => {

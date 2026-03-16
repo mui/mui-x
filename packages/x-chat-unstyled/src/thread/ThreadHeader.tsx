@@ -6,11 +6,11 @@ import { useThreadContext } from './internals/ThreadContext';
 import { type ThreadHeaderOwnerState } from './thread.types';
 
 export interface ThreadHeaderSlots {
-  root: React.ElementType;
+  header: React.ElementType;
 }
 
 export interface ThreadHeaderSlotProps {
-  root?: SlotComponentProps<'div', {}, ThreadHeaderOwnerState>;
+  header?: SlotComponentProps<'div', {}, ThreadHeaderOwnerState>;
 }
 
 export interface ThreadHeaderProps
@@ -30,10 +30,10 @@ export const ThreadHeader = React.forwardRef(function ThreadHeader(
 ) {
   const { children, slots, slotProps, ...other } = props;
   const ownerState = useThreadContext();
-  const Root = slots?.root ?? 'div';
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const Header = slots?.header ?? 'div';
+  const headerProps = useSlotProps({
+    elementType: Header,
+    externalSlotProps: slotProps?.header,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -41,5 +41,5 @@ export const ThreadHeader = React.forwardRef(function ThreadHeader(
     },
   });
 
-  return <Root {...rootProps}>{children}</Root>;
+  return <Header {...headerProps}>{children}</Header>;
 }) as ThreadHeaderComponent;

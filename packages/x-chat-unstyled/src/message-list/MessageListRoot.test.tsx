@@ -252,7 +252,7 @@ describe('MessageListRoot', () => {
     expect(screen.getByTestId('message-m2')).to.have.text('m2');
   });
 
-  it('supports custom item order and passes ownerState to a custom root slot', () => {
+  it('supports custom item order and passes ownerState to a custom messageList slot', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
@@ -261,7 +261,7 @@ describe('MessageListRoot', () => {
         <MessageListRoot
           items={['m2', 'm1']}
           renderItem={({ id }) => <DefaultRenderItem id={id} />}
-          slots={{ root: CustomRoot }}
+          slots={{ messageList: CustomRoot }}
           style={{ overflowY: 'auto' }}
           virtualization={false}
         />
@@ -272,8 +272,10 @@ describe('MessageListRoot', () => {
 
     expect(customRoot).to.have.attribute('data-message-count', '2');
     expect(customRoot).to.have.attribute('data-virtualization', 'false');
-    expect(customRoot.firstElementChild).to.have.attribute('data-message-id', 'm2');
-    expect(customRoot.lastElementChild).to.have.attribute('data-message-id', 'm1');
+    expect(screen.getAllByTestId(/message-m[12]/).map((node) => node.textContent)).to.deep.equal([
+      'm2',
+      'm1',
+    ]);
   });
 
   it.skipIf(!isJSDOM)('exposes an imperative scrollToBottom handle', () => {
@@ -490,7 +492,7 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('tracks unseen appended messages while away from the bottom and resets at the bottom', async () => {
-    render(<ControlledMessageList slots={{ root: RootWithBottomState }} virtualization={false} />);
+    render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} virtualization={false} />);
 
     const log = screen.getByRole('log');
 
@@ -560,7 +562,7 @@ describe('MessageListRoot', () => {
               {id}
             </div>
           )}
-          slots={{ root: RootWithBottomState }}
+          slots={{ messageList: RootWithBottomState }}
           style={{ height: 160, overflowY: 'auto' }}
           virtualization={false}
         />

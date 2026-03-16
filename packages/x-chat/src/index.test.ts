@@ -1,5 +1,8 @@
 import * as chat from '@mui/x-chat';
+import * as chatConversationsSubpath from '@mui/x-chat/ChatConversations';
+import * as chatThreadSubpath from '@mui/x-chat/ChatThread';
 import * as headlessBridge from '@mui/x-chat/headless';
+import * as chatLocales from '@mui/x-chat/locales';
 import * as headlessDirect from '@mui/x-chat-headless';
 import * as themeAugmentation from '@mui/x-chat/themeAugmentation';
 import * as chatTypes from '@mui/x-chat/types';
@@ -144,9 +147,15 @@ import type {
 } from '@mui/x-chat/unstyled';
 import type {
   ChatBoxProps as ThemeAugmentationChatBoxProps,
+  ChatConversationsProps as ThemeAugmentationChatConversationsProps,
   ChatComponents as ThemeAugmentationChatComponents,
+  ChatThreadProps as ThemeAugmentationChatThreadProps,
   PaletteChat as ThemeAugmentationPaletteChat,
 } from '@mui/x-chat/themeAugmentation';
+import type {
+  ChatLocalization as ChatLocalesLocalization,
+  ChatLocaleText as ChatLocalesLocaleText,
+} from '@mui/x-chat/locales';
 import type * as Chatbox from '@mui/x-chat/types';
 
 declare module '@mui/x-chat-headless/types' {
@@ -195,6 +204,24 @@ declare module '@mui/x-chat-headless/types' {
 
 describe('x-chat package scaffold', () => {
   it('resolves the root, bridge, and type entry points', () => {
+    const expectedChatRuntimeExports = [
+      'ChatConversations',
+      'ChatThread',
+      'chatConversationsClasses',
+      'chatThreadClasses',
+      'getChatConversationsUtilityClass',
+      'getChatThreadUtilityClass',
+    ];
+    const expectedChatConversationsSubpathExports = [
+      'ChatConversations',
+      'chatConversationsClasses',
+      'getChatConversationsUtilityClass',
+    ];
+    const expectedChatThreadSubpathExports = [
+      'ChatThread',
+      'chatThreadClasses',
+      'getChatThreadUtilityClass',
+    ];
     const expectedHeadlessRuntimeExports = [
       'ChatProvider',
       'chatSelectors',
@@ -262,11 +289,18 @@ describe('x-chat package scaffold', () => {
     const unstyledDirectRuntime = unstyledDirect as Record<string, unknown>;
 
     expect(chat).toBeDefined();
+    expect(chatLocales).toBeDefined();
     expect(chatTypes).toBeDefined();
     expect(themeAugmentation).toBeDefined();
     expect(headlessBridge).toBeDefined();
     expect(unstyledBridge).toBeDefined();
+    expect(Object.keys(chat).sort()).toEqual(expectedChatRuntimeExports);
+    expect(Object.keys(chatConversationsSubpath).sort()).toEqual(
+      expectedChatConversationsSubpathExports,
+    );
+    expect(Object.keys(chatThreadSubpath).sort()).toEqual(expectedChatThreadSubpathExports);
     expect(Object.keys(themeAugmentation)).toEqual([]);
+    expect(Object.keys(chatLocales).sort()).toEqual(['enUS', 'getChatLocalization']);
     expect(Object.keys(headlessBridge).sort()).toEqual(expectedHeadlessRuntimeExports);
     expect(Object.keys(headlessDirect).sort()).toEqual(expectedHeadlessRuntimeExports);
     expect(Object.keys(unstyledBridge).sort()).toEqual(expectedUnstyledRuntimeExports);
@@ -382,6 +416,14 @@ describe('x-chat package scaffold', () => {
     );
     expect(unstyledBridgeRuntime.renderDefaultTextPart).toBe(unstyledDirectRuntime.renderDefaultTextPart);
     expect(unstyledBridgeRuntime.renderDefaultToolPart).toBe(unstyledDirectRuntime.renderDefaultToolPart);
+    expect(chat.ChatConversations).toBe(chatConversationsSubpath.ChatConversations);
+    expect(chat.chatConversationsClasses).toBe(chatConversationsSubpath.chatConversationsClasses);
+    expect(chat.getChatConversationsUtilityClass).toBe(
+      chatConversationsSubpath.getChatConversationsUtilityClass,
+    );
+    expect(chat.ChatThread).toBe(chatThreadSubpath.ChatThread);
+    expect(chat.chatThreadClasses).toBe(chatThreadSubpath.chatThreadClasses);
+    expect(chat.getChatThreadUtilityClass).toBe(chatThreadSubpath.getChatThreadUtilityClass);
     expect(unstyledBridgeRuntime.renderDefaultDataPart).toBe(unstyledDirectRuntime.renderDefaultDataPart);
     expect(unstyledBridgeRuntime.markChatLayoutPane).toBeUndefined();
     expect(unstyledBridgeRuntime.ToolRenderer).toBeUndefined();
@@ -571,7 +613,43 @@ describe('x-chat package scaffold', () => {
     const chatBoxProps: ThemeAugmentationChatBoxProps<number> = {
       adapter,
       className: 'chat-box',
+      localeText: {
+        composerSendButtonLabel: 'Send',
+      },
     };
+    const chatConversationsProps: ThemeAugmentationChatConversationsProps = {
+      className: 'chat-conversations',
+      dense: true,
+    };
+    const chatThreadProps: ThemeAugmentationChatThreadProps = {
+      className: 'chat-thread',
+      renderItem: () => null,
+    };
+    const chatLocaleText: ChatLocalesLocaleText = {
+      composerInputPlaceholder: 'Type a message',
+      composerInputAriaLabel: 'Message',
+      composerSendButtonLabel: 'Send message',
+      composerAttachButtonLabel: 'Add attachment',
+      messageEditedLabel: 'Edited',
+      messageDeletedLabel: 'Deleted',
+      messageReasoningLabel: 'Reasoning',
+      conversationListNoConversationsLabel: 'No conversations',
+      conversationListSearchPlaceholder: 'Search conversations',
+      unreadMarkerLabel: 'New messages',
+      scrollToBottomLabel: 'Scroll to bottom',
+      threadNoMessagesLabel: 'No messages yet',
+      genericErrorLabel: 'Something went wrong',
+      loadingLabel: 'Loading...',
+      messageStatusLabel: (status) => status,
+      toolStateLabel: (state) => state,
+      messageTimestampLabel: (dateTime) => dateTime,
+      conversationTimestampLabel: (dateTime) => dateTime,
+      typingIndicatorLabel: (users) => users.map((user) => user.displayName ?? user.id).join(', '),
+      scrollToBottomWithCountLabel: (count) => `Scroll to bottom, ${count} new messages`,
+    };
+    const chatLocalization: ChatLocalesLocalization = chatLocales.getChatLocalization({
+      composerSendButtonLabel: 'Envoyer',
+    });
 
     const publicState: Chatbox.PublicState<number> = {
       conversations: [conversation],
@@ -646,6 +724,14 @@ describe('x-chat package scaffold', () => {
     expect(chatPalette.userMessageBg).toBe('#1976d2');
     expect(chatComponents.MuiChatBox?.styleOverrides?.root).toBeDefined();
     expect(chatBoxProps.className).toBe('chat-box');
+    expect(chatConversationsProps.className).toBe('chat-conversations');
+    expect(chatConversationsProps.dense).toBe(true);
+    expect(chatThreadProps.className).toBe('chat-thread');
+    expect(chatBoxProps.localeText?.composerSendButtonLabel).toBe('Send');
+    expect(chatLocaleText.composerAttachButtonLabel).toBe('Add attachment');
+    expect(
+      chatLocalization.components.MuiChatBox.defaultProps.localeText.composerSendButtonLabel,
+    ).toBe('Envoyer');
     expect(weatherChunk.data.temperatureC).toBe(12);
     expect(metadataChunk.metadata.traceId).toBe('trace-2');
     expect(envelope.chunk.type).toBe('tool-input-available');

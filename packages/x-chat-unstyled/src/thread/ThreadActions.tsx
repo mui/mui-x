@@ -6,11 +6,11 @@ import { useThreadContext } from './internals/ThreadContext';
 import { type ThreadActionsOwnerState } from './thread.types';
 
 export interface ThreadActionsSlots {
-  root: React.ElementType;
+  actions: React.ElementType;
 }
 
 export interface ThreadActionsSlotProps {
-  root?: SlotComponentProps<'div', {}, ThreadActionsOwnerState>;
+  actions?: SlotComponentProps<'div', {}, ThreadActionsOwnerState>;
 }
 
 export interface ThreadActionsProps
@@ -30,10 +30,10 @@ export const ThreadActions = React.forwardRef(function ThreadActions(
 ) {
   const { children, slots, slotProps, ...other } = props;
   const ownerState = useThreadContext();
-  const Root = slots?.root ?? 'div';
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+  const Actions = slots?.actions ?? 'div';
+  const actionsProps = useSlotProps({
+    elementType: Actions,
+    externalSlotProps: slotProps?.actions,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -41,5 +41,5 @@ export const ThreadActions = React.forwardRef(function ThreadActions(
     },
   });
 
-  return <Root {...rootProps}>{children}</Root>;
+  return <Actions {...actionsProps}>{children}</Actions>;
 }) as ThreadActionsComponent;

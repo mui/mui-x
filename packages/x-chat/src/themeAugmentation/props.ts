@@ -3,13 +3,17 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import type { ChatProviderProps } from '@mui/x-chat-headless';
 import type {
   ComposerRootProps as UnstyledComposerRootProps,
-  ConversationListRootProps as UnstyledConversationListRootProps,
   MessageRootProps as UnstyledMessageRootProps,
   ScrollToBottomAffordanceProps as UnstyledScrollToBottomAffordanceProps,
-  ThreadRootProps as UnstyledThreadRootProps,
   TypingIndicatorProps as UnstyledTypingIndicatorProps,
   UnreadMarkerProps as UnstyledUnreadMarkerProps,
 } from '@mui/x-chat-unstyled';
+import type { ChatConversationsProps } from '../ChatConversations';
+import type { ChatThreadProps } from '../ChatThread';
+import type { ChatLocaleText } from '../locales';
+
+export type { ChatConversationsProps } from '../ChatConversations';
+export type { ChatThreadProps } from '../ChatThread';
 
 export interface ChatStyledFoundationProps {
   children?: React.ReactNode;
@@ -20,18 +24,10 @@ export interface ChatStyledFoundationProps {
 export interface ChatBoxProps<Cursor = string>
   extends Omit<ChatProviderProps<Cursor>, 'children'>,
     ChatStyledFoundationProps {
-  locale?: Record<string, unknown>;
+  localeText?: Partial<ChatLocaleText>;
   slots?: Record<string, React.ElementType | undefined>;
   slotProps?: Record<string, unknown>;
 }
-
-export interface ChatConversationsProps
-  extends UnstyledConversationListRootProps,
-    ChatStyledFoundationProps {
-  dense?: boolean;
-}
-
-export interface ChatThreadProps extends UnstyledThreadRootProps, ChatStyledFoundationProps {}
 
 export interface ChatComposerProps extends UnstyledComposerRootProps, ChatStyledFoundationProps {}
 
