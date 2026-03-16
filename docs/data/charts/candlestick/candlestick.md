@@ -65,4 +65,3 @@ A candlestick series requires a band x-axis, so you need to set the `scaleType` 
 Since the candlestick plot is a WebGL canvas, you need to render it inside a `ChartsWebGLLayer`. You can read more about layering in the [Layering](/x/react-charts/composition/#layering) documentation.
 
 {{"demo": "CandlestickComposition.js"}}
-
