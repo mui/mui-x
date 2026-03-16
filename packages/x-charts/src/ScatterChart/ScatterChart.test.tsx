@@ -64,7 +64,9 @@ describe('<ScatterChart />', () => {
         />
       </div>,
     );
-    const layerContainer = container.querySelector<HTMLElement>(`.${chartsSvgLayerClasses.root}`)!.parentElement!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
     await user.pointer([
       // Set tooltip position voronoi value
       { target: layerContainer, coords: { clientX: 10, clientY: 10 } },

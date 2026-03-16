@@ -43,7 +43,9 @@ describe('LineChart - click event', () => {
           />
         </div>,
       );
-      const layerContainer = container.querySelector<HTMLElement>(`.${chartsSvgLayerClasses.root}`)!.parentElement!;
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
 
       await user.pointer([
         {

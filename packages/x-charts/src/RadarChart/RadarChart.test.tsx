@@ -56,7 +56,9 @@ describe('<RadarChart />', () => {
       </div>,
     );
 
-    const layerContainer = container.querySelector<HTMLElement>(`.${chartsSvgLayerClasses.root}`)!.parentElement!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
     await user.pointer([{ target: layerContainer, coords: { clientX: 45, clientY: 45 } }]);
 
     expect(document.querySelector<HTMLElement>('svg .MuiRadarAxisHighlight-root')!).toBeVisible();

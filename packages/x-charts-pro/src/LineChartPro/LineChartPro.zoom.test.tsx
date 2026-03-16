@@ -120,8 +120,8 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
       const layerContainer = container.querySelector<HTMLElement>(
-      `.${chartsSvgLayerClasses.root}`,
-    )!.parentElement!;
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
 
       // we drag one position so C should be visible
       await user.pointer([
