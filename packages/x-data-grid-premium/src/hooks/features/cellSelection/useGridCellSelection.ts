@@ -770,10 +770,13 @@ export const useGridCellSelection = (
       const clickX = event.clientX;
       const clickY = event.clientY;
 
-      // Check if click is near bottom-right corner (within hit area)
-      // TODO: RTL support — check bottom-left instead
+      const isRtl = apiRef.current.state.isRtl;
+
+      // Check if click is near the inline-end bottom corner (within hit area)
       const isNearHandle =
-        clickX >= rect.right - FILL_HANDLE_HIT_AREA &&
+        (isRtl
+          ? clickX <= rect.left + FILL_HANDLE_HIT_AREA
+          : clickX >= rect.right - FILL_HANDLE_HIT_AREA) &&
         clickY >= rect.bottom - FILL_HANDLE_HIT_AREA &&
         clickY >= rect.top; // Ensure click is within cell bounds
 

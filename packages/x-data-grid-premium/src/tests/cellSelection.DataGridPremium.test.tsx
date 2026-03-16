@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { stub, type SinonStub, spy } from 'sinon';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { type RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
@@ -54,6 +55,16 @@ describe('<DataGridPremium /> - Cell selection', () => {
           {...other}
         />
       </div>
+    );
+  }
+
+  function renderRtl(node: React.ReactElement) {
+    const rtlTheme = createTheme({ direction: 'rtl' });
+
+    return render(
+      <ThemeProvider theme={rtlTheme}>
+        <div dir="rtl">{node}</div>
+      </ThemeProvider>,
     );
   }
 
@@ -1022,11 +1033,17 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
     describe.skipIf(isJSDOM)('Fill via mouse drag', () => {
       /* eslint-disable testing-library/no-unnecessary-act */
-      async function simulateFillDrag(sourceCell: HTMLElement, targetCell: HTMLElement) {
+      async function simulateFillDrag(
+        sourceCell: HTMLElement,
+        targetCell: HTMLElement,
+        options?: { handleSide?: 'left' | 'right' },
+      ) {
+        const handleSide = options?.handleSide ?? 'right';
+
         act(() => {
           const rect = sourceCell.getBoundingClientRect();
           fireEvent.mouseDown(sourceCell, {
-            clientX: rect.right - 4,
+            clientX: handleSide === 'left' ? rect.left + 4 : rect.right - 4,
             clientY: rect.bottom - 4,
           });
         });
@@ -1074,6 +1091,32 @@ describe('<DataGridPremium /> - Cell selection', () => {
           )! as HTMLElement;
 
           await simulateFillDrag(handleCell, getCell(2, 1));
+
+          await waitFor(() => {
+            expect(getCell(1, 1).textContent).to.equal('Alice');
+          });
+          expect(getCell(2, 1).textContent).to.equal('Alice');
+          expect(processRowUpdateSpy.callCount).to.equal(2);
+        });
+
+        it('should start fill drag from the bottom-left corner in RTL', async () => {
+          const processRowUpdateSpy = spy((newRow) => newRow);
+          const { user } = renderRtl(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle
+              processRowUpdate={processRowUpdateSpy}
+            />,
+          );
+
+          await user.click(getCell(0, 1)); // 'Alice'
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(2, 1), { handleSide: 'left' });
 
           await waitFor(() => {
             expect(getCell(1, 1).textContent).to.equal('Alice');

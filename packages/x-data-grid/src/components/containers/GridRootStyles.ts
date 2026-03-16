@@ -905,7 +905,7 @@ export const GridRootStyles = styled('div', {
         content: '""',
         position: 'absolute',
         bottom: -4,
-        right: -4,
+        insetInlineEnd: -4,
         width: 7,
         height: 7,
         backgroundColor: vars.colors.interactive.focus,
