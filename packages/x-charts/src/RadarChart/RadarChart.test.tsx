@@ -3,8 +3,8 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { RadarChart, type RadarChartProps } from '@mui/x-charts/RadarChart';
 import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
 import { chartsTooltipClasses } from '../ChartsTooltip';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const radarConfig: RadarChartProps = {
   height: 100,
@@ -44,7 +44,7 @@ describe('<RadarChart />', () => {
   });
 
   it.skipIf(isJSDOM)('should highlight axis on hover', async () => {
-    const { user } = render(
+    const { user, container } = render(
       <div
         style={{
           margin: -8, // Removes the body default margins
@@ -56,8 +56,8 @@ describe('<RadarChart />', () => {
       </div>,
     );
 
-    const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
-    await user.pointer([{ target: svg, coords: { clientX: 45, clientY: 45 } }]);
+    const layerContainer = container.querySelector<HTMLElement>(`.${chartsSvgLayerClasses.root}`)!.parentElement!;
+    await user.pointer([{ target: layerContainer, coords: { clientX: 45, clientY: 45 } }]);
 
     expect(document.querySelector<HTMLElement>('svg .MuiRadarAxisHighlight-root')!).toBeVisible();
   });
@@ -68,7 +68,7 @@ describe('<RadarChart />', () => {
     async () => {
       const cellSelector = `.${chartsTooltipClasses.cell}, .${chartsTooltipClasses.root} caption`;
 
-      const { user, container } = render(
+      const { user } = render(
         <RadarChart
           {...radarConfig}
           radar={{ metrics: ['A', 'B', 'C'] }}
@@ -80,9 +80,8 @@ describe('<RadarChart />', () => {
         />,
       );
 
-      // Focus the chart container (the div with tabIndex=0)
-      const chartContainer = container.querySelector<HTMLElement>('[tabindex="0"]')!;
-      await user.click(chartContainer);
+      // Focus the chart
+      await user.keyboard('{Tab}');
 
       // Navigate to the first item (dataIndex=0)
       await user.keyboard('[ArrowRight]');

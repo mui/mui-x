@@ -49,7 +49,7 @@ export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {
  */
 const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(
   function ChartsLayerContainer(inProps, ref) {
-    const { store } = useChartContext<
+    const { store, instance } = useChartContext<
       [],
       [UseChartInteractionSignature, UseChartItemClickSignature]
     >();
@@ -84,6 +84,18 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
         ownerState={{ width: propsWidth, height: propsHeight }}
         role="presentation"
         {...other}
+        onPointerEnter={(event) => {
+          other.onPointerEnter?.(event);
+          instance.handlePointerEnter?.(event);
+        }}
+        onPointerLeave={(event) => {
+          other.onPointerLeave?.(event);
+          instance.handlePointerLeave?.(event);
+        }}
+        onClick={(event) => {
+          other.onClick?.(event);
+          instance.handleClick?.(event);
+        }}
       >
         {isKeyboardNavigationEnabled && <ChartsAccessibilityProxy />}
         {children}
