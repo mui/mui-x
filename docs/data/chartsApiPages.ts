@@ -226,6 +226,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/heatmap-cell',
+    title: 'HeatmapCell',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/heatmap-plot',
     title: 'HeatmapPlot',
     plan: 'pro',

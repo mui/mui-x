@@ -2,6 +2,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
+/**
+ * @deprecated Use `RadarClasses` from `../radarClasses` instead.
+ */
 export interface RadarSeriesPlotClasses {
   /** Styles applied to the root element. */
   root: string;
@@ -21,12 +24,21 @@ export interface RadarSeriesPlotClasses {
   mark: string;
 }
 
+/**
+ * @deprecated Use `RadarClassKey` from `../radarClasses` instead.
+ */
 export type RadarSeriesPlotClassKey = keyof RadarSeriesPlotClasses;
 
+/**
+ * @deprecated Use `getRadarUtilityClass` from `../radarClasses` instead.
+ */
 export function getRadarSeriesPlotUtilityClass(slot: string) {
   return generateUtilityClass('MuiRadarSeriesPlot', slot);
 }
 
+/**
+ * @deprecated Use `radarClasses` from `../radarClasses` instead.
+ */
 export const radarSeriesPlotClasses = generateUtilityClasses('MuiRadarSeriesPlot', [
   'root',
   'area',
@@ -35,6 +47,9 @@ export const radarSeriesPlotClasses = generateUtilityClasses('MuiRadarSeriesPlot
   'faded',
 ]);
 
+/**
+ * @deprecated Use `useUtilityClasses` from `../radarClasses` instead.
+ */
 export const useUtilityClasses = (classes?: Partial<RadarSeriesPlotClasses>) => {
   const slots = {
     root: ['root'],

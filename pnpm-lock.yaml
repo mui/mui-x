@@ -184,8 +184,8 @@ catalogs:
       specifier: ^5.1.1
       version: 5.1.1
     rimraf:
-      specifier: ^6.1.2
-      version: 6.1.2
+      specifier: ^6.1.3
+      version: 6.1.3
     serve:
       specifier: ^14.2.5
       version: 14.2.5
@@ -418,7 +418,7 @@ importers:
         version: 15.0.1
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
       serve:
         specifier: 'catalog:'
         version: 14.2.5
@@ -673,7 +673,7 @@ importers:
         version: 0.12.1(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
@@ -903,7 +903,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-charts-premium:
@@ -962,7 +962,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     optionalDependencies:
       rasterizehtml:
         specifier: 'catalog:'
@@ -1025,7 +1025,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     optionalDependencies:
       rasterizehtml:
         specifier: 'catalog:'
@@ -1121,7 +1121,7 @@ importers:
         version: 9.6.1
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-codemod:
@@ -1156,7 +1156,7 @@ importers:
         version: 0.6.0
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-data-grid:
@@ -1218,7 +1218,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-data-grid-generator:
@@ -1271,7 +1271,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-data-grid-headless:
@@ -1309,7 +1309,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-data-grid-headless-premium:
@@ -1347,7 +1347,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-data-grid-headless-pro:
@@ -1382,7 +1382,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-data-grid-premium:
@@ -1450,7 +1450,7 @@ importers:
         version: 4.4.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-data-grid-pro:
@@ -1509,7 +1509,7 @@ importers:
         version: 4.4.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-date-pickers:
@@ -1595,7 +1595,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-date-pickers-pro:
@@ -1675,7 +1675,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-internal-gestures:
@@ -1714,7 +1714,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-license:
@@ -1743,7 +1743,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-scheduler:
@@ -1799,7 +1799,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-scheduler-headless:
@@ -1837,6 +1837,9 @@ importers:
       tabbable:
         specifier: ^6.3.0
         version: 6.3.0
+      use-sync-external-store:
+        specifier: 'catalog:'
+        version: 1.6.0(react@19.2.3)
     devDependencies:
       '@date-fns/tz':
         specifier: 'catalog:'
@@ -1861,7 +1864,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-scheduler-headless-premium:
@@ -1908,7 +1911,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-scheduler-premium:
@@ -1973,7 +1976,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-telemetry:
@@ -2002,7 +2005,7 @@ importers:
         version: 1.0.3
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-tree-view:
@@ -2058,7 +2061,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-tree-view-pro:
@@ -2132,7 +2135,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-virtualizer:
@@ -2244,6 +2247,9 @@ importers:
       '@types/semver':
         specifier: 'catalog:'
         version: 7.7.1
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
       dayjs:
         specifier: 'catalog:'
         version: 1.11.18
@@ -4442,6 +4448,7 @@ packages:
   '@lerna/create@9.0.4':
     resolution: {integrity: sha512-WxedGD98G8/a6HztCXNWquaM0x17oSvfvuqDsLxNNX1qXGyrzmMUmd1mQikF/47uy80X6qyWdaRtaAHlwkvEUA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    deprecated: This package is an implementation detail of Lerna and is no longer published separately.
 
   '@mdn/browser-compat-data@5.7.6':
     resolution: {integrity: sha512-7xdrMX0Wk7grrTZQwAoy1GkvPMFoizStUoL+VmtUkAxegbCCec+3FKwOM6yc/uGU5+BEczQHXAlWiqvM8JeENg==}
@@ -8542,9 +8549,9 @@ packages:
     deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
-  glob@13.0.0:
-    resolution: {integrity: sha512-tvZgpqk6fz4BaNZ66ZsRaZnbHvP/jG3uKJvAZOwEVUL4RTA5nJeeLYfyN9/VA8NX/V3IBG+hkeuGpKjvELkVhA==}
-    engines: {node: 20 || >=22}
+  glob@13.0.6:
+    resolution: {integrity: sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==}
+    engines: {node: 18 || 20 || >=22}
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
@@ -9908,8 +9915,8 @@ packages:
     resolution: {integrity: sha512-fNzuVyifolSLFL4NzpF+wEF4qrgqaaKX0haXPQEdQ7NKAN+WecoKMHV09YcuL/DHxrUsYQOK3MiuDf7Ip2OXfQ==}
     engines: {node: '>=8'}
 
-  minipass@7.1.2:
-    resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
+  minipass@7.1.3:
+    resolution: {integrity: sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==}
     engines: {node: '>=16 || 14 >=14.17'}
 
   minizlib@3.1.0:
@@ -10461,9 +10468,9 @@ packages:
     resolution: {integrity: sha512-Xa4Nw17FS9ApQFJ9umLiJS4orGjm7ZzwUrwamcGQuHSzDyth9boKDaycYdDcZDuqYATXw4HFXgaqWTctW/v1HA==}
     engines: {node: '>=16 || 14 >=14.18'}
 
-  path-scurry@2.0.0:
-    resolution: {integrity: sha512-ypGJsmGtdXUOeM5u93TyeIEfEhM6s+ljAhrk5vAvSx8uyY/02OvrZnA0YNGUrPXfpJMgI1ODd3nwz8Npx4O4cg==}
-    engines: {node: 20 || >=22}
+  path-scurry@2.0.2:
+    resolution: {integrity: sha512-3O/iVVsJAPsOnpwWIeD+d6z/7PmqApyQePUtCndjatj/9I5LylHvt5qluFaBT3I5h3r1ejfR056c+FCv+NnNXg==}
+    engines: {node: 18 || 20 || >=22}
 
   path-to-regexp@3.3.0:
     resolution: {integrity: sha512-qyCH421YQPS2WFDxDjftfc1ZR5WKQzVzqsp4n9M2kQhVOo/ByahFoUNJfl58kOcEGfQ//7weFTDhm+ss8Ecxgw==}
@@ -10998,6 +11005,11 @@ packages:
 
   rimraf@6.1.2:
     resolution: {integrity: sha512-cFCkPslJv7BAXJsYlK1dZsbP8/ZNLkCAQ0bi1hf5EKX2QHegmDFEFA6QhuYJlk7UDdc+02JjO80YSOrWPpw06g==}
+    engines: {node: 20 || >=22}
+    hasBin: true
+
+  rimraf@6.1.3:
+    resolution: {integrity: sha512-LKg+Cr2ZF61fkcaK1UdkH2yEBBKnYjTyWzTJT6KNPcSPaiT7HSdhtMXQuN5wkTX0Xu72KQ1l8S42rlmexS2hSA==}
     engines: {node: 20 || >=22}
     hasBin: true
 
@@ -14715,7 +14727,7 @@ snapshots:
 
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   '@isaacs/string-locale-compare@1.1.0': {}
 
@@ -15748,7 +15760,7 @@ snapshots:
     dependencies:
       '@npmcli/name-from-folder': 4.0.0
       '@npmcli/package-json': 7.0.2
-      glob: 13.0.0
+      glob: 13.0.6
       minimatch: 10.2.2
 
   '@npmcli/metavuln-calculator@9.0.2':
@@ -17990,7 +18002,7 @@ snapshots:
       fs-minipass: 3.0.3
       glob: 11.0.3
       lru-cache: 11.2.5
-      minipass: 7.1.2
+      minipass: 7.1.3
       minipass-collect: 2.0.1
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
@@ -19560,7 +19572,7 @@ snapshots:
 
   fs-minipass@3.0.3:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   fs-readdir-recursive@1.1.0: {}
 
@@ -19694,7 +19706,7 @@ snapshots:
       foreground-child: 3.3.1
       jackspeak: 3.4.3
       minimatch: 9.0.5
-      minipass: 7.1.2
+      minipass: 7.1.3
       package-json-from-dist: 1.0.1
       path-scurry: 1.11.1
 
@@ -19703,15 +19715,15 @@ snapshots:
       foreground-child: 3.3.1
       jackspeak: 4.1.1
       minimatch: 10.2.2
-      minipass: 7.1.2
+      minipass: 7.1.3
       package-json-from-dist: 1.0.1
-      path-scurry: 2.0.0
+      path-scurry: 2.0.2
 
-  glob@13.0.0:
+  glob@13.0.6:
     dependencies:
       minimatch: 10.2.2
-      minipass: 7.1.2
-      path-scurry: 2.0.0
+      minipass: 7.1.3
+      path-scurry: 2.0.2
 
   glob@7.2.3:
     dependencies:
@@ -20856,7 +20868,7 @@ snapshots:
       '@npmcli/agent': 4.0.0
       cacache: 20.0.1
       http-cache-semantics: 4.2.0
-      minipass: 7.1.2
+      minipass: 7.1.3
       minipass-fetch: 4.0.1
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
@@ -21470,11 +21482,11 @@ snapshots:
 
   minipass-collect@2.0.1:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   minipass-fetch@4.0.1:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
       minipass-sized: 1.0.3
       minizlib: 3.1.0
     optionalDependencies:
@@ -21498,11 +21510,11 @@ snapshots:
 
   minipass@4.2.8: {}
 
-  minipass@7.1.2: {}
+  minipass@7.1.3: {}
 
   minizlib@3.1.0:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   modify-values@1.0.1: {}
 
@@ -21728,7 +21740,7 @@ snapshots:
       '@npmcli/redact': 3.2.2
       jsonparse: 1.3.1
       make-fetch-happen: 15.0.2
-      minipass: 7.1.2
+      minipass: 7.1.3
       minipass-fetch: 4.0.1
       minizlib: 3.1.0
       npm-package-arg: 13.0.1
@@ -22009,7 +22021,7 @@ snapshots:
       '@npmcli/run-script': 10.0.3
       cacache: 20.0.1
       fs-minipass: 3.0.3
-      minipass: 7.1.2
+      minipass: 7.1.3
       npm-package-arg: 13.0.1
       npm-packlist: 10.0.3
       npm-pick-manifest: 10.0.0
@@ -22031,7 +22043,7 @@ snapshots:
       '@npmcli/run-script': 10.0.3
       cacache: 20.0.1
       fs-minipass: 3.0.3
-      minipass: 7.1.2
+      minipass: 7.1.3
       npm-package-arg: 13.0.1
       npm-packlist: 10.0.3
       npm-pick-manifest: 11.0.3
@@ -22138,12 +22150,12 @@ snapshots:
   path-scurry@1.11.1:
     dependencies:
       lru-cache: 10.4.3
-      minipass: 7.1.2
+      minipass: 7.1.3
 
-  path-scurry@2.0.0:
+  path-scurry@2.0.2:
     dependencies:
       lru-cache: 11.2.5
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   path-to-regexp@3.3.0: {}
 
@@ -22713,7 +22725,12 @@ snapshots:
 
   rimraf@6.1.2:
     dependencies:
-      glob: 13.0.0
+      glob: 13.0.6
+      package-json-from-dist: 1.0.1
+
+  rimraf@6.1.3:
+    dependencies:
+      glob: 13.0.6
       package-json-from-dist: 1.0.1
 
   rollup-plugin-visualizer@6.0.5(rollup@4.52.5):
@@ -23109,11 +23126,11 @@ snapshots:
 
   ssri@12.0.0:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   ssri@13.0.0:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   stable-hash-x@0.2.0: {}
 
@@ -23436,7 +23453,7 @@ snapshots:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
-      minipass: 7.1.2
+      minipass: 7.1.3
       minizlib: 3.1.0
       yallist: 5.0.0
 

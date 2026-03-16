@@ -25,7 +25,7 @@ import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledC
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
-  version: (process.env as any).MUI_VERSION,
+  version: process.env.MUI_VERSION!,
   name: 'x-scheduler-premium' as const,
 };
 const watermark = <Watermark packageInfo={packageInfo} />;
@@ -35,13 +35,12 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     root: ['root'],
     content: ['content'],
     grid: ['grid'],
-    titleSubGridWrapper: ['titleSubGridWrapper'],
+    headerRow: ['headerRow'],
+    titleHeaderCell: ['titleHeaderCell'],
+    eventsHeaderCell: ['eventsHeaderCell'],
     titleSubGrid: ['titleSubGrid'],
-    titleSubGridHeaderRow: ['titleSubGridHeaderRow'],
-    titleSubGridHeaderCell: ['titleSubGridHeaderCell'],
     eventsSubGridWrapper: ['eventsSubGridWrapper'],
     eventsSubGrid: ['eventsSubGrid'],
-    eventsSubGridHeaderRow: ['eventsSubGridHeaderRow'],
     eventsSubGridRow: ['eventsSubGridRow'],
     titleCellRow: ['titleCellRow'],
     titleCell: ['titleCell'],

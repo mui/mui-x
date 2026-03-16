@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { useAdapter } from '../../use-adapter/useAdapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
@@ -17,7 +17,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     componentProps: CalendarGridCurrentTimeIndicator.Props,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const adapter = useAdapter();
+    const adapter = useAdapterContext();
 
     const {
       // Rendering props

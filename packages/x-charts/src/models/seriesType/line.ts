@@ -73,7 +73,8 @@ export interface LineSeriesType
   /**
    * The shape of the mark elements.
    * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
-   * @default 'circle'
+   * By default, each series has a different shape, cycling through `'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, `'wye'`.
+   * If there are more than 7 series, the shapes will repeat.
    */
   shape?: MarkShape;
   /**

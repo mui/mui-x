@@ -60,6 +60,7 @@ export * from '../PieChart/PieChart.plugins';
 // utils
 export * from './configInit';
 export * from './getLabel';
+export * from './legendUtils';
 export * from './getChartPoint';
 export * from './isDefined';
 export * from './getScale';
