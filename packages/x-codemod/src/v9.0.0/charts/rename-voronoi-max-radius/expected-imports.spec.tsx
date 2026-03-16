@@ -1,8 +1,8 @@
 // @ts-nocheck
 
 <div>
-  <ScatterChart interactionMaxRadius={50} />
-  <ScatterChartPro interactionMaxRadius={'item'} />
+  <ScatterChart interactionMaxRadius={50} disableClosestPoint />
+  <ScatterChartPro interactionMaxRadius={'item'} disableClosestPoint={true} />
   <SparkLineChart interactionMaxRadius={50} />
   <ChartsContainer interactionMaxRadius={50} />
   <ChartContainer interactionMaxRadius={50} />

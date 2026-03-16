@@ -32,9 +32,13 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableClipping": { "type": { "name": "bool" }, "default": "false" },
+    "disableClosestPoint": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "disableVoronoi": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "disableVoronoi": {
+      "type": { "name": "bool" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>disableClosestPoint</code> instead."
+    },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {

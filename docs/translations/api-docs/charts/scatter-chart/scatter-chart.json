@@ -16,6 +16,9 @@
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
+    "disableClosestPoint": {
+      "description": "If true, the closest point interaction is disabled and falls back to hover events."
+    },
     "disableKeyboardNavigation": {
       "description": "If <code>true</code>, disables keyboard navigation for the chart."
     },
@@ -86,7 +89,7 @@
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element if using Voronoi cells. Or the Mouse event from the scatter element, when <code>disableVoronoi=true</code>."
+          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element if using closest point interaction. Or the Mouse event from the scatter element, when <code>disableClosestPoint=true</code>."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",

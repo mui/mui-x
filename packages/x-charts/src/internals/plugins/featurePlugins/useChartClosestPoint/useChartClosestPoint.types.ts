@@ -30,7 +30,12 @@ export interface UseChartVoronoiState {
 
 export interface UseChartVoronoiParameters {
   /**
+   * If true, the closest point interaction is disabled.
+   */
+  disableClosestPoint?: boolean;
+  /**
    * If true, the voronoi interaction are ignored.
+   * @deprecated Use `disableClosestPoint` instead.
    */
   disableVoronoi?: boolean;
   /**
@@ -57,12 +62,12 @@ export interface UseChartVoronoiParameters {
 
 export type UseChartVoronoiDefaultizedParameters = Pick<
   UseChartVoronoiParameters,
-  'interactionMaxRadius' | 'voronoiMaxRadius' | 'onItemClick'
+  'interactionMaxRadius' | 'voronoiMaxRadius' | 'disableVoronoi' | 'onItemClick'
 > & {
   /**
-   * If true, the voronoi plugin is disabled.
+   * If true, the closest point interaction is disabled.
    */
-  disableVoronoi: boolean;
+  disableClosestPoint: boolean;
 };
 
 export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =

@@ -97,7 +97,7 @@ describe('<ScatterChart />', () => {
           height: 100,
         }}
       >
-        <ScatterChart {...config} disableVoronoi series={[{ id: 's1', data: config.dataset }]} />
+        <ScatterChart {...config} disableClosestPoint series={[{ id: 's1', data: config.dataset }]} />
       </div>,
     );
     const marks = document.querySelectorAll<HTMLElement>('circle');

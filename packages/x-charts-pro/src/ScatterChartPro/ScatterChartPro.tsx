@@ -193,12 +193,18 @@ ScatterChartPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If true, the closest point interaction is disabled and falls back to hover events.
+   * @default false
+   */
+  disableClosestPoint: PropTypes.bool,
+  /**
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
   /**
    * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
+   * @deprecated Use `disableClosestPoint` instead.
    */
   disableVoronoi: PropTypes.bool,
   /**
@@ -370,7 +376,7 @@ ScatterChartPro.propTypes = {
   onHighlightChange: PropTypes.func,
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using closest point interaction. Or the Mouse event from the scatter element, when `disableClosestPoint=true`.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,

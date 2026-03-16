@@ -28,9 +28,14 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableClosestPoint": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "disableVoronoi": { "type": { "name": "bool" }, "default": "false" },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "disableVoronoi": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use <code>disableClosestPoint</code> instead."
+    },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },

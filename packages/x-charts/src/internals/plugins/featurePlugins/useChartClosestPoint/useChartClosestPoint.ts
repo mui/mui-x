@@ -24,8 +24,9 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
-  const { disableVoronoi, interactionMaxRadius, voronoiMaxRadius, onItemClick } = params;
+  const { disableClosestPoint, disableVoronoi, interactionMaxRadius, voronoiMaxRadius, onItemClick } = params;
 
+  const resolvedDisableClosestPoint = disableClosestPoint ?? disableVoronoi;
   const resolvedInteractionMaxRadius = interactionMaxRadius ?? voronoiMaxRadius;
 
   const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
@@ -41,11 +42,11 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   const defaultYAxisId = yAxisIds[0];
 
   useEnhancedEffect(() => {
-    store.set('voronoi', { isVoronoiEnabled: !disableVoronoi });
-  }, [store, disableVoronoi]);
+    store.set('voronoi', { isVoronoiEnabled: !resolvedDisableClosestPoint });
+  }, [store, resolvedDisableClosestPoint]);
 
   React.useEffect(() => {
-    if (chartsLayerContainerRef.current === null || disableVoronoi) {
+    if (chartsLayerContainerRef.current === null || resolvedDisableClosestPoint) {
       return undefined;
     }
     const element = chartsLayerContainerRef.current;
@@ -211,7 +212,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     xAxis,
     resolvedInteractionMaxRadius,
     onItemClick,
-    disableVoronoi,
+    resolvedDisableClosestPoint,
     instance,
     seriesOrder,
     series,
@@ -240,16 +241,17 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
 useChartClosestPoint.getDefaultizedParams = ({ params }) => ({
   ...params,
-  disableVoronoi: params.disableVoronoi ?? !params.series.some((item) => item.type === 'scatter'),
+  disableClosestPoint: (params.disableClosestPoint ?? params.disableVoronoi) ?? !params.series.some((item) => item.type === 'scatter'),
 });
 
 useChartClosestPoint.getInitialState = (params) => ({
   voronoi: {
-    isVoronoiEnabled: !params.disableVoronoi,
+    isVoronoiEnabled: !params.disableClosestPoint,
   },
 });
 
 useChartClosestPoint.params = {
+  disableClosestPoint: true,
   disableVoronoi: true,
   interactionMaxRadius: true,
   voronoiMaxRadius: true,

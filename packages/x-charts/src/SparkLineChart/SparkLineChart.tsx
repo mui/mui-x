@@ -414,11 +414,16 @@ SparkLineChart.propTypes = {
    */
   disableClipping: PropTypes.bool,
   /**
+   * If true, the closest point interaction is disabled.
+   */
+  disableClosestPoint: PropTypes.bool,
+  /**
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
   /**
    * If true, the voronoi interaction are ignored.
+   * @deprecated Use `disableClosestPoint` instead.
    */
   disableVoronoi: PropTypes.bool,
   /**

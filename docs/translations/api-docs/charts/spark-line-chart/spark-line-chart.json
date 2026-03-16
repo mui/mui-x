@@ -22,6 +22,7 @@
     "disableClipping": {
       "description": "When <code>true</code>, the chart&#39;s drawing area will not be clipped and elements within can visually overflow the chart."
     },
+    "disableClosestPoint": { "description": "If true, the closest point interaction is disabled." },
     "disableKeyboardNavigation": {
       "description": "If <code>true</code>, disables keyboard navigation for the chart."
     },
