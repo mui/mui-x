@@ -96,16 +96,6 @@ describe('Heatmap - data attributes', () => {
     margin: { top: 0, left: 0, bottom: 0, right: 0 },
   } as const;
 
-  it('should add data-series-id to cell elements', () => {
-    const { container } = render(<Heatmap {...config} />);
-
-    const cells = container.querySelectorAll<HTMLElement>(`.${heatmapClasses.cell}`);
-
-    cells.forEach((cell) => {
-      expect(cell.getAttribute('data-series-id')).to.equal('heat-1');
-    });
-  });
-
   it('should add data-x-index to cell elements', () => {
     const { container } = render(<Heatmap {...config} />);
 

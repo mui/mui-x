@@ -92,9 +92,10 @@ function HeatmapItem(props: HeatmapItemProps) {
       ...interactionProps,
       rx: borderRadius,
       ry: borderRadius,
+      // Adding attributes can lead to performance issues, so we only add them when necessary.
+      // data-series-id is not necessary for styling, since we always render only one series on Heatmap.
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
-      'data-series-id': seriesId,
       'data-x-index': xIndex,
       'data-y-index': yIndex,
     },

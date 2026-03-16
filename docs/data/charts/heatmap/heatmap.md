@@ -106,7 +106,6 @@ You can customize the heatmap cells using CSS selectors.
 
 Each cell element provides the following data attributes:
 
-- `[data-series-id]` — the ID of the series the cell belongs to.
 - `[data-x-index]` — the index of the cell along the x-axis.
 - `[data-y-index]` — the index of the cell along the y-axis.
 
