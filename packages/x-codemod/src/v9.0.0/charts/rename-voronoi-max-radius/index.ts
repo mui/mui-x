@@ -21,6 +21,12 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       'SparkLineChart',
       'ChartsContainer',
       'ChartContainer',
+      'ChartDataProvider',
+      'ChartsDataProvider',
+      'ChartDataProviderPro',
+      'ChartsDataProviderPro',
+      'ChartDataProviderPremium',
+      'ChartsDataProviderPremium',
     ],
     props: {
       voronoiMaxRadius: 'interactionMaxRadius',

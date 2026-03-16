@@ -45,7 +45,7 @@ You can define a maximal radius with the `interactionMaxRadius` prop.
 If the distance with the pointer is larger than this radius, no item will be selected.
 Alternatively, set the `interactionMaxRadius` prop to `item` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
 
-{{"demo": "VoronoiInteraction.js"}}
+{{"demo": "ClosestPointInteraction.js"}}
 
 ## Click event
 

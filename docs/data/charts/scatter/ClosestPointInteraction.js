@@ -10,7 +10,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import data from '../dataset/random/scatterParallel.json';
 
-export default function VoronoiInteraction() {
+export default function ClosestPointInteraction() {
   const [option, setOption] = React.useState('numeric');
   const [interactionMaxRadius, setVoronoiMaxRadius] = React.useState(25);
 

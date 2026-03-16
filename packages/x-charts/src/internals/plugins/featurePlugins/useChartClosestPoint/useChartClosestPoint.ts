@@ -2,7 +2,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { warnOnce } from '@mui/x-internals/warning';
 import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { type ChartPlugin } from '../../models';
 import { type SeriesId } from '../../../../models/seriesType/common';
@@ -26,17 +25,6 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 }) => {
   const { chartsLayerContainerRef } = instance;
   const { disableVoronoi, interactionMaxRadius, voronoiMaxRadius, onItemClick } = params;
-
-  if (process.env.NODE_ENV !== 'production') {
-    if (voronoiMaxRadius !== undefined) {
-      warnOnce(
-        [
-          'MUI X Charts: The `voronoiMaxRadius` prop is deprecated. Use `interactionMaxRadius` instead.',
-        ],
-        'error',
-      );
-    }
-  }
 
   const resolvedInteractionMaxRadius = interactionMaxRadius ?? voronoiMaxRadius;
 
