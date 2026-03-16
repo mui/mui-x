@@ -325,7 +325,7 @@ Heatmap.propTypes = {
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
    * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,
