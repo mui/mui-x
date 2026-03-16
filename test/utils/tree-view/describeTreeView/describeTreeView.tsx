@@ -114,6 +114,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
   const createRendererForComponentWithItemsProp = (
     TreeViewComponent: typeof RichTreeView | typeof RichTreeViewPro,
+    defaultProps?: Record<string, unknown>,
   ) => {
     const objectRenderer: DescribeTreeViewRenderer<TStore> = ({
       items: rawItems,
@@ -151,6 +152,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
           }}
           isItemDisabled={(item) => !!item.disabled}
           isItemSelectionDisabled={(item) => !!item.disableSelection}
+          {...defaultProps}
           {...other}
         />
       );
@@ -231,7 +233,9 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
     describe('RichTreeViewPro', () => {
       testRunner({
-        ...createRendererForComponentWithItemsProp(RichTreeViewPro),
+        ...createRendererForComponentWithItemsProp(RichTreeViewPro, {
+          disableVirtualization: true,
+        }),
         treeViewComponentName: 'RichTreeViewPro',
         TreeViewComponent: RichTreeViewPro,
         TreeItemComponent: TreeItem,

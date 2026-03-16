@@ -1,8 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type {
-  SeriesItemIdentifier,
-  SeriesItemIdentifierWithType,
-} from '../../../../models/seriesType';
+import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type ProcessedSeries,
@@ -78,20 +75,20 @@ const selectorChartsTooltipAxisConfig = createSelectorMemoized(
   selectorChartRotationAxis,
   selectorChartRadiusAxis,
   selectorChartSeriesProcessed,
-  function selectorChartsTooltipAxisConfig<T extends ChartSeriesType>(
-    identifier: SeriesItemIdentifier<T> | null,
+  function selectorChartsTooltipAxisConfig<SeriesType extends ChartSeriesType>(
+    identifier: SeriesItemIdentifierWithType<SeriesType> | null,
     { axis: xAxis, axisIds: xAxisIds }: ComputeResult<ChartsXAxisProps>,
     { axis: yAxis, axisIds: yAxisIds }: ComputeResult<ChartsYAxisProps>,
     rotationAxes: ComputePolarResult<ChartsRotationAxisProps>,
     radiusAxes: ComputePolarResult<ChartsRadiusAxisProps>,
-    series: ProcessedSeries<T>,
+    series: ProcessedSeries<SeriesType>,
   ) {
     if (!identifier) {
       return {};
     }
 
-    const itemSeries = series[identifier.type as T]?.series[identifier.seriesId] as
-      | ChartSeriesDefaultized<T>
+    const itemSeries = series[identifier.type as SeriesType]?.series[identifier.seriesId] as
+      | ChartSeriesDefaultized<SeriesType>
       | undefined;
 
     if (!itemSeries) {
@@ -128,28 +125,28 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
   selectorChartSeriesLayout,
   selectorChartsTooltipAxisConfig,
 
-  function selectorChartsTooltipItemPosition<T extends ChartSeriesType>(
-    identifier: SeriesItemIdentifierWithType<T> | null,
+  function selectorChartsTooltipItemPosition<SeriesType extends ChartSeriesType>(
+    identifier: SeriesItemIdentifierWithType<SeriesType> | null,
     drawingArea: ChartDrawingArea,
-    seriesConfig: ChartSeriesConfig<T>,
-    series: ProcessedSeries<T>,
-    seriesLayout: SeriesLayout<T>,
+    seriesConfig: ChartSeriesConfig<SeriesType>,
+    series: ProcessedSeries<SeriesType>,
+    seriesLayout: SeriesLayout<SeriesType>,
     axesConfig: TooltipPositionGetterAxesConfig,
-    placement: 'top' | 'bottom' | 'left' | 'right' = 'top',
+    placement: 'top' | 'bottom' | 'left' | 'right',
   ) {
     if (!identifier) {
       return null;
     }
 
-    const itemSeries = series[identifier.type as T]?.series[identifier.seriesId] as
-      | ChartSeriesDefaultized<T>
+    const itemSeries = series[identifier.type as SeriesType]?.series[identifier.seriesId] as
+      | ChartSeriesDefaultized<SeriesType>
       | undefined;
 
     if (!itemSeries) {
       return null;
     }
     return (
-      seriesConfig[itemSeries.type as T].tooltipItemPositionGetter?.({
+      seriesConfig[itemSeries.type as SeriesType].tooltipItemPositionGetter?.({
         series,
         seriesLayout,
         drawingArea,

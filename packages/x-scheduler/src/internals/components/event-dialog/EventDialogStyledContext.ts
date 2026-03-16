@@ -16,7 +16,9 @@ export function useEventDialogStyledContext(): EventDialogStyledContextValue {
   const value = React.useContext(EventDialogStyledContext);
   if (!value) {
     throw new Error(
-      'MUI X: useEventDialogStyledContext must be used within EventDialogStyledContext.Provider',
+      'MUI X Scheduler: useEventDialogStyledContext must be used within an EventDialogStyledContext.Provider. ' +
+        'The component requires access to dialog styling and locale information. ' +
+        'Ensure the component is rendered inside an EventDialog component.',
     );
   }
   return value;

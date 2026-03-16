@@ -14,6 +14,7 @@ const legendGetter: LegendGetter<'line'> = (params) => {
     acc.push({
       type: 'line',
       markType: series[seriesId].labelMarkType,
+      markShape: series[seriesId].showMark ? (series[seriesId].shape ?? 'circle') : undefined,
       seriesId,
       color: series[seriesId].color,
       label: formattedLabel,

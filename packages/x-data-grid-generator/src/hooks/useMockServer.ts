@@ -94,7 +94,7 @@ const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] |
       columns = getMovieColumns();
       break;
     default:
-      throw new Error('Unknown dataset');
+      throw new Error('MUI X: Unknown dataset');
   }
 
   if (options.visibleFields) {
@@ -354,7 +354,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           if (verbose) {
             print('MUI X: DATASOURCE REQUEST FAILURE', params);
           }
-          setTimeout(() => reject(new Error('Could not fetch the data')), delay);
+          setTimeout(() => reject(new Error('MUI X: Could not fetch the data')), delay);
         });
       }
 
@@ -455,7 +455,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
 
         if (shouldRequestsFailRef.current) {
           setTimeout(
-            () => reject(new Error(`Could not update the row with the id ${rowId}`)),
+            () => reject(new Error(`MUI X: Could not update the row with the id ${rowId}`)),
             delay,
           );
           if (verbose) {

@@ -5,6 +5,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
+import { chartsTooltipClasses } from './chartsTooltipClasses';
 
 const config: Partial<BarChartProps> = {
   dataset: [
@@ -34,8 +35,7 @@ const config: Partial<BarChartProps> = {
 // B| X
 //   --------
 
-const cellSelector =
-  '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th, .MuiChartsTooltip-root caption';
+const cellSelector = `.${chartsTooltipClasses.cell}, .${chartsTooltipClasses.root} caption`;
 
 // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
 describe.skipIf(isJSDOM)('ChartsTooltip', () => {

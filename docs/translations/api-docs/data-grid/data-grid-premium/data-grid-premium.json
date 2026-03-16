@@ -39,6 +39,9 @@
     "chartsIntegration": {
       "description": "If <code>true</code>, the charts integration feature is enabled."
     },
+    "checkboxColDef": {
+      "description": "Definition of the column rendered when the <code>checkboxSelection</code> prop is enabled."
+    },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
     },

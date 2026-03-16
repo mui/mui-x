@@ -20,8 +20,8 @@ export type ChartStateCacheKey = { id: number };
 export type ChartState<
   TSignatures extends readonly ChartAnyPluginSignature[],
   TOptionalSignatures extends readonly ChartAnyPluginSignature[] = [],
-  TSeriesType extends ChartSeriesType = ChartSeriesType,
-> = MergeSignaturesProperty<[...ChartCorePluginSignatures<TSeriesType>, ...TSignatures], 'state'> &
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> = MergeSignaturesProperty<[...ChartCorePluginSignatures<SeriesType>, ...TSignatures], 'state'> &
   Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>> & {
     /**
      * The key used to identify the chart in the global cache object.

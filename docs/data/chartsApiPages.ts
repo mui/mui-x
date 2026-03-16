@@ -44,20 +44,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
-    pathname: '/x/api/charts/chart-data-provider',
-    title: 'ChartDataProvider',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider-premium',
-    title: 'ChartDataProviderPremium',
-    plan: 'premium',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider-pro',
-    title: 'ChartDataProviderPro',
-    plan: 'pro',
-  },
-  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
@@ -89,6 +75,20 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-container-pro',
     title: 'ChartsContainerPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider',
+    title: 'ChartsDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider-premium',
+    title: 'ChartsDataProviderPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider-pro',
+    title: 'ChartsDataProviderPro',
     plan: 'pro',
   },
   {
@@ -165,8 +165,8 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsYAxis',
   },
   {
-    pathname: '/x/api/charts/chart-zoom-slider',
-    title: 'ChartZoomSlider',
+    pathname: '/x/api/charts/charts-zoom-slider',
+    title: 'ChartsZoomSlider',
     plan: 'pro',
   },
   {
@@ -223,6 +223,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap',
     title: 'Heatmap',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-cell',
+    title: 'HeatmapCell',
     plan: 'pro',
   },
   {

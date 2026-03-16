@@ -34,12 +34,14 @@
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the series element",
-      "conditions": "it is faded"
+      "conditions": "it is faded",
+      "deprecationInfo": "Use <code>[data-faded]</code> selector instead."
     },
     "highlighted": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the series element",
-      "conditions": "it is highlighted"
+      "conditions": "it is highlighted",
+      "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
     },
     "mark": {
       "description": "Styles applied to {{nodeName}}.",

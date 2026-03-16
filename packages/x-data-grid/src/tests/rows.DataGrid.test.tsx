@@ -284,7 +284,7 @@ describe('<DataGrid /> - Rows', () => {
         );
       }
 
-      it.skipIf(!isJSDOM)('should throw an error if getActions is missing', () => {
+      it('should throw an error if getActions is missing', () => {
         expect(() => {
           render(
             <ErrorBoundary>

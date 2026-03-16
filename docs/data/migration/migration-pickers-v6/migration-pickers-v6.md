@@ -344,7 +344,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 ### Headless fields
 
 :::success
-The following breaking changes only impact you if you are using hooks like `useDateField` to build a custom UI.
+The following breaking changes only impact you if you are using hooks like `useDateField()` to build a custom UI.
 
 If you are just using the regular field components, then you can safely skip this section.
 :::
@@ -406,7 +406,7 @@ If you are using a multi input range field hook, the same applies to the ref in 
 
 #### Restructure the API of `useClearableField`
 
-The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
+The `useClearableField()` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
 You should now be able to directly pass the returned value from your field hook (for example `useDateField`) to `useClearableField`
 
@@ -625,9 +625,9 @@ You can use the `date` method instead:
 +adapter.date(undefined, 'system');
 ```
 
-#### Remove the `getDiff` method
+#### Remove the `getDiff()` method
 
-The `getDiff` method has been removed.
+The `getDiff()` method has been removed.
 You can directly use your date library:
 
 ```diff
@@ -683,9 +683,9 @@ You can directly use your date library:
 +const diff = value.diff(comparing, unit);
 ```
 
-#### Remove the `getFormatHelperText` method
+#### Remove the `getFormatHelperText()` method
 
-The `getFormatHelperText` method has been removed.
+The `getFormatHelperText()` method has been removed.
 You can use the `expandFormat` instead:
 
 ```diff
@@ -714,10 +714,10 @@ You can apply the following transformation:
 +const expandedFormat = adapter.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
 ```
 
-#### Remove the `getMeridiemText` method
+#### Remove the `getMeridiemText()` method
 
-The `getMeridiemText` method has been removed.
-You can use the `setHours`, `date` and `format` methods to recreate its behavior:
+The `getMeridiemText()` method has been removed.
+You can use the `setHours()`, `date()` and `format()` methods to recreate its behavior:
 
 ```diff
 -const meridiem = adapter.getMeridiemText('am');
@@ -729,9 +729,9 @@ You can use the `setHours`, `date` and `format` methods to recreate its behavior
 +const meridiem = getMeridiemText('am');
 ```
 
-#### Remove the `getMonthArray` method
+#### Remove the `getMonthArray()` method
 
-The `getMonthArray` method has been removed.
+The `getMonthArray()` method has been removed.
 You can use the `startOfYear` and `addMonths` methods to recreate its behavior:
 
 ```diff
@@ -751,9 +751,9 @@ You can use the `startOfYear` and `addMonths` methods to recreate its behavior:
 +const monthArray = getMonthArray(value);
 ```
 
-#### Remove the `getNextMonth` method
+#### Remove the `getNextMonth()` method
 
-The `getNextMonth` method has been removed.
+The `getNextMonth()` method has been removed.
 You can use the `addMonths` method instead:
 
 ```diff
@@ -761,9 +761,9 @@ You can use the `addMonths` method instead:
 +const nextMonth = adapter.addMonths(value, 1);
 ```
 
-#### Remove the `getPreviousMonth` method
+#### Remove the `getPreviousMonth()` method
 
-The `getPreviousMonth` method has been removed.
+The `getPreviousMonth()` method has been removed.
 You can use the `addMonths` method instead:
 
 ```diff
@@ -771,9 +771,9 @@ You can use the `addMonths` method instead:
 +const previousMonth = adapter.addMonths(value, -1);
 ```
 
-#### Remove the `getWeekdays` method
+#### Remove the `getWeekdays()` method
 
-The `getWeekdays` method has been removed.
+The `getWeekdays()` method has been removed.
 You can use the `startOfWeek` and `addDays` methods instead:
 
 ```diff
@@ -799,7 +799,7 @@ You can replace it with a very basic check:
 #### Remove the `mergeDateAndTime` method
 
 The `mergeDateAndTime` method has been removed.
-You can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate its behavior:
+You can use the `setHours()`, `setMinutes()`, and `setSeconds()` methods to recreate its behavior:
 
 ```diff
 -const result = adapter.mergeDateAndTime(valueWithDate, valueWithTime);
@@ -818,9 +818,9 @@ You can use the `setHours`, `setMinutes`, and `setSeconds` methods to recreate i
 +const result = mergeDateAndTime(valueWithDate, valueWithTime);
 ```
 
-#### Remove the `parseISO` method
+#### Remove the `parseISO()` method
 
-The `parseISO` method has been removed.
+The `parseISO()` method has been removed.
 You can directly use your date library:
 
 ```diff
@@ -864,7 +864,7 @@ You can directly use your date library:
 +const isoString = value.toISOString();
 ```
 
-The `getYearRange` method used to accept two params and now accepts a tuple to be consistent with the `isWithinRange` method:
+The `getYearRange()` method used to accept two params and now accepts a tuple to be consistent with the `isWithinRange()` method:
 
 ```diff
 -adapter.getYearRange(start, end);
