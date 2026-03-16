@@ -1,4 +1,14 @@
 export {
+  ChatComposer,
+  ChatComposerAttachButton,
+  ChatComposerHelperText,
+  ChatComposerInput,
+  ChatComposerSendButton,
+  ChatComposerToolbar,
+  chatComposerClasses,
+  getChatComposerUtilityClass,
+} from './ChatComposer';
+export {
   ChatConversations,
   chatConversationsClasses,
   getChatConversationsUtilityClass,
@@ -21,6 +31,28 @@ export {
   getChatThreadUtilityClass,
 } from './ChatThread';
 
+export type {
+  ChatComposerAttachButtonProps,
+  ChatComposerAttachButtonSlotProps,
+  ChatComposerAttachButtonSlots,
+  ChatComposerClassKey,
+  ChatComposerClasses,
+  ChatComposerHelperTextProps,
+  ChatComposerHelperTextSlotProps,
+  ChatComposerHelperTextSlots,
+  ChatComposerInputProps,
+  ChatComposerInputSlotProps,
+  ChatComposerInputSlots,
+  ChatComposerProps,
+  ChatComposerSendButtonProps,
+  ChatComposerSendButtonSlotProps,
+  ChatComposerSendButtonSlots,
+  ChatComposerSlotProps,
+  ChatComposerSlots,
+  ChatComposerToolbarProps,
+  ChatComposerToolbarSlotProps,
+  ChatComposerToolbarSlots,
+} from './ChatComposer';
 export type {
   ChatConversationsClassKey,
   ChatConversationsClasses,

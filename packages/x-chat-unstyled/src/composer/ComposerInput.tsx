@@ -4,15 +4,16 @@ import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '@mui/x-chat-headless';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerInputOwnerState } from './composer.types';
 
 export interface ComposerInputSlots {
-  root: React.ElementType;
+  input: React.ElementType;
 }
 
 export interface ComposerInputSlotProps {
-  root?: SlotComponentProps<'textarea', {}, ComposerInputOwnerState>;
+  input?: SlotComponentProps<'textarea', {}, ComposerInputOwnerState>;
 }
 
 export interface ComposerInputProps
@@ -41,18 +42,19 @@ export const ComposerInput = React.forwardRef(function ComposerInput(
   const { slots, slotProps, ...other } = props;
   const { activeConversationId } = useChat();
   const composer = useComposerContext();
+  const localeText = useChatLocaleText();
   const ownerState: ComposerInputOwnerState = {
     isSubmitting: composer.isSubmitting,
     hasValue: composer.hasValue,
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
   };
-  const Root = slots?.root ?? 'textarea';
+  const Input = slots?.input ?? 'textarea';
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
   const handleRef = useForkRef(ref, inputRef);
   const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+    elementType: Input,
+    externalSlotProps: slotProps?.input,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -100,9 +102,13 @@ export const ComposerInput = React.forwardRef(function ComposerInput(
   }, [activeConversationId]);
 
   return (
-    <Root
+    <Input
       {...rootProps}
-      aria-label={rootProps['aria-label'] ?? (rootProps['aria-labelledby'] ? undefined : 'Message')}
+      aria-label={
+        rootProps['aria-label'] ??
+        (rootProps['aria-labelledby'] ? undefined : localeText.composerInputAriaLabel)
+      }
+      placeholder={rootProps.placeholder ?? localeText.composerInputPlaceholder}
       onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
         externalOnChange?.(event);
 

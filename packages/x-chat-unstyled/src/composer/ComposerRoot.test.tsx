@@ -388,7 +388,7 @@ describe('ComposerRoot', () => {
       render(
         <ChatRoot adapter={createAdapter()}>
           <ComposerRoot>
-            <ComposerAttachButton slotProps={{ input: { 'data-testid': 'attach-input' } as any }}>
+            <ComposerAttachButton slotProps={{ attachInput: { 'data-testid': 'attach-input' } as any }}>
               Attach
             </ComposerAttachButton>
             <AttachmentCountIndicator />
@@ -481,6 +481,33 @@ describe('ComposerRoot', () => {
     });
   });
 
+  it('uses localeText for the default composer placeholder and accessible labels', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        localeText={{
+          composerInputPlaceholder: 'Nachricht eingeben',
+          composerInputAriaLabel: 'Nachricht',
+          composerSendButtonLabel: 'Senden',
+          composerAttachButtonLabel: 'Datei anhaengen',
+        }}
+      >
+        <ComposerRoot>
+          <ComposerInput />
+          <ComposerSendButton />
+          <ComposerAttachButton />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'Nachricht' })).to.have.attribute(
+      'placeholder',
+      'Nachricht eingeben',
+    );
+    expect(screen.getByRole('button', { name: 'Senden' })).not.to.equal(null);
+    expect(screen.getByRole('button', { name: 'Datei anhaengen' })).not.to.equal(null);
+  });
+
   it('supports replacing all slots and passes ownerState to custom components', async () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async () => createPendingStream()),
@@ -489,19 +516,19 @@ describe('ComposerRoot', () => {
     render(
       <ChatRoot adapter={adapter} defaultActiveConversationId="c1" defaultComposerValue="Draft">
         <ComposerRoot slots={{ root: CustomRoot }}>
-          <ComposerInput slots={{ root: CustomInput }} />
+          <ComposerInput slots={{ input: CustomInput }} />
           <ComposerAttachButton
-            slots={{ root: CustomAttachButton, input: CustomAttachInput }}
+            slots={{ attachButton: CustomAttachButton, attachInput: CustomAttachInput }}
           >
             Attach
           </ComposerAttachButton>
-          <ComposerSendButton slots={{ root: CustomSendButton }}>
+          <ComposerSendButton slots={{ sendButton: CustomSendButton }}>
             Send
           </ComposerSendButton>
-          <ComposerToolbar slots={{ root: CustomToolbar }}>
+          <ComposerToolbar slots={{ toolbar: CustomToolbar }}>
             toolbar
           </ComposerToolbar>
-          <ComposerHelperText slots={{ root: CustomHelperText }}>
+          <ComposerHelperText slots={{ helperText: CustomHelperText }}>
             helper
           </ComposerHelperText>
         </ComposerRoot>

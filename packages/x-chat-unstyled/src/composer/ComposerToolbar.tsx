@@ -6,11 +6,11 @@ import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerToolbarOwnerState } from './composer.types';
 
 export interface ComposerToolbarSlots {
-  root: React.ElementType;
+  toolbar: React.ElementType;
 }
 
 export interface ComposerToolbarSlotProps {
-  root?: SlotComponentProps<'div', {}, ComposerToolbarOwnerState>;
+  toolbar?: SlotComponentProps<'div', {}, ComposerToolbarOwnerState>;
 }
 
 export interface ComposerToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,10 +34,10 @@ export const ComposerToolbar = React.forwardRef(function ComposerToolbar(
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
   };
-  const Root = slots?.root ?? 'div';
+  const Toolbar = slots?.toolbar ?? 'div';
   const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+    elementType: Toolbar,
+    externalSlotProps: slotProps?.toolbar,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -45,5 +45,5 @@ export const ComposerToolbar = React.forwardRef(function ComposerToolbar(
     },
   });
 
-  return <Root {...rootProps} />;
+  return <Toolbar {...rootProps} />;
 }) as ComposerToolbarComponent;

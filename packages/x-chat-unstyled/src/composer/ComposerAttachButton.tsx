@@ -2,17 +2,18 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerAttachButtonOwnerState } from './composer.types';
 
 export interface ComposerAttachButtonSlots {
-  root: React.ElementType;
-  input: React.ElementType;
+  attachButton: React.ElementType;
+  attachInput: React.ElementType;
 }
 
 export interface ComposerAttachButtonSlotProps {
-  root?: SlotComponentProps<'button', {}, ComposerAttachButtonOwnerState>;
-  input?: SlotComponentProps<'input', {}, ComposerAttachButtonOwnerState>;
+  attachButton?: SlotComponentProps<'button', {}, ComposerAttachButtonOwnerState>;
+  attachInput?: SlotComponentProps<'input', {}, ComposerAttachButtonOwnerState>;
 }
 
 export interface ComposerAttachButtonProps
@@ -31,6 +32,7 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
 ) {
   const { slots, slotProps, ...other } = props;
   const composer = useComposerContext();
+  const localeText = useChatLocaleText();
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const ownerState: ComposerAttachButtonOwnerState = {
     isSubmitting: composer.isSubmitting,
@@ -38,11 +40,11 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
   };
-  const Root = slots?.root ?? 'button';
-  const Input = slots?.input ?? 'input';
+  const AttachButton = slots?.attachButton ?? 'button';
+  const AttachInput = slots?.attachInput ?? 'input';
   const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+    elementType: AttachButton,
+    externalSlotProps: slotProps?.attachButton,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -51,8 +53,8 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
   }) as React.ButtonHTMLAttributes<HTMLButtonElement> &
     React.RefAttributes<HTMLButtonElement>;
   const inputProps = useSlotProps({
-    elementType: Input,
-    externalSlotProps: slotProps?.input,
+    elementType: AttachInput,
+    externalSlotProps: slotProps?.attachInput,
     ownerState,
     additionalProps: {
       hidden: true,
@@ -67,7 +69,7 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
 
   return (
     <React.Fragment>
-      <Input
+      <AttachInput
         {...inputProps}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           externalOnChange?.(event);
@@ -82,9 +84,9 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
           event.currentTarget.value = '';
         }}
       />
-      <Root
+      <AttachButton
         {...rootProps}
-        aria-label={rootProps['aria-label'] ?? 'Add attachment'}
+        aria-label={rootProps['aria-label'] ?? localeText.composerAttachButtonLabel}
         onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
           externalOnClick?.(event);
 

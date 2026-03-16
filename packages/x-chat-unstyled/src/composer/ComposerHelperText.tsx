@@ -6,11 +6,11 @@ import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerHelperTextOwnerState } from './composer.types';
 
 export interface ComposerHelperTextSlots {
-  root: React.ElementType;
+  helperText: React.ElementType;
 }
 
 export interface ComposerHelperTextSlotProps {
-  root?: SlotComponentProps<'div', {}, ComposerHelperTextOwnerState>;
+  helperText?: SlotComponentProps<'div', {}, ComposerHelperTextOwnerState>;
 }
 
 export interface ComposerHelperTextProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,10 +34,10 @@ export const ComposerHelperText = React.forwardRef(function ComposerHelperText(
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
   };
-  const Root = slots?.root ?? 'div';
+  const HelperText = slots?.helperText ?? 'div';
   const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+    elementType: HelperText,
+    externalSlotProps: slotProps?.helperText,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -50,5 +50,5 @@ export const ComposerHelperText = React.forwardRef(function ComposerHelperText(
     return null;
   }
 
-  return <Root {...rootProps}>{content}</Root>;
+  return <HelperText {...rootProps}>{content}</HelperText>;
 }) as ComposerHelperTextComponent;

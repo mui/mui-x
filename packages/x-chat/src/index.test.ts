@@ -1,4 +1,5 @@
 import * as chat from '@mui/x-chat';
+import * as chatComposerSubpath from '@mui/x-chat/ChatComposer';
 import * as chatConversationsSubpath from '@mui/x-chat/ChatConversations';
 import * as chatMessageSubpath from '@mui/x-chat/ChatMessage';
 import * as chatThreadSubpath from '@mui/x-chat/ChatThread';
@@ -148,6 +149,7 @@ import type {
 } from '@mui/x-chat/unstyled';
 import type {
   ChatBoxProps as ThemeAugmentationChatBoxProps,
+  ChatComposerProps as ThemeAugmentationChatComposerProps,
   ChatConversationsProps as ThemeAugmentationChatConversationsProps,
   ChatMessageProps as ThemeAugmentationChatMessageProps,
   ChatComponents as ThemeAugmentationChatComponents,
@@ -207,6 +209,12 @@ declare module '@mui/x-chat-headless/types' {
 describe('x-chat package scaffold', () => {
   it('resolves the root, bridge, and type entry points', () => {
     const expectedChatRuntimeExports = [
+      'ChatComposer',
+      'ChatComposerAttachButton',
+      'ChatComposerHelperText',
+      'ChatComposerInput',
+      'ChatComposerSendButton',
+      'ChatComposerToolbar',
       'ChatConversations',
       'ChatDateDivider',
       'ChatMessage',
@@ -217,12 +225,24 @@ describe('x-chat package scaffold', () => {
       'ChatMessageMeta',
       'ChatMessageRoot',
       'ChatThread',
+      'chatComposerClasses',
       'chatConversationsClasses',
       'chatMessageClasses',
       'chatThreadClasses',
+      'getChatComposerUtilityClass',
       'getChatConversationsUtilityClass',
       'getChatMessageUtilityClass',
       'getChatThreadUtilityClass',
+    ];
+    const expectedChatComposerSubpathExports = [
+      'ChatComposer',
+      'ChatComposerAttachButton',
+      'ChatComposerHelperText',
+      'ChatComposerInput',
+      'ChatComposerSendButton',
+      'ChatComposerToolbar',
+      'chatComposerClasses',
+      'getChatComposerUtilityClass',
     ];
     const expectedChatConversationsSubpathExports = [
       'ChatConversations',
@@ -319,6 +339,7 @@ describe('x-chat package scaffold', () => {
     expect(headlessBridge).toBeDefined();
     expect(unstyledBridge).toBeDefined();
     expect(Object.keys(chat).sort()).toEqual(expectedChatRuntimeExports);
+    expect(Object.keys(chatComposerSubpath).sort()).toEqual(expectedChatComposerSubpathExports);
     expect(Object.keys(chatConversationsSubpath).sort()).toEqual(
       expectedChatConversationsSubpathExports,
     );
@@ -441,6 +462,14 @@ describe('x-chat package scaffold', () => {
     );
     expect(unstyledBridgeRuntime.renderDefaultTextPart).toBe(unstyledDirectRuntime.renderDefaultTextPart);
     expect(unstyledBridgeRuntime.renderDefaultToolPart).toBe(unstyledDirectRuntime.renderDefaultToolPart);
+    expect(chat.ChatComposer).toBe(chatComposerSubpath.ChatComposer);
+    expect(chat.ChatComposerInput).toBe(chatComposerSubpath.ChatComposerInput);
+    expect(chat.ChatComposerSendButton).toBe(chatComposerSubpath.ChatComposerSendButton);
+    expect(chat.ChatComposerAttachButton).toBe(chatComposerSubpath.ChatComposerAttachButton);
+    expect(chat.ChatComposerToolbar).toBe(chatComposerSubpath.ChatComposerToolbar);
+    expect(chat.ChatComposerHelperText).toBe(chatComposerSubpath.ChatComposerHelperText);
+    expect(chat.chatComposerClasses).toBe(chatComposerSubpath.chatComposerClasses);
+    expect(chat.getChatComposerUtilityClass).toBe(chatComposerSubpath.getChatComposerUtilityClass);
     expect(chat.ChatConversations).toBe(chatConversationsSubpath.ChatConversations);
     expect(chat.chatConversationsClasses).toBe(chatConversationsSubpath.chatConversationsClasses);
     expect(chat.getChatConversationsUtilityClass).toBe(
@@ -656,6 +685,11 @@ describe('x-chat package scaffold', () => {
       className: 'chat-conversations',
       dense: true,
     };
+    const chatComposerProps: ThemeAugmentationChatComposerProps = {
+      className: 'chat-composer',
+      helperText: 'Helpful hint',
+      toolbar: 'toolbar',
+    };
     const chatMessageProps: ThemeAugmentationChatMessageProps = {
       className: 'chat-message',
       messageId: 'm1',
@@ -762,6 +796,7 @@ describe('x-chat package scaffold', () => {
     expect(chatPalette.userMessageBg).toBe('#1976d2');
     expect(chatComponents.MuiChatBox?.styleOverrides?.root).toBeDefined();
     expect(chatBoxProps.className).toBe('chat-box');
+    expect(chatComposerProps.className).toBe('chat-composer');
     expect(chatConversationsProps.className).toBe('chat-conversations');
     expect(chatConversationsProps.dense).toBe(true);
     expect(chatMessageProps.messageId).toBe('m1');

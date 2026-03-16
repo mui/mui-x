@@ -2,17 +2,18 @@ import type * as React from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { ChatProviderProps } from '@mui/x-chat-headless';
 import type {
-  ComposerRootProps as UnstyledComposerRootProps,
   ScrollToBottomAffordanceProps as UnstyledScrollToBottomAffordanceProps,
   TypingIndicatorProps as UnstyledTypingIndicatorProps,
   UnreadMarkerProps as UnstyledUnreadMarkerProps,
 } from '@mui/x-chat-unstyled';
 import type { ChatConversationsProps } from '../ChatConversations';
+import type { ChatComposerProps as RealChatComposerProps } from '../ChatComposer';
 import type { ChatMessageProps } from '../ChatMessage';
 import type { ChatThreadProps } from '../ChatThread';
 import type { ChatLocaleText } from '../locales';
 
 export type { ChatConversationsProps } from '../ChatConversations';
+export type { ChatComposerProps } from '../ChatComposer';
 export type { ChatMessageProps } from '../ChatMessage';
 export type { ChatThreadProps } from '../ChatThread';
 
@@ -30,8 +31,6 @@ export interface ChatBoxProps<Cursor = string>
   slotProps?: Record<string, unknown>;
 }
 
-export interface ChatComposerProps extends UnstyledComposerRootProps, ChatStyledFoundationProps {}
-
 export interface ChatTypingIndicatorProps
   extends UnstyledTypingIndicatorProps,
     ChatStyledFoundationProps {}
@@ -48,7 +47,7 @@ export interface ChatComponentsPropsList {
   MuiChatBox: ChatBoxProps;
   MuiChatConversations: ChatConversationsProps;
   MuiChatThread: ChatThreadProps;
-  MuiChatComposer: ChatComposerProps;
+  MuiChatComposer: RealChatComposerProps;
   MuiChatMessage: ChatMessageProps;
   MuiChatTypingIndicator: ChatTypingIndicatorProps;
   MuiChatUnreadMarker: ChatUnreadMarkerProps;

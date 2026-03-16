@@ -2,15 +2,16 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerSendButtonOwnerState } from './composer.types';
 
 export interface ComposerSendButtonSlots {
-  root: React.ElementType;
+  sendButton: React.ElementType;
 }
 
 export interface ComposerSendButtonSlotProps {
-  root?: SlotComponentProps<'button', {}, ComposerSendButtonOwnerState>;
+  sendButton?: SlotComponentProps<'button', {}, ComposerSendButtonOwnerState>;
 }
 
 export interface ComposerSendButtonProps
@@ -29,16 +30,17 @@ export const ComposerSendButton = React.forwardRef(function ComposerSendButton(
 ) {
   const { slots, slotProps, ...other } = props;
   const composer = useComposerContext();
+  const localeText = useChatLocaleText();
   const ownerState: ComposerSendButtonOwnerState = {
     isSubmitting: composer.isSubmitting,
     hasValue: composer.hasValue,
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
   };
-  const Root = slots?.root ?? 'button';
+  const SendButton = slots?.sendButton ?? 'button';
   const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
+    elementType: SendButton,
+    externalSlotProps: slotProps?.sendButton,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -48,9 +50,9 @@ export const ComposerSendButton = React.forwardRef(function ComposerSendButton(
     React.RefAttributes<HTMLButtonElement>;
 
   return (
-    <Root
+    <SendButton
       {...rootProps}
-      aria-label={rootProps['aria-label'] ?? 'Send message'}
+      aria-label={rootProps['aria-label'] ?? localeText.composerSendButtonLabel}
       disabled={Boolean(rootProps.disabled) || !ownerState.hasValue || ownerState.isStreaming}
       type={rootProps.type ?? 'submit'}
     />
