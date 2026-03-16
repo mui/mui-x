@@ -141,9 +141,9 @@ When you set `skipAnimation` to `true`, the chart renders without animations.
 <PieChart skipAnimation />
 
 // For a composed chart
-<ChartsDataProvider>
+<ChartsContainer>
   <PiePlot skipAnimation />
-</ChartsDataProvider>
+</ChartsContainer>
 ```
 
 {{"demo": "PieAnimation.js"}}
