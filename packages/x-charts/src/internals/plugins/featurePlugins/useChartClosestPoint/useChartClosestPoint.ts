@@ -24,7 +24,13 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
-  const { disableClosestPoint, disableVoronoi, interactionMaxRadius, voronoiMaxRadius, onItemClick } = params;
+  const {
+    disableClosestPoint,
+    disableVoronoi,
+    interactionMaxRadius,
+    voronoiMaxRadius,
+    onItemClick,
+  } = params;
 
   const resolvedDisableClosestPoint = disableClosestPoint ?? disableVoronoi;
   const resolvedInteractionMaxRadius = interactionMaxRadius ?? voronoiMaxRadius;
@@ -241,7 +247,10 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
 useChartClosestPoint.getDefaultizedParams = ({ params }) => ({
   ...params,
-  disableClosestPoint: (params.disableClosestPoint ?? params.disableVoronoi) ?? !params.series.some((item) => item.type === 'scatter'),
+  disableClosestPoint:
+    params.disableClosestPoint ??
+    params.disableVoronoi ??
+    !params.series.some((item) => item.type === 'scatter'),
 });
 
 useChartClosestPoint.getInitialState = (params) => ({
