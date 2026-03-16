@@ -45,7 +45,7 @@ export const selectorChartsFocusedItem = createSelector(
 
 /**
  * The item that is either
- * - currently focused 
+ * - currently focused
  * - will be focused when user focuses the chart
  */
 export const selectorChartsFocusedOrToFocusedItem = createSelector(
