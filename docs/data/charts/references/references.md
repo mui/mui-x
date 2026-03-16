@@ -69,6 +69,4 @@ The component uses the `useXScale()` and `useYScale()` hooks to convert data val
 
 ## With Zoom
 
-The zoom 
-
-
+The zoom

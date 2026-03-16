@@ -16,7 +16,9 @@ type UseReferencePointResult = {
 type ReferencePointProps = UseReferencePointParams &
   Omit<React.SVGProps<SVGCircleElement>, 'cx' | 'cy'>;
 
-function useReferencePoint(params: UseReferencePointParams): UseReferencePointResult {
+function useReferencePoint(
+  params: UseReferencePointParams,
+): UseReferencePointResult {
   const xScale = useXScale() as ScaleLinear<any, any> | ScalePoint<any>;
   const yScale = useYScale() as ScaleLinear<any, any>;
 
@@ -38,7 +40,14 @@ export default function ReferencePointBasic() {
   return (
     <LineChart {...chartsConfig}>
       <ReferencePoint x="Apr" y={7} r={6} fill="red" />
-      <ReferencePoint x="Jun" y={6} r={8} fill="none" stroke="green" strokeWidth={2} />
+      <ReferencePoint
+        x="Jun"
+        y={6}
+        r={8}
+        fill="none"
+        stroke="green"
+        strokeWidth={2}
+      />
     </LineChart>
   );
 }

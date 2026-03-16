@@ -4,7 +4,7 @@ import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 
 export default function ReferenceLineBasic() {
   return (
-    <LineChart {...chartsConfig} >
+    <LineChart {...chartsConfig}>
       <ChartsReferenceLine y={4} />
       <ChartsReferenceLine x="Mar" />
     </LineChart>

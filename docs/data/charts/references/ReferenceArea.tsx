@@ -56,8 +56,8 @@ function resolveValue(
   if (value === 'end') {
     return drawingEnd;
   }
-  
-// The value clamped between the drawing area boundaries.
+
+  // The value clamped between the drawing area boundaries.
   return (
     Math.max(drawingStart, Math.min(drawingEnd, scale(value as any)! as number)) ?? 0
   );

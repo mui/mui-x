@@ -37,7 +37,7 @@ const recessions: RecessionPeriod[] = [
   },
   {
     start: new Date('2007-12-01'),
-    end: new Date('2009-06-01'),    
+    end: new Date('2009-06-01'),
     label: 'Great Recession',
   },
   { start: new Date('2020-02-01'), end: new Date('2020-04-01'), label: 'COVID-19' },
@@ -84,24 +84,26 @@ function AreaWithLabel(period: RecessionPeriod) {
   );
 }
 
-function ElectionMarker(election: Election){
-   return <ChartsReferenceLine
-                x={new Date(election.year, 0, 20).getTime()}
-                key={election.year}
-                label={election.label}
-                labelAlign="start"
-                lineStyle={{
-                  strokeDasharray: '2 2',
-                }}
-                labelStyle={{
-                  textAnchor: 'end',
-                  dominantBaseline: 'hanging',
-                  fontSize: 10,
-                  rotate: '270deg',
-                  transformOrigin: 'top right',
-                  transformBox: 'fill-box',
-                }}
-              />
+function ElectionMarker(election: Election) {
+  return (
+    <ChartsReferenceLine
+      x={new Date(election.year, 0, 20).getTime()}
+      key={election.year}
+      label={election.label}
+      labelAlign="start"
+      lineStyle={{
+        strokeDasharray: '2 2',
+      }}
+      labelStyle={{
+        textAnchor: 'end',
+        dominantBaseline: 'hanging',
+        fontSize: 10,
+        rotate: '270deg',
+        transformOrigin: 'top right',
+        transformBox: 'fill-box',
+      }}
+    />
+  );
 }
 
 export default function ReferenceOverview() {
@@ -194,7 +196,7 @@ export default function ReferenceOverview() {
             <ChartsAxisHighlight x="line" />
 
             {elections.map((election) => (
-              <ElectionMarker key={election.year} {...election}/>
+              <ElectionMarker key={election.year} {...election} />
             ))}
           </g>
 
