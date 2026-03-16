@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 
 export default function ReferenceLineStyled() {
@@ -22,7 +22,7 @@ export default function ReferenceLineStyled() {
     </LineChart>
   );
 }
-const chartsConfig: LineChartProps = {
+const chartsConfig = {
   height: 300,
   xAxis: [
     { scaleType: 'point', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'] },

@@ -24,6 +24,11 @@ Common use cases include marking thresholds, averages, or targets.
 
 Provide an `x` prop for a vertical line or a `y` prop for a horizontal line.
 
+:::info
+When a chart has multiple axes, use the `axisId` prop to specify which axis the reference value belongs to.
+By default, it targets the first defined axis.
+:::
+
 {{"demo": "ReferenceLineBasic.js"}}
 
 ### Label
@@ -39,11 +44,6 @@ Use the `lineStyle` and `labelStyle` props to customize the appearance of the li
 For example, you can create a dashed line with `lineStyle={{ strokeDasharray: '10 5' }}`.
 
 {{"demo": "ReferenceLineStyled.js"}}
-
-### Axis targeting
-
-When a chart has multiple axes, use the `axisId` prop to specify which axis the reference value belongs to.
-By default, it targets the first defined axis.
 
 ## Reference area 🧪
 
