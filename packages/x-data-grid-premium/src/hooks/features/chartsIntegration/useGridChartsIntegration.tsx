@@ -76,11 +76,7 @@ export const EMPTY_CHART_INTEGRATION_CONTEXT_STATE: ChartState = {
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
     DataGridPremiumProcessedProps,
-    | 'chartsIntegration'
-    | 'initialState'
-    | 'activeChartId'
-    | 'rowGroupingModel'
-    | 'pivotModel'
+    'chartsIntegration' | 'initialState' | 'activeChartId' | 'rowGroupingModel' | 'pivotModel'
   >,
   GridPrivateApiPremium
 > = (state, props) => {
@@ -941,12 +937,7 @@ export const useGridChartsIntegration = (
         chartsIntegration: chartStateToExport,
       };
     },
-    [
-      apiRef,
-      chartStateLookup,
-      props.chartsIntegration,
-      props.initialState?.chartsIntegration,
-    ],
+    [apiRef, chartStateLookup, props.chartsIntegration, props.initialState?.chartsIntegration],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
