@@ -3,31 +3,40 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 /**
- * @deprecated Use `RadarClasses` from `../radarClasses` instead.
+ * @deprecated Use `RadarClasses` instead.
  */
 export interface RadarAxisClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `radarClasses.axisRoot` instead.
+   */
   root: string;
-  /** Styles applied to the line element. */
+  /**
+   * Styles applied to the line element.
+   * @deprecated Use `radarClasses.axisLine` instead.
+   */
   line: string;
-  /** Styles applied to every label element. */
+  /**
+   * Styles applied to every label element.
+   * @deprecated Use `radarClasses.axisLabel` instead.
+   */
   label: string;
 }
 
 /**
- * @deprecated Use `RadarClassKey` from `../radarClasses` instead.
+ * @deprecated Use `RadarClassKey` instead.
  */
 export type RadarAxisClassKey = keyof RadarAxisClasses;
 
 /**
- * @deprecated Use `getRadarUtilityClass` from `../radarClasses` instead.
+ * @deprecated Use `getRadarUtilityClass` instead.
  */
 export function getRadarAxisUtilityClass(slot: string) {
   return generateUtilityClass('MuiRadarAxis', slot);
 }
 
 /**
- * @deprecated Use `radarClasses` from `../radarClasses` instead.
+ * @deprecated Use `radarClasses` instead.
  */
 export const chartsAxisClasses: RadarAxisClasses = generateUtilityClasses('MuiRadarAxis', [
   'root',
@@ -36,7 +45,7 @@ export const chartsAxisClasses: RadarAxisClasses = generateUtilityClasses('MuiRa
 ]);
 
 /**
- * @deprecated Use `useUtilityClasses` from `../radarClasses` instead.
+ * @deprecated Use `useUtilityClasses` instead.
  */
 export const useUtilityClasses = (classes?: Partial<RadarAxisClasses>) => {
   const slots = {
