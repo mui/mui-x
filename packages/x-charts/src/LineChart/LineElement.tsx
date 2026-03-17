@@ -16,7 +16,10 @@ import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
  * @deprecated Use `LineClasses` instead.
  */
 export interface LineElementClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `lineClasses.line` instead.
+   */
   root: string;
   /**
    * Styles applied to the root element when highlighted.
@@ -31,6 +34,7 @@ export interface LineElementClasses {
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }

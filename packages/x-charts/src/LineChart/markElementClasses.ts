@@ -9,7 +9,10 @@ export { type MarkElementOwnerState };
  * @deprecated Use `LineClasses` instead.
  */
 export interface MarkElementClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `lineClasses.mark` instead.
+   */
   root: string;
   /**
    * Styles applied to the root element when highlighted.
@@ -21,11 +24,15 @@ export interface MarkElementClasses {
    * @deprecated Use `[data-faded]` selector instead.
    */
   faded: string;
-  /** Styles applied to the root element when animation is not skipped. */
+  /**
+   * Styles applied to the root element when animation is not skipped.
+   * @deprecated Use `lineClasses.markAnimate` instead.
+   */
   animate: string;
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }
