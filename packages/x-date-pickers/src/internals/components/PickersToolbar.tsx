@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { shouldForwardProp } from '@mui/system/createStyled';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
 import { PickerToolbarOwnerState, useToolbarOwnerState } from '../hooks/useToolbarOwnerState';
@@ -18,9 +19,7 @@ export interface PickersToolbarProps extends Pick<BaseToolbarProps, 'hidden' | '
 
 const useUtilityClasses = (classes: Partial<PickersToolbarClasses> | undefined) => {
   const slots = {
-    root: ['root'],
-    title: ['title'],
-    content: ['content'],
+    ...createSlotArrayMap(['root', 'title', 'content'] as const),
   };
 
   return composeClasses(slots, getPickersToolbarUtilityClass, classes);

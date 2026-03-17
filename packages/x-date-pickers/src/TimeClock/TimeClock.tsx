@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
@@ -24,10 +25,7 @@ import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate'
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 const useUtilityClasses = (classes: Partial<TimeClockClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    arrowSwitcher: ['arrowSwitcher'],
-  };
+  const slots = createSlotArrayMap(['root', 'arrowSwitcher'] as const);
 
   return composeClasses(slots, getTimeClockUtilityClass, classes);
 };

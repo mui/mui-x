@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
@@ -52,10 +53,7 @@ export interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerSt
 }
 
 const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    item: ['item'],
-  };
+  const slots = createSlotArrayMap(['root', 'item'] as const);
 
   return composeClasses(slots, getMultiSectionDigitalClockSectionUtilityClass, classes);
 };

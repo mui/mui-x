@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
@@ -42,15 +43,14 @@ const useUtilityClasses = (
   const { pickerOrientation, toolbarDirection } = ownerState;
 
   const slots = {
-    root: ['root'],
-    separator: ['separator'],
     hourMinuteLabel: [
       'hourMinuteLabel',
       pickerOrientation === 'landscape' && 'hourMinuteLabelLandscape',
       toolbarDirection === 'rtl' && 'hourMinuteLabelReverse',
     ],
     ampmSelection: ['ampmSelection', pickerOrientation === 'landscape' && 'ampmLandscape'],
-    ampmLabel: ['ampmLabel'],
+
+    ...createSlotArrayMap(['root', 'separator', 'ampmLabel'] as const),
   };
 
   return composeClasses(slots, getTimePickerToolbarUtilityClass, classes);

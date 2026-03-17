@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import { PickerOwnerState, TimeView } from '../models';
 import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
@@ -35,10 +36,7 @@ export interface ClockPointerOwnerState extends PickerOwnerState {
 }
 
 const useUtilityClasses = (classes: Partial<ClockPointerClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    thumb: ['thumb'],
-  };
+  const slots = createSlotArrayMap(['root', 'thumb'] as const);
 
   return composeClasses(slots, getClockPointerUtilityClass, classes);
 };

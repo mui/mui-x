@@ -5,6 +5,7 @@ import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   pickersOutlinedInputClasses,
   getPickersOutlinedInputUtilityClass,
@@ -89,11 +90,7 @@ const PickersOutlinedInputSectionsContainer = styled(PickersInputBaseSectionsCon
 });
 
 const useUtilityClasses = (classes: Partial<PickersOutlinedInputClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    notchedOutline: ['notchedOutline'],
-    input: ['input'],
-  };
+  const slots = createSlotArrayMap(['root', 'notchedOutline', 'input'] as const);
 
   const composedClasses = composeClasses(slots, getPickersOutlinedInputUtilityClass, classes);
 
