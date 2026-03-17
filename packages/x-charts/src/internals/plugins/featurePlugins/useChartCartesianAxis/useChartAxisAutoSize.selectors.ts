@@ -8,9 +8,9 @@ import type { AxisId } from '../../../../models/axis';
 import { type UseChartDimensionsSignature } from '../../corePlugins/useChartDimensions/useChartDimensions.types';
 import type { ChartState } from '../../models';
 import {
-  selectorChartXAxisExtrema,
-  selectorChartYAxisExtrema,
-} from './useChartAxisExtrema.selectors';
+  selectorChartXAxisDomainsForAutoSize,
+  selectorChartYAxisDomainsForAutoSize,
+} from './useChartAxisDomains.selectors';
 
 // Direct state access to avoid circular dependency
 const selectorIsHydrated = (state: ChartState<[UseChartDimensionsSignature]>) =>
@@ -26,8 +26,8 @@ const EMPTY_RESULTS: Record<AxisId, AxisAutoSizeResult> = {};
 export const selectorChartXAxisAutoSizeResults = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorIsHydrated,
-  selectorChartXAxisExtrema,
-  function selectorChartXAxisAutoSizeResults(xAxes, isHydrated, extremaMap) {
+  selectorChartXAxisDomainsForAutoSize,
+  function selectorChartXAxisAutoSizeResults(xAxes, isHydrated, domainsMap) {
     const hasAutoAxis = xAxes?.some((axis) => axis.height === 'auto');
     if (!hasAutoAxis || !isHydrated) {
       return EMPTY_RESULTS;
@@ -41,7 +41,7 @@ export const selectorChartXAxisAutoSizeResults = createSelectorMemoized(
         const computed = computeAxisAutoSize({
           axis,
           direction: 'x',
-          extrema: extremaMap[axis.id],
+          domain: domainsMap[axis.id],
         });
         if (computed !== undefined) {
           results[axis.id] = computed;
@@ -79,8 +79,8 @@ export const selectorChartXAxisAutoSizes = createSelectorMemoized(
 export const selectorChartYAxisAutoSizeResults = createSelectorMemoized(
   selectorChartRawYAxis,
   selectorIsHydrated,
-  selectorChartYAxisExtrema,
-  function selectorChartYAxisAutoSizeResults(yAxes, isHydrated, extremaMap) {
+  selectorChartYAxisDomainsForAutoSize,
+  function selectorChartYAxisAutoSizeResults(yAxes, isHydrated, domainsMap) {
     const hasAutoAxis = yAxes?.some((axis) => axis.width === 'auto');
     if (!hasAutoAxis || !isHydrated) {
       return EMPTY_RESULTS;
@@ -94,7 +94,7 @@ export const selectorChartYAxisAutoSizeResults = createSelectorMemoized(
         const computed = computeAxisAutoSize({
           axis,
           direction: 'y',
-          extrema: extremaMap[axis.id],
+          domain: domainsMap[axis.id],
         });
         if (computed !== undefined) {
           results[axis.id] = computed;

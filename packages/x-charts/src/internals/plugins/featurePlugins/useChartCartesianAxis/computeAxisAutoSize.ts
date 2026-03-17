@@ -43,14 +43,20 @@ function getGroupLabels(data: readonly any[], group: AxisGroup): string[] {
   return Array.from(uniqueLabels);
 }
 
+interface AxisDomainInfo {
+  domain: [number, number];
+  tickNumber: number;
+}
+
 interface ComputeAxisAutoSizeOptions {
   axis: DefaultedXAxis | DefaultedYAxis;
   direction: 'x' | 'y';
   /**
-   * The actual data extrema [min, max] for continuous scales.
-   * These are used to estimate tick labels, unless axis min/max props are provided.
+   * The niced domain and tick number for continuous scales.
+   * These reflect the actual displayed domain (after domainLimit processing),
+   * so tick labels measured from them match what the chart renders.
    */
-  extrema?: [number, number];
+  domain?: AxisDomainInfo;
 }
 
 /**
@@ -135,10 +141,9 @@ function selectLargestCandidates(labels: string[]): string[] {
  */
 function getTickLabels(
   axis: DefaultedXAxis | DefaultedYAxis,
-  extrema?: [number, number],
+  domain?: AxisDomainInfo,
 ): string[] {
-  const { valueFormatter, scaleType, data, min, max } = axis as DefaultedXAxis &
-    DefaultedYAxis & { min?: number; max?: number };
+  const { valueFormatter, scaleType, data } = axis as DefaultedXAxis & DefaultedYAxis;
 
   if (scaleType === 'band' || scaleType === 'point') {
     if (!data || data.length === 0) {
@@ -161,9 +166,10 @@ function getTickLabels(
     return selectLargestCandidates(labels);
   }
 
-  // Use axis min/max props first, then data extrema, then defaults.
-  const minVal = min ?? (extrema && Number.isFinite(extrema[0]) ? extrema[0] : 0);
-  const maxVal = max ?? (extrema && Number.isFinite(extrema[1]) ? extrema[1] : 100);
+  // Use niced domain values (already processed through domainLimit), or defaults.
+  const minVal = domain ? domain.domain[0] : 0;
+  const maxVal = domain ? domain.domain[1] : 100;
+  const tickNumber = domain ? domain.tickNumber : 2;
 
   // Create a temporary scale for formatting (tickFormat only uses the domain, not the range)
   const continuousScaleType = (scaleType ?? 'linear') as ContinuousScaleName;
@@ -171,7 +177,7 @@ function getTickLabels(
 
   const valuesToMeasure = minVal === maxVal ? [minVal] : [minVal, maxVal];
 
-  const tickFormat = scale.tickFormat(valuesToMeasure.length);
+  const tickFormat = scale.tickFormat(tickNumber);
 
   return valuesToMeasure.map((value) => {
     const defaultTickLabel = tickFormat(value as any);
@@ -343,7 +349,7 @@ function computeGroupedAxisAutoSize(
 export function computeAxisAutoSize(
   options: ComputeAxisAutoSizeOptions,
 ): AxisAutoSizeResult | undefined {
-  const { axis, direction, extrema } = options;
+  const { axis, direction, domain } = options;
 
   if (hasGroups(axis)) {
     return computeGroupedAxisAutoSize(axis, direction);
@@ -354,7 +360,7 @@ export function computeAxisAutoSize(
   const hasLabel = Boolean(axis.label);
   const angle = tickLabelStyle?.angle;
 
-  const labels = getTickLabels(axis, extrema);
+  const labels = getTickLabels(axis, domain);
 
   if (labels.length === 0) {
     return { size: AXIS_AUTO_SIZE_MIN };
