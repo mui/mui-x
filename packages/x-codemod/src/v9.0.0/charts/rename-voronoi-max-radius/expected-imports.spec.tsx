@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 <div>
-  <ScatterChart hitAreaRadius={50} disableHitArea hitAreaRadius={30} disableHitArea />
+  <ScatterChart hitAreaRadius={50} disableHitArea />
   <ScatterChartPro hitAreaRadius={'item'} disableHitArea={true} />
   <SparkLineChart hitAreaRadius={50} />
   <ChartsContainer hitAreaRadius={50} />
