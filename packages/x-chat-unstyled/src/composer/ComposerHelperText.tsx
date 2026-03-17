@@ -33,6 +33,7 @@ export const ComposerHelperText = React.forwardRef(function ComposerHelperText(
     hasValue: composer.hasValue,
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
+    disabled: composer.disabled,
   };
   const HelperText = slots?.helperText ?? 'div';
   const rootProps = useSlotProps({

@@ -33,7 +33,7 @@ function createDeferred<T>() {
 
 function renderChatBox(
   ui: React.ReactElement,
-  options?: {
+  _options?: {
     adapter?: ChatAdapter;
     defaultMessages?: ChatMessage[];
   },
@@ -95,50 +95,47 @@ describe('ChatBox', () => {
   });
 
   it('forwards mirrored nested slots through the one-liner API', () => {
-    const ConversationTitleSlot = React.forwardRef<HTMLDivElement, any>(function ConversationTitleSlot(
-      props,
-      ref,
-    ) {
-      const { conversation, dense, focused, ownerState, selected, unread, ...other } = props;
+    const ConversationTitleSlot = React.forwardRef<HTMLDivElement, any>(
+      function ConversationTitleSlot(props, ref) {
+        const { conversation, dense, focused, ownerState, selected, unread, ...other } = props;
 
-      void conversation;
-      void dense;
-      void focused;
-      void ownerState;
-      void selected;
-      void unread;
+        void conversation;
+        void dense;
+        void focused;
+        void ownerState;
+        void selected;
+        void unread;
 
-      return (
-        <div data-testid="conversation-title-slot" ref={ref} {...other}>
-          {typeof conversation === 'object' && conversation && 'title' in conversation
-            ? ((conversation as { id: string; title?: string }).title ??
-              (conversation as { id: string; title?: string }).id)
-            : null}
-        </div>
-      );
-    });
+        return (
+          <div data-testid="conversation-title-slot" ref={ref} {...other}>
+            {typeof conversation === 'object' && conversation && 'title' in conversation
+              ? ((conversation as { id: string; title?: string }).title ??
+                (conversation as { id: string; title?: string }).id)
+              : null}
+          </div>
+        );
+      },
+    );
 
-    const MessageContentSlot = React.forwardRef<HTMLDivElement, any>(function MessageContentSlot(
-      props,
-      ref,
-    ) {
-      const { ownerState, ...other } = props;
+    const MessageContentSlot = React.forwardRef<HTMLDivElement, any>(
+      function MessageContentSlot(props, ref) {
+        const { ownerState, ...other } = props;
 
-      void ownerState;
+        void ownerState;
 
-      return <div data-testid="message-content-slot" ref={ref} {...other} />;
-    });
+        return <div data-testid="message-content-slot" ref={ref} {...other} />;
+      },
+    );
 
-    const ComposerInputSlot = React.forwardRef<HTMLTextAreaElement, any>(function ComposerInputSlot(
-      props,
-      ref,
-    ) {
-      const { ownerState, ...other } = props;
+    const ComposerInputSlot = React.forwardRef<HTMLTextAreaElement, any>(
+      function ComposerInputSlot(props, ref) {
+        const { ownerState, ...other } = props;
 
-      void ownerState;
+        void ownerState;
 
-      return <textarea data-testid="composer-input-slot" ref={ref} {...other} />;
-    });
+        return <textarea data-testid="composer-input-slot" ref={ref} {...other} />;
+      },
+    );
 
     renderChatBox(
       <ChatBox

@@ -1,13 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
-import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import type { SlotComponentProps } from '@mui/utils/types';
-import {
-  useChat,
-  useMessage,
-  type ChatMessage as ChatMessageModel,
-} from '@mui/x-chat-headless';
+import { useChat, useMessage } from '@mui/x-chat-headless';
 import {
   MessageListRoot,
   ThreadActions,
@@ -41,6 +35,7 @@ import {
 } from '../ChatIndicators';
 import { styled, useChatThemeProps } from '../internals/material/chatStyled';
 import { chatCssVarKeys, getChatCssVars } from '../internals/material/chatThemeVars';
+import { getCopyableText, joinClassNames, mergeSlotPropsWithClassName } from '../internals/utils';
 import { chatThreadClasses, getChatThreadUtilityClass } from './chatThreadClasses';
 
 export interface ChatThreadSlots {
@@ -82,36 +77,6 @@ export interface ChatThreadProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   sx?: SxProps<Theme>;
   typingIndicator?: React.ReactNode;
   virtualization?: UnstyledMessageListRootProps['virtualization'];
-}
-
-function getCopyableText(message: ChatMessageModel | null) {
-  if (message == null) {
-    return '';
-  }
-
-  return message.parts
-    .filter((part): part is Extract<ChatMessageModel['parts'][number], { type: 'text' }> => part.type === 'text')
-    .map((part) => part.text)
-    .join('\n\n')
-    .trim();
-}
-
-function joinClassNames(...classNames: Array<string | undefined>) {
-  return classNames.filter(Boolean).join(' ');
-}
-
-function mergeSlotPropsWithClassName<TOwnerState>(
-  slotProps: SlotComponentProps<any, {}, TOwnerState> | undefined,
-  className: string,
-) {
-  return (ownerState: TOwnerState) => {
-    const resolved = resolveComponentProps(slotProps, ownerState) ?? {};
-
-    return {
-      ...resolved,
-      className: joinClassNames(className, (resolved as { className?: string }).className),
-    };
-  };
 }
 
 const ChatThreadRootSlot = styled('div', {
@@ -344,10 +309,7 @@ export const ChatThread = React.forwardRef(function ChatThread(
     ...other
   } = props;
 
-  const Root = React.useMemo(
-    () => slots?.root ?? createDefaultRootSlot(sx),
-    [slots?.root, sx],
-  );
+  const Root = React.useMemo(() => slots?.root ?? createDefaultRootSlot(sx), [slots?.root, sx]);
   const Header = slots?.header ?? ChatThreadHeaderSlot;
   const Title = slots?.title ?? ChatThreadTitleSlot;
   const Subtitle = slots?.subtitle ?? ChatThreadSubtitleSlot;
@@ -365,17 +327,24 @@ export const ChatThread = React.forwardRef(function ChatThread(
     <ThreadRoot
       ref={ref}
       slotProps={{
-        root: mergeSlotPropsWithClassName(slotProps?.root, joinClassNames(chatThreadClasses.root, className)),
+        root: mergeSlotPropsWithClassName(
+          slotProps?.root,
+          joinClassNames(chatThreadClasses.root, className),
+        ),
       }}
       slots={{ root: Root }}
       {...other}
     >
       <ThreadHeader
-        slotProps={{ header: mergeSlotPropsWithClassName(slotProps?.header, chatThreadClasses.header) }}
+        slotProps={{
+          header: mergeSlotPropsWithClassName(slotProps?.header, chatThreadClasses.header),
+        }}
         slots={{ header: Header }}
       >
         <ThreadTitle
-          slotProps={{ title: mergeSlotPropsWithClassName(slotProps?.title, chatThreadClasses.title) }}
+          slotProps={{
+            title: mergeSlotPropsWithClassName(slotProps?.title, chatThreadClasses.title),
+          }}
           slots={{ title: Title }}
         />
         <ThreadSubtitle
@@ -385,7 +354,9 @@ export const ChatThread = React.forwardRef(function ChatThread(
           slots={{ subtitle: Subtitle }}
         />
         <ThreadActions
-          slotProps={{ actions: mergeSlotPropsWithClassName(slotProps?.actions, chatThreadClasses.actions) }}
+          slotProps={{
+            actions: mergeSlotPropsWithClassName(slotProps?.actions, chatThreadClasses.actions),
+          }}
           slots={{ actions: Actions }}
         >
           {actions}
@@ -400,7 +371,10 @@ export const ChatThread = React.forwardRef(function ChatThread(
         overscan={overscan}
         renderItem={resolvedRenderItem}
         slotProps={{
-          messageList: mergeSlotPropsWithClassName(slotProps?.messageList, chatThreadClasses.messageList),
+          messageList: mergeSlotPropsWithClassName(
+            slotProps?.messageList,
+            chatThreadClasses.messageList,
+          ),
           messageListScroller: mergeSlotPropsWithClassName(
             slotProps?.messageListScroller,
             chatThreadClasses.messageListScroller,

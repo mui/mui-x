@@ -39,6 +39,7 @@
     "@babel/runtime": "catalog:",
     "@mui/x-chat-headless": "workspace:*",
     "@mui/x-chat-unstyled": "workspace:*",
+    "prop-types": "catalog:",
     "react-markdown": "10.1.0",
     "remark-gfm": "4.0.1",
     "shiki": "4.0.2"

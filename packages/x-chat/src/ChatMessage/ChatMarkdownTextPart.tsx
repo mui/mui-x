@@ -3,7 +3,6 @@ import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import { useTheme, type SxProps, type Theme } from '@mui/material/styles';
-import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import type {
   ChatPartRenderer,
@@ -13,6 +12,7 @@ import type {
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { styled } from '../internals/material/chatStyled';
+import { createDefaultSlot, joinClassNames, mergeSlotPropsWithClassName } from '../internals/utils';
 import { chatMessageClasses } from './chatMessageClasses';
 
 type CodeButtonLocaleText = {
@@ -29,37 +29,6 @@ type ShikiModule = typeof import('shiki');
 
 const highlightedCodeCache = new Map<string, string>();
 let shikiModulePromise: Promise<ShikiModule> | null = null;
-
-function joinClassNames(...classNames: Array<string | undefined>) {
-  return classNames.filter(Boolean).join(' ');
-}
-
-function mergeSlotPropsWithClassName<TOwnerState>(
-  slotProps: SlotComponentProps<any, {}, TOwnerState> | undefined,
-  className: string,
-) {
-  return (ownerState: TOwnerState) => {
-    const resolved = resolveComponentProps(slotProps, ownerState) ?? {};
-
-    return {
-      ...resolved,
-      className: joinClassNames(className, (resolved as { className?: string }).className),
-    };
-  };
-}
-
-function createDefaultSlot(Component: React.ElementType, sx?: SxProps<Theme>) {
-  return React.forwardRef(function DefaultSlot(
-    props: React.HTMLAttributes<HTMLDivElement> & {
-      ownerState?: unknown;
-    },
-    ref: React.Ref<any>,
-  ) {
-    const { ownerState, ...other } = props;
-
-    return <Component ownerState={ownerState} ref={ref} sx={sx} {...other} />;
-  });
-}
 
 function normalizeMarkdownForRender(markdown: string) {
   const fenceMatches = markdown.match(/```/g);
@@ -415,12 +384,12 @@ function CodeBlock(props: {
       return undefined;
     }
 
-    const timeout = window.setTimeout(() => {
+    const timeout = setTimeout(() => {
       setCopied(false);
     }, 1500);
 
     return () => {
-      window.clearTimeout(timeout);
+      clearTimeout(timeout);
     };
   }, [copied]);
 
@@ -430,11 +399,13 @@ function CodeBlock(props: {
         <Language {...languageProps}>{language || 'text'}</Language>
         <CopyButton
           {...copyButtonProps}
-          aria-label={copied ? localeText.messageCopiedCodeButtonLabel : localeText.messageCopyCodeButtonLabel}
+          aria-label={
+            copied ? localeText.messageCopiedCodeButtonLabel : localeText.messageCopyCodeButtonLabel
+          }
           onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
-            (copyButtonProps as { onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void }).onClick?.(
-              event,
-            );
+            (
+              copyButtonProps as { onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void }
+            ).onClick?.(event);
             if (event.defaultPrevented) {
               return;
             }
@@ -453,6 +424,7 @@ function CodeBlock(props: {
       {highlightedHtml ? (
         <div
           className={chatMessageClasses.codeBlockPre}
+          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: highlightedHtml }}
         />
       ) : (
@@ -488,10 +460,7 @@ export const ChatMarkdownTextPart = React.forwardRef(function ChatMarkdownTextPa
     }),
     [localeTextProp],
   );
-  const normalizedText = React.useMemo(
-    () => normalizeMarkdownForRender(part.text),
-    [part.text],
-  );
+  const normalizedText = React.useMemo(() => normalizeMarkdownForRender(part.text), [part.text]);
   const ownerState = React.useMemo<ChatMarkdownTextPartOwnerState>(
     () => ({
       copied: false,
@@ -512,7 +481,9 @@ export const ChatMarkdownTextPart = React.forwardRef(function ChatMarkdownTextPa
   const InlineCode = slots?.inlineCode ?? ChatMarkdownInlineCodeSlot;
   const rootProps = mergeSlotPropsWithClassName(
     slotProps?.root,
-    className ? joinClassNames(chatMessageClasses.markdown, className) : chatMessageClasses.markdown,
+    className
+      ? joinClassNames(chatMessageClasses.markdown, className)
+      : chatMessageClasses.markdown,
   )(ownerState);
   const markdownProps = mergeSlotPropsWithClassName(
     slotProps?.markdown,
@@ -578,22 +549,58 @@ export const ChatMarkdownTextPart = React.forwardRef(function ChatMarkdownTextPa
           );
         },
         h1(props: React.ComponentProps<'h1'>) {
-          return <h1 {...props} className={joinClassNames(chatMessageClasses.markdownHeading, props.className)} />;
+          return (
+            // eslint-disable-next-line jsx-a11y/heading-has-content
+            <h1
+              {...props}
+              className={joinClassNames(chatMessageClasses.markdownHeading, props.className)}
+            />
+          );
         },
         h2(props: React.ComponentProps<'h2'>) {
-          return <h2 {...props} className={joinClassNames(chatMessageClasses.markdownHeading, props.className)} />;
+          return (
+            // eslint-disable-next-line jsx-a11y/heading-has-content
+            <h2
+              {...props}
+              className={joinClassNames(chatMessageClasses.markdownHeading, props.className)}
+            />
+          );
         },
         h3(props: React.ComponentProps<'h3'>) {
-          return <h3 {...props} className={joinClassNames(chatMessageClasses.markdownHeading, props.className)} />;
+          return (
+            // eslint-disable-next-line jsx-a11y/heading-has-content
+            <h3
+              {...props}
+              className={joinClassNames(chatMessageClasses.markdownHeading, props.className)}
+            />
+          );
         },
         h4(props: React.ComponentProps<'h4'>) {
-          return <h4 {...props} className={joinClassNames(chatMessageClasses.markdownHeading, props.className)} />;
+          return (
+            // eslint-disable-next-line jsx-a11y/heading-has-content
+            <h4
+              {...props}
+              className={joinClassNames(chatMessageClasses.markdownHeading, props.className)}
+            />
+          );
         },
         h5(props: React.ComponentProps<'h5'>) {
-          return <h5 {...props} className={joinClassNames(chatMessageClasses.markdownHeading, props.className)} />;
+          return (
+            // eslint-disable-next-line jsx-a11y/heading-has-content
+            <h5
+              {...props}
+              className={joinClassNames(chatMessageClasses.markdownHeading, props.className)}
+            />
+          );
         },
         h6(props: React.ComponentProps<'h6'>) {
-          return <h6 {...props} className={joinClassNames(chatMessageClasses.markdownHeading, props.className)} />;
+          return (
+            // eslint-disable-next-line jsx-a11y/heading-has-content
+            <h6
+              {...props}
+              className={joinClassNames(chatMessageClasses.markdownHeading, props.className)}
+            />
+          );
         },
         img(props: React.ComponentProps<'img'>) {
           const src = safeUri(props.src);
@@ -604,9 +611,9 @@ export const ChatMarkdownTextPart = React.forwardRef(function ChatMarkdownTextPa
           return <img {...props} alt={props.alt ?? ''} src={src} />;
         },
         pre(props: React.ComponentProps<'pre'>) {
-          const child = React.Children.toArray(props.children).find(React.isValidElement) as React.ReactElement<
-            React.HTMLAttributes<HTMLElement>
-          >;
+          const child = React.Children.toArray(props.children).find(
+            React.isValidElement,
+          ) as React.ReactElement<React.HTMLAttributes<HTMLElement>>;
 
           if (child == null) {
             return <pre {...props} />;

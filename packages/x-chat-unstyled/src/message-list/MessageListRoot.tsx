@@ -4,11 +4,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
-import {
-  useChat,
-  useMessageIds,
-  type ChatMessage,
-} from '@mui/x-chat-headless';
+import { useChat, useMessageIds, type ChatMessage } from '@mui/x-chat-headless';
 import { LayoutList, useVirtualizer } from '@mui/x-virtualizer';
 import { MessageListContextProvider } from './internals/MessageListContext';
 import { type MessageListRootOwnerState } from './messageList.types';
@@ -46,7 +42,10 @@ export interface MessageListRootSlotProps {
   messageListOverlay?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
 
-export interface MessageListRootProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface MessageListRootProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   items?: string[];
   overlay?: React.ReactNode;
   renderItem(params: { id: string; index: number }): React.ReactNode;
@@ -149,7 +148,6 @@ interface MessageListRenderedRowProps {
   id: string;
   index: number;
   renderItem: MessageListRootProps['renderItem'];
-  getItemKey: NonNullable<MessageListRootProps['getItemKey']>;
   registerRowElement(id: string, element: HTMLDivElement | null): void;
   onRowResize(): void;
   observeRowHeight?: (element: HTMLDivElement, rowId: string) => (() => void) | void;
@@ -161,7 +159,6 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
     id,
     index,
     renderItem,
-    getItemKey,
     registerRowElement,
     onRowResize,
     observeRowHeight,
@@ -209,12 +206,7 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
   }, [onRowResize]);
 
   return (
-    <div
-      data-message-id={id}
-      data-message-list-row=""
-      ref={rowRef}
-      style={{ width: '100%' }}
-    >
+    <div data-message-id={id} data-message-list-row="" ref={rowRef} style={{ width: '100%' }}>
       {renderItem({ id, index })}
     </div>
   );
@@ -278,39 +270,36 @@ function useMessageListBehavior(parameters: {
     setUnseenMessageCount((previous) => (previous === nextCount ? previous : nextCount));
   }, []);
 
-  const captureAnchor = React.useCallback(
-    (ids: string[]): ScrollAnchor | null => {
-      const root = rootRef.current;
+  const captureAnchor = React.useCallback((ids: string[]): ScrollAnchor | null => {
+    const root = rootRef.current;
 
-      if (!root) {
-        return null;
-      }
-
-      const containerRect = root.getBoundingClientRect();
-
-      for (const id of ids) {
-        const element = rowElementsRef.current.get(id);
-
-        if (!element) {
-          continue;
-        }
-
-        const rect = element.getBoundingClientRect();
-
-        if (rect.bottom <= containerRect.top || rect.top >= containerRect.bottom) {
-          continue;
-        }
-
-        return {
-          id,
-          offsetFromBottom: containerRect.bottom - rect.bottom,
-        };
-      }
-
+    if (!root) {
       return null;
-    },
-    [],
-  );
+    }
+
+    const containerRect = root.getBoundingClientRect();
+
+    for (const id of ids) {
+      const element = rowElementsRef.current.get(id);
+
+      if (!element) {
+        continue;
+      }
+
+      const rect = element.getBoundingClientRect();
+
+      if (rect.bottom <= containerRect.top || rect.top >= containerRect.bottom) {
+        continue;
+      }
+
+      return {
+        id,
+        offsetFromBottom: containerRect.bottom - rect.bottom,
+      };
+    }
+
+    return null;
+  }, []);
 
   const restoreAnchor = React.useCallback((anchor: ScrollAnchor | null) => {
     const root = rootRef.current;
@@ -333,25 +322,28 @@ function useMessageListBehavior(parameters: {
     return true;
   }, []);
 
-  const scrollToBottom = React.useCallback((options?: { behavior?: ScrollBehavior }) => {
-    const root = rootRef.current;
+  const scrollToBottom = React.useCallback(
+    (options?: { behavior?: ScrollBehavior }) => {
+      const root = rootRef.current;
 
-    if (!root) {
-      return;
-    }
+      if (!root) {
+        return;
+      }
 
-    if (typeof root.scrollTo === 'function') {
-      root.scrollTo({
-        top: root.scrollHeight,
-        behavior: options?.behavior ?? 'auto',
-      });
-    } else {
-      root.scrollTop = root.scrollHeight;
-    }
-    updateIsAtBottom();
-    updateUnseenMessageCount(0);
-    anchorRef.current = captureAnchor(itemIdsRef.current);
-  }, [captureAnchor, updateIsAtBottom, updateUnseenMessageCount]);
+      if (typeof root.scrollTo === 'function') {
+        root.scrollTo({
+          top: root.scrollHeight,
+          behavior: options?.behavior ?? 'auto',
+        });
+      } else {
+        root.scrollTop = root.scrollHeight;
+      }
+      updateIsAtBottom();
+      updateUnseenMessageCount(0);
+      anchorRef.current = captureAnchor(itemIdsRef.current);
+    },
+    [captureAnchor, updateIsAtBottom, updateUnseenMessageCount],
+  );
 
   const registerRowElement = React.useCallback((id: string, element: HTMLDivElement | null) => {
     if (element == null) {
@@ -543,7 +535,6 @@ function StaticMessageListView(props: MessageListViewProps) {
           <MessageListContent {...messageListContentProps}>
             {itemIds.map((id, index) => (
               <MessageListRenderedRow
-                getItemKey={getItemKey}
                 id={id}
                 index={index}
                 key={getItemKey(id, index)}
@@ -606,7 +597,6 @@ function VirtualizedMessageListView(
     rowCount: rows.length,
     renderRow: ({ id, model }) => (
       <MessageListRenderedRow
-        getItemKey={getItemKey}
         id={id}
         index={(model as MessageListRowModel).index}
         key={getItemKey(id, (model as MessageListRowModel).index)}

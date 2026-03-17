@@ -2,10 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
-import {
-  getChatLayoutPaneKind,
-  type ChatLayoutPaneKind,
-} from './internals/chatLayoutPaneKind';
+import { getChatLayoutPaneKind, type ChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
 
 export interface ChatLayoutSlots {
   root: React.ElementType;
@@ -62,7 +59,8 @@ function resolvePaneChildren(children: React.ReactNode) {
   });
 
   if (allChildren.length <= 1) {
-    const singleChild = paneChildren.conversations[0] ?? paneChildren.thread[0] ?? unassignedChildren[0];
+    const singleChild =
+      paneChildren.conversations[0] ?? paneChildren.thread[0] ?? unassignedChildren[0];
 
     if (singleChild === undefined) {
       return paneChildren;
@@ -98,6 +96,18 @@ function resolvePaneChildren(children: React.ReactNode) {
 
     assignPaneChild(paneChildren, 'thread', child);
   });
+
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    unassignedChildren.length > 0 &&
+    unassignedChildren.length < allChildren.length
+  ) {
+    console.warn(
+      'MUI X Chat: ChatLayout could not determine the pane kind for some children. ' +
+        'Use the `pane` prop (pane="conversations" or pane="thread") to explicitly assign children to panes, ' +
+        'or use the `ConversationListRoot` and `ThreadRoot` components directly.',
+    );
+  }
 
   return paneChildren;
 }
@@ -150,7 +160,9 @@ export const ChatLayout = React.forwardRef(function ChatLayout(
   return (
     <Root {...rootProps}>
       {ownerState.hasConversationsPane ? (
-        <ConversationsPane {...conversationsPaneProps}>{paneChildren.conversations}</ConversationsPane>
+        <ConversationsPane {...conversationsPaneProps}>
+          {paneChildren.conversations}
+        </ConversationsPane>
       ) : null}
       {ownerState.hasThreadPane ? (
         <ThreadPane {...threadPaneProps}>{paneChildren.thread}</ThreadPane>

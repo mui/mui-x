@@ -10,13 +10,21 @@ import * as headlessDirect from '@mui/x-chat-headless';
 import * as themeAugmentation from '@mui/x-chat/themeAugmentation';
 import * as chatTypes from '@mui/x-chat/types';
 import * as unstyledBridge from '@mui/x-chat/unstyled';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import * as unstyledChatBridge from '@mui/x-chat/unstyled/chat';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import * as unstyledComposerBridge from '@mui/x-chat/unstyled/composer';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import * as unstyledConversationListBridge from '@mui/x-chat/unstyled/conversation-list';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import * as unstyledIndicatorsBridge from '@mui/x-chat/unstyled/indicators';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import * as unstyledMessageGroupBridge from '@mui/x-chat/unstyled/message-group';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import * as unstyledMessageBridge from '@mui/x-chat/unstyled/message';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import * as unstyledMessageListBridge from '@mui/x-chat/unstyled/message-list';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import * as unstyledThreadBridge from '@mui/x-chat/unstyled/thread';
 import * as unstyledDirect from '@mui/x-chat-unstyled';
 import * as unstyledChatDirect from '@mui/x-chat-unstyled/chat';
@@ -27,7 +35,13 @@ import * as unstyledMessageGroupDirect from '@mui/x-chat-unstyled/message-group'
 import * as unstyledMessageDirect from '@mui/x-chat-unstyled/message';
 import * as unstyledMessageListDirect from '@mui/x-chat-unstyled/message-list';
 import * as unstyledThreadDirect from '@mui/x-chat-unstyled/thread';
-import { Chat as UnstyledBridgeChat, ChatLayout as UnstyledBridgeChatLayout, ChatRoot as UnstyledBridgeChatRoot } from '@mui/x-chat/unstyled/chat';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
+import {
+  Chat as UnstyledBridgeChat,
+  ChatLayout as UnstyledBridgeChatLayout,
+  ChatRoot as UnstyledBridgeChatRoot,
+} from '@mui/x-chat/unstyled/chat';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import {
   Composer as UnstyledBridgeComposer,
   ComposerAttachButton as UnstyledBridgeComposerAttachButton,
@@ -37,17 +51,21 @@ import {
   ComposerSendButton as UnstyledBridgeComposerSendButton,
   ComposerToolbar as UnstyledBridgeComposerToolbar,
 } from '@mui/x-chat/unstyled/composer';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import {
   ConversationList as UnstyledBridgeConversationList,
   ConversationListRoot as UnstyledBridgeConversationListRoot,
 } from '@mui/x-chat/unstyled/conversation-list';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import { MessageGroup as UnstyledBridgeMessageGroup } from '@mui/x-chat/unstyled/message-group';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import {
   Indicators as UnstyledBridgeIndicators,
   ScrollToBottomAffordance as UnstyledBridgeScrollToBottomAffordance,
   TypingIndicator as UnstyledBridgeTypingIndicator,
   UnreadMarker as UnstyledBridgeUnreadMarker,
 } from '@mui/x-chat/unstyled/indicators';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import {
   MessageActions as UnstyledBridgeMessageActions,
   MessageAvatar as UnstyledBridgeMessageAvatar,
@@ -56,16 +74,22 @@ import {
   MessageMeta as UnstyledBridgeMessageMeta,
   MessageRoot as UnstyledBridgeMessageRoot,
 } from '@mui/x-chat/unstyled/message';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import {
   MessageListDateDivider as UnstyledBridgeMessageListDateDivider,
   MessageList as UnstyledBridgeMessageList,
   MessageListRoot as UnstyledBridgeMessageListRoot,
 } from '@mui/x-chat/unstyled/message-list';
+// eslint-disable-next-line no-restricted-imports -- Testing subpath exports
 import {
   Thread as UnstyledBridgeThread,
   ThreadRoot as UnstyledBridgeThreadRoot,
 } from '@mui/x-chat/unstyled/thread';
-import { Chat as UnstyledDirectChat, ChatLayout as UnstyledDirectChatLayout, ChatRoot as UnstyledDirectChatRoot } from '@mui/x-chat-unstyled/chat';
+import {
+  Chat as UnstyledDirectChat,
+  ChatLayout as UnstyledDirectChatLayout,
+  ChatRoot as UnstyledDirectChatRoot,
+} from '@mui/x-chat-unstyled/chat';
 import {
   Composer as UnstyledDirectComposer,
   ComposerAttachButton as UnstyledDirectComposerAttachButton,
@@ -387,19 +411,35 @@ describe('x-chat package scaffold', () => {
     expect(headlessBridge).toBeDefined();
     expect(unstyledBridge).toBeDefined();
     expect(Object.keys(chat).sort()).toEqual(expectedChatRuntimeExports.slice().sort());
-    expect(Object.keys(chatComposerSubpath).sort()).toEqual(expectedChatComposerSubpathExports.slice().sort());
+    expect(Object.keys(chatComposerSubpath).sort()).toEqual(
+      expectedChatComposerSubpathExports.slice().sort(),
+    );
     expect(Object.keys(chatConversationsSubpath).sort()).toEqual(
       expectedChatConversationsSubpathExports.slice().sort(),
     );
-    expect(Object.keys(chatIndicatorsSubpath).sort()).toEqual(expectedChatIndicatorsSubpathExports.slice().sort());
-    expect(Object.keys(chatMessageSubpath).sort()).toEqual(expectedChatMessageSubpathExports.slice().sort());
-    expect(Object.keys(chatThreadSubpath).sort()).toEqual(expectedChatThreadSubpathExports.slice().sort());
+    expect(Object.keys(chatIndicatorsSubpath).sort()).toEqual(
+      expectedChatIndicatorsSubpathExports.slice().sort(),
+    );
+    expect(Object.keys(chatMessageSubpath).sort()).toEqual(
+      expectedChatMessageSubpathExports.slice().sort(),
+    );
+    expect(Object.keys(chatThreadSubpath).sort()).toEqual(
+      expectedChatThreadSubpathExports.slice().sort(),
+    );
     expect(Object.keys(themeAugmentation)).toEqual([]);
     expect(Object.keys(chatLocales).sort()).toEqual(['enUS', 'getChatLocalization']);
-    expect(Object.keys(headlessBridge).sort()).toEqual(expectedHeadlessRuntimeExports.slice().sort());
-    expect(Object.keys(headlessDirect).sort()).toEqual(expectedHeadlessRuntimeExports.slice().sort());
-    expect(Object.keys(unstyledBridge).sort()).toEqual(expectedUnstyledRuntimeExports.slice().sort());
-    expect(Object.keys(unstyledDirect).sort()).toEqual(expectedUnstyledRuntimeExports.slice().sort());
+    expect(Object.keys(headlessBridge).sort()).toEqual(
+      expectedHeadlessRuntimeExports.slice().sort(),
+    );
+    expect(Object.keys(headlessDirect).sort()).toEqual(
+      expectedHeadlessRuntimeExports.slice().sort(),
+    );
+    expect(Object.keys(unstyledBridge).sort()).toEqual(
+      expectedUnstyledRuntimeExports.slice().sort(),
+    );
+    expect(Object.keys(unstyledDirect).sort()).toEqual(
+      expectedUnstyledRuntimeExports.slice().sort(),
+    );
     expect(Object.keys(unstyledChatBridge).sort()).toEqual(Object.keys(unstyledChatDirect).sort());
     expect(Object.keys(unstyledComposerBridge).sort()).toEqual(
       Object.keys(unstyledComposerDirect).sort(),
@@ -413,11 +453,15 @@ describe('x-chat package scaffold', () => {
     expect(Object.keys(unstyledMessageGroupBridge).sort()).toEqual(
       Object.keys(unstyledMessageGroupDirect).sort(),
     );
-    expect(Object.keys(unstyledMessageBridge).sort()).toEqual(Object.keys(unstyledMessageDirect).sort());
+    expect(Object.keys(unstyledMessageBridge).sort()).toEqual(
+      Object.keys(unstyledMessageDirect).sort(),
+    );
     expect(Object.keys(unstyledMessageListBridge).sort()).toEqual(
       Object.keys(unstyledMessageListDirect).sort(),
     );
-    expect(Object.keys(unstyledThreadBridge).sort()).toEqual(Object.keys(unstyledThreadDirect).sort());
+    expect(Object.keys(unstyledThreadBridge).sort()).toEqual(
+      Object.keys(unstyledThreadDirect).sort(),
+    );
     expect(headlessBridgeSelectors).toBe(headlessDirectSelectors);
     expect(HeadlessBridgeChatProvider).toBe(HeadlessDirectChatProvider);
     expect(headlessBridgeUseChatStore).toBe(headlessDirectUseChatStore);
@@ -509,8 +553,12 @@ describe('x-chat package scaffold', () => {
     expect(unstyledBridgeRuntime.getDefaultMessagePartRenderer).toBe(
       unstyledDirectRuntime.getDefaultMessagePartRenderer,
     );
-    expect(unstyledBridgeRuntime.renderDefaultTextPart).toBe(unstyledDirectRuntime.renderDefaultTextPart);
-    expect(unstyledBridgeRuntime.renderDefaultToolPart).toBe(unstyledDirectRuntime.renderDefaultToolPart);
+    expect(unstyledBridgeRuntime.renderDefaultTextPart).toBe(
+      unstyledDirectRuntime.renderDefaultTextPart,
+    );
+    expect(unstyledBridgeRuntime.renderDefaultToolPart).toBe(
+      unstyledDirectRuntime.renderDefaultToolPart,
+    );
     expect(chat.ChatComposer).toBe(chatComposerSubpath.ChatComposer);
     expect(chat.ChatComposerInput).toBe(chatComposerSubpath.ChatComposerInput);
     expect(chat.ChatComposerSendButton).toBe(chatComposerSubpath.ChatComposerSendButton);
@@ -554,7 +602,9 @@ describe('x-chat package scaffold', () => {
     expect(chat.ChatFilePartRenderer).toBe(chatMessageSubpath.ChatFilePartRenderer);
     expect(chat.ChatMarkdownTextPart).toBe(chatMessageSubpath.ChatMarkdownTextPart);
     expect(chat.ChatReasoningPartRenderer).toBe(chatMessageSubpath.ChatReasoningPartRenderer);
-    expect(chat.ChatSourceDocumentPartRenderer).toBe(chatMessageSubpath.ChatSourceDocumentPartRenderer);
+    expect(chat.ChatSourceDocumentPartRenderer).toBe(
+      chatMessageSubpath.ChatSourceDocumentPartRenderer,
+    );
     expect(chat.ChatSourceUrlPartRenderer).toBe(chatMessageSubpath.ChatSourceUrlPartRenderer);
     expect(chat.ChatToolPartRenderer).toBe(chatMessageSubpath.ChatToolPartRenderer);
     expect(chat.chatMessageClasses).toBe(chatMessageSubpath.chatMessageClasses);
@@ -576,7 +626,9 @@ describe('x-chat package scaffold', () => {
     expect(chat.ChatThread).toBe(chatThreadSubpath.ChatThread);
     expect(chat.chatThreadClasses).toBe(chatThreadSubpath.chatThreadClasses);
     expect(chat.getChatThreadUtilityClass).toBe(chatThreadSubpath.getChatThreadUtilityClass);
-    expect(unstyledBridgeRuntime.renderDefaultDataPart).toBe(unstyledDirectRuntime.renderDefaultDataPart);
+    expect(unstyledBridgeRuntime.renderDefaultDataPart).toBe(
+      unstyledDirectRuntime.renderDefaultDataPart,
+    );
     expect(unstyledBridgeRuntime.markChatLayoutPane).toBeUndefined();
     expect(unstyledBridgeRuntime.ToolRenderer).toBeUndefined();
     expect(unstyledBridgeRuntime.JsonBlock).toBeUndefined();
@@ -736,7 +788,8 @@ describe('x-chat package scaffold', () => {
       tool: ({ part: currentPart }) => currentPart.toolInvocation.toolName,
     };
 
-    const rendererAliasMap: Chatbox.PartRendererMap = rendererMap;
+    // eslint-disable-next-line testing-library/render-result-naming-convention -- Not a render result
+    const partRendererMapAlias: Chatbox.PartRendererMap = rendererMap;
     const approvalResponseInput: HeadlessAddToolApproveResponseInput = {
       id: 'approval-1',
       approved: true,
@@ -788,10 +841,9 @@ describe('x-chat package scaffold', () => {
     const chatUnreadMarkerProps: ThemeAugmentationChatUnreadMarkerProps = {
       messageId: 'm1',
     };
-    const chatScrollToBottomAffordanceProps: ThemeAugmentationChatScrollToBottomAffordanceProps =
-      {
-        className: 'chat-scroll-affordance',
-      };
+    const chatScrollToBottomAffordanceProps: ThemeAugmentationChatScrollToBottomAffordanceProps = {
+      className: 'chat-scroll-affordance',
+    };
     const chatThreadProps: ThemeAugmentationChatThreadProps = {
       className: 'chat-thread',
     };
@@ -917,16 +969,19 @@ describe('x-chat package scaffold', () => {
     expect(weatherChunk.data.temperatureC).toBe(12);
     expect(metadataChunk.metadata.traceId).toBe('trace-2');
     expect(envelope.chunk.type).toBe('tool-input-available');
-    expect(rendererAliasMap.text?.({ part: textPart, message, index: 0 })).toBe('Hello');
+    expect(partRendererMapAlias.text?.({ part: textPart, message, index: 0 })).toBe('Hello');
     expect(publicStateAlias.historyCursor).toBe(2);
     expect(realtimeEventAlias.type).toBe('typing');
     expect(adapter.subscribe).toBeDefined();
     expect(unstyledChatRootProps.adapter).toBe(adapter);
     expect(unstyledChatRootSlots.root).toBe('section');
+    expect(unstyledChatRootSlotProps.root).toBe(chatRootSlotRoot);
     expect(chatRootSlotRoot.id).toBe('chat-root');
     expect(unstyledComposerInputProps.placeholder).toBe('Type a message');
     expect(unstyledConversationListItemSlots.root).toBe('button');
+    expect(unstyledMessageContentSlotProps.content).toBe(messageContentSlotRoot);
     expect(messageContentSlotRoot.className).toBe('message-content');
+    expect(unstyledScrollToBottomAffordanceProps.slotProps?.root).toBe(scrollToBottomRootSlot);
     expect(scrollToBottomRootSlot.id).toBe('scroll-affordance');
     expect(unstyledThreadHeaderProps.role).toBe('banner');
     unstyledMessageListRootHandle.scrollToBottom();

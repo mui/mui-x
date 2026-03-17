@@ -119,11 +119,14 @@ describe('ChatProvider', () => {
       adapter: createAdapter(),
       defaultMessages: [message1],
     });
-    const { result } = renderHook(() => {
-      const store = useChatStore();
+    const { result } = renderHook(
+      () => {
+        const store = useChatStore();
 
-      return useStore(store, chatSelectors.messageCount);
-    }, { wrapper: Wrapper });
+        return useStore(store, chatSelectors.messageCount);
+      },
+      { wrapper: Wrapper },
+    );
 
     expect(result.current).toBe(1);
   });

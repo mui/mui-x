@@ -16,8 +16,10 @@ export interface ComposerAttachButtonSlotProps {
   attachInput?: SlotComponentProps<'input', {}, ComposerAttachButtonOwnerState>;
 }
 
-export interface ComposerAttachButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
+export interface ComposerAttachButtonProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'type'
+> {
   slots?: Partial<ComposerAttachButtonSlots>;
   slotProps?: ComposerAttachButtonSlotProps;
 }
@@ -39,6 +41,7 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
     hasValue: composer.hasValue,
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
+    disabled: composer.disabled,
   };
   const AttachButton = slots?.attachButton ?? 'button';
   const AttachInput = slots?.attachInput ?? 'input';
@@ -50,8 +53,7 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
     additionalProps: {
       ref,
     },
-  }) as React.ButtonHTMLAttributes<HTMLButtonElement> &
-    React.RefAttributes<HTMLButtonElement>;
+  }) as React.ButtonHTMLAttributes<HTMLButtonElement> & React.RefAttributes<HTMLButtonElement>;
   const inputProps = useSlotProps({
     elementType: AttachInput,
     externalSlotProps: slotProps?.attachInput,
@@ -62,10 +64,13 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
       ref: inputRef,
       type: 'file',
     },
-  }) as React.InputHTMLAttributes<HTMLInputElement> &
-    React.RefAttributes<HTMLInputElement>;
-  const externalOnClick = rootProps.onClick as React.MouseEventHandler<HTMLButtonElement> | undefined;
-  const externalOnChange = inputProps.onChange as React.ChangeEventHandler<HTMLInputElement> | undefined;
+  }) as React.InputHTMLAttributes<HTMLInputElement> & React.RefAttributes<HTMLInputElement>;
+  const externalOnClick = rootProps.onClick as
+    | React.MouseEventHandler<HTMLButtonElement>
+    | undefined;
+  const externalOnChange = inputProps.onChange as
+    | React.ChangeEventHandler<HTMLInputElement>
+    | undefined;
 
   return (
     <React.Fragment>
@@ -87,6 +92,7 @@ export const ComposerAttachButton = React.forwardRef(function ComposerAttachButt
       <AttachButton
         {...rootProps}
         aria-label={rootProps['aria-label'] ?? localeText.composerAttachButtonLabel}
+        disabled={Boolean(rootProps.disabled) || ownerState.disabled}
         onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
           externalOnClick?.(event);
 

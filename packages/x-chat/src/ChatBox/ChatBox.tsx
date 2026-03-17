@@ -66,23 +66,8 @@ import {
   type ChatThreadSlots as StyledChatThreadSlots,
 } from '../ChatThread';
 import { chatMessageClasses } from '../ChatMessage/chatMessageClasses';
+import { getCopyableText, joinClassNames } from '../internals/utils';
 import { chatBoxClasses } from './chatBoxClasses';
-
-function joinClassNames(...classNames: Array<string | undefined>) {
-  return classNames.filter(Boolean).join(' ');
-}
-
-function getCopyableText(message: ChatMessageModel | null) {
-  if (message == null) {
-    return '';
-  }
-
-  return message.parts
-    .filter((part): part is Extract<ChatMessageModel['parts'][number], { type: 'text' }> => part.type === 'text')
-    .map((part) => part.text)
-    .join('\n\n')
-    .trim();
-}
 
 function parseTimestamp(value: string | undefined) {
   if (!value) {
@@ -148,10 +133,9 @@ function getAuthorLabel(message: ChatMessageModel | null) {
   return message.author?.displayName ?? message.author?.id ?? message.role;
 }
 
-function hasConversationSource<Cursor>(props: Pick<
-  ChatBoxProps<Cursor>,
-  'adapter' | 'conversations' | 'defaultConversations'
->) {
+function hasConversationSource<Cursor>(
+  props: Pick<ChatBoxProps<Cursor>, 'adapter' | 'conversations' | 'defaultConversations'>,
+) {
   return (
     props.conversations != null ||
     props.defaultConversations != null ||
@@ -298,8 +282,10 @@ export interface ChatBoxSlotProps {
   errorState?: SlotComponentProps<'div', {}, ChatBoxStateOwnerState>;
 }
 
-export interface ChatBoxProps<Cursor = string>
-  extends Omit<ChatRootProps<Cursor>, 'children' | 'slotProps' | 'slots'> {
+export interface ChatBoxProps<Cursor = string> extends Omit<
+  ChatRootProps<Cursor>,
+  'children' | 'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatBoxSlotProps;
   slots?: Partial<ChatBoxSlots>;
@@ -377,34 +363,41 @@ const ChatBoxStateSlot = styled('div')(({ theme }) => ({
   textAlign: 'center',
 }));
 
-const ChatBoxMessageGroupSlot = styled('div')<{ ownerState: ChatBoxMessageGroupOwnerState }>(
-  ({ theme, ownerState }) => {
-    const connectedRadius = Math.max((Number(theme.shape.borderRadius) || 0) - 2, 4);
-    const isUser = ownerState.authorRole === 'user';
-    const isSystem = ownerState.authorRole === 'system';
+const ChatBoxMessageGroupSlot = styled('div')<{ ownerState: ChatBoxMessageGroupOwnerState }>(({
+  theme,
+  ownerState,
+}) => {
+  const connectedRadius = Math.max((Number(theme.shape.borderRadius) || 0) - 2, 4);
+  const isUser = ownerState.authorRole === 'user';
+  const isSystem = ownerState.authorRole === 'system';
 
-    return {
-      marginBlockStart: ownerState.isFirst ? theme.spacing(2) : theme.spacing(0.5),
-      width: '100%',
-      ...(isSystem
-        ? {}
-        : {
-            [`& .${chatMessageClasses.bubble}`]: {
-              ...(!ownerState.isFirst
-                ? isUser
-                  ? { borderStartEndRadius: connectedRadius }
-                  : { borderStartStartRadius: connectedRadius }
-                : {}),
-              ...(!ownerState.isLast
-                ? isUser
-                  ? { borderEndEndRadius: connectedRadius }
-                  : { borderEndStartRadius: connectedRadius }
-                : {}),
-            },
-          }),
-    };
-  },
-);
+  let firstRadiusOverride = {};
+  if (!ownerState.isFirst && !isSystem) {
+    firstRadiusOverride = isUser
+      ? { borderStartEndRadius: connectedRadius }
+      : { borderStartStartRadius: connectedRadius };
+  }
+
+  let lastRadiusOverride = {};
+  if (!ownerState.isLast && !isSystem) {
+    lastRadiusOverride = isUser
+      ? { borderEndEndRadius: connectedRadius }
+      : { borderEndStartRadius: connectedRadius };
+  }
+
+  return {
+    marginBlockStart: ownerState.isFirst ? theme.spacing(2) : theme.spacing(0.5),
+    width: '100%',
+    ...(isSystem
+      ? {}
+      : {
+          [`& .${chatMessageClasses.bubble}`]: {
+            ...firstRadiusOverride,
+            ...lastRadiusOverride,
+          },
+        }),
+  };
+});
 
 const ChatBoxMessageAuthorNameSlot = styled('div')<{ ownerState: ChatBoxMessageGroupOwnerState }>(
   ({ theme, ownerState }) => ({
@@ -468,17 +461,17 @@ function ChatBoxDefaultThreadRow(props: {
   const defaultItems = useMessageIds();
   const items = itemsProp ?? defaultItems;
   const message = useMessage(id);
-  const previousMessage = useMessage(index > 0 ? items[index - 1] ?? '' : '');
-  const nextMessage = useMessage(index < items.length - 1 ? items[index + 1] ?? '' : '');
+  const previousMessage = useMessage(index > 0 ? (items[index - 1] ?? '') : '');
+  const nextMessage = useMessage(index < items.length - 1 ? (items[index + 1] ?? '') : '');
   const copyableText = React.useMemo(() => getCopyableText(message), [message]);
   const hasRetry = message?.role === 'user' && message.status === 'error';
   const hasActions = Boolean(copyableText) || hasRetry;
-  const inlineErrorText =
-    hasRetry && chat.error?.source === 'send'
-      ? chat.error.message
-      : hasRetry
-        ? localeText.genericErrorLabel
-        : null;
+  let inlineErrorText: string | null = null;
+  if (hasRetry && chat.error?.source === 'send') {
+    inlineErrorText = chat.error.message;
+  } else if (hasRetry) {
+    inlineErrorText = localeText.genericErrorLabel;
+  }
   const isFirst = !areMessagesGrouped(previousMessage, message, 300_000);
   const isLast = !areMessagesGrouped(message, nextMessage, 300_000);
   const groupOwnerState = React.useMemo<ChatBoxMessageGroupOwnerState>(
@@ -547,7 +540,9 @@ function ChatBoxDefaultThreadRow(props: {
         }}
       />
       <Group {...groupProps}>
-        {isFirst && authorLabel ? <AuthorName {...authorNameProps}>{authorLabel}</AuthorName> : null}
+        {isFirst && authorLabel ? (
+          <AuthorName {...authorNameProps}>{authorLabel}</AuthorName>
+        ) : null}
         <StyledChatMessage.Root
           isGrouped={!isFirst}
           messageId={id}
@@ -583,7 +578,16 @@ function ChatBoxDefaultThreadRow(props: {
             }}
           />
           {inlineErrorText ? (
-            <div style={{ alignItems: 'center', color: 'inherit', display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6 }}>
+            <div
+              style={{
+                alignItems: 'center',
+                color: 'inherit',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 6,
+                marginTop: 6,
+              }}
+            >
               <Typography color="error" variant="caption">
                 {inlineErrorText}
               </Typography>
@@ -638,10 +642,11 @@ function ChatBoxContent(props: {
       status.isLoadingMessages ||
       status.isRealtimeConnecting);
 
-  const blockingError =
-    !hasLoadedContent
-      ? (hasConversationsPane ? chat.conversationError : null) ?? chat.messageError ?? chat.realtimeError
-      : null;
+  const blockingError = !hasLoadedContent
+    ? ((hasConversationsPane ? chat.conversationError : null) ??
+      chat.messageError ??
+      chat.realtimeError)
+    : null;
 
   const ownerState: ChatBoxOwnerState = {
     hasBlockingError: Boolean(blockingError),
@@ -653,7 +658,8 @@ function ChatBoxContent(props: {
       ...ownerState,
       state: 'loading',
     };
-    const resolvedLoadingProps = resolveComponentProps(slotProps?.loadingState, loadingOwnerState) ?? {};
+    const resolvedLoadingProps =
+      resolveComponentProps(slotProps?.loadingState, loadingOwnerState) ?? {};
 
     return (
       <LoadingState
@@ -678,12 +684,14 @@ function ChatBoxContent(props: {
       state: 'error',
     };
     const resolvedErrorProps = resolveComponentProps(slotProps?.errorState, errorOwnerState) ?? {};
-    const handleRetry =
-      chat.conversationError != null
-        ? () => void chat.reloadConversations()
-        : chat.messageError != null
-          ? () => void chat.reloadMessages(chat.activeConversationId)
-          : () => void chat.reconnectRealtime();
+    let handleRetry: () => void;
+    if (chat.conversationError != null) {
+      handleRetry = () => void chat.reloadConversations();
+    } else if (chat.messageError != null) {
+      handleRetry = () => void chat.reloadMessages(chat.activeConversationId);
+    } else {
+      handleRetry = () => void chat.reconnectRealtime();
+    }
 
     return (
       <ErrorState
@@ -698,7 +706,9 @@ function ChatBoxContent(props: {
           {blockingError.message || localeText.genericErrorLabel}
         </Typography>
         <Button onClick={handleRetry} type="button" variant="outlined">
-          {chat.realtimeError != null ? localeText.reconnectButtonLabel : localeText.retryButtonLabel}
+          {chat.realtimeError != null
+            ? localeText.reconnectButtonLabel
+            : localeText.retryButtonLabel}
         </Button>
       </ErrorState>
     );
@@ -728,7 +738,8 @@ function ChatBoxContent(props: {
     errorState: slotProps?.conversationsErrorState ?? conversationsProps.slotProps?.errorState,
     item: slotProps?.conversationItem ?? conversationsProps.slotProps?.item,
     itemAvatar: slotProps?.conversationItemAvatar ?? conversationsProps.slotProps?.itemAvatar,
-    loadingState: slotProps?.conversationsLoadingState ?? conversationsProps.slotProps?.loadingState,
+    loadingState:
+      slotProps?.conversationsLoadingState ?? conversationsProps.slotProps?.loadingState,
     preview: slotProps?.conversationPreview ?? conversationsProps.slotProps?.preview,
     root: slotProps?.conversationsRoot ?? conversationsProps.slotProps?.root,
     timestamp: slotProps?.conversationTimestamp ?? conversationsProps.slotProps?.timestamp,
@@ -804,7 +815,8 @@ function ChatBoxContent(props: {
     messageList: slotProps?.messageList ?? threadProps.slotProps?.messageList,
     messageListContent: slotProps?.messageListContent ?? threadProps.slotProps?.messageListContent,
     messageListOverlay: slotProps?.messageListOverlay ?? threadProps.slotProps?.messageListOverlay,
-    messageListScroller: slotProps?.messageListScroller ?? threadProps.slotProps?.messageListScroller,
+    messageListScroller:
+      slotProps?.messageListScroller ?? threadProps.slotProps?.messageListScroller,
     root: slotProps?.threadRoot ?? threadProps.slotProps?.root,
     subtitle: slotProps?.threadSubtitle ?? threadProps.slotProps?.subtitle,
     title: slotProps?.threadTitle ?? threadProps.slotProps?.title,

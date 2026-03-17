@@ -1,8 +1,6 @@
 'use client';
 import * as React from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
-import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import type { SlotComponentProps } from '@mui/utils/types';
 import {
   ScrollToBottomAffordance as UnstyledScrollToBottomAffordance,
   TypingIndicator as UnstyledTypingIndicator,
@@ -34,24 +32,7 @@ import {
   chatUnreadMarkerClasses,
   getChatUnreadMarkerUtilityClass,
 } from './chatUnreadMarkerClasses';
-
-function joinClassNames(...classNames: Array<string | undefined>) {
-  return classNames.filter(Boolean).join(' ');
-}
-
-function mergeSlotPropsWithClassName<TOwnerState>(
-  slotProps: SlotComponentProps<any, {}, TOwnerState> | undefined,
-  className: string,
-) {
-  return (ownerState: TOwnerState) => {
-    const resolved = resolveComponentProps(slotProps, ownerState) ?? {};
-
-    return {
-      ...resolved,
-      className: joinClassNames(className, (resolved as { className?: string }).className),
-    };
-  };
-}
+import { joinClassNames, mergeSlotPropsWithClassName } from '../internals/utils';
 
 const ChatTypingIndicatorRootSlot = styled('div', {
   name: 'MuiChatTypingIndicator',
@@ -232,8 +213,10 @@ export interface ChatTypingIndicatorSlotProps {
   root?: UnstyledTypingIndicatorSlotProps['root'];
 }
 
-export interface ChatTypingIndicatorProps
-  extends Omit<UnstyledTypingIndicatorProps, 'slotProps' | 'slots'> {
+export interface ChatTypingIndicatorProps extends Omit<
+  UnstyledTypingIndicatorProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatTypingIndicatorSlotProps;
   slots?: Partial<ChatTypingIndicatorSlots>;
@@ -250,8 +233,10 @@ export interface ChatUnreadMarkerSlotProps {
   label?: UnstyledUnreadMarkerSlotProps['label'];
 }
 
-export interface ChatUnreadMarkerProps
-  extends Omit<UnstyledUnreadMarkerProps, 'slotProps' | 'slots'> {
+export interface ChatUnreadMarkerProps extends Omit<
+  UnstyledUnreadMarkerProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatUnreadMarkerSlotProps;
   slots?: Partial<ChatUnreadMarkerSlots>;
@@ -268,8 +253,10 @@ export interface ChatScrollToBottomAffordanceSlotProps {
   badge?: UnstyledScrollToBottomAffordanceSlotProps['badge'];
 }
 
-export interface ChatScrollToBottomAffordanceProps
-  extends Omit<UnstyledScrollToBottomAffordanceProps, 'scrollBehavior' | 'slotProps' | 'slots'> {
+export interface ChatScrollToBottomAffordanceProps extends Omit<
+  UnstyledScrollToBottomAffordanceProps,
+  'scrollBehavior' | 'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatScrollToBottomAffordanceSlotProps;
   slots?: Partial<ChatScrollToBottomAffordanceSlots>;
@@ -286,7 +273,9 @@ export const ChatTypingIndicator = React.forwardRef(function ChatTypingIndicator
   });
   const { className, slotProps, slots, sx, ...other } = props;
   const Root = React.useMemo(
-    () => slots?.root ?? createSxRootSlot(ChatTypingIndicatorRootSlot, chatTypingIndicatorClasses.root, sx),
+    () =>
+      slots?.root ??
+      createSxRootSlot(ChatTypingIndicatorRootSlot, chatTypingIndicatorClasses.root, sx),
     [slots?.root, sx],
   );
 
@@ -315,7 +304,8 @@ export const ChatUnreadMarker = React.forwardRef(function ChatUnreadMarker(
   });
   const { className, slotProps, slots, sx, ...other } = props;
   const Root = React.useMemo(
-    () => slots?.root ?? createSxRootSlot(ChatUnreadMarkerRootSlot, chatUnreadMarkerClasses.root, sx),
+    () =>
+      slots?.root ?? createSxRootSlot(ChatUnreadMarkerRootSlot, chatUnreadMarkerClasses.root, sx),
     [slots?.root, sx],
   );
   const Label = slots?.label ?? ChatUnreadMarkerLabelSlot;

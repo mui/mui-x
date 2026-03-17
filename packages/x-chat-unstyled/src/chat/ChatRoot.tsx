@@ -3,6 +3,8 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { ChatProvider, type ChatProviderProps } from '@mui/x-chat-headless';
+import type { ChatLocaleText } from './internals/chatLocaleText';
+import { ChatLocaleProvider } from './internals/ChatLocaleContext';
 
 export interface ChatRootSlots {
   root: React.ElementType;
@@ -15,8 +17,10 @@ export interface ChatRootSlotProps {
 }
 
 export interface ChatRootProps<Cursor = string>
-  extends ChatProviderProps<Cursor>,
+  extends
+    ChatProviderProps<Cursor>,
     Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onError'> {
+  localeText?: Partial<ChatLocaleText>;
   slots?: Partial<ChatRootSlots>;
   slotProps?: ChatRootSlotProps;
 }
@@ -34,6 +38,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     slots,
     slotProps,
     adapter,
+    localeText,
     messages,
     defaultMessages,
     onMessagesChange,
@@ -90,7 +95,9 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       partRenderers={partRenderers}
       storeClass={storeClass}
     >
-      <Root {...rootProps}>{children}</Root>
+      <ChatLocaleProvider localeText={localeText}>
+        <Root {...rootProps}>{children}</Root>
+      </ChatLocaleProvider>
     </ChatProvider>
   );
 }) as ChatRootComponent;

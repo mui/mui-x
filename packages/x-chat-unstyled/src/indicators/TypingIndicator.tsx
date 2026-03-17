@@ -2,11 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
-import {
-  useChat,
-  useChatStatus,
-  type ChatUser,
-} from '@mui/x-chat-headless';
+import { useChat, useChatStatus, type ChatUser } from '@mui/x-chat-headless';
 import { type TypingIndicatorOwnerState } from './indicators.types';
 
 function resolveTypingUser(
@@ -16,8 +12,7 @@ function resolveTypingUser(
 ) {
   return (
     participants?.find((participant) => participant.id === userId) ??
-    messageAuthors.find((author) => author.id === userId) ??
-    { id: userId }
+    messageAuthors.find((author) => author.id === userId) ?? { id: userId }
   );
 }
 
@@ -39,8 +34,10 @@ export interface TypingIndicatorSlotProps {
   root?: SlotComponentProps<'div', {}, TypingIndicatorOwnerState>;
 }
 
-export interface TypingIndicatorProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface TypingIndicatorProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   slots?: Partial<TypingIndicatorSlots>;
   slotProps?: TypingIndicatorSlotProps;
 }
@@ -60,7 +57,7 @@ export const TypingIndicator = React.forwardRef(function TypingIndicator(
     () =>
       activeConversationId == null
         ? null
-        : conversations.find((candidate) => candidate.id === activeConversationId) ?? null,
+        : (conversations.find((candidate) => candidate.id === activeConversationId) ?? null),
     [activeConversationId, conversations],
   );
   const messageAuthors = React.useMemo(
@@ -81,10 +78,7 @@ export const TypingIndicator = React.forwardRef(function TypingIndicator(
       ),
     [conversation?.participants, messageAuthors, typingUserIds],
   );
-  const label = React.useMemo(
-    () => (users.length === 0 ? '' : createTypingLabel(users)),
-    [users],
-  );
+  const label = React.useMemo(() => (users.length === 0 ? '' : createTypingLabel(users)), [users]);
   const ownerState = React.useMemo<TypingIndicatorOwnerState>(
     () => ({
       activeConversationId,

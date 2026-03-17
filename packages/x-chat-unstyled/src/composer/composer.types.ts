@@ -5,6 +5,7 @@ export interface ComposerOwnerState {
   hasValue: boolean;
   isStreaming: boolean;
   attachmentCount: number;
+  disabled: boolean;
 }
 
 export interface ComposerRootOwnerState extends ComposerOwnerState {}

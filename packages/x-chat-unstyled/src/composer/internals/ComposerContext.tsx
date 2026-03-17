@@ -18,6 +18,7 @@ const defaultOwnerState: ComposerOwnerState = {
   hasValue: false,
   isStreaming: false,
   attachmentCount: 0,
+  disabled: false,
 };
 
 const ComposerContext = React.createContext<ComposerContextValue>({

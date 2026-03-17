@@ -28,7 +28,9 @@ export function useChatRuntimeContext<Cursor = string>(optional = false) {
   const context = React.useContext(ChatRuntimeContext);
 
   if (context == null && !optional) {
-    throw new Error('MUI X Chat: useChatRuntimeContext must be used within a <ChatProvider> component');
+    throw new Error(
+      'MUI X Chat: useChatRuntimeContext must be used within a <ChatProvider> component',
+    );
   }
 
   return context as ChatRuntimeContextValue<Cursor> | null;

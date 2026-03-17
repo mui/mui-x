@@ -1,12 +1,6 @@
 import * as React from 'react';
-import {
-  act,
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-} from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { useChat } from '@mui/x-chat-headless';
 import { ChatLayout } from '../chat/ChatLayout';
@@ -90,20 +84,12 @@ const CustomItem = React.forwardRef(function CustomItem(
 });
 
 function CustomItemText(props: ConversationListItemTextProps) {
-  const {
-    conversation,
-    focused,
-    ownerState,
-    selected,
-    slotProps,
-    slots,
-    unread,
-    ...other
-  } = props as ConversationListItemTextProps & {
-    ownerState?: {
-      selected: boolean;
+  const { conversation, focused, ownerState, selected, slotProps, slots, unread, ...other } =
+    props as ConversationListItemTextProps & {
+      ownerState?: {
+        selected: boolean;
+      };
     };
-  };
   void focused;
   void selected;
   void slotProps;
@@ -111,27 +97,23 @@ function CustomItemText(props: ConversationListItemTextProps) {
   void unread;
 
   return (
-    <div data-selected={String(ownerState?.selected)} data-testid={`custom-text-${conversation.id}`} {...other}>
+    <div
+      data-selected={String(ownerState?.selected)}
+      data-testid={`custom-text-${conversation.id}`}
+      {...other}
+    >
       {conversation.title}
     </div>
   );
 }
 
 function CustomItemMeta(props: ConversationListItemMetaProps) {
-  const {
-    conversation,
-    focused,
-    ownerState,
-    selected,
-    slotProps,
-    slots,
-    unread,
-    ...other
-  } = props as ConversationListItemMetaProps & {
-    ownerState?: {
-      unread: boolean;
+  const { conversation, focused, ownerState, selected, slotProps, slots, unread, ...other } =
+    props as ConversationListItemMetaProps & {
+      ownerState?: {
+        unread: boolean;
+      };
     };
-  };
   void focused;
   void selected;
   void slotProps;
@@ -139,27 +121,23 @@ function CustomItemMeta(props: ConversationListItemMetaProps) {
   void unread;
 
   return (
-    <div data-testid={`custom-meta-${conversation.id}`} data-unread={String(ownerState?.unread)} {...other}>
+    <div
+      data-testid={`custom-meta-${conversation.id}`}
+      data-unread={String(ownerState?.unread)}
+      {...other}
+    >
       {conversation.unreadCount ?? 0}
     </div>
   );
 }
 
 function CustomItemAvatar(props: ConversationListItemAvatarProps) {
-  const {
-    conversation,
-    focused,
-    ownerState,
-    selected,
-    slotProps,
-    slots,
-    unread,
-    ...other
-  } = props as ConversationListItemAvatarProps & {
-    ownerState?: {
-      unread: boolean;
+  const { conversation, focused, ownerState, selected, slotProps, slots, unread, ...other } =
+    props as ConversationListItemAvatarProps & {
+      ownerState?: {
+        unread: boolean;
+      };
     };
-  };
   void focused;
   void selected;
   void slotProps;
@@ -247,7 +225,7 @@ describe('ConversationListRoot', () => {
     act(() => {
       (options[1] as HTMLElement).focus();
     });
-    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    fireEvent.keyDown(options[1], { key: 'ArrowDown' });
 
     options = screen.getAllByRole('option');
     expect(document.activeElement).toBe(options[2]);
@@ -352,6 +330,10 @@ describe('ConversationListRoot', () => {
   });
 
   it('is recognized by ChatLayout as the conversations pane', () => {
+    // The test mixes a marked ConversationListRoot with an unmarked <div>,
+    // which triggers a development warning about ambiguous pane assignment.
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
     render(
       <ChatRoot
         adapter={createAdapter()}
@@ -369,5 +351,7 @@ describe('ConversationListRoot', () => {
     expect(root.children).to.have.length(2);
     expect(root.children[0]).to.contain(screen.getByTestId('conversation-list'));
     expect(root.children[1]).to.contain(screen.getByTestId('thread-pane'));
+
+    warnSpy.mockRestore();
   });
 });

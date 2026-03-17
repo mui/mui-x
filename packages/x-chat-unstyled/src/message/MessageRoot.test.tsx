@@ -1,13 +1,7 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  screen,
-} from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import type {
-  ChatAdapter,
-  ChatMessage,
-} from '@mui/x-chat-headless';
+import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
 import { ChatRoot } from '../chat/ChatRoot';
 import type { MessageActionsProps } from './MessageActions';
 import { MessageActions } from './MessageActions';
@@ -159,15 +153,7 @@ const CustomRoot = React.forwardRef(function CustomRoot(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    children,
-    messageId,
-    isGrouped,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, messageId, isGrouped, ownerState, slotProps, slots, ...other } = props;
   void messageId;
   void isGrouped;
   void slotProps;
@@ -191,42 +177,40 @@ const CustomRoot = React.forwardRef(function CustomRoot(
 });
 
 function CustomAvatar(props: MessageAvatarProps & { ownerState?: { isGrouped: boolean } }) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
   return (
-    <div data-grouped={String(ownerState?.isGrouped)} data-testid="custom-message-avatar" {...other}>
+    <div
+      data-grouped={String(ownerState?.isGrouped)}
+      data-testid="custom-message-avatar"
+      {...other}
+    >
       {children}
     </div>
   );
 }
 
 function CustomContent(props: MessageContentProps & { ownerState?: { messageId: string } }) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
   return (
-    <div data-message-id={ownerState?.messageId ?? 'none'} data-testid="custom-message-content" {...other}>
+    <div
+      data-message-id={ownerState?.messageId ?? 'none'}
+      data-testid="custom-message-content"
+      {...other}
+    >
       {children}
     </div>
   );
 }
 
-function CustomBubble(props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: { role?: string } }) {
+function CustomBubble(
+  props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: { role?: string } },
+) {
   const { children, ownerState, ...other } = props;
 
   return (
@@ -237,13 +221,7 @@ function CustomBubble(props: React.HTMLAttributes<HTMLDivElement> & { ownerState
 }
 
 function CustomMeta(props: MessageMetaProps & { ownerState?: { status?: string } }) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -254,17 +232,25 @@ function CustomMeta(props: MessageMetaProps & { ownerState?: { status?: string }
   );
 }
 
-function CustomTimestamp(props: React.HTMLAttributes<HTMLSpanElement> & { ownerState?: { status?: string } }) {
+function CustomTimestamp(
+  props: React.HTMLAttributes<HTMLSpanElement> & { ownerState?: { status?: string } },
+) {
   const { children, ownerState, ...other } = props;
 
   return (
-    <span data-status={ownerState?.status ?? 'none'} data-testid="custom-message-timestamp" {...other}>
+    <span
+      data-status={ownerState?.status ?? 'none'}
+      data-testid="custom-message-timestamp"
+      {...other}
+    >
       {children}
     </span>
   );
 }
 
-function CustomStatus(props: React.HTMLAttributes<HTMLSpanElement> & { ownerState?: { streaming: boolean } }) {
+function CustomStatus(
+  props: React.HTMLAttributes<HTMLSpanElement> & { ownerState?: { streaming: boolean } },
+) {
   const { children, ownerState, ...other } = props;
 
   return (
@@ -278,7 +264,9 @@ function CustomStatus(props: React.HTMLAttributes<HTMLSpanElement> & { ownerStat
   );
 }
 
-function CustomEdited(props: React.HTMLAttributes<HTMLSpanElement> & { ownerState?: { error: boolean } }) {
+function CustomEdited(
+  props: React.HTMLAttributes<HTMLSpanElement> & { ownerState?: { error: boolean } },
+) {
   const { children, ownerState, ...other } = props;
 
   return (
@@ -292,13 +280,7 @@ const CustomActions = React.forwardRef(function CustomActions(
   props: MessageActionsProps & { ownerState?: { messageId: string } },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -316,7 +298,7 @@ const CustomActions = React.forwardRef(function CustomActions(
 
 describe('MessageRoot', () => {
   it('renders the default part pipeline for built-in parts and falls back for unknown parts', () => {
-    const { container } = render(
+    render(
       <ChatRoot adapter={createAdapter()} defaultMessages={[fullMessage]}>
         <MessageRoot messageId="m1">
           <MessageAvatar data-testid="message-avatar" />
@@ -329,7 +311,10 @@ describe('MessageRoot', () => {
       </ChatRoot>,
     );
 
-    expect(screen.getByAltText('Assistant')).to.have.attribute('src', 'https://example.com/avatar.png');
+    expect(screen.getByAltText('Assistant')).to.have.attribute(
+      'src',
+      'https://example.com/avatar.png',
+    );
     expect(screen.getByText('Hello world')).not.to.equal(null);
     expect(screen.getByText('Reasoning')).not.to.equal(null);
     expect(screen.getByText('search')).not.to.equal(null);
@@ -343,8 +328,8 @@ describe('MessageRoot', () => {
     expect(screen.getByText('Streaming')).not.to.equal(null);
     expect(screen.getByText('Edited')).not.to.equal(null);
     expect(screen.getByRole('button', { name: 'Reply' })).not.to.equal(null);
-    expect(container.querySelector('[role="separator"]')).not.to.equal(null);
-    expect(container.querySelector('[data-part-type="poll"]')).not.to.equal(null);
+    expect(screen.queryByRole('separator')).not.to.equal(null);
+    expect(document.querySelector('[data-part-type="poll"]')).not.to.equal(null);
   });
 
   it('prefers custom part renderers and passes the provider onToolCall callback', () => {
@@ -436,7 +421,10 @@ describe('MessageRoot', () => {
     expect(screen.getByTestId('content-slot')).to.have.attribute('data-message-id', 'm1');
     expect(screen.getByTestId('custom-message-bubble')).to.have.attribute('data-role', 'assistant');
     expect(screen.getByTestId('meta-slot')).to.have.attribute('data-status', 'streaming');
-    expect(screen.getByTestId('custom-message-timestamp')).to.have.attribute('data-status', 'streaming');
+    expect(screen.getByTestId('custom-message-timestamp')).to.have.attribute(
+      'data-status',
+      'streaming',
+    );
     expect(screen.getByTestId('custom-message-status')).to.have.attribute('data-streaming', 'true');
     expect(screen.getByTestId('custom-message-edited')).to.have.attribute('data-extra', 'edited');
     expect(screen.getByTestId('actions-slot')).to.have.attribute('data-message-id', 'm1');
@@ -460,7 +448,7 @@ describe('MessageRoot', () => {
   });
 
   it('hides the avatar for grouped follow-up messages', () => {
-    const { queryByRole } = render(
+    render(
       <ChatRoot adapter={createAdapter()} defaultMessages={[fullMessage]}>
         <MessageRoot isGrouped messageId="m1">
           <MessageAvatar />
@@ -468,11 +456,11 @@ describe('MessageRoot', () => {
       </ChatRoot>,
     );
 
-    expect(queryByRole('img')).to.equal(null);
+    expect(screen.queryByRole('img')).to.equal(null);
   });
 
   it('tolerates missing messages and empty meta without crashing', () => {
-    const { container } = render(
+    render(
       <ChatRoot adapter={createAdapter()} defaultMessages={[minimalMessage]}>
         <MessageRoot data-testid="missing-message-root" messageId="missing">
           <MessageAvatar />
@@ -484,7 +472,7 @@ describe('MessageRoot', () => {
     );
 
     expect(screen.getByTestId('missing-message-root')).not.to.equal(null);
-    expect(container.querySelector('[role="img"]')).to.equal(null);
-    expect(container.textContent).to.equal('');
+    expect(screen.queryByRole('img')).to.equal(null);
+    expect(screen.getByTestId('missing-message-root').textContent).to.equal('');
   });
 });

@@ -10,21 +10,9 @@ export { ThreadTitle } from './ThreadTitle';
 export { ThreadSubtitle } from './ThreadSubtitle';
 export { ThreadActions } from './ThreadActions';
 
-export type {
-  ThreadRootProps,
-  ThreadRootSlotProps,
-  ThreadRootSlots,
-} from './ThreadRoot';
-export type {
-  ThreadHeaderProps,
-  ThreadHeaderSlotProps,
-  ThreadHeaderSlots,
-} from './ThreadHeader';
-export type {
-  ThreadTitleProps,
-  ThreadTitleSlotProps,
-  ThreadTitleSlots,
-} from './ThreadTitle';
+export type { ThreadRootProps, ThreadRootSlotProps, ThreadRootSlots } from './ThreadRoot';
+export type { ThreadHeaderProps, ThreadHeaderSlotProps, ThreadHeaderSlots } from './ThreadHeader';
+export type { ThreadTitleProps, ThreadTitleSlotProps, ThreadTitleSlots } from './ThreadTitle';
 export type {
   ThreadSubtitleProps,
   ThreadSubtitleSlotProps,

@@ -13,8 +13,10 @@ export interface ConversationListItemSlotProps {
   root?: SlotComponentProps<'div', {}, ConversationListItemOwnerState>;
 }
 
-export interface ConversationListItemProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface ConversationListItemProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   children?: React.ReactNode;
   conversation: ChatConversation;
   selected?: boolean;

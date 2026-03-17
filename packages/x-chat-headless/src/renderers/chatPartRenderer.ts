@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import * as React from 'react';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatOnToolCall } from '../types/chat-callbacks';
 import type { ChatMessagePart } from '../types/chat-message-parts';
@@ -12,7 +12,7 @@ export interface ChatPartRendererProps<TPart extends ChatMessagePart = ChatMessa
 
 export type ChatPartRenderer<TPart extends ChatMessagePart = ChatMessagePart> = (
   props: ChatPartRendererProps<TPart>,
-) => ReactNode;
+) => React.ReactNode;
 
 export type ChatPartRendererMap = Partial<{
   [TType in ChatMessagePart['type']]: ChatPartRenderer<Extract<ChatMessagePart, { type: TType }>>;

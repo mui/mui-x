@@ -1,13 +1,7 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  screen,
-} from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
-import type {
-  ChatAdapter,
-  ChatMessage,
-} from '@mui/x-chat-headless';
+import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
 import { ChatRoot } from '../chat/ChatRoot';
 import type { MessageListDateDividerProps } from './MessageListDateDivider';
 import { MessageListDateDivider } from './MessageListDateDivider';
@@ -44,16 +38,7 @@ const CustomRoot = React.forwardRef(function CustomRoot(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    formatDate,
-    index,
-    items,
-    messageId,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { formatDate, index, items, messageId, ownerState, slotProps, slots, ...other } = props;
   void formatDate;
   void index;
   void items;
@@ -81,7 +66,11 @@ function CustomLabel(
   const { children, ownerState, ...other } = props;
 
   return (
-    <div data-boundary={String(ownerState?.hasBoundary)} data-testid="custom-date-divider-label" {...other}>
+    <div
+      data-boundary={String(ownerState?.hasBoundary)}
+      data-testid="custom-date-divider-label"
+      {...other}
+    >
       {children}
     </div>
   );
@@ -96,11 +85,17 @@ function CustomLine(
 ) {
   const { ownerState, ...other } = props;
 
-  return <div data-boundary={String(ownerState?.hasBoundary)} data-testid="custom-date-divider-line" {...other} />;
+  return (
+    <div
+      data-boundary={String(ownerState?.hasBoundary)}
+      data-testid="custom-date-divider-line"
+      {...other}
+    />
+  );
 }
 
 describe('MessageListDateDivider', () => {
-  it('renders only on calendar day boundaries with the default ISO-style label', () => {
+  it('renders only on calendar day boundaries with the default locale-formatted label', () => {
     const { rerender } = render(
       <ChatRoot
         adapter={createAdapter()}
@@ -145,7 +140,7 @@ describe('MessageListDateDivider', () => {
     );
 
     expect(screen.getByRole('separator')).not.to.equal(null);
-    expect(screen.getByText('2026-03-16')).not.to.equal(null);
+    expect(screen.getByText('March 16, 2026')).not.to.equal(null);
   });
 
   it('supports formatDate and custom slots with ownerState', () => {
@@ -165,10 +160,16 @@ describe('MessageListDateDivider', () => {
       </ChatRoot>,
     );
 
-    expect(screen.getByTestId('custom-date-divider-root')).to.have.attribute('data-boundary', 'true');
+    expect(screen.getByTestId('custom-date-divider-root')).to.have.attribute(
+      'data-boundary',
+      'true',
+    );
     expect(screen.getByTestId('custom-date-divider-root')).to.have.attribute('role', 'separator');
     expect(screen.getAllByTestId('custom-date-divider-line')).to.have.length(2);
-    expect(screen.getByTestId('custom-date-divider-label')).to.have.attribute('data-boundary', 'true');
+    expect(screen.getByTestId('custom-date-divider-label')).to.have.attribute(
+      'data-boundary',
+      'true',
+    );
     expect(screen.getByTestId('custom-date-divider-label')).to.have.text('Day 16');
   });
 
@@ -186,6 +187,6 @@ describe('MessageListDateDivider', () => {
     );
 
     expect(screen.getByRole('separator')).not.to.equal(null);
-    expect(screen.getByText('2026-03-15')).not.to.equal(null);
+    expect(screen.getByText('March 15, 2026')).not.to.equal(null);
   });
 });

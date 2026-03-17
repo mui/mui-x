@@ -86,6 +86,42 @@ function LocalizedToolPart(props: {
   );
 }
 
+function createLocalizedReasoningRenderer(
+  localeText: ReturnType<typeof useChatLocaleText>,
+): ChatPartRenderer<ChatMessagePart> {
+  return function LocalizedReasoningRenderer(renderProps) {
+    return (
+      <LocalizedReasoningPart
+        localeText={localeText}
+        part={renderProps.part as ChatReasoningMessagePart}
+      />
+    );
+  };
+}
+
+function createLocalizedToolRenderer(
+  localeText: ReturnType<typeof useChatLocaleText>,
+): ChatPartRenderer<ChatMessagePart> {
+  return function LocalizedToolRenderer(renderProps) {
+    return (
+      <LocalizedToolPart localeText={localeText} part={renderProps.part as ChatToolMessagePart} />
+    );
+  };
+}
+
+function createLocalizedDynamicToolRenderer(
+  localeText: ReturnType<typeof useChatLocaleText>,
+): ChatPartRenderer<ChatMessagePart> {
+  return function LocalizedDynamicToolRenderer(renderProps) {
+    return (
+      <LocalizedToolPart
+        localeText={localeText}
+        part={renderProps.part as ChatDynamicToolMessagePart}
+      />
+    );
+  };
+}
+
 function MessageRenderedPart(props: {
   part: ChatMessagePart;
   index: number;
@@ -101,45 +137,25 @@ function MessageRenderedPart(props: {
   const localizedRenderer = React.useMemo<ChatPartRenderer<ChatMessagePart> | null>(() => {
     switch (part.type) {
       case 'reasoning':
-        return ({ part: currentPart }) => (
-          <LocalizedReasoningPart
-            localeText={localeText}
-            part={currentPart as ChatReasoningMessagePart}
-          />
-        );
+        return createLocalizedReasoningRenderer(localeText);
       case 'tool':
-        return ({ part: currentPart }) => (
-          <LocalizedToolPart
-            localeText={localeText}
-            part={currentPart as ChatToolMessagePart}
-          />
-        );
+        return createLocalizedToolRenderer(localeText);
       case 'dynamic-tool':
-        return ({ part: currentPart }) => (
-          <LocalizedToolPart
-            localeText={localeText}
-            part={currentPart as ChatDynamicToolMessagePart}
-          />
-        );
+        return createLocalizedDynamicToolRenderer(localeText);
       default:
         return null;
     }
   }, [localeText, part.type]);
-  const defaultRenderer = React.useMemo(
-    () => getDefaultMessagePartRenderer(part),
-    [part],
-  );
+  const defaultRenderer = React.useMemo(() => getDefaultMessagePartRenderer(part), [part]);
   const builtInRenderer = React.useMemo(
     () => resolveBuiltInPartRenderer?.(part, localeText) ?? null,
     [localeText, part, resolveBuiltInPartRenderer],
   );
   const onToolCall = useChatOnToolCall();
-  const Renderer = (
-    customRenderer ??
+  const Renderer = (customRenderer ??
     builtInRenderer ??
     localizedRenderer ??
-    defaultRenderer
-  ) as ChatPartRenderer<ChatMessagePart> | null;
+    defaultRenderer) as ChatPartRenderer<ChatMessagePart> | null;
 
   if (Renderer == null) {
     return <DefaultPartFallback part={part} />;

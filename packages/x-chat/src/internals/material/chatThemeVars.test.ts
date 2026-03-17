@@ -45,9 +45,7 @@ describe('chatThemeVars', () => {
     const cssVars = getChatCssVars(theme);
 
     expect(tokens.userMessageBg).to.equal('var(--mui-palette-Chat-userMessageBg, #102030)');
-    expect(tokens.composerFocusRing).to.equal(
-      'var(--mui-palette-Chat-composerFocusRing, #304050)',
-    );
+    expect(tokens.composerFocusRing).to.equal('var(--mui-palette-Chat-composerFocusRing, #304050)');
     expect(cssVars[chatCssVarKeys.userMessageBg]).to.equal(tokens.userMessageBg);
     expect(cssVars[chatCssVarKeys.composerFocusRing]).to.equal(tokens.composerFocusRing);
   });

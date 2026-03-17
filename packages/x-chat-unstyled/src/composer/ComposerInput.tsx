@@ -16,8 +16,10 @@ export interface ComposerInputSlotProps {
   input?: SlotComponentProps<'textarea', {}, ComposerInputOwnerState>;
 }
 
-export interface ComposerInputProps
-  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'children' | 'value' | 'defaultValue' | 'onChange'> {
+export interface ComposerInputProps extends Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  'children' | 'value' | 'defaultValue' | 'onChange'
+> {
   slots?: Partial<ComposerInputSlots>;
   slotProps?: ComposerInputSlotProps;
 }
@@ -48,6 +50,7 @@ export const ComposerInput = React.forwardRef(function ComposerInput(
     hasValue: composer.hasValue,
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
+    disabled: composer.disabled,
   };
   const Input = slots?.input ?? 'textarea';
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
@@ -63,8 +66,12 @@ export const ComposerInput = React.forwardRef(function ComposerInput(
     },
   }) as React.TextareaHTMLAttributes<HTMLTextAreaElement> &
     React.RefAttributes<HTMLTextAreaElement>;
-  const externalOnChange = rootProps.onChange as React.ChangeEventHandler<HTMLTextAreaElement> | undefined;
-  const externalOnKeyDown = rootProps.onKeyDown as React.KeyboardEventHandler<HTMLTextAreaElement> | undefined;
+  const externalOnChange = rootProps.onChange as
+    | React.ChangeEventHandler<HTMLTextAreaElement>
+    | undefined;
+  const externalOnKeyDown = rootProps.onKeyDown as
+    | React.KeyboardEventHandler<HTMLTextAreaElement>
+    | undefined;
   const externalOnCompositionStart = rootProps.onCompositionStart as
     | React.CompositionEventHandler<HTMLTextAreaElement>
     | undefined;
@@ -108,6 +115,7 @@ export const ComposerInput = React.forwardRef(function ComposerInput(
         rootProps['aria-label'] ??
         (rootProps['aria-labelledby'] ? undefined : localeText.composerInputAriaLabel)
       }
+      disabled={Boolean(rootProps.disabled) || composer.disabled}
       placeholder={rootProps.placeholder ?? localeText.composerInputPlaceholder}
       onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
         externalOnChange?.(event);
@@ -143,7 +151,8 @@ export const ComposerInput = React.forwardRef(function ComposerInput(
           event.defaultPrevented ||
           event.key !== 'Enter' ||
           event.shiftKey ||
-          event.nativeEvent.isComposing
+          event.nativeEvent.isComposing ||
+          composer.disabled
         ) {
           return;
         }

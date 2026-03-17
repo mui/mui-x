@@ -29,7 +29,4 @@ export type {
   ChatTypingIndicatorClassKey,
   ChatTypingIndicatorClasses,
 } from './chatTypingIndicatorClasses';
-export type {
-  ChatUnreadMarkerClassKey,
-  ChatUnreadMarkerClasses,
-} from './chatUnreadMarkerClasses';
+export type { ChatUnreadMarkerClassKey, ChatUnreadMarkerClasses } from './chatUnreadMarkerClasses';

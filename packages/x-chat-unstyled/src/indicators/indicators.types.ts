@@ -1,5 +1,5 @@
 'use client';
-import type { ReactNode } from 'react';
+import * as React from 'react';
 import type { ChatUser } from '@mui/x-chat-headless';
 
 export interface TypingIndicatorOwnerState {
@@ -12,7 +12,7 @@ export interface TypingIndicatorOwnerState {
 export interface UnreadMarkerOwnerState {
   messageId: string;
   hasBoundary: boolean;
-  label: ReactNode;
+  label: React.ReactNode;
 }
 
 export interface ScrollToBottomAffordanceOwnerState {

@@ -96,35 +96,23 @@ export function useChatInstance<Cursor = string>(
     }
   });
 
-  useStoreEffect(
-    store,
-    selectConversations,
-    (_, nextConversations) => {
-      if (!syncingControlledModelsRef.current?.has('conversations')) {
-        store.parameters.onConversationsChange?.(nextConversations);
-      }
-    },
-  );
+  useStoreEffect(store, selectConversations, (_, nextConversations) => {
+    if (!syncingControlledModelsRef.current?.has('conversations')) {
+      store.parameters.onConversationsChange?.(nextConversations);
+    }
+  });
 
-  useStoreEffect(
-    store,
-    selectActiveConversationId,
-    (_, nextActiveConversationId) => {
-      if (!syncingControlledModelsRef.current?.has('activeConversationId')) {
-        store.parameters.onActiveConversationChange?.(nextActiveConversationId);
-      }
-    },
-  );
+  useStoreEffect(store, selectActiveConversationId, (_, nextActiveConversationId) => {
+    if (!syncingControlledModelsRef.current?.has('activeConversationId')) {
+      store.parameters.onActiveConversationChange?.(nextActiveConversationId);
+    }
+  });
 
-  useStoreEffect(
-    store,
-    selectComposerValue,
-    (_, nextComposerValue) => {
-      if (!syncingControlledModelsRef.current?.has('composerValue')) {
-        store.parameters.onComposerValueChange?.(nextComposerValue);
-      }
-    },
-  );
+  useStoreEffect(store, selectComposerValue, (_, nextComposerValue) => {
+    if (!syncingControlledModelsRef.current?.has('composerValue')) {
+      store.parameters.onComposerValueChange?.(nextComposerValue);
+    }
+  });
 
   React.useEffect(() => store.disposeEffect(), [store]);
 

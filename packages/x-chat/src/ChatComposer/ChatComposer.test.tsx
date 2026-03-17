@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
@@ -13,7 +8,6 @@ import { ChatRoot } from '@mui/x-chat-unstyled';
 import {
   ChatComposer,
   ChatComposerAttachButton,
-  ChatComposerHelperText,
   ChatComposerInput,
   ChatComposerSendButton,
   ChatComposerToolbar,
@@ -311,9 +305,18 @@ describe('ChatComposer', () => {
       },
     );
 
-    expect(screen.getByTestId('custom-chat-composer-root')).to.have.attribute('data-has-value', 'true');
-    expect(screen.getByTestId('custom-chat-composer-input')).to.have.attribute('data-has-value', 'true');
-    expect(screen.getByTestId('custom-chat-composer-helper')).to.have.attribute('data-has-value', 'true');
+    expect(screen.getByTestId('custom-chat-composer-root')).to.have.attribute(
+      'data-has-value',
+      'true',
+    );
+    expect(screen.getByTestId('custom-chat-composer-input')).to.have.attribute(
+      'data-has-value',
+      'true',
+    );
+    expect(screen.getByTestId('custom-chat-composer-helper')).to.have.attribute(
+      'data-has-value',
+      'true',
+    );
 
     fireEvent.change(screen.getByTestId('custom-chat-composer-input'), {
       target: {

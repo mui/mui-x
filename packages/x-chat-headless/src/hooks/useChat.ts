@@ -12,6 +12,7 @@ import type { UseChatSendMessageInput } from '../internals/useChatController';
 
 export type { UseChatSendMessageInput } from '../internals/useChatController';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface UseChatValue<Cursor = string> {
   messages: ChatMessage[];
   conversations: ChatConversation[];

@@ -16,11 +16,7 @@ export type {
   TypingIndicatorSlotProps,
   TypingIndicatorSlots,
 } from './TypingIndicator';
-export type {
-  UnreadMarkerProps,
-  UnreadMarkerSlotProps,
-  UnreadMarkerSlots,
-} from './UnreadMarker';
+export type { UnreadMarkerProps, UnreadMarkerSlotProps, UnreadMarkerSlots } from './UnreadMarker';
 export type {
   ScrollToBottomAffordanceOwnerState,
   TypingIndicatorOwnerState,

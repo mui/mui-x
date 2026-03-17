@@ -1,13 +1,7 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  screen,
-} from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
-import type {
-  ChatAdapter,
-  ChatMessage,
-} from '@mui/x-chat-headless';
+import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
 import { ChatRoot } from '../chat/ChatRoot';
 import type { MessageGroupProps } from './MessageGroup';
 import { MessageGroup } from './MessageGroup';
@@ -37,14 +31,7 @@ function createMessage(
     text?: string;
   } = {},
 ): ChatMessage {
-  const {
-    role = 'assistant',
-    authorId,
-    displayName,
-    avatarUrl,
-    createdAt,
-    text = id,
-  } = options;
+  const { role = 'assistant', authorId, displayName, avatarUrl, createdAt, text = id } = options;
 
   return {
     id,

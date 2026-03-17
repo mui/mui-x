@@ -26,9 +26,7 @@ const conversation2: ChatConversation = {
   title: 'Support',
 };
 
-function createAttachment(
-  overrides: Partial<ChatDraftAttachment> = {},
-): ChatDraftAttachment {
+function createAttachment(overrides: Partial<ChatDraftAttachment> = {}): ChatDraftAttachment {
   return {
     localId: 'a1',
     file: new File(['hello'], 'hello.txt', { type: 'text/plain' }),
@@ -159,9 +157,7 @@ describe('ChatStore', () => {
 
     expect(store.state.messageIds).toEqual(['m1', 'm2']);
     expect(store.state.messagesById.m1.status).toBe('sent');
-    expect(store.state.messagesById.m2.parts).toEqual([
-      { type: 'text', text: 'Updated response' },
-    ]);
+    expect(store.state.messagesById.m2.parts).toEqual([{ type: 'text', text: 'Updated response' }]);
   });
 
   it('setMessages replaces the normalized message state', () => {

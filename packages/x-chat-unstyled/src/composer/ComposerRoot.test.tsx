@@ -1,16 +1,8 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
-import {
-  useChatComposer,
-  useChatStore,
-} from '@mui/x-chat-headless';
+import { useChatComposer, useChatStore } from '@mui/x-chat-headless';
 import { ChatRoot } from '../chat/ChatRoot';
 import type { ComposerAttachButtonProps } from './ComposerAttachButton';
 import { ComposerAttachButton } from './ComposerAttachButton';
@@ -85,13 +77,7 @@ const CustomRoot = React.forwardRef(function CustomRoot(
   },
   ref: React.Ref<HTMLFormElement>,
 ) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -117,12 +103,7 @@ const CustomInput = React.forwardRef(function CustomInput(
   },
   ref: React.Ref<HTMLTextAreaElement>,
 ) {
-  const {
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -146,13 +127,7 @@ const CustomSendButton = React.forwardRef(function CustomSendButton(
   },
   ref: React.Ref<HTMLButtonElement>,
 ) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -177,13 +152,7 @@ const CustomAttachButton = React.forwardRef(function CustomAttachButton(
   },
   ref: React.Ref<HTMLButtonElement>,
 ) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -207,10 +176,7 @@ const CustomAttachInput = React.forwardRef(function CustomAttachInput(
   },
   ref: React.Ref<HTMLInputElement>,
 ) {
-  const {
-    ownerState,
-    ...other
-  } = props;
+  const { ownerState, ...other } = props;
 
   return (
     <input
@@ -230,13 +196,7 @@ const CustomToolbar = React.forwardRef(function CustomToolbar(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -261,13 +221,7 @@ const CustomHelperText = React.forwardRef(function CustomHelperText(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -388,7 +342,9 @@ describe('ComposerRoot', () => {
       render(
         <ChatRoot adapter={createAdapter()}>
           <ComposerRoot>
-            <ComposerAttachButton slotProps={{ attachInput: { 'data-testid': 'attach-input' } as any }}>
+            <ComposerAttachButton
+              slotProps={{ attachInput: { 'data-testid': 'attach-input' } as any }}
+            >
               Attach
             </ComposerAttachButton>
             <AttachmentCountIndicator />
@@ -453,7 +409,7 @@ describe('ComposerRoot', () => {
   });
 
   it('renders helper text children first and falls back to the chat error message', async () => {
-    const firstRender = render(
+    const view = render(
       <ChatRoot adapter={createAdapter()}>
         <ComposerRoot>
           <ComposerHelperText data-testid="helper-text">Hint text</ComposerHelperText>
@@ -463,7 +419,7 @@ describe('ComposerRoot', () => {
 
     expect(screen.getByTestId('helper-text')).to.have.text('Hint text');
 
-    firstRender.unmount();
+    view.unmount();
 
     render(
       <ChatRoot adapter={createAdapter()}>
@@ -522,15 +478,9 @@ describe('ComposerRoot', () => {
           >
             Attach
           </ComposerAttachButton>
-          <ComposerSendButton slots={{ sendButton: CustomSendButton }}>
-            Send
-          </ComposerSendButton>
-          <ComposerToolbar slots={{ toolbar: CustomToolbar }}>
-            toolbar
-          </ComposerToolbar>
-          <ComposerHelperText slots={{ helperText: CustomHelperText }}>
-            helper
-          </ComposerHelperText>
+          <ComposerSendButton slots={{ sendButton: CustomSendButton }}>Send</ComposerSendButton>
+          <ComposerToolbar slots={{ toolbar: CustomToolbar }}>toolbar</ComposerToolbar>
+          <ComposerHelperText slots={{ helperText: CustomHelperText }}>helper</ComposerHelperText>
         </ComposerRoot>
       </ChatRoot>,
     );
@@ -538,7 +488,10 @@ describe('ComposerRoot', () => {
     expect(screen.getByTestId('custom-composer-root')).to.have.attribute('data-has-value', 'true');
     expect(screen.getByTestId('custom-composer-input')).to.have.attribute('data-has-value', 'true');
     expect(screen.getByTestId('custom-helper-text')).to.have.attribute('data-has-value', 'true');
-    expect(screen.getByTestId('custom-attach-input')).to.have.attribute('data-attachment-count', '0');
+    expect(screen.getByTestId('custom-attach-input')).to.have.attribute(
+      'data-attachment-count',
+      '0',
+    );
 
     fireEvent.change(screen.getByTestId('custom-attach-input'), {
       target: {
@@ -547,9 +500,18 @@ describe('ComposerRoot', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId('custom-composer-root')).to.have.attribute('data-attachment-count', '1');
-      expect(screen.getByTestId('custom-attach-button')).to.have.attribute('data-attachment-count', '1');
-      expect(screen.getByTestId('custom-helper-text')).to.have.attribute('data-attachment-count', '1');
+      expect(screen.getByTestId('custom-composer-root')).to.have.attribute(
+        'data-attachment-count',
+        '1',
+      );
+      expect(screen.getByTestId('custom-attach-button')).to.have.attribute(
+        'data-attachment-count',
+        '1',
+      );
+      expect(screen.getByTestId('custom-helper-text')).to.have.attribute(
+        'data-attachment-count',
+        '1',
+      );
     });
 
     fireEvent.click(screen.getByTestId('custom-send-button'));

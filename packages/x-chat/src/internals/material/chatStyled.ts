@@ -1,7 +1,4 @@
-import {
-  styled as muiStyled,
-  useThemeProps as muiUseThemeProps,
-} from '@mui/material/styles';
+import { styled as muiStyled, useThemeProps as muiUseThemeProps } from '@mui/material/styles';
 
 export type MuiChatComponentName =
   | 'MuiChatBox'

@@ -1,26 +1,11 @@
 import axe from 'axe-core';
 import * as React from 'react';
-import {
-  act,
-  createRenderer,
-  screen,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
-import type {
-  ChatAdapter,
-  ChatMessage,
-} from '@mui/x-chat-headless';
-import {
-  ComposerInput,
-  ComposerRoot,
-} from '../composer';
+import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
+import { ComposerInput, ComposerRoot } from '../composer';
 import { ConversationListRoot } from '../conversation-list';
-import {
-  ScrollToBottomAffordance,
-  TypingIndicator,
-  UnreadMarker,
-} from '../indicators';
+import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from '../indicators';
 import {
   MessageActions,
   MessageAvatar,
@@ -34,12 +19,7 @@ import {
   MessageListRoot,
   type MessageListRootProps,
 } from '../message-list';
-import {
-  ThreadHeader,
-  ThreadRoot,
-  ThreadSubtitle,
-  ThreadTitle,
-} from '../thread';
+import { ThreadHeader, ThreadRoot, ThreadSubtitle, ThreadTitle } from '../thread';
 import { ChatLayout } from './ChatLayout';
 import { ChatRoot } from './ChatRoot';
 
@@ -262,64 +242,73 @@ const ChatCompositionHarness = React.forwardRef(function ChatCompositionHarness(
 });
 
 describe('ChatComposition', () => {
-  it.skipIf(isJSDOM)('allows keyboard tab travel through the message list without trapping focus', async () => {
-    const view = render(<ChatCompositionHarness includeBeforeAfterButtons />);
+  it.skipIf(isJSDOM)(
+    'allows keyboard tab travel through the message list without trapping focus',
+    async () => {
+      const view = render(<ChatCompositionHarness includeBeforeAfterButtons />);
 
-    const beforeButton = screen.getByRole('button', { name: 'Before list' });
-    const firstMessageAction = screen.getByTestId('message-action-c1-m1');
-    const secondMessageAction = screen.getByTestId('message-action-c1-m2');
-    const afterButton = screen.getByRole('button', { name: 'After list' });
+      const beforeButton = screen.getByRole('button', { name: 'Before list' });
+      const firstMessageAction = screen.getByTestId('message-action-c1-m1');
+      const secondMessageAction = screen.getByTestId('message-action-c1-m2');
+      const afterButton = screen.getByRole('button', { name: 'After list' });
 
-    beforeButton.focus();
+      beforeButton.focus();
 
-    await view.user.keyboard('{Tab}');
-    expect(firstMessageAction).toHaveFocus();
+      await view.user.keyboard('{Tab}');
+      expect(firstMessageAction).toHaveFocus();
 
-    await view.user.keyboard('{Tab}');
-    expect(secondMessageAction).toHaveFocus();
+      await view.user.keyboard('{Tab}');
+      expect(secondMessageAction).toHaveFocus();
 
-    await view.user.keyboard('{Tab}');
-    expect(afterButton).toHaveFocus();
-  });
+      await view.user.keyboard('{Tab}');
+      expect(afterButton).toHaveFocus();
+    },
+  );
 
-  it.skipIf(isJSDOM)('moves focus to the composer input when a conversation switch unmounts the focused thread action', async () => {
-    const handleRef = React.createRef<ChatCompositionHandle>();
+  it.skipIf(isJSDOM)(
+    'moves focus to the composer input when a conversation switch unmounts the focused thread action',
+    async () => {
+      const handleRef = React.createRef<ChatCompositionHandle>();
 
-    render(<ChatCompositionHarness ref={handleRef} />);
+      render(<ChatCompositionHarness ref={handleRef} />);
 
-    const actionButton = screen.getByTestId('message-action-c1-m1');
-    const composerInput = screen.getByTestId('composer-input');
+      const actionButton = screen.getByTestId('message-action-c1-m1');
+      const composerInput = screen.getByTestId('composer-input');
 
-    actionButton.focus();
-    expect(actionButton).toHaveFocus();
+      actionButton.focus();
+      expect(actionButton).toHaveFocus();
 
-    act(() => {
-      handleRef.current!.switchConversation('c2');
-    });
+      act(() => {
+        handleRef.current!.switchConversation('c2');
+      });
 
-    await waitFor(() => {
-      expect(screen.getByTestId('message-action-c2-m1')).not.to.equal(null);
-      expect(composerInput).toHaveFocus();
-    });
-  });
+      await waitFor(() => {
+        expect(screen.getByTestId('message-action-c2-m1')).not.to.equal(null);
+        expect(composerInput).toHaveFocus();
+      });
+    },
+  );
 
-  it.skipIf(isJSDOM)('preserves focused message actions across same-thread rerenders when the action stays mounted', async () => {
-    const handleRef = React.createRef<ChatCompositionHandle>();
+  it.skipIf(isJSDOM)(
+    'preserves focused message actions across same-thread rerenders when the action stays mounted',
+    async () => {
+      const handleRef = React.createRef<ChatCompositionHandle>();
 
-    render(<ChatCompositionHarness ref={handleRef} />);
+      render(<ChatCompositionHarness ref={handleRef} />);
 
-    const actionButton = screen.getByTestId('message-action-c1-m1');
-    actionButton.focus();
+      const actionButton = screen.getByTestId('message-action-c1-m1');
+      actionButton.focus();
 
-    act(() => {
-      handleRef.current!.appendAssistantMessage();
-    });
+      act(() => {
+        handleRef.current!.appendAssistantMessage();
+      });
 
-    await waitFor(() => {
-      expect(screen.getByTestId('message-action-c1-m1')).toHaveFocus();
-      expect(screen.getByRole('log')).to.contain.text('assistant:c1-m3');
-    });
-  });
+      await waitFor(() => {
+        expect(screen.getByTestId('message-action-c1-m1')).toHaveFocus();
+        expect(screen.getByRole('log')).to.contain.text('assistant:c1-m3');
+      });
+    },
+  );
 
   it.skipIf(isJSDOM)('keeps keyboard focus behavior stable under rtl direction', async () => {
     const handleRef = React.createRef<ChatCompositionHandle>();
@@ -364,22 +353,25 @@ describe('ChatComposition', () => {
     });
   });
 
-  it.skipIf(isJSDOM || !isChrome)('passes an axe audit for the composed unstyled chat', async () => {
-    render(<ChatCompositionHarness includeBeforeAfterButtons />);
+  it.skipIf(isJSDOM || !isChrome)(
+    'passes an axe audit for the composed unstyled chat',
+    async () => {
+      render(<ChatCompositionHarness includeBeforeAfterButtons />);
 
-    axe.configure({
-      disableOtherRules: true,
-      rules: [
-        { id: 'aria-required-parent', enabled: true },
-        { id: 'aria-required-children', enabled: true },
-        { id: 'button-name', enabled: true },
-        { id: 'aria-input-field-name', enabled: true },
-      ],
-    });
+      axe.configure({
+        disableOtherRules: true,
+        rules: [
+          { id: 'aria-required-parent', enabled: true },
+          { id: 'aria-required-children', enabled: true },
+          { id: 'button-name', enabled: true },
+          { id: 'aria-input-field-name', enabled: true },
+        ],
+      });
 
-    const results = await axe.run(document.body);
+      const results = await axe.run(document.body);
 
-    logViolations(results.violations);
-    expect(results.violations.length).to.equal(0);
-  });
+      logViolations(results.violations);
+      expect(results.violations.length).to.equal(0);
+    },
+  );
 });

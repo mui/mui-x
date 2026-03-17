@@ -2,10 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
-import {
-  useChat,
-  useMessageIds,
-} from '@mui/x-chat-headless';
+import { useChat, useMessageIds } from '@mui/x-chat-headless';
 import { type UnreadMarkerOwnerState } from './indicators.types';
 
 function resolveMessageIndex(messageId: string, index: number | undefined, items: string[]) {
@@ -26,8 +23,7 @@ export interface UnreadMarkerSlotProps {
   label?: SlotComponentProps<'div', {}, UnreadMarkerOwnerState>;
 }
 
-export interface UnreadMarkerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface UnreadMarkerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   messageId: string;
   index?: number;
   items?: string[];
@@ -61,7 +57,7 @@ export const UnreadMarker = React.forwardRef(function UnreadMarker(
     () =>
       activeConversationId == null
         ? null
-        : conversations.find((candidate) => candidate.id === activeConversationId) ?? null,
+        : (conversations.find((candidate) => candidate.id === activeConversationId) ?? null),
     [activeConversationId, conversations],
   );
   const boundaryIndex = React.useMemo(() => {

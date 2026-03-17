@@ -2,11 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
-import {
-  useMessage,
-  useMessageIds,
-  type ChatMessage,
-} from '@mui/x-chat-headless';
+import { useMessage, useMessageIds, type ChatMessage } from '@mui/x-chat-headless';
 import { MessageAvatar } from '../message/MessageAvatar';
 import { MessageContent } from '../message/MessageContent';
 import { MessageMeta } from '../message/MessageMeta';

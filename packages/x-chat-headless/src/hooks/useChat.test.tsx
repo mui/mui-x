@@ -194,7 +194,9 @@ describe('useChat', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.store.state.activeStreamAbortController).toBeInstanceOf(AbortController);
+      expect(result.current.store.state.activeStreamAbortController).toBeInstanceOf(
+        AbortController,
+      );
     });
 
     act(() => {
@@ -226,7 +228,7 @@ describe('useChat', () => {
             conversationId: 'c1',
             parts: [{ type: 'text', text: 'Hello from effect' }],
           });
-        }, [chat.sendMessage]);
+        }, [chat, chat.sendMessage]);
 
         return chat;
       },
@@ -275,7 +277,9 @@ describe('useChat', () => {
 
     await waitFor(() => {
       expect(result.current.chat.isStreaming).toBe(true);
-      expect(result.current.store.state.activeStreamAbortController).toBeInstanceOf(AbortController);
+      expect(result.current.store.state.activeStreamAbortController).toBeInstanceOf(
+        AbortController,
+      );
     });
 
     const store = result.current.store;
@@ -751,6 +755,7 @@ describe('useChat', () => {
         attempt += 1;
 
         if (attempt === 1) {
+          // eslint-disable-next-line vitest/no-conditional-expect
           expect(messages.map((currentMessage) => currentMessage.id)).toEqual([message.id]);
           return createStream([
             { type: 'start', messageId: 'assistant-1' },
@@ -967,7 +972,11 @@ describe('useChat', () => {
         toolCallId: 'tool-1',
         output: { results: ['sunny'] },
       });
-      await controlledStream.enqueue({ type: 'finish', messageId: 'assistant-1', finishReason: 'stop' });
+      await controlledStream.enqueue({
+        type: 'finish',
+        messageId: 'assistant-1',
+        finishReason: 'stop',
+      });
       await controlledStream.close();
       await sendPromise;
     });
@@ -1100,7 +1109,11 @@ describe('useChat', () => {
         toolCallId: 'tool-1',
         reason: 'Needs approval',
       });
-      await controlledStream.enqueue({ type: 'finish', messageId: 'assistant-1', finishReason: 'stop' });
+      await controlledStream.enqueue({
+        type: 'finish',
+        messageId: 'assistant-1',
+        finishReason: 'stop',
+      });
       await controlledStream.close();
       await sendPromise;
     });
@@ -1190,10 +1203,9 @@ describe('useChat', () => {
       adapter,
       defaultActiveConversationId: 'c1',
     });
-    const { result } = renderHook(
-      () => ({ chat: useChat(), status: useChatStatus() }),
-      { wrapper: Wrapper },
-    );
+    const { result } = renderHook(() => ({ chat: useChat(), status: useChatStatus() }), {
+      wrapper: Wrapper,
+    });
 
     await waitFor(() => {
       expect(adapter.subscribe).toHaveBeenCalledTimes(1);

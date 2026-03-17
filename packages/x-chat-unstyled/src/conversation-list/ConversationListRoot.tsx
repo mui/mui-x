@@ -9,10 +9,8 @@ import {
   type ChatConversation,
 } from '@mui/x-chat-headless';
 import { markChatLayoutPane } from '../chat/internals/chatLayoutPaneKind';
-import {
-  ConversationListItem,
-  type ConversationListItemProps,
-} from './ConversationListItem';
+import { mergeReactProps } from '../internals/mergeReactProps';
+import { ConversationListItem, type ConversationListItemProps } from './ConversationListItem';
 import {
   ConversationListItemText,
   type ConversationListItemTextProps,
@@ -43,8 +41,16 @@ export interface ConversationListRootSlots {
 export interface ConversationListRootSlotProps {
   root?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
   item?: SlotComponentProps<typeof ConversationListItem, {}, ConversationListItemOwnerState>;
-  itemText?: SlotComponentProps<typeof ConversationListItemText, {}, ConversationListItemOwnerState>;
-  itemMeta?: SlotComponentProps<typeof ConversationListItemMeta, {}, ConversationListItemOwnerState>;
+  itemText?: SlotComponentProps<
+    typeof ConversationListItemText,
+    {},
+    ConversationListItemOwnerState
+  >;
+  itemMeta?: SlotComponentProps<
+    typeof ConversationListItemMeta,
+    {},
+    ConversationListItemOwnerState
+  >;
   itemAvatar?: SlotComponentProps<
     typeof ConversationListItemAvatar,
     {},
@@ -52,8 +58,10 @@ export interface ConversationListRootSlotProps {
   >;
 }
 
-export interface ConversationListRootProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface ConversationListRootProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   slots?: Partial<ConversationListRootSlots>;
   slotProps?: ConversationListRootSlotProps;
 }
@@ -94,7 +102,7 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
   const ItemText = slots?.itemText ?? ConversationListItemText;
   const ItemMeta = slots?.itemMeta ?? ConversationListItemMeta;
   const ItemAvatar = slots?.itemAvatar ?? ConversationListItemAvatar;
-  const itemProps = useSlotProps({
+  const itemSlotProps = useSlotProps({
     elementType: Item,
     externalSlotProps: slotProps?.item,
     ownerState,
@@ -106,18 +114,20 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
       role: 'option',
       tabIndex: focused ? 0 : -1,
       'aria-selected': selected,
-      onClick: () => {
-        onSelect(conversation.id);
-      },
-      onFocus: () => {
-        onFocus(conversation.id);
-      },
-      onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => {
-        onKeyDown(event, conversation.id);
-      },
       ref: (element: HTMLElement | null) => {
         registerItemRef(conversation.id, element);
       },
+    },
+  });
+  const itemProps = mergeReactProps(itemSlotProps, {
+    onClick: () => {
+      onSelect(conversation.id);
+    },
+    onFocus: () => {
+      onFocus(conversation.id);
+    },
+    onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown(event, conversation.id);
     },
   });
   const itemTextProps = useSlotProps({
@@ -202,7 +212,11 @@ export const ConversationListRoot = markChatLayoutPane(
         : null,
     );
     const [focusedConversationId, setFocusedConversationId] = React.useState(() =>
-      getInitialFocusedConversationId(conversations, activeConversationId, storedFocusedConversationId),
+      getInitialFocusedConversationId(
+        conversations,
+        activeConversationId,
+        storedFocusedConversationId,
+      ),
     );
     const itemRefs = React.useRef(new Map<string, HTMLElement | null>());
     const conversationIds = React.useMemo(
@@ -239,7 +253,11 @@ export const ConversationListRoot = markChatLayoutPane(
       }
 
       setFocusedConversationId(
-        getInitialFocusedConversationId(conversations, activeConversationId, storedFocusedConversationId),
+        getInitialFocusedConversationId(
+          conversations,
+          activeConversationId,
+          storedFocusedConversationId,
+        ),
       );
     }, [
       activeConversationId,
@@ -267,22 +285,28 @@ export const ConversationListRoot = markChatLayoutPane(
       itemRefs.current.set(id, element);
     }, []);
 
-    const handleFocusedConversationChange = React.useCallback((id: string) => {
-      setFocusedConversationId(id);
-      lastFocusedConversationIdByStore.set(store, id);
-    }, [store]);
+    const handleFocusedConversationChange = React.useCallback(
+      (id: string) => {
+        setFocusedConversationId(id);
+        lastFocusedConversationIdByStore.set(store, id);
+      },
+      [store],
+    );
 
-    const moveFocus = React.useCallback((targetIndex: number) => {
-      const boundedIndex = Math.max(0, Math.min(targetIndex, conversationIds.length - 1));
-      const targetId = conversationIds[boundedIndex];
+    const moveFocus = React.useCallback(
+      (targetIndex: number) => {
+        const boundedIndex = Math.max(0, Math.min(targetIndex, conversationIds.length - 1));
+        const targetId = conversationIds[boundedIndex];
 
-      if (targetId == null) {
-        return;
-      }
+        if (targetId == null) {
+          return;
+        }
 
-      handleFocusedConversationChange(targetId);
-      focusConversation(targetId);
-    }, [conversationIds, focusConversation, handleFocusedConversationChange]);
+        handleFocusedConversationChange(targetId);
+        focusConversation(targetId);
+      },
+      [conversationIds, focusConversation, handleFocusedConversationChange],
+    );
 
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>, id: string) => {
@@ -317,7 +341,7 @@ export const ConversationListRoot = markChatLayoutPane(
             break;
         }
       },
-      [conversationIds.length, conversationIds, moveFocus, setActiveConversation],
+      [conversationIds, moveFocus, setActiveConversation],
     );
 
     const handleSelect = React.useCallback(

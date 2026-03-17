@@ -1,8 +1,4 @@
-import type {
-  ChatMessageStatus,
-  ChatToolInvocationState,
-  ChatUser,
-} from '@mui/x-chat-headless';
+import type { ChatMessageStatus, ChatToolInvocationState, ChatUser } from '@mui/x-chat-headless';
 
 export type ChatLocaleTypingUser = Pick<ChatUser, 'id' | 'displayName'>;
 

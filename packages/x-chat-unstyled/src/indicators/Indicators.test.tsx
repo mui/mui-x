@@ -1,25 +1,11 @@
 import * as React from 'react';
-import {
-  act,
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter, ChatMessage, ChatRealtimeEvent } from '@mui/x-chat-headless';
 import { ChatRoot } from '../chat/ChatRoot';
-import {
-  MessageListRoot,
-  type MessageListRootProps,
-} from '../message-list/MessageListRoot';
+import { MessageListRoot, type MessageListRootProps } from '../message-list/MessageListRoot';
 import { MessageListContextProvider } from '../message-list/internals/MessageListContext';
-import {
-  Indicators,
-  ScrollToBottomAffordance,
-  TypingIndicator,
-  UnreadMarker,
-} from './index';
+import { Indicators, ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './index';
 
 const { render } = createRenderer();
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -169,7 +155,10 @@ function ControlledMessageListWithAffordance() {
     <ChatRoot adapter={createAdapter()} messages={messages}>
       <button
         onClick={() => {
-          setMessages((previous) => [...previous, createMessage(`m${previous.length + 1}`, 'assistant')]);
+          setMessages((previous) => [
+            ...previous,
+            createMessage(`m${previous.length + 1}`, 'assistant'),
+          ]);
         }}
         type="button"
       >
@@ -260,7 +249,11 @@ describe('Indicators', () => {
     });
 
     render(
-      <ChatRoot adapter={adapter} defaultActiveConversationId="c1" defaultConversations={[{ id: 'c1' }]}>
+      <ChatRoot
+        adapter={adapter}
+        defaultActiveConversationId="c1"
+        defaultConversations={[{ id: 'c1' }]}
+      >
         <TypingIndicator slots={{ root: TypingRoot }} />
       </ChatRoot>,
     );
@@ -475,36 +468,37 @@ describe('Indicators', () => {
     expect(scrollToBottom).toHaveBeenCalledTimes(1);
   });
 
-  it.skipIf(isJSDOM)('ScrollToBottomAffordance follows message-list scroll state and unseen count', async () => {
-    render(<ControlledMessageListWithAffordance />);
+  it.skipIf(isJSDOM)(
+    'ScrollToBottomAffordance follows message-list scroll state and unseen count',
+    async () => {
+      render(<ControlledMessageListWithAffordance />);
 
-    const log = screen.getByRole('log');
+      const log = screen.getByRole('log');
 
-    await waitFor(() => {
-      expect(log.scrollHeight).toBeGreaterThan(160);
-    });
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
 
-    act(() => {
       log.scrollTop = 0;
       fireEvent.scroll(log);
-    });
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Scroll to bottom' })).toBeVisible();
-    });
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Scroll to bottom' })).toBeVisible();
+      });
 
-    fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
+      fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' }),
-      ).toBeVisible();
-    });
+      await waitFor(() => {
+        expect(
+          screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' }),
+        ).toBeVisible();
+      });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' }));
 
-    await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Scroll to bottom/ })).toBeNull();
-    });
-  });
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /Scroll to bottom/ })).toBeNull();
+      });
+    },
+  );
 });

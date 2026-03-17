@@ -1,6 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
-import type { ChatError } from '../types/chat-error';
 import type { ChatInternalState } from '../types/chat-state';
 
 type State<Cursor = string> = ChatInternalState<Cursor>;
@@ -56,7 +55,7 @@ export const chatSelectors = {
   typingUserIds: createSelectorMemoized(
     (state: State) => state.typingByConversation,
     (state: State) => state.activeConversationId,
-    (typingByConversation, activeConversationId, conversationId?: string): string[] => {
+    (typingByConversation, activeConversationId, conversationId: string | undefined): string[] => {
       const id = conversationId ?? activeConversationId;
       if (!id) {
         return [];

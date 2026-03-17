@@ -1,15 +1,13 @@
 import * as React from 'react';
-import {
-  act,
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
 import { ChatRoot } from '../chat/ChatRoot';
-import { MessageListRoot, type MessageListRootHandle, type MessageListRootProps } from './MessageListRoot';
+import {
+  MessageListRoot,
+  type MessageListRootHandle,
+  type MessageListRootProps,
+} from './MessageListRoot';
 import { useMessageListContext } from './internals/MessageListContext';
 
 const { render } = createRenderer();
@@ -178,7 +176,10 @@ function ControlledMessageList(props: {
       </button>
       <button
         onClick={() => {
-          setMessages((previous) => [...previous, createMessage(`m${previous.length + 1}`, 'assistant')]);
+          setMessages((previous) => [
+            ...previous,
+            createMessage(`m${previous.length + 1}`, 'assistant'),
+          ]);
         }}
         type="button"
       >
@@ -186,7 +187,10 @@ function ControlledMessageList(props: {
       </button>
       <button
         onClick={() => {
-          setMessages((previous) => [...previous, createMessage(`m${previous.length + 1}`, 'user')]);
+          setMessages((previous) => [
+            ...previous,
+            createMessage(`m${previous.length + 1}`, 'user'),
+          ]);
         }}
         type="button"
       >
@@ -215,7 +219,9 @@ function ControlledMessageList(props: {
         estimatedItemSize={40}
         renderItem={({ id }) => {
           const message = messages.find((item) => item.id === id)!;
-          const expanded = Boolean(message.metadata && 'expanded' in message.metadata && message.metadata.expanded);
+          const expanded = Boolean(
+            message.metadata && 'expanded' in message.metadata && message.metadata.expanded,
+          );
 
           return (
             <div
@@ -314,9 +320,7 @@ describe('MessageListRoot', () => {
     });
     log.scrollTop = 0;
 
-    act(() => {
-      handleRef.current!.scrollToBottom();
-    });
+    handleRef.current!.scrollToBottom();
 
     expect(scrollTo).toHaveBeenCalledWith({
       behavior: 'auto',
@@ -324,9 +328,7 @@ describe('MessageListRoot', () => {
     });
     expect(log.scrollTop).toBe(640);
 
-    act(() => {
-      handleRef.current!.scrollToBottom({ behavior: 'smooth' });
-    });
+    handleRef.current!.scrollToBottom({ behavior: 'smooth' });
 
     expect(scrollTo).toHaveBeenLastCalledWith({
       behavior: 'smooth',
@@ -395,11 +397,8 @@ describe('MessageListRoot', () => {
     });
 
     const log = screen.getByRole('log');
-    await act(async () => {
-      log.scrollTop = 0;
-      fireEvent.scroll(log);
-      await Promise.resolve();
-    });
+    log.scrollTop = 0;
+    fireEvent.scroll(log);
 
     await waitFor(() => {
       expect(screen.getByTestId('message-m2')).toBeVisible();
@@ -407,15 +406,10 @@ describe('MessageListRoot', () => {
 
     expect(onReachTop).toHaveBeenCalledTimes(1);
 
-    act(() => {
-      log.scrollTop = 200;
-      fireEvent.scroll(log);
-    });
-    await act(async () => {
-      log.scrollTop = 0;
-      fireEvent.scroll(log);
-      await Promise.resolve();
-    });
+    log.scrollTop = 200;
+    fireEvent.scroll(log);
+    log.scrollTop = 0;
+    fireEvent.scroll(log);
 
     await waitFor(() => {
       expect(screen.getByTestId('message-m1')).toBeVisible();
@@ -457,10 +451,8 @@ describe('MessageListRoot', () => {
       expect(log.scrollHeight).toBeGreaterThan(160);
     });
 
-    act(() => {
-      log.scrollTop = 80;
-      fireEvent.scroll(log);
-    });
+    log.scrollTop = 80;
+    fireEvent.scroll(log);
 
     fireEvent.click(screen.getByRole('button', { name: 'prepend' }));
 
@@ -478,10 +470,8 @@ describe('MessageListRoot', () => {
       expect(log.scrollHeight).toBeGreaterThan(160);
     });
 
-    act(() => {
-      log.scrollTop = 75;
-      fireEvent.scroll(log);
-    });
+    log.scrollTop = 75;
+    fireEvent.scroll(log);
 
     fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
 
@@ -499,10 +489,8 @@ describe('MessageListRoot', () => {
       expect(log.scrollHeight).toBeGreaterThan(160);
     });
 
-    act(() => {
-      log.scrollTop = 0;
-      fireEvent.scroll(log);
-    });
+    log.scrollTop = 0;
+    fireEvent.scroll(log);
 
     fireEvent.click(screen.getByRole('button', { name: 'append user' }));
 
@@ -511,56 +499,61 @@ describe('MessageListRoot', () => {
     });
   });
 
-  it.skipIf(isJSDOM)('does not auto-scroll for assistant appends when away from the bottom', async () => {
-    render(<ControlledMessageList virtualization={false} />);
+  it.skipIf(isJSDOM)(
+    'does not auto-scroll for assistant appends when away from the bottom',
+    async () => {
+      render(<ControlledMessageList virtualization={false} />);
 
-    const log = screen.getByRole('log');
+      const log = screen.getByRole('log');
 
-    await waitFor(() => {
-      expect(log.scrollHeight).toBeGreaterThan(160);
-    });
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
 
-    act(() => {
       log.scrollTop = 0;
       fireEvent.scroll(log);
-    });
 
-    fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
+      fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
 
-    await waitFor(() => {
-      expect(log.scrollTop).toBe(0);
-    });
-  });
+      await waitFor(() => {
+        expect(log.scrollTop).toBe(0);
+      });
+    },
+  );
 
-  it.skipIf(isJSDOM)('tracks unseen appended messages while away from the bottom and resets at the bottom', async () => {
-    render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} virtualization={false} />);
+  it.skipIf(isJSDOM)(
+    'tracks unseen appended messages while away from the bottom and resets at the bottom',
+    async () => {
+      render(
+        <ControlledMessageList
+          slots={{ messageList: RootWithBottomState }}
+          virtualization={false}
+        />,
+      );
 
-    const log = screen.getByRole('log');
+      const log = screen.getByRole('log');
 
-    await waitFor(() => {
-      expect(log.scrollHeight).toBeGreaterThan(160);
-    });
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
 
-    act(() => {
       log.scrollTop = 0;
       fireEvent.scroll(log);
-    });
 
-    fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
+      fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
 
-    await waitFor(() => {
-      expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
-    });
+      await waitFor(() => {
+        expect(screen.getByTestId('message-list-unseen-count')).to.have.text('1');
+      });
 
-    act(() => {
       log.scrollTop = log.scrollHeight;
       fireEvent.scroll(log);
-    });
 
-    await waitFor(() => {
-      expect(screen.getByTestId('message-list-unseen-count')).to.have.text('0');
-    });
-  });
+      await waitFor(() => {
+        expect(screen.getByTestId('message-list-unseen-count')).to.have.text('0');
+      });
+    },
+  );
 
   it.skipIf(isJSDOM)('restores the anchor when a row above the viewport grows', async () => {
     render(<ControlledMessageList virtualization={false} />);
@@ -571,10 +564,8 @@ describe('MessageListRoot', () => {
       expect(log.scrollHeight).toBeGreaterThan(160);
     });
 
-    act(() => {
-      log.scrollTop = 80;
-      fireEvent.scroll(log);
-    });
+    log.scrollTop = 80;
+    fireEvent.scroll(log);
 
     fireEvent.click(screen.getByRole('button', { name: 'expand first' }));
 
@@ -616,19 +607,15 @@ describe('MessageListRoot', () => {
       expect(log.scrollHeight).toBeGreaterThan(160);
     });
 
-    act(() => {
-      log.scrollTop = log.scrollHeight;
-      fireEvent.scroll(log);
-    });
+    log.scrollTop = log.scrollHeight;
+    fireEvent.scroll(log);
 
     await waitFor(() => {
       expect(screen.getByTestId('message-list-bottom-state')).to.have.text('true');
     });
 
-    act(() => {
-      log.scrollTop = 0;
-      fireEvent.scroll(log);
-    });
+    log.scrollTop = 0;
+    fireEvent.scroll(log);
 
     await waitFor(() => {
       expect(screen.getByTestId('message-list-bottom-state')).to.have.text('false');

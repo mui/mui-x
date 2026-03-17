@@ -6,10 +6,7 @@ export {
   ChatComposerSendButton,
   ChatComposerToolbar,
 } from './ChatComposer';
-export {
-  chatComposerClasses,
-  getChatComposerUtilityClass,
-} from './chatComposerClasses';
+export { chatComposerClasses, getChatComposerUtilityClass } from './chatComposerClasses';
 
 export type {
   ChatComposerAttachButtonProps,
@@ -31,7 +28,4 @@ export type {
   ChatComposerToolbarSlotProps,
   ChatComposerToolbarSlots,
 } from './ChatComposer';
-export type {
-  ChatComposerClassKey,
-  ChatComposerClasses,
-} from './chatComposerClasses';
+export type { ChatComposerClassKey, ChatComposerClasses } from './chatComposerClasses';

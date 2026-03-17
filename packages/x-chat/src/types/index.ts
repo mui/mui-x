@@ -61,10 +61,7 @@ export type {
   ChatUserMetadata as UserMetadata,
 } from '@mui/x-chat-headless/types';
 
-export type {
-  ChatAdapter as Adapter,
-  PaginationDirection,
-} from '@mui/x-chat-headless/adapters';
+export type { ChatAdapter as Adapter, PaginationDirection } from '@mui/x-chat-headless/adapters';
 
 export type {
   ChatPartRenderer as PartRenderer,

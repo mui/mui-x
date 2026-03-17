@@ -8,5 +8,9 @@ export function useChatPartRenderer<TPartType extends ChatMessagePart['type']>(
 ): ChatPartRenderer<Extract<ChatMessagePart, { type: TPartType }>> | null {
   const { partRenderers } = useChatRuntimeContext();
 
-  return (partRenderers[partType] as ChatPartRenderer<Extract<ChatMessagePart, { type: TPartType }>> | undefined) ?? null;
+  return (
+    (partRenderers[partType] as
+      | ChatPartRenderer<Extract<ChatMessagePart, { type: TPartType }>>
+      | undefined) ?? null
+  );
 }

@@ -1,20 +1,10 @@
 import * as React from 'react';
-import {
-  act,
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter, ChatMessage, ChatRealtimeEvent } from '@mui/x-chat-headless';
 import { ChatRoot, MessageListRoot } from '@mui/x-chat-unstyled';
-import {
-  ChatScrollToBottomAffordance,
-  ChatTypingIndicator,
-  ChatUnreadMarker,
-} from './index';
+import { ChatScrollToBottomAffordance, ChatTypingIndicator, ChatUnreadMarker } from './index';
 import { chatScrollToBottomAffordanceClasses } from './chatScrollToBottomAffordanceClasses';
 import { chatTypingIndicatorClasses } from './chatTypingIndicatorClasses';
 import { chatUnreadMarkerClasses } from './chatUnreadMarkerClasses';
@@ -72,7 +62,10 @@ function ControlledMessageListWithStyledAffordance() {
     <ChatRoot adapter={createAdapter()} messages={messages}>
       <button
         onClick={() => {
-          setMessages((previous) => [...previous, createMessage(`m${previous.length + 1}`, 'assistant')]);
+          setMessages((previous) => [
+            ...previous,
+            createMessage(`m${previous.length + 1}`, 'assistant'),
+          ]);
         }}
         type="button"
       >
@@ -127,9 +120,7 @@ describe('ChatIndicators', () => {
   });
 
   it('styles the unread marker and supports replacing the label slot', () => {
-    function CustomLabel(
-      props: React.ComponentProps<'span'> & { ownerState?: unknown },
-    ) {
+    function CustomLabel(props: React.ComponentProps<'span'> & { ownerState?: unknown }) {
       const { ownerState, ...other } = props;
       void ownerState;
 
@@ -143,10 +134,7 @@ describe('ChatIndicators', () => {
         defaultConversations={[{ id: 'c1', unreadCount: 1 }]}
         defaultMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'assistant')]}
       >
-        <ChatUnreadMarker
-          messageId="m2"
-          slots={{ label: CustomLabel }}
-        />
+        <ChatUnreadMarker messageId="m2" slots={{ label: CustomLabel }} />
       </ChatRoot>,
     );
 
@@ -174,15 +162,15 @@ describe('ChatIndicators', () => {
       value: scrollTo,
     });
 
-    act(() => {
-      log.scrollTop = 0;
-      fireEvent.scroll(log);
-    });
+    log.scrollTop = 0;
+    fireEvent.scroll(log);
 
     fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' })).toBeVisible();
+      expect(
+        screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' }),
+      ).toBeVisible();
     });
 
     const affordance = screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' });
@@ -222,7 +210,9 @@ describe('ChatIndicators', () => {
           <ChatRoot
             adapter={adapter}
             defaultActiveConversationId="c1"
-            defaultConversations={[{ id: 'c1', participants: [{ id: 'u1', displayName: 'Alice' }] }]}
+            defaultConversations={[
+              { id: 'c1', participants: [{ id: 'u1', displayName: 'Alice' }] },
+            ]}
             defaultMessages={[createMessage('m1', 'assistant')]}
           >
             <ChatTypingIndicator />

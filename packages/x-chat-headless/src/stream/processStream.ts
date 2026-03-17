@@ -50,11 +50,15 @@ function createStreamError(message: string, details?: Record<string, unknown>): 
   };
 }
 
-function isStreamEnvelope(value: ChatMessageChunk | ChatStreamEnvelope): value is ChatStreamEnvelope {
+function isStreamEnvelope(
+  value: ChatMessageChunk | ChatStreamEnvelope,
+): value is ChatStreamEnvelope {
   return 'chunk' in value;
 }
 
-function isDataChunk(chunk: ChatMessageChunk): chunk is Extract<ChatMessageChunk, { type: `data-${string}` }> {
+function isDataChunk(
+  chunk: ChatMessageChunk,
+): chunk is Extract<ChatMessageChunk, { type: `data-${string}` }> {
   return chunk.type.startsWith('data-');
 }
 
@@ -177,10 +181,7 @@ function updateMessage(
   }
 }
 
-function findLastStreamingPartIndex(
-  parts: ChatMessagePart[],
-  type: 'text' | 'reasoning',
-) {
+function findLastStreamingPartIndex(parts: ChatMessagePart[], type: 'text' | 'reasoning') {
   for (let index = parts.length - 1; index >= 0; index -= 1) {
     const part = parts[index];
 
@@ -211,13 +212,11 @@ export async function processStream<Cursor = string>(
   const textPartIndexesByStreamId = new Map<string, number>();
   const reasoningPartIndexesByStreamId = new Map<string, number>();
   const flushInterval = Math.max(0, options.flushInterval ?? DEFAULT_STREAM_FLUSH_INTERVAL);
-  let pendingTextLikeDelta:
-    | {
-        partType: 'text' | 'reasoning';
-        streamId: string;
-        delta: string;
-      }
-    | null = null;
+  let pendingTextLikeDelta: {
+    partType: 'text' | 'reasoning';
+    streamId: string;
+    delta: string;
+  } | null = null;
   let pendingTextLikeDeltaTimer: ReturnType<typeof setTimeout> | null = null;
 
   const reader = stream.getReader();
@@ -346,12 +345,9 @@ export async function processStream<Cursor = string>(
     }
   };
 
-  const applyTextLikeDelta = (
-    partType: 'text' | 'reasoning',
-    streamId: string,
-    delta: string,
-  ) => {
-    const indexMap = partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
+  const applyTextLikeDelta = (partType: 'text' | 'reasoning', streamId: string, delta: string) => {
+    const indexMap =
+      partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
     const partIndex = resolveTextLikePartIndex(partType, streamId, indexMap);
 
     updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
@@ -416,9 +412,7 @@ export async function processStream<Cursor = string>(
 
   const withToolInvocation = async (
     toolCallId: string,
-    getInitialToolPart:
-      | (() => ChatToolMessagePart | ChatDynamicToolMessagePart)
-      | null,
+    getInitialToolPart: (() => ChatToolMessagePart | ChatDynamicToolMessagePart) | null,
     updateInvocation: (
       invocation: ChatToolInvocation | ChatDynamicToolInvocation,
     ) => ChatToolInvocation | ChatDynamicToolInvocation,
@@ -428,9 +422,10 @@ export async function processStream<Cursor = string>(
     let updatedInvocation: ChatToolInvocation | ChatDynamicToolInvocation | undefined;
 
     updateMessageParts(store, message.id, (parts) => {
-      const partIndex = parts.findIndex((part) =>
-        (part.type === 'tool' || part.type === 'dynamic-tool') &&
-        part.toolInvocation.toolCallId === toolCallId,
+      const partIndex = parts.findIndex(
+        (part) =>
+          (part.type === 'tool' || part.type === 'dynamic-tool') &&
+          part.toolInvocation.toolCallId === toolCallId,
       );
 
       if (partIndex === -1) {
@@ -439,14 +434,21 @@ export async function processStream<Cursor = string>(
         }
 
         const initialPart = getInitialToolPart();
-        updatedInvocation = updateInvocation(initialPart.toolInvocation) as typeof initialPart.toolInvocation;
+        updatedInvocation = updateInvocation(
+          initialPart.toolInvocation,
+        ) as typeof initialPart.toolInvocation;
         return [...parts, { ...initialPart, toolInvocation: updatedInvocation } as ChatMessagePart];
       }
 
       const currentPart = parts[partIndex] as ChatToolMessagePart | ChatDynamicToolMessagePart;
-      updatedInvocation = updateInvocation(currentPart.toolInvocation) as typeof currentPart.toolInvocation;
+      updatedInvocation = updateInvocation(
+        currentPart.toolInvocation,
+      ) as typeof currentPart.toolInvocation;
       const nextParts = [...parts];
-      nextParts[partIndex] = { ...currentPart, toolInvocation: updatedInvocation } as ChatMessagePart;
+      nextParts[partIndex] = {
+        ...currentPart,
+        toolInvocation: updatedInvocation,
+      } as ChatMessagePart;
 
       return nextParts;
     });
@@ -489,8 +491,9 @@ export async function processStream<Cursor = string>(
 
       case 'text-start':
       case 'reasoning-start': {
-        const partType = chunk.type === 'text-start' ? 'text' as const : 'reasoning' as const;
-        const indexMap = partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
+        const partType = chunk.type === 'text-start' ? ('text' as const) : ('reasoning' as const);
+        const indexMap =
+          partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
         const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
 
         updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
@@ -509,7 +512,7 @@ export async function processStream<Cursor = string>(
 
       case 'text-delta':
       case 'reasoning-delta': {
-        const partType = chunk.type === 'text-delta' ? 'text' as const : 'reasoning' as const;
+        const partType = chunk.type === 'text-delta' ? ('text' as const) : ('reasoning' as const);
 
         if (flushInterval > 0) {
           scheduleTextLikeDelta(partType, chunk.id, chunk.delta);
@@ -522,8 +525,9 @@ export async function processStream<Cursor = string>(
 
       case 'text-end':
       case 'reasoning-end': {
-        const partType = chunk.type === 'text-end' ? 'text' as const : 'reasoning' as const;
-        const indexMap = partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
+        const partType = chunk.type === 'text-end' ? ('text' as const) : ('reasoning' as const);
+        const indexMap =
+          partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
         const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
 
         updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
@@ -714,7 +718,10 @@ export async function processStream<Cursor = string>(
         return;
 
       case 'start-step':
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => [...parts, { type: 'step-start' }]);
+        updateMessageParts(store, ensureAssistantMessage().id, (parts) => [
+          ...parts,
+          { type: 'step-start' },
+        ]);
         return;
 
       case 'finish-step':
@@ -787,6 +794,7 @@ export async function processStream<Cursor = string>(
     while (bufferedChunksBySequence.has(expectedSequence)) {
       const nextChunk = bufferedChunksBySequence.get(expectedSequence)!;
       bufferedChunksBySequence.delete(expectedSequence);
+      // eslint-disable-next-line no-await-in-loop
       await processChunk(nextChunk);
       expectedSequence += 1;
     }
@@ -810,12 +818,14 @@ export async function processStream<Cursor = string>(
         return handleAbort();
       }
 
+      // eslint-disable-next-line no-await-in-loop
       const { done, value } = await reader.read();
 
       if (done) {
         break;
       }
 
+      // eslint-disable-next-line no-await-in-loop
       await processIncoming(value);
 
       if (didReceiveTerminalChunk) {
@@ -869,8 +879,7 @@ export async function processStream<Cursor = string>(
     }
 
     flushPendingTextLikeDelta();
-    const streamError =
-      error instanceof Error ? error : new Error('Stream processing failed.');
+    const streamError = error instanceof Error ? error : new Error('Stream processing failed.');
 
     failStream(streamError.message || 'Stream processing failed.');
     await finish({

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
+import { mergeReactProps } from '../internals/mergeReactProps';
 import { useMessageListContext } from '../message-list/internals/MessageListContext';
 import { type ScrollToBottomAffordanceOwnerState } from './indicators.types';
 
@@ -23,8 +24,10 @@ export interface ScrollToBottomAffordanceSlotProps {
   badge?: SlotComponentProps<'span', {}, ScrollToBottomAffordanceOwnerState>;
 }
 
-export interface ScrollToBottomAffordanceProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+export interface ScrollToBottomAffordanceProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'children'
+> {
   scrollBehavior?: ScrollBehavior;
   slots?: Partial<ScrollToBottomAffordanceSlots>;
   slotProps?: ScrollToBottomAffordanceSlotProps;
@@ -40,10 +43,7 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
 ) {
   const { scrollBehavior, slots, slotProps, ...other } = props;
   const { isAtBottom, scrollToBottom, unseenMessageCount } = useMessageListContext();
-  const label = React.useMemo(
-    () => createAriaLabel(unseenMessageCount),
-    [unseenMessageCount],
-  );
+  const label = React.useMemo(() => createAriaLabel(unseenMessageCount), [unseenMessageCount]);
   const ownerState = React.useMemo<ScrollToBottomAffordanceOwnerState>(
     () => ({
       isAtBottom,
@@ -54,7 +54,7 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
   );
   const Root = slots?.root ?? 'button';
   const Badge = slots?.badge ?? 'span';
-  const rootProps = useSlotProps({
+  const rootSlotProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
@@ -63,11 +63,13 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
       ref,
       type: 'button',
       'aria-label': label,
-      onClick: () => {
-        scrollToBottom({
-          behavior: scrollBehavior,
-        });
-      },
+    },
+  });
+  const rootProps = mergeReactProps(rootSlotProps, {
+    onClick: () => {
+      scrollToBottom({
+        behavior: scrollBehavior,
+      });
     },
   });
   const badgeProps = useSlotProps({

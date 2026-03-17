@@ -62,7 +62,9 @@ interface ChatFallbackToolInputStartChunk<TToolName extends string = string> {
   dynamic?: boolean;
 }
 
-interface ChatRegisteredToolInputStartChunk<TToolName extends ChatRegisteredToolName = ChatRegisteredToolName> {
+interface ChatRegisteredToolInputStartChunk<
+  TToolName extends ChatRegisteredToolName = ChatRegisteredToolName,
+> {
   type: 'tool-input-start';
   toolCallId: string;
   toolName: TToolName;
@@ -80,10 +82,12 @@ type ChatAnyRegisteredToolInputStartChunk = {
   [TToolName in ChatRegisteredToolName]: ChatRegisteredToolInputStartChunk<TToolName>;
 }[ChatRegisteredToolName];
 
-export type ChatToolInputStartChunk<TToolName extends string = string> =
-  [ChatRegisteredToolName] extends [never]
-    ? ChatFallbackToolInputStartChunk<TToolName>
-    : | ChatAnyRegisteredToolInputStartChunk
+export type ChatToolInputStartChunk<TToolName extends string = string> = [
+  ChatRegisteredToolName,
+] extends [never]
+  ? ChatFallbackToolInputStartChunk<TToolName>
+  :
+      | ChatAnyRegisteredToolInputStartChunk
       | ChatDynamicToolInputStartChunk<Exclude<TToolName, ChatRegisteredToolName>>;
 
 export interface ChatToolInputDeltaChunk {
@@ -99,7 +103,9 @@ interface ChatFallbackToolInputAvailableChunk<TToolName extends string = string>
   input: ChatToolInput<TToolName>;
 }
 
-interface ChatRegisteredToolInputAvailableChunk<TToolName extends ChatRegisteredToolName = ChatRegisteredToolName> {
+interface ChatRegisteredToolInputAvailableChunk<
+  TToolName extends ChatRegisteredToolName = ChatRegisteredToolName,
+> {
   type: 'tool-input-available';
   toolCallId: string;
   toolName: TToolName;
@@ -118,10 +124,12 @@ type ChatAnyRegisteredToolInputAvailableChunk = {
   [TToolName in ChatRegisteredToolName]: ChatRegisteredToolInputAvailableChunk<TToolName>;
 }[ChatRegisteredToolName];
 
-export type ChatToolInputAvailableChunk<TToolName extends string = string> =
-  [ChatRegisteredToolName] extends [never]
-    ? ChatFallbackToolInputAvailableChunk<TToolName>
-    : | ChatAnyRegisteredToolInputAvailableChunk
+export type ChatToolInputAvailableChunk<TToolName extends string = string> = [
+  ChatRegisteredToolName,
+] extends [never]
+  ? ChatFallbackToolInputAvailableChunk<TToolName>
+  :
+      | ChatAnyRegisteredToolInputAvailableChunk
       | ChatDynamicToolInputAvailableChunk<Exclude<TToolName, ChatRegisteredToolName>>;
 
 export interface ChatToolInputErrorChunk {
@@ -161,10 +169,12 @@ type ChatAnyRegisteredToolApprovalRequestChunk = {
   [TToolName in ChatRegisteredToolName]: ChatRegisteredToolApprovalRequestChunk<TToolName>;
 }[ChatRegisteredToolName];
 
-export type ChatToolApprovalRequestChunk<TToolName extends string = string> =
-  [ChatRegisteredToolName] extends [never]
-    ? ChatFallbackToolApprovalRequestChunk<TToolName>
-    : | ChatAnyRegisteredToolApprovalRequestChunk
+export type ChatToolApprovalRequestChunk<TToolName extends string = string> = [
+  ChatRegisteredToolName,
+] extends [never]
+  ? ChatFallbackToolApprovalRequestChunk<TToolName>
+  :
+      | ChatAnyRegisteredToolApprovalRequestChunk
       | ChatDynamicToolApprovalRequestChunk<Exclude<TToolName, ChatRegisteredToolName>>;
 
 export interface ChatToolOutputAvailableChunk<TToolName extends string = string> {
@@ -208,7 +218,9 @@ export interface ChatFileChunk {
   filename?: string;
 }
 
-export interface ChatFallbackDataChunk<TType extends ChatKnownDataPartType = ChatKnownDataPartType> {
+export interface ChatFallbackDataChunk<
+  TType extends ChatKnownDataPartType = ChatKnownDataPartType,
+> {
   type: TType;
   id?: string;
   data: [ChatRegisteredDataPartType] extends [never]

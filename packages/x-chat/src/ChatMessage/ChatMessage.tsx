@@ -2,13 +2,7 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import type { SxProps, Theme } from '@mui/material/styles';
-import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import type { SlotComponentProps } from '@mui/utils/types';
-import type {
-  ChatMessagePart,
-  ChatPartRenderer,
-  ChatTextMessagePart,
-} from '@mui/x-chat-headless';
+import type { ChatMessagePart, ChatPartRenderer, ChatTextMessagePart } from '@mui/x-chat-headless';
 import {
   MessageActions as UnstyledMessageActions,
   MessageAvatar as UnstyledMessageAvatar,
@@ -49,10 +43,7 @@ import type {
 import type { MessageGroupOwnerState } from '@mui/x-chat-unstyled/message-group';
 import { styled, useChatThemeProps } from '../internals/material/chatStyled';
 import { chatCssVarKeys, getChatCssVars } from '../internals/material/chatThemeVars';
-import {
-  ChatMarkdownTextPart,
-  createChatMarkdownTextPartRenderer,
-} from './ChatMarkdownTextPart';
+import { ChatMarkdownTextPart, createChatMarkdownTextPartRenderer } from './ChatMarkdownTextPart';
 import {
   ChatFilePartRenderer,
   ChatReasoningPartRenderer,
@@ -65,7 +56,9 @@ import {
   createChatSourceUrlPartRenderer,
   createChatToolPartRenderer,
 } from './ChatAiPartRenderers';
+import { createDefaultSlot, joinClassNames, mergeSlotPropsWithClassName } from '../internals/utils';
 import { chatMessageClasses, getChatMessageUtilityClass } from './chatMessageClasses';
+
 export type {
   ChatMarkdownTextPartProps,
   ChatMarkdownTextPartRendererOptions,
@@ -95,37 +88,6 @@ export type {
   ChatToolPartRendererSlots,
 } from './ChatAiPartRenderers';
 
-function joinClassNames(...classNames: Array<string | undefined>) {
-  return classNames.filter(Boolean).join(' ');
-}
-
-function mergeSlotPropsWithClassName<TOwnerState>(
-  slotProps: SlotComponentProps<any, {}, TOwnerState> | undefined,
-  className: string | undefined,
-) {
-  return (ownerState: TOwnerState) => {
-    const resolved = resolveComponentProps(slotProps, ownerState) ?? {};
-
-    return {
-      ...resolved,
-      className: joinClassNames(className, (resolved as { className?: string }).className),
-    };
-  };
-}
-
-function createDefaultSlot(Component: React.ElementType, sx?: SxProps<Theme>) {
-  return React.forwardRef(function DefaultSlot(
-    props: React.HTMLAttributes<HTMLDivElement> & {
-      ownerState?: unknown;
-    },
-    ref: React.Ref<any>,
-  ) {
-    const { ownerState, ...other } = props;
-
-    return <Component ownerState={ownerState} ref={ref} sx={sx} {...other} />;
-  });
-}
-
 function getAvatarLabel(ownerState: MessageAvatarOwnerState) {
   const author = ownerState.message?.author;
 
@@ -154,14 +116,40 @@ const ChatMessageRootSlot = styled('div', {
 })<{ ownerState: MessageRootOwnerState }>(({ theme, ownerState }) => {
   const isSystem = ownerState.role === 'system';
   const isUser = ownerState.role === 'user';
-  const contentColumn = isSystem ? 1 : isUser ? 1 : 2;
-  const borderRadius = Number(theme.shape.borderRadius) || 0;
+  const contentColumn = isSystem || isUser ? 1 : 2;
+
+  let alignSelf: string;
+  if (isSystem) {
+    alignSelf = 'center';
+  } else if (isUser) {
+    alignSelf = 'end';
+  } else {
+    alignSelf = 'start';
+  }
+
+  let gridTemplateColumns: string;
+  if (isSystem) {
+    gridTemplateColumns = 'minmax(0, 1fr)';
+  } else if (isUser) {
+    gridTemplateColumns = 'minmax(0, 1fr) auto';
+  } else {
+    gridTemplateColumns = 'auto minmax(0, 1fr)';
+  }
+
+  let justifySelf: string;
+  if (isSystem) {
+    justifySelf = 'center';
+  } else if (isUser) {
+    justifySelf = 'end';
+  } else {
+    justifySelf = 'start';
+  }
 
   return {
     ...getChatCssVars(theme),
-    alignSelf: isSystem ? 'center' : isUser ? 'end' : 'start',
+    alignSelf,
     display: 'grid',
-    gridTemplateColumns: isSystem ? 'minmax(0, 1fr)' : isUser ? 'minmax(0, 1fr) auto' : 'auto minmax(0, 1fr)',
+    gridTemplateColumns,
     maxWidth: isSystem ? '100%' : 'min(100%, 48rem)',
     minWidth: 0,
     rowGap: theme.spacing(0.5),
@@ -174,14 +162,14 @@ const ChatMessageRootSlot = styled('div', {
     [`& .${chatMessageClasses.content}`]: {
       gridColumn: contentColumn,
       gridRow: 1,
-      justifySelf: isSystem ? 'center' : isUser ? 'end' : 'start',
+      justifySelf,
       maxWidth: '100%',
       minWidth: 0,
     },
     [`& .${chatMessageClasses.actions}`]: {
       gridColumn: contentColumn,
       gridRow: 2,
-      justifySelf: isSystem ? 'center' : isUser ? 'end' : 'start',
+      justifySelf,
       opacity: 0,
       pointerEvents: 'none',
       transition: theme.transitions.create('opacity', {
@@ -191,7 +179,7 @@ const ChatMessageRootSlot = styled('div', {
     [`& .${chatMessageClasses.meta}`]: {
       gridColumn: contentColumn,
       gridRow: 3,
-      justifySelf: isSystem ? 'center' : isUser ? 'end' : 'start',
+      justifySelf,
       maxWidth: '100%',
       minWidth: 0,
     },
@@ -230,20 +218,30 @@ const ChatMessageBubbleSlot = styled('div', {
 })<{ ownerState: MessageContentOwnerState }>(({ theme, ownerState }) => {
   const isSystem = ownerState.role === 'system';
   const isUser = ownerState.role === 'user';
-  const borderRadius = Number(theme.shape.borderRadius) || 0;
+  const baseBorderRadius = Number(theme.shape.borderRadius) || 0;
+
+  let backgroundColor: string;
+  if (isSystem) {
+    backgroundColor = 'transparent';
+  } else if (isUser) {
+    backgroundColor = `var(${chatCssVarKeys.userMessageBg})`;
+  } else {
+    backgroundColor = `var(${chatCssVarKeys.assistantMessageBg})`;
+  }
+
+  let color: string;
+  if (isSystem) {
+    color = theme.palette.text.secondary;
+  } else if (isUser) {
+    color = `var(${chatCssVarKeys.userMessageColor})`;
+  } else {
+    color = `var(${chatCssVarKeys.assistantMessageColor})`;
+  }
 
   return {
-    backgroundColor: isSystem
-      ? 'transparent'
-      : isUser
-        ? `var(${chatCssVarKeys.userMessageBg})`
-        : `var(${chatCssVarKeys.assistantMessageBg})`,
-    borderRadius: isSystem ? 0 : borderRadius * 2,
-    color: isSystem
-      ? theme.palette.text.secondary
-      : isUser
-        ? `var(${chatCssVarKeys.userMessageColor})`
-        : `var(${chatCssVarKeys.assistantMessageColor})`,
+    backgroundColor,
+    borderRadius: isSystem ? 0 : baseBorderRadius * 2,
+    color,
     maxWidth: '100%',
     minWidth: 0,
     padding: isSystem ? 0 : theme.spacing(1.25, 1.5),
@@ -311,10 +309,27 @@ const ChatMessageActionsSlot = styled('div', {
   minHeight: 28,
 }));
 
-const ChatMessageGroupSlot = styled('div')<{ ownerState: MessageGroupOwnerState }>(({ theme, ownerState }) => {
+const ChatMessageGroupSlot = styled('div')<{ ownerState: MessageGroupOwnerState }>(({
+  theme,
+  ownerState,
+}) => {
   const connectedRadius = Math.max((Number(theme.shape.borderRadius) || 0) - 2, 4);
   const isUser = ownerState.authorRole === 'user';
   const isSystem = ownerState.authorRole === 'system';
+
+  let firstRadiusOverride = {};
+  if (!ownerState.isFirst && !isSystem) {
+    firstRadiusOverride = isUser
+      ? { borderStartEndRadius: connectedRadius }
+      : { borderStartStartRadius: connectedRadius };
+  }
+
+  let lastRadiusOverride = {};
+  if (!ownerState.isLast && !isSystem) {
+    lastRadiusOverride = isUser
+      ? { borderEndEndRadius: connectedRadius }
+      : { borderEndStartRadius: connectedRadius };
+  }
 
   return {
     marginBlockStart: ownerState.isFirst ? theme.spacing(2) : theme.spacing(0.5),
@@ -323,27 +338,21 @@ const ChatMessageGroupSlot = styled('div')<{ ownerState: MessageGroupOwnerState 
       ? {}
       : {
           [`& .${chatMessageClasses.bubble}`]: {
-            ...(!ownerState.isFirst
-              ? isUser
-                ? { borderStartEndRadius: connectedRadius }
-                : { borderStartStartRadius: connectedRadius }
-              : {}),
-            ...(!ownerState.isLast
-              ? isUser
-                ? { borderEndEndRadius: connectedRadius }
-                : { borderEndStartRadius: connectedRadius }
-              : {}),
+            ...firstRadiusOverride,
+            ...lastRadiusOverride,
           },
         }),
   };
 });
 
-const ChatMessageAuthorNameSlot = styled('div')<{ ownerState: MessageGroupOwnerState }>(({ theme, ownerState }) => ({
-  ...theme.typography.caption,
-  color: theme.palette.text.secondary,
-  marginBlockEnd: theme.spacing(0.5),
-  textAlign: ownerState.authorRole === 'user' ? 'end' : 'start',
-}));
+const ChatMessageAuthorNameSlot = styled('div')<{ ownerState: MessageGroupOwnerState }>(
+  ({ theme, ownerState }) => ({
+    ...theme.typography.caption,
+    color: theme.palette.text.secondary,
+    marginBlockEnd: theme.spacing(0.5),
+    textAlign: ownerState.authorRole === 'user' ? 'end' : 'start',
+  }),
+);
 
 const ChatDateDividerSlot = styled('div')(({ theme }) => ({
   alignItems: 'center',
@@ -387,8 +396,10 @@ function DefaultAvatarSlot(
 
 export type ChatMessageRootSlots = UnstyledMessageRootSlots;
 export type ChatMessageRootSlotProps = UnstyledMessageRootSlotProps;
-export interface ChatMessageRootProps
-  extends Omit<UnstyledMessageRootProps, 'slotProps' | 'slots'> {
+export interface ChatMessageRootProps extends Omit<
+  UnstyledMessageRootProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatMessageRootSlotProps;
   slots?: Partial<ChatMessageRootSlots>;
@@ -397,8 +408,10 @@ export interface ChatMessageRootProps
 
 export type ChatMessageAvatarSlots = UnstyledMessageAvatarSlots;
 export type ChatMessageAvatarSlotProps = UnstyledMessageAvatarSlotProps;
-export interface ChatMessageAvatarProps
-  extends Omit<UnstyledMessageAvatarProps, 'slotProps' | 'slots'> {
+export interface ChatMessageAvatarProps extends Omit<
+  UnstyledMessageAvatarProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatMessageAvatarSlotProps;
   slots?: Partial<ChatMessageAvatarSlots>;
@@ -407,8 +420,10 @@ export interface ChatMessageAvatarProps
 
 export type ChatMessageContentSlots = UnstyledMessageContentSlots;
 export type ChatMessageContentSlotProps = UnstyledMessageContentSlotProps;
-export interface ChatMessageContentProps
-  extends Omit<UnstyledMessageContentProps, 'resolveBuiltInPartRenderer' | 'slotProps' | 'slots'> {
+export interface ChatMessageContentProps extends Omit<
+  UnstyledMessageContentProps,
+  'resolveBuiltInPartRenderer' | 'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatMessageContentSlotProps;
   slots?: Partial<ChatMessageContentSlots>;
@@ -417,7 +432,10 @@ export interface ChatMessageContentProps
 
 export type ChatMessageMetaSlots = UnstyledMessageMetaSlots;
 export type ChatMessageMetaSlotProps = UnstyledMessageMetaSlotProps;
-export interface ChatMessageMetaProps extends Omit<UnstyledMessageMetaProps, 'slotProps' | 'slots'> {
+export interface ChatMessageMetaProps extends Omit<
+  UnstyledMessageMetaProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatMessageMetaSlotProps;
   slots?: Partial<ChatMessageMetaSlots>;
@@ -426,8 +444,10 @@ export interface ChatMessageMetaProps extends Omit<UnstyledMessageMetaProps, 'sl
 
 export type ChatMessageActionsSlots = UnstyledMessageActionsSlots;
 export type ChatMessageActionsSlotProps = UnstyledMessageActionsSlotProps;
-export interface ChatMessageActionsProps
-  extends Omit<UnstyledMessageActionsProps, 'slotProps' | 'slots'> {
+export interface ChatMessageActionsProps extends Omit<
+  UnstyledMessageActionsProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatMessageActionsSlotProps;
   slots?: Partial<ChatMessageActionsSlots>;
@@ -436,7 +456,10 @@ export interface ChatMessageActionsProps
 
 export type ChatMessageGroupSlots = UnstyledMessageGroupSlots;
 export type ChatMessageGroupSlotProps = UnstyledMessageGroupSlotProps;
-export interface ChatMessageGroupProps extends Omit<UnstyledMessageGroupProps, 'slotProps' | 'slots'> {
+export interface ChatMessageGroupProps extends Omit<
+  UnstyledMessageGroupProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatMessageGroupSlotProps;
   slots?: Partial<ChatMessageGroupSlots>;
@@ -445,8 +468,10 @@ export interface ChatMessageGroupProps extends Omit<UnstyledMessageGroupProps, '
 
 export type ChatDateDividerSlots = UnstyledMessageListDateDividerSlots;
 export type ChatDateDividerSlotProps = UnstyledMessageListDateDividerSlotProps;
-export interface ChatDateDividerProps
-  extends Omit<UnstyledMessageListDateDividerProps, 'slotProps' | 'slots'> {
+export interface ChatDateDividerProps extends Omit<
+  UnstyledMessageListDateDividerProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatDateDividerSlotProps;
   slots?: Partial<ChatDateDividerSlots>;
@@ -462,13 +487,19 @@ export const ChatMessageRoot = React.forwardRef(function ChatMessageRoot(
     name: 'MuiChatMessage',
   });
   const { className, slotProps, slots, sx, ...other } = props;
-  const Root = React.useMemo(() => slots?.root ?? createDefaultSlot(ChatMessageRootSlot, sx), [slots?.root, sx]);
+  const Root = React.useMemo(
+    () => slots?.root ?? createDefaultSlot(ChatMessageRootSlot, sx),
+    [slots?.root, sx],
+  );
 
   return (
     <UnstyledMessageRoot
       ref={ref}
       slotProps={{
-        root: mergeSlotPropsWithClassName(slotProps?.root, className ? joinClassNames(chatMessageClasses.root, className) : chatMessageClasses.root),
+        root: mergeSlotPropsWithClassName(
+          slotProps?.root,
+          className ? joinClassNames(chatMessageClasses.root, className) : chatMessageClasses.root,
+        ),
       }}
       slots={{ root: Root }}
       {...other}
@@ -490,7 +521,12 @@ export const ChatMessageAvatar = React.forwardRef(function ChatMessageAvatar(
     <UnstyledMessageAvatar
       ref={ref}
       slotProps={{
-        avatar: mergeSlotPropsWithClassName(slotProps?.avatar, className ? joinClassNames(chatMessageClasses.avatar, className) : chatMessageClasses.avatar),
+        avatar: mergeSlotPropsWithClassName(
+          slotProps?.avatar,
+          className
+            ? joinClassNames(chatMessageClasses.avatar, className)
+            : chatMessageClasses.avatar,
+        ),
       }}
       slots={{ avatar: AvatarSlot }}
       {...other}
@@ -556,7 +592,9 @@ export const ChatMessageContent = React.forwardRef(function ChatMessageContent(
         bubble: mergeSlotPropsWithClassName(slotProps?.bubble, chatMessageClasses.bubble),
         content: mergeSlotPropsWithClassName(
           slotProps?.content,
-          className ? joinClassNames(chatMessageClasses.content, className) : chatMessageClasses.content,
+          className
+            ? joinClassNames(chatMessageClasses.content, className)
+            : chatMessageClasses.content,
         ),
       }}
       slots={{
@@ -573,7 +611,10 @@ export const ChatMessageMeta = React.forwardRef(function ChatMessageMeta(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { className, slotProps, slots, sx, ...other } = props;
-  const Meta = React.useMemo(() => slots?.meta ?? createDefaultSlot(ChatMessageMetaSlot, sx), [slots?.meta, sx]);
+  const Meta = React.useMemo(
+    () => slots?.meta ?? createDefaultSlot(ChatMessageMetaSlot, sx),
+    [slots?.meta, sx],
+  );
   const Timestamp = slots?.timestamp ?? ChatMessageTimestampSlot;
   const Status = slots?.status ?? ChatMessageStatusSlot;
   const Edited = slots?.edited ?? ChatMessageEditedSlot;
@@ -617,7 +658,9 @@ export const ChatMessageActions = React.forwardRef(function ChatMessageActions(
       slotProps={{
         actions: mergeSlotPropsWithClassName(
           slotProps?.actions,
-          className ? joinClassNames(chatMessageClasses.actions, className) : chatMessageClasses.actions,
+          className
+            ? joinClassNames(chatMessageClasses.actions, className)
+            : chatMessageClasses.actions,
         ),
       }}
       slots={{ actions: Actions }}
@@ -631,7 +674,10 @@ export const ChatMessageGroup = React.forwardRef(function ChatMessageGroup(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { children, className, slotProps, slots, sx, ...other } = props;
-  const Group = React.useMemo(() => slots?.group ?? createDefaultSlot(ChatMessageGroupSlot, sx), [slots?.group, sx]);
+  const Group = React.useMemo(
+    () => slots?.group ?? createDefaultSlot(ChatMessageGroupSlot, sx),
+    [slots?.group, sx],
+  );
   const AuthorName = slots?.authorName ?? ChatMessageAuthorNameSlot;
 
   return (
@@ -639,10 +685,7 @@ export const ChatMessageGroup = React.forwardRef(function ChatMessageGroup(
       ref={ref}
       slotProps={{
         authorName: slotProps?.authorName,
-        group: mergeSlotPropsWithClassName(
-          slotProps?.group,
-          className,
-        ),
+        group: mergeSlotPropsWithClassName(slotProps?.group, className),
       }}
       slots={{
         authorName: AuthorName,

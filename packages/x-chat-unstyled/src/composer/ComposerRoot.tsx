@@ -2,11 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
-import {
-  useChatComposer,
-  useChatStatus,
-  useChatStore,
-} from '@mui/x-chat-headless';
+import { useChatComposer, useChatStatus, useChatStore } from '@mui/x-chat-headless';
 import { ComposerContextProvider } from './internals/ComposerContext';
 import { type ComposerRootOwnerState } from './composer.types';
 
@@ -18,7 +14,11 @@ export interface ComposerRootSlotProps {
   root?: SlotComponentProps<'form', {}, ComposerRootOwnerState>;
 }
 
-export interface ComposerRootProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
+export interface ComposerRootProps extends Omit<
+  React.FormHTMLAttributes<HTMLFormElement>,
+  'onSubmit'
+> {
+  disabled?: boolean;
   slots?: Partial<ComposerRootSlots>;
   slotProps?: ComposerRootSlotProps;
 }
@@ -31,7 +31,7 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
   props: ComposerRootProps,
   ref: React.Ref<HTMLFormElement>,
 ) {
-  const { slots, slotProps, children, ...other } = props;
+  const { slots, slotProps, children, disabled = false, ...other } = props;
   const composer = useChatComposer();
   const status = useChatStatus();
   const store = useChatStore();
@@ -41,8 +41,15 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
       hasValue: composer.value.trim() !== '',
       isStreaming: status.isStreaming,
       attachmentCount: composer.attachments.length,
+      disabled,
     }),
-    [composer.attachments.length, composer.isSubmitting, composer.value, status.isStreaming],
+    [
+      composer.attachments.length,
+      composer.isSubmitting,
+      composer.value,
+      status.isStreaming,
+      disabled,
+    ],
   );
   const contextValue = React.useMemo(
     () => ({
@@ -76,7 +83,9 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
       ref,
     },
   }) as React.FormHTMLAttributes<HTMLFormElement> & React.RefAttributes<HTMLFormElement>;
-  const externalOnSubmit = rootProps.onSubmit as React.FormEventHandler<HTMLFormElement> | undefined;
+  const externalOnSubmit = rootProps.onSubmit as
+    | React.FormEventHandler<HTMLFormElement>
+    | undefined;
 
   return (
     <ComposerContextProvider value={contextValue}>
@@ -90,6 +99,11 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
           }
 
           event.preventDefault();
+
+          if (disabled) {
+            return;
+          }
+
           void composer.submit();
         }}
       >

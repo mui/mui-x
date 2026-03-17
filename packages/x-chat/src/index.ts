@@ -48,12 +48,18 @@ export {
   chatMessageClasses,
   getChatMessageUtilityClass,
 } from './ChatMessage';
-export {
-  ChatThread,
-  chatThreadClasses,
-  getChatThreadUtilityClass,
-} from './ChatThread';
+export { ChatBox, chatBoxClasses, getChatBoxUtilityClass } from './ChatBox';
+export { ChatThread, chatThreadClasses, getChatThreadUtilityClass } from './ChatThread';
 
+export type {
+  ChatBoxClassKey,
+  ChatBoxClasses,
+  ChatBoxOwnerState,
+  ChatBoxProps,
+  ChatBoxSlotProps,
+  ChatBoxSlots,
+  ChatBoxStateOwnerState,
+} from './ChatBox';
 export type {
   ChatScrollToBottomAffordanceClassKey,
   ChatScrollToBottomAffordanceClasses,

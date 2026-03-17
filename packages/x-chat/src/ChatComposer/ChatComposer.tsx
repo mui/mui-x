@@ -2,8 +2,6 @@
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import type { SxProps, Theme } from '@mui/material/styles';
-import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import type { SlotComponentProps } from '@mui/utils/types';
 import {
   ComposerAttachButton as UnstyledComposerAttachButton,
   ComposerHelperText as UnstyledComposerHelperText,
@@ -38,25 +36,8 @@ import {
 } from '@mui/x-chat-unstyled/composer';
 import { styled, useChatThemeProps } from '../internals/material/chatStyled';
 import { chatCssVarKeys, getChatCssVars } from '../internals/material/chatThemeVars';
-import { chatComposerClasses, getChatComposerUtilityClass } from './chatComposerClasses';
-
-function joinClassNames(...classNames: Array<string | undefined>) {
-  return classNames.filter(Boolean).join(' ');
-}
-
-function mergeSlotPropsWithClassName<TOwnerState>(
-  slotProps: SlotComponentProps<any, {}, TOwnerState> | undefined,
-  className: string,
-) {
-  return (ownerState: TOwnerState) => {
-    const resolved = resolveComponentProps(slotProps, ownerState) ?? {};
-
-    return {
-      ...resolved,
-      className: joinClassNames(className, (resolved as { className?: string }).className),
-    };
-  };
-}
+import { joinClassNames, mergeSlotPropsWithClassName } from '../internals/utils';
+import { chatComposerClasses } from './chatComposerClasses';
 
 function DefaultAttachIcon() {
   return (
@@ -82,8 +63,10 @@ export interface ChatComposerInputSlotProps {
   input?: UnstyledComposerInputSlotProps['input'];
 }
 
-export interface ChatComposerInputProps
-  extends Omit<UnstyledComposerInputProps, 'slotProps' | 'slots'> {
+export interface ChatComposerInputProps extends Omit<
+  UnstyledComposerInputProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatComposerInputSlotProps;
   slots?: Partial<ChatComposerInputSlots>;
@@ -98,8 +81,10 @@ export interface ChatComposerSendButtonSlotProps {
   sendButton?: UnstyledComposerSendButtonSlotProps['sendButton'];
 }
 
-export interface ChatComposerSendButtonProps
-  extends Omit<UnstyledComposerSendButtonProps, 'slotProps' | 'slots'> {
+export interface ChatComposerSendButtonProps extends Omit<
+  UnstyledComposerSendButtonProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatComposerSendButtonSlotProps;
   slots?: Partial<ChatComposerSendButtonSlots>;
@@ -116,8 +101,10 @@ export interface ChatComposerAttachButtonSlotProps {
   attachInput?: UnstyledComposerAttachButtonSlotProps['attachInput'];
 }
 
-export interface ChatComposerAttachButtonProps
-  extends Omit<UnstyledComposerAttachButtonProps, 'slotProps' | 'slots'> {
+export interface ChatComposerAttachButtonProps extends Omit<
+  UnstyledComposerAttachButtonProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatComposerAttachButtonSlotProps;
   slots?: Partial<ChatComposerAttachButtonSlots>;
@@ -132,8 +119,10 @@ export interface ChatComposerToolbarSlotProps {
   toolbar?: UnstyledComposerToolbarSlotProps['toolbar'];
 }
 
-export interface ChatComposerToolbarProps
-  extends Omit<UnstyledComposerToolbarProps, 'slotProps' | 'slots'> {
+export interface ChatComposerToolbarProps extends Omit<
+  UnstyledComposerToolbarProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatComposerToolbarSlotProps;
   slots?: Partial<ChatComposerToolbarSlots>;
@@ -148,8 +137,10 @@ export interface ChatComposerHelperTextSlotProps {
   helperText?: UnstyledComposerHelperTextSlotProps['helperText'];
 }
 
-export interface ChatComposerHelperTextProps
-  extends Omit<UnstyledComposerHelperTextProps, 'slotProps' | 'slots'> {
+export interface ChatComposerHelperTextProps extends Omit<
+  UnstyledComposerHelperTextProps,
+  'slotProps' | 'slots'
+> {
   className?: string;
   slotProps?: ChatComposerHelperTextSlotProps;
   slots?: Partial<ChatComposerHelperTextSlots>;
@@ -176,8 +167,10 @@ export interface ChatComposerSlotProps {
   helperText?: UnstyledComposerHelperTextSlotProps['helperText'];
 }
 
-export interface ChatComposerProps
-  extends Omit<UnstyledComposerRootProps, 'children' | 'slotProps' | 'slots'> {
+export interface ChatComposerProps extends Omit<
+  UnstyledComposerRootProps,
+  'children' | 'slotProps' | 'slots'
+> {
   children?: React.ReactNode;
   className?: string;
   helperText?: React.ReactNode;
@@ -439,16 +432,16 @@ export const ChatComposerInput = React.forwardRef(function ChatComposerInput(
     name: 'MuiChatComposer',
   });
   const { className, slotProps, slots, sx, ...other } = props;
-  const Input = React.useMemo(
-    () => slots?.input ?? createDefaultInputSlot(sx),
-    [slots?.input, sx],
-  );
+  const Input = React.useMemo(() => slots?.input ?? createDefaultInputSlot(sx), [slots?.input, sx]);
 
   return (
     <UnstyledComposerInput
       ref={ref}
       slotProps={{
-        input: mergeSlotPropsWithClassName(slotProps?.input, className ?? chatComposerClasses.input),
+        input: mergeSlotPropsWithClassName(
+          slotProps?.input,
+          className ?? chatComposerClasses.input,
+        ),
       }}
       slots={{ input: Input }}
       {...other}
@@ -534,7 +527,10 @@ export const ChatComposerToolbar = React.forwardRef(function ChatComposerToolbar
     <UnstyledComposerToolbar
       ref={ref}
       slotProps={{
-        toolbar: mergeSlotPropsWithClassName(slotProps?.toolbar, className ?? chatComposerClasses.toolbar),
+        toolbar: mergeSlotPropsWithClassName(
+          slotProps?.toolbar,
+          className ?? chatComposerClasses.toolbar,
+        ),
       }}
       slots={{ toolbar: Toolbar }}
       {...other}
@@ -579,26 +575,17 @@ export const ChatComposer = React.forwardRef(function ChatComposer(
     props: inProps,
     name: 'MuiChatComposer',
   });
-  const {
-    children,
-    className,
-    helperText,
-    slotProps,
-    slots,
-    sx,
-    toolbar,
-    ...other
-  } = props;
-  const Root = React.useMemo(
-    () => slots?.root ?? createDefaultRootSlot(sx),
-    [slots?.root, sx],
-  );
+  const { children, className, helperText, slotProps, slots, sx, toolbar, ...other } = props;
+  const Root = React.useMemo(() => slots?.root ?? createDefaultRootSlot(sx), [slots?.root, sx]);
 
   return (
     <ComposerRoot
       ref={ref}
       slotProps={{
-        root: mergeSlotPropsWithClassName(slotProps?.root, joinClassNames(chatComposerClasses.root, className)),
+        root: mergeSlotPropsWithClassName(
+          slotProps?.root,
+          joinClassNames(chatComposerClasses.root, className),
+        ),
       }}
       slots={{ root: Root }}
       {...other}

@@ -2,11 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
-import {
-  useChat,
-  useConversations,
-  type ChatConversation,
-} from '@mui/x-chat-headless';
+import { useChat, useConversations, type ChatConversation } from '@mui/x-chat-headless';
 import { markChatLayoutPane } from '../chat/internals/chatLayoutPaneKind';
 import { ThreadContextProvider } from './internals/ThreadContext';
 import { type ThreadRootOwnerState } from './thread.types';
@@ -41,10 +37,7 @@ function getActiveConversation(
 }
 
 export const ThreadRoot = markChatLayoutPane(
-  React.forwardRef(function ThreadRoot(
-    props: ThreadRootProps,
-    ref: React.Ref<HTMLDivElement>,
-  ) {
+  React.forwardRef(function ThreadRoot(props: ThreadRootProps, ref: React.Ref<HTMLDivElement>) {
     const { children, slots, slotProps, ...other } = props;
     const { activeConversationId } = useChat();
     const conversations = useConversations();

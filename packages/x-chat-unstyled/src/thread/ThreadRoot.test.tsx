@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { useChat } from '@mui/x-chat-headless';
@@ -63,13 +58,7 @@ const CustomRoot = React.forwardRef(function CustomRoot(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -94,13 +83,7 @@ const CustomHeader = React.forwardRef(function CustomHeader(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -117,36 +100,34 @@ const CustomHeader = React.forwardRef(function CustomHeader(
 });
 
 function CustomTitle(props: ThreadTitleProps & { ownerState?: { conversationId?: string } }) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
   return (
-    <div data-conversation-id={ownerState?.conversationId ?? 'none'} data-testid="custom-thread-title" {...other}>
+    <div
+      data-conversation-id={ownerState?.conversationId ?? 'none'}
+      data-testid="custom-thread-title"
+      {...other}
+    >
       {children}
     </div>
   );
 }
 
-function CustomSubtitle(props: ThreadSubtitleProps & { ownerState?: { hasConversation: boolean } }) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+function CustomSubtitle(
+  props: ThreadSubtitleProps & { ownerState?: { hasConversation: boolean } },
+) {
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
   return (
-    <div data-has-conversation={String(ownerState?.hasConversation)} data-testid="custom-thread-subtitle" {...other}>
+    <div
+      data-has-conversation={String(ownerState?.hasConversation)}
+      data-testid="custom-thread-subtitle"
+      {...other}
+    >
       {children}
     </div>
   );
@@ -160,13 +141,7 @@ const CustomActions = React.forwardRef(function CustomActions(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    children,
-    ownerState,
-    slotProps,
-    slots,
-    ...other
-  } = props;
+  const { children, ownerState, slotProps, slots, ...other } = props;
   void slotProps;
   void slots;
 
@@ -268,7 +243,9 @@ describe('ThreadRoot', () => {
       <ChatRoot
         adapter={createAdapter()}
         defaultActiveConversationId="c1"
-        defaultConversations={[{ id: 'c1', subtitle: 'Alpha subtitle', title: 'Alpha conversation' }]}
+        defaultConversations={[
+          { id: 'c1', subtitle: 'Alpha subtitle', title: 'Alpha conversation' },
+        ]}
       >
         <ActiveConversationSwitcher />
         <ThreadRoot>

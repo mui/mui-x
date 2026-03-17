@@ -18,7 +18,7 @@ export function useChatStatus(): UseChatStatusValue {
   const isStreaming = useStore(store, chatSelectors.isStreaming);
   const hasMoreHistory = useStore(store, chatSelectors.hasMoreHistory);
   const error = useStore(store, chatSelectors.error);
-  const typingUserIds = useStore(store, chatSelectors.typingUserIds);
+  const typingUserIds = useStore(store, (state) => chatSelectors.typingUserIds(state, undefined));
 
   return React.useMemo(
     () => ({

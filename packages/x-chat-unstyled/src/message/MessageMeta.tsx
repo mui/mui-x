@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import { useIsHydrated } from '../chat/internals/useIsHydrated';
 import { useMessageContext } from './internals/MessageContext';
 import { type MessageMetaOwnerState } from './message.types';
 
@@ -41,21 +42,17 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
   } = props as MessageMetaProps & { ownerState?: MessageMetaOwnerState };
   const ownerState = useMessageContext();
   const localeText = useChatLocaleText();
-  const timestampLabel = ownerState.message?.createdAt
-    ? localeText.messageTimestampLabel(ownerState.message.createdAt)
-    : '';
+  const isHydrated = useIsHydrated();
+  const timestampLabel =
+    isHydrated && ownerState.message?.createdAt
+      ? localeText.messageTimestampLabel(ownerState.message.createdAt)
+      : '';
   const statusLabel = ownerState.message?.status
     ? localeText.messageStatusLabel(ownerState.message.status)
     : '';
   const hasMeta =
-    Boolean(timestampLabel) ||
-    Boolean(statusLabel) ||
-    ownerState.message?.editedAt != null;
+    Boolean(timestampLabel) || Boolean(statusLabel) || ownerState.message?.editedAt != null;
   void ownerStateProp;
-
-  if (!hasMeta) {
-    return null;
-  }
 
   const Meta = slots?.meta ?? 'div';
   const Timestamp = slots?.timestamp ?? 'span';
@@ -85,6 +82,10 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
     externalSlotProps: slotProps?.edited,
     ownerState,
   });
+
+  if (!hasMeta) {
+    return null;
+  }
 
   return (
     <Meta {...metaProps}>

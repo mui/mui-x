@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  screen,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type {
@@ -24,7 +20,6 @@ import type {
 import {
   ChatDateDivider,
   ChatFilePartRenderer,
-  ChatMessage,
   ChatMessageActions,
   ChatMessageAvatar,
   ChatMessageContent,
@@ -133,7 +128,13 @@ function CustomAvatar(props: ChatMessageAvatarProps & { ownerState?: { messageId
     ownerState?: { messageId: string };
   };
 
-  return <div data-message-id={ownerState?.messageId ?? 'none'} data-testid="custom-chat-avatar" {...other} />;
+  return (
+    <div
+      data-message-id={ownerState?.messageId ?? 'none'}
+      data-testid="custom-chat-avatar"
+      {...other}
+    />
+  );
 }
 
 function CustomContent(props: ChatMessageContentProps & { ownerState?: { role?: string } }) {
@@ -148,7 +149,9 @@ function CustomContent(props: ChatMessageContentProps & { ownerState?: { role?: 
   );
 }
 
-function CustomBubble(props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: { status?: string } }) {
+function CustomBubble(
+  props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: { status?: string } },
+) {
   const { children, ownerState, ...other } = props;
 
   return (
@@ -179,7 +182,12 @@ const CustomActions = React.forwardRef(function CustomActions(
   };
 
   return (
-    <div data-error={String(ownerState?.error)} data-testid="custom-chat-actions" ref={ref} {...other}>
+    <div
+      data-error={String(ownerState?.error)}
+      data-testid="custom-chat-actions"
+      ref={ref}
+      {...other}
+    >
       {children}
     </div>
   );
@@ -211,7 +219,13 @@ function CustomDivider(props: ChatDateDividerProps & { ownerState?: { hasBoundar
     ownerState?: { hasBoundary: boolean };
   };
 
-  return <div data-boundary={String(ownerState?.hasBoundary)} data-testid="custom-chat-divider" {...other} />;
+  return (
+    <div
+      data-boundary={String(ownerState?.hasBoundary)}
+      data-testid="custom-chat-divider"
+      {...other}
+    />
+  );
 }
 
 describe('ChatMessage', () => {
@@ -265,9 +279,15 @@ describe('ChatMessage', () => {
     expect(screen.getByText('AO')).toBeVisible();
     expect(screen.getByText('JD')).toBeVisible();
     expect(screen.queryByText('SY')).toBeNull();
-    expect(screen.getByText('Assistant message').closest(`.${chatMessageClasses.bubble}`)).not.toBeNull();
-    expect(screen.getByText('User message').closest(`.${chatMessageClasses.bubble}`)).not.toBeNull();
-    expect(screen.getByText('System notice').closest(`.${chatMessageClasses.bubble}`)).not.toBeNull();
+    expect(
+      screen.getByText('Assistant message').closest(`.${chatMessageClasses.bubble}`),
+    ).not.toBeNull();
+    expect(
+      screen.getByText('User message').closest(`.${chatMessageClasses.bubble}`),
+    ).not.toBeNull();
+    expect(
+      screen.getByText('System notice').closest(`.${chatMessageClasses.bubble}`),
+    ).not.toBeNull();
     expect(screen.getByText('Streaming').closest(`.${chatMessageClasses.status}`)).not.toBeNull();
     expect(screen.getByText('Edited').closest(`.${chatMessageClasses.edited}`)).not.toBeNull();
     expect(screen.getByRole('button', { name: 'Reply' })).toBeVisible();
@@ -313,12 +333,30 @@ describe('ChatMessage', () => {
 
     expect(screen.getByTestId('custom-chat-divider')).to.have.attribute('data-boundary', 'true');
     expect(screen.getByTestId('custom-chat-group')).to.have.attribute('data-first', 'true');
-    expect(screen.getByTestId('custom-chat-message-root')).to.have.attribute('data-role', 'assistant');
-    expect(screen.getAllByTestId('custom-chat-avatar')[0]).to.have.attribute('data-message-id', 'm2');
-    expect(screen.getAllByTestId('custom-chat-content')[0]).to.have.attribute('data-role', 'assistant');
-    expect(screen.getAllByTestId('custom-chat-bubble')[0]).to.have.attribute('data-status', 'streaming');
-    expect(screen.getAllByTestId('custom-chat-meta')[0]).to.have.attribute('data-streaming', 'true');
-    expect(screen.getAllByTestId('custom-chat-actions')[0]).to.have.attribute('data-error', 'false');
+    expect(screen.getByTestId('custom-chat-message-root')).to.have.attribute(
+      'data-role',
+      'assistant',
+    );
+    expect(screen.getAllByTestId('custom-chat-avatar')[0]).to.have.attribute(
+      'data-message-id',
+      'm2',
+    );
+    expect(screen.getAllByTestId('custom-chat-content')[0]).to.have.attribute(
+      'data-role',
+      'assistant',
+    );
+    expect(screen.getAllByTestId('custom-chat-bubble')[0]).to.have.attribute(
+      'data-status',
+      'streaming',
+    );
+    expect(screen.getAllByTestId('custom-chat-meta')[0]).to.have.attribute(
+      'data-streaming',
+      'true',
+    );
+    expect(screen.getAllByTestId('custom-chat-actions')[0]).to.have.attribute(
+      'data-error',
+      'false',
+    );
   });
 
   it('uses grouped spacing and date dividers in the styled helpers', () => {
@@ -332,19 +370,31 @@ describe('ChatMessage', () => {
       </React.Fragment>,
       [
         createMessage('m1', {
-          author: { id: 'assistant-3', displayName: 'Assistant', avatarUrl: 'https://example.com/avatar.png' },
+          author: {
+            id: 'assistant-3',
+            displayName: 'Assistant',
+            avatarUrl: 'https://example.com/avatar.png',
+          },
           createdAt: '2026-03-15T09:00:00.000Z',
           role: 'assistant',
           text: 'First grouped',
         }),
         createMessage('m2', {
-          author: { id: 'assistant-3', displayName: 'Assistant', avatarUrl: 'https://example.com/avatar.png' },
+          author: {
+            id: 'assistant-3',
+            displayName: 'Assistant',
+            avatarUrl: 'https://example.com/avatar.png',
+          },
           createdAt: '2026-03-15T09:02:00.000Z',
           role: 'assistant',
           text: 'Second grouped',
         }),
         createMessage('m3', {
-          author: { id: 'assistant-3', displayName: 'Assistant', avatarUrl: 'https://example.com/avatar.png' },
+          author: {
+            id: 'assistant-3',
+            displayName: 'Assistant',
+            avatarUrl: 'https://example.com/avatar.png',
+          },
           createdAt: '2026-03-16T09:00:00.000Z',
           role: 'assistant',
           text: 'Third grouped',
@@ -354,7 +404,7 @@ describe('ChatMessage', () => {
 
     expect(screen.getAllByText('Assistant')).to.have.length(2);
     expect(screen.getAllByRole('img')).to.have.length(2);
-    expect(screen.getByText('2026-03-16')).toBeVisible();
+    expect(screen.getByText('March 16, 2026')).toBeVisible();
   });
 
   it('renders correctly in dark mode and RTL', () => {
@@ -551,7 +601,10 @@ describe('ChatMessage', () => {
       'href',
       'https://example.com/spec.pdf',
     );
-    expect(screen.getByRole('link', { name: 'MUI Docs' })).to.have.attribute('href', 'https://mui.com');
+    expect(screen.getByRole('link', { name: 'MUI Docs' })).to.have.attribute(
+      'href',
+      'https://mui.com',
+    );
     expect(screen.getByText('Internal spec')).toBeVisible();
     expect(screen.getByText('Document excerpt')).toBeVisible();
   });

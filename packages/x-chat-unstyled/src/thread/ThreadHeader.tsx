@@ -13,8 +13,7 @@ export interface ThreadHeaderSlotProps {
   header?: SlotComponentProps<'div', {}, ThreadHeaderOwnerState>;
 }
 
-export interface ThreadHeaderProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface ThreadHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   children?: React.ReactNode;
   slots?: Partial<ThreadHeaderSlots>;
   slotProps?: ThreadHeaderSlotProps;

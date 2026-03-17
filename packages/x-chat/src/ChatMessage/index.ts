@@ -74,7 +74,4 @@ export type {
   ChatMessageRootSlots as ChatMessageSlots,
 } from './ChatMessage';
 
-export type {
-  ChatMessageClassKey,
-  ChatMessageClasses,
-} from './chatMessageClasses';
+export type { ChatMessageClassKey, ChatMessageClasses } from './chatMessageClasses';

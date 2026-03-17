@@ -2,7 +2,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { ChatStore } from '../store/ChatStore';
 import { processStream } from './processStream';
 import type { ChatMessageChunk, ChatStreamEnvelope } from '../types/chat-stream';
-import type { ChatDataMessagePart, ChatDynamicToolMessagePart, ChatToolMessagePart } from '../types/chat-message-parts';
+import type {
+  ChatDataMessagePart,
+  ChatDynamicToolMessagePart,
+  ChatToolMessagePart,
+} from '../types/chat-message-parts';
 
 declare module '@mui/x-chat-headless/types' {
   interface ChatToolDefinitionMap {
@@ -148,7 +152,9 @@ describe('processStream', () => {
       },
     );
 
-    expect(store.state.messagesById.a1.parts).toEqual([{ type: 'text', text: 'Hello first', state: 'done' }]);
+    expect(store.state.messagesById.a1.parts).toEqual([
+      { type: 'text', text: 'Hello first', state: 'done' },
+    ]);
     expect(store.state.messagesById.a1.status).toBe('sent');
   });
 
@@ -220,7 +226,12 @@ describe('processStream', () => {
       store,
       createStream([
         { type: 'start', messageId: 'a1' },
-        { type: 'tool-input-start', toolCallId: 'tool-1', toolName: 'dynamic-search', dynamic: true },
+        {
+          type: 'tool-input-start',
+          toolCallId: 'tool-1',
+          toolName: 'dynamic-search',
+          dynamic: true,
+        },
         {
           type: 'tool-input-available',
           toolCallId: 'tool-1',
@@ -232,7 +243,8 @@ describe('processStream', () => {
       ]),
     );
 
-    const toolPart = store.state.messagesById.a1.parts[0] as ChatDynamicToolMessagePart<'dynamic-search'>;
+    const toolPart = store.state.messagesById.a1
+      .parts[0] as ChatDynamicToolMessagePart<'dynamic-search'>;
     expect(toolPart.type).toBe('dynamic-tool');
     expect(toolPart.toolInvocation.toolName).toBe('dynamic-search');
     expect(toolPart.toolInvocation.input).toEqual({ query: 'weather' });
@@ -259,7 +271,10 @@ describe('processStream', () => {
       { onData },
     );
 
-    const dataPart = store.state.messagesById.a1.parts[0] as Extract<ChatDataMessagePart, { type: 'data-weather' }>;
+    const dataPart = store.state.messagesById.a1.parts[0] as Extract<
+      ChatDataMessagePart,
+      { type: 'data-weather' }
+    >;
     expect(dataPart).toEqual({
       type: 'data-weather',
       id: 'data-1',
@@ -462,7 +477,9 @@ describe('processStream', () => {
       },
     );
 
-    expect(store.state.messagesById.a1.parts).toEqual([{ type: 'text', text: ' world!', state: 'done' }]);
+    expect(store.state.messagesById.a1.parts).toEqual([
+      { type: 'text', text: ' world!', state: 'done' },
+    ]);
   });
 
   it('reports disconnects when the stream closes without a terminal chunk', async () => {

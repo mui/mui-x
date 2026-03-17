@@ -30,6 +30,7 @@ export interface UseChatSendMessageInput {
   attachments?: ChatDraftAttachment[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface ChatRuntimeActions<Cursor = string> {
   sendMessage(input: UseChatSendMessageInput): Promise<void>;
   stopStreaming(): void;
@@ -74,10 +75,7 @@ function createRuntimeError(
   };
 }
 
-function getErrorMessage(
-  fallbackMessage: string,
-  error: unknown,
-): string {
+function getErrorMessage(fallbackMessage: string, error: unknown): string {
   return error instanceof Error && error.message ? error.message : fallbackMessage;
 }
 
@@ -177,7 +175,8 @@ function applyPresenceUpdate(
   });
 
   const didChange = nextConversations.some(
-    (conversation, index) => conversation !== store.state.conversationsById[store.state.conversationIds[index]],
+    (conversation, index) =>
+      conversation !== store.state.conversationsById[store.state.conversationIds[index]],
   );
 
   if (didChange) {
@@ -255,7 +254,8 @@ export function useChatController<Cursor = string>({
         resetWhenUndefined?: boolean;
       } = {},
     ) => {
-      const requestId = ++conversationLoadRequestIdRef.current;
+      conversationLoadRequestIdRef.current += 1;
+      const requestId = conversationLoadRequestIdRef.current;
       const { resetWhenUndefined = true } = options;
 
       if (conversationId == null) {
@@ -354,14 +354,15 @@ export function useChatController<Cursor = string>({
           onData: runtimeRef.current.onData,
         });
 
-        store.updateMessage(nextMessage.id, {
-          status:
-            result.status === 'cancelled'
-              ? 'cancelled'
-              : result.status === 'error'
-                ? 'error'
-                : 'sent',
-        });
+        let status: 'cancelled' | 'error' | 'sent';
+        if (result.status === 'cancelled') {
+          status = 'cancelled';
+        } else if (result.status === 'error') {
+          status = 'error';
+        } else {
+          status = 'sent';
+        }
+        store.updateMessage(nextMessage.id, { status });
 
         if (result.messageId) {
           assistantMessageIdByUserMessageIdRef.current.set(nextMessage.id, result.messageId);
@@ -439,64 +440,69 @@ export function useChatController<Cursor = string>({
         assistantMessageIdByUserMessageIdRef.current,
       );
 
-      removeAssistantMessageIds(store, assistantMessageIds, assistantMessageIdByUserMessageIdRef.current);
+      removeAssistantMessageIds(
+        store,
+        assistantMessageIds,
+        assistantMessageIdByUserMessageIdRef.current,
+      );
 
       await sendExistingMessage(message);
     },
     [sendExistingMessage, store],
   );
 
-  const loadMoreHistory = React.useCallback<ChatRuntimeActions<Cursor>['loadMoreHistory']>(
-    async () => {
-      const conversationId = store.state.activeConversationId;
+  const loadMoreHistory = React.useCallback<
+    ChatRuntimeActions<Cursor>['loadMoreHistory']
+  >(async () => {
+    const conversationId = store.state.activeConversationId;
 
-      if (!conversationId) {
+    if (!conversationId) {
+      return;
+    }
+
+    try {
+      let result: ChatListMessagesResult<Cursor> | undefined;
+
+      if (runtimeRef.current.adapter.listMessages) {
+        result = await runtimeRef.current.adapter.listMessages({
+          conversationId,
+          cursor: store.state.historyCursor,
+          direction: 'backward',
+        });
+      } else if (runtimeRef.current.adapter.loadMore) {
+        result = await runtimeRef.current.adapter.loadMore(store.state.historyCursor);
+      }
+
+      if (!result) {
         return;
       }
 
-      try {
-        let result: ChatListMessagesResult<Cursor> | undefined;
-
-        if (runtimeRef.current.adapter.listMessages) {
-          result = await runtimeRef.current.adapter.listMessages({
+      store.prependMessages(result.messages);
+      store.setHistoryState({
+        cursor: result.cursor,
+        hasMore: result.hasMore ?? false,
+      });
+      store.setError(null);
+    } catch (error) {
+      setRuntimeError(
+        createRuntimeError(
+          'HISTORY_ERROR',
+          getErrorMessage('Unable to load more message history.', error),
+          'history',
+          true,
+          true,
+          {
             conversationId,
-            cursor: store.state.historyCursor,
-            direction: 'backward',
-          });
-        } else if (runtimeRef.current.adapter.loadMore) {
-          result = await runtimeRef.current.adapter.loadMore(store.state.historyCursor);
-        }
+            cursor: store.state.historyCursor as Cursor | undefined,
+          },
+        ),
+      );
+    }
+  }, [setRuntimeError, store]);
 
-        if (!result) {
-          return;
-        }
-
-        store.prependMessages(result.messages);
-        store.setHistoryState({
-          cursor: result.cursor,
-          hasMore: result.hasMore ?? false,
-        });
-        store.setError(null);
-      } catch (error) {
-        setRuntimeError(
-          createRuntimeError(
-            'HISTORY_ERROR',
-            getErrorMessage('Unable to load more message history.', error),
-            'history',
-            true,
-            true,
-            {
-              conversationId,
-              cursor: store.state.historyCursor as Cursor | undefined,
-            },
-          ),
-        );
-      }
-    },
-    [setRuntimeError, store],
-  );
-
-  const setActiveConversation = React.useCallback<ChatRuntimeActions<Cursor>['setActiveConversation']>(
+  const setActiveConversation = React.useCallback<
+    ChatRuntimeActions<Cursor>['setActiveConversation']
+  >(
     async (id) => {
       if (store.state.activeConversationId === id) {
         return;
@@ -522,7 +528,9 @@ export function useChatController<Cursor = string>({
     [setRuntimeError, store],
   );
 
-  const addToolApprovalResponse = React.useCallback<ChatRuntimeActions<Cursor>['addToolApprovalResponse']>(
+  const addToolApprovalResponse = React.useCallback<
+    ChatRuntimeActions<Cursor>['addToolApprovalResponse']
+  >(
     async ({ id, approved, reason }) => {
       const assistantMessage = getMessages(store).find(
         (message) =>
@@ -707,14 +715,18 @@ export function useChatController<Cursor = string>({
     };
   }, [adapter, handleRealtimeEvent, setRuntimeError]);
 
-  useStoreEffect(store, (state) => state.activeConversationId, (_, nextActiveConversationId) => {
-    if (skipNextConversationEffectRef.current) {
-      skipNextConversationEffectRef.current = false;
-      return;
-    }
+  useStoreEffect(
+    store,
+    (state) => state.activeConversationId,
+    (_, nextActiveConversationId) => {
+      if (skipNextConversationEffectRef.current) {
+        skipNextConversationEffectRef.current = false;
+        return;
+      }
 
-    void loadConversationMessages(nextActiveConversationId);
-  });
+      void loadConversationMessages(nextActiveConversationId);
+    },
+  );
 
   React.useEffect(() => {
     if (store.state.activeConversationId != null) {
@@ -743,6 +755,14 @@ export function useChatController<Cursor = string>({
       setError,
       addToolApprovalResponse,
     }),
-    [addToolApprovalResponse, loadMoreHistory, retry, sendMessage, setActiveConversation, setError, stopStreaming],
+    [
+      addToolApprovalResponse,
+      loadMoreHistory,
+      retry,
+      sendMessage,
+      setActiveConversation,
+      setError,
+      stopStreaming,
+    ],
   );
 }

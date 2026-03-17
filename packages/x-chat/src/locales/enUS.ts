@@ -1,69 +1,18 @@
-import {
-  getChatLocalization,
-} from './getChatLocalization';
-import type {
-  ChatLocaleText,
-  ChatLocaleTypingUser,
-} from './chatLocaleTextApi';
+import { CHAT_DEFAULT_LOCALE_TEXT } from '@mui/x-chat-unstyled/chat';
+import { getChatLocalization } from './getChatLocalization';
 
-function getUserLabel(user: ChatLocaleTypingUser) {
-  return user.displayName ?? user.id;
+function formatTimestamp(dateTime: string): string {
+  const d = new Date(dateTime);
+  if (Number.isNaN(d.getTime())) {
+    return dateTime;
+  }
+  return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 }
 
-const enUSLocaleText: ChatLocaleText = {
-  composerInputPlaceholder: 'Type a message',
-  composerInputAriaLabel: 'Message',
-  composerSendButtonLabel: 'Send message',
-  composerAttachButtonLabel: 'Add attachment',
-  messageCopyCodeButtonLabel: 'Copy code',
-  messageCopiedCodeButtonLabel: 'Copied',
-  messageEditedLabel: 'Edited',
-  messageDeletedLabel: 'Deleted',
-  messageReasoningLabel: 'Reasoning',
-  messageReasoningStreamingLabel: 'Thinking...',
-  messageToolInputLabel: 'Input',
-  messageToolOutputLabel: 'Output',
-  messageToolApproveButtonLabel: 'Approve',
-  messageToolDenyButtonLabel: 'Deny',
-  conversationListNoConversationsLabel: 'No conversations',
-  conversationListSearchPlaceholder: 'Search conversations',
-  unreadMarkerLabel: 'New messages',
-  scrollToBottomLabel: 'Scroll to bottom',
-  threadNoMessagesLabel: 'No messages yet',
-  genericErrorLabel: 'Something went wrong',
-  loadingLabel: 'Loading...',
-  messageStatusLabel: (status) =>
-    ({
-      pending: 'Pending',
-      sending: 'Sending',
-      streaming: 'Streaming',
-      sent: 'Sent',
-      error: 'Error',
-      cancelled: 'Cancelled',
-    })[status],
-  toolStateLabel: (state) =>
-    ({
-      'input-streaming': 'Running...',
-      'input-available': 'Running...',
-      'approval-requested': 'Awaiting approval',
-      'approval-responded': 'Running...',
-      'output-available': 'Completed',
-      'output-error': 'Failed',
-      'output-denied': 'Denied',
-    })[state],
-  messageTimestampLabel: (dateTime) => dateTime,
-  conversationTimestampLabel: (dateTime) => dateTime,
-  typingIndicatorLabel: (users) => {
-    const names = users.map(getUserLabel).join(', ');
-
-    if (users.length === 1) {
-      return `${names} is typing`;
-    }
-
-    return `${names} are typing`;
-  },
-  scrollToBottomWithCountLabel: (unseenCount) =>
-    `Scroll to bottom, ${unseenCount} new messages`,
-};
-
-export const enUS = getChatLocalization(enUSLocaleText);
+export const enUS = getChatLocalization({
+  ...CHAT_DEFAULT_LOCALE_TEXT,
+  // The styled package formats timestamps with `toLocaleTimeString`,
+  // whereas the unstyled default simply returns the raw dateTime string.
+  messageTimestampLabel: formatTimestamp,
+  conversationTimestampLabel: formatTimestamp,
+});

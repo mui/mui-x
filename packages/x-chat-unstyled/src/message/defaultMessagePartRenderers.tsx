@@ -23,16 +23,16 @@ export const renderDefaultTextPart: ChatPartRenderer<ChatTextMessagePart> = ({ p
   <div>{part.text}</div>
 );
 
-export const renderDefaultReasoningPart: ChatPartRenderer<ChatReasoningMessagePart> = ({ part }) => (
+export const renderDefaultReasoningPart: ChatPartRenderer<ChatReasoningMessagePart> = ({
+  part,
+}) => (
   <details>
     <summary>Reasoning</summary>
     <div>{part.text}</div>
   </details>
 );
 
-function ToolRenderer(props: {
-  part: ChatToolMessagePart | ChatDynamicToolMessagePart;
-}) {
+function ToolRenderer(props: { part: ChatToolMessagePart | ChatDynamicToolMessagePart }) {
   const { part } = props;
   const { toolInvocation } = part;
 
@@ -85,9 +85,7 @@ export const renderDefaultDataPart: ChatPartRenderer<
   Extract<ChatMessagePart, { type: `data-${string}` }>
 > = ({ part }) => <JsonBlock value={part.data} />;
 
-export function getDefaultMessagePartRenderer(
-  part: ChatMessagePart,
-): ChatPartRenderer<any> | null {
+export function getDefaultMessagePartRenderer(part: ChatMessagePart): ChatPartRenderer<any> | null {
   switch (part.type) {
     case 'text':
       return renderDefaultTextPart;

@@ -2,10 +2,8 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
-import {
-  useMessage,
-  useMessageIds,
-} from '@mui/x-chat-headless';
+import { useMessage, useMessageIds } from '@mui/x-chat-headless';
+import { useIsHydrated } from '../chat/internals/useIsHydrated';
 import { type MessageListDateDividerOwnerState } from './messageList.types';
 
 function resolveMessageIndex(messageId: string, index: number | undefined, items: string[]) {
@@ -30,6 +28,14 @@ function formatIsoDay(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
+function formatLocalDate(date: Date) {
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
 function isSameCalendarDay(left: Date, right: Date) {
   return formatIsoDay(left) === formatIsoDay(right);
 }
@@ -46,8 +52,10 @@ export interface MessageListDateDividerSlotProps {
   label?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
 }
 
-export interface MessageListDateDividerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface MessageListDateDividerProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   messageId: string;
   index?: number;
   items?: string[];
@@ -64,15 +72,7 @@ export const MessageListDateDivider = React.forwardRef(function MessageListDateD
   props: MessageListDateDividerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    messageId,
-    index,
-    items: itemsProp,
-    formatDate,
-    slots,
-    slotProps,
-    ...other
-  } = props;
+  const { messageId, index, items: itemsProp, formatDate, slots, slotProps, ...other } = props;
   const defaultItems = useMessageIds();
   const items = itemsProp ?? defaultItems;
   const messageIndex = resolveMessageIndex(messageId, index, items);
@@ -86,7 +86,9 @@ export const MessageListDateDivider = React.forwardRef(function MessageListDateD
     currentDate != null &&
     previousDate != null &&
     !isSameCalendarDay(previousDate, currentDate);
-  const label = currentDate ? formatDate?.(currentDate) ?? formatIsoDay(currentDate) : null;
+  const isHydrated = useIsHydrated();
+  const label =
+    isHydrated && currentDate ? (formatDate?.(currentDate) ?? formatLocalDate(currentDate)) : null;
   const ownerState = React.useMemo<MessageListDateDividerOwnerState>(
     () => ({
       messageId,

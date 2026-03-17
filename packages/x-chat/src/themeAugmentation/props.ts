@@ -24,24 +24,20 @@ export interface ChatStyledFoundationProps {
 }
 
 export interface ChatBoxProps<Cursor = string>
-  extends Omit<ChatProviderProps<Cursor>, 'children'>,
-    ChatStyledFoundationProps {
+  extends Omit<ChatProviderProps<Cursor>, 'children'>, ChatStyledFoundationProps {
   localeText?: Partial<ChatLocaleText>;
   slots?: Record<string, React.ElementType | undefined>;
   slotProps?: Record<string, unknown>;
 }
 
 export interface ChatTypingIndicatorProps
-  extends RealChatTypingIndicatorProps,
-    ChatStyledFoundationProps {}
+  extends RealChatTypingIndicatorProps, ChatStyledFoundationProps {}
 
 export interface ChatUnreadMarkerProps
-  extends RealChatUnreadMarkerProps,
-    ChatStyledFoundationProps {}
+  extends RealChatUnreadMarkerProps, ChatStyledFoundationProps {}
 
 export interface ChatScrollToBottomAffordanceProps
-  extends RealChatScrollToBottomAffordanceProps,
-    ChatStyledFoundationProps {}
+  extends RealChatScrollToBottomAffordanceProps, ChatStyledFoundationProps {}
 
 export interface ChatComponentsPropsList {
   MuiChatBox: ChatBoxProps;

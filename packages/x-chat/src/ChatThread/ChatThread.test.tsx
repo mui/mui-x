@@ -2,7 +2,12 @@ import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import type { ChatAdapter, ChatConversation, ChatMessage, ChatRealtimeEvent } from '@mui/x-chat-headless';
+import type {
+  ChatAdapter,
+  ChatConversation,
+  ChatMessage,
+  ChatRealtimeEvent,
+} from '@mui/x-chat-headless';
 import { ChatRoot } from '@mui/x-chat-unstyled';
 import type {
   MessageListRootProps,
@@ -94,7 +99,12 @@ const CustomHeader = React.forwardRef(function CustomHeader(
   const { children, ownerState, ...other } = props;
 
   return (
-    <header data-has-conversation={String(ownerState?.hasConversation)} data-testid="custom-header" ref={ref} {...other}>
+    <header
+      data-has-conversation={String(ownerState?.hasConversation)}
+      data-testid="custom-header"
+      ref={ref}
+      {...other}
+    >
       {children}
     </header>
   );
@@ -103,14 +113,26 @@ const CustomHeader = React.forwardRef(function CustomHeader(
 function CustomTitle(props: ThreadTitleProps & { ownerState?: { conversationId?: string } }) {
   const { ownerState, ...other } = props;
 
-  return <div data-testid="custom-title" data-thread-id={ownerState?.conversationId ?? 'none'} {...other} />;
+  return (
+    <div
+      data-testid="custom-title"
+      data-thread-id={ownerState?.conversationId ?? 'none'}
+      {...other}
+    />
+  );
 }
 
-function CustomSubtitle(props: ThreadSubtitleProps & { ownerState?: { hasConversation: boolean } }) {
+function CustomSubtitle(
+  props: ThreadSubtitleProps & { ownerState?: { hasConversation: boolean } },
+) {
   const { ownerState, ...other } = props;
 
   return (
-    <div data-has-conversation={String(ownerState?.hasConversation)} data-testid="custom-subtitle" {...other} />
+    <div
+      data-has-conversation={String(ownerState?.hasConversation)}
+      data-testid="custom-subtitle"
+      {...other}
+    />
   );
 }
 
@@ -121,7 +143,12 @@ const CustomActions = React.forwardRef(function CustomActions(
   const { children, ownerState, ...other } = props;
 
   return (
-    <div data-has-conversation={String(ownerState?.hasConversation)} data-testid="custom-actions" ref={ref} {...other}>
+    <div
+      data-has-conversation={String(ownerState?.hasConversation)}
+      data-testid="custom-actions"
+      ref={ref}
+      {...other}
+    >
       {children}
     </div>
   );
@@ -206,7 +233,10 @@ function ControlledChatThread() {
       >
         append assistant
       </button>
-      <ChatThread slotProps={{ messageListScroller: { style: { height: 160 } } }} virtualization={false} />
+      <ChatThread
+        slotProps={{ messageListScroller: { style: { height: 160 } } }}
+        virtualization={false}
+      />
     </ChatRoot>
   );
 }
@@ -214,12 +244,14 @@ function ControlledChatThread() {
 describe('ChatThread', () => {
   it('renders the default styled timeline with grouped rows, date dividers, and built-in actions', async () => {
     let onEvent: ((event: ChatRealtimeEvent) => void) | undefined;
-    const sendMessage = vi.fn(async () =>
-      new ReadableStream({
-        start(controller) {
-          controller.close();
-        },
-      }));
+    const sendMessage = vi.fn(
+      async () =>
+        new ReadableStream({
+          start(controller) {
+            controller.close();
+          },
+        }),
+    );
     const adapter: ChatAdapter = {
       sendMessage,
       subscribe({ onEvent: nextOnEvent }) {
@@ -280,7 +312,7 @@ describe('ChatThread', () => {
     expect(screen.getByText('First assistant message')).toBeVisible();
     expect(screen.getByText('Grouped follow-up')).toBeVisible();
     expect(screen.getByText('New messages')).toBeVisible();
-    expect(screen.getByText('2026-03-16')).toBeVisible();
+    expect(screen.getByText('March 16, 2026')).toBeVisible();
     expect(screen.getByText('Streaming')).toBeVisible();
     expect(screen.getByText('AS')).toBeVisible();
     expect(screen.getByText('RE')).toBeVisible();
@@ -319,7 +351,10 @@ describe('ChatThread', () => {
 
     expect(screen.getByTestId('custom-header')).to.have.attribute('data-has-conversation', 'true');
     expect(screen.getByTestId('custom-title')).to.have.attribute('data-thread-id', 'c1');
-    expect(screen.getByTestId('custom-subtitle')).to.have.attribute('data-has-conversation', 'true');
+    expect(screen.getByTestId('custom-subtitle')).to.have.attribute(
+      'data-has-conversation',
+      'true',
+    );
     expect(screen.getByTestId('custom-actions')).to.contain.text('Inspect');
     expect(screen.getByTestId('custom-message-list')).to.have.attribute('data-message-count', '24');
   });
@@ -371,15 +406,15 @@ describe('ChatThread', () => {
       value: scrollTo,
     });
 
-    act(() => {
-      log.scrollTop = 0;
-      fireEvent.scroll(log);
-    });
+    log.scrollTop = 0;
+    fireEvent.scroll(log);
 
     fireEvent.click(screen.getByRole('button', { name: 'append assistant' }));
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' })).toBeVisible();
+      expect(
+        screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' }),
+      ).toBeVisible();
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'Scroll to bottom, 1 new messages' }));

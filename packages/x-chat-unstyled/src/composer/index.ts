@@ -12,11 +12,7 @@ export { ComposerAttachButton } from './ComposerAttachButton';
 export { ComposerToolbar } from './ComposerToolbar';
 export { ComposerHelperText } from './ComposerHelperText';
 
-export type {
-  ComposerRootProps,
-  ComposerRootSlotProps,
-  ComposerRootSlots,
-} from './ComposerRoot';
+export type { ComposerRootProps, ComposerRootSlotProps, ComposerRootSlots } from './ComposerRoot';
 export type {
   ComposerInputProps,
   ComposerInputSlotProps,

@@ -1,9 +1,5 @@
 'use client';
-import type {
-  ChatMessageStatus,
-  ChatToolInvocationState,
-  ChatUser,
-} from '@mui/x-chat-headless';
+import type { ChatMessageStatus, ChatToolInvocationState, ChatUser } from '@mui/x-chat-headless';
 
 export type ChatLocaleTypingUser = Pick<ChatUser, 'id' | 'displayName'>;
 
@@ -95,6 +91,5 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
 
     return `${names} are typing`;
   },
-  scrollToBottomWithCountLabel: (unseenCount) =>
-    `Scroll to bottom, ${unseenCount} new messages`,
+  scrollToBottomWithCountLabel: (unseenCount) => `Scroll to bottom, ${unseenCount} new messages`,
 };

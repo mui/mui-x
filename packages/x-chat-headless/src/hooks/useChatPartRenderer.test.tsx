@@ -54,7 +54,9 @@ describe('useChatPartRenderer', () => {
     const { Wrapper } = createProviderWrapper({
       adapter: createAdapter(),
     });
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const textHook = renderHook(() => useChatPartRenderer('text'), { wrapper: Wrapper });
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const pollHook = renderHook(() => useChatPartRenderer('poll'), { wrapper: Wrapper });
 
     expect(textHook.result.current).toBeNull();

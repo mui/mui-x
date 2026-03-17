@@ -45,7 +45,9 @@ export interface ChatSourceDocumentMessagePart {
 
 export type ChatDataPartType = ChatDataPartTypePattern;
 
-export interface ChatFallbackDataMessagePart<TType extends ChatKnownDataPartType = ChatKnownDataPartType> {
+export interface ChatFallbackDataMessagePart<
+  TType extends ChatKnownDataPartType = ChatKnownDataPartType,
+> {
   type: TType;
   id?: string;
   data: [ChatRegisteredDataPartType] extends [never]

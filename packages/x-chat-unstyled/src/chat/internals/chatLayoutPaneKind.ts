@@ -22,5 +22,17 @@ export function getChatLayoutPaneKind(element: React.ReactNode): ChatLayoutPaneK
     return null;
   }
 
-  return (element.type as ChatLayoutPaneMarkedType)[chatLayoutPaneKind] ?? null;
+  // Primary: symbol-based detection (works for direct unstyled components)
+  const symbolKind = (element.type as ChatLayoutPaneMarkedType)[chatLayoutPaneKind];
+  if (symbolKind) {
+    return symbolKind;
+  }
+
+  // Fallback: explicit pane prop (works for wrapped components like React.memo, styled, etc.)
+  const paneKind = (element.props as Record<string, unknown>)?.pane;
+  if (paneKind === 'conversations' || paneKind === 'thread') {
+    return paneKind;
+  }
+
+  return null;
 }

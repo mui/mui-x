@@ -37,10 +37,6 @@ export const MessageAvatar = React.forwardRef(function MessageAvatar(
   const displayName = ownerState.message?.author?.displayName;
   void ownerStateProp;
 
-  if (ownerState.isGrouped || ownerState.role === 'system' || ownerState.message == null) {
-    return null;
-  }
-
   const Avatar = slots?.avatar ?? 'div';
   const avatarProps = useSlotProps({
     elementType: Avatar,
@@ -51,6 +47,10 @@ export const MessageAvatar = React.forwardRef(function MessageAvatar(
       ref,
     },
   });
+
+  if (ownerState.isGrouped || ownerState.role === 'system' || ownerState.message == null) {
+    return null;
+  }
 
   if (avatarUrl == null && slots?.avatar == null) {
     return null;

@@ -18,13 +18,17 @@ type ChatToolDefinitionFor<TToolName extends string> = TToolName extends keyof C
   ? ChatToolDefinitionMap[TToolName]
   : never;
 
-export type ChatToolInput<TToolName extends string> = [ChatToolDefinitionFor<TToolName>] extends [never]
+export type ChatToolInput<TToolName extends string> = [ChatToolDefinitionFor<TToolName>] extends [
+  never,
+]
   ? unknown
   : ChatToolDefinitionFor<TToolName> extends { input: infer TInput }
     ? TInput
     : unknown;
 
-export type ChatToolOutput<TToolName extends string> = [ChatToolDefinitionFor<TToolName>] extends [never]
+export type ChatToolOutput<TToolName extends string> = [ChatToolDefinitionFor<TToolName>] extends [
+  never,
+]
   ? unknown
   : ChatToolDefinitionFor<TToolName> extends { output: infer TOutput }
     ? TOutput

@@ -14,8 +14,10 @@ export interface ComposerSendButtonSlotProps {
   sendButton?: SlotComponentProps<'button', {}, ComposerSendButtonOwnerState>;
 }
 
-export interface ComposerSendButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
+export interface ComposerSendButtonProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'type'
+> {
   slots?: Partial<ComposerSendButtonSlots>;
   slotProps?: ComposerSendButtonSlotProps;
 }
@@ -36,6 +38,7 @@ export const ComposerSendButton = React.forwardRef(function ComposerSendButton(
     hasValue: composer.hasValue,
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
+    disabled: composer.disabled,
   };
   const SendButton = slots?.sendButton ?? 'button';
   const rootProps = useSlotProps({
@@ -46,14 +49,18 @@ export const ComposerSendButton = React.forwardRef(function ComposerSendButton(
     additionalProps: {
       ref,
     },
-  }) as React.ButtonHTMLAttributes<HTMLButtonElement> &
-    React.RefAttributes<HTMLButtonElement>;
+  }) as React.ButtonHTMLAttributes<HTMLButtonElement> & React.RefAttributes<HTMLButtonElement>;
 
   return (
     <SendButton
       {...rootProps}
       aria-label={rootProps['aria-label'] ?? localeText.composerSendButtonLabel}
-      disabled={Boolean(rootProps.disabled) || !ownerState.hasValue || ownerState.isStreaming}
+      disabled={
+        Boolean(rootProps.disabled) ||
+        !ownerState.hasValue ||
+        ownerState.isStreaming ||
+        ownerState.disabled
+      }
       type={rootProps.type ?? 'submit'}
     />
   );

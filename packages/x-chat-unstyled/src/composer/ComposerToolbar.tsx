@@ -33,6 +33,7 @@ export const ComposerToolbar = React.forwardRef(function ComposerToolbar(
     hasValue: composer.hasValue,
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
+    disabled: composer.disabled,
   };
   const Toolbar = slots?.toolbar ?? 'div';
   const rootProps = useSlotProps({

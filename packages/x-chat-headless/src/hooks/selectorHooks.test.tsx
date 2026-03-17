@@ -75,9 +75,13 @@ describe('selector hooks', () => {
       defaultMessages: [userMessage, assistantMessage],
     });
     const wrapper = createStoreWrapper(store);
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const messageIdsHook = renderHook(() => useRenderCount(useMessageIds()), { wrapper });
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const targetMessageHook = renderHook(() => useRenderCount(useMessage('m1')), { wrapper });
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const otherMessageHook = renderHook(() => useRenderCount(useMessage('m2')), { wrapper });
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const missingMessageHook = renderHook(() => useMessage('missing'), { wrapper });
 
     expect(targetMessageHook.result.current.value).toEqual(userMessage);
@@ -105,8 +109,11 @@ describe('selector hooks', () => {
       defaultConversations: [conversation1, conversation2],
     });
     const wrapper = createStoreWrapper(store);
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const conversationsHook = renderHook(() => useRenderCount(useConversations()), { wrapper });
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const conversationHook = renderHook(() => useRenderCount(useConversation('c1')), { wrapper });
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const missingConversationHook = renderHook(() => useConversation('missing'), { wrapper });
 
     const initialConversations = conversationsHook.result.current.value;
@@ -155,6 +162,7 @@ describe('selector hooks', () => {
       defaultMessages: [userMessage],
     });
     const wrapper = createStoreWrapper(store);
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const statusHook = renderHook(() => useRenderCount(useChatStatus()), { wrapper });
 
     const initialStatus = statusHook.result.current.value;
@@ -218,6 +226,7 @@ describe('selector hooks', () => {
       defaultActiveConversationId: 'c1',
     });
     const wrapper = createStoreWrapper(store);
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const statusHook = renderHook(() => useRenderCount(useChatStatus()), { wrapper });
 
     expect(statusHook.result.current.value.typingUserIds).toEqual([]);
@@ -239,6 +248,7 @@ describe('selector hooks', () => {
     expect(statusHook.result.current.value.typingUserIds).toEqual(['u1', 'u2']);
 
     // Typing in a different conversation does not affect the active conversation's typingUserIds
+    // eslint-disable-next-line testing-library/render-result-naming-convention
     const renderCountBeforeOtherConv = statusHook.result.current.renderCount;
     act(() => {
       store.setTypingUser('c2', 'u3', true);

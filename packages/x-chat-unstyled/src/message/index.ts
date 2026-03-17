@@ -10,11 +10,7 @@ export { MessageContent } from './MessageContent';
 export { MessageMeta } from './MessageMeta';
 export { MessageActions } from './MessageActions';
 
-export type {
-  MessageRootProps,
-  MessageRootSlotProps,
-  MessageRootSlots,
-} from './MessageRoot';
+export type { MessageRootProps, MessageRootSlotProps, MessageRootSlots } from './MessageRoot';
 export type {
   MessageAvatarProps,
   MessageAvatarSlotProps,
@@ -25,11 +21,7 @@ export type {
   MessageContentSlotProps,
   MessageContentSlots,
 } from './MessageContent';
-export type {
-  MessageMetaProps,
-  MessageMetaSlotProps,
-  MessageMetaSlots,
-} from './MessageMeta';
+export type { MessageMetaProps, MessageMetaSlotProps, MessageMetaSlots } from './MessageMeta';
 export type {
   MessageActionsProps,
   MessageActionsSlotProps,
