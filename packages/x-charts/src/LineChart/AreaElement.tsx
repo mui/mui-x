@@ -157,7 +157,7 @@ function AreaElement(props: AreaElementProps) {
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
-      'data-series-id': seriesId,
+      'data-series': seriesId,
     },
     className: `${classes.area} ${deprecatedClasses.root}`,
     ownerState,

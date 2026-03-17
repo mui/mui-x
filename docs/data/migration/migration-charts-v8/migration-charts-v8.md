@@ -336,6 +336,11 @@ This modification improves accessibility for color blind people.
 
 If you want to keep the previous behavior, set the `shape` property to `'circle'` on all series.
 
+### Rename `[data-series-id]` by `[data-series]`
+
+The data attribute used to select a given series by it's id got renamed.
+Replace the `[data-series-id="<SeriesId>"]` by `[data-series="<SeriesId>"]`.
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
