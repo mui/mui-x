@@ -83,7 +83,7 @@ function Scatter() {
       <ScatterChart
         series={series}
         grid={{ horizontal: true, vertical: true }}
-        voronoiMaxRadius={20}
+        hitAreaRadius={20}
         slots={{ tooltip: CustomTooltip }}
         {...chartSetting}
       />

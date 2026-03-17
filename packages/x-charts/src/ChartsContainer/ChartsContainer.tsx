@@ -100,6 +100,10 @@ ChartsContainer.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -108,19 +112,22 @@ ChartsContainer.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If true, the hit area interaction is disabled and falls back to hover events.
+   */
+  disableHitArea: PropTypes.bool,
+  /**
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
   /**
    * If true, the voronoi interaction are ignored.
+   * @deprecated Use `disableHitArea` instead.
    */
   disableVoronoi: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -184,6 +191,12 @@ ChartsContainer.propTypes = {
       type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
     }),
   ]),
+  /**
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  hitAreaRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -1049,6 +1062,10 @@ ChartsContainer.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The controlled axis tooltip.
@@ -1079,6 +1096,7 @@ ChartsContainer.propTypes = {
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
+   * @deprecated Use `hitAreaRadius` instead.
    */
   voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
