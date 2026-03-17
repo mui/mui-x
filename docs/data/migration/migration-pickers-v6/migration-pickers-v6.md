@@ -323,7 +323,7 @@ the field components were not behaving correctly, you can now only select one or
 ### Replace the section `hasLeadingZeros` property
 
 :::success
-This only impacts you if you are using the `fieldRef` prop to imperatively access the section object.
+This only impacts you if you are using the `unstableFieldRef` prop to imperatively access the section object.
 :::
 
 The property `hasLeadingZeros` has been removed from the sections in favor of the more precise `hasLeadingZerosInFormat` and `hasLeadingZerosInInput` properties.
@@ -338,7 +338,7 @@ To keep the same behavior, you can replace it by `hasLeadingZerosInFormat`
 +  console.log(firstSection.hasLeadingZerosInFormat);
  }, []);
 
- return <DateField fieldRef={fieldRef} />;
+ return <DateField unstableFieldRef={fieldRef} />;
 ```
 
 ### Headless fields

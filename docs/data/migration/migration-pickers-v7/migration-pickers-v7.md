@@ -1569,7 +1569,7 @@ However, consider looking into your usage to see if you really need those types.
     TEnableAccessibleFieldDOMStructure extends boolean,
   > extends Omit<
     DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    'fieldRef'
+    'unstableFieldRef'
   > {}
   ```
 
@@ -1843,7 +1843,7 @@ However, consider looking into your usage to see if you really need those types.
     +interface CustomDateRangeFieldProps
     +  extends Omit<
     +     DateRangePickerFieldProps,
-    +    'fieldRef' | 'clearable' | 'onClear'
+    +    'unstableFieldRef' | 'clearable' | 'onClear'
     +  >,
     +  MultiInputFieldRefs {}
     ```
@@ -1875,7 +1875,7 @@ However, consider looking into your usage to see if you really need those types.
     +interface JoyMultiInputDateRangeFieldProps
     +  extends Omit<
     +     DateTimeRangePickerFieldProps,
-    +    'fieldRef' | 'clearable' | 'onClear'
+    +    'unstableFieldRef' | 'clearable' | 'onClear'
     +  >,
     +  MultiInputFieldRefs {}
     ```
