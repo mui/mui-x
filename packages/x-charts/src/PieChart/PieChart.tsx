@@ -51,10 +51,7 @@ export interface PieChartSlotProps
 export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieChartProps
   extends
-    Omit<
-      ChartContainerProps<'pie', PieChartPluginSignatures>,
-      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
-    >,
+    Omit<ChartContainerProps<'pie', PieChartPluginSignatures>, 'series' | 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
   /**
@@ -197,6 +194,10 @@ PieChart.propTypes = {
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

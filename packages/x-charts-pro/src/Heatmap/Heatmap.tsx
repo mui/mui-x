@@ -86,7 +86,6 @@ export interface HeatmapProps
       | 'skipAnimation'
       | 'slots'
       | 'slotProps'
-      | 'experimentalFeatures'
       | 'highlightedAxis'
       | 'onHighlightedAxisChange'
       | 'seriesConfig'
@@ -243,6 +242,10 @@ Heatmap.propTypes = {
    */
   disableKeyboardNavigation: PropTypes.bool,
   /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
@@ -325,7 +328,7 @@ Heatmap.propTypes = {
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
    * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,

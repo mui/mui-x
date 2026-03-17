@@ -68,28 +68,9 @@ See [Stacking](/x/react-charts/stacking/) for more details.
 
 ### Axis domain
 
-By default, axes round their limits to human-readable values.
-For example, if your data ranges from 2 to 195, the axis shows 0 to 200.
-You can change this with the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
-
-:::info
-The current default behavior can leave empty space at the left and right edges of the line chart.
-
-To fix that issue, future major version will default the x-axis domain limit to `'strict'`.
-You can test this behavior by passing the `experimentalFeatures` prop to your chart with `preferStrictDomainInLineCharts: true`.
-You can also enable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
-
-```js
-components: {
-  MuiChartsDataProvider: {
-    defaultProps: {
-       experimentalFeatures: { preferStrictDomainInLineCharts: true }
-    },
-  },
-}
-```
-
-:::
+By default, the x-axis domain limit for line charts is set to `'strict'`, meaning the axis range matches the data range exactly.
+For other chart types, axes round their limits to match human-readable values (for example, data ranging from 2 to 195 displays values from 0 to 200).
+This behavior can be modified by the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
 
 {{"demo": "LineDefaultDomainLimit.js"}}
 

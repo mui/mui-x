@@ -581,6 +581,26 @@ If you used `enableKeyboardNavigation` prop, you can remove it.
 
 To disable this feature, use the prop `disableKeyboardNavigation`.
 
+## Stabilized `experimentalFeatures` ✅
+
+The `preferStrictDomainInLineCharts` experimental feature is now the default behavior.
+The x-axis domain limit for line charts defaults to `'strict'`, meaning the axis range matches the data range exactly without extra padding.
+
+If you were using the `experimentalFeatures` prop with `preferStrictDomainInLineCharts`, you can remove it.
+
+```diff
+ <LineChart
+-  experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+   series={[{ data: [1, 2, 3] }]}
+ />
+```
+
+If you want to revert to the previous behavior (rounded/"nice" domain limits on the x-axis), set `domainLimit` to `'nice'` on the x-axis configuration:
+
+```jsx
+<LineChart xAxis={[{ domainLimit: 'nice' }]} series={[{ data: [1, 2, 3] }]} />
+```
+
 ## Props propagation
 
 The `ref` for single component charts like `<LineChart />` is now propagated to the root element instead of the SVG element.

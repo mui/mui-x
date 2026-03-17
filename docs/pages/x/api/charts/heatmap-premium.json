@@ -32,6 +32,7 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
@@ -74,7 +75,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
+        "type": "function(event: React.MouseEvent<HTMLDivElement, MouseEvent>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
         "describedArgs": ["event", "item"]
       }
     },
