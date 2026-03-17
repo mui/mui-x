@@ -74,6 +74,11 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     }
   });
 
+  // If no relevant imports were found, return the source unchanged to avoid reformatting
+  if (Object.keys(removedTypeLocalNames).length === 0) {
+    return file.source;
+  }
+
   // Replace type references with the new types
   // We need to add the necessary imports if they're not already present
   const typesToImport = new Set<string>();

@@ -52,6 +52,11 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     }
   });
 
+  // If no relevant imports were found, return the source unchanged to avoid reformatting
+  if (Object.keys(importedFunctions).length === 0) {
+    return file.source;
+  }
+
   // Replace function calls with series.type === 'bar'
   // isBarSeries(series) -> series.type === 'bar'
   // isDefaultizedBarSeries(series) -> series.type === 'bar'

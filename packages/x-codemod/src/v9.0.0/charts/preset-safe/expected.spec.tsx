@@ -24,23 +24,15 @@ import {
   <HeatmapPremium hideLegend {...otherProps} />
   <PieArc seriesId="test" />
   <SankeyChart series={{}} />
-  <LineChart
-    series={[
-      {
-        data: [1, 2, 3],
-        showMark: true,
-      },
-    ]}
-  />
-  <ChartsDataProvider
-    series={[
-      {
-        type: 'line',
-        data: [1, 2, 3],
-        showMark: true,
-      },
-    ]}
-  />
+  <LineChart series={[{
+    data: [1, 2, 3],
+    showMark: true,
+  }]} />
+  <ChartsDataProvider series={[{
+    type: 'line',
+    data: [1, 2, 3],
+    showMark: true,
+  }]} />
   <ChartsContainer />
 </div>
 
