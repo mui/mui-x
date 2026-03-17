@@ -7,6 +7,7 @@ import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -28,18 +29,19 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   const { classes } = ownerState;
 
   return React.useMemo(() => {
-    const slots = {
-      root: ['root'],
-      item: ['item'],
-      itemContent: ['itemContent'],
-      itemGroupTransition: ['itemGroupTransition'],
-      itemIconContainer: ['itemIconContainer'],
-      itemLabel: ['itemLabel'],
-      itemLabelInput: ['itemLabelInput'],
-      itemCheckbox: ['itemCheckbox'],
-      // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
-      // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
-    };
+    const slots = createSlotArrayMap([
+      'root',
+      'item',
+      'itemContent',
+      'itemGroupTransition',
+      'itemIconContainer',
+      'itemLabel',
+      'itemLabelInput',
+      'itemCheckbox',
+    ] as const);
+
+    // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
+    // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
 
     return composeClasses(slots, getRichTreeViewUtilityClass, classes);
   }, [classes]);

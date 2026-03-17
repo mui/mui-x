@@ -13,6 +13,7 @@ import {
   useTreeViewStore,
 } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
@@ -29,18 +30,18 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
   const { classes } = ownerState;
 
   return React.useMemo(() => {
-    const slots = {
-      root: ['root'],
-      item: ['item'],
-      itemContent: ['itemContent'],
-      itemGroupTransition: ['itemGroupTransition'],
-      itemIconContainer: ['itemIconContainer'],
-      itemLabel: ['itemLabel'],
-      itemLabelInput: ['itemLabelInput'],
-      itemCheckbox: ['itemCheckbox'],
-      itemDragAndDropOverlay: ['itemDragAndDropOverlay'],
-      itemErrorIcon: ['itemErrorIcon'],
-    };
+    const slots = createSlotArrayMap([
+      'root',
+      'item',
+      'itemContent',
+      'itemGroupTransition',
+      'itemIconContainer',
+      'itemLabel',
+      'itemLabelInput',
+      'itemCheckbox',
+      'itemDragAndDropOverlay',
+      'itemErrorIcon',
+    ] as const);
 
     return composeClasses(slots, getRichTreeViewProUtilityClass, classes);
   }, [classes]);
