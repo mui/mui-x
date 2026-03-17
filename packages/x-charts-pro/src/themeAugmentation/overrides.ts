@@ -1,8 +1,6 @@
-import { type HeatmapClassKey } from '../Heatmap';
-
 export interface ChartsProComponentNameToClassKey {
   // Heatmap components
-  MuiHeatmap: HeatmapClassKey;
+  MuiHeatmapPlot: 'root';
 
   // SankeyChart components
   MuiSankeyPlot: 'root';
