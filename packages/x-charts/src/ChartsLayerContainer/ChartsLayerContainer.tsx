@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, useThemeProps, type SxProps, type Theme } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
+import useId from '@mui/utils/useId';
 import { useUtilityClasses } from '../ChartsSurface/chartsSurfaceClasses';
 import {
   selectorChartPropsHeight,
@@ -40,6 +41,16 @@ const ChartsLayerContainerDiv = styled('div', {
 }));
 
 export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
+  title?: string;
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
+  desc?: string;
   sx?: SxProps<Theme>;
 }
 
@@ -58,12 +69,13 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
 
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
-    const { children, className, ...other } = themeProps;
+    const { children, title, desc, className, ...other } = themeProps;
 
     const classes = useUtilityClasses();
 
     const chartsLayerContainerRef = useChartsLayerContainerRef();
     const handleRef = useForkRef(chartsLayerContainerRef, ref);
+    const descId = useId();
 
     if (process.env.NODE_ENV !== 'production') {
       React.Children.forEach(children, (child) => {
@@ -86,6 +98,8 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
         ref={handleRef}
         ownerState={{ width: propsWidth, height: propsHeight }}
         tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
+        aria-label={title}
+        aria-describedby={desc ? descId : undefined}
         className={clsx(classes.root, className)}
         {...other}
         onPointerEnter={(event) => {
@@ -101,6 +115,11 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
           instance.handleClick?.(event);
         }}
       >
+        {desc && (
+          <span id={descId} style={{ display: 'none' }}>
+            {desc}
+          </span>
+        )}
         {children}
       </ChartsLayerContainerDiv>
     );
@@ -112,11 +131,21 @@ ChartsLayerContainer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
+  desc: PropTypes.string,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
+  title: PropTypes.string,
 } as any;
 
 export { ChartsLayerContainer };

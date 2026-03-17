@@ -1,5 +1,12 @@
 {
   "componentDescription": "A helper component that combines `<ChartsLayerContainer>` and `<ChartsSvgLayer>` to provide a surface for drawing charts.\nIf you need more control over the layers, you can use `<ChartsLayerContainer>` and `<ChartsSvgLayer>` separately.",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    }
+  },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
 }
