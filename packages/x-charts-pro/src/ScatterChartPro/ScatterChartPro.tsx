@@ -197,12 +197,24 @@ ScatterChartPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * If true, the closest point interaction is disabled and falls back to hover events.
+   * @default false
+   * @deprecated Use `disableHitArea` instead.
+   */
+  disableClosestPoint: PropTypes.bool,
+  /**
+   * If true, the hit area interaction is disabled and falls back to hover events.
+   * @default false
+   */
+  disableHitArea: PropTypes.bool,
+  /**
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
   /**
    * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
+   * @deprecated Use `disableHitArea` instead.
    */
   disableVoronoi: PropTypes.bool,
   /**
@@ -273,6 +285,12 @@ ScatterChartPro.propTypes = {
       seriesId: PropTypes.string.isRequired,
     }),
   ]),
+  /**
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  hitAreaRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -368,7 +386,7 @@ ScatterChartPro.propTypes = {
   onHighlightChange: PropTypes.func,
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using hit area interaction. Or the Mouse event from the scatter element, when `disableHitArea=true`.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
@@ -466,6 +484,7 @@ ScatterChartPro.propTypes = {
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
+   * @deprecated Use `hitAreaRadius` instead.
    */
   voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
