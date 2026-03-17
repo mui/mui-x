@@ -103,7 +103,7 @@ const selectors = (() => {
       Dimensions.selectors.columnsTotalWidth,
       Dimensions.selectors.needsVerticalScrollbar,
       (scrollPosition, dimensions, columnsTotalWidth, needsVerticalScrollbar) =>
-        columnsTotalWidth -
+        Math.max(columnsTotalWidth, dimensions.viewportOuterSize.width) -
         dimensions.viewportOuterSize.width -
         scrollPosition.current.left +
         (needsVerticalScrollbar ? dimensions.scrollbarSize : 0),
