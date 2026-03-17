@@ -5,7 +5,7 @@ import type { FunnelSectionProps } from './FunnelSection';
 import type { FunnelSectionLabelProps } from './FunnelSectionLabel';
 
 /**
- * @deprecated Use `FunnelClasses` from `./funnelClasses` instead.
+ * @deprecated Use `FunnelClasses` from `funnelClasses` instead.
  */
 export interface FunnelSectionClasses {
   /** Styles applied to the root element. */
@@ -35,14 +35,14 @@ export interface FunnelSectionClasses {
 }
 
 /**
- * @deprecated Use `getFunnelUtilityClass` from `./funnelClasses` instead.
+ * @deprecated Use `getFunnelUtilityClass` from `funnelClasses` instead.
  */
 function getFunnelSectionUtilityClass(slot: string) {
   return generateUtilityClass('MuiFunnelSection', slot);
 }
 
 /**
- * @deprecated Use `useUtilityClasses` from `./funnelClasses` instead.
+ * @deprecated Use `useUtilityClasses` from `funnelClasses` instead.
  */
 export const useUtilityClasses = (props: FunnelSectionProps) => {
   const { classes, seriesId, variant, dataIndex } = props;
@@ -60,7 +60,7 @@ export const useUtilityClasses = (props: FunnelSectionProps) => {
 };
 
 /**
- * @deprecated Use `useUtilityClasses` from `./funnelClasses` instead.
+ * @deprecated Use `useUtilityClasses` from `funnelClasses` instead.
  */
 export const useLabelUtilityClasses = (props: FunnelSectionLabelProps) => {
   const { classes, seriesId, dataIndex } = props;
@@ -73,7 +73,7 @@ export const useLabelUtilityClasses = (props: FunnelSectionLabelProps) => {
 };
 
 /**
- * @deprecated Use `funnelClasses` from `./funnelClasses` instead.
+ * @deprecated Use `funnelClasses` from `funnelClasses` instead.
  */
 export const funnelSectionClasses: FunnelSectionClasses = generateUtilityClasses(
   'MuiFunnelSection',
