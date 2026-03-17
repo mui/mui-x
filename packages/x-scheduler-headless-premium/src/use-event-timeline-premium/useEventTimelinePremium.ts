@@ -9,7 +9,7 @@ import { EventTimelinePremiumParameters } from './EventTimelinePremiumStore.type
 export function useEventTimelinePremium<TEvent extends object, TResource extends object>(
   parameters: EventTimelinePremiumParameters<TEvent, TResource>,
 ): EventTimelinePremiumStore<TEvent, TResource> {
-  const adapter = useAdapter();
+  const adapter = useAdapter(parameters.dateLocale);
   const store = useRefWithInit(() => new EventTimelinePremiumStore(parameters, adapter)).current;
 
   useIsoLayoutEffect(

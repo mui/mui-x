@@ -3,7 +3,9 @@ export type { HeatmapSeries, HeatmapProps, HeatmapSlots, HeatmapSlotProps } from
 export { HeatmapPlot, type HeatmapPlotProps } from './HeatmapPlot';
 export type { HeatmapPlotSlots, HeatmapPlotSlotProps } from './Heatmap.types';
 export * from './FocusedHeatmapCell';
-export type { HeatmapCellProps } from './internals/HeatmapCell';
+export { HeatmapCell } from './HeatmapCell';
+export type { HeatmapCellProps, HeatmapCellOwnerState } from './HeatmapCell';
 export * from './HeatmapTooltip';
 export * from './Heatmap.plugins';
-export * from './heatmapClasses';
+export { heatmapClasses } from './heatmapClasses';
+export type { HeatmapClasses, HeatmapClassKey } from './heatmapClasses';

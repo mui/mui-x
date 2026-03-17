@@ -14,7 +14,6 @@ const stackStrategy = {
 const customize = {
   height: 350,
   hideLegend: true,
-  experimentalFeatures: { preferStrictDomainInLineCharts: true },
 };
 
 export default function LineDataset() {

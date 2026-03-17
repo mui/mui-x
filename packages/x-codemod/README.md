@@ -103,6 +103,7 @@ The list includes these transformers
 - [`rename-chart-data-provider`](#rename-chart-data-provider)
 - [`rename-chart-zoom-slider`](#rename-chart-zoom-slider)
 - [`remove-enable-keyboard-navigation`](#remove-enable-keyboard-navigation)
+- [`remove-stabilized-experimentalFeatures`](#remove-stabilized-experimentalfeatures)
 
 #### `replace-heatmap-hide-legend-false`
 
@@ -237,6 +238,18 @@ Removes the `enableKeyboardNavigation` props set to `true` since it's now the de
 ```diff
  <LineChart
 -  enableKeyboardNavigation
+ />
+```
+
+#### `remove-stabilized-experimentalFeatures`
+
+Removes the `preferStrictDomainInLineCharts` property from the `experimentalFeatures` prop since it's now the default behavior.
+If `preferStrictDomainInLineCharts` is the only property in the object, the entire `experimentalFeatures` prop is removed.
+
+```diff
+ <LineChart
+-  experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+   series={[]}
  />
 ```
 

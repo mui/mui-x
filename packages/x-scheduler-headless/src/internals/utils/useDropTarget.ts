@@ -25,7 +25,7 @@ import {
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import { StandaloneEvent } from '../../standalone-event';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
@@ -39,7 +39,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     addPropertiesToDroppedEvent,
   } = parameters;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
   React.useEffect(() => {

@@ -6,7 +6,7 @@ import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
@@ -14,7 +14,7 @@ export function useCalendarGridPlaceholderInRange(
 ): useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null {
   const { start, end, occurrences, maxIndex } = parameters;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
   const rawPlaceholder = useStore(

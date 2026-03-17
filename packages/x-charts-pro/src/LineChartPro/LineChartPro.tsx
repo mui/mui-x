@@ -184,6 +184,10 @@ LineChartPro.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -202,9 +206,7 @@ LineChartPro.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
+  experimentalFeatures: PropTypes.object,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -443,6 +445,10 @@ LineChartPro.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The controlled axis tooltip.

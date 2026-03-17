@@ -25,8 +25,10 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "gap": { "type": { "name": "number" }, "default": "0" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
@@ -99,6 +101,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "title": { "type": { "name": "string" } },
     "tooltipItem": {
       "type": {
         "name": "union",
