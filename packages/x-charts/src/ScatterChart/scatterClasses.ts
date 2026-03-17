@@ -1,7 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { createSlotArrayMap } from '../internals/keyToArrayMap';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface ScatterClasses {
   /** Styles applied to the scatter plot element. */

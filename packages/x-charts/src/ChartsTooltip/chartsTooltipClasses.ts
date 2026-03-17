@@ -1,7 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
-import { createSlotArrayMap } from '../internals/keyToArrayMap';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface ChartsTooltipClasses {
   /** Styles applied to the root element. */

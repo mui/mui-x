@@ -2,7 +2,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SeriesId } from '../models/seriesType/common';
-import { createSlotArrayMap } from '../internals/keyToArrayMap';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface PieClasses {
   /** Styles applied to the root element. */

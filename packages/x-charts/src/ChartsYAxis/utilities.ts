@@ -1,7 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import { type AxisConfig, type ChartsYAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
-import { createSlotArrayMap } from '../internals/keyToArrayMap';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) => {
   const { classes, position } = ownerState;

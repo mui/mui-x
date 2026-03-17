@@ -3,7 +3,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import type { PiecewiseColorLegendProps } from './PiecewiseColorLegend';
 import type { ChartsLegendSlotExtension } from './chartsLegend.types';
-import { createSlotArrayMap } from '../internals/keyToArrayMap';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface PiecewiseColorLegendClasses {
   /** Styles applied to the root element. */
