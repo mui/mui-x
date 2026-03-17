@@ -81,7 +81,7 @@ export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';
-export * from './keyToArrayMap'
+export * from './keyToArrayMap';
 export { useUtilityClasses as useChartsTooltipUtilityClasses } from '../ChartsTooltip/chartsTooltipClasses';
 
 // contexts
