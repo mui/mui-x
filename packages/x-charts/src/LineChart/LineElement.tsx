@@ -164,6 +164,7 @@ function LineElement(props: LineElementProps) {
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
+      'data-series-id': seriesId,
       'data-series': seriesId,
     },
     className: `${classes.line} ${deprecatedClasses.root}`,
