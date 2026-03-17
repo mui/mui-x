@@ -20,7 +20,7 @@ export default function ScatterCSSSelectors() {
   return (
     <ScatterChart
       height={300}
-      voronoiMaxRadius={30}
+      hitAreaRadius={30}
       series={series}
       sx={{
         '& [data-faded=true]': { opacity: 0.4 },
