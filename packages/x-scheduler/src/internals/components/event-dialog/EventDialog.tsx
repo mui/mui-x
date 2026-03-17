@@ -176,7 +176,11 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
           {...other}
         />
       )}
+      onOpen={(occurrence) => {
+        store.setEditedEventId(occurrence.id);
+      }}
       onClose={() => {
+        store.setEditedEventId(null);
         store.setOccurrencePlaceholder(null);
       }}
     >

@@ -7,6 +7,7 @@ import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
   schedulerEventSelectors,
+  schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
@@ -16,7 +17,6 @@ import { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
-import { useEventDialogContext } from '../../event-dialog/EventDialog';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -39,7 +39,7 @@ const EventItemCard = styled('div', {
     '&:hover': {
       backgroundColor: 'var(--event-surface-bold-hover)',
     },
-    '&[data-selected]': {
+    '&[data-editing]': {
       backgroundColor: 'var(--event-surface-selected)',
       color: 'var(--event-on-surface-selected)',
       '&:hover': {
@@ -50,7 +50,7 @@ const EventItemCard = styled('div', {
   '&[data-variant="regular"]': {
     cursor: 'pointer',
   },
-  '&[data-selected]': {
+  '&[data-editing]': {
     backgroundColor: 'var(--event-surface-selected)',
     '&:hover': {
       backgroundColor: 'var(--event-surface-selected-hover)',
@@ -81,7 +81,7 @@ const EventItemTitle = styled('span', {
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
-  '[data-selected] &': {
+  '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
   },
 }));
@@ -101,7 +101,7 @@ const EventItemTime = styled('time', {
     width: 'fit-content',
     marginInlineEnd: theme.spacing(0.5),
   },
-  '[data-selected] &': {
+  '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
   },
 }));
@@ -111,7 +111,7 @@ const EventItemRecurringIcon = styled(RepeatRounded, {
   slot: 'EventItemRecurringIcon',
 })(({ theme }) => ({
   color: (theme.vars || theme).palette.text.primary,
-  '[data-selected] &': {
+  '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
   },
 }));
@@ -125,7 +125,7 @@ const ResourceLegendColor = styled('span', {
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-main)',
-  '[data-selected] &': {
+  '[data-editing] &': {
     backgroundColor: 'var(--event-on-surface-selected)',
   },
 });
@@ -172,9 +172,7 @@ export const EventItem = React.forwardRef(function EventItem(
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const { data: dialogData } = useEventDialogContext();
-
-  const isSelected = dialogData != null && dialogData.id === occurrence.id;
+  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
 
   // State hooks
   const id = useId(idProp);
@@ -293,7 +291,7 @@ export const EventItem = React.forwardRef(function EventItem(
       id={id}
       data-variant={variant}
       data-palette={color}
-      data-selected={isSelected || undefined}
+      data-editing={isEditing || undefined}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
       className={clsx(className, classes.eventItemCard, occurrence.className)}

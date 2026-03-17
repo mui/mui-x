@@ -35,6 +35,7 @@ export interface ProviderProps<TData> {
     data: TData;
     onClose: () => void;
   }) => React.ReactNode;
+  onOpen?: (data: TData) => void;
   onClose?: () => void;
 }
 

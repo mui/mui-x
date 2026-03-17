@@ -5,7 +5,10 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
-import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { TimeGridEventProps } from './TimeGridEvent.types';
@@ -13,7 +16,6 @@ import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
-import { useEventDialogContext } from '../../event-dialog/EventDialog';
 
 const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   display: '-webkit-box',
@@ -61,7 +63,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   '&:hover': {
     backgroundColor: 'var(--event-surface-subtle-hover)',
   },
-  '&[data-selected]': {
+  '&[data-editing]': {
     backgroundColor: 'var(--event-surface-selected)',
     color: 'var(--event-on-surface-selected)',
     '&:hover': {
@@ -132,7 +134,7 @@ const TimeGridEventTitle = styled(Typography, {
     fontSize: '11px',
     lineHeight: '11px',
   },
-  '[data-selected] &': {
+  '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
   },
   ...linesClampStyles(1),
@@ -146,7 +148,7 @@ const TimeGridEventTime = styled('time', {
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
-  '[data-selected] &': {
+  '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
   },
   '&[data-lines-clamp]': {
@@ -171,7 +173,7 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   bottom: 3,
   padding: theme.spacing(0.25),
   color: 'var(--event-on-surface-subtle-secondary)',
-  '[data-selected] &': {
+  '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
   },
   '@container (max-width: 50px)': {
@@ -216,9 +218,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
-  const { data: dialogData } = useEventDialogContext();
-
-  const isSelected = dialogData != null && dialogData.id === occurrence.id;
+  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
 
   // Selector hooks
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
@@ -322,7 +322,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
       data-palette={color}
-      data-selected={isSelected || undefined}
+      data-editing={isEditing || undefined}
       {...sharedProps}
       className={clsx(classes.timeGridEvent, sharedProps.className)}
     >

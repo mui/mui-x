@@ -83,7 +83,7 @@ export const getNeutralVibesTheme = (mode: 'light' | 'dark'): Theme => {
               borderColor: 'var(--event-main)',
               background: theme.palette.background.paper,
             },
-            '&[data-selected]': {
+            '&[data-editing]': {
               background: theme.palette.background.paper,
               borderColor: 'var(--event-surface-accent)',
               color: theme.palette.text.primary,
@@ -180,7 +180,7 @@ export const getNeutralVibesTheme = (mode: 'light' | 'dark'): Theme => {
               borderColor: 'var(--event-surface-bold)',
               background: theme.palette.background.paper,
             },
-            '&[data-selected]': {
+            '&[data-editing]': {
               background: theme.palette.background.paper,
               borderColor: 'var(--event-surface-accent)',
               color: 'inherit',
@@ -212,13 +212,13 @@ export const getNeutralVibesTheme = (mode: 'light' | 'dark'): Theme => {
             color: theme.palette.text.primary,
             paddingLeft: theme.spacing(2),
             fontWeight: 500,
-            '[data-selected] &': {
+            '[data-editing] &': {
               color: theme.palette.text.primary,
             },
           }),
           timeGridEventTime: ({ theme }) => ({
             color: theme.palette.text.secondary,
-            '[data-selected] &': {
+            '[data-editing] &': {
               color: theme.palette.text.secondary,
             },
           }),
@@ -238,7 +238,7 @@ export const getNeutralVibesTheme = (mode: 'light' | 'dark'): Theme => {
               borderColor: 'var(--event-surface-bold)',
               background: theme.palette.background.paper,
             },
-            '&[data-variant="compact"][data-selected]': {
+            '&[data-variant="compact"][data-editing]': {
               backgroundColor: theme.palette.background.paper,
               borderColor: 'var(--event-surface-accent)',
               '&:hover': {
@@ -248,22 +248,22 @@ export const getNeutralVibesTheme = (mode: 'light' | 'dark'): Theme => {
             },
           }),
           dayGridEventTitle: ({ theme }) => ({
-            '[data-variant="compact"][data-selected] &': {
+            '[data-variant="compact"][data-editing] &': {
               color: theme.palette.text.primary,
             },
           }),
           dayGridEventTime: ({ theme }) => ({
-            '[data-variant="compact"][data-selected] &': {
+            '[data-variant="compact"][data-editing] &': {
               color: theme.palette.text.secondary,
             },
           }),
           dayGridEventRecurringIcon: ({ theme }) => ({
-            '[data-variant="compact"][data-selected] &': {
+            '[data-variant="compact"][data-editing] &': {
               color: theme.palette.text.primary,
             },
           }),
           eventItemCard: ({ theme }) => ({
-            '&[data-selected]': {
+            '&[data-editing]': {
               backgroundColor: 'transparent',
               outline: '1px solid var(--event-surface-accent)',
               outlineOffset: -1,
@@ -273,22 +273,22 @@ export const getNeutralVibesTheme = (mode: 'light' | 'dark'): Theme => {
             },
           }),
           eventItemTitle: ({ theme }) => ({
-            '[data-selected] &': {
+            '[data-editing] &': {
               color: theme.palette.text.primary,
             },
           }),
           eventItemTime: ({ theme }) => ({
-            '[data-selected] &': {
+            '[data-editing] &': {
               color: theme.palette.text.secondary,
             },
           }),
           eventItemRecurringIcon: ({ theme }) => ({
-            '[data-selected] &': {
+            '[data-editing] &': {
               color: theme.palette.text.primary,
             },
           }),
           resourceLegendColor: {
-            '[data-selected] &': {
+            '[data-editing] &': {
               backgroundColor: 'var(--event-main)',
             },
           },

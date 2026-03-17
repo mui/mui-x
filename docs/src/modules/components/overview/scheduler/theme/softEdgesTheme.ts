@@ -114,7 +114,7 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
             '&::before': {
               width: 0,
             },
-            '&[data-selected]': {
+            '&[data-editing]': {
               backgroundColor: 'var(--event-surface-subtle)',
               color: 'inherit',
               outline: '2px solid var(--event-surface-accent)',
@@ -125,17 +125,17 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
             },
           },
           timeGridEventTitle: {
-            '[data-selected] &': {
+            '[data-editing] &': {
               color: 'var(--event-on-surface-subtle-primary)',
             },
           },
           timeGridEventTime: {
-            '[data-selected] &': {
+            '[data-editing] &': {
               color: 'var(--event-on-surface-subtle-secondary)',
             },
           },
           timeGridEventRecurringIcon: {
-            '[data-selected] &': {
+            '[data-editing] &': {
               color: 'var(--event-on-surface-subtle-secondary)',
             },
           },
@@ -157,7 +157,7 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
               '&:hover': {
                 background: 'var(--event-surface-subtle-hover)',
               },
-              '&[data-selected]': {
+              '&[data-editing]': {
                 background: 'var(--event-surface-selected)',
                 '&:hover': {
                   background: 'var(--event-surface-selected-hover)',
@@ -169,7 +169,7 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
             '[data-variant="compact"] &': {
               color: 'var(--event-on-surface-subtle-secondary)',
             },
-            '[data-variant="compact"][data-selected] &': {
+            '[data-variant="compact"][data-editing] &': {
               color: 'var(--event-on-surface-selected)',
             },
           },
@@ -177,12 +177,12 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
             '[data-variant="compact"] &': {
               color: 'var(--event-on-surface-subtle-primary)',
             },
-            '[data-variant="compact"][data-selected] &': {
+            '[data-variant="compact"][data-editing] &': {
               color: 'var(--event-on-surface-selected)',
             },
           },
           eventColorIndicator: {
-            '[data-selected] &': {
+            '[data-editing] &': {
               backgroundColor: 'var(--event-on-surface-selected)',
             },
           },
@@ -193,7 +193,7 @@ export const getSoftEdgesTheme = (mode: 'light' | 'dark'): Theme => {
             },
           },
           resourceLegendColor: {
-            '[data-selected] &': {
+            '[data-editing] &': {
               backgroundColor: 'var(--event-on-surface-selected)',
             },
           },
