@@ -1,5 +1,5 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { describeConformance } from 'test/utils/charts/describeConformance';
+import { describeConformance } from 'test/utils/describeConformance';
 import { FunnelChart, funnelClasses } from '@mui/x-charts-pro/FunnelChart';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
