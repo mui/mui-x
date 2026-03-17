@@ -165,9 +165,6 @@ catalogs:
     prop-types:
       specifier: ^15.8.1
       version: 15.8.1
-    rasterizehtml:
-      specifier: ^1.4.1
-      version: 1.4.1
     react:
       specifier: 19.2.3
       version: 19.2.3
@@ -190,8 +187,8 @@ catalogs:
       specifier: ^14.2.5
       version: 14.2.5
     stylis:
-      specifier: ^4.3.6
-      version: 4.3.6
+      specifier: 4.2.0
+      version: 4.2.0
     tsx:
       specifier: ^4.21.0
       version: 4.21.0
@@ -514,7 +511,7 @@ importers:
         version: 7.3.7(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/server@11.11.0)(@types/react@19.2.9)(next@15.5.12(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 7.3.7(stylis@4.3.6)
+        version: 7.3.7(stylis@4.2.0)
       '@mui/system':
         specifier: 'catalog:'
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
@@ -532,7 +529,7 @@ importers:
         version: link:../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../packages/x-charts-vendor/build
+        version: link:../packages/x-charts-vendor
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../packages/x-data-grid/build
@@ -685,7 +682,7 @@ importers:
         version: 6.1.19(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       stylis:
         specifier: 'catalog:'
-        version: 4.3.6
+        version: 4.2.0
       webpack-bundle-analyzer:
         specifier: ^5.2.0
         version: 5.2.0
@@ -857,7 +854,7 @@ importers:
         version: 7.3.7(@types/react@19.2.9)(react@19.2.3)
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../x-charts-vendor/build
+        version: link:../x-charts-vendor
       '@mui/x-internal-gestures':
         specifier: workspace:*
         version: link:../x-internal-gestures/build
@@ -931,7 +928,7 @@ importers:
         version: link:../x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../x-charts-vendor/build
+        version: link:../x-charts-vendor
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -968,7 +965,7 @@ importers:
         version: 6.1.3
     optionalDependencies:
       rasterizehtml:
-        specifier: 'catalog:'
+        specifier: ^1.4.1
         version: 1.4.1
     publishDirectory: build
 
@@ -991,7 +988,7 @@ importers:
         version: link:../x-charts/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../x-charts-vendor/build
+        version: link:../x-charts-vendor
       '@mui/x-internal-gestures':
         specifier: workspace:*
         version: link:../x-internal-gestures/build
@@ -1031,7 +1028,7 @@ importers:
         version: 6.1.3
     optionalDependencies:
       rasterizehtml:
-        specifier: 'catalog:'
+        specifier: ^1.4.1
         version: 1.4.1
     publishDirectory: build
 
@@ -1110,9 +1107,6 @@ importers:
       '@babel/cli':
         specifier: 'catalog:'
         version: 7.28.6(@babel/core@7.29.0)
-      '@babel/plugin-transform-modules-commonjs':
-        specifier: 7.28.6
-        version: 7.28.6(@babel/core@7.29.0)
       '@babel/plugin-transform-runtime':
         specifier: 'catalog:'
         version: 7.29.0(@babel/core@7.29.0)
@@ -1125,7 +1119,6 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
-    publishDirectory: build
 
   packages/x-chat:
     dependencies:
@@ -1174,7 +1167,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-chat-headless:
@@ -1197,7 +1190,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-chat-unstyled:
@@ -1223,7 +1216,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: 'catalog:'
-        version: 6.1.2
+        version: 6.1.3
     publishDirectory: build
 
   packages/x-codemod:
@@ -2288,7 +2281,7 @@ importers:
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 7.3.7(stylis@4.3.6)
+        version: 7.3.7(stylis@4.2.0)
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../packages/x-charts/build
@@ -2300,7 +2293,7 @@ importers:
         version: link:../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../packages/x-charts-vendor/build
+        version: link:../packages/x-charts-vendor
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../packages/x-data-grid/build
@@ -2384,7 +2377,7 @@ importers:
         version: 7.7.4
       stylis:
         specifier: 'catalog:'
-        version: 4.3.6
+        version: 4.2.0
 
   test/bundle-size:
     dependencies:
@@ -2435,7 +2428,7 @@ importers:
         version: link:../../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../../packages/x-charts-vendor/build
+        version: link:../../packages/x-charts-vendor
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../../packages/x-data-grid/build
@@ -2558,7 +2551,7 @@ importers:
         version: link:../../packages/x-charts-pro/build
       '@mui/x-charts-vendor':
         specifier: workspace:*
-        version: link:../../packages/x-charts-vendor/build
+        version: link:../../packages/x-charts-vendor
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../../packages/x-data-grid/build
@@ -11731,9 +11724,6 @@ packages:
   stylis@4.3.2:
     resolution: {integrity: sha512-bhtUjWd/z6ltJiQwg0dUfxEJ+W+jdqQd8TbWLWyeIJHlnsqmGLRFFd8e5mA0AZi/zx90smXRlN66YMTcaSFifg==}
 
-  stylis@4.3.6:
-    resolution: {integrity: sha512-yQ3rwFWRfwNUY7H5vpU0wfdkNSnvnJinhF9830Swlaxl03zsOjCfmX0ugac+3LtK0lYSgwL/KXc8oYL3mG4YFQ==}
-
   subsume@4.0.0:
     resolution: {integrity: sha512-BWnYJElmHbYZ/zKevy+TG+SsyoFCmRPDHJbR1MzLxkPOv1Jp/4hGhVUtP98s+wZBsBsHwCXvPTP0x287/WMjGg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -15582,11 +15572,11 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.9)(react@19.2.3)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
 
-  '@mui/stylis-plugin-rtl@7.3.7(stylis@4.3.6)':
+  '@mui/stylis-plugin-rtl@7.3.7(stylis@4.2.0)':
     dependencies:
       '@babel/runtime': 7.28.6
       cssjanus: 2.3.0
-      stylis: 4.3.6
+      stylis: 4.2.0
 
   '@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)':
     dependencies:
@@ -22844,7 +22834,7 @@ snapshots:
       remark-parse: 11.0.0
       remark-rehype: 11.1.2
       unified: 11.0.5
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -23804,8 +23794,6 @@ snapshots:
   stylis@4.2.0: {}
 
   stylis@4.3.2: {}
-
-  stylis@4.3.6: {}
 
   subsume@4.0.0:
     dependencies:
