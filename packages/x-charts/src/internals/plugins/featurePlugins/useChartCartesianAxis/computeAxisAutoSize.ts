@@ -139,10 +139,7 @@ function selectLargestCandidates(labels: string[]): string[] {
  * For ordinal scales (band/point), use axis.data.
  * For continuous scales, generate estimated tick values from axis min/max configuration.
  */
-function getTickLabels(
-  axis: DefaultedXAxis | DefaultedYAxis,
-  domain?: AxisDomainInfo,
-): string[] {
+function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis, domain?: AxisDomainInfo): string[] {
   const { valueFormatter, scaleType, data } = axis as DefaultedXAxis & DefaultedYAxis;
 
   if (scaleType === 'band' || scaleType === 'point') {
