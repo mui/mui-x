@@ -160,6 +160,7 @@ function LineElement(props: LineElementProps) {
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
       'data-series-id': id,
+      'data-series': id,
     },
     className: `${classes.line} ${deprecatedClasses.root}`,
     ownerState,

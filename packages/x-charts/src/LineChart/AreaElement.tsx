@@ -155,6 +155,7 @@ function AreaElement(props: AreaElementProps) {
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
       'data-series-id': id,
+      'data-series': id,
     },
     className: `${classes.area} ${deprecatedClasses.root}`,
     ownerState,

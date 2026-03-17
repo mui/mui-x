@@ -74,8 +74,16 @@ export default function ShinyBarChartHorizontal() {
 }
 
 export function BarShadedBackground(props) {
-  const { ownerState, skipAnimation, id, dataIndex, xOrigin, yOrigin, ...other } =
-    props;
+  const {
+    ownerState,
+    skipAnimation,
+    id,
+    dataIndex,
+    xOrigin,
+    yOrigin,
+    seriesId,
+    ...other
+  } = props;
   const theme = useTheme();
 
   const animatedProps = useAnimateBar(props);
