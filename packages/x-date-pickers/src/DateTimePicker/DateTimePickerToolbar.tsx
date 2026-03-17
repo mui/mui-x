@@ -57,7 +57,6 @@ const useUtilityClasses = (
     timeContainer: ['timeContainer', toolbarDirection === 'rtl' && 'timeLabelReverse'],
     timeDigitsContainer: ['timeDigitsContainer', toolbarDirection === 'rtl' && 'timeLabelReverse'],
     ampmSelection: ['ampmSelection', pickerOrientation === 'landscape' && 'ampmLandscape'],
-
     ...createSlotArrayMap(['root', 'dateContainer', 'separator', 'ampmLabel'] as const),
   };
 
