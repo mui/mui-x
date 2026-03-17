@@ -6,7 +6,7 @@ import type { MarkElementOwnerState } from './lineClasses';
 export { type MarkElementOwnerState };
 
 /**
- * @deprecated Use `LineClasses` from `./lineClasses` instead.
+ * @deprecated Use `LineClasses` instead.
  */
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
@@ -31,19 +31,19 @@ export interface MarkElementClasses {
 }
 
 /**
- * @deprecated Use `LineClassKey` from `./lineClasses` instead.
+ * @deprecated Use `LineClassKey` instead.
  */
 export type MarkElementClassKey = keyof MarkElementClasses;
 
 /**
- * @deprecated Use `getLineUtilityClass` from `./lineClasses` instead.
+ * @deprecated Use `getLineUtilityClass` instead.
  */
 export function getMarkElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiMarkElement', slot);
 }
 
 /**
- * @deprecated Use `lineClasses` from `./lineClasses` instead.
+ * @deprecated Use `lineClasses` instead.
  */
 export const markElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
   'root',
@@ -54,7 +54,7 @@ export const markElementClasses: MarkElementClasses = generateUtilityClasses('Mu
 ]);
 
 /**
- * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
+ * @deprecated Use `useUtilityClasses` instead.
  */
 export const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;

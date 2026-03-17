@@ -3,7 +3,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 /**
- * @deprecated Use `RadarClasses` from `../radarClasses` instead.
+ * @deprecated Use `RadarClasses` instead.
  */
 export interface RadarGridClasses {
   /** Styles applied to every radial line element. */
@@ -15,19 +15,19 @@ export interface RadarGridClasses {
 }
 
 /**
- * @deprecated Use `RadarClassKey` from `../radarClasses` instead.
+ * @deprecated Use `RadarClassKey` instead.
  */
 export type RadarGridClassKey = keyof RadarGridClasses;
 
 /**
- * @deprecated Use `getRadarUtilityClass` from `../radarClasses` instead.
+ * @deprecated Use `getRadarUtilityClass` instead.
  */
 export function getRadarGridUtilityClass(slot: string) {
   return generateUtilityClass('MuiRadarGrid', slot);
 }
 
 /**
- * @deprecated Use `radarClasses` from `../radarClasses` instead.
+ * @deprecated Use `radarClasses` instead.
  */
 export const chartsGridClasses: RadarGridClasses = generateUtilityClasses('MuiRadarGrid', [
   'radial',
@@ -36,7 +36,7 @@ export const chartsGridClasses: RadarGridClasses = generateUtilityClasses('MuiRa
 ]);
 
 /**
- * @deprecated Use `useUtilityClasses` from `../radarClasses` instead.
+ * @deprecated Use `useUtilityClasses` instead.
  */
 export const useUtilityClasses = (classes?: Partial<RadarGridClasses>) => {
   const slots = {
