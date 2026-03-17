@@ -1,9 +1,9 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-charts/internals';
 import type { FunnelSectionProps } from './FunnelSection';
 import type { FunnelSectionLabelProps } from './FunnelSectionLabel';
-import { createSlotArrayMap } from '../../internals/keyToArrayMap';
 
 export interface FunnelSectionClasses {
   /** Styles applied to the root element. */
