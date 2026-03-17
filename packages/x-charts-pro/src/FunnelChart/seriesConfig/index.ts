@@ -2,8 +2,6 @@ import {
   type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
-  createIsHighlighted,
-  createIsFaded,
 } from '@mui/x-charts/internals';
 import { getExtremumX, getExtremumY } from './extremums';
 import seriesProcessor from './seriesProcessor';
@@ -26,6 +24,4 @@ export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
-  isHighlightedCreator: createIsHighlighted,
-  isFadedCreator: createIsFaded,
 };

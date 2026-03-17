@@ -1,9 +1,6 @@
-import { createRenderer, screen } from '@mui/internal-test-utils';
-import { describeConformance } from 'test/utils/charts/describeConformance';
-import { pieArcClasses, pieClasses, PieChart } from '@mui/x-charts/PieChart';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { isJSDOM } from 'test/utils/skipIf';
-import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
+import { createRenderer, screen, act } from '@mui/internal-test-utils';
+import { describeConformance } from 'test/utils/describeConformance';
+import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();
@@ -22,11 +19,22 @@ describe('<PieChart />', () => {
     />,
     () => ({
       classes: {} as any,
-      inheritComponent: 'div',
+      inheritComponent: 'svg',
       render,
       muiName: 'MuiPieChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.HTMLDivElement,
+      refInstanceof: window.SVGSVGElement,
+      skip: [
+        'componentProp',
+        'componentsProp',
+        'slotPropsProp',
+        'slotPropsCallback',
+        'slotsProp',
+        'themeStyleOverrides',
+        'themeVariants',
+        'themeCustomPalette',
+        'themeDefaultProps',
+      ],
     }),
   );
 
@@ -42,7 +50,7 @@ describe('<PieChart />', () => {
       <PieChart height={100} width={100} series={[{ data: [{ id: 0, value: 10 }] }]} hideLegend />,
     );
 
-    const pieArc = document.querySelector(`.${pieClasses.arc}`)!;
+    const pieArc = document.querySelector(`.${pieArcClasses.root}`)!;
     await user.hover(pieArc);
 
     expect(await screen.findByRole('tooltip')).toBeVisible();
@@ -57,7 +65,7 @@ describe('<PieChart />', () => {
       <PieChart height={100} width={100} series={[{ data: [{ id: 0, value: 10 }] }]} hideLegend />,
     );
 
-    const pieArc = document.querySelector(`.${pieClasses.arc}`)!;
+    const pieArc = document.querySelector(`.${pieArcClasses.root}`)!;
     await user.hover(pieArc);
 
     expect(await screen.findByRole('tooltip')).toBeVisible();
@@ -67,112 +75,11 @@ describe('<PieChart />', () => {
     expect(screen.queryByRole('tooltip')).to.equal(null);
   });
 
-  describe('classes', () => {
-    it('should apply root class to the pie plot', () => {
-      const { container } = render(
-        <PieChart
-          height={100}
-          width={100}
-          series={[{ data: [{ id: 'A', value: 100 }] }]}
-          hideLegend
-        />,
-      );
-
-      expect(container.querySelector(`.${pieClasses.root}`)).toBeTruthy();
-    });
-
-    it('should apply series class to each series group', () => {
-      const { container } = render(
-        <PieChart
-          height={100}
-          width={100}
-          series={[{ data: [{ id: 'A', value: 100 }] }, { data: [{ id: 'B', value: 200 }] }]}
-          hideLegend
-        />,
-      );
-
-      const seriesGroups = container.querySelectorAll(`.${pieClasses.series}`);
-      expect(seriesGroups.length).to.equal(2);
-    });
-
-    it('should apply arc class to each pie arc element', () => {
-      const { container } = render(
-        <PieChart
-          height={100}
-          width={100}
-          series={[
-            {
-              data: [
-                { id: 'A', value: 100 },
-                { id: 'B', value: 200 },
-              ],
-            },
-          ]}
-          hideLegend
-        />,
-      );
-
-      const arcs = container.querySelectorAll(`.${pieClasses.arc}`);
-      expect(arcs.length).to.equal(2);
-    });
-
-    it('should apply arcLabel class to each pie arc label element', () => {
-      const { container } = render(
-        <PieChart
-          height={100}
-          width={100}
-          series={[
-            {
-              arcLabel: 'value',
-              data: [
-                { id: 'A', value: 100 },
-                { id: 'B', value: 200 },
-              ],
-            },
-          ]}
-          hideLegend
-        />,
-      );
-
-      const arcLabels = container.querySelectorAll(`.${pieClasses.arcLabel}`);
-      expect(arcLabels.length).to.equal(2);
-    });
-
-    it('should apply focusIndicator class to the focused arc', async () => {
-      const { container, user } = render(
-        <PieChart
-          height={100}
-          width={100}
-          series={[
-            {
-              data: [
-                { id: 0, value: 10 },
-                { id: 1, value: 20 },
-              ],
-            },
-          ]}
-          hideLegend
-        />,
-      );
-
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
-
-      // by default does not show focus indicator
-      expect(container.querySelector(`.${pieClasses.focusIndicator}`)).not.toBeTruthy();
-
-      // focus the chart and navigate
-      await user.click(layerContainer);
-      await user.keyboard('{ArrowRight}');
-
-      expect(container.querySelector(`.${pieClasses.focusIndicator}`)).toBeTruthy();
-    });
-  });
-
   it('should show focus indicator when navigating with keyboard', async () => {
     const { container, user } = render(
       <PieChart
+        enableKeyboardNavigation
+        data-testid="chart-keyboard-navigation"
         height={100}
         width={100}
         series={[
@@ -187,15 +94,11 @@ describe('<PieChart />', () => {
       />,
     );
 
-    const layerContainer = container.querySelector<HTMLElement>(
-      `.${chartsSvgLayerClasses.root}`,
-    )!.parentElement!;
-
     // by default does not show focus indicator
     expect(container.querySelector(`.${pieArcClasses.focusIndicator}`)).not.toBeTruthy();
 
     // focus the chart
-    await user.click(layerContainer);
+    await act(async () => screen.getByTestId('chart-keyboard-navigation').focus());
 
     // Focus the first arc
     await user.keyboard('{ArrowRight}');
@@ -213,6 +116,8 @@ describe('<PieChart />', () => {
   it('should only show focus indicator for the focused series', async () => {
     const { container, user } = render(
       <PieChart
+        enableKeyboardNavigation
+        data-testid="chart-focus-series"
         height={400}
         width={400}
         series={[
@@ -239,12 +144,8 @@ describe('<PieChart />', () => {
       />,
     );
 
-    const layerContainer = container.querySelector<HTMLElement>(
-      `.${chartsSvgLayerClasses.root}`,
-    )!.parentElement!;
-
     // focus the chart
-    await user.click(layerContainer);
+    await act(async () => screen.getByTestId('chart-focus-series').focus());
 
     // Focus the first arc of series-1
     await user.keyboard('{ArrowRight}');
@@ -266,67 +167,5 @@ describe('<PieChart />', () => {
     // Should still only have one focus indicator
     const focusIndicators3 = container.querySelectorAll(`.${pieArcClasses.focusIndicator}`);
     expect(focusIndicators3.length).to.equal(1);
-  });
-
-  describe('theme style overrides', () => {
-    it.skipIf(isJSDOM)('should apply MuiPieArcPlot style overrides from the theme', () => {
-      const theme = createTheme({
-        components: {
-          MuiPieArcPlot: {
-            styleOverrides: {
-              root: {
-                strokeDashoffset: 10,
-              },
-            },
-          },
-        },
-      });
-
-      render(
-        <ThemeProvider theme={theme}>
-          <PieChart
-            height={100}
-            width={100}
-            series={[{ data: [{ id: 'A', value: 100 }] }]}
-            hideLegend
-          />
-        </ThemeProvider>,
-      );
-
-      const arc = document.querySelector<SVGElement>(`.${pieClasses.arc}`);
-      expect(arc).not.to.equal(null);
-      const pieArcPlotRoot = arc!.parentElement;
-      expect(pieArcPlotRoot).toHaveComputedStyle({ strokeDashoffset: '10px' });
-    });
-
-    it.skipIf(isJSDOM)('should apply MuiPieArcLabelPlot style overrides from the theme', () => {
-      const theme = createTheme({
-        components: {
-          MuiPieArcLabelPlot: {
-            styleOverrides: {
-              root: {
-                strokeDashoffset: 10,
-              },
-            },
-          },
-        },
-      });
-
-      render(
-        <ThemeProvider theme={theme}>
-          <PieChart
-            height={100}
-            width={100}
-            series={[{ arcLabel: 'value', data: [{ id: 'A', value: 100 }] }]}
-            hideLegend
-          />
-        </ThemeProvider>,
-      );
-
-      const arcLabel = document.querySelector<SVGElement>(`.${pieClasses.arcLabel}`);
-      expect(arcLabel).not.to.equal(null);
-      const pieArcLabelPlotRoot = arcLabel!.parentElement;
-      expect(pieArcLabelPlotRoot).toHaveComputedStyle({ strokeDashoffset: '10px' });
-    });
   });
 });

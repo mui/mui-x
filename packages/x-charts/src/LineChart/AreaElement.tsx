@@ -7,41 +7,24 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlightState } from '../hooks/useItemHighlightState';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
 import { type SeriesId } from '../models/seriesType/common';
-import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
-/**
- * @deprecated Use `LineClasses` instead.
- */
 export interface AreaElementClasses {
-  /**
-   * Styles applied to the root element.
-   * @deprecated Use `lineClasses.area` instead.
-   */
+  /** Styles applied to the root element. */
   root: string;
-  /**
-   * Styles applied to the root element when highlighted.
-   * @deprecated Use `[data-highlighted]` selector instead.
-   */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
-  /**
-   * Styles applied to the root element when faded.
-   * @deprecated Use `[data-faded]` selector instead.
-   */
+  /** Styles applied to the root element when faded. */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${areaElementClasses.series}-${seriesId}`.
-   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }
 
-/**
- * @deprecated Use `LineClassKey` instead.
- */
 export type AreaElementClassKey = keyof AreaElementClasses;
 
 export interface AreaElementOwnerState {
@@ -53,16 +36,10 @@ export interface AreaElementOwnerState {
   classes?: Partial<AreaElementClasses>;
 }
 
-/**
- * @deprecated Use `getLineUtilityClass` instead.
- */
 export function getAreaElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiAreaElement', slot);
 }
 
-/**
- * @deprecated Use `lineClasses` instead.
- */
 export const areaElementClasses: AreaElementClasses = generateUtilityClasses('MuiAreaElement', [
   'root',
   'highlighted',
@@ -70,10 +47,7 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
   'series',
 ]);
 
-/**
- * @deprecated Use `useUtilityClasses` instead.
- */
-const useDeprecatedUtilityClasses = (ownerState: AreaElementOwnerState) => {
+const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
     root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
@@ -134,11 +108,10 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
-  const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
-  const interactionProps = useInteractionItemProps(identifier);
-  const highlightState = useItemHighlightState(identifier);
-  const isHighlighted = highlightState === 'highlighted';
-  const isFaded = highlightState === 'faded';
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId });
+  const { isFaded, isHighlighted } = useItemHighlighted({
+    seriesId,
+  });
 
   const ownerState = {
     seriesId,
@@ -148,8 +121,7 @@ function AreaElement(props: AreaElementProps) {
     isFaded,
     isHighlighted,
   };
-  const classes = useLineUtilityClasses();
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
+  const classes = useUtilityClasses(ownerState);
 
   const Area = slots?.area ?? AnimatedArea;
   const areaProps = useSlotProps({
@@ -159,11 +131,8 @@ function AreaElement(props: AreaElementProps) {
       ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
-      'data-highlighted': isHighlighted || undefined,
-      'data-faded': isFaded || undefined,
-      'data-series-id': seriesId,
     },
-    className: `${classes.area} ${deprecatedClasses.root}`,
+    className: classes.root,
     ownerState,
   });
 

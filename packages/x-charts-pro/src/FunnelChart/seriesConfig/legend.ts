@@ -1,4 +1,4 @@
-import { type SeriesLegendItemParams } from '@mui/x-charts/ChartsLegend';
+import { type LegendItemParams } from '@mui/x-charts/ChartsLegend';
 import { type LegendGetter, getLabel } from '@mui/x-charts/internals';
 
 const legendGetter: LegendGetter<'funnel'> = (params) => {
@@ -25,7 +25,7 @@ const legendGetter: LegendGetter<'funnel'> = (params) => {
     });
 
     return acc;
-  }, [] as SeriesLegendItemParams[]);
+  }, [] as LegendItemParams[]);
 };
 
 export default legendGetter;

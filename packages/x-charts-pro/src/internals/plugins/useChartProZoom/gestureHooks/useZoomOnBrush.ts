@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getChartPoint,
+  getSVGPoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -16,10 +16,10 @@ export const useZoomOnBrush = (
   {
     store,
     instance,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
+    svgRef,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<(prev: ZoomData[]) => ZoomData[]>,
 ) => {
-  const { chartsLayerContainerRef } = instance;
   const drawingArea = store.use(selectorChartDrawingArea);
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const config = store.use(selectorZoomInteractionConfig, 'brush' as const);
@@ -27,29 +27,12 @@ export const useZoomOnBrush = (
   const isZoomOnBrushEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
-    if ('setZoomBrushEnabled' in instance) {
-      instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
-    }
+    instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
   }, [isZoomOnBrushEnabled, instance]);
-
-  React.useEffect(() => {
-    if (!isZoomOnBrushEnabled) {
-      return;
-    }
-
-    instance.updateZoomInteractionListeners('brush', {
-      requiredKeys: config!.requiredKeys,
-      pointerMode: config!.pointerMode,
-      pointerOptions: {
-        mouse: config!.mouse,
-        touch: config!.touch,
-      },
-    });
-  }, [isZoomOnBrushEnabled, config, instance]);
 
   // Zoom on brush
   React.useEffect(() => {
-    const element = chartsLayerContainerRef.current;
+    const element = svgRef.current;
     if (element === null || !isZoomOnBrushEnabled) {
       return () => {};
     }
@@ -57,11 +40,11 @@ export const useZoomOnBrush = (
     const handleBrushEnd = (event: PanEvent) => {
       // Convert the brush rectangle to zoom percentages for each axis
       setZoomDataCallback((prev) => {
-        const startPoint = getChartPoint(element, {
+        const startPoint = getSVGPoint(element, {
           clientX: event.detail.initialCentroid.x,
           clientY: event.detail.initialCentroid.y,
         });
-        const endPoint = getChartPoint(element, {
+        const endPoint = getSVGPoint(element, {
           clientX: event.detail.centroid.x,
           clientY: event.detail.centroid.y,
         });
@@ -125,7 +108,7 @@ export const useZoomOnBrush = (
       brushEndHandler.cleanup();
     };
   }, [
-    chartsLayerContainerRef,
+    svgRef,
     drawingArea,
     isZoomOnBrushEnabled,
     optionsLookup,

@@ -1,6 +1,5 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { LicenseInfo } from '@mui/x-license';
-import { clearLicenseStatusCache } from '@mui/x-license/internals';
+import { clearLicenseStatusCache, LicenseInfo } from '@mui/x-license';
 import { BarChartPro } from './BarChartPro';
 
 describe('<BarChartPro /> - License', () => {

@@ -1,5 +1,4 @@
 import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
-import { type SeriesId } from '../../../../models';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type UseChartSeriesSignature } from './useChartSeries.types';
 import { applySeriesLayout, applySeriesProcessors } from './processSeries';
@@ -50,32 +49,5 @@ export const selectorChartSeriesLayout = createSelectorMemoized(
   selectorChartDrawingArea,
   function selectorChartSeriesLayout(processedSeries, seriesConfig, drawingArea) {
     return applySeriesLayout(processedSeries, seriesConfig, drawingArea);
-  },
-);
-
-/**
- * Returns a function that returns the series configuration for a given series id.
- */
-export const selectorChartSeriesConfigGetter = createSelectorMemoized(
-  selectorChartSeriesConfig,
-  selectorChartSeriesProcessed,
-  (seriesConfig, processedSeries) => {
-    return function getSeriesConfigById(seriesId: SeriesId) {
-      for (const type in processedSeries) {
-        if (!Object.hasOwn(processedSeries, type)) {
-          continue;
-        }
-
-        const seriesGroup = processedSeries[type as keyof typeof processedSeries];
-        if (seriesGroup?.series) {
-          const item = seriesGroup.series[seriesId];
-          if (item) {
-            return seriesConfig[type as keyof typeof processedSeries];
-          }
-        }
-      }
-
-      return null;
-    };
   },
 );

@@ -1,6 +1,5 @@
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
-import { LicenseInfo } from '@mui/x-license';
-import { clearLicenseStatusCache } from '@mui/x-license/internals';
+import { clearLicenseStatusCache, LicenseInfo } from '@mui/x-license';
 import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { Heatmap } from './Heatmap';
@@ -117,9 +116,7 @@ describe('Heatmap - onItemClick', () => {
     expect(onItemClick).toHaveBeenLastCalledWith(expect.anything(), {
       type: 'heatmap',
       seriesId: '0',
-      value: 6,
-      xIndex: 1,
-      yIndex: 2,
+      dataIndex: 5,
     });
   });
 });

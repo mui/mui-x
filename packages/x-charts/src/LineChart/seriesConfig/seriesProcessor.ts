@@ -9,17 +9,6 @@ import {
 import { type SeriesId } from '../../models/seriesType/common';
 import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import type { DefaultizedLineSeriesType } from '../../models';
-import type { MarkShape } from '../../models/seriesType/line';
-
-const defaultShapes: MarkShape[] = [
-  'circle',
-  'square',
-  'diamond',
-  'cross',
-  'star',
-  'triangle',
-  'wye',
-];
 
 const lineValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedLineSeriesType['valueFormatter'];
@@ -28,25 +17,24 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
-  const idToIndex: Map<SeriesId, number> = new Map();
   // Create a data set with format adapted to d3
   const d3Dataset: DatasetType<number | null> = (dataset as DatasetType<number | null>) ?? [];
-  seriesOrder.forEach((id, seriesIndex) => {
-    idToIndex.set(id, seriesIndex);
+  seriesOrder.forEach((id) => {
     const data = series[id].data;
     if (data !== undefined) {
-      data.forEach((value, dataIndex) => {
-        if (d3Dataset.length <= dataIndex) {
+      data.forEach((value, index) => {
+        if (d3Dataset.length <= index) {
           d3Dataset.push({ [id]: value });
         } else {
-          d3Dataset[dataIndex][id] = value;
+          d3Dataset[index][id] = value;
         }
       });
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
-        `MUI X Charts: Line series with id="${id}" has no data. ` +
-          'The chart cannot render this series without data. ' +
-          'Provide a data property to the series or use the dataset prop.',
+        [
+          `MUI X Charts: line series with id='${id}' has no data.`,
+          'Either provide a data property to the series or use the dataset prop.',
+        ].join('\n'),
       );
     }
 
@@ -56,9 +44,10 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
 
         if (!dataKey) {
           throw new Error(
-            `MUI X Charts: Line series with id="${id}" has no data and no dataKey. ` +
-              'When using the dataset prop, each series must have a dataKey to identify which dataset column to use. ' +
-              'Add a dataKey property to the series configuration.',
+            [
+              `MUI X Charts: line series with id='${id}' has no data and no dataKey.`,
+              'You must provide a dataKey when using the dataset prop.',
+            ].join('\n'),
           );
         }
 
@@ -66,8 +55,10 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
           const value = entry[dataKey];
           if (value != null && typeof value !== 'number') {
             warnOnce(
-              `MUI X Charts: your dataset key "${dataKey}" is used for plotting lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
-Line plots only support numeric and null values.`,
+              [
+                `MUI X Charts: your dataset key "${dataKey}" is used for plotting lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.`,
+                'Line plots only support numeric and null values.',
+              ].join('\n'),
             );
           }
         });
@@ -120,9 +111,8 @@ Line plots only support numeric and null values.`,
         : series[id].data!;
       const hidden = !isItemVisible?.({ type: 'line', seriesId: id });
       completedSeries[id] = {
-        labelMarkType: 'line+mark',
+        labelMarkType: 'line',
         ...series[id],
-        shape: series[id].shape ?? defaultShapes[(idToIndex.get(id) ?? 0) % defaultShapes.length],
         data,
         valueFormatter: series[id].valueFormatter ?? lineValueFormatter,
         hidden,

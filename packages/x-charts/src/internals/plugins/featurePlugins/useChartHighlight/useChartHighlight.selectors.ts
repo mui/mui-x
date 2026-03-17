@@ -1,48 +1,34 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import type { HighlightItemIdentifierWithType } from '../../../../models/seriesType';
-import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
-import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type ChartRootSelector } from '../../utils/selectors';
-import { type UseChartHighlightSignature } from './useChartHighlight.types';
+import { type HighlightItemData, type UseChartHighlightSignature } from './useChartHighlight.types';
+import { type HighlightScope } from './highlightConfig.types';
+import { createIsHighlighted } from './createIsHighlighted';
+import { createIsFaded } from './createIsFaded';
 import {
-  getSeriesHighlightedDataIndex,
-  getSeriesUnfadedDataIndex,
+  getSeriesHighlightedItem,
+  getSeriesUnfadedItem,
   isSeriesFaded,
   isSeriesHighlighted,
 } from './highlightStates';
 import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
-import {
-  type ChartSeriesConfig,
-  selectorChartSeriesConfig,
-} from '../../corePlugins/useChartSeriesConfig';
-import { type HighlightState } from '../../../../hooks/useItemHighlightState';
 
-const selectHighlight: ChartRootSelector<UseChartHighlightSignature<ChartSeriesType>> = (state) =>
-  state.highlight;
+const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) => state.highlight;
 
-type HighlightLookUp<SeriesType extends ChartSeriesType> = {
-  [K in SeriesType]?: Map<SeriesId, HighlightScope<K>>;
-};
-
-export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
+export const selectorChartsHighlightScopePerSeriesId = createSelector(
   selectorChartSeriesProcessed,
-  (processedSeries): HighlightLookUp<ChartSeriesType> => {
-    const map: HighlightLookUp<ChartSeriesType> = {};
+  (processedSeries): Map<SeriesId, Partial<HighlightScope> | undefined> => {
+    const map = new Map<SeriesId, Partial<HighlightScope> | undefined>();
 
-    (Object.keys(processedSeries) as ChartSeriesType[]).forEach(
-      <SeriesType extends ChartSeriesType>(seriesType: SeriesType) => {
-        map[seriesType] = new Map();
-        const seriesData = processedSeries[seriesType as ChartSeriesType];
-        seriesData?.seriesOrder?.forEach((seriesId) => {
-          const seriesItem = seriesData?.series[seriesId];
-          if (seriesItem?.highlightScope !== undefined) {
-            map[seriesType]?.set(seriesId, seriesItem.highlightScope);
-          }
-        });
-      },
-    );
+    Object.keys(processedSeries).forEach((seriesType) => {
+      const seriesData = processedSeries[seriesType as ChartSeriesType];
+      seriesData?.seriesOrder?.forEach((seriesId) => {
+        const seriesItem = seriesData?.series[seriesId];
+        map.set(seriesId, seriesItem?.highlightScope);
+      });
+    });
     return map;
   },
 );
@@ -60,16 +46,11 @@ export const selectorChartsHighlightedItem = createSelectorMemoized(
 export const selectorChartsHighlightScope = createSelector(
   selectorChartsHighlightScopePerSeriesId,
   selectorChartsHighlightedItem,
-  function selectorChartsHighlightScope<SeriesType extends ChartSeriesType>(
-    seriesIdToHighlightScope: HighlightLookUp<ChartSeriesType>,
-    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
-  ): HighlightScope<SeriesType> | null {
+  function selectorChartsHighlightScope(seriesIdToHighlightScope, highlightedItem) {
     if (!highlightedItem) {
       return null;
     }
-    const highlightScope = seriesIdToHighlightScope[highlightedItem.type]?.get(
-      highlightedItem.seriesId,
-    );
+    const highlightScope = seriesIdToHighlightScope.get(highlightedItem.seriesId);
 
     if (highlightScope === undefined) {
       return null;
@@ -78,128 +59,59 @@ export const selectorChartsHighlightScope = createSelector(
     return highlightScope;
   },
 );
-const alwaysNone = (): HighlightState => 'none';
 
-const selectorChartsHighlightStateCallbackImpl = createSelectorMemoized(
+export const selectorChartsIsHighlightedCallback = createSelectorMemoized(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  selectorChartSeriesConfig,
-  function selectorChartsHighlightStateCallbackCombiner<SeriesType extends ChartSeriesType>(
-    highlightScope: HighlightScope<SeriesType> | null,
-    highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null,
-    seriesConfig: ChartSeriesConfig<SeriesType>,
-  ): (
-    item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
-  ) => HighlightState {
-    if (highlightedItem === null || highlightScope === null) {
-      return alwaysNone;
-    }
-    const config = seriesConfig[highlightedItem.type as keyof typeof seriesConfig];
-    const isHighlighted = config.isHighlightedCreator(highlightScope, highlightedItem);
-    const isFaded = config.isFadedCreator(highlightScope, highlightedItem);
-    return (item) => {
-      if (isHighlighted(item)) {
-        return 'highlighted';
-      }
-      if (isFaded(item)) {
-        return 'faded';
-      }
-      return 'none';
-    };
-  },
+  createIsHighlighted,
 );
 
-/**
- * Returns a callback to get the highlight state of an item.
- * Uses an explicit function declaration so that TypeScript preserves
- * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
- * allowing module augmentation from pro/premium packages to extend the accepted types.
- */
-export function selectorChartsHighlightStateCallback<SeriesType extends ChartSeriesType>(
-  state: Parameters<typeof selectorChartsHighlightStateCallbackImpl>[0],
-): (
-  item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
-) => HighlightState {
-  return selectorChartsHighlightStateCallbackImpl(state);
-}
-
-const selectorChartsHighlightStateImpl = createSelectorMemoized(
-  selectorChartsHighlightStateCallback,
-  function selectorChartsHighlightStateCombiner<SeriesType extends ChartSeriesType>(
-    getHighlightState: (
-      item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
-    ) => HighlightState,
-    item: HighlightItemIdentifierWithType<ComposableChartSeriesType<SeriesType>> | null,
-  ): HighlightState {
-    return getHighlightState(item);
-  },
+export const selectorChartsIsFadedCallback = createSelectorMemoized(
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
+  createIsFaded,
 );
 
-/**
- * Returns the highlight state of an item.
- * Uses an explicit function declaration so that TypeScript preserves
- * the `HighlightItemIdentifier<ChartSeriesType>` reference in `.d.ts` output,
- * allowing module augmentation from pro/premium packages to extend the accepted types.
- */
-export function selectorChartsHighlightState(
-  state: Parameters<typeof selectorChartsHighlightStateImpl>[0],
-  item: Parameters<typeof selectorChartsHighlightStateImpl>[1],
-): HighlightState {
-  return selectorChartsHighlightStateImpl(state, item);
-}
-
-// ==========================================================================================
-//
-// Selectors for a specific series
-//
-// Those selectors are for series with batch rendering (e.g., Scatter, Bar, Line)
-//
-// ==========================================================================================
+export const selectorChartsIsHighlighted = createSelector(
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
+  function selectorChartsIsHighlighted(
+    highlightScope,
+    highlightedItem,
+    item: HighlightItemData | null,
+  ) {
+    return createIsHighlighted(highlightScope, highlightedItem)(item);
+  },
+);
 
 export const selectorChartIsSeriesHighlighted = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  function selectorChartIsSeriesHighlighted<SeriesType extends ChartSeriesType>(
-    scope: Partial<HighlightScope<SeriesType>> | null,
-    item: HighlightItemIdentifierWithType<SeriesType> | null,
-    seriesId: SeriesId,
-  ) {
-    return isSeriesHighlighted(scope, item, seriesId);
-  },
+  isSeriesHighlighted,
 );
 
 export const selectorChartIsSeriesFaded = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  function selectorChartIsSeriesFaded<SeriesType extends ChartSeriesType>(
-    scope: Partial<HighlightScope<SeriesType>> | null,
-    item: HighlightItemIdentifierWithType<SeriesType> | null,
-    seriesId: SeriesId,
-  ) {
-    return isSeriesFaded(scope, item, seriesId);
-  },
+  isSeriesFaded,
 );
 
 export const selectorChartSeriesUnfadedItem = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  function selectorChartSeriesUnfadedItem<SeriesType extends ChartSeriesType>(
-    scope: Partial<HighlightScope<SeriesType>> | null,
-    item: HighlightItemIdentifierWithType<SeriesType> | null,
-    seriesId: SeriesId,
-  ) {
-    return getSeriesUnfadedDataIndex(scope, item, seriesId);
-  },
+  getSeriesUnfadedItem,
 );
 
 export const selectorChartSeriesHighlightedItem = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  function selectorChartSeriesHighlightedItem<SeriesType extends ChartSeriesType>(
-    scope: Partial<HighlightScope<SeriesType>> | null,
-    item: HighlightItemIdentifierWithType<SeriesType> | null,
-    seriesId: SeriesId,
-  ) {
-    return getSeriesHighlightedDataIndex(scope, item, seriesId);
+  getSeriesHighlightedItem,
+);
+
+export const selectorChartsIsFaded = createSelector(
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
+  function selectorChartsIsFaded(highlightScope, highlightedItem, item: HighlightItemData | null) {
+    return createIsFaded(highlightScope, highlightedItem)(item);
   },
 );

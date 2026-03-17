@@ -1,5 +1,4 @@
 'use client';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
   PieArcPlot,
@@ -21,7 +20,6 @@ export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 export interface PiePlotSlotProps extends PieArcPlotSlotProps, PieArcLabelPlotSlotProps {}
 
 export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'onItemClick'> {
-  className?: string;
   /**
    * Overridable component slots.
    * @default {}
@@ -45,7 +43,7 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
  * - [PiePlot API](https://mui.com/x/api/charts/pie-plot/)
  */
 function PiePlot(props: PiePlotProps) {
-  const { skipAnimation: inSkipAnimation, slots, slotProps, onItemClick, className } = props;
+  const { skipAnimation: inSkipAnimation, slots, slotProps, onItemClick } = props;
   const seriesData = usePieSeriesContext();
   const seriesLayout = usePieSeriesLayout();
   const skipAnimation = useSkipAnimation(inSkipAnimation);
@@ -58,7 +56,7 @@ function PiePlot(props: PiePlotProps) {
   const { series, seriesOrder } = seriesData;
 
   return (
-    <g className={clsx(classes.root, className)}>
+    <g>
       {seriesOrder.map((seriesId) => {
         const { cornerRadius, paddingAngle, data, highlighted, faded } = series[seriesId];
 

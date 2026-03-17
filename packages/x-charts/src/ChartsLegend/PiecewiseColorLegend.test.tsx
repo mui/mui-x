@@ -1,6 +1,6 @@
 import { createRenderer, describeConformance, screen } from '@mui/internal-test-utils';
 import { PiecewiseColorLegend, piecewiseColorLegendClasses } from '@mui/x-charts/ChartsLegend';
-import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
+import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -13,7 +13,7 @@ describe('<PiecewiseColorLegend />', () => {
     render: (node) =>
       render(node, {
         wrapper: ({ children }) => (
-          <ChartsDataProvider
+          <ChartDataProvider
             height={50}
             width={50}
             series={[
@@ -37,7 +37,7 @@ describe('<PiecewiseColorLegend />', () => {
             {/* https://github.com/mui/material-ui/blob/c0620e333641deda56f3cd68c7c3736098ee818c/packages-internal/test-utils/src/describeConformance.tsx#L257 */}
             {children}
             <ChartsSurface />
-          </ChartsDataProvider>
+          </ChartDataProvider>
         ),
       }),
     muiName: 'MuiPiecewiseColorLegend',
@@ -51,7 +51,7 @@ describe('<PiecewiseColorLegend />', () => {
 
   it('should apply inline-start class when labelPosition="inline-start"', () => {
     render(
-      <ChartsDataProvider
+      <ChartDataProvider
         height={50}
         width={50}
         series={[
@@ -73,7 +73,7 @@ describe('<PiecewiseColorLegend />', () => {
       >
         <PiecewiseColorLegend labelPosition="inline-start" />
         <ChartsSurface />
-      </ChartsDataProvider>,
+      </ChartDataProvider>,
     );
 
     expect(screen.getByRole('list').className).contains(piecewiseColorLegendClasses.inlineStart);
@@ -81,7 +81,7 @@ describe('<PiecewiseColorLegend />', () => {
 
   it('should apply inline-end class when labelPosition="inline-end"', () => {
     render(
-      <ChartsDataProvider
+      <ChartDataProvider
         height={50}
         width={50}
         series={[
@@ -103,7 +103,7 @@ describe('<PiecewiseColorLegend />', () => {
       >
         <PiecewiseColorLegend labelPosition="inline-end" />
         <ChartsSurface />
-      </ChartsDataProvider>,
+      </ChartDataProvider>,
     );
 
     expect(screen.getByRole('list').className).contains(piecewiseColorLegendClasses.inlineEnd);

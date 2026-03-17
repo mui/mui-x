@@ -115,12 +115,6 @@ export const ptBRLocaleText: Partial<ChartsLocaleText> = {
   chartConfigurationOptionStepAfter: 'Passo Posterior',
   chartConfigurationOptionBumpX: 'Colisão X',
   chartConfigurationOptionBumpY: 'Colisão Y',
-
-  // OHLC/Candlestick
-  // open: 'Open',
-  // high: 'High',
-  // low: 'Low',
-  // close: 'Close',
 };
 
 export const ptBR = getChartsLocalization(ptBRLocaleText);

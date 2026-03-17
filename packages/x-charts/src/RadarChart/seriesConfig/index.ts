@@ -9,10 +9,6 @@ import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
-import {
-  createIsHighlighted,
-  createIsFaded,
-} from '../../internals/plugins/featurePlugins/useChartHighlight';
 
 export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   colorProcessor: getColor,
@@ -27,6 +23,4 @@ export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
-  isHighlightedCreator: createIsHighlighted,
-  isFadedCreator: createIsFaded,
 };

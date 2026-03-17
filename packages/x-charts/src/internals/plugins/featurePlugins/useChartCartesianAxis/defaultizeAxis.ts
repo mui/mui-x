@@ -63,11 +63,7 @@ export function defaultizeXAxis(
     }
 
     if (dataset === undefined) {
-      throw new Error(
-        'MUI X Charts: The x-axis uses `dataKey` but no `dataset` is provided. ' +
-          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
-          'Either provide a dataset prop or use the data property directly on the x-axis.',
-      );
+      throw new Error(`MUI X Charts: x-axis uses \`dataKey\` but no \`dataset\` is provided.`);
     }
 
     // If `dataKey` is provided
@@ -128,11 +124,7 @@ export function defaultizeYAxis(
     }
 
     if (dataset === undefined) {
-      throw new Error(
-        'MUI X Charts: The y-axis uses `dataKey` but no `dataset` is provided. ' +
-          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
-          'Either provide a dataset prop or use the data property directly on the y-axis.',
-      );
+      throw new Error(`MUI X Charts: y-axis uses \`dataKey\` but no \`dataset\` is provided.`);
     }
 
     // If `dataKey` is provided

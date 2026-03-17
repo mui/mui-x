@@ -35,9 +35,6 @@ function ChartsAxis(props: ChartsAxisProps) {
   const { xAxisIds, xAxis } = useXAxes();
   const { yAxisIds, yAxis } = useYAxes();
 
-  const XAxis = slots?.xAxis ?? ChartsXAxis;
-  const YAxis = slots?.yAxis ?? ChartsYAxis;
-
   return (
     <React.Fragment>
       {xAxisIds.map((axisId) => {
@@ -45,14 +42,14 @@ function ChartsAxis(props: ChartsAxisProps) {
           return null;
         }
 
-        return <XAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
+        return <ChartsXAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
       })}
       {yAxisIds.map((axisId) => {
         if (!yAxis[axisId].position || yAxis[axisId].position === 'none') {
           return null;
         }
 
-        return <YAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
+        return <ChartsYAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
       })}
     </React.Fragment>
   );

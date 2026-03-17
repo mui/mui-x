@@ -9,7 +9,7 @@ describe.skipIf(isJSDOM)('<ChartsSurface />', () => {
   const { render } = createRenderer();
 
   it('should pass ref when it is added directly to component', () => {
-    const ref = React.createRef<HTMLDivElement>();
+    const ref = React.createRef<SVGSVGElement>();
 
     render(
       <ChartProvider pluginParams={{ width: 100, height: 100, series: [] }}>
@@ -19,9 +19,9 @@ describe.skipIf(isJSDOM)('<ChartsSurface />', () => {
       </ChartProvider>,
     );
 
-    expect(ref.current instanceof HTMLDivElement, 'ref is a HTMLDivElement').to.equal(true);
+    expect(ref.current instanceof SVGElement, 'ref is a SVGElement').to.equal(true);
     expect(
-      ref.current?.lastElementChild?.lastElementChild instanceof SVGRectElement,
+      ref.current?.lastElementChild instanceof SVGRectElement,
       'ref last child is a SVGRectElement',
     ).to.equal(true);
   });

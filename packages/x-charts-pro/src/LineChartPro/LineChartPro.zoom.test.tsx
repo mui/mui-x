@@ -4,7 +4,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 import { LineChartPro } from './LineChartPro';
-import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const getAxisTickValues = (axis: 'x' | 'y', container: HTMLElement): string[] => {
   const axisData = Array.from(
@@ -58,25 +58,23 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
-    const layerContainer = container.querySelector<HTMLElement>(
-      `.${chartsSvgLayerClasses.root}`,
-    )!.parentElement!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     await user.pointer([
       {
-        target: layerContainer,
+        target: svg,
         coords: { x: 15, y: 50 },
       },
     ]);
 
-    fireEvent.wheel(layerContainer, { deltaY: -10, clientX: 15, clientY: 50 });
+    fireEvent.wheel(svg, { deltaY: -10, clientX: 15, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
     expect(onZoomChange.mock.calls.length).to.equal(1);
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C']);
 
     // scroll back
-    fireEvent.wheel(layerContainer, { deltaY: 10, clientX: 15, clientY: 50 });
+    fireEvent.wheel(svg, { deltaY: 10, clientX: 15, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
     expect(onZoomChange.mock.calls.length).to.equal(2);
@@ -86,19 +84,19 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // TODO: Fix this test. When zooming on the right side, D should stay visible and A disappear.
     await user.pointer([
       {
-        target: layerContainer,
+        target: svg,
         coords: { x: 90, y: 50 },
       },
     ]);
 
-    fireEvent.wheel(layerContainer, { deltaY: -10, clientX: 90, clientY: 50 });
+    fireEvent.wheel(svg, { deltaY: -10, clientX: 90, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
     expect(onZoomChange.mock.calls.length).to.equal(3);
     expect(getAxisTickValues('x', container)).to.deep.equal(['B', 'C']);
 
     // scroll back
-    fireEvent.wheel(layerContainer, { deltaY: 10, clientX: 90, clientY: 50 });
+    fireEvent.wheel(svg, { deltaY: 10, clientX: 90, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
     expect(onZoomChange.mock.calls.length).to.equal(4);
@@ -119,25 +117,23 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
       expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = container.querySelector(CHART_SELECTOR)!;
 
       // we drag one position so C should be visible
       await user.pointer([
         {
           keys: `[${pointerName}>]`,
-          target: layerContainer,
+          target: svg,
           coords: { x: 15, y: 20 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
-          target: layerContainer,
+          target: svg,
           coords: { x: 135, y: 20 },
         },
         {
           keys: `[/${pointerName}]`,
-          target: layerContainer,
+          target: svg,
           coords: { x: 135, y: 20 },
         },
       ]);
@@ -151,17 +147,17 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       await user.pointer([
         {
           keys: `[${pointerName}>]`,
-          target: layerContainer,
+          target: svg,
           coords: { x: 15, y: 20 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
-          target: layerContainer,
+          target: svg,
           coords: { x: 400, y: 20 },
         },
         {
           keys: `[/${pointerName}]`,
-          target: layerContainer,
+          target: svg,
           coords: { x: 400, y: 20 },
         },
       ]);
@@ -250,39 +246,37 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
-    const layerContainer = container.querySelector<HTMLElement>(
-      `.${chartsSvgLayerClasses.root}`,
-    )!.parentElement!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     await user.pointer([
       {
         keys: '[TouchA>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 55, y: 45 },
       },
       {
         keys: '[TouchB>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 45, y: 55 },
       },
       {
         pointerName: 'TouchA',
-        target: layerContainer,
+        target: svg,
         coords: { x: 65, y: 25 },
       },
       {
         pointerName: 'TouchB',
-        target: layerContainer,
+        target: svg,
         coords: { x: 25, y: 65 },
       },
       {
         keys: '[/TouchA]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 65, y: 25 },
       },
       {
         keys: '[/TouchB]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 25, y: 65 },
       },
     ]);
@@ -307,34 +301,32 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
-    const layerContainer = container.querySelector<HTMLElement>(
-      `.${chartsSvgLayerClasses.root}`,
-    )!.parentElement!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     // Perform tap and drag gesture - tap once, then drag vertically up to zoom in
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[/MouseLeft]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[MouseLeft>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 50 },
       },
       {
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 80 },
       },
       {
         keys: '[/MouseLeft]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 80 },
       },
     ]);
@@ -360,35 +352,33 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
-    const layerContainer = container.querySelector<HTMLElement>(
-      `.${chartsSvgLayerClasses.root}`,
-    )!.parentElement!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     // Simulate the problematic scenario:
     // 1. Small drag down (positive deltaY) - this should zoom out slightly
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[/MouseLeft]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[MouseLeft>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 50 },
       },
       {
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 60 }, // Small drag down
       },
       {
         keys: '[/MouseLeft]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 60 },
       },
     ]);
@@ -402,26 +392,26 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[/MouseLeft]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 50 },
       },
       {
         keys: '[MouseLeft>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: 50 },
       },
       {
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: -1000 }, // Very large drag up
       },
       {
         keys: '[/MouseLeft]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 50, y: -1000 },
       },
     ]);
@@ -447,14 +437,12 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
-    const layerContainer = container.querySelector<HTMLElement>(
-      `.${chartsSvgLayerClasses.root}`,
-    )!.parentElement!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 15, y: 20 },
       },
     ]);
@@ -464,12 +452,12 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // we drag one position so C should be visible
     await user.pointer([
       {
-        target: layerContainer,
+        target: svg,
         coords: { x: 135, y: 20 },
       },
       {
         keys: '[/MouseLeft]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 135, y: 20 },
       },
     ]);
@@ -496,24 +484,22 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
-    const layerContainer = container.querySelector<HTMLElement>(
-      `.${chartsSvgLayerClasses.root}`,
-    )!.parentElement!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     // we drag one position so C should be visible
     await user.pointer([
       {
         keys: '[MouseLeft>]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 15, y: 20 },
       },
       {
-        target: layerContainer,
+        target: svg,
         coords: { x: 135, y: 20 },
       },
       {
         keys: '[/MouseLeft]',
-        target: layerContainer,
+        target: svg,
         coords: { x: 135, y: 20 },
       },
     ]);

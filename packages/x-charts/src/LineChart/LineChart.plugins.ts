@@ -38,7 +38,7 @@ export type LineChartPluginSignatures = [
   UseChartTooltipSignature<'line'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'line'>,
-  UseChartHighlightSignature<'line'>,
+  UseChartHighlightSignature,
   UseChartVisibilityManagerSignature<'line'>,
   UseChartKeyboardNavigationSignature,
 ];

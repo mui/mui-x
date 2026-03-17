@@ -116,12 +116,6 @@ export const enUSLocaleText: ChartsLocaleText = {
   chartConfigurationOptionStepAfter: 'Step After',
   chartConfigurationOptionBumpX: 'Bump X',
   chartConfigurationOptionBumpY: 'Bump Y',
-
-  // OHLC/Candlestick
-  open: 'Open',
-  high: 'High',
-  low: 'Low',
-  close: 'Close',
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;

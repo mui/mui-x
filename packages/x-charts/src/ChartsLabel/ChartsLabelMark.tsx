@@ -1,17 +1,14 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import clsx from 'clsx';
-import { styled, useTheme, type SxProps, type Theme } from '@mui/material/styles';
-import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import {
   type ChartsLabelMarkClasses,
   labelMarkClasses,
   useUtilityClasses,
 } from './labelMarkClasses';
-import type { MarkShape } from '../models/seriesType/line';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
-import { getSymbol } from '../internals/getSymbol';
 
 export interface ChartsLabelCustomMarkProps {
   className?: string;
@@ -23,7 +20,6 @@ export type ChartsLabelMarkType =
   | 'square'
   | 'circle'
   | 'line'
-  | 'line+mark'
   | React.ComponentType<ChartsLabelCustomMarkProps>;
 
 export interface ChartsLabelMarkProps {
@@ -32,12 +28,6 @@ export interface ChartsLabelMarkProps {
    * @default 'square'
    */
   type?: ChartsLabelMarkType;
-  /**
-   * The mark will be rendered as a combination of a line and the specified mark type.
-   * The line will be rendered first, followed by the mark.
-   * Only used if `type='line+mark'`.
-   */
-  markShape?: MarkShape;
   /**
    * The color of the mark.
    */
@@ -58,19 +48,16 @@ const Root = styled('div', {
     display: 'flex',
     width: 14,
     height: 14,
-    ['& > *']: {
-      width: '100%',
-      height: '100%',
-    },
     [`&.${labelMarkClasses.line}`]: {
       width: 16,
-      height: 8,
+      height: 'unset',
       alignItems: 'center',
-    },
-    [`&.${labelMarkClasses.lineAndMark}`]: {
-      width: 16,
-      height: 16,
-      alignItems: 'center',
+      [`.${labelMarkClasses.mask}`]: {
+        height: 4,
+        width: '100%',
+        borderRadius: 1,
+        overflow: 'hidden',
+      },
     },
     [`&.${labelMarkClasses.square}`]: {
       height: 13,
@@ -84,6 +71,14 @@ const Root = styled('div', {
     },
     svg: {
       display: 'block',
+    },
+    [`& .${labelMarkClasses.mask} > *`]: {
+      height: '100%',
+      width: '100%',
+    },
+    [`& .${labelMarkClasses.mask}`]: {
+      height: '100%',
+      width: '100%',
     },
   };
 });
@@ -99,10 +94,8 @@ const ChartsLabelMark = consumeThemeProps(
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelMark(props: ChartsLabelMarkProps, ref: React.Ref<HTMLDivElement>) {
-    const { type, markShape, color, className, classes, ...other } = props;
+    const { type, color, className, classes, ...other } = props;
     const Component = type;
-
-    const theme = useTheme();
 
     return (
       <Root
@@ -112,55 +105,19 @@ const ChartsLabelMark = consumeThemeProps(
         ref={ref}
         {...other}
       >
-        {typeof Component === 'function' ? (
-          <Component className={classes?.fill} color={color} />
-        ) : (
-          <React.Fragment>
-            {type === 'circle' && (
-              <svg viewBox="0 0 15 15">
-                <circle className={classes?.fill} r="7.5" cx="7.5" cy="7.5" fill={color} />
-              </svg>
-            )}
-            {type === 'line' && (
-              <svg viewBox="0 0 16 8" preserveAspectRatio="none">
-                <path
-                  className={classes?.fill}
-                  d="M 2 4 L 14 4"
-                  stroke={color}
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                />
-              </svg>
-            )}
-            {type === 'line+mark' && (
-              <svg viewBox="0 0 16 16" preserveAspectRatio="none">
-                <path
-                  className={classes?.fill}
-                  d="M 1 8 L 15 8"
-                  stroke={color}
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                />
-                {markShape && (
-                  <path
-                    d={d3Symbol(d3SymbolsFill[getSymbol(markShape)], 32)()!}
-                    transform="translate(8, 8) "
-                    stroke={color}
-                    strokeWidth={2}
-                    fill={(theme.vars || theme).palette.background.paper}
-                  />
-                )}
-              </svg>
-            )}
-            {type !== 'line' && type !== 'circle' && type !== 'line+mark' && (
-              <svg viewBox="0 0 13 13">
-                <rect className={classes?.fill} width="13" height="13" fill={color} />
-              </svg>
-            )}
-          </React.Fragment>
-        )}
+        <div className={classes?.mask}>
+          {typeof Component === 'function' ? (
+            <Component className={classes?.fill} color={color} />
+          ) : (
+            <svg viewBox="0 0 24 24" preserveAspectRatio={type === 'line' ? 'none' : undefined}>
+              {type === 'circle' ? (
+                <circle className={classes?.fill} r="12" cx="12" cy="12" fill={color} />
+              ) : (
+                <rect className={classes?.fill} width="24" height="24" fill={color} />
+              )}
+            </svg>
+          )}
+        </div>
       </Root>
     );
   },

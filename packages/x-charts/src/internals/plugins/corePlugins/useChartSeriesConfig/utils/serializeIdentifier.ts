@@ -10,18 +10,14 @@ import type { ChartSeriesConfig } from '../types';
  * @returns {string} A unique string representation of the identifier.
  * @throws Will throw an error if no serializer is found for the given series type.
  */
-export const serializeIdentifier = <
-  SeriesType extends ChartSeriesType,
-  U extends { type: SeriesType },
->(
-  seriesConfig: ChartSeriesConfig<SeriesType>,
+export const serializeIdentifier = <T extends ChartSeriesType, U extends { type: T }>(
+  seriesConfig: ChartSeriesConfig<T>,
   identifier: U,
 ): string => {
   const serializer = seriesConfig[identifier.type]?.identifierSerializer;
   if (!serializer) {
     throw new Error(
-      `MUI X Charts: No identifier serializer found for series type "${identifier.type}". ` +
-        'This internal error occurs when the series configuration is incomplete.',
+      `MUI X Charts: No identifier serializer found for series type "${identifier.type}".`,
     );
   }
   // @ts-expect-error identifierSerializer expects the full object,

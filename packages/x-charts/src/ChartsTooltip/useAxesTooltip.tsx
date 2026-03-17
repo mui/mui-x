@@ -10,6 +10,7 @@ import {
 import { type ComputedAxis, type PolarAxisDefaultized, type AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
 import { getLabel } from '../internals/getLabel';
+import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
 import {
   useRotationAxes,
@@ -28,11 +29,6 @@ import {
 import { type ChartsLabelMarkProps } from '../ChartsLabel';
 import { selectorChartsInteractionTooltipRotationAxes } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { isPolarSeriesType } from '../internals/isPolar';
-import { selectorIsItemVisibleGetter } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.selectors';
-import {
-  type ComposableCartesianChartSeriesType,
-  composableCartesianSeriesTypes,
-} from '../models/seriesType/composition';
 
 export interface UseAxesTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType | PolarChartSeriesType =
@@ -57,14 +53,13 @@ export interface UseAxesTooltipParams {
   directions?: ('x' | 'y' | 'rotation')[];
 }
 
-export interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
+interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
   seriesId: SeriesId;
   color: string;
   value: ChartsSeriesConfig[T]['valueType'];
   formattedValue: string;
   formattedLabel: string | null;
   markType: ChartsLabelMarkProps['type'];
-  markShape: ChartsLabelMarkProps['markShape'];
 }
 
 function defaultAxisTooltipConfig(
@@ -122,8 +117,6 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
 
   const colorProcessors = useColorProcessor();
 
-  const isItemVisible = store.use(selectorIsItemVisibleGetter);
-
   if (tooltipXAxes.length === 0 && tooltipYAxes.length === 0 && tooltipRotationAxes.length === 0) {
     return null;
   }
@@ -149,21 +142,14 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
   }
 
   Object.keys(series)
-    .filter((seriesType): seriesType is ComposableCartesianChartSeriesType =>
-      composableCartesianSeriesTypes.has(seriesType as ComposableCartesianChartSeriesType),
-    )
-    .forEach(<SeriesT extends ComposableCartesianChartSeriesType>(seriesType: SeriesT) => {
+    .filter(isCartesianSeriesType)
+    .forEach(<SeriesT extends CartesianChartSeriesType>(seriesType: SeriesT) => {
       const seriesOfType = series[seriesType];
       if (!seriesOfType) {
         return [];
       }
       return seriesOfType.seriesOrder.forEach((seriesId) => {
         const seriesToAdd = seriesOfType.series[seriesId]!;
-
-        // Skip hidden series (only if visibility manager is available)
-        if (isItemVisible && !isItemVisible({ type: seriesType, seriesId })) {
-          return;
-        }
 
         const providedXAxisId = seriesToAdd.xAxisId ?? defaultXAxis.id;
         const providedYAxisId = seriesToAdd.yAxisId ?? defaultYAxis.id;
@@ -198,10 +184,6 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
-            markShape:
-              'showMark' in seriesToAdd && seriesToAdd.showMark
-                ? (seriesToAdd.shape ?? 'circle')
-                : undefined,
           });
         }
       });
@@ -216,11 +198,6 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
       }
       return seriesOfType.seriesOrder.forEach((seriesId) => {
         const seriesToAdd = seriesOfType.series[seriesId]!;
-
-        // Skip hidden series (only if visibility manager is available)
-        if (isItemVisible && !isItemVisible({ type: seriesType, seriesId })) {
-          return;
-        }
 
         const providedRotationAxisId: AxisId | undefined =
           // @ts-expect-error Should be fixed when we introduce a polar series with a rotationAxisId
@@ -248,7 +225,6 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
-            markShape: 'showMark' in seriesToAdd && seriesToAdd.showMark ? 'circle' : undefined,
           });
         }
       });

@@ -7,8 +7,7 @@ import { type RadarGridProps } from './RadarGrid.types';
 import { CircularRadarGrid } from './CircularRadarGrid';
 import { SharpRadarStripes } from './SharpRadarStripes';
 import { CircularRadarStripes } from './CircularRadarStripes';
-import { useUtilityClasses as useDeprecatedUtilityClasses } from './radarGridClasses';
-import { useUtilityClasses } from '../radarClasses';
+import { useUtilityClasses } from './radarGridClasses';
 
 function RadarGrid(props: RadarGridProps) {
   const theme = useTheme();
@@ -21,13 +20,7 @@ function RadarGrid(props: RadarGridProps) {
   } = props;
   const gridData = useRadarGridData();
 
-  const newClasses = useUtilityClasses();
-  const deprecatedClasses = useDeprecatedUtilityClasses(props.classes);
-  const classes = {
-    radial: `${newClasses.gridRadial} ${deprecatedClasses.radial}`,
-    divider: `${newClasses.gridDivider} ${deprecatedClasses.divider}`,
-    stripe: `${newClasses.gridStripe} ${deprecatedClasses.stripe}`,
-  };
+  const classes = useUtilityClasses(props.classes);
   if (gridData === null) {
     return null;
   }

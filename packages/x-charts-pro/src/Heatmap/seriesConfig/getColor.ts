@@ -4,12 +4,9 @@ const getColor: ColorProcessor<'heatmap'> = (series, xAxis, yAxis, zAxis) => {
   const zColorScale = zAxis?.colorScale;
 
   if (zColorScale) {
-    return (value: number | null) => {
-      if (value === null) {
-        return '';
-      }
-
-      const color = zColorScale(value);
+    return (dataIndex: number) => {
+      const value = series.data[dataIndex];
+      const color = zColorScale(value[2]);
       if (color === null) {
         return '';
       }

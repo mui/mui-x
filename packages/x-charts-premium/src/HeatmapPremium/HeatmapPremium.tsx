@@ -4,42 +4,23 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import {
-  FocusedHeatmapCell,
-  HeatmapTooltip,
-  type HeatmapProps,
-  type HeatmapSlots,
-  type HeatmapSlotProps,
-} from '@mui/x-charts-pro/Heatmap';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { FocusedHeatmapCell, type HeatmapProps, HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
-import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 
-export interface HeatmapPremiumSlots extends HeatmapSlots {}
-export interface HeatmapPremiumSlotProps extends HeatmapSlotProps {}
-
-export interface HeatmapPremiumProps extends HeatmapProps {
-  /**
-   * The type of renderer to use for the heatmap plot.
-   * - `svg-single`: Renders every scatter item in a `<rect />` element.
-   * - `webgl`: Renders heatmap cells using WebGL for better performance, at the cost of some limitations.
-   *                Read more: https://mui.com/x/react-charts/heatmap/#performance
-   */
-  renderer?: 'svg-single' | 'webgl';
-}
+export interface HeatmapPremiumProps extends HeatmapProps {}
 
 const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   inProps: HeatmapPremiumProps,
-  ref: React.Ref<HTMLDivElement>,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmapPremium' });
   const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
@@ -58,33 +39,25 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
 
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
   const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
-  const renderer = heatmapPlotPremiumProps.renderer;
 
   return (
     <ChartDataProviderPremium<'heatmap', HeatmapPremiumPluginSignatures>
       {...chartDataProviderPremiumProps}
     >
-      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
+      <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsLayerContainer>
-          {renderer === 'webgl' && (
-            <ChartsWebGLLayer>
-              <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
-            </ChartsWebGLLayer>
-          )}
-          <ChartsSvgLayer sx={sx}>
-            <g {...clipPathGroupProps}>
-              {renderer !== 'webgl' && <HeatmapPlotPremium {...heatmapPlotPremiumProps} />}
-              <FocusedHeatmapCell />
-              <ChartsOverlay {...overlayProps} />
-            </g>
-            <ChartsAxis {...chartsAxisProps} />
-            <ChartsClipPath {...clipPathProps} />
-            <ChartsBrushOverlay />
-            {children}
-          </ChartsSvgLayer>
-        </ChartsLayerContainer>
+        <ChartsSurface ref={ref} sx={sx}>
+          <g {...clipPathGroupProps}>
+            <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
+            <FocusedHeatmapCell />
+            <ChartsOverlay {...overlayProps} />
+          </g>
+          <ChartsAxis {...chartsAxisProps} />
+          <ChartsClipPath {...clipPathProps} />
+          <ChartsBrushOverlay />
+          {children}
+        </ChartsSurface>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPremium>
@@ -126,10 +99,6 @@ HeatmapPremium.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * The description of the chart.
-   * Used to provide an accessible description for the chart.
-   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -137,14 +106,7 @@ HeatmapPremium.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * If `true`, disables keyboard navigation for the chart.
-   */
-  disableKeyboardNavigation: PropTypes.bool,
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.object,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -157,19 +119,10 @@ HeatmapPremium.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['heatmap']).isRequired,
-      xIndex: PropTypes.number.isRequired,
-      yIndex: PropTypes.number.isRequired,
-    }),
-    PropTypes.shape({
-      seriesId: PropTypes.string.isRequired,
-      xIndex: PropTypes.number.isRequired,
-      yIndex: PropTypes.number.isRequired,
-    }),
-  ]),
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -222,28 +175,20 @@ HeatmapPremium.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
-   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
+   * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
+   * @param {SeriesItemIdentifier<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,
   /**
-   * The function called when the pointer position corresponds to a new axis data item.
-   * This update can either be caused by a pointer movement, or an axis update.
-   * In case of multiple axes, the function is called if at least one axis is updated.
-   * The argument contains the identifier for all axes with a `data` property.
-   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
-   */
-  onTooltipAxisChange: PropTypes.func,
-  /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -252,13 +197,6 @@ HeatmapPremium.propTypes = {
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange: PropTypes.func,
-  /**
-   * The type of renderer to use for the heatmap plot.
-   * - `svg-single`: Renders every scatter item in a `<rect />` element.
-   * - `webgl`: Renders heatmap cells using WebGL for better performance, at the cost of some limitations.
-   *                Read more: https://mui.com/x/react-charts/heatmap/#performance
-   */
-  renderer: PropTypes.oneOf(['svg-single', 'webgl']),
   /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeries]] objects.
@@ -285,10 +223,6 @@ HeatmapPremium.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
-  /**
-   * The title of the chart.
-   * Used to provide an accessible label for the chart.
-   */
   title: PropTypes.string,
   /**
    * The configuration of the tooltip.
@@ -296,32 +230,16 @@ HeatmapPremium.propTypes = {
    */
   tooltip: PropTypes.object,
   /**
-   * The controlled axis tooltip.
-   * Identified by the axis id, and data index.
-   */
-  tooltipAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      dataIndex: PropTypes.number.isRequired,
-    }),
-  ),
-  /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['heatmap']).isRequired,
-      xIndex: PropTypes.number.isRequired,
-      yIndex: PropTypes.number.isRequired,
-    }),
-    PropTypes.shape({
-      seriesId: PropTypes.string.isRequired,
-      xIndex: PropTypes.number.isRequired,
-      yIndex: PropTypes.number.isRequired,
-    }),
-  ]),
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['heatmap']).isRequired,
+    xIndex: PropTypes.number,
+    yIndex: PropTypes.number,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -649,8 +567,8 @@ HeatmapPremium.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,

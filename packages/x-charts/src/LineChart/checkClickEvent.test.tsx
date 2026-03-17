@@ -2,7 +2,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   dataset: [
@@ -25,7 +25,7 @@ describe('LineChart - click event', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAxisClick = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <div
           style={{
             width: 400,
@@ -43,14 +43,12 @@ describe('LineChart - click event', () => {
           />
         </div>,
       );
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { clientX: 198, clientY: 60 },
         },
       ]);
@@ -64,7 +62,7 @@ describe('LineChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { clientX: 201, clientY: 60 },
         },
       ]);
@@ -78,13 +76,13 @@ describe('LineChart - click event', () => {
   });
 
   describe('onMarkClick', () => {
-    it('should add cursor="pointer" to mark elements', () => {
+    it('should add cursor="pointer" to bar elements', () => {
       render(
         <LineChart
           {...config}
           series={[
-            { dataKey: 'v1', id: 's1', showMark: true },
-            { dataKey: 'v2', id: 's2', showMark: true },
+            { dataKey: 'v1', id: 's1' },
+            { dataKey: 'v2', id: 's2' },
           ]}
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
           onMarkClick={() => {}}
@@ -117,8 +115,8 @@ describe('LineChart - click event', () => {
           <LineChart
             {...config}
             series={[
-              { dataKey: 'v1', id: 's1', showMark: true },
-              { dataKey: 'v2', id: 's2', showMark: true },
+              { dataKey: 'v1', id: 's1' },
+              { dataKey: 'v2', id: 's2' },
             ]}
             xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
             onMarkClick={onMarkClick}

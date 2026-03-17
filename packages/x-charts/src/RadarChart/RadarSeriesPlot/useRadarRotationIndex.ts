@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { selectorChartPolarCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { getChartPoint } from '../../internals/getChartPoint';
+import { getSVGPoint } from '../../internals/getSVGPoint';
 import { generateSvg2rotation } from '../../internals/plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
 import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
 import { useStore } from '../../internals/store/useStore';
-import { useChartsLayerContainerRef } from '../../hooks/useChartsLayerContainerRef';
+import { useSvgRef } from '../../hooks/useSvgRef';
 import { useRotationAxis } from '../../hooks/useAxis';
 
 /**
@@ -12,7 +12,7 @@ import { useRotationAxis } from '../../hooks/useAxis';
  * @return {(event: { clientX: number; clientY: number }) => number | null} rotationIndexGetter Returns the rotation data index.
  */
 export function useRadarRotationIndex() {
-  const chartsLayerContainerRef = useChartsLayerContainerRef();
+  const svgRef = useSvgRef();
 
   const store = useStore();
   const rotationAxis = useRotationAxis();
@@ -21,23 +21,21 @@ export function useRadarRotationIndex() {
 
   const rotationIndexGetter = React.useCallback(
     function rotationIndexGetter(event: { clientX: number; clientY: number }) {
-      const element = chartsLayerContainerRef.current;
+      const element = svgRef.current;
       if (!element || !rotationAxis) {
         // Should never append
         throw new Error(
-          `MUI X Charts: The ${!element ? 'SVG element' : 'rotation axis'} was not found. ` +
-            'This is required to compute the radar chart dataIndex. ' +
-            'Ensure the radar chart is properly initialized with all required axes.',
+          `MUI X Charts: The ${!element ? 'SVG' : 'rotation axis'} was not found to compute radar dataIndex.`,
         );
       }
 
-      const svgPoint = getChartPoint(element, event);
+      const svgPoint = getSVGPoint(element, event);
       const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
       const rotationIndex = getAxisIndex(rotationAxis, rotation);
 
       return rotationIndex;
     },
-    [center, rotationAxis, chartsLayerContainerRef],
+    [center, rotationAxis, svgRef],
   );
   return rotationIndexGetter;
 }

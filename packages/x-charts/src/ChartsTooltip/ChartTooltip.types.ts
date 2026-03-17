@@ -1,18 +1,17 @@
 import { type ChartsTooltipProps } from './ChartsTooltip';
-import { type TriggerOptions } from './utils';
 
-export interface ChartsTooltipSlots<T extends TriggerOptions = TriggerOptions> {
+export interface ChartsTooltipSlots {
   /**
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
    */
-  tooltip?: React.ElementType<ChartsTooltipProps<T>>;
+  tooltip?: React.ElementType<ChartsTooltipProps>;
 }
 
-export interface ChartsTooltipSlotProps<T extends TriggerOptions = TriggerOptions> {
+export interface ChartsTooltipSlotProps {
   /**
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
    */
-  tooltip?: Partial<ChartsTooltipProps<T>>;
+  tooltip?: Partial<ChartsTooltipProps>;
 }

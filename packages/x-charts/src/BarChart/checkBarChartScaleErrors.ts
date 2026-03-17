@@ -35,23 +35,17 @@ export function checkBarChartScaleErrors(
 
   if (discreteAxisConfig.scaleType !== 'band') {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should be of type "band" to display the bar series of id "${seriesId}". ` +
-        'Bar charts require a band scale for the category axis to properly position and size the bars. ' +
-        'Set the scaleType to "band" for this axis.',
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should be of type "band" to display the bar series of id "${seriesId}".`,
     );
   }
   if (discreteAxisConfig.data === undefined) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have a data property. ` +
-        'The axis needs data to define the categories for the bar chart. ' +
-        'Provide a data array to the axis configuration.',
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
     );
   }
   if (continuousAxisConfig.scaleType === 'band' || continuousAxisConfig.scaleType === 'point') {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}". ` +
-        'Bar charts require a continuous scale (like "linear" or "log") for the value axis. ' +
-        'Change the scaleType to a continuous type such as "linear".',
+      `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}".`,
     );
   }
   if (process.env.NODE_ENV !== 'production') {

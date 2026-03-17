@@ -6,7 +6,7 @@ import {
 } from '../internals/plugins/corePlugins/useChartSeries';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useSeries } from './useSeries';
-import type { SeriesLegendItemParams } from '../ChartsLegend';
+import type { LegendItemParams } from '../ChartsLegend';
 import { useStore } from '../internals/store/useStore';
 import { type ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
@@ -15,9 +15,9 @@ function getSeriesToDisplay(
   seriesConfig: ChartSeriesConfig<ChartSeriesType>,
 ) {
   return (Object.keys(series) as ChartSeriesType[]).flatMap(
-    <SeriesType extends ChartSeriesType>(seriesType: SeriesType) => {
-      const getter = seriesConfig[seriesType as SeriesType].legendGetter;
-      return getter === undefined ? [] : getter(series[seriesType as SeriesType]!);
+    <T extends ChartSeriesType>(seriesType: T) => {
+      const getter = seriesConfig[seriesType as T].legendGetter;
+      return getter === undefined ? [] : getter(series[seriesType as T]!);
     },
   );
 }
@@ -31,7 +31,7 @@ function getSeriesToDisplay(
  *
  * @returns legend data
  */
-export function useLegend(): { items: SeriesLegendItemParams[] } {
+export function useLegend(): { items: LegendItemParams[] } {
   const series = useSeries();
   const store = useStore<[UseChartSeriesSignature]>();
   const seriesConfig = store.use(selectorChartSeriesConfig);

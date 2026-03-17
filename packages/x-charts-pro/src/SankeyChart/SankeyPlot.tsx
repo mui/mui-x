@@ -39,8 +39,8 @@ export interface SankeyPlotProps {
 }
 
 const SankeyPlotRoot = styled('g', {
-  name: 'MuiSankeyPlot',
-  slot: 'Root',
+  slot: 'internal',
+  shouldForwardProp: undefined,
 })({});
 
 /**

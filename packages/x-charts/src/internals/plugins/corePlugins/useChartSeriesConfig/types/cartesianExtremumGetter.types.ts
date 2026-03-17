@@ -5,8 +5,8 @@ import type {
 import type { AxisConfig, AxisId } from '../../../../../models/axis';
 import type { SeriesId } from '../../../../../models/seriesType/common';
 
-type CartesianExtremumGetterParams<SeriesType extends CartesianChartSeriesType> = {
-  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType>>;
+type CartesianExtremumGetterParams<TSeriesType extends CartesianChartSeriesType> = {
+  series: Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>;
   axis: AxisConfig;
   axisIndex: number;
   isDefaultAxis: boolean;
@@ -20,8 +20,8 @@ type CartesianExtremumGetterParams<SeriesType extends CartesianChartSeriesType> 
 
 export type CartesianExtremumGetterResult = [number, number];
 
-export type CartesianExtremumGetter<SeriesType extends CartesianChartSeriesType> = (
-  params: CartesianExtremumGetterParams<SeriesType>,
+export type CartesianExtremumGetter<TSeriesType extends CartesianChartSeriesType> = (
+  params: CartesianExtremumGetterParams<TSeriesType>,
 ) => CartesianExtremumGetterResult;
 
 export type CartesianExtremumFilter = (

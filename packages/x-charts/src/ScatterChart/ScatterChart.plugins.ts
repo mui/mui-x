@@ -42,7 +42,7 @@ export type ScatterChartPluginSignatures = [
   UseChartTooltipSignature<'scatter'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'scatter'>,
-  UseChartHighlightSignature<'scatter'>,
+  UseChartHighlightSignature,
   UseChartVisibilityManagerSignature<'scatter'>,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,

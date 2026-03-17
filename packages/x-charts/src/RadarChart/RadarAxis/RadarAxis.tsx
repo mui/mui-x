@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { useRadarAxis, type UseRadarAxisParams } from './useRadarAxis';
 import { getLabelAttributes } from './RadarAxis.utils';
-import { type RadarAxisClasses } from './radarAxisClasses';
-import { useUtilityClasses as useDeprecatedUtilityClasses } from './radarAxisClasses';
-import { useUtilityClasses } from '../radarClasses';
+import { type RadarAxisClasses, useUtilityClasses } from './radarAxisClasses';
 
 export interface RadarAxisProps extends UseRadarAxisParams {
   /**
@@ -36,8 +34,7 @@ export interface RadarAxisProps extends UseRadarAxisParams {
 function RadarAxis(props: RadarAxisProps) {
   const { labelOrientation = 'horizontal', textAnchor, dominantBaseline } = props;
 
-  const classes = useUtilityClasses();
-  const deprecatedClasses = useDeprecatedUtilityClasses(props.classes);
+  const classes = useUtilityClasses(props.classes);
   const theme = useTheme();
   const data = useRadarAxis(props);
 
@@ -48,12 +45,12 @@ function RadarAxis(props: RadarAxisProps) {
   const { center, angle, labels } = data;
 
   return (
-    <g className={`${classes.axisRoot} ${deprecatedClasses.root}`}>
+    <g className={classes.root}>
       <path
         d={`M ${center.x} ${center.y} L ${labels[labels.length - 1].x} ${labels[labels.length - 1].y}`}
         stroke={(theme.vars ?? theme).palette.text.primary}
         strokeOpacity={0.3}
-        className={`${classes.axisLine} ${deprecatedClasses.line}`}
+        className={classes.line}
       />
       {labels.map(({ x, y, formattedValue }) => (
         <text
@@ -61,7 +58,7 @@ function RadarAxis(props: RadarAxisProps) {
           fontSize={12}
           fill={(theme.vars ?? theme).palette.text.primary}
           stroke="none"
-          className={`${classes.axisLabel} ${deprecatedClasses.label}`}
+          className={classes.label}
           {...getLabelAttributes({ labelOrientation, x, y, angle, textAnchor, dominantBaseline })}
         >
           {formattedValue}

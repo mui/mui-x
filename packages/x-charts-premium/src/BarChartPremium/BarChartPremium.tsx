@@ -13,14 +13,14 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { BarPlot, FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
+import { BarPlot, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
-import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
+import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { seriesPreviewPlotMap, useChartsContainerProProps } from '@mui/x-charts-pro/internals';
+import { seriesPreviewPlotMap, useChartContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
@@ -31,8 +31,7 @@ import {
   type RangeBarSeriesType,
 } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
-import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
-import { RangeBarPreviewPlot } from '../ChartsZoomSlider/internals/previews/RangeBarPreviewPlot';
+import { RangeBarPreviewPlot } from '../ChartZoomSlider/internals/previews/RangeBarPreviewPlot';
 
 import type {} from '../typeOverloads/modules';
 
@@ -88,7 +87,7 @@ export interface BarChartPremiumProps extends Omit<
  */
 const BarChartPremium = React.forwardRef(function BarChartPremium(
   inProps: BarChartPremiumProps,
-  ref: React.Ref<HTMLDivElement>,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPremium' });
   const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
@@ -108,17 +107,20 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
     children,
   } = useBarChartPremiumProps(other);
 
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'bar' | 'rangeBar',
     BarChartPremiumPluginSignatures
-  >({
-    ...chartContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: BAR_CHART_PREMIUM_PLUGINS,
-  });
+  >(
+    {
+      ...chartContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: BAR_CHART_PREMIUM_PLUGINS,
+    },
+    ref,
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -127,7 +129,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
     <ChartDataProviderPremium<'bar' | 'rangeBar', BarChartPremiumPluginSignatures>
       {...chartDataProviderProProps}
     >
-      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
+      <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -137,11 +139,9 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
             <RangeBarPlot {...rangeBarPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
-            <FocusedBar />
-            <FocusedRangeBar />
           </g>
           <ChartsAxis {...chartsAxisProps} />
-          <ChartsZoomSlider />
+          <ChartZoomSlider />
           <ChartsBrushOverlay />
           <ChartsClipPath {...clipPathProps} />
           {children}
@@ -212,10 +212,6 @@ BarChartPremium.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * The description of the chart.
-   * Used to provide an accessible description for the chart.
-   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -223,14 +219,7 @@ BarChartPremium.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * If `true`, disables keyboard navigation for the chart.
-   */
-  disableKeyboardNavigation: PropTypes.bool,
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.object,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -263,18 +252,11 @@ BarChartPremium.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -294,17 +276,10 @@ BarChartPremium.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -332,18 +307,11 @@ BarChartPremium.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
   ),
   /**
    * The list of zoom data related to each axis.
@@ -394,13 +362,13 @@ BarChartPremium.propTypes = {
   onAxisClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -418,17 +386,9 @@ BarChartPremium.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
-   * The function called when the pointer position corresponds to a new axis data item.
-   * This update can either be caused by a pointer movement, or an axis update.
-   * In case of multiple axes, the function is called if at least one axis is updated.
-   * The argument contains the identifier for all axes with a `data` property.
-   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
-   */
-  onTooltipAxisChange: PropTypes.func,
-  /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -477,36 +437,16 @@ BarChartPremium.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
-  /**
-   * The title of the chart.
-   * Used to provide an accessible label for the chart.
-   */
   title: PropTypes.string,
-  /**
-   * The controlled axis tooltip.
-   * Identified by the axis id, and data index.
-   */
-  tooltipAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      dataIndex: PropTypes.number.isRequired,
-    }),
-  ),
   /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number.isRequired,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number.isRequired,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['bar']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -1093,8 +1033,18 @@ BarChartPremium.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1175,8 +1125,18 @@ BarChartPremium.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1884,8 +1844,18 @@ BarChartPremium.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1965,8 +1935,18 @@ BarChartPremium.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -2196,8 +2176,8 @@ BarChartPremium.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,

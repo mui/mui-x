@@ -2,7 +2,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   dataset: [
@@ -31,7 +31,7 @@ describe('BarChart - click event', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAxisClick = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <div
           style={{
             width: 400,
@@ -49,14 +49,12 @@ describe('BarChart - click event', () => {
           />
         </div>,
       );
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { clientX: 198, clientY: 60 },
         },
       ]);
@@ -70,7 +68,7 @@ describe('BarChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { clientX: 201, clientY: 60 },
         },
       ]);
@@ -87,7 +85,7 @@ describe('BarChart - click event', () => {
       'should provide the right context as second argument with layout="horizontal"',
       async () => {
         const onAxisClick = vi.fn();
-        const { user, container } = render(
+        const { user } = render(
           <div
             style={{
               width: 400,
@@ -106,14 +104,12 @@ describe('BarChart - click event', () => {
             />
           </div>,
         );
-        const layerContainer = container.querySelector<HTMLElement>(
-          `.${chartsSvgLayerClasses.root}`,
-        )!.parentElement!;
+        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: layerContainer,
+            target: svg,
             coords: { clientX: 60, clientY: 198 },
           },
         ]);
@@ -127,7 +123,7 @@ describe('BarChart - click event', () => {
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: layerContainer,
+            target: svg,
             coords: { clientX: 60, clientY: 201 },
           },
         ]);
@@ -154,7 +150,7 @@ describe('BarChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
-      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarChart-element');
+      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarElement-root');
 
       expect(
         Array.from(rectangles).map((rectangle) => rectangle.getAttribute('cursor')),
@@ -183,7 +179,7 @@ describe('BarChart - click event', () => {
         </div>,
       );
 
-      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarChart-element');
+      const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarElement-root');
 
       await user.click(rectangles[0]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({

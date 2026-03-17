@@ -24,26 +24,17 @@ export * from './SparkLineChart';
 export * from './Gauge';
 export * from './RadarChart';
 export * from './ChartsSurface';
-export { ChartsContainer } from './ChartsContainer';
-export type {
-  ChartsContainerProps,
-  ChartsContainerSlots,
-  ChartsContainerSlotProps,
-} from './ChartsContainer';
 export { ChartContainer } from './ChartContainer';
 export type {
   ChartContainerProps,
   ChartContainerSlots,
   ChartContainerSlotProps,
 } from './ChartContainer';
-export * from './ChartsDataProvider';
 export * from './ChartDataProvider';
 export * from './Toolbar';
 export * from './ChartsWrapper';
 export * from './ChartsBrushOverlay';
 export * from './utils';
-export * from './ChartsLayerContainer';
-export * from './ChartsSvgLayer';
 
 // Locales should be imported from `@mui/x-charts/locales`
 // export * from './locales';

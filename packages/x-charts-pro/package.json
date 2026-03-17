@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "9.0.0-alpha.3",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Charts components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -60,14 +60,14 @@
     }
   },
   "optionalDependencies": {
-    "rasterizehtml": "catalog:"
+    "rasterizehtml": "^1.4.1"
   },
   "devDependencies": {
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "csstype": "catalog:",
-    "rasterizehtml": "catalog:",
+    "rasterizehtml": "1.4.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
@@ -78,8 +78,5 @@
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts"
-  },
-  "imports": {
-    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

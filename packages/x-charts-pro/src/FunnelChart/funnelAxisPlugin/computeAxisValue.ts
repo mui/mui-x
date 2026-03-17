@@ -71,10 +71,10 @@ export type ComputeResult<T extends ChartsAxisProps> = {
   axisIds: string[];
 };
 
-type ComputeCommonParams<SeriesType extends ChartSeriesType = 'funnel'> = {
+type ComputeCommonParams<T extends ChartSeriesType = 'funnel'> = {
   drawingArea: ChartDrawingArea;
-  formattedSeries: ProcessedSeries<SeriesType>;
-  seriesConfig: ChartSeriesConfig<SeriesType>;
+  formattedSeries: ProcessedSeries<T>;
+  seriesConfig: ChartSeriesConfig<T>;
   gap: number;
 };
 
@@ -171,7 +171,7 @@ export function computeAxisValue({
 
     if (isPointScaleConfig(axis)) {
       throw new Error(
-        'MUI X Charts: Point scale is not supported in FunnelChart. Please use band scale instead.',
+        'Point scale is not supported in FunnelChart. Please use band scale instead.',
       );
     }
 

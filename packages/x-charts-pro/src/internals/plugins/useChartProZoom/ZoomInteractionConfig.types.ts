@@ -143,8 +143,8 @@ export type DoubleTapResetInteraction = Unpack<
 export type BrushInteraction = Unpack<
   {
     type: 'brush';
-  } & AllModeProp &
-    AllKeysProp
+  } & NoModeProp &
+    NoKeysProp
 >;
 
 export type AnyInteraction = {

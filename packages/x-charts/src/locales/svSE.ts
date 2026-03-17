@@ -115,12 +115,6 @@ export const svSELocaleText: Partial<ChartsLocaleText> = {
   // chartConfigurationOptionStepAfter: 'Step After',
   // chartConfigurationOptionBumpX: 'Bump X',
   // chartConfigurationOptionBumpY: 'Bump Y',
-
-  // OHLC/Candlestick
-  // open: 'Open',
-  // high: 'High',
-  // low: 'Low',
-  // close: 'Close',
 };
 
 export const svSE = getChartsLocalization(svSELocaleText);

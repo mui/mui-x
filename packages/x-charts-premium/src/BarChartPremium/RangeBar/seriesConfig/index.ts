@@ -3,15 +3,12 @@ import {
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   type ChartSeriesTypeConfig,
-  createIsHighlighted,
-  createIsFaded,
 } from '@mui/x-charts/internals';
 import { getExtremumX, getExtremumY } from './extrema';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import legendGetter from './legend';
-import keyboardFocusHandler from './keyboardFocusHandler';
 import tooltipItemPositionGetter from './tooltipPosition';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 
@@ -25,11 +22,8 @@ export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
-  keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
-  isHighlightedCreator: createIsHighlighted,
-  isFadedCreator: createIsFaded,
 };
 
 cartesianSeriesTypes.addType('rangeBar');

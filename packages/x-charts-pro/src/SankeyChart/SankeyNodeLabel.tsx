@@ -3,18 +3,12 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import type { SankeyLayoutNode } from './sankey.types';
 import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
-import type { SeriesId } from '../models';
-import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyNodeLabelProps {
   /**
    * The node data
    */
   node: SankeyLayoutNode;
-  /**
-   * The series id
-   */
-  seriesId: SeriesId;
 }
 
 /**
@@ -22,7 +16,7 @@ export interface SankeyNodeLabelProps {
  */
 export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelProps>(
   function SankeyNodeLabel(props, ref) {
-    const { node, seriesId } = props;
+    const { node } = props;
     const theme = useTheme();
 
     const x0 = node.x0 ?? 0;
@@ -39,19 +33,7 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
 
     const labelAnchor = isRightSide ? 'start' : 'end';
 
-    const classes = useUtilityClasses();
-
-    const highlightState = useSankeyNodeHighlightState(
-      React.useMemo(
-        () => ({
-          type: 'sankey',
-          subType: 'node',
-          seriesId,
-          nodeId: node.id,
-        }),
-        [seriesId, node.id],
-      ),
-    );
+    const highlightState = useSankeyNodeHighlightState(node.id);
 
     let opacity = 1;
     if (highlightState === 'faded') {
@@ -67,7 +49,6 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
     return (
       <text
         ref={ref}
-        className={classes.nodeLabel}
         x={labelX}
         y={(y0 + y1) / 2}
         textAnchor={labelAnchor}

@@ -36,7 +36,7 @@ export type RadarChartPluginSignatures = [
   UseChartTooltipSignature<'radar'>,
   UseChartInteractionSignature,
   UseChartPolarAxisSignature,
-  UseChartHighlightSignature<'radar'>,
+  UseChartHighlightSignature,
   UseChartKeyboardNavigationSignature,
   UseChartVisibilityManagerSignature<'radar'>,
 ];

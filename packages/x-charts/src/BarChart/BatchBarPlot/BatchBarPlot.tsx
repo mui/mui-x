@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useChartsLayerContainerRef } from '../../hooks';
+import { useSvgRef } from '../../hooks';
 import type { BarItemIdentifier } from '../../models';
 import { type ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
@@ -30,11 +30,11 @@ export function BatchBarPlot({
   skipAnimation = false,
 }: BatchBarPlotProps) {
   const prevCursorRef = React.useRef<string | null>(null);
-  const chartsLayerContainerRef = useChartsLayerContainerRef();
+  const svgRef = useSvgRef();
 
   const onItemEnter = onItemClick
     ? () => {
-        const svg = chartsLayerContainerRef.current;
+        const svg = svgRef.current;
 
         if (!svg) {
           return;
@@ -50,7 +50,7 @@ export function BatchBarPlot({
 
   const onItemLeave = onItemClick
     ? () => {
-        const svg = chartsLayerContainerRef.current;
+        const svg = svgRef.current;
 
         if (!svg) {
           return;
@@ -92,7 +92,7 @@ function SeriesBatchPlot({
   skipAnimation: boolean;
 }) {
   const classes = useUtilityClasses();
-  const { store } = useChartContext<[UseChartHighlightSignature<'bar'>]>();
+  const { store } = useChartContext<[UseChartHighlightSignature]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.seriesId);
   const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.seriesId);
 
@@ -143,7 +143,7 @@ function FadedHighlightedBars({
   processedSeries: ProcessedBarSeriesData;
   borderRadius: number;
 }) {
-  const { store } = useChartContext<[UseChartHighlightSignature<'bar'>]>();
+  const { store } = useChartContext<[UseChartHighlightSignature]>();
   const seriesHighlightedDataIndex = store.use(
     selectorChartSeriesHighlightedItem,
     processedSeries.seriesId,

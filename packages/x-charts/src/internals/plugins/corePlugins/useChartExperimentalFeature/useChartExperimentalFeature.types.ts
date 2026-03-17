@@ -1,6 +1,11 @@
 import { type ChartPluginSignature } from '../../models';
 
-export interface ChartExperimentalFeatures {}
+export interface ChartExperimentalFeatures {
+  /**
+   * Default domainLimit to strict for line chart x-axis.
+   */
+  preferStrictDomainInLineCharts?: boolean;
+}
 
 export interface UseChartExperimentalFeaturesParameters {
   /**

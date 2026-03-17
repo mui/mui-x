@@ -1,15 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
 import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
-import { useUtilityClasses } from './scatterClasses';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -21,8 +18,7 @@ export interface ScatterPlotSlotProps extends ScatterSlotProps {
 
 export type RendererType = 'svg-single' | 'svg-batch';
 
-export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'classes'> {
-  className?: string;
+export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -44,11 +40,6 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'cl
   renderer?: RendererType;
 }
 
-const ScatterPlotRoot = styled('g', {
-  name: 'MuiScatterPlot',
-  slot: 'Root',
-})();
-
 /**
  * Demos:
  *
@@ -60,12 +51,11 @@ const ScatterPlotRoot = styled('g', {
  * - [ScatterPlot API](https://mui.com/x/api/charts/scatter-plot/)
  */
 function ScatterPlot(props: ScatterPlotProps) {
-  const { slots, slotProps, onItemClick, renderer, className, classes: inClasses } = props;
+  const { slots, slotProps, onItemClick, renderer } = props;
   const seriesData = useScatterSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
-  const classes = useUtilityClasses({ classes: inClasses });
 
   if (seriesData === undefined) {
     return null;
@@ -80,7 +70,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
   return (
-    <ScatterPlotRoot className={clsx(classes.root, className)}>
+    <React.Fragment>
       {seriesOrder.map((seriesId) => {
         const { id, xAxisId, yAxisId, zAxisId, color, hidden } = series[seriesId];
 
@@ -111,7 +101,7 @@ function ScatterPlot(props: ScatterPlotProps) {
           />
         );
       })}
-    </ScatterPlotRoot>
+    </React.Fragment>
   );
 }
 

@@ -3,23 +3,19 @@ import { getLabel, type TooltipGetter } from '@mui/x-charts/internals';
 const tooltipGetter: TooltipGetter<'heatmap'> = (params) => {
   const { series, getColor, identifier } = params;
 
-  if (!identifier) {
+  if (!identifier || identifier.dataIndex === undefined) {
     return null;
   }
 
-  const cellValue = series.heatmapData.getValue(identifier.xIndex, identifier.yIndex);
-
   const label = getLabel(series.label, 'tooltip');
-  const formattedValue = series.valueFormatter(cellValue, {
-    xIndex: identifier.xIndex,
-    yIndex: identifier.yIndex,
-  });
+  const value = series.data[identifier.dataIndex];
+  const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
 
   return {
     identifier,
-    color: getColor(cellValue),
+    color: getColor(identifier.dataIndex),
     label,
-    value: cellValue,
+    value,
     formattedValue,
     markType: series.labelMarkType,
   };

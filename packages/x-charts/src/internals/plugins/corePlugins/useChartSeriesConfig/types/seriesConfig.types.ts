@@ -1,4 +1,3 @@
-import type * as React from 'react';
 import type { SeriesProcessor } from './seriesProcessor.types';
 import type {
   CartesianChartSeriesType,
@@ -20,62 +19,55 @@ import { type IdentifierCleaner } from './identifierCleaner.types';
 import { type GetItemAtPosition } from './getItemAtPosition.types';
 import { type UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
 import { type UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
-import { type HighlightCreator } from '../../../featurePlugins/useChartHighlight/highlightCreator.types';
-import { type AxisTooltipContentProps, type ItemTooltipContentProps } from './TooltipContent.types';
 
-export type ChartSeriesTypeRequiredPlugins<SeriesType extends ChartSeriesType> =
-  ChartsSeriesConfig[SeriesType] extends { axisType: 'cartesian' }
+export type ChartSeriesTypeRequiredPlugins<TSeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[TSeriesType] extends { axisType: 'cartesian' }
     ? [UseChartCartesianAxisSignature]
-    : ChartsSeriesConfig[SeriesType] extends { axisType: 'polar' }
+    : ChartsSeriesConfig[TSeriesType] extends { axisType: 'polar' }
       ? [UseChartPolarAxisSignature]
       : [];
 
-export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
-  seriesProcessor: SeriesProcessor<SeriesType>;
+export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
+  seriesProcessor: SeriesProcessor<TSeriesType>;
   /**
    * A processor to add series layout when the layout does not depend from other series.
    */
-  seriesLayout?: SeriesLayoutGetter<SeriesType>;
-  colorProcessor: ColorProcessor<SeriesType>;
-  legendGetter: LegendGetter<SeriesType>;
-  tooltipGetter: TooltipGetter<SeriesType>;
-  ItemTooltipContent?: React.ComponentType<ItemTooltipContentProps<SeriesType>>;
-  tooltipItemPositionGetter?: TooltipItemPositionGetter<SeriesType>;
-  getSeriesWithDefaultValues: GetSeriesWithDefaultValues<SeriesType>;
-  keyboardFocusHandler?: KeyboardFocusHandler<SeriesType>;
+  seriesLayout?: SeriesLayoutGetter<TSeriesType>;
+  colorProcessor: ColorProcessor<TSeriesType>;
+  legendGetter: LegendGetter<TSeriesType>;
+  tooltipGetter: TooltipGetter<TSeriesType>;
+  tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
+  getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
+  keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
   /**
    * A function to serialize the series item identifier into a unique string.
-   * @param {SeriesItemIdentifierWithType<SeriesType>} identifier The series item identifier.
+   * @param {SeriesItemIdentifier<TSeriesType>} identifier The series item identifier.
    * @returns {string} A unique string representation of the identifier.
    */
-  identifierSerializer: IdentifierSerializer<SeriesType>;
+  identifierSerializer: IdentifierSerializer<TSeriesType>;
   /**
    * A function to clean a series item identifier, returning only the properties
    * relevant to the series type.
-   * @param {Partial<SeriesItemIdentifierWithType<SeriesType>> & { type: SeriesType }} identifier The partial identifier to clean.
-   * @returns {SeriesItemIdentifierWithType<SeriesType>} A cleaned identifier with only the relevant properties.
+   * @param {Partial<SeriesItemIdentifier<TSeriesType>> & { type: TSeriesType }} identifier The partial identifier to clean.
+   * @returns {SeriesItemIdentifier<TSeriesType>} A cleaned identifier with only the relevant properties.
    */
-  identifierCleaner: IdentifierCleaner<SeriesType>;
-  getItemAtPosition?: GetItemAtPosition<SeriesType>;
-  isHighlightedCreator: HighlightCreator<SeriesType>;
-  isFadedCreator: HighlightCreator<SeriesType>;
-} & (SeriesType extends CartesianChartSeriesType
+  identifierCleaner: IdentifierCleaner<TSeriesType>;
+  getItemAtPosition?: GetItemAtPosition<TSeriesType>;
+} & (TSeriesType extends CartesianChartSeriesType
   ? {
-      xExtremumGetter: CartesianExtremumGetter<SeriesType>;
-      yExtremumGetter: CartesianExtremumGetter<SeriesType>;
-      axisTooltipGetter?: AxisTooltipGetter<SeriesType, 'x' | 'y'>;
-      AxisTooltipContent?: React.ComponentType<AxisTooltipContentProps<SeriesType>>;
+      xExtremumGetter: CartesianExtremumGetter<TSeriesType>;
+      yExtremumGetter: CartesianExtremumGetter<TSeriesType>;
+      axisTooltipGetter?: AxisTooltipGetter<TSeriesType, 'x' | 'y'>;
     }
   : {}) &
-  (SeriesType extends PolarChartSeriesType
+  (TSeriesType extends PolarChartSeriesType
     ? {
-        rotationExtremumGetter: PolarExtremumGetter<SeriesType>;
-        radiusExtremumGetter: PolarExtremumGetter<SeriesType>;
-        axisTooltipGetter?: AxisTooltipGetter<SeriesType, 'rotation' | 'radius'>;
-        AxisTooltipContent?: React.ComponentType<AxisTooltipContentProps<SeriesType>>;
+        rotationExtremumGetter: PolarExtremumGetter<TSeriesType>;
+        radiusExtremumGetter: PolarExtremumGetter<TSeriesType>;
+        axisTooltipGetter?: AxisTooltipGetter<TSeriesType, 'rotation' | 'radius'>;
       }
     : {});
 
-export type ChartSeriesConfig<SeriesType extends ChartSeriesType> = {
-  [Key in SeriesType]: ChartSeriesTypeConfig<Key>;
+export type ChartSeriesConfig<TSeriesType extends ChartSeriesType> = {
+  [Key in TSeriesType]: ChartSeriesTypeConfig<Key>;
 };

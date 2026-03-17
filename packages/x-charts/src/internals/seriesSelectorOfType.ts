@@ -17,7 +17,7 @@ export const selectorSeriesOfType = createSelectorMemoized(
   <T extends keyof ChartsSeriesConfig>(
     processedSeries: ProcessedSeries,
     seriesType: T,
-    ids: SeriesId | SeriesId[] | undefined,
+    ids?: SeriesId | SeriesId[],
   ) => {
     if (ids === undefined) {
       return (

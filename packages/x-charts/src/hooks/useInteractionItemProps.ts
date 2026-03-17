@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { type SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
 import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { SeriesItemIdentifierWithType } from '../models/seriesType';
+import type { SeriesItemIdentifier } from '../models/seriesType';
 import type { ChartInstance } from '../internals/plugins/models';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 
@@ -18,8 +19,8 @@ function onPointerDown(event: React.PointerEvent) {
   }
 }
 
-export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
-  data: SeriesItemIdentifierWithType<SeriesType>,
+export const useInteractionItemProps = (
+  data: SeriesItemIdentifierWithData,
   skip?: boolean,
 ): {
   onPointerEnter?: () => void;
@@ -28,18 +29,18 @@ export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
 } => {
   const { instance } =
     useChartContext<
-      [
-        UseChartInteractionSignature,
-        UseChartHighlightSignature<SeriesType>,
-        UseChartTooltipSignature,
-      ]
+      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
     >();
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
     instance.setLastUpdateSource('pointer');
     instance.setTooltipItem(data);
-    instance.setHighlight(data);
+    // TODO: uniformize sankey and other types to get a single plugin
+    instance.setHighlight(
+      // @ts-ignore
+      data.type === 'sankey' ? data : { seriesId: data.seriesId, dataIndex: data.dataIndex },
+    );
   });
 
   const onPointerLeave = useEventCallback(() => {
@@ -70,11 +71,11 @@ export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
   );
 };
 
-export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
+export function getInteractionItemProps(
   instance: ChartInstance<
-    [UseChartInteractionSignature, UseChartHighlightSignature<SeriesType>, UseChartTooltipSignature]
+    [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
   >,
-  item: SeriesItemIdentifierWithType<SeriesType>,
+  item: SeriesItemIdentifier<ChartSeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
@@ -86,7 +87,10 @@ export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
     }
     instance.setLastUpdateSource('pointer');
     instance.setTooltipItem(item);
-    instance.setHighlight(item);
+    instance.setHighlight(
+      // @ts-ignore
+      item.type === 'sankey' ? item : { seriesId: item.seriesId, dataIndex: item.dataIndex },
+    );
   }
 
   function onPointerLeave() {

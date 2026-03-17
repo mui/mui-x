@@ -65,24 +65,12 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'sankey'> = 
     return { ...link, color: resolvedColor };
   });
 
-  const highlightScope = {
-    nodes: {
-      highlight: seriesData.nodeOptions?.highlight ?? 'links',
-      fade: seriesData.nodeOptions?.fade ?? 'none',
-    },
-    links: {
-      highlight: seriesData.linkOptions?.highlight ?? 'links',
-      fade: seriesData.linkOptions?.fade ?? 'none',
-    },
-  };
-
   if (!seriesData.data || !links) {
     return {
       id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
       ...seriesData,
       valueFormatter: seriesData.valueFormatter ?? defaultSankeyValueFormatter,
       data: { nodes: [], links: [] },
-      highlightScope,
     };
   }
 
@@ -125,7 +113,6 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'sankey'> = 
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     ...seriesData,
     valueFormatter: seriesData.valueFormatter ?? defaultSankeyValueFormatter,
-    highlightScope,
     data,
   };
 };

@@ -2,7 +2,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   dataset: [
@@ -34,7 +34,7 @@ describe('ScatterChart - click event', () => {
   describe.skipIf(isJSDOM)('onItemClick - using voronoi', () => {
     it('should provide the right context as second argument when clicking svg', async () => {
       const onItemClick = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <div
           style={{
             width: 100,
@@ -48,14 +48,12 @@ describe('ScatterChart - click event', () => {
           />
         </div>,
       );
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { clientX: 10, clientY: 10 },
         },
       ]);
@@ -68,7 +66,7 @@ describe('ScatterChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { clientX: 30, clientY: 30 },
         },
       ]);
@@ -121,7 +119,7 @@ describe('ScatterChart - click event', () => {
   describe('onItemClick - disabling voronoi', () => {
     it('should not call onItemClick when clicking the SVG', async () => {
       const onItemClick = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <div
           style={{
             width: 100,
@@ -132,18 +130,16 @@ describe('ScatterChart - click event', () => {
             {...config}
             series={[{ id: 's1', data: config.dataset }]}
             onItemClick={onItemClick}
-            disableHitArea
+            disableVoronoi
           />
         </div>,
       );
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { clientX: 10, clientY: 10 },
         },
       ]);
@@ -163,7 +159,7 @@ describe('ScatterChart - click event', () => {
             {...config}
             series={[{ id: 's1', data: config.dataset }]}
             onItemClick={onItemClick}
-            disableHitArea
+            disableVoronoi
           />
         </div>,
       );

@@ -7,21 +7,21 @@ import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartS
 import { isPolarSeriesType } from '../../../isPolar';
 import { type AxisId } from '../../../../models/axis';
 
-export const getAxisTriggerTooltip = <SeriesType extends PolarChartSeriesType>(
+export const getAxisTriggerTooltip = <TSeriesType extends PolarChartSeriesType>(
   axisDirection: 'radius' | 'rotation',
-  seriesConfig: ChartSeriesConfig<SeriesType>,
-  formattedSeries: ProcessedSeries<SeriesType>,
+  seriesConfig: ChartSeriesConfig<TSeriesType>,
+  formattedSeries: ProcessedSeries<TSeriesType>,
   defaultAxisId: AxisId,
 ) => {
   const tooltipAxesIds = new Set<AxisId>();
 
-  const chartTypes = Object.keys(seriesConfig).filter(isPolarSeriesType) as SeriesType[];
+  const chartTypes = Object.keys(seriesConfig).filter(isPolarSeriesType) as TSeriesType[];
 
   chartTypes.forEach((chartType) => {
     const series = formattedSeries[chartType]?.series ?? {};
     const tooltipAxes = (
       seriesConfig[chartType].axisTooltipGetter as
-        | AxisTooltipGetter<SeriesType, 'radius' | 'rotation'>
+        | AxisTooltipGetter<TSeriesType, 'radius' | 'rotation'>
         | undefined
     )?.(series);
 

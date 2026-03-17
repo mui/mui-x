@@ -1,7 +1,26 @@
 'use client';
-import { useChartsContext } from '../ChartsProvider/useChartsContext';
+import * as React from 'react';
+import { type ChartAnyPluginSignature } from '../../internals/plugins/models';
+import { ChartContext } from './ChartContext';
+import { type ChartContextValue } from './ChartProvider.types';
 
-/**
- * @deprecated Use `useChartsContext` instead. We added S to the charts prefix to align with other components.
- */
-export const useChartContext = useChartsContext;
+export const useChartContext = <
+  TSignatures extends readonly ChartAnyPluginSignature[],
+  TOptionalSignatures extends readonly ChartAnyPluginSignature[] = [],
+>() => {
+  const context = React.useContext(ChartContext) as ChartContextValue<
+    TSignatures,
+    TOptionalSignatures
+  >;
+  if (context == null) {
+    throw new Error(
+      [
+        'MUI X Charts: Could not find the Chart context.',
+        'It looks like you rendered your component outside of a ChartDataProvider.',
+        'This can also happen if you are bundling multiple versions of the library.',
+      ].join('\n'),
+    );
+  }
+
+  return context;
+};

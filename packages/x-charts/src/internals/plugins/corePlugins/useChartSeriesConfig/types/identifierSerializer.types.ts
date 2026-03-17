@@ -1,6 +1,6 @@
-import type { SeriesItemIdentifierWithType } from '../../../../../models';
+import type { SeriesItemIdentifier } from '../../../../../models';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 
-export type IdentifierSerializer<SeriesType extends ChartSeriesType> = (
-  identifier: SeriesItemIdentifierWithType<SeriesType>,
+export type IdentifierSerializer<TSeriesType extends ChartSeriesType> = (
+  identifier: SeriesItemIdentifier<TSeriesType>,
 ) => string;

@@ -5,7 +5,7 @@ import {
   type DefaultizedPieSeriesType,
   type DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
-import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
+import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
 import { getModifiedArcProperties } from './getModifiedArcProperties';
 
@@ -35,21 +35,19 @@ export function useTransformData(
 ) {
   const { id: seriesId, data, faded, highlighted } = series;
 
-  const getHighlightState = useItemHighlightStateGetter();
+  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
   const isItemFocused = useIsItemFocusedGetter();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
       data.map((item, itemIndex) => {
-        const identifier = {
-          type: 'pie' as const,
+        const currentItem = {
           seriesId,
           dataIndex: itemIndex,
         };
-        const highlightState = getHighlightState(identifier);
-        const isHighlighted = highlightState === 'highlighted';
-        const isFaded = highlightState === 'faded';
-        const isFocused = isItemFocused(identifier);
+        const isHighlighted = isItemHighlighted(currentItem);
+        const isFaded = !isHighlighted && isItemFaded(currentItem);
+        const isFocused = isItemFocused({ type: 'pie', seriesId, dataIndex: itemIndex });
 
         // TODO v9: Replace the second argument with the result of useSeriesLayout
         const arcSizes = getModifiedArcProperties(
@@ -80,7 +78,7 @@ export function useTransformData(
           ...arcSizes,
         };
       }),
-    [data, seriesId, getHighlightState, isItemFocused, series, faded, highlighted],
+    [data, seriesId, isItemHighlighted, isItemFaded, isItemFocused, series, faded, highlighted],
   );
 
   return dataWithHighlight;

@@ -7,21 +7,21 @@ import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartS
 import { isCartesianSeriesType } from '../../../isCartesian';
 import { type AxisId } from '../../../../models/axis';
 
-export const getAxisTriggerTooltip = <SeriesType extends CartesianChartSeriesType>(
+export const getAxisTriggerTooltip = <TSeriesType extends CartesianChartSeriesType>(
   axisDirection: 'x' | 'y',
-  seriesConfig: ChartSeriesConfig<SeriesType>,
-  formattedSeries: ProcessedSeries<SeriesType>,
+  seriesConfig: ChartSeriesConfig<TSeriesType>,
+  formattedSeries: ProcessedSeries<TSeriesType>,
   defaultAxisId: AxisId,
 ) => {
   const tooltipAxesIds = new Set<AxisId>();
 
-  const chartTypes = Object.keys(seriesConfig).filter(isCartesianSeriesType) as SeriesType[];
+  const chartTypes = Object.keys(seriesConfig).filter(isCartesianSeriesType) as TSeriesType[];
 
   chartTypes.forEach((chartType) => {
     const series = formattedSeries[chartType]?.series ?? {};
     const tooltipAxes = (
       seriesConfig[chartType].axisTooltipGetter as
-        | AxisTooltipGetter<SeriesType, 'x' | 'y'>
+        | AxisTooltipGetter<TSeriesType, 'x' | 'y'>
         | undefined
     )?.(series);
 

@@ -1,12 +1,10 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { getValueToPositionMapper, useScatterSeriesContext, useXAxes, useYAxes } from '../hooks';
-import { useUtilityClasses } from './scatterClasses';
 
-export function FocusedScatterMark({ className, ...props }: React.SVGAttributes<SVGRectElement>) {
+export function FocusedScatterMark(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
   const focusedItem = useFocusedItem();
 
@@ -14,7 +12,6 @@ export function FocusedScatterMark({ className, ...props }: React.SVGAttributes<
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  const classes = useUtilityClasses();
   if (focusedItem === null || focusedItem.type !== 'scatter' || !scatterSeries) {
     return null;
   }
@@ -34,7 +31,6 @@ export function FocusedScatterMark({ className, ...props }: React.SVGAttributes<
 
   return (
     <rect
-      className={clsx(classes.focusedMark, className)}
       fill="none"
       stroke={(theme.vars ?? theme).palette.text.primary}
       strokeWidth={2}

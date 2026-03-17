@@ -44,8 +44,3 @@ export type SankeyLinkHighlightScope = {
    */
   fade?: SankeyLinkFade;
 };
-
-export type SankeyHighlightScope = {
-  nodes: SankeyNodeHighlightScope;
-  links: SankeyLinkHighlightScope;
-};

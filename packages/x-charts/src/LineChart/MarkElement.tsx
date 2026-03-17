@@ -9,9 +9,8 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import {
   markElementClasses,
   type MarkElementOwnerState,
-  useUtilityClasses as useDeprecatedUtilityClasses,
+  useUtilityClasses,
 } from './markElementClasses';
-import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
@@ -94,8 +93,7 @@ function MarkElement(props: MarkElementProps) {
     isFaded,
     skipAnimation,
   };
-  const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
+  const classes = useUtilityClasses(ownerState);
 
   return (
     <MarkElementPath
@@ -106,7 +104,7 @@ function MarkElement(props: MarkElementProps) {
         transformOrigin: `${x}px ${y}px`,
       }}
       ownerState={ownerState}
-      className={`${classes.mark} ${deprecatedClasses.root}`}
+      className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
@@ -114,8 +112,6 @@ function MarkElement(props: MarkElementProps) {
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
-      data-series-id={seriesId}
-      data-index={dataIndex}
       opacity={hidden ? 0 : 1}
       strokeWidth={2}
       stroke={color}

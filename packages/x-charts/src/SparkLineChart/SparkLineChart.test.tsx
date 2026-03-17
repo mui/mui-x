@@ -1,5 +1,4 @@
-import { createRenderer } from '@mui/internal-test-utils';
-import { describeConformance } from 'test/utils/charts/describeConformance';
+import { createRenderer, describeConformance } from '@mui/internal-test-utils';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
 describe('<SparkLineChart />', () => {
@@ -7,10 +6,21 @@ describe('<SparkLineChart />', () => {
 
   describeConformance(<SparkLineChart height={100} width={100} data={[100, 200]} />, () => ({
     classes: {} as any,
-    inheritComponent: 'div',
+    inheritComponent: 'svg',
     render,
     muiName: 'MuiSparkLineChart',
     testComponentPropWith: 'div',
-    refInstanceof: window.HTMLDivElement,
+    refInstanceof: window.SVGSVGElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'slotPropsProp',
+      'slotPropsCallback',
+      'slotsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'themeCustomPalette',
+    ],
   }));
 });

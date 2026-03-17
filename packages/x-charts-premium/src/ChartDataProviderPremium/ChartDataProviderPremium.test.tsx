@@ -1,16 +1,16 @@
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium/ChartsDataProviderPremium';
+import { ChartDataProviderPremium } from './ChartDataProviderPremium';
 
-describe('<ChartsDataProviderPremium />', () => {
+describe('<ChartDataProviderPremium />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<ChartsDataProviderPremium height={100} width={100} series={[]} />, () => ({
+  describeConformance(<ChartDataProviderPremium height={100} width={100} series={[]} />, () => ({
     classes: {} as any,
-    inheritComponent: 'div',
+    inheritComponent: 'svg',
     render,
-    muiName: 'MuiChartsDataProviderPremium',
+    muiName: 'MuiChartDataProviderPremium',
     testComponentPropWith: 'div',
-    refInstanceof: window.HTMLDivElement,
+    refInstanceof: window.SVGSVGElement,
     skip: [
       'mergeClassName',
       'propsSpread',

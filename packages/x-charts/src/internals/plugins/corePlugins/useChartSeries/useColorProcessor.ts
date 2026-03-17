@@ -5,13 +5,11 @@ import { useStore } from '../../../store/useStore';
 import { selectorChartSeriesConfig } from '../useChartSeriesConfig';
 import { type ColorProcessor } from '../useChartSeriesConfig';
 
-export type ColorProcessorsConfig<SeriesType extends ChartSeriesType> = {
-  [Key in SeriesType]?: ColorProcessor<Key>;
+export type ColorProcessorsConfig<T extends ChartSeriesType> = {
+  [Key in T]?: ColorProcessor<Key>;
 };
 
-export function useColorProcessor<SeriesType extends ChartSeriesType>(
-  seriesType: SeriesType,
-): ColorProcessor<SeriesType>;
+export function useColorProcessor<T extends ChartSeriesType>(seriesType: T): ColorProcessor<T>;
 export function useColorProcessor(): ColorProcessorsConfig<ChartSeriesType>;
 export function useColorProcessor(seriesType?: ChartSeriesType) {
   const store = useStore();
@@ -20,10 +18,9 @@ export function useColorProcessor(seriesType?: ChartSeriesType) {
   const colorProcessors = React.useMemo(() => {
     const rep: ColorProcessorsConfig<ChartSeriesType> = {};
     (Object.keys(seriesConfig) as ChartSeriesType[]).forEach(
-      <SeriesType extends ChartSeriesType>(seriesT: SeriesType) => {
+      <T extends ChartSeriesType>(seriesT: T) => {
         // @ts-expect-error https://github.com/microsoft/TypeScript/issues/61555
-        rep[seriesT as SeriesType] = seriesConfig[seriesT]
-          .colorProcessor as ColorProcessor<SeriesType>;
+        rep[seriesT as T] = seriesConfig[seriesT].colorProcessor as ColorProcessor<T>;
       },
     );
     return rep;

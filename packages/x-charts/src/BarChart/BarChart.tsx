@@ -56,7 +56,10 @@ export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 
 export interface BarChartProps
   extends
-    Omit<ChartContainerProps<'bar', BarChartPluginSignatures>, 'series' | 'plugins' | 'zAxis'>,
+    Omit<
+      ChartContainerProps<'bar', BarChartPluginSignatures>,
+      'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -116,7 +119,7 @@ export interface BarChartProps
  */
 const BarChart = React.forwardRef(function BarChart(
   inProps: BarChartProps,
-  ref: React.Ref<HTMLDivElement>,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChart' });
   const {
@@ -132,15 +135,17 @@ const BarChart = React.forwardRef(function BarChart(
     legendProps,
     children,
   } = useBarChartProps(props);
-  const { chartDataProviderProps, chartsSurfaceProps } =
-    useChartContainerProps(chartContainerProps);
+  const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps(
+    chartContainerProps,
+    ref,
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
 
   return (
     <ChartDataProvider<'bar', BarChartPluginSignatures> {...chartDataProviderProps}>
-      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
+      <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -216,10 +221,6 @@ BarChart.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * The description of the chart.
-   * Used to provide an accessible description for the chart.
-   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -227,14 +228,7 @@ BarChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * If `true`, disables keyboard navigation for the chart.
-   */
-  disableKeyboardNavigation: PropTypes.bool,
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.object,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -267,18 +261,11 @@ BarChart.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -298,17 +285,10 @@ BarChart.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -336,18 +316,11 @@ BarChart.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
   ),
   /**
    * The direction of the bar elements.
@@ -387,13 +360,13 @@ BarChart.propTypes = {
   onAxisClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -411,17 +384,9 @@ BarChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
-   * The function called when the pointer position corresponds to a new axis data item.
-   * This update can either be caused by a pointer movement, or an axis update.
-   * In case of multiple axes, the function is called if at least one axis is updated.
-   * The argument contains the identifier for all axes with a `data` property.
-   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
-   */
-  onTooltipAxisChange: PropTypes.func,
-  /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -464,36 +429,16 @@ BarChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
-  /**
-   * The title of the chart.
-   * Used to provide an accessible label for the chart.
-   */
   title: PropTypes.string,
-  /**
-   * The controlled axis tooltip.
-   * Identified by the axis id, and data index.
-   */
-  tooltipAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      dataIndex: PropTypes.number.isRequired,
-    }),
-  ),
   /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number.isRequired,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number.isRequired,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['bar']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -972,8 +917,18 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1036,8 +991,18 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1601,8 +1566,18 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1664,8 +1639,18 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,

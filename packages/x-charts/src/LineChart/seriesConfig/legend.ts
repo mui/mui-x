@@ -1,4 +1,4 @@
-import type { SeriesLegendItemParams } from '../../ChartsLegend';
+import type { LegendItemParams } from '../../ChartsLegend';
 import { getLabel } from '../../internals/getLabel';
 import { type LegendGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
@@ -14,13 +14,12 @@ const legendGetter: LegendGetter<'line'> = (params) => {
     acc.push({
       type: 'line',
       markType: series[seriesId].labelMarkType,
-      markShape: series[seriesId].showMark ? (series[seriesId].shape ?? 'circle') : undefined,
       seriesId,
       color: series[seriesId].color,
       label: formattedLabel,
     });
     return acc;
-  }, [] as SeriesLegendItemParams[]);
+  }, [] as LegendItemParams[]);
 };
 
 export default legendGetter;

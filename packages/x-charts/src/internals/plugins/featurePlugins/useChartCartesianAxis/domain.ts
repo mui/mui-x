@@ -27,8 +27,15 @@ export function calculateInitialDomainAndTickNumber(
   formattedSeries: ProcessedSeries,
   [minData, maxData]: [number | Date, number | Date],
   defaultTickNumber: number,
+  preferStrictDomainInLineCharts: boolean | undefined,
 ) {
-  const domainLimit = getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries);
+  const domainLimit = getDomainLimit(
+    axis,
+    axisDirection,
+    axisIndex,
+    formattedSeries,
+    preferStrictDomainInLineCharts,
+  );
 
   let axisExtrema = getActualAxisExtrema(axis, minData, maxData);
 
@@ -64,8 +71,15 @@ export function calculateFinalDomain(
   formattedSeries: ProcessedSeries,
   [minData, maxData]: [number | Date, number | Date],
   tickNumber: number,
+  preferStrictDomainInLineCharts: boolean | undefined,
 ) {
-  const domainLimit = getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries);
+  const domainLimit = getDomainLimit(
+    axis,
+    axisDirection,
+    axisIndex,
+    formattedSeries,
+    preferStrictDomainInLineCharts,
+  );
 
   let axisExtrema = getActualAxisExtrema(axis, minData, maxData);
 
@@ -80,6 +94,18 @@ export function calculateFinalDomain(
   }
 
   return [axis.min ?? axisExtrema[0], axis.max ?? axisExtrema[1]];
+}
+
+function getDomainLimit(
+  axis: Pick<DefaultedAxis, 'id' | 'domainLimit'>,
+  axisDirection: 'x' | 'y',
+  axisIndex: number,
+  formattedSeries: ProcessedSeries,
+  preferStrictDomainInLineCharts: boolean | undefined,
+) {
+  return preferStrictDomainInLineCharts
+    ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
+    : (axis.domainLimit ?? 'nice');
 }
 
 /**

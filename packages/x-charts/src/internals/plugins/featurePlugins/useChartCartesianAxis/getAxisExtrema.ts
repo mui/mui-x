@@ -9,13 +9,13 @@ import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartS
 import { type GetZoomAxisFilters } from './zoom.types';
 import { isCartesianSeriesType } from '../../../isCartesian';
 
-const axisExtremumCallback = <SeriesType extends CartesianChartSeriesType>(
-  chartType: SeriesType,
+const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(
+  chartType: TSeriesType,
   axis: AxisConfig,
   axisDirection: 'x' | 'y',
-  seriesConfig: ChartSeriesConfig<SeriesType>,
+  seriesConfig: ChartSeriesConfig<TSeriesType>,
   axisIndex: number,
-  formattedSeries: ProcessedSeries<SeriesType>,
+  formattedSeries: ProcessedSeries<TSeriesType>,
   getFilters?: GetZoomAxisFilters,
 ): CartesianExtremumGetterResult => {
   const getter =
@@ -25,7 +25,7 @@ const axisExtremumCallback = <SeriesType extends CartesianChartSeriesType>(
   const series = formattedSeries[chartType]?.series ?? {};
 
   return (
-    (getter as CartesianExtremumGetter<SeriesType>)?.({
+    (getter as CartesianExtremumGetter<TSeriesType>)?.({
       series,
       axis,
       axisIndex,

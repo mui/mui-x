@@ -32,10 +32,8 @@ export interface ShowMarkParams<AxisValue = number | Date> {
   value: number;
 }
 
-export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
-
 export interface LineSeriesType
-  extends CommonSeriesType<number | null, 'line'>, CartesianSeriesType, StackableSeriesType {
+  extends CommonSeriesType<number | null>, CartesianSeriesType, StackableSeriesType {
   type: 'line';
   /**
    * Data associated to the line.
@@ -73,10 +71,9 @@ export interface LineSeriesType
   /**
    * The shape of the mark elements.
    * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
-   * By default, each series has a different shape, cycling through `'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, `'wye'`.
-   * If there are more than 7 series, the shapes will repeat.
+   * @default 'circle'
    */
-  shape?: MarkShape;
+  shape?: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
   /**
    * Do not render the line highlight item if set to `true`.
    * @default false

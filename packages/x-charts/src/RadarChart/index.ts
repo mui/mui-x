@@ -24,5 +24,3 @@ export * from './RadarAxisHighlight';
 export * from './RadarMetricLabels';
 export * from './RadarSeriesPlot';
 export * from './RadarChart.plugins';
-export { radarClasses } from './radarClasses';
-export type { RadarClassKey, RadarClasses } from './radarClasses';

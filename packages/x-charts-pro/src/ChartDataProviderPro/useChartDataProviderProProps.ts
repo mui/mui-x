@@ -1,7 +1,26 @@
 'use client';
-import { useChartsDataProviderProProps } from '../ChartsDataProviderPro/useChartsDataProviderProProps';
+import {
+  type ChartAnyPluginSignature,
+  type ChartSeriesType,
+  useChartDataProviderProps,
+} from '@mui/x-charts/internals';
+import type { ChartDataProviderProProps } from './ChartDataProviderPro';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 
-/**
- * @deprecated Use `useChartsDataProviderProProps` instead. We added S to the charts prefix to align with other components.
- */
-export const useChartDataProviderProProps = useChartsDataProviderProProps;
+export const useChartDataProviderProProps = <
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(
+  props: ChartDataProviderProProps<TSeries, TSignatures>,
+) => {
+  const { chartProviderProps, localeText, slots, slotProps, children } =
+    useChartDataProviderProps(props);
+
+  return {
+    children,
+    localeText,
+    chartProviderProps,
+    slots,
+    slotProps,
+  };
+};

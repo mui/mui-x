@@ -87,7 +87,7 @@ export interface RadarChartProps
  */
 const RadarChart = React.forwardRef(function RadarChart(
   inProps: RadarChartProps,
-  ref: React.Ref<HTMLDivElement>,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiRadarChart' });
   const {
@@ -108,10 +108,10 @@ const RadarChart = React.forwardRef(function RadarChart(
 
   return (
     <RadarDataProvider<RadarChartPluginSignatures> {...radarDataProviderProps}>
-      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
+      <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
           <RadarSeriesArea {...radarSeriesAreaProps} />
@@ -141,10 +141,6 @@ RadarChart.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
-  /**
-   * The description of the chart.
-   * Used to provide an accessible description for the chart.
-   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -153,18 +149,11 @@ RadarChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * If `true`, disables keyboard navigation for the chart.
-   */
-  disableKeyboardNavigation: PropTypes.bool,
-  /**
    * The number of divisions in the radar grid.
    * @default 5
    */
   divisions: PropTypes.number,
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.object,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -190,18 +179,11 @@ RadarChart.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radar']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radar']),
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -216,17 +198,10 @@ RadarChart.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -254,18 +229,11 @@ RadarChart.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radar']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radar']),
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
   ),
   /**
    * If `true`, a loading overlay is displayed.
@@ -306,13 +274,13 @@ RadarChart.propTypes = {
   onAxisClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -324,7 +292,7 @@ RadarChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -389,26 +357,16 @@ RadarChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
-  /**
-   * The title of the chart.
-   * Used to provide an accessible label for the chart.
-   */
   title: PropTypes.string,
   /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['radar']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

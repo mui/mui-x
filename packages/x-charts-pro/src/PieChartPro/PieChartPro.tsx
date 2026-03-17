@@ -37,7 +37,7 @@ export interface PieChartProProps
     Omit<PieChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartContainerProProps<'pie', PieChartProPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -51,7 +51,7 @@ export interface PieChartProProps
   slotProps?: PieChartProSlotProps;
 }
 
-const PieChartPro = React.forwardRef<HTMLDivElement, PieChartProProps>(
+const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
   function PieChartPro(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiPieChartPro' });
     const {
@@ -79,19 +79,22 @@ const PieChartPro = React.forwardRef<HTMLDivElement, PieChartProProps>(
     const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
       'pie',
       PieChartProPluginSignatures
-    >({
-      ...other,
-      series: series.map((s) => ({ type: 'pie', ...s })),
-      width,
-      height,
-      margin,
-      colors,
-      highlightedItem,
-      onHighlightChange,
-      className,
-      skipAnimation,
-      plugins: PIE_CHART_PRO_PLUGINS,
-    });
+    >(
+      {
+        ...other,
+        series: series.map((s) => ({ type: 'pie', ...s })),
+        width,
+        height,
+        margin,
+        colors,
+        highlightedItem,
+        onHighlightChange,
+        className,
+        skipAnimation,
+        plugins: PIE_CHART_PRO_PLUGINS,
+      },
+      ref,
+    );
 
     const Tooltip = slots?.tooltip ?? ChartsTooltip;
     const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
@@ -103,7 +106,6 @@ const PieChartPro = React.forwardRef<HTMLDivElement, PieChartProProps>(
           legendDirection={slotProps?.legend?.direction ?? 'vertical'}
           sx={sx}
           hideLegend={hideLegend ?? false}
-          ref={ref}
         >
           {showToolbar ? <Toolbar {...slotProps?.toolbar} /> : null}
           {!hideLegend && (
@@ -147,19 +149,8 @@ PieChartPro.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * The description of the chart.
-   * Used to provide an accessible description for the chart.
-   */
   desc: PropTypes.string,
-  /**
-   * If `true`, disables keyboard navigation for the chart.
-   */
-  disableKeyboardNavigation: PropTypes.bool,
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.object,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -185,18 +176,11 @@ PieChartPro.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['pie']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['pie']),
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -206,17 +190,10 @@ PieChartPro.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['pie']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -244,18 +221,11 @@ PieChartPro.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['pie']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['pie']),
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
   ),
   /**
    * If `true`, a loading overlay is displayed.
@@ -283,13 +253,13 @@ PieChartPro.propTypes = {
   ]),
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -299,7 +269,7 @@ PieChartPro.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -333,26 +303,16 @@ PieChartPro.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
-  /**
-   * The title of the chart.
-   * Used to provide an accessible label for the chart.
-   */
   title: PropTypes.string,
   /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number.isRequired,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['pie']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number.isRequired,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['pie']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

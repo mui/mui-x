@@ -32,7 +32,7 @@ export type BarChartProPluginSignatures = [
   UseChartTooltipSignature<'bar'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'bar'>,
-  UseChartHighlightSignature<'bar'>,
+  UseChartHighlightSignature,
   UseChartVisibilityManagerSignature<'bar'>,
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,

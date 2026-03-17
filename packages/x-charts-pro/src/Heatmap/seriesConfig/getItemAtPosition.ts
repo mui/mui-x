@@ -13,13 +13,13 @@ import {
 import type {
   ChartsXAxisProps,
   ChartsYAxisProps,
-  SeriesItemIdentifierWithData,
+  SeriesItemIdentifier,
 } from '@mui/x-charts/models';
 
 export default function getItemAtPosition(
   state: ChartState<[UseChartCartesianAxisSignature]>,
   point: { x: number; y: number },
-): SeriesItemIdentifierWithData<'heatmap'> | undefined {
+): SeriesItemIdentifier<'heatmap'> | undefined {
   const { axis: xAxis, axisIds: xAxisIds } = selectorChartXAxis(state);
   const { axis: yAxis, axisIds: yAxisIds } = selectorChartYAxis(state);
   const series = selectorAllSeriesOfType(state, 'heatmap') as ProcessedSeries['heatmap'];
@@ -40,13 +40,20 @@ export default function getItemAtPosition(
     return undefined;
   }
 
-  const value = series?.series[series.seriesOrder[0]].heatmapData.getValue(xIndex, yIndex) ?? null;
+  const dataIndex = series
+    ? series.series[series.seriesOrder[0]].data.findIndex((d) => d[0] === xIndex && d[1] === yIndex)
+    : -1;
+
+  if (dataIndex === -1) {
+    return {
+      type: 'heatmap',
+      seriesId,
+    };
+  }
 
   return {
     type: 'heatmap',
     seriesId,
-    xIndex,
-    yIndex,
-    value,
+    dataIndex,
   };
 }

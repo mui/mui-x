@@ -11,12 +11,7 @@ import {
 export type UseChartFunnelAxisSignature = ChartPluginSignature<{
   params: Omit<
     UseChartCartesianAxisParameters,
-    | 'onAxisClick'
-    | 'onHighlightedAxisChange'
-    | 'highlightedAxis'
-    | 'onTooltipAxisChange'
-    | 'tooltipAxis'
-    | 'axesGap'
+    'onAxisClick' | 'onHighlightedAxisChange' | 'highlightedAxis' | 'axesGap'
   > & {
     /**
      * The gap, in pixels, between funnel sections.

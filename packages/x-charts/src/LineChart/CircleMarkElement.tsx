@@ -7,9 +7,8 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import {
   markElementClasses,
   type MarkElementOwnerState,
-  useUtilityClasses as useDeprecatedUtilityClasses,
+  useUtilityClasses,
 } from './markElementClasses';
-import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
@@ -90,8 +89,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     isFaded,
     skipAnimation,
   };
-  const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
+  const classes = useUtilityClasses(ownerState);
 
   return (
     <Circle
@@ -102,15 +100,13 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
       strokeWidth={2}
-      className={`${classes.mark} ${deprecatedClasses.root}`}
+      className={classes.root}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       pointerEvents={hidden ? 'none' : undefined}
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
-      data-series-id={seriesId}
-      data-index={dataIndex}
       opacity={hidden ? 0 : 1}
     />
   );

@@ -6,7 +6,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import { chartsSvgLayerClasses } from '../../../ChartsSvgLayer';
+import { CHART_SELECTOR } from '../../../tests/constants';
 
 describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   const { render } = createRenderer();
@@ -53,7 +53,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   describe('Wheel zoom with key modifiers', () => {
     it('should zoom on wheel with Control key pressed', async () => {
       const onZoomChange = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <BarChartPro
           {...barChartProps}
           onZoomChange={onZoomChange}
@@ -66,19 +66,17 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       await user.pointer([
         {
-          target: layerContainer,
+          target: svg,
           coords: { x: 50, y: 50 },
         },
       ]);
 
       // Wheel without modifier keys - should not zoom
-      fireEvent.wheel(layerContainer, { deltaY: -10, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaY: -10, clientX: 50, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.mock.calls.length).to.equal(0);
@@ -86,7 +84,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       await user.keyboard('{Control>}');
       // Wheel with Control key - should zoom
-      fireEvent.wheel(layerContainer, { deltaY: -30, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaY: -30, clientX: 50, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
       await user.keyboard('{/Control}');
 
@@ -97,7 +95,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   describe('Pan with key modifiers', () => {
     it('should only pan on drag when Alt key is pressed', async () => {
       const onZoomChange = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <BarChartPro
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
@@ -111,24 +109,22 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Drag without Alt key - should not pan
       await user.pointer([
         {
           keys: '[MouseLeft>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 15, y: 20 },
         },
         {
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
         {
           keys: '[/MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
       ]);
@@ -142,16 +138,16 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       await user.pointer([
         {
           keys: '[MouseLeft>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 15, y: 20 },
         },
         {
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
         {
           keys: '[/MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
       ]);
@@ -165,7 +161,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
     it('should only pan on drag with multiple key modifiers', async () => {
       const onZoomChange = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <BarChartPro
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
@@ -179,25 +175,23 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Drag with only Shift key - should not pan
       await user.keyboard('{Shift>}');
       await user.pointer([
         {
           keys: '[MouseLeft>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 15, y: 20 },
         },
         {
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
         {
           keys: '[/MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
       ]);
@@ -212,16 +206,16 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       await user.pointer([
         {
           keys: '[MouseLeft>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 15, y: 20 },
         },
         {
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
         {
           keys: '[/MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
       ]);
@@ -237,7 +231,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   describe('Interaction modes', () => {
     it('should only pan on drag with mouse mode', async () => {
       const onZoomChange = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <BarChartPro
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
@@ -251,24 +245,22 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Mouse drag - should pan
       await user.pointer([
         {
           keys: '[MouseLeft>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 15, y: 20 },
         },
         {
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
         {
           keys: '[/MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
       ]);
@@ -282,17 +274,17 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       await user.pointer([
         {
           keys: '[TouchA>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 15, y: 20 },
         },
         {
           pointerName: 'TouchA',
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
         {
           keys: '[/TouchA]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 20 },
         },
       ]);
@@ -304,7 +296,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
     it('should only zoom when specific interactions are enabled', async () => {
       const onZoomChange = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <BarChartPro
           {...barChartProps}
           onZoomChange={onZoomChange}
@@ -317,12 +309,10 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector('svg:not([aria-hidden="true"])')!;
 
       // Wheel - should not zoom since only pinch is enabled
-      fireEvent.wheel(layerContainer, { deltaY: -30, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaY: -30, clientX: 50, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.mock.calls.length).to.equal(0);
@@ -332,32 +322,32 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       await user.pointer([
         {
           keys: '[TouchA>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 55, y: 45 },
         },
         {
           keys: '[TouchB>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 45, y: 55 },
         },
         {
           pointerName: 'TouchA',
-          target: layerContainer,
+          target: svg,
           coords: { x: 75, y: 25 },
         },
         {
           pointerName: 'TouchB',
-          target: layerContainer,
+          target: svg,
           coords: { x: 25, y: 75 },
         },
         {
           keys: '[/TouchA]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 75, y: 25 },
         },
         {
           keys: '[/TouchB]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 25, y: 75 },
         },
       ]);
@@ -372,7 +362,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   describe('Zoom and Pan with reversed axis', () => {
     it('should zoom at the correct position with reversed x-axis', async () => {
       const onZoomChange = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <BarChartPro
           series={[
             {
@@ -402,20 +392,18 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       // Ticks still render in data order: A, B, C, D
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       await user.pointer([
         {
-          target: layerContainer,
+          target: svg,
           coords: { x: 25, y: 50 },
         },
       ]);
 
       // Zoom in the <-- left side
       // For `[D, C, B, A]` should zoom towards B, C, D
-      fireEvent.wheel(layerContainer, { deltaY: -500, clientX: 15, clientY: 50 });
+      fireEvent.wheel(svg, { deltaY: -500, clientX: 15, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.mock.calls.length).to.be.greaterThan(0);
@@ -426,7 +414,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
     it('should pan in the correct direction with reversed x-axis on drag', async () => {
       const onZoomChange = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <BarChartPro
           series={[
             {
@@ -456,25 +444,23 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       // With zoom at 25-75%, we see the middle range which is B and C
       expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Drag from left to right (positive direction)
       // Drag --> should pan towards left side of data [D, C, B, A], showing C and D
       await user.pointer([
         {
           keys: '[MouseLeft>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 15, y: 50 },
         },
         {
-          target: layerContainer,
+          target: svg,
           coords: { x: 85, y: 50 },
         },
         {
           keys: '[/MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 85, y: 50 },
         },
       ]);
@@ -488,77 +474,9 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   });
 
   describe('Zoom on brush', () => {
-    it('should not zoom on brush when required keys are not pressed', async () => {
-      const onZoomChange = vi.fn();
-      const { user, container } = render(
-        <BarChartPro
-          {...barChartProps}
-          onZoomChange={onZoomChange}
-          zoomInteractionConfig={{
-            zoom: [{ type: 'brush', requiredKeys: ['Control'] }],
-            pan: [],
-          }}
-        />,
-        options,
-      );
-
-      const initialTicks = getAxisTickValues('x');
-      expect(initialTicks).to.deep.equal(['A', 'B', 'C', 'D']);
-
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
-
-      // Brush without Control key - should not zoom
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: layerContainer,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          target: layerContainer,
-          coords: { x: 90, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: layerContainer,
-          coords: { x: 90, y: 50 },
-        },
-      ]);
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.mock.calls.length).to.equal(0);
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-
-      // Brush with Control key - should zoom
-      await user.keyboard('{Control>}');
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: layerContainer,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          target: layerContainer,
-          coords: { x: 90, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: layerContainer,
-          coords: { x: 90, y: 50 },
-        },
-      ]);
-      await user.keyboard('{/Control}');
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.mock.calls.length).to.equal(1);
-      expect(getAxisTickValues('x')).to.deep.equal(['C', 'D']);
-    });
-
     it('should zoom into the brushed area on x-axis', async () => {
       const onZoomChange = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <BarChartPro
           {...barChartProps}
           onZoomChange={onZoomChange}
@@ -573,24 +491,22 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       const initialTicks = getAxisTickValues('x');
       expect(initialTicks).to.deep.equal(['A', 'B', 'C', 'D']);
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Brush from middle to right side
       await user.pointer([
         {
           keys: '[MouseLeft>]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 50, y: 50 },
         },
         {
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 50 },
         },
         {
           keys: '[/MouseLeft]',
-          target: layerContainer,
+          target: svg,
           coords: { x: 90, y: 50 },
         },
       ]);
@@ -602,78 +518,12 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       // Should have zoomed in, so 'A' should not be visible anymore
       expect(ticksAfterZoom).to.deep.equal(['C', 'D']);
     });
-
-    it('should only zoom on brush with mouse when pointerMode is mouse', async () => {
-      const onZoomChange = vi.fn();
-      const { user, container } = render(
-        <BarChartPro
-          {...barChartProps}
-          onZoomChange={onZoomChange}
-          zoomInteractionConfig={{
-            zoom: [{ type: 'brush', pointerMode: 'mouse' }],
-            pan: [],
-          }}
-        />,
-        options,
-      );
-
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
-
-      // Touch brush - should not zoom
-      await user.pointer([
-        {
-          keys: '[TouchA>]',
-          target: layerContainer,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          pointerName: 'TouchA',
-          target: layerContainer,
-          coords: { x: 90, y: 50 },
-        },
-        {
-          keys: '[/TouchA]',
-          target: layerContainer,
-          coords: { x: 90, y: 50 },
-        },
-      ]);
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.mock.calls.length).to.equal(0);
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-
-      // Mouse brush - should zoom
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: layerContainer,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          target: layerContainer,
-          coords: { x: 90, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: layerContainer,
-          coords: { x: 90, y: 50 },
-        },
-      ]);
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.mock.calls.length).to.equal(1);
-      expect(getAxisTickValues('x')).to.deep.equal(['C', 'D']);
-    });
   });
 
   describe('Pan on wheel (side scrolling)', () => {
     it('should pan horizontally on wheel scroll', async () => {
       const onZoomChange = vi.fn();
-      const { container } = render(
+      render(
         <BarChartPro
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
@@ -686,13 +536,11 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
         options,
       );
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
       expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
 
       // Simulate wheel scroll
-      fireEvent.wheel(layerContainer, { deltaX: 100, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       // Should trigger zoom change (pan)
@@ -702,7 +550,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
     it('should pan diagonally on wheel scroll with xy', async () => {
       const onZoomChange = vi.fn();
-      const { container } = render(
+      render(
         <ScatterChartPro
           {...barChartProps}
           initialZoom={[
@@ -729,14 +577,12 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
         options,
       );
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
       expect(getAxisTickValues('x')).to.deep.equal(['10', '20']);
       expect(getAxisTickValues('y')).to.deep.equal(['10', '20']);
 
       // Simulate wheel scroll
-      fireEvent.wheel(layerContainer, {
+      fireEvent.wheel(svg, {
         // X <-- scroll right
         deltaX: -100,
         // Y v-- scroll down
@@ -754,7 +600,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
     it('should not pan when required keys are not pressed', async () => {
       const onZoomChange = vi.fn();
-      const { user, container } = render(
+      const { user } = render(
         <BarChartPro
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
@@ -767,13 +613,11 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
         options,
       );
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
       expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
 
       // Simulate wheel scroll without Alt key
-      fireEvent.wheel(layerContainer, { deltaX: 100, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       // Should not trigger zoom change because Alt key is required but not pressed
@@ -781,7 +625,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       // Simulate wheel scroll with Alt key
       await user.keyboard('{Alt>}');
-      fireEvent.wheel(layerContainer, { deltaX: 100, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
       await user.keyboard('{/Alt}');
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
@@ -792,7 +636,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
     it('should pan to the correct side when axis is reversed', async () => {
       const onZoomChange = vi.fn();
-      const { container } = render(
+      render(
         <BarChartPro
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
@@ -814,13 +658,11 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
         options,
       );
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
       expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
 
       // Simulate wheel scroll to the right (positive deltaX)
-      fireEvent.wheel(layerContainer, { deltaX: 100, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       // With reversed axis, should pan to show higher value ticks
@@ -830,7 +672,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
     it('should be enabled by default when only x-axis has zoom', async () => {
       const onZoomChange = vi.fn();
-      const { container } = render(
+      render(
         <BarChartPro
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
@@ -839,13 +681,11 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
         options,
       );
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
       expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
 
       // Simulate wheel scroll - should pan because only x-axis has zoom
-      fireEvent.wheel(layerContainer, { deltaX: 100, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       // Should trigger pan
@@ -855,7 +695,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
     it('should be disabled by default when both axes have zoom', async () => {
       const onZoomChange = vi.fn();
-      const { container } = render(
+      render(
         <ScatterChartPro
           series={[
             {
@@ -881,13 +721,11 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
         options,
       );
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
       const initialXTicks = getAxisTickValues('x');
 
       // Simulate wheel scroll - should NOT pan because both axes have zoom
-      fireEvent.wheel(layerContainer, { deltaX: 100, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       // Should not trigger pan
@@ -897,7 +735,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
     it('should be disabled by default when only y-axis has zoom', async () => {
       const onZoomChange = vi.fn();
-      const { container } = render(
+      render(
         <BarChartPro
           {...barChartProps}
           xAxis={[
@@ -920,13 +758,11 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
         options,
       );
 
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
       const initialXTicks = getAxisTickValues('x');
 
       // Simulate wheel scroll - should NOT pan because x-axis doesn't have zoom
-      fireEvent.wheel(layerContainer, { deltaX: 100, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       // Should not trigger pan

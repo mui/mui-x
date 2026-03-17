@@ -8,22 +8,22 @@ import type { SeriesId } from '../../../../../models/seriesType/common';
 import type { StackingGroupsType } from '../../../../stacking';
 import type { IsItemVisibleFunction } from '../../../featurePlugins/useChartVisibilityManager';
 
-export type SeriesProcessorParams<SeriesType extends ChartSeriesType> = {
-  series: Record<SeriesId, ChartsSeriesConfig[SeriesType]['seriesInput']>;
+export type SeriesProcessorParams<TSeriesType extends ChartSeriesType> = {
+  series: Record<SeriesId, ChartsSeriesConfig[TSeriesType]['seriesInput']>;
   seriesOrder: SeriesId[];
 };
 
-export type SeriesProcessorResult<SeriesType extends ChartSeriesType> = {
-  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType>>;
+export type SeriesProcessorResult<TSeriesType extends ChartSeriesType> = {
+  series: Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>;
   seriesOrder: SeriesId[];
-} & (ChartsSeriesConfig[SeriesType] extends {
+} & (ChartsSeriesConfig[TSeriesType] extends {
   canBeStacked: true;
 }
   ? { stackingGroups: StackingGroupsType }
   : {});
 
-export type SeriesProcessor<SeriesType extends ChartSeriesType> = (
-  params: SeriesProcessorParams<SeriesType>,
+export type SeriesProcessor<TSeriesType extends ChartSeriesType> = (
+  params: SeriesProcessorParams<TSeriesType>,
   dataset?: Readonly<DatasetType>,
   isItemVisible?: IsItemVisibleFunction,
-) => SeriesProcessorResult<SeriesType>;
+) => SeriesProcessorResult<TSeriesType>;

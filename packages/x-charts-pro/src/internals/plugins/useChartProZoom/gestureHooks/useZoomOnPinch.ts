@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getChartPoint,
+  getSVGPoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -22,10 +22,10 @@ export const useZoomOnPinch = (
   {
     store,
     instance,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
+    svgRef,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const { chartsLayerContainerRef } = instance;
   const drawingArea = store.use(selectorChartDrawingArea);
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const config = store.use(selectorZoomInteractionConfig, 'pinch' as const);
@@ -44,7 +44,7 @@ export const useZoomOnPinch = (
 
   // Zoom on pinch
   React.useEffect(() => {
-    const element = chartsLayerContainerRef.current;
+    const element = svgRef.current;
     if (element === null || !isZoomOnPinchEnabled) {
       return () => {};
     }
@@ -65,7 +65,7 @@ export const useZoomOnPinch = (
           const isZoomIn = event.detail.direction > 0;
           const scaleRatio = 1 + event.detail.deltaScale;
 
-          const point = getChartPoint(element, {
+          const point = getSVGPoint(element, {
             clientX: event.detail.centroid.x,
             clientY: event.detail.centroid.y,
           });
@@ -92,7 +92,7 @@ export const useZoomOnPinch = (
       rafThrottledCallback.clear();
     };
   }, [
-    chartsLayerContainerRef,
+    svgRef,
     drawingArea,
     isZoomOnPinchEnabled,
     optionsLookup,

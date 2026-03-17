@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getChartPoint,
+  getSVGPoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -16,10 +16,10 @@ export const usePanOnWheel = (
   {
     store,
     instance,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
+    svgRef,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const { chartsLayerContainerRef } = instance;
   const drawingArea = store.use(selectorChartDrawingArea);
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const startedOutsideRef = React.useRef(false);
@@ -40,7 +40,7 @@ export const usePanOnWheel = (
 
   // Add event for chart pan on wheel
   React.useEffect(() => {
-    const element = chartsLayerContainerRef.current;
+    const element = svgRef.current;
     const accumulatedChange = { x: 0, y: 0 };
     if (element === null || !isPanOnWheelEnabled) {
       return () => {};
@@ -49,7 +49,7 @@ export const usePanOnWheel = (
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
     const wheelHandler = instance.addInteractionListener('panTurnWheel', (event) => {
-      const point = getChartPoint(element, {
+      const point = getSVGPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
       });
@@ -121,7 +121,7 @@ export const usePanOnWheel = (
       rafThrottledSetZoomData.clear();
     };
   }, [
-    chartsLayerContainerRef,
+    svgRef,
     drawingArea,
     isPanOnWheelEnabled,
     optionsLookup,

@@ -22,7 +22,6 @@ const tooltipGetter: TooltipGetter<'line'> = (params) => {
     value,
     formattedValue,
     markType: series.labelMarkType,
-    markShape: series.showMark ? series.shape : undefined,
   };
 };
 

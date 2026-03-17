@@ -1,7 +1,6 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import { type ChartSeriesDefaultized, type ChartSeriesType } from '../models/seriesType/config';
-import { type SeriesItemIdentifierWithType } from '../models/seriesType';
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { useStore } from '../internals/store/useStore';
 import { useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
@@ -17,18 +16,14 @@ import {
 import { isCartesianSeries } from '../internals/isCartesian';
 import { type AxisId } from '../models/axis';
 
-export type UseItemTooltipReturnValue<SeriesType extends ChartSeriesType> = ItemTooltip<SeriesType>;
+export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
 
-export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
-  | (SeriesType extends 'radar'
-      ? ItemTooltipWithMultipleValues<SeriesType>
-      : ItemTooltip<SeriesType>)
+export function useInternalItemTooltip<T extends ChartSeriesType>():
+  | (T extends 'radar' ? ItemTooltipWithMultipleValues<T> : ItemTooltip<T>)
   | null {
   const store = useStore();
-  const identifier = store.use(
-    selectorChartsTooltipItem,
-  ) as SeriesItemIdentifierWithType<SeriesType> | null;
+  const identifier = store.use(selectorChartsTooltipItem);
   const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const series = useSeries();
@@ -43,7 +38,7 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
   }
 
   const itemSeries = series[identifier.type]?.series[identifier.seriesId] as
-    | ChartSeriesDefaultized<SeriesType>
+    | ChartSeriesDefaultized<T>
     | undefined;
 
   if (!itemSeries) {
@@ -62,7 +57,7 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
   const rotationAxisId: AxisId | undefined = rotationAxisIds[0];
 
   const getColor =
-    (seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<SeriesType>)?.(
+    (seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<T>)?.(
       itemSeries,
       xAxisId !== undefined ? xAxis[xAxisId] : undefined,
       yAxisId !== undefined ? yAxis[yAxisId] : undefined,
@@ -82,7 +77,7 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
     axesConfig.rotation = rotationAxis[rotationAxisId];
   }
 
-  return (seriesConfig[itemSeries.type].tooltipGetter as unknown as TooltipGetter<SeriesType>)({
+  return (seriesConfig[itemSeries.type].tooltipGetter as unknown as TooltipGetter<T>)({
     series: itemSeries,
     axesConfig,
     getColor,
@@ -95,8 +90,8 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
  * Some specific charts like radar need more complex structure. Use specific hook like `useRadarItemTooltip` for them.
  * @returns The tooltip item config
  */
-export const useItemTooltip = <SeriesType extends Exclude<ChartSeriesType, 'radar'>>() => {
-  return useInternalItemTooltip<SeriesType>() as UseItemTooltipReturnValue<SeriesType> | null;
+export const useItemTooltip = <T extends Exclude<ChartSeriesType, 'radar'>>() => {
+  return useInternalItemTooltip<T>() as UseItemTooltipReturnValue<T> | null;
 };
 
 /**

@@ -52,24 +52,23 @@ export const selectorChartsInteractionRotationAxisIndex = createSelector(
   selectorChartsInteractionRotationAngle,
   selectorChartRotationAxis,
   optionalGetAxisId,
-  (rotation, rotationAxis, id) =>
-    rotation === null ? null : indexGetter(rotation, rotationAxis, id ?? rotationAxis.axisIds[0]),
+  (rotation, rotationAxis, id = rotationAxis.axisIds[0]) =>
+    rotation === null ? null : indexGetter(rotation, rotationAxis, id),
 );
 
 export const selectorChartsInteractionRotationAxisIndexes = createSelector(
   selectorChartsInteractionRotationAngle,
   selectorChartRotationAxis,
   optionalGetAxisIds,
-  (rotation, rotationAxis, ids) =>
-    rotation === null ? null : indexGetter(rotation, rotationAxis, ids ?? rotationAxis.axisIds),
+  (rotation, rotationAxis, ids = rotationAxis.axisIds) =>
+    rotation === null ? null : indexGetter(rotation, rotationAxis, ids),
 );
 
 export const selectorChartsInteractionRotationAxisValue = createSelector(
   selectorChartRotationAxis,
   selectorChartsInteractionRotationAxisIndex,
   optionalGetAxisId,
-  (rotationAxis, rotationIndex, id) => {
-    id = id ?? rotationAxis.axisIds[0];
+  (rotationAxis, rotationIndex, id = rotationAxis.axisIds[0]) => {
     if (rotationIndex === null || rotationIndex === -1 || rotationAxis.axisIds.length === 0) {
       return null;
     }
@@ -86,8 +85,7 @@ export const selectorChartsInteractionRotationAxisValues = createSelector(
   selectorChartRotationAxis,
   selectorChartsInteractionRotationAxisIndexes,
   optionalGetAxisIds,
-  (rotationAxis, rotationIndexes, ids) => {
-    ids = ids ?? rotationAxis.axisIds;
+  (rotationAxis, rotationIndexes, ids = rotationAxis.axisIds) => {
     if (rotationIndexes === null) {
       return null;
     }

@@ -1,31 +1,56 @@
+import type * as React from 'react';
+import { type Store } from '@mui/x-internals/store';
 import type {
-  ChartsContextValue,
-  ChartsPluginParams,
-  ChartsProviderProps,
-} from '../ChartsProvider/ChartsProvider.types';
-import type { ChartAnyPluginSignature } from '../../internals/plugins/models';
+  ChartAnyPluginSignature,
+  ChartInstance,
+  ChartPublicAPI,
+  ChartState,
+  ConvertSignaturesIntoPlugins,
+  MergeSignaturesProperty,
+} from '../../internals/plugins/models';
+import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
+import type { UseChartBaseProps } from '../../internals/store/useCharts.types';
 import type { ChartSeriesType } from '../../models/seriesType/config';
 
-/**
- * @deprecated Use `ChartsContextValue` instead. We added S to the charts prefix to align with other components.
- */
 export type ChartContextValue<
   TSignatures extends readonly ChartAnyPluginSignature[],
   TOptionalSignatures extends readonly ChartAnyPluginSignature[] = [],
-> = ChartsContextValue<TSignatures, TOptionalSignatures>;
+> = {
+  /**
+   * And object with all the methods needed to interact with the chart.
+   */
+  instance: ChartInstance<TSignatures, TOptionalSignatures>;
+  /**
+   * A subset of the `instance` method that are exposed to the developers.
+   */
+  publicAPI: ChartPublicAPI<TSignatures, TOptionalSignatures>;
+  /**
+   * The internal state of the chart.
+   */
+  store: Store<ChartState<TSignatures, TOptionalSignatures>>;
+  /**
+   * The ref to the <svg />.
+   */
+  svgRef: React.RefObject<SVGSVGElement | null>;
+  /**
+   * The ref to the chart root element.
+   */
+  chartRootRef: React.RefObject<Element | null>;
+};
 
-/**
- * @deprecated Use `ChartsPluginParams` instead. We added S to the charts prefix to align with other components.
- */
 export type ChartPluginParams<
-  SeriesType extends ChartSeriesType,
+  TSeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
-> = ChartsPluginParams<SeriesType, TSignatures>;
+> = UseChartBaseProps<TSignatures> &
+  MergeSignaturesProperty<[...ChartCorePluginSignatures<TSeriesType>, ...TSignatures], 'params'>;
 
-/**
- * @deprecated Use `ChartsProviderProps` instead. We added S to the charts prefix to align with other components.
- */
-export type ChartProviderProps<
-  SeriesType extends ChartSeriesType,
+export interface ChartProviderProps<
+  TSeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
-> = ChartsProviderProps<SeriesType, TSignatures>;
+> {
+  /**
+   * Array of plugins used to add features to the chart.
+   */
+  plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
+  pluginParams?: ChartPluginParams<TSeriesType, TSignatures>;
+}

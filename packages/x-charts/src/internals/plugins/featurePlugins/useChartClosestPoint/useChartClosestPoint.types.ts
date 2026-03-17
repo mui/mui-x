@@ -1,5 +1,4 @@
-import type { ScatterItemIdentifier } from '../../../../models/seriesType';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import { type ScatterItemIdentifier } from '../../../../models/seriesType';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import { type ChartPluginSignature } from '../../models';
 import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
@@ -30,25 +29,13 @@ export interface UseChartVoronoiState {
 
 export interface UseChartVoronoiParameters {
   /**
-   * If true, the hit area interaction is disabled and falls back to hover events.
-   */
-  disableHitArea?: boolean;
-  /**
    * If true, the voronoi interaction are ignored.
-   * @deprecated Use `disableHitArea` instead.
    */
   disableVoronoi?: boolean;
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
-   */
-  hitAreaRadius?: 'item' | number | undefined;
-  /**
-   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
-   * If set to `'item'`, the radius is the `markerSize`.
-   * If `undefined`, the radius is assumed to be infinite.
-   * @deprecated Use `hitAreaRadius` instead.
    */
   voronoiMaxRadius?: 'item' | number | undefined;
   /**
@@ -62,19 +49,23 @@ export interface UseChartVoronoiParameters {
 
 export type UseChartVoronoiDefaultizedParameters = Pick<
   UseChartVoronoiParameters,
-  'hitAreaRadius' | 'voronoiMaxRadius' | 'disableHitArea' | 'disableVoronoi' | 'onItemClick'
->;
+  'voronoiMaxRadius' | 'onItemClick'
+> & {
+  /**
+   * If true, the voronoi plugin is disabled.
+   */
+  disableVoronoi: boolean;
+};
 
-export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  ChartPluginSignature<{
-    instance: UseChartVoronoiInstance;
-    state: UseChartVoronoiState;
-    params: UseChartVoronoiParameters;
-    defaultizedParams: UseChartVoronoiDefaultizedParameters;
-    dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
-    optionalDependencies: [
-      UseChartInteractionSignature,
-      UseChartHighlightSignature<SeriesType>,
-      UseChartTooltipSignature,
-    ];
-  }>;
+export type UseChartClosestPointSignature = ChartPluginSignature<{
+  instance: UseChartVoronoiInstance;
+  state: UseChartVoronoiState;
+  params: UseChartVoronoiParameters;
+  defaultizedParams: UseChartVoronoiDefaultizedParameters;
+  dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
+  optionalDependencies: [
+    UseChartInteractionSignature,
+    UseChartHighlightSignature,
+    UseChartTooltipSignature,
+  ];
+}>;

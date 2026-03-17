@@ -1,14 +1,27 @@
-import { selectorChartsHighlightState, useStore } from '@mui/x-charts/internals';
-import type { SankeyLinkIdentifier, SankeyNodeIdentifier } from './sankey.types';
+import { useStore } from '@mui/x-charts/internals';
+import {
+  selectorIsLinkHighlighted,
+  selectorIsNodeHighlighted,
+  selectorIsSankeyItemFaded,
+} from './plugins/useSankeyHighlight.selectors';
+import type { SankeyLayoutLink, SankeyNodeId } from './sankey.types';
 
-export function useSankeyNodeHighlightState(nodeIdentifier: SankeyNodeIdentifier) {
+export function useSankeyNodeHighlightState(nodeId: SankeyNodeId) {
   const store = useStore();
 
-  return store.use(selectorChartsHighlightState, nodeIdentifier);
+  const isHighlighted = store.use(selectorIsNodeHighlighted, nodeId);
+  const isFaded = store.use(selectorIsSankeyItemFaded, isHighlighted);
+
+  // eslint-disable-next-line no-nested-ternary
+  return isHighlighted ? 'highlighted' : isFaded ? 'faded' : 'none';
 }
 
-export function useSankeyLinkHighlightState(linkIdentifier: SankeyLinkIdentifier) {
+export function useSankeyLinkHighlightState(link: SankeyLayoutLink) {
   const store = useStore();
 
-  return store.use(selectorChartsHighlightState, linkIdentifier);
+  const isHighlighted = store.use(selectorIsLinkHighlighted, link);
+  const isFaded = store.use(selectorIsSankeyItemFaded, isHighlighted);
+
+  // eslint-disable-next-line no-nested-ternary
+  return isHighlighted ? 'highlighted' : isFaded ? 'faded' : 'none';
 }

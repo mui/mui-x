@@ -12,7 +12,7 @@ import {
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
 } from './useChartPolarAxis.selectors';
-import { getChartPoint } from '../../../getChartPoint';
+import { getSVGPoint } from '../../../getSVGPoint';
 import {
   generatePolar2svg,
   generateSvg2polar,
@@ -25,9 +25,9 @@ import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasIntera
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
   store,
+  svgRef,
   instance,
 }) => {
-  const { chartsLayerContainerRef } = instance;
   const { rotationAxis, radiusAxis, dataset } = params;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -96,7 +96,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   const hasInteractionPlugin = checkHasInteractionPlugin(instance);
 
   React.useEffect(() => {
-    const element = chartsLayerContainerRef.current;
+    const element = svgRef.current;
     if (
       !isInteractionEnabled ||
       !hasInteractionPlugin ||
@@ -145,7 +145,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
           return;
         }
 
-        const svgPoint = getChartPoint(element, srcEvent);
+        const svgPoint = getSVGPoint(element, srcEvent);
 
         mousePosition.current.isInChart = true;
         instance.setPointerCoordinate?.(svgPoint);
@@ -154,7 +154,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
 
       // On mouse, we want to restrict the interaction to the drawing area and radar circle.
 
-      const svgPoint = getChartPoint(element, srcEvent);
+      const svgPoint = getSVGPoint(element, srcEvent);
 
       // Test if it's in the drawing area
       if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.detail.target)) {
@@ -194,7 +194,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       pressEndHandler.cleanup();
     };
   }, [
-    chartsLayerContainerRef,
+    svgRef,
     store,
     center,
     radiusAxisWithScale,
@@ -209,7 +209,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   ]);
 
   React.useEffect(() => {
-    const element = chartsLayerContainerRef.current;
+    const element = svgRef.current;
     const onAxisClick = params.onAxisClick;
     if (element === null || !onAxisClick) {
       return () => {};
@@ -219,7 +219,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       let dataIndex: number | null = null;
       let isRotationAxis: boolean = false;
 
-      const svgPoint = getChartPoint(element, event.detail.srcEvent);
+      const svgPoint = getSVGPoint(element, event.detail.srcEvent);
 
       const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
       const rotationIndex = getAxisIndex(rotationAxisWithScale[usedRotationAxisId], rotation);
@@ -261,7 +261,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     processedSeries,
     radiusAxisWithScale,
     rotationAxisWithScale,
-    chartsLayerContainerRef,
+    svgRef,
     usedRadiusAxisId,
     usedRotationAxisId,
   ]);

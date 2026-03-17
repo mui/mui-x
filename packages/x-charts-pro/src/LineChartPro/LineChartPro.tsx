@@ -27,7 +27,7 @@ import {
   type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
-import { ChartsZoomSlider } from '../ChartsZoomSlider';
+import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { type ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
@@ -73,7 +73,7 @@ export interface LineChartProProps
  */
 const LineChartPro = React.forwardRef(function LineChartPro(
   inProps: LineChartProProps,
-  ref: React.Ref<HTMLDivElement>,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
   const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
@@ -96,21 +96,24 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'line',
     LineChartProPluginSignatures
-  >({
-    ...chartContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: LINE_CHART_PRO_PLUGINS,
-  });
+  >(
+    {
+      ...chartContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: LINE_CHART_PRO_PLUGINS,
+    },
+    ref,
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro<'line', LineChartProPluginSignatures> {...chartDataProviderProProps}>
-      <ChartsWrapper {...chartsWrapperProps} ref={ref}>
+      <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
@@ -122,7 +125,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
           <ChartsAxis {...chartsAxisProps} />
-          <ChartsZoomSlider />
+          <ChartZoomSlider />
           <g data-drawing-container>
             {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
             <MarkPlot {...markPlotProps} />
@@ -184,10 +187,6 @@ LineChartPro.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * The description of the chart.
-   * Used to provide an accessible description for the chart.
-   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -196,17 +195,16 @@ LineChartPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * If `true`, disables keyboard navigation for the chart.
-   */
-  disableKeyboardNavigation: PropTypes.bool,
-  /**
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    preferStrictDomainInLineCharts: PropTypes.bool,
+  }),
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -239,18 +237,11 @@ LineChartPro.propTypes = {
    * ```
    */
   hiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['line']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['line']),
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['line']).isRequired,
+    }),
   ),
   /**
    * If `true`, the legend is not rendered.
@@ -270,17 +261,10 @@ LineChartPro.propTypes = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['line']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+  }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -308,18 +292,11 @@ LineChartPro.propTypes = {
    * ```
    */
   initialHiddenItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['line']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['line']),
-      }),
-    ]).isRequired,
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['line']).isRequired,
+    }),
   ),
   /**
    * The list of zoom data related to each axis.
@@ -369,13 +346,13 @@ LineChartPro.propTypes = {
   onAxisClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifierWithType[]} hiddenItems The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
   onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
@@ -395,17 +372,9 @@ LineChartPro.propTypes = {
    */
   onMarkClick: PropTypes.func,
   /**
-   * The function called when the pointer position corresponds to a new axis data item.
-   * This update can either be caused by a pointer movement, or an axis update.
-   * In case of multiple axes, the function is called if at least one axis is updated.
-   * The argument contains the identifier for all axes with a `data` property.
-   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
-   */
-  onTooltipAxisChange: PropTypes.func,
-  /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -445,36 +414,16 @@ LineChartPro.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
-  /**
-   * The title of the chart.
-   * Used to provide an accessible label for the chart.
-   */
   title: PropTypes.string,
-  /**
-   * The controlled axis tooltip.
-   * Identified by the axis id, and data index.
-   */
-  tooltipAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      dataIndex: PropTypes.number.isRequired,
-    }),
-  ),
   /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem: PropTypes.oneOfType([
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['line']).isRequired,
-    }),
-    PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.string.isRequired,
-    }),
-  ]),
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['line']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -1061,8 +1010,18 @@ LineChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1143,8 +1102,18 @@ LineChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1852,8 +1821,18 @@ LineChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1933,8 +1912,18 @@ LineChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.any,
-        min: PropTypes.any,
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -2164,8 +2153,8 @@ LineChartPro.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,

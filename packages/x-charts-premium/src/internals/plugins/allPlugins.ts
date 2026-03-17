@@ -27,21 +27,21 @@ import {
   type UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
 
-export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
+export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature<SeriesType>,
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
-  UseChartCartesianAxisSignature<SeriesType>,
-  UseChartPolarAxisSignature<SeriesType>,
-  UseChartHighlightSignature<SeriesType>,
-  UseChartVisibilityManagerSignature<SeriesType>,
+  UseChartCartesianAxisSignature<TSeries>,
+  UseChartPolarAxisSignature<TSeries>,
+  UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
 ];
 
-export type AllPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  ConvertSignaturesIntoPlugins<AllPluginSignatures<SeriesType>>;
+export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
+  ConvertSignaturesIntoPlugins<AllPluginSignatures<TSeries>>;
 
 export const ALL_PLUGINS = [
   useChartZAxis,
@@ -56,21 +56,21 @@ export const ALL_PLUGINS = [
   useChartProExport,
 ];
 
-export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
+export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature<SeriesType>,
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
-  UseChartCartesianAxisSignature<SeriesType>,
-  UseChartPolarAxisSignature<SeriesType>,
-  UseChartHighlightSignature<SeriesType>,
-  UseChartVisibilityManagerSignature<SeriesType>,
+  UseChartCartesianAxisSignature<TSeries>,
+  UseChartPolarAxisSignature<TSeries>,
+  UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
 ];
 
-export type DefaultPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  ConvertSignaturesIntoPlugins<DefaultPluginSignatures<SeriesType>>;
+export type DefaultPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
+  ConvertSignaturesIntoPlugins<DefaultPluginSignatures<TSeries>>;
 
 export const DEFAULT_PLUGINS = [
   useChartZAxis,

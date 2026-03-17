@@ -3,10 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
-import { useUtilityClasses as useDeprecatedUtilityClasses } from './barElementClasses';
+import { type BarElementOwnerState, useUtilityClasses } from './barElementClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlightState } from '../hooks/useItemHighlightState';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
 
@@ -74,9 +73,7 @@ function BarElement(props: BarElementProps) {
     [seriesId, dataIndex],
   );
   const interactionProps = useInteractionItemProps(itemIdentifier);
-  const highlightState = useItemHighlightState(itemIdentifier);
-  const isHighlighted = highlightState === 'highlighted';
-  const isFaded = highlightState === 'faded';
+  const { isFaded, isHighlighted } = useItemHighlighted(itemIdentifier);
   const isFocused = useIsItemFocused(
     React.useMemo(
       () => ({
@@ -99,7 +96,6 @@ function BarElement(props: BarElementProps) {
   };
 
   const classes = useUtilityClasses(ownerState);
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Bar = slots?.bar ?? AnimatedBarElement;
 
@@ -127,7 +123,7 @@ function BarElement(props: BarElementProps) {
       layout,
       hidden,
     },
-    className: `${classes.element} ${deprecatedClasses.root}`,
+    className: classes.root,
     ownerState,
   });
 

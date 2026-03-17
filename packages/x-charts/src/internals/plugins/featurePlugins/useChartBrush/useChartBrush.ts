@@ -3,13 +3,17 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { PanEvent } from '@mui/x-internal-gestures/core';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { getChartPoint } from '../../../getChartPoint';
+import { getSVGPoint } from '../../../getSVGPoint';
 import { type ChartPlugin } from '../../models';
 import { type UseChartBrushSignature, type Point } from './useChartBrush.types';
 import { selectorIsBrushEnabled } from './useChartBrush.selectors';
 
-export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, instance, params }) => {
-  const { chartsLayerContainerRef } = instance;
+export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
+  store,
+  svgRef,
+  instance,
+  params,
+}) => {
   const isEnabled = store.use(selectorIsBrushEnabled);
 
   useEnhancedEffect(() => {
@@ -53,7 +57,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, inst
   });
 
   React.useEffect(() => {
-    const element = chartsLayerContainerRef.current;
+    const element = svgRef.current;
     if (element === null || !isEnabled) {
       return () => {};
     }
@@ -63,7 +67,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, inst
         return;
       }
 
-      const point = getChartPoint(element, {
+      const point = getSVGPoint(element, {
         clientX: event.detail.initialCentroid.x,
         clientY: event.detail.initialCentroid.y,
       });
@@ -72,7 +76,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, inst
     };
 
     const handleBrush = (event: PanEvent) => {
-      const currentPoint = getChartPoint(element, {
+      const currentPoint = getSVGPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
       });
@@ -91,7 +95,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, inst
       brushEndHandler.cleanup();
       brushCancelHandler.cleanup();
     };
-  }, [chartsLayerContainerRef, instance, store, clearBrush, setBrushCoordinates, isEnabled]);
+  }, [svgRef, instance, store, clearBrush, setBrushCoordinates, isEnabled]);
 
   return {
     instance: {

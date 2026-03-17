@@ -2,9 +2,8 @@ import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import { useUtilityClasses as useDeprecatedUtilityClasses } from './radarSeriesPlotClasses';
-import { useUtilityClasses } from '../radarClasses';
-import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
+import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { useUtilityClasses } from './radarSeriesPlotClasses';
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
@@ -15,18 +14,12 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const getHighlightState = useItemHighlightStateGetter();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
-  const newClasses = useUtilityClasses();
-  const deprecatedClasses = useDeprecatedUtilityClasses(inClasses);
-  const classes = {
-    ...deprecatedClasses,
-    area: `${newClasses.seriesArea} ${deprecatedClasses.area}`,
-    mark: `${newClasses.seriesMark} ${deprecatedClasses.mark}`,
-  };
+  const classes = useUtilityClasses(inClasses);
 
   return (
-    <g className={`${newClasses.seriesRoot} ${deprecatedClasses.root}`}>
+    <g className={classes.root}>
       {seriesCoordinates?.map(
         ({ seriesId, points, color, hideMark, fillArea, hidden }, seriesIndex) => {
           if (hidden) {
@@ -43,7 +36,8 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                     points,
                     color,
                     fillArea,
-                    getHighlightState,
+                    isFaded,
+                    isHighlighted,
                     classes,
                   })}
                   onClick={(event) =>
@@ -66,7 +60,8 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       point,
                       color: point.color,
                       fillArea,
-                      getHighlightState,
+                      isFaded,
+                      isHighlighted,
                       classes,
                     })}
                     onClick={(event) =>

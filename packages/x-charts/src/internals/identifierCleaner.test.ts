@@ -18,6 +18,11 @@ describe('identifierCleanerSeriesIdDataIndex', () => {
       { type: 'funnel', seriesId: 's3', dataIndex: 2 },
     ],
     [
+      'heatmap',
+      { type: 'heatmap', seriesId: 's4', dataIndex: 3, qux: true },
+      { type: 'heatmap', seriesId: 's4', dataIndex: 3 },
+    ],
+    [
       'scatter',
       { type: 'scatter', seriesId: 's5', dataIndex: 4, extraProp: 'remove this too' },
       { type: 'scatter', seriesId: 's5', dataIndex: 4 },

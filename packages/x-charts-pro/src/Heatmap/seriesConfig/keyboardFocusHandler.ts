@@ -14,19 +14,30 @@ function getFirstCell(
   if (!seriesId || !series || !data || data.length === 0) {
     return null;
   }
+  const dataIndex = data.findIndex((value) => value[0] === 0 && value[1] === 0);
 
-  return { type: 'heatmap', seriesId, xIndex: 0, yIndex: 0 };
+  if (dataIndex === -1) {
+    return { type: 'heatmap', seriesId, xIndex: 0, yIndex: 0 };
+  }
+  return { type: 'heatmap', seriesId, dataIndex, xIndex: 0, yIndex: 0 };
 }
 
 const updateCoordinates = (
   newXIndex: number,
   newYIndex: number,
   currentItem: FocusedItemIdentifier<'heatmap'>,
+  state: Pick<ChartState<[UseChartKeyboardNavigationSignature], [], 'heatmap'>, 'series'>,
 ) => {
+  const seriesData = state.series.defaultizedSeries.heatmap?.series[currentItem.seriesId]?.data;
+  const dataIndex = seriesData?.findIndex(
+    (value) => value[0] === newXIndex && value[1] === newYIndex,
+  );
+
   return {
     ...currentItem,
     xIndex: newXIndex,
     yIndex: newYIndex,
+    dataIndex: dataIndex === -1 || dataIndex === undefined ? undefined : dataIndex,
   };
 };
 
@@ -42,7 +53,7 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
           return currentItem;
         }
 
-        return updateCoordinates(currentItem.xIndex + 1, currentItem.yIndex, currentItem);
+        return updateCoordinates(currentItem.xIndex + 1, currentItem.yIndex, currentItem, state);
       };
     case 'ArrowLeft':
       return (currentItem, state) => {
@@ -53,7 +64,7 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
           return currentItem;
         }
 
-        return updateCoordinates(currentItem.xIndex - 1, currentItem.yIndex, currentItem);
+        return updateCoordinates(currentItem.xIndex - 1, currentItem.yIndex, currentItem, state);
       };
     case 'ArrowDown':
       return (currentItem, state) => {
@@ -64,7 +75,7 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
         if (currentItem.yIndex + 1 === (maxLength ?? 0)) {
           return currentItem;
         }
-        return updateCoordinates(currentItem.xIndex, currentItem.yIndex + 1, currentItem);
+        return updateCoordinates(currentItem.xIndex, currentItem.yIndex + 1, currentItem, state);
       };
     case 'ArrowUp':
       return (currentItem, state) => {
@@ -75,7 +86,7 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
         if (currentItem.yIndex - 1 < 0) {
           return currentItem;
         }
-        return updateCoordinates(currentItem.xIndex, currentItem.yIndex - 1, currentItem);
+        return updateCoordinates(currentItem.xIndex, currentItem.yIndex - 1, currentItem, state);
       };
     default:
       return null;

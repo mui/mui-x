@@ -1,19 +1,53 @@
 'use client';
-import { type ChartAnyPluginSignature, type ChartSeriesType } from '@mui/x-charts/internals';
+import type * as React from 'react';
 import {
-  useChartsContainerPremiumProps,
-  type UseChartsContainerPremiumPropsReturnValue,
-} from '../ChartsContainerPremium/useChartsContainerPremiumProps';
+  type ChartAnyPluginSignature,
+  type ChartSeriesType,
+  type UseChartContainerPropsReturnValue,
+} from '@mui/x-charts/internals';
+import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
+import { useChartContainerProProps } from '@mui/x-charts-pro/internals';
+import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { ChartContainerPremiumProps } from './ChartContainerPremium';
 
-/**
- * @deprecated Use `UseChartsContainerPremiumPropsReturnValue` instead.
- */
 export type UseChartContainerPremiumPropsReturnValue<
-  SeriesType extends ChartSeriesType,
+  TSeries extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
-> = UseChartsContainerPremiumPropsReturnValue<SeriesType, TSignatures>;
+> = Pick<
+  UseChartContainerPropsReturnValue<TSeries, TSignatures>,
+  'chartsSurfaceProps' | 'children'
+> & {
+  chartDataProviderPremiumProps: ChartDataProviderProps<TSeries, TSignatures>;
+};
 
-/**
- * @deprecated Use `useChartsContainerPremiumProps` instead.
- */
-export const useChartContainerPremiumProps = useChartsContainerPremiumProps;
+export function useChartContainerPremiumProps<
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(
+  props: ChartContainerPremiumProps<TSeries, TSignatures>,
+  ref: React.Ref<SVGSVGElement>,
+): UseChartContainerPremiumPropsReturnValue<TSeries, TSignatures> {
+  const {
+    initialZoom,
+    zoomData,
+    onZoomChange,
+    zoomInteractionConfig,
+    plugins,
+    apiRef,
+    ...baseProps
+  } = props as ChartContainerPremiumProps<TSeries, AllPluginSignatures<TSeries>>;
+
+  const { chartDataProviderProProps, chartsSurfaceProps, children } =
+    useChartContainerProProps<TSeries>(baseProps, ref);
+
+  const chartDataProviderPremiumProps = {
+    ...chartDataProviderProProps,
+    plugins: plugins ?? DEFAULT_PLUGINS,
+  } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
+
+  return {
+    chartDataProviderPremiumProps,
+    chartsSurfaceProps,
+    children,
+  };
+}

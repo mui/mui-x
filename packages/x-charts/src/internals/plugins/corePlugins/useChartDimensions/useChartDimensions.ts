@@ -14,9 +14,8 @@ const MAX_COMPUTE_RUN = 10;
 export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   params,
   store,
-  instance,
+  svgRef,
 }) => {
-  const { chartsLayerContainerRef } = instance;
   const hasInSize = params.width !== undefined && params.height !== undefined;
   const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
   // States only used for the initialization of the size.
@@ -24,7 +23,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   const [innerHeight, setInnerHeight] = React.useState(0);
 
   const computeSize = React.useCallback(() => {
-    const mainEl = chartsLayerContainerRef?.current;
+    const mainEl = svgRef?.current;
 
     if (!mainEl) {
       return {};
@@ -56,7 +55,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     };
   }, [
     store,
-    chartsLayerContainerRef,
+    svgRef,
     params.height,
     params.width,
     // Margin is an object, so we need to include all the properties to prevent infinite loops.
@@ -131,7 +130,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     }
     computeSize();
 
-    const elementToObserve = chartsLayerContainerRef.current;
+    const elementToObserve = svgRef.current;
     if (typeof ResizeObserver === 'undefined') {
       return () => {};
     }
@@ -157,7 +156,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
         observer.unobserve(elementToObserve);
       }
     };
-  }, [computeSize, hasInSize, chartsLayerContainerRef]);
+  }, [computeSize, hasInSize, svgRef]);
 
   if (process.env.NODE_ENV !== 'production') {
     if (stateRef.current.displayError && params.width === undefined && innerWidth === 0) {

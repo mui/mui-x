@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -9,27 +8,15 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
 import { type SeriesId } from '../models';
-import { pieClasses, useUtilityClasses as usePieUtilityClasses } from './pieClasses';
 
-/**
- * @deprecated Use `PieClasses` instead.
- */
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
   root: string;
-  /**
-   * Styles applied to the root element when highlighted.
-   * @deprecated Use `[data-highlighted]` selector instead.
-   */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
-  /**
-   * Styles applied to the root element when faded.
-   * @deprecated Use `[data-faded]` selector instead.
-   */
+  /** Styles applied to the root element when faded. */
   faded: string;
-  /** Styles applied to the root element when animation is not skipped.
-   * @deprecated Use the `animate` class from `./pieClasses` instead.
-   */
+  /** Styles applied to the root element when animation is not skipped. */
   animate: string;
   /**
    * Styles applied to the root element for a specified series.
@@ -38,9 +25,6 @@ export interface PieArcLabelClasses {
   series: string;
 }
 
-/**
- * @deprecated Use `PieClassKey` instead.
- */
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
 interface PieArcLabelOwnerState {
@@ -52,16 +36,10 @@ interface PieArcLabelOwnerState {
   classes?: Partial<PieArcLabelClasses>;
 }
 
-/**
- * @deprecated Use `getPieUtilityClass` instead.
- */
 export function getPieArcLabelUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArcLabel', slot);
 }
 
-/**
- * @deprecated Use `pieClasses` instead.
- */
 export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('MuiPieArcLabel', [
   'root',
   'highlighted',
@@ -70,9 +48,6 @@ export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('Mu
   'series',
 ]);
 
-/**
- * @deprecated Use `useUtilityClasses` instead.
- */
 const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
@@ -102,7 +77,7 @@ const PieArcLabelRoot = styled('text', {
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
   transitionProperty: 'opacity',
   transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
-  [`&.${pieClasses.animate}`]: {
+  [`&.${pieArcLabelClasses.animate}`]: {
     animationDuration: `${ANIMATION_DURATION_MS}ms`,
   },
   '@keyframes animate-opacity': {
@@ -142,7 +117,6 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       isFaded,
       skipAnimation,
       hidden,
-      className,
       ...other
     } = props;
 
@@ -154,8 +128,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       isHighlighted,
       skipAnimation,
     };
-    const classes = usePieUtilityClasses(ownerState);
-    const deprecatedClasses = useUtilityClasses(ownerState);
+    const classes = useUtilityClasses(ownerState);
 
     const animatedProps = useAnimatePieArcLabel({
       cornerRadius,
@@ -170,9 +143,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
 
     return (
       <PieArcLabelRoot
-        className={clsx(classes.arcLabel, deprecatedClasses.root, className)}
-        data-highlighted={isHighlighted || undefined}
-        data-faded={isFaded || undefined}
+        className={classes.root}
         {...other}
         {...animatedProps}
         opacity={hidden ? 0 : 1}

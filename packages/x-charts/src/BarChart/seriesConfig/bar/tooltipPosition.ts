@@ -1,4 +1,4 @@
-import { createGetBarDimensions } from '../../../internals/createGetBarDimensions';
+import { getBarDimensions } from '../../../internals/getBarDimensions';
 import type { TooltipItemPositionGetter } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'bar'> = (params) => {
@@ -17,17 +17,15 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'bar'> = (params) => 
     return null;
   }
 
-  const groupIndex = series.bar.stackingGroups.findIndex((group) =>
-    group.ids.includes(itemSeries.id),
-  );
-
-  const dimensions = createGetBarDimensions({
+  const dimensions = getBarDimensions({
     verticalLayout: itemSeries.layout === 'vertical',
     xAxisConfig: axesConfig.x,
     yAxisConfig: axesConfig.y,
     series: itemSeries,
+    dataIndex: identifier.dataIndex,
     numberOfGroups: series.bar.stackingGroups.length,
-  })(identifier.dataIndex, groupIndex);
+    groupIndex: series.bar.stackingGroups.findIndex((group) => group.ids.includes(itemSeries.id)),
+  });
 
   if (dimensions == null) {
     return null;

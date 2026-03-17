@@ -1,5 +1,5 @@
 import { type SeriesId } from '../../models/seriesType/common';
-import type { BarClasses } from '../barClasses';
+import type { BarLabelClasses } from './barLabelClasses';
 import { type BarValueType } from '../../models';
 
 export interface BarLabelOwnerState {
@@ -10,7 +10,7 @@ export interface BarLabelOwnerState {
   isHighlighted: boolean;
   skipAnimation: boolean;
   layout: 'vertical' | 'horizontal';
-  classes?: Partial<BarClasses>;
+  classes?: Partial<BarLabelClasses>;
 }
 
 export type BarItem = {

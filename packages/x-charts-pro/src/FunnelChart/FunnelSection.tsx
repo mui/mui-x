@@ -2,13 +2,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useInteractionItemProps, type SeriesId, consumeSlots } from '@mui/x-charts/internals';
-import { useItemHighlightState } from '@mui/x-charts/hooks';
+import { useItemHighlighted } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
-import {
-  type FunnelSectionClasses,
-  useUtilityClasses as useDeprecatedUtilityClasses,
-} from './funnelSectionClasses';
-import { useUtilityClasses } from './funnelClasses';
+import { type FunnelSectionClasses, useUtilityClasses } from './funnelSectionClasses';
 
 export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref'> {
   seriesId: SeriesId;
@@ -19,8 +15,8 @@ export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>,
 }
 
 export const FunnelSectionPath = styled('path', {
-  name: 'MuiFunnelChart',
-  slot: 'Section',
+  slot: 'internal',
+  shouldForwardProp: undefined,
 })(() => ({
   transition:
     'opacity 0.2s ease-in, fill 0.2s ease-in, fill-opacity 0.2s ease-in, filter 0.2s ease-in',
@@ -33,7 +29,7 @@ const FunnelSection = consumeSlots(
   'MuiFunnelSection',
   'funnelSection',
   {
-    classesResolver: useDeprecatedUtilityClasses,
+    classesResolver: useUtilityClasses,
   },
   React.forwardRef(function FunnelSection(
     props: FunnelSectionProps,
@@ -49,18 +45,11 @@ const FunnelSection = consumeSlots(
       variant = 'filled',
       ...other
     } = props;
-
-    const identifier = React.useMemo(
-      () => ({ type: 'funnel' as const, seriesId, dataIndex }),
-      [seriesId, dataIndex],
-    );
-
-    const interactionProps = useInteractionItemProps(identifier);
-    const highlightState = useItemHighlightState(identifier);
-    const isHighlighted = highlightState === 'highlighted';
-    const isFaded = highlightState === 'faded';
-
-    const newClasses = useUtilityClasses({ variant });
+    const interactionProps = useInteractionItemProps({ type: 'funnel', seriesId, dataIndex });
+    const { isFaded, isHighlighted } = useItemHighlighted({
+      seriesId,
+      dataIndex,
+    });
 
     const isOutlined = variant === 'outlined';
 
@@ -79,7 +68,6 @@ const FunnelSection = consumeSlots(
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
         className={clsx(
-          newClasses.section,
           classes?.root,
           isHighlighted && classes?.highlighted,
           isFaded && classes?.faded,

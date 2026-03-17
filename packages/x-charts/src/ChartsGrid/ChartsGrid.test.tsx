@@ -1,13 +1,13 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 
 describe('<ChartsGrid />', () => {
   const { render } = createRenderer();
 
   it('should render grid at millisecond level without warnings', () => {
     render(
-      <ChartsContainer
+      <ChartContainer
         series={[]}
         width={500}
         height={500}
@@ -27,7 +27,7 @@ describe('<ChartsGrid />', () => {
         ]}
       >
         <ChartsGrid vertical horizontal />
-      </ChartsContainer>,
+      </ChartContainer>,
     );
 
     const gridLines = document.querySelectorAll('.MuiChartsGrid-line');
@@ -36,7 +36,7 @@ describe('<ChartsGrid />', () => {
 
   it('should render grid on band scale without error', () => {
     render(
-      <ChartsContainer
+      <ChartContainer
         series={[]}
         width={500}
         height={500}
@@ -44,7 +44,7 @@ describe('<ChartsGrid />', () => {
         yAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
       >
         <ChartsGrid vertical horizontal />
-      </ChartsContainer>,
+      </ChartContainer>,
     );
 
     const gridLines = document.querySelectorAll('.MuiChartsGrid-line');

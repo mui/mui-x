@@ -3,7 +3,7 @@ import { isBandScaleConfig, type TooltipItemPositionGetter } from '@mui/x-charts
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'heatmap'> = (params) => {
   const { series, identifier, axesConfig, placement } = params;
 
-  if (!identifier) {
+  if (!identifier || identifier.dataIndex === undefined) {
     return null;
   }
   const itemSeries = series.heatmap?.series[identifier.seriesId];
@@ -21,8 +21,10 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'heatmap'> = (params)
     return null;
   }
 
-  const x = axesConfig.x.scale(axesConfig.x.scale.domain()[identifier.xIndex]);
-  const y = axesConfig.y.scale(axesConfig.y.scale.domain()[identifier.yIndex]);
+  const [xIndex, yIndex] = itemSeries.data[identifier.dataIndex];
+
+  const x = axesConfig.x.scale(axesConfig.x.scale.domain()[xIndex]);
+  const y = axesConfig.y.scale(axesConfig.y.scale.domain()[yIndex]);
 
   if (x === undefined || y === undefined) {
     return null;
