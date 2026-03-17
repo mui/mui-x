@@ -81,9 +81,6 @@ export default function AssistantWithCharts() {
                 schema: configurationOptions,
               },
             }}
-            experimentalFeatures={{
-              charts: true,
-            }}
           />
         </div>
         <GridChartsRendererProxy id="main" renderer={CustomRenderer} />

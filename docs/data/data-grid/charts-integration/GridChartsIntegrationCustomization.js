@@ -238,9 +238,6 @@ export default function GridChartsIntegrationCustomization() {
             }}
             getPivotDerivedColumns={getPivotDerivedColumns}
             initialState={initialState}
-            experimentalFeatures={{
-              charts: true,
-            }}
           />
         </div>
         <GridChartsRendererProxy

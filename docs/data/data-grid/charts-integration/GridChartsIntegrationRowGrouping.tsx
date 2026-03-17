@@ -107,9 +107,6 @@ export default function GridChartsIntegrationRowGrouping() {
               },
             }}
             initialState={initialState}
-            experimentalFeatures={{
-              charts: true,
-            }}
           />
         </div>
         <GridChartsRendererProxy
