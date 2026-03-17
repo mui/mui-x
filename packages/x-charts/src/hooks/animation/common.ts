@@ -16,9 +16,9 @@ export function createInterpolator<
   const interpolators: Partial<Record<keyof T, (t: number) => any>> = {};
   (Object.keys(to) as (keyof T)[]).forEach((key) => {
     if (typeof from[key] === 'number' && typeof to[key] === 'number') {
-      interpolators[key] = interpolateNumber(from[key] as number, to[key] as number);
+      interpolators[key] = interpolateNumber(from[key], to[key]);
     } else if (typeof from[key] === 'string' && typeof to[key] === 'string') {
-      interpolators[key] = interpolateString(from[key] as string, to[key] as string);
+      interpolators[key] = interpolateString(from[key], to[key]);
     }
   });
 
