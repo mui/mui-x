@@ -12,7 +12,6 @@ import {
 import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
-  schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -297,8 +296,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
-
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(store, isResizableSelector, 'start', occurrence);
@@ -404,7 +401,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ref: forwardedRef,
     'data-variant': variant,
     'data-palette': color,
-    'data-editing': isEditing || undefined,
     style: {
       '--grid-row': occurrence.position.index,
       '--grid-column-span': occurrence.position.daySpan,

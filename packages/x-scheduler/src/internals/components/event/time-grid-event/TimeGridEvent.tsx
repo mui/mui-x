@@ -5,10 +5,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { TimeGridEventProps } from './TimeGridEvent.types';
@@ -218,8 +215,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
-  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
-
   // Selector hooks
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
@@ -322,7 +317,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
       data-palette={color}
-      data-editing={isEditing || undefined}
       {...sharedProps}
       className={clsx(classes.timeGridEvent, sharedProps.className)}
     >

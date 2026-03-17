@@ -4,10 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
 import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
@@ -125,8 +122,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
-  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
-
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(
@@ -153,7 +148,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       '--row-index': occurrence.position.firstIndex,
     } as React.CSSProperties,
     'data-palette': color,
-    'data-editing': isEditing || undefined,
     ...other,
   };
 
