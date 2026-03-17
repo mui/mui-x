@@ -15,7 +15,7 @@ export function GridColumnMenuChartsItem(props: GridColumnMenuItemProps) {
     apiRef.current.setChartsPanelOpen(true);
   };
 
-  if (!rootProps.experimentalFeatures?.charts || !rootProps.chartsIntegration) {
+  if (!rootProps.chartsIntegration) {
     return null;
   }
 

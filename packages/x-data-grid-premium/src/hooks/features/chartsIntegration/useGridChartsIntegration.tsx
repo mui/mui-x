@@ -81,11 +81,10 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
     | 'activeChartId'
     | 'rowGroupingModel'
     | 'pivotModel'
-    | 'experimentalFeatures'
   >,
   GridPrivateApiPremium
 > = (state, props) => {
-  if (!props.chartsIntegration || !props.experimentalFeatures?.charts) {
+  if (!props.chartsIntegration) {
     return {
       ...state,
       chartsIntegration: {
@@ -154,7 +153,6 @@ export const useGridChartsIntegration = (
     | 'slotProps'
     | 'aggregationFunctions'
     | 'dataSource'
-    | 'experimentalFeatures'
   >,
 ) => {
   const visibleDimensions = React.useRef<Record<string, GridColDef[]>>({});
@@ -165,8 +163,7 @@ export const useGridChartsIntegration = (
   );
 
   const context = useGridChartsIntegrationContext(true);
-  const isChartsIntegrationAvailable =
-    !!props.chartsIntegration && !!props.experimentalFeatures?.charts && !!context;
+  const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
   const aggregationModel = gridAggregationModelSelector(apiRef);
   const pivotActive = gridPivotActiveSelector(apiRef);
@@ -862,16 +859,14 @@ export const useGridChartsIntegration = (
   );
   useGridApiMethod(
     apiRef,
-    props.experimentalFeatures?.charts
-      ? {
-          setChartsPanelOpen,
-          setActiveChartId,
-          setChartType,
-          setChartSynchronizationState,
-          updateChartDimensionsData,
-          updateChartValuesData,
-        }
-      : {},
+    {
+      setChartsPanelOpen,
+      setActiveChartId,
+      setChartType,
+      setChartSynchronizationState,
+      updateChartDimensionsData,
+      updateChartValuesData,
+    },
     'public',
   );
 
@@ -903,7 +898,7 @@ export const useGridChartsIntegration = (
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, exportContext) => {
-      if (!props.chartsIntegration || !props.experimentalFeatures?.charts) {
+      if (!props.chartsIntegration) {
         return prevState;
       }
 
@@ -950,7 +945,6 @@ export const useGridChartsIntegration = (
       apiRef,
       chartStateLookup,
       props.chartsIntegration,
-      props.experimentalFeatures?.charts,
       props.initialState?.chartsIntegration,
     ],
   );

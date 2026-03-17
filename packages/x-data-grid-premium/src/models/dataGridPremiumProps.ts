@@ -46,9 +46,7 @@ import type {
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
-  charts?: boolean;
-}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing extends Pick<
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
