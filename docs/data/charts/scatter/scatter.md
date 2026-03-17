@@ -41,7 +41,7 @@ Since scatter elements can be small, interactions do not require hovering exactl
 When the pointer is in the drawing area, the closest scatter element will be used for interactions (tooltip or highlights).
 To do so, the chart computes [Voronoi cells](https://en.wikipedia.org/wiki/Voronoi_diagram) which map the pointer position to the closest element.
 
-You can define a maximal radius with the `hitAreaRadius` prop.
+You can define a maximum radius with the `hitAreaRadius` prop.
 If the distance with the pointer is larger than this radius, no item will be selected.
 Alternatively, set the `hitAreaRadius` prop to `item` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
 
