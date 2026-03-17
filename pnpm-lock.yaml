@@ -271,7 +271,7 @@ importers:
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/monorepo':
         specifier: github:mui/material-ui#v7.x
-        version: https://codeload.github.com/mui/material-ui/tar.gz/d13a72d0e71b4d073ba630b8329291e2c1e5f412(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
+        version: https://codeload.github.com/mui/material-ui/tar.gz/79f9ffb67fa0e1a4b622526b4e0f5bc3a2826957(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.7(@types/react@19.2.7)(react@19.2.3)
@@ -4232,6 +4232,7 @@ packages:
   '@lerna/create@9.0.3':
     resolution: {integrity: sha512-hUTEWrR8zH+/Z3bp/R1aLm6DW8vB/BB7KH7Yeg4fMfrvSwxegiLVW9uJFAzWkK4mzEagmj/Dti85Yg9MN13t0g==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    deprecated: This package is an implementation detail of Lerna and is no longer published separately.
 
   '@mdn/browser-compat-data@5.7.6':
     resolution: {integrity: sha512-7xdrMX0Wk7grrTZQwAoy1GkvPMFoizStUoL+VmtUkAxegbCCec+3FKwOM6yc/uGU5+BEczQHXAlWiqvM8JeENg==}
@@ -4432,8 +4433,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d13a72d0e71b4d073ba630b8329291e2c1e5f412':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/d13a72d0e71b4d073ba630b8329291e2c1e5f412}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/79f9ffb67fa0e1a4b622526b4e0f5bc3a2826957':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/79f9ffb67fa0e1a4b622526b4e0f5bc3a2826957}
     version: 7.3.9
     engines: {node: '>=22.18.0', pnpm: 10.28.2}
 
@@ -14753,7 +14754,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
       '@types/react': 19.2.7
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d13a72d0e71b4d073ba630b8329291e2c1e5f412(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/79f9ffb67fa0e1a4b622526b4e0f5bc3a2826957(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
     dependencies:
       '@netlify/functions': 5.1.2
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
