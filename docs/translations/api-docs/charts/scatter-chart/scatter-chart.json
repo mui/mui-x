@@ -51,9 +51,6 @@
     "initialHiddenItems": {
       "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
-    "interactionMaxRadius": {
-      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
-    },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
     "margin": {

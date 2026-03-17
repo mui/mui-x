@@ -54,9 +54,6 @@
     "initialZoom": {
       "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
     },
-    "interactionMaxRadius": {
-      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
-    },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
     "margin": {

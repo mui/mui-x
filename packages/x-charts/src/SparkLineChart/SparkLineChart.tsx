@@ -414,11 +414,6 @@ SparkLineChart.propTypes = {
    */
   disableClipping: PropTypes.bool,
   /**
-   * If true, the closest point interaction is disabled.
-   * @deprecated Use `disableHitArea` instead.
-   */
-  disableClosestPoint: PropTypes.bool,
-  /**
    * If true, the hit area interaction is disabled and falls back to hover events.
    */
   disableHitArea: PropTypes.bool,
@@ -644,13 +639,6 @@ SparkLineChart.propTypes = {
       }),
     ]).isRequired,
   ),
-  /**
-   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
-   * If set to `'item'`, the radius is the `markerSize`.
-   * If `undefined`, the radius is assumed to be infinite.
-   * @deprecated Use `hitAreaRadius` instead.
-   */
-  interactionMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * Localized text for chart components.
    */

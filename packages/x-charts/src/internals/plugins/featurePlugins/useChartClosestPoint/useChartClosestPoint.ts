@@ -24,18 +24,10 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
-  const {
-    disableHitArea,
-    disableClosestPoint,
-    disableVoronoi,
-    hitAreaRadius,
-    interactionMaxRadius,
-    voronoiMaxRadius,
-    onItemClick,
-  } = params;
+  const { disableHitArea, disableVoronoi, hitAreaRadius, voronoiMaxRadius, onItemClick } = params;
 
-  const resolvedDisableHitArea = disableHitArea ?? disableClosestPoint ?? disableVoronoi;
-  const resolvedHitAreaRadius = hitAreaRadius ?? interactionMaxRadius ?? voronoiMaxRadius;
+  const resolvedDisableHitArea = disableHitArea ?? disableVoronoi;
+  const resolvedHitAreaRadius = hitAreaRadius ?? voronoiMaxRadius;
 
   const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
   const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
@@ -249,7 +241,6 @@ useChartClosestPoint.getDefaultizedParams = ({ params }) => ({
   ...params,
   disableHitArea:
     params.disableHitArea ??
-    params.disableClosestPoint ??
     params.disableVoronoi ??
     !params.series.some((item) => item.type === 'scatter'),
 });
@@ -262,10 +253,8 @@ useChartClosestPoint.getInitialState = (params) => ({
 
 useChartClosestPoint.params = {
   disableHitArea: true,
-  disableClosestPoint: true,
   disableVoronoi: true,
   hitAreaRadius: true,
-  interactionMaxRadius: true,
   voronoiMaxRadius: true,
   onItemClick: true,
 };

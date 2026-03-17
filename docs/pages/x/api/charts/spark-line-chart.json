@@ -32,11 +32,6 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableClipping": { "type": { "name": "bool" }, "default": "false" },
-    "disableClosestPoint": {
-      "type": { "name": "bool" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>disableHitArea</code> instead."
-    },
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "disableVoronoi": {
@@ -71,11 +66,6 @@
         "name": "arrayOf",
         "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
       }
-    },
-    "interactionMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>hitAreaRadius</code> instead."
     },
     "localeText": { "type": { "name": "object" } },
     "margin": {

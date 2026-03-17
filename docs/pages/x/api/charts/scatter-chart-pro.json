@@ -74,11 +74,6 @@
         "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
       }
     },
-    "interactionMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>hitAreaRadius</code> instead."
-    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {

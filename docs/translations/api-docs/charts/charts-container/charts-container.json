@@ -12,7 +12,6 @@
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
-    "disableClosestPoint": { "description": "If true, the closest point interaction is disabled." },
     "disableHitArea": {
       "description": "If true, the hit area interaction is disabled and falls back to hover events."
     },
@@ -43,9 +42,6 @@
     },
     "initialHiddenItems": {
       "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
-    },
-    "interactionMaxRadius": {
-      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "localeText": { "description": "Localized text for chart components." },
     "margin": {

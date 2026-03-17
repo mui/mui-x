@@ -339,13 +339,6 @@ ScatterChartPro.propTypes = {
     }),
   ),
   /**
-   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
-   * If set to `'item'`, the radius is the `markerSize`.
-   * If `undefined`, the radius is assumed to be infinite.
-   * @deprecated Use `hitAreaRadius` instead.
-   */
-  interactionMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */

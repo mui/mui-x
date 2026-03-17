@@ -27,10 +27,8 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     series,
     axisHighlight,
     hitAreaRadius,
-    interactionMaxRadius,
     voronoiMaxRadius,
     disableHitArea,
-    disableClosestPoint,
     disableVoronoi,
     hideLegend,
     width,
@@ -57,7 +55,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     () => series.map((s) => ({ type: 'scatter' as const, ...s })),
     [series],
   );
-  const resolvedDisableHitArea = disableHitArea ?? disableClosestPoint ?? disableVoronoi;
+  const resolvedDisableHitArea = disableHitArea ?? disableVoronoi;
   const useVoronoiOnItemClick = resolvedDisableHitArea !== true || renderer === 'svg-batch';
   const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginSignatures> = {
     ...other,
@@ -72,10 +70,8 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     highlightedItem,
     onHighlightChange,
     disableHitArea,
-    disableClosestPoint,
     disableVoronoi,
     hitAreaRadius,
-    interactionMaxRadius,
     voronoiMaxRadius,
     onItemClick: useVoronoiOnItemClick
       ? (onItemClick as UseChartClosestPointSignature['params']['onItemClick'])

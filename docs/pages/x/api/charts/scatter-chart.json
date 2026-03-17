@@ -68,11 +68,6 @@
         "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'scatter' }&gt;"
       }
     },
-    "interactionMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>hitAreaRadius</code> instead."
-    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
