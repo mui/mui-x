@@ -6,6 +6,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   DayCalendarSkeletonClasses,
@@ -28,9 +29,7 @@ export interface DayCalendarSkeletonProps extends HTMLDivProps {
 
 const useUtilityClasses = (classes: Partial<DayCalendarSkeletonClasses> | undefined) => {
   const slots = {
-    root: ['root'],
-    week: ['week'],
-    daySkeleton: ['daySkeleton'],
+    ...createSlotArrayMap(['root', 'week', 'daySkeleton'] as const),
   };
 
   return composeClasses(slots, getDayCalendarSkeletonUtilityClass, classes);

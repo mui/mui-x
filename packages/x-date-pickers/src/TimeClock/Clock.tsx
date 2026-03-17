@@ -17,6 +17,8 @@ import { formatMeridiem } from '../internals/utils/date-utils';
 import { Meridiem } from '../internals/utils/time-utils';
 import { FormProps } from '../internals/models/formProps';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { create } from 'domain';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProps {
   ampm: boolean;
@@ -64,14 +66,16 @@ const useUtilityClasses = (
   ownerState: ClockOwnerState,
 ) => {
   const slots = {
-    root: ['root'],
-    clock: ['clock'],
-    wrapper: ['wrapper'],
-    squareMask: ['squareMask'],
-    pin: ['pin'],
+    ...createSlotArrayMap([
+      'root',
+      'clock',
+      'wrapper',
+      'squareMask',
+      'pin',
+      'meridiemText',
+    ] as const),
     amButton: ['amButton', ownerState.clockMeridiemMode === 'am' && 'selected'],
     pmButton: ['pmButton', ownerState.clockMeridiemMode === 'pm' && 'selected'],
-    meridiemText: ['meridiemText'],
   };
 
   return composeClasses(slots, getClockUtilityClass, classes);
