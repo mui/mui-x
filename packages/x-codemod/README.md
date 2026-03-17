@@ -80,6 +80,26 @@ The corresponding sub-sections are listed below
 
 - [`preset-safe-for-charts`](#preset-safe-for-charts-v900)
 
+### Data Grid codemods
+
+#### `remove-stabilized-experimentalFeatures`
+
+Removes the `charts` property from the `experimentalFeatures` prop of `DataGridPremium`.
+If `charts` is the only property, the entire `experimentalFeatures` prop is removed.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path|folder>
+```
+
+```diff
+ <DataGridPremium
+-  experimentalFeatures={{ charts: true }}
+   chartsIntegration
+ />
+```
+
 ### Charts codemods
 
 #### 🚀 `preset-safe` for Charts v9.0.0
