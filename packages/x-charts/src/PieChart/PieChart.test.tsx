@@ -3,7 +3,7 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { pieArcClasses, pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();
@@ -155,13 +155,15 @@ describe('<PieChart />', () => {
         />,
       );
 
-      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
 
       // by default does not show focus indicator
       expect(container.querySelector(`.${pieClasses.focusIndicator}`)).not.toBeTruthy();
 
       // focus the chart and navigate
-      await user.click(svg);
+      await user.click(layerContainer);
       await user.keyboard('{ArrowRight}');
 
       expect(container.querySelector(`.${pieClasses.focusIndicator}`)).toBeTruthy();
@@ -185,13 +187,15 @@ describe('<PieChart />', () => {
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
     // by default does not show focus indicator
     expect(container.querySelector(`.${pieArcClasses.focusIndicator}`)).not.toBeTruthy();
 
     // focus the chart
-    await user.click(svg);
+    await user.click(layerContainer);
 
     // Focus the first arc
     await user.keyboard('{ArrowRight}');
@@ -235,10 +239,12 @@ describe('<PieChart />', () => {
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
     // focus the chart
-    await user.click(svg);
+    await user.click(layerContainer);
 
     // Focus the first arc of series-1
     await user.keyboard('{ArrowRight}');
