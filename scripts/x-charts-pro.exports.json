@@ -302,7 +302,6 @@
   { "name": "getBarLabelUtilityClass", "kind": "Function" },
   { "name": "getChartsGridUtilityClass", "kind": "Function" },
   { "name": "getChartsTooltipUtilityClass", "kind": "Function" },
-  { "name": "getFunnelUtilityClass", "kind": "Function" },
   { "name": "getGaugeUtilityClass", "kind": "Function" },
   { "name": "getHighlightElementUtilityClass", "kind": "Function" },
   { "name": "getLineElementUtilityClass", "kind": "Function" },
