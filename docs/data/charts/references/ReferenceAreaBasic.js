@@ -38,21 +38,22 @@ export default function ReferenceAreaBasic() {
           >
             Error &lt; 10%
           </ReferenceAreaLabel>
-          <LinePlot />
+
           <ChartsReferenceLine
             x={0}
             label="command starts"
             labelAlign="start"
             lineStyle={{ strokeDasharray: '10 5' }}
-            labelStyle={{ fontSize: 8, fontStyle: 'italic' }}
+            labelStyle={{ fontSize: '1rem', fontStyle: 'italic' }}
           />
           <ChartsReferenceLine
             x={1.6}
             label="stability"
             labelAlign="start"
             lineStyle={{ strokeDasharray: '10 5' }}
-            labelStyle={{ fontSize: 8, fontStyle: 'italic' }}
+            labelStyle={{ fontSize: '1rem', fontStyle: 'italic' }}
           />
+          <LinePlot />
           <ChartsAxisHighlight x="line" />
           <LineHighlightPlot />
           <ChartsXAxis />
