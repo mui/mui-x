@@ -19,6 +19,7 @@ The exporting feature is available for the following charts:
 - `FunnelChart`
 - `RadarChartPro`
 - `SankeyChart`
+- `CandlestickChart`
 
 ## Implementing exporting
 

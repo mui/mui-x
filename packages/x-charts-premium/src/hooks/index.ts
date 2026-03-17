@@ -6,3 +6,4 @@ export * from './animation';
 
 export * from './useChartPremiumApiRef';
 export * from './useRangeBarSeries';
+export * from './useOHLCSeries';
