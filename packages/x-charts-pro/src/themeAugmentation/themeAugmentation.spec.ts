@@ -26,7 +26,7 @@ createTheme({
     MuiHeatmap: {
       defaultProps: {
         title: 'toto',
-        // @ts-expect-error invalid MuiHeatmap prop
+        // @ts-expect-error invalid MuiChartsAxis prop
         someRandomProp: true,
       },
     },
