@@ -7,7 +7,7 @@ import {
   TreeViewEventParameters,
   TreeViewEventEvent,
 } from '@mui/x-tree-view/internals';
-import { TreeViewItemId } from '@mui/x-tree-view/models';
+import { TreeViewItemId, TreeViewValidItem } from '@mui/x-tree-view/models';
 import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import { RichTreeViewProStore } from '../../RichTreeViewProStore/RichTreeViewProStore';
 import { NestedDataManager } from './utils';
@@ -18,16 +18,16 @@ export const TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE = {
   errors: {},
 };
 
-export class TreeViewLazyLoadingPlugin {
-  private store: RichTreeViewProStore<any, any>;
+export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
+  private store: RichTreeViewProStore<R, any>;
 
   private nestedDataManager = new NestedDataManager(this);
 
-  private cache: DataSourceCache;
+  private cache: DataSourceCache<R>;
 
-  constructor(store: RichTreeViewProStore<any, any>) {
+  constructor(store: RichTreeViewProStore<R, any>) {
     this.store = store;
-    this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault({});
+    this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault<R>({});
 
     if (store.parameters.dataSource != null) {
       this.init();
@@ -181,6 +181,29 @@ export class TreeViewLazyLoadingPlugin {
    * @param {boolean} [parameters.forceRefresh] Whether to force a refresh of the children when the cache already contains some data.
    * @returns {Promise<void>} The promise resolved when the items are fetched.
    */
+  private processNestedItemChildren = (items: R[]) => {
+    const { getChildrenCount } = this.store.parameters.dataSource!;
+    const getItemId = (item: R): TreeViewItemId =>
+      this.store.parameters.getItemId
+        ? this.store.parameters.getItemId(item)
+        : (item as unknown as { id: string }).id;
+    const getInlineChildren = (item: R): R[] =>
+      (this.store.parameters.getItemChildren
+        ? this.store.parameters.getItemChildren(item)
+        : item.children) ?? [];
+
+    for (const item of items) {
+      const children = getInlineChildren(item);
+      if (children.length === 0) {
+        continue;
+      }
+      const itemId = getItemId(item);
+      this.cache.set(itemId, children);
+      this.store.items.setItemChildren({ items: children, parentId: itemId, getChildrenCount });
+      this.processNestedItemChildren(children);
+    }
+  };
+
   public fetchItemChildren = async ({
     itemId,
     forceRefresh,
@@ -214,6 +237,7 @@ export class TreeViewLazyLoadingPlugin {
         }
         this.store.items.setItemChildren({ items: cachedData, parentId: itemId, getChildrenCount });
         this.setItemLoading(itemId, false);
+        this.store.parameters.onItemsLazyLoaded?.(cachedData, itemId);
         return;
       }
 
@@ -231,7 +255,7 @@ export class TreeViewLazyLoadingPlugin {
     }
 
     try {
-      let response: any[];
+      let response: R[];
       if (itemId == null) {
         response = await getTreeItems();
       } else {
@@ -242,6 +266,10 @@ export class TreeViewLazyLoadingPlugin {
       this.cache.set(cacheKey, response);
       // update the items in the state
       this.store.items.setItemChildren({ items: response, parentId: itemId, getChildrenCount });
+      // pre-cache any inline nested children so expanding them requires no extra network call
+      this.processNestedItemChildren(response);
+      // notify the user that new items have been loaded
+      this.store.parameters.onItemsLazyLoaded?.(response, itemId);
     } catch (error) {
       const childrenFetchError = error as Error;
       // set the item error in the state

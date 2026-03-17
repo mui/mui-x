@@ -162,6 +162,13 @@
         "describedArgs": ["event", "itemId", "isSelected"]
       }
     },
+    "onItemsLazyLoaded": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(items: Array<R>, parentId: TreeViewItemId | null) => void",
+        "describedArgs": ["items", "parentId"]
+      }
+    },
     "onSelectedItemsChange": {
       "type": { "name": "func" },
       "signature": {

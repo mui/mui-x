@@ -389,6 +389,13 @@ RichTreeViewPro.propTypes = {
    */
   onItemSelectionToggle: PropTypes.func,
   /**
+   * Callback fired when the children of an item are loaded from the data source.
+   * Only relevant for lazy-loaded tree views.
+   * @param {R[]} items The items that were loaded.
+   * @param {TreeViewItemId | null} parentId The id of the parent item whose children were loaded. `null` if the root items were loaded.
+   */
+  onItemsLazyLoaded: PropTypes.func,
+  /**
    * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {TreeViewItemId[] | TreeViewItemId} itemIds The ids of the selected items.

@@ -1,4 +1,5 @@
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
@@ -186,6 +187,120 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2', '2-1']);
       });
     });
+    describe('onItemsLazyLoaded', () => {
+      it('should call onItemsLazyLoaded with (items, null) when root items are fetched', async () => {
+        const onItemsLazyLoaded = spy();
+        render({
+          items: [],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          onItemsLazyLoaded,
+        });
+
+        await awaitMockFetch();
+        expect(onItemsLazyLoaded.callCount).to.equal(1);
+        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal([{ id: '1', childrenCount: 1 }]);
+        expect(onItemsLazyLoaded.lastCall.args[1]).to.equal(null);
+      });
+
+      it('should call onItemsLazyLoaded with (items, parentId) when child items are fetched', async () => {
+        const onItemsLazyLoaded = spy();
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          onItemsLazyLoaded,
+        });
+
+        expect(onItemsLazyLoaded.callCount).to.equal(0);
+
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+        expect(onItemsLazyLoaded.callCount).to.equal(1);
+        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal([{ id: '1-1', childrenCount: 1 }]);
+        expect(onItemsLazyLoaded.lastCall.args[1]).to.equal('1');
+      });
+
+      it('should call onItemsLazyLoaded on cache hit when the same item is expanded again', async () => {
+        const onItemsLazyLoaded = spy();
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          onItemsLazyLoaded,
+        });
+
+        // First expansion — server fetch
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+        expect(onItemsLazyLoaded.callCount).to.equal(1);
+
+        // Collapse
+        fireEvent.click(view.getItemContent('1'));
+        // Second expansion — cache hit
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+        expect(onItemsLazyLoaded.callCount).to.equal(2);
+        expect(onItemsLazyLoaded.lastCall.args[1]).to.equal('1');
+      });
+
+      it('should pre-cache inline nested children so expanding them requires no extra fetch', async () => {
+        let fetchCount = 0;
+        const fetchDataWithNested = async (parentId?: string): Promise<ItemType[]> => {
+          fetchCount += 1;
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              if (parentId == null) {
+                resolve([{ id: '1', childrenCount: 1 }]);
+              } else {
+                resolve([
+                  {
+                    id: `${parentId}-1`,
+                    childrenCount: 1,
+                    children: [{ id: `${parentId}-1-1`, childrenCount: 0 }],
+                  },
+                ]);
+              }
+            }, 0);
+          });
+        };
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: fetchDataWithNested,
+          },
+          onItemsLazyLoaded: (items, _parentId) => {
+            items.forEach((item) => {
+              if (item.children && item.children.length > 0) {
+                view.apiRef.current.setItemExpansion({
+                  event: {} as any,
+                  itemId: item.id,
+                  shouldBeExpanded: true,
+                });
+              }
+            });
+          },
+        });
+
+        const fetchCountBefore = fetchCount;
+        // Expand item '1' — fetches '1-1' (with nested '1-1-1')
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+        // '1-1' should be auto-expanded from the callback without any additional fetch
+        expect(fetchCount - fetchCountBefore).to.equal(1);
+        expect(view.isItemExpanded('1-1')).to.equal(true);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '1-1-1']);
+      });
+    });
+
     describe('updateItemChildren', () => {
       it('should refresh root children when updateItemChildren is called with null', async () => {
         const view = render({

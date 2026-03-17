@@ -45,7 +45,7 @@ export interface RichTreeViewProStoreParameters<
   /**
    * The data source cache object.
    */
-  dataSourceCache?: DataSourceCache;
+  dataSourceCache?: DataSourceCache<R>;
   /**
    * If `true`, the reordering of items is enabled.
    * @default false
@@ -71,6 +71,13 @@ export interface RichTreeViewProStoreParameters<
     oldPosition: TreeViewItemReorderPosition;
     newPosition: TreeViewItemReorderPosition;
   }) => boolean;
+  /**
+   * Callback fired when the children of an item are loaded from the data source.
+   * Only relevant for lazy-loaded tree views.
+   * @param {R[]} items The items that were loaded.
+   * @param {TreeViewItemId | null} parentId The id of the parent item whose children were loaded. `null` if the root items were loaded.
+   */
+  onItemsLazyLoaded?: (items: R[], parentId: TreeViewItemId | null) => void;
   /**
    * Callback fired when a Tree Item is moved in the tree.
    * @param {object} parameters The params describing the item re-ordering.
