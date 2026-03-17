@@ -118,6 +118,10 @@ GaugeContainer.propTypes = {
    * The '100%' is the height the drawing area.
    */
   cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * The end angle (deg).
@@ -181,6 +185,10 @@ GaugeContainer.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The value of the gauge.

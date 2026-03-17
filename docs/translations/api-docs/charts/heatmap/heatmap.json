@@ -7,6 +7,9 @@
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
@@ -87,6 +90,9 @@
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    },
     "tooltip": {
       "description": "The configuration of the tooltip.",
       "seeMoreText": "See {{link}} for more details."
