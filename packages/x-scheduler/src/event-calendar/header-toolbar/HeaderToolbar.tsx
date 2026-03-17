@@ -113,6 +113,8 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
         </HeaderToolbarLabel>
+      </HeaderToolbarLeftElement>
+      <HeaderToolbarActions className={classes.headerToolbarActions}>
         <HeaderToolbarDateNavigator className={classes.headerToolbarDateNavigator}>
           <IconButton
             className={classes.headerToolbarPreviousButton}
@@ -129,14 +131,11 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             <ChevronRight />
           </IconButton>
         </HeaderToolbarDateNavigator>
-      </HeaderToolbarLeftElement>
-      <HeaderToolbarActions className={classes.headerToolbarActions}>
-        <PreferencesMenu />
-
         <Button onClick={store.goToToday}>{localeText.today}</Button>
         {showViewSwitcher && (
           <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
         )}
+        <PreferencesMenu />
       </HeaderToolbarActions>
     </HeaderToolbarRoot>
   );
