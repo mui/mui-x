@@ -29,8 +29,10 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       'ChartsDataProviderPremium',
     ],
     props: {
-      voronoiMaxRadius: 'interactionMaxRadius',
-      disableVoronoi: 'disableClosestPoint',
+      voronoiMaxRadius: 'hitAreaRadius',
+      interactionMaxRadius: 'hitAreaRadius',
+      disableVoronoi: 'disableHitArea',
+      disableClosestPoint: 'disableHitArea',
     },
   });
 
@@ -41,7 +43,7 @@ export const testConfig = () => ({
   name: 'rename-voronoi-max-radius',
   specFiles: [
     {
-      name: 'rename voronoiMaxRadius to interactionMaxRadius and disableVoronoi to disableClosestPoint',
+      name: 'rename voronoiMaxRadius/interactionMaxRadius to hitAreaRadius and disableVoronoi/disableClosestPoint to disableHitArea',
       actual: readFile(path.join(import.meta.dirname, 'actual-imports.spec.tsx')),
       expected: readFile(path.join(import.meta.dirname, 'expected-imports.spec.tsx')),
     },

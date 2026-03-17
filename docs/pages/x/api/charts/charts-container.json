@@ -13,16 +13,19 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
-    "disableClosestPoint": { "type": { "name": "bool" } },
+    "disableClosestPoint": {
+      "type": { "name": "bool" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>disableHitArea</code> instead."
+    },
+    "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "disableVoronoi": {
       "type": { "name": "bool" },
       "deprecated": true,
-      "deprecationInfo": "Use <code>disableClosestPoint</code> instead."
+      "deprecationInfo": "Use <code>disableHitArea</code> instead."
     },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
-    },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
@@ -42,6 +45,7 @@
         "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }"
       }
     },
+    "hitAreaRadius": { "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" } },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
@@ -50,7 +54,9 @@
       }
     },
     "interactionMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
+      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>hitAreaRadius</code> instead."
     },
     "localeText": { "type": { "name": "object" } },
     "margin": {
@@ -139,7 +145,7 @@
     "voronoiMaxRadius": {
       "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" },
       "deprecated": true,
-      "deprecationInfo": "Use <code>interactionMaxRadius</code> instead."
+      "deprecationInfo": "Use <code>hitAreaRadius</code> instead."
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {

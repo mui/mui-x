@@ -12,7 +12,7 @@ import data from '../dataset/random/scatterParallel.json';
 
 export default function ClosestPointInteraction() {
   const [option, setOption] = React.useState('numeric');
-  const [interactionMaxRadius, setVoronoiMaxRadius] = React.useState(25);
+  const [hitAreaRadius, setVoronoiMaxRadius] = React.useState(25);
 
   const handleMaxRadiusChange = (event, newValue) => {
     if (typeof newValue !== 'number') {
@@ -25,12 +25,12 @@ export default function ClosestPointInteraction() {
     <Stack direction="column" sx={{ width: '100%' }}>
       <ScatterChart
         height={300}
-        interactionMaxRadius={
+        hitAreaRadius={
           option === 'undefined'
             ? undefined
             : option === 'item'
               ? 'item'
-              : interactionMaxRadius
+              : hitAreaRadius
         }
         dataset={data}
         series={[
@@ -76,7 +76,7 @@ export default function ClosestPointInteraction() {
           Numeric radius
         </Typography>
         <Slider
-          value={interactionMaxRadius}
+          value={hitAreaRadius}
           onChange={handleMaxRadiusChange}
           valueLabelDisplay="auto"
           min={1}

@@ -30,12 +30,17 @@ export interface UseChartVoronoiState {
 
 export interface UseChartVoronoiParameters {
   /**
+   * If true, the hit area interaction is disabled and falls back to hover events.
+   */
+  disableHitArea?: boolean;
+  /**
    * If true, the closest point interaction is disabled.
+   * @deprecated Use `disableHitArea` instead.
    */
   disableClosestPoint?: boolean;
   /**
    * If true, the voronoi interaction are ignored.
-   * @deprecated Use `disableClosestPoint` instead.
+   * @deprecated Use `disableHitArea` instead.
    */
   disableVoronoi?: boolean;
   /**
@@ -43,12 +48,19 @@ export interface UseChartVoronoiParameters {
    * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
    */
+  hitAreaRadius?: 'item' | number | undefined;
+  /**
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
+   * If `undefined`, the radius is assumed to be infinite.
+   * @deprecated Use `hitAreaRadius` instead.
+   */
   interactionMaxRadius?: 'item' | number | undefined;
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
-   * @deprecated Use `interactionMaxRadius` instead.
+   * @deprecated Use `hitAreaRadius` instead.
    */
   voronoiMaxRadius?: 'item' | number | undefined;
   /**
@@ -62,12 +74,17 @@ export interface UseChartVoronoiParameters {
 
 export type UseChartVoronoiDefaultizedParameters = Pick<
   UseChartVoronoiParameters,
-  'interactionMaxRadius' | 'voronoiMaxRadius' | 'disableVoronoi' | 'onItemClick'
+  | 'hitAreaRadius'
+  | 'interactionMaxRadius'
+  | 'voronoiMaxRadius'
+  | 'disableClosestPoint'
+  | 'disableVoronoi'
+  | 'onItemClick'
 > & {
   /**
-   * If true, the closest point interaction is disabled.
+   * If true, the hit area interaction is disabled.
    */
-  disableClosestPoint: boolean;
+  disableHitArea: boolean;
 };
 
 export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =

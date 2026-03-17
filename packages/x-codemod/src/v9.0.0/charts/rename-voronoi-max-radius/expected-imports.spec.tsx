@@ -1,15 +1,15 @@
 // @ts-nocheck
 
 <div>
-  <ScatterChart interactionMaxRadius={50} disableClosestPoint />
-  <ScatterChartPro interactionMaxRadius={'item'} disableClosestPoint={true} />
-  <SparkLineChart interactionMaxRadius={50} />
-  <ChartsContainer interactionMaxRadius={50} />
-  <ChartContainer interactionMaxRadius={50} />
-  <ChartDataProvider interactionMaxRadius={50} />
-  <ChartsDataProvider interactionMaxRadius={50} />
-  <ChartDataProviderPro interactionMaxRadius={50} />
-  <ChartsDataProviderPro interactionMaxRadius={50} />
-  <ChartDataProviderPremium interactionMaxRadius={50} />
-  <ChartsDataProviderPremium interactionMaxRadius={50} />
+  <ScatterChart hitAreaRadius={50} disableHitArea hitAreaRadius={30} disableHitArea />
+  <ScatterChartPro hitAreaRadius={'item'} disableHitArea={true} />
+  <SparkLineChart hitAreaRadius={50} />
+  <ChartsContainer hitAreaRadius={50} />
+  <ChartContainer hitAreaRadius={50} />
+  <ChartDataProvider hitAreaRadius={50} />
+  <ChartsDataProvider hitAreaRadius={50} />
+  <ChartDataProviderPro hitAreaRadius={50} />
+  <ChartsDataProviderPro hitAreaRadius={50} />
+  <ChartDataProviderPremium hitAreaRadius={50} />
+  <ChartsDataProviderPremium hitAreaRadius={50} />
 </div>;

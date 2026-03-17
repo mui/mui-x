@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 <div>
-  <ScatterChart voronoiMaxRadius={50} disableVoronoi />
+  <ScatterChart voronoiMaxRadius={50} disableVoronoi interactionMaxRadius={30} disableClosestPoint />
   <ScatterChartPro voronoiMaxRadius={'item'} disableVoronoi={true} />
   <SparkLineChart voronoiMaxRadius={50} />
   <ChartsContainer voronoiMaxRadius={50} />
