@@ -3,35 +3,43 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 /**
- * @deprecated Use `RadarClasses` from `../radarClasses` instead.
+ * @deprecated Use `RadarClasses` instead.
  */
 export interface RadarSeriesPlotClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `radarClasses.seriesRoot` instead.
+   */
   root: string;
   /** Styles applied to the series element if it is highlighted. */
   highlighted: string;
   /** Styles applied to the series element if it is faded. */
   faded: string;
-  /** Styles applied to the series area element. */
+  /**
+   * Styles applied to the series area element.
+   * @deprecated Use `radarClasses.seriesArea` instead.
+   */
   area: string;
-  /** Styles applied to the series mark element. */
+  /** Styles applied to the series mark element.
+   * @deprecated Use `radarClasses.seriesMark` instead.
+   */
   mark: string;
 }
 
 /**
- * @deprecated Use `RadarClassKey` from `../radarClasses` instead.
+ * @deprecated Use `RadarClassKey` instead.
  */
 export type RadarSeriesPlotClassKey = keyof RadarSeriesPlotClasses;
 
 /**
- * @deprecated Use `getRadarUtilityClass` from `../radarClasses` instead.
+ * @deprecated Use `getRadarUtilityClass` instead.
  */
 export function getRadarSeriesPlotUtilityClass(slot: string) {
   return generateUtilityClass('MuiRadarSeriesPlot', slot);
 }
 
 /**
- * @deprecated Use `radarClasses` from `../radarClasses` instead.
+ * @deprecated Use `radarClasses` instead.
  */
 export const radarSeriesPlotClasses = generateUtilityClasses('MuiRadarSeriesPlot', [
   'root',
@@ -42,7 +50,7 @@ export const radarSeriesPlotClasses = generateUtilityClasses('MuiRadarSeriesPlot
 ]);
 
 /**
- * @deprecated Use `useUtilityClasses` from `../radarClasses` instead.
+ * @deprecated Use `useUtilityClasses` instead.
  */
 export const useUtilityClasses = (classes?: Partial<RadarSeriesPlotClasses>) => {
   const slots = {

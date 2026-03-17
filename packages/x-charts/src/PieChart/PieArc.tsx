@@ -14,7 +14,7 @@ import { type PieArcOwnerState, useUtilityClasses as usePieUtilityClasses } from
 export { type PieArcOwnerState };
 
 /**
- * @deprecated Use `PieClasses` from `./pieClasses` instead.
+ * @deprecated Use `PieClasses` instead.
  */
 export interface PieArcClasses {
   /** Styles applied to the root element. */
@@ -33,19 +33,19 @@ export interface PieArcClasses {
 }
 
 /**
- * @deprecated Use `PieClassKey` from `./pieClasses` instead.
+ * @deprecated Use `PieClassKey` instead.
  */
 export type PieArcClassKey = keyof PieArcClasses;
 
 /**
- * @deprecated Use `getPieUtilityClass` from `./pieClasses` instead.
+ * @deprecated Use `getPieUtilityClass` instead.
  */
 export function getPieArcUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArc', slot);
 }
 
 /**
- * @deprecated Use `pieClasses` from `./pieClasses` instead.
+ * @deprecated Use `pieClasses` instead.
  */
 export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', [
   'root',
@@ -56,7 +56,7 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
 ]);
 
 /**
- * @deprecated Use `useUtilityClasses` from `./pieClasses` instead.
+ * @deprecated Use `useUtilityClasses` instead.
  */
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   const { classes, id, isFaded, isHighlighted, dataIndex } = ownerState;

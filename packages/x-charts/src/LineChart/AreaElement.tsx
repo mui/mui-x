@@ -13,10 +13,13 @@ import { type SeriesId } from '../models/seriesType/common';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 /**
- * @deprecated Use `LineClasses` from `./lineClasses` instead.
+ * @deprecated Use `LineClasses` instead.
  */
 export interface AreaElementClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `lineClasses.area` instead.
+   */
   root: string;
   /** Styles applied to the root element when highlighted. */
   highlighted: string;
@@ -25,12 +28,13 @@ export interface AreaElementClasses {
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${areaElementClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }
 
 /**
- * @deprecated Use `LineClassKey` from `./lineClasses` instead.
+ * @deprecated Use `LineClassKey` instead.
  */
 export type AreaElementClassKey = keyof AreaElementClasses;
 
@@ -44,14 +48,14 @@ export interface AreaElementOwnerState {
 }
 
 /**
- * @deprecated Use `getLineUtilityClass` from `./lineClasses` instead.
+ * @deprecated Use `getLineUtilityClass` instead.
  */
 export function getAreaElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiAreaElement', slot);
 }
 
 /**
- * @deprecated Use `lineClasses` from `./lineClasses` instead.
+ * @deprecated Use `lineClasses` instead.
  */
 export const areaElementClasses: AreaElementClasses = generateUtilityClasses('MuiAreaElement', [
   'root',
@@ -61,7 +65,7 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
 ]);
 
 /**
- * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
+ * @deprecated Use `useUtilityClasses` instead.
  */
 const useDeprecatedUtilityClasses = (ownerState: AreaElementOwnerState) => {
   const { classes, id, isFaded, isHighlighted } = ownerState;
