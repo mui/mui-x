@@ -1,6 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { createSlotArrayMap } from '@mui/x-charts/internals';
 
 export interface SankeyClasses {
   /** Styles applied to the root element. */
@@ -60,15 +61,17 @@ export const useUtilityClasses = (options?: { classes?: Partial<SankeyClasses> }
   const { classes } = options ?? {};
 
   const slots = {
-    root: ['root'],
-    nodes: ['nodes'],
-    nodeLabels: ['nodeLabels'],
-    links: ['links'],
-    linkLabels: ['linkLabels'],
-    node: ['node'],
-    link: ['link'],
-    nodeLabel: ['nodeLabel'],
-    linkLabel: ['linkLabel'],
+    ...createSlotArrayMap([
+      'root',
+      'nodes',
+      'nodeLabels',
+      'links',
+      'linkLabels',
+      'node',
+      'link',
+      'nodeLabel',
+      'linkLabel',
+    ] as const),
   };
 
   return composeClasses(slots, getSankeyUtilityClass, classes);
