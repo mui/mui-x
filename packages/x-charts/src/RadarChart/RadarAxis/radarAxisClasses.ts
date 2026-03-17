@@ -6,11 +6,20 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
  * @deprecated Use `RadarClasses` instead.
  */
 export interface RadarAxisClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `radarClasses.axisRoot` instead.
+   */
   root: string;
-  /** Styles applied to the line element. */
+  /**
+   * Styles applied to the line element.
+   * @deprecated Use `radarClasses.axisLine` instead.
+   */
   line: string;
-  /** Styles applied to every label element. */
+  /**
+   * Styles applied to every label element.
+   * @deprecated Use `radarClasses.axisLabel` instead.
+   */
   label: string;
 }
 

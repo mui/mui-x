@@ -6,11 +6,20 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
  * @deprecated Use `RadarClasses` instead.
  */
 export interface RadarAxisHighlightClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `radarClasses.axisHighlightRoot` instead.
+   */
   root: string;
-  /** Styles applied to the highlighted axis line element. */
+  /**
+   * Styles applied to the highlighted axis line element.
+   * @deprecated Use `radarClasses.axisHighlightLine` instead.
+   */
   line: string;
-  /** Styles applied to every highlight dot. */
+  /**
+   * Styles applied to every highlight dot.
+   * @deprecated Use `radarClasses.axisHighlightDot` instead.
+   */
   dot: string;
 }
 

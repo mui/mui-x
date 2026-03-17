@@ -6,11 +6,20 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
  * @deprecated Use `RadarClasses` instead.
  */
 export interface RadarGridClasses {
-  /** Styles applied to every radial line element. */
+  /**
+   * Styles applied to every radial line element.
+   * @deprecated Use `radarClasses.gridRadial` instead.
+   */
   radial: string;
-  /** Styles applied to every divider element. */
+  /**
+   * Styles applied to every divider element.
+   * @deprecated Use `radarClasses.gridDivider` instead.
+   */
   divider: string;
-  /** Styles applied to every stripe element. */
+  /**
+   * Styles applied to every stripe element.
+   * @deprecated Use `radarClasses.gridStripe` instead.
+   */
   stripe: string;
 }
 
