@@ -115,6 +115,7 @@ function MarkElement(props: MarkElementProps) {
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
       data-series-id={seriesId}
+      data-series={seriesId}
       data-index={dataIndex}
       opacity={hidden ? 0 : 1}
       strokeWidth={2}
