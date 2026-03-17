@@ -20,6 +20,7 @@ import {
   usePickerTranslations,
 } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
@@ -27,10 +28,7 @@ import {
 import { usePickerRangePositionContext } from '../hooks';
 
 const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    container: ['container'],
-  };
+  const slots = createSlotArrayMap(['root', 'container'] as const);
 
   return composeClasses(slots, getDateRangePickerToolbarUtilityClass, classes);
 };
