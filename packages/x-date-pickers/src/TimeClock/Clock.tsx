@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { ClockPointer } from './ClockPointer';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
@@ -17,8 +18,6 @@ import { formatMeridiem } from '../internals/utils/date-utils';
 import { Meridiem } from '../internals/utils/time-utils';
 import { FormProps } from '../internals/models/formProps';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { create } from 'domain';
-import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProps {
   ampm: boolean;
