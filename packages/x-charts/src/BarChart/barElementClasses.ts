@@ -9,7 +9,10 @@ export { type BarElementOwnerState };
  * @deprecated Use `BarClasses` instead.
  */
 export interface BarElementClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `barClasses.element` instead.
+   */
   root: string;
   /**
    * Styles applied to the root element if it is highlighted.
@@ -24,6 +27,7 @@ export interface BarElementClasses {
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${barElementClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }

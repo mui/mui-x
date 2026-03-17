@@ -7,7 +7,9 @@ import type { BarLabelOwnerState } from './BarLabel.types';
  * @deprecated Use `BarClasses` instead.
  */
 export interface BarLabelClasses {
-  /** Styles applied to the root element. */
+  /** Styles applied to the root element.
+   * @deprecated Use `barClasses.label` instead.
+   */
   root: string;
   /**
    * Styles applied to the root element if it is highlighted.
@@ -19,11 +21,14 @@ export interface BarLabelClasses {
    * @deprecated Use `[data-faded]` selector instead.
    */
   faded: string;
-  /** Styles applied to the root element if it is animated. */
+  /** Styles applied to the root element if it is animated.
+   * @deprecated Use `barClasses.labelAnimate` instead.
+   */
   animate: string;
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${barLabelClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }
