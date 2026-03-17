@@ -20,19 +20,23 @@ import { type ChartsDataProviderProProps } from '@mui/x-charts-pro/ChartsDataPro
 import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderPremiumProps } from './useChartsDataProviderPremiumProps';
+import { ohlcSeriesConfig } from '../CandlestickChart/seriesConfig';
 
-const releaseInfo = '__RELEASE_INFO__';
-const packageIdentifier = 'x-charts-premium';
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-charts-premium' as const,
+};
 
 export interface ChartsDataProviderPremiumSlots extends ChartsSlotsPro {}
 
 export interface ChartsDataProviderPremiumSlotProps extends ChartsSlotPropsPro {}
 
 export type ChartsDataProviderPremiumProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartsDataProviderProProps<TSeries, TSignatures> &
-  ChartsProviderProps<TSeries, TSignatures>['pluginParams'] & {
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = ChartsDataProviderProProps<SeriesType, TSignatures> &
+  ChartsProviderProps<SeriesType, TSignatures>['pluginParams'] & {
     /**
      * Slots to customize charts' components.
      */
@@ -44,10 +48,11 @@ export type ChartsDataProviderPremiumProps<
   };
 
 export const defaultSeriesConfigPremium: ChartSeriesConfig<
-  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie'
+  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie' | 'ohlc'
 > = {
   ...defaultSeriesConfigPro,
   rangeBar: rangeBarSeriesConfig,
+  ohlc: ohlcSeriesConfig,
 };
 
 /**
@@ -78,9 +83,9 @@ export const defaultSeriesConfigPremium: ChartSeriesConfig<
  * ```
  */
 function ChartsDataProviderPremium<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsDataProviderPremiumProps<TSeries, TSignatures>) {
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+>(props: ChartsDataProviderPremiumProps<SeriesType, TSignatures>) {
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartsDataProviderPremiumProps({
       ...props,
@@ -88,7 +93,7 @@ function ChartsDataProviderPremium<
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 
-  useLicenseVerifier(packageIdentifier, releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   return (
     <ChartsProvider {...chartProviderProps}>
@@ -101,7 +106,7 @@ function ChartsDataProviderPremium<
           {children}
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>
-      <ChartsWatermark packageName={packageIdentifier} />
+      <ChartsWatermark packageInfo={packageInfo} />
     </ChartsProvider>
   );
 }
@@ -123,12 +128,6 @@ ChartsDataProviderPremium.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

@@ -5,8 +5,8 @@ import type {
 import type { AxisConfig } from '../../../../../models/axis';
 import type { SeriesId } from '../../../../../models/seriesType/common';
 
-type PolarExtremumGetterParams<TSeriesType extends PolarChartSeriesType> = {
-  series: Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>;
+type PolarExtremumGetterParams<SeriesType extends PolarChartSeriesType> = {
+  series: Record<SeriesId, ChartSeriesDefaultized<SeriesType>>;
   axis: AxisConfig;
   axisIndex: number;
   isDefaultAxis: boolean;
@@ -14,6 +14,6 @@ type PolarExtremumGetterParams<TSeriesType extends PolarChartSeriesType> = {
 
 export type PolarExtremumGetterResult = [number, number];
 
-export type PolarExtremumGetter<TSeriesType extends PolarChartSeriesType> = (
-  params: PolarExtremumGetterParams<TSeriesType>,
+export type PolarExtremumGetter<SeriesType extends PolarChartSeriesType> = (
+  params: PolarExtremumGetterParams<SeriesType>,
 ) => PolarExtremumGetterResult;

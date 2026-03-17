@@ -4,7 +4,8 @@ import { alpha, styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
@@ -36,7 +37,6 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   padding: theme.spacing(0.5),
   fontSize: theme.typography.body2.fontSize,
   lineHeight: '18px',
-  color: (theme.vars || theme).palette.text.secondary,
   '&:not(:first-of-type)': {
     borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
@@ -167,7 +167,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const { day, row, maxEvents } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes, localeText } = useEventCalendarStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();

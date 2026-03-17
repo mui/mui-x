@@ -4,6 +4,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
+import ListSubheader from '@mui/material/ListSubheader';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -22,6 +24,18 @@ import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
 const NO_RESOURCE_VALUE = '';
+
+const ResourceMenuItem = styled(MenuItem, {
+  name: 'MuiEventDialog',
+  slot: 'ResourceMenuItem',
+})(({ theme }) => ({
+  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-indent) * ${theme.spacing(2)})`,
+}));
+
+const ResourceMenuListSubheader = styled(ListSubheader, {
+  name: 'MuiEventDialog',
+  slot: 'ResourceMenuListSubheader',
+})({});
 
 const ResourceMenuColorDot = styled('span', {
   name: 'MuiEventDialog',
@@ -86,6 +100,9 @@ interface ResourceOptionType {
   label: string;
   value: string | null;
   eventColor: SchedulerEventColor;
+  isGroupRoot: boolean;
+  indentLevel: number;
+  showDivider: boolean;
 }
 
 function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
@@ -117,18 +134,44 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
 
   // Selector hooks
   const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
+  const resourceDepthLookup = useStore(store, schedulerResourceSelectors.resourceDepthLookup);
+  const childrenIdLookup = useStore(store, schedulerResourceSelectors.childrenIdLookup);
   const eventDefaultColor = useStore(store, schedulerOtherSelectors.defaultEventColor);
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
+    const hasNesting = resources.some(
+      (resource) => (childrenIdLookup.get(resource.id)?.length ?? 0) > 0,
+    );
+
     return [
-      { label: localeText.labelNoResource, value: null, eventColor: eventDefaultColor },
-      ...resources.map((resource) => ({
-        label: resource.title,
-        value: resource.id,
-        eventColor: resource.eventColor ?? eventDefaultColor,
-      })),
+      {
+        label: localeText.labelNoResource,
+        value: null,
+        eventColor: eventDefaultColor,
+        isGroupRoot: false,
+        indentLevel: 0,
+        showDivider: false,
+      },
+      ...resources.map((resource) => {
+        const depth = resourceDepthLookup.get(resource.id) ?? 0;
+        const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
+        return {
+          label: resource.title,
+          value: resource.id,
+          eventColor: resource.eventColor ?? eventDefaultColor,
+          isGroupRoot: depth === 0 && hasChildren,
+          indentLevel: Math.max(0, depth - 1),
+          showDivider: hasNesting && depth === 0,
+        };
+      }),
     ];
-  }, [resources, localeText.labelNoResource, eventDefaultColor]);
+  }, [
+    resources,
+    resourceDepthLookup,
+    childrenIdLookup,
+    localeText.labelNoResource,
+    eventDefaultColor,
+  ]);
 
   const resource = React.useMemo(
     () =>
@@ -161,22 +204,45 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           }
           renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
         >
-          {resourcesOptions.map((resourceOption) => (
-            <MenuItem
-              key={resourceOption.value ?? NO_RESOURCE_VALUE}
-              value={resourceOption.value ?? NO_RESOURCE_VALUE}
-              aria-label={resourceOption.label}
-            >
-              <ListItemIcon>
-                <ResourceMenuColorDot
-                  className={classes.eventDialogResourceMenuColorDot}
-                  data-palette={resourceOption.eventColor}
-                  data-no-resource={Boolean(resourceOption.value === null)}
-                />
-              </ListItemIcon>
-              <ListItemText>{resourceOption.label}</ListItemText>
-            </MenuItem>
-          ))}
+          {resourcesOptions.flatMap((resourceOption) => {
+            const items: React.ReactNode[] = [];
+
+            if (resourceOption.showDivider) {
+              items.push(<Divider key={`divider-${resourceOption.value}`} />);
+            }
+
+            if (resourceOption.isGroupRoot) {
+              items.push(
+                <ResourceMenuListSubheader
+                  key={`header-${resourceOption.value}`}
+                  className={classes.eventDialogResourceMenuListSubheader}
+                >
+                  {resourceOption.label.toUpperCase()}
+                </ResourceMenuListSubheader>,
+              );
+            }
+
+            items.push(
+              <ResourceMenuItem
+                key={resourceOption.value ?? NO_RESOURCE_VALUE}
+                value={resourceOption.value ?? NO_RESOURCE_VALUE}
+                aria-label={resourceOption.label}
+                className={classes.eventDialogResourceMenuItem}
+                style={{ '--resource-indent': resourceOption.indentLevel } as React.CSSProperties}
+              >
+                <ListItemIcon>
+                  <ResourceMenuColorDot
+                    className={classes.eventDialogResourceMenuColorDot}
+                    data-palette={resourceOption.eventColor}
+                    data-no-resource={Boolean(resourceOption.value === null)}
+                  />
+                </ListItemIcon>
+                <ListItemText>{resourceOption.label}</ListItemText>
+              </ResourceMenuItem>,
+            );
+
+            return items;
+          })}
         </Select>
       </FormControl>
       <ColorSelectionContainer role="radiogroup" aria-label={localeText.colorPickerLabel}>

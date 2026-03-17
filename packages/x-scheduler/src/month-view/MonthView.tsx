@@ -6,7 +6,7 @@ import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { EventCalendarViewConfig, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
@@ -49,7 +49,7 @@ const MonthViewGrid = styled(CalendarGrid.Root, {
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  maxHeight: '100%',
+  minHeight: 0,
 });
 
 interface MonthViewRowGridProps {
@@ -98,8 +98,9 @@ const MonthViewBody = styled('div', {
 })({
   flex: 1,
   display: 'grid',
-  gridAutoRows: '1fr',
+  gridAutoRows: 'minmax(0, 1fr)',
   position: 'relative',
+  flexGrow: 1,
 });
 
 const CELL_PADDING = 5; // theme.spacing(0.5) * 2
@@ -136,7 +137,7 @@ export const MonthView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     // Context hooks
-    const adapter = useAdapter();
+    const adapter = useAdapterContext();
     const { classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
@@ -149,7 +150,7 @@ export const MonthView = React.memo(
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
 
     // State hooks
-    const [maxEvents, setMaxEvents] = React.useState<number>(4);
+    const [maxEvents, setMaxEvents] = React.useState<number>(2);
 
     // Feature hooks
     const { days } = useEventCalendarView(MONTH_VIEW_CONFIG);

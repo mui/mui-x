@@ -102,8 +102,10 @@ The list includes these transformers
 - [`rename-chart-container`](#rename-chart-container)
 - [`rename-chart-data-provider`](#rename-chart-data-provider)
 - [`rename-chart-zoom-slider`](#rename-chart-zoom-slider)
+- [`remove-enable-keyboard-navigation`](#remove-enable-keyboard-navigation)
+- [`remove-stabilized-experimentalFeatures`](#remove-stabilized-experimentalfeatures)
 
-### `replace-heatmap-hide-legend-false`
+#### `replace-heatmap-hide-legend-false`
 
 The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9. This improves consistency across chart components and developer experience.
 
@@ -113,7 +115,7 @@ The default value of the `hideLegend` prop in the `Heatmap` component has change
  />
 ```
 
-### `rename-axis-tooltip-hook`
+#### `rename-axis-tooltip-hook`
 
 The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
 
@@ -138,7 +140,7 @@ After running the codemod to do the renaming make sure to adapt the hook returne
  }
 ```
 
-### `rename-chart-api-import`
+#### `rename-chart-api-import`
 
 Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-charts/context`.
 
@@ -227,6 +229,28 @@ Renames the `ChartDataProvider` component and related exports to `ChartsDataProv
 
 -import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 +import { ChartsDataProviderPro } from '@mui/x-charts-pro/ChartsDataProviderPro';
+```
+
+#### `remove-enable-keyboard-navigation`
+
+Removes the `enableKeyboardNavigation` props set to `true` since it's now the default behavior.
+
+```diff
+ <LineChart
+-  enableKeyboardNavigation
+ />
+```
+
+#### `remove-stabilized-experimentalFeatures`
+
+Removes the `preferStrictDomainInLineCharts` property from the `experimentalFeatures` prop since it's now the default behavior.
+If `preferStrictDomainInLineCharts` is the only property in the object, the entire `experimentalFeatures` prop is removed.
+
+```diff
+ <LineChart
+-  experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+   series={[]}
+ />
 ```
 
 ## v8.0.0

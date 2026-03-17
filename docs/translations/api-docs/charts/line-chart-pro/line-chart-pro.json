@@ -13,8 +13,14 @@
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
     },
     "disableLineItemHighlight": {
       "description": "If <code>true</code>, render the line highlight item."
@@ -115,6 +121,9 @@
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    },
     "tooltipAxis": {
       "description": "The controlled axis tooltip. Identified by the axis id, and data index."
     },

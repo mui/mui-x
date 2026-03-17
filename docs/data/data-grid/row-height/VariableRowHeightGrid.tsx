@@ -45,14 +45,15 @@ function CustomToolbar() {
           <SettingsIcon fontSize="small" sx={{ ml: 'auto' }} />
         </ToolbarButton>
       </Tooltip>
-
       <Menu
         id="density-menu"
         anchorEl={densityMenuTriggerRef.current}
         open={densityMenuOpen}
         onClose={() => setDensityMenuOpen(false)}
-        MenuListProps={{
-          'aria-labelledby': 'density-menu-trigger',
+        slotProps={{
+          list: {
+            'aria-labelledby': 'density-menu-trigger',
+          },
         }}
       >
         {DENISTY_OPTIONS.map((option) => (

@@ -102,14 +102,19 @@ SankeyChart.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -214,7 +219,7 @@ SankeyChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -238,6 +243,10 @@ SankeyChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The tooltip item.

@@ -11,8 +11,14 @@ import {
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
 import { useAxesTooltip } from './useAxesTooltip';
-
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
+import { useStore } from '../internals/store/useStore';
+import { selectorChartSeriesConfigGetter } from '../internals/plugins/corePlugins/useChartSeries';
+import {
+  type CartesianChartSeriesType,
+  type PolarChartSeriesType,
+} from '../models/seriesType/config';
+import { type AxisTooltipContentProps } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 export interface ChartsAxisTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -33,6 +39,9 @@ export interface ChartsAxisTooltipContentProps {
 function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   const { sort } = props;
   const classes = useUtilityClasses(props.classes);
+  const store = useStore();
+
+  const getSeriesConfig = store.use(selectorChartSeriesConfigGetter);
 
   const tooltipData = useAxesTooltip();
 
@@ -66,42 +75,60 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
             )}
 
             <tbody>
-              {sortedItems.map(
-                ({ seriesId, color, formattedValue, formattedLabel, markType, markShape }) => {
-                  if (formattedValue == null) {
-                    return null;
-                  }
-                  return (
-                    <ChartsTooltipRow key={seriesId} className={classes.row}>
-                      <ChartsTooltipCell
-                        className={clsx(classes.labelCell, classes.cell)}
-                        component="th"
-                      >
-                        <div className={classes.markContainer}>
-                          <ChartsLabelMark
-                            type={markType}
-                            markShape={markShape}
-                            color={color}
-                            className={classes.mark}
-                          />
-                        </div>
-                        {formattedLabel || null}
-                      </ChartsTooltipCell>
-                      <ChartsTooltipCell
-                        className={clsx(classes.valueCell, classes.cell)}
-                        component="td"
-                      >
-                        {formattedValue}
-                      </ChartsTooltipCell>
-                    </ChartsTooltipRow>
-                  );
-                },
-              )}
+              {sortedItems.map((item) => {
+                const seriesConfig = getSeriesConfig(item.seriesId);
+                const Content =
+                  seriesConfig && 'AxisTooltipContent' in seriesConfig
+                    ? (seriesConfig.AxisTooltipContent ?? DefaultContent)
+                    : DefaultContent;
+
+                return (
+                  <Content
+                    key={item.seriesId}
+                    classes={props.classes}
+                    item={
+                      /* TypeScript can't guarantee that the item's series type is the same as the Content's series type,
+                       * so we need to cast */
+                      item as any
+                    }
+                  />
+                );
+              })}
             </tbody>
           </ChartsTooltipTable>
         );
       })}
     </ChartsTooltipPaper>
+  );
+}
+
+function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesType>(
+  props: AxisTooltipContentProps<T>,
+) {
+  const classes = useUtilityClasses(props.classes);
+  const { item } = props;
+
+  if (item.formattedValue == null) {
+    return null;
+  }
+
+  return (
+    <ChartsTooltipRow className={classes.row}>
+      <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+        <div className={classes.markContainer}>
+          <ChartsLabelMark
+            type={item.markType}
+            markShape={item.markShape}
+            color={item.color}
+            className={classes.mark}
+          />
+        </div>
+        {item.formattedLabel || null}
+      </ChartsTooltipCell>
+      <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+        {item.formattedValue}
+      </ChartsTooltipCell>
+    </ChartsTooltipRow>
   );
 }
 

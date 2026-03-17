@@ -23,6 +23,11 @@ In the following example, the resource column header and loading text are custom
 
 {{"demo": "CustomLocaleTextTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::success
+You can also customize the resource column header using the [`resourceColumnLabel`](/x/react-scheduler/event-timeline/resources/#resource-column-label) prop.
+When provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
+:::
+
 ## Locale text
 
 You can use the theme to configure the locale text and replace the default locale:
@@ -85,6 +90,45 @@ import { frFR } from '@mui/x-scheduler/locales';
 ```
 
 {{"demo": "LocaleTextTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Date locale
+
+The `localeText` prop only translates the UI labels (button text, menu items, etc.).
+To also translate **formatted dates** (day names, month names, and week start day), pass a `date-fns` locale object.
+
+Use the `createDateLocaleTheme` helper to set the date locale globally via the theme, alongside `localeText` translations:
+
+```jsx
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { fr } from 'date-fns/locale/fr';
+import { frFR, createDateLocaleTheme } from '@mui/x-scheduler/locales';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+
+const theme = createTheme(
+  {
+    palette: {
+      primary: { main: '#1976d2' },
+    },
+  },
+  frFR,
+  createDateLocaleTheme(fr),
+);
+
+<ThemeProvider theme={theme}>
+  <EventTimelinePremium />
+</ThemeProvider>;
+```
+
+You can also pass the `dateLocale` prop directly to the component to override the theme value or avoid using a theme:
+
+```jsx
+import { fr } from 'date-fns/locale/fr';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+
+<EventTimelinePremium dateLocale={fr} />;
+```
+
+{{"demo": "DateLocaleTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Supported locales
 

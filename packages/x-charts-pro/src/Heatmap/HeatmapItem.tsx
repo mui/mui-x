@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import composeClasses from '@mui/utils/composeClasses';
 import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
-import { getHeatmapUtilityClass } from './heatmapClasses';
-import { HeatmapCell, type HeatmapItemOwnerState } from './internals/HeatmapCell';
+import { useUtilityClasses } from './heatmapClasses';
+import { HeatmapCell, type HeatmapCellOwnerState, type HeatmapCellProps } from './HeatmapCell';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
 export interface HeatmapItemSlots {
@@ -20,7 +19,6 @@ export interface HeatmapItemSlotProps {
 }
 
 export interface HeatmapItemProps {
-  dataIndex: number;
   seriesId: SeriesId;
   value: number;
   width: number;
@@ -48,29 +46,12 @@ export interface HeatmapItemProps {
   slots?: HeatmapItemSlots;
 }
 
-export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  ownerState: HeatmapItemOwnerState;
-}
-
-const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
-  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
-  const slots = {
-    cell: ['cell', `series-${seriesId}`, isFaded && 'faded', isHighlighted && 'highlighted'],
-  };
-  return composeClasses(slots, getHeatmapUtilityClass, classes);
-};
-
 /**
  * @ignore - internal component.
  */
 function HeatmapItem(props: HeatmapItemProps) {
   const {
     seriesId,
-    dataIndex,
     color,
     value,
     isHighlighted = false,
@@ -90,18 +71,18 @@ function HeatmapItem(props: HeatmapItemProps) {
     props.slotProps,
   );
   const interactionProps = useInteractionItemProps(
-    { type: 'heatmap', seriesId, dataIndex, xIndex, yIndex },
+    { type: 'heatmap', seriesId, xIndex, yIndex },
     skipInteractionItemProps,
   );
 
-  const ownerState = {
+  const ownerState: HeatmapCellOwnerState = {
     seriesId,
-    dataIndex,
     color,
-    value,
     isFaded,
     isHighlighted,
+    value,
   };
+
   const classes = useUtilityClasses(ownerState);
 
   const Cell = slots?.cell ?? HeatmapCell;
@@ -129,7 +110,6 @@ HeatmapItem.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   color: PropTypes.string.isRequired,
-  dataIndex: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**

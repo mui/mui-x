@@ -8,7 +8,8 @@ import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-e
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
-import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
@@ -52,20 +53,13 @@ const DayTimeGridRoot = styled('div', {
   overflowY: 'auto',
 });
 
-const DayTimeGridHeader = styled('div', {
+const DayTimeGridHeader = styled(CalendarGrid.HeaderRow, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridHeader',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-const DayTimeGridHeaderRow = styled(CalendarGrid.HeaderRow, {
-  name: 'MuiEventCalendar',
-  slot: 'DayTimeGridHeaderRow',
 })(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'minmax(var(--fixed-cell-width), auto) repeat(auto-fit, minmax(0, 1fr))',
+  gridTemplateColumns:
+    'minmax(var(--fixed-cell-width), auto) repeat(var(--column-count), minmax(0, 1fr)) fit-content(100%)',
   width: '100%',
   borderBlockEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
@@ -162,11 +156,41 @@ const DayTimeGridHeaderContent = styled('span', {
   padding: theme.spacing(1.25),
 }));
 
+const DayTimeGridHeaderCell = styled(CalendarGrid.HeaderCell, {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridHeaderCell',
+})({
+  display: 'flex',
+  '&:last-of-type': {
+    gridColumn: 'span 2',
+  },
+  '&[data-has-scroll]': {
+    display: 'grid',
+    gridTemplateColumns: 'subgrid',
+  },
+  [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}`]: {
+    overflowY: 'scroll',
+    scrollbarGutter: 'stable',
+    /* Make scrollbar invisible by setting transparent colors */
+    scrollbarColor: 'transparent transparent',
+    background: 'transparent',
+    /* Webkit browsers (Chrome, Safari, Edge) */
+    '&::-webkit-scrollbar': {
+      background: 'transparent',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: 'transparent',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: 'transparent',
+    },
+  },
+});
+
 const DayTimeGridHeaderButton = styled('button', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridHeaderButton',
 })(({ theme }) => ({
-  width: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -177,6 +201,7 @@ const DayTimeGridHeaderButton = styled('button', {
   font: 'inherit',
   color: 'inherit',
   padding: theme.spacing(0.25),
+  flexGrow: 1,
   '&:focus-visible': {
     outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
     outlineOffset: -2,
@@ -295,7 +320,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const { days, className, ...other } = props;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
 
@@ -373,30 +398,37 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       {...other}
       className={clsx(className, classes.dayTimeGridContainer)}
     >
-      <DayTimeGridHeader className={classes.dayTimeGridHeader}>
-        <DayTimeGridHeaderRow className={classes.dayTimeGridHeaderRow} as={CalendarGrid.HeaderRow}>
-          <DayTimeGridAllDayEventsCell className={classes.dayTimeGridAllDayEventsCell} />
-          {days.map((day) => (
-            <CalendarGrid.HeaderCell
-              key={day.key}
-              date={day}
-              ariaLabelFormat={`${adapter.formats.weekday} ${adapter.formats.dayOfMonth}`}
-            >
-              {hasDayView ? (
-                <DayTimeGridHeaderButton
-                  className={classes.dayTimeGridHeaderButton}
-                  type="button"
-                  onClick={(event) => store.switchToDay(day.value, event)}
-                  tabIndex={0}
-                >
-                  {renderHeaderContent(day)}
-                </DayTimeGridHeaderButton>
-              ) : (
-                renderHeaderContent(day)
-              )}
-            </CalendarGrid.HeaderCell>
-          ))}
-        </DayTimeGridHeaderRow>
+      <DayTimeGridHeader
+        className={classes.dayTimeGridHeader}
+        as={CalendarGrid.HeaderRow}
+        style={{ '--column-count': days.length } as React.CSSProperties}
+      >
+        <DayTimeGridAllDayEventsCell className={classes.dayTimeGridAllDayEventsCell} />
+        {days.map((day, index) => (
+          <DayTimeGridHeaderCell
+            key={day.key}
+            className={classes.dayTimeGridHeaderCell}
+            date={day}
+            ariaLabelFormat={`${adapter.formats.weekday} ${adapter.formats.dayOfMonth}`}
+            data-has-scroll={(index === days.length - 1 && hasScroll) || undefined}
+          >
+            {hasDayView ? (
+              <DayTimeGridHeaderButton
+                className={classes.dayTimeGridHeaderButton}
+                type="button"
+                onClick={(event) => store.switchToDay(day.value, event)}
+                tabIndex={0}
+              >
+                {renderHeaderContent(day)}
+              </DayTimeGridHeaderButton>
+            ) : (
+              renderHeaderContent(day)
+            )}
+            {index === days.length - 1 && (
+              <div className={classes.dayTimeGridScrollablePlaceholder} />
+            )}
+          </DayTimeGridHeaderCell>
+        ))}
       </DayTimeGridHeader>
 
       <DayTimeGridAllDayEventsGrid

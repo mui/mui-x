@@ -42,7 +42,6 @@ export interface FunnelChartProps
       | 'radiusAxis'
       | 'slots'
       | 'slotProps'
-      | 'experimentalFeatures'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -241,6 +240,10 @@ FunnelChart.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -248,7 +251,14 @@ FunnelChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * The gap, in pixels, between funnel sections.
    * @default 0
@@ -403,7 +413,7 @@ FunnelChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -432,6 +442,10 @@ FunnelChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The tooltip item.

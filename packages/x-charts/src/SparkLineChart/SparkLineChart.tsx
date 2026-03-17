@@ -60,7 +60,6 @@ export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 
   | 'colors'
   | 'slots'
   | 'slotProps'
-  | 'experimentalFeatures'
 > {
   /**
    * The xAxis configuration.
@@ -401,6 +400,10 @@ SparkLineChart.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -415,10 +418,17 @@ SparkLineChart.propTypes = {
    */
   disableClipping: PropTypes.bool,
   /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
    * If true, the voronoi interaction are ignored.
    */
   disableVoronoi: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -686,7 +696,7 @@ SparkLineChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -727,6 +737,10 @@ SparkLineChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The controlled axis tooltip.

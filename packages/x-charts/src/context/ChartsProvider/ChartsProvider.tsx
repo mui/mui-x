@@ -26,9 +26,9 @@ const defaultPlugins = [
 ];
 
 function ChartsProvider<
-  TSeriesType extends ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = ChartCorePluginSignatures<TSeriesType>,
->(props: React.PropsWithChildren<ChartsProviderProps<TSeriesType, TSignatures>>) {
+  SeriesType extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = ChartCorePluginSignatures<SeriesType>,
+>(props: React.PropsWithChildren<ChartsProviderProps<SeriesType, TSignatures>>) {
   const {
     children,
     plugins = defaultPlugins as ConvertSignaturesIntoPlugins<TSignatures>,
