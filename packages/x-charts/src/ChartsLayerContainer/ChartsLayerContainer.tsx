@@ -1,9 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, useThemeProps, type SxProps, type Theme } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
+import { useUtilityClasses } from '../ChartsSurface/chartsSurfaceClasses';
 import {
   selectorChartPropsHeight,
   selectorChartPropsWidth,
@@ -67,7 +69,9 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
 
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
-    const { children, title, desc, ...other } = themeProps;
+    const { children, title, desc, className, ...other } = themeProps;
+
+    const classes = useUtilityClasses();
 
     const chartsLayerContainerRef = useChartsLayerContainerRef();
     const handleRef = useForkRef(chartsLayerContainerRef, ref);
@@ -88,6 +92,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
         }
       });
     }
+
     return (
       <ChartsLayerContainerDiv
         ref={handleRef}
@@ -95,6 +100,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
         tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
         aria-label={title}
         aria-describedby={desc ? descId : undefined}
+        className={clsx(classes.root, className)}
         {...other}
         onPointerEnter={(event) => {
           other.onPointerEnter?.(event);
