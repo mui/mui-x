@@ -257,11 +257,11 @@ The gradient is defined as a child of the chart (`myGradient` referenced in `fil
       strokeDasharray: '10 5',
       strokeWidth: 4,
     },
-[`& .${lineClasses.line}`]: {
-strokeDasharray: '10 5',
-strokeWidth: 4,
-},
-[`& .${lineClasses.area}[data-series="Germany"]`]: {
+    [`& .${lineClasses.line}`]: {
+      strokeDasharray: '10 5',
+      strokeWidth: 4,
+    },
+    [`& .${lineClasses.area}[data-series="Germany"]`]: {
       fill: "url('#myGradient')",
     },
   }}
