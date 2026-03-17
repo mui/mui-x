@@ -1,7 +1,7 @@
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer, act } from '@mui/internal-test-utils/createRenderer';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
-import { CHART_SELECTOR } from '../../../../tests/constants';
+import { chartsSvgLayerClasses } from '../../../../ChartsSvgLayer';
 
 describe('useChartKeyboardNavigation', () => {
   const { render } = createRenderer();
@@ -37,11 +37,13 @@ describe('useChartKeyboardNavigation', () => {
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
     expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
 
-    await user.click(svg);
+    await user.click(layerContainer);
     await user.keyboard('[ArrowRight]');
 
     expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
@@ -58,9 +60,11 @@ describe('useChartKeyboardNavigation', () => {
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
 
-    await user.click(svg);
+    await user.click(layerContainer);
     await user.keyboard('[ArrowRight]');
 
     expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
@@ -83,7 +87,9 @@ describe('useChartKeyboardNavigation', () => {
         />,
       );
 
-      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
       const firstBar = container.querySelector(
         `[data-series="A"] .${barClasses.element}:nth-child(1)`,
       );
@@ -91,7 +97,7 @@ describe('useChartKeyboardNavigation', () => {
         `[data-series="A"] .${barClasses.element}:nth-child(2)`,
       );
 
-      await user.click(svg);
+      await user.click(layerContainer);
       // Navigate to first bar, then to second bar
       await user.keyboard('[ArrowRight]');
       await user.keyboard('[ArrowRight]');

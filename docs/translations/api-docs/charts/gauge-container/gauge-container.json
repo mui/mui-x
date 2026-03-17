@@ -10,6 +10,9 @@
     "cy": {
       "description": "The y coordinate of the arc center. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the height the drawing area."
     },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
     "endAngle": { "description": "The end angle (deg)." },
     "experimentalFeatures": {
       "description": "Options to enable features planned for the next major."
@@ -33,6 +36,9 @@
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
     },
     "startAngle": { "description": "The start angle (deg)." },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    },
     "value": {
       "description": "The value of the gauge. Set to <code>null</code> to not display a value."
     },
