@@ -1,0 +1,7 @@
+<ChatProvider
+  adapter={adapter}
+  defaultConversations={cloneConversations(demoConversations.slice(0, 2))}
+  defaultActiveConversationId="support"
+>
+  <RealtimeInner emit={emit} />
+</ChatProvider>

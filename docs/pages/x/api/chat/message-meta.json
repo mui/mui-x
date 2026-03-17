@@ -1,0 +1,20 @@
+{
+  "props": {},
+  "name": "MessageMeta",
+  "imports": [
+    "import { MessageMeta } from '@mui/x-chat-unstyled/message';",
+    "import { MessageMeta } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [
+    { "name": "meta", "description": "", "class": null },
+    { "name": "timestamp", "description": "", "class": null },
+    { "name": "status", "description": "", "class": null },
+    { "name": "edited", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiMessageMeta",
+  "filename": "/packages/x-chat-unstyled/src/message/MessageMeta.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/messages/\">Unstyled messages</a></li></ul>",
+  "cssComponent": false
+}

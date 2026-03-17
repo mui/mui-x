@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 
 import { ChatBox } from '@mui/x-chat';
+import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
 
 const adapter = {
   async sendMessage() {
@@ -37,6 +38,7 @@ export default function ChatBoxOneLiner() {
             {
               id: 'm1',
               role: 'assistant',
+              author: demoUsers.agent,
               createdAt: '2026-03-17T09:00:00.000Z',
               parts: [
                 {
@@ -48,6 +50,7 @@ export default function ChatBoxOneLiner() {
             {
               id: 'm2',
               role: 'user',
+              author: demoUsers.you,
               createdAt: '2026-03-17T09:03:00.000Z',
               parts: [
                 {
@@ -59,6 +62,7 @@ export default function ChatBoxOneLiner() {
             {
               id: 'm3',
               role: 'assistant',
+              author: demoUsers.agent,
               createdAt: '2026-03-17T09:04:30.000Z',
               parts: [
                 {

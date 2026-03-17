@@ -58,8 +58,12 @@ const MessageRow = React.memo(function MessageRow({ id }: { id: string }) {
       <div style={{ fontSize: 12, color: '#5c6b7c' }}>
         {message.id} · renders {renders.current}
       </div>
-      <div style={{ marginTop: 4, fontWeight: 700 }}>{message.author?.displayName ?? message.role}</div>
-      <div style={{ marginTop: 6 }}>{message.parts[0]?.type === 'text' ? message.parts[0].text : null}</div>
+      <div style={{ marginTop: 4, fontWeight: 700 }}>
+        {message.author?.displayName ?? message.role}
+      </div>
+      <div style={{ marginTop: 6 }}>
+        {message.parts[0]?.type === 'text' ? message.parts[0].text : null}
+      </div>
     </div>
   );
 });
@@ -78,7 +82,10 @@ function SelectorThread() {
             <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
               The list subscribes to ids. Each row subscribes to its own message.
             </p>
-            <DemoConversationList conversations={conversations} activeConversationId="selectors" />
+            <DemoConversationList
+              conversations={conversations}
+              activeConversationId="selectors"
+            />
           </React.Fragment>
         }
       >
@@ -129,7 +136,12 @@ export default function SelectorDrivenThread() {
                 message.id === 'selector-6'
                   ? {
                       ...message,
-                      parts: [{ type: 'text', text: 'Only this row changed in the controlled state.' }],
+                      parts: [
+                        {
+                          type: 'text',
+                          text: 'Only this row changed in the controlled state.',
+                        },
+                      ],
                     }
                   : message,
               ),
@@ -140,14 +152,22 @@ export default function SelectorDrivenThread() {
         </DemoButton>
         <DemoButton
           onClick={() => {
-            setMessages((previous) => [...previous, {
-              id: `selector-${previous.length + 1}`,
-              conversationId: 'selectors',
-              role: 'assistant',
-              author: demoUsers.agent,
-              status: 'sent',
-              parts: [{ type: 'text', text: 'A new row appears without rerendering every item.' }],
-            }]);
+            setMessages((previous) => [
+              ...previous,
+              {
+                id: `selector-${previous.length + 1}`,
+                conversationId: 'selectors',
+                role: 'assistant',
+                author: demoUsers.agent,
+                status: 'sent',
+                parts: [
+                  {
+                    type: 'text',
+                    text: 'A new row appears without rerendering every item.',
+                  },
+                ],
+              },
+            ]);
           }}
         >
           Append one row

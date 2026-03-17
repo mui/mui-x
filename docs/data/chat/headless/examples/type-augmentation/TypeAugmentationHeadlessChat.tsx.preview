@@ -1,0 +1,9 @@
+<ChatProvider
+  adapter={adapter}
+  defaultConversations={conversations}
+  defaultMessages={initialMessages}
+  defaultActiveConversationId="triage"
+  partRenderers={partRenderers}
+>
+  <TypeAugmentationInner />
+</ChatProvider>

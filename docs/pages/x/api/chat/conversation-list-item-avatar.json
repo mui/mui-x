@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ConversationListItemAvatar",
+  "imports": [
+    "import { ConversationListItemAvatar } from '@mui/x-chat-unstyled/conversation-list';",
+    "import { ConversationListItemAvatar } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationListItemAvatar",
+  "filename": "/packages/x-chat-unstyled/src/conversation-list/ConversationListItemAvatar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/conversation-list/\">Unstyled conversation list</a></li></ul>",
+  "cssComponent": false
+}

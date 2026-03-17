@@ -1,0 +1,41 @@
+{
+  "props": {},
+  "name": "ChatConversations",
+  "imports": [
+    "import { ChatConversations } from '@mui/x-chat/ChatConversations';",
+    "import { ChatConversations } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "loadingState", "description": "", "class": "MuiChatConversations-loadingState" },
+    { "name": "emptyState", "description": "", "class": "MuiChatConversations-emptyState" },
+    { "name": "errorState", "description": "", "class": "MuiChatConversations-errorState" },
+    { "name": "root", "description": "", "class": "MuiChatConversations-root" },
+    { "name": "item", "description": "", "class": "MuiChatConversations-item" },
+    { "name": "itemAvatar", "description": "", "class": "MuiChatConversations-itemAvatar" },
+    { "name": "title", "description": "", "class": "MuiChatConversations-title" },
+    { "name": "preview", "description": "", "class": "MuiChatConversations-preview" },
+    { "name": "timestamp", "description": "", "class": "MuiChatConversations-timestamp" },
+    { "name": "unreadBadge", "description": "", "class": "MuiChatConversations-unreadBadge" }
+  ],
+  "classes": [
+    {
+      "key": "state",
+      "className": "MuiChatConversations-state",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "stateGlyph",
+      "className": "MuiChatConversations-stateGlyph",
+      "description": "",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatConversations",
+  "filename": "/packages/x-chat/src/ChatConversations/ChatConversations.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/material/conversations/\">Conversations</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ThreadActions",
+  "imports": [
+    "import { ThreadActions } from '@mui/x-chat-unstyled/thread';",
+    "import { ThreadActions } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "actions", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiThreadActions",
+  "filename": "/packages/x-chat-unstyled/src/thread/ThreadActions.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/thread/\">Unstyled thread</a></li></ul>",
+  "cssComponent": false
+}

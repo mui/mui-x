@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "MessageActions",
+  "imports": [
+    "import { MessageActions } from '@mui/x-chat-unstyled/message';",
+    "import { MessageActions } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "actions", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiMessageActions",
+  "filename": "/packages/x-chat-unstyled/src/message/MessageActions.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/messages/\">Unstyled messages</a></li></ul>",
+  "cssComponent": false
+}

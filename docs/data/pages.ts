@@ -1,5 +1,6 @@
 import type { MuiPage } from 'docs/src/MuiPage';
 import chartsComponentApi from './chartsApiPages';
+import chatComponentApi from './chatApiPages';
 import dataGridComponentApi from './dataGridApiPages';
 import pickersComponentApi from './datePickersApiPages';
 import treeViewComponentApi from './treeViewApiPages';
@@ -821,6 +822,192 @@ const pages: MuiPage[] = [
     ],
   },
   ...schedulerPages,
+  {
+    pathname: '/x/react-chat-group',
+    title: 'Chat',
+    newFeature: true,
+    children: [
+      { pathname: '/x/react-chat', title: 'Overview' },
+      {
+        pathname: '/x/react-chat/headless-group',
+        subheader: 'Headless',
+        children: [
+          { pathname: '/x/react-chat/headless', title: 'Overview' },
+          {
+            pathname: '/x/react-chat/headless/examples',
+            title: 'Examples',
+            children: [
+              { pathname: '/x/react-chat/headless/examples/minimal-chat', title: 'Minimal chat' },
+              {
+                pathname: '/x/react-chat/headless/examples/controlled-state',
+                title: 'Controlled state',
+              },
+              {
+                pathname: '/x/react-chat/headless/examples/selector-driven-thread',
+                title: 'Selector-driven thread',
+              },
+              {
+                pathname: '/x/react-chat/headless/examples/conversation-history',
+                title: 'Conversation history',
+              },
+              { pathname: '/x/react-chat/headless/examples/composer', title: 'Composer' },
+              {
+                pathname: '/x/react-chat/headless/examples/streaming-lifecycle',
+                title: 'Streaming lifecycle',
+              },
+              { pathname: '/x/react-chat/headless/examples/realtime', title: 'Realtime' },
+              {
+                pathname: '/x/react-chat/headless/examples/tool-approval-and-renderers',
+                title: 'Tool approval and renderers',
+              },
+              {
+                pathname: '/x/react-chat/headless/examples/advanced-store-access',
+                title: 'Advanced store access',
+              },
+              {
+                pathname: '/x/react-chat/headless/examples/message-parts',
+                title: 'Message parts',
+              },
+              {
+                pathname: '/x/react-chat/headless/examples/realtime-thread-sync',
+                title: 'Realtime thread sync',
+              },
+              {
+                pathname: '/x/react-chat/headless/examples/tool-call-events',
+                title: 'Tool call events',
+              },
+              {
+                pathname: '/x/react-chat/headless/examples/type-augmentation',
+                title: 'Type augmentation',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/unstyled-group',
+        subheader: 'Unstyled',
+        children: [
+          { pathname: '/x/react-chat/unstyled', title: 'Overview' },
+          { pathname: '/x/react-chat/unstyled/composition', title: 'Composition' },
+          { pathname: '/x/react-chat/unstyled/layout', title: 'Layout' },
+          {
+            pathname: '/x/react-chat/unstyled/conversation-list',
+            title: 'Conversation list',
+          },
+          { pathname: '/x/react-chat/unstyled/thread', title: 'Thread' },
+          { pathname: '/x/react-chat/unstyled/message-list', title: 'Message list' },
+          { pathname: '/x/react-chat/unstyled/messages', title: 'Messages' },
+          { pathname: '/x/react-chat/unstyled/composer', title: 'Composer' },
+          { pathname: '/x/react-chat/unstyled/indicators', title: 'Indicators' },
+          { pathname: '/x/react-chat/unstyled/customization', title: 'Customization' },
+          {
+            pathname: '/x/react-chat/unstyled/examples',
+            title: 'Examples',
+            children: [
+              {
+                pathname: '/x/react-chat/unstyled/examples/minimal-shell',
+                title: 'Minimal shell',
+              },
+              {
+                pathname: '/x/react-chat/unstyled/examples/two-pane-inbox',
+                title: 'Two-pane inbox',
+              },
+              {
+                pathname: '/x/react-chat/unstyled/examples/virtualized-thread',
+                title: 'Virtualized thread',
+              },
+              {
+                pathname: '/x/react-chat/unstyled/examples/grouped-message-timeline',
+                title: 'Grouped message timeline',
+              },
+              {
+                pathname: '/x/react-chat/unstyled/examples/composer-with-attachments',
+                title: 'Composer with attachments',
+              },
+              {
+                pathname: '/x/react-chat/unstyled/examples/indicators-in-context',
+                title: 'Indicators in context',
+              },
+              {
+                pathname: '/x/react-chat/unstyled/examples/custom-message-part-rendering',
+                title: 'Custom message part rendering',
+              },
+              {
+                pathname: '/x/react-chat/unstyled/examples/slot-customization',
+                title: 'Slot customization',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/material-group',
+        subheader: 'Material UI',
+        children: [
+          { pathname: '/x/react-chat/material', title: 'Overview' },
+          { pathname: '/x/react-chat/material/chat-box', title: 'ChatBox' },
+          { pathname: '/x/react-chat/material/composition', title: 'Composition' },
+          { pathname: '/x/react-chat/material/conversations', title: 'Conversations' },
+          { pathname: '/x/react-chat/material/messages', title: 'Messages' },
+          { pathname: '/x/react-chat/material/composer', title: 'Composer' },
+          { pathname: '/x/react-chat/material/indicators', title: 'Indicators' },
+          { pathname: '/x/react-chat/material/slots', title: 'Slots' },
+          { pathname: '/x/react-chat/material/theming', title: 'Theming' },
+          { pathname: '/x/react-chat/material/localization', title: 'Localization' },
+          {
+            pathname: '/x/react-chat/material/examples',
+            title: 'Examples',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/ai-assistant',
+                title: 'AI assistant',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/customer-support-inbox',
+                title: 'Customer support inbox',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/dark-mode-chat',
+                title: 'Dark mode chat',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/branded-chat',
+                title: 'Branded chat',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/thread-only-copilot',
+                title: 'Thread-only copilot',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/skeleton-loading',
+                title: 'Skeleton loading',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/custom-message-actions',
+                title: 'Custom message actions',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/rtl-chat',
+                title: 'RTL chat',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        pathname: '/x/api/chat-resources',
+        subheader: 'Resources',
+        children: [
+          {
+            pathname: '/x/api/chat-group',
+            title: 'API reference',
+            children: [...chatComponentApi],
+          },
+        ],
+      },
+    ],
+  },
   {
     pathname: '/x/migration-group',
     title: 'Migration',

@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
 import { ChatBox } from '@mui/x-chat';
+import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
 
 const adapter = {
   async sendMessage() {
@@ -76,6 +77,7 @@ export default function ChatBoxSlotCustomization() {
             {
               id: 'm1',
               role: 'assistant',
+              author: demoUsers.agent,
               createdAt: '2026-03-17T09:15:00.000Z',
               parts: [
                 {

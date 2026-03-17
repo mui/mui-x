@@ -1,0 +1,18 @@
+{
+  "props": {},
+  "name": "ScrollToBottomAffordance",
+  "imports": [
+    "import { ScrollToBottomAffordance } from '@mui/x-chat-unstyled/indicators';",
+    "import { ScrollToBottomAffordance } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [
+    { "name": "root", "description": "", "class": null },
+    { "name": "badge", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiScrollToBottomAffordance",
+  "filename": "/packages/x-chat-unstyled/src/indicators/ScrollToBottomAffordance.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/indicators/\">Unstyled indicators</a></li></ul>",
+  "cssComponent": false
+}

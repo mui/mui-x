@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "MessageAvatar",
+  "imports": [
+    "import { MessageAvatar } from '@mui/x-chat-unstyled/message';",
+    "import { MessageAvatar } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "avatar", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiMessageAvatar",
+  "filename": "/packages/x-chat-unstyled/src/message/MessageAvatar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/messages/\">Unstyled messages</a></li></ul>",
+  "cssComponent": false
+}

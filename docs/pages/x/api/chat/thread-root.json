@@ -1,0 +1,17 @@
+{
+  "props": {},
+  "name": "ThreadRoot",
+  "imports": [
+    "import { ThreadRoot } from '@mui/x-chat-unstyled/thread';",
+    "import { ThreadRoot } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiThreadRoot",
+  "filename": "/packages/x-chat-unstyled/src/thread/ThreadRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/thread/\">Unstyled thread</a></li></ul>",
+  "cssComponent": false
+}

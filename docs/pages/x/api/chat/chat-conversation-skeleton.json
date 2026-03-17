@@ -1,0 +1,16 @@
+{
+  "props": {},
+  "name": "ChatConversationSkeleton",
+  "imports": [
+    "import { ChatConversationSkeleton } from '@mui/x-chat/ChatConversationSkeleton';",
+    "import { ChatConversationSkeleton } from '@mui/x-chat';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatConversationSkeleton",
+  "filename": "/packages/x-chat/src/ChatConversationSkeleton/ChatConversationSkeleton.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/material/conversations/\">Conversations</a></li></ul>",
+  "cssComponent": false
+}

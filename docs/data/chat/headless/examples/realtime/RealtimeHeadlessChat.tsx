@@ -8,7 +8,11 @@ import {
   type ChatAdapter,
   type ChatRealtimeEvent,
 } from '@mui/x-chat-headless';
-import { cloneConversations, demoConversations, demoUsers } from '../shared/demoData';
+import {
+  cloneConversations,
+  demoConversations,
+  demoUsers,
+} from '../shared/demoData';
 import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
 import {
   DemoButton,
@@ -75,9 +79,13 @@ function RealtimeInner({ emit }: { emit: (event: ChatRealtimeEvent) => void }) {
           <React.Fragment>
             <h3 style={{ margin: 0 }}>Realtime subscription</h3>
             <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              The provider owns the subscription. These buttons emit demo realtime events.
+              The provider owns the subscription. These buttons emit demo realtime
+              events.
             </p>
-            <DemoConversationList conversations={conversations} activeConversationId="support" />
+            <DemoConversationList
+              conversations={conversations}
+              activeConversationId="support"
+            />
           </React.Fragment>
         }
       >
@@ -90,41 +98,67 @@ function RealtimeInner({ emit }: { emit: (event: ChatRealtimeEvent) => void }) {
             { label: 'Typing users', value: typingUserIds.join(', ') || 'none' },
             { label: 'Online', value: getOnlineNames(conversations) },
             { label: 'Unread', value: activeConversation?.unreadCount ?? 0 },
-            { label: 'Read state', value: activeConversation?.readState ?? 'unknown' },
+            {
+              label: 'Read state',
+              value: activeConversation?.readState ?? 'unknown',
+            },
           ]}
         />
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           <DemoButton
             onClick={() =>
-              emit({ type: 'typing', conversationId: 'support', userId: demoUsers.alice.id, isTyping: true })
+              emit({
+                type: 'typing',
+                conversationId: 'support',
+                userId: demoUsers.alice.id,
+                isTyping: true,
+              })
             }
           >
             Alice starts typing
           </DemoButton>
           <DemoButton
             onClick={() =>
-              emit({ type: 'typing', conversationId: 'support', userId: demoUsers.alice.id, isTyping: false })
+              emit({
+                type: 'typing',
+                conversationId: 'support',
+                userId: demoUsers.alice.id,
+                isTyping: false,
+              })
             }
           >
             Alice stops typing
           </DemoButton>
           <DemoButton
-            onClick={() => emit({ type: 'presence', userId: demoUsers.sam.id, isOnline: true })}
+            onClick={() =>
+              emit({ type: 'presence', userId: demoUsers.sam.id, isOnline: true })
+            }
           >
             Sam comes online
           </DemoButton>
           <DemoButton
-            onClick={() => emit({ type: 'presence', userId: demoUsers.sam.id, isOnline: false })}
+            onClick={() =>
+              emit({ type: 'presence', userId: demoUsers.sam.id, isOnline: false })
+            }
           >
             Sam goes offline
           </DemoButton>
           <DemoButton
-            onClick={() => emit({ type: 'read', conversationId: 'support', userId: demoUsers.alice.id })}
+            onClick={() =>
+              emit({
+                type: 'read',
+                conversationId: 'support',
+                userId: demoUsers.alice.id,
+              })
+            }
           >
             Mark thread as read
           </DemoButton>
         </div>
-        <DemoMessageList messages={messages} emptyLabel="This example focuses on state reactions from realtime events." />
+        <DemoMessageList
+          messages={messages}
+          emptyLabel="This example focuses on state reactions from realtime events."
+        />
       </DemoSplitLayout>
     </DemoFrame>
   );

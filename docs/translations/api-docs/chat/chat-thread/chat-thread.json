@@ -1,0 +1,27 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "actionButton": { "description": "" },
+    "banner": { "description": "" },
+    "inlineError": { "description": "" },
+    "state": { "description": "" },
+    "stateGlyph": { "description": "" }
+  },
+  "slotDescriptions": {
+    "actions": "",
+    "emptyState": "",
+    "errorState": "",
+    "header": "",
+    "historyError": "",
+    "historyLoading": "",
+    "loadingState": "",
+    "messageList": "",
+    "messageListContent": "",
+    "messageListOverlay": "",
+    "messageListScroller": "",
+    "root": "",
+    "subtitle": "",
+    "title": ""
+  }
+}

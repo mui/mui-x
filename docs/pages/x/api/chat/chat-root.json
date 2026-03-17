@@ -1,0 +1,20 @@
+{
+  "props": {
+    "storeClass": { "type": { "name": "func" }, "default": "ChatStore" },
+    "streamFlushInterval": { "type": { "name": "number" }, "default": "16" }
+  },
+  "name": "ChatRoot",
+  "imports": [
+    "import { ChatRoot } from '@mui/x-chat-unstyled/chat';",
+    "import { ChatRoot } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatRoot",
+  "filename": "/packages/x-chat-unstyled/src/chat/ChatRoot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/composition/\">Unstyled composition</a></li></ul>",
+  "cssComponent": false
+}

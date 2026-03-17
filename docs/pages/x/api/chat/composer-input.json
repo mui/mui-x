@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ComposerInput",
+  "imports": [
+    "import { ComposerInput } from '@mui/x-chat-unstyled/composer';",
+    "import { ComposerInput } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "input", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiComposerInput",
+  "filename": "/packages/x-chat-unstyled/src/composer/ComposerInput.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/composer/\">Unstyled composer</a></li></ul>",
+  "cssComponent": false
+}

@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '@mui/x-chat';
+import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
 
 const adapter: ChatAdapter = {
   async sendMessage() {
@@ -19,7 +20,8 @@ const ConversationTitle = React.forwardRef(function ConversationTitle(
   props: React.HTMLAttributes<HTMLDivElement> & Record<string, unknown>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { conversation, dense, focused, ownerState, selected, unread, ...other } = props;
+  const { conversation, dense, focused, ownerState, selected, unread, ...other } =
+    props;
 
   void dense;
   void focused;
@@ -66,7 +68,10 @@ const MessageContent = React.forwardRef(function MessageContent(
 
 export default function ChatBoxSlotCustomization() {
   return (
-    <Paper elevation={0} sx={{ border: 1, borderColor: 'divider', overflow: 'hidden' }}>
+    <Paper
+      elevation={0}
+      sx={{ border: 1, borderColor: 'divider', overflow: 'hidden' }}
+    >
       <Box sx={{ height: 560 }}>
         <ChatBox
           adapter={adapter}
@@ -78,6 +83,7 @@ export default function ChatBoxSlotCustomization() {
             {
               id: 'm1',
               role: 'assistant',
+              author: demoUsers.agent,
               createdAt: '2026-03-17T09:15:00.000Z',
               parts: [
                 {

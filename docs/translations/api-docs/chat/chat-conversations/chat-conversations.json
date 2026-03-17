@@ -1,0 +1,17 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": { "state": { "description": "" }, "stateGlyph": { "description": "" } },
+  "slotDescriptions": {
+    "emptyState": "",
+    "errorState": "",
+    "item": "",
+    "itemAvatar": "",
+    "loadingState": "",
+    "preview": "",
+    "root": "",
+    "timestamp": "",
+    "title": "",
+    "unreadBadge": ""
+  }
+}

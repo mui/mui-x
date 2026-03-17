@@ -1,7 +1,16 @@
 import * as React from 'react';
-import { ChatProvider, useChat, type ChatAdapter, type ChatDataMessagePart } from '@mui/x-chat-headless';
+import {
+  ChatProvider,
+  useChat,
+  type ChatAdapter,
+  type ChatDataMessagePart,
+} from '@mui/x-chat-headless';
 import { demoUsers } from '../shared/demoData';
-import { createChunkStream, createTextResponseChunks, getMessageText } from '../shared/demoUtils';
+import {
+  createChunkStream,
+  createTextResponseChunks,
+  getMessageText,
+} from '../shared/demoUtils';
 import {
   DemoButton,
   DemoCodeBlock,
@@ -22,8 +31,16 @@ function createStreamingAdapter(): ChatAdapter {
           [
             { type: 'start', messageId: 'streaming-failure' },
             { type: 'text-start', id: 'streaming-failure-text' },
-            { type: 'text-delta', id: 'streaming-failure-text', delta: 'The stream will fail' },
-            { type: 'text-delta', id: 'streaming-failure-text', delta: ' after this chunk.' },
+            {
+              type: 'text-delta',
+              id: 'streaming-failure-text',
+              delta: 'The stream will fail',
+            },
+            {
+              type: 'text-delta',
+              id: 'streaming-failure-text',
+              delta: ' after this chunk.',
+            },
           ],
           {
             delayMs: 260,
@@ -47,9 +64,21 @@ function createStreamingAdapter(): ChatAdapter {
         [
           { type: 'start', messageId: 'streaming-success' },
           { type: 'text-start', id: 'streaming-success-text' },
-          { type: 'text-delta', id: 'streaming-success-text', delta: 'Streaming updates are visible' },
-          { type: 'text-delta', id: 'streaming-success-text', delta: ' before the final chunk arrives.' },
-          { type: 'data-insight', id: 'data-1', data: { source: 'demo', confidence: 0.92 } },
+          {
+            type: 'text-delta',
+            id: 'streaming-success-text',
+            delta: 'Streaming updates are visible',
+          },
+          {
+            type: 'text-delta',
+            id: 'streaming-success-text',
+            delta: ' before the final chunk arrives.',
+          },
+          {
+            type: 'data-insight',
+            id: 'data-1',
+            data: { source: 'demo', confidence: 0.92 },
+          },
           { type: 'text-end', id: 'streaming-success-text' },
           { type: 'finish', messageId: 'streaming-success', finishReason: 'stop' },
         ],
@@ -70,7 +99,12 @@ export default function StreamingLifecycleHeadlessChat() {
         console.log('onData', part.type);
       }}
       onFinish={(payload) => {
-        console.log('onFinish', payload.finishReason, payload.isError, payload.isAbort);
+        console.log(
+          'onFinish',
+          payload.finishReason,
+          payload.isError,
+          payload.isAbort,
+        );
       }}
       onError={(error) => {
         console.log('onError', error.message);
@@ -94,7 +128,11 @@ function StreamingLifecycleWithLogs() {
     const originalLog = console.log;
 
     console.log = (...args: unknown[]) => {
-      appendLog(args.map((arg) => (typeof arg === 'string' ? arg : JSON.stringify(arg))).join(' '));
+      appendLog(
+        args
+          .map((arg) => (typeof arg === 'string' ? arg : JSON.stringify(arg)))
+          .join(' '),
+      );
       originalLog(...args);
     };
 
@@ -110,20 +148,30 @@ function StreamingLifecycleWithLogs() {
           <React.Fragment>
             <h3 style={{ margin: 0 }}>Lifecycle controls</h3>
             <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              Use <code>success</code>, <code>slow</code>, or <code>fail</code> to drive different flows.
+              Use <code>success</code>, <code>slow</code>, or <code>fail</code> to
+              drive different flows.
             </p>
-            <DemoCodeBlock>{events.join('\n') || 'Callback events will appear here.'}</DemoCodeBlock>
+            <DemoCodeBlock>
+              {events.join('\n') || 'Callback events will appear here.'}
+            </DemoCodeBlock>
           </React.Fragment>
         }
       >
         <DemoHeading
           title="Streaming lifecycle"
           description="This recipe shows callbacks, cancellation, errors, and retry in one headless UI."
-          actions={<DemoButton disabled={!isStreaming} onClick={() => stopStreaming()}>Stop stream</DemoButton>}
+          actions={
+            <DemoButton disabled={!isStreaming} onClick={() => stopStreaming()}>
+              Stop stream
+            </DemoButton>
+          }
         />
         <DemoMessageList messages={messages} />
         <div style={{ display: 'flex', gap: 8 }}>
-          <DemoInput value={draft} onChange={(event) => setDraft(event.target.value)} />
+          <DemoInput
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+          />
           <DemoButton
             disabled={isStreaming || draft.trim() === ''}
             onClick={() =>
@@ -142,7 +190,11 @@ function StreamingLifecycleWithLogs() {
           <DemoButton onClick={() => setDraft('slow')}>Slow stream</DemoButton>
           <DemoButton onClick={() => setDraft('fail')}>Failure</DemoButton>
           {messages
-            .filter((message) => message.role === 'user' && (message.status === 'error' || message.status === 'cancelled'))
+            .filter(
+              (message) =>
+                message.role === 'user' &&
+                (message.status === 'error' || message.status === 'cancelled'),
+            )
             .map((message) => (
               <DemoButton key={message.id} onClick={() => void retry(message.id)}>
                 Retry
