@@ -28,19 +28,22 @@
       "key": "divider",
       "className": "MuiRadarGrid-divider",
       "description": "Styles applied to every divider element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "radial",
       "className": "MuiRadarGrid-radial",
       "description": "Styles applied to every radial line element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "stripe",
       "className": "MuiRadarGrid-stripe",
       "description": "Styles applied to every stripe element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     }
   ],
   "muiName": "MuiRadarGrid",

@@ -19,7 +19,8 @@
   "classDescriptions": {
     "area": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the series area element"
+      "nodeName": "the series area element",
+      "deprecationInfo": "Use <code>radarClasses.seriesArea</code> instead."
     },
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -35,8 +36,12 @@
     },
     "mark": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the series mark element"
+      "nodeName": "the series mark element",
+      "deprecationInfo": "Use <code>radarClasses.seriesMark</code> instead."
     },
-    "root": { "description": "Styles applied to the root element." }
+    "root": {
+      "description": "Styles applied to the root element.",
+      "deprecationInfo": "Use <code>radarClasses.seriesRoot</code> instead."
+    }
   }
 }
