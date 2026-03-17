@@ -6,11 +6,9 @@ export const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisPr
   const { classes, position } = ownerState;
   const slots = {
     root: ['root', 'directionY', position],
-    line: ['line'],
-    tickContainer: ['tickContainer'],
-    tick: ['tick'],
-    tickLabel: ['tickLabel'],
-    label: ['label'],
+    ...Object.fromEntries(
+      ['line', 'tickContainer', 'tick', 'tickLabel', 'label'].map((pos) => [pos, [pos]]),
+    ),
   };
 
   return composeClasses(slots, getAxisUtilityClass, classes);
