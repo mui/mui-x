@@ -56,7 +56,7 @@ export interface AreaElementOwnerState {
 /**
  * @deprecated Use `getLineUtilityClass` instead.
  */
-export function getAreaElementUtilityClass(slot: string) {
+function getAreaElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiAreaElement', slot);
 }
 

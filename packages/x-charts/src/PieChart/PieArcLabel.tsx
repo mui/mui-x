@@ -55,7 +55,7 @@ interface PieArcLabelOwnerState {
 /**
  * @deprecated Use `getPieUtilityClass` instead.
  */
-export function getPieArcLabelUtilityClass(slot: string) {
+function getPieArcLabelUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArcLabel', slot);
 }
 

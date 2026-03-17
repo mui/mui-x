@@ -58,7 +58,7 @@ export interface LineElementOwnerState {
 /**
  * @deprecated Use `getLineUtilityClass` instead.
  */
-export function getLineElementUtilityClass(slot: string) {
+function getLineElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiLineElement', slot);
 }
 
