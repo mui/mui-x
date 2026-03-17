@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import type { ScaleLinear, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { resolveValue } from './resolveValue';
 
 type UseReferenceAreaParams = {
   /**
@@ -30,38 +31,7 @@ type UseReferenceAreaResult = {
 
 type ReferenceAreaProps = UseReferenceAreaParams & React.SVGProps<SVGRectElement>;
 type ReferenceAreaLabelProps = UseReferenceAreaParams &
-  React.SVGProps<SVGTextElement>;
-
-function resolveValue(
-  /**
-   * The value to resolve. Either an axis value, or 'start'/'end' to stick to the edges of the drawing area.
-   */
-  value: string | number | 'start' | 'end',
-  /**
-   * The axis scale to use.
-   */
-  scale: ScaleLinear<any, any> | ScalePoint<any>,
-  /**
-   * The start coordinate of the drawing area (left for x-axis, top for y-axis).
-   */
-  drawingStart: number,
-  /**
-   * The end coordinate of the drawing area (right for x-axis, bottom for y-axis).
-   */
-  drawingEnd: number,
-): number {
-  if (value === 'start') {
-    return drawingStart;
-  }
-  if (value === 'end') {
-    return drawingEnd;
-  }
-
-  // The value clamped between the drawing area boundaries.
-  return (
-    Math.max(drawingStart, Math.min(drawingEnd, scale(value as any)! as number)) ?? 0
-  );
-}
+  React.SVGProps<SVGTextElement> & { dx?: number; dy?: number };
 
 function useReferenceArea(params: UseReferenceAreaParams): UseReferenceAreaResult {
   const { x1: x1Props, x2: x2Props, y1: y1Props, y2: y2Props } = params;
@@ -70,11 +40,11 @@ function useReferenceArea(params: UseReferenceAreaParams): UseReferenceAreaResul
   const yScale = useYScale() as ScaleLinear<any, any>;
   const { left, top, width, height } = useDrawingArea();
 
-  const x1 = resolveValue(x1Props ?? 'start', xScale, left, left + width);
-  const x2 = resolveValue(x2Props ?? 'end', xScale, left, left + width);
+  const x1 = resolveValue(x1Props ?? 'start', xScale, left, left + width, 'start');
+  const x2 = resolveValue(x2Props ?? 'end', xScale, left, left + width, 'end');
 
-  const y1 = resolveValue(y1Props ?? 'start', yScale, top, top + height);
-  const y2 = resolveValue(y2Props ?? 'end', yScale, top, top + height);
+  const y1 = resolveValue(y1Props ?? 'start', yScale, top, top + height, 'start');
+  const y2 = resolveValue(y2Props ?? 'end', yScale, top, top + height, 'end');
 
   return {
     x: Math.min(x1, x2),
@@ -92,12 +62,16 @@ export function ReferenceArea(props: ReferenceAreaProps) {
 }
 
 export function ReferenceAreaLabel(props: ReferenceAreaLabelProps) {
-  const { x1, x2, y1, y2, children, ...other } = props;
+  const { x1, x2, y1, y2, dx, dy, children, ...other } = props;
 
   const rectCoordinates = useReferenceArea({ x1, x2, y1, y2 });
 
   return (
-    <text x={rectCoordinates.x + 5} y={rectCoordinates.y + 5} {...other}>
+    <text
+      x={rectCoordinates.x + (dx ?? 0)}
+      y={rectCoordinates.y + (dy ?? 0)}
+      {...other}
+    >
       {children}
     </text>
   );

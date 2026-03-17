@@ -49,24 +49,20 @@ For example, you can create a dashed line with `lineStyle={{ strokeDasharray: '1
 
 ## Reference area
 
-A reference area highlights a range on the chart by rendering a `<rect />` element.
-Provide `x1`/`x2` for the horizontal bounds and `y1`/`y2` for the vertical bounds.
+The next demo shows the implementation of a reference area between points (x1, y1) and (x2, y2).
 
-Use the special values `"start"` and `"end"` to extend the area to the min or max of the axis domain.
-Omitted bounds also default to the full axis range.
+Coordinates can either be axis values, or `'start'`/`'end'` to extend the area to the min or max of the axis domain.
+Omitted coordinates also default to the full axis range.
 
-The component uses the `useXScale()` and `useYScale()` hooks to convert data values into pixel coordinates.
+For customization, use the associated `useReferenceArea()` which returns the coordinates of the rectangle.
+This allows for example adding some labels to the area.
+
+Notice the usage of composition to be able to put the reference area bellow the plots
 
 {{"demo": "ReferenceAreaBasic.js"}}
 
 ## Reference point
 
-A reference point places a marker at a specific `(x, y)` coordinate by rendering a `<circle />` element.
-
-The component uses the `useXScale()` and `useYScale()` hooks to convert data values into pixel coordinates.
+With the same logic as the previous section, you can highlight specific point in the chart.
 
 {{"demo": "ReferencePointBasic.js"}}
-
-## With Zoom
-
-The zoom
