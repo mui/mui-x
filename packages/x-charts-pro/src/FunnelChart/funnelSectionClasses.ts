@@ -3,6 +3,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import type { FunnelSectionProps } from './FunnelSection';
 import type { FunnelSectionLabelProps } from './FunnelSectionLabel';
+import { createSlotArrayMap } from '../../internals/keyToArrayMap';
 
 export interface FunnelSectionClasses {
   /** Styles applied to the root element. */
@@ -39,11 +40,9 @@ export const useUtilityClasses = (props: FunnelSectionProps) => {
 
   const slots = {
     root: ['root', `series-${seriesId}`, `data-index-${dataIndex}`],
-    highlighted: ['highlighted'],
-    faded: ['faded'],
     outlined: variant === 'outlined' ? ['outlined'] : [],
     filled: variant === 'filled' ? ['filled'] : [],
-    label: ['label'],
+    ...createSlotArrayMap(['highlighted', 'faded', 'label'] as const),
   };
 
   return composeClasses(slots, getFunnelSectionUtilityClass, classes);
