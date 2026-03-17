@@ -19,7 +19,7 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 
 ## Prepare for the migration
 
-We highly recommend updating `@mui/x-charts` and `@mui/x-charts-pro` to the latest v8 version before migrating to v9.
+We highly recommend updating `@mui/x-charts`, `@mui/x-charts-pro`, and `@mui/x-charts-premium` to the latest v8 version before migrating to v9.
 This will help you resolve deprecation warnings at your own pace, reducing the number of changes needed when upgrading.
 
 Below is a list of deprecated APIs that have alternatives in the latest minor of v8. We recommend you move from these deprecated APIs before upgrading to v9 to ease the migration.
@@ -89,14 +89,17 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `latest`.
+In `package.json`, change the version of the charts package to `next`.
 
 ```diff
 -"@mui/x-charts": "^8.x.x",
-+"@mui/x-charts": "latest",
++"@mui/x-charts": "next",
 
 -"@mui/x-charts-pro": "^8.x.x",
-+"@mui/x-charts-pro": "latest",
++"@mui/x-charts-pro": "next",
+
+-"@mui/x-charts-premium": "^8.x.x",
++"@mui/x-charts-premium": "next",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
@@ -577,6 +580,26 @@ The keyboard navigation is no enabled by default.
 If you used `enableKeyboardNavigation` prop, you can remove it.
 
 To disable this feature, use the prop `disableKeyboardNavigation`.
+
+## Stabilized `experimentalFeatures` ✅
+
+The `preferStrictDomainInLineCharts` experimental feature is now the default behavior.
+The x-axis domain limit for line charts defaults to `'strict'`, meaning the axis range matches the data range exactly without extra padding.
+
+If you were using the `experimentalFeatures` prop with `preferStrictDomainInLineCharts`, you can remove it.
+
+```diff
+ <LineChart
+-  experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+   series={[{ data: [1, 2, 3] }]}
+ />
+```
+
+If you want to revert to the previous behavior (rounded/"nice" domain limits on the x-axis), set `domainLimit` to `'nice'` on the x-axis configuration:
+
+```jsx
+<LineChart xAxis={[{ domainLimit: 'nice' }]} series={[{ data: [1, 2, 3] }]} />
+```
 
 ## Props propagation
 

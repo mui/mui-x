@@ -44,6 +44,16 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
+    pathname: '/x/api/charts/candlestick-chart',
+    title: 'CandlestickChart',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/candlestick-plot',
+    title: 'CandlestickPlot',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
@@ -223,6 +233,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap',
     title: 'Heatmap',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-cell',
+    title: 'HeatmapCell',
     plan: 'pro',
   },
   {

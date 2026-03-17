@@ -6,7 +6,7 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 
 # Charts - Pie demos
 
-<p class="description">This page groups demos using pie charts.</p>
+<p class="description">Demos that use pie charts for multi-level data, angles, labels, padding, and custom legend or tooltip.</p>
 
 ## TwoLevelPieChart
 

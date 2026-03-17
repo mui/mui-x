@@ -2,7 +2,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { CSSInterpolation } from '@mui/system';
 import { styled } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
-import { gridClasses as c } from '../../constants/gridClasses';
+import { gridClasses as c, gridClassesOverrides } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -34,132 +34,20 @@ const shouldShowBorderTopRightRadiusSelector = (apiRef: RefObject<GridApiCommuni
       (!apiRef.current.state.dimensions.hasScrollY ||
         apiRef.current.state.dimensions.scrollbarSize === 0);
 
-const elementOverrides = {
-  root: [
-    'autoHeight',
-    'autosizing',
-    'root--densityStandard',
-    'root--densityComfortable',
-    'root--densityCompact',
-    'root--disableUserSelection',
-    'root--noToolbar',
-    'withVerticalBorder',
-  ],
-  children: [
-    'actionsCell',
-    'booleanCell',
-    'cell',
-    'cell--editable',
-    'cell--editing',
-    'cell--flex',
-    'cell--pinnedLeft',
-    'cell--pinnedRight',
-    'cell--rangeBottom',
-    'cell--rangeLeft',
-    'cell--rangeRight',
-    'cell--rangeTop',
-    'cell--selectionMode',
-    'cell--textCenter',
-    'cell--textLeft',
-    'cell--textRight',
-    'cell--withLeftBorder',
-    'cell--withRightBorder',
-    'cellCheckbox',
-    'cellEmpty',
-    'cellOffsetLeft',
-    'cellSkeleton',
-    'checkboxInput',
-    'columnHeader',
-    'columnHeader--alignCenter',
-    'columnHeader--alignLeft',
-    'columnHeader--alignRight',
-    'columnHeader--dragging',
-    'columnHeader--emptyGroup',
-    'columnHeader--filledGroup',
-    'columnHeader--filtered',
-    'columnHeader--last',
-    'columnHeader--moving',
-    'columnHeader--numeric',
-    'columnHeader--pinnedLeft',
-    'columnHeader--pinnedRight',
-    'columnHeader--siblingFocused',
-    'columnHeader--sortable',
-    'columnHeader--sorted',
-    'columnHeader--withLeftBorder',
-    'columnHeader--withRightBorder',
-    'columnHeaderCheckbox',
-    'columnHeaderDraggableContainer',
-    'columnHeaderTitleContainer',
-    'columnHeaderTitleContainerContent',
-    'columnSeparator',
-    'columnSeparator--resizable',
-    'columnSeparator--resizing',
-    'columnSeparator--sideLeft',
-    'columnSeparator--sideRight',
-    'container--bottom',
-    'container--top',
-    'detailPanelToggleCell',
-    'detailPanelToggleCell--expanded',
-    'editBooleanCell',
-    'filterIcon',
-    'filler--borderBottom',
-    'filler--pinnedLeft',
-    'filler--pinnedRight',
-    'groupingCriteriaCell',
-    'groupingCriteriaCellLoadingContainer',
-    'groupingCriteriaCellToggle',
-    'headerFilterRow',
-    'iconSeparator',
-    'menuIcon',
-    'menuIconButton',
-    'menuList',
-    'menuOpen',
-    'overlayWrapperInner',
-    'pinnedRows',
-    'pinnedRows--bottom',
-    'pinnedRows--top',
-    'row',
-    'row--borderBottom',
-    'row--detailPanelExpanded',
-    'row--dragging',
-    'row--dynamicHeight',
-    'row--editable',
-    'row--editing',
-    'row--firstVisible',
-    'row--lastVisible',
-    'rowReorderCell',
-    'rowReorderCell--draggable',
-    'rowReorderCellContainer',
-    'rowReorderCellPlaceholder',
-    'rowSkeleton',
-    'scrollbar',
-    'scrollbar--horizontal',
-    'scrollbar--vertical',
-    'scrollbarFiller',
-    'scrollbarFiller--pinnedRight',
-    'sortIcon',
-    'treeDataGroupingCell',
-    'treeDataGroupingCellLoadingContainer',
-    'treeDataGroupingCellToggle',
-    'withBorderColor',
-    'row--beingDragged',
-  ],
-} as const;
-
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Root',
   overridesResolver: (props, styles) => {
     // Root overrides
     const overrides = [styles.root];
-    elementOverrides.root.forEach((key) => {
+    gridClassesOverrides.root.forEach((key) => {
       overrides.push({ [`&.${c[key]}`]: styles[key] });
     });
 
     // Child element overrides
     // - Only declare overrides here for class names that are not applied to `styled` components.
     // - For `styled` components, declare overrides in the component itself.
-    elementOverrides.children.forEach((key) => {
+    gridClassesOverrides.children.forEach((key) => {
       overrides.push({ [`& .${c[key]}`]: styles[key] });
     });
     return overrides;
