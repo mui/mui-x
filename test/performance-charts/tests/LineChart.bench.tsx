@@ -21,7 +21,7 @@ describe('LineChart', () => {
     async () => {
       const { findByText } = render(
         <LineChart
-          xAxis={[{ data: xData }]}
+          xAxis={[{ data: xData, domainLimit: 'nice' }]}
           series={[{ data: yData, showMark: true }]}
           width={500}
           height={300}
@@ -40,7 +40,7 @@ describe('LineChart', () => {
     async () => {
       const { findByText } = render(
         <LineChart
-          xAxis={[{ data: xData }]}
+          xAxis={[{ data: xData, domainLimit: 'nice' }]}
           series={[{ area: true, data: yData, showMark: false }]}
           width={500}
           height={300}
