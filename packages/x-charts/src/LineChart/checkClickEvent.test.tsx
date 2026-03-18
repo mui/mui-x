@@ -1,6 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
@@ -126,7 +126,7 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>(`.${lineClasses.mark}`);
 
       await user.click(marks[0]);
       expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
@@ -164,7 +164,7 @@ describe('LineChart - click event', () => {
           onAreaClick={() => {}}
         />,
       );
-      const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
+      const areas = document.querySelectorAll<HTMLElement>(`path.${lineClasses.area}`);
 
       expect(Array.from(areas).map((area) => area.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -194,7 +194,7 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
+      const areas = document.querySelectorAll<HTMLElement>(`path.${lineClasses.area}`);
 
       await user.click(areas[0]);
       expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
@@ -223,7 +223,7 @@ describe('LineChart - click event', () => {
           onLineClick={() => {}}
         />,
       );
-      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
+      const lines = document.querySelectorAll<HTMLElement>(`path.${lineClasses.line}`);
 
       expect(Array.from(lines).map((line) => line.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -253,7 +253,7 @@ describe('LineChart - click event', () => {
         </div>,
       );
 
-      const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
+      const lines = document.querySelectorAll<HTMLElement>(`path.${lineClasses.line}`);
 
       await user.click(lines[0]);
       expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({

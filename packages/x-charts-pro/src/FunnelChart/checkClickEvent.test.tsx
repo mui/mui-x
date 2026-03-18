@@ -1,6 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart, funnelClasses } from '@mui/x-charts-pro/FunnelChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
@@ -204,7 +204,7 @@ describe('FunnelChart - click event', () => {
   describe('onItemClick', () => {
     it('should add cursor="pointer" to bar elements', () => {
       render(<FunnelChart {...config} onItemClick={() => {}} />);
-      const paths = document.querySelectorAll<HTMLElement>('path.MuiFunnelSection-root');
+      const paths = document.querySelectorAll<HTMLElement>(`path.${funnelClasses.section}`);
 
       expect(Array.from(paths).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
         'pointer',
