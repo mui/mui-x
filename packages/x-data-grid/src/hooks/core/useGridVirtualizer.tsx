@@ -184,7 +184,7 @@ export function useGridVirtualizer() {
 
     dimensions: dimensionsParams,
     virtualization: {
-      layoutMode: 'uncontrolled',
+      layoutMode: 'controlled',
       isRtl,
       rowBufferPx: rootProps.rowBufferPx,
       columnBufferPx: rootProps.columnBufferPx,
