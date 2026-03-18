@@ -124,6 +124,7 @@
     "markdownlint-cli2": "0.20.0",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
+    "pkg-pr-new": "^0.0.66",
     "playwright": "catalog:",
     "prettier": "3.7.4",
     "pretty-quick": "4.2.2",
