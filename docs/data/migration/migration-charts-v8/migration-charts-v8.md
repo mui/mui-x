@@ -19,7 +19,7 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 
 ## Prepare for the migration
 
-We highly recommend updating `@mui/x-charts` and `@mui/x-charts-pro` to the latest v8 version before migrating to v9.
+We highly recommend updating `@mui/x-charts`, `@mui/x-charts-pro`, and `@mui/x-charts-premium` to the latest v8 version before migrating to v9.
 This will help you resolve deprecation warnings at your own pace, reducing the number of changes needed when upgrading.
 
 Below is a list of deprecated APIs that have alternatives in the latest minor of v8. We recommend you move from these deprecated APIs before upgrading to v9 to ease the migration.
@@ -89,14 +89,17 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `latest`.
+In `package.json`, change the version of the charts package to `next`.
 
 ```diff
 -"@mui/x-charts": "^8.x.x",
-+"@mui/x-charts": "latest",
++"@mui/x-charts": "next",
 
 -"@mui/x-charts-pro": "^8.x.x",
-+"@mui/x-charts-pro": "latest",
++"@mui/x-charts-pro": "next",
+
+-"@mui/x-charts-premium": "^8.x.x",
++"@mui/x-charts-premium": "next",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
@@ -244,6 +247,36 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
+### `useItemHighlighted()` replaced by `useItemHighlightState()`
+
+The `useItemHighlighted()` hook is replaced by `useItemHighlightState()`.
+Instead of returning an object with `isHighlighted` and `isFaded` booleans.
+It now returns a `HighlightState` union type: `'highlighted' | 'faded' | 'none'`.
+
+```diff
+-const { isHighlighted, isFaded } = useItemHighlighted(identifier);
++const highlightState = useItemHighlightState(identifier);
++const isHighlighted = highlightState === 'highlighted';
++const isFaded = highlightState === 'faded';
+```
+
+### `useItemHighlightedGetter()` replaced by `useItemHighlightStateGetter()`
+
+The `useItemHighlightedGetter()` hook is replaced by `useItemHighlightStateGetter()`.
+instead of returning an object with two callbacks `isHighlighted()` and `isFaded()`.
+It now returns a single callback `(item) => HighlightState`.
+The `HighlightState` type is the union of the following variants: `'highlighted' | 'faded' | 'none'`
+
+```diff
+-const { isHighlighted, isFaded } = useItemHighlightedGetter();
+-const isItemHighlighted = isHighlighted(item);
+-const isItemFaded = !isItemHighlighted && isFaded(item);
++const getHighlightState = useItemHighlightStateGetter();
+
++const isItemHighlighted = (item) => getHighlightState(item) === 'highlighted'
++const isItemFaded = (item) => getHighlightState(item) === 'faded'
+```
+
 ### Rename `useAxisTooltip()` hook
 
 The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
@@ -293,6 +326,21 @@ If you were relying on marks being visible by default, explicitly set `showMark`
  />
 ```
 
+### Default `shape` changed
+
+In v8, the `shape` was set to `'circle'` by default.
+Now it alternates across series according to the following order:
+`'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, `'wye'`.
+
+This modification improves accessibility for color blind people.
+
+If you want to keep the previous behavior, set the `shape` property to `'circle'` on all series.
+
+### Rename `[data-series-id]` by `[data-series]`
+
+The data attribute used to select a given series by it's id got renamed.
+Replace the `[data-series-id="<SeriesId>"]` by `[data-series="<SeriesId>"]`.
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
@@ -306,6 +354,44 @@ This improves consistency across chart components and developer experience.
  />
 ```
 
+### Theme style overrides use `cell` slot
+
+The `MuiHeatmap` theme style overrides now correctly use the `cell` key instead of `arc`.
+Previously, the `overridesResolver` was incorrectly referencing `styles.arc` due to a copy-paste error.
+If you were using `arc` as a workaround, update it to `cell`.
+
+```diff
+ const theme = createTheme({
+   components: {
+     MuiHeatmap: {
+       styleOverrides: {
+-        arc: {
++        cell: {
+           fill: 'red',
+         },
+       },
+     },
+   },
+ });
+```
+
+## Sankey
+
+### Removed group
+
+The DOM structure got simplified by removing the group wrapping each nodes.
+It's `data-node` attribute got moved to the `rect` associated to it.
+
+```diff
+-<g data-node="nodeId-A">
+   <rect
++    data-node="nodeId-A"
+     x="20"
+     /* ... */
+   />
+-</g>
+```
+
 ### New identifier structure
 
 The heatmap identifier type has been modified as follows.
@@ -316,11 +402,31 @@ This new type relies on the `xIndex`/`yIndex` to identify the cell instead of ju
  {
   type: 'heatmap';
   seriesId: SeriesId;
-  dataIndex?: number;
+-  dataIndex?: number;
 -  xIndex?: number;
 +  xIndex: number;
 -  yIndex?: number;
 +  yIndex: number;
+ }
+```
+
+The return type of the `useItemTooltip()` for heatmap series was modified.
+Instead of returning an object where the `value` was a `[x, y, cellValue]` tuple, it now returns cell value directly.
+
+If the cell is empty, it returns `null`.
+
+Here is an example about how to get exactly the same info from `useItemTooltip()`.
+
+```diff
+ const { identifier, value } = useItemTooltip<'heatmap'>();
+
+ return {
+-  xIndex: value[0],
++  xIndex: identifier.xIndex,
+-  yIndex: value[1],
++  yIndex: identifier.yIndex,
+-  cellValue: value[2],
++  cellValue: value,
  }
 ```
 
@@ -472,6 +578,33 @@ The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a 
 ### Ref target
 
 The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
+
+## Keyboard navigation ✅
+
+The keyboard navigation is no enabled by default.
+If you used `enableKeyboardNavigation` prop, you can remove it.
+
+To disable this feature, use the prop `disableKeyboardNavigation`.
+
+## Stabilized `experimentalFeatures` ✅
+
+The `preferStrictDomainInLineCharts` experimental feature is now the default behavior.
+The x-axis domain limit for line charts defaults to `'strict'`, meaning the axis range matches the data range exactly without extra padding.
+
+If you were using the `experimentalFeatures` prop with `preferStrictDomainInLineCharts`, you can remove it.
+
+```diff
+ <LineChart
+-  experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+   series={[{ data: [1, 2, 3] }]}
+ />
+```
+
+If you want to revert to the previous behavior (rounded/"nice" domain limits on the x-axis), set `domainLimit` to `'nice'` on the x-axis configuration:
+
+```jsx
+<LineChart xAxis={[{ domainLimit: 'nice' }]} series={[{ data: [1, 2, 3] }]} />
+```
 
 ## Props propagation
 

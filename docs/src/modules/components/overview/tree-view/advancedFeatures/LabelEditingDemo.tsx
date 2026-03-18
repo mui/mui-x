@@ -6,11 +6,13 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, TreeItemContent, TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
+import { UseTreeItemContentSlotOwnProps, UseTreeItemStatus } from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from './products';
 import DemoWrapper from '../../DemoWrapper';
 
-function CustomContent(props: UseTreeItemContentSlotOwnProps & { itemId: string }) {
+function CustomContent(
+  props: UseTreeItemContentSlotOwnProps & { itemId: string; status: UseTreeItemStatus },
+) {
   if (props?.itemId === 'grid-community' && !props.status?.editing) {
     return (
       <Tooltip placement="left" open arrow title="Double click to edit">

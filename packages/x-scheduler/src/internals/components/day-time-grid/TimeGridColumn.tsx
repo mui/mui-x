@@ -5,7 +5,8 @@ import { useStore } from '@base-ui/utils/store';
 import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
@@ -74,7 +75,7 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);

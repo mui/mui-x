@@ -41,7 +41,7 @@ const EventCalendarRootStyled = styled('div', {
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
   height: '100%',
   minHeight: 0,
   overflow: 'hidden',
@@ -70,7 +70,7 @@ const EventCalendarMainPanel = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   flexGrow: 1,
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
   minHeight: 0,
 
   '&[data-view="month"]': {

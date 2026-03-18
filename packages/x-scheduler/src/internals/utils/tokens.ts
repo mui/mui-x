@@ -113,8 +113,8 @@ const eventColorTokens = {
   indigo: {
     light: {
       main: indigo[500],
-      'surface-bold': indigo[200],
-      'surface-bold-hover': '#8694E2',
+      'surface-bold': '#bab4fc',
+      'surface-bold-hover': '#A59DFB',
       'on-surface-bold': indigo[900],
       'surface-bold-selected': indigo[400],
       'surface-bold-selected-hover': indigo[500],

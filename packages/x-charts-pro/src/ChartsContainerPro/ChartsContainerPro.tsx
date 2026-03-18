@@ -12,15 +12,15 @@ export interface ChartsContainerProSlots {}
 export interface ChartsContainerProSlotProps {}
 
 export type ChartsContainerProProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
-> = ChartsDataProviderProProps<TSeries, TSignatures> & ChartsSurfaceProps;
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = ChartsDataProviderProProps<SeriesType, TSignatures> & ChartsSurfaceProps;
 
 type ChartsContainerProComponent = <
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
-  props: ChartsContainerProProps<TSeries, TSignatures> & {
+  props: ChartsContainerProProps<SeriesType, TSignatures> & {
     ref?: React.ForwardedRef<SVGSVGElement>;
   },
 ) => React.JSX.Element;
@@ -50,16 +50,16 @@ type ChartsContainerProComponent = <
  * ```
  */
 const ChartsContainerPro = React.forwardRef(function ChartsContainerProInner<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsContainerProProps<TSeries, TSignatures>, ref: React.Ref<HTMLDivElement>) {
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+>(props: ChartsContainerProProps<SeriesType, TSignatures>, ref: React.Ref<HTMLDivElement>) {
   const { chartDataProviderProProps, children, chartsSurfaceProps } = useChartsContainerProProps<
-    TSeries,
+    SeriesType,
     TSignatures
   >(props);
 
   return (
-    <ChartsDataProviderPro<TSeries, TSignatures> {...chartDataProviderProProps}>
+    <ChartsDataProviderPro<SeriesType, TSignatures> {...chartDataProviderProProps}>
       <ChartsSurface {...chartsSurfaceProps} ref={ref}>
         {children}
       </ChartsSurface>

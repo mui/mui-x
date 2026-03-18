@@ -22,7 +22,7 @@ export type RadarDataProviderProps<
   TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginSignatures,
 > = Omit<
   ChartDataProviderProps<'radar', TSignatures>,
-  'series' | 'rotationAxis' | 'radiusAxis' | 'dataset' | 'experimentalFeatures'
+  'series' | 'rotationAxis' | 'radiusAxis' | 'dataset'
 > & {
   /**
    * The series to display in the bar chart.

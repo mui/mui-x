@@ -2,7 +2,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config = {
   dataset: [
@@ -25,7 +25,7 @@ describe('LineChart - click event', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAxisClick = vi.fn();
-      const { user } = render(
+      const { user, container } = render(
         <div
           style={{
             width: 400,
@@ -43,12 +43,14 @@ describe('LineChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
 
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 198, clientY: 60 },
         },
       ]);
@@ -62,7 +64,7 @@ describe('LineChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 201, clientY: 60 },
         },
       ]);

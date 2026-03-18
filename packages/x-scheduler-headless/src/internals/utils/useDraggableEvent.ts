@@ -11,7 +11,7 @@ import {
 import { SchedulerEventId, TemporalSupportedObject } from '../../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 
 export function useDraggableEvent(
   parameters: useDraggableEvent.Parameters,
@@ -30,7 +30,7 @@ export function useDraggableEvent(
   } = parameters;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks

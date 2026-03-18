@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-
 import { useTreeItemModel } from '@mui/x-tree-view/hooks';
 
 export const MUI_X_PRODUCTS = [

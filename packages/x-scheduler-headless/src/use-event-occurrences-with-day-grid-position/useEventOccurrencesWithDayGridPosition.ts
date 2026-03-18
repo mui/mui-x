@@ -5,7 +5,7 @@ import {
   SchedulerProcessedDate,
 } from '../models';
 import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { useAdapter } from '../use-adapter/useAdapter';
+import { useAdapterContext } from '../use-adapter-context';
 import { sortEventOccurrences } from '../sort-event-occurrences';
 
 /**
@@ -15,7 +15,7 @@ export function useEventOccurrencesWithDayGridPosition(
   parameters: useEventOccurrencesWithDayGridPosition.Parameters,
 ): useEventOccurrencesWithDayGridPosition.ReturnValue {
   const { days, occurrencesMap, shouldAddPosition } = parameters;
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
 
   return React.useMemo(() => {
     const indexLookup: {

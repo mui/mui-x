@@ -9,10 +9,17 @@ import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
 import { type SeriesId } from '../models/seriesType/common';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
+import { useItemHighlightState } from '../hooks/useItemHighlightState';
+import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
+/**
+ * @deprecated Use `LineClasses` instead.
+ */
 export interface LineElementClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `lineClasses.line` instead.
+   */
   root: string;
   /**
    * Styles applied to the root element when highlighted.
@@ -27,10 +34,14 @@ export interface LineElementClasses {
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }
 
+/**
+ * @deprecated Use `LineClassKey` instead.
+ */
 export type LineElementClassKey = keyof LineElementClasses;
 
 export interface LineElementOwnerState {
@@ -44,10 +55,16 @@ export interface LineElementOwnerState {
   hidden?: boolean;
 }
 
+/**
+ * @deprecated Use `getLineUtilityClass` instead.
+ */
 export function getLineElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiLineElement', slot);
 }
 
+/**
+ * @deprecated Use `lineClasses` instead.
+ */
 export const lineElementClasses: LineElementClasses = generateUtilityClasses('MuiLineElement', [
   'root',
   'highlighted',
@@ -55,7 +72,10 @@ export const lineElementClasses: LineElementClasses = generateUtilityClasses('Mu
   'series',
 ]);
 
-const useUtilityClasses = (ownerState: LineElementOwnerState) => {
+/**
+ * @deprecated Use `useUtilityClasses` instead.
+ */
+const useDeprecatedUtilityClasses = (ownerState: LineElementOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
     root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
@@ -122,7 +142,9 @@ function LineElement(props: LineElementProps) {
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
 
   const interactionProps = useInteractionItemProps(identifier);
-  const { isFaded, isHighlighted } = useItemHighlighted(identifier);
+  const highlightState = useItemHighlightState(identifier);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
 
   const ownerState = {
     seriesId,
@@ -133,7 +155,8 @@ function LineElement(props: LineElementProps) {
     isHighlighted,
     hidden,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useLineUtilityClasses();
+  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Line = slots?.line ?? AnimatedLine;
   const lineProps = useSlotProps({
@@ -145,8 +168,10 @@ function LineElement(props: LineElementProps) {
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
+      'data-series-id': seriesId,
+      'data-series': seriesId,
     },
-    className: classes.root,
+    className: `${classes.line} ${deprecatedClasses.root}`,
     ownerState,
   });
 

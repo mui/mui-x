@@ -10,21 +10,21 @@ import type { ChartsContainerProProps } from './ChartsContainerPro';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type UseChartsContainerProPropsReturnValue<
-  TSeries extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = Pick<
-  UseChartsContainerPropsReturnValue<TSeries, TSignatures>,
+  UseChartsContainerPropsReturnValue<SeriesType, TSignatures>,
   'chartsSurfaceProps' | 'children'
 > & {
-  chartDataProviderProProps: ChartDataProviderProProps<TSeries, TSignatures>;
+  chartDataProviderProProps: ChartDataProviderProProps<SeriesType, TSignatures>;
 };
 
 export const useChartsContainerProProps = <
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
-  props: ChartsContainerProProps<TSeries, TSignatures>,
-): UseChartsContainerProPropsReturnValue<TSeries, TSignatures> => {
+  props: ChartsContainerProProps<SeriesType, TSignatures>,
+): UseChartsContainerProPropsReturnValue<SeriesType, TSignatures> => {
   const {
     initialZoom,
     zoomData,
@@ -33,10 +33,10 @@ export const useChartsContainerProProps = <
     plugins,
     apiRef,
     ...baseProps
-  } = props as ChartsContainerProProps<TSeries, AllPluginSignatures<TSeries>>;
+  } = props as ChartsContainerProProps<SeriesType, AllPluginSignatures<SeriesType>>;
 
   const { chartDataProviderProps, chartsSurfaceProps, children } =
-    useChartsContainerProps<TSeries>(baseProps);
+    useChartsContainerProps<SeriesType>(baseProps);
 
   const chartDataProviderProProps = {
     ...chartDataProviderProps,
@@ -46,7 +46,7 @@ export const useChartsContainerProProps = <
     zoomInteractionConfig,
     apiRef,
     plugins: plugins ?? DEFAULT_PLUGINS,
-  } as unknown as ChartDataProviderProProps<TSeries, TSignatures>;
+  } as unknown as ChartDataProviderProProps<SeriesType, TSignatures>;
 
   return {
     chartDataProviderProProps,

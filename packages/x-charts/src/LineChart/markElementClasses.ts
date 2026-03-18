@@ -1,10 +1,18 @@
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { type SeriesId } from '../models/seriesType/common';
+import type { MarkElementOwnerState } from './lineClasses';
 
+export { type MarkElementOwnerState };
+
+/**
+ * @deprecated Use `LineClasses` instead.
+ */
 export interface MarkElementClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `lineClasses.mark` instead.
+   */
   root: string;
   /**
    * Styles applied to the root element when highlighted.
@@ -16,29 +24,34 @@ export interface MarkElementClasses {
    * @deprecated Use `[data-faded]` selector instead.
    */
   faded: string;
-  /** Styles applied to the root element when animation is not skipped. */
+  /**
+   * Styles applied to the root element when animation is not skipped.
+   * @deprecated Use `lineClasses.markAnimate` instead.
+   */
   animate: string;
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }
 
+/**
+ * @deprecated Use `LineClassKey` instead.
+ */
 export type MarkElementClassKey = keyof MarkElementClasses;
 
-export interface MarkElementOwnerState {
-  seriesId: SeriesId;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<MarkElementClasses>;
-  skipAnimation?: boolean;
-}
-
+/**
+ * @deprecated Use `getLineUtilityClass` instead.
+ */
 export function getMarkElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiMarkElement', slot);
 }
 
+/**
+ * @deprecated Use `lineClasses` instead.
+ */
 export const markElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
   'root',
   'highlighted',
@@ -47,6 +60,9 @@ export const markElementClasses: MarkElementClasses = generateUtilityClasses('Mu
   'series',
 ]);
 
+/**
+ * @deprecated Use `useUtilityClasses` instead.
+ */
 export const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {

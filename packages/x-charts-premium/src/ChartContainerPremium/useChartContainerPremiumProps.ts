@@ -9,9 +9,9 @@ import {
  * @deprecated Use `UseChartsContainerPremiumPropsReturnValue` instead.
  */
 export type UseChartContainerPremiumPropsReturnValue<
-  TSeries extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
-> = UseChartsContainerPremiumPropsReturnValue<TSeries, TSignatures>;
+> = UseChartsContainerPremiumPropsReturnValue<SeriesType, TSignatures>;
 
 /**
  * @deprecated Use `useChartsContainerPremiumProps` instead.

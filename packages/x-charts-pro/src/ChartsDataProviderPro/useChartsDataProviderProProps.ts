@@ -8,10 +8,10 @@ import type { ChartsDataProviderProProps } from './ChartsDataProviderPro';
 import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export const useChartsDataProviderProProps = <
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
-  props: ChartsDataProviderProProps<TSeries, TSignatures>,
+  props: ChartsDataProviderProProps<SeriesType, TSignatures>,
 ) => {
   const { chartProviderProps, localeText, slots, slotProps, children } =
     useChartsDataProviderProps(props);

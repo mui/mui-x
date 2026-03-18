@@ -7,7 +7,7 @@ import { useUtilityClasses as useDeprecatedUtilityClasses } from './barLabelClas
 import { type BarLabelOwnerState, type BarItem, type BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
 import { BarLabel, type BarLabelProps } from './BarLabel';
-import { useItemHighlighted } from '../../hooks/useItemHighlighted';
+import { useItemHighlightState } from '../../hooks/useItemHighlightState';
 import { type BarValueType } from '../../models';
 
 export interface BarLabelSlots {
@@ -118,11 +118,13 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
     hidden,
     ...other
   } = props;
-  const { isFaded, isHighlighted } = useItemHighlighted({
+  const highlightState = useItemHighlightState({
     type: 'bar',
     seriesId,
     dataIndex,
   });
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
 
   const ownerState = {
     seriesId,

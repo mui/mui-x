@@ -51,7 +51,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     flexDirection: 'row',
   },
   '&[data-under-fifteen-minutes="true"]': {
-    padding: theme.spacing(0.05, 1),
+    padding: theme.spacing(0, 1),
   },
   '&:focus-visible': {
     outline: '2px solid var(--event-surface-accent)',
@@ -97,9 +97,13 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   containerType: 'size',
   minHeight: 11.5,
   '&[data-under-fifteen-minutes="true"]': {
-    padding: theme.spacing(0.05, 1),
+    padding: theme.spacing(0, 1),
   },
   variants: getPaletteVariants(theme),
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+  },
 }));
 
 const TimeGridEventTitle = styled(Typography, {
@@ -213,7 +217,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
-  const isLessThan15Minutes = durationMinutes < 15;
+  const isLessThan15Minutes = durationMinutes <= 15;
 
   const content = React.useMemo(() => {
     return (

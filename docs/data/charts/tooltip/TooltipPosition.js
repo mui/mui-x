@@ -72,7 +72,6 @@ export default function TooltipPosition() {
                   props.placement === 'undefined' ? undefined : props.placement,
               },
             }}
-            enableKeyboardNavigation
             {...chartSetting}
           />
         </Box>

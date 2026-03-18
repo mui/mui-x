@@ -2,11 +2,7 @@ import * as React from 'react';
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
 import { type ChartDrawingArea, useZColorScale } from '@mui/x-charts/hooks';
-import {
-  selectorChartsIsFadedCallback,
-  selectorChartsIsHighlightedCallback,
-  useStore,
-} from '@mui/x-charts/internals';
+import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
 import { parseColor } from '../../utils/webgl/parseColor';
 
 export function useHeatmapPlotData(
@@ -19,8 +15,7 @@ export function useHeatmapPlotData(
   const height = yScale.bandwidth();
   const colorScale = useZColorScale()!;
   const store = useStore();
-  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
-  const isFaded = store.use(selectorChartsIsFadedCallback);
+  const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
   return React.useMemo(() => {
     const centers = new Float32Array(series.data.length * 2);
@@ -51,9 +46,15 @@ export function useHeatmapPlotData(
       colors[dataIndex * 4 + 2] = rgbColor[2];
       colors[dataIndex * 4 + 3] = 1.0;
 
-      if (isHighlighted({ type: 'heatmap', seriesId: series.id, xIndex, yIndex })) {
+      const highlightState = getHighlightState({
+        type: 'heatmap',
+        seriesId: series.id,
+        xIndex,
+        yIndex,
+      });
+      if (highlightState === 'highlighted') {
         saturations[dataIndex] = 0.2;
-      } else if (isFaded({ type: 'heatmap', seriesId: series.id, xIndex, yIndex })) {
+      } else if (highlightState === 'faded') {
         saturations[dataIndex] = -0.2;
       }
     }
@@ -64,8 +65,7 @@ export function useHeatmapPlotData(
     drawingArea.left,
     drawingArea.top,
     height,
-    isFaded,
-    isHighlighted,
+    getHighlightState,
     series.data,
     series.id,
     width,
