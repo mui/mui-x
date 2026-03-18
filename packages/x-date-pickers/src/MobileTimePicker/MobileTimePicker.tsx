@@ -155,6 +155,7 @@ MobileTimePicker.propTypes = {
    * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
+  fieldRef: PropTypes.object,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.

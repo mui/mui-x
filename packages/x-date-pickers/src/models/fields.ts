@@ -169,7 +169,7 @@ export type PickerFieldSlotProps<
 > = ExportedPickerFieldUIProps &
   Pick<
     UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
-    'shouldRespectLeadingZeros' | 'readOnly'
+    'shouldRespectLeadingZeros' | 'readOnly' | 'fieldRef'
   > &
   React.HTMLAttributes<HTMLDivElement> & {
     ref?: React.Ref<HTMLDivElement>;

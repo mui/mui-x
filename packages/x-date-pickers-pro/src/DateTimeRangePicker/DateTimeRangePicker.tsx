@@ -151,6 +151,7 @@ DateTimeRangePicker.propTypes = {
    * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
+  fieldRef: PropTypes.object,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
