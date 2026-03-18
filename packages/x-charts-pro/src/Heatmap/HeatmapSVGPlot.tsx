@@ -2,15 +2,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
-import {
-  selectorChartsHighlightStateCallback,
-  useStore,
-  useRegisterPointerInteractions,
-} from '@mui/x-charts/internals';
+import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks';
 import { HeatmapItem } from './HeatmapItem';
-import { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';
-import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 import { type HeatmapRendererPlotProps } from './Heatmap.types';
 import { type HighlightItemIdentifierWithType } from '../models';
 import { heatmapClasses } from './heatmapClasses';
@@ -41,9 +35,6 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
 
   return (
     <React.Fragment>
-      {shouldRegisterPointerInteractionsGlobally(props.slots, props.slotProps) ? (
-        <RegisterHeatmapPointerInteractions />
-      ) : null}
       <HeatmapPlotRoot className={heatmapClasses.root} data-series={seriesToDisplay.id}>
         {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
           const x = xScale(xDomain[xIndex]);
@@ -87,7 +78,3 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   );
 }
 
-function RegisterHeatmapPointerInteractions() {
-  useRegisterPointerInteractions(selectorHeatmapItemAtPosition);
-  return null;
-}
