@@ -251,7 +251,7 @@ Here is the list of slots and components that are impacted by the renaming:
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
 
-### Series types
+### ✅ Series types
 
 The following type aliases have been removed from `@mui/x-charts/models`:
 
@@ -276,7 +276,7 @@ The `ChartApi` type export has been moved from `@mui/x-charts/ChartContainer` to
 +import type { ChartApi } from '@mui/x-charts/context';
 ```
 
-### Series helper functions
+### ✅ Series helper functions
 
 The following helper functions have been removed:
 
