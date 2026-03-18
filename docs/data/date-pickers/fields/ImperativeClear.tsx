@@ -10,13 +10,13 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { FieldRef } from '@mui/x-date-pickers/models';
-import { PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { PickerRangeValue, PickerValue } from '@mui/x-date-pickers/internals';
 
 export default function ImperativeClear() {
-  const fieldRef = React.useRef<FieldRef<any>>(null);
+  const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
   const rangeFieldRef = React.useRef<FieldRef<PickerRangeValue>>(null);
-  const startFieldRef = React.useRef<FieldRef<PickerRangeValue>>(null);
-  const endFieldRef = React.useRef<FieldRef<PickerRangeValue>>(null);
+  const startFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
   const CustomMultiInputDateRangeField = React.useCallback(
     (props: MultiInputDateRangeFieldProps<true>) => (

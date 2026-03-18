@@ -36,7 +36,7 @@ export const useMultiInputRangeFieldSelectedSections = (
   parameters: UseMultiInputRangeFieldSelectedSectionsParameters,
 ): UseMultiInputFieldSelectedSectionsResponse => {
   const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
-  const handleUnstableEndFieldRef = useForkRef(parameters.endFieldRef, endFieldRef);
+  const handleEndFieldRef = useForkRef(parameters.endFieldRef, endFieldRef);
 
   const [startSelectedSection, setStartSelectedSection] = React.useState<FieldSelectedSections>(
     parameters.selectedSections ?? null,
@@ -81,7 +81,7 @@ export const useMultiInputRangeFieldSelectedSections = (
       onSelectedSectionsChange: handleStartSelectedSectionChange,
     },
     end: {
-      fieldRef: handleUnstableEndFieldRef,
+      fieldRef: handleEndFieldRef,
       selectedSections:
         activeField === 'end' && parameters.selectedSections !== undefined
           ? parameters.selectedSections

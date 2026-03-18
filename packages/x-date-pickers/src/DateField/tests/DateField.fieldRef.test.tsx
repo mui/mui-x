@@ -56,9 +56,7 @@ describe('<DateField /> - fieldRef', () => {
     });
 
     expect(fieldRef.current?.isFieldFocused()).to.equal(true);
-    // In JSDOM, focusing might not always update the active section index immediately
-    // or the test helper might not be catching it correctly.
-    // Let's at least verify it focused.
+    expect(fieldRef.current?.getActiveSectionIndex()).to.equal(1);
   });
 
   it('should allow to update the selected sections with setSelectedSections', () => {

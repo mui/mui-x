@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { PickerRangeValue, PickerValue } from '@mui/x-date-pickers/internals';
 import { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
 import type { UseMultiInputRangeFieldTextFieldProps } from '../hooks/useMultiInputRangeField';
 
@@ -24,9 +24,9 @@ export interface MultiInputFieldSlotRootProps {
   onBlur?: React.FocusEventHandler;
 }
 
-export interface MultiInputFieldRefs {
-  startFieldRef?: React.Ref<FieldRef<any> | null>;
-  endFieldRef?: React.Ref<FieldRef<any> | null>;
+export interface MultiInputFieldRefs<TValue = PickerValue> {
+  startFieldRef?: React.Ref<FieldRef<TValue> | null>;
+  endFieldRef?: React.Ref<FieldRef<TValue> | null>;
 }
 
 export interface RangeFieldSeparatorProps {
