@@ -25,8 +25,12 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         newClassName: 'barClasses',
         properties: {
           root: 'label',
-          animate: 'labelAnimate'
+          animate: 'labelAnimate',
         },
+      },
+      sankeyPlotClasses: {
+        newClassName: 'sankeyClasses',
+        properties: {},
       },
     },
   });
