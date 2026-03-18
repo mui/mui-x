@@ -189,7 +189,7 @@ Here is the list of slots and components that are impacted by the renaming:
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
 
-### Series types
+### ✅ Series types
 
 The following type aliases have been removed from `@mui/x-charts/models`:
 
@@ -214,7 +214,7 @@ The `ChartApi` type export has been moved from `@mui/x-charts/ChartContainer` to
 +import type { ChartApi } from '@mui/x-charts/context';
 ```
 
-### Series helper functions
+### ✅ Series helper functions
 
 The following helper functions have been removed:
 
@@ -335,6 +335,11 @@ Now it alternates across series according to the following order:
 This modification improves accessibility for color blind people.
 
 If you want to keep the previous behavior, set the `shape` property to `'circle'` on all series.
+
+### Rename `[data-series-id]` by `[data-series]`
+
+The data attribute used to select a given series by it's id got renamed.
+Replace the `[data-series-id="<SeriesId>"]` by `[data-series="<SeriesId>"]`.
 
 ## Heatmap
 

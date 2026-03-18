@@ -22,9 +22,17 @@
   "classDescriptions": {
     "label": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every label element"
+      "nodeName": "every label element",
+      "deprecationInfo": "Use <code>radarClasses.axisLabel</code> instead."
     },
-    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the line element" },
-    "root": { "description": "Styles applied to the root element." }
+    "line": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the line element",
+      "deprecationInfo": "Use <code>radarClasses.axisLine</code> instead."
+    },
+    "root": {
+      "description": "Styles applied to the root element.",
+      "deprecationInfo": "Use <code>radarClasses.axisRoot</code> instead."
+    }
   }
 }

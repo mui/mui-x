@@ -25,7 +25,7 @@ describe.for([
 ])('%s data attributes', ([_, MarkElementComponent]) => {
   const { render } = createRenderer();
 
-  it('should have data-series-id attribute', () => {
+  it('should have data-series attribute', () => {
     render(
       <TestWrapper>
         <MarkElementComponent
@@ -41,7 +41,7 @@ describe.for([
     );
 
     const mark = screen.getByTestId('mark');
-    expect(mark.getAttribute('data-series-id')).to.equal('s1');
+    expect(mark.getAttribute('data-series')).to.equal('s1');
   });
 
   it('should have data-index attribute', () => {
