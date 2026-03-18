@@ -36,7 +36,11 @@ export const useMobileRangePicker = <
   steps,
   ...pickerParams
 }: UseMobileRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
-  useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
+  useLicenseVerifier({
+    releaseDate: '__RELEASE_INFO__',
+    version: process.env.MUI_VERSION!,
+    name: 'x-date-pickers-pro',
+  });
 
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 

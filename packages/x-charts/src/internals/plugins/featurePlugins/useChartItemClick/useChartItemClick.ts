@@ -16,7 +16,7 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
     return { instance: {} };
   }
 
-  const getItemPosition = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+  const getItemPosition = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const svgPoint = getChartPoint(event?.currentTarget, event);
 
     if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
@@ -41,7 +41,7 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
 
   return {
     instance: {
-      handleClick: (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+      handleClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const item = getItemPosition(event);
         if (item !== undefined) {
           onItemClick(event, item);

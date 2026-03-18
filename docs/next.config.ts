@@ -170,6 +170,11 @@ export default withDeploymentConfig({
                   search: '__ALLOW_TEST_LICENSES__',
                   replace: 'false',
                 },
+                {
+                  search: String.raw`\(process\.env\s*(as any\s*)?\)\.MUI_VERSION`,
+                  replace: JSON.stringify(pkg.version),
+                  flags: 'g',
+                },
               ],
             },
           },

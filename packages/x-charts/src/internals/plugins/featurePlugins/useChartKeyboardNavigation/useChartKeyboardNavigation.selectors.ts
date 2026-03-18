@@ -45,7 +45,7 @@ export const selectorChartsFocusedItem = createSelector(
 
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
   selectKeyboardNavigation,
-  (keyboardNavigationState) => !!keyboardNavigationState?.enableKeyboardNavigation,
+  (keyboardNavigationState) => !!keyboardNavigationState?.enabled,
 );
 
 /**
@@ -54,16 +54,16 @@ export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
 
 const createSelectAxisHighlight =
   (direction: 'x' | 'y') =>
-  <T extends ChartSeriesType>(
-    item: FocusedItemIdentifier<T> | null,
+  <SeriesType extends ChartSeriesType>(
+    item: FocusedItemIdentifier<SeriesType> | null,
     axis: ComputeResult<ChartsAxisProps>,
-    series: ProcessedSeries<T>,
+    series: ProcessedSeries<SeriesType>,
   ): AxisItemIdentifier | undefined => {
     if (item == null || !('dataIndex' in item) || item.dataIndex === undefined) {
       return undefined;
     }
 
-    const seriesConfig = series[item.type as T]?.series[item.seriesId];
+    const seriesConfig = series[item.type as SeriesType]?.series[item.seriesId];
     if (!seriesConfig) {
       return undefined;
     }

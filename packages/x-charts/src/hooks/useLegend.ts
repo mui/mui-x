@@ -15,9 +15,9 @@ function getSeriesToDisplay(
   seriesConfig: ChartSeriesConfig<ChartSeriesType>,
 ) {
   return (Object.keys(series) as ChartSeriesType[]).flatMap(
-    <T extends ChartSeriesType>(seriesType: T) => {
-      const getter = seriesConfig[seriesType as T].legendGetter;
-      return getter === undefined ? [] : getter(series[seriesType as T]!);
+    <SeriesType extends ChartSeriesType>(seriesType: SeriesType) => {
+      const getter = seriesConfig[seriesType as SeriesType].legendGetter;
+      return getter === undefined ? [] : getter(series[seriesType as SeriesType]!);
     },
   );
 }

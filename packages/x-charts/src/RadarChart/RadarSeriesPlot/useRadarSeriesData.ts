@@ -1,7 +1,7 @@
 import { useRotationScale } from '../../hooks/useScale';
 import { useRadarSeries } from '../../hooks/useRadarSeries';
 import { useRadiusAxes } from '../../hooks/useAxis';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { type SeriesId } from '../../models/seriesType/common';
 import { type UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
@@ -19,7 +19,7 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
 
   const radarSeries = useRadarSeries(querySeriesId === undefined ? undefined : [querySeriesId]);
 
-  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
 
   const metrics = (rotationScale?.domain() as (string | number)[]) ?? [];
 
@@ -27,8 +27,9 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
 
   return radarSeries.map((series) => {
     const seriesId = series.id;
-    const isSeriesHighlighted = isItemHighlighted({ type: 'radar', seriesId });
-    const isSeriesFaded = !isSeriesHighlighted && isItemFaded({ type: 'radar', seriesId });
+    const seriesHighlightState = getHighlightState({ type: 'radar', seriesId });
+    const isSeriesHighlighted = seriesHighlightState === 'highlighted';
+    const isSeriesFaded = seriesHighlightState === 'faded';
     const getColor = getSeriesColorFn(series);
 
     return {
@@ -37,8 +38,9 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
       isSeriesHighlighted,
       isSeriesFaded,
       points: series.data.map((value, dataIndex) => {
-        const highlighted = isItemHighlighted({ type: 'radar', seriesId, dataIndex });
-        const faded = !highlighted && isItemFaded({ type: 'radar', seriesId, dataIndex });
+        const pointHighlightState = getHighlightState({ type: 'radar', seriesId, dataIndex });
+        const highlighted = pointHighlightState === 'highlighted';
+        const faded = pointHighlightState === 'faded';
 
         const r = radiusAxis[metrics[dataIndex]].scale(value)!;
         const angle = angles[dataIndex];

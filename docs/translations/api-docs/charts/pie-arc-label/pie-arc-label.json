@@ -5,7 +5,8 @@
     "animate": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "animation is not skipped"
+      "conditions": "animation is not skipped",
+      "deprecationInfo": "Use the <code>animate</code> class from <code>./pieClasses</code> instead."
     },
     "faded": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",

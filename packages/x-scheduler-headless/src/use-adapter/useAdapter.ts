@@ -1,17 +1,18 @@
-import { fr } from 'date-fns/locale/fr';
+import * as React from 'react';
 import { TemporalSupportedObject } from '../models';
 import { UnstableTemporalAdapterDateFns } from '../base-ui-copy/temporal-adapter-date-fns';
 import { TemporalAdapter } from '../base-ui-copy/types';
+import type { DateLocale } from './useAdapter.types';
 
-export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS = new UnstableTemporalAdapterDateFns();
-
-export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR = new UnstableTemporalAdapterDateFns({
-  locale: fr,
-});
+const DEFAULT_ADAPTER = new UnstableTemporalAdapterDateFns();
 
 // TODO: Replace with Base UI adapter when available.
-export function useAdapter() {
-  return DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS;
+export function useAdapter(dateLocale?: DateLocale) {
+  return React.useMemo(
+    () =>
+      dateLocale ? new UnstableTemporalAdapterDateFns({ locale: dateLocale }) : DEFAULT_ADAPTER,
+    [dateLocale],
+  );
 }
 
 /**

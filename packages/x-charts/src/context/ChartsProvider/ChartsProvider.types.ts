@@ -30,18 +30,18 @@ export type ChartsContextValue<
 };
 
 export type ChartsPluginParams<
-  TSeriesType extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = UseChartBaseProps<TSignatures> &
-  MergeSignaturesProperty<[...ChartCorePluginSignatures<TSeriesType>, ...TSignatures], 'params'>;
+  MergeSignaturesProperty<[...ChartCorePluginSignatures<SeriesType>, ...TSignatures], 'params'>;
 
 export interface ChartsProviderProps<
-  TSeriesType extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > {
   /**
    * Array of plugins used to add features to the chart.
    */
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
-  pluginParams?: ChartsPluginParams<TSeriesType, TSignatures>;
+  pluginParams?: ChartsPluginParams<SeriesType, TSignatures>;
 }

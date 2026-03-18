@@ -10,21 +10,21 @@ import type { ChartsContainerPremiumProps } from './ChartsContainerPremium';
 import type { ChartDataProviderPremiumProps } from '../ChartDataProviderPremium';
 
 export type UseChartsContainerPremiumPropsReturnValue<
-  TSeries extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = Pick<
-  UseChartsContainerPropsReturnValue<TSeries, TSignatures>,
+  UseChartsContainerPropsReturnValue<SeriesType, TSignatures>,
   'chartsSurfaceProps' | 'children'
 > & {
-  chartDataProviderPremiumProps: ChartDataProviderPremiumProps<TSeries, TSignatures>;
+  chartDataProviderPremiumProps: ChartDataProviderPremiumProps<SeriesType, TSignatures>;
 };
 
 export function useChartsContainerPremiumProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
-  props: ChartsContainerPremiumProps<TSeries, TSignatures>,
-): UseChartsContainerPremiumPropsReturnValue<TSeries, TSignatures> {
+  props: ChartsContainerPremiumProps<SeriesType, TSignatures>,
+): UseChartsContainerPremiumPropsReturnValue<SeriesType, TSignatures> {
   const {
     initialZoom,
     zoomData,
@@ -33,15 +33,15 @@ export function useChartsContainerPremiumProps<
     plugins,
     apiRef,
     ...baseProps
-  } = props as ChartsContainerPremiumProps<TSeries, AllPluginSignatures<TSeries>>;
+  } = props as ChartsContainerPremiumProps<SeriesType, AllPluginSignatures<SeriesType>>;
 
   const { chartDataProviderProProps, chartsSurfaceProps, children } =
-    useChartsContainerProProps<TSeries>(baseProps);
+    useChartsContainerProProps<SeriesType>(baseProps);
 
   const chartDataProviderPremiumProps = {
     ...chartDataProviderProProps,
     plugins: plugins ?? DEFAULT_PLUGINS,
-  } as unknown as ChartDataProviderPremiumProps<TSeries, TSignatures>;
+  } as unknown as ChartDataProviderPremiumProps<SeriesType, TSignatures>;
 
   return {
     chartDataProviderPremiumProps,

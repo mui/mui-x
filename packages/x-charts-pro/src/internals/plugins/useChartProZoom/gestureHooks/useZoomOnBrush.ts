@@ -27,8 +27,25 @@ export const useZoomOnBrush = (
   const isZoomOnBrushEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
-    instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
+    if ('setZoomBrushEnabled' in instance) {
+      instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
+    }
   }, [isZoomOnBrushEnabled, instance]);
+
+  React.useEffect(() => {
+    if (!isZoomOnBrushEnabled) {
+      return;
+    }
+
+    instance.updateZoomInteractionListeners('brush', {
+      requiredKeys: config!.requiredKeys,
+      pointerMode: config!.pointerMode,
+      pointerOptions: {
+        mouse: config!.mouse,
+        touch: config!.touch,
+      },
+    });
+  }, [isZoomOnBrushEnabled, config, instance]);
 
   // Zoom on brush
   React.useEffect(() => {

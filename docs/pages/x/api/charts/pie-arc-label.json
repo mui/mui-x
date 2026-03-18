@@ -12,7 +12,8 @@
       "key": "animate",
       "className": "MuiPieArcLabel-animate",
       "description": "Styles applied to the root element when animation is not skipped.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "faded",

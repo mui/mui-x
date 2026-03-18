@@ -9,20 +9,18 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   content: string;
   /** Styles applied to the grid element. */
   grid: string;
-  /** Styles applied to the title sub-grid wrapper element. */
-  titleSubGridWrapper: string;
+  /** Styles applied to the header row element. */
+  headerRow: string;
+  /** Styles applied to the title header cell element. */
+  titleHeaderCell: string;
+  /** Styles applied to the events header cell element. */
+  eventsHeaderCell: string;
   /** Styles applied to the title sub-grid element. */
   titleSubGrid: string;
-  /** Styles applied to the title sub-grid header row element. */
-  titleSubGridHeaderRow: string;
-  /** Styles applied to the title sub-grid header cell element. */
-  titleSubGridHeaderCell: string;
   /** Styles applied to the events sub-grid wrapper element. */
   eventsSubGridWrapper: string;
   /** Styles applied to the events sub-grid element. */
   eventsSubGrid: string;
-  /** Styles applied to the events sub-grid header row element. */
-  eventsSubGridHeaderRow: string;
   /** Styles applied to the events sub-grid row element. */
   eventsSubGridRow: string;
   /** Styles applied to the title cell row element. */
@@ -103,13 +101,12 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'root',
     'content',
     'grid',
-    'titleSubGridWrapper',
+    'headerRow',
+    'titleHeaderCell',
+    'eventsHeaderCell',
     'titleSubGrid',
-    'titleSubGridHeaderRow',
-    'titleSubGridHeaderCell',
     'eventsSubGridWrapper',
     'eventsSubGrid',
-    'eventsSubGridHeaderRow',
     'eventsSubGridRow',
     'titleCellRow',
     'titleCell',

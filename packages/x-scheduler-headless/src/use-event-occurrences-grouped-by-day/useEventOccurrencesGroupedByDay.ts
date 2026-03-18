@@ -6,7 +6,7 @@ import {
   getOccurrencesFromEvents,
   GetOccurrencesFromEventsParameters,
 } from '../internals/utils/event-utils';
-import { useAdapter } from '../use-adapter/useAdapter';
+import { useAdapterContext } from '../use-adapter-context';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
@@ -24,7 +24,7 @@ export function useEventOccurrencesGroupedByDay(
   parameters: useEventOccurrencesGroupedByDay.Parameters,
 ): useEventOccurrencesGroupedByDay.ReturnValue {
   const { days } = parameters;
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const events = useStore(store, schedulerEventSelectors.processedEventList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
