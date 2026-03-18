@@ -110,6 +110,43 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       }),
     ),
 
+    scrollerContentProps: createSelectorMemoized(
+      Dimensions.selectors.dimensions,
+      Dimensions.selectors.needsHorizontalScrollbar,
+      (dimensions, needsHorizontalScrollbar) => {
+        const {
+          contentSize: { height: contentHeight },
+          topContainerHeight,
+          bottomContainerHeight,
+          minimalContentHeight,
+          columnsTotalWidth,
+        } = dimensions;
+
+        const cssContentHeight = valueToCSSString(
+          contentHeight === 0 ? minimalContentHeight : contentHeight,
+        );
+
+        const width = needsHorizontalScrollbar ? columnsTotalWidth : 'auto';
+        const height = `calc(${cssContentHeight} + ${valueToCSSString(topContainerHeight)} + ${valueToCSSString(bottomContainerHeight)})`;
+
+        return {
+          style: {
+            width,
+            height,
+          } as React.CSSProperties,
+          role: 'presentation',
+        };
+      },
+    ),
+
+    viewportProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
+      style: {
+        width: dimensions.viewportOuterSize.width,
+        height: dimensions.viewportOuterSize.height,
+      },
+      role: 'presentation',
+    })),
+
     contentProps: createSelectorMemoized(
       Dimensions.selectors.contentHeight,
       Dimensions.selectors.minimalContentHeight,
@@ -125,14 +162,6 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
         role: 'presentation',
       }),
     ),
-
-    viewportProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
-      style: {
-        width: dimensions.viewportOuterSize.width,
-        height: dimensions.viewportOuterSize.height,
-      },
-      role: 'presentation',
-    })),
 
     positionerProps: createSelectorMemoized(
       Virtualization.selectors.layoutMode,
@@ -204,6 +233,7 @@ export class LayoutDataGridLegacy extends LayoutDataGrid {
 
     const containerProps = store.use(LayoutDataGrid.selectors.containerProps);
     const scrollerProps = store.use(LayoutDataGrid.selectors.scrollerProps);
+    const scrollerContentProps = store.use(LayoutDataGrid.selectors.scrollerProps);
     const viewportProps = store.use(LayoutDataGrid.selectors.viewportProps);
     const contentProps = store.use(LayoutDataGrid.selectors.contentProps);
     const positionerProps = store.use(LayoutDataGrid.selectors.positionerProps);
@@ -215,6 +245,7 @@ export class LayoutDataGridLegacy extends LayoutDataGrid {
     return {
       getContainerProps: () => containerProps,
       getScrollerProps: () => scrollerProps,
+      getScrollerContentProps: () => scrollerContentProps,
       getViewportProps: () => viewportProps,
       getContentProps: () => contentProps,
       getPositionerProps: () => positionerProps,
@@ -352,4 +383,14 @@ function useScrollbarRefCallback(
       scrollbar.removeEventListener('scroll', onScrollbarScroll);
     };
   });
+}
+
+function valueToCSSString(value: string | number | undefined) {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (typeof value === 'undefined') {
+    return '0';
+  }
+  return `${value}px`;
 }

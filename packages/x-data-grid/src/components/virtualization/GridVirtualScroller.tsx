@@ -133,6 +133,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const {
     getContainerProps,
     getScrollerProps,
+    getScrollerContentProps,
     getViewportProps,
     getContentProps,
     getPositionerProps,
@@ -146,7 +147,6 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const rows = getRows(undefined, gridRowTreeSelector(apiRef));
 
   const containerVerticalProps = getContainerVerticalProps();
-  const contentProps = getContentProps();
 
   return (
     <Container
@@ -162,7 +162,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <GridScrollArea scrollDirection="up" {...getScrollAreaProps()} />
       <GridScrollArea scrollDirection="down" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
-        <Content {...contentProps}>
+        <Content {...getScrollerContentProps()}>
           <Viewport {...getViewportProps()}>
             <TopContainer {...containerVerticalProps}>
               {!rootProps.listView && <GridHeaders />}
@@ -183,7 +183,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
               {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
             </RenderZone>
 
-            {hasContentFiller && <div className="CONTENT_FILLER" {...contentProps} />}
+            {hasContentFiller && <div {...getContentProps()} />}
 
             {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
 
