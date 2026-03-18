@@ -114,7 +114,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
   const layoutMode = useGridSelector(apiRef, gridVirtualizationLayoutModeSelector);
-  const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length, layoutMode);
+  const offsetLeft = computeOffsetLeft(
+    columnPositions,
+    renderContext,
+    pinnedColumns.left.length,
+    layoutMode,
+  );
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
   const headerHeight = useGridSelector(apiRef, gridHeaderHeightSelector);
