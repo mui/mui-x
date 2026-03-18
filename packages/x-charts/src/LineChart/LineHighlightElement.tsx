@@ -34,7 +34,7 @@ interface LineHighlightElementCommonProps {
 /**
  * @deprecated Use `getLineUtilityClass` instead.
  */
-export function getHighlightElementUtilityClass(slot: string) {
+function getHighlightElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiHighlightElement', slot);
 }
 
