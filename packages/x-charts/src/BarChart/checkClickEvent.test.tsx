@@ -185,21 +185,32 @@ describe('BarChart - click event', () => {
 
       const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarChart-element');
 
-      await user.click(rectangles[0]);
+      const getCenter = (el: Element) => {
+        const rect = el.getBoundingClientRect();
+        return { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
+      };
+
+      await user.pointer([
+        { keys: '[MouseLeft]', target: rectangles[0], coords: getCenter(rectangles[0]) },
+      ]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 0,
       });
 
-      await user.click(rectangles[1]);
+      await user.pointer([
+        { keys: '[MouseLeft]', target: rectangles[1], coords: getCenter(rectangles[1]) },
+      ]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 1,
       });
 
-      await user.click(rectangles[2]);
+      await user.pointer([
+        { keys: '[MouseLeft]', target: rectangles[2], coords: getCenter(rectangles[2]) },
+      ]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's2',
