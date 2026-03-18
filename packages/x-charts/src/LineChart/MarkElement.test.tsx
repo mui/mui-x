@@ -22,6 +22,92 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
 describe.for([
   ['MarkElement', MarkElement],
   ['CircleMarkElement', CircleMarkElement],
+])('%s data attributes', ([_, MarkElementComponent]) => {
+  const { render } = createRenderer();
+
+  it('should have data-series attribute', () => {
+    render(
+      <TestWrapper>
+        <MarkElementComponent
+          seriesId="s1"
+          dataIndex={0}
+          x={10}
+          y={10}
+          color="red"
+          shape="circle"
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
+
+    const mark = screen.getByTestId('mark');
+    expect(mark.getAttribute('data-series')).to.equal('s1');
+  });
+
+  it('should have data-index attribute', () => {
+    render(
+      <TestWrapper>
+        <MarkElementComponent
+          seriesId="s1"
+          dataIndex={2}
+          x={10}
+          y={10}
+          color="red"
+          shape="circle"
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
+
+    const mark = screen.getByTestId('mark');
+    expect(mark.getAttribute('data-index')).to.equal('2');
+  });
+
+  it('should have both new and deprecated classes', () => {
+    render(
+      <TestWrapper>
+        <MarkElementComponent
+          seriesId="s1"
+          dataIndex={0}
+          x={10}
+          y={10}
+          color="red"
+          shape="circle"
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
+
+    const mark = screen.getByTestId('mark');
+    expect(mark.classList.contains('MuiLineChart-mark')).to.equal(true);
+    expect(mark.classList.contains('MuiMarkElement-root')).to.equal(true);
+  });
+
+  it('should apply custom classes passed via the classes prop', () => {
+    render(
+      <TestWrapper>
+        <MarkElementComponent
+          seriesId="s1"
+          dataIndex={0}
+          x={10}
+          y={10}
+          color="red"
+          shape="circle"
+          classes={{ mark: 'my-custom-mark' }}
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
+
+    const mark = screen.getByTestId('mark');
+    expect(mark.classList.contains('my-custom-mark')).to.equal(true);
+    expect(mark.classList.contains('MuiLineChart-mark')).to.equal(true);
+  });
+});
+
+describe.for([
+  ['MarkElement', MarkElement],
+  ['CircleMarkElement', CircleMarkElement],
 ])('%s click behavior', ([_, MarkElementComponent]) => {
   const { render } = createRenderer();
 
