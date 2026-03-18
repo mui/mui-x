@@ -29,25 +29,29 @@
       "key": "faded",
       "className": "MuiLineElement-faded",
       "description": "Styles applied to the root element when faded.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "highlighted",
       "className": "MuiLineElement-highlighted",
       "description": "Styles applied to the root element when highlighted.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "root",
       "className": "MuiLineElement-root",
       "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "series",
       "className": "MuiLineElement-series",
       "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     }
   ],
   "muiName": "MuiLineElement",

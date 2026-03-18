@@ -9,17 +9,23 @@
     "faded": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "faded"
+      "conditions": "faded",
+      "deprecationInfo": "Use <code>[data-faded]</code> selector instead."
     },
     "highlighted": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "highlighted"
+      "conditions": "highlighted",
+      "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
     },
-    "root": { "description": "Styles applied to the root element." },
+    "root": {
+      "description": "Styles applied to the root element.",
+      "deprecationInfo": "Use <code>lineClasses.area</code> instead."
+    },
     "series": {
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${areaElementClasses.series}-${seriesId}</code>.",
-      "nodeName": "the root element for a specified series"
+      "nodeName": "the root element for a specified series",
+      "deprecationInfo": "Use <code>[data-series=&quot;${seriesId}&quot;]</code> selector instead."
     }
   },
   "slotDescriptions": { "area": "The component that renders the area." }

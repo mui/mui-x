@@ -29,31 +29,36 @@
       "key": "area",
       "className": "MuiRadarSeriesPlot-area",
       "description": "Styles applied to the series area element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "faded",
       "className": "MuiRadarSeriesPlot-faded",
       "description": "Styles applied to the series element if it is faded.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "highlighted",
       "className": "MuiRadarSeriesPlot-highlighted",
       "description": "Styles applied to the series element if it is highlighted.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "mark",
       "className": "MuiRadarSeriesPlot-mark",
       "description": "Styles applied to the series mark element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "root",
       "className": "MuiRadarSeriesPlot-root",
       "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     }
   ],
   "muiName": "MuiRadarSeriesPlot",
