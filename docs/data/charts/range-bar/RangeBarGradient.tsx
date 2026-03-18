@@ -46,10 +46,9 @@ export default function RangeBarGradient() {
     <BarChartPremium
       {...settings}
       sx={{
-        [`& .${rangeBarClasses.series}[data-series="2"] .${barClasses.element}`]:
-          {
-            fill: 'url(#bar-gradient)',
-          },
+        [`& .${rangeBarClasses.series}[data-series="2"] .${barClasses.element}`]: {
+          fill: 'url(#bar-gradient)',
+        },
       }}
     >
       <defs>
