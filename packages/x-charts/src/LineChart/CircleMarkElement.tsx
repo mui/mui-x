@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 import { styled, useTheme } from '@mui/material/styles';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import {
-  markElementClasses,
+  lineClasses,
   type MarkElementOwnerState,
-  useUtilityClasses as useDeprecatedUtilityClasses,
-} from './markElementClasses';
-import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+  useUtilityClasses as useLineUtilityClasses,
+} from './lineClasses';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
@@ -42,7 +41,7 @@ const Circle = styled('circle', {
   slot: 'internal',
   shouldForwardProp: undefined,
 })({
-  [`&.${markElementClasses.animate}`]: {
+  [`&.${lineClasses.markAnimate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionProperty: 'cx, cy, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -81,15 +80,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
 
   const theme = useTheme();
 
-  const ownerState = {
-    seriesId,
-    classes: innerClasses,
-    isHighlighted,
-    isFaded,
-    skipAnimation,
-  };
   const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   return (
     <Circle
@@ -100,7 +91,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
       strokeWidth={2}
-      className={`${classes.mark} ${deprecatedClasses.root}`}
+      className={classes.mark}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       pointerEvents={hidden ? 'none' : undefined}

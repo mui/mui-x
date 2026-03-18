@@ -5,6 +5,7 @@ import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsTooltipClasses } from '../ChartsTooltip';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
+import { radarClasses } from './radarClasses';
 
 const radarConfig: RadarChartProps = {
   height: 100,
@@ -37,7 +38,7 @@ describe('<RadarChart />', () => {
     const onHighlightChange = vi.fn();
     const { user } = render(<RadarChart {...radarConfig} onHighlightChange={onHighlightChange} />);
 
-    const path = document.querySelector<HTMLElement>('svg .MuiRadarSeriesPlot-area')!;
+    const path = document.querySelector<HTMLElement>(`svg .${radarClasses.seriesArea}`)!;
     await user.pointer({ target: path });
 
     expect(onHighlightChange.mock.calls.length).to.equal(1);
@@ -61,7 +62,9 @@ describe('<RadarChart />', () => {
     )!.parentElement!;
     await user.pointer([{ target: layerContainer, coords: { clientX: 45, clientY: 45 } }]);
 
-    expect(document.querySelector<HTMLElement>('svg .MuiRadarAxisHighlight-root')!).toBeVisible();
+    expect(
+      document.querySelector<HTMLElement>(`svg .${radarClasses.axisHighlightRoot}`)!,
+    ).toBeVisible();
   });
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
