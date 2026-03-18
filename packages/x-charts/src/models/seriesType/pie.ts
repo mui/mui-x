@@ -32,7 +32,7 @@ export type DefaultizedPieValueType = PieValueType &
 
 export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number) => number);
 
-export interface PieSeriesType<TData = PieValueType> extends CommonSeriesType<TData> {
+export interface PieSeriesType<TData = PieValueType> extends CommonSeriesType<TData, 'pie'> {
   type: 'pie';
   data: Readonly<TData[]>;
   /**

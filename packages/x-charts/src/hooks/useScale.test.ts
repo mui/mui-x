@@ -1,6 +1,6 @@
 import { scaleBand } from '@mui/x-charts/internals';
 import { scaleLinear } from '@mui/x-charts-vendor/d3-scale';
-import { getValueToPositionMapper } from './useScale';
+import { getValueToPositionMapper } from './getValueToPositionMapper';
 
 describe('getValueToPositionMapper', () => {
   it('returns a function that maps values to their position for ordinal scales', () => {

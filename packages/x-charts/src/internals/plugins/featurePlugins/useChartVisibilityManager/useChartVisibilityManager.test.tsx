@@ -1,6 +1,6 @@
 import { createRenderer, screen, within } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { PieChart, pieArcClasses } from '@mui/x-charts/PieChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
@@ -28,7 +28,7 @@ function isPieArcVisible(path: Element): boolean {
  * Helper to get visible bars from the document
  */
 function getVisibleBars(): Element[] {
-  const bars = document.querySelectorAll(`.${barElementClasses.root}`);
+  const bars = document.querySelectorAll(`.${barClasses.element}`);
   return Array.from(bars).filter(isBarVisible);
 }
 

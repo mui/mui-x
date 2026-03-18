@@ -8,5 +8,9 @@ import type * as React from 'react';
  * @param _props Not used
  */
 export function NotRendered<T>(_props: T): React.ReactNode {
-  throw new Error('Failed assertion: should not be rendered');
+  throw new Error(
+    'MUI X Charts: Failed assertion - this component should not be rendered. ' +
+      'This is an internal component used for styling purposes only. ' +
+      'If you see this error, there may be a configuration issue with styled components.',
+  );
 }

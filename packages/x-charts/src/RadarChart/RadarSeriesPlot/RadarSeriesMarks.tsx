@@ -3,25 +3,30 @@ import { clsx } from 'clsx';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
+import {
+  type RadarSeriesPlotClasses,
+  useUtilityClasses as useDeprecatedUtilityClasses,
+} from './radarSeriesPlotClasses';
+import { useUtilityClasses } from '../radarClasses';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { type SeriesId } from '../../models/seriesType/common';
-import { type HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import type { HighlightItemIdentifierWithType } from '../../models';
+import type { HighlightState } from '../../hooks/useItemHighlightState';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
   classes: RadarSeriesPlotClasses;
-  isFaded: (item: HighlightItemData | null) => boolean;
-  isHighlighted: (item: HighlightItemData | null) => boolean;
+  getHighlightState: (item: HighlightItemIdentifierWithType<'radar'> | null) => HighlightState;
   point: { x: number; y: number };
   fillArea?: boolean;
   color: string;
 }
 
 export function getCircleProps(params: GetCirclePropsParams): React.SVGProps<SVGCircleElement> {
-  const { isHighlighted, isFaded, seriesId, classes, point, fillArea, color } = params;
-  const isItemHighlighted = isHighlighted({ seriesId });
-  const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
+  const { getHighlightState, seriesId, classes, point, fillArea, color } = params;
+  const highlightState = getHighlightState({ type: 'radar', seriesId });
+  const isItemHighlighted = highlightState === 'highlighted';
+  const isItemFaded = highlightState === 'faded';
 
   return {
     cx: point.x,
@@ -41,8 +46,14 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   const { seriesId, onItemClick, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(props.seriesId);
 
-  const classes = useUtilityClasses(props.classes);
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const newClasses = useUtilityClasses();
+  const deprecatedClasses = useDeprecatedUtilityClasses(props.classes);
+  const classes = {
+    ...deprecatedClasses,
+    area: `${newClasses.seriesArea} ${deprecatedClasses.area}`,
+    mark: `${newClasses.seriesMark} ${deprecatedClasses.mark}`,
+  };
+  const getHighlightState = useItemHighlightStateGetter();
 
   return (
     <React.Fragment>
@@ -61,8 +72,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   point,
                   color: point.color,
                   fillArea,
-                  isFaded,
-                  isHighlighted,
+                  getHighlightState,
                   classes,
                 })}
                 pointerEvents={onItemClick ? undefined : 'none'}

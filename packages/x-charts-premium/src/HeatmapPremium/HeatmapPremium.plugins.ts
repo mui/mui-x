@@ -29,7 +29,7 @@ export type HeatmapPremiumPluginSignatures = [
   UseChartTooltipSignature<'heatmap'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'heatmap'>,
-  UseChartHighlightSignature,
+  UseChartHighlightSignature<'heatmap'>,
   UseChartProExportSignature,
   UseChartBrushSignature,
   UseChartProZoomSignature,

@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useLegend } from '../hooks/useLegend';
 import type { Direction } from './direction';
-import { type SeriesLegendItemContext, type LegendItemParams } from './legendContext.types';
+import { type SeriesLegendItemContext, type SeriesLegendItemParams } from './legendContext.types';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
@@ -15,6 +15,7 @@ import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
 import { useChartContext } from '../context/ChartProvider';
 import {
   selectorIsItemVisibleGetter,
+  type VisibilityIdentifierWithType,
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 import { useStore } from '../internals/store/useStore';
@@ -115,10 +116,8 @@ const ChartsLegend = consumeSlots(
 
     const isButton = Boolean(onItemClick || toggleVisibilityOnClick);
 
-    const Element = isButton ? 'button' : 'div';
-
     const handleClick = useEventCallback(
-      (item: LegendItemParams, i: number) =>
+      (item: SeriesLegendItemParams, i: number) =>
         (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
           if (onItemClick && item) {
             onItemClick(event, seriesContextBuilder(item), i);
@@ -129,7 +128,7 @@ const ChartsLegend = consumeSlots(
               type: item.type,
               seriesId: item.seriesId,
               dataIndex: item.dataIndex,
-            });
+            } as VisibilityIdentifierWithType);
           }
         },
     );
@@ -158,20 +157,31 @@ const ChartsLegend = consumeSlots(
               data-series={item.seriesId}
               data-index={item.dataIndex}
             >
-              <Element
-                className={clsx(classes?.series, !isVisible && classes?.hidden)}
-                role={isButton ? 'button' : undefined}
-                type={isButton ? 'button' : undefined}
-                // @ts-expect-error onClick is only attached to a button
-                onClick={isButton ? handleClick(item, i) : undefined}
-              >
-                <ChartsLabelMark
-                  className={classes?.mark}
-                  color={item.color}
-                  type={item.markType}
-                />
-                <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
-              </Element>
+              {isButton ? (
+                <button
+                  className={clsx(classes?.series, !isVisible && classes?.hidden)}
+                  onClick={handleClick(item, i)}
+                  type="button"
+                >
+                  <ChartsLabelMark
+                    className={classes?.mark}
+                    color={item.color}
+                    type={item.markType}
+                    markShape={item.markShape}
+                  />
+                  <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
+                </button>
+              ) : (
+                <div className={clsx(classes?.series, !isVisible && classes?.hidden)}>
+                  <ChartsLabelMark
+                    className={classes?.mark}
+                    color={item.color}
+                    type={item.markType}
+                    markShape={item.markShape}
+                  />
+                  <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
+                </div>
+              )}
             </li>
           );
         })}

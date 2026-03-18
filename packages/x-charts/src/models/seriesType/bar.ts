@@ -12,7 +12,7 @@ import { type BarItem, type BarLabelContext } from '../../BarChart';
 export type BarValueType = number;
 
 export interface BarSeriesType
-  extends CommonSeriesType<BarValueType | null>, CartesianSeriesType, StackableSeriesType {
+  extends CommonSeriesType<BarValueType | null, 'bar'>, CartesianSeriesType, StackableSeriesType {
   type: 'bar';
   /**
    * Data associated to each bar.

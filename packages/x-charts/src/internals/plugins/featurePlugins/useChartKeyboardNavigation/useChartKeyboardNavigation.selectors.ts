@@ -26,23 +26,26 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
 export const selectorChartsItemIsFocused = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState, item: FocusedItemIdentifier<ChartSeriesType>) =>
+    keyboardNavigationState?.isFocused === true &&
     keyboardNavigationState?.item != null &&
     fastObjectShallowCompare(keyboardNavigationState.item, item),
 );
 
 export const selectorChartsHasFocusedItem = createSelector(
   selectKeyboardNavigation,
-  (keyboardNavigationState) => keyboardNavigationState?.item != null,
+  (keyboardNavigationState) =>
+    keyboardNavigationState?.isFocused === true && keyboardNavigationState?.item != null,
 );
 
 export const selectorChartsFocusedItem = createSelector(
   selectKeyboardNavigation,
-  (keyboardNavigationState) => keyboardNavigationState?.item ?? null,
+  (keyboardNavigationState) =>
+    keyboardNavigationState?.isFocused === true ? (keyboardNavigationState?.item ?? null) : null,
 );
 
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
   selectKeyboardNavigation,
-  (keyboardNavigationState) => !!keyboardNavigationState?.enableKeyboardNavigation,
+  (keyboardNavigationState) => !!keyboardNavigationState?.enabled,
 );
 
 /**
@@ -51,16 +54,16 @@ export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
 
 const createSelectAxisHighlight =
   (direction: 'x' | 'y') =>
-  <T extends ChartSeriesType>(
-    item: FocusedItemIdentifier<T> | null,
+  <SeriesType extends ChartSeriesType>(
+    item: FocusedItemIdentifier<SeriesType> | null,
     axis: ComputeResult<ChartsAxisProps>,
-    series: ProcessedSeries<T>,
+    series: ProcessedSeries<SeriesType>,
   ): AxisItemIdentifier | undefined => {
     if (item == null || !('dataIndex' in item) || item.dataIndex === undefined) {
       return undefined;
     }
 
-    const seriesConfig = series[item.type as T]?.series[item.seriesId];
+    const seriesConfig = series[item.type as SeriesType]?.series[item.seriesId];
     if (!seriesConfig) {
       return undefined;
     }
@@ -94,7 +97,7 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
 export const selectorChartsKeyboardItem = createSelector(
   selectKeyboardNavigation,
   function selectorChartsKeyboardItem(keyboardState) {
-    if (keyboardState?.item == null) {
+    if (keyboardState?.isFocused !== true || keyboardState?.item == null) {
       return null;
     }
     const { type, seriesId } = keyboardState.item;

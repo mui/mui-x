@@ -52,7 +52,7 @@ export function useXAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
   const axis = xAxes[axisId];
 
   // FIXME(v9): Remove
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const themedProps = useThemeProps({ props: axis, name: 'MuiChartsXAxis' });
 
   if (!axis) {
@@ -105,7 +105,7 @@ export function useYAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
   const axis = yAxes[axisId];
 
   // FIXME(v9): Remove
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const themedProps = useThemeProps({ props: axis, name: 'MuiChartsYAxis' });
 
   if (!axis) {

@@ -30,7 +30,7 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
   // Should be set to never, but this causes other issues with proptypes generator.
   const { scale: xScale, tickNumber, reverse, ordinalTimeTicks, ...settings } = axis;
 
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
   const defaultizedProps = { ...defaultProps, ...themedProps };
 

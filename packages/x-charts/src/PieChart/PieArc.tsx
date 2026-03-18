@@ -9,14 +9,25 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { type SeriesId } from '../models';
+import { type PieArcOwnerState, useUtilityClasses as usePieUtilityClasses } from './pieClasses';
 
+export { type PieArcOwnerState };
+
+/**
+ * @deprecated Use `PieClasses` instead.
+ */
 export interface PieArcClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when highlighted. */
+  /**
+   * Styles applied to the root element when highlighted.
+   * @deprecated Use `[data-highlighted]` selector instead.
+   */
   highlighted: string;
-  /** Styles applied to the root element when faded. */
+  /**
+   * Styles applied to the root element when faded.
+   * @deprecated Use `[data-faded]` selector instead.
+   */
   faded: string;
   /**
    * Styles applied to the root element for a specified series.
@@ -27,18 +38,10 @@ export interface PieArcClasses {
   focusIndicator: string;
 }
 
+/**
+ * @deprecated Use `PieClassKey` instead.
+ */
 export type PieArcClassKey = keyof PieArcClasses;
-
-interface PieArcOwnerState {
-  seriesId: SeriesId;
-  dataIndex: number;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  isFocused: boolean;
-  stroke?: string;
-  classes?: Partial<PieArcClasses>;
-}
 
 /**
  * @deprecated Use `getPieUtilityClass` instead.
@@ -47,6 +50,9 @@ function getPieArcUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArc', slot);
 }
 
+/**
+ * @deprecated Use `pieClasses` instead.
+ */
 export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', [
   'root',
   'highlighted',
@@ -55,6 +61,9 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
   'focusIndicator',
 ]);
 
+/**
+ * @deprecated Use `useUtilityClasses` instead.
+ */
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted, dataIndex } = ownerState;
   const slots = {
@@ -73,7 +82,6 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
 const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
 })<{ ownerState: PieArcOwnerState }>({
   transitionProperty: 'opacity, fill, filter',
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
@@ -135,7 +143,8 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     isHighlighted,
     isFocused,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = usePieUtilityClasses(ownerState);
+  const deprecatedClasses = useUtilityClasses(ownerState);
 
   const interactionProps = useInteractionItemProps(
     { type: 'pie', seriesId, dataIndex },
@@ -157,15 +166,15 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
-      className={clsx(classes.root, className)}
-      fill={ownerState.color}
-      opacity={ownerState.isFaded ? 0.3 : 1}
-      filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+      className={clsx(classes.arc, deprecatedClasses.root, className)}
+      fill={color}
+      opacity={isFaded ? 0.3 : 1}
+      filter={isHighlighted ? 'brightness(120%)' : 'none'}
       stroke={stroke}
       strokeWidth={1}
       strokeLinejoin="round"
-      data-highlighted={ownerState.isHighlighted || undefined}
-      data-faded={ownerState.isFaded || undefined}
+      data-highlighted={isHighlighted || undefined}
+      data-faded={isFaded || undefined}
       {...other}
       {...interactionProps}
       {...animatedProps}

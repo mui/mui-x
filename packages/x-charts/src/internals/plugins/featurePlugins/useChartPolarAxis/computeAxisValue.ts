@@ -68,31 +68,31 @@ export type ComputeResult<T extends ChartsAxisProps> = {
   axisIds: string[];
 };
 
-type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
+type ComputeCommonParams<SeriesType extends ChartSeriesType = ChartSeriesType> = {
   drawingArea: ChartDrawingArea;
-  formattedSeries: ProcessedSeries<T>;
-  seriesConfig: ChartSeriesConfig<T>;
+  formattedSeries: ProcessedSeries<SeriesType>;
+  seriesConfig: ChartSeriesConfig<SeriesType>;
 };
 
-export function computeAxisValue<T extends ChartSeriesType>(
-  options: ComputeCommonParams<T> & {
+export function computeAxisValue<SeriesType extends ChartSeriesType>(
+  options: ComputeCommonParams<SeriesType> & {
     axis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
     axisDirection: 'radius';
   },
 ): ComputeResult<ChartsRadiusAxisProps>;
-export function computeAxisValue<T extends ChartSeriesType>(
-  options: ComputeCommonParams<T> & {
+export function computeAxisValue<SeriesType extends ChartSeriesType>(
+  options: ComputeCommonParams<SeriesType> & {
     axis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
     axisDirection: 'rotation';
   },
 ): ComputeResult<ChartsRotationAxisProps>;
-export function computeAxisValue<T extends ChartSeriesType>({
+export function computeAxisValue<SeriesType extends ChartSeriesType>({
   drawingArea,
   formattedSeries,
   axis: allAxis,
   seriesConfig,
   axisDirection,
-}: ComputeCommonParams<T> & {
+}: ComputeCommonParams<SeriesType> & {
   axis?: AxisConfig<ScaleName, any, ChartsAxisProps>[];
   axisDirection: 'radius' | 'rotation';
 }) {

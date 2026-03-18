@@ -9,6 +9,10 @@ import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
+import {
+  createIsHighlighted,
+  createIsFaded,
+} from '../../internals/plugins/featurePlugins/useChartHighlight';
 
 export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   colorProcessor: getColor,
@@ -21,4 +25,6 @@ export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  isHighlightedCreator: createIsHighlighted,
+  isFadedCreator: createIsFaded,
 };

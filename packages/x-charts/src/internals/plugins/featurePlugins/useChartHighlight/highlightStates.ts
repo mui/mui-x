@@ -1,18 +1,23 @@
-import { type HighlightItemData } from './useChartHighlight.types';
-import { type HighlightScope } from './highlightConfig.types';
-import { type SeriesId } from '../../../../models/seriesType/common';
+import type { HighlightItemIdentifier, SeriesId } from '../../../../models/seriesType';
+import type { ChartsSeriesConfig, HighlightScope } from '../../../../models/seriesType/config';
 
-export function isSeriesHighlighted(
-  scope: Partial<HighlightScope> | null,
-  item: HighlightItemData | null,
+type SeriesTypeWithBatchRendering =
+  | 'bar'
+  | 'line'
+  // Conditional type to add 'rangeBar' if it exists in ChartsSeriesConfig
+  | (ChartsSeriesConfig extends { rangeBar: any } ? 'rangeBar' : never);
+
+export function isSeriesHighlighted<SeriesType extends SeriesTypeWithBatchRendering>(
+  scope: Partial<HighlightScope<SeriesType>> | null,
+  item: HighlightItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   return scope?.highlight === 'series' && item?.seriesId === seriesId;
 }
 
-export function isSeriesFaded(
-  scope: Partial<HighlightScope> | null,
-  item: HighlightItemData | null,
+export function isSeriesFaded<SeriesType extends SeriesTypeWithBatchRendering>(
+  scope: Partial<HighlightScope<SeriesType>> | null,
+  item: HighlightItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   if (isSeriesHighlighted(scope, item, seriesId)) {
@@ -29,9 +34,9 @@ export function isSeriesFaded(
  * Returns the data index of the highlighted item for a specific series.
  * If the item is not highlighted, it returns `null`.
  */
-export function getSeriesHighlightedItem(
-  scope: Partial<HighlightScope> | null,
-  item: HighlightItemData | null,
+export function getSeriesHighlightedDataIndex<SeriesType extends SeriesTypeWithBatchRendering>(
+  scope: Partial<HighlightScope<SeriesType>> | null,
+  item: HighlightItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   return scope?.highlight === 'item' && item?.seriesId === seriesId ? item.dataIndex : null;
@@ -42,16 +47,16 @@ export function getSeriesHighlightedItem(
  * An "unfaded item" is the only item of a faded series that shouldn't be faded.
  * If the series is not faded or if there is no highlighted item, it returns `null`.
  */
-export function getSeriesUnfadedItem(
-  scope: Partial<HighlightScope> | null,
-  item: HighlightItemData | null,
+export function getSeriesUnfadedDataIndex<SeriesType extends SeriesTypeWithBatchRendering>(
+  scope: Partial<HighlightScope<SeriesType>> | null,
+  item: HighlightItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   if (isSeriesHighlighted(scope, item, seriesId)) {
     return null;
   }
 
-  if (getSeriesHighlightedItem(scope, item, seriesId) === item?.dataIndex) {
+  if (getSeriesHighlightedDataIndex(scope, item, seriesId) === item?.dataIndex) {
     return null;
   }
 

@@ -69,7 +69,7 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     loading,
     highlightedItem,
     onHighlightChange,
-    enableKeyboardNavigation,
+    disableKeyboardNavigation,
     borderRadius,
     hideLegend,
   } = props;
@@ -141,7 +141,7 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     disableAxisListener: true,
     highlightedItem,
     onHighlightChange,
-    enableKeyboardNavigation,
+    disableKeyboardNavigation,
     onAxisClick,
     onItemClick,
     plugins: HEATMAP_PLUGINS,

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { useBarSeriesContext, useXAxes, useYAxes } from '../hooks';
-import { getBarDimensions } from '../internals/getBarDimensions';
+import { createGetBarDimensions } from '../internals/createGetBarDimensions';
 
 export function FocusedBar(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
@@ -36,15 +36,13 @@ export function FocusedBar(props: React.SVGAttributes<SVGRectElement>) {
     group.ids.includes(focusedItem.seriesId),
   );
 
-  const barDimensions = getBarDimensions({
+  const barDimensions = createGetBarDimensions({
     verticalLayout,
     xAxisConfig,
     yAxisConfig,
     series,
-    dataIndex: focusedItem.dataIndex,
     numberOfGroups: barSeries.stackingGroups.length,
-    groupIndex,
-  });
+  })(focusedItem.dataIndex, groupIndex);
 
   if (barDimensions === null) {
     return null;

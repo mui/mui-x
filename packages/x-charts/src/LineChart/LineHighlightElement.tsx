@@ -8,12 +8,19 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SeriesId } from '../models/seriesType/common';
 import { getSymbol } from '../internals/getSymbol';
+import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
+/**
+ * @deprecated Use `LineClasses` instead.
+ */
 export interface LineHighlightElementClasses {
   /** Styles applied to the root element. */
   root: string;
 }
 
+/**
+ * @deprecated Use `LineClassKey` instead.
+ */
 export type HighlightElementClassKey = keyof LineHighlightElementClasses;
 
 interface LineHighlightElementCommonProps {
@@ -31,12 +38,18 @@ function getHighlightElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiHighlightElement', slot);
 }
 
+/**
+ * @deprecated Use `lineClasses` instead.
+ */
 export const lineHighlightElementClasses: LineHighlightElementClasses = generateUtilityClasses(
   'MuiHighlightElement',
   ['root'],
 );
 
-const useUtilityClasses = (
+/**
+ * @deprecated Use `useUtilityClasses` instead.
+ */
+const useDeprecatedUtilityClasses = (
   ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'seriesId'>,
 ) => {
   const { classes, seriesId } = ownerState;
@@ -48,8 +61,10 @@ const useUtilityClasses = (
 };
 
 export type LineHighlightElementProps =
-  | (LineHighlightElementCommonProps &
-      ({ shape: 'circle' } & Omit<React.SVGProps<SVGCircleElement>, 'ref'>))
+  | (LineHighlightElementCommonProps & { shape: 'circle' } & Omit<
+        React.SVGProps<SVGCircleElement>,
+        'ref'
+      >)
   | (LineHighlightElementCommonProps & {
       shape: 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
     } & Omit<React.SVGProps<SVGPathElement>, 'ref'>);
@@ -67,7 +82,8 @@ export type LineHighlightElementProps =
 function LineHighlightElement(props: LineHighlightElementProps) {
   const { x, y, seriesId, classes: innerClasses, color, shape, ...other } = props;
 
-  const classes = useUtilityClasses(props);
+  const classes = useLineUtilityClasses();
+  const deprecatedClasses = useDeprecatedUtilityClasses(props);
 
   const Element = shape === 'circle' ? 'circle' : 'path';
 
@@ -85,7 +101,7 @@ function LineHighlightElement(props: LineHighlightElementProps) {
   return (
     <Element
       pointerEvents="none"
-      className={classes.root}
+      className={`${classes.highlight} ${deprecatedClasses.root}`}
       transform={`translate(${x} ${y})`}
       fill={color}
       {...transformOrigin}

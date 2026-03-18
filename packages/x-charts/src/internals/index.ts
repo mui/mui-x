@@ -18,7 +18,9 @@ export { useLinePlotData } from '../LineChart/useLinePlotData';
 export * from '../BarChart/useBarChartProps';
 export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
+export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartContainer/useChartContainerProps';
+export * from '../ChartsDataProvider/useChartsDataProviderProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
@@ -49,7 +51,6 @@ export * from './store/useCharts';
 export * from './store/useStore';
 
 // plugins configs
-
 export * from '../BarChart/BarChart.plugins';
 export * from '../LineChart/LineChart.plugins';
 export * from '../ScatterChart/ScatterChart.plugins';
@@ -59,7 +60,8 @@ export * from '../PieChart/PieChart.plugins';
 // utils
 export * from './configInit';
 export * from './getLabel';
-export * from './getSVGPoint';
+export * from './legendUtils';
+export * from './getChartPoint';
 export * from './isDefined';
 export * from './getScale';
 export * from './stacking';
@@ -74,6 +76,7 @@ export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
 export * from './commonNextFocusItem';
+export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
@@ -85,6 +88,7 @@ export {
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
+export * from '../context/ChartsProvider';
 export * from '../context/ChartProvider';
 export * from '../context/ChartsSlotsContext';
 
@@ -94,6 +98,7 @@ export * from '../models/seriesType/common';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
+export * from '../models/seriesType/composition';
 
 export * from './plugins/models';
 export * from './material';

@@ -8,5 +8,5 @@ export type { BarElementClasses, BarElementClassKey } from './barElementClasses'
 export { barElementClasses } from './barElementClasses';
 export * from './BarChart.plugins';
 export { type BarProps } from './AnimatedBarElement';
-export { barClasses, getBarUtilityClass } from './barClasses';
+export { barClasses } from './barClasses';
 export type { BarClassKey, BarClasses } from './barClasses';

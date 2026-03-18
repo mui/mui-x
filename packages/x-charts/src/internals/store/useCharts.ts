@@ -54,8 +54,6 @@ export function useCharts<TSignatures extends readonly ChartAnyPluginSignature[]
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
-  const innerChartRootRef = React.useRef<Element>(null);
-  const innerSvgRef = React.useRef<SVGSVGElement>(null);
 
   const storeRef = React.useRef<Store<ChartState<TSignaturesWithCorePluginSignatures>>>(null);
   if (storeRef.current == null) {
@@ -82,8 +80,6 @@ export function useCharts<TSignatures extends readonly ChartAnyPluginSignature[]
       store: storeRef.current as Store<
         ChartState<TSignaturesWithCorePluginSignatures> & UseChartInteractionState
       >,
-      svgRef: innerSvgRef,
-      chartRootRef: innerChartRootRef,
     });
 
     if (pluginResponse.publicAPI) {
@@ -102,8 +98,6 @@ export function useCharts<TSignatures extends readonly ChartAnyPluginSignature[]
       store: storeRef.current!,
       publicAPI: publicAPI.current,
       instance,
-      svgRef: innerSvgRef,
-      chartRootRef: innerChartRootRef,
     }),
     [instance, publicAPI],
   );

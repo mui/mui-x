@@ -63,6 +63,19 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    */
   highlightedAxis?: AxisItemIdentifier[];
   /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onTooltipAxisChange?: (axisItems: AxisItemIdentifier[]) => void;
+  /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis?: AxisItemIdentifier[];
+  /**
    * If `true`, the charts will not listen to the mouse move event.
    * It might break interactive features, but will improve performance.
    * @default false
@@ -113,6 +126,10 @@ export interface UseChartCartesianAxisState {
    * The controlled axis item highlighted.
    */
   controlledCartesianAxisHighlight?: AxisItemIdentifier[];
+  /**
+   * The controlled axis tooltip.
+   */
+  controlledCartesianAxisTooltip?: AxisItemIdentifier[];
 }
 
 export type ExtremumFilter = (
