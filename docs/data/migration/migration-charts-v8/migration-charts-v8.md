@@ -483,6 +483,42 @@ If you're using the `sx` prop or `styled()`:
  />
 ```
 
+### Removed `defaultProps` from `MuiChartsXAxis` and `MuiChartsYAxis` theme entries
+
+The `defaultProps` key in the `MuiChartsXAxis` and `MuiChartsYAxis` theme entries has been removed.
+The axis components now use the store as the source of truth for axis configuration, making theme-based `defaultProps` obsolete.
+
+The `styleOverrides` key is still supported.
+
+```diff
+ const theme = createTheme({
+   components: {
+     MuiChartsXAxis: {
+-      defaultProps: {
+-        tickSize: 10,
+-      },
+       styleOverrides: {
+         root: { color: 'red' },
+       },
+     },
+     MuiChartsYAxis: {
+-      defaultProps: {
+-        tickSize: 10,
+-      },
+       styleOverrides: {
+         root: { color: 'red' },
+       },
+     },
+   },
+ });
+```
+
+To customize axis props, pass them directly to the axis configuration instead:
+
+```jsx
+<LineChart xAxis={[{ tickSize: 10 }]} yAxis={[{ tickSize: 10 }]} />
+```
+
 ### The `domainLimit` function signature updated
 
 The `domainLimit` function now receives `NumberValue` instead of `number` for its parameters and return type.
