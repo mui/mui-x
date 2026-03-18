@@ -29,7 +29,8 @@
       "key": "area",
       "className": "MuiRadarSeriesPlot-area",
       "description": "Styles applied to the series area element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "faded",
@@ -47,13 +48,15 @@
       "key": "mark",
       "className": "MuiRadarSeriesPlot-mark",
       "description": "Styles applied to the series mark element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "root",
       "className": "MuiRadarSeriesPlot-root",
       "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     }
   ],
   "muiName": "MuiRadarSeriesPlot",

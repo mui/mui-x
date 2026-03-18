@@ -17,10 +17,14 @@
       "nodeName": "the root element",
       "conditions": "highlighted"
     },
-    "root": { "description": "Styles applied to the root element." },
+    "root": {
+      "description": "Styles applied to the root element.",
+      "deprecationInfo": "Use <code>lineClasses.line</code> instead."
+    },
     "series": {
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${lineElementClasses.series}-${seriesId}</code>.",
-      "nodeName": "the root element for a specified series"
+      "nodeName": "the root element for a specified series",
+      "deprecationInfo": "Use <code>[data-series=&quot;${seriesId}&quot;]</code> selector instead."
     }
   },
   "slotDescriptions": { "line": "The component that renders the line." }

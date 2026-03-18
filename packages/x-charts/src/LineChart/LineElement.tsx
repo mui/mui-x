@@ -13,10 +13,13 @@ import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 /**
- * @deprecated Use `LineClasses` from `./lineClasses` instead.
+ * @deprecated Use `LineClasses` instead.
  */
 export interface LineElementClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `lineClasses.line` instead.
+   */
   root: string;
   /** Styles applied to the root element when highlighted. */
   highlighted: string;
@@ -25,12 +28,13 @@ export interface LineElementClasses {
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }
 
 /**
- * @deprecated Use `LineClassKey` from `./lineClasses` instead.
+ * @deprecated Use `LineClassKey` instead.
  */
 export type LineElementClassKey = keyof LineElementClasses;
 
@@ -46,14 +50,14 @@ export interface LineElementOwnerState {
 }
 
 /**
- * @deprecated Use `getLineUtilityClass` from `./lineClasses` instead.
+ * @deprecated Use `getLineUtilityClass` instead.
  */
 export function getLineElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiLineElement', slot);
 }
 
 /**
- * @deprecated Use `lineClasses` from `./lineClasses` instead.
+ * @deprecated Use `lineClasses` instead.
  */
 export const lineElementClasses: LineElementClasses = generateUtilityClasses('MuiLineElement', [
   'root',
@@ -63,7 +67,7 @@ export const lineElementClasses: LineElementClasses = generateUtilityClasses('Mu
 ]);
 
 /**
- * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
+ * @deprecated Use `useUtilityClasses` instead.
  */
 const useDeprecatedUtilityClasses = (ownerState: LineElementOwnerState) => {
   const { classes, id, isFaded, isHighlighted } = ownerState;

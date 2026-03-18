@@ -40,13 +40,15 @@
       "key": "root",
       "className": "MuiAreaElement-root",
       "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     },
     {
       "key": "series",
       "className": "MuiAreaElement-series",
       "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${areaElementClasses.series}-${seriesId}`.",
-      "isGlobal": false
+      "isGlobal": false,
+      "isDeprecated": true
     }
   ],
   "muiName": "MuiAreaElement",
