@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { lineClasses } from '@mui/x-charts/LineChart';
+import { lineElementClasses } from '@mui/x-charts/LineChart';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -93,6 +93,7 @@ export default function DownloadDemo() {
           <MenuItem value="relative">Relative</MenuItem>
         </Select>
       </Stack>
+
       <div style={{ flex: 1, minHeight: 300 }}>
         <LineChartPro
           skipAnimation
@@ -128,7 +129,7 @@ export default function DownloadDemo() {
           ]}
           margin={{ left: 0, bottom: 0 }}
           sx={{
-            [`& .${lineClasses.line}`]: {
+            [`& .${lineElementClasses.root}`]: {
               strokeWidth: 1.5,
             },
             '& .MuiAreaElement-series-5': {

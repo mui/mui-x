@@ -10,7 +10,7 @@ export default function CSSCustomization() {
           strokeDasharray: '10 5',
           strokeWidth: 4,
         },
-        [`& .${lineClasses.line}[data-series="Germany"]`]: {
+        [`& .${lineClasses.area}[data-series="Germany"]`]: {
           fill: "url('#myGradient')",
           filter: 'none', // Remove the default filtering
         },

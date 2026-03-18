@@ -18,12 +18,13 @@ export default function BarGradient() {
     <BarChart
       {...settings}
       sx={{
-        [`& .${barClasses.series}[data-series="2"] .${barClasses.label}`]: {
+        [`& .${barClasses.series}[data-series="2"] .${barClasses.element}`]: {
           fill: 'url(#bar-gradient)',
         },
-        [`& .${barClasses.seriesLabels}[data-series="2"] .${barClasses.label}`]: {
-          fontWeight: 'bold',
-        },
+        [`& .${barClasses.seriesLabels}[data-series="2"] .${barClasses.label}`]:
+          {
+            fontWeight: 'bold',
+          },
       }}
     >
       <defs>

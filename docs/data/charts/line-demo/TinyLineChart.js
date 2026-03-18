@@ -21,7 +21,7 @@ export default function TinyLineChart() {
       xAxis={[{ scaleType: 'point', data: xLabels, position: 'none' }]}
       yAxis={[{ position: 'none' }]}
       sx={{
-        [`& .${lineClasses.mark}`]: {
+        [`& .${lineClasses.line}`]: {
           stroke: '#8884d8',
           strokeWidth: 2,
         },

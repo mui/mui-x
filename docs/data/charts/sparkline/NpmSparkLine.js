@@ -22,7 +22,7 @@ const settings = {
     }),
   },
   sx: {
-    [`& .${lineClasses.line}`]: { opacity: 0.2 },
+    [`& .${lineClasses.area}`]: { opacity: 0.2 },
     [`& .${lineClasses.line}`]: { strokeWidth: 3 },
     [`& .${chartsAxisHighlightClasses.root}`]: {
       stroke: 'rgb(137, 86, 255)',

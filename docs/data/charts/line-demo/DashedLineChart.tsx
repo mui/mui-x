@@ -25,19 +25,19 @@ export default function DashedLineChart() {
         xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
         sx={{
-          [`.${lineClasses.mark}, .${lineClasses.mark}`]: {
+          [`.${lineClasses.line}, .${lineClasses.mark}`]: {
             strokeWidth: 1,
           },
-          [`.${lineClasses.mark}[data-series="pvId"]`]: {
+          [`.${lineClasses.line}[data-series="pvId"]`]: {
             strokeDasharray: '5 5',
           },
-          [`.${lineClasses.mark}[data-series="uvId"]`]: {
+          [`.${lineClasses.line}[data-series="uvId"]`]: {
             strokeDasharray: '3 4 5 2',
           },
-          [`.${lineClasses.mark}:not([data-highlighted])`]: {
+          [`.${lineClasses.mark}:not([data-highlighted="true"])`]: {
             fill: '#fff',
           },
-          [`& [data-highlighted]`]: {
+          [`& [data-highlighted="true"]`]: {
             stroke: 'none',
           },
         }}
