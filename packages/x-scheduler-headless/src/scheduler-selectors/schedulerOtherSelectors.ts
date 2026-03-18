@@ -9,7 +9,7 @@ export const schedulerOtherSelectors = {
    */
   isEditedEvent: createSelector(
     (state: State) => state.editedEventId,
-    (editedEventId, eventId: SchedulerEventId) => editedEventId === eventId,
+    (editedEventId, eventId: SchedulerEventId | undefined) => editedEventId === eventId,
   ),
   visibleDate: createSelectorMemoized(
     (state: State) => state.adapter,

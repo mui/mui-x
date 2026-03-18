@@ -12,11 +12,11 @@ export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue 
 
   const started = useStore(store, schedulerOccurrenceSelectors.isStarted, start);
   const ended = useStore(store, schedulerOccurrenceSelectors.isEnded, end);
-  const editing = useStore(store, schedulerOtherSelectors.isEditedEvent, eventId!);
+  const editing = useStore(store, schedulerOtherSelectors.isEditedEvent, eventId);
 
   const state = React.useMemo(
-    () => ({ started, ended, editing: Boolean(eventId) && editing }),
-    [started, ended, editing, eventId],
+    () => ({ started, ended, editing }),
+    [started, ended, editing],
   );
 
   return { state };
