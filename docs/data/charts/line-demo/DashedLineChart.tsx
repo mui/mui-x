@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { LineChart, lineClasses, lineClasses } from '@mui/x-charts/LineChart';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 
 const margin = { right: 24 };
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
@@ -34,10 +34,10 @@ export default function DashedLineChart() {
           [`.${lineClasses.mark}[data-series="uvId"]`]: {
             strokeDasharray: '3 4 5 2',
           },
-          [`.${lineClasses.mark}:not(.${lineClasses.highlighted})`]: {
+          [`.${lineClasses.mark}:not([data-highlighted])`]: {
             fill: '#fff',
           },
-          [`& .${lineClasses.highlighted}`]: {
+          [`& [data-highlighted]`]: {
             stroke: 'none',
           },
         }}

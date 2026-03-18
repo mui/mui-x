@@ -82,13 +82,6 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const theme = useTheme();
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
-  const ownerState = {
-    seriesId,
-    classes: innerClasses,
-    isHighlighted,
-    isFaded,
-    skipAnimation,
-  };
   const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
 
   return (

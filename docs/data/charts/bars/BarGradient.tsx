@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  BarChart,
-  barClasses,
-  barClasses,
-  barClasses,
-} from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 
 const settings = {
   xAxis: [{ data: ['group A', 'group B', 'group C'] }],
