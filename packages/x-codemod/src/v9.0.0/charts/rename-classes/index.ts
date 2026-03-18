@@ -115,5 +115,15 @@ export const testConfig = () => ({
       actual: readFile(path.join(import.meta.dirname, 'actual-imports.spec.tsx')),
       expected: readFile(path.join(import.meta.dirname, 'expected-imports.spec.tsx')),
     },
+    {
+      name: 'rename radar-specific classes only when imported from RadarChart',
+      actual: readFile(path.join(import.meta.dirname, 'actual-radar-imports.spec.tsx')),
+      expected: readFile(path.join(import.meta.dirname, 'expected-radar-imports.spec.tsx')),
+    },
+    {
+      name: 'do not rename radar-specific classes when imported from root package',
+      actual: readFile(path.join(import.meta.dirname, 'actual-not-radar-imports.spec.tsx')),
+      expected: readFile(path.join(import.meta.dirname, 'expected-not-radar-imports.spec.tsx')),
+    },
   ],
 });
