@@ -89,8 +89,8 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
         j(elementPath)
           .find(j.JSXAttribute)
-          .filter((path) =>
-            ['fieldRef', 'unstableFieldRef'].includes(path.value.name.name as string),
+          .filter((attrPath) =>
+            ['fieldRef', 'unstableFieldRef'].includes(attrPath.value.name.name as string),
           )
           .forEach((attr) => {
             const value = attr.node.value;
