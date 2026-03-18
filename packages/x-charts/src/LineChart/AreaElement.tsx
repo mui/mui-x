@@ -6,7 +6,6 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
 import { type SeriesId } from '../models/seriesType/common';
@@ -135,7 +134,6 @@ function AreaElement(props: AreaElementProps) {
   } = props;
 
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
-  const interactionProps = useInteractionItemProps(identifier);
   const highlightState = useItemHighlightState(identifier);
   const isHighlighted = highlightState === 'highlighted';
   const isFaded = highlightState === 'faded';
@@ -156,7 +154,6 @@ function AreaElement(props: AreaElementProps) {
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
