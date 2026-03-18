@@ -36,6 +36,14 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           mark: 'seriesMark'
         },
       },
+      funnelSectionClasses: {
+        newClassName: 'funnelClasses',
+        properties: {
+          root: 'section',
+          filled: 'sectionFilled',
+          outlined: 'sectionOutlined',
+          label: 'sectionLabel',
+        },
       },
       sankeyPlotClasses: {
         newClassName: 'sankeyClasses',

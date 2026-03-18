@@ -14,6 +14,10 @@ const cls5 = radarClasses.seriesRoot;
 const cls6 = rspc.seriesRoot;
 const cls7 = radarClasses.seriesArea;
 const cls8 = radarClasses.seriesMark;
+import { funnelClasses } from '@mui/x-charts-pro';
+const cls17 = funnelClasses.section;
+const cls18 = funnelClasses.sectionFilled;
+
 import { sankeyClasses } from '@mui/x-charts-pro';
 const cls19 = sankeyClasses.root;
 const cls20 = sankeyClasses.node;

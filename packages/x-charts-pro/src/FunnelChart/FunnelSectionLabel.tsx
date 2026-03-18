@@ -3,11 +3,7 @@ import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { consumeSlots, type SeriesId } from '@mui/x-charts/internals';
 import clsx from 'clsx';
-import {
-  type FunnelSectionClasses,
-  useLabelUtilityClasses as useDeprecatedLabelUtilityClasses,
-} from './funnelSectionClasses';
-import { useUtilityClasses } from './funnelClasses';
+import { useUtilityClasses, type FunnelClasses } from './funnelClasses';
 
 export interface FunnelSectionLabelConfig {
   x: number;
@@ -21,7 +17,7 @@ export interface FunnelSectionLabelProps extends Omit<
   React.SVGProps<SVGTextElement>,
   'ref' | 'id'
 > {
-  classes?: Partial<FunnelSectionClasses>;
+  classes?: Partial<FunnelClasses>;
   label: FunnelSectionLabelConfig;
   /**
    * Indicate if the section is filled or outlined.
@@ -47,7 +43,7 @@ const FunnelSectionLabel = consumeSlots(
   'MuiFunnelSectionLabel',
   'funnelSectionLabel',
   {
-    classesResolver: useDeprecatedLabelUtilityClasses,
+    classesResolver: useUtilityClasses,
   },
   React.forwardRef(function FunnelSectionLabel(
     props: FunnelSectionLabelProps,
@@ -66,8 +62,6 @@ const FunnelSectionLabel = consumeSlots(
     } = props;
     const theme = useTheme();
 
-    const newClasses = useUtilityClasses({ variant });
-
     return (
       <FunnelSectionLabelText
         stroke="none"
@@ -81,7 +75,7 @@ const FunnelSectionLabel = consumeSlots(
         fontStyle={theme.typography.body2.fontStyle}
         fontVariant={theme.typography.body2.fontVariant}
         fill={(theme.vars || theme)?.palette?.text?.primary}
-        className={clsx(newClasses.sectionLabel, classes?.label)}
+        className={clsx(classes?.sectionLabel, className)}
         x={label.x}
         y={label.y}
         textAnchor={label.textAnchor ?? 'middle'}
