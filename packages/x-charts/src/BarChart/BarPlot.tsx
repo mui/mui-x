@@ -29,13 +29,10 @@ export interface BarPlotProps {
   skipAnimation?: boolean;
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
-  onItemClick?(
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    barItemIdentifier: BarItemIdentifier,
-  ): void;
+  onItemClick?(event: MouseEvent, barItemIdentifier: BarItemIdentifier): void;
   /**
    * Defines the border radius of the bar element.
    */
@@ -120,14 +117,7 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
         /* The batch renderer doesn't animate bars after the initial mount. Providing skipAnimation was causing an issue
          * where bars would animate again after a zoom interaction because skipAnimation would change from true to false. */
         skipAnimation={renderer === 'svg-batch' ? batchSkipAnimation : skipAnimation}
-        onItemClick={
-          /* `onItemClick` accepts a `MouseEvent` when the renderer is "svg-batch" and a `React.MouseEvent` otherwise,
-           * so we need this cast to prevent TypeScript from complaining. */
-          onItemClick as (
-            event: MouseEvent | React.MouseEvent<SVGElement, MouseEvent>,
-            barItemIdentifier: BarItemIdentifier,
-          ) => void
-        }
+        onItemClick={onItemClick}
         borderRadius={borderRadius}
         {...other}
       />
@@ -165,7 +155,7 @@ BarPlot.propTypes = {
   borderRadius: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,

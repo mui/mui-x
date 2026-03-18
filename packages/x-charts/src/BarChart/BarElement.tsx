@@ -5,7 +5,6 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
 import { useUtilityClasses as useDeprecatedUtilityClasses } from './barElementClasses';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
@@ -73,7 +72,6 @@ function BarElement(props: BarElementProps) {
     () => ({ type: 'bar' as const, seriesId, dataIndex }),
     [seriesId, dataIndex],
   );
-  const interactionProps = useInteractionItemProps(itemIdentifier);
   const highlightState = useItemHighlightState(itemIdentifier);
   const isHighlighted = highlightState === 'highlighted';
   const isFaded = highlightState === 'faded';
@@ -108,7 +106,6 @@ function BarElement(props: BarElementProps) {
     externalSlotProps: slotProps?.bar,
     externalForwardedProps: other,
     additionalProps: {
-      ...interactionProps,
       seriesId,
       dataIndex,
       color,

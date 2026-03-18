@@ -5,16 +5,14 @@ import { BarElement } from './BarElement';
 import { type MaskData, type ProcessedBarSeriesData } from './types';
 import { useUtilityClasses } from './barClasses';
 import { BarClipPath } from './BarClipPath';
+import { useRegisterItemClickHandlers } from './useRegisterItemClickHandlers';
 
 export interface IndividualBarPlotProps {
   completedData: ProcessedBarSeriesData[];
   masksData: MaskData[];
   borderRadius?: number;
   skipAnimation?: boolean;
-  onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    barItemIdentifier: BarItemIdentifier,
-  ) => void;
+  onItemClick?: (event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void;
   slotProps?: BarPlotSlotProps;
   slots?: BarPlotSlots;
 }
@@ -27,6 +25,8 @@ export function IndividualBarPlot({
   skipAnimation,
   ...other
 }: IndividualBarPlotProps) {
+  useRegisterItemClickHandlers(onItemClick);
+
   const classes = useUtilityClasses();
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
 
@@ -73,12 +73,6 @@ export function IndividualBarPlot({
                   width={width}
                   height={height}
                   {...other}
-                  onClick={
-                    onItemClick &&
-                    ((event) => {
-                      onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                    })
-                  }
                 />
               );
 

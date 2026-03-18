@@ -142,7 +142,7 @@ describe('BarChart - click event', () => {
   });
 
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', () => {
+    it('should not add cursor="pointer" to bar elements (clicks handled at container level)', () => {
       render(
         <BarChart
           {...config}
@@ -158,7 +158,7 @@ describe('BarChart - click event', () => {
 
       expect(
         Array.from(rectangles).map((rectangle) => rectangle.getAttribute('cursor')),
-      ).to.deep.equal(['pointer', 'pointer', 'pointer', 'pointer']);
+      ).to.deep.equal(['unset', 'unset', 'unset', 'unset']);
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
