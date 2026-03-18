@@ -228,9 +228,11 @@ describe('FunnelChart - click event', () => {
         </div>,
       );
 
-      const pathsBig = document.querySelectorAll<HTMLElement>('path.MuiFunnelSection-series-big');
+      const pathsBig = document.querySelectorAll<HTMLElement>(
+        `[data-series="big"] path.${funnelClasses.section}`,
+      );
       const pathsSmall = document.querySelectorAll<HTMLElement>(
-        'path.MuiFunnelSection-series-small',
+        `[data-series="small"] path.${funnelClasses.section}`,
       );
 
       await user.click(pathsBig[0]);
