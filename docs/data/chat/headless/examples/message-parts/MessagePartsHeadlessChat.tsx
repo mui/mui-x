@@ -170,7 +170,7 @@ function MessagePartsInner() {
   const { messages, sendMessage, isStreaming } = useChat();
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -187,8 +187,8 @@ function MessagePartsInner() {
             Assistant message parts
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Reasoning, sources, files, and data parts all flow through the same message
-            array.
+            Reasoning, sources, files, and data parts all flow through the same
+            message array.
           </Typography>
         </Box>
         <Button
@@ -259,9 +259,7 @@ function MessagePartsInner() {
                   <strong>{message.author?.displayName ?? message.role}</strong>
                   {message.status ? ` · ${message.status}` : ''}
                 </Typography>
-                <Box
-                  sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
-                >
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   {message.parts.map((part, index) => {
                     const rendered = renderPart(part, message, index);
                     if (!rendered) {

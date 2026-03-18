@@ -155,7 +155,7 @@ function RealtimeThreadSyncInner({
   };
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -193,9 +193,7 @@ function RealtimeThreadSyncInner({
             variant={
               conversation.id === activeConversationId ? 'filled' : 'outlined'
             }
-            color={
-              conversation.id === activeConversationId ? 'primary' : 'default'
-            }
+            color={conversation.id === activeConversationId ? 'primary' : 'default'}
             onClick={() => {
               void setActiveConversation(conversation.id);
             }}
@@ -305,8 +303,8 @@ function RealtimeThreadSyncInner({
             color="text.secondary"
             sx={{ textAlign: 'center', mt: 8 }}
           >
-            Select or create a conversation. Removing the active thread clears
-            the message view.
+            Select or create a conversation. Removing the active thread clears the
+            message view.
           </Typography>
         ) : (
           messages.map((message) => {

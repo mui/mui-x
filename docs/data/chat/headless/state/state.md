@@ -6,7 +6,7 @@ packageName: '@mui/x-chat-headless'
 
 # State and store
 
-<p class="description">Configure the runtime through <code>ChatProvider</code> props, choose between controlled and uncontrolled state models, and understand the normalized store internals.</p>
+<p class="description">Configure the runtime via <code>ChatProvider</code> props, choose controlled or uncontrolled state, and explore the normalized store.</p>
 
 `ChatProvider` is the single entry point for the headless runtime.
 It creates the chat store, wires the adapter, and makes hooks and selectors available to every descendant component.
@@ -83,7 +83,7 @@ const [activeId, setActiveId] = React.useState<string | undefined>('support');
   onActiveConversationChange={setActiveId}
 >
   <MyChat />
-</ChatProvider>
+</ChatProvider>;
 ```
 
 The runtime still streams, normalizes, and derives selectors — you just own the source of truth.
@@ -119,11 +119,11 @@ Runtime errors use the `ChatError` type:
 
 ```ts
 interface ChatError {
-  code: string;              // machine-readable error code
-  message: string;           // human-readable description
-  source: ChatErrorSource;   // where the error originated
-  recoverable: boolean;      // whether the runtime can continue
-  retryable?: boolean;       // whether the failed operation can be retried
+  code: string; // machine-readable error code
+  message: string; // human-readable description
+  source: ChatErrorSource; // where the error originated
+  recoverable: boolean; // whether the runtime can continue
+  retryable?: boolean; // whether the failed operation can be retried
   details?: Record<string, unknown>; // additional context
 }
 
@@ -155,12 +155,12 @@ Fires when a stream reaches a terminal state (success, abort, disconnect, or err
 
 ```ts
 interface ChatOnFinishPayload {
-  message: ChatMessage;     // the assistant message
-  messages: ChatMessage[];  // all messages after the stream
-  isAbort: boolean;         // user stopped the stream
-  isDisconnect: boolean;    // stream disconnected unexpectedly
-  isError: boolean;         // stream ended with an error
-  finishReason?: string;    // backend-provided reason
+  message: ChatMessage; // the assistant message
+  messages: ChatMessage[]; // all messages after the stream
+  isAbort: boolean; // user stopped the stream
+  isDisconnect: boolean; // stream disconnected unexpectedly
+  isError: boolean; // stream ended with an error
+  finishReason?: string; // backend-provided reason
 }
 ```
 
@@ -175,14 +175,12 @@ Register custom renderers for message part types through the `partRenderers` pro
 
 ```tsx
 const renderers: ChatPartRendererMap = {
-  'ticket-summary': ({ part }) => (
-    <div>Ticket: {part.ticketId}</div>
-  ),
+  'ticket-summary': ({ part }) => <div>Ticket: {part.ticketId}</div>,
 };
 
 <ChatProvider adapter={adapter} partRenderers={renderers}>
   <MyChat />
-</ChatProvider>
+</ChatProvider>;
 ```
 
 Registered renderers are available through `useChatPartRenderer(partType)` inside any descendant component.

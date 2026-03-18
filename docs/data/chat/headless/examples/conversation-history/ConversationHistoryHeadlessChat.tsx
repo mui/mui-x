@@ -114,10 +114,10 @@ const adapter: ChatAdapter<string> = {
     const key = cursor ?? 'initial';
     return pages[conversationId][key];
   },
-  async sendMessage({ conversationId, message: _message }) {
+  async sendMessage({ conversationId, message }) {
     return createChunkStream(
       createTextResponseChunks(
-        `reply-${conversationId}-${Date.now()}`,
+        `reply-${conversationId}-${message.id}`,
         `The active conversation is ${conversationId}. The adapter still streams new turns after history loads.`,
       ),
       { delayMs: 160 },
@@ -150,7 +150,7 @@ function ConversationHistoryInner() {
     'Loading conversations';
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -189,9 +189,7 @@ function ConversationHistoryInner() {
             variant={
               conversation.id === activeConversationId ? 'filled' : 'outlined'
             }
-            color={
-              conversation.id === activeConversationId ? 'primary' : 'default'
-            }
+            color={conversation.id === activeConversationId ? 'primary' : 'default'}
             onClick={() => {
               void setActiveConversation(conversation.id);
             }}

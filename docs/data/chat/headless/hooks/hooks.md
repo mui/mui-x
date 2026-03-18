@@ -61,11 +61,11 @@ When calling `sendMessage`, the input object has the following shape:
 
 ```ts
 interface UseChatSendMessageInput {
-  id?: string;                    // optional custom message ID
-  conversationId?: string;        // target conversation
-  parts: ChatMessagePart[];       // message content
+  id?: string; // optional custom message ID
+  conversationId?: string; // target conversation
+  parts: ChatMessagePart[]; // message content
   metadata?: ChatMessageMetadata; // app-specific metadata
-  author?: ChatUser;              // user identity
+  author?: ChatUser; // user identity
   createdAt?: ChatDateTimeString; // optional timestamp
   attachments?: ChatDraftAttachment[]; // file attachments
 }
@@ -80,7 +80,9 @@ function Thread() {
   return (
     <div>
       {messages.map((msg) => (
-        <div key={msg.id}>{msg.parts[0]?.type === 'text' ? msg.parts[0].text : null}</div>
+        <div key={msg.id}>
+          {msg.parts[0]?.type === 'text' ? msg.parts[0].text : null}
+        </div>
       ))}
       <button
         disabled={isStreaming}
@@ -133,7 +135,12 @@ function DraftArea() {
   const composer = useChatComposer();
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); composer.submit(); }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        composer.submit();
+      }}
+    >
       <input
         value={composer.value}
         onChange={(e) => composer.setValue(e.target.value)}
@@ -201,7 +208,9 @@ function MessageRow({ id }: { id: string }) {
   const message = useMessage(id);
   if (!message) return null;
 
-  return <div>{message.parts[0]?.type === 'text' ? message.parts[0].text : null}</div>;
+  return (
+    <div>{message.parts[0]?.type === 'text' ? message.parts[0].text : null}</div>
+  );
 }
 ```
 

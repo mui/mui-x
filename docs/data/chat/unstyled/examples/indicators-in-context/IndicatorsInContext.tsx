@@ -156,7 +156,9 @@ export default function IndicatorsInContext() {
             </div>
             <Indicators.TypingIndicator slots={{ root: DemoTypingIndicator }} />
           </div>
-          <Conversation.HeaderActions style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <Conversation.HeaderActions
+            style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}
+          >
             <DemoToolbarButton onClick={triggerTyping}>
               Show typing
             </DemoToolbarButton>

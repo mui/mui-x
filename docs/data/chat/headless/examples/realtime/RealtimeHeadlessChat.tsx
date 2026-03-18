@@ -69,7 +69,7 @@ function RealtimeInner({ emit }: { emit: (event: ChatRealtimeEvent) => void }) {
   const activeConversation = useConversation('support');
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -89,11 +89,7 @@ function RealtimeInner({ emit }: { emit: (event: ChatRealtimeEvent) => void }) {
       </Box>
 
       {/* Stats */}
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{ px: 2, pt: 2, flexWrap: 'wrap' }}
-      >
+      <Stack direction="row" spacing={1} sx={{ px: 2, pt: 2, flexWrap: 'wrap' }}>
         {[
           { label: 'Typing users', value: typingUserIds.join(', ') || 'none' },
           { label: 'Online', value: getOnlineNames(conversations) },

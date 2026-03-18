@@ -6,7 +6,7 @@ packageName: '@mui/x-chat-headless'
 
 # Headless adapters
 
-<p class="description">Write a <code>ChatAdapter</code> to connect the headless runtime to any backend — HTTP, SSE, WebSocket, or AI SDK — while keeping the UI completely decoupled from transport.</p>
+<p class="description">Write a <code>ChatAdapter</code> to connect the headless runtime to any backend — HTTP, SSE, WebSocket, or AI SDK.</p>
 
 The `ChatAdapter` interface is the transport boundary between the headless runtime and your backend.
 Only one method is required: `sendMessage()`.
@@ -44,20 +44,25 @@ That is enough for `ChatProvider` to handle streaming, message normalization, an
 ```ts
 interface ChatAdapter<Cursor = string> {
   // Required
-  sendMessage(input: ChatSendMessageInput):
-    Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope>>;
+  sendMessage(
+    input: ChatSendMessageInput,
+  ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope>>;
 
   // Optional
-  listConversations?(input?: ChatListConversationsInput<Cursor>):
-    Promise<ChatListConversationsResult<Cursor>>;
-  listMessages?(input: ChatListMessagesInput<Cursor>):
-    Promise<ChatListMessagesResult<Cursor>>;
-  reconnectToStream?(input: ChatReconnectToStreamInput):
-    Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope> | null>;
+  listConversations?(
+    input?: ChatListConversationsInput<Cursor>,
+  ): Promise<ChatListConversationsResult<Cursor>>;
+  listMessages?(
+    input: ChatListMessagesInput<Cursor>,
+  ): Promise<ChatListMessagesResult<Cursor>>;
+  reconnectToStream?(
+    input: ChatReconnectToStreamInput,
+  ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope> | null>;
   setTyping?(input: ChatSetTypingInput): Promise<void>;
   markRead?(input: ChatMarkReadInput): Promise<void>;
-  subscribe?(input: ChatSubscribeInput):
-    Promise<ChatSubscriptionCleanup> | ChatSubscriptionCleanup;
+  subscribe?(
+    input: ChatSubscribeInput,
+  ): Promise<ChatSubscriptionCleanup> | ChatSubscriptionCleanup;
   loadMore?(cursor?: Cursor): Promise<ChatLoadMoreResult<Cursor>>;
   addToolApprovalResponse?(input: ChatAddToolApproveResponseInput): Promise<void>;
   stop?(): void;
@@ -72,12 +77,12 @@ Sends a user message and returns a readable stream of response chunks.
 
 ```ts
 interface ChatSendMessageInput {
-  conversationId?: string;        // target conversation
-  message: ChatMessage;           // the user message being sent
-  messages: ChatMessage[];        // full thread context
+  conversationId?: string; // target conversation
+  message: ChatMessage; // the user message being sent
+  messages: ChatMessage[]; // full thread context
   attachments?: ChatDraftAttachment[]; // file attachments
   metadata?: Record<string, unknown>; // extra context
-  signal: AbortSignal;            // cancellation signal
+  signal: AbortSignal; // cancellation signal
 }
 ```
 
@@ -89,13 +94,13 @@ Loads the conversation list, typically called on mount.
 
 ```ts
 interface ChatListConversationsInput<Cursor> {
-  cursor?: Cursor;   // pagination cursor
-  query?: string;    // search filter
+  cursor?: Cursor; // pagination cursor
+  query?: string; // search filter
 }
 
 interface ChatListConversationsResult<Cursor> {
   conversations: ChatConversation[];
-  cursor?: Cursor;   // next page cursor
+  cursor?: Cursor; // next page cursor
   hasMore?: boolean; // whether more pages exist
 }
 ```
@@ -185,9 +190,9 @@ Sends a tool approval decision back to the backend.
 
 ```ts
 interface ChatAddToolApproveResponseInput {
-  id: string;        // the approval request ID
-  approved: boolean;  // whether the tool call is approved
-  reason?: string;    // optional reason for denial
+  id: string; // the approval request ID
+  approved: boolean; // whether the tool call is approved
+  reason?: string; // optional reason for denial
 }
 ```
 
@@ -208,7 +213,9 @@ interface MyCursor {
 }
 
 const adapter: ChatAdapter<MyCursor> = {
-  async sendMessage(input) { /* ... */ },
+  async sendMessage(input) {
+    /* ... */
+  },
   async listMessages({ cursor }) {
     // cursor is typed as MyCursor | undefined
     const page = cursor?.page ?? 1;
@@ -238,7 +245,11 @@ const adapter: ChatAdapter = {
         const id = `response-${message.id}`;
         controller.enqueue({ type: 'start', messageId: id });
         controller.enqueue({ type: 'text-start', id: 'text-1' });
-        controller.enqueue({ type: 'text-delta', id: 'text-1', delta: `You said: "${text}"` });
+        controller.enqueue({
+          type: 'text-delta',
+          id: 'text-1',
+          delta: `You said: "${text}"`,
+        });
         controller.enqueue({ type: 'text-end', id: 'text-1' });
         controller.enqueue({ type: 'finish', messageId: id });
         controller.close();
@@ -254,7 +265,9 @@ Implement `listConversations()` and `listMessages()` to load initial data:
 
 ```tsx
 const adapter: ChatAdapter = {
-  async sendMessage(input) { /* ... */ },
+  async sendMessage(input) {
+    /* ... */
+  },
 
   async listConversations() {
     const res = await fetch('/api/conversations');
@@ -263,7 +276,9 @@ const adapter: ChatAdapter = {
   },
 
   async listMessages({ conversationId, cursor }) {
-    const res = await fetch(`/api/conversations/${conversationId}/messages?cursor=${cursor ?? ''}`);
+    const res = await fetch(
+      `/api/conversations/${conversationId}/messages?cursor=${cursor ?? ''}`,
+    );
     const { messages, nextCursor, hasMore } = await res.json();
     return { messages, cursor: nextCursor, hasMore };
   },
@@ -276,7 +291,9 @@ Implement `subscribe()` for push updates:
 
 ```tsx
 const adapter: ChatAdapter = {
-  async sendMessage(input) { /* ... */ },
+  async sendMessage(input) {
+    /* ... */
+  },
 
   subscribe({ onEvent }) {
     const ws = new WebSocket('/api/ws');

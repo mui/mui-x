@@ -44,7 +44,7 @@ function ControlledStateChat({
   }, [messages]);
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -81,9 +81,7 @@ function ControlledStateChat({
             variant={
               conversation.id === activeConversationId ? 'filled' : 'outlined'
             }
-            color={
-              conversation.id === activeConversationId ? 'primary' : 'default'
-            }
+            color={conversation.id === activeConversationId ? 'primary' : 'default'}
             onClick={() => {
               void setActiveConversation(conversation.id);
             }}

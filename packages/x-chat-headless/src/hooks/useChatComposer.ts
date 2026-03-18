@@ -5,6 +5,7 @@ import { useChatRuntimeContext } from '../internals/useChatRuntimeContext';
 import { chatSelectors } from '../selectors';
 import type { ChatDraftAttachment } from '../types/chat-entities';
 import type { ChatInternalState } from '../types/chat-state';
+import type { ChatMessagePart } from '../types/chat-message-parts';
 import { createLocalId } from '../internals/createLocalId';
 import { useChatStore } from './useChatStore';
 
@@ -120,20 +121,46 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
   const submit = React.useCallback(async () => {
     const nextValue = store.state.composerValue;
     const nextAttachments = store.state.composerAttachments;
+    const hasText = nextValue.trim() !== '';
+    const hasAttachments = nextAttachments.length > 0;
 
-    if (store.state.isStreaming || store.state.composerIsComposing || nextValue.trim() === '') {
+    if (
+      store.state.isStreaming ||
+      store.state.composerIsComposing ||
+      (!hasText && !hasAttachments)
+    ) {
       return;
+    }
+
+    const parts: ChatMessagePart[] = [];
+
+    if (hasText) {
+      parts.push({ type: 'text', text: nextValue });
+    }
+
+    for (const attachment of nextAttachments) {
+      parts.push({
+        type: 'file',
+        mediaType: attachment.file.type || 'application/octet-stream',
+        url: attachment.previewUrl ?? URL.createObjectURL(attachment.file),
+        filename: attachment.file.name,
+      });
     }
 
     const messageId = createLocalId();
 
     await actions.sendMessage({
       id: messageId,
-      parts: [{ type: 'text', text: nextValue }],
+      parts,
       attachments: [...nextAttachments],
     });
 
     if (store.state.messagesById[messageId]?.status === 'sent') {
+      // Release ownership of preview URLs so clearComposer's cleanup effect
+      // does not revoke them — they are now referenced by the stored message.
+      for (const attachment of nextAttachments) {
+        ownedPreviewUrlsRef.current.delete(attachment.localId);
+      }
       store.clearComposer();
     }
   }, [actions, store]);

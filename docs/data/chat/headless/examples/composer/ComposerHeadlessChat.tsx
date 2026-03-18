@@ -18,10 +18,10 @@ import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
 
 const adapter: ChatAdapter = {
-  async sendMessage({ message: _message }) {
+  async sendMessage({ message }) {
     return createChunkStream(
       createTextResponseChunks(
-        `composer-${Date.now()}`,
+        `composer-assistant-${message.id}`,
         'The composer demo covers attachments, preview URLs, and IME-safe submit behavior.',
       ),
       { delayMs: 180 },
@@ -43,7 +43,7 @@ function ComposerInner() {
   }, [messages]);
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -123,14 +123,43 @@ function ComposerInner() {
                   >
                     {message.author?.displayName ?? message.role}
                   </Typography>
-                  {message.parts.map((part, index) => (
-                    <Typography
-                      variant="body2"
-                      key={`${message.id}-${part.type}-${index}`}
-                    >
-                      {part.type === 'text' ? part.text : null}
-                    </Typography>
-                  ))}
+                  {message.parts.map((part, index) => {
+                    if (part.type === 'text') {
+                      return (
+                        <Typography
+                          variant="body2"
+                          key={`${message.id}-${part.type}-${index}`}
+                        >
+                          {part.text}
+                        </Typography>
+                      );
+                    }
+                    if (part.type === 'file') {
+                      return part.mediaType.startsWith('image/') ? (
+                        <Box
+                          key={`${message.id}-${part.type}-${index}`}
+                          component="img"
+                          src={part.url}
+                          alt={part.filename ?? ''}
+                          sx={{
+                            maxWidth: '100%',
+                            maxHeight: 200,
+                            borderRadius: 1.5,
+                            mt: 0.5,
+                          }}
+                        />
+                      ) : (
+                        <Typography
+                          variant="body2"
+                          key={`${message.id}-${part.type}-${index}`}
+                          sx={{ mt: 0.5 }}
+                        >
+                          {part.filename ?? part.url}
+                        </Typography>
+                      );
+                    }
+                    return null;
+                  })}
                 </Paper>
               </Box>
             );
@@ -226,11 +255,7 @@ function ComposerInner() {
       />
 
       {/* Action buttons */}
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{ px: 2, py: 1.5 }}
-      >
+      <Stack direction="row" spacing={1} sx={{ px: 2, py: 1.5 }}>
         <Button
           size="small"
           variant="outlined"
@@ -250,7 +275,10 @@ function ComposerInner() {
         <Button
           size="small"
           variant="contained"
-          disabled={composer.isSubmitting || composer.value.trim() === ''}
+          disabled={
+            composer.isSubmitting ||
+            (composer.value.trim() === '' && composer.attachments.length === 0)
+          }
           onClick={() => void composer.submit()}
           endIcon={<SendRoundedIcon />}
         >

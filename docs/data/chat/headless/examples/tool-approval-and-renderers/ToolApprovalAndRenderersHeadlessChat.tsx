@@ -30,58 +30,66 @@ declare module '@mui/x-chat-headless/types' {
 
 function createToolAdapter() {
   let onEventRef: ((event: ChatRealtimeEvent) => void) | null = null;
+  let callCounter = 0;
+  let latestAssistantMessage: ChatMessage | null = null;
+
   const pollPart: Extract<ChatMessage['parts'][number], { type: 'poll' }> = {
     type: 'poll',
     question: 'Was this approval flow understandable?',
     options: ['Yes', 'Mostly', 'Needs work'],
   };
 
-  const baseAssistantMessage: ChatMessage = {
-    id: 'assistant-tool',
-    conversationId: 'tools',
-    role: 'assistant',
-    author: demoUsers.agent,
-    status: 'sent',
-    parts: [
-      {
-        type: 'text',
-        text: 'I can fetch the weather, but the tool call needs approval first.',
-      },
-      {
-        type: 'tool',
-        toolInvocation: {
-          toolCallId: 'weather-approval',
-          toolName: 'weather',
-          state: 'approval-requested',
-          input: { location: 'Prague' },
-        },
-      },
-    ],
-  };
-
   return {
     adapter: {
       async sendMessage() {
+        callCounter += 1;
+        const messageId = `assistant-tool-${callCounter}`;
+        const textId = `assistant-tool-text-${callCounter}`;
+        const toolCallId = `weather-approval-${callCounter}`;
+
+        latestAssistantMessage = {
+          id: messageId,
+          conversationId: 'tools',
+          role: 'assistant',
+          author: demoUsers.agent,
+          status: 'sent',
+          parts: [
+            {
+              type: 'text',
+              text: 'I can fetch the weather, but the tool call needs approval first.',
+            },
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId,
+                toolName: 'weather',
+                state: 'approval-requested',
+                input: { location: 'Prague' },
+              },
+            },
+          ],
+        };
+
         return createChunkStream(
           [
-            { type: 'start', messageId: 'assistant-tool' },
-            { type: 'text-start', id: 'assistant-tool-text' },
+            { type: 'start', messageId },
+            { type: 'text-start', id: textId },
             {
               type: 'text-delta',
-              id: 'assistant-tool-text',
+              id: textId,
               delta:
                 'I can fetch the weather, but the tool call needs approval first.',
             },
-            { type: 'text-end', id: 'assistant-tool-text' },
+            { type: 'text-end', id: textId },
             {
               type: 'tool-approval-request',
-              toolCallId: 'weather-approval',
+              toolCallId,
               toolName: 'weather',
               input: { location: 'Prague' },
             },
             {
               type: 'finish',
-              messageId: 'assistant-tool',
+              messageId,
               finishReason: 'tool-call',
             },
           ],
@@ -95,12 +103,17 @@ function createToolAdapter() {
         };
       },
       async addToolApprovalResponse({ id, approved, reason }) {
+        if (!latestAssistantMessage) {
+          return;
+        }
+
+        // 1. Update the tool invocation state on the current message
         onEventRef?.({
           type: 'message-updated',
           message: {
-            ...baseAssistantMessage,
+            ...latestAssistantMessage,
             parts: [
-              baseAssistantMessage.parts[0],
+              latestAssistantMessage.parts[0],
               {
                 type: 'tool',
                 toolInvocation: {
@@ -124,6 +137,25 @@ function createToolAdapter() {
             ],
           },
         });
+
+        // 2. Emit a follow-up assistant message after a short delay
+        setTimeout(() => {
+          const followUpText = approved
+            ? 'The weather in Prague is Cloudy with a temperature of 18 °C.'
+            : `The weather tool call was denied${reason ? `: ${reason}` : ''}. Let me know if you change your mind.`;
+
+          onEventRef?.({
+            type: 'message-added',
+            message: {
+              id: `assistant-followup-${id}`,
+              conversationId: 'tools',
+              role: 'assistant',
+              author: demoUsers.agent,
+              status: 'sent',
+              parts: [{ type: 'text', text: followUpText }],
+            },
+          });
+        }, 400);
       },
     } satisfies ChatAdapter,
   };
@@ -151,7 +183,7 @@ function ToolAndRendererInner() {
   const { messages, sendMessage, addToolApprovalResponse } = useChat();
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -168,8 +200,8 @@ function ToolAndRendererInner() {
             Tool approval and custom renderers
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Approve or deny the tool call, then render the custom poll part through the
-            registry.
+            Approve or deny the tool call, then render the custom poll part through
+            the registry.
           </Typography>
         </Box>
         <Button
@@ -206,10 +238,7 @@ function ToolAndRendererInner() {
               {message.parts.map((part, index) => {
                 if (part.type === 'text') {
                   return (
-                    <Typography
-                      variant="body2"
-                      key={`${message.id}-text-${index}`}
-                    >
+                    <Typography variant="body2" key={`${message.id}-text-${index}`}>
                       {part.text}
                     </Typography>
                   );
@@ -242,6 +271,12 @@ function ToolAndRendererInner() {
                         >
                           {JSON.stringify(part.toolInvocation.output, null, 2)}
                         </Paper>
+                      ) : null}
+                      {part.toolInvocation.state === 'output-denied' ? (
+                        <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                          {part.toolInvocation.approval?.reason ??
+                            'Tool execution was denied'}
+                        </Typography>
                       ) : null}
                       {part.toolInvocation.state === 'approval-requested' ? (
                         <Stack direction="row" spacing={1} sx={{ mt: 1 }}>

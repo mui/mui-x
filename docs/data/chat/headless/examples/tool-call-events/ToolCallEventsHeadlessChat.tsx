@@ -14,39 +14,43 @@ import { demoUsers } from '../shared/demoData';
 import { createChunkStream } from '../shared/demoUtils';
 
 const adapter: ChatAdapter = {
-  async sendMessage() {
+  async sendMessage({ message }) {
+    const messageId = `tool-events-assistant-${message.id}`;
+    const textId = `${messageId}-text`;
+    const toolCallId = `inventory-${message.id}`;
+
     return createChunkStream(
       [
-        { type: 'start', messageId: 'tool-events-assistant' },
-        { type: 'text-start', id: 'tool-events-text' },
+        { type: 'start', messageId },
+        { type: 'text-start', id: textId },
         {
           type: 'text-delta',
-          id: 'tool-events-text',
+          id: textId,
           delta:
             'I am checking inventory and will keep the tool state in sync as it changes.',
         },
-        { type: 'text-end', id: 'tool-events-text' },
+        { type: 'text-end', id: textId },
         {
           type: 'tool-input-start',
-          toolCallId: 'inventory-1',
+          toolCallId,
           toolName: 'inventory.search',
         },
         {
           type: 'tool-input-available',
-          toolCallId: 'inventory-1',
+          toolCallId,
           toolName: 'inventory.search',
           input: { sku: 'CHAIR-04', warehouse: 'prg-1' },
         },
         {
           type: 'tool-output-available',
-          toolCallId: 'inventory-1',
+          toolCallId,
           output: {
             sku: 'CHAIR-04',
             available: 14,
             warehouse: 'prg-1',
           },
         },
-        { type: 'finish', messageId: 'tool-events-assistant', finishReason: 'stop' },
+        { type: 'finish', messageId, finishReason: 'stop' },
       ],
       { delayMs: 220 },
     );
@@ -107,8 +111,8 @@ function ToolCallEventsInner() {
             color="text.secondary"
             sx={{ textAlign: 'center', mt: 8 }}
           >
-            Send a message to stream a tool invocation and watch the callback
-            log update.
+            Send a message to stream a tool invocation and watch the callback log
+            update.
           </Typography>
         ) : (
           messages.map((message) => {
@@ -181,7 +185,7 @@ export default function ToolCallEventsHeadlessChat() {
       defaultActiveConversationId="ops"
       onToolCall={handleToolCall}
     >
-      <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+      <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
         <ToolCallEventsInner />
 
         {/* Stats */}

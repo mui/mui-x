@@ -40,7 +40,9 @@ const adapter: ChatAdapter = {
     return { messages, cursor: nextCursor, hasMore };
   },
 
-  async sendMessage(input) { /* ... */ },
+  async sendMessage(input) {
+    /* ... */
+  },
 };
 ```
 
@@ -54,7 +56,7 @@ const { hasMoreHistory, loadMoreHistory } = useChat();
 
 <button disabled={!hasMoreHistory} onClick={() => loadMoreHistory()}>
   Load older messages
-</button>
+</button>;
 ```
 
 ### Switching conversations
@@ -65,7 +67,7 @@ The runtime automatically calls `listMessages()` for the new conversation:
 ```tsx
 const { setActiveConversation } = useChat();
 
-<ConversationList onSelect={(id) => setActiveConversation(id)} />
+<ConversationList onSelect={(id) => setActiveConversation(id)} />;
 ```
 
 {{"demo": "ConversationHistoryHeadlessChat.js"}}

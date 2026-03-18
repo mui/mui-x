@@ -6,21 +6,17 @@ import {
   useConversation,
   useConversations,
 } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import {
   cloneConversations,
   demoConversations,
   demoUsers,
 } from '../shared/demoData';
 import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
-import {
-  DemoButton,
-  DemoConversationList,
-  DemoFrame,
-  DemoHeading,
-  DemoMessageList,
-  DemoSplitLayout,
-  DemoStats,
-} from '../shared/DemoPrimitives';
 
 function createRealtimeAdapter() {
   let onEventRef = null;
@@ -71,94 +67,200 @@ function RealtimeInner({ emit }) {
   const activeConversation = useConversation('support');
 
   return (
-    <DemoFrame>
-      <DemoSplitLayout
-        sidebar={
-          <React.Fragment>
-            <h3 style={{ margin: 0 }}>Realtime subscription</h3>
-            <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              The provider owns the subscription. These buttons emit demo realtime
-              events.
-            </p>
-            <DemoConversationList
-              conversations={conversations}
-              activeConversationId="support"
-            />
-          </React.Fragment>
-        }
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
       >
-        <DemoHeading
-          title="Realtime presence and typing"
-          description="Typing, presence, and read-state changes come in through adapter.subscribe()."
-        />
-        <DemoStats
-          items={[
-            { label: 'Typing users', value: typingUserIds.join(', ') || 'none' },
-            { label: 'Online', value: getOnlineNames(conversations) },
-            { label: 'Unread', value: activeConversation?.unreadCount ?? 0 },
-            {
-              label: 'Read state',
-              value: activeConversation?.readState ?? 'unknown',
-            },
-          ]}
-        />
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <DemoButton
-            onClick={() =>
-              emit({
-                type: 'typing',
-                conversationId: 'support',
-                userId: demoUsers.alice.id,
-                isTyping: true,
-              })
-            }
+        <Typography variant="subtitle1" fontWeight={700}>
+          Realtime presence and typing
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Typing, presence, and read-state changes come in through
+          adapter.subscribe().
+        </Typography>
+      </Box>
+
+      {/* Stats */}
+      <Stack direction="row" spacing={1} sx={{ px: 2, pt: 2, flexWrap: 'wrap' }}>
+        {[
+          { label: 'Typing users', value: typingUserIds.join(', ') || 'none' },
+          { label: 'Online', value: getOnlineNames(conversations) },
+          { label: 'Unread', value: activeConversation?.unreadCount ?? 0 },
+          {
+            label: 'Read state',
+            value: activeConversation?.readState ?? 'unknown',
+          },
+        ].map((item) => (
+          <Paper
+            key={item.label}
+            variant="outlined"
+            sx={{ p: 1.5, minWidth: 100, flex: 1 }}
           >
-            Alice starts typing
-          </DemoButton>
-          <DemoButton
-            onClick={() =>
-              emit({
-                type: 'typing',
-                conversationId: 'support',
-                userId: demoUsers.alice.id,
-                isTyping: false,
-              })
-            }
+            <Typography
+              variant="caption"
+              sx={{
+                textTransform: 'uppercase',
+                color: 'text.secondary',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {item.label}
+            </Typography>
+            <Typography
+              variant="body1"
+              fontWeight={700}
+              sx={{
+                mt: 0.5,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {item.value}
+            </Typography>
+          </Paper>
+        ))}
+      </Stack>
+
+      {/* Action buttons */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ px: 2, pt: 2, flexWrap: 'wrap', rowGap: 1 }}
+      >
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() =>
+            emit({
+              type: 'typing',
+              conversationId: 'support',
+              userId: demoUsers.alice.id,
+              isTyping: true,
+            })
+          }
+        >
+          Alice starts typing
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() =>
+            emit({
+              type: 'typing',
+              conversationId: 'support',
+              userId: demoUsers.alice.id,
+              isTyping: false,
+            })
+          }
+        >
+          Alice stops typing
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() =>
+            emit({ type: 'presence', userId: demoUsers.sam.id, isOnline: true })
+          }
+        >
+          Sam comes online
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() =>
+            emit({ type: 'presence', userId: demoUsers.sam.id, isOnline: false })
+          }
+        >
+          Sam goes offline
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() =>
+            emit({
+              type: 'read',
+              conversationId: 'support',
+              userId: demoUsers.alice.id,
+            })
+          }
+        >
+          Mark thread as read
+        </Button>
+      </Stack>
+
+      {/* Messages */}
+      <Box
+        sx={{
+          p: 2,
+          minHeight: 200,
+          maxHeight: 320,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', mt: 6 }}
           >
-            Alice stops typing
-          </DemoButton>
-          <DemoButton
-            onClick={() =>
-              emit({ type: 'presence', userId: demoUsers.sam.id, isOnline: true })
-            }
-          >
-            Sam comes online
-          </DemoButton>
-          <DemoButton
-            onClick={() =>
-              emit({ type: 'presence', userId: demoUsers.sam.id, isOnline: false })
-            }
-          >
-            Sam goes offline
-          </DemoButton>
-          <DemoButton
-            onClick={() =>
-              emit({
-                type: 'read',
-                conversationId: 'support',
-                userId: demoUsers.alice.id,
-              })
-            }
-          >
-            Mark thread as read
-          </DemoButton>
-        </div>
-        <DemoMessageList
-          messages={messages}
-          emptyLabel="This example focuses on state reactions from realtime events."
-        />
-      </DemoSplitLayout>
-    </DemoFrame>
+            This example focuses on state reactions from realtime events.
+          </Typography>
+        ) : (
+          messages.map((message) => {
+            const isUser = message.role === 'user';
+            return (
+              <Box
+                key={message.id}
+                sx={{
+                  display: 'flex',
+                  justifyContent: isUser ? 'flex-end' : 'flex-start',
+                }}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    maxWidth: '80%',
+                    bgcolor: isUser ? 'primary.main' : 'grey.100',
+                    color: isUser ? 'primary.contrastText' : 'text.primary',
+                    borderRadius: 3,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: 700,
+                      color: isUser ? 'primary.contrastText' : 'text.secondary',
+                    }}
+                  >
+                    {message.author?.displayName ?? message.role}
+                  </Typography>
+                  {message.parts.map((part, index) => (
+                    <Typography
+                      variant="body2"
+                      key={`${message.id}-${part.type}-${index}`}
+                    >
+                      {part.type === 'text' ? part.text : null}
+                    </Typography>
+                  ))}
+                </Paper>
+              </Box>
+            );
+          })
+        )}
+      </Box>
+    </Paper>
   );
 }
 

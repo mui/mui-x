@@ -2,7 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { Chat } from '@mui/x-chat-unstyled';
-import { ChatConversations, ChatConversation, ChatConversationInput } from '@mui/x-chat';
+import {
+  ChatConversations,
+  ChatConversation,
+  ChatConversationInput,
+} from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/shared/demoUtils';
 import {
   inboxConversations,

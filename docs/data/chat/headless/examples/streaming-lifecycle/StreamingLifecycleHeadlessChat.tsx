@@ -23,20 +23,22 @@ function createStreamingAdapter(): ChatAdapter {
   return {
     async sendMessage({ message }) {
       const text = getMessageText(message);
+      const messageId = `streaming-assistant-${message.id}`;
+      const textId = `${messageId}-text`;
 
       if (text.includes('fail')) {
         return createChunkStream(
           [
-            { type: 'start', messageId: 'streaming-failure' },
-            { type: 'text-start', id: 'streaming-failure-text' },
+            { type: 'start', messageId },
+            { type: 'text-start', id: textId },
             {
               type: 'text-delta',
-              id: 'streaming-failure-text',
+              id: textId,
               delta: 'The stream will fail',
             },
             {
               type: 'text-delta',
-              id: 'streaming-failure-text',
+              id: textId,
               delta: ' after this chunk.',
             },
           ],
@@ -51,7 +53,7 @@ function createStreamingAdapter(): ChatAdapter {
       if (text.includes('slow')) {
         return createChunkStream(
           createTextResponseChunks(
-            'streaming-slow',
+            messageId,
             'This long-running stream is useful for demonstrating stopStreaming().',
           ),
           { delayMs: 420 },
@@ -60,25 +62,25 @@ function createStreamingAdapter(): ChatAdapter {
 
       return createChunkStream(
         [
-          { type: 'start', messageId: 'streaming-success' },
-          { type: 'text-start', id: 'streaming-success-text' },
+          { type: 'start', messageId },
+          { type: 'text-start', id: textId },
           {
             type: 'text-delta',
-            id: 'streaming-success-text',
+            id: textId,
             delta: 'Streaming updates are visible',
           },
           {
             type: 'text-delta',
-            id: 'streaming-success-text',
+            id: textId,
             delta: ' before the final chunk arrives.',
           },
           {
             type: 'data-insight',
-            id: 'data-1',
+            id: `${messageId}-data`,
             data: { source: 'demo', confidence: 0.92 },
           },
-          { type: 'text-end', id: 'streaming-success-text' },
-          { type: 'finish', messageId: 'streaming-success', finishReason: 'stop' },
+          { type: 'text-end', id: textId },
+          { type: 'finish', messageId, finishReason: 'stop' },
         ],
         { delayMs: 220 },
       );
@@ -140,7 +142,7 @@ function StreamingLifecycleWithLogs() {
   }, [appendLog]);
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -295,19 +297,11 @@ function StreamingLifecycleWithLogs() {
       </Stack>
 
       {/* Scenario buttons */}
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{ px: 2, pb: 2, flexWrap: 'wrap' }}
-      >
+      <Stack direction="row" spacing={1} sx={{ px: 2, pb: 2, flexWrap: 'wrap' }}>
         <Button size="small" variant="outlined" onClick={() => setDraft('success')}>
           Success
         </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          onClick={() => setDraft('slow')}
-        >
+        <Button size="small" variant="outlined" onClick={() => setDraft('slow')}>
           Slow stream
         </Button>
         <Button size="small" variant="outlined" onClick={() => setDraft('fail')}>

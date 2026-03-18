@@ -21,7 +21,9 @@ When `ChatProvider` mounts and the adapter implements `subscribe()`, the runtime
 
 ```ts
 const adapter: ChatAdapter = {
-  async sendMessage(input) { /* ... */ },
+  async sendMessage(input) {
+    /* ... */
+  },
 
   subscribe({ onEvent }) {
     const ws = new WebSocket('/api/realtime');

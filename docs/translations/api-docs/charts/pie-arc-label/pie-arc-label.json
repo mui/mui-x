@@ -5,20 +5,17 @@
     "animate": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "animation is not skipped",
-      "deprecationInfo": "Use the <code>animate</code> class from <code>./pieClasses</code> instead."
+      "conditions": "animation is not skipped"
     },
     "faded": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "faded",
-      "deprecationInfo": "Use <code>[data-faded]</code> selector instead."
+      "conditions": "faded"
     },
     "highlighted": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "highlighted",
-      "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
+      "conditions": "highlighted"
     },
     "root": { "description": "Styles applied to the root element." },
     "series": {

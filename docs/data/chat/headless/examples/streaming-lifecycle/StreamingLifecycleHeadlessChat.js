@@ -1,39 +1,39 @@
 import * as React from 'react';
 import { ChatProvider, useChat } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { demoUsers } from '../shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
   getMessageText,
 } from '../shared/demoUtils';
-import {
-  DemoButton,
-  DemoCodeBlock,
-  DemoFrame,
-  DemoHeading,
-  DemoInput,
-  DemoMessageList,
-  DemoSplitLayout,
-} from '../shared/DemoPrimitives';
 
 function createStreamingAdapter() {
   return {
     async sendMessage({ message }) {
       const text = getMessageText(message);
+      const messageId = `streaming-assistant-${message.id}`;
+      const textId = `${messageId}-text`;
 
       if (text.includes('fail')) {
         return createChunkStream(
           [
-            { type: 'start', messageId: 'streaming-failure' },
-            { type: 'text-start', id: 'streaming-failure-text' },
+            { type: 'start', messageId },
+            { type: 'text-start', id: textId },
             {
               type: 'text-delta',
-              id: 'streaming-failure-text',
+              id: textId,
               delta: 'The stream will fail',
             },
             {
               type: 'text-delta',
-              id: 'streaming-failure-text',
+              id: textId,
               delta: ' after this chunk.',
             },
           ],
@@ -48,7 +48,7 @@ function createStreamingAdapter() {
       if (text.includes('slow')) {
         return createChunkStream(
           createTextResponseChunks(
-            'streaming-slow',
+            messageId,
             'This long-running stream is useful for demonstrating stopStreaming().',
           ),
           { delayMs: 420 },
@@ -57,25 +57,25 @@ function createStreamingAdapter() {
 
       return createChunkStream(
         [
-          { type: 'start', messageId: 'streaming-success' },
-          { type: 'text-start', id: 'streaming-success-text' },
+          { type: 'start', messageId },
+          { type: 'text-start', id: textId },
           {
             type: 'text-delta',
-            id: 'streaming-success-text',
+            id: textId,
             delta: 'Streaming updates are visible',
           },
           {
             type: 'text-delta',
-            id: 'streaming-success-text',
+            id: textId,
             delta: ' before the final chunk arrives.',
           },
           {
             type: 'data-insight',
-            id: 'data-1',
+            id: `${messageId}-data`,
             data: { source: 'demo', confidence: 0.92 },
           },
-          { type: 'text-end', id: 'streaming-success-text' },
-          { type: 'finish', messageId: 'streaming-success', finishReason: 'stop' },
+          { type: 'text-end', id: textId },
+          { type: 'finish', messageId, finishReason: 'stop' },
         ],
         { delayMs: 220 },
       );
@@ -137,66 +137,188 @@ function StreamingLifecycleWithLogs() {
   }, [appendLog]);
 
   return (
-    <DemoFrame>
-      <DemoSplitLayout
-        sidebar={
-          <React.Fragment>
-            <h3 style={{ margin: 0 }}>Lifecycle controls</h3>
-            <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              Use <code>success</code>, <code>slow</code>, or <code>fail</code> to
-              drive different flows.
-            </p>
-            <DemoCodeBlock>
-              {events.join('\n') || 'Callback events will appear here.'}
-            </DemoCodeBlock>
-          </React.Fragment>
-        }
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
       >
-        <DemoHeading
-          title="Streaming lifecycle"
-          description="This recipe shows callbacks, cancellation, errors, and retry in one headless UI."
-          actions={
-            <DemoButton disabled={!isStreaming} onClick={() => stopStreaming()}>
-              Stop stream
-            </DemoButton>
-          }
-        />
-        <DemoMessageList messages={messages} />
-        <div style={{ display: 'flex', gap: 8 }}>
-          <DemoInput
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-          />
-          <DemoButton
-            disabled={isStreaming || draft.trim() === ''}
-            onClick={() =>
+        <Typography variant="subtitle1" fontWeight={700}>
+          Streaming lifecycle
+        </Typography>
+        <Button
+          size="small"
+          variant="outlined"
+          disabled={!isStreaming}
+          onClick={() => stopStreaming()}
+        >
+          Stop stream
+        </Button>
+      </Box>
+
+      {/* Event log */}
+      <Box sx={{ px: 2, pt: 2 }}>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 1.5,
+            bgcolor: 'grey.900',
+            color: 'grey.100',
+            fontFamily: 'monospace',
+            fontSize: 12,
+            maxHeight: 160,
+            overflow: 'auto',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          }}
+        >
+          {events.join('\n') || 'Callback events will appear here.'}
+        </Paper>
+      </Box>
+
+      {/* Messages */}
+      <Box
+        sx={{
+          p: 2,
+          minHeight: 200,
+          maxHeight: 320,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', mt: 6 }}
+          >
+            No messages yet.
+          </Typography>
+        ) : (
+          messages.map((message) => {
+            const isUser = message.role === 'user';
+            return (
+              <Box
+                key={message.id}
+                sx={{
+                  display: 'flex',
+                  justifyContent: isUser ? 'flex-end' : 'flex-start',
+                }}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    maxWidth: '80%',
+                    bgcolor: isUser ? 'primary.main' : 'grey.100',
+                    color: isUser ? 'primary.contrastText' : 'text.primary',
+                    borderRadius: 3,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: 700,
+                      color: isUser ? 'primary.contrastText' : 'text.secondary',
+                    }}
+                  >
+                    {message.author?.displayName ?? message.role}
+                    {message.status ? ` · ${message.status}` : null}
+                  </Typography>
+                  {message.parts.map((part, index) => (
+                    <Typography
+                      variant="body2"
+                      key={`${message.id}-${part.type}-${index}`}
+                    >
+                      {part.type === 'text' ? part.text : null}
+                      {part.type.startsWith('data-') && 'data' in part
+                        ? JSON.stringify(part.data, null, 2)
+                        : null}
+                    </Typography>
+                  ))}
+                </Paper>
+              </Box>
+            );
+          })
+        )}
+      </Box>
+
+      {/* Input */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ px: 2, pb: 2, borderTop: 1, borderColor: 'divider', pt: 2 }}
+      >
+        <TextField
+          fullWidth
+          size="small"
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+              event.preventDefault();
               void sendMessage({
                 conversationId: 'support',
                 author: demoUsers.alice,
                 parts: [{ type: 'text', text: draft }],
-              })
+              });
             }
-          >
-            Send
-          </DemoButton>
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <DemoButton onClick={() => setDraft('success')}>Success</DemoButton>
-          <DemoButton onClick={() => setDraft('slow')}>Slow stream</DemoButton>
-          <DemoButton onClick={() => setDraft('fail')}>Failure</DemoButton>
-          {messages
-            .filter(
-              (message) =>
-                message.role === 'user' &&
-                (message.status === 'error' || message.status === 'cancelled'),
-            )
-            .map((message) => (
-              <DemoButton key={message.id} onClick={() => void retry(message.id)}>
-                Retry
-              </DemoButton>
-            ))}
-        </div>
-      </DemoSplitLayout>
-    </DemoFrame>
+          }}
+        />
+        <Button
+          variant="contained"
+          disabled={isStreaming || draft.trim() === ''}
+          onClick={() =>
+            void sendMessage({
+              conversationId: 'support',
+              author: demoUsers.alice,
+              parts: [{ type: 'text', text: draft }],
+            })
+          }
+          sx={{ minWidth: 'auto', px: 2 }}
+        >
+          <SendRoundedIcon fontSize="small" />
+        </Button>
+      </Stack>
+
+      {/* Scenario buttons */}
+      <Stack direction="row" spacing={1} sx={{ px: 2, pb: 2, flexWrap: 'wrap' }}>
+        <Button size="small" variant="outlined" onClick={() => setDraft('success')}>
+          Success
+        </Button>
+        <Button size="small" variant="outlined" onClick={() => setDraft('slow')}>
+          Slow stream
+        </Button>
+        <Button size="small" variant="outlined" onClick={() => setDraft('fail')}>
+          Failure
+        </Button>
+        {messages
+          .filter(
+            (message) =>
+              message.role === 'user' &&
+              (message.status === 'error' || message.status === 'cancelled'),
+          )
+          .map((message) => (
+            <Button
+              key={message.id}
+              size="small"
+              variant="outlined"
+              onClick={() => void retry(message.id)}
+            >
+              Retry
+            </Button>
+          ))}
+      </Stack>
+    </Paper>
   );
 }

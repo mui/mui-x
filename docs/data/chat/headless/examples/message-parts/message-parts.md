@@ -26,11 +26,24 @@ message.parts.map((part, index) => {
     case 'text':
       return <p key={index}>{part.text}</p>;
     case 'reasoning':
-      return <details key={index}><summary>Thinking</summary>{part.text}</details>;
+      return (
+        <details key={index}>
+          <summary>Thinking</summary>
+          {part.text}
+        </details>
+      );
     case 'file':
-      return <a key={index} href={part.url}>{part.filename ?? 'File'}</a>;
+      return (
+        <a key={index} href={part.url}>
+          {part.filename ?? 'File'}
+        </a>
+      );
     case 'source-url':
-      return <a key={index} href={part.url}>{part.title ?? part.url}</a>;
+      return (
+        <a key={index} href={part.url}>
+          {part.title ?? part.url}
+        </a>
+      );
     case 'source-document':
       return <cite key={index}>{part.title}</cite>;
     case 'tool':

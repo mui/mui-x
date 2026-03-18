@@ -82,7 +82,11 @@ That means East Asian IME flows stay intact without requiring extra app-level bo
 ### Input example
 
 ```tsx
-<ConversationInput.TextArea aria-label="Message" minRows={1} placeholder="Reply in thread" />
+<ConversationInput.TextArea
+  aria-label="Message"
+  minRows={1}
+  placeholder="Reply in thread"
+/>
 ```
 
 If you replace the root slot, preserve the textarea-like behavior unless you are intentionally building a different draft surface.

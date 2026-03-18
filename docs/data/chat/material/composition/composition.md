@@ -33,9 +33,9 @@ When you do not need a conversations sidebar, compose `ChatConversation` and `Ch
 
 ## Component relationships
 
-| Styled component    | Unstyled equivalent                | Headless dependency                |
-| :------------------ | :--------------------------------- | :--------------------------------- |
-| `ChatConversations` | `ConversationList.Root`            | `useConversations`, `useChatStore` |
+| Styled component        | Unstyled equivalent                      | Headless dependency                |
+| :---------------------- | :--------------------------------------- | :--------------------------------- |
+| `ChatConversations`     | `ConversationList.Root`                  | `useConversations`, `useChatStore` |
 | `ChatConversation`      | `Conversation.Root` + `MessageList.Root` | `useMessageIds`, `useMessage`      |
 | `ChatConversationInput` | `ConversationInput.Root`                 | `useChatComposer`                  |
 

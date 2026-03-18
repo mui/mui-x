@@ -19,12 +19,12 @@ All four public state models are owned by the parent component while the runtime
 
 Each model has a controlled prop, a change callback, and an uncontrolled default:
 
-| Model                | Controlled prop          | Change callback               |
-| :------------------- | :----------------------- | :---------------------------- |
-| Messages             | `messages`               | `onMessagesChange`            |
-| Conversations        | `conversations`          | `onConversationsChange`       |
-| Active conversation  | `activeConversationId`   | `onActiveConversationChange`  |
-| Composer value       | `composerValue`          | `onComposerValueChange`       |
+| Model               | Controlled prop        | Change callback              |
+| :------------------ | :--------------------- | :--------------------------- |
+| Messages            | `messages`             | `onMessagesChange`           |
+| Conversations       | `conversations`        | `onConversationsChange`      |
+| Active conversation | `activeConversationId` | `onActiveConversationChange` |
+| Composer value      | `composerValue`        | `onComposerValueChange`      |
 
 ### Wiring controlled state
 

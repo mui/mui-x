@@ -123,7 +123,16 @@ export const ToolPartComponent_ = React.forwardRef(function ToolPartRenderer(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { addToolApprovalResponse } = useChat();
-  const { className, index: _index, message, onToolCall: _onToolCall, part, slots, slotProps, ...other } = props;
+  const {
+    className,
+    index: _index,
+    message,
+    onToolCall: _onToolCall,
+    part,
+    slots,
+    slotProps,
+    ...other
+  } = props;
   void _index;
   void _onToolCall;
   const [pendingApproval, setPendingApproval] = React.useState(false);

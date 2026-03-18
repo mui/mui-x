@@ -173,21 +173,25 @@ const partRenderers: ChatPartRendererMap = {
 };
 
 const adapter: ChatAdapter = {
-  async sendMessage() {
+  async sendMessage({ message }) {
+    const messageId = `typed-response-${message.id}`;
+    const textId = `${messageId}-text`;
+    const toolCallId = `ticket-lookup-${message.id}`;
+
     return createChunkStream(
       [
-        { type: 'start', messageId: 'typed-response' },
-        { type: 'text-start', id: 'typed-response-text' },
+        { type: 'start', messageId },
+        { type: 'text-start', id: textId },
         {
           type: 'text-delta',
-          id: 'typed-response-text',
+          id: textId,
           delta:
             'The runtime is now streaming typed tool, metadata, and data-part updates.',
         },
-        { type: 'text-end', id: 'typed-response-text' },
+        { type: 'text-end', id: textId },
         {
           type: 'tool-input-available',
-          toolCallId: 'ticket-lookup-1',
+          toolCallId,
           toolName: 'ticket.lookup',
           input: {
             ticketId: 'CHAT-128',
@@ -195,7 +199,7 @@ const adapter: ChatAdapter = {
         },
         {
           type: 'tool-output-available',
-          toolCallId: 'ticket-lookup-1',
+          toolCallId,
           output: {
             status: 'blocked',
             owner: 'Sam',
@@ -204,7 +208,7 @@ const adapter: ChatAdapter = {
         },
         {
           type: 'data-ticket-status',
-          id: 'ticket-status-1',
+          id: `${messageId}-ticket-status`,
           data: {
             ticketId: 'CHAT-128',
             status: 'blocked',
@@ -218,7 +222,7 @@ const adapter: ChatAdapter = {
             confidence: 'high',
           },
         },
-        { type: 'finish', messageId: 'typed-response', finishReason: 'stop' },
+        { type: 'finish', messageId, finishReason: 'stop' },
       ],
       { delayMs: 180 },
     );
@@ -315,9 +319,8 @@ function renderPart(
         ) : null}
         {ticketLookup?.output ? (
           <Typography variant="body2" sx={{ mt: 0.5 }}>
-            {ticketLookup.output.status} &middot; owner{' '}
-            {ticketLookup.output.owner} &middot;{' '}
-            {ticketLookup.output.priority} priority
+            {ticketLookup.output.status} &middot; owner {ticketLookup.output.owner}{' '}
+            &middot; {ticketLookup.output.priority} priority
           </Typography>
         ) : null}
       </Paper>
@@ -331,8 +334,7 @@ function renderPart(
           data-ticket-status
         </Typography>
         <Typography variant="body2" sx={{ mt: 0.5 }}>
-          {part.data.ticketId} is{' '}
-          <Chip size="small" label={part.data.status} />
+          {part.data.ticketId} is <Chip size="small" label={part.data.status} />
         </Typography>
         <Typography variant="caption" color="text.secondary">
           Last updated {part.data.lastUpdated}
@@ -353,7 +355,7 @@ function TypeAugmentationInner() {
   const conversation = useConversation('triage');
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -471,9 +473,7 @@ function TypeAugmentationInner() {
                     variant="caption"
                     sx={{
                       fontWeight: 700,
-                      color: isUser
-                        ? 'primary.contrastText'
-                        : 'text.secondary',
+                      color: isUser ? 'primary.contrastText' : 'text.secondary',
                     }}
                   >
                     {message.author?.displayName ?? message.role}

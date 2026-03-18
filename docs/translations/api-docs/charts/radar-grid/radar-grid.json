@@ -15,18 +15,15 @@
   "classDescriptions": {
     "divider": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every divider element",
-      "deprecationInfo": "Use <code>radarClasses.gridDivider</code> instead."
+      "nodeName": "every divider element"
     },
     "radial": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every radial line element",
-      "deprecationInfo": "Use <code>radarClasses.gridRadial</code> instead."
+      "nodeName": "every radial line element"
     },
     "stripe": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every stripe element",
-      "deprecationInfo": "Use <code>radarClasses.gridStripe</code> instead."
+      "nodeName": "every stripe element"
     }
   }
 }

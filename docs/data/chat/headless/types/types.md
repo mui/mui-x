@@ -6,7 +6,7 @@ packageName: '@mui/x-chat-headless'
 
 # Type augmentation
 
-<p class="description">Extend the headless type system with app-specific metadata, typed tool definitions, typed data parts, and custom message parts using TypeScript module augmentation.</p>
+<p class="description">Extend the type system with app-specific metadata, typed tools, data parts, and custom message parts via module augmentation.</p>
 
 The headless package uses [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) instead of generic props for type-safe customization.
 This means you declare your app-specific types once, and they flow through the entire stack — messages, stream chunks, selectors, hooks, and renderers.

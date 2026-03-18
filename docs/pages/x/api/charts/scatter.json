@@ -21,26 +21,14 @@
       "name": "marker",
       "description": "The component that renders the marker for a scatter point.",
       "default": "ScatterMarker",
-      "class": "MuiScatter-marker"
+      "class": null
     }
   ],
   "classes": [
     {
-      "key": "focusedMark",
-      "className": "MuiScatter-focusedMark",
-      "description": "Styles applied to the focused scatter mark element.",
-      "isGlobal": false
-    },
-    {
       "key": "root",
       "className": "MuiScatter-root",
-      "description": "Styles applied to the scatter plot element.",
-      "isGlobal": false
-    },
-    {
-      "key": "series",
-      "className": "MuiScatter-series",
-      "description": "Styles applied to the group surrounding a series' scatter elements.",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     }
   ],

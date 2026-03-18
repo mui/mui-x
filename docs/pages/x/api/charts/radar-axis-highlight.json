@@ -12,22 +12,19 @@
       "key": "dot",
       "className": "MuiRadarAxisHighlight-dot",
       "description": "Styles applied to every highlight dot.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "line",
       "className": "MuiRadarAxisHighlight-line",
       "description": "Styles applied to the highlighted axis line element.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiRadarAxisHighlight-root",
       "description": "Styles applied to the root element.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     }
   ],
   "muiName": "MuiRadarAxisHighlight",

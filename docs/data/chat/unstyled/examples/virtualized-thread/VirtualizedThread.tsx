@@ -133,7 +133,9 @@ export default function VirtualizedThread() {
               }}
             />
           </div>
-          <Conversation.HeaderActions style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <Conversation.HeaderActions
+            style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}
+          >
             <DemoToolbarButton
               disabled={history.length === 0}
               onClick={prependHistory}

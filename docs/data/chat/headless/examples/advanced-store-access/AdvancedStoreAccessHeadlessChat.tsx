@@ -46,15 +46,15 @@ function AdvancedMetrics() {
   const composer = useChatComposer();
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
         <Typography variant="subtitle1" fontWeight={700}>
           Store escape hatch
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          The runtime stays headless, but advanced consumers can subscribe to exactly the
-          slices they need.
+          The runtime stays headless, but advanced consumers can subscribe to exactly
+          the slices they need.
         </Typography>
       </Box>
 
@@ -179,7 +179,10 @@ function AdvancedMetrics() {
                   {message.status ? ` · ${message.status}` : ''}
                 </Typography>
                 {message.parts.map((part, index) => (
-                  <Typography variant="body2" key={`${message.id}-${part.type}-${index}`}>
+                  <Typography
+                    variant="body2"
+                    key={`${message.id}-${part.type}-${index}`}
+                  >
                     {'text' in part ? part.text : JSON.stringify(part)}
                   </Typography>
                 ))}

@@ -12,22 +12,19 @@
       "key": "animate",
       "className": "MuiPieArcLabel-animate",
       "description": "Styles applied to the root element when animation is not skipped.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "faded",
       "className": "MuiPieArcLabel-faded",
       "description": "Styles applied to the root element when faded.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "highlighted",
       "className": "MuiPieArcLabel-highlighted",
       "description": "Styles applied to the root element when highlighted.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "root",

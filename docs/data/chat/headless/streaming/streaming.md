@@ -111,8 +111,8 @@ For deduplication and ordering, wrap chunks in a `ChatStreamEnvelope`:
 
 ```ts
 interface ChatStreamEnvelope {
-  eventId?: string;    // unique event identifier for deduplication
-  sequence?: number;   // monotonic ordering number
+  eventId?: string; // unique event identifier for deduplication
+  sequence?: number; // monotonic ordering number
   chunk: ChatMessageChunk;
 }
 ```
@@ -169,7 +169,10 @@ If the adapter's `sendMessage()` throws, the runtime records a send error and su
 When writing an adapter, you can construct a `ReadableStream` from an array of chunks:
 
 ```tsx
-function createStream(chunks: ChatMessageChunk[], delayMs = 0): ReadableStream<ChatMessageChunk> {
+function createStream(
+  chunks: ChatMessageChunk[],
+  delayMs = 0,
+): ReadableStream<ChatMessageChunk> {
   return new ReadableStream({
     async start(controller) {
       for (const chunk of chunks) {
@@ -187,7 +190,10 @@ function createStream(chunks: ChatMessageChunk[], delayMs = 0): ReadableStream<C
 Or convert a server-sent event stream into chunks:
 
 ```tsx
-async function fromSSE(url: string, signal: AbortSignal): Promise<ReadableStream<ChatMessageChunk>> {
+async function fromSSE(
+  url: string,
+  signal: AbortSignal,
+): Promise<ReadableStream<ChatMessageChunk>> {
   const response = await fetch(url, { signal });
   const reader = response.body!.getReader();
   const decoder = new TextDecoder();
@@ -195,7 +201,10 @@ async function fromSSE(url: string, signal: AbortSignal): Promise<ReadableStream
   return new ReadableStream({
     async pull(controller) {
       const { done, value } = await reader.read();
-      if (done) { controller.close(); return; }
+      if (done) {
+        controller.close();
+        return;
+      }
       const chunk = JSON.parse(decoder.decode(value));
       controller.enqueue(chunk);
     },

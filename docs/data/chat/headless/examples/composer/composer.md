@@ -28,18 +28,18 @@ This recipe uses `useChatComposer()` directly with plain DOM controls to demonst
 const composer = useChatComposer();
 
 // Draft text
-composer.value;              // current text
-composer.setValue('hello');   // update text
+composer.value; // current text
+composer.setValue('hello'); // update text
 
 // Attachments
-composer.attachments;                    // ChatDraftAttachment[]
-composer.addAttachment(file);            // add a file
-composer.removeAttachment(localId);      // remove by local ID
+composer.attachments; // ChatDraftAttachment[]
+composer.addAttachment(file); // add a file
+composer.removeAttachment(localId); // remove by local ID
 
 // Actions
-composer.submit();           // send the message
-composer.clear();            // clear text and attachments
-composer.isSubmitting;       // true while a stream is active
+composer.submit(); // send the message
+composer.clear(); // clear text and attachments
+composer.isSubmitting; // true while a stream is active
 ```
 
 ### Attachment preview URLs
@@ -48,15 +48,19 @@ When you add an image file, `useChatComposer()` automatically creates an object 
 The URL is available on `attachment.previewUrl` for rendering inline previews:
 
 ```tsx
-{composer.attachments.map((attachment) => (
-  <div key={attachment.localId}>
-    {attachment.previewUrl && (
-      <img src={attachment.previewUrl} alt={attachment.file.name} />
-    )}
-    <span>{attachment.file.name}</span>
-    <button onClick={() => composer.removeAttachment(attachment.localId)}>Remove</button>
-  </div>
-))}
+{
+  composer.attachments.map((attachment) => (
+    <div key={attachment.localId}>
+      {attachment.previewUrl && (
+        <img src={attachment.previewUrl} alt={attachment.file.name} />
+      )}
+      <span>{attachment.file.name}</span>
+      <button onClick={() => composer.removeAttachment(attachment.localId)}>
+        Remove
+      </button>
+    </div>
+  ));
+}
 ```
 
 Preview URLs are revoked automatically when:

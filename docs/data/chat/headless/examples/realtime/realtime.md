@@ -26,7 +26,9 @@ The adapter pushes events through this callback and returns a cleanup function:
 
 ```tsx
 const adapter: ChatAdapter = {
-  async sendMessage(input) { /* ... */ },
+  async sendMessage(input) {
+    /* ... */
+  },
 
   subscribe({ onEvent }) {
     const ws = new WebSocket('/api/events');

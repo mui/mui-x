@@ -27,11 +27,11 @@
       "default": "rainbowSurgePalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
-    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
+    },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -39,7 +39,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'line' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -50,16 +50,13 @@
       }
     },
     "highlightedItem": {
-      "type": {
-        "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
-      }
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'line' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'line' }&gt;"
       }
     },
     "initialZoom": {
@@ -87,14 +84,14 @@
     "onHiddenItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifierWithType>) => void",
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
         "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },
@@ -107,17 +104,10 @@
     },
     "onLineClick": { "type": { "name": "func" } },
     "onMarkClick": { "type": { "name": "func" } },
-    "onTooltipAxisChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
-        "describedArgs": ["axisItems"]
-      }
-    },
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(tooltipItem: SeriesItemIdentifier<SeriesType> | null) => void",
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
         "describedArgs": ["tooltipItem"]
       }
     },
@@ -136,17 +126,10 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "title": { "type": { "name": "string" } },
-    "tooltipAxis": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
-      }
-    },
     "tooltipItem": {
       "type": {
-        "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }"
       }
     },
     "width": { "type": { "name": "number" } },
@@ -177,7 +160,7 @@
     "zoomInteractionConfig": {
       "type": {
         "name": "shape",
-        "description": "{ pan?: Array&lt;'drag'<br>&#124;&nbsp;'pressAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'drag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'pressAndDrag' }<br>&#124;&nbsp;{ allowedDirection?: 'x'<br>&#124;&nbsp;'xy'<br>&#124;&nbsp;'y', pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }&gt;, zoom?: Array&lt;'brush'<br>&#124;&nbsp;'doubleTapReset'<br>&#124;&nbsp;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: array, type: 'pinch' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'tapAndDrag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'doubleTapReset' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'brush' }&gt; }"
+        "description": "{ pan?: Array&lt;'drag'<br>&#124;&nbsp;'pressAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'drag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'pressAndDrag' }<br>&#124;&nbsp;{ allowedDirection?: 'x'<br>&#124;&nbsp;'xy'<br>&#124;&nbsp;'y', pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }&gt;, zoom?: Array&lt;'brush'<br>&#124;&nbsp;'doubleTapReset'<br>&#124;&nbsp;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: array, type: 'pinch' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'tapAndDrag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'doubleTapReset' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: array, type: 'brush' }&gt; }"
       }
     }
   },
@@ -266,18 +249,6 @@
       "name": "tooltip",
       "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
-      "class": null
-    },
-    {
-      "name": "xAxis",
-      "description": "Custom component for the x-axis.",
-      "default": "ChartsXAxis",
-      "class": null
-    },
-    {
-      "name": "yAxis",
-      "description": "Custom component for the y-axis.",
-      "default": "ChartsYAxis",
       "class": null
     },
     {

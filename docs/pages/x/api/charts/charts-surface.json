@@ -1,5 +1,5 @@
 {
-  "props": { "desc": { "type": { "name": "string" } }, "title": { "type": { "name": "string" } } },
+  "props": {},
   "name": "ChartsSurface",
   "imports": [
     "import { ChartsSurface } from '@mui/x-charts/ChartsSurface';",

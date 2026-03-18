@@ -12,7 +12,12 @@ components: ConversationRoot, ConversationHeader, ConversationTitle, Conversatio
 {{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js"}}
 
 ```tsx
-import { ConversationInput, MessageGroup, MessageList, Conversation } from '@mui/x-chat-unstyled';
+import {
+  ConversationInput,
+  MessageGroup,
+  MessageList,
+  Conversation,
+} from '@mui/x-chat-unstyled';
 
 <Conversation.Root>
   <Conversation.Header>

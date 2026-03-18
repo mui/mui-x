@@ -18,14 +18,6 @@
     }
   },
   "classDescriptions": {
-    "link": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual link element"
-    },
-    "linkLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual link label element"
-    },
     "linkLabels": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the link label container"
@@ -33,14 +25,6 @@
     "links": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the links container"
-    },
-    "node": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual node element"
-    },
-    "nodeLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual node label element"
     },
     "nodeLabels": {
       "description": "Styles applied to {{nodeName}}.",

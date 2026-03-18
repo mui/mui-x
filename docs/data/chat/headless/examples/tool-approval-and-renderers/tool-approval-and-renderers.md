@@ -14,6 +14,7 @@ This recipe covers the main extension points for tool-assisted AI interactions:
 
 - the tool approval lifecycle from `approval-requested` to response
 - `addToolApprovalResponse()` for approving or denying tool calls
+- follow-up assistant messages via `message-added` events after tool resolution
 - `partRenderers` for registering custom part renderers on `ChatProvider`
 - `useChatPartRenderer()` for looking up renderers in components
 - custom part registration through type augmentation
@@ -51,17 +52,13 @@ Register renderers for specific part types on `ChatProvider`:
 
 ```tsx
 const renderers: ChatPartRendererMap = {
-  tool: ({ part, message, index }) => (
-    <ToolCard invocation={part.toolInvocation} />
-  ),
-  'custom-widget': ({ part }) => (
-    <Widget data={part.data} />
-  ),
+  tool: ({ part, message, index }) => <ToolCard invocation={part.toolInvocation} />,
+  'custom-widget': ({ part }) => <Widget data={part.data} />,
 };
 
 <ChatProvider adapter={adapter} partRenderers={renderers}>
   <MyChat />
-</ChatProvider>
+</ChatProvider>;
 ```
 
 ### Looking up renderers
@@ -89,6 +86,7 @@ For a dedicated walkthrough of TypeScript module augmentation, see [Type augment
 
 - Tool approval is a first-class runtime feature — the stream pauses at `approval-requested` until you respond
 - `addToolApprovalResponse()` drives the approval/denial decision
+- After tool resolution, the adapter can emit a `message-added` event to deliver the assistant's follow-up interpretation of the result
 - `partRenderers` decouples rendering from the message loop — register once, look up anywhere
 - Custom part types registered through module augmentation integrate seamlessly with the renderer registry
 

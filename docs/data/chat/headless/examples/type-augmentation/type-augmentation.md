@@ -74,9 +74,7 @@ Register a renderer for your custom part type on `ChatProvider`:
 <ChatProvider
   adapter={adapter}
   partRenderers={{
-    'ticket-summary': ({ part }) => (
-      <div>Ticket summary: {part.summary}</div>
-    ),
+    'ticket-summary': ({ part }) => <div>Ticket summary: {part.summary}</div>,
   }}
 >
   <MyChat />

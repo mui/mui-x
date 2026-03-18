@@ -113,7 +113,9 @@ export default function TwoPaneInbox() {
             }}
           />
         </div>
-        <Conversation.Root slotProps={{ root: { style: demoSurfaceStyles.threadRoot } }}>
+        <Conversation.Root
+          slotProps={{ root: { style: demoSurfaceStyles.threadRoot } }}
+        >
           <Conversation.Header slots={{ root: DemoThreadHeader }}>
             <div style={{ minWidth: 0 }}>
               <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />

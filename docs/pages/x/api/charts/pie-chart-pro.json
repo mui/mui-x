@@ -9,28 +9,22 @@
       "default": "rainbowSurgePalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "desc": { "type": { "name": "string" } },
-    "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'pie' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
-      "type": {
-        "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
-      }
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'pie' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'pie' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -44,14 +38,14 @@
     "onHiddenItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifierWithType>) => void",
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
         "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },
@@ -59,7 +53,7 @@
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(tooltipItem: SeriesItemIdentifier<SeriesType> | null) => void",
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
         "describedArgs": ["tooltipItem"]
       }
     },
@@ -71,11 +65,10 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "title": { "type": { "name": "string" } },
     "tooltipItem": {
       "type": {
-        "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "name": "shape",
+        "description": "{ dataIndex: number, seriesId: string, type: 'pie' }"
       }
     },
     "width": { "type": { "name": "number" } }

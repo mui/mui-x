@@ -33,22 +33,19 @@
       "key": "label",
       "className": "MuiRadarAxis-label",
       "description": "Styles applied to every label element.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "line",
       "className": "MuiRadarAxis-line",
       "description": "Styles applied to the line element.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiRadarAxis-root",
       "description": "Styles applied to the root element.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     }
   ],
   "muiName": "MuiRadarAxis",

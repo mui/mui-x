@@ -1,6 +1,5 @@
 {
   "componentDescription": "The chart toolbar component for the pro package.",
   "propDescriptions": {},
-  "classDescriptions": {},
-  "slotDescriptions": { "toolbar": "Custom component for the toolbar." }
+  "classDescriptions": {}
 }

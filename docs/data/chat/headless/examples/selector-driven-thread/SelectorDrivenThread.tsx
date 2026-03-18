@@ -66,7 +66,7 @@ function SelectorThread() {
   const conversation = useConversation('selectors');
 
   return (
-    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+    <Paper variant="outlined" sx={{ overflow: 'hidden', width: '100%' }}>
       {/* Header */}
       <Box
         sx={{
@@ -80,8 +80,8 @@ function SelectorThread() {
           {conversation?.title ?? 'Selector lab'}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Update one controlled message from the parent to see only the matching
-          row rerender.
+          Update one controlled message from the parent to see only the matching row
+          rerender.
         </Typography>
       </Box>
 

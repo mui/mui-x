@@ -56,9 +56,8 @@ const message = useStore(store, chatSelectors.message, 'msg-42');
 const conversation = useStore(store, chatSelectors.conversation, 'support');
 
 // Typing users in a specific conversation
-const typingUserIds = useStore(
-  store,
-  (state) => chatSelectors.typingUserIds(state, 'support'),
+const typingUserIds = useStore(store, (state) =>
+  chatSelectors.typingUserIds(state, 'support'),
 );
 ```
 

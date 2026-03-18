@@ -509,16 +509,28 @@ describe('x-chat package scaffold', () => {
     expect(UnstyledBridgeConversationInput).toBe(UnstyledDirectConversationInput);
     expect(UnstyledBridgeConversationInputRoot).toBe(UnstyledDirectConversationInputRoot);
     expect(UnstyledBridgeConversationInputTextArea).toBe(UnstyledDirectConversationInputTextArea);
-    expect(UnstyledBridgeConversationInputSendButton).toBe(UnstyledDirectConversationInputSendButton);
-    expect(UnstyledBridgeConversationInputAttachButton).toBe(UnstyledDirectConversationInputAttachButton);
+    expect(UnstyledBridgeConversationInputSendButton).toBe(
+      UnstyledDirectConversationInputSendButton,
+    );
+    expect(UnstyledBridgeConversationInputAttachButton).toBe(
+      UnstyledDirectConversationInputAttachButton,
+    );
     expect(UnstyledBridgeConversationInputToolbar).toBe(UnstyledDirectConversationInputToolbar);
-    expect(UnstyledBridgeConversationInputHelperText).toBe(UnstyledDirectConversationInputHelperText);
+    expect(UnstyledBridgeConversationInputHelperText).toBe(
+      UnstyledDirectConversationInputHelperText,
+    );
     expect(UnstyledBridgeConversationInput.Root).toBe(UnstyledBridgeConversationInputRoot);
     expect(UnstyledBridgeConversationInput.TextArea).toBe(UnstyledBridgeConversationInputTextArea);
-    expect(UnstyledBridgeConversationInput.SendButton).toBe(UnstyledBridgeConversationInputSendButton);
-    expect(UnstyledBridgeConversationInput.AttachButton).toBe(UnstyledBridgeConversationInputAttachButton);
+    expect(UnstyledBridgeConversationInput.SendButton).toBe(
+      UnstyledBridgeConversationInputSendButton,
+    );
+    expect(UnstyledBridgeConversationInput.AttachButton).toBe(
+      UnstyledBridgeConversationInputAttachButton,
+    );
     expect(UnstyledBridgeConversationInput.Toolbar).toBe(UnstyledBridgeConversationInputToolbar);
-    expect(UnstyledBridgeConversationInput.HelperText).toBe(UnstyledBridgeConversationInputHelperText);
+    expect(UnstyledBridgeConversationInput.HelperText).toBe(
+      UnstyledBridgeConversationInputHelperText,
+    );
     expect(UnstyledBridgeConversationList).toBe(UnstyledDirectConversationList);
     expect(UnstyledBridgeConversationListRoot).toBe(UnstyledDirectConversationListRoot);
     expect(UnstyledBridgeConversationList.Root).toBe(UnstyledBridgeConversationListRoot);
@@ -582,13 +594,27 @@ describe('x-chat package scaffold', () => {
       unstyledDirectRuntime.renderDefaultToolPart,
     );
     expect(chat.ChatConversationInput).toBe(chatConversationInputSubpath.ChatConversationInput);
-    expect(chat.ChatConversationInputTextArea).toBe(chatConversationInputSubpath.ChatConversationInputTextArea);
-    expect(chat.ChatConversationInputSendButton).toBe(chatConversationInputSubpath.ChatConversationInputSendButton);
-    expect(chat.ChatConversationInputAttachButton).toBe(chatConversationInputSubpath.ChatConversationInputAttachButton);
-    expect(chat.ChatConversationInputToolbar).toBe(chatConversationInputSubpath.ChatConversationInputToolbar);
-    expect(chat.ChatConversationInputHelperText).toBe(chatConversationInputSubpath.ChatConversationInputHelperText);
-    expect(chat.chatConversationInputClasses).toBe(chatConversationInputSubpath.chatConversationInputClasses);
-    expect(chat.getChatConversationInputUtilityClass).toBe(chatConversationInputSubpath.getChatConversationInputUtilityClass);
+    expect(chat.ChatConversationInputTextArea).toBe(
+      chatConversationInputSubpath.ChatConversationInputTextArea,
+    );
+    expect(chat.ChatConversationInputSendButton).toBe(
+      chatConversationInputSubpath.ChatConversationInputSendButton,
+    );
+    expect(chat.ChatConversationInputAttachButton).toBe(
+      chatConversationInputSubpath.ChatConversationInputAttachButton,
+    );
+    expect(chat.ChatConversationInputToolbar).toBe(
+      chatConversationInputSubpath.ChatConversationInputToolbar,
+    );
+    expect(chat.ChatConversationInputHelperText).toBe(
+      chatConversationInputSubpath.ChatConversationInputHelperText,
+    );
+    expect(chat.chatConversationInputClasses).toBe(
+      chatConversationInputSubpath.chatConversationInputClasses,
+    );
+    expect(chat.getChatConversationInputUtilityClass).toBe(
+      chatConversationInputSubpath.getChatConversationInputUtilityClass,
+    );
     expect(chat.ChatConversations).toBe(chatConversationsSubpath.ChatConversations);
     expect(chat.chatConversationsClasses).toBe(chatConversationsSubpath.chatConversationsClasses);
     expect(chat.getChatConversationsUtilityClass).toBe(
@@ -647,7 +673,9 @@ describe('x-chat package scaffold', () => {
     expect(chat.getChatMessageUtilityClass).toBe(chatMessageSubpath.getChatMessageUtilityClass);
     expect(chat.ChatConversation).toBe(chatConversationSubpath.ChatConversation);
     expect(chat.chatConversationClasses).toBe(chatConversationSubpath.chatConversationClasses);
-    expect(chat.getChatConversationUtilityClass).toBe(chatConversationSubpath.getChatConversationUtilityClass);
+    expect(chat.getChatConversationUtilityClass).toBe(
+      chatConversationSubpath.getChatConversationUtilityClass,
+    );
     expect(unstyledBridgeRuntime.renderDefaultDataPart).toBe(
       unstyledDirectRuntime.renderDefaultDataPart,
     );

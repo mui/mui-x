@@ -37,7 +37,9 @@ const MessageRow = React.memo(function MessageRow({ id }: { id: string }) {
   const message = useMessage(id);
   if (!message) return null;
 
-  return <div>{message.parts[0]?.type === 'text' ? message.parts[0].text : null}</div>;
+  return (
+    <div>{message.parts[0]?.type === 'text' ? message.parts[0].text : null}</div>
+  );
 });
 ```
 

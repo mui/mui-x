@@ -8,23 +8,17 @@
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "it is faded",
-      "deprecationInfo": "Use <code>[data-faded]</code> selector instead."
+      "conditions": "it is faded"
     },
     "highlighted": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "it is highlighted",
-      "deprecationInfo": "Use <code>[data-highlighted]</code> selector instead."
+      "conditions": "it is highlighted"
     },
-    "root": {
-      "description": "Styles applied to the root element.",
-      "deprecationInfo": "Use <code>barClasses.element</code> instead."
-    },
+    "root": { "description": "Styles applied to the root element." },
     "series": {
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${barElementClasses.series}-${seriesId}</code>.",
-      "nodeName": "the root element for a specified series",
-      "deprecationInfo": "Use <code>[data-series=&quot;${seriesId}&quot;]</code> selector instead."
+      "nodeName": "the root element for a specified series"
     }
   },
   "slotDescriptions": { "bar": "The component that renders the bar." }

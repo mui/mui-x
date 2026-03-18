@@ -15,16 +15,13 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
-    "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
-    "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
-    "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'radar' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -36,16 +33,13 @@
       "default": "'axis'"
     },
     "highlightedItem": {
-      "type": {
-        "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
-      }
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'radar' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -73,14 +67,14 @@
     "onHiddenItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifierWithType>) => void",
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
         "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },
@@ -94,7 +88,7 @@
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(tooltipItem: SeriesItemIdentifier<SeriesType> | null) => void",
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
         "describedArgs": ["tooltipItem"]
       }
     },
@@ -119,11 +113,10 @@
         "returned": "string"
       }
     },
-    "title": { "type": { "name": "string" } },
     "tooltipItem": {
       "type": {
-        "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }"
       }
     },
     "width": { "type": { "name": "number" } }

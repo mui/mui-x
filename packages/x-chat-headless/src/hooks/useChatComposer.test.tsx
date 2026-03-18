@@ -191,7 +191,15 @@ describe('useChatComposer', () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async ({ conversationId, message, attachments }) => {
         expect(conversationId).toBe('c1');
-        expect(message.parts).toEqual([{ type: 'text', text: 'Hello there' }]);
+        expect(message.parts).toEqual([
+          { type: 'text', text: 'Hello there' },
+          {
+            type: 'file',
+            mediaType: 'image/png',
+            url: 'blob:hello.png-1',
+            filename: 'hello.png',
+          },
+        ]);
         expect(attachments).toHaveLength(1);
         expect(attachments?.[0].file.name).toBe('hello.png');
 
@@ -216,10 +224,53 @@ describe('useChatComposer', () => {
 
       expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
       await waitFor(() => {
-        expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:hello.png-1');
+        // Preview URLs of submitted attachments are NOT revoked — they are
+        // now referenced by the stored message parts.
+        expect(objectUrls.revokeObjectURL).not.toHaveBeenCalledWith('blob:hello.png-1');
         expect(result.current.value).toBe('');
         expect(result.current.attachments).toEqual([]);
         expect(result.current.isSubmitting).toBe(false);
+      });
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
+  it('submits when there are only attachments and no text', async () => {
+    const objectUrls = mockObjectUrlApis();
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async ({ message, attachments }) => {
+        expect(message.parts).toEqual([
+          {
+            type: 'file',
+            mediaType: 'image/png',
+            url: 'blob:photo.png-1',
+            filename: 'photo.png',
+          },
+        ]);
+        expect(attachments).toHaveLength(1);
+
+        return createStream();
+      }),
+    });
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        defaultActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.addAttachment(new File(['photo'], 'photo.png', { type: 'image/png' }));
+      });
+
+      await act(async () => {
+        await result.current.submit();
+      });
+
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+      await waitFor(() => {
+        expect(result.current.attachments).toEqual([]);
       });
     } finally {
       objectUrls.restore();

@@ -25,36 +25,31 @@
       "key": "animate",
       "className": "MuiMarkElement-animate",
       "description": "Styles applied to the root element when animation is not skipped.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "faded",
       "className": "MuiMarkElement-faded",
       "description": "Styles applied to the root element when faded.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "highlighted",
       "className": "MuiMarkElement-highlighted",
       "description": "Styles applied to the root element when highlighted.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiMarkElement-root",
       "description": "Styles applied to the root element.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     },
     {
       "key": "series",
       "className": "MuiMarkElement-series",
       "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.",
-      "isGlobal": false,
-      "isDeprecated": true
+      "isGlobal": false
     }
   ],
   "spread": true,
