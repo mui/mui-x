@@ -8,7 +8,6 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
-import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../../collapsible';
 import { ResizablePanel, ResizablePanelHandle } from '../../resizablePanel';
@@ -32,19 +31,16 @@ type OwnerState = DataGridPremiumProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = createSlotArrayMap(
-    [
-      'root',
-      'availableFields',
-      'sections',
-      'scrollArea',
-      'section',
-      'sectionTitle',
-      'fieldList',
-      'placeholder',
-    ] as const,
-    'chartsPanelDataBody',
-  );
+  const slots = {
+    root: ['chartsPanelDataBody'],
+    availableFields: ['chartsPanelDataAvailableFields'],
+    sections: ['chartsPanelDataSections'],
+    scrollArea: ['chartsPanelDataScrollArea'],
+    section: ['chartsPanelDataSection'],
+    sectionTitle: ['chartsPanelDataSectionTitle'],
+    fieldList: ['chartsPanelDataFieldList'],
+    placeholder: ['chartsPanelDataPlaceholder'],
+  };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

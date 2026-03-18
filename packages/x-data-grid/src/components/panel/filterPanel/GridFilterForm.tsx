@@ -7,7 +7,6 @@ import useId from '@mui/utils/useId';
 import capitalize from '@mui/utils/capitalize';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { vars } from '../../../constants/cssVariables';
 import {
   gridFilterableColumnDefinitionsSelector,
@@ -133,17 +132,14 @@ type OwnerState = DataGridProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = createSlotArrayMap(
-    [
-      'root',
-      'deleteIcon',
-      'logicOperatorInput',
-      'columnInput',
-      'operatorInput',
-      'valueInput',
-    ] as const,
-    'filterForm',
-  );
+  const slots = {
+    root: ['filterForm'],
+    deleteIcon: ['filterFormDeleteIcon'],
+    logicOperatorInput: ['filterFormLogicOperatorInput'],
+    columnInput: ['filterFormColumnInput'],
+    operatorInput: ['filterFormOperatorInput'],
+    valueInput: ['filterFormValueInput'],
+  };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

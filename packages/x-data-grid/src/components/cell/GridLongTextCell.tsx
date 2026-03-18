@@ -3,7 +3,6 @@ import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
-import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -20,10 +19,14 @@ type OwnerState = DataGridProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = createSlotArrayMap(
-    ['root', 'content', 'expandButton', 'collapseButton', 'popup', 'popperContent'] as const,
-    'longTextCell',
-  );
+  const slots = {
+    root: ['longTextCell'],
+    content: ['longTextCellContent'],
+    expandButton: ['longTextCellExpandButton'],
+    collapseButton: ['longTextCellCollapseButton'],
+    popup: ['longTextCellPopup'],
+    popperContent: ['longTextCellPopperContent'],
+  };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

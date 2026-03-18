@@ -8,7 +8,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   gridPivotInitialColumnsSelector,
   gridPivotModelSelector,
@@ -25,19 +24,16 @@ type OwnerState = DataGridPremiumProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = createSlotArrayMap(
-    [
-      'root',
-      'availableFields',
-      'sections',
-      'scrollArea',
-      'section',
-      'sectionTitle',
-      'fieldList',
-      'placeholder',
-    ] as const,
-    'pivotPanelBody',
-  );
+  const slots = {
+    root: ['pivotPanelBody'],
+    availableFields: ['pivotPanelAvailableFields'],
+    sections: ['pivotPanelSections'],
+    scrollArea: ['pivotPanelScrollArea'],
+    section: ['pivotPanelSection'],
+    sectionTitle: ['pivotPanelSectionTitle'],
+    fieldList: ['pivotPanelFieldList'],
+    placeholder: ['pivotPanelPlaceholder'],
+  };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

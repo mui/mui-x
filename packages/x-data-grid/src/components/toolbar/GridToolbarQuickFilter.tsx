@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import type { GridSlotProps } from '../../models/gridSlotsComponent';
 import { getDataGridUtilityClass } from '../../constants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -54,7 +53,11 @@ type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = createSlotArrayMap(['root', 'trigger', 'control'] as const, 'toolbarQuickFilter');
+  const slots = {
+    root: ['toolbarQuickFilter'],
+    trigger: ['toolbarQuickFilterTrigger'],
+    control: ['toolbarQuickFilterControl'],
+  };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

@@ -2,7 +2,6 @@ import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -17,10 +16,12 @@ type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = createSlotArrayMap(
-    ['root', 'list', 'item', 'label'] as const,
-    'aiAssistantPanelSuggestions',
-  );
+  const slots = {
+    root: ['aiAssistantPanelSuggestions'],
+    list: ['aiAssistantPanelSuggestionsList'],
+    item: ['aiAssistantPanelSuggestionsItem'],
+    label: ['aiAssistantPanelSuggestionsLabel'],
+  };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

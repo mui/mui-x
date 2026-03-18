@@ -6,7 +6,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import debounce from '@mui/utils/debounce';
 import { styled } from '@mui/material/styles';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import type { TextFieldProps } from '../../models/gridBaseSlots';
 import { vars } from '../../constants/cssVariables';
 import {
@@ -81,10 +80,13 @@ type OwnerState = DataGridProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = createSlotArrayMap(
-    ['root', 'header', 'searchInput', 'footer', 'row'] as const,
-    'columnsManagement',
-  );
+  const slots = {
+    root: ['columnsManagement'],
+    header: ['columnsManagementHeader'],
+    searchInput: ['columnsManagementSearchInput'],
+    footer: ['columnsManagementFooter'],
+    row: ['columnsManagementRow'],
+  };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

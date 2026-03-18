@@ -10,7 +10,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { gridPivotActiveSelector, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
-import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
@@ -50,10 +49,13 @@ type OwnerState = GridChartsPanelDataFieldProps &
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
-  const slots = createSlotArrayMap(
-    ['root', 'name', 'actionContainer', 'dragIcon', 'checkbox'] as const,
-    'chartsPanelDataField',
-  );
+  const slots = {
+    root: ['chartsPanelDataField'],
+    name: ['chartsPanelDataFieldName'],
+    actionContainer: ['chartsPanelDataFieldActionContainer'],
+    dragIcon: ['chartsPanelDataFieldDragIcon'],
+    checkbox: ['chartsPanelDataFieldCheckbox'],
+  };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
