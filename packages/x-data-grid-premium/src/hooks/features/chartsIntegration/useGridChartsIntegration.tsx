@@ -855,14 +855,16 @@ export const useGridChartsIntegration = (
   );
   useGridApiMethod(
     apiRef,
-    {
-      setChartsPanelOpen,
-      setActiveChartId,
-      setChartType,
-      setChartSynchronizationState,
-      updateChartDimensionsData,
-      updateChartValuesData,
-    },
+    props.chartsIntegration
+      ? {
+          setChartsPanelOpen,
+          setActiveChartId,
+          setChartType,
+          setChartSynchronizationState,
+          updateChartDimensionsData,
+          updateChartValuesData,
+        }
+      : {},
     'public',
   );
 

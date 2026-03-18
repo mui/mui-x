@@ -274,7 +274,7 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/charts-integration',
             plan: 'premium',
-            unstable: true,
+            newFeature: true,
             title: 'Charts integration',
           },
           {
