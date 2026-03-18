@@ -1969,8 +1969,8 @@ const theme = createTheme({
     MuiPickerPopper: {
       defaultProps: {
         // Those are now the props with support for theme default props
-        position: "bottom",
-        classes: { root: "custom-root-class" },
+        position: 'bottom',
+        classes: { root: 'custom-root-class' },
       },
     },
   },
