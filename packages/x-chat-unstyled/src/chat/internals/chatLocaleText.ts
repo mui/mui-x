@@ -21,6 +21,8 @@ export interface ChatLocaleText {
   conversationListNoConversationsLabel: string;
   conversationListSearchPlaceholder: string;
   unreadMarkerLabel: string;
+  retryButtonLabel: string;
+  reconnectButtonLabel: string;
   scrollToBottomLabel: string;
   threadNoMessagesLabel: string;
   genericErrorLabel: string;
@@ -74,6 +76,8 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   conversationListNoConversationsLabel: 'No conversations',
   conversationListSearchPlaceholder: 'Search conversations',
   unreadMarkerLabel: 'New messages',
+  retryButtonLabel: 'Retry',
+  reconnectButtonLabel: 'Reconnect',
   scrollToBottomLabel: 'Scroll to bottom',
   threadNoMessagesLabel: 'No messages yet',
   genericErrorLabel: 'Something went wrong',

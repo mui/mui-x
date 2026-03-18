@@ -47,6 +47,11 @@ export interface ChatConversationSlots {
   title: UnstyledConversationTitleSlots['title'];
   subtitle: UnstyledConversationSubtitleSlots['subtitle'];
   actions: UnstyledConversationHeaderActionsSlots['actions'];
+  loadingState: React.ElementType;
+  emptyState: React.ElementType;
+  errorState: React.ElementType;
+  historyLoading: React.ElementType;
+  historyError: React.ElementType;
   messageList: UnstyledMessageListRootSlots['messageList'];
   messageListScroller: UnstyledMessageListRootSlots['messageListScroller'];
   messageListContent: UnstyledMessageListRootSlots['messageListContent'];
@@ -59,6 +64,11 @@ export interface ChatConversationSlotProps {
   title?: UnstyledConversationTitleSlotProps['title'];
   subtitle?: UnstyledConversationSubtitleSlotProps['subtitle'];
   actions?: UnstyledConversationHeaderActionsSlotProps['actions'];
+  loadingState?: React.HTMLAttributes<HTMLDivElement>;
+  emptyState?: React.HTMLAttributes<HTMLDivElement>;
+  errorState?: React.HTMLAttributes<HTMLDivElement>;
+  historyLoading?: React.HTMLAttributes<HTMLDivElement>;
+  historyError?: React.HTMLAttributes<HTMLDivElement>;
   messageList?: UnstyledMessageListRootSlotProps['messageList'];
   messageListScroller?: UnstyledMessageListRootSlotProps['messageListScroller'];
   messageListContent?: UnstyledMessageListRootSlotProps['messageListContent'];

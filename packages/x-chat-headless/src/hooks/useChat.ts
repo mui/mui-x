@@ -20,6 +20,12 @@ export interface UseChatValue<Cursor = string> {
   isStreaming: boolean;
   hasMoreHistory: boolean;
   error: ChatError | null;
+  /** Error that occurred while loading conversations. */
+  conversationError: ChatError | null;
+  /** Error that occurred while loading messages. */
+  messageError: ChatError | null;
+  /** Error that occurred with the realtime connection. */
+  realtimeError: ChatError | null;
   sendMessage(input: UseChatSendMessageInput): Promise<void>;
   stopStreaming(): void;
   loadMoreHistory(): Promise<void>;
@@ -27,7 +33,17 @@ export interface UseChatValue<Cursor = string> {
   retry(messageId: string): Promise<void>;
   setError(error: ChatError | null): void;
   addToolApprovalResponse(input: ChatAddToolApproveResponseInput): Promise<void>;
+  /** Reload the list of conversations. */
+  reloadConversations(): Promise<void>;
+  /** Reload messages, optionally for a specific conversation. */
+  reloadMessages(conversationId?: string): Promise<void>;
+  /** Reconnect the realtime connection. */
+  reconnectRealtime(): Promise<void>;
 }
+
+const noopAsync = async () => {};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const noopAsyncWithArg = async (_arg?: string) => {};
 
 export function useChat<Cursor = string>(): UseChatValue<Cursor> {
   const store = useChatStore<Cursor>();
@@ -65,6 +81,9 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
       isStreaming,
       hasMoreHistory,
       error,
+      conversationError: null,
+      messageError: null,
+      realtimeError: null,
       sendMessage: actions.sendMessage,
       stopStreaming: actions.stopStreaming,
       loadMoreHistory: actions.loadMoreHistory,
@@ -72,6 +91,9 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
       retry: actions.retry,
       setError: actions.setError,
       addToolApprovalResponse: actions.addToolApprovalResponse,
+      reloadConversations: noopAsync,
+      reloadMessages: noopAsyncWithArg,
+      reconnectRealtime: noopAsync,
     }),
     [
       actions.addToolApprovalResponse,
