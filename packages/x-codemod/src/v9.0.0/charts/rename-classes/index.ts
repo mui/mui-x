@@ -21,7 +21,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         newClassName: 'barClasses',
         properties: { root: 'element' },
       },
-      barClasses: {
+      barLabelClasses: {
         newClassName: 'barClasses',
         properties: {
           root: 'label',
@@ -33,7 +33,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         properties: {
           root: 'seriesRoot',
           area: 'seriesArea',
-          mark: 'seriesMark'
+          mark: 'seriesMark',
         },
       },
       areaElementClasses: {
@@ -48,7 +48,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         newClassName: 'lineClasses',
         properties: {
           root: 'mark',
-          animate: 'markAnimate'
+          animate: 'markAnimate',
         },
       },
       lineHighlightElementClasses: {
@@ -75,14 +75,18 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   renameClasses({
     j,
     root,
-    packageNames: ['@mui/x-charts/RadarChart', '@mui/x-charts-pro/RadarChart', '@mui/x-charts-premium/RadarChart'],
+    packageNames: [
+      '@mui/x-charts/RadarChart',
+      '@mui/x-charts-pro/RadarChart',
+      '@mui/x-charts-premium/RadarChart',
+    ],
     classes: {
       chartsAxisHighlightClasses: {
         newClassName: 'radarClasses',
         properties: {
           root: 'axisHighlightRoot',
           line: 'axisHighlightLine',
-          dot: 'axisHighlightDot'
+          dot: 'axisHighlightDot',
         },
       },
       chartsAxisClasses: {
@@ -90,7 +94,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         properties: {
           root: 'axisRoot',
           line: 'axisLine',
-          label: 'axisLabel'
+          label: 'axisLabel',
         },
       },
       chartsGridClasses: {
@@ -98,9 +102,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         properties: {
           radial: 'gridRadial',
           divider: 'gridDivider',
-          stripe: 'gridStripe'
+          stripe: 'gridStripe',
         },
-      }
+      },
     },
   });
 
