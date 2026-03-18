@@ -1,4 +1,3 @@
-import { useThemeProps } from '@mui/material/styles';
 import { type ChartDrawingArea, useDrawingArea } from './useDrawingArea';
 import { useXAxes, useYAxes } from './useAxis';
 import { defaultProps } from '../ChartsXAxis/utilities';
@@ -51,15 +50,11 @@ export function useXAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
   const drawingArea = useDrawingArea();
   const axis = xAxes[axisId];
 
-  // FIXME(v9): Remove
-  // eslint-disable-next-line mui/material-ui-name-matches-component-name
-  const themedProps = useThemeProps({ props: axis, name: 'MuiChartsXAxis' });
-
   if (!axis) {
     return null;
   }
 
-  const defaultizedProps = { ...defaultProps, ...themedProps };
+  const defaultizedProps = { ...defaultProps, ...axis };
 
   return getXAxisCoordinates(drawingArea, defaultizedProps);
 }
@@ -104,18 +99,11 @@ export function useYAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
   const drawingArea = useDrawingArea();
   const axis = yAxes[axisId];
 
-  // FIXME(v9): Remove
-  // eslint-disable-next-line mui/material-ui-name-matches-component-name
-  const themedProps = useThemeProps({ props: axis, name: 'MuiChartsYAxis' });
-
   if (!axis) {
     return null;
   }
 
-  const defaultizedProps = {
-    ...defaultProps,
-    ...themedProps,
-  };
+  const defaultizedProps = { ...defaultProps, ...axis };
 
   return getYAxisCoordinates(drawingArea, defaultizedProps);
 }

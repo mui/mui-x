@@ -1,4 +1,3 @@
-import { useThemeProps } from '@mui/material/styles';
 import { useXAxes, useYAxes } from './useAxis';
 import { type TickItem, useTicks } from './useTicks';
 import { type AxisId } from '../models/axis';
@@ -13,13 +12,9 @@ export function useXAxisTicks(axisId: AxisId): TickItem[] {
   const { xAxis: xAxes } = useXAxes();
   const axis = xAxes[axisId];
 
-  // FIXME: `useAxisTicksProps` does this, but should we do it here?
-  // eslint-disable-next-line mui/material-ui-name-matches-component-name
-  const themedProps = useThemeProps({ props: axis, name: 'MuiChartsXAxis' });
-
   const defaultizedProps = {
     ...defaultProps,
-    ...themedProps,
+    ...axis,
   };
 
   return useTicks({
@@ -45,13 +40,9 @@ export function useYAxisTicks(axisId: AxisId): TickItem[] {
   const { yAxis: yAxes } = useYAxes();
   const axis = yAxes[axisId];
 
-  // FIXME: `useAxisTicksProps` does this, but should we do it here?
-  // eslint-disable-next-line mui/material-ui-name-matches-component-name
-  const themedProps = useThemeProps({ props: axis, name: 'MuiChartsYAxis' });
-
   const defaultizedProps = {
     ...defaultProps,
-    ...themedProps,
+    ...axis,
   };
 
   return useTicks({

@@ -10,11 +10,6 @@ createTheme({
       },
     },
     MuiChartsXAxis: {
-      defaultProps: {
-        axisId: 'test',
-        // @ts-expect-error invalid MuiChartsXAxis prop
-        someRandomProp: true,
-      },
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiChartsXAxis class key
@@ -22,11 +17,6 @@ createTheme({
       },
     },
     MuiChartsYAxis: {
-      defaultProps: {
-        axisId: 'test',
-        // @ts-expect-error invalid MuiChartsYAxis prop
-        someRandomProp: true,
-      },
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiChartsYAxis class key
