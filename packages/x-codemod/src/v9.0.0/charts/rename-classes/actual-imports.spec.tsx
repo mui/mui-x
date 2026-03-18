@@ -14,6 +14,20 @@ const cls5 = radarSeriesPlotClasses.root;
 const cls6 = rspc.root;
 const cls7 = radarSeriesPlotClasses.area;
 const cls8 = radarSeriesPlotClasses.mark;
+
+import { areaElementClasses as aec } from '@mui/x-charts';
+const cls12 = aec.root;
+
+import { lineElementClasses as lec } from '@mui/x-charts';
+const cls13 = lec.root;
+
+import { markElementClasses as mec } from '@mui/x-charts/LineChart';
+const cls14 = mec.root;
+const cls15 = mec.animate;
+
+import { lineHighlightElementClasses as lhec } from '@mui/x-charts';
+const cls16 = lhec.root;
+
 import { funnelSectionClasses } from '@mui/x-charts-pro';
 const cls17 = funnelSectionClasses.root;
 const cls18 = funnelSectionClasses.filled;

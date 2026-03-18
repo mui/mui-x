@@ -6,19 +6,14 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import {
-  markElementClasses,
-  type MarkElementOwnerState,
-  useUtilityClasses as useDeprecatedUtilityClasses,
-} from './markElementClasses';
-import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import { lineClasses, type MarkElementOwnerState, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
 })<{ ownerState: MarkElementOwnerState }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
-  [`&.${markElementClasses.animate}`]: {
+  [`&.${lineClasses.markAnimate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionProperty: 'transform, transform-origin, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -95,7 +90,6 @@ function MarkElement(props: MarkElementProps) {
     skipAnimation,
   };
   const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   return (
     <MarkElementPath
@@ -106,7 +100,7 @@ function MarkElement(props: MarkElementProps) {
         transformOrigin: `${x}px ${y}px`,
       }}
       ownerState={ownerState}
-      className={`${classes.mark} ${deprecatedClasses.root}`}
+      className={classes.mark}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}

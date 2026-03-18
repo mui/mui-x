@@ -36,6 +36,25 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           mark: 'seriesMark'
         },
       },
+      areaElementClasses: {
+        newClassName: 'lineClasses',
+        properties: { root: 'area' },
+      },
+      lineElementClasses: {
+        newClassName: 'lineClasses',
+        properties: { root: 'line' },
+      },
+      markElementClasses: {
+        newClassName: 'lineClasses',
+        properties: {
+          root: 'mark',
+          animate: 'markAnimate'
+        },
+      },
+      lineHighlightElementClasses: {
+        newClassName: 'lineClasses',
+        properties: { root: 'highlight' },
+      },
       funnelSectionClasses: {
         newClassName: 'funnelClasses',
         properties: {
