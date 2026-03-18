@@ -860,9 +860,6 @@ export const GridRootStyles = styled('div', {
         right: 0,
       },
     },
-    [`& .${c.filler}`]: {
-      flex: '1 0 auto',
-    },
     [`& .${c['filler--borderBottom']}`]: {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
     },
