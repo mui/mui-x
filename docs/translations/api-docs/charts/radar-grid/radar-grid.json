@@ -12,21 +12,5 @@
       }
     }
   },
-  "classDescriptions": {
-    "divider": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every divider element",
-      "deprecationInfo": "Use <code>radarClasses.gridDivider</code> instead."
-    },
-    "radial": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every radial line element",
-      "deprecationInfo": "Use <code>radarClasses.gridRadial</code> instead."
-    },
-    "stripe": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every stripe element",
-      "deprecationInfo": "Use <code>radarClasses.gridStripe</code> instead."
-    }
-  }
+  "classDescriptions": {}
 }
