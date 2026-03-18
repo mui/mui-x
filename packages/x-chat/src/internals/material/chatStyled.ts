@@ -3,8 +3,8 @@ import { styled as muiStyled, useThemeProps as muiUseThemeProps } from '@mui/mat
 export type MuiChatComponentName =
   | 'MuiChatBox'
   | 'MuiChatConversations'
-  | 'MuiChatThread'
-  | 'MuiChatComposer'
+  | 'MuiChatConversation'
+  | 'MuiChatConversationInput'
   | 'MuiChatMessage'
   | 'MuiChatTypingIndicator'
   | 'MuiChatUnreadMarker'

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { Chat } from '@mui/x-chat-unstyled';
-import { ChatThread, ChatComposer } from '@mui/x-chat';
+import { ChatConversation, ChatConversationInput } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/shared/demoUtils';
 import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
 
@@ -32,8 +32,8 @@ export default function ThreadOnlyComposition() {
         ]}
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', height: 480 }}>
-          <ChatThread sx={{ flex: 1 }} />
-          <ChatComposer />
+          <ChatConversation sx={{ flex: 1 }} />
+          <ChatConversationInput />
         </Box>
       </Chat.Root>
     </Paper>

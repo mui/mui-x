@@ -9,6 +9,8 @@ components: TypingIndicator, UnreadMarker, ScrollToBottomAffordance
 
 <p class="description">Use shared structural affordances for typing, unread boundaries, and scroll-to-bottom behavior.</p>
 
+{{"demo": "../examples/indicators-in-context/IndicatorsInContext.js"}}
+
 ## Primitive set
 
 The indicator group is built from:
@@ -35,13 +37,13 @@ It renders a polite live region and shows labels such as:
 ### Typical placement
 
 ```tsx
-import { Indicators, Thread } from '@mui/x-chat-unstyled';
+import { Indicators, Conversation } from '@mui/x-chat-unstyled';
 
-<Thread.Header>
-  <Thread.Title />
-  <Thread.Subtitle />
+<Conversation.Header>
+  <Conversation.Title />
+  <Conversation.Subtitle />
   <Indicators.TypingIndicator />
-</Thread.Header>;
+</Conversation.Header>;
 ```
 
 Use it in the thread header or just above the composer when typing feedback should stay close to the active draft area.

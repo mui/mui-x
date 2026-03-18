@@ -175,77 +175,49 @@ export const DemoConversationItemAvatar = React.forwardRef(
   },
 );
 
-export const DemoConversationItemText = React.forwardRef(
-  function DemoConversationItemText(
-    props: React.HTMLAttributes<HTMLDivElement> & {
-      conversation?: {
-        title?: string;
-        subtitle?: string;
-      };
-      ownerState?: {
-        unread?: boolean;
-      };
-      selected?: boolean;
-      unread?: boolean;
-      focused?: boolean;
-    },
-    ref: React.Ref<HTMLDivElement>,
-  ) {
-    const {
-      conversation,
-      ownerState,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
-
-    return (
-      <div
-        ref={ref}
-        style={{
-          minWidth: 0,
-          display: 'grid',
-          gap: 4,
-          ...style,
-        }}
-        {...other}
-      >
-        <div
-          style={{
-            fontWeight: ownerState?.unread ? 800 : 700,
-            color: palette.text,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {conversation?.title}
-        </div>
-        <div
-          style={{
-            fontSize: 12,
-            color: palette.muted,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {conversation?.subtitle}
-        </div>
-      </div>
-    );
+export const DemoConversationTitle = React.forwardRef(function DemoConversationTitle(
+  props: React.HTMLAttributes<HTMLDivElement> & {
+    conversation?: { title?: string; id?: string };
+    ownerState?: { unread?: boolean };
+    selected?: boolean;
+    unread?: boolean;
+    focused?: boolean;
   },
-);
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const {
+    conversation,
+    ownerState,
+    selected: _s,
+    unread: _u,
+    focused: _f,
+    style,
+    ...other
+  } = props;
 
-export const DemoConversationItemMeta = React.forwardRef(
-  function DemoConversationItemMeta(
+  return (
+    <div
+      ref={ref}
+      style={{
+        fontWeight: ownerState?.unread ? 800 : 700,
+        color: palette.text,
+        minWidth: 0,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        ...style,
+      }}
+      {...other}
+    >
+      {conversation?.title ?? conversation?.id}
+    </div>
+  );
+});
+
+export const DemoConversationPreview = React.forwardRef(
+  function DemoConversationPreview(
     props: React.HTMLAttributes<HTMLDivElement> & {
-      conversation?: {
-        unreadCount?: number;
-        lastMessageAt?: string;
-      };
+      conversation?: { subtitle?: string };
       ownerState?: unknown;
       selected?: boolean;
       unread?: boolean;
@@ -262,40 +234,116 @@ export const DemoConversationItemMeta = React.forwardRef(
       style,
       ...other
     } = props;
-    const unreadCount = conversation?.unreadCount ?? 0;
+
+    if (!conversation?.subtitle) {
+      return null;
+    }
 
     return (
       <div
         ref={ref}
         style={{
-          display: 'grid',
-          justifyItems: 'end',
-          gap: 6,
-          fontSize: 11,
+          fontSize: 12,
           color: palette.muted,
+          minWidth: 0,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
           ...style,
         }}
         {...other}
       >
-        <time dateTime={conversation?.lastMessageAt}>
-          {formatConversationTime(conversation?.lastMessageAt)}
-        </time>
-        {unreadCount > 0 ? (
-          <span
-            style={{
-              minWidth: 20,
-              padding: '2px 7px',
-              borderRadius: 999,
-              background: palette.accent,
-              color: '#ffffff',
-              fontWeight: 700,
-              textAlign: 'center',
-            }}
-          >
-            {unreadCount}
-          </span>
-        ) : null}
+        {conversation.subtitle}
       </div>
+    );
+  },
+);
+
+export const DemoConversationTimestamp = React.forwardRef(
+  function DemoConversationTimestamp(
+    props: React.HTMLAttributes<HTMLDivElement> & {
+      conversation?: { lastMessageAt?: string };
+      ownerState?: unknown;
+      selected?: boolean;
+      unread?: boolean;
+      focused?: boolean;
+    },
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    const {
+      conversation,
+      ownerState: _,
+      selected: _s,
+      unread: _u,
+      focused: _f,
+      style,
+      ...other
+    } = props;
+
+    if (!conversation?.lastMessageAt) {
+      return null;
+    }
+
+    return (
+      <div
+        ref={ref}
+        style={{ fontSize: 11, color: palette.muted, textAlign: 'end', ...style }}
+        {...other}
+      >
+        <time dateTime={conversation.lastMessageAt}>
+          {formatConversationTime(conversation.lastMessageAt)}
+        </time>
+      </div>
+    );
+  },
+);
+
+export const DemoConversationUnreadBadge = React.forwardRef(
+  function DemoConversationUnreadBadge(
+    props: React.HTMLAttributes<HTMLSpanElement> & {
+      conversation?: { unreadCount?: number };
+      ownerState?: unknown;
+      selected?: boolean;
+      unread?: boolean;
+      focused?: boolean;
+    },
+    ref: React.Ref<HTMLSpanElement>,
+  ) {
+    const {
+      conversation,
+      ownerState: _,
+      selected: _s,
+      unread: _u,
+      focused: _f,
+      style,
+      ...other
+    } = props;
+    const unreadCount = conversation?.unreadCount ?? 0;
+
+    if (unreadCount <= 0) {
+      return null;
+    }
+
+    return (
+      <span
+        ref={ref}
+        style={{
+          display: 'inline-block',
+          minWidth: 20,
+          padding: '2px 7px',
+          borderRadius: 999,
+          background: palette.accent,
+          color: '#ffffff',
+          fontWeight: 700,
+          fontSize: 11,
+          textAlign: 'center',
+          justifySelf: 'end',
+          ...style,
+        }}
+        {...other}
+      >
+        {unreadCount > 99 ? '99+' : unreadCount}
+      </span>
     );
   },
 );

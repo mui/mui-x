@@ -1,8 +1,8 @@
 export interface ChatComponentNameToClassKey {
   MuiChatBox: 'root';
   MuiChatConversations: 'root';
-  MuiChatThread: 'root';
-  MuiChatComposer: 'root';
+  MuiChatConversation: 'root';
+  MuiChatConversationInput: 'root';
   MuiChatMessage: 'root';
   MuiChatTypingIndicator: 'root';
   MuiChatUnreadMarker: 'root';

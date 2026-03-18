@@ -7,6 +7,12 @@ import {
   type ChatMessage,
   type ChatRealtimeEvent,
 } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import {
   cloneConversations,
   cloneMessages,
@@ -14,15 +20,6 @@ import {
   demoThreads,
   demoUsers,
 } from '../shared/demoData';
-import {
-  DemoButton,
-  DemoConversationList,
-  DemoFrame,
-  DemoHeading,
-  DemoMessageList,
-  DemoSplitLayout,
-  DemoStats,
-} from '../shared/DemoPrimitives';
 
 function createRealtimeSyncAdapter() {
   let onEventRef: ((event: ChatRealtimeEvent) => void) | null = null;
@@ -158,66 +155,205 @@ function RealtimeThreadSyncInner({
   };
 
   return (
-    <DemoFrame>
-      <DemoSplitLayout
-        sidebar={
-          <React.Fragment>
-            <h3 style={{ margin: 0 }}>Conversation sync</h3>
-            <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              The provider applies incoming realtime record updates directly to the
-              normalized store.
-            </p>
-            <DemoConversationList
-              conversations={conversations}
-              activeConversationId={activeConversationId}
-              onSelect={(conversationId) => {
-                void setActiveConversation(conversationId);
-              }}
-            />
-          </React.Fragment>
-        }
+    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
       >
-        <DemoHeading
-          title="Realtime collection sync"
-          description="Message and conversation events can reshape the thread without a manual refetch."
-        />
-        <DemoStats
-          items={[
-            { label: 'Conversations', value: conversations.length },
-            { label: 'Active', value: activeConversation?.title ?? 'none' },
-            { label: 'Messages', value: messages.length },
-          ]}
-        />
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <DemoButton onClick={addMessage} disabled={!activeConversationId}>
-            Add message
-          </DemoButton>
-          <DemoButton onClick={updateLastMessage} disabled={messages.length === 0}>
-            Update last assistant message
-          </DemoButton>
-          <DemoButton onClick={removeLastMessage} disabled={messages.length === 0}>
-            Remove last assistant message
-          </DemoButton>
-          <DemoButton onClick={addConversation}>Add conversation</DemoButton>
-          <DemoButton
-            onClick={renameActiveConversation}
-            disabled={!activeConversationId}
+        <Typography variant="subtitle1" fontWeight={700}>
+          Realtime collection sync
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Message and conversation events can reshape the thread without a manual
+          refetch.
+        </Typography>
+      </Box>
+
+      {/* Conversation selector */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          px: 2,
+          py: 1.5,
+          borderBottom: 1,
+          borderColor: 'divider',
+          flexWrap: 'wrap',
+        }}
+      >
+        {conversations.map((conversation) => (
+          <Chip
+            key={conversation.id}
+            label={conversation.title ?? conversation.id}
+            variant={
+              conversation.id === activeConversationId ? 'filled' : 'outlined'
+            }
+            color={
+              conversation.id === activeConversationId ? 'primary' : 'default'
+            }
+            onClick={() => {
+              void setActiveConversation(conversation.id);
+            }}
+          />
+        ))}
+      </Stack>
+
+      {/* Stats */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ px: 2, py: 1.5, borderBottom: 1, borderColor: 'divider' }}
+      >
+        {[
+          { label: 'Conversations', value: conversations.length },
+          { label: 'Active', value: activeConversation?.title ?? 'none' },
+          { label: 'Messages', value: messages.length },
+        ].map((stat) => (
+          <Paper
+            key={stat.label}
+            variant="outlined"
+            sx={{ px: 1.5, py: 0.75, flex: 1, textAlign: 'center' }}
           >
-            Rename active conversation
-          </DemoButton>
-          <DemoButton
-            onClick={removeActiveConversation}
-            disabled={!activeConversationId}
+            <Typography variant="caption" color="text.secondary">
+              {stat.label}
+            </Typography>
+            <Typography variant="body2" fontWeight={700} noWrap>
+              {stat.value}
+            </Typography>
+          </Paper>
+        ))}
+      </Stack>
+
+      {/* Action buttons */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          px: 2,
+          py: 1.5,
+          borderBottom: 1,
+          borderColor: 'divider',
+          flexWrap: 'wrap',
+          rowGap: 1,
+        }}
+      >
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={addMessage}
+          disabled={!activeConversationId}
+        >
+          Add message
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={updateLastMessage}
+          disabled={messages.length === 0}
+        >
+          Update last assistant message
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={removeLastMessage}
+          disabled={messages.length === 0}
+        >
+          Remove last assistant message
+        </Button>
+        <Button size="small" variant="outlined" onClick={addConversation}>
+          Add conversation
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={renameActiveConversation}
+          disabled={!activeConversationId}
+        >
+          Rename active conversation
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={removeActiveConversation}
+          disabled={!activeConversationId}
+        >
+          Remove active conversation
+        </Button>
+      </Stack>
+
+      {/* Messages */}
+      <Box
+        sx={{
+          p: 2,
+          minHeight: 300,
+          maxHeight: 400,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', mt: 8 }}
           >
-            Remove active conversation
-          </DemoButton>
-        </div>
-        <DemoMessageList
-          messages={messages}
-          emptyLabel="Select or create a conversation. Removing the active thread clears the message view."
-        />
-      </DemoSplitLayout>
-    </DemoFrame>
+            Select or create a conversation. Removing the active thread clears
+            the message view.
+          </Typography>
+        ) : (
+          messages.map((message) => {
+            const isUser = message.role === 'user';
+            return (
+              <Box
+                key={message.id}
+                sx={{
+                  display: 'flex',
+                  justifyContent: isUser ? 'flex-end' : 'flex-start',
+                }}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    maxWidth: '80%',
+                    bgcolor: isUser ? 'primary.main' : 'grey.100',
+                    color: isUser ? 'primary.contrastText' : 'text.primary',
+                    borderRadius: 3,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: 700,
+                      color: isUser ? 'primary.contrastText' : 'text.secondary',
+                    }}
+                  >
+                    {message.author?.displayName ?? message.role}
+                  </Typography>
+                  {message.parts.map((part, index) => (
+                    <Typography
+                      variant="body2"
+                      key={`${message.id}-${part.type}-${index}`}
+                    >
+                      {part.type === 'text' ? part.text : null}
+                    </Typography>
+                  ))}
+                </Paper>
+              </Box>
+            );
+          })
+        )}
+      </Box>
+    </Paper>
   );
 }
 

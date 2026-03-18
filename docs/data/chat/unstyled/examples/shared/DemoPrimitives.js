@@ -144,8 +144,8 @@ export const DemoConversationItemAvatar = React.forwardRef(
   },
 );
 
-export const DemoConversationItemText = React.forwardRef(
-  function DemoConversationItemText(props, ref) {
+export const DemoConversationTitle = React.forwardRef(
+  function DemoConversationTitle(props, ref) {
     const {
       conversation,
       ownerState,
@@ -160,42 +160,90 @@ export const DemoConversationItemText = React.forwardRef(
       <div
         ref={ref}
         style={{
+          fontWeight: ownerState?.unread ? 800 : 700,
+          color: palette.text,
           minWidth: 0,
-          display: 'grid',
-          gap: 4,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
           ...style,
         }}
         {...other}
       >
-        <div
-          style={{
-            fontWeight: ownerState?.unread ? 800 : 700,
-            color: palette.text,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {conversation?.title}
-        </div>
-        <div
-          style={{
-            fontSize: 12,
-            color: palette.muted,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {conversation?.subtitle}
-        </div>
+        {conversation?.title ?? conversation?.id}
       </div>
     );
   },
 );
 
-export const DemoConversationItemMeta = React.forwardRef(
-  function DemoConversationItemMeta(props, ref) {
+export const DemoConversationPreview = React.forwardRef(
+  function DemoConversationPreview(props, ref) {
+    const {
+      conversation,
+      ownerState: _,
+      selected: _s,
+      unread: _u,
+      focused: _f,
+      style,
+      ...other
+    } = props;
+
+    if (!conversation?.subtitle) {
+      return null;
+    }
+
+    return (
+      <div
+        ref={ref}
+        style={{
+          fontSize: 12,
+          color: palette.muted,
+          minWidth: 0,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          ...style,
+        }}
+        {...other}
+      >
+        {conversation.subtitle}
+      </div>
+    );
+  },
+);
+
+export const DemoConversationTimestamp = React.forwardRef(
+  function DemoConversationTimestamp(props, ref) {
+    const {
+      conversation,
+      ownerState: _,
+      selected: _s,
+      unread: _u,
+      focused: _f,
+      style,
+      ...other
+    } = props;
+
+    if (!conversation?.lastMessageAt) {
+      return null;
+    }
+
+    return (
+      <div
+        ref={ref}
+        style={{ fontSize: 11, color: palette.muted, textAlign: 'end', ...style }}
+        {...other}
+      >
+        <time dateTime={conversation.lastMessageAt}>
+          {formatConversationTime(conversation.lastMessageAt)}
+        </time>
+      </div>
+    );
+  },
+);
+
+export const DemoConversationUnreadBadge = React.forwardRef(
+  function DemoConversationUnreadBadge(props, ref) {
     const {
       conversation,
       ownerState: _,
@@ -207,38 +255,30 @@ export const DemoConversationItemMeta = React.forwardRef(
     } = props;
     const unreadCount = conversation?.unreadCount ?? 0;
 
+    if (unreadCount <= 0) {
+      return null;
+    }
+
     return (
-      <div
+      <span
         ref={ref}
         style={{
-          display: 'grid',
-          justifyItems: 'end',
-          gap: 6,
+          display: 'inline-block',
+          minWidth: 20,
+          padding: '2px 7px',
+          borderRadius: 999,
+          background: palette.accent,
+          color: '#ffffff',
+          fontWeight: 700,
           fontSize: 11,
-          color: palette.muted,
+          textAlign: 'center',
+          justifySelf: 'end',
           ...style,
         }}
         {...other}
       >
-        <time dateTime={conversation?.lastMessageAt}>
-          {formatConversationTime(conversation?.lastMessageAt)}
-        </time>
-        {unreadCount > 0 ? (
-          <span
-            style={{
-              minWidth: 20,
-              padding: '2px 7px',
-              borderRadius: 999,
-              background: palette.accent,
-              color: '#ffffff',
-              fontWeight: 700,
-              textAlign: 'center',
-            }}
-          >
-            {unreadCount}
-          </span>
-        ) : null}
-      </div>
+        {unreadCount > 99 ? '99+' : unreadCount}
+      </span>
     );
   },
 );

@@ -2,12 +2,14 @@
 productId: x-chat
 title: Chat - Unstyled conversation list
 packageName: '@mui/x-chat-unstyled'
-components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListItemMeta, ConversationListItemText
+components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
 ---
 
 # Unstyled conversation list
 
 <p class="description">Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus.</p>
+
+{{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js"}}
 
 ## Primitive set
 
@@ -16,8 +18,10 @@ The conversation list surface is built from:
 - `ConversationList.Root`
 - `ConversationList.Item`
 - `ConversationList.ItemAvatar`
-- `ConversationList.ItemText`
-- `ConversationList.ItemMeta`
+- `ConversationList.Title`
+- `ConversationList.Preview`
+- `ConversationList.Timestamp`
+- `ConversationList.UnreadBadge`
 
 ## `ConversationList.Root`
 
@@ -41,8 +45,10 @@ The root is also the conversation-pane marker recognized by `Chat.Layout`, so it
 Each rendered row is composed from:
 
 - `ItemAvatar` for participant identity
-- `ItemText` for title and subtitle
-- `ItemMeta` for unread counts and metadata regions
+- `Title` for the conversation name
+- `Preview` for the last message subtitle
+- `Timestamp` for the last-message time
+- `UnreadBadge` for the unread count
 
 Replace the row or any subpart through `slots` and `slotProps` when a product surface needs a different row layout.
 
@@ -53,8 +59,10 @@ The default structure is useful for inbox-like sidebars, but the slot model make
   slots={{
     item: MyConversationRow,
     itemAvatar: MyAvatar,
-    itemText: MyPrimaryText,
-    itemMeta: MyMeta,
+    title: MyTitle,
+    preview: MyPreview,
+    timestamp: MyTimestamp,
+    unreadBadge: MyBadge,
   }}
 />
 ```
@@ -90,7 +98,7 @@ The most common composition is:
 ```tsx
 <Chat.Layout>
   <ConversationList.Root aria-label="Conversations" />
-  <Thread.Root>{/* thread content */}</Thread.Root>
+  <Conversation.Root>{/* thread content */}</Conversation.Root>
 </Chat.Layout>
 ```
 

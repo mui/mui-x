@@ -3,6 +3,7 @@ import { MessageAvatar } from './MessageAvatar';
 import { MessageContent } from './MessageContent';
 import { MessageMeta } from './MessageMeta';
 import { MessageRoot } from './MessageRoot';
+import { FilePart, ReasoningPart, SourceDocumentPart, SourceUrlPart, ToolPart } from './parts';
 
 export { MessageRoot } from './MessageRoot';
 export { MessageAvatar } from './MessageAvatar';
@@ -17,6 +18,7 @@ export type {
   MessageAvatarSlots,
 } from './MessageAvatar';
 export type {
+  MessageContentPartProps,
   MessageContentProps,
   MessageContentSlotProps,
   MessageContentSlots,
@@ -36,10 +38,69 @@ export type {
   MessageRootOwnerState,
 } from './message.types';
 
+// Part renderer components
+export {
+  FilePart,
+  ReasoningPart,
+  SourceDocumentPart,
+  SourceUrlPart,
+  ToolPart,
+  createFilePartRenderer,
+  createReasoningPartRenderer,
+  createSourceDocumentPartRenderer,
+  createSourceUrlPartRenderer,
+  createToolPartRenderer,
+} from './parts';
+
+export type {
+  FilePartExternalProps,
+  FilePartOwnerState,
+  FilePartProps,
+  FilePartSlotProps,
+  FilePartSlots,
+  ReasoningPartExternalProps,
+  ReasoningPartOwnerState,
+  ReasoningPartProps,
+  ReasoningPartSlotProps,
+  ReasoningPartSlots,
+  SourceDocumentPartExternalProps,
+  SourceDocumentPartOwnerState,
+  SourceDocumentPartProps,
+  SourceDocumentPartSlotProps,
+  SourceDocumentPartSlots,
+  SourceUrlPartExternalProps,
+  SourceUrlPartOwnerState,
+  SourceUrlPartProps,
+  SourceUrlPartSlotProps,
+  SourceUrlPartSlots,
+  ToolPartExternalProps,
+  ToolPartOwnerState,
+  ToolPartProps,
+  ToolPartSectionOwnerState,
+  ToolPartSlotProps,
+  ToolPartSlots,
+} from './parts';
+
+// Part utilities
+export {
+  extractLanguage,
+  formatStructuredValue,
+  normalizeCodeContent,
+  normalizeMarkdownForRender,
+  safeUri,
+  shouldCollapsePayload,
+} from './parts';
+
 export const Message = {
   Root: MessageRoot,
   Avatar: MessageAvatar,
   Content: MessageContent,
   Meta: MessageMeta,
   Actions: MessageActions,
+  // Part renderer components
+  FilePart,
+  ReasoningPart,
+  SourceDocumentPart,
+  SourceUrlPart,
+  ToolPart,
 } as const;

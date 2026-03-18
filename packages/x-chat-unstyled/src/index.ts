@@ -1,29 +1,56 @@
 export { Chat, ChatLayout, ChatRoot } from './chat';
 export {
-  Composer,
-  ComposerAttachButton,
-  ComposerHelperText,
-  ComposerInput,
-  ComposerRoot,
-  ComposerSendButton,
-  ComposerToolbar,
-} from './composer';
+  Conversation,
+  ConversationHeader,
+  ConversationHeaderActions,
+  ConversationHeaderInfo,
+  ConversationRoot,
+  ConversationSubtitle,
+  ConversationTitle,
+} from './conversation';
+export {
+  ConversationInput,
+  ConversationInputAttachButton,
+  ConversationInputHelperText,
+  ConversationInputRoot,
+  ConversationInputSendButton,
+  ConversationInputTextArea,
+  ConversationInputToolbar,
+} from './conversation-input';
 export {
   ConversationList,
   ConversationListItem,
   ConversationListItemAvatar,
-  ConversationListItemMeta,
-  ConversationListItemText,
+  ConversationListPreview,
   ConversationListRoot,
+  ConversationListTimestamp,
+  ConversationListTitle,
+  ConversationListUnreadBadge,
 } from './conversation-list';
 export { Indicators, ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
 export {
+  FilePart,
   Message,
   MessageActions,
   MessageAvatar,
   MessageContent,
   MessageMeta,
   MessageRoot,
+  ReasoningPart,
+  SourceDocumentPart,
+  SourceUrlPart,
+  ToolPart,
+  createFilePartRenderer,
+  createReasoningPartRenderer,
+  createSourceDocumentPartRenderer,
+  createSourceUrlPartRenderer,
+  createToolPartRenderer,
+  extractLanguage,
+  formatStructuredValue,
+  normalizeCodeContent,
+  normalizeMarkdownForRender,
+  safeUri,
+  shouldCollapsePayload,
 } from './message';
 export {
   getDefaultMessagePartRenderer,
@@ -39,14 +66,6 @@ export {
 } from './message/defaultMessagePartRenderers';
 export { MessageGroup } from './message-group';
 export { MessageList, MessageListDateDivider, MessageListRoot } from './message-list';
-export {
-  Thread,
-  ThreadActions,
-  ThreadHeader,
-  ThreadRoot,
-  ThreadSubtitle,
-  ThreadTitle,
-} from './thread';
 
 export type {
   ChatLayoutProps,
@@ -57,41 +76,67 @@ export type {
   ChatRootSlots,
 } from './chat';
 export type {
-  ComposerAttachButtonProps,
-  ComposerAttachButtonSlotProps,
-  ComposerAttachButtonSlots,
-  ComposerHelperTextProps,
-  ComposerHelperTextSlotProps,
-  ComposerHelperTextSlots,
-  ComposerInputProps,
-  ComposerInputSlotProps,
-  ComposerInputSlots,
-  ComposerRootProps,
-  ComposerRootSlotProps,
-  ComposerRootSlots,
-  ComposerSendButtonProps,
-  ComposerSendButtonSlotProps,
-  ComposerSendButtonSlots,
-  ComposerToolbarProps,
-  ComposerToolbarSlotProps,
-  ComposerToolbarSlots,
-} from './composer';
+  ConversationHeaderActionsProps,
+  ConversationHeaderActionsSlotProps,
+  ConversationHeaderActionsSlots,
+  ConversationHeaderInfoProps,
+  ConversationHeaderInfoSlotProps,
+  ConversationHeaderInfoSlots,
+  ConversationHeaderProps,
+  ConversationHeaderSlotProps,
+  ConversationHeaderSlots,
+  ConversationRootProps,
+  ConversationRootSlotProps,
+  ConversationRootSlots,
+  ConversationSubtitleProps,
+  ConversationSubtitleSlotProps,
+  ConversationSubtitleSlots,
+  ConversationTitleProps,
+  ConversationTitleSlotProps,
+  ConversationTitleSlots,
+} from './conversation';
+export type {
+  ConversationInputAttachButtonProps,
+  ConversationInputAttachButtonSlotProps,
+  ConversationInputAttachButtonSlots,
+  ConversationInputHelperTextProps,
+  ConversationInputHelperTextSlotProps,
+  ConversationInputHelperTextSlots,
+  ConversationInputRootProps,
+  ConversationInputRootSlotProps,
+  ConversationInputRootSlots,
+  ConversationInputSendButtonProps,
+  ConversationInputSendButtonSlotProps,
+  ConversationInputSendButtonSlots,
+  ConversationInputTextAreaProps,
+  ConversationInputTextAreaSlotProps,
+  ConversationInputTextAreaSlots,
+  ConversationInputToolbarProps,
+  ConversationInputToolbarSlotProps,
+  ConversationInputToolbarSlots,
+} from './conversation-input';
 export type {
   ConversationListItemAvatarProps,
   ConversationListItemAvatarSlotProps,
   ConversationListItemAvatarSlots,
-  ConversationListItemMetaProps,
-  ConversationListItemMetaSlotProps,
-  ConversationListItemMetaSlots,
   ConversationListItemProps,
   ConversationListItemSlotProps,
   ConversationListItemSlots,
-  ConversationListItemTextProps,
-  ConversationListItemTextSlotProps,
-  ConversationListItemTextSlots,
+  ConversationListPreviewProps,
+  ConversationListPreviewSlotProps,
+  ConversationListPreviewSlots,
   ConversationListRootProps,
   ConversationListRootSlotProps,
   ConversationListRootSlots,
+  ConversationListTimestampProps,
+  ConversationListTimestampSlotProps,
+  ConversationListTimestampSlots,
+  ConversationListTitleProps,
+  ConversationListTitleSlotProps,
+  ConversationListTitleSlots,
+  ConversationListUnreadBadgeProps,
+  ConversationListUnreadBadgeSlotProps,
+  ConversationListUnreadBadgeSlots,
 } from './conversation-list';
 export type {
   ScrollToBottomAffordanceProps,
@@ -105,12 +150,18 @@ export type {
   UnreadMarkerSlots,
 } from './indicators';
 export type {
+  FilePartExternalProps,
+  FilePartOwnerState,
+  FilePartProps,
+  FilePartSlotProps,
+  FilePartSlots,
   MessageActionsProps,
   MessageActionsSlotProps,
   MessageActionsSlots,
   MessageAvatarProps,
   MessageAvatarSlotProps,
   MessageAvatarSlots,
+  MessageContentPartProps,
   MessageContentProps,
   MessageContentSlotProps,
   MessageContentSlots,
@@ -120,6 +171,27 @@ export type {
   MessageRootProps,
   MessageRootSlotProps,
   MessageRootSlots,
+  ReasoningPartExternalProps,
+  ReasoningPartOwnerState,
+  ReasoningPartProps,
+  ReasoningPartSlotProps,
+  ReasoningPartSlots,
+  SourceDocumentPartExternalProps,
+  SourceDocumentPartOwnerState,
+  SourceDocumentPartProps,
+  SourceDocumentPartSlotProps,
+  SourceDocumentPartSlots,
+  SourceUrlPartExternalProps,
+  SourceUrlPartOwnerState,
+  SourceUrlPartProps,
+  SourceUrlPartSlotProps,
+  SourceUrlPartSlots,
+  ToolPartExternalProps,
+  ToolPartOwnerState,
+  ToolPartProps,
+  ToolPartSectionOwnerState,
+  ToolPartSlotProps,
+  ToolPartSlots,
 } from './message';
 export type { MessageGroupProps, MessageGroupSlotProps, MessageGroupSlots } from './message-group';
 export type {
@@ -131,41 +203,35 @@ export type {
   MessageListRootSlotProps,
   MessageListRootSlots,
 } from './message-list';
-export type {
-  ThreadActionsProps,
-  ThreadActionsSlotProps,
-  ThreadActionsSlots,
-  ThreadHeaderProps,
-  ThreadHeaderSlotProps,
-  ThreadHeaderSlots,
-  ThreadRootProps,
-  ThreadRootSlotProps,
-  ThreadRootSlots,
-  ThreadSubtitleProps,
-  ThreadSubtitleSlotProps,
-  ThreadSubtitleSlots,
-  ThreadTitleProps,
-  ThreadTitleSlotProps,
-  ThreadTitleSlots,
-} from './thread';
 
 // OwnerState types
 export type { ChatLayoutOwnerState, ChatLayoutPaneOwnerState, ChatRootOwnerState } from './chat';
 export type {
-  ComposerAttachButtonOwnerState,
-  ComposerHelperTextOwnerState,
-  ComposerInputOwnerState,
-  ComposerOwnerState,
-  ComposerRootOwnerState,
-  ComposerSendButtonOwnerState,
-  ComposerToolbarOwnerState,
-} from './composer';
+  ConversationHeaderActionsOwnerState,
+  ConversationHeaderInfoOwnerState,
+  ConversationHeaderOwnerState,
+  ConversationOwnerState,
+  ConversationRootOwnerState,
+  ConversationSubtitleOwnerState,
+  ConversationTitleOwnerState,
+} from './conversation';
+export type {
+  ConversationInputAttachButtonOwnerState,
+  ConversationInputHelperTextOwnerState,
+  ConversationInputOwnerState,
+  ConversationInputRootOwnerState,
+  ConversationInputSendButtonOwnerState,
+  ConversationInputTextAreaOwnerState,
+  ConversationInputToolbarOwnerState,
+} from './conversation-input';
 export type {
   ConversationListItemAvatarOwnerState,
-  ConversationListItemMetaOwnerState,
   ConversationListItemOwnerState,
-  ConversationListItemTextOwnerState,
+  ConversationListPreviewOwnerState,
   ConversationListRootOwnerState,
+  ConversationListTimestampOwnerState,
+  ConversationListTitleOwnerState,
+  ConversationListUnreadBadgeOwnerState,
 } from './conversation-list';
 export type {
   ScrollToBottomAffordanceOwnerState,
@@ -180,16 +246,9 @@ export type {
   MessageOwnerState,
   MessageRootOwnerState,
 } from './message';
+// Part renderer OwnerState types are exported via the type block above (FilePartOwnerState, etc.)
 export type { MessageGroupOwnerState } from './message-group';
 export type { MessageListDateDividerOwnerState, MessageListRootOwnerState } from './message-list';
-export type {
-  ThreadActionsOwnerState,
-  ThreadHeaderOwnerState,
-  ThreadOwnerState,
-  ThreadRootOwnerState,
-  ThreadSubtitleOwnerState,
-  ThreadTitleOwnerState,
-} from './thread';
 
 // Locale types
 export type { ChatLocaleText, ChatLocaleTypingUser } from './chat';

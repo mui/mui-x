@@ -9,13 +9,13 @@ export interface ChatComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChatConversations'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversations'];
   };
-  MuiChatThread?: {
-    defaultProps?: ComponentsProps['MuiChatThread'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiChatThread'];
+  MuiChatConversation?: {
+    defaultProps?: ComponentsProps['MuiChatConversation'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversation'];
   };
-  MuiChatComposer?: {
-    defaultProps?: ComponentsProps['MuiChatComposer'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiChatComposer'];
+  MuiChatConversationInput?: {
+    defaultProps?: ComponentsProps['MuiChatConversationInput'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversationInput'];
   };
   MuiChatMessage?: {
     defaultProps?: ComponentsProps['MuiChatMessage'];

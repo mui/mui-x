@@ -5,17 +5,13 @@ import {
   type ChatAdapter,
   type ChatOnToolCallPayload,
 } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { demoUsers } from '../shared/demoData';
 import { createChunkStream } from '../shared/demoUtils';
-import {
-  DemoButton,
-  DemoCodeBlock,
-  DemoFrame,
-  DemoHeading,
-  DemoMessageList,
-  DemoSplitLayout,
-  DemoStats,
-} from '../shared/DemoPrimitives';
 
 const adapter: ChatAdapter = {
   async sendMessage() {
@@ -62,28 +58,106 @@ function ToolCallEventsInner() {
 
   return (
     <React.Fragment>
-      <DemoHeading
-        title="Tool call callback log"
-        description="The message list reflects tool state, while the sidebar shows side effects driven by onToolCall."
-        actions={
-          <DemoButton
-            disabled={isStreaming}
-            onClick={() =>
-              void sendMessage({
-                conversationId: 'ops',
-                author: demoUsers.alice,
-                parts: [{ type: 'text', text: 'Check stock for CHAIR-04.' }],
-              })
-            }
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
+      >
+        <Typography variant="subtitle1" fontWeight={700}>
+          Tool call callback log
+        </Typography>
+        <Button
+          size="small"
+          variant="contained"
+          disabled={isStreaming}
+          onClick={() =>
+            void sendMessage({
+              conversationId: 'ops',
+              author: demoUsers.alice,
+              parts: [{ type: 'text', text: 'Check stock for CHAIR-04.' }],
+            })
+          }
+        >
+          Run inventory tool
+        </Button>
+      </Box>
+
+      {/* Messages */}
+      <Box
+        sx={{
+          p: 2,
+          minHeight: 300,
+          maxHeight: 400,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', mt: 8 }}
           >
-            Run inventory tool
-          </DemoButton>
-        }
-      />
-      <DemoMessageList
-        messages={messages}
-        emptyLabel="Send a message to stream a tool invocation and watch the callback log update."
-      />
+            Send a message to stream a tool invocation and watch the callback
+            log update.
+          </Typography>
+        ) : (
+          messages.map((message) => {
+            const isUser = message.role === 'user';
+            return (
+              <Box
+                key={message.id}
+                sx={{
+                  display: 'flex',
+                  justifyContent: isUser ? 'flex-end' : 'flex-start',
+                }}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    maxWidth: '80%',
+                    bgcolor: isUser ? 'primary.main' : 'grey.100',
+                    color: isUser ? 'primary.contrastText' : 'text.primary',
+                    borderRadius: 3,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: 700,
+                      color: isUser ? 'primary.contrastText' : 'text.secondary',
+                    }}
+                  >
+                    {message.author?.displayName ?? message.role}
+                  </Typography>
+                  {message.parts.map((part, index) => (
+                    <Typography
+                      variant="body2"
+                      key={`${message.id}-${part.type}-${index}`}
+                    >
+                      {part.type === 'text' ? part.text : null}
+                      {part.type === 'tool'
+                        ? `${part.toolInvocation.toolName}: ${part.toolInvocation.state}`
+                        : null}
+                    </Typography>
+                  ))}
+                </Paper>
+              </Box>
+            );
+          })
+        )}
+      </Box>
     </React.Fragment>
   );
 }
@@ -107,31 +181,55 @@ export default function ToolCallEventsHeadlessChat() {
       defaultActiveConversationId="ops"
       onToolCall={handleToolCall}
     >
-      <DemoFrame>
-        <DemoSplitLayout
-          sidebar={
-            <React.Fragment>
-              <h3 style={{ margin: 0 }}>Side effects</h3>
-              <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-                <code>onToolCall</code> runs outside the store, so it is a good place
-                for logs, analytics, and orchestration.
-              </p>
-              <DemoStats
-                items={[
-                  { label: 'Tool', value: toolName },
-                  { label: 'Latest state', value: latestState },
-                  { label: 'Events', value: events.length },
-                ]}
-              />
-              <DemoCodeBlock>
-                {events.join('\n') || 'Tool events will appear here.'}
-              </DemoCodeBlock>
-            </React.Fragment>
-          }
+      <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+        <ToolCallEventsInner />
+
+        {/* Stats */}
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ px: 2, py: 1.5, borderTop: 1, borderColor: 'divider' }}
         >
-          <ToolCallEventsInner />
-        </DemoSplitLayout>
-      </DemoFrame>
+          {[
+            { label: 'Tool', value: toolName },
+            { label: 'Latest state', value: latestState },
+            { label: 'Events', value: events.length },
+          ].map((stat) => (
+            <Paper
+              key={stat.label}
+              variant="outlined"
+              sx={{ px: 1.5, py: 0.75, flex: 1, textAlign: 'center' }}
+            >
+              <Typography variant="caption" color="text.secondary">
+                {stat.label}
+              </Typography>
+              <Typography variant="body2" fontWeight={700} noWrap>
+                {stat.value}
+              </Typography>
+            </Paper>
+          ))}
+        </Stack>
+
+        {/* Event log */}
+        <Box sx={{ px: 2, pb: 2, pt: 1 }}>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 1.5,
+              bgcolor: 'grey.900',
+              color: 'grey.100',
+              fontFamily: 'monospace',
+              fontSize: 12,
+              maxHeight: 160,
+              overflow: 'auto',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+            }}
+          >
+            {events.join('\n') || 'Tool events will appear here.'}
+          </Paper>
+        </Box>
+      </Paper>
     </ChatProvider>
   );
 }

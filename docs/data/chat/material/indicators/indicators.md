@@ -12,7 +12,7 @@ components: ChatTypingIndicator, ChatUnreadMarker, ChatScrollToBottomAffordance
 ## Typing indicator
 
 `ChatTypingIndicator` shows an animated dots indicator when the assistant is composing a response.
-It is automatically displayed inside `ChatThread` during streaming.
+It is automatically displayed inside `ChatConversation` during streaming.
 
 ## Unread marker
 

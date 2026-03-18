@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import type { SxProps, Theme } from '@mui/material/styles';
-import type { ChatMessagePart, ChatPartRenderer, ChatTextMessagePart } from '@mui/x-chat-headless';
+import type { ChatPartRenderer, ChatTextMessagePart } from '@mui/x-chat-headless';
 import {
   MessageActions as UnstyledMessageActions,
   MessageAvatar as UnstyledMessageAvatar,
@@ -50,6 +50,11 @@ import {
   ChatSourceDocumentPartRenderer,
   ChatSourceUrlPartRenderer,
   ChatToolPartRenderer,
+  chatFilePartSlots,
+  chatReasoningPartSlots,
+  chatSourceDocumentPartSlots,
+  chatSourceUrlPartSlots,
+  chatToolPartSlots,
   createChatFilePartRenderer,
   createChatReasoningPartRenderer,
   createChatSourceDocumentPartRenderer,
@@ -422,7 +427,7 @@ export type ChatMessageContentSlots = UnstyledMessageContentSlots;
 export type ChatMessageContentSlotProps = UnstyledMessageContentSlotProps;
 export interface ChatMessageContentProps extends Omit<
   UnstyledMessageContentProps,
-  'resolveBuiltInPartRenderer' | 'slotProps' | 'slots'
+  'partProps' | 'resolveBuiltInPartRenderer' | 'slotProps' | 'slots'
 > {
   className?: string;
   slotProps?: ChatMessageContentSlotProps;
@@ -549,44 +554,46 @@ export const ChatMessageContent = React.forwardRef(function ChatMessageContent(
     <UnstyledMessageContent
       ref={ref}
       resolveBuiltInPartRenderer={(part, localeText) => {
-        switch (part.type) {
-          case 'text':
-            return ((rendererProps) => (
-              <ChatMarkdownTextPart
-                {...(rendererProps as Parameters<ChatPartRenderer<ChatTextMessagePart>>[0])}
-                localeText={{
-                  messageCopiedCodeButtonLabel: localeText.messageCopiedCodeButtonLabel,
-                  messageCopyCodeButtonLabel: localeText.messageCopyCodeButtonLabel,
-                }}
-              />
-            )) as ChatPartRenderer<any>;
-          case 'reasoning':
-            return createChatReasoningPartRenderer({
-              localeText: {
-                messageReasoningLabel: localeText.messageReasoningLabel,
-                messageReasoningStreamingLabel: localeText.messageReasoningStreamingLabel,
-              },
-            }) as ChatPartRenderer<ChatMessagePart>;
-          case 'tool':
-          case 'dynamic-tool':
-            return createChatToolPartRenderer({
-              localeText: {
-                messageToolApproveButtonLabel: localeText.messageToolApproveButtonLabel,
-                messageToolDenyButtonLabel: localeText.messageToolDenyButtonLabel,
-                messageToolInputLabel: localeText.messageToolInputLabel,
-                messageToolOutputLabel: localeText.messageToolOutputLabel,
-                toolStateLabel: localeText.toolStateLabel,
-              },
-            }) as ChatPartRenderer<ChatMessagePart>;
-          case 'file':
-            return createChatFilePartRenderer() as ChatPartRenderer<ChatMessagePart>;
-          case 'source-url':
-            return createChatSourceUrlPartRenderer() as ChatPartRenderer<ChatMessagePart>;
-          case 'source-document':
-            return createChatSourceDocumentPartRenderer() as ChatPartRenderer<ChatMessagePart>;
-          default:
-            return null;
+        // Text part uses resolveBuiltInPartRenderer until an unstyled TextPart is available.
+        // All other part types use partProps with styled slots below.
+        if (part.type === 'text') {
+          return ((rendererProps) => (
+            <ChatMarkdownTextPart
+              {...(rendererProps as Parameters<ChatPartRenderer<ChatTextMessagePart>>[0])}
+              localeText={{
+                messageCopiedCodeButtonLabel: localeText.messageCopiedCodeButtonLabel,
+                messageCopyCodeButtonLabel: localeText.messageCopyCodeButtonLabel,
+              }}
+            />
+          )) as ChatPartRenderer<any>;
         }
+        return null;
+      }}
+      partProps={{
+        reasoning: {
+          className: chatMessageClasses.reasoning,
+          slots: chatReasoningPartSlots,
+        },
+        tool: {
+          className: chatMessageClasses.tool,
+          slots: chatToolPartSlots,
+        },
+        'dynamic-tool': {
+          className: chatMessageClasses.tool,
+          slots: chatToolPartSlots,
+        },
+        file: {
+          className: chatMessageClasses.file,
+          slots: chatFilePartSlots,
+        },
+        'source-url': {
+          className: chatMessageClasses.sourceUrl,
+          slots: chatSourceUrlPartSlots,
+        },
+        'source-document': {
+          className: chatMessageClasses.sourceDocument,
+          slots: chatSourceDocumentPartSlots,
+        },
       }}
       slotProps={{
         bubble: mergeSlotPropsWithClassName(slotProps?.bubble, chatMessageClasses.bubble),

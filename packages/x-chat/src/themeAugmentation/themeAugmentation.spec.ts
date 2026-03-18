@@ -40,29 +40,29 @@ createTheme({
         },
       },
     },
-    MuiChatComposer: {
+    MuiChatConversationInput: {
       defaultProps: {
-        className: 'chat-composer',
+        className: 'chat-conversation-input',
       },
       styleOverrides: {
         root: {
           borderColor: 'red',
         },
-        // @ts-expect-error invalid MuiChatComposer class key
+        // @ts-expect-error invalid MuiChatConversationInput class key
         toolbar: {
           borderColor: 'blue',
         },
       },
     },
-    MuiChatThread: {
+    MuiChatConversation: {
       defaultProps: {
-        className: 'chat-thread',
+        className: 'chat-conversation',
       },
       styleOverrides: {
         root: {
           backgroundColor: 'red',
         },
-        // @ts-expect-error invalid MuiChatThread class key
+        // @ts-expect-error invalid MuiChatConversation class key
         header: {
           backgroundColor: 'blue',
         },

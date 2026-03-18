@@ -17,11 +17,11 @@ import {
 import { ChatLayout, ChatRoot, type ChatRootProps } from '@mui/x-chat-unstyled';
 import { useChatLocaleText } from '@mui/x-chat-unstyled/chat';
 import {
-  ChatComposer,
-  type ChatComposerProps,
-  type ChatComposerSlotProps as StyledChatComposerSlotProps,
-  type ChatComposerSlots as StyledChatComposerSlots,
-} from '../ChatComposer';
+  ChatConversationInput,
+  type ChatConversationInputProps,
+  type ChatConversationInputSlotProps as StyledChatConversationInputSlotProps,
+  type ChatConversationInputSlots as StyledChatConversationInputSlots,
+} from '../ChatConversationInput';
 import {
   ChatConversations,
   type ChatConversationsProps,
@@ -60,11 +60,11 @@ import {
 import { styled, useChatThemeProps } from '../internals/material/chatStyled';
 import { chatCssVarKeys, getChatCssVars } from '../internals/material/chatThemeVars';
 import {
-  ChatThread,
-  type ChatThreadProps,
-  type ChatThreadSlotProps as StyledChatThreadSlotProps,
-  type ChatThreadSlots as StyledChatThreadSlots,
-} from '../ChatThread';
+  ChatConversation,
+  type ChatConversationProps,
+  type ChatConversationSlotProps as StyledChatConversationSlotProps,
+  type ChatConversationSlots as StyledChatConversationSlots,
+} from '../ChatConversation';
 import { chatMessageClasses } from '../ChatMessage/chatMessageClasses';
 import { getCopyableText, joinClassNames } from '../internals/utils';
 import { chatBoxClasses } from './chatBoxClasses';
@@ -176,20 +176,20 @@ export interface ChatBoxSlots {
   conversationsEmptyState: StyledChatConversationsSlots['emptyState'];
   conversationsErrorState: StyledChatConversationsSlots['errorState'];
   thread: React.ElementType;
-  threadRoot: StyledChatThreadSlots['root'];
-  threadHeader: StyledChatThreadSlots['header'];
-  threadTitle: StyledChatThreadSlots['title'];
-  threadSubtitle: StyledChatThreadSlots['subtitle'];
-  threadActions: StyledChatThreadSlots['actions'];
-  threadLoadingState: StyledChatThreadSlots['loadingState'];
-  threadEmptyState: StyledChatThreadSlots['emptyState'];
-  threadErrorState: StyledChatThreadSlots['errorState'];
-  historyLoading: StyledChatThreadSlots['historyLoading'];
-  historyError: StyledChatThreadSlots['historyError'];
-  messageList: StyledChatThreadSlots['messageList'];
-  messageListScroller: StyledChatThreadSlots['messageListScroller'];
-  messageListContent: StyledChatThreadSlots['messageListContent'];
-  messageListOverlay: StyledChatThreadSlots['messageListOverlay'];
+  threadRoot: StyledChatConversationSlots['root'];
+  threadHeader: StyledChatConversationSlots['header'];
+  threadTitle: StyledChatConversationSlots['title'];
+  threadSubtitle: StyledChatConversationSlots['subtitle'];
+  threadActions: StyledChatConversationSlots['actions'];
+  threadLoadingState: StyledChatConversationSlots['loadingState'];
+  threadEmptyState: StyledChatConversationSlots['emptyState'];
+  threadErrorState: StyledChatConversationSlots['errorState'];
+  historyLoading: StyledChatConversationSlots['historyLoading'];
+  historyError: StyledChatConversationSlots['historyError'];
+  messageList: StyledChatConversationSlots['messageList'];
+  messageListScroller: StyledChatConversationSlots['messageListScroller'];
+  messageListContent: StyledChatConversationSlots['messageListContent'];
+  messageListOverlay: StyledChatConversationSlots['messageListOverlay'];
   messageGroup: ChatMessageGroupSlots['group'];
   messageAuthorName: ChatMessageGroupSlots['authorName'];
   messageRoot: ChatMessageRootSlots['root'];
@@ -210,13 +210,13 @@ export interface ChatBoxSlots {
   scrollToBottomAffordance: ChatScrollToBottomAffordanceSlots['root'];
   scrollToBottomBadge: ChatScrollToBottomAffordanceSlots['badge'];
   composer: React.ElementType;
-  composerRoot: StyledChatComposerSlots['root'];
-  composerInput: StyledChatComposerSlots['input'];
-  composerSendButton: StyledChatComposerSlots['sendButton'];
-  composerAttachButton: StyledChatComposerSlots['attachButton'];
-  composerAttachInput: StyledChatComposerSlots['attachInput'];
-  composerToolbar: StyledChatComposerSlots['toolbar'];
-  composerHelperText: StyledChatComposerSlots['helperText'];
+  composerRoot: StyledChatConversationInputSlots['root'];
+  composerInput: StyledChatConversationInputSlots['input'];
+  composerSendButton: StyledChatConversationInputSlots['sendButton'];
+  composerAttachButton: StyledChatConversationInputSlots['attachButton'];
+  composerAttachInput: StyledChatConversationInputSlots['attachInput'];
+  composerToolbar: StyledChatConversationInputSlots['toolbar'];
+  composerHelperText: StyledChatConversationInputSlots['helperText'];
   loadingState: React.ElementType;
   errorState: React.ElementType;
 }
@@ -236,21 +236,21 @@ export interface ChatBoxSlotProps {
   conversationsLoadingState?: StyledChatConversationsSlotProps['loadingState'];
   conversationsEmptyState?: StyledChatConversationsSlotProps['emptyState'];
   conversationsErrorState?: StyledChatConversationsSlotProps['errorState'];
-  thread?: Partial<ChatThreadProps>;
-  threadRoot?: StyledChatThreadSlotProps['root'];
-  threadHeader?: StyledChatThreadSlotProps['header'];
-  threadTitle?: StyledChatThreadSlotProps['title'];
-  threadSubtitle?: StyledChatThreadSlotProps['subtitle'];
-  threadActions?: StyledChatThreadSlotProps['actions'];
-  threadLoadingState?: StyledChatThreadSlotProps['loadingState'];
-  threadEmptyState?: StyledChatThreadSlotProps['emptyState'];
-  threadErrorState?: StyledChatThreadSlotProps['errorState'];
-  historyLoading?: StyledChatThreadSlotProps['historyLoading'];
-  historyError?: StyledChatThreadSlotProps['historyError'];
-  messageList?: StyledChatThreadSlotProps['messageList'];
-  messageListScroller?: StyledChatThreadSlotProps['messageListScroller'];
-  messageListContent?: StyledChatThreadSlotProps['messageListContent'];
-  messageListOverlay?: StyledChatThreadSlotProps['messageListOverlay'];
+  thread?: Partial<ChatConversationProps>;
+  threadRoot?: StyledChatConversationSlotProps['root'];
+  threadHeader?: StyledChatConversationSlotProps['header'];
+  threadTitle?: StyledChatConversationSlotProps['title'];
+  threadSubtitle?: StyledChatConversationSlotProps['subtitle'];
+  threadActions?: StyledChatConversationSlotProps['actions'];
+  threadLoadingState?: StyledChatConversationSlotProps['loadingState'];
+  threadEmptyState?: StyledChatConversationSlotProps['emptyState'];
+  threadErrorState?: StyledChatConversationSlotProps['errorState'];
+  historyLoading?: StyledChatConversationSlotProps['historyLoading'];
+  historyError?: StyledChatConversationSlotProps['historyError'];
+  messageList?: StyledChatConversationSlotProps['messageList'];
+  messageListScroller?: StyledChatConversationSlotProps['messageListScroller'];
+  messageListContent?: StyledChatConversationSlotProps['messageListContent'];
+  messageListOverlay?: StyledChatConversationSlotProps['messageListOverlay'];
   messageGroup?: ChatMessageGroupSlotProps['group'];
   messageAuthorName?: ChatMessageGroupSlotProps['authorName'];
   messageRoot?: ChatMessageRootSlotProps['root'];
@@ -270,14 +270,14 @@ export interface ChatBoxSlotProps {
   typingIndicator?: ChatTypingIndicatorSlotProps['root'];
   scrollToBottomAffordance?: ChatScrollToBottomAffordanceSlotProps['root'];
   scrollToBottomBadge?: ChatScrollToBottomAffordanceSlotProps['badge'];
-  composer?: Partial<ChatComposerProps>;
-  composerRoot?: StyledChatComposerSlotProps['root'];
-  composerInput?: StyledChatComposerSlotProps['input'];
-  composerSendButton?: StyledChatComposerSlotProps['sendButton'];
-  composerAttachButton?: StyledChatComposerSlotProps['attachButton'];
-  composerAttachInput?: StyledChatComposerSlotProps['attachInput'];
-  composerToolbar?: StyledChatComposerSlotProps['toolbar'];
-  composerHelperText?: StyledChatComposerSlotProps['helperText'];
+  composer?: Partial<ChatConversationInputProps>;
+  composerRoot?: StyledChatConversationInputSlotProps['root'];
+  composerInput?: StyledChatConversationInputSlotProps['input'];
+  composerSendButton?: StyledChatConversationInputSlotProps['sendButton'];
+  composerAttachButton?: StyledChatConversationInputSlotProps['attachButton'];
+  composerAttachInput?: StyledChatConversationInputSlotProps['attachInput'];
+  composerToolbar?: StyledChatConversationInputSlotProps['toolbar'];
+  composerHelperText?: StyledChatConversationInputSlotProps['helperText'];
   loadingState?: SlotComponentProps<'div', {}, ChatBoxStateOwnerState>;
   errorState?: SlotComponentProps<'div', {}, ChatBoxStateOwnerState>;
 }
@@ -631,8 +631,8 @@ function ChatBoxContent(props: {
   const LoadingState = slots?.loadingState ?? createDefaultStateSlot();
   const ErrorState = slots?.errorState ?? createDefaultStateSlot();
   const ConversationsComponent = slots?.conversations ?? ChatConversations;
-  const ThreadComponent = slots?.thread ?? ChatThread;
-  const ComposerComponent = slots?.composer ?? ChatComposer;
+  const ThreadComponent = slots?.thread ?? ChatConversation;
+  const ComposerComponent = slots?.composer ?? ChatConversationInput;
 
   const hasLoadedContent =
     (hasConversationsPane && chat.conversations.length > 0) || chat.messages.length > 0;

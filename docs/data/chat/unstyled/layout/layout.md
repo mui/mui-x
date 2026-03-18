@@ -8,6 +8,8 @@ packageName: '@mui/x-chat-unstyled'
 
 <p class="description">Use <code>Chat.Root</code> and <code>Chat.Layout</code> to define the main chat shell and split the interface into conversation and thread panes.</p>
 
+{{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js"}}
+
 ## `Chat.Root`
 
 `Chat.Root` wraps `ChatProvider` and exposes a root slot for the outer container.
@@ -48,12 +50,12 @@ Its job is to place panes and expose owner state, not to decide visual density, 
 
 ## Pane detection
 
-The layout recognizes marked pane components such as `ConversationList.Root` and `Thread.Root`.
+The layout recognizes marked pane components such as `ConversationList.Root` and `Conversation.Root`.
 That means you can write:
 
 ```tsx
 <Chat.Layout>
-  <Thread.Root />
+  <Conversation.Root />
   <ConversationList.Root />
 </Chat.Layout>
 ```
@@ -66,7 +68,7 @@ This makes single-thread layouts straightforward:
 
 ```tsx
 <Chat.Layout>
-  <Thread.Root>{/* thread-only view */}</Thread.Root>
+  <Conversation.Root>{/* thread-only view */}</Conversation.Root>
 </Chat.Layout>
 ```
 
@@ -94,7 +96,7 @@ For example:
   }}
 >
   <ConversationList.Root />
-  <Thread.Root />
+  <Conversation.Root />
 </Chat.Layout>
 ```
 
@@ -114,7 +116,7 @@ Use a one-pane layout when:
 ## Recommended patterns
 
 - Use `Chat.Layout` for desktop split-pane surfaces.
-- Render just `Thread.Root` inside `Chat.Layout` for focused thread pages.
+- Render just `Conversation.Root` inside `Chat.Layout` for focused thread pages.
 - Replace the pane slots when the surrounding page already defines grid or landmark semantics.
 
 For the canonical end-to-end shell, continue with [Composition](/x/react-chat/unstyled/composition/).

@@ -1,0 +1,62 @@
+import { ConversationInputAttachButton } from './ConversationInputAttachButton';
+import { ConversationInputHelperText } from './ConversationInputHelperText';
+import { ConversationInputTextArea } from './ConversationInputTextArea';
+import { ConversationInputRoot } from './ConversationInputRoot';
+import { ConversationInputSendButton } from './ConversationInputSendButton';
+import { ConversationInputToolbar } from './ConversationInputToolbar';
+
+export { ConversationInputRoot } from './ConversationInputRoot';
+export { ConversationInputTextArea } from './ConversationInputTextArea';
+export { ConversationInputSendButton } from './ConversationInputSendButton';
+export { ConversationInputAttachButton } from './ConversationInputAttachButton';
+export { ConversationInputToolbar } from './ConversationInputToolbar';
+export { ConversationInputHelperText } from './ConversationInputHelperText';
+
+export type {
+  ConversationInputRootProps,
+  ConversationInputRootSlotProps,
+  ConversationInputRootSlots,
+} from './ConversationInputRoot';
+export type {
+  ConversationInputTextAreaProps,
+  ConversationInputTextAreaSlotProps,
+  ConversationInputTextAreaSlots,
+} from './ConversationInputTextArea';
+export type {
+  ConversationInputSendButtonProps,
+  ConversationInputSendButtonSlotProps,
+  ConversationInputSendButtonSlots,
+} from './ConversationInputSendButton';
+export type {
+  ConversationInputAttachButtonProps,
+  ConversationInputAttachButtonSlotProps,
+  ConversationInputAttachButtonSlots,
+} from './ConversationInputAttachButton';
+export type {
+  ConversationInputToolbarProps,
+  ConversationInputToolbarSlotProps,
+  ConversationInputToolbarSlots,
+} from './ConversationInputToolbar';
+export type {
+  ConversationInputHelperTextProps,
+  ConversationInputHelperTextSlotProps,
+  ConversationInputHelperTextSlots,
+} from './ConversationInputHelperText';
+export type {
+  ConversationInputAttachButtonOwnerState,
+  ConversationInputHelperTextOwnerState,
+  ConversationInputTextAreaOwnerState,
+  ConversationInputOwnerState,
+  ConversationInputRootOwnerState,
+  ConversationInputSendButtonOwnerState,
+  ConversationInputToolbarOwnerState,
+} from './conversation-input.types';
+
+export const ConversationInput = {
+  Root: ConversationInputRoot,
+  TextArea: ConversationInputTextArea,
+  SendButton: ConversationInputSendButton,
+  AttachButton: ConversationInputAttachButton,
+  Toolbar: ConversationInputToolbar,
+  HelperText: ConversationInputHelperText,
+} as const;

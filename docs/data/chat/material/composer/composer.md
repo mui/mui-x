@@ -2,12 +2,12 @@
 productId: x-chat
 title: Chat - Composer
 packageName: '@mui/x-chat'
-components: ChatComposer
+components: ChatConversationInput
 ---
 
 # Composer
 
-<p class="description"><code>ChatComposer</code> provides a styled message input with auto-growing textarea, send button, attachment button, toolbar, and helper text.</p>
+<p class="description"><code>ChatConversationInput</code> provides a styled message input with auto-growing textarea, send button, attachment button, toolbar, and helper text.</p>
 
 ## Default layout
 
@@ -24,13 +24,13 @@ Add a toolbar row for additional actions and helper text for draft-level status 
 
 ## Sub-components
 
-`ChatComposer` is composed from:
+`ChatConversationInput` is composed from:
 
-- `ChatComposerInput` — auto-growing textarea with IME-safe Enter behavior
-- `ChatComposerSendButton` — submit button that disables when the draft is empty or streaming
-- `ChatComposerAttachButton` — file input trigger with hidden file picker
-- `ChatComposerToolbar` — toolbar row for action buttons
-- `ChatComposerHelperText` — status text below the input
+- `ChatConversationInputTextArea` — auto-growing textarea with IME-safe Enter behavior
+- `ChatConversationInputSendButton` — submit button that disables when the draft is empty or streaming
+- `ChatConversationInputAttachButton` — file input trigger with hidden file picker
+- `ChatConversationInputToolbar` — toolbar row for action buttons
+- `ChatConversationInputHelperText` — status text below the input
 
 Each sub-component can be used independently for custom layouts or replaced through slots.
 
@@ -39,7 +39,7 @@ Each sub-component can be used independently for custom layouts or replaced thro
 Replace individual parts through the `slots` prop:
 
 ```tsx
-<ChatComposer
+<ChatConversationInput
   slots={{
     input: CustomTextarea,
     sendButton: CustomSendButton,

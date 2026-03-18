@@ -2,45 +2,47 @@
 productId: x-chat
 title: Chat - Unstyled thread
 packageName: '@mui/x-chat-unstyled'
-components: ThreadRoot, ThreadHeader, ThreadTitle, ThreadSubtitle, ThreadActions
+components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
 ---
 
 # Unstyled thread
 
 <p class="description">Build the active conversation surface from thread primitives that derive their state from the selected conversation.</p>
 
-```tsx
-import { Composer, MessageGroup, MessageList, Thread } from '@mui/x-chat-unstyled';
+{{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js"}}
 
-<Thread.Root>
-  <Thread.Header>
-    <Thread.Title />
-    <Thread.Subtitle />
-    <Thread.Actions />
-  </Thread.Header>
+```tsx
+import { ConversationInput, MessageGroup, MessageList, Conversation } from '@mui/x-chat-unstyled';
+
+<Conversation.Root>
+  <Conversation.Header>
+    <Conversation.Title />
+    <Conversation.Subtitle />
+    <Conversation.HeaderActions />
+  </Conversation.Header>
   <MessageList.Root
     renderItem={({ id, index }) => <MessageGroup index={index} messageId={id} />}
   />
-  <Composer.Root>
-    <Composer.Input />
-    <Composer.SendButton />
-  </Composer.Root>
-</Thread.Root>;
+  <ConversationInput.Root>
+    <ConversationInput.TextArea />
+    <ConversationInput.SendButton />
+  </ConversationInput.Root>
+</Conversation.Root>;
 ```
 
 ## Primitive set
 
 The thread surface is built from:
 
-- `Thread.Root`
-- `Thread.Header`
-- `Thread.Title`
-- `Thread.Subtitle`
-- `Thread.Actions`
+- `Conversation.Root`
+- `Conversation.Header`
+- `Conversation.Title`
+- `Conversation.Subtitle`
+- `Conversation.HeaderActions`
 
-## `Thread.Root`
+## `Conversation.Root`
 
-`Thread.Root` derives the active conversation from chat state and exposes it through thread owner state and context.
+`Conversation.Root` derives the active conversation from chat state and exposes it through thread owner state and context.
 
 It is responsible for:
 
@@ -49,16 +51,16 @@ It is responsible for:
 - exposing `hasConversation` for empty or loading thread states
 - acting as the thread pane marker for `Chat.Layout`
 
-Because `Thread.Root` sits on top of chat state instead of receiving the active conversation as a prop, it stays synchronized with conversation switching automatically.
+Because `Conversation.Root` sits on top of chat state instead of receiving the active conversation as a prop, it stays synchronized with conversation switching automatically.
 
 ## Header composition
 
-`Thread.Header` is a structural wrapper for thread header content.
+`Conversation.Header` is a structural wrapper for thread header content.
 The default thread stack often includes:
 
-- `Thread.Title`
-- `Thread.Subtitle`
-- `Thread.Actions`
+- `Conversation.Title`
+- `Conversation.Subtitle`
+- `Conversation.HeaderActions`
 - `Indicators.TypingIndicator`
 
 Because the thread primitives all derive from the same context, header subparts can stay simple and focus on rendering.
@@ -67,7 +69,7 @@ That means custom title, subtitle, or action slots can react to the active conve
 
 ## Empty and missing-thread states
 
-`Thread.Root` exposes `hasConversation` through owner state.
+`Conversation.Root` exposes `hasConversation` through owner state.
 Use that to switch between:
 
 - a fully populated thread
@@ -92,27 +94,27 @@ Typical owner-state-driven patterns include:
 - hiding action buttons until a conversation is active
 - switching between subtitle variants based on the active thread metadata
 
-## Thread subparts
+## Conversation subparts
 
-### `Thread.Title`
+### `Conversation.Title`
 
-`Thread.Title` is the structural slot for the conversation title.
+`Conversation.Title` is the structural slot for the conversation title.
 Use it when the active conversation already carries a title and the thread header should stay minimal.
 
-### `Thread.Subtitle`
+### `Conversation.Subtitle`
 
-`Thread.Subtitle` is the structural slot for secondary thread text such as participant names, preview metadata, or presence-driven summaries.
+`Conversation.Subtitle` is the structural slot for secondary thread text such as participant names, preview metadata, or presence-driven summaries.
 
-### `Thread.Actions`
+### `Conversation.HeaderActions`
 
-`Thread.Actions` is the structural action region for controls such as archive, mute, or context-specific thread actions.
+`Conversation.HeaderActions` is the structural action region for controls such as archive, mute, or context-specific thread actions.
 It is intentionally light on policy so the app can decide which actions belong there.
 
 ## Recommended patterns
 
-- Use `Thread.Root` as the shell for the active conversation region.
-- Keep header composition inside `Thread.Root` so title, subtitle, and actions stay in sync with the active conversation.
-- Pair `Thread.Root` with `MessageList.Root` and `Composer.Root` for the canonical thread surface.
+- Use `Conversation.Root` as the shell for the active conversation region.
+- Keep header composition inside `Conversation.Root` so title, subtitle, and actions stay in sync with the active conversation.
+- Pair `Conversation.Root` with `MessageList.Root` and `ConversationInput.Root` for the canonical thread surface.
 
 ## Adjacent pages
 

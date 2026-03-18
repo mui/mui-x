@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import {
   Chat,
+  Conversation,
   Indicators,
   Message,
   MessageGroup,
   MessageList,
-  Thread,
 } from '@mui/x-chat-unstyled';
 import { createEchoAdapter, cloneMessages } from '../shared/demoUtils';
 import { createLongThreadMessages, demoUsers } from '../shared/demoData';
@@ -127,7 +127,7 @@ export default function IndicatorsInContext() {
         },
       }}
     >
-      <Thread.Root
+      <Conversation.Root
         slotProps={{
           root: {
             style: {
@@ -139,11 +139,11 @@ export default function IndicatorsInContext() {
           },
         }}
       >
-        <Thread.Header slots={{ root: DemoThreadHeader }}>
+        <Conversation.Header slots={{ root: DemoThreadHeader }}>
           <div style={{ display: 'grid', gap: 6, minWidth: 0 }}>
             <div>
-              <Thread.Title style={{ fontSize: 18, fontWeight: 800 }} />
-              <Thread.Subtitle
+              <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
+              <Conversation.Subtitle
                 style={{
                   color: '#5c6b7c',
                   fontSize: 13,
@@ -156,7 +156,9 @@ export default function IndicatorsInContext() {
             </div>
             <Indicators.TypingIndicator slots={{ root: DemoTypingIndicator }} />
           </div>
-          <Thread.Actions style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <Conversation.HeaderActions
+            style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}
+          >
             <DemoToolbarButton onClick={triggerTyping}>
               Show typing
             </DemoToolbarButton>
@@ -175,8 +177,8 @@ export default function IndicatorsInContext() {
             >
               Mark read
             </DemoToolbarButton>
-          </Thread.Actions>
-        </Thread.Header>
+          </Conversation.HeaderActions>
+        </Conversation.Header>
         <MessageList.Root
           estimatedItemSize={108}
           renderItem={({ id, index }) => (
@@ -224,7 +226,7 @@ export default function IndicatorsInContext() {
           slots={{ root: DemoMessageListRoot }}
           virtualization={false}
         />
-      </Thread.Root>
+      </Conversation.Root>
     </Chat.Root>
   );
 }

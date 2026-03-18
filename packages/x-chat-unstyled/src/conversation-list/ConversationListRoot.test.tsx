@@ -6,9 +6,9 @@ import { useChat } from '@mui/x-chat-headless';
 import { ChatLayout } from '../chat/ChatLayout';
 import { ChatRoot } from '../chat/ChatRoot';
 import type { ConversationListItemAvatarProps } from './ConversationListItemAvatar';
-import type { ConversationListItemMetaProps } from './ConversationListItemMeta';
 import type { ConversationListItemProps } from './ConversationListItem';
-import type { ConversationListItemTextProps } from './ConversationListItemText';
+import type { ConversationListPreviewProps } from './ConversationListPreview';
+import type { ConversationListTitleProps } from './ConversationListTitle';
 import { ConversationListRoot } from './ConversationListRoot';
 
 const { render } = createRenderer();
@@ -83,9 +83,9 @@ const CustomItem = React.forwardRef(function CustomItem(
   );
 });
 
-function CustomItemText(props: ConversationListItemTextProps) {
+function CustomTitle(props: ConversationListTitleProps) {
   const { conversation, focused, ownerState, selected, slotProps, slots, unread, ...other } =
-    props as ConversationListItemTextProps & {
+    props as ConversationListTitleProps & {
       ownerState?: {
         selected: boolean;
       };
@@ -99,7 +99,7 @@ function CustomItemText(props: ConversationListItemTextProps) {
   return (
     <div
       data-selected={String(ownerState?.selected)}
-      data-testid={`custom-text-${conversation.id}`}
+      data-testid={`custom-title-${conversation.id}`}
       {...other}
     >
       {conversation.title}
@@ -107,9 +107,9 @@ function CustomItemText(props: ConversationListItemTextProps) {
   );
 }
 
-function CustomItemMeta(props: ConversationListItemMetaProps) {
+function CustomPreview(props: ConversationListPreviewProps) {
   const { conversation, focused, ownerState, selected, slotProps, slots, unread, ...other } =
-    props as ConversationListItemMetaProps & {
+    props as ConversationListPreviewProps & {
       ownerState?: {
         unread: boolean;
       };
@@ -122,11 +122,11 @@ function CustomItemMeta(props: ConversationListItemMetaProps) {
 
   return (
     <div
-      data-testid={`custom-meta-${conversation.id}`}
+      data-testid={`custom-preview-${conversation.id}`}
       data-unread={String(ownerState?.unread)}
       {...other}
     >
-      {conversation.unreadCount ?? 0}
+      {conversation.subtitle}
     </div>
   );
 }
@@ -298,8 +298,8 @@ describe('ConversationListRoot', () => {
           slots={{
             item: CustomItem,
             itemAvatar: CustomItemAvatar,
-            itemMeta: CustomItemMeta,
-            itemText: CustomItemText,
+            preview: CustomPreview,
+            title: CustomTitle,
             root: 'section',
           }}
         />
@@ -313,8 +313,8 @@ describe('ConversationListRoot', () => {
     expect(screen.getByTestId('custom-item-c1')).to.have.attribute('data-selected', 'false');
     expect(screen.getByTestId('custom-item-c2')).to.have.attribute('data-selected', 'true');
     expect(screen.getByTestId('custom-item-c2')).to.have.attribute('data-unread', 'true');
-    expect(screen.getByTestId('custom-text-c2')).to.have.attribute('data-selected', 'true');
-    expect(screen.getByTestId('custom-meta-c2')).to.have.attribute('data-unread', 'true');
+    expect(screen.getByTestId('custom-title-c2')).to.have.attribute('data-selected', 'true');
+    expect(screen.getByTestId('custom-preview-c2')).to.have.attribute('data-unread', 'true');
     expect(screen.getByTestId('custom-avatar-c2')).to.have.attribute('data-unread', 'true');
   });
 

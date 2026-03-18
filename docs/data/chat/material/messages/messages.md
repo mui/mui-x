@@ -54,7 +54,7 @@ Override the default rendering for any part type using the `partRenderers` prop.
 ## Date dividers
 
 `ChatDateDivider` renders a centered date label between messages from different days.
-It is automatically inserted by `ChatThread` when dates change in the message list.
+It is automatically inserted by `ChatConversation` when dates change in the message list.
 
 ## Adjacent pages
 

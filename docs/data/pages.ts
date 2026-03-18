@@ -824,8 +824,8 @@ const pages: MuiPage[] = [
   ...schedulerPages,
   {
     pathname: '/x/react-chat-group',
-    title: 'Chat',
-    newFeature: true,
+    title: 'Chatbox',
+    unstable: true,
     children: [
       { pathname: '/x/react-chat', title: 'Overview' },
       {
@@ -833,6 +833,13 @@ const pages: MuiPage[] = [
         subheader: 'Headless',
         children: [
           { pathname: '/x/react-chat/headless', title: 'Overview' },
+          { pathname: '/x/react-chat/headless/state', title: 'State and store' },
+          { pathname: '/x/react-chat/headless/hooks', title: 'Hooks' },
+          { pathname: '/x/react-chat/headless/selectors', title: 'Selectors' },
+          { pathname: '/x/react-chat/headless/adapters', title: 'Adapters' },
+          { pathname: '/x/react-chat/headless/streaming', title: 'Streaming' },
+          { pathname: '/x/react-chat/headless/realtime', title: 'Realtime' },
+          { pathname: '/x/react-chat/headless/types', title: 'Type augmentation' },
           {
             pathname: '/x/react-chat/headless/examples',
             title: 'Examples',

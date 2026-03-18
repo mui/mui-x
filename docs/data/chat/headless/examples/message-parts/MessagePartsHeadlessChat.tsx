@@ -6,16 +6,14 @@ import {
   type ChatMessage,
   type ChatMessagePart,
 } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import { demoUsers } from '../shared/demoData';
 import { createChunkStream } from '../shared/demoUtils';
-import {
-  DemoButton,
-  DemoCodeBlock,
-  DemoFrame,
-  DemoHeading,
-  DemoMessageList,
-  DemoSplitLayout,
-} from '../shared/DemoPrimitives';
 
 const adapter: ChatAdapter = {
   async sendMessage() {
@@ -74,103 +72,94 @@ const adapter: ChatAdapter = {
   },
 };
 
-const partStyles = {
-  card: {
-    border: '1px solid #d7dee7',
-    borderRadius: 12,
-    padding: 10,
-    background: '#fff',
-  } satisfies React.CSSProperties,
-  subtle: {
-    color: '#5c6b7c',
-    fontSize: 12,
-  } satisfies React.CSSProperties,
-  badge: {
-    display: 'inline-flex',
-    borderRadius: 999,
-    padding: '3px 8px',
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: '0.04em',
-    textTransform: 'uppercase',
-    background: '#eef6ff',
-    color: '#0b4f8a',
-  } satisfies React.CSSProperties,
-} as const;
-
 function renderPart(part: ChatMessagePart, _message: ChatMessage, index: number) {
   if (part.type === 'reasoning') {
     return (
-      <div style={{ ...partStyles.card, background: '#f7fafc' }}>
-        <div style={partStyles.badge}>Reasoning</div>
-        <div style={{ marginTop: 8 }}>{part.text}</div>
-      </div>
+      <Paper variant="outlined" sx={{ p: 1.5, bgcolor: 'grey.50' }}>
+        <Chip label="Reasoning" size="small" sx={{ mb: 1 }} />
+        <Typography variant="body2">{part.text}</Typography>
+      </Paper>
     );
   }
 
   if (part.type === 'text') {
-    return <div>{part.text}</div>;
+    return <Typography variant="body2">{part.text}</Typography>;
   }
 
   if (part.type === 'source-url') {
     return (
-      <div style={partStyles.card}>
-        <div style={partStyles.badge}>Source URL</div>
-        <a
+      <Paper variant="outlined" sx={{ p: 1.5 }}>
+        <Chip label="Source URL" size="small" sx={{ mb: 1 }} />
+        <Link
           href={part.url}
           target="_blank"
           rel="noreferrer"
-          style={{ display: 'block', marginTop: 8 }}
+          sx={{ display: 'block' }}
         >
           {part.title ?? part.url}
-        </a>
-      </div>
+        </Link>
+      </Paper>
     );
   }
 
   if (part.type === 'source-document') {
     return (
-      <div style={partStyles.card}>
-        <div style={partStyles.badge}>Source document</div>
-        <div style={{ marginTop: 8, fontWeight: 700 }}>
+      <Paper variant="outlined" sx={{ p: 1.5 }}>
+        <Chip label="Source document" size="small" sx={{ mb: 1 }} />
+        <Typography variant="body2" fontWeight={700}>
           {part.title ?? 'Document excerpt'}
-        </div>
-        <div style={{ marginTop: 4 }}>{part.text}</div>
-      </div>
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 0.5 }}>
+          {part.text}
+        </Typography>
+      </Paper>
     );
   }
 
   if (part.type === 'file') {
     return (
-      <div style={partStyles.card}>
-        <div style={partStyles.badge}>File</div>
-        <a
+      <Paper variant="outlined" sx={{ p: 1.5 }}>
+        <Chip label="File" size="small" sx={{ mb: 1 }} />
+        <Link
           href={part.url}
           target="_blank"
           rel="noreferrer"
-          style={{ display: 'block', marginTop: 8 }}
+          sx={{ display: 'block' }}
         >
           {part.filename ?? part.url}
-        </a>
-        <div style={{ ...partStyles.subtle, marginTop: 4 }}>{part.mediaType}</div>
-      </div>
+        </Link>
+        <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
+          {part.mediaType}
+        </Typography>
+      </Paper>
     );
   }
 
   if (part.type === 'step-start') {
-    return (
-      <div style={{ ...partStyles.badge, background: '#edf2f8', color: '#334a62' }}>
-        Step {index + 1}
-      </div>
-    );
+    return <Chip label={`Step ${index + 1}`} size="small" variant="outlined" />;
   }
 
   if (part.type.startsWith('data-') && 'data' in part) {
     return (
-      <div style={partStyles.card}>
-        <div style={partStyles.badge}>{part.type}</div>
-        <DemoCodeBlock>{JSON.stringify(part.data, null, 2)}</DemoCodeBlock>
-      </div>
+      <Paper variant="outlined" sx={{ p: 1.5 }}>
+        <Chip label={part.type} size="small" sx={{ mb: 1 }} />
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 1.5,
+            bgcolor: 'grey.900',
+            color: 'grey.100',
+            fontFamily: 'monospace',
+            fontSize: 12,
+            maxHeight: 160,
+            overflow: 'auto',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          }}
+        >
+          {JSON.stringify(part.data, null, 2)}
+        </Paper>
+      </Paper>
     );
   }
 
@@ -181,46 +170,116 @@ function MessagePartsInner() {
   const { messages, sendMessage, isStreaming } = useChat();
 
   return (
-    <DemoFrame>
-      <DemoSplitLayout
-        sidebar={
-          <React.Fragment>
-            <h3 style={{ margin: 0 }}>Part model</h3>
-            <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              Headless messages are arrays of parts. This demo renders each part type
-              with plain React branches.
-            </p>
-            <DemoButton
-              disabled={isStreaming}
-              onClick={() =>
-                void sendMessage({
-                  conversationId: 'research',
-                  author: demoUsers.alice,
-                  parts: [
-                    {
-                      type: 'text',
-                      text: 'Summarize the adapter contract with supporting evidence.',
-                    },
-                  ],
-                })
-              }
-            >
-              Generate rich answer
-            </DemoButton>
-          </React.Fragment>
-        }
+    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          p: 2,
+          borderBottom: 1,
+          borderColor: 'divider',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
       >
-        <DemoHeading
-          title="Assistant message parts"
-          description="Reasoning, sources, files, and data parts all flow through the same message array."
-        />
-        <DemoMessageList
-          messages={messages}
-          renderPart={renderPart}
-          emptyLabel="Send a message to stream a multi-part assistant response."
-        />
-      </DemoSplitLayout>
-    </DemoFrame>
+        <Box>
+          <Typography variant="subtitle1" fontWeight={700}>
+            Assistant message parts
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Reasoning, sources, files, and data parts all flow through the same message
+            array.
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          size="small"
+          disabled={isStreaming}
+          onClick={() =>
+            void sendMessage({
+              conversationId: 'research',
+              author: demoUsers.alice,
+              parts: [
+                {
+                  type: 'text',
+                  text: 'Summarize the adapter contract with supporting evidence.',
+                },
+              ],
+            })
+          }
+        >
+          Generate rich answer
+        </Button>
+      </Box>
+
+      {/* Message list */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+          p: 2,
+          minHeight: 160,
+          maxHeight: 480,
+          overflow: 'auto',
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', py: 4 }}
+          >
+            Send a message to stream a multi-part assistant response.
+          </Typography>
+        ) : (
+          messages.map((message) => {
+            const isUser = message.role === 'user';
+            return (
+              <Paper
+                key={message.id}
+                elevation={0}
+                sx={{
+                  p: 1.5,
+                  maxWidth: '85%',
+                  borderRadius: 3,
+                  alignSelf: isUser ? 'flex-end' : 'flex-start',
+                  bgcolor: isUser ? 'primary.main' : 'grey.100',
+                  color: isUser ? 'primary.contrastText' : 'text.primary',
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: 'block',
+                    mb: 0.5,
+                    color: isUser ? 'rgba(255,255,255,0.82)' : 'text.secondary',
+                  }}
+                >
+                  <strong>{message.author?.displayName ?? message.role}</strong>
+                  {message.status ? ` · ${message.status}` : ''}
+                </Typography>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                >
+                  {message.parts.map((part, index) => {
+                    const rendered = renderPart(part, message, index);
+                    if (!rendered) {
+                      return null;
+                    }
+                    return (
+                      <Box key={`${message.id}-${part.type}-${index}`}>
+                        {rendered}
+                      </Box>
+                    );
+                  })}
+                </Box>
+              </Paper>
+            );
+          })
+        )}
+      </Box>
+    </Paper>
   );
 }
 

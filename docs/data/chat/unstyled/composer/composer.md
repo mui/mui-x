@@ -2,48 +2,50 @@
 productId: x-chat
 title: Chat - Unstyled composer
 packageName: '@mui/x-chat-unstyled'
-components: ComposerRoot, ComposerInput, ComposerSendButton, ComposerAttachButton, ComposerToolbar, ComposerHelperText
+components: ConversationInputRoot, ConversationInputTextArea, ConversationInputSendButton, ConversationInputAttachButton, ConversationInputToolbar, ConversationInputHelperText
 ---
 
 # Unstyled composer
 
 <p class="description">Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states.</p>
 
+{{"demo": "../examples/composer-with-attachments/ComposerWithAttachments.js"}}
+
 ## Primitive set
 
 The composer surface is built from:
 
-- `Composer.Root`
-- `Composer.Input`
-- `Composer.Toolbar`
-- `Composer.AttachButton`
-- `Composer.HelperText`
-- `Composer.SendButton`
+- `ConversationInput.Root`
+- `ConversationInput.TextArea`
+- `ConversationInput.Toolbar`
+- `ConversationInput.AttachButton`
+- `ConversationInput.HelperText`
+- `ConversationInput.SendButton`
 
 ## Canonical composition
 
 ```tsx
-import { Composer } from '@mui/x-chat-unstyled';
+import { ConversationInput } from '@mui/x-chat-unstyled';
 
 function ThreadComposer() {
   return (
-    <Composer.Root>
-      <Composer.Input placeholder="Write a message" />
-      <Composer.HelperText />
-      <Composer.Toolbar>
-        <Composer.AttachButton />
-        <Composer.SendButton />
-      </Composer.Toolbar>
-    </Composer.Root>
+    <ConversationInput.Root>
+      <ConversationInput.TextArea placeholder="Write a message" />
+      <ConversationInput.HelperText />
+      <ConversationInput.Toolbar>
+        <ConversationInput.AttachButton />
+        <ConversationInput.SendButton />
+      </ConversationInput.Toolbar>
+    </ConversationInput.Root>
   );
 }
 ```
 
 This pattern gives you a working structural composer while leaving every visual decision in user land.
 
-## `Composer.Root`
+## `ConversationInput.Root`
 
-`Composer.Root` is a structural form wrapper around the headless composer state.
+`ConversationInput.Root` is a structural form wrapper around the headless composer state.
 
 It owns:
 
@@ -53,9 +55,9 @@ It owns:
 
 That makes it the place to style global draft states such as empty, busy, or attachment-heavy composers.
 
-## `Composer.Input`
+## `ConversationInput.TextArea`
 
-`Composer.Input` is a textarea-based primitive that already handles the runtime-specific behaviors that usually make chat inputs fiddly to implement.
+`ConversationInput.TextArea` is a textarea-based primitive that already handles the runtime-specific behaviors that usually make chat inputs fiddly to implement.
 
 It supports:
 
@@ -80,14 +82,14 @@ That means East Asian IME flows stay intact without requiring extra app-level bo
 ### Input example
 
 ```tsx
-<Composer.Input aria-label="Message" minRows={1} placeholder="Reply in thread" />
+<ConversationInput.TextArea aria-label="Message" minRows={1} placeholder="Reply in thread" />
 ```
 
 If you replace the root slot, preserve the textarea-like behavior unless you are intentionally building a different draft surface.
 
-## `Composer.AttachButton`
+## `ConversationInput.AttachButton`
 
-`Composer.AttachButton` pairs a visible trigger with a hidden file input.
+`ConversationInput.AttachButton` pairs a visible trigger with a hidden file input.
 
 By default it:
 
@@ -101,7 +103,7 @@ The primitive exposes both `root` and `input` slots, which is useful when you wa
 ### Attachment example
 
 ```tsx
-<Composer.AttachButton
+<ConversationInput.AttachButton
   aria-label="Add files"
   slotProps={{
     input: {
@@ -111,9 +113,9 @@ The primitive exposes both `root` and `input` slots, which is useful when you wa
 />
 ```
 
-## `Composer.HelperText`
+## `ConversationInput.HelperText`
 
-`Composer.HelperText` is the default place for draft-level status and error messaging.
+`ConversationInput.HelperText` is the default place for draft-level status and error messaging.
 
 It renders:
 
@@ -123,16 +125,16 @@ It renders:
 That makes it a good structural slot for validation copy, transport errors, and retry guidance.
 
 ```tsx
-<Composer.HelperText>
+<ConversationInput.HelperText>
   Files are uploaded after the message is sent.
-</Composer.HelperText>
+</ConversationInput.HelperText>
 ```
 
 If you omit children, the component falls back to the active runtime error text and returns `null` when there is nothing to show.
 
-## `Composer.SendButton`
+## `ConversationInput.SendButton`
 
-`Composer.SendButton` is a submit button that understands composer state.
+`ConversationInput.SendButton` is a submit button that understands composer state.
 
 It disables itself when:
 
@@ -140,11 +142,11 @@ It disables itself when:
 - a stream is already active
 - the button is disabled externally
 
-The default button type is `submit`, so it works naturally inside `Composer.Root`.
+The default button type is `submit`, so it works naturally inside `ConversationInput.Root`.
 
 ## Slots and owner state
 
-Composer primitives expose `slots` and `slotProps` throughout the surface.
+ConversationInput primitives expose `slots` and `slotProps` throughout the surface.
 Custom slots receive owner state derived from the composer context, including:
 
 - `hasValue`

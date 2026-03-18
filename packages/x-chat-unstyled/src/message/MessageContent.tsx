@@ -3,19 +3,24 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import {
-  type ChatDynamicToolMessagePart,
   useChatPartRenderer,
   type ChatMessagePart,
   type ChatPartRenderer,
-  type ChatReasoningMessagePart,
-  type ChatToolMessagePart,
+  type ChatStepStartMessagePart,
 } from '@mui/x-chat-headless';
 import { useChatOnToolCall } from '@mui/x-chat-headless/hooks';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import type { ChatLocaleText } from '../chat/internals/chatLocaleText';
-import { getDefaultMessagePartRenderer } from './defaultMessagePartRenderers';
 import { useMessageContext } from './internals/MessageContext';
 import { type MessageContentOwnerState } from './message.types';
+import { FilePart, type FilePartExternalProps } from './parts/FilePart';
+import { ReasoningPart, type ReasoningPartExternalProps } from './parts/ReasoningPart';
+import {
+  SourceDocumentPart,
+  type SourceDocumentPartExternalProps,
+} from './parts/SourceDocumentPart';
+import { SourceUrlPart, type SourceUrlPartExternalProps } from './parts/SourceUrlPart';
+import { ToolPart, type ToolPartExternalProps } from './parts/ToolPart';
 
 export interface MessageContentSlots {
   content: React.ElementType;
@@ -27,7 +32,26 @@ export interface MessageContentSlotProps {
   bubble?: SlotComponentProps<'div', {}, MessageContentOwnerState>;
 }
 
+export interface MessageContentPartProps {
+  text?: Record<string, unknown>;
+  reasoning?: ReasoningPartExternalProps;
+  tool?: ToolPartExternalProps;
+  'dynamic-tool'?: ToolPartExternalProps;
+  file?: FilePartExternalProps;
+  'source-url'?: SourceUrlPartExternalProps;
+  'source-document'?: SourceDocumentPartExternalProps;
+}
+
 export interface MessageContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Props forwarded to the built-in unstyled part renderer components.
+   * Use this to pass `slots` and `slotProps` to individual part type renderers.
+   */
+  partProps?: MessageContentPartProps;
+  /**
+   * @deprecated Use `partProps` instead.
+   * Callback to resolve a built-in part renderer for a given part type.
+   */
   resolveBuiltInPartRenderer?: (
     part: ChatMessagePart,
     localeText: ChatLocaleText,
@@ -52,116 +76,73 @@ function JsonBlock(props: { value: unknown }) {
   return <pre>{JSON.stringify(value, null, 2)}</pre>;
 }
 
-function LocalizedReasoningPart(props: {
-  localeText: ReturnType<typeof useChatLocaleText>;
-  part: ChatReasoningMessagePart;
-}) {
-  const { localeText, part } = props;
+const renderDefaultStepStartPart: ChatPartRenderer<ChatStepStartMessagePart> = () => (
+  <div role="separator" />
+);
 
-  return (
-    <details>
-      <summary>{localeText.messageReasoningLabel}</summary>
-      <div>{part.text}</div>
-    </details>
-  );
-}
-
-function LocalizedToolPart(props: {
-  localeText: ReturnType<typeof useChatLocaleText>;
-  part: ChatToolMessagePart | ChatDynamicToolMessagePart;
-}) {
-  const { localeText, part } = props;
-  const { toolInvocation } = part;
-  const stateLabel = localeText.toolStateLabel(toolInvocation.state);
-
-  return (
-    <div>
-      <div>{toolInvocation.title ?? toolInvocation.toolName}</div>
-      {stateLabel ? <div>{stateLabel}</div> : null}
-      {toolInvocation.input !== undefined ? <JsonBlock value={toolInvocation.input} /> : null}
-      {toolInvocation.output !== undefined ? <JsonBlock value={toolInvocation.output} /> : null}
-      {toolInvocation.approval !== undefined ? <JsonBlock value={toolInvocation.approval} /> : null}
-      {toolInvocation.errorText ? <div>{toolInvocation.errorText}</div> : null}
-    </div>
-  );
-}
-
-function createLocalizedReasoningRenderer(
-  localeText: ReturnType<typeof useChatLocaleText>,
-): ChatPartRenderer<ChatMessagePart> {
-  return function LocalizedReasoningRenderer(renderProps) {
-    return (
-      <LocalizedReasoningPart
-        localeText={localeText}
-        part={renderProps.part as ChatReasoningMessagePart}
-      />
-    );
-  };
-}
-
-function createLocalizedToolRenderer(
-  localeText: ReturnType<typeof useChatLocaleText>,
-): ChatPartRenderer<ChatMessagePart> {
-  return function LocalizedToolRenderer(renderProps) {
-    return (
-      <LocalizedToolPart localeText={localeText} part={renderProps.part as ChatToolMessagePart} />
-    );
-  };
-}
-
-function createLocalizedDynamicToolRenderer(
-  localeText: ReturnType<typeof useChatLocaleText>,
-): ChatPartRenderer<ChatMessagePart> {
-  return function LocalizedDynamicToolRenderer(renderProps) {
-    return (
-      <LocalizedToolPart
-        localeText={localeText}
-        part={renderProps.part as ChatDynamicToolMessagePart}
-      />
-    );
-  };
-}
+const renderDefaultDataPart: ChatPartRenderer<
+  Extract<ChatMessagePart, { type: `data-${string}` }>
+> = ({ part }) => <JsonBlock value={part.data} />;
 
 function MessageRenderedPart(props: {
   part: ChatMessagePart;
   index: number;
   message: NonNullable<MessageContentOwnerState['message']>;
+  partProps?: MessageContentPartProps;
   resolveBuiltInPartRenderer?: (
     part: ChatMessagePart,
     localeText: ChatLocaleText,
   ) => ChatPartRenderer<ChatMessagePart> | null;
 }) {
-  const { part, index, message, resolveBuiltInPartRenderer } = props;
+  const { part, index, message, partProps, resolveBuiltInPartRenderer } = props;
   const customRenderer = useChatPartRenderer(part.type as ChatMessagePart['type']);
   const localeText = useChatLocaleText();
-  const localizedRenderer = React.useMemo<ChatPartRenderer<ChatMessagePart> | null>(() => {
-    switch (part.type) {
-      case 'reasoning':
-        return createLocalizedReasoningRenderer(localeText);
-      case 'tool':
-        return createLocalizedToolRenderer(localeText);
-      case 'dynamic-tool':
-        return createLocalizedDynamicToolRenderer(localeText);
-      default:
-        return null;
-    }
-  }, [localeText, part.type]);
-  const defaultRenderer = React.useMemo(() => getDefaultMessagePartRenderer(part), [part]);
-  const builtInRenderer = React.useMemo(
-    () => resolveBuiltInPartRenderer?.(part, localeText) ?? null,
-    [localeText, part, resolveBuiltInPartRenderer],
-  );
   const onToolCall = useChatOnToolCall();
-  const Renderer = (customRenderer ??
-    builtInRenderer ??
-    localizedRenderer ??
-    defaultRenderer) as ChatPartRenderer<ChatMessagePart> | null;
 
-  if (Renderer == null) {
-    return <DefaultPartFallback part={part} />;
+  // Priority 1: User-provided custom renderer from ChatProvider
+  if (customRenderer != null) {
+    return <React.Fragment>{customRenderer({ part, message, index, onToolCall })}</React.Fragment>;
   }
 
-  return <React.Fragment>{Renderer({ part, message, index, onToolCall })}</React.Fragment>;
+  // Priority 2: Legacy resolveBuiltInPartRenderer callback (deprecated)
+  if (resolveBuiltInPartRenderer != null) {
+    const builtInRenderer = resolveBuiltInPartRenderer(part, localeText);
+
+    if (builtInRenderer != null) {
+      return (
+        <React.Fragment>{builtInRenderer({ part, message, index, onToolCall })}</React.Fragment>
+      );
+    }
+  }
+
+  // Priority 3: Built-in unstyled part renderer components with partProps
+  const baseProps = { part, message, index, onToolCall };
+  switch (part.type) {
+    case 'text':
+      // Text part: simple div renderer, can be overridden via partProps or custom renderer.
+      // Material layer overrides this with markdown rendering.
+      return <div>{part.text}</div>;
+    case 'reasoning':
+      return <ReasoningPart {...partProps?.reasoning} {...baseProps} part={part} />;
+    case 'tool':
+      return <ToolPart {...partProps?.tool} {...baseProps} part={part} />;
+    case 'dynamic-tool':
+      return <ToolPart {...partProps?.['dynamic-tool']} {...baseProps} part={part} />;
+    case 'file':
+      return <FilePart {...partProps?.file} {...baseProps} part={part} />;
+    case 'source-url':
+      return <SourceUrlPart {...partProps?.['source-url']} {...baseProps} part={part} />;
+    case 'source-document':
+      return <SourceDocumentPart {...partProps?.['source-document']} {...baseProps} part={part} />;
+    case 'step-start':
+      return <React.Fragment>{renderDefaultStepStartPart(baseProps as any)}</React.Fragment>;
+    default:
+      if (part.type.startsWith('data-')) {
+        return <React.Fragment>{renderDefaultDataPart(baseProps as any)}</React.Fragment>;
+      }
+
+      return <DefaultPartFallback part={part} />;
+  }
 }
 
 export const MessageContent = React.forwardRef(function MessageContent(
@@ -170,6 +151,7 @@ export const MessageContent = React.forwardRef(function MessageContent(
 ) {
   const {
     ownerState: ownerStateProp,
+    partProps,
     resolveBuiltInPartRenderer,
     slots,
     slotProps,
@@ -199,12 +181,13 @@ export const MessageContent = React.forwardRef(function MessageContent(
     <Content {...contentProps}>
       <Bubble {...bubbleProps}>
         {message
-          ? message.parts.map((part, index) => (
+          ? message.parts.map((part, idx) => (
               <MessageRenderedPart
                 part={part}
-                index={index}
-                key={`${ownerState.messageId}-${index}-${part.type}`}
+                index={idx}
+                key={`${ownerState.messageId}-${idx}-${part.type}`}
                 message={message}
+                partProps={partProps}
                 resolveBuiltInPartRenderer={resolveBuiltInPartRenderer}
               />
             ))

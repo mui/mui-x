@@ -9,14 +9,13 @@ import {
   type ChatConversation,
   type ChatMessage,
 } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { demoUsers } from '../shared/demoData';
-import {
-  DemoButton,
-  DemoConversationList,
-  DemoFrame,
-  DemoHeading,
-  DemoSplitLayout,
-} from '../shared/DemoPrimitives';
 
 function createMessages() {
   return Array.from({ length: 14 }, (_, index) => ({
@@ -47,24 +46,17 @@ const MessageRow = React.memo(function MessageRow({ id }: { id: string }) {
   }
 
   return (
-    <div
-      style={{
-        border: '1px solid #d7dee7',
-        borderRadius: 12,
-        padding: 10,
-        background: '#fff',
-      }}
-    >
-      <div style={{ fontSize: 12, color: '#5c6b7c' }}>
-        {message.id} · renders {renders.current}
-      </div>
-      <div style={{ marginTop: 4, fontWeight: 700 }}>
+    <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
+      <Typography variant="caption" color="text.secondary">
+        {message.id} &middot; renders {renders.current}
+      </Typography>
+      <Typography variant="body2" fontWeight={700} sx={{ mt: 0.5 }}>
         {message.author?.displayName ?? message.role}
-      </div>
-      <div style={{ marginTop: 6 }}>
+      </Typography>
+      <Typography variant="body2" sx={{ mt: 0.5 }}>
         {message.parts[0]?.type === 'text' ? message.parts[0].text : null}
-      </div>
-    </div>
+      </Typography>
+    </Paper>
   );
 });
 
@@ -74,32 +66,56 @@ function SelectorThread() {
   const conversation = useConversation('selectors');
 
   return (
-    <DemoFrame>
-      <DemoSplitLayout
-        sidebar={
-          <React.Fragment>
-            <h3 style={{ margin: 0 }}>Selector hooks</h3>
-            <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              The list subscribes to ids. Each row subscribes to its own message.
-            </p>
-            <DemoConversationList
-              conversations={conversations}
-              activeConversationId="selectors"
-            />
-          </React.Fragment>
-        }
+    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
       >
-        <DemoHeading
-          title={conversation?.title ?? 'Selector lab'}
-          description="Update one controlled message from the parent to see only the matching row rerender."
-        />
-        <div style={{ display: 'grid', gap: 8 }}>
-          {messageIds.map((id) => (
-            <MessageRow key={id} id={id} />
+        <Typography variant="subtitle1" fontWeight={700}>
+          {conversation?.title ?? 'Selector lab'}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Update one controlled message from the parent to see only the matching
+          row rerender.
+        </Typography>
+      </Box>
+
+      {/* Conversations */}
+      <Box sx={{ px: 2, pt: 2 }}>
+        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+          {conversations.map((conv) => (
+            <Chip
+              key={conv.id}
+              label={conv.title ?? conv.id}
+              size="small"
+              variant={conv.id === 'selectors' ? 'filled' : 'outlined'}
+              color={conv.id === 'selectors' ? 'primary' : 'default'}
+            />
           ))}
-        </div>
-      </DemoSplitLayout>
-    </DemoFrame>
+        </Stack>
+      </Box>
+
+      {/* Message rows */}
+      <Box
+        sx={{
+          p: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+          maxHeight: 480,
+          overflow: 'auto',
+        }}
+      >
+        {messageIds.map((id) => (
+          <MessageRow key={id} id={id} />
+        ))}
+      </Box>
+    </Paper>
   );
 }
 
@@ -127,9 +143,11 @@ export default function SelectorDrivenThread() {
   );
 
   return (
-    <div style={{ display: 'grid', gap: 12 }}>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <DemoButton
+    <Stack spacing={1.5}>
+      <Stack direction="row" spacing={1}>
+        <Button
+          size="small"
+          variant="outlined"
           onClick={() => {
             setMessages((previous) =>
               previous.map((message) =>
@@ -149,8 +167,10 @@ export default function SelectorDrivenThread() {
           }}
         >
           Update message 6
-        </DemoButton>
-        <DemoButton
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
           onClick={() => {
             setMessages((previous) => [
               ...previous,
@@ -171,8 +191,8 @@ export default function SelectorDrivenThread() {
           }}
         >
           Append one row
-        </DemoButton>
-      </div>
+        </Button>
+      </Stack>
       <ChatProvider
         adapter={adapter}
         messages={messages}
@@ -181,6 +201,6 @@ export default function SelectorDrivenThread() {
       >
         <SelectorThread />
       </ChatProvider>
-    </div>
+    </Stack>
   );
 }

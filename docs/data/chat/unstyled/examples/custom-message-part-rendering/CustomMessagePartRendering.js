@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
   Chat,
+  Conversation,
   Message,
   MessageGroup,
   MessageList,
-  Thread,
   getDefaultMessagePartRenderer,
 } from '@mui/x-chat-unstyled';
 
@@ -128,7 +128,7 @@ export default function CustomMessagePartRendering() {
         },
       }}
     >
-      <Thread.Root
+      <Conversation.Root
         slotProps={{
           root: {
             style: {
@@ -140,10 +140,10 @@ export default function CustomMessagePartRendering() {
           },
         }}
       >
-        <Thread.Header slots={{ root: DemoThreadHeader }}>
+        <Conversation.Header slots={{ root: DemoThreadHeader }}>
           <div style={{ minWidth: 0 }}>
-            <Thread.Title style={{ fontSize: 18, fontWeight: 800 }} />
-            <Thread.Subtitle
+            <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
+            <Conversation.Subtitle
               style={{
                 color: '#5c6b7c',
                 fontSize: 13,
@@ -154,7 +154,7 @@ export default function CustomMessagePartRendering() {
               }}
             />
           </div>
-        </Thread.Header>
+        </Conversation.Header>
         <MessageList.Root
           estimatedItemSize={100}
           renderItem={({ id, index }) => (
@@ -186,7 +186,7 @@ export default function CustomMessagePartRendering() {
           style={{ minHeight: 0 }}
           virtualization={false}
         />
-      </Thread.Root>
+      </Conversation.Root>
     </Chat.Root>
   );
 }

@@ -7,15 +7,15 @@ import type {
   ChatUnreadMarkerProps as RealChatUnreadMarkerProps,
 } from '../ChatIndicators';
 import type { ChatConversationsProps } from '../ChatConversations';
-import type { ChatComposerProps as RealChatComposerProps } from '../ChatComposer';
+import type { ChatConversationInputProps as RealChatConversationInputProps } from '../ChatConversationInput';
 import type { ChatMessageProps } from '../ChatMessage';
-import type { ChatThreadProps } from '../ChatThread';
+import type { ChatConversationProps } from '../ChatConversation';
 import type { ChatLocaleText } from '../locales';
 
 export type { ChatConversationsProps } from '../ChatConversations';
-export type { ChatComposerProps } from '../ChatComposer';
+export type { ChatConversationInputProps } from '../ChatConversationInput';
 export type { ChatMessageProps } from '../ChatMessage';
-export type { ChatThreadProps } from '../ChatThread';
+export type { ChatConversationProps } from '../ChatConversation';
 
 export interface ChatStyledFoundationProps {
   children?: React.ReactNode;
@@ -42,8 +42,8 @@ export interface ChatScrollToBottomAffordanceProps
 export interface ChatComponentsPropsList {
   MuiChatBox: ChatBoxProps;
   MuiChatConversations: ChatConversationsProps;
-  MuiChatThread: ChatThreadProps;
-  MuiChatComposer: RealChatComposerProps;
+  MuiChatConversation: ChatConversationProps;
+  MuiChatConversationInput: RealChatConversationInputProps;
   MuiChatMessage: ChatMessageProps;
   MuiChatTypingIndicator: ChatTypingIndicatorProps;
   MuiChatUnreadMarker: ChatUnreadMarkerProps;

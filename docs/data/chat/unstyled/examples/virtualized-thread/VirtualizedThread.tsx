@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
   Chat,
+  Conversation,
   Indicators,
   Message,
   MessageGroup,
   MessageList,
-  Thread,
   type MessageListRootHandle,
 } from '@mui/x-chat-unstyled';
 import {
@@ -107,7 +107,7 @@ export default function VirtualizedThread() {
         },
       }}
     >
-      <Thread.Root
+      <Conversation.Root
         slotProps={{
           root: {
             style: {
@@ -119,10 +119,10 @@ export default function VirtualizedThread() {
           },
         }}
       >
-        <Thread.Header slots={{ root: DemoThreadHeader }}>
+        <Conversation.Header slots={{ root: DemoThreadHeader }}>
           <div style={{ minWidth: 0 }}>
-            <Thread.Title style={{ fontSize: 18, fontWeight: 800 }} />
-            <Thread.Subtitle
+            <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
+            <Conversation.Subtitle
               style={{
                 color: '#5c6b7c',
                 fontSize: 13,
@@ -133,7 +133,7 @@ export default function VirtualizedThread() {
               }}
             />
           </div>
-          <Thread.Actions style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <Conversation.HeaderActions style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <DemoToolbarButton
               disabled={history.length === 0}
               onClick={prependHistory}
@@ -149,8 +149,8 @@ export default function VirtualizedThread() {
             >
               Scroll to latest
             </DemoToolbarButton>
-          </Thread.Actions>
-        </Thread.Header>
+          </Conversation.HeaderActions>
+        </Conversation.Header>
         <MessageList.Root
           estimatedItemSize={108}
           onReachTop={prependHistory}
@@ -195,7 +195,7 @@ export default function VirtualizedThread() {
           slots={{ root: DemoMessageListRoot }}
           virtualization
         />
-      </Thread.Root>
+      </Conversation.Root>
     </Chat.Root>
   );
 }

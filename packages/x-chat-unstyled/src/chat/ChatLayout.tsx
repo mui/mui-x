@@ -105,7 +105,7 @@ function resolvePaneChildren(children: React.ReactNode) {
     console.warn(
       'MUI X Chat: ChatLayout could not determine the pane kind for some children. ' +
         'Use the `pane` prop (pane="conversations" or pane="thread") to explicitly assign children to panes, ' +
-        'or use the `ConversationListRoot` and `ThreadRoot` components directly.',
+        'or use the `ConversationListRoot` and `ConversationRoot` components directly.',
     );
   }
 

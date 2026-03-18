@@ -20,9 +20,9 @@ It is intentionally simple so the structural responsibilities are easy to see be
 - `Chat.Root`
 - `Chat.Layout`
 - `ConversationList.Root`
-- `Thread.Root`
+- `Conversation.Root`
 - `MessageList.Root`
-- `Composer.Root`
+- `ConversationInput.Root`
 
 ## Why start here
 
@@ -48,9 +48,9 @@ This pattern is a good fit for:
 - `Chat.Root` wires the runtime and owns the outer shell.
 - `Chat.Layout` splits the surface into conversation and thread panes.
 - `ConversationList.Root` renders the selectable list of conversations.
-- `Thread.Root` holds the active conversation surface.
+- `Conversation.Root` holds the active conversation surface.
 - `MessageList.Root` renders the thread log.
-- `Composer.Root` holds the draft surface and submit flow.
+- `ConversationInput.Root` holds the draft surface and submit flow.
 
 ## Implementation notes
 

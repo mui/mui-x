@@ -10,17 +10,14 @@ import {
   type ChatPartRendererMap,
   type ChatUser,
 } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { demoUsers } from '../shared/demoData';
 import { createChunkStream } from '../shared/demoUtils';
-import {
-  DemoButton,
-  DemoFrame,
-  DemoHeading,
-  DemoMessageList,
-  DemoSplitLayout,
-  DemoStats,
-  DemoTag,
-} from '../shared/DemoPrimitives';
 
 declare module '@mui/x-chat-headless/types' {
   interface ChatUserMetadata {
@@ -159,24 +156,19 @@ const initialMessages: ChatMessage[] = [
 
 const partRenderers: ChatPartRendererMap = {
   'ticket-summary': ({ part }) => (
-    <div
-      style={{
-        border: '1px solid #d7dee7',
-        borderRadius: 12,
-        padding: 10,
-        background: part.severity === 'high' ? '#fff5f3' : '#f7fafc',
-        display: 'grid',
-        gap: 6,
-      }}
-    >
-      <div
-        style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}
-      >
-        <strong>{part.ticketId}</strong>
-        <DemoTag>{part.severity} severity</DemoTag>
-      </div>
-      <div>{part.summary}</div>
-    </div>
+    <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
+      <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+        <Typography variant="body2" fontWeight={700}>
+          {part.ticketId}
+        </Typography>
+        <Chip
+          size="small"
+          label={`${part.severity} severity`}
+          color={part.severity === 'high' ? 'error' : 'default'}
+        />
+      </Stack>
+      <Typography variant="body2">{part.summary}</Typography>
+    </Paper>
   ),
 };
 
@@ -280,33 +272,28 @@ function renderPart(
 ) {
   if (part.type === 'text') {
     return (
-      <div style={{ display: 'grid', gap: 8 }}>
-        <div>{part.text}</div>
+      <Box sx={{ display: 'grid', gap: 1 }}>
+        <Typography variant="body2">{part.text}</Typography>
         {index === 0 ? (
-          <div
-            style={{
-              display: 'flex',
-              gap: 8,
-              flexWrap: 'wrap',
-              fontSize: 12,
-              color: '#5c6b7c',
-            }}
-          >
+          <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap' }}>
             {message.author?.metadata ? (
-              <span>
-                {message.author.metadata.team} · {message.author.metadata.shift}{' '}
-                shift
-              </span>
+              <Chip
+                size="small"
+                label={`${message.author.metadata.team} \u00b7 ${message.author.metadata.shift} shift`}
+              />
             ) : null}
             {message.metadata?.model ? (
-              <span>model {message.metadata.model}</span>
+              <Chip size="small" label={`model ${message.metadata.model}`} />
             ) : null}
             {message.metadata?.confidence ? (
-              <span>{message.metadata.confidence} confidence</span>
+              <Chip
+                size="small"
+                label={`${message.metadata.confidence} confidence`}
+              />
             ) : null}
-          </div>
+          </Stack>
         ) : null}
-      </div>
+      </Box>
     );
   }
 
@@ -317,52 +304,40 @@ function renderPart(
       : null;
 
     return (
-      <div
-        style={{
-          border: '1px solid #d7dee7',
-          borderRadius: 12,
-          padding: 10,
-          display: 'grid',
-          gap: 6,
-          background: '#fff',
-        }}
-      >
-        <div>
-          <strong>{toolInvocation.toolName}</strong> · {toolInvocation.state}
-        </div>
+      <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
+        <Typography variant="body2" fontWeight={700}>
+          {toolInvocation.toolName} &middot; {toolInvocation.state}
+        </Typography>
         {ticketLookup?.input ? (
-          <div>Lookup ticket: {ticketLookup.input.ticketId}</div>
+          <Typography variant="body2" sx={{ mt: 0.5 }}>
+            Lookup ticket: {ticketLookup.input.ticketId}
+          </Typography>
         ) : null}
         {ticketLookup?.output ? (
-          <div>
-            {ticketLookup.output.status} · owner {ticketLookup.output.owner} ·{' '}
+          <Typography variant="body2" sx={{ mt: 0.5 }}>
+            {ticketLookup.output.status} &middot; owner{' '}
+            {ticketLookup.output.owner} &middot;{' '}
             {ticketLookup.output.priority} priority
-          </div>
+          </Typography>
         ) : null}
-      </div>
+      </Paper>
     );
   }
 
   if (part.type === 'data-ticket-status') {
     return (
-      <div
-        style={{
-          border: '1px solid #d7dee7',
-          borderRadius: 12,
-          padding: 10,
-          display: 'grid',
-          gap: 6,
-          background: '#f7fafc',
-        }}
-      >
-        <strong>data-ticket-status</strong>
-        <div>
-          {part.data.ticketId} is {part.data.status}
-        </div>
-        <div style={{ fontSize: 12, color: '#5c6b7c' }}>
+      <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
+        <Typography variant="body2" fontWeight={700}>
+          data-ticket-status
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 0.5 }}>
+          {part.data.ticketId} is{' '}
+          <Chip size="small" label={part.data.status} />
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
           Last updated {part.data.lastUpdated}
-        </div>
-      </div>
+        </Typography>
+      </Paper>
     );
   }
 
@@ -378,62 +353,151 @@ function TypeAugmentationInner() {
   const conversation = useConversation('triage');
 
   return (
-    <DemoFrame>
-      <DemoSplitLayout
-        sidebar={
-          <React.Fragment>
-            <h3 style={{ margin: 0 }}>Augmented types</h3>
-            <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              One module augmentation shapes metadata, tool payloads, data parts, and
-              custom part rendering across the runtime.
-            </p>
-            <DemoStats
-              items={[
-                {
-                  label: 'Channel',
-                  value: conversation?.metadata?.channel ?? 'n/a',
-                },
-                {
-                  label: 'SLA',
-                  value: `${conversation?.metadata?.slaMinutes ?? 0}m`,
-                },
-                {
-                  label: 'Escalated',
-                  value: conversation?.metadata?.escalated ? 'yes' : 'no',
-                },
-              ]}
-            />
-            <DemoButton
-              disabled={isStreaming}
-              onClick={() =>
-                void sendMessage({
-                  conversationId: 'triage',
-                  author: triageUser,
-                  parts: [
-                    {
-                      type: 'text',
-                      text: 'Look up ticket CHAT-128 and summarize the state.',
-                    },
-                  ],
-                })
-              }
-            >
-              Run typed lookup
-            </DemoButton>
-          </React.Fragment>
-        }
+    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
       >
-        <DemoHeading
-          title="Type augmentation"
-          description="The conversation metadata, author metadata, message metadata, tool payloads, and data part payloads are all strongly typed."
-        />
-        <DemoMessageList
-          messages={messages}
-          renderPart={renderPart}
-          emptyLabel="Send a message to stream typed tool and data-part updates."
-        />
-      </DemoSplitLayout>
-    </DemoFrame>
+        <Typography variant="subtitle1" fontWeight={700}>
+          Type augmentation
+        </Typography>
+        <Button
+          size="small"
+          variant="contained"
+          disabled={isStreaming}
+          onClick={() =>
+            void sendMessage({
+              conversationId: 'triage',
+              author: triageUser,
+              parts: [
+                {
+                  type: 'text',
+                  text: 'Look up ticket CHAT-128 and summarize the state.',
+                },
+              ],
+            })
+          }
+        >
+          Run typed lookup
+        </Button>
+      </Box>
+
+      {/* Stats */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ px: 2, py: 1.5, borderBottom: 1, borderColor: 'divider' }}
+      >
+        {[
+          {
+            label: 'Channel',
+            value: conversation?.metadata?.channel ?? 'n/a',
+          },
+          {
+            label: 'SLA',
+            value: `${conversation?.metadata?.slaMinutes ?? 0}m`,
+          },
+          {
+            label: 'Escalated',
+            value: conversation?.metadata?.escalated ? 'yes' : 'no',
+          },
+        ].map((stat) => (
+          <Paper
+            key={stat.label}
+            variant="outlined"
+            sx={{ px: 1.5, py: 0.75, flex: 1, textAlign: 'center' }}
+          >
+            <Typography variant="caption" color="text.secondary">
+              {stat.label}
+            </Typography>
+            <Typography variant="body2" fontWeight={700} noWrap>
+              {stat.value}
+            </Typography>
+          </Paper>
+        ))}
+      </Stack>
+
+      {/* Messages */}
+      <Box
+        sx={{
+          p: 2,
+          minHeight: 300,
+          maxHeight: 400,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', mt: 8 }}
+          >
+            Send a message to stream typed tool and data-part updates.
+          </Typography>
+        ) : (
+          messages.map((message) => {
+            const isUser = message.role === 'user';
+            return (
+              <Box
+                key={message.id}
+                sx={{
+                  display: 'flex',
+                  justifyContent: isUser ? 'flex-end' : 'flex-start',
+                }}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    maxWidth: '80%',
+                    bgcolor: isUser ? 'primary.main' : 'grey.100',
+                    color: isUser ? 'primary.contrastText' : 'text.primary',
+                    borderRadius: 3,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: 700,
+                      color: isUser
+                        ? 'primary.contrastText'
+                        : 'text.secondary',
+                    }}
+                  >
+                    {message.author?.displayName ?? message.role}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 1,
+                    }}
+                  >
+                    {message.parts.map((part, index) => (
+                      <Box key={`${message.id}-${part.type}-${index}`}>
+                        {renderPart(part, message, index)}
+                      </Box>
+                    ))}
+                  </Box>
+                </Paper>
+              </Box>
+            );
+          })
+        )}
+      </Box>
+    </Paper>
   );
 }
 

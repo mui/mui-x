@@ -2,7 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { Chat } from '@mui/x-chat-unstyled';
-import { ChatConversations, ChatThread, ChatComposer } from '@mui/x-chat';
+import {
+  ChatConversations,
+  ChatConversation,
+  ChatConversationInput,
+} from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/shared/demoUtils';
 import {
   inboxConversations,
@@ -28,8 +32,8 @@ export default function ModularComposition() {
             <ChatConversations />
           </Box>
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <ChatThread sx={{ flex: 1 }} />
-            <ChatComposer />
+            <ChatConversation sx={{ flex: 1 }} />
+            <ChatConversationInput />
           </Box>
         </Box>
       </Chat.Root>

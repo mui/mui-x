@@ -12,17 +12,22 @@ import { markChatLayoutPane } from '../chat/internals/chatLayoutPaneKind';
 import { mergeReactProps } from '../internals/mergeReactProps';
 import { ConversationListItem, type ConversationListItemProps } from './ConversationListItem';
 import {
-  ConversationListItemText,
-  type ConversationListItemTextProps,
-} from './ConversationListItemText';
-import {
-  ConversationListItemMeta,
-  type ConversationListItemMetaProps,
-} from './ConversationListItemMeta';
-import {
   ConversationListItemAvatar,
   type ConversationListItemAvatarProps,
 } from './ConversationListItemAvatar';
+import { ConversationListTitle, type ConversationListTitleProps } from './ConversationListTitle';
+import {
+  ConversationListPreview,
+  type ConversationListPreviewProps,
+} from './ConversationListPreview';
+import {
+  ConversationListTimestamp,
+  type ConversationListTimestampProps,
+} from './ConversationListTimestamp';
+import {
+  ConversationListUnreadBadge,
+  type ConversationListUnreadBadgeProps,
+} from './ConversationListUnreadBadge';
 import {
   type ConversationListItemOwnerState,
   type ConversationListRootOwnerState,
@@ -33,26 +38,30 @@ const lastFocusedConversationIdByStore = new WeakMap<object, string>();
 export interface ConversationListRootSlots {
   root: React.ElementType;
   item: React.JSXElementConstructor<ConversationListItemProps>;
-  itemText: React.JSXElementConstructor<ConversationListItemTextProps>;
-  itemMeta: React.JSXElementConstructor<ConversationListItemMetaProps>;
   itemAvatar: React.JSXElementConstructor<ConversationListItemAvatarProps>;
+  title: React.JSXElementConstructor<ConversationListTitleProps>;
+  preview: React.JSXElementConstructor<ConversationListPreviewProps>;
+  timestamp: React.JSXElementConstructor<ConversationListTimestampProps>;
+  unreadBadge: React.JSXElementConstructor<ConversationListUnreadBadgeProps>;
 }
 
 export interface ConversationListRootSlotProps {
   root?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
   item?: SlotComponentProps<typeof ConversationListItem, {}, ConversationListItemOwnerState>;
-  itemText?: SlotComponentProps<
-    typeof ConversationListItemText,
-    {},
-    ConversationListItemOwnerState
-  >;
-  itemMeta?: SlotComponentProps<
-    typeof ConversationListItemMeta,
-    {},
-    ConversationListItemOwnerState
-  >;
   itemAvatar?: SlotComponentProps<
     typeof ConversationListItemAvatar,
+    {},
+    ConversationListItemOwnerState
+  >;
+  title?: SlotComponentProps<typeof ConversationListTitle, {}, ConversationListItemOwnerState>;
+  preview?: SlotComponentProps<typeof ConversationListPreview, {}, ConversationListItemOwnerState>;
+  timestamp?: SlotComponentProps<
+    typeof ConversationListTimestamp,
+    {},
+    ConversationListItemOwnerState
+  >;
+  unreadBadge?: SlotComponentProps<
+    typeof ConversationListUnreadBadge,
     {},
     ConversationListItemOwnerState
   >;
@@ -99,9 +108,12 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
     unread,
   };
   const Item = slots?.item ?? ConversationListItem;
-  const ItemText = slots?.itemText ?? ConversationListItemText;
-  const ItemMeta = slots?.itemMeta ?? ConversationListItemMeta;
   const ItemAvatar = slots?.itemAvatar ?? ConversationListItemAvatar;
+  const Title = slots?.title ?? ConversationListTitle;
+  const Preview = slots?.preview ?? ConversationListPreview;
+  const Timestamp = slots?.timestamp ?? ConversationListTimestamp;
+  const UnreadBadge = slots?.unreadBadge ?? ConversationListUnreadBadge;
+
   const itemSlotProps = useSlotProps({
     elementType: Item,
     externalSlotProps: slotProps?.item,
@@ -130,31 +142,53 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
       onKeyDown(event, conversation.id);
     },
   });
-  const itemTextProps = useSlotProps({
-    elementType: ItemText,
-    externalSlotProps: slotProps?.itemText,
-    ownerState,
-    additionalProps: {
-      conversation,
-      selected,
-      unread,
-      focused,
-    },
-  });
-  const itemMetaProps = useSlotProps({
-    elementType: ItemMeta,
-    externalSlotProps: slotProps?.itemMeta,
-    ownerState,
-    additionalProps: {
-      conversation,
-      selected,
-      unread,
-      focused,
-    },
-  });
   const itemAvatarProps = useSlotProps({
     elementType: ItemAvatar,
     externalSlotProps: slotProps?.itemAvatar,
+    ownerState,
+    additionalProps: {
+      conversation,
+      selected,
+      unread,
+      focused,
+    },
+  });
+  const titleProps = useSlotProps({
+    elementType: Title,
+    externalSlotProps: slotProps?.title,
+    ownerState,
+    additionalProps: {
+      conversation,
+      selected,
+      unread,
+      focused,
+    },
+  });
+  const previewProps = useSlotProps({
+    elementType: Preview,
+    externalSlotProps: slotProps?.preview,
+    ownerState,
+    additionalProps: {
+      conversation,
+      selected,
+      unread,
+      focused,
+    },
+  });
+  const timestampProps = useSlotProps({
+    elementType: Timestamp,
+    externalSlotProps: slotProps?.timestamp,
+    ownerState,
+    additionalProps: {
+      conversation,
+      selected,
+      unread,
+      focused,
+    },
+  });
+  const unreadBadgeProps = useSlotProps({
+    elementType: UnreadBadge,
+    externalSlotProps: slotProps?.unreadBadge,
     ownerState,
     additionalProps: {
       conversation,
@@ -167,8 +201,10 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
   return (
     <Item {...itemProps}>
       <ItemAvatar {...itemAvatarProps} />
-      <ItemText {...itemTextProps} />
-      <ItemMeta {...itemMetaProps} />
+      <Title {...titleProps} />
+      <Preview {...previewProps} />
+      <Timestamp {...timestampProps} />
+      <UnreadBadge {...unreadBadgeProps} />
     </Item>
   );
 }

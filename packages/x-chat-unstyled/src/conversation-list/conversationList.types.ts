@@ -13,8 +13,12 @@ export interface ConversationListItemOwnerState {
   focused: boolean;
 }
 
-export interface ConversationListItemTextOwnerState extends ConversationListItemOwnerState {}
-
-export interface ConversationListItemMetaOwnerState extends ConversationListItemOwnerState {}
-
 export interface ConversationListItemAvatarOwnerState extends ConversationListItemOwnerState {}
+
+export interface ConversationListTitleOwnerState extends ConversationListItemOwnerState {}
+
+export interface ConversationListPreviewOwnerState extends ConversationListItemOwnerState {}
+
+export interface ConversationListTimestampOwnerState extends ConversationListItemOwnerState {}
+
+export interface ConversationListUnreadBadgeOwnerState extends ConversationListItemOwnerState {}

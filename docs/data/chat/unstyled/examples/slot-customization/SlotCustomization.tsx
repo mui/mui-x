@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
   Chat,
-  Composer,
+  Conversation,
+  ConversationInput,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-  Thread,
 } from '@mui/x-chat-unstyled';
 import {
   createEchoAdapter,
@@ -69,8 +69,9 @@ const BrandConversationItem = React.forwardRef(function BrandConversationItem(
       style={{
         display: 'grid',
         gridTemplateColumns: '44px minmax(0, 1fr) auto',
-        gap: 10,
-        alignItems: 'center',
+        gridTemplateRows: 'auto auto',
+        columnGap: 10,
+        rowGap: 2,
         padding: 12,
         borderRadius: 18,
         background: ownerState?.selected ? brand.surface : 'transparent',
@@ -115,6 +116,8 @@ const BrandConversationAvatar = React.forwardRef(function BrandConversationAvata
     <div
       ref={ref}
       style={{
+        gridColumn: 1,
+        gridRow: '1 / 3',
         width: 44,
         height: 44,
         borderRadius: 16,
@@ -136,69 +139,9 @@ const BrandConversationAvatar = React.forwardRef(function BrandConversationAvata
   );
 });
 
-const BrandConversationText = React.forwardRef(function BrandConversationText(
+const BrandConversationTitle = React.forwardRef(function BrandConversationTitle(
   props: React.HTMLAttributes<HTMLDivElement> & {
-    conversation?: {
-      title?: string;
-      subtitle?: string;
-    };
-    ownerState?: {
-      unread?: boolean;
-    };
-    selected?: boolean;
-    unread?: boolean;
-    focused?: boolean;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const {
-    conversation,
-    ownerState,
-    selected: _s,
-    unread: _u,
-    focused: _f,
-    style,
-    ...other
-  } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{ minWidth: 0, display: 'grid', gap: 4, ...style }}
-      {...other}
-    >
-      <div
-        style={{
-          fontWeight: 800,
-          color: brand.text,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {conversation?.title}
-      </div>
-      <div
-        style={{
-          color: ownerState?.unread ? brand.text : brand.muted,
-          fontSize: 12,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {conversation?.subtitle}
-      </div>
-    </div>
-  );
-});
-
-const BrandConversationMeta = React.forwardRef(function BrandConversationMeta(
-  props: React.HTMLAttributes<HTMLDivElement> & {
-    conversation?: {
-      unreadCount?: number;
-      lastMessageAt?: string;
-    };
+    conversation?: { title?: string };
     ownerState?: unknown;
     selected?: boolean;
     unread?: boolean;
@@ -220,34 +163,166 @@ const BrandConversationMeta = React.forwardRef(function BrandConversationMeta(
     <div
       ref={ref}
       style={{
-        display: 'grid',
-        justifyItems: 'end',
-        gap: 6,
-        color: brand.muted,
-        fontSize: 11,
+        gridColumn: 2,
+        gridRow: 1,
+        alignSelf: 'end',
+        minWidth: 0,
+        fontWeight: 800,
+        color: brand.text,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
         ...style,
       }}
       {...other}
     >
-      <div>{formatConversationTime(conversation?.lastMessageAt)}</div>
-      {(conversation?.unreadCount ?? 0) > 0 ? (
-        <div
-          style={{
-            borderRadius: 999,
-            background: brand.accent,
-            color: '#ffffff',
-            minWidth: 22,
-            padding: '2px 7px',
-            textAlign: 'center',
-            fontWeight: 800,
-          }}
-        >
-          {conversation?.unreadCount}
-        </div>
-      ) : null}
+      {conversation?.title}
     </div>
   );
 });
+
+const BrandConversationPreview = React.forwardRef(function BrandConversationPreview(
+  props: React.HTMLAttributes<HTMLDivElement> & {
+    conversation?: { subtitle?: string };
+    ownerState?: { unread?: boolean };
+    selected?: boolean;
+    unread?: boolean;
+    focused?: boolean;
+  },
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const {
+    conversation,
+    ownerState,
+    selected: _s,
+    unread: _u,
+    focused: _f,
+    style,
+    ...other
+  } = props;
+
+  if (!conversation?.subtitle) {
+    return null;
+  }
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        gridColumn: 2,
+        gridRow: 2,
+        alignSelf: 'start',
+        minWidth: 0,
+        color: ownerState?.unread ? brand.text : brand.muted,
+        fontSize: 12,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        ...style,
+      }}
+      {...other}
+    >
+      {conversation.subtitle}
+    </div>
+  );
+});
+
+const BrandConversationTimestamp = React.forwardRef(
+  function BrandConversationTimestamp(
+    props: React.HTMLAttributes<HTMLDivElement> & {
+      conversation?: { lastMessageAt?: string };
+      ownerState?: unknown;
+      selected?: boolean;
+      unread?: boolean;
+      focused?: boolean;
+    },
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    const {
+      conversation,
+      ownerState: _,
+      selected: _s,
+      unread: _u,
+      focused: _f,
+      style,
+      ...other
+    } = props;
+
+    if (!conversation?.lastMessageAt) {
+      return null;
+    }
+
+    return (
+      <div
+        ref={ref}
+        style={{
+          gridColumn: 3,
+          gridRow: 1,
+          alignSelf: 'end',
+          justifySelf: 'end',
+          color: brand.muted,
+          fontSize: 11,
+          ...style,
+        }}
+        {...other}
+      >
+        {formatConversationTime(conversation.lastMessageAt)}
+      </div>
+    );
+  },
+);
+
+const BrandConversationUnreadBadge = React.forwardRef(
+  function BrandConversationUnreadBadge(
+    props: React.HTMLAttributes<HTMLSpanElement> & {
+      conversation?: { unreadCount?: number };
+      ownerState?: unknown;
+      selected?: boolean;
+      unread?: boolean;
+      focused?: boolean;
+    },
+    ref: React.Ref<HTMLSpanElement>,
+  ) {
+    const {
+      conversation,
+      ownerState: _,
+      selected: _s,
+      unread: _u,
+      focused: _f,
+      style,
+      ...other
+    } = props;
+    const unreadCount = conversation?.unreadCount ?? 0;
+
+    if (unreadCount <= 0) {
+      return null;
+    }
+
+    return (
+      <span
+        ref={ref}
+        style={{
+          gridColumn: 3,
+          gridRow: 2,
+          alignSelf: 'start',
+          justifySelf: 'end',
+          borderRadius: 999,
+          background: brand.accent,
+          color: '#ffffff',
+          minWidth: 22,
+          padding: '2px 7px',
+          textAlign: 'center',
+          fontWeight: 800,
+          fontSize: 11,
+          ...style,
+        }}
+        {...other}
+      >
+        {unreadCount > 99 ? '99+' : unreadCount}
+      </span>
+    );
+  },
+);
 
 const BrandMessageAuthor = React.forwardRef(function BrandMessageAuthor(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
@@ -591,11 +666,13 @@ export default function SlotCustomization() {
           slots={{
             item: BrandConversationItem,
             itemAvatar: BrandConversationAvatar,
-            itemMeta: BrandConversationMeta,
-            itemText: BrandConversationText,
+            preview: BrandConversationPreview,
+            timestamp: BrandConversationTimestamp,
+            title: BrandConversationTitle,
+            unreadBadge: BrandConversationUnreadBadge,
           }}
         />
-        <Thread.Root
+        <Conversation.Root
           slotProps={{
             root: {
               style: {
@@ -607,7 +684,7 @@ export default function SlotCustomization() {
             },
           }}
         >
-          <Thread.Header
+          <Conversation.Header
             style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -617,8 +694,8 @@ export default function SlotCustomization() {
             }}
           >
             <div style={{ minWidth: 0 }}>
-              <Thread.Title style={{ fontSize: 19, fontWeight: 900 }} />
-              <Thread.Subtitle
+              <Conversation.Title style={{ fontSize: 19, fontWeight: 900 }} />
+              <Conversation.Subtitle
                 style={{
                   color: brand.muted,
                   fontSize: 13,
@@ -629,7 +706,7 @@ export default function SlotCustomization() {
                 }}
               />
             </div>
-            <Thread.Actions style={{ display: 'flex', gap: 8 }}>
+            <Conversation.HeaderActions style={{ display: 'flex', gap: 8 }}>
               <button
                 type="button"
                 style={{
@@ -660,8 +737,8 @@ export default function SlotCustomization() {
               >
                 Archive
               </button>
-            </Thread.Actions>
-          </Thread.Header>
+            </Conversation.HeaderActions>
+          </Conversation.Header>
           <MessageList.Root
             estimatedItemSize={100}
             renderItem={({ id, index }) => (
@@ -681,8 +758,8 @@ export default function SlotCustomization() {
             style={{ minHeight: 0 }}
             virtualization={false}
           />
-          <Composer.Root slots={{ root: BrandComposerRoot }}>
-            <Composer.Input
+          <ConversationInput.Root slots={{ root: BrandComposerRoot }}>
+            <ConversationInput.TextArea
               aria-label="Brand message"
               placeholder="Reply using the product-specific markup"
               slots={{ root: BrandComposerInput }}
@@ -690,18 +767,18 @@ export default function SlotCustomization() {
             <div
               style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}
             >
-              <Composer.AttachButton slots={{ root: BrandComposerButton }}>
+              <ConversationInput.AttachButton slots={{ root: BrandComposerButton }}>
                 Attach
-              </Composer.AttachButton>
-              <Composer.SendButton
+              </ConversationInput.AttachButton>
+              <ConversationInput.SendButton
                 data-variant="primary"
                 slots={{ root: BrandComposerButton }}
               >
                 Send
-              </Composer.SendButton>
+              </ConversationInput.SendButton>
             </div>
-          </Composer.Root>
-        </Thread.Root>
+          </ConversationInput.Root>
+        </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
   );

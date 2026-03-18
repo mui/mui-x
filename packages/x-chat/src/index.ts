@@ -1,13 +1,18 @@
 export {
-  ChatComposer,
-  ChatComposerAttachButton,
-  ChatComposerHelperText,
-  ChatComposerInput,
-  ChatComposerSendButton,
-  ChatComposerToolbar,
-  chatComposerClasses,
-  getChatComposerUtilityClass,
-} from './ChatComposer';
+  ChatConversation,
+  chatConversationClasses,
+  getChatConversationUtilityClass,
+} from './ChatConversation';
+export {
+  ChatConversationInput,
+  ChatConversationInputAttachButton,
+  ChatConversationInputHelperText,
+  ChatConversationInputTextArea,
+  ChatConversationInputSendButton,
+  ChatConversationInputToolbar,
+  chatConversationInputClasses,
+  getChatConversationInputUtilityClass,
+} from './ChatConversationInput';
 export {
   ChatScrollToBottomAffordance,
   ChatTypingIndicator,
@@ -49,7 +54,6 @@ export {
   getChatMessageUtilityClass,
 } from './ChatMessage';
 export { ChatBox, chatBoxClasses, getChatBoxUtilityClass } from './ChatBox';
-export { ChatThread, chatThreadClasses, getChatThreadUtilityClass } from './ChatThread';
 
 export type {
   ChatBoxClassKey,
@@ -60,6 +64,35 @@ export type {
   ChatBoxSlots,
   ChatBoxStateOwnerState,
 } from './ChatBox';
+export type {
+  ChatConversationClassKey,
+  ChatConversationClasses,
+  ChatConversationProps,
+  ChatConversationSlotProps,
+  ChatConversationSlots,
+} from './ChatConversation';
+export type {
+  ChatConversationInputAttachButtonProps,
+  ChatConversationInputAttachButtonSlotProps,
+  ChatConversationInputAttachButtonSlots,
+  ChatConversationInputClassKey,
+  ChatConversationInputClasses,
+  ChatConversationInputHelperTextProps,
+  ChatConversationInputHelperTextSlotProps,
+  ChatConversationInputHelperTextSlots,
+  ChatConversationInputTextAreaProps,
+  ChatConversationInputTextAreaSlotProps,
+  ChatConversationInputTextAreaSlots,
+  ChatConversationInputProps,
+  ChatConversationInputSendButtonProps,
+  ChatConversationInputSendButtonSlotProps,
+  ChatConversationInputSendButtonSlots,
+  ChatConversationInputSlotProps,
+  ChatConversationInputSlots,
+  ChatConversationInputToolbarProps,
+  ChatConversationInputToolbarSlotProps,
+  ChatConversationInputToolbarSlots,
+} from './ChatConversationInput';
 export type {
   ChatScrollToBottomAffordanceClassKey,
   ChatScrollToBottomAffordanceClasses,
@@ -77,28 +110,6 @@ export type {
   ChatUnreadMarkerSlotProps,
   ChatUnreadMarkerSlots,
 } from './ChatIndicators';
-export type {
-  ChatComposerAttachButtonProps,
-  ChatComposerAttachButtonSlotProps,
-  ChatComposerAttachButtonSlots,
-  ChatComposerClassKey,
-  ChatComposerClasses,
-  ChatComposerHelperTextProps,
-  ChatComposerHelperTextSlotProps,
-  ChatComposerHelperTextSlots,
-  ChatComposerInputProps,
-  ChatComposerInputSlotProps,
-  ChatComposerInputSlots,
-  ChatComposerProps,
-  ChatComposerSendButtonProps,
-  ChatComposerSendButtonSlotProps,
-  ChatComposerSendButtonSlots,
-  ChatComposerSlotProps,
-  ChatComposerSlots,
-  ChatComposerToolbarProps,
-  ChatComposerToolbarSlotProps,
-  ChatComposerToolbarSlots,
-} from './ChatComposer';
 export type {
   ChatConversationsClassKey,
   ChatConversationsClasses,
@@ -158,10 +169,3 @@ export type {
   ChatToolPartRendererSlotProps,
   ChatToolPartRendererSlots,
 } from './ChatMessage';
-export type {
-  ChatThreadClassKey,
-  ChatThreadClasses,
-  ChatThreadProps,
-  ChatThreadSlotProps,
-  ChatThreadSlots,
-} from './ChatThread';

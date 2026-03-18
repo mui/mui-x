@@ -8,6 +8,8 @@ packageName: '@mui/x-chat-unstyled'
 
 <p class="description">Customize the unstyled primitives through slots, <code>slotProps</code>, and owner state while keeping the built-in structure and behavior.</p>
 
+{{"demo": "../examples/slot-customization/SlotCustomization.js"}}
+
 ## Customization model
 
 `@mui/x-chat-unstyled` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.

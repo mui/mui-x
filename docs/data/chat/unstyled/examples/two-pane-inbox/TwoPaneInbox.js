@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
   Chat,
-  Composer,
+  Conversation,
+  ConversationInput,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-  Thread,
 } from '@mui/x-chat-unstyled';
 import {
   createEchoAdapter,
@@ -21,8 +21,10 @@ import {
   DemoComposerRoot,
   DemoConversationItem,
   DemoConversationItemAvatar,
-  DemoConversationItemMeta,
-  DemoConversationItemText,
+  DemoConversationPreview,
+  DemoConversationTimestamp,
+  DemoConversationTitle,
+  DemoConversationUnreadBadge,
   DemoMessageAuthor,
   DemoMessageAvatar,
   DemoMessageContent,
@@ -104,16 +106,20 @@ export default function TwoPaneInbox() {
             slots={{
               item: DemoConversationItem,
               itemAvatar: DemoConversationItemAvatar,
-              itemMeta: DemoConversationItemMeta,
-              itemText: DemoConversationItemText,
+              preview: DemoConversationPreview,
+              timestamp: DemoConversationTimestamp,
+              title: DemoConversationTitle,
+              unreadBadge: DemoConversationUnreadBadge,
             }}
           />
         </div>
-        <Thread.Root slotProps={{ root: { style: demoSurfaceStyles.threadRoot } }}>
-          <Thread.Header slots={{ root: DemoThreadHeader }}>
+        <Conversation.Root
+          slotProps={{ root: { style: demoSurfaceStyles.threadRoot } }}
+        >
+          <Conversation.Header slots={{ root: DemoThreadHeader }}>
             <div style={{ minWidth: 0 }}>
-              <Thread.Title style={{ fontSize: 18, fontWeight: 800 }} />
-              <Thread.Subtitle
+              <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
+              <Conversation.Subtitle
                 style={{
                   color: '#5c6b7c',
                   fontSize: 13,
@@ -124,7 +130,7 @@ export default function TwoPaneInbox() {
                 }}
               />
             </div>
-            <Thread.Actions style={{ display: 'flex', gap: 8 }}>
+            <Conversation.HeaderActions style={{ display: 'flex', gap: 8 }}>
               <DemoToolbarButton
                 onClick={() =>
                   setConversations((previous) =>
@@ -139,8 +145,8 @@ export default function TwoPaneInbox() {
                 Mark read
               </DemoToolbarButton>
               <DemoToolbarButton tone="accent">Escalate</DemoToolbarButton>
-            </Thread.Actions>
-          </Thread.Header>
+            </Conversation.HeaderActions>
+          </Conversation.Header>
           <MessageList.Root
             estimatedItemSize={96}
             renderItem={({ id, index }) => (
@@ -160,22 +166,22 @@ export default function TwoPaneInbox() {
             style={{ minHeight: 0 }}
             virtualization={false}
           />
-          <Composer.Root slots={{ root: DemoComposerRoot }}>
-            <Composer.Input
+          <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
+            <ConversationInput.TextArea
               aria-label="Reply"
               placeholder="Reply in the active thread"
               slots={{ root: DemoComposerInput }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Composer.SendButton
+              <ConversationInput.SendButton
                 data-variant="primary"
                 slots={{ root: DemoComposerButton }}
               >
                 Send reply
-              </Composer.SendButton>
+              </ConversationInput.SendButton>
             </div>
-          </Composer.Root>
-        </Thread.Root>
+          </ConversationInput.Root>
+        </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
   );

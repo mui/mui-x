@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
   Chat,
-  Composer,
+  Conversation,
+  ConversationInput,
   Message,
   MessageGroup,
   MessageList,
-  Thread,
 } from '@mui/x-chat-unstyled';
 import { useChatComposer } from '@mui/x-chat-headless';
 import { createEchoAdapter } from '../shared/demoUtils';
@@ -45,7 +45,7 @@ function ComposerDemoBody() {
   );
 
   return (
-    <Thread.Root
+    <Conversation.Root
       slotProps={{
         root: {
           style: {
@@ -57,10 +57,10 @@ function ComposerDemoBody() {
         },
       }}
     >
-      <Thread.Header slots={{ root: DemoThreadHeader }}>
+      <Conversation.Header slots={{ root: DemoThreadHeader }}>
         <div style={{ minWidth: 0 }}>
-          <Thread.Title style={{ fontSize: 18, fontWeight: 800 }} />
-          <Thread.Subtitle
+          <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
+          <Conversation.Subtitle
             style={{
               color: '#5c6b7c',
               fontSize: 13,
@@ -71,7 +71,7 @@ function ComposerDemoBody() {
             }}
           />
         </div>
-      </Thread.Header>
+      </Conversation.Header>
       <MessageList.Root
         estimatedItemSize={92}
         renderItem={({ id, index }) => (
@@ -91,18 +91,18 @@ function ComposerDemoBody() {
         style={{ minHeight: 0 }}
         virtualization={false}
       />
-      <Composer.Root slots={{ root: DemoComposerRoot }}>
+      <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
         <AttachmentPreviewList />
-        <Composer.Input
+        <ConversationInput.TextArea
           aria-label="Draft"
           placeholder="Write the update and attach any supporting files"
           slots={{ root: DemoComposerInput }}
         />
-        <Composer.Toolbar slots={{ root: DemoComposerToolbar }}>
+        <ConversationInput.Toolbar slots={{ root: DemoComposerToolbar }}>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <Composer.AttachButton slots={{ root: DemoComposerButton }}>
+            <ConversationInput.AttachButton slots={{ root: DemoComposerButton }}>
               Attach file
-            </Composer.AttachButton>
+            </ConversationInput.AttachButton>
             <DemoToolbarButton
               onClick={() =>
                 addSampleAttachment('architecture-note.txt', 'text/plain')
@@ -116,19 +116,19 @@ function ComposerDemoBody() {
               Add image
             </DemoToolbarButton>
           </div>
-          <Composer.SendButton
+          <ConversationInput.SendButton
             data-variant="primary"
             slots={{ root: DemoComposerButton }}
           >
             Send message
-          </Composer.SendButton>
-        </Composer.Toolbar>
-        <Composer.HelperText slots={{ root: DemoComposerHelperText }}>
+          </ConversationInput.SendButton>
+        </ConversationInput.Toolbar>
+        <ConversationInput.HelperText slots={{ root: DemoComposerHelperText }}>
           Press Enter to send. Shift+Enter keeps a new line, and the file trigger
           stays connected to the hidden input.
-        </Composer.HelperText>
-      </Composer.Root>
-    </Thread.Root>
+        </ConversationInput.HelperText>
+      </ConversationInput.Root>
+    </Conversation.Root>
   );
 }
 

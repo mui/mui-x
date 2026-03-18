@@ -18,16 +18,16 @@ For most teams, this is the first production-ready composition pattern rather th
 
 - `Chat.Layout` pane composition
 - `ConversationList.Root` selection behavior
-- `Thread.Header`, `Thread.Title`, and `Thread.Subtitle`
+- `Conversation.Header`, `Conversation.Title`, and `Conversation.Subtitle`
 - `MessageList.Root`
-- `Composer.Root`
+- `ConversationInput.Root`
 
 ## Key primitives
 
 - `Chat.Layout` provides the two-pane frame.
 - `ConversationList.Root` owns selection, keyboard navigation, and focus restoration.
-- `Thread.Header` gives the thread a stable title and metadata region.
-- `MessageList.Root` and `Composer.Root` complete the active thread pane.
+- `Conversation.Header` gives the thread a stable title and metadata region.
+- `MessageList.Root` and `ConversationInput.Root` complete the active thread pane.
 
 ## When to use this pattern
 
@@ -48,7 +48,7 @@ It is especially applicable when users need to switch threads frequently without
 
 ## What to pay attention to
 
-- `ConversationList.Root` and `Thread.Root` already coordinate through active conversation state, so the page-level layout code can stay small.
+- `ConversationList.Root` and `Conversation.Root` already coordinate through active conversation state, so the page-level layout code can stay small.
 - `Chat.Layout` should stay the structural owner of the two-pane arrangement even when the visual layout is heavily customized.
 
 ## Next steps

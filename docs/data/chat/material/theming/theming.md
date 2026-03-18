@@ -16,7 +16,7 @@ Import the theme augmentation module to enable TypeScript autocompletion for cha
 import type {} from '@mui/x-chat/themeAugmentation';
 ```
 
-This adds `MuiChatBox`, `MuiChatThread`, `MuiChatComposer`, `MuiChatConversations`, `MuiChatMessage`, and other chat component keys to the theme's `components` type.
+This adds `MuiChatBox`, `MuiChatConversation`, `MuiChatConversationInput`, `MuiChatConversations`, `MuiChatMessage`, and other chat component keys to the theme's `components` type.
 
 ## Palette tokens
 

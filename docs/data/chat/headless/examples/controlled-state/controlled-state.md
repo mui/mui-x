@@ -8,13 +8,65 @@ packageName: '@mui/x-chat-headless'
 
 <p class="description">Drive the public chat models from React state while the runtime keeps normalized internals.</p>
 
-This recipe demonstrates the major public design choice of the headless package:
+## What this example shows
 
-- `messages`
-- `conversations`
-- `activeConversationId`
-- `composerValue`
+This recipe demonstrates the controlled state model — the major public design choice of the headless package.
+All four public state models are owned by the parent component while the runtime still streams, normalizes, and derives selectors internally.
 
-All stay externally controlled, but the runtime still streams, derives selectors, and updates through the normalized store.
+## Key concepts
+
+### The four controlled models
+
+Each model has a controlled prop, a change callback, and an uncontrolled default:
+
+| Model                | Controlled prop          | Change callback               |
+| :------------------- | :----------------------- | :---------------------------- |
+| Messages             | `messages`               | `onMessagesChange`            |
+| Conversations        | `conversations`          | `onConversationsChange`       |
+| Active conversation  | `activeConversationId`   | `onActiveConversationChange`  |
+| Composer value       | `composerValue`          | `onComposerValueChange`       |
+
+### Wiring controlled state
+
+Pass your React state directly to `ChatProvider`:
+
+```tsx
+<ChatProvider
+  adapter={adapter}
+  conversations={conversations}
+  onConversationsChange={setConversations}
+  activeConversationId={activeConversationId}
+  onActiveConversationChange={setActiveConversationId}
+  messages={messages}
+  onMessagesChange={setMessages}
+  composerValue={composerValue}
+  onComposerValueChange={setComposerValue}
+>
+  <ControlledStateChat />
+</ChatProvider>
+```
+
+### When to use controlled state
+
+Use controlled state when you need to:
+
+- sync chat state with a global store (Redux, Zustand, etc.)
+- persist messages across navigation or page reloads
+- drive the conversation list from an external data source
+- coordinate the composer value with external UI (e.g. slash commands)
+
+Start with `default*` props for prototyping and switch to controlled when the need arises — no other changes are required.
 
 {{"demo": "ControlledStateHeadlessChat.js"}}
+
+## Key takeaways
+
+- Controlled state lets you own the source of truth while the runtime still handles streaming and normalization
+- You can switch from uncontrolled to controlled at any time without changing the runtime model
+- The `onMessagesChange` callback fires with the full array after every update, including streaming deltas
+
+## Next steps
+
+- [State and store](/x/react-chat/headless/state/) for the full `ChatProvider` props reference
+- [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) for efficient rendering with controlled state
+- [Conversation history](/x/react-chat/headless/examples/conversation-history/) for adapter-driven conversation loading

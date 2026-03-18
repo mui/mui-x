@@ -17,80 +17,24 @@ import type {
   ChatSourceUrlMessagePart,
   ChatToolMessagePart,
 } from '@mui/x-chat-headless';
-import { useChat } from '@mui/x-chat-headless';
+import {
+  ReasoningPart,
+  type ReasoningPartExternalProps,
+  ToolPart,
+  type ToolPartExternalProps,
+  FilePart,
+  type FilePartExternalProps,
+  SourceUrlPart,
+  type SourceUrlPartExternalProps,
+  SourceDocumentPart,
+  type SourceDocumentPartExternalProps,
+} from '@mui/x-chat-unstyled';
 import { styled } from '../internals/material/chatStyled';
-import { createDefaultSlot, joinClassNames, mergeSlotPropsWithClassName } from '../internals/utils';
 import { chatMessageClasses } from './chatMessageClasses';
 
-type ChatPartLocaleText = {
-  messageReasoningLabel: string;
-  messageReasoningStreamingLabel: string;
-  messageToolApproveButtonLabel: string;
-  messageToolDenyButtonLabel: string;
-  messageToolInputLabel: string;
-  messageToolOutputLabel: string;
-  toolStateLabel(state: string): string;
-};
-
-const DEFAULT_PART_LOCALE_TEXT: ChatPartLocaleText = {
-  messageReasoningLabel: 'Reasoning',
-  messageReasoningStreamingLabel: 'Thinking...',
-  messageToolApproveButtonLabel: 'Approve',
-  messageToolDenyButtonLabel: 'Deny',
-  messageToolInputLabel: 'Input',
-  messageToolOutputLabel: 'Output',
-  toolStateLabel: (state) => state,
-};
-
-function createPartRenderer<
-  TPart extends ChatMessagePart,
-  TProps extends ChatPartRendererProps<TPart>,
->(
-  Component: React.ComponentType<TProps>,
-  defaultProps: Omit<TProps, 'index' | 'message' | 'onToolCall' | 'part'>,
-): ChatPartRenderer<TPart> {
-  return function StyledPartRenderer(props) {
-    return (
-      <Component
-        {...(defaultProps as Omit<TProps, 'index' | 'message' | 'onToolCall' | 'part'>)}
-        {...(props as unknown as TProps)}
-      />
-    );
-  };
-}
-
-function formatStructuredValue(value: unknown) {
-  if (typeof value === 'string') {
-    return value;
-  }
-
-  try {
-    return JSON.stringify(value, null, 2);
-  } catch {
-    return String(value);
-  }
-}
-
-function shouldCollapsePayload(text: string) {
-  return text.length > 320 || text.split('\n').length > 8;
-}
-
-function ExternalLinkIcon() {
-  return (
-    <svg aria-hidden="true" fill="currentColor" focusable="false" viewBox="0 0 24 24">
-      <path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3Z" />
-      <path d="M5 5h6v2H7v10h10v-4h2v6H5V5Z" />
-    </svg>
-  );
-}
-
-function FileIcon() {
-  return (
-    <svg aria-hidden="true" fill="currentColor" focusable="false" viewBox="0 0 24 24">
-      <path d="M6 2h8l4 4v16H6V2Zm8 1.5V7h3.5L14 3.5Z" />
-    </svg>
-  );
-}
+// ---------------------------------------------------------------------------
+// Shared utilities
+// ---------------------------------------------------------------------------
 
 function getToolStateColor(theme: Theme, state: string) {
   switch (state) {
@@ -105,6 +49,10 @@ function getToolStateColor(theme: Theme, state: string) {
       return theme.palette.info.main;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Reasoning – styled slots
+// ---------------------------------------------------------------------------
 
 export interface ChatReasoningPartRendererOwnerState {
   messageId: string;
@@ -126,9 +74,6 @@ export interface ChatReasoningPartRendererSlotProps {
 
 export interface ChatReasoningPartRendererProps extends ChatPartRendererProps<ChatReasoningMessagePart> {
   className?: string;
-  localeText?: Partial<
-    Pick<ChatPartLocaleText, 'messageReasoningLabel' | 'messageReasoningStreamingLabel'>
-  >;
   slotProps?: ChatReasoningPartRendererSlotProps;
   slots?: Partial<ChatReasoningPartRendererSlots>;
   sx?: SxProps<Theme>;
@@ -178,71 +123,45 @@ export const ChatReasoningPartRenderer = React.forwardRef(function ChatReasoning
   props: ChatReasoningPartRendererProps,
   ref: React.Ref<HTMLDetailsElement>,
 ) {
-  const { className, localeText: localeTextProp, message, part, slotProps, slots, sx } = props;
-  const localeText = React.useMemo(
-    () => ({
-      messageReasoningLabel: DEFAULT_PART_LOCALE_TEXT.messageReasoningLabel,
-      messageReasoningStreamingLabel: DEFAULT_PART_LOCALE_TEXT.messageReasoningStreamingLabel,
-      ...localeTextProp,
-    }),
-    [localeTextProp],
-  );
-  const ownerState = React.useMemo<ChatReasoningPartRendererOwnerState>(
-    () => ({
-      messageId: message.id,
-      role: message.role,
-      streaming: part.state === 'streaming',
-    }),
-    [message.id, message.role, part.state],
-  );
-  const Root = React.useMemo(
-    () => slots?.root ?? createDefaultSlot(ChatReasoningRootSlot, sx),
-    [slots?.root, sx],
-  );
-  const Summary = slots?.summary ?? ChatReasoningSummarySlot;
-  const Content = slots?.content ?? ChatReasoningContentSlot;
-  const rootProps = mergeSlotPropsWithClassName(
-    slotProps?.root,
-    className
-      ? joinClassNames(chatMessageClasses.reasoning, className)
-      : chatMessageClasses.reasoning,
-  )(ownerState);
-  const summaryProps = mergeSlotPropsWithClassName(
-    slotProps?.summary,
-    chatMessageClasses.reasoningSummary,
-  )(ownerState);
-  const contentProps = mergeSlotPropsWithClassName(
-    slotProps?.content,
-    chatMessageClasses.reasoningContent,
-  )(ownerState);
+  const { slots, slotProps, className, ...other } = props;
 
   return (
-    <Root {...rootProps} open={ownerState.streaming} ownerState={ownerState} ref={ref}>
-      <Summary {...summaryProps} ownerState={ownerState}>
-        {ownerState.streaming
-          ? localeText.messageReasoningStreamingLabel
-          : localeText.messageReasoningLabel}
-      </Summary>
-      <Content {...contentProps} ownerState={ownerState}>
-        {part.text}
-      </Content>
-    </Root>
+    <ReasoningPart
+      ref={ref}
+      className={
+        className ? `${chatMessageClasses.reasoning} ${className}` : chatMessageClasses.reasoning
+      }
+      slots={{
+        root: ChatReasoningRootSlot,
+        summary: ChatReasoningSummarySlot,
+        content: ChatReasoningContentSlot,
+        ...slots,
+      }}
+      slotProps={slotProps as ReasoningPartExternalProps['slotProps']}
+      {...other}
+    />
   );
 });
 
 export function createChatReasoningPartRenderer(
   defaultProps: ChatReasoningPartRendererOptions = {},
 ): ChatPartRenderer<ChatReasoningMessagePart> {
-  return createPartRenderer(ChatReasoningPartRenderer, defaultProps);
+  return function StyledReasoningPartRenderer(props) {
+    return <ChatReasoningPartRenderer {...defaultProps} {...props} />;
+  };
 }
 
-type ToolPart = ChatToolMessagePart | ChatDynamicToolMessagePart;
+// ---------------------------------------------------------------------------
+// Tool – styled slots
+// ---------------------------------------------------------------------------
+
+type ToolPartType = ChatToolMessagePart | ChatDynamicToolMessagePart;
 
 export interface ChatToolPartRendererOwnerState {
   messageId: string;
   pendingApproval: boolean;
-  role: ChatPartRendererProps<ToolPart>['message']['role'];
-  state: ToolPart['toolInvocation']['state'];
+  role: ChatPartRendererProps<ToolPartType>['message']['role'];
+  state: ToolPartType['toolInvocation']['state'];
 }
 
 interface ChatToolPartSectionOwnerState extends ChatToolPartRendererOwnerState {
@@ -275,18 +194,8 @@ export interface ChatToolPartRendererSlotProps {
   denyButton?: SlotComponentProps<typeof Button, {}, ChatToolPartRendererOwnerState>;
 }
 
-export interface ChatToolPartRendererProps extends ChatPartRendererProps<ToolPart> {
+export interface ChatToolPartRendererProps extends ChatPartRendererProps<ToolPartType> {
   className?: string;
-  localeText?: Partial<
-    Pick<
-      ChatPartLocaleText,
-      | 'messageToolApproveButtonLabel'
-      | 'messageToolDenyButtonLabel'
-      | 'messageToolInputLabel'
-      | 'messageToolOutputLabel'
-      | 'toolStateLabel'
-    >
-  >;
   slotProps?: ChatToolPartRendererSlotProps;
   slots?: Partial<ChatToolPartRendererSlots>;
   sx?: SxProps<Theme>;
@@ -401,243 +310,46 @@ const ChatToolDenyButtonSlot = styled(Button, {
   slot: 'ToolDenyButton',
 })({});
 
-function ToolPayloadSection(props: {
-  label: string;
-  ownerState: ChatToolPartRendererOwnerState;
-  section: 'input' | 'output';
-  slotProps?: ChatToolPartRendererSlotProps;
-  slots?: Partial<ChatToolPartRendererSlots>;
-  value: unknown;
-}) {
-  const { label, ownerState, section, slotProps, slots, value } = props;
-  const formatted = React.useMemo(() => formatStructuredValue(value), [value]);
-  const collapsed = shouldCollapsePayload(formatted);
-  const sectionOwnerState = React.useMemo<ChatToolPartSectionOwnerState>(
-    () => ({
-      ...ownerState,
-      section,
-    }),
-    [ownerState, section],
-  );
-  const Section = slots?.section ?? ChatToolSectionSlot;
-  const SectionContent = slots?.sectionContent ?? ChatToolSectionContentSlot;
-  const sectionProps = mergeSlotPropsWithClassName(
-    slotProps?.section,
-    chatMessageClasses.toolSection,
-  )(sectionOwnerState);
-  const sectionContentProps = mergeSlotPropsWithClassName(
-    slotProps?.sectionContent,
-    chatMessageClasses.toolSectionContent,
-  )(sectionOwnerState);
-
-  if (!collapsed) {
-    return (
-      <Section {...sectionProps} ownerState={sectionOwnerState}>
-        <strong>{label}</strong>
-        <SectionContent {...sectionContentProps} ownerState={sectionOwnerState}>
-          {formatted}
-        </SectionContent>
-      </Section>
-    );
-  }
-
-  return (
-    <Section {...sectionProps} ownerState={sectionOwnerState}>
-      <details>
-        <summary>{label}</summary>
-        <SectionContent {...sectionContentProps} ownerState={sectionOwnerState}>
-          {formatted}
-        </SectionContent>
-      </details>
-    </Section>
-  );
-}
-
 export const ChatToolPartRenderer = React.forwardRef(function ChatToolPartRenderer(
   props: ChatToolPartRendererProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { addToolApprovalResponse } = useChat();
-  const { className, localeText: localeTextProp, message, part, slotProps, slots, sx } = props;
-  const [pendingApproval, setPendingApproval] = React.useState(false);
-  const localeText = React.useMemo(
-    () => ({
-      messageToolApproveButtonLabel: DEFAULT_PART_LOCALE_TEXT.messageToolApproveButtonLabel,
-      messageToolDenyButtonLabel: DEFAULT_PART_LOCALE_TEXT.messageToolDenyButtonLabel,
-      messageToolInputLabel: DEFAULT_PART_LOCALE_TEXT.messageToolInputLabel,
-      messageToolOutputLabel: DEFAULT_PART_LOCALE_TEXT.messageToolOutputLabel,
-      toolStateLabel: DEFAULT_PART_LOCALE_TEXT.toolStateLabel,
-      ...localeTextProp,
-    }),
-    [localeTextProp],
-  );
-  const ownerState = React.useMemo<ChatToolPartRendererOwnerState>(
-    () => ({
-      messageId: message.id,
-      pendingApproval,
-      role: message.role,
-      state: part.toolInvocation.state,
-    }),
-    [message.id, message.role, part.toolInvocation.state, pendingApproval],
-  );
-  const Root = React.useMemo(
-    () => slots?.root ?? createDefaultSlot(ChatToolRootSlot, sx),
-    [slots?.root, sx],
-  );
-  const Header = slots?.header ?? ChatToolHeaderSlot;
-  const Title = slots?.title ?? ChatToolTitleSlot;
-  const State = slots?.state ?? ChatToolStateSlot;
-  const Error = slots?.error ?? ChatToolErrorSlot;
-  const Actions = slots?.actions ?? ChatToolActionsSlot;
-  const ApproveButton = slots?.approveButton ?? ChatToolApproveButtonSlot;
-  const DenyButton = slots?.denyButton ?? ChatToolDenyButtonSlot;
-  const rootProps = mergeSlotPropsWithClassName(
-    slotProps?.root,
-    className ? joinClassNames(chatMessageClasses.tool, className) : chatMessageClasses.tool,
-  )(ownerState);
-  const headerProps = mergeSlotPropsWithClassName(
-    slotProps?.header,
-    chatMessageClasses.toolHeader,
-  )(ownerState);
-  const titleProps = mergeSlotPropsWithClassName(
-    slotProps?.title,
-    chatMessageClasses.toolTitle,
-  )(ownerState);
-  const stateProps = mergeSlotPropsWithClassName(
-    slotProps?.state,
-    chatMessageClasses.toolState,
-  )(ownerState);
-  const errorProps = mergeSlotPropsWithClassName(
-    slotProps?.error,
-    chatMessageClasses.toolError,
-  )(ownerState);
-  const actionsProps = mergeSlotPropsWithClassName(
-    slotProps?.actions,
-    chatMessageClasses.toolActions,
-  )(ownerState);
-  const approveButtonProps = mergeSlotPropsWithClassName(
-    slotProps?.approveButton,
-    chatMessageClasses.toolApproveButton,
-  )(ownerState);
-  const denyButtonProps = mergeSlotPropsWithClassName(
-    slotProps?.denyButton,
-    chatMessageClasses.toolDenyButton,
-  )(ownerState);
-  const { toolInvocation } = part;
-  const toolTitle = toolInvocation.title ?? toolInvocation.toolName;
-  const stateLabel = localeText.toolStateLabel(toolInvocation.state);
-
-  const handleApproval = React.useCallback(
-    async (approved: boolean) => {
-      setPendingApproval(true);
-      try {
-        await addToolApprovalResponse({
-          id: toolInvocation.toolCallId,
-          approved,
-        });
-      } catch {
-        // Errors are surfaced through the chat runtime error channel.
-      } finally {
-        setPendingApproval(false);
-      }
-    },
-    [addToolApprovalResponse, toolInvocation.toolCallId],
-  );
+  const { slots, slotProps, className, ...other } = props;
 
   return (
-    <Root {...rootProps} elevation={0} ownerState={ownerState} ref={ref} variant="outlined">
-      <Header {...headerProps} ownerState={ownerState}>
-        <Title {...titleProps} ownerState={ownerState}>
-          {toolTitle}
-        </Title>
-        <State {...stateProps} label={stateLabel} ownerState={ownerState} size="small" />
-      </Header>
-      {(toolInvocation.state === 'input-streaming' ||
-        toolInvocation.state === 'input-available' ||
-        toolInvocation.state === 'approval-requested' ||
-        toolInvocation.state === 'approval-responded') &&
-      toolInvocation.input !== undefined ? (
-        <ToolPayloadSection
-          label={localeText.messageToolInputLabel}
-          ownerState={ownerState}
-          section="input"
-          slotProps={slotProps}
-          slots={slots}
-          value={toolInvocation.input}
-        />
-      ) : null}
-      {toolInvocation.state === 'output-available' && toolInvocation.output !== undefined ? (
-        <ToolPayloadSection
-          label={localeText.messageToolOutputLabel}
-          ownerState={ownerState}
-          section="output"
-          slotProps={slotProps}
-          slots={slots}
-          value={toolInvocation.output}
-        />
-      ) : null}
-      {toolInvocation.state === 'output-error' && toolInvocation.errorText ? (
-        <Error {...errorProps} ownerState={ownerState}>
-          {toolInvocation.errorText}
-        </Error>
-      ) : null}
-      {toolInvocation.state === 'output-denied' ? (
-        <Error {...errorProps} ownerState={ownerState}>
-          {toolInvocation.approval?.reason ?? localeText.toolStateLabel('output-denied')}
-        </Error>
-      ) : null}
-      {toolInvocation.state === 'approval-requested' ? (
-        <Actions {...actionsProps} ownerState={ownerState}>
-          <ApproveButton
-            {...approveButtonProps}
-            disabled={pendingApproval}
-            onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
-              (
-                approveButtonProps as {
-                  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-                }
-              ).onClick?.(event);
-              if (!event.defaultPrevented) {
-                await handleApproval(true);
-              }
-            }}
-            ownerState={ownerState}
-            size="small"
-            variant="contained"
-          >
-            {localeText.messageToolApproveButtonLabel}
-          </ApproveButton>
-          <DenyButton
-            {...denyButtonProps}
-            color="inherit"
-            disabled={pendingApproval}
-            onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
-              (
-                denyButtonProps as {
-                  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-                }
-              ).onClick?.(event);
-              if (!event.defaultPrevented) {
-                await handleApproval(false);
-              }
-            }}
-            ownerState={ownerState}
-            size="small"
-            variant="outlined"
-          >
-            {localeText.messageToolDenyButtonLabel}
-          </DenyButton>
-        </Actions>
-      ) : null}
-    </Root>
+    <ToolPart
+      ref={ref}
+      className={className ? `${chatMessageClasses.tool} ${className}` : chatMessageClasses.tool}
+      slots={{
+        root: ChatToolRootSlot,
+        header: ChatToolHeaderSlot,
+        title: ChatToolTitleSlot,
+        state: ChatToolStateSlot,
+        section: ChatToolSectionSlot,
+        sectionContent: ChatToolSectionContentSlot,
+        error: ChatToolErrorSlot,
+        actions: ChatToolActionsSlot,
+        approveButton: ChatToolApproveButtonSlot,
+        denyButton: ChatToolDenyButtonSlot,
+        ...slots,
+      }}
+      slotProps={slotProps as ToolPartExternalProps['slotProps']}
+      {...other}
+    />
   );
 });
 
 export function createChatToolPartRenderer(
   defaultProps: ChatToolPartRendererOptions = {},
-): ChatPartRenderer<ToolPart> {
-  return createPartRenderer(ChatToolPartRenderer, defaultProps);
+): ChatPartRenderer<ToolPartType> {
+  return function StyledToolPartRenderer(props) {
+    return <ChatToolPartRenderer {...defaultProps} {...props} />;
+  };
 }
+
+// ---------------------------------------------------------------------------
+// File – styled slots
+// ---------------------------------------------------------------------------
 
 export interface ChatFilePartRendererOwnerState {
   image: boolean;
@@ -719,82 +431,36 @@ export const ChatFilePartRenderer = React.forwardRef(function ChatFilePartRender
   props: ChatFilePartRendererProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { className, message, part, slotProps, slots, sx } = props;
-  const ownerState = React.useMemo<ChatFilePartRendererOwnerState>(
-    () => ({
-      image: part.mediaType.startsWith('image/'),
-      mediaType: part.mediaType,
-      messageId: message.id,
-      role: message.role,
-    }),
-    [message.id, message.role, part.mediaType],
-  );
-  const Root = React.useMemo(
-    () => slots?.root ?? createDefaultSlot(ChatFileRootSlot, sx),
-    [slots?.root, sx],
-  );
-  const Preview = slots?.preview ?? ChatFilePreviewSlot;
-  const LinkSlot = slots?.link ?? ChatFileLinkSlot;
-  const Filename = slots?.filename ?? ChatFileNameSlot;
-  const rootProps = mergeSlotPropsWithClassName(
-    slotProps?.root,
-    className ? joinClassNames(chatMessageClasses.file, className) : chatMessageClasses.file,
-  )(ownerState);
-  const previewProps = mergeSlotPropsWithClassName(
-    slotProps?.preview,
-    chatMessageClasses.filePreview,
-  )(ownerState);
-  const linkProps = mergeSlotPropsWithClassName(
-    slotProps?.link,
-    chatMessageClasses.fileLink,
-  )(ownerState);
-  const filenameProps = mergeSlotPropsWithClassName(
-    slotProps?.filename,
-    chatMessageClasses.fileName,
-  )(ownerState);
+  const { slots, slotProps, className, ...other } = props;
 
   return (
-    <Root {...rootProps} ownerState={ownerState} ref={ref}>
-      {ownerState.image ? (
-        <LinkSlot
-          href={part.url}
-          rel="noreferrer noopener"
-          target="_blank"
-          underline="none"
-          ownerState={ownerState}
-          {...linkProps}
-        >
-          <Preview
-            {...previewProps}
-            alt={part.filename ?? ''}
-            ownerState={ownerState}
-            src={part.url}
-          />
-        </LinkSlot>
-      ) : (
-        <LinkSlot
-          href={part.url}
-          rel="noreferrer noopener"
-          target="_blank"
-          underline="hover"
-          ownerState={ownerState}
-          {...linkProps}
-        >
-          <FileIcon />
-          <Filename {...filenameProps} ownerState={ownerState}>
-            {part.filename ?? part.url}
-          </Filename>
-        </LinkSlot>
-      )}
-    </Root>
+    <FilePart
+      ref={ref}
+      className={className ? `${chatMessageClasses.file} ${className}` : chatMessageClasses.file}
+      slots={{
+        root: ChatFileRootSlot,
+        preview: ChatFilePreviewSlot,
+        link: ChatFileLinkSlot,
+        filename: ChatFileNameSlot,
+        ...slots,
+      }}
+      slotProps={slotProps as FilePartExternalProps['slotProps']}
+      {...other}
+    />
   );
 });
 
 export function createChatFilePartRenderer(
   defaultProps: ChatFilePartRendererOptions = {},
 ): ChatPartRenderer<ChatFileMessagePart> {
-  return createPartRenderer(ChatFilePartRenderer, defaultProps);
+  return function StyledFilePartRenderer(props) {
+    return <ChatFilePartRenderer {...defaultProps} {...props} />;
+  };
 }
+
+// ---------------------------------------------------------------------------
+// Source URL – styled slots
+// ---------------------------------------------------------------------------
 
 export interface ChatSourceUrlPartRendererOwnerState {
   messageId: string;
@@ -855,58 +521,37 @@ export const ChatSourceUrlPartRenderer = React.forwardRef(function ChatSourceUrl
   props: ChatSourceUrlPartRendererProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { className, message, part, slotProps, slots, sx } = props;
-  const ownerState = React.useMemo<ChatSourceUrlPartRendererOwnerState>(
-    () => ({
-      messageId: message.id,
-      role: message.role,
-    }),
-    [message.id, message.role],
-  );
-  const Root = React.useMemo(
-    () => slots?.root ?? createDefaultSlot(ChatSourceUrlRootSlot, sx),
-    [slots?.root, sx],
-  );
-  const Icon = slots?.icon ?? ChatSourceUrlIconSlot;
-  const LinkSlot = slots?.link ?? ChatSourceUrlLinkSlot;
-  const rootProps = mergeSlotPropsWithClassName(
-    slotProps?.root,
-    className
-      ? joinClassNames(chatMessageClasses.sourceUrl, className)
-      : chatMessageClasses.sourceUrl,
-  )(ownerState);
-  const iconProps = mergeSlotPropsWithClassName(
-    slotProps?.icon,
-    chatMessageClasses.sourceUrlIcon,
-  )(ownerState);
-  const linkProps = mergeSlotPropsWithClassName(
-    slotProps?.link,
-    chatMessageClasses.sourceUrlLink,
-  )(ownerState);
+  const { slots, slotProps, className, ...other } = props;
 
   return (
-    <Root {...rootProps} ownerState={ownerState} ref={ref}>
-      <Icon {...iconProps} ownerState={ownerState}>
-        <ExternalLinkIcon />
-      </Icon>
-      <LinkSlot
-        href={part.url}
-        rel="noreferrer noopener"
-        target="_blank"
-        ownerState={ownerState}
-        {...linkProps}
-      >
-        {part.title ?? part.url}
-      </LinkSlot>
-    </Root>
+    <SourceUrlPart
+      ref={ref as React.Ref<HTMLSpanElement>}
+      className={
+        className ? `${chatMessageClasses.sourceUrl} ${className}` : chatMessageClasses.sourceUrl
+      }
+      slots={{
+        root: ChatSourceUrlRootSlot,
+        icon: ChatSourceUrlIconSlot,
+        link: ChatSourceUrlLinkSlot,
+        ...slots,
+      }}
+      slotProps={slotProps as SourceUrlPartExternalProps['slotProps']}
+      {...other}
+    />
   );
 });
 
 export function createChatSourceUrlPartRenderer(
   defaultProps: ChatSourceUrlPartRendererOptions = {},
 ): ChatPartRenderer<ChatSourceUrlMessagePart> {
-  return createPartRenderer(ChatSourceUrlPartRenderer, defaultProps);
+  return function StyledSourceUrlPartRenderer(props) {
+    return <ChatSourceUrlPartRenderer {...defaultProps} {...props} />;
+  };
 }
+
+// ---------------------------------------------------------------------------
+// Source Document – styled slots
+// ---------------------------------------------------------------------------
 
 export interface ChatSourceDocumentPartRendererOwnerState {
   messageId: string;
@@ -973,48 +618,25 @@ export const ChatSourceDocumentPartRenderer = React.forwardRef(
     props: ChatSourceDocumentPartRendererProps,
     ref: React.Ref<HTMLDivElement>,
   ) {
-    const { className, message, part, slotProps, slots, sx } = props;
-    const ownerState = React.useMemo<ChatSourceDocumentPartRendererOwnerState>(
-      () => ({
-        messageId: message.id,
-        role: message.role,
-      }),
-      [message.id, message.role],
-    );
-    const Root = React.useMemo(
-      () => slots?.root ?? createDefaultSlot(ChatSourceDocumentRootSlot, sx),
-      [slots?.root, sx],
-    );
-    const Title = slots?.title ?? ChatSourceDocumentTitleSlot;
-    const Excerpt = slots?.excerpt ?? ChatSourceDocumentExcerptSlot;
-    const rootProps = mergeSlotPropsWithClassName(
-      slotProps?.root,
-      className
-        ? joinClassNames(chatMessageClasses.sourceDocument, className)
-        : chatMessageClasses.sourceDocument,
-    )(ownerState);
-    const titleProps = mergeSlotPropsWithClassName(
-      slotProps?.title,
-      chatMessageClasses.sourceDocumentTitle,
-    )(ownerState);
-    const excerptProps = mergeSlotPropsWithClassName(
-      slotProps?.excerpt,
-      chatMessageClasses.sourceDocumentExcerpt,
-    )(ownerState);
+    const { slots, slotProps, className, ...other } = props;
 
     return (
-      <Root {...rootProps} elevation={0} ownerState={ownerState} ref={ref} variant="outlined">
-        {part.title ? (
-          <Title {...titleProps} ownerState={ownerState}>
-            {part.title}
-          </Title>
-        ) : null}
-        {part.text ? (
-          <Excerpt {...excerptProps} ownerState={ownerState}>
-            {part.text}
-          </Excerpt>
-        ) : null}
-      </Root>
+      <SourceDocumentPart
+        ref={ref}
+        className={
+          className
+            ? `${chatMessageClasses.sourceDocument} ${className}`
+            : chatMessageClasses.sourceDocument
+        }
+        slots={{
+          root: ChatSourceDocumentRootSlot,
+          title: ChatSourceDocumentTitleSlot,
+          excerpt: ChatSourceDocumentExcerptSlot,
+          ...slots,
+        }}
+        slotProps={slotProps as SourceDocumentPartExternalProps['slotProps']}
+        {...other}
+      />
     );
   },
 );
@@ -1022,5 +644,49 @@ export const ChatSourceDocumentPartRenderer = React.forwardRef(
 export function createChatSourceDocumentPartRenderer(
   defaultProps: ChatSourceDocumentPartRendererOptions = {},
 ): ChatPartRenderer<ChatSourceDocumentMessagePart> {
-  return createPartRenderer(ChatSourceDocumentPartRenderer, defaultProps);
+  return function StyledSourceDocumentPartRenderer(props) {
+    return <ChatSourceDocumentPartRenderer {...defaultProps} {...props} />;
+  };
 }
+
+// ---------------------------------------------------------------------------
+// Slot groups – used by ChatMessageContent to pass styled slots via partProps
+// ---------------------------------------------------------------------------
+
+export const chatReasoningPartSlots = {
+  root: ChatReasoningRootSlot,
+  summary: ChatReasoningSummarySlot,
+  content: ChatReasoningContentSlot,
+};
+
+export const chatToolPartSlots = {
+  root: ChatToolRootSlot,
+  header: ChatToolHeaderSlot,
+  title: ChatToolTitleSlot,
+  state: ChatToolStateSlot,
+  section: ChatToolSectionSlot,
+  sectionContent: ChatToolSectionContentSlot,
+  error: ChatToolErrorSlot,
+  actions: ChatToolActionsSlot,
+  approveButton: ChatToolApproveButtonSlot,
+  denyButton: ChatToolDenyButtonSlot,
+};
+
+export const chatFilePartSlots = {
+  root: ChatFileRootSlot,
+  preview: ChatFilePreviewSlot,
+  link: ChatFileLinkSlot,
+  filename: ChatFileNameSlot,
+};
+
+export const chatSourceUrlPartSlots = {
+  root: ChatSourceUrlRootSlot,
+  icon: ChatSourceUrlIconSlot,
+  link: ChatSourceUrlLinkSlot,
+};
+
+export const chatSourceDocumentPartSlots = {
+  root: ChatSourceDocumentRootSlot,
+  title: ChatSourceDocumentTitleSlot,
+  excerpt: ChatSourceDocumentExcerptSlot,
+};

@@ -9,6 +9,8 @@ components: MessageListRoot
 
 <p class="description">Render ordered thread rows with optional virtualization, date boundaries, history loading, scroll anchoring, and unseen-message tracking.</p>
 
+{{"demo": "../examples/virtualized-thread/VirtualizedThread.js"}}
+
 ## Primitive set
 
 The message list surface is built from:

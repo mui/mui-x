@@ -69,277 +69,57 @@ import {
 } from '@mui/x-chat-headless';
 ```
 
-## State ownership and data model
+## State and store
 
-The public API stays array-first because that is what app code and React props usually want:
+`ChatProvider` supports both controlled and uncontrolled state for messages, conversations, active conversation ID, and composer value.
+Internally the store normalizes data into ID arrays and record maps, making streaming updates efficient and selector subscriptions granular.
 
-- `messages`
-- `conversations`
-- `activeConversationId`
-- `composerValue`
+See [State and store](/x/react-chat/headless/state/) for the full `ChatProvider` props reference, the controlled/uncontrolled model, error model, callbacks, and store internals.
 
-`ChatProvider` supports both controlled and uncontrolled versions of those models.
-That means you can start with `defaultMessages` and `defaultConversations`, then move to controlled props later without changing the runtime model.
+## Hooks
 
-Internally, the store is normalized:
+Nine public hooks cover the full spectrum from all-in-one orchestration (`useChat()`) to row-level subscriptions (`useMessageIds()` + `useMessage(id)`).
 
-- `messageIds` + `messagesById`
-- `conversationIds` + `conversationsById`
+Narrower hooks like `useChatComposer()`, `useChatStatus()`, and `useChatPartRenderer()` handle specific concerns without subscribing to unrelated state.
 
-That normalization is what makes the headless layer efficient for streaming and large threads:
+See [Hooks](/x/react-chat/headless/hooks/) for signatures, return types, and when-to-use guidance for every hook.
 
-- point updates do not require rebuilding the whole thread
-- selector hooks can subscribe to one message or one conversation at a time
-- ordering stays stable even when individual records update repeatedly
+## Selectors
 
-For the controlled array-first pattern, see [Controlled state](/x/react-chat/headless/examples/controlled-state/).
-For row-level subscriptions, see [Selector-driven thread](/x/react-chat/headless/examples/selector-driven-thread/) and [Advanced store access](/x/react-chat/headless/examples/advanced-store-access/).
+`chatSelectors` provides memoized selectors for the normalized store.
+Use them directly with `useChatStore()` for custom derived values and advanced subscriptions.
 
-## Hooks and selectors
-
-Use `useChat()` when you want the main orchestration surface in one place.
-
-It returns public state:
-
-- `messages`
-- `conversations`
-- `activeConversationId`
-- `isStreaming`
-- `hasMoreHistory`
-- `error`
-
-And runtime actions:
-
-- `sendMessage`
-- `stopStreaming`
-- `loadMoreHistory`
-- `setActiveConversation`
-- `retry`
-- `setError`
-- `addToolApprovalResponse`
-
-Use the narrower hooks when you need more targeted subscriptions:
-
-- `useMessageIds()` and `useMessage(id)` for message rows
-- `useConversations()` and `useConversation(id)` for conversation lists
-- `useChatStatus()` for lightweight status such as `typingUserIds`
-- `useChatComposer()` for draft state, attachments, and submit behavior
-- `useChatStore()` plus `chatSelectors` when you need a lower-level escape hatch
+See [Selectors](/x/react-chat/headless/selectors/) for the full selector table and usage patterns.
 
 ## Adapter contract
 
 `ChatAdapter` is the transport boundary between the runtime and your backend.
+Only `sendMessage()` is required — everything else is optional and incrementally adopted.
+The adapter works with HTTP, SSE, WebSocket, or AI SDK-style streaming backends.
 
-Required:
+See [Adapters](/x/react-chat/headless/adapters/) for the full interface reference, a step-by-step writing guide, and backend pattern guidance.
 
-- `sendMessage()`
+## Streaming
 
-Optional:
+The adapter returns a `ReadableStream` of typed chunks.
+The runtime processes text, reasoning, tool, source, file, data, step, and metadata chunks into normalized message parts.
+`streamFlushInterval` batches rapid deltas for efficient store updates.
 
-- `listConversations()`
-- `listMessages()`
-- `reconnectToStream()`
-- `setTyping()`
-- `markRead()`
-- `subscribe()`
-- `loadMore()`
-- `addToolApprovalResponse()`
-- `stop()`
+See [Streaming](/x/react-chat/headless/streaming/) for the chunk protocol reference, envelope format, and stream construction patterns.
 
-That keeps the runtime backend-agnostic:
+## Realtime
 
-- HTTP or SSE adapters fit
-- WebSocket adapters fit
-- AI SDK-style streaming adapters fit
+The adapter's `subscribe()` method enables push-based updates for messages, conversations, typing indicators, presence, and read state.
+The runtime manages the subscription lifecycle on mount and unmount.
 
-For the smallest working setup, see [Minimal headless chat](/x/react-chat/headless/examples/minimal-chat/).
+See [Realtime](/x/react-chat/headless/realtime/) for event types, store effects, and consumption patterns.
 
-## Runtime lifecycles
+## Type augmentation
 
-### Mount lifecycle
+Module augmentation lets you add app-specific metadata, typed tool definitions, typed `data-*` payloads, and custom message parts.
+Types flow through the entire stack at compile time — no provider props needed.
 
-When the provider mounts, the runtime can perform two optional setup tasks if the adapter supports them:
-
-- `listConversations()` to load the conversation list
-- `subscribe()` to start realtime updates
-
-If you do not implement those methods, the headless runtime simply skips those phases.
-
-### Conversation lifecycle
-
-Conversation state is driven by `activeConversationId`.
-When the active conversation changes and the adapter supports `listMessages()`, the runtime loads that conversation's messages and updates `hasMoreHistory` and `historyCursor`.
-
-History pagination then builds on the same state through `loadMoreHistory()`.
-
-Use:
-
-- [Conversation history](/x/react-chat/headless/examples/conversation-history/) for `listConversations()`, `listMessages()`, and `loadMoreHistory()`
-- [Controlled state](/x/react-chat/headless/examples/controlled-state/) for externally-owned conversation state
-
-### Send and stream lifecycle
-
-The send flow looks like this:
-
-1. `sendMessage()` creates or uses a user message id.
-2. The runtime adds the user message optimistically with `status: 'sending'`.
-3. The adapter's `sendMessage()` returns a `ReadableStream`.
-4. `processStream` reads chunks and applies them to the assistant message in the normalized store.
-5. A terminal chunk such as `finish` or `abort` finalizes the assistant turn.
-6. The user message status is updated to `sent`, `cancelled`, or `error`.
-
-The stream processor understands:
-
-- lifecycle chunks such as `start`, `finish`, and `abort`
-- text and reasoning deltas
-- tool input, approval, and output chunks
-- source and file chunks
-- `data-*` chunks
-- step boundary chunks
-- message metadata patches
-- optional envelopes for dedupe and ordering
-
-`streamFlushInterval` on `ChatProvider` batches rapid text and reasoning deltas before applying them to the store.
-
-Use:
-
-- [Message parts](/x/react-chat/headless/examples/message-parts/) for multi-part assistant messages
-- [Streaming lifecycle](/x/react-chat/headless/examples/streaming-lifecycle/) for send, callbacks, stop, and retry
-
-### Interruption and recovery
-
-`stopStreaming()` aborts the active stream and calls `adapter.stop()` when provided.
-If a stream disconnects before a terminal chunk arrives, the runtime records a recoverable stream error.
-If a user turn fails or is cancelled, `retry(messageId)` resends that turn and removes the assistant messages tied to the failed attempt.
-
-Errors surface through:
-
-- `error` from `useChat()`
-- `useChatStatus()`
-- `onError`
-
-### Realtime lifecycle
-
-If the adapter implements `subscribe()`, the provider wires it on mount and cleans it up on unmount.
-
-Realtime events can update:
-
-- messages
-- conversations
-- typing state
-- presence
-- read state
-
-Typing information is surfaced through `useChatStatus().typingUserIds`.
-
-Use:
-
-- [Realtime](/x/react-chat/headless/examples/realtime/) for provider-owned subscriptions, typing, presence, and read state
-- [Realtime thread sync](/x/react-chat/headless/examples/realtime-thread-sync/) for add, update, and remove events
-
-### Tool lifecycle
-
-Tool calls are first-class runtime events.
-The stream model covers:
-
-- tool input becoming available
-- tool approval requests
-- tool approval responses
-- tool output availability
-- tool errors or denials
-
-Two extension points matter here:
-
-- `onToolCall` for side effects outside the store
-- `addToolApprovalResponse()` for approval-required flows
-
-Use:
-
-- [Tool call events](/x/react-chat/headless/examples/tool-call-events/) for callback-driven side effects
-- [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) for approval flows and renderer registration
-
-## Composer lifecycle
-
-`useChatComposer()` wraps the draft lifecycle for custom inputs and toolbars.
-
-It manages:
-
-- draft text
-- draft attachments
-- image preview URLs for image attachments
-- preview cleanup on removal, clear, and unmount
-- IME-safe submission blocking during composition
-- submission blocking while a stream is already active
-
-Use [Composer](/x/react-chat/headless/examples/composer/) for a full custom draft area.
-
-## Rendering model
-
-Headless chat does not render message parts for you.
-Built-in parts such as text, reasoning, tools, files, sources, and `data-*` parts are just typed data in `message.parts`.
-
-That means you choose the rendering strategy:
-
-- branch on `part.type` and render plain React yourself
-- register custom renderers with `partRenderers`
-- look up a registered renderer with `useChatPartRenderer(partType)`
-
-The part renderer registry is especially useful for app-specific custom parts.
-The default built-in renderer map is intentionally empty because headless does not impose UI decisions.
-
-Use:
-
-- [Message parts](/x/react-chat/headless/examples/message-parts/) for plain React branching over part types
-- [Tool approval and renderers](/x/react-chat/headless/examples/tool-approval-and-renderers/) for custom renderer lookup
-
-## Type augmentation and app-specific types
-
-Headless chat uses TypeScript module augmentation for app-specific types.
-This is how you add custom metadata, tool definitions, `data-*` payloads, and custom message parts.
-
-These augmentation interfaces live under `@mui/x-chat-headless/types`:
-
-- `ChatUserMetadata`
-- `ChatConversationMetadata`
-- `ChatMessageMetadata`
-- `ChatToolDefinitionMap`
-- `ChatDataPartMap`
-- `ChatCustomMessagePartMap`
-
-```ts
-declare module '@mui/x-chat-headless/types' {
-  interface ChatMessageMetadata {
-    model?: 'gpt-4.1' | 'gpt-5';
-    confidence?: 'medium' | 'high';
-  }
-
-  interface ChatToolDefinitionMap {
-    'ticket.lookup': {
-      input: { ticketId: string };
-      output: { status: 'open' | 'blocked' | 'resolved' };
-    };
-  }
-
-  interface ChatDataPartMap {
-    'data-ticket-status': {
-      ticketId: string;
-      status: 'open' | 'blocked' | 'resolved';
-    };
-  }
-
-  interface ChatCustomMessagePartMap {
-    'ticket-summary': {
-      type: 'ticket-summary';
-      summary: string;
-    };
-  }
-}
-```
-
-This is the headless package's type-extension model.
-There is no separate provider prop for "type overrides".
-
-Use [Type augmentation](/x/react-chat/headless/examples/type-augmentation/) for a focused end-to-end recipe that combines metadata, typed tools, typed `data-*` parts, and a custom renderer.
+See [Type augmentation](/x/react-chat/headless/types/) for the six registry interfaces, a step-by-step guide, and an end-to-end example.
 
 ## Headless examples
 

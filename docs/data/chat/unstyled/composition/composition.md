@@ -9,16 +9,18 @@ components: ChatRoot, ChatLayout
 
 <p class="description">Compose a complete chat UI from the unstyled namespaces while keeping styling decisions in your own code.</p>
 
+{{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js"}}
+
 The canonical unstyled shell combines a provider-backed root, a pane layout, a conversation rail, a thread view, a message list, and a composer.
 
 ```tsx
 import {
   Chat,
-  Composer,
+  ConversationInput,
   ConversationList,
   MessageGroup,
   MessageList,
-  Thread,
+  Conversation,
 } from '@mui/x-chat-unstyled';
 
 function ChatSurface(props: ChatRootProps) {
@@ -26,25 +28,25 @@ function ChatSurface(props: ChatRootProps) {
     <Chat.Root {...props}>
       <Chat.Layout>
         <ConversationList.Root />
-        <Thread.Root>
-          <Thread.Header>
-            <Thread.Title />
-            <Thread.Subtitle />
-            <Thread.Actions />
-          </Thread.Header>
+        <Conversation.Root>
+          <Conversation.Header>
+            <Conversation.Title />
+            <Conversation.Subtitle />
+            <Conversation.HeaderActions />
+          </Conversation.Header>
           <MessageList.Root
             renderItem={({ id, index }) => (
               <MessageGroup index={index} messageId={id} />
             )}
           />
-          <Composer.Root>
-            <Composer.Input />
-            <Composer.Toolbar>
-              <Composer.AttachButton />
-              <Composer.SendButton />
-            </Composer.Toolbar>
-          </Composer.Root>
-        </Thread.Root>
+          <ConversationInput.Root>
+            <ConversationInput.TextArea />
+            <ConversationInput.Toolbar>
+              <ConversationInput.AttachButton />
+              <ConversationInput.SendButton />
+            </ConversationInput.Toolbar>
+          </ConversationInput.Root>
+        </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
   );
@@ -56,7 +58,7 @@ function ChatSurface(props: ChatRootProps) {
 Composition is the best entry point when you are starting from a blank screen.
 It shows how the primitive groups fit together before you drill into individual pages such as
 [Layout](/x/react-chat/unstyled/layout/), [Messages](/x/react-chat/unstyled/messages/), or
-[Composer](/x/react-chat/unstyled/composer/).
+[ConversationInput](/x/react-chat/unstyled/composer/).
 
 ## What composition gives you
 
@@ -64,7 +66,7 @@ It shows how the primitive groups fit together before you drill into individual 
 - active-conversation wiring between the conversation list and thread
 - message list semantics and list-management behavior
 - grouped message composition without custom row bookkeeping
-- a form-based composer with submission and attachment plumbing
+- a form-based conversation input with submission and attachment plumbing
 
 ## `Chat.Root` versus `ChatProvider`
 
@@ -84,11 +86,11 @@ Choose `ChatProvider` directly when only part of the tree should use unstyled pr
 The namespaced exports are useful when you want the API to read like a component family:
 
 - `Chat.Root` and `Chat.Layout`
-- `ConversationList.Root`, `ConversationList.Item`, `ConversationList.ItemAvatar`, `ConversationList.ItemText`, and `ConversationList.ItemMeta`
-- `Thread.Root`, `Thread.Header`, `Thread.Title`, `Thread.Subtitle`, and `Thread.Actions`
+- `ConversationList.Root`, `ConversationList.Item`, `ConversationList.ItemAvatar`, `ConversationList.Title`, `ConversationList.Preview`, `ConversationList.Timestamp`, and `ConversationList.UnreadBadge`
+- `Conversation.Root`, `Conversation.Header`, `Conversation.Title`, `Conversation.Subtitle`, and `Conversation.HeaderActions`
 - `MessageList.Root` and `MessageList.DateDivider`
 - `Message.Root`, `Message.Avatar`, `Message.Content`, `Message.Meta`, and `Message.Actions`
-- `Composer.Root`, `Composer.Input`, `Composer.Toolbar`, `Composer.AttachButton`, `Composer.HelperText`, and `Composer.SendButton`
+- `ConversationInput.Root`, `ConversationInput.TextArea`, `ConversationInput.Toolbar`, `ConversationInput.AttachButton`, `ConversationInput.HelperText`, and `ConversationInput.SendButton`
 - `Indicators.TypingIndicator`, `Indicators.UnreadMarker`, and `Indicators.ScrollToBottomAffordance`
 
 Direct imports are useful when a codebase prefers explicit component names or tree-local imports.
@@ -104,19 +106,19 @@ Use only the thread pane when a page already chooses the active conversation els
 ```tsx
 <Chat.Root {...props}>
   <Chat.Layout>
-    <Thread.Root>
-      <Thread.Header>
-        <Thread.Title />
-        <Thread.Subtitle />
-      </Thread.Header>
+    <Conversation.Root>
+      <Conversation.Header>
+        <Conversation.Title />
+        <Conversation.Subtitle />
+      </Conversation.Header>
       <MessageList.Root
         renderItem={({ id, index }) => <MessageGroup index={index} messageId={id} />}
       />
-      <Composer.Root>
-        <Composer.Input />
-        <Composer.SendButton />
-      </Composer.Root>
-    </Thread.Root>
+      <ConversationInput.Root>
+        <ConversationInput.TextArea />
+        <ConversationInput.SendButton />
+      </ConversationInput.Root>
+    </Conversation.Root>
   </Chat.Layout>
 </Chat.Root>
 ```

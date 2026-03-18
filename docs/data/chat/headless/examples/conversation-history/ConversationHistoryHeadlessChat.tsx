@@ -6,21 +6,18 @@ import {
   type ChatConversation,
   type ChatMessage,
 } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { demoUsers } from '../shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
   wait,
 } from '../shared/demoUtils';
-import {
-  DemoButton,
-  DemoConversationList,
-  DemoFrame,
-  DemoHeading,
-  DemoMessageList,
-  DemoSplitLayout,
-  DemoTag,
-} from '../shared/DemoPrimitives';
 
 const conversations: ChatConversation[] = [
   {
@@ -139,58 +136,166 @@ function ConversationHistoryInner() {
     sendMessage,
   } = useChat<string>();
 
+  const listRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const activeTitle =
+    loadedConversations.find((c) => c.id === activeConversationId)?.title ??
+    activeConversationId ??
+    'Loading conversations';
+
   return (
-    <DemoFrame>
-      <DemoSplitLayout
-        sidebar={
-          <React.Fragment>
-            <h3 style={{ margin: 0 }}>Conversation orchestration</h3>
-            <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              Conversations come from <code>listConversations()</code>. Each thread
-              comes from
-              <code> listMessages()</code>.
-            </p>
-            <DemoConversationList
-              conversations={loadedConversations}
-              activeConversationId={activeConversationId}
-              onSelect={(conversationId) => {
-                void setActiveConversation(conversationId);
-              }}
-            />
-          </React.Fragment>
-        }
+    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
       >
-        <DemoHeading
-          title={activeConversationId ?? 'Loading conversations'}
-          description="Use the buttons to switch threads, load older pages, and send a follow-up message."
-          actions={hasMoreHistory ? <DemoTag>More history available</DemoTag> : null}
-        />
-        <div style={{ display: 'flex', gap: 8 }}>
-          <DemoButton
-            disabled={!hasMoreHistory}
-            onClick={() => void loadMoreHistory()}
-          >
-            Load older history
-          </DemoButton>
-          <DemoButton
-            disabled={!activeConversationId}
-            onClick={() =>
-              void sendMessage({
-                conversationId: activeConversationId,
-                author: demoUsers.alice,
-                parts: [{ type: 'text', text: 'Send a follow-up turn.' }],
-              })
+        <Typography variant="subtitle1" fontWeight={700}>
+          {activeTitle}
+        </Typography>
+        {hasMoreHistory ? (
+          <Chip
+            size="small"
+            label="More history available"
+            color="primary"
+            variant="outlined"
+          />
+        ) : null}
+      </Box>
+
+      {/* Conversation selector */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ px: 2, py: 1.5, borderBottom: 1, borderColor: 'divider' }}
+      >
+        {loadedConversations.map((conversation) => (
+          <Chip
+            key={conversation.id}
+            label={conversation.title}
+            variant={
+              conversation.id === activeConversationId ? 'filled' : 'outlined'
             }
+            color={
+              conversation.id === activeConversationId ? 'primary' : 'default'
+            }
+            onClick={() => {
+              void setActiveConversation(conversation.id);
+            }}
+          />
+        ))}
+      </Stack>
+
+      {/* Action buttons */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ px: 2, py: 1.5, borderBottom: 1, borderColor: 'divider' }}
+      >
+        <Button
+          size="small"
+          variant="outlined"
+          disabled={!hasMoreHistory}
+          onClick={() => void loadMoreHistory()}
+        >
+          Load older history
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          disabled={!activeConversationId}
+          onClick={() =>
+            void sendMessage({
+              conversationId: activeConversationId,
+              author: demoUsers.alice,
+              parts: [{ type: 'text', text: 'Send a follow-up turn.' }],
+            })
+          }
+        >
+          Send follow-up
+        </Button>
+      </Stack>
+
+      {/* Messages */}
+      <Box
+        ref={listRef}
+        sx={{
+          p: 2,
+          minHeight: 300,
+          maxHeight: 400,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', mt: 8 }}
           >
-            Send follow-up
-          </DemoButton>
-        </div>
-        <DemoMessageList
-          messages={messages}
-          emptyLabel="Messages load from the adapter when the active conversation changes."
-        />
-      </DemoSplitLayout>
-    </DemoFrame>
+            Messages load from the adapter when the active conversation changes.
+          </Typography>
+        ) : (
+          messages.map((message) => {
+            const isUser = message.role === 'user';
+            return (
+              <Box
+                key={message.id}
+                sx={{
+                  display: 'flex',
+                  justifyContent: isUser ? 'flex-end' : 'flex-start',
+                }}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    maxWidth: '80%',
+                    bgcolor: isUser ? 'primary.main' : 'grey.100',
+                    color: isUser ? 'primary.contrastText' : 'text.primary',
+                    borderRadius: 3,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: 700,
+                      color: isUser ? 'primary.contrastText' : 'text.secondary',
+                    }}
+                  >
+                    {message.author?.displayName ?? message.role}
+                  </Typography>
+                  {message.parts.map((part, index) => (
+                    <Typography
+                      variant="body2"
+                      key={`${message.id}-${part.type}-${index}`}
+                    >
+                      {part.type === 'text' ? part.text : null}
+                    </Typography>
+                  ))}
+                </Paper>
+              </Box>
+            );
+          })
+        )}
+      </Box>
+    </Paper>
   );
 }
 

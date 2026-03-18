@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { ChatProvider, useChat, type ChatAdapter } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { demoUsers } from '../shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
   getMessageText,
 } from '../shared/demoUtils';
-import {
-  DemoButton,
-  DemoFrame,
-  DemoHeading,
-  DemoInput,
-  DemoMessageList,
-  DemoSplitLayout,
-} from '../shared/DemoPrimitives';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {
@@ -30,6 +30,7 @@ const adapter: ChatAdapter = {
 function MinimalChatInner() {
   const { messages, sendMessage, isStreaming } = useChat();
   const [draft, setDraft] = React.useState('Show me the smallest working chat.');
+  const listRef = React.useRef<HTMLDivElement>(null);
 
   const submit = React.useCallback(async () => {
     if (draft.trim() === '') {
@@ -45,45 +46,133 @@ function MinimalChatInner() {
     setDraft('');
   }, [draft, sendMessage]);
 
+  React.useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <DemoFrame>
-      <DemoSplitLayout
-        sidebar={
-          <React.Fragment>
-            <h3 style={{ margin: 0 }}>Minimal recipe</h3>
-            <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              This demo uses only <code>ChatProvider</code> and{' '}
-              <code>useChat()</code>.
-            </p>
-            <DemoButton
-              onClick={() => setDraft('How does optimistic sending work?')}
-            >
-              Load sample prompt
-            </DemoButton>
-          </React.Fragment>
-        }
+    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
       >
-        <DemoHeading
-          title="Minimal headless chat"
-          description="The provider owns the runtime. Your markup stays fully custom."
-          actions={<span>{isStreaming ? 'Streaming…' : 'Idle'}</span>}
+        <Typography variant="subtitle1" fontWeight={700}>
+          Minimal headless chat
+        </Typography>
+        <Chip
+          size="small"
+          label={isStreaming ? 'Streaming…' : 'Idle'}
+          color={isStreaming ? 'primary' : 'default'}
+          variant="outlined"
         />
-        <DemoMessageList
-          messages={messages}
-          emptyLabel="Send the first message to start the thread."
+      </Box>
+
+      {/* Messages */}
+      <Box
+        ref={listRef}
+        sx={{
+          p: 2,
+          minHeight: 300,
+          maxHeight: 400,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', mt: 8 }}
+          >
+            Send the first message to start the thread.
+          </Typography>
+        ) : (
+          messages.map((message) => {
+            const isUser = message.role === 'user';
+            return (
+              <Box
+                key={message.id}
+                sx={{
+                  display: 'flex',
+                  justifyContent: isUser ? 'flex-end' : 'flex-start',
+                }}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    maxWidth: '80%',
+                    bgcolor: isUser ? 'primary.main' : 'grey.100',
+                    color: isUser ? 'primary.contrastText' : 'text.primary',
+                    borderRadius: 3,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: 700,
+                      color: isUser ? 'primary.contrastText' : 'text.secondary',
+                    }}
+                  >
+                    {message.author?.displayName ?? message.role}
+                  </Typography>
+                  {message.parts.map((part, index) => (
+                    <Typography
+                      variant="body2"
+                      key={`${message.id}-${part.type}-${index}`}
+                    >
+                      {part.type === 'text' ? part.text : null}
+                    </Typography>
+                  ))}
+                </Paper>
+              </Box>
+            );
+          })
+        )}
+      </Box>
+
+      {/* Input */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}
+      >
+        <TextField
+          fullWidth
+          size="small"
+          placeholder="Type a message…"
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+              event.preventDefault();
+              submit();
+            }
+          }}
         />
-        <div style={{ display: 'flex', gap: 8 }}>
-          <DemoInput
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            placeholder="Type a message"
-          />
-          <DemoButton disabled={isStreaming || draft.trim() === ''} onClick={submit}>
-            Send
-          </DemoButton>
-        </div>
-      </DemoSplitLayout>
-    </DemoFrame>
+        <Button
+          variant="contained"
+          disabled={isStreaming || draft.trim() === ''}
+          onClick={submit}
+          sx={{ minWidth: 'auto', px: 2 }}
+        >
+          <SendRoundedIcon fontSize="small" />
+        </Button>
+      </Stack>
+    </Paper>
   );
 }
 

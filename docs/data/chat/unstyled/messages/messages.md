@@ -9,6 +9,8 @@ components: MessageRoot, MessageAvatar, MessageContent, MessageMeta, MessageActi
 
 <p class="description">Compose thread rows from message grouping primitives, message subparts, and default message-part renderers.</p>
 
+{{"demo": "../examples/grouped-message-timeline/GroupedMessageTimeline.js"}}
+
 ## Primitive set
 
 The message surface is built from:

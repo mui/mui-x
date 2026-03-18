@@ -25,8 +25,8 @@ It forwards the headless controlled and uncontrolled props directly to the under
 ### What it renders
 
 - `ChatConversations` when a conversations source exists
-- `ChatThread`
-- `ChatComposer`
+- `ChatConversation`
+- `ChatConversationInput`
 
 ### Layout modes
 

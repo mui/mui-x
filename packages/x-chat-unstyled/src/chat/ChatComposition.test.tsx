@@ -3,7 +3,7 @@ import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
-import { ComposerInput, ComposerRoot } from '../composer';
+import { ConversationInputTextArea, ConversationInputRoot } from '../conversation-input';
 import { ConversationListRoot } from '../conversation-list';
 import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from '../indicators';
 import {
@@ -19,7 +19,12 @@ import {
   MessageListRoot,
   type MessageListRootProps,
 } from '../message-list';
-import { ThreadHeader, ThreadRoot, ThreadSubtitle, ThreadTitle } from '../thread';
+import {
+  ConversationHeader,
+  ConversationRoot,
+  ConversationSubtitle,
+  ConversationTitle,
+} from '../conversation';
 import { ChatLayout } from './ChatLayout';
 import { ChatRoot } from './ChatRoot';
 
@@ -200,12 +205,12 @@ const ChatCompositionHarness = React.forwardRef(function ChatCompositionHarness(
     >
       <ChatLayout>
         <ConversationListRoot aria-label="Conversations" />
-        <ThreadRoot>
-          <ThreadHeader>
-            <ThreadTitle />
-            <ThreadSubtitle />
+        <ConversationRoot>
+          <ConversationHeader>
+            <ConversationTitle />
+            <ConversationSubtitle />
             <TypingIndicator />
-          </ThreadHeader>
+          </ConversationHeader>
           {includeBeforeAfterButtons ? <button type="button">Before list</button> : null}
           <MessageListRoot
             estimatedItemSize={40}
@@ -232,10 +237,10 @@ const ChatCompositionHarness = React.forwardRef(function ChatCompositionHarness(
             virtualization={false}
           />
           {includeBeforeAfterButtons ? <button type="button">After list</button> : null}
-          <ComposerRoot>
-            <ComposerInput data-testid="composer-input" />
-          </ComposerRoot>
-        </ThreadRoot>
+          <ConversationInputRoot>
+            <ConversationInputTextArea data-testid="composer-input" />
+          </ConversationInputRoot>
+        </ConversationRoot>
       </ChatLayout>
     </ChatRoot>
   );

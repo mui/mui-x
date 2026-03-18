@@ -12,8 +12,8 @@ import type { SlotComponentProps } from '@mui/utils/types';
 import { useChat, useChatStatus } from '@mui/x-chat-headless';
 import {
   ConversationListRoot,
-  type ConversationListItemAvatarProps,
   type ConversationListItemProps,
+  type ConversationListItemAvatarProps,
   type ConversationListPreviewProps,
   type ConversationListRootProps as UnstyledConversationListRootProps,
   type ConversationListRootSlotProps as UnstyledConversationListRootSlotProps,
@@ -77,6 +77,13 @@ export interface ChatConversationsProps extends Omit<
   className?: string;
   dense?: boolean;
   emptyAction?: React.ReactNode;
+  /**
+   * The visual variant of the conversation list.
+   * - `"rich"`: Shows avatar, title, preview, timestamp, and unread badge (Slack-style).
+   * - `"compact"`: Shows title only with a small unread dot (ChatGPT-style).
+   * @default "rich"
+   */
+  variant?: 'rich' | 'compact';
   slotProps?: ChatConversationsSlotProps;
   slots?: Partial<ChatConversationsSlots>;
   sx?: SxProps<Theme>;
@@ -84,6 +91,7 @@ export interface ChatConversationsProps extends Omit<
 
 interface ChatConversationsRootOwnerState {
   dense: boolean;
+  variant: 'rich' | 'compact';
 }
 
 interface ChatConversationsItemOwnerState {
@@ -92,6 +100,7 @@ interface ChatConversationsItemOwnerState {
   focused: boolean;
   selected: boolean;
   unread: boolean;
+  variant: 'rich' | 'compact';
 }
 
 interface ChatConversationsPieceOwnerState extends ChatConversationsItemOwnerState {}
@@ -123,6 +132,8 @@ function getDisplayUnreadCount(unreadCount: number | undefined) {
 
   return unreadCount > 99 ? '99+' : String(unreadCount);
 }
+
+// ─── Shared styled slots ──────────────────────────────────────────────────────
 
 const ChatConversationsRootSlot = styled('div', {
   name: 'MuiChatConversations',
@@ -171,7 +182,9 @@ const ChatConversationsStateGlyph = styled('div', {
   width: 56,
 }));
 
-const ChatConversationsItemSlot = styled('div', {
+// ─── Rich variant styled slots ────────────────────────────────────────────────
+
+const ChatConversationsRichItemSlot = styled('div', {
   name: 'MuiChatConversations',
   slot: 'Item',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'ownerState',
@@ -228,6 +241,45 @@ const ChatConversationsItemSlot = styled('div', {
   },
 }));
 
+// ─── Compact variant styled slots ─────────────────────────────────────────────
+
+const ChatConversationsCompactItemSlot = styled('div', {
+  name: 'MuiChatConversations',
+  slot: 'Item',
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'ownerState',
+  overridesResolver: (_, styles) => styles.item,
+})<{ ownerState: ChatConversationsItemOwnerState }>(({ theme, ownerState }) => ({
+  alignItems: 'center',
+  backgroundColor: ownerState.selected
+    ? `var(${chatCssVarKeys.conversationSelectedBg})`
+    : 'transparent',
+  borderRadius: theme.shape.borderRadius,
+  color: ownerState.selected ? `var(${chatCssVarKeys.conversationSelectedColor})` : 'inherit',
+  cursor: 'pointer',
+  display: 'flex',
+  flexDirection: 'row',
+  gap: theme.spacing(1),
+  minWidth: 0,
+  outline: 0,
+  padding: theme.spacing(ownerState.dense ? 0.75 : 1, ownerState.dense ? 1 : 1.25),
+  textDecoration: 'none',
+  '&:hover': {
+    backgroundColor: ownerState.selected
+      ? `var(${chatCssVarKeys.conversationSelectedBg})`
+      : `var(${chatCssVarKeys.conversationHoverBg})`,
+  },
+  '&:focus-visible': {
+    boxShadow: `inset 0 0 0 2px var(${chatCssVarKeys.composerFocusRing})`,
+  },
+  [`& .${chatConversationsClasses.title}`]: {
+    flex: '1 1 auto',
+    minWidth: 0,
+  },
+  [`& .${chatConversationsClasses.unreadBadge}`]: {
+    flexShrink: 0,
+  },
+}));
+
 const ChatConversationsAvatarSlot = styled(Avatar, {
   name: 'MuiChatConversations',
   slot: 'ItemAvatar',
@@ -250,6 +302,9 @@ const ChatConversationsTitleSlot = styled('div', {
     ? theme.typography.fontWeightMedium
     : theme.typography.fontWeightRegular,
   minWidth: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 }));
 
 const ChatConversationsPreviewSlot = styled('div', {
@@ -261,6 +316,9 @@ const ChatConversationsPreviewSlot = styled('div', {
   ...theme.typography.body2,
   color: (theme.vars || theme).palette.text.secondary,
   minWidth: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 }));
 
 const ChatConversationsTimestampSlot = styled('div', {
@@ -293,7 +351,27 @@ const ChatConversationsUnreadBadgeSlot = styled('span', {
   paddingInline: theme.spacing(0.75),
 }));
 
-function createDefaultRootSlot(dense: boolean, sx: ChatConversationsProps['sx']) {
+const ChatConversationsUnreadDotSlot = styled('span', {
+  name: 'MuiChatConversations',
+  slot: 'UnreadBadge',
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'ownerState',
+  overridesResolver: (_, styles) => styles.unreadBadge,
+})<{ ownerState: ChatConversationsPieceOwnerState }>(({ theme }) => ({
+  backgroundColor: (theme.vars || theme).palette.primary.main,
+  borderRadius: '50%',
+  display: 'inline-block',
+  height: 8,
+  width: 8,
+  flexShrink: 0,
+}));
+
+// ─── Default slot factories ───────────────────────────────────────────────────
+
+function createDefaultRootSlot(
+  dense: boolean,
+  variant: 'rich' | 'compact',
+  sx: ChatConversationsProps['sx'],
+) {
   return React.forwardRef(function DefaultRoot(
     props: React.HTMLAttributes<HTMLDivElement> & {
       ownerState?: ChatConversationsRootOwnerState;
@@ -307,7 +385,7 @@ function createDefaultRootSlot(dense: boolean, sx: ChatConversationsProps['sx'])
     return (
       <ChatConversationsRootSlot
         className={joinClassNames(chatConversationsClasses.root, className)}
-        ownerState={{ dense }}
+        ownerState={{ dense, variant }}
         ref={ref}
         sx={sx}
         {...other}
@@ -340,8 +418,8 @@ function createDefaultStateSlot() {
   });
 }
 
-function createDefaultItemSlot(dense: boolean) {
-  return React.forwardRef(function DefaultItem(
+function createDefaultRichItemSlot(dense: boolean) {
+  return React.forwardRef(function DefaultRichItem(
     props: ConversationListItemProps & {
       ownerState?: ChatConversationsItemOwnerState;
     },
@@ -354,10 +432,39 @@ function createDefaultItemSlot(dense: boolean) {
       focused: focused ?? ownerState?.focused ?? false,
       selected: selected ?? ownerState?.selected ?? false,
       unread: unread ?? ownerState?.unread ?? false,
+      variant: 'rich',
     };
 
     return (
-      <ChatConversationsItemSlot
+      <ChatConversationsRichItemSlot
+        className={joinClassNames(chatConversationsClasses.item, className)}
+        ownerState={mergedOwnerState}
+        ref={ref}
+        {...other}
+      />
+    );
+  });
+}
+
+function createDefaultCompactItemSlot(dense: boolean) {
+  return React.forwardRef(function DefaultCompactItem(
+    props: ConversationListItemProps & {
+      ownerState?: ChatConversationsItemOwnerState;
+    },
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    const { className, conversation, focused, ownerState, selected, unread, ...other } = props;
+    const mergedOwnerState: ChatConversationsItemOwnerState = {
+      conversation,
+      dense,
+      focused: focused ?? ownerState?.focused ?? false,
+      selected: selected ?? ownerState?.selected ?? false,
+      unread: unread ?? ownerState?.unread ?? false,
+      variant: 'compact',
+    };
+
+    return (
+      <ChatConversationsCompactItemSlot
         className={joinClassNames(chatConversationsClasses.item, className)}
         ownerState={mergedOwnerState}
         ref={ref}
@@ -382,6 +489,7 @@ function createDefaultItemAvatarSlot(dense: boolean) {
       focused: focused ?? ownerState?.focused ?? false,
       selected: selected ?? ownerState?.selected ?? false,
       unread: unread ?? ownerState?.unread ?? false,
+      variant: ownerState?.variant ?? 'rich',
     };
 
     return (
@@ -409,7 +517,12 @@ function createDefaultItemAvatarSlot(dense: boolean) {
   });
 }
 
-function createDefaultTitleSlot(dense: boolean) {
+/** Null avatar for compact variant */
+function NullItemAvatar(_props: ConversationListItemAvatarProps) {
+  return null;
+}
+
+function createDefaultTitleSlot(dense: boolean, variant: 'rich' | 'compact') {
   return React.forwardRef(function DefaultTitle(
     props: ConversationListTitleProps & {
       ownerState?: ChatConversationsItemOwnerState;
@@ -423,6 +536,7 @@ function createDefaultTitleSlot(dense: boolean) {
       focused: focused ?? ownerState?.focused ?? false,
       selected: selected ?? ownerState?.selected ?? false,
       unread: unread ?? ownerState?.unread ?? false,
+      variant,
     };
 
     return (
@@ -452,6 +566,7 @@ function createDefaultPreviewSlot(dense: boolean) {
       focused: focused ?? ownerState?.focused ?? false,
       selected: selected ?? ownerState?.selected ?? false,
       unread: unread ?? ownerState?.unread ?? false,
+      variant: 'rich',
     };
 
     if (!conversation.subtitle) {
@@ -469,6 +584,11 @@ function createDefaultPreviewSlot(dense: boolean) {
       </ChatConversationsPreviewSlot>
     );
   });
+}
+
+/** Null preview for compact variant */
+function NullPreview(_props: ConversationListPreviewProps) {
+  return null;
 }
 
 function createDefaultTimestampSlot(dense: boolean) {
@@ -490,6 +610,7 @@ function createDefaultTimestampSlot(dense: boolean) {
       focused: focused ?? ownerState?.focused ?? false,
       selected: selected ?? ownerState?.selected ?? false,
       unread: unread ?? ownerState?.unread ?? false,
+      variant: 'rich',
     };
 
     if (!conversation.lastMessageAt) {
@@ -511,6 +632,11 @@ function createDefaultTimestampSlot(dense: boolean) {
   });
 }
 
+/** Null timestamp for compact variant */
+function NullTimestamp(_props: ConversationListTimestampProps) {
+  return null;
+}
+
 function createDefaultUnreadBadgeSlot(dense: boolean) {
   return React.forwardRef(function DefaultUnreadBadge(
     props: ConversationListUnreadBadgeProps & {
@@ -525,6 +651,7 @@ function createDefaultUnreadBadgeSlot(dense: boolean) {
       focused: focused ?? ownerState?.focused ?? false,
       selected: selected ?? ownerState?.selected ?? false,
       unread: unread ?? ownerState?.unread ?? false,
+      variant: 'rich',
     };
     const unreadCount = getDisplayUnreadCount(conversation.unreadCount);
 
@@ -544,6 +671,43 @@ function createDefaultUnreadBadgeSlot(dense: boolean) {
     );
   });
 }
+
+function createDefaultCompactUnreadDotSlot() {
+  return React.forwardRef(function DefaultCompactUnreadDot(
+    props: ConversationListUnreadBadgeProps & {
+      ownerState?: ChatConversationsItemOwnerState;
+    },
+    ref: React.Ref<HTMLSpanElement>,
+  ) {
+    const { className, conversation, focused, ownerState, selected, unread, ...other } = props;
+    const mergedOwnerState: ChatConversationsPieceOwnerState = {
+      conversation,
+      dense: ownerState?.dense ?? false,
+      focused: focused ?? ownerState?.focused ?? false,
+      selected: selected ?? ownerState?.selected ?? false,
+      unread: unread ?? ownerState?.unread ?? false,
+      variant: 'compact',
+    };
+    const hasUnread =
+      (conversation.unreadCount != null && conversation.unreadCount > 0) ||
+      conversation.readState === 'unread';
+
+    if (!hasUnread) {
+      return null;
+    }
+
+    return (
+      <ChatConversationsUnreadDotSlot
+        className={joinClassNames(chatConversationsClasses.unreadBadge, className)}
+        ownerState={mergedOwnerState}
+        ref={ref as React.Ref<HTMLSpanElement>}
+        {...(other as React.HTMLAttributes<HTMLSpanElement>)}
+      />
+    );
+  });
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 type ChatConversationsComponent = ((
   props: ChatConversationsProps & React.RefAttributes<HTMLDivElement>,
@@ -565,28 +729,35 @@ const ChatConversations = React.forwardRef(function ChatConversations(
     slotProps,
     slots,
     sx,
+    variant = 'rich',
     ...other
   } = props;
   const classes = useUtilityClasses(classesProp);
   const { conversations, reloadConversations } = useChat();
   const { conversationError, isLoadingConversations } = useChatStatus();
   const localeText = useChatLocaleText();
-  const rootOwnerState = React.useMemo(() => ({ dense }), [dense]);
+  const rootOwnerState = React.useMemo(() => ({ dense, variant }), [dense, variant]);
 
   const defaultSlots = React.useMemo(
     () => ({
       emptyState: createDefaultStateSlot(),
       errorState: createDefaultStateSlot(),
-      item: createDefaultItemSlot(dense),
-      itemAvatar: createDefaultItemAvatarSlot(dense),
+      item:
+        variant === 'compact'
+          ? createDefaultCompactItemSlot(dense)
+          : createDefaultRichItemSlot(dense),
+      itemAvatar: variant === 'compact' ? NullItemAvatar : createDefaultItemAvatarSlot(dense),
       loadingState: createDefaultStateSlot(),
-      preview: createDefaultPreviewSlot(dense),
-      root: createDefaultRootSlot(dense, sx),
-      timestamp: createDefaultTimestampSlot(dense),
-      title: createDefaultTitleSlot(dense),
-      unreadBadge: createDefaultUnreadBadgeSlot(dense),
+      preview: variant === 'compact' ? NullPreview : createDefaultPreviewSlot(dense),
+      root: createDefaultRootSlot(dense, variant, sx),
+      timestamp: variant === 'compact' ? NullTimestamp : createDefaultTimestampSlot(dense),
+      title: createDefaultTitleSlot(dense, variant),
+      unreadBadge:
+        variant === 'compact'
+          ? createDefaultCompactUnreadDotSlot()
+          : createDefaultUnreadBadgeSlot(dense),
     }),
-    [dense, sx],
+    [dense, sx, variant],
   );
 
   const Root = slots?.root ?? defaultSlots.root;
@@ -727,6 +898,7 @@ ChatConversations.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  variant: PropTypes.oneOf(['compact', 'rich']),
 } as any;
 
 export { ChatConversations };

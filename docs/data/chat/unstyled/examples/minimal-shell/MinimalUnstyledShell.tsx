@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
   Chat,
-  Composer,
+  Conversation,
+  ConversationInput,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-  Thread,
 } from '@mui/x-chat-unstyled';
 import { createEchoAdapter } from '../shared/demoUtils';
 import { minimalConversation, minimalMessages } from '../shared/demoData';
@@ -16,8 +16,10 @@ import {
   DemoComposerRoot,
   DemoConversationItem,
   DemoConversationItemAvatar,
-  DemoConversationItemMeta,
-  DemoConversationItemText,
+  DemoConversationPreview,
+  DemoConversationTimestamp,
+  DemoConversationTitle,
+  DemoConversationUnreadBadge,
   DemoMessageAuthor,
   DemoMessageAvatar,
   DemoMessageContent,
@@ -58,15 +60,17 @@ export default function MinimalUnstyledShell() {
           slots={{
             item: DemoConversationItem,
             itemAvatar: DemoConversationItemAvatar,
-            itemMeta: DemoConversationItemMeta,
-            itemText: DemoConversationItemText,
+            preview: DemoConversationPreview,
+            timestamp: DemoConversationTimestamp,
+            title: DemoConversationTitle,
+            unreadBadge: DemoConversationUnreadBadge,
           }}
         />
-        <Thread.Root slotProps={{ root: { style: demoSurfaceStyles.threadRoot } }}>
-          <Thread.Header slots={{ root: DemoThreadHeader }}>
+        <Conversation.Root slotProps={{ root: { style: demoSurfaceStyles.threadRoot } }}>
+          <Conversation.Header slots={{ root: DemoThreadHeader }}>
             <div style={{ minWidth: 0 }}>
-              <Thread.Title style={{ fontSize: 18, fontWeight: 800 }} />
-              <Thread.Subtitle
+              <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
+              <Conversation.Subtitle
                 style={{
                   color: '#5c6b7c',
                   fontSize: 13,
@@ -77,7 +81,7 @@ export default function MinimalUnstyledShell() {
                 }}
               />
             </div>
-          </Thread.Header>
+          </Conversation.Header>
           <MessageList.Root
             estimatedItemSize={90}
             renderItem={({ id, index }) => (
@@ -98,22 +102,22 @@ export default function MinimalUnstyledShell() {
             style={{ minHeight: 0 }}
             virtualization={false}
           />
-          <Composer.Root slots={{ root: DemoComposerRoot }}>
-            <Composer.Input
+          <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
+            <ConversationInput.TextArea
               aria-label="Message"
               placeholder="Ask the starter thread a question"
               slots={{ root: DemoComposerInput }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Composer.SendButton
+              <ConversationInput.SendButton
                 data-variant="primary"
                 slots={{ root: DemoComposerButton }}
               >
                 Send
-              </Composer.SendButton>
+              </ConversationInput.SendButton>
             </div>
-          </Composer.Root>
-        </Thread.Root>
+          </ConversationInput.Root>
+        </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
   );

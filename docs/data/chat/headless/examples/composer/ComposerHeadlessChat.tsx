@@ -6,15 +6,16 @@ import {
   useChatStore,
   type ChatAdapter,
 } from '@mui/x-chat-headless';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
-import {
-  DemoButton,
-  DemoFrame,
-  DemoHeading,
-  DemoMessageList,
-  DemoSplitLayout,
-  DemoTextarea,
-} from '../shared/DemoPrimitives';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message: _message }) {
@@ -33,92 +34,168 @@ function ComposerInner() {
   const composer = useChatComposer();
   const store = useChatStore();
   const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const listRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
-    <DemoFrame>
-      <DemoSplitLayout
-        sidebar={
-          <React.Fragment>
-            <h3 style={{ margin: 0 }}>Composer recipe</h3>
-            <p style={{ margin: 0, fontSize: 13, color: '#5c6b7c' }}>
-              This uses <code>useChatComposer()</code> with plain DOM controls.
-            </p>
-            <DemoButton onClick={() => inputRef.current?.click()}>
-              Attach files
-            </DemoButton>
-            <input
-              hidden
-              multiple
-              ref={inputRef}
-              type="file"
-              onChange={(event) => {
-                Array.from(event.target.files ?? []).forEach((file) =>
-                  composer.addAttachment(file),
-                );
-                event.target.value = '';
-              }}
-            />
-          </React.Fragment>
-        }
+    <Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
       >
-        <DemoHeading
-          title="Composer with attachments"
-          description="Press Enter to submit, Shift+Enter for a newline, and use composition events to guard IME input."
-          actions={
-            <span>
-              {composer.isSubmitting
-                ? 'Submitting…'
-                : `${composer.attachments.length} attachment(s)`}
-            </span>
+        <Typography variant="subtitle1" fontWeight={700}>
+          Composer with attachments
+        </Typography>
+        <Chip
+          size="small"
+          label={
+            composer.isSubmitting
+              ? 'Submitting\u2026'
+              : `${composer.attachments.length} attachment(s)`
           }
+          color={composer.isSubmitting ? 'primary' : 'default'}
+          variant="outlined"
         />
-        <DemoMessageList
-          messages={messages}
-          emptyLabel="Use the composer to create the first message."
-        />
-        {composer.attachments.length > 0 ? (
-          <div style={{ display: 'grid', gap: 8 }}>
-            {composer.attachments.map((attachment) => (
-              <div
-                key={attachment.localId}
-                style={{
+      </Box>
+
+      {/* Messages */}
+      <Box
+        ref={listRef}
+        sx={{
+          p: 2,
+          minHeight: 300,
+          maxHeight: 400,
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.5,
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', mt: 8 }}
+          >
+            Use the composer to create the first message.
+          </Typography>
+        ) : (
+          messages.map((message) => {
+            const isUser = message.role === 'user';
+            return (
+              <Box
+                key={message.id}
+                sx={{
                   display: 'flex',
-                  gap: 10,
-                  alignItems: 'center',
-                  border: '1px solid #d7dee7',
-                  borderRadius: 12,
-                  padding: 10,
-                  background: '#fff',
+                  justifyContent: isUser ? 'flex-end' : 'flex-start',
                 }}
               >
-                {attachment.previewUrl ? (
-                  <img
-                    src={attachment.previewUrl}
-                    alt={attachment.file.name}
-                    style={{
-                      width: 44,
-                      height: 44,
-                      objectFit: 'cover',
-                      borderRadius: 10,
-                    }}
-                  />
-                ) : null}
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700 }}>{attachment.file.name}</div>
-                  <div style={{ fontSize: 12, color: '#5c6b7c' }}>
-                    {attachment.status}
-                  </div>
-                </div>
-                <DemoButton
-                  onClick={() => composer.removeAttachment(attachment.localId)}
+                <Paper
+                  elevation={0}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    maxWidth: '80%',
+                    bgcolor: isUser ? 'primary.main' : 'grey.100',
+                    color: isUser ? 'primary.contrastText' : 'text.primary',
+                    borderRadius: 3,
+                  }}
                 >
-                  Remove
-                </DemoButton>
-              </div>
-            ))}
-          </div>
-        ) : null}
-        <DemoTextarea
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: 700,
+                      color: isUser ? 'primary.contrastText' : 'text.secondary',
+                    }}
+                  >
+                    {message.author?.displayName ?? message.role}
+                  </Typography>
+                  {message.parts.map((part, index) => (
+                    <Typography
+                      variant="body2"
+                      key={`${message.id}-${part.type}-${index}`}
+                    >
+                      {part.type === 'text' ? part.text : null}
+                    </Typography>
+                  ))}
+                </Paper>
+              </Box>
+            );
+          })
+        )}
+      </Box>
+
+      {/* Attachments */}
+      {composer.attachments.length > 0 ? (
+        <Stack
+          spacing={1}
+          sx={{ px: 2, py: 1.5, borderTop: 1, borderColor: 'divider' }}
+        >
+          {composer.attachments.map((attachment) => (
+            <Paper
+              key={attachment.localId}
+              variant="outlined"
+              sx={{
+                p: 1.5,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5,
+              }}
+            >
+              {attachment.previewUrl ? (
+                <Box
+                  component="img"
+                  src={attachment.previewUrl}
+                  alt={attachment.file.name}
+                  sx={{
+                    width: 44,
+                    height: 44,
+                    objectFit: 'cover',
+                    borderRadius: 1.5,
+                  }}
+                />
+              ) : null}
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Typography variant="body2" fontWeight={700} noWrap>
+                  {attachment.file.name}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {attachment.status}
+                </Typography>
+              </Box>
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => composer.removeAttachment(attachment.localId)}
+              >
+                Remove
+              </Button>
+            </Paper>
+          ))}
+        </Stack>
+      ) : null}
+
+      {/* Textarea */}
+      <Box sx={{ px: 2, pt: 1.5, borderTop: 1, borderColor: 'divider' }}>
+        <TextField
+          fullWidth
+          size="small"
+          multiline
+          minRows={2}
+          maxRows={6}
           aria-label="Draft message"
           placeholder="Write a message. Use an IME or add images to see the completed composer behaviors."
           value={composer.value}
@@ -132,22 +209,55 @@ function ComposerInner() {
             }
           }}
         />
-        <div style={{ display: 'flex', gap: 8 }}>
-          <DemoButton
-            onClick={() => composer.clear()}
-            disabled={composer.value === '' && composer.attachments.length === 0}
-          >
-            Clear
-          </DemoButton>
-          <DemoButton
-            disabled={composer.isSubmitting || composer.value.trim() === ''}
-            onClick={() => void composer.submit()}
-          >
-            Submit
-          </DemoButton>
-        </div>
-      </DemoSplitLayout>
-    </DemoFrame>
+      </Box>
+
+      {/* Hidden file input */}
+      <input
+        hidden
+        multiple
+        ref={inputRef}
+        type="file"
+        onChange={(event) => {
+          Array.from(event.target.files ?? []).forEach((file) =>
+            composer.addAttachment(file),
+          );
+          event.target.value = '';
+        }}
+      />
+
+      {/* Action buttons */}
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ px: 2, py: 1.5 }}
+      >
+        <Button
+          size="small"
+          variant="outlined"
+          startIcon={<AttachFileRoundedIcon />}
+          onClick={() => inputRef.current?.click()}
+        >
+          Attach files
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() => composer.clear()}
+          disabled={composer.value === '' && composer.attachments.length === 0}
+        >
+          Clear
+        </Button>
+        <Button
+          size="small"
+          variant="contained"
+          disabled={composer.isSubmitting || composer.value.trim() === ''}
+          onClick={() => void composer.submit()}
+          endIcon={<SendRoundedIcon />}
+        >
+          Submit
+        </Button>
+      </Stack>
+    </Paper>
   );
 }
 

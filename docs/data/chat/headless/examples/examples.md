@@ -11,6 +11,17 @@ packageName: '@mui/x-chat-headless'
 These recipes stay strictly within the headless layer.
 They use the runtime, hooks, selectors, callbacks, and adapter contract without relying on unstyled or Material UI primitives.
 
+Each recipe includes explanatory prose, inline code snippets for the key patterns, and a runnable demo.
+For the concept-level reference behind these recipes, see the dedicated documentation pages:
+
+- [State and store](/x/react-chat/headless/state/) for `ChatProvider` props, controlled/uncontrolled state, and the error model
+- [Hooks](/x/react-chat/headless/hooks/) for all nine hooks with signatures and when-to-use guidance
+- [Selectors](/x/react-chat/headless/selectors/) for the full selector API and store subscription patterns
+- [Adapters](/x/react-chat/headless/adapters/) for the adapter interface, writing guide, and backend patterns
+- [Streaming](/x/react-chat/headless/streaming/) for the chunk protocol and stream construction
+- [Realtime](/x/react-chat/headless/realtime/) for event types, subscription lifecycle, and store effects
+- [Type augmentation](/x/react-chat/headless/types/) for the six registry interfaces and module augmentation
+
 ## Start here
 
 - [Minimal headless chat](/x/react-chat/headless/examples/minimal-chat/) for the smallest working `ChatProvider` + `useChat()` setup

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
   Chat,
+  Conversation,
   Message,
   MessageGroup,
   MessageList,
-  Thread,
 } from '@mui/x-chat-unstyled';
 import { createEchoAdapter } from '../shared/demoUtils';
 import { demoUsers, groupedTimelineMessages } from '../shared/demoData';
@@ -52,7 +52,7 @@ export default function GroupedMessageTimeline() {
         },
       }}
     >
-      <Thread.Root
+      <Conversation.Root
         slotProps={{
           root: {
             style: {
@@ -64,10 +64,10 @@ export default function GroupedMessageTimeline() {
           },
         }}
       >
-        <Thread.Header slots={{ root: DemoThreadHeader }}>
+        <Conversation.Header slots={{ root: DemoThreadHeader }}>
           <div style={{ minWidth: 0 }}>
-            <Thread.Title style={{ fontSize: 18, fontWeight: 800 }} />
-            <Thread.Subtitle
+            <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
+            <Conversation.Subtitle
               style={{
                 color: '#5c6b7c',
                 fontSize: 13,
@@ -78,7 +78,7 @@ export default function GroupedMessageTimeline() {
               }}
             />
           </div>
-          <Thread.Actions style={{ display: 'flex', gap: 8 }}>
+          <Conversation.HeaderActions style={{ display: 'flex', gap: 8 }}>
             <DemoToolbarButton
               onClick={() => setGroupingWindowMs(5 * 60_000)}
               tone={groupingWindowMs === 5 * 60_000 ? 'accent' : 'default'}
@@ -91,8 +91,8 @@ export default function GroupedMessageTimeline() {
             >
               12 minute window
             </DemoToolbarButton>
-          </Thread.Actions>
-        </Thread.Header>
+          </Conversation.HeaderActions>
+        </Conversation.Header>
         <MessageList.Root
           estimatedItemSize={96}
           renderItem={({ id, index }) => (
@@ -153,7 +153,7 @@ export default function GroupedMessageTimeline() {
           style={{ minHeight: 0 }}
           virtualization={false}
         />
-      </Thread.Root>
+      </Conversation.Root>
     </Chat.Root>
   );
 }
