@@ -46,7 +46,7 @@ export type PieArcClassKey = keyof PieArcClasses;
 /**
  * @deprecated Use `getPieUtilityClass` instead.
  */
-export function getPieArcUtilityClass(slot: string) {
+function getPieArcUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArc', slot);
 }
 
