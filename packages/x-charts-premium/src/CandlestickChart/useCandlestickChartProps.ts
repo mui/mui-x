@@ -72,22 +72,24 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     y: axisHighlight?.y ?? ('line' as const),
   } satisfies ChartsAxisHighlightProps;
 
-  const chartsContainerProps: ChartsContainerPremiumProps<'ohlc', CandlestickChartPluginSignatures> =
-    {
-      ...other,
-      series: seriesWithDefault,
-      width,
-      height,
-      margin,
-      colors,
-      dataset,
-      xAxis: xAxisWithDefault,
-      yAxis,
-      disableAxisListener: axisHighlightProps.x === 'none' && axisHighlightProps.y === 'none',
-      className,
-      skipAnimation,
-      plugins: CANDLESTICK_CHART_PLUGINS,
-    };
+  const chartsContainerProps: ChartsContainerPremiumProps<
+    'ohlc',
+    CandlestickChartPluginSignatures
+  > = {
+    ...other,
+    series: seriesWithDefault,
+    width,
+    height,
+    margin,
+    colors,
+    dataset,
+    xAxis: xAxisWithDefault,
+    yAxis,
+    disableAxisListener: axisHighlightProps.x === 'none' && axisHighlightProps.y === 'none',
+    className,
+    skipAnimation,
+    plugins: CANDLESTICK_CHART_PLUGINS,
+  };
 
   const candlestickPlotProps: CandlestickPlotProps = {
     slots,

@@ -126,26 +126,27 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     hideLegend,
   };
 
-  const chartsDataProviderProProps: ChartsDataProviderProProps<'heatmap', HeatmapPluginSignatures> = {
-    apiRef,
-    seriesConfig,
-    series: seriesWithDefault,
-    width,
-    height,
-    margin,
-    xAxis: xAxisWithDefault,
-    yAxis: yAxisWithDefault,
-    zAxis: zAxisWithDefault,
-    colors,
-    dataset,
-    disableAxisListener: true,
-    highlightedItem,
-    onHighlightChange,
-    disableKeyboardNavigation,
-    onAxisClick,
-    onItemClick,
-    plugins: HEATMAP_PLUGINS,
-  };
+  const chartsDataProviderProProps: ChartsDataProviderProProps<'heatmap', HeatmapPluginSignatures> =
+    {
+      apiRef,
+      seriesConfig,
+      series: seriesWithDefault,
+      width,
+      height,
+      margin,
+      xAxis: xAxisWithDefault,
+      yAxis: yAxisWithDefault,
+      zAxis: zAxisWithDefault,
+      colors,
+      dataset,
+      disableAxisListener: true,
+      highlightedItem,
+      onHighlightChange,
+      disableKeyboardNavigation,
+      onAxisClick,
+      onItemClick,
+      plugins: HEATMAP_PLUGINS,
+    };
 
   const heatmapPlotProps: HeatmapPlotProps = {
     borderRadius,
