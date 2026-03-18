@@ -140,21 +140,6 @@ After running the codemod to do the renaming make sure to adapt the hook returne
  }
 ```
 
-#### `rename-classes`
-
-The classes structure got modified.
-Instead of a classes object per element, the v9 export a classes object per chart.
-
-```diff
--import { barElementClasses } from '@mui/x-charts';
-+import { barClasses } from '@mui/x-charts';
-
--const class = barElementClasses.root;
-+const class = barClasses.element;
-```
-
-After running the codemod to do the renaming make sure types are matching with the new names.
-
 #### `rename-chart-api-import`
 
 Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-charts/context`.
