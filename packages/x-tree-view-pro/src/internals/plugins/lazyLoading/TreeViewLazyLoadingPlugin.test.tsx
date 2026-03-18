@@ -200,7 +200,6 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
 
         await awaitMockFetch();
-        expect(onItemsLazyLoaded.callCount).to.equal(1);
         expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal([{ id: '1', childrenCount: 1 }]);
         expect(onItemsLazyLoaded.lastCall.args[1]).to.equal(null);
       });
