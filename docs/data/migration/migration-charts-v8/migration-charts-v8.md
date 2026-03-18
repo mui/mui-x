@@ -29,7 +29,7 @@ Items marked with ✅ are handled by the [codemod](#run-codemods).
 
 The `Chart` prefix has been renamed to `Charts` (with an S) to align with other components.
 
-| Deprecated                             | Replacement                             |
+| v8                                     | v9                                      |
 | :------------------------------------- | :-------------------------------------- |
 | `ChartContainer`                       | `ChartsContainer`                       |
 | `ChartContainerProps`                  | `ChartsContainerProps`                  |
@@ -51,10 +51,13 @@ The `Chart` prefix has been renamed to `Charts` (with an S) to align with other 
 | `ChartAxisZoomSliderTrackClassKey`     | `ChartsAxisZoomSliderTrackClassKey`     |
 | `chartAxisZoomSliderTrackClasses`      | `chartsAxisZoomSliderTrackClasses`      |
 
-### CSS class deprecations (`highlighted` / `faded`)
+### CSS class removed (`highlighted` / `faded` / `seriesId`)
 
-The highlighted and faded CSS state classes are deprecated across all chart element types.
+The highlighted and faded CSS state classes are removed across all chart element types.
 Use `[data-highlighted]` and `[data-faded]` attribute selectors instead.
+
+The CSS classes built with `.${classes.series}-${seriesId}` are removed accross all chart element types.
+Use `[data-series]` attribute selectors instead.
 
 This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkElement`, `PieArc`, `PieArcLabel`, `RadarSeriesPlot`, `Heatmap`, and `FunnelSection`.
 
@@ -64,7 +67,66 @@ This affects: `BarElement`, `BarLabel`, `LineElement`, `AreaElement`, `MarkEleme
 
 -`.MuiBarElement-root.MuiBarElement-faded`
 +`.MuiBarElement-root[data-faded]`
+
+-`.MuiBarElement-root.${barElementClasses.series}-seriesA`
++`.MuiBarElement-root[data-series="seriesA"]`
 ```
+
+### CSS class reorganized
+
+The classes per components got replace by classes per charts.
+Here is the table of the classes renamed.
+
+Run the following command to do the renaming.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/rename-classes <path|folder>
+```
+
+After running the codemod, make sure the type check are passing.
+This codemod does not handle:
+
+- The `highlighted` / `faded` / `seriesId` classes mentioned in the previous section.
+- The type associated to those classes renaming.
+
+| v8                       | v9                     |
+| :----------------------- | :--------------------- | ------------------- | ---------------- |
+| `barElementClasses.root` | `'barClasses.element'` |
+| `barClasses.root`        | `label',`              | barClasses.animate` | `labelAnimate',` |
+
+|`areaElementClasses.root` | `lineClasses.area`|
+|`lineElementClasses.root` | `lineClasses.line`|
+|`lineHighlightElementClasses.root` | `lineClasses.highlight`|
+|`markElementClasses.root` | `lineClasses.mark`|
+|`markElementClasses.animate` | `lineClasses.markAnimate`|
+
+|`funnelSectionClasses.root` | `funnelClasses.section`|
+|`funnelSectionClasses.filled` | `funnelClasses.sectionFilled`|
+|`funnelSectionClasses.outlined` | `funnelClasses.sectionOutlined`|
+|`funnelSectionClasses.label` | `funnelClasses.sectionLabel`|
+
+|`radarSeriesPlotClasses.root` | `radarClasses.seriesRoot`|
+|`radarSeriesPlotClasses.area` | `radarClasses.seriesArea`|
+|`radarSeriesPlotClasses.mark` | `radarClasses.seriesMark`|
+|`chartsAxisHighlightClasses.root` | `radarClasses.axisHighlightRoot`|
+|`chartsAxisHighlightClasses.line` | `radarClasses.axisHighlightLine`|
+|`chartsAxisHighlightClasses.dot` | `radarClasses.axisHighlightDot`|
+|`chartsAxisClasses.root` | `radarClasses.axisRoot`|
+|`chartsAxisClasses.line` | `radarClasses.axisLine`|
+|`chartsAxisClasses.label` | `radarClasses.axisLabel`|
+|`chartsGridClasses.radial` | `radarClasses.gridRadial`|
+|`chartsGridClasses.divider` | `radarClasses.gridDivider`|
+|`chartsGridClasses.stripe` | `radarClasses.gridStripe`|
+
+|`sankeyPlotClasses.root`|`sankeyClasses.root`|
+|`sankeyPlotClasses.nodes`|`sankeyClasses.nodes`|
+|`sankeyPlotClasses.nodeLabels`|`sankeyClasses.nodeLabels`|
+|`sankeyPlotClasses.links`|`sankeyClasses.links`|
+|`sankeyPlotClasses.linkLabels`|`sankeyClasses.linkLabels`|
+|`sankeyPlotClasses.node`|`sankeyClasses.node`|
+|`sankeyPlotClasses.link`|`sankeyClasses.link`|
+|`sankeyPlotClasses.nodeLabel`|`sankeyClasses.nodeLabel`|
+|`sankeyPlotClasses.linkLabel`|`sankeyClasses.linkLabel`|
 
 ### Unstable exports are now stable
 
