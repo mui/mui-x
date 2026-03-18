@@ -201,5 +201,6 @@
   "200": "MUI X: Unimplemented: colspan feature is required",
   "201": "MUI X: Unimplemented: rowspan feature is required",
   "202": "MUI X Charts: Series with ID \"%s\" should have an x-axis of type \"band\". Candlestick charts require a band scale for the x-axis. Set the scaleType to \"band\" for this axis.",
-  "203": "MUI X Charts: OHLC series with id='%s' has no data. \nProvide a data property to the series."
+  "203": "MUI X Charts: OHLC series with id='%s' has no data. \nProvide a data property to the series.",
+  "204": "MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartsDataProviderPro."
 }
