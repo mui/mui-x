@@ -233,7 +233,7 @@ export class LayoutDataGridLegacy extends LayoutDataGrid {
 
     const containerProps = store.use(LayoutDataGrid.selectors.containerProps);
     const scrollerProps = store.use(LayoutDataGrid.selectors.scrollerProps);
-    const scrollerContentProps = store.use(LayoutDataGrid.selectors.scrollerProps);
+    const scrollerContentProps = store.use(LayoutDataGrid.selectors.scrollerContentProps);
     const viewportProps = store.use(LayoutDataGrid.selectors.viewportProps);
     const contentProps = store.use(LayoutDataGrid.selectors.contentProps);
     const positionerProps = store.use(LayoutDataGrid.selectors.positionerProps);
