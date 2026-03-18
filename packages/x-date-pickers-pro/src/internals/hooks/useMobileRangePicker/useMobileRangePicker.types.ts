@@ -19,6 +19,7 @@ import {
   NonStaticRangePickerHookParameters,
   UseRangePickerProps,
 } from '../../models';
+import { PickerRangeFieldSlotProps } from '../../../models';
 
 export interface UseMobileRangePickerSlots
   extends
@@ -39,9 +40,7 @@ export interface ExportedUseMobileRangePickerSlotProps<
     ExportedPickersLayoutSlotProps<PickerRangeValue>,
     PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<
-    PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> & {
-      dateSeparator?: string;
-    },
+    PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;

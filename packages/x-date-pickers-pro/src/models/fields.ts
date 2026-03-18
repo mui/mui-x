@@ -48,5 +48,4 @@ export interface RangeFieldSeparatorProps {
  */
 export type PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> &
-    RangeFieldSeparatorProps &
-    MultiInputFieldRefs;
+    RangeFieldSeparatorProps;

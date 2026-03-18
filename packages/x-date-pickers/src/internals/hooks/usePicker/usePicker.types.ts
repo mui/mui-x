@@ -102,7 +102,7 @@ export interface UsePickerBaseProps<
  */
 export interface UsePickerNonStaticProps extends Omit<
   PickerFieldPrivateContextValue,
-  'internalFieldRef'
+  'internalFieldRef' | 'fieldRef'
 > {
   /**
    * If `true`, the Picker will close after submitting the full date.
