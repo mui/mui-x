@@ -872,11 +872,10 @@ export const GridRootStyles = styled('div', {
 
     /* Used when skeleton/no columns overlay is visible */
     [`& .${c['main--hiddenContent']}`]: {
-      [`& .${c.virtualScrollerContent}`]: {
+      [`& .${c.virtualScrollerRenderZone}`]: {
         // We use visibility hidden so that the virtual scroller content retains its height.
         // Position fixed is used to remove the virtual scroller content from the flow.
         // https://github.com/mui/mui-x/issues/14061
-        position: 'fixed',
         visibility: 'hidden',
       },
       // Hide grid content
