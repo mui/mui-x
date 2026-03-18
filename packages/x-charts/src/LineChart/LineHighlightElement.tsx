@@ -11,7 +11,7 @@ import { getSymbol } from '../internals/getSymbol';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 /**
- * @deprecated Use `LineClasses` from `./lineClasses` instead.
+ * @deprecated Use `LineClasses` instead.
  */
 export interface LineHighlightElementClasses {
   /** Styles applied to the root element. */
@@ -19,7 +19,7 @@ export interface LineHighlightElementClasses {
 }
 
 /**
- * @deprecated Use `LineClassKey` from `./lineClasses` instead.
+ * @deprecated Use `LineClassKey` instead.
  */
 export type HighlightElementClassKey = keyof LineHighlightElementClasses;
 
@@ -32,14 +32,14 @@ interface LineHighlightElementCommonProps {
 }
 
 /**
- * @deprecated Use `getLineUtilityClass` from `./lineClasses` instead.
+ * @deprecated Use `getLineUtilityClass` instead.
  */
-export function getHighlightElementUtilityClass(slot: string) {
+function getHighlightElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiHighlightElement', slot);
 }
 
 /**
- * @deprecated Use `lineClasses` from `./lineClasses` instead.
+ * @deprecated Use `lineClasses` instead.
  */
 export const lineHighlightElementClasses: LineHighlightElementClasses = generateUtilityClasses(
   'MuiHighlightElement',
@@ -47,7 +47,7 @@ export const lineHighlightElementClasses: LineHighlightElementClasses = generate
 );
 
 /**
- * @deprecated Use `useUtilityClasses` from `./lineClasses` instead.
+ * @deprecated Use `useUtilityClasses` instead.
  */
 const useDeprecatedUtilityClasses = (
   ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'seriesId'>,

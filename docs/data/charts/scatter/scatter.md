@@ -41,11 +41,11 @@ Since scatter elements can be small, interactions do not require hovering exactl
 When the pointer is in the drawing area, the closest scatter element will be used for interactions (tooltip or highlights).
 To do so, the chart computes [Voronoi cells](https://en.wikipedia.org/wiki/Voronoi_diagram) which map the pointer position to the closest element.
 
-You can define a maximal radius with the `voronoiMaxRadius` prop.
+You can define a maximum radius with the `hitAreaRadius` prop.
 If the distance with the pointer is larger than this radius, no item will be selected.
-Alternatively, set the `voronoiMaxRadius` prop to `item` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
+Alternatively, set the `hitAreaRadius` prop to `item` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
 
-{{"demo": "VoronoiInteraction.js"}}
+{{"demo": "ClosestPointInteraction.js"}}
 
 ## Click event
 
@@ -61,7 +61,7 @@ const onItemClick = (
 
 {{"demo": "ScatterClick.js"}}
 
-If `voronoiMaxRadius` is `item`, users need to click precisely on the scatter element, and the mouse event will come from this element.
+If `hitAreaRadius` is `item`, users need to click precisely on the scatter element, and the mouse event will come from this element.
 
 Otherwise, the click behavior will be the same as defined in the [interaction section](#interaction) and the mouse event will come from the svg component.
 
@@ -167,7 +167,7 @@ However, this comes with the following limitations:
 On top of that, there's also some differences in behavior:
 
 - The rendering order might be different, which might cause overlapping circles to render at different depths when compared to the default rendering;
-- When `disableVoronoi` is true, `onItemClick` does not work as it requires that plugin to work.
+- When `disableHitArea` is true, `onItemClick` does not work as it requires that plugin to work.
 
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 16,000 data points.
 

@@ -10,11 +10,13 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import data from '../dataset/random/scatterParallel.json';
 
-export default function VoronoiInteraction() {
-  const [option, setOption] = React.useState('numeric');
-  const [voronoiMaxRadius, setVoronoiMaxRadius] = React.useState(25);
+export default function ClosestPointInteraction() {
+  const [option, setOption] = React.useState<'item' | 'undefined' | 'numeric'>(
+    'numeric',
+  );
+  const [hitAreaRadius, setVoronoiMaxRadius] = React.useState<number>(25);
 
-  const handleMaxRadiusChange = (event, newValue) => {
+  const handleMaxRadiusChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue !== 'number') {
       return;
     }
@@ -25,12 +27,12 @@ export default function VoronoiInteraction() {
     <Stack direction="column" sx={{ width: '100%' }}>
       <ScatterChart
         height={300}
-        voronoiMaxRadius={
+        hitAreaRadius={
           option === 'undefined'
             ? undefined
             : option === 'item'
               ? 'item'
-              : voronoiMaxRadius
+              : hitAreaRadius
         }
         dataset={data}
         series={[
@@ -46,7 +48,11 @@ export default function VoronoiInteraction() {
       />
       <div>
         <Typography gutterBottom>Maximum radius</Typography>
-        <RadioGroup onChange={(event) => setOption(event.target.value)}>
+        <RadioGroup
+          onChange={(event) =>
+            setOption(event.target.value as 'item' | 'undefined' | 'numeric')
+          }
+        >
           <Stack direction="row">
             <FormControlLabel
               checked={option === 'item'}
@@ -76,7 +82,7 @@ export default function VoronoiInteraction() {
           Numeric radius
         </Typography>
         <Slider
-          value={voronoiMaxRadius}
+          value={hitAreaRadius}
           onChange={handleMaxRadiusChange}
           valueLabelDisplay="auto"
           min={1}

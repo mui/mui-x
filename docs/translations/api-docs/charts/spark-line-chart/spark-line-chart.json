@@ -25,6 +25,9 @@
     "disableClipping": {
       "description": "When <code>true</code>, the chart&#39;s drawing area will not be clipped and elements within can visually overflow the chart."
     },
+    "disableHitArea": {
+      "description": "If true, the hit area interaction is disabled and falls back to hover events."
+    },
     "disableKeyboardNavigation": {
       "description": "If <code>true</code>, disables keyboard navigation for the chart."
     },
@@ -43,6 +46,9 @@
     },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
+    },
+    "hitAreaRadius": {
+      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."

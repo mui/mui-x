@@ -4,11 +4,19 @@
     "classes": { "description": "Override or extend the styles applied to the component." }
   },
   "classDescriptions": {
-    "dot": { "description": "Styles applied to {{nodeName}}.", "nodeName": "every highlight dot" },
+    "dot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every highlight dot",
+      "deprecationInfo": "Use <code>radarClasses.axisHighlightDot</code> instead."
+    },
     "line": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the highlighted axis line element"
+      "nodeName": "the highlighted axis line element",
+      "deprecationInfo": "Use <code>radarClasses.axisHighlightLine</code> instead."
     },
-    "root": { "description": "Styles applied to the root element." }
+    "root": {
+      "description": "Styles applied to the root element.",
+      "deprecationInfo": "Use <code>radarClasses.axisHighlightRoot</code> instead."
+    }
   }
 }

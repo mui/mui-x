@@ -83,6 +83,10 @@ export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';
 export { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 export { useUtilityClasses as useChartsTooltipUtilityClasses } from '../ChartsTooltip/chartsTooltipClasses';
+export {
+  useUtilityClasses as useChartsTooltipUtilityClasses,
+  getChartsTooltipUtilityClass,
+} from '../ChartsTooltip/chartsTooltipClasses';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';

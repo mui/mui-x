@@ -4,7 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useInteractionItemProps, type SeriesId, consumeSlots } from '@mui/x-charts/internals';
 import { useItemHighlightState } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
-import { type FunnelSectionClasses, useUtilityClasses } from './funnelSectionClasses';
+import {
+  type FunnelSectionClasses,
+  useUtilityClasses as useDeprecatedUtilityClasses,
+} from './funnelSectionClasses';
+import { useUtilityClasses } from './funnelClasses';
 
 export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref'> {
   seriesId: SeriesId;
@@ -15,8 +19,8 @@ export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>,
 }
 
 export const FunnelSectionPath = styled('path', {
-  slot: 'internal',
-  shouldForwardProp: undefined,
+  name: 'MuiFunnelChart',
+  slot: 'Section',
 })(() => ({
   transition:
     'opacity 0.2s ease-in, fill 0.2s ease-in, fill-opacity 0.2s ease-in, filter 0.2s ease-in',
@@ -29,7 +33,7 @@ const FunnelSection = consumeSlots(
   'MuiFunnelSection',
   'funnelSection',
   {
-    classesResolver: useUtilityClasses,
+    classesResolver: useDeprecatedUtilityClasses,
   },
   React.forwardRef(function FunnelSection(
     props: FunnelSectionProps,
@@ -56,6 +60,8 @@ const FunnelSection = consumeSlots(
     const isHighlighted = highlightState === 'highlighted';
     const isFaded = highlightState === 'faded';
 
+    const newClasses = useUtilityClasses({ variant });
+
     const isOutlined = variant === 'outlined';
 
     return (
@@ -73,6 +79,7 @@ const FunnelSection = consumeSlots(
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
         className={clsx(
+          newClasses.section,
           classes?.root,
           isHighlighted && classes?.highlighted,
           isFaded && classes?.faded,

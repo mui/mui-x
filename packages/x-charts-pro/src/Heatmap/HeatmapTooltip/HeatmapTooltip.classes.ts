@@ -1,6 +1,6 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { getChartsTooltipUtilityClass } from '@mui/x-charts/ChartsTooltip';
 import { createSlotArrayMap } from '@mui/x-charts/internals';
+import { getChartsTooltipUtilityClass } from '@mui/x-charts/internals';
 import { type HeatmapTooltipProps } from './HeatmapTooltip.types';
 
 export const useUtilityClasses = (props: Pick<HeatmapTooltipProps, 'classes'>) => {
