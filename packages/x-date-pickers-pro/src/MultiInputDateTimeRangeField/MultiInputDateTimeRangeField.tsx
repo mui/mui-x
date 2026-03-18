@@ -117,7 +117,7 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
-   * The ref object used to imperatively interact with the end field.
+   * The ref object used to interact with the end field imperatively.
    */
   endFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
@@ -275,7 +275,7 @@ MultiInputDateTimeRangeField.propTypes = {
     PropTypes.string,
   ]),
   /**
-   * The ref object used to imperatively interact with the start field.
+   * The ref object used to interact with the start field imperatively.
    */
   startFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   style: PropTypes.object,

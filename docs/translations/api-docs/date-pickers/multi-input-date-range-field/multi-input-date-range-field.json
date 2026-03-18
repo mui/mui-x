@@ -23,7 +23,7 @@
     },
     "divider": { "description": "Add an element between each child." },
     "endFieldRef": {
-      "description": "The ref object used to imperatively interact with the end field."
+      "description": "The ref object used to interact with the end field imperatively."
     },
     "format": { "description": "Format of the date when rendered in the input(s)." },
     "formatDensity": {
@@ -99,7 +99,7 @@
     "slots": { "description": "Overridable component slots." },
     "spacing": { "description": "Defines the space between immediate children." },
     "startFieldRef": {
-      "description": "The ref object used to imperatively interact with the start field."
+      "description": "The ref object used to interact with the start field imperatively."
     },
     "sx": {
       "description": "The system prop, which allows defining system overrides as well as additional CSS styles."
