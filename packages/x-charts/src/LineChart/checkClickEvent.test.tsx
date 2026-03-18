@@ -90,7 +90,7 @@ describe('LineChart - click event', () => {
           onMarkClick={() => {}}
         />,
       );
-      const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
+      const marks = document.querySelectorAll<HTMLElement>(`.${lineClasses.mark}`);
 
       expect(Array.from(marks).map((mark) => mark.getAttribute('cursor'))).to.deep.equal([
         'pointer',
