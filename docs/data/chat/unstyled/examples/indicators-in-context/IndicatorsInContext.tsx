@@ -8,8 +8,8 @@ import {
   MessageGroup,
   MessageList,
 } from '@mui/x-chat-unstyled';
-import { createEchoAdapter, cloneMessages } from '../shared/demoUtils';
-import { createLongThreadMessages, demoUsers } from '../shared/demoData';
+import { createEchoAdapter, cloneMessages } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import { createLongThreadMessages, demoUsers } from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoDateDividerLabel,
   DemoDateDividerRoot,
@@ -25,7 +25,7 @@ import {
   DemoTypingIndicator,
   DemoUnreadMarkerLabel,
   DemoUnreadMarkerRoot,
-} from '../shared/DemoPrimitives';
+} from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 function createRealtimeController() {
   let emit: ((event: ChatRealtimeEvent) => void) | null = null;

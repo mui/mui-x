@@ -6,8 +6,8 @@ import {
   MessageGroup,
   MessageList,
 } from '@mui/x-chat-unstyled';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { demoUsers, groupedTimelineMessages } from '../shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import { demoUsers, groupedTimelineMessages } from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoMessageAuthor,
   DemoMessageAvatar,
@@ -17,7 +17,7 @@ import {
   DemoMessageRoot,
   DemoThreadHeader,
   DemoToolbarButton,
-} from '../shared/DemoPrimitives';
+} from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 export default function GroupedMessageTimeline() {
   const [groupingWindowMs, setGroupingWindowMs] = React.useState(5 * 60_000);

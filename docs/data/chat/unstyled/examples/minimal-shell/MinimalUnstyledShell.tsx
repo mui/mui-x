@@ -8,8 +8,8 @@ import {
   MessageGroup,
   MessageList,
 } from '@mui/x-chat-unstyled';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { minimalConversation, minimalMessages } from '../shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import { minimalConversation, minimalMessages } from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoComposerButton,
   DemoComposerInput,
@@ -28,7 +28,7 @@ import {
   DemoMessageRoot,
   DemoThreadHeader,
   demoSurfaceStyles,
-} from '../shared/DemoPrimitives';
+} from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 const adapter = createEchoAdapter();
 

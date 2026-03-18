@@ -13,8 +13,12 @@ import {
   cloneConversations,
   cloneThreadMap,
   syncConversationPreview,
-} from '../shared/demoUtils';
-import { demoUsers, inboxConversations, inboxThreads } from '../shared/demoData';
+} from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import {
+  demoUsers,
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoComposerButton,
   DemoComposerInput,
@@ -34,7 +38,7 @@ import {
   DemoThreadHeader,
   DemoToolbarButton,
   demoSurfaceStyles,
-} from '../shared/DemoPrimitives';
+} from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 export default function TwoPaneInbox() {
   const [activeConversationId, setActiveConversationId] = React.useState('triage');

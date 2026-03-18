@@ -8,8 +8,11 @@ import {
   MessageList,
 } from '@mui/x-chat-unstyled';
 import { useChatComposer } from '@mui/x-chat-headless';
-import { createEchoAdapter } from '../shared/demoUtils';
-import { createTextMessage, demoUsers } from '../shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   AttachmentPreviewList,
   DemoComposerButton,
@@ -25,7 +28,7 @@ import {
   DemoMessageRoot,
   DemoThreadHeader,
   DemoToolbarButton,
-} from '../shared/DemoPrimitives';
+} from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 const adapter = createEchoAdapter({
   agent: demoUsers.agent,

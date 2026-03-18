@@ -8,8 +8,11 @@ import {
   getDefaultMessagePartRenderer,
 } from '@mui/x-chat-unstyled';
 
-import { createEchoAdapter } from '../shared/demoUtils';
-import { demoUsers, partRenderingMessages } from '../shared/demoData';
+import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import {
+  demoUsers,
+  partRenderingMessages,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoDateDividerLabel,
   DemoDateDividerRoot,
@@ -20,7 +23,7 @@ import {
   DemoMessageMeta,
   DemoMessageRoot,
   DemoThreadHeader,
-} from '../shared/DemoPrimitives';
+} from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 const partRenderers = {
   reasoning: ({ part }) => (

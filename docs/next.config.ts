@@ -120,6 +120,9 @@ export default withDeploymentConfig({
           ...config.resolve.alias,
           ...MONOREPO_ALIASES,
           '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
+          '@mui/x-chat-headless': path.resolve(currentDirectory, '../packages/x-chat-headless/src'),
+          '@mui/x-chat-unstyled': path.resolve(currentDirectory, '../packages/x-chat-unstyled/src'),
+          '@mui/x-chat': path.resolve(currentDirectory, '../packages/x-chat/src'),
           // TODO: get rid of this, replace with @mui/docs
           docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),

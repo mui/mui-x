@@ -54,6 +54,16 @@ export {
   getChatMessageUtilityClass,
 } from './ChatMessage';
 export { ChatBox, chatBoxClasses, getChatBoxUtilityClass } from './ChatBox';
+export {
+  ChatConversationSkeleton,
+  chatConversationSkeletonClasses,
+  getChatConversationSkeletonUtilityClass,
+} from './ChatConversationSkeleton';
+export {
+  ChatMessageSkeleton,
+  chatMessageSkeletonClasses,
+  getChatMessageSkeletonUtilityClass,
+} from './ChatMessageSkeleton';
 
 export type {
   ChatBoxClassKey,
@@ -169,3 +179,13 @@ export type {
   ChatToolPartRendererSlotProps,
   ChatToolPartRendererSlots,
 } from './ChatMessage';
+export type {
+  ChatConversationSkeletonClassKey,
+  ChatConversationSkeletonClasses,
+  ChatConversationSkeletonProps,
+} from './ChatConversationSkeleton';
+export type {
+  ChatMessageSkeletonClassKey,
+  ChatMessageSkeletonClasses,
+  ChatMessageSkeletonProps,
+} from './ChatMessageSkeleton';

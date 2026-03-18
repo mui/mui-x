@@ -15,9 +15,13 @@ import {
   syncConversationPreview,
   formatConversationTime,
   formatMessageTime,
-} from '../shared/demoUtils';
-import { demoUsers, inboxConversations, inboxThreads } from '../shared/demoData';
-import { DemoToolbarButton } from '../shared/DemoPrimitives';
+} from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import {
+  demoUsers,
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
+import { DemoToolbarButton } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 const brand = {
   background: '#fff8ef',

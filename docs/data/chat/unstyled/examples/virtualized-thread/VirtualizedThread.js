@@ -11,8 +11,11 @@ import {
   createEchoAdapter,
   cloneMessages,
   formatDayLabel,
-} from '../shared/demoUtils';
-import { createLongThreadMessages, demoUsers } from '../shared/demoData';
+} from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import {
+  createLongThreadMessages,
+  demoUsers,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoDateDividerLabel,
   DemoDateDividerRoot,
@@ -27,7 +30,7 @@ import {
   DemoToolbarButton,
   DemoUnreadMarkerLabel,
   DemoUnreadMarkerRoot,
-} from '../shared/DemoPrimitives';
+} from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 const allMessages = createLongThreadMessages();
 const initialMessages = cloneMessages(allMessages.slice(-18));
