@@ -12,7 +12,7 @@ import { type SeriesId } from '../models';
 import { pieClasses, useUtilityClasses as usePieUtilityClasses } from './pieClasses';
 
 /**
- * @deprecated Use `PieClasses` from `./pieClasses` instead.
+ * @deprecated Use `PieClasses` instead.
  */
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
@@ -39,7 +39,7 @@ export interface PieArcLabelClasses {
 }
 
 /**
- * @deprecated Use `PieClassKey` from `./pieClasses` instead.
+ * @deprecated Use `PieClassKey` instead.
  */
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
@@ -53,14 +53,14 @@ interface PieArcLabelOwnerState {
 }
 
 /**
- * @deprecated Use `getPieUtilityClass` from `./pieClasses` instead.
+ * @deprecated Use `getPieUtilityClass` instead.
  */
-export function getPieArcLabelUtilityClass(slot: string) {
+function getPieArcLabelUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArcLabel', slot);
 }
 
 /**
- * @deprecated Use `pieClasses` from `./pieClasses` instead.
+ * @deprecated Use `pieClasses` instead.
  */
 export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('MuiPieArcLabel', [
   'root',
@@ -71,7 +71,7 @@ export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('Mu
 ]);
 
 /**
- * @deprecated Use `useUtilityClasses` from `./pieClasses` instead.
+ * @deprecated Use `useUtilityClasses` instead.
  */
 const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;

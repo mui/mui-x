@@ -6,10 +6,13 @@ import type { BarElementOwnerState } from './barClasses';
 export { type BarElementOwnerState };
 
 /**
- * @deprecated Use `BarClasses` from `./barClasses` instead.
+ * @deprecated Use `BarClasses` instead.
  */
 export interface BarElementClasses {
-  /** Styles applied to the root element. */
+  /**
+   * Styles applied to the root element.
+   * @deprecated Use `barClasses.element` instead.
+   */
   root: string;
   /**
    * Styles applied to the root element if it is highlighted.
@@ -24,24 +27,25 @@ export interface BarElementClasses {
   /**
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${barElementClasses.series}-${seriesId}`.
+   * @deprecated Use `[data-series="${seriesId}"]` selector instead.
    */
   series: string;
 }
 
 /**
- * @deprecated Use `BarClassKey` from `./barClasses` instead.
+ * @deprecated Use `BarClassKey` instead.
  */
 export type BarElementClassKey = keyof BarElementClasses;
 
 /**
- * @deprecated Use `getBarUtilityClass` from `./barClasses` instead.
+ * @deprecated Use `getBarUtilityClass` instead.
  */
 export function getBarElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiBarElement', slot);
 }
 
 /**
- * @deprecated Use `barClasses` from `./barClasses` instead.
+ * @deprecated Use `barClasses` instead.
  */
 export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
   'root',
@@ -51,7 +55,7 @@ export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiB
 ]);
 
 /**
- * @deprecated Use `useBarElementUtilityClasses` from `./barClasses` instead.
+ * @deprecated Use `useBarElementUtilityClasses` instead.
  */
 export const useUtilityClasses = (ownerState: BarElementOwnerState) => {
   const { classes, seriesId, isHighlighted, isFaded } = ownerState;
