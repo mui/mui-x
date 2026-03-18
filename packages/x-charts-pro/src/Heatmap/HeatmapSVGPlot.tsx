@@ -77,4 +77,3 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
     </React.Fragment>
   );
 }
-

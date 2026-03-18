@@ -63,10 +63,7 @@ export interface BarChartPremiumProps extends Omit<
    * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
    */
-  onItemClick?(
-    event: MouseEvent,
-    itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier,
-  ): void;
+  onItemClick?(event: MouseEvent, itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier): void;
 
   /**
    * The series to display in the bar chart.

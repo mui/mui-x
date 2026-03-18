@@ -28,9 +28,9 @@ export function useRegisterPointerInteractions() {
   const store = useStore();
 
   const interactionActive = React.useRef(false);
-  const lastItemRef = React.useRef<
-    SeriesItemIdentifierWithType<ChartSeriesType> | undefined
-  >(undefined);
+  const lastItemRef = React.useRef<SeriesItemIdentifierWithType<ChartSeriesType> | undefined>(
+    undefined,
+  );
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
