@@ -34,46 +34,44 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   const seriesToDisplay = series.series[series.seriesOrder[0]];
 
   return (
-    <React.Fragment>
-      <HeatmapPlotRoot className={heatmapClasses.root} data-series={seriesToDisplay.id}>
-        {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
-          const x = xScale(xDomain[xIndex]);
-          const y = yScale(yDomain[yIndex]);
-          const color = colorScale?.(value);
+    <HeatmapPlotRoot className={heatmapClasses.root} data-series={seriesToDisplay.id}>
+      {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
+        const x = xScale(xDomain[xIndex]);
+        const y = yScale(yDomain[yIndex]);
+        const color = colorScale?.(value);
 
-          if (x === undefined || y === undefined || !color) {
-            return null;
-          }
+        if (x === undefined || y === undefined || !color) {
+          return null;
+        }
 
-          const item: HighlightItemIdentifierWithType<'heatmap'> = {
-            type: 'heatmap',
-            seriesId: seriesToDisplay.id,
-            xIndex,
-            yIndex,
-          };
-          const highlightState = getHighlightState(item);
+        const item: HighlightItemIdentifierWithType<'heatmap'> = {
+          type: 'heatmap',
+          seriesId: seriesToDisplay.id,
+          xIndex,
+          yIndex,
+        };
+        const highlightState = getHighlightState(item);
 
-          return (
-            <MemoHeatmapItem
-              key={`${xIndex}_${yIndex}`}
-              width={xScale.bandwidth()}
-              height={yScale.bandwidth()}
-              x={x}
-              y={y}
-              xIndex={xIndex}
-              yIndex={yIndex}
-              color={color}
-              seriesId={series.seriesOrder[0]}
-              value={value}
-              slots={props.slots}
-              slotProps={props.slotProps}
-              isHighlighted={highlightState === 'highlighted'}
-              isFaded={highlightState === 'faded'}
-              borderRadius={props.borderRadius}
-            />
-          );
-        })}
-      </HeatmapPlotRoot>
-    </React.Fragment>
+        return (
+          <MemoHeatmapItem
+            key={`${xIndex}_${yIndex}`}
+            width={xScale.bandwidth()}
+            height={yScale.bandwidth()}
+            x={x}
+            y={y}
+            xIndex={xIndex}
+            yIndex={yIndex}
+            color={color}
+            seriesId={series.seriesOrder[0]}
+            value={value}
+            slots={props.slots}
+            slotProps={props.slotProps}
+            isHighlighted={highlightState === 'highlighted'}
+            isFaded={highlightState === 'faded'}
+            borderRadius={props.borderRadius}
+          />
+        );
+      })}
+    </HeatmapPlotRoot>
   );
 }
