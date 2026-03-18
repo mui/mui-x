@@ -28,10 +28,52 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           animate: 'labelAnimate',
         },
       },
+      radarSeriesPlotClasses: {
+        newClassName: 'radarClasses',
+        properties: {
+          root: 'seriesRoot',
+          area: 'seriesArea',
+          mark: 'seriesMark'
+        },
+      },
+      },
       sankeyPlotClasses: {
         newClassName: 'sankeyClasses',
         properties: {},
       },
+    },
+  });
+
+  // Classes that had same name as cartesian classes but only for radar charts.
+  renameClasses({
+    j,
+    root,
+    packageNames: ['@mui/x-charts/RadarChart', '@mui/x-charts-pro/RadarChart', '@mui/x-charts-premium/RadarChart'],
+    classes: {
+      chartsAxisHighlightClasses: {
+        newClassName: 'radarClasses',
+        properties: {
+          root: 'axisHighlightRoot',
+          line: 'axisHighlightLine',
+          dot: 'axisHighlightDot'
+        },
+      },
+      chartsAxisClasses: {
+        newClassName: 'radarClasses',
+        properties: {
+          root: 'axisRoot',
+          line: 'axisLine',
+          label: 'axisLabel'
+        },
+      },
+      chartsGridClasses: {
+        newClassName: 'radarClasses',
+        properties: {
+          radial: 'gridRadial',
+          divider: 'gridDivider',
+          stripe: 'gridStripe'
+        },
+      }
     },
   });
 
