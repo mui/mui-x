@@ -16,6 +16,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   CreateMultiInputRangeFieldParameters,
   CreateMultiInputRangeFieldReturnValue,
@@ -32,11 +33,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
   allowTriggerShifting,
 }: CreateMultiInputRangeFieldParameters<TManager>): CreateMultiInputRangeFieldReturnValue<TManager> {
   const useUtilityClasses = (classes: MultiInputRangeFieldProps<TManager>['classes']) => {
-    const slots = {
-      root: ['root'],
-      separator: ['separator'],
-    };
-
+    const slots = createSlotArrayMap(['root', 'separator'] as const);
     return composeClasses(slots, getUtilityClass, classes);
   };
 

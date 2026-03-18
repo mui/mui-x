@@ -10,6 +10,7 @@ import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { MuiEvent } from '@mui/x-internals/types';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
@@ -215,13 +216,15 @@ const useUtilityClasses = (
       hasStartAdornment && 'adornedStart',
       hasEndAdornment && 'adornedEnd',
     ],
-    notchedOutline: ['notchedOutline'],
-    input: ['input'],
-    sectionsContainer: ['sectionsContainer'],
-    sectionContent: ['sectionContent'],
-    sectionBefore: ['sectionBefore'],
-    sectionAfter: ['sectionAfter'],
-    activeBar: ['activeBar'],
+    ...createSlotArrayMap([
+      'notchedOutline',
+      'input',
+      'sectionsContainer',
+      'sectionContent',
+      'sectionBefore',
+      'sectionAfter',
+      'activeBar',
+    ] as const),
   };
 
   return composeClasses(slots, getPickersInputBaseUtilityClass, classes);

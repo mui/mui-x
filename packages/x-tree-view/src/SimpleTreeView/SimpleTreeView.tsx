@@ -5,6 +5,7 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { warnOnce } from '@mui/x-internals/warning';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
 import { SimpleTreeViewProps } from './SimpleTreeView.types';
@@ -24,18 +25,20 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
   const { classes } = ownerState;
 
   return React.useMemo(() => {
-    const slots = {
-      root: ['root'],
-      item: ['item'],
-      itemContent: ['itemContent'],
-      itemGroupTransition: ['itemGroupTransition'],
-      itemIconContainer: ['itemIconContainer'],
-      itemLabel: ['itemLabel'],
-      // itemLabelInput: ['itemLabelInput'], => feature not available on this component
-      itemCheckbox: ['itemCheckbox'],
-      // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
-      // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
-    };
+    const slots = createSlotArrayMap([
+      'root',
+      'item',
+      'itemContent',
+      'itemGroupTransition',
+      'itemIconContainer',
+      'itemLabel',
+      'itemLabelInput',
+      'itemCheckbox',
+    ] as const);
+
+    // itemLabelInput: ['itemLabelInput'], => feature not available on this component
+    // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
+    // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
 
     return composeClasses(slots, getSimpleTreeViewUtilityClass, classes);
   }, [classes]);

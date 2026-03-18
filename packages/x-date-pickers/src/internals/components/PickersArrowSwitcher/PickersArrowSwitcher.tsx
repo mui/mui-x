@@ -7,6 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import IconButton from '@mui/material/IconButton';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
 import {
   PickersArrowSwitcherOwnerState,
@@ -53,13 +54,15 @@ const PickersArrowSwitcherButton = styled(IconButton, {
 
 const useUtilityClasses = (classes: Partial<PickersArrowSwitcherClasses> | undefined) => {
   const slots = {
-    root: ['root'],
-    spacer: ['spacer'],
-    button: ['button'],
-    previousIconButton: ['previousIconButton'],
-    nextIconButton: ['nextIconButton'],
-    leftArrowIcon: ['leftArrowIcon'],
-    rightArrowIcon: ['rightArrowIcon'],
+    ...createSlotArrayMap([
+      'root',
+      'spacer',
+      'button',
+      'previousIconButton',
+      'nextIconButton',
+      'leftArrowIcon',
+      'rightArrowIcon',
+    ] as const),
   };
 
   return composeClasses(slots, getPickersArrowSwitcherUtilityClass, classes);

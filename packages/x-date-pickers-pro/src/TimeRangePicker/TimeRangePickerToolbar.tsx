@@ -27,6 +27,7 @@ import {
   usePickerContext,
   usePickerTranslations,
 } from '@mui/x-date-pickers/hooks';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   TimeRangePickerToolbarClasses,
   getTimeRangePickerToolbarUtilityClass,
@@ -39,10 +40,8 @@ const useUtilityClasses = (
 ) => {
   const { pickerVariant } = ownerState;
   const slots = {
-    root: ['root'],
     container: ['container', pickerVariant],
-    separator: ['separator'],
-    timeContainer: ['timeContainer'],
+    ...createSlotArrayMap(['root', 'separator', 'timeContainer'] as const),
   };
 
   return composeClasses(slots, getTimeRangePickerToolbarUtilityClass, classes);

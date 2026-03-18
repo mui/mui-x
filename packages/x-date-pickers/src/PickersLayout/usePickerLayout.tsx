@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useRtl } from '@mui/system/RtlProvider';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { PickersActionBar } from '../PickersActionBar';
 import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
@@ -23,12 +24,7 @@ const useUtilityClasses = (
   const { pickerOrientation } = ownerState;
   const slots = {
     root: ['root', pickerOrientation === 'landscape' && 'landscape'],
-    contentWrapper: ['contentWrapper'],
-    toolbar: ['toolbar'],
-    actionBar: ['actionBar'],
-    tabs: ['tabs'],
-    landscape: ['landscape'],
-    shortcuts: ['shortcuts'],
+    ...createSlotArrayMap(['contentWrapper', 'toolbar', 'actionBar', 'tabs', 'shortcuts'] as const),
   };
 
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);

@@ -26,13 +26,10 @@ import {
 } from './dateTimeRangePickerToolbarClasses';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
 import { usePickerRangePositionContext } from '../hooks';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 const useUtilityClasses = (classes: Partial<DateTimeRangePickerToolbarClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    startToolbar: ['startToolbar'],
-    endToolbar: ['endToolbar'],
-  };
+  const slots = createSlotArrayMap(['root', 'startToolbar', 'endToolbar'] as const);
 
   return composeClasses(slots, getDateTimeRangePickerToolbarUtilityClass, classes);
 };

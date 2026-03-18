@@ -1,6 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 /**
  * @deprecated Use `RadarClasses` instead.
@@ -49,9 +50,7 @@ export const chartsAxisClasses: RadarAxisClasses = generateUtilityClasses('MuiRa
  */
 export const useUtilityClasses = (classes?: Partial<RadarAxisClasses>) => {
   const slots = {
-    root: ['root'],
-    line: ['line'],
-    label: ['label'],
+    ...createSlotArrayMap(['root', 'line', 'label'] as const),
   };
 
   return composeClasses(slots, getRadarAxisUtilityClass, classes);

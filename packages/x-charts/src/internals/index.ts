@@ -81,6 +81,8 @@ export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';
+export { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
+export { useUtilityClasses as useChartsTooltipUtilityClasses } from '../ChartsTooltip/chartsTooltipClasses';
 export {
   useUtilityClasses as useChartsTooltipUtilityClasses,
   getChartsTooltipUtilityClass,

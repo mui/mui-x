@@ -1,16 +1,13 @@
 import composeClasses from '@mui/utils/composeClasses';
 import { type AxisConfig, type ChartsYAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) => {
   const { classes, position } = ownerState;
   const slots = {
     root: ['root', 'directionY', position],
-    line: ['line'],
-    tickContainer: ['tickContainer'],
-    tick: ['tick'],
-    tickLabel: ['tickLabel'],
-    label: ['label'],
+    ...createSlotArrayMap(['line', 'tickContainer', 'tick', 'tickLabel', 'label'] as const),
   };
 
   return composeClasses(slots, getAxisUtilityClass, classes);

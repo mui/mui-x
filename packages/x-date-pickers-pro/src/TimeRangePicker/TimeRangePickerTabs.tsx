@@ -9,6 +9,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon } from '@mui/x-date-pickers/icons';
 import { ExportedBaseTabsProps } from '@mui/x-date-pickers/internals';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   TimeRangePickerTabsClasses,
   getTimeRangePickerTabsUtilityClass,
@@ -36,10 +37,7 @@ export interface ExportedTimeRangePickerTabsProps extends ExportedBaseTabsProps 
 export interface TimeRangePickerTabsProps extends ExportedTimeRangePickerTabsProps {}
 
 const useUtilityClasses = (classes: Partial<TimeRangePickerTabsClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    tab: ['tab'],
-  };
+  const slots = createSlotArrayMap(['root', 'tab'] as const);
 
   return composeClasses(slots, getTimeRangePickerTabsUtilityClass, classes);
 };

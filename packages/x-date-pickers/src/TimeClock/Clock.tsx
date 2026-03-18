@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { ClockPointer } from './ClockPointer';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
@@ -64,14 +65,16 @@ const useUtilityClasses = (
   ownerState: ClockOwnerState,
 ) => {
   const slots = {
-    root: ['root'],
-    clock: ['clock'],
-    wrapper: ['wrapper'],
-    squareMask: ['squareMask'],
-    pin: ['pin'],
+    ...createSlotArrayMap([
+      'root',
+      'clock',
+      'wrapper',
+      'squareMask',
+      'pin',
+      'meridiemText',
+    ] as const),
     amButton: ['amButton', ownerState.clockMeridiemMode === 'am' && 'selected'],
     pmButton: ['pmButton', ownerState.clockMeridiemMode === 'pm' && 'selected'],
-    meridiemText: ['meridiemText'],
   };
 
   return composeClasses(slots, getClockUtilityClass, classes);

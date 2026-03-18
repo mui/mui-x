@@ -2,6 +2,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SeriesId } from '../models/seriesType/common';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface PieClasses {
   /** Styles applied to the root element. */
@@ -52,12 +53,8 @@ export const useUtilityClasses = (options?: {
 }) => {
   const { classes, skipAnimation } = options ?? {};
   const slots = {
-    root: ['root'],
-    series: ['series'],
-    seriesLabels: ['seriesLabels'],
-    arc: ['arc'],
     arcLabel: ['arcLabel', !skipAnimation && 'animate'],
-    focusIndicator: ['focusIndicator'],
+    ...createSlotArrayMap(['root', 'series', 'seriesLabels', 'arc', 'focusIndicator'] as const),
   };
 
   return composeClasses(slots, getPieUtilityClass, classes);

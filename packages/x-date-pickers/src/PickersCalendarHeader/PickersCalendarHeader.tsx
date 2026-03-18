@@ -7,6 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import IconButton from '@mui/material/IconButton';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
 import { ArrowDropDownIcon } from '../icons';
@@ -26,13 +27,13 @@ import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateCont
 import { DateView } from '../models/views';
 
 const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    labelContainer: ['labelContainer'],
-    label: ['label'],
-    switchViewButton: ['switchViewButton'],
-    switchViewIcon: ['switchViewIcon'],
-  };
+  const slots = createSlotArrayMap([
+    'root',
+    'labelContainer',
+    'label',
+    'switchViewButton',
+    'switchViewIcon',
+  ] as const);
 
   return composeClasses(slots, getPickersCalendarHeaderUtilityClass, classes);
 };

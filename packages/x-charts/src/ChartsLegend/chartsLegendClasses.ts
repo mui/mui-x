@@ -3,6 +3,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import type { ChartsLegendProps } from './ChartsLegend';
 import type { ChartsLegendSlotExtension } from './chartsLegend.types';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface ChartsLegendClasses {
   /** Styles applied to the root element. */
@@ -31,11 +32,7 @@ export const useUtilityClasses = (props: ChartsLegendProps & ChartsLegendSlotExt
   const { classes, direction } = props;
   const slots = {
     root: ['root', direction],
-    item: ['item'],
-    mark: ['mark'],
-    label: ['label'],
-    series: ['series'],
-    hidden: ['hidden'],
+    ...createSlotArrayMap(['item', 'mark', 'label', 'series', 'hidden'] as const),
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);

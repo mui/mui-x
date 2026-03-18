@@ -1,6 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface RadarClasses {
   /** Styles applied to the radar axis root element. */
@@ -53,18 +54,20 @@ export const radarClasses: RadarClasses = generateUtilityClasses('MuiRadarChart'
 export const useUtilityClasses = (options?: { classes?: Partial<RadarClasses> }) => {
   const { classes } = options ?? {};
   const slots = {
-    axisRoot: ['axisRoot'],
-    axisLine: ['axisLine'],
-    axisLabel: ['axisLabel'],
-    gridRadial: ['gridRadial'],
-    gridDivider: ['gridDivider'],
-    gridStripe: ['gridStripe'],
-    seriesRoot: ['seriesRoot'],
-    seriesArea: ['seriesArea'],
-    seriesMark: ['seriesMark'],
-    axisHighlightRoot: ['axisHighlightRoot'],
-    axisHighlightLine: ['axisHighlightLine'],
-    axisHighlightDot: ['axisHighlightDot'],
+    ...createSlotArrayMap([
+      'axisRoot',
+      'axisLine',
+      'axisLabel',
+      'gridRadial',
+      'gridDivider',
+      'gridStripe',
+      'seriesRoot',
+      'seriesArea',
+      'seriesMark',
+      'axisHighlightRoot',
+      'axisHighlightLine',
+      'axisHighlightDot',
+    ] as const),
   };
 
   return composeClasses(slots, getRadarUtilityClass, classes);

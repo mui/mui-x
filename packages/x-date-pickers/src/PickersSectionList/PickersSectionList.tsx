@@ -5,6 +5,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   getPickersSectionListUtilityClass,
   pickersSectionListClasses,
@@ -41,11 +42,7 @@ export const PickersSectionListSectionContent = styled('span', {
 });
 
 const useUtilityClasses = (classes: Partial<PickersSectionListClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    section: ['section'],
-    sectionContent: ['sectionContent'],
-  };
+  const slots = createSlotArrayMap(['root', 'section', 'sectionContent'] as const);
 
   return composeClasses(slots, getPickersSectionListUtilityClass, classes);
 };

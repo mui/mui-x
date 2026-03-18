@@ -3,6 +3,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import type { ContinuousColorLegendProps } from './ContinuousColorLegend';
 import type { ChartsLegendSlotExtension } from './chartsLegend.types';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface ContinuousColorLegendClasses {
   /** Styles applied to the root element. */
@@ -37,11 +38,7 @@ export const useUtilityClasses = (
   const { classes, direction, labelPosition } = props;
   const slots = {
     root: ['root', direction, labelPosition],
-    minLabel: ['minLabel'],
-    maxLabel: ['maxLabel'],
-    gradient: ['gradient'],
-    mark: ['mark'],
-    label: ['label'],
+    ...createSlotArrayMap(['minLabel', 'maxLabel', 'gradient', 'label', 'mark'] as const),
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);

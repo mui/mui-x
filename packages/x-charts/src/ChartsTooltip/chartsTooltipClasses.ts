@@ -1,6 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface ChartsTooltipClasses {
   /** Styles applied to the root element. */
@@ -52,16 +53,18 @@ export const chartsTooltipClasses: ChartsTooltipClasses = generateUtilityClasses
 
 export const useUtilityClasses = (classes?: Partial<ChartsTooltipClasses>) => {
   const slots = {
-    root: ['root'],
-    paper: ['paper'],
-    table: ['table'],
-    row: ['row'],
-    cell: ['cell'],
-    mark: ['mark'],
-    markContainer: ['markContainer'],
-    labelCell: ['labelCell'],
-    valueCell: ['valueCell'],
-    axisValueCell: ['axisValueCell'],
+    ...createSlotArrayMap([
+      'root',
+      'paper',
+      'table',
+      'row',
+      'cell',
+      'mark',
+      'markContainer',
+      'labelCell',
+      'valueCell',
+      'axisValueCell',
+    ] as const),
   };
 
   return composeClasses(slots, getChartsTooltipUtilityClass, classes);

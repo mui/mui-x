@@ -19,6 +19,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { isElementInteractive } from '../../utils/isElementInteractive';
 import { getPickerPopperUtilityClass, PickerPopperClasses } from './pickerPopperClasses';
 import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
@@ -91,10 +92,7 @@ export interface PickerPopperProps extends ExportedPickerPopperProps {
 }
 
 const useUtilityClasses = (classes: Partial<PickerPopperClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    paper: ['paper'],
-  };
+  const slots = createSlotArrayMap(['root', 'paper'] as const);
 
   return composeClasses(slots, getPickerPopperUtilityClass, classes);
 };

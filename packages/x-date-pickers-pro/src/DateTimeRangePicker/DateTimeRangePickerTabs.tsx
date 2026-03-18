@@ -16,6 +16,7 @@ import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   DateTimeRangePickerTabsClasses,
   getDateTimeRangePickerTabsUtilityClass,
@@ -66,12 +67,7 @@ export interface ExportedDateTimeRangePickerTabsProps extends ExportedBaseTabsPr
 export interface DateTimeRangePickerTabsProps extends ExportedDateTimeRangePickerTabsProps {}
 
 const useUtilityClasses = (classes: Partial<DateTimeRangePickerTabsClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    tabButton: ['tabButton'],
-    navigationButton: ['navigationButton'],
-    filler: ['filler'],
-  };
+  const slots = createSlotArrayMap(['root', 'tabButton', 'navigationButton', 'filler'] as const);
 
   return composeClasses(slots, getDateTimeRangePickerTabsUtilityClass, classes);
 };

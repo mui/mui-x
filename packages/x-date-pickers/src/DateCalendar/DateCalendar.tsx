@@ -7,6 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
@@ -29,10 +30,7 @@ import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateM
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
 const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    viewTransitionContainer: ['viewTransitionContainer'],
-  };
+  const slots = createSlotArrayMap(['root', 'viewTransitionContainer'] as const);
 
   return composeClasses(slots, getDateCalendarUtilityClass, classes);
 };

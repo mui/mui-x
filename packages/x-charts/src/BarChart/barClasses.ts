@@ -2,6 +2,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SeriesId } from '../models/seriesType/common';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface BarClasses {
   /** Styles applied to the bar plot element. */
@@ -51,10 +52,7 @@ export interface UseUtilityClassesOptions {
 export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
   const { skipAnimation, classes } = options ?? {};
   const slots = {
-    root: ['root'],
-    series: ['series'],
-    seriesLabels: ['seriesLabels'],
-    element: ['element'],
+    ...createSlotArrayMap(['root', 'series', 'seriesLabels', 'element'] as const),
     label: ['label', !skipAnimation && 'labelAnimate'],
   };
 

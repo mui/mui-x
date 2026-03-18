@@ -1,6 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import { type AxisConfig, type ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export const useUtilityClasses = (
   ownerState: Pick<AxisConfig<any, any, ChartsXAxisProps>, 'position' | 'classes'>,
@@ -8,11 +9,7 @@ export const useUtilityClasses = (
   const { classes, position } = ownerState;
   const slots = {
     root: ['root', 'directionX', position],
-    line: ['line'],
-    tickContainer: ['tickContainer'],
-    tick: ['tick'],
-    tickLabel: ['tickLabel'],
-    label: ['label'],
+    ...createSlotArrayMap(['line', 'tickContainer', 'tick', 'tickLabel', 'label'] as const),
   };
 
   return composeClasses(slots, getAxisUtilityClass, classes);

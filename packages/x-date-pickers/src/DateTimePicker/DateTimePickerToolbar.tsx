@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { shouldForwardProp } from '@mui/system/createStyled';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
@@ -53,13 +54,10 @@ const useUtilityClasses = (
   const { pickerOrientation, toolbarDirection } = ownerState;
 
   const slots = {
-    root: ['root'],
-    dateContainer: ['dateContainer'],
     timeContainer: ['timeContainer', toolbarDirection === 'rtl' && 'timeLabelReverse'],
     timeDigitsContainer: ['timeDigitsContainer', toolbarDirection === 'rtl' && 'timeLabelReverse'],
-    separator: ['separator'],
     ampmSelection: ['ampmSelection', pickerOrientation === 'landscape' && 'ampmLandscape'],
-    ampmLabel: ['ampmLabel'],
+    ...createSlotArrayMap(['root', 'dateContainer', 'separator', 'ampmLabel'] as const),
   };
 
   return composeClasses(slots, getDateTimePickerToolbarUtilityClass, classes);

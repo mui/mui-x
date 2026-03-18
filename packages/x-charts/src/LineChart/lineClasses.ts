@@ -2,6 +2,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SeriesId } from '../models/seriesType/common';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface LineClasses {
   /** Styles applied to the area element. */
@@ -55,13 +56,15 @@ export interface UseUtilityClassesOptions {
 export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
   const { skipAnimation, classes } = options ?? {};
   const slots = {
-    area: ['area'],
-    line: ['line'],
     mark: ['mark', !skipAnimation && 'markAnimate'],
-    highlight: ['highlight'],
-    areaPlot: ['areaPlot'],
-    linePlot: ['linePlot'],
-    markPlot: ['markPlot'],
+    ...createSlotArrayMap([
+      'area',
+      'line',
+      'highlight',
+      'areaPlot',
+      'linePlot',
+      'markPlot',
+    ] as const),
   };
 
   return composeClasses(slots, getLineUtilityClass, classes);

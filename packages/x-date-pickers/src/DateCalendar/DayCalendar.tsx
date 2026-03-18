@@ -8,6 +8,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { PickersDay, PickerDayOwnerState, PickersDayProps } from '../PickersDay';
 import { ExportedPickersDayProps } from '../PickersDay/PickersDay.types';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
@@ -118,15 +119,17 @@ export interface DayCalendarProps
 
 const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) => {
   const slots = {
-    root: ['root'],
-    header: ['header'],
-    weekDayLabel: ['weekDayLabel'],
-    loadingContainer: ['loadingContainer'],
-    slideTransition: ['slideTransition'],
-    monthContainer: ['monthContainer'],
-    weekContainer: ['weekContainer'],
-    weekNumberLabel: ['weekNumberLabel'],
-    weekNumber: ['weekNumber'],
+    ...createSlotArrayMap([
+      'root',
+      'header',
+      'weekDayLabel',
+      'loadingContainer',
+      'slideTransition',
+      'monthContainer',
+      'weekContainer',
+      'weekNumberLabel',
+      'weekNumber',
+    ] as const),
   };
 
   return composeClasses(slots, getDayCalendarUtilityClass, classes);

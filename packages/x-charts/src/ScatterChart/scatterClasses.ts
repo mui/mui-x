@@ -1,6 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface ScatterClasses {
   /** Styles applied to the scatter plot element. */
@@ -36,10 +37,7 @@ export interface UseUtilityClassesOptions {
 export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
   const { classes } = options ?? {};
   const slots = {
-    root: ['root'],
-    series: ['series'],
-    marker: ['marker'],
-    focusedMark: ['focusedMark'],
+    ...createSlotArrayMap(['root', 'series', 'marker', 'focusedMark'] as const),
   };
 
   return composeClasses(slots, getScatterUtilityClass, classes);

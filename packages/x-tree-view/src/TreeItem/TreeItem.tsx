@@ -10,6 +10,7 @@ import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItemProps } from './TreeItem.types';
 import { useTreeItem, UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
@@ -197,18 +198,18 @@ const useUtilityClasses = (classesProp: Partial<TreeItemClasses> | undefined) =>
     loadingIcon: clsx(classesProp?.loadingIcon, classesFromTreeView.itemLoadingIcon),
   };
 
-  const slots = {
-    root: ['root'],
-    content: ['content'],
-    iconContainer: ['iconContainer'],
-    checkbox: ['checkbox'],
-    label: ['label'],
-    groupTransition: ['groupTransition'],
-    labelInput: ['labelInput'],
-    dragAndDropOverlay: ['dragAndDropOverlay'],
-    errorIcon: ['errorIcon'],
-    loadingIcon: ['loadingIcon'],
-  };
+  const slots = createSlotArrayMap([
+    'root',
+    'content',
+    'iconContainer',
+    'checkbox',
+    'label',
+    'groupTransition',
+    'labelInput',
+    'dragAndDropOverlay',
+    'errorIcon',
+    'loadingIcon',
+  ] as const);
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
 };

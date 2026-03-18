@@ -3,6 +3,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import type { PiecewiseColorLegendProps } from './PiecewiseColorLegend';
 import type { ChartsLegendSlotExtension } from './chartsLegend.types';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 
 export interface PiecewiseColorLegendClasses {
   /** Styles applied to the root element. */
@@ -45,11 +46,7 @@ export const useUtilityClasses = (props: PiecewiseColorLegendProps & ChartsLegen
       direction,
       labelPosition?.replaceAll(/-(\w)/g, (match) => match[1].toUpperCase()),
     ],
-    minLabel: ['minLabel'],
-    maxLabel: ['maxLabel'],
-    item: ['item'],
-    mark: ['mark'],
-    label: ['label'],
+    ...createSlotArrayMap(['minLabel', 'maxLabel', 'item', 'mark', 'label'] as const),
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);

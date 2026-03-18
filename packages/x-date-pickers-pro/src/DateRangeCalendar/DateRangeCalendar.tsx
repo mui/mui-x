@@ -27,6 +27,7 @@ import {
   useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import {
@@ -146,9 +147,8 @@ const useUtilityClasses = (
   ownerState: DateRangeCalendarOwnerState,
 ) => {
   const slots = {
-    root: ['root'],
-    monthContainer: ['monthContainer'],
     dayCalendar: [ownerState.isDraggingDay && 'dayDragging'],
+    ...createSlotArrayMap(['root', 'monthContainer'] as const),
   };
 
   return composeClasses(slots, getDateRangeCalendarUtilityClass, classes);

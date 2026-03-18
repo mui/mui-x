@@ -1,6 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { createSlotArrayMap } from '@mui/x-charts/internals';
 
 export interface RangeBarClasses {
   /** Styles applied to the range bar plot element. */
@@ -25,9 +26,7 @@ export const rangeBarClasses: RangeBarClasses = generateUtilityClasses('MuiRange
 
 export const useUtilityClasses = (classes?: Partial<RangeBarClasses>) => {
   const slots = {
-    root: ['root'],
-    series: ['series'],
-    seriesLabels: ['seriesLabels'],
+    ...createSlotArrayMap(['root', 'series', 'seriesLabels'] as const),
   };
 
   return composeClasses(slots, getRangeBarUtilityClass, classes);
