@@ -2,7 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SparkLineChart, SparkLineChartProps } from '@mui/x-charts/SparkLineChart';
-import { areaElementClasses, lineElementClasses } from '@mui/x-charts/LineChart';
+import { lineClasses, lineClasses } from '@mui/x-charts/LineChart';
 import { chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
 import Box from '@mui/material/Box';
 import data from './weekly-downloads.json';
@@ -22,8 +22,8 @@ const settings: SparkLineChartProps = {
     }),
   },
   sx: {
-    [`& .${areaElementClasses.root}`]: { opacity: 0.2 },
-    [`& .${lineElementClasses.root}`]: { strokeWidth: 3 },
+    [`& .${lineClasses.line}`]: { opacity: 0.2 },
+    [`& .${lineClasses.line}`]: { strokeWidth: 3 },
     [`& .${chartsAxisHighlightClasses.root}`]: {
       stroke: 'rgb(137, 86, 255)',
       strokeDasharray: 'none',

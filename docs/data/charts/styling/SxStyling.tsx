@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const labels: string[] = ['Group A', 'Group B', 'Group C', 'Group D', 'Group E'];
@@ -11,7 +11,7 @@ export default function SxStyling(): React.JSX.Element {
   return (
     <BarChart
       sx={(theme) => ({
-        [`.${barElementClasses.root}`]: {
+        [`.${barClasses.element}`]: {
           fill: (theme.vars || theme).palette.background.paper,
           strokeWidth: 2,
         },
