@@ -15,11 +15,9 @@ const cls6 = rspc.root;
 const cls7 = radarSeriesPlotClasses.area;
 const cls8 = radarSeriesPlotClasses.mark;
 
-import { areaElementClasses as aec } from '@mui/x-charts';
-const cls12 = aec.root;
-
-import { lineElementClasses as lec } from '@mui/x-charts';
-const cls13 = lec.root;
+import { areaElementClasses, lineElementClasses } from '@mui/x-charts';
+const cls12 = areaElementClasses.root;
+const cls13 = lineElementClasses.root;
 
 import { markElementClasses as mec } from '@mui/x-charts/LineChart';
 const cls14 = mec.root;

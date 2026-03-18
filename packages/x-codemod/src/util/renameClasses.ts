@@ -47,6 +47,8 @@ export function renameClasses(parameters: RenameClassesParameters) {
   const localNameToOldClassName: Record<string, string> = {};
   // Track non-aliased identifiers that need renaming
   const renamedIdentifiersMap: Record<string, string> = {};
+  // Track name already added to the file
+  const alreadyAvailableIdentifiersMap: Set<string> = new Set();
 
   const importDeclarations = root.find(j.ImportDeclaration).filter((path) => {
     const pathStr = path.node.source.value?.toString() ?? '';
@@ -57,30 +59,29 @@ export function renameClasses(parameters: RenameClassesParameters) {
   importDeclarations
     .find(j.ImportSpecifier)
     .filter((path) => parameters.classes.hasOwnProperty(path.node.imported.name as string))
-    .replaceWith((path) => {
+    .forEach((path) => {
       const oldName = path.node.imported.name as string;
       const config = parameters.classes[oldName];
       const localName = path.node.local?.name as string;
       const hasAlias = localName !== oldName;
 
       // Track the local name for property renaming
-      localNameToOldClassName[hasAlias ? localName : config.newClassName] = oldName;
+      localNameToOldClassName[hasAlias ? localName : oldName] = oldName;
+      renamedIdentifiersMap[oldName] = config.newClassName;
+
+      if (!hasAlias && alreadyAvailableIdentifiersMap.has(config.newClassName)) {
+        path.prune();
+        return;
+      }
+
+      alreadyAvailableIdentifiersMap.add(config.newClassName);
 
       if (hasAlias) {
         // Keep the alias, only rename the imported name
-        return j.importSpecifier(j.identifier(config.newClassName), j.identifier(localName));
+        path.replace(j.importSpecifier(j.identifier(config.newClassName), j.identifier(localName)));
+      } else {
+        path.replace(j.importSpecifier(j.identifier(config.newClassName)));
       }
-
-      renamedIdentifiersMap[oldName] = config.newClassName;
-      return j.importSpecifier(j.identifier(config.newClassName));
-    });
-
-  // Rename identifier usages (non-aliased)
-  root
-    .find(j.Identifier)
-    .filter((path) => renamedIdentifiersMap.hasOwnProperty(path.node.name))
-    .replaceWith((path) => {
-      return j.identifier(renamedIdentifiersMap[path.node.name]);
     });
 
   // Rename member expression properties (e.g., lineElementClasses.root → lineClasses.elementRoot)
@@ -107,6 +108,14 @@ export function renameClasses(parameters: RenameClassesParameters) {
       const newPropertyName = parameters.classes[oldClassName].properties[oldPropertyName];
 
       return j.memberExpression(path.node.object, j.identifier(newPropertyName));
+    });
+
+  // Rename identifier usages (non-aliased)
+  root
+    .find(j.Identifier)
+    .filter((path) => renamedIdentifiersMap.hasOwnProperty(path.node.name))
+    .replaceWith((path) => {
+      return j.identifier(renamedIdentifiersMap[path.node.name]);
     });
 
   return root;

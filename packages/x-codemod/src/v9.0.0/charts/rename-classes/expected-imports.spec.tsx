@@ -15,11 +15,9 @@ const cls6 = rspc.seriesRoot;
 const cls7 = radarClasses.seriesArea;
 const cls8 = radarClasses.seriesMark;
 
-import { lineClasses as aec } from '@mui/x-charts';
-const cls12 = aec.area;
-
-import { lineClasses as lec } from '@mui/x-charts';
-const cls13 = lec.line;
+import { lineClasses } from '@mui/x-charts';
+const cls12 = lineClasses.area;
+const cls13 = lineClasses.line;
 
 import { lineClasses as mec } from '@mui/x-charts/LineChart';
 const cls14 = mec.mark;
