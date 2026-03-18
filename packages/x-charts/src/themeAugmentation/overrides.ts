@@ -2,7 +2,6 @@ import { type GaugeClassKey } from '../Gauge';
 import { type RadarClassKey } from '../RadarChart/radarClasses';
 import { type BarClassKey } from '../BarChart/barClasses';
 import { type BarLabelClassKey } from '../BarChart';
-import { type BarElementClassKey } from '../BarChart/barElementClasses';
 import { type ScatterClassKey } from '../ScatterChart/scatterClasses';
 import { type ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
 import { type ChartsGridClassKey } from '../ChartsGrid';
@@ -22,11 +21,7 @@ export interface ChartsComponentNameToClassKey {
   MuiChartsSurface: 'root';
 
   // BarChart components
-  MuiBarChart: BarClassKey;
-  /** @deprecated Use `MuiBarChart` instead. */
-  MuiBarElement: BarElementClassKey;
-  /** @deprecated Use `MuiBarChart` instead. */
-  MuiBarLabel: BarLabelClassKey;
+  MuiBarPlot: 'root';
 
   // PieChart components
   MuiPieArcPlot: 'root';

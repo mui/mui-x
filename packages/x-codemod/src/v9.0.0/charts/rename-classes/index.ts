@@ -15,11 +15,18 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   renameClasses({
     j,
     root,
-    packageNames: ['@mui/x-charts', '@mui/x-charts-pro'],
+    packageNames: ['@mui/x-charts', '@mui/x-charts-pro', '@mui/x-charts-premium'],
     classes: {
       barElementClasses: {
         newClassName: 'barClasses',
         properties: { root: 'element' },
+      },
+      barClasses: {
+        newClassName: 'barClasses',
+        properties: {
+          root: 'label',
+          animate: 'labelAnimate'
+        },
       },
     },
   });

@@ -43,16 +43,9 @@ export interface ChartsComponents<Theme = unknown> {
   };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiBarChart'];
-  };
-  /** @deprecated Use `MuiBarChart` instead. */
-  MuiBarElement?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiBarElement'];
-  };
-  /** @deprecated Use `MuiBarChart` instead. */
-  MuiBarLabel?: {
-    defaultProps?: ComponentsProps['MuiBarLabel'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiBarLabel'];
+  }; 
+  MuiBarPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiBarPlot'];
   };
   MuiLineChart?: {
     defaultProps?: ComponentsProps['MuiLineChart'];
