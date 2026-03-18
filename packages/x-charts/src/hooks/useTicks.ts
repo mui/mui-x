@@ -6,7 +6,7 @@ import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { tickFrequencies } from '../utils/timeTicks';
 import { isDateData } from '../internals/dateHelpers';
-import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../context/ChartsProvider/useChartsContext';
 
 export interface TickParams {
   /**
@@ -398,7 +398,7 @@ export function useTicks(
     direction,
     ordinalTimeTicks,
   } = options;
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
   const isInside = direction === 'x' ? instance.isXInside : instance.isYInside;
 
   return React.useMemo(

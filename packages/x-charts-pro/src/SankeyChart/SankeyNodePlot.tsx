@@ -41,7 +41,7 @@ function SankeyNodePlot(props: SankeyNodePlotProps) {
 
   if (!sankeySeries) {
     throw new Error(
-      `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartDataProviderPro.`,
+      `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartsDataProviderPro.`,
     );
   }
 

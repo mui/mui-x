@@ -5,7 +5,7 @@ import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { type ChartsGridProps } from '../ChartsGrid';
 import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import { type ChartsOverlayProps } from '../ChartsOverlay';
-import { type ChartContainerProps } from '../ChartContainer';
+import { type ChartsContainerProps } from '../ChartsContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
@@ -57,7 +57,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
   );
   const resolvedDisableHitArea = disableHitArea ?? disableVoronoi;
   const useVoronoiOnItemClick = resolvedDisableHitArea !== true || renderer === 'svg-batch';
-  const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginSignatures> = {
+  const chartsContainerProps: ChartsContainerProps<'scatter', ScatterChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
     width,
@@ -128,7 +128,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
 
   return {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { GaugeProvider, type GaugeProviderProps } from './GaugeProvider';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
 import { type MergeSignaturesProperty } from '../internals/plugins/models';
 import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
@@ -55,7 +55,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
   } = props;
 
   return (
-    <ChartProvider
+    <ChartsProvider
       pluginParams={{
         width: inWidth,
         height: inHeight,
@@ -89,7 +89,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
           <GStyled aria-hidden="true">{children}</GStyled>
         </ChartsSurface>
       </GaugeProvider>
-    </ChartProvider>
+    </ChartsProvider>
   );
 });
 

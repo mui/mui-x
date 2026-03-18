@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 
 type MousePosition = {
   x: number;
@@ -17,7 +17,7 @@ export type UseMouseTrackerReturnValue = null | MousePosition;
  * @deprecated We recommend using vanilla JS to let popper track mouse position.
  */
 export function useMouseTracker(): UseMouseTrackerReturnValue {
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
