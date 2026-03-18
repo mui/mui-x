@@ -98,7 +98,7 @@ function BarElement(props: BarElementProps) {
   };
 
   const classes = useUtilityClasses(ownerState);
-  
+
   const Bar = slots?.bar ?? AnimatedBarElement;
 
   const barProps = useSlotProps({

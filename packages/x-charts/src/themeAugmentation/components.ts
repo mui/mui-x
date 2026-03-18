@@ -43,7 +43,7 @@ export interface ChartsComponents<Theme = unknown> {
   };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
-  }; 
+  };
   MuiBarPlot?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiBarPlot'];
   };

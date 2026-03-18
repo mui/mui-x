@@ -48,12 +48,10 @@ export function renameClasses(parameters: RenameClassesParameters) {
   // Track non-aliased identifiers that need renaming
   const renamedIdentifiersMap: Record<string, string> = {};
 
-  const importDeclarations = root
-    .find(j.ImportDeclaration)
-    .filter((path) => {
-      const pathStr = path.node.source.value?.toString() ?? '';
-      return !!pathStr.match(packageRegExp);
-    });
+  const importDeclarations = root.find(j.ImportDeclaration).filter((path) => {
+    const pathStr = path.node.source.value?.toString() ?? '';
+    return !!pathStr.match(packageRegExp);
+  });
 
   // Rename import specifiers and collect local names for property renaming
   importDeclarations
@@ -70,10 +68,7 @@ export function renameClasses(parameters: RenameClassesParameters) {
 
       if (hasAlias) {
         // Keep the alias, only rename the imported name
-        return j.importSpecifier(
-          j.identifier(config.newClassName),
-          j.identifier(localName),
-        );
+        return j.importSpecifier(j.identifier(config.newClassName), j.identifier(localName));
       }
 
       renamedIdentifiersMap[oldName] = config.newClassName;
@@ -111,10 +106,7 @@ export function renameClasses(parameters: RenameClassesParameters) {
       const oldClassName = localNameToOldClassName[objectName];
       const newPropertyName = parameters.classes[oldClassName].properties[oldPropertyName];
 
-      return j.memberExpression(
-        path.node.object,
-        j.identifier(newPropertyName),
-      );
+      return j.memberExpression(path.node.object, j.identifier(newPropertyName));
     });
 
   return root;

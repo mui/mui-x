@@ -135,7 +135,7 @@ createTheme({
         constent: { color: 'red' },
       },
     },
-    
+
     // PieChart components
     MuiPieArcPlot: {
       styleOverrides: {
