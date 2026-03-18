@@ -1,6 +1,6 @@
 # Migration from v8 to v9
 
-This guide describes the changes between MUI X Pickers v8 and v9.
+This guide describes the changes between MUI X Pickers v8 and v9.
 
 ## Fields
 
