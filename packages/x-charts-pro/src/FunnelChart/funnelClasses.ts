@@ -47,7 +47,7 @@ export interface UseUtilityClassesOptions {
 }
 
 export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
-  const { variant, classes } = options ?? {};
+  const { variant = 'filled', classes } = options ?? {};
   const slots = {
     root: ['root'],
     section: [

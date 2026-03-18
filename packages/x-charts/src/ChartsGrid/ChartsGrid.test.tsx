@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
+import { ChartsGrid, chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 
 describe('<ChartsGrid />', () => {
@@ -30,7 +30,7 @@ describe('<ChartsGrid />', () => {
       </ChartsContainer>,
     );
 
-    const gridLines = document.querySelectorAll('.MuiChartsGrid-line');
+    const gridLines = document.querySelectorAll(`.${chartsGridClasses.line}`);
     expect(gridLines.length).to.be.greaterThan(0);
   });
 
@@ -47,7 +47,7 @@ describe('<ChartsGrid />', () => {
       </ChartsContainer>,
     );
 
-    const gridLines = document.querySelectorAll('.MuiChartsGrid-line');
+    const gridLines = document.querySelectorAll(`.${chartsGridClasses.line}`);
     expect(gridLines.length).to.be.greaterThan(0);
   });
 });
