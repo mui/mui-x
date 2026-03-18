@@ -20,7 +20,6 @@ function onPointerDown(event: React.PointerEvent) {
 
 export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
   data: SeriesItemIdentifierWithType<SeriesType>,
-  skip?: boolean,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
@@ -58,15 +57,12 @@ export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
   }, [onPointerLeave]);
 
   return React.useMemo(
-    () =>
-      skip
-        ? {}
-        : {
-            onPointerEnter,
-            onPointerLeave,
-            onPointerDown,
-          },
-    [skip, onPointerEnter, onPointerLeave],
+    () => ({
+      onPointerEnter,
+      onPointerLeave,
+      onPointerDown,
+    }),
+    [onPointerEnter, onPointerLeave],
   );
 };
 
