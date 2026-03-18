@@ -39,7 +39,7 @@ export const FunnelSectionLabelText = styled('text', {
 /**
  * @ignore - internal component.
  */
-const FunnelSectionLabel = consumeSlots(
+const FunnelSectionLabel = consumeSlots<FunnelSectionLabelProps, SVGTextElement>(
   'MuiFunnelSectionLabel',
   'funnelSectionLabel',
   {
@@ -49,17 +49,8 @@ const FunnelSectionLabel = consumeSlots(
     props: FunnelSectionLabelProps,
     ref: React.Ref<SVGTextElement>,
   ) {
-    const {
-      classes,
-      color,
-      onClick,
-      className,
-      label,
-      variant = 'filled',
-      seriesId,
-      dataIndex,
-      ...other
-    } = props;
+    const { classes, color, onClick, className, label, variant, seriesId, dataIndex, ...other } =
+      props;
     const theme = useTheme();
 
     return (

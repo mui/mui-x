@@ -25,7 +25,7 @@ export const FunnelSectionPath = styled('path', {
 /**
  * @ignore - internal component.
  */
-const FunnelSection = consumeSlots(
+const FunnelSection = consumeSlots<FunnelSectionProps, SVGPathElement>(
   'MuiFunnelSection',
   'funnelSection',
   {
@@ -72,10 +72,7 @@ const FunnelSection = consumeSlots(
         onClick={onClick}
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
-        className={clsx(
-          classes?.section,
-          className,
-        )}
+        className={clsx(classes?.section, className)}
         {...other}
         ref={ref}
       />
