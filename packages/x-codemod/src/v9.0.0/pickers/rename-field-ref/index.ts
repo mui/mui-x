@@ -3,7 +3,22 @@ import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import renameProps from '../../../util/renameProps';
 import readFile from '../../../util/readFile';
 
-const componentNames = [
+const fieldNames = [
+  'DateField',
+  'DateTimeField',
+  'TimeField',
+  'DateRangeField',
+  'DateTimeRangeField',
+  'TimeRangeField',
+  'MultiInputDateRangeField',
+  'MultiInputDateTimeRangeField',
+  'MultiInputTimeRangeField',
+  'SingleInputDateRangeField',
+  'SingleInputDateTimeRangeField',
+  'SingleInputTimeRangeField',
+];
+
+const pickerNames = [
   'DatePicker',
   'DesktopDatePicker',
   'MobileDatePicker',
@@ -16,9 +31,6 @@ const componentNames = [
   'DesktopTimePicker',
   'MobileTimePicker',
   'StaticTimePicker',
-  'DateField',
-  'DateTimeField',
-  'TimeField',
   'DateRangePicker',
   'DesktopDateRangePicker',
   'MobileDateRangePicker',
@@ -29,15 +41,6 @@ const componentNames = [
   'TimeRangePicker',
   'DesktopTimeRangePicker',
   'MobileTimeRangePicker',
-  'DateRangeField',
-  'DateTimeRangeField',
-  'TimeRangeField',
-  'MultiInputDateRangeField',
-  'MultiInputDateTimeRangeField',
-  'MultiInputTimeRangeField',
-  'SingleInputDateRangeField',
-  'SingleInputDateTimeRangeField',
-  'SingleInputTimeRangeField',
 ];
 
 const props = {
@@ -55,7 +58,62 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     trailingComma: true,
   };
 
-  return renameProps({ root, j, props, componentNames }).toSource(printOptions);
+  renameProps({ root, j, props, componentNames: fieldNames });
+
+  pickerNames.forEach((componentName) => {
+    root.find(j.JSXElement, { openingElement: { name: { name: componentName } } }).forEach((path) => {
+      j(path)
+        .find(j.JSXAttribute, { name: { name: 'fieldRef' } })
+        .forEach((attr) => {
+          const value = attr.node.value;
+          const slotPropsAttr = j(path)
+            .find(j.JSXAttribute, { name: { name: 'slotProps' } })
+            .at(0);
+
+          const fieldRefProperty = j.objectProperty(
+            j.identifier('fieldRef'),
+            value?.type === 'JSXExpressionContainer'
+              ? (value.expression as any)
+              : (value as any),
+          );
+
+          if (slotPropsAttr.size() > 0) {
+            const slotPropsValue = slotPropsAttr.get().node.value;
+            if (slotPropsValue.type === 'JSXExpressionContainer') {
+              const expression = slotPropsValue.expression;
+              if (expression.type === 'ObjectExpression') {
+                const fieldProp = expression.properties.find(
+                  (p: any) => p.key.name === 'field' || p.key.value === 'field',
+                );
+
+                if (fieldProp && fieldProp.value.type === 'ObjectExpression') {
+                  fieldProp.value.properties.push(fieldRefProperty);
+                } else {
+                  expression.properties.push(
+                    j.objectProperty(j.identifier('field'), j.objectExpression([fieldRefProperty])),
+                  );
+                }
+              }
+            }
+          } else {
+            path.value.openingElement.attributes?.push(
+              j.jsxAttribute(
+                j.jsxIdentifier('slotProps'),
+                j.jsxExpressionContainer(
+                  j.objectExpression([
+                    j.objectProperty(j.identifier('field'), j.objectExpression([fieldRefProperty])),
+                  ]),
+                ),
+              ),
+            );
+          }
+
+          j(attr).remove();
+        });
+    });
+  });
+
+  return root.toSource(printOptions);
 }
 
 export const testConfig = () => ({

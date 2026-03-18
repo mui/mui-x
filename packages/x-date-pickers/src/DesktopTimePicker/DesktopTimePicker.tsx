@@ -183,10 +183,6 @@ DesktopTimePicker.propTypes = {
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
-   * Ref to the field component.
-   */
-  fieldRef: PropTypes.object,
-  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */

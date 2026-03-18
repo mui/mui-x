@@ -10,8 +10,20 @@ function App() {
 
   return (
     <div>
-      <DatePicker fieldRef={fieldRef} />
-      <DateRangePicker fieldRef={fieldRef} />
+      <DatePicker
+        slotProps={{
+          field: {
+            fieldRef: fieldRef,
+          },
+        }}
+      />
+      <DateRangePicker
+        slotProps={{
+          field: {
+            fieldRef: fieldRef,
+          },
+        }}
+      />
       <MultiInputDateRangeField
         startFieldRef={startRef}
         endFieldRef={endRef}

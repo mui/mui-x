@@ -101,7 +101,10 @@ describe('<DatePicker />', () => {
   it('should clear the field when calling clearValue from fieldRef', async () => {
     const fieldRef = React.createRef<any>();
     const { user } = render(
-      <DatePicker enableAccessibleFieldDOMStructure={false} fieldRef={fieldRef} />,
+      <DatePicker
+        enableAccessibleFieldDOMStructure={false}
+        slotProps={{ field: { fieldRef } }}
+      />,
     );
 
     const input = screen.getByRole('textbox') as HTMLInputElement;

@@ -10,8 +10,8 @@ function App() {
 
   return (
     <div>
-      <DatePicker unstableFieldRef={fieldRef} />
-      <DateRangePicker unstableFieldRef={fieldRef} />
+      <DatePicker fieldRef={fieldRef} />
+      <DateRangePicker fieldRef={fieldRef} />
       <MultiInputDateRangeField
         unstableStartFieldRef={startRef}
         unstableEndFieldRef={endRef}

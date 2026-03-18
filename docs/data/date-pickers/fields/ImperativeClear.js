@@ -37,8 +37,7 @@ export default function ImperativeClear() {
           </Typography>
           <Stack direction="row" spacing={2} alignItems="center">
             <DatePicker
-              fieldRef={fieldRef}
-              slotProps={{ textField: { fullWidth: true } }}
+              slotProps={{ field: { fieldRef }, textField: { fullWidth: true } }}
             />
             <Button
               variant="outlined"
@@ -68,8 +67,10 @@ export default function ImperativeClear() {
           </Typography>
           <Stack direction="row" spacing={2} alignItems="center">
             <DateRangePicker
-              fieldRef={rangeFieldRef}
-              slotProps={{ textField: { fullWidth: true } }}
+              slotProps={{
+                field: { fieldRef: rangeFieldRef },
+                textField: { fullWidth: true },
+              }}
             />
             <Button
               variant="outlined"

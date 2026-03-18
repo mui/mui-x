@@ -382,7 +382,6 @@ export const usePicker = <
       selectedSections,
       onSelectedSectionsChange,
       internalFieldRef,
-      fieldRef: props.fieldRef,
     }),
     [
       formatDensity,
@@ -390,7 +389,6 @@ export const usePicker = <
       selectedSections,
       onSelectedSectionsChange,
       internalFieldRef,
-      props.fieldRef,
     ],
   );
 

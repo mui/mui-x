@@ -22,7 +22,6 @@
       "deprecationInfo": "Use the <a href=\"https://mui.com/x/react-date-pickers/fields/\">field component</a> instead."
     },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "fieldRef": { "type": { "name": "object" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },

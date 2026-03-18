@@ -29,7 +29,6 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
-    "fieldRef": { "description": "Ref to the field component." },
     "format": {
       "description": "Format of the date when rendered in the input(s). Defaults to localized format based on the used <code>views</code>."
     },
