@@ -50,8 +50,6 @@ export const getTheme = (mode: 'light' | 'dark'): ThemeOptions => {
           root: { fontWeight: 400 },
         },
       },
-      MuiChartsXAxis: { defaultProps: { tickLabelStyle: { fontWeight: 400 } } },
-      MuiChartsYAxis: { defaultProps: { tickLabelStyle: { fontWeight: 400 } } },
       MuiChartsAxis: {
         styleOverrides: {
           root: ({ theme }) => ({
