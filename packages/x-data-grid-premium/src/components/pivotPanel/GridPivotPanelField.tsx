@@ -13,6 +13,7 @@ import {
 import composeClasses from '@mui/utils/composeClasses';
 import { GridColumnSortButton, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import type {
   GridPivotModel,
@@ -52,10 +53,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const sorted = modelKey === 'columns' && ownerState.modelValue.sort;
   const slots = {
     root: ['pivotPanelField', sorted && 'pivotPanelField--sorted'],
-    name: ['pivotPanelFieldName'],
-    actionContainer: ['pivotPanelFieldActionContainer'],
-    dragIcon: ['pivotPanelFieldDragIcon'],
-    checkbox: ['pivotPanelFieldCheckbox'],
+
+    ...createSlotArrayMap(
+      ['name', 'actionContainer', 'dragIcon', 'checkbox'] as const,
+      'pivotPanelField',
+    ),
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

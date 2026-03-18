@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled } from '@mui/material/styles';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import type { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -20,13 +21,10 @@ type OwnerState = DataGridProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['editLongTextCell'],
-    value: ['editLongTextCellValue'],
-    popup: ['editLongTextCellPopup'],
-    popperContent: ['editLongTextCellPopperContent'],
-    textarea: ['editLongTextCellTextarea'],
-  };
+  const slots = createSlotArrayMap(
+    ['root', 'value', 'popup', 'popperContent', 'textarea'] as const,
+    'editLongTextCell',
+  );
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
@@ -18,10 +19,7 @@ type OwnerState = DataGridProProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['treeDataGroupingCell'],
-    toggle: ['treeDataGroupingCellToggle'],
-  };
+  const slots = createSlotArrayMap(['root', 'toggle'] as const, 'treeDataGroupingCell');
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

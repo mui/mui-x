@@ -7,6 +7,7 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import { vars, gridRowSelector } from '@mui/x-data-grid/internals';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -20,11 +21,7 @@ type OwnerState = DataGridProProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['treeDataGroupingCell'],
-    toggle: ['treeDataGroupingCellToggle'],
-    loadingContainer: ['treeDataGroupingCellLoadingContainer'],
-  };
+  const slots = createSlotArrayMap(['root', 'toggle', 'loadingContainer'] as const, 'treeDataGroupingCell');
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

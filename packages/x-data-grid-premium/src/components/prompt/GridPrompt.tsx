@@ -12,6 +12,7 @@ import capitalize from '@mui/utils/capitalize';
 
 import { keyframes, styled } from '@mui/system';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -31,18 +32,21 @@ type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['prompt'],
-    iconContainer: ['promptIconContainer'],
-    icon: ['promptIcon'],
-    text: ['promptText'],
-    content: ['promptContent'],
-    action: ['promptAction'],
-    feedback: ['promptFeedback'],
-    changeList: ['promptChangeList'],
-    changesToggle: ['promptChangesToggle'],
-    changesToggleIcon: ['promptChangesToggleIcon'],
-  };
+  const slots = createSlotArrayMap(
+    [
+      'root',
+      'iconContainer',
+      'icon',
+      'text',
+      'content',
+      'action',
+      'feedback',
+      'changeList',
+      'changesToggle',
+      'changesToggleIcon',
+    ] as const,
+    'prompt',
+  );
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

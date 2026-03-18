@@ -7,6 +7,7 @@ import capitalize from '@mui/utils/capitalize';
 import useId from '@mui/utils/useId';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridSortDirection } from '../../models/gridSortModel';
@@ -92,9 +93,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       // See https://github.com/mui/mui-x/pull/14559
       isSiblingFocused && 'columnHeader--siblingFocused',
     ],
-    draggableContainer: ['columnHeaderDraggableContainer'],
-    titleContainer: ['columnHeaderTitleContainer'],
-    titleContainerContent: ['columnHeaderTitleContainerContent'],
+    ...createSlotArrayMap(
+      ['draggableContainer', 'titleContainer', 'titleContainerContent'] as const,
+      'columnHeader',
+    ),
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

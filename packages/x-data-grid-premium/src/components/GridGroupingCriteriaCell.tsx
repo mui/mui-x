@@ -9,6 +9,7 @@ import {
   type GridGroupNode,
   gridRowMaximumTreeDepthSelector,
 } from '@mui/x-data-grid-pro';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -19,10 +20,7 @@ type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['groupingCriteriaCell'],
-    toggle: ['groupingCriteriaCellToggle'],
-  };
+  const slots = createSlotArrayMap(['root', 'toggle'] as const, 'groupingCriteriaCell');
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

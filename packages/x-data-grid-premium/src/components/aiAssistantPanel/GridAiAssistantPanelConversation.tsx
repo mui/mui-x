@@ -3,6 +3,7 @@ import * as React from 'react';
 import { getDataGridUtilityClass, GridShadowScrollArea } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import type { Conversation } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
@@ -18,10 +19,7 @@ type OwnerState = DataGridPremiumProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['aiAssistantPanelConversation'],
-    list: ['aiAssistantPanelConversationList'],
-  };
+  const slots = createSlotArrayMap(['root', 'list'] as const, 'aiAssistantPanelConversation');
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

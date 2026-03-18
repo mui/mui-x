@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { GridMenu } from '../menu/GridMenu';
 import { Toolbar } from './Toolbar';
 import { ToolbarButton } from './ToolbarButton';
@@ -31,10 +32,7 @@ type OwnerState = DataGridProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = {
-    divider: ['toolbarDivider'],
-    label: ['toolbarLabel'],
-  };
+  const slots = createSlotArrayMap(['divider', 'label'] as const, 'toolbar');
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };

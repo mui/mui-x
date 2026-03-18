@@ -3,6 +3,7 @@ import { useGridSelector, getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
+import { createSlotArrayMap } from '@mui/x-internals/createSlotArrayMap';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
   gridAiAssistantActiveConversationSelector,
@@ -20,16 +21,19 @@ type OwnerState = DataGridPremiumProcessedProps;
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
-  const slots = {
-    root: ['aiAssistantPanel'],
-    header: ['aiAssistantPanelHeader'],
-    title: ['aiAssistantPanelTitle'],
-    titleContainer: ['aiAssistantPanelTitleContainer'],
-    conversationTitle: ['aiAssistantPanelConversationTitle'],
-    body: ['aiAssistantPanelBody'],
-    emptyText: ['aiAssistantPanelEmptyText'],
-    footer: ['aiAssistantPanelFooter'],
-  };
+  const slots = createSlotArrayMap(
+    [
+      'root',
+      'header',
+      'title',
+      'titleContainer',
+      'conversationTitle',
+      'body',
+      'emptyText',
+      'footer',
+    ] as const,
+    'aiAssistantPanel',
+  );
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
