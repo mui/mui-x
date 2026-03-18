@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { createHash } from 'crypto';
 import { isJSDOM } from '@mui/x-internals/platform';
 
-function nodeHash(input: string): string {
+async function nodeHash(input: string): Promise<string> {
+  const { createHash } = await import('crypto');
   return createHash('sha256').update(input).digest('hex');
 }
 
@@ -13,7 +13,7 @@ describe.runIf(isJSDOM)('hashString', () => {
     const { hashString } = await import('./utils');
     const runtimeResult = await hashString(input);
 
-    expect(runtimeResult).toBe(nodeHash(input));
+    expect(runtimeResult).toBe(await nodeHash(input));
   });
 
   it('should produce the same projectId from postinstall and runtime for the same package name', async () => {
@@ -21,7 +21,7 @@ describe.runIf(isJSDOM)('hashString', () => {
 
     // Simulate what postinstall does: getPackageName() returns "my-app",
     // then getAnonymousProjectId() hashes it with crypto.createHash('sha256')
-    const postinstallResult = nodeHash(packageName);
+    const postinstallResult = await nodeHash(packageName);
 
     // Simulate what runtime does: npm_package_name = "my-app",
     // then getRuntimeProjectId() hashes it with crypto.subtle.digest('SHA-256')

@@ -3,7 +3,10 @@ import path from 'path';
 
 const readFileSyncSpy = vi.fn();
 
-vi.mock('fs', () => ({ default: { readFileSync: readFileSyncSpy }, readFileSync: readFileSyncSpy }));
+vi.mock('fs', () => ({
+  default: { readFileSync: readFileSyncSpy },
+  readFileSync: readFileSyncSpy,
+}));
 
 describe('getPackageName', () => {
   beforeEach(() => {
@@ -60,4 +63,3 @@ describe('getAnonymousProjectId', () => {
     expect(result).toMatch(/^[a-f0-9]{64}$/);
   });
 });
-
