@@ -59,18 +59,6 @@ export interface ChartsComponents<Theme = unknown> {
   MuiMarkPlot?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiMarkPlot'];
   };
-  /** @deprecated Use `MuiAreaPlot` instead. */
-  MuiAreaElement?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiAreaElement'];
-  };
-  /** @deprecated Use `MuiLinePlot` instead. */
-  MuiLineElement?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiLineElement'];
-  };
-  /** @deprecated Use `MuiMarkPlot` instead. */
-  MuiMarkElement?: {
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMarkElement'];
-  };
   MuiPieArcPlot?: {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPieArcPlot'];
   };
