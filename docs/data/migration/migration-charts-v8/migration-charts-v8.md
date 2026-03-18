@@ -369,7 +369,7 @@ Replace the `[data-series-id="<SeriesId>"]` by `[data-series="<SeriesId>"]`.
 Line chart elements (`MarkElement`, `CircleMarkElement`, `LineElement`, `AreaElement`) no longer attach `onPointerEnter`/`onPointerLeave` event handlers for highlight and tooltip interactions.
 These interactions are now handled at the container level using position-based hit detection.
 
-If you were relying on these pointer events being attached to individual SVG elements (e.g., via custom slots or DOM inspection), note that they are no longer present.
+If you were relying on these pointer events being attached to individual SVG elements (for example, via custom slots or DOM inspection), note that they are no longer present.
 The highlight and tooltip behavior remains the same from the user's perspective.
 
 ## Bar Chart
