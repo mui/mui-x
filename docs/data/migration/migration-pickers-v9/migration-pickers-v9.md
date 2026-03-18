@@ -7,34 +7,32 @@ This guide describes the changes between MUI X Pickers v8 and v9.
 ### Renamed `fieldRef` props
 
 The `unstableFieldRef`, `unstableStartFieldRef`, and `unstableEndFieldRef` props have been renamed to `fieldRef`, `startFieldRef`, and `endFieldRef` respectively.
+For Picker components, `fieldRef` should now be passed through the `slotProps.field.fieldRef` prop.
 
 ```tsx
 // Before
 <DateField unstableFieldRef={fieldRef} />
-<MultiInputDateRangeField unstableStartFieldRef={startRef} unstableEndFieldRef={endRef} />
+<DatePicker slotProps={{ field: { unstableFieldRef: fieldRef } }} />
 
 // After
 <DateField fieldRef={fieldRef} />
-<MultiInputDateRangeField startFieldRef={startRef} endFieldRef={endRef} />
-```
-
-You can also use the `slotProps` prop to pass the `fieldRef` to the custom field slot.
-
-```tsx
-<DatePicker slotProps={{ field: { fieldRef } }} />
+<DatePicker slotProps={{ field: { fieldRef: fieldRef } }} />
 ```
 
 :::info
-For multi-input range pickers, `startFieldRef` and `endFieldRef` are NOT available in `slotProps.field`.
-If you need to use them, you should pass them directly to the `MultiInputDateRangeField` component used as a custom field slot:
+For multi-input range pickers, `startFieldRef` and `endFieldRef` are available directly on the `MultiInputDateRangeField` component when used as a custom field slot.
 :::
 
 ```tsx
 const CustomField = (props: MultiInputDateRangeFieldProps<true>) => (
-  <MultiInputDateRangeField {...props} startFieldRef={startFieldRef} endFieldRef={endFieldRef} />
+  <MultiInputDateRangeField
+    {...props}
+    startFieldRef={startFieldRef}
+    endFieldRef={endFieldRef}
+  />
 );
 
-<DateRangePicker slots={{ field: CustomField }} />
+<DateRangePicker slots={{ field: CustomField }} />;
 ```
 
 ### New `clearValue()` method on `FieldRef`
@@ -46,7 +44,7 @@ const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
 // ...
 
-<DateField fieldRef={fieldRef} />
+<DateField fieldRef={fieldRef} />;
 
 // ...
 

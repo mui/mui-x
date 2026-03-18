@@ -1,5 +1,5 @@
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickerFieldSlotProps, PickerOwnerState } from '@mui/x-date-pickers/models';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
