@@ -15,10 +15,10 @@ export default function SxStyling(): React.JSX.Element {
           fill: (theme.vars || theme).palette.background.paper,
           strokeWidth: 2,
         },
-        [`.MuiBarElement-series-l_id`]: {
+        [`[data-series="l_id"] .${barClasses.element}`]: {
           stroke: colors[0],
         },
-        [`.MuiBarElement-series-r_id`]: {
+        [`[data-series="r_id"] .${barClasses.element}`]: {
           stroke: colors[1],
         },
         [`.${axisClasses.root}`]: {
