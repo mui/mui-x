@@ -252,6 +252,18 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
       it('should pre-cache inline nested children so expanding them requires no extra fetch', async () => {
         let fetchCount = 0;
+        let view: ReturnType<typeof render>;
+        const onItemsLazyLoaded = spy((items, _parentId) => {
+          items.forEach((item) => {
+            if (item.children && item.children.length > 0) {
+              view.apiRef.current.setItemExpansion({
+                event: {} as any,
+                itemId: item.id,
+                shouldBeExpanded: true,
+              });
+            }
+          });
+        });
         const fetchDataWithNested = async (parentId?: string): Promise<ItemType[]> => {
           fetchCount += 1;
           return new Promise((resolve) => {
@@ -271,23 +283,13 @@ describeTreeView<RichTreeViewProStore<any, any>>(
           });
         };
 
-        const view = render({
+        view = render({
           items: [{ id: '1', childrenCount: 1 }],
           dataSource: {
             getChildrenCount: (item) => item?.childrenCount as number,
             getTreeItems: fetchDataWithNested,
           },
-          onItemsLazyLoaded: (items, _parentId) => {
-            items.forEach((item) => {
-              if (item.children && item.children.length > 0) {
-                view.apiRef.current.setItemExpansion({
-                  event: {} as any,
-                  itemId: item.id,
-                  shouldBeExpanded: true,
-                });
-              }
-            });
-          },
+          onItemsLazyLoaded,
         });
 
         const fetchCountBefore = fetchCount;
@@ -298,6 +300,8 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(fetchCount - fetchCountBefore).to.equal(1);
         expect(view.isItemExpanded('1-1')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '1-1-1']);
+        // onItemsLazyLoaded should fire exactly once — not cascade for auto-expanded children
+        expect(onItemsLazyLoaded.callCount).to.equal(1);
       });
     });
 

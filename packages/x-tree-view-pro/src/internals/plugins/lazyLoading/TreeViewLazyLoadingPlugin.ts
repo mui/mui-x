@@ -25,6 +25,8 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
 
   private cache: DataSourceCache<R>;
 
+  private isInsideOnItemsLazyLoaded = false;
+
   constructor(store: RichTreeViewProStore<R, any>) {
     this.store = store;
     this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault<R>({});
@@ -147,6 +149,18 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
     this.store.set('lazyLoadedItems', { ...this.store.state.lazyLoadedItems, errors });
   };
 
+  private callOnItemsLazyLoaded(items: R[], parentId: TreeViewItemId | null) {
+    if (this.isInsideOnItemsLazyLoaded) {
+      return;
+    }
+    this.isInsideOnItemsLazyLoaded = true;
+    try {
+      this.store.parameters.onItemsLazyLoaded?.(items, parentId);
+    } finally {
+      this.isInsideOnItemsLazyLoaded = false;
+    }
+  }
+
   public buildPublicAPI = () => {
     return {
       updateItemChildren: this.updateItemChildren,
@@ -237,7 +251,7 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
         }
         this.store.items.setItemChildren({ items: cachedData, parentId: itemId, getChildrenCount });
         this.setItemLoading(itemId, false);
-        this.store.parameters.onItemsLazyLoaded?.(cachedData, itemId);
+        this.callOnItemsLazyLoaded(cachedData, itemId);
         return;
       }
 
@@ -269,7 +283,7 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       // pre-cache any inline nested children so expanding them requires no extra network call
       this.processNestedItemChildren(response);
       // notify the user that new items have been loaded
-      this.store.parameters.onItemsLazyLoaded?.(response, itemId);
+      this.callOnItemsLazyLoaded(response, itemId);
     } catch (error) {
       const childrenFetchError = error as Error;
       // set the item error in the state
