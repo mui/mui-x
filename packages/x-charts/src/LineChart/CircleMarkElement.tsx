@@ -110,6 +110,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
       data-series-id={id}
+      data-series={id}
       data-index={dataIndex}
       opacity={hidden ? 0 : 1}
     />
