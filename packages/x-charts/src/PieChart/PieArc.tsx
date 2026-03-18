@@ -40,7 +40,10 @@ interface PieArcOwnerState {
   classes?: Partial<PieArcClasses>;
 }
 
-export function getPieArcUtilityClass(slot: string) {
+/**
+ * @deprecated Use `getPieUtilityClass` instead.
+ */
+function getPieArcUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArc', slot);
 }
 

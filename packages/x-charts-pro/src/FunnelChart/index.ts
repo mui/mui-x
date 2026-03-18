@@ -17,5 +17,7 @@ export * from './FunnelChart.plugins';
 export type { FunnelCurveType } from './curves';
 export { funnelSectionClasses } from './funnelSectionClasses';
 export type { FunnelSectionClasses } from './funnelSectionClasses';
+export { funnelClasses } from './funnelClasses';
+export type { FunnelClassKey, FunnelClasses } from './funnelClasses';
 export { FunnelSection } from './FunnelSection';
 export { FunnelSectionLabel } from './FunnelSectionLabel';
