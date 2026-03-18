@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { ChartsContainer } from '@mui/x-charts';
+import { ChartsContainerProps } from '@mui/x-charts/ChartsContainer';
+import { ChartApi } from '@mui/x-charts/context';
 import { LineChart } from '@mui/x-charts/LineChart';
 import {
   AllSeriesType,

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { ChartContainer } from '@mui/x-charts';
+import { ChartContainerProps, ChartApi } from '@mui/x-charts/ChartContainer';
 import { LineChart } from '@mui/x-charts/LineChart';
 import {
   CartesianSeriesType,

@@ -1,42 +1,31 @@
-import path from 'path';
 import jscodeshift from 'jscodeshift';
-import transform from './index';
-import readFile from '../../../util/readFile';
+import transform, { testConfig } from './index';
 
-function read(fileName) {
-  return readFile(path.join(__dirname, fileName));
-}
-
-const TEST_FILES = ['nested-imports', 'root-imports'];
+const allFiles = [testConfig].map((config) => config().specFiles).flat();
 
 describe('v9.0.0/charts', () => {
-  describe('remove-is-bar-series-helpers', () => {
-    TEST_FILES.forEach((testFile) => {
-      const actualPath = `./actual-${testFile}.spec.tsx`;
-      const expectedPath = `./expected-${testFile}.spec.tsx`;
+  describe(`${testConfig.name}`, () => {
+    describe.each(allFiles)('$name', (file) => {
+      it('transforms code as needed', () => {
+        const actual = transform(
+          { source: file.actual },
+          { jscodeshift: jscodeshift.withParser('tsx') },
+          {},
+        );
 
-      describe(`${testFile.replace(/-/g, ' ')}`, () => {
-        it('transforms function calls as needed', () => {
-          const actual = transform(
-            { source: read(actualPath) },
-            { jscodeshift: jscodeshift.withParser('tsx') },
-            {},
-          );
+        const expected = file.expected;
+        expect(actual).to.equal(expected, 'The transformed version should be correct');
+      });
 
-          const expected = read(expectedPath);
-          expect(actual).to.equal(expected, 'The transformed version should be correct');
-        });
+      it('should be idempotent', () => {
+        const actual = transform(
+          { source: file.expected },
+          { jscodeshift: jscodeshift.withParser('tsx') },
+          {},
+        );
 
-        it('should be idempotent', () => {
-          const actual = transform(
-            { source: read(expectedPath) },
-            { jscodeshift: jscodeshift.withParser('tsx') },
-            {},
-          );
-
-          const expected = read(expectedPath);
-          expect(actual).to.equal(expected, 'The transformed version should be correct');
-        });
+        const expected = file.expected;
+        expect(actual).to.equal(expected, 'The transformed version should be correct');
       });
     });
   });
