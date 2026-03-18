@@ -69,7 +69,8 @@ function GridVirtualScrollerFiller({ rowsLength }: Props) {
   const remainingHeight =
     viewportOuterSize.height - topContainerHeight - bottomContainerHeight - contentSize.height;
 
-  const height = remainingHeight + (hasScrollX ? scrollbarSize : 0);
+  const clampedRemainingHeight = Math.max(0, remainingHeight);
+  const height = clampedRemainingHeight + (hasScrollX ? scrollbarSize : 0);
   const needsLastRowBorder = viewportOuterSize.height - minimumSize.height > 0;
 
   if (height === 0 && !needsLastRowBorder) {
