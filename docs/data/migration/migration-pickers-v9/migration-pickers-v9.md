@@ -56,5 +56,5 @@ fieldRef.current?.clearValue();
 The `rename-field-ref` codemod can be used to automatically apply these changes to your codebase.
 
 ```bash
-npx @mui/x-codemod@latest v9.0.0/pickers/rename-field-ref <path>
+npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
 ```
