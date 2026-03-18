@@ -72,11 +72,18 @@ export default chatApiPages;
     // Skip compound component files that export multiple components from a single file.
     // react-docgen cannot handle files with multiple exported component definitions.
     const compoundFiles = [
-      'ChatComposer/ChatComposer.tsx',
+      'ChatConversationInput/ChatConversationInput.tsx',
       'ChatIndicators/ChatIndicators.tsx',
       'ChatMessage/ChatMessage.tsx',
       'ChatMessage/ChatAiPartRenderers.tsx',
-      'ChatMessage/ChatMarkdownTextPart.tsx',
+      // Unstyled part renderers: compound or missing demos
+      'message/parts/ToolPart.tsx',
+      'message/parts/FilePart.tsx',
+      'message/parts/ReasoningPart.tsx',
+      'message/parts/SourceDocumentPart.tsx',
+      'message/parts/SourceUrlPart.tsx',
+      // Unstyled internal components without demos
+      'conversation/ConversationHeaderInfo.tsx',
     ];
     if (compoundFiles.some((f) => filename.includes(f))) {
       return true;

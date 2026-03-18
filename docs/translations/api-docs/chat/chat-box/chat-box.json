@@ -1,12 +1,7 @@
 {
   "componentDescription": "",
-  "propDescriptions": {
-    "storeClass": { "description": "The store class to use for this provider." },
-    "streamFlushInterval": {
-      "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."
-    }
-  },
-  "classDescriptions": { "layout": { "description": "" }, "state": { "description": "" } },
+  "propDescriptions": {},
+  "classDescriptions": {},
   "slotDescriptions": {
     "composer": "",
     "composerAttachButton": "",

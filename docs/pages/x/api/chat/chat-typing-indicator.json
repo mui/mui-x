@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ChatTypingIndicator",
+  "imports": [
+    "import { ChatTypingIndicator } from '@mui/x-chat/ChatIndicators';",
+    "import { ChatTypingIndicator } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": "MuiChatTypingIndicator-root" }],
+  "classes": [],
+  "muiName": "MuiChatTypingIndicator",
+  "filename": "/packages/x-chat/src/ChatIndicators/ChatTypingIndicator.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/material/indicators/\">Indicators and skeletons</a></li></ul>",
+  "cssComponent": false
+}

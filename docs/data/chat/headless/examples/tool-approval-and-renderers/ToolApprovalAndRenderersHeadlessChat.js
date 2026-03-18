@@ -169,7 +169,7 @@ function ToolAndRendererInner() {
           alignItems: 'center',
         }}
       >
-        <Box>
+        <div>
           <Typography variant="subtitle1" fontWeight={700}>
             Tool approval and custom renderers
           </Typography>
@@ -177,7 +177,7 @@ function ToolAndRendererInner() {
             Approve or deny the tool call, then render the custom poll part through
             the registry.
           </Typography>
-        </Box>
+        </div>
         <Button
           variant="contained"
           size="small"
@@ -311,7 +311,7 @@ function ToolAndRendererInner() {
 
 const partRenderers = {
   poll: ({ part }) => (
-    <Box>
+    <div>
       <Divider sx={{ my: 1 }} />
       <Typography variant="body2" fontWeight={700} sx={{ mb: 1 }}>
         {part.question}
@@ -321,7 +321,7 @@ const partRenderers = {
           <Chip key={option} label={option} variant="outlined" />
         ))}
       </Stack>
-    </Box>
+    </div>
   ),
 };
 

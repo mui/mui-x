@@ -1,0 +1,19 @@
+{
+  "props": {},
+  "name": "ChatDateDivider",
+  "imports": [
+    "import { ChatDateDivider } from '@mui/x-chat/ChatMessage';",
+    "import { ChatDateDivider } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "divider", "description": "", "class": null },
+    { "name": "line", "description": "", "class": null },
+    { "name": "label", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiChatDateDivider",
+  "filename": "/packages/x-chat/src/ChatMessage/ChatDateDivider.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/material/messages/\">Messages</a></li></ul>",
+  "cssComponent": false
+}

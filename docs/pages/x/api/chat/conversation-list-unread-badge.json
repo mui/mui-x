@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ConversationListUnreadBadge",
+  "imports": [
+    "import { ConversationListUnreadBadge } from '@mui/x-chat-unstyled/conversation-list';",
+    "import { ConversationListUnreadBadge } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "root", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationListUnreadBadge",
+  "filename": "/packages/x-chat-unstyled/src/conversation-list/ConversationListUnreadBadge.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/conversation-list/\">Unstyled conversation list</a></li></ul>",
+  "cssComponent": false
+}

@@ -127,28 +127,32 @@ import {
   Conversation as UnstyledDirectConversation,
   ConversationRoot as UnstyledDirectConversationRoot,
 } from '@mui/x-chat-unstyled/conversation';
-import { ChatProvider as HeadlessBridgeChatProvider } from '@mui/x-chat/headless';
-import { chatSelectors as headlessBridgeSelectors } from '@mui/x-chat/headless';
-import { useChat as headlessBridgeUseChat } from '@mui/x-chat/headless';
-import { useChatComposer as headlessBridgeUseChatComposer } from '@mui/x-chat/headless';
-import { useChatPartRenderer as headlessBridgeUseChatPartRenderer } from '@mui/x-chat/headless';
-import { useChatStatus as headlessBridgeUseChatStatus } from '@mui/x-chat/headless';
-import { useConversation as headlessBridgeUseConversation } from '@mui/x-chat/headless';
-import { useConversations as headlessBridgeUseConversations } from '@mui/x-chat/headless';
-import { useMessage as headlessBridgeUseMessage } from '@mui/x-chat/headless';
-import { useMessageIds as headlessBridgeUseMessageIds } from '@mui/x-chat/headless';
-import { useChatStore as headlessBridgeUseChatStore } from '@mui/x-chat/headless';
-import { ChatProvider as HeadlessDirectChatProvider } from '@mui/x-chat-headless';
-import { chatSelectors as headlessDirectSelectors } from '@mui/x-chat-headless';
-import { useChat as headlessDirectUseChat } from '@mui/x-chat-headless';
-import { useChatComposer as headlessDirectUseChatComposer } from '@mui/x-chat-headless';
-import { useChatPartRenderer as headlessDirectUseChatPartRenderer } from '@mui/x-chat-headless';
-import { useChatStatus as headlessDirectUseChatStatus } from '@mui/x-chat-headless';
-import { useConversation as headlessDirectUseConversation } from '@mui/x-chat-headless';
-import { useConversations as headlessDirectUseConversations } from '@mui/x-chat-headless';
-import { useMessage as headlessDirectUseMessage } from '@mui/x-chat-headless';
-import { useMessageIds as headlessDirectUseMessageIds } from '@mui/x-chat-headless';
-import { useChatStore as headlessDirectUseChatStore } from '@mui/x-chat-headless';
+import {
+  ChatProvider as HeadlessBridgeChatProvider,
+  chatSelectors as headlessBridgeSelectors,
+  useChat as headlessBridgeUseChat,
+  useChatComposer as headlessBridgeUseChatComposer,
+  useChatPartRenderer as headlessBridgeUseChatPartRenderer,
+  useChatStatus as headlessBridgeUseChatStatus,
+  useConversation as headlessBridgeUseConversation,
+  useConversations as headlessBridgeUseConversations,
+  useMessage as headlessBridgeUseMessage,
+  useMessageIds as headlessBridgeUseMessageIds,
+  useChatStore as headlessBridgeUseChatStore,
+} from '@mui/x-chat/headless';
+import {
+  ChatProvider as HeadlessDirectChatProvider,
+  chatSelectors as headlessDirectSelectors,
+  useChat as headlessDirectUseChat,
+  useChatComposer as headlessDirectUseChatComposer,
+  useChatPartRenderer as headlessDirectUseChatPartRenderer,
+  useChatStatus as headlessDirectUseChatStatus,
+  useConversation as headlessDirectUseConversation,
+  useConversations as headlessDirectUseConversations,
+  useMessage as headlessDirectUseMessage,
+  useMessageIds as headlessDirectUseMessageIds,
+  useChatStore as headlessDirectUseChatStore,
+} from '@mui/x-chat-headless';
 import type {
   ChatAddToolApproveResponseInput as HeadlessAddToolApproveResponseInput,
   ChatAdapter as HeadlessAdapter,

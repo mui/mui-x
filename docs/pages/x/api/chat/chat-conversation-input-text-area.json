@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ChatConversationInputTextArea",
+  "imports": [
+    "import { ChatConversationInputTextArea } from '@mui/x-chat/ChatConversationInput';",
+    "import { ChatConversationInputTextArea } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "input", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiChatConversationInputTextArea",
+  "filename": "/packages/x-chat/src/ChatConversationInput/ChatConversationInputTextArea.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/material/composer/\">Composer</a></li></ul>",
+  "cssComponent": false
+}

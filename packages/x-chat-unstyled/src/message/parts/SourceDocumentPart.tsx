@@ -45,18 +45,9 @@ export const SourceDocumentPart = React.forwardRef(function SourceDocumentPart(
   props: SourceDocumentPartProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    className,
-    index: _index,
-    message,
-    onToolCall: _onToolCall,
-    part,
-    slots,
-    slotProps,
-    ...other
-  } = props;
-  void _index;
-  void _onToolCall;
+  const { className, index, message, onToolCall, part, slots, slotProps, ...other } = props;
+  void index;
+  void onToolCall;
   const ownerState = React.useMemo<SourceDocumentPartOwnerState>(
     () => ({
       messageId: message.id,

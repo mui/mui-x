@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -9,7 +8,7 @@ import { ChatMessageSkeleton, ChatConversationSkeleton } from '@mui/x-chat';
 export default function SkeletonLoading() {
   return (
     <Stack spacing={3}>
-      <Box>
+      <div>
         <Typography gutterBottom variant="h6">
           Message skeletons
         </Typography>
@@ -21,9 +20,9 @@ export default function SkeletonLoading() {
             <ChatMessageSkeleton align="user" lines={2} />
           </Stack>
         </Paper>
-      </Box>
+      </div>
       <Divider />
-      <Box>
+      <div>
         <Typography gutterBottom variant="h6">
           Conversation skeletons
         </Typography>
@@ -37,9 +36,9 @@ export default function SkeletonLoading() {
             <ChatConversationSkeleton />
           </Stack>
         </Paper>
-      </Box>
+      </div>
       <Divider />
-      <Box>
+      <div>
         <Typography gutterBottom variant="h6">
           Dense conversation skeletons
         </Typography>
@@ -54,7 +53,7 @@ export default function SkeletonLoading() {
             <ChatConversationSkeleton dense />
           </Stack>
         </Paper>
-      </Box>
+      </div>
     </Stack>
   );
 }

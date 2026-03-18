@@ -47,18 +47,9 @@ export const ReasoningPart = React.forwardRef(function ReasoningPart(
   props: ReasoningPartProps,
   ref: React.Ref<HTMLDetailsElement>,
 ) {
-  const {
-    className,
-    index: _index,
-    message,
-    onToolCall: _onToolCall,
-    part,
-    slots,
-    slotProps,
-    ...other
-  } = props;
-  void _index;
-  void _onToolCall;
+  const { className, index, message, onToolCall, part, slots, slotProps, ...other } = props;
+  void index;
+  void onToolCall;
   const localeText = useChatLocaleText();
   const ownerState = React.useMemo<ReasoningPartOwnerState>(
     () => ({

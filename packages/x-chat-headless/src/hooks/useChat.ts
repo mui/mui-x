@@ -42,7 +42,7 @@ export interface UseChatValue<Cursor = string> {
 }
 
 const noopAsync = async () => {};
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const noopAsyncWithArg = async (_arg?: string) => {};
 
 export function useChat<Cursor = string>(): UseChatValue<Cursor> {

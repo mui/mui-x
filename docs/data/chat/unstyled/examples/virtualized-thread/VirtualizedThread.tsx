@@ -13,7 +13,10 @@ import {
   cloneMessages,
   formatDayLabel,
 } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
-import { createLongThreadMessages, demoUsers } from 'docsx/data/chat/unstyled/examples/shared/demoData';
+import {
+  createLongThreadMessages,
+  demoUsers,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoDateDividerLabel,
   DemoDateDividerRoot,

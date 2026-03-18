@@ -63,10 +63,10 @@ export const DemoConversationItem = React.forwardRef(
     const {
       children,
       ownerState,
-      conversation: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
+      conversation,
+      selected,
+      unread,
+      focused,
       style,
       ...other
     } = props;
@@ -106,15 +106,8 @@ export const DemoConversationItem = React.forwardRef(
 
 export const DemoConversationItemAvatar = React.forwardRef(
   function DemoConversationItemAvatar(props, ref) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
     const participant = conversation?.participants?.[0];
 
     return (
@@ -146,15 +139,8 @@ export const DemoConversationItemAvatar = React.forwardRef(
 
 export const DemoConversationTitle = React.forwardRef(
   function DemoConversationTitle(props, ref) {
-    const {
-      conversation,
-      ownerState,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
 
     return (
       <div
@@ -178,15 +164,8 @@ export const DemoConversationTitle = React.forwardRef(
 
 export const DemoConversationPreview = React.forwardRef(
   function DemoConversationPreview(props, ref) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
 
     if (!conversation?.subtitle) {
       return null;
@@ -214,15 +193,8 @@ export const DemoConversationPreview = React.forwardRef(
 
 export const DemoConversationTimestamp = React.forwardRef(
   function DemoConversationTimestamp(props, ref) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
 
     if (!conversation?.lastMessageAt) {
       return null;
@@ -244,15 +216,8 @@ export const DemoConversationTimestamp = React.forwardRef(
 
 export const DemoConversationUnreadBadge = React.forwardRef(
   function DemoConversationUnreadBadge(props, ref) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
     const unreadCount = conversation?.unreadCount ?? 0;
 
     if (unreadCount <= 0) {
@@ -285,7 +250,7 @@ export const DemoConversationUnreadBadge = React.forwardRef(
 
 export const DemoThreadHeader = React.forwardRef(
   function DemoThreadHeader(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -373,7 +338,7 @@ export const DemoMessageListRoot = React.forwardRef(
 
 export const DemoDateDividerRoot = React.forwardRef(
   function DemoDateDividerRoot(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -394,7 +359,7 @@ export const DemoDateDividerRoot = React.forwardRef(
 
 export const DemoDateDividerLabel = React.forwardRef(
   function DemoDateDividerLabel(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -418,7 +383,7 @@ export const DemoDateDividerLabel = React.forwardRef(
 
 export const DemoUnreadMarkerRoot = React.forwardRef(
   function DemoUnreadMarkerRoot(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -442,7 +407,7 @@ export const DemoUnreadMarkerRoot = React.forwardRef(
 
 export const DemoUnreadMarkerLabel = React.forwardRef(
   function DemoUnreadMarkerLabel(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -488,7 +453,7 @@ export const DemoMessageGroup = React.forwardRef(
 
 export const DemoMessageAuthor = React.forwardRef(
   function DemoMessageAuthor(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -535,7 +500,7 @@ export const DemoMessageRoot = React.forwardRef(
 
 export const DemoMessageAvatar = React.forwardRef(
   function DemoMessageAvatar(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -615,7 +580,7 @@ export const DemoMessageMeta = React.forwardRef(
 
 export const DemoComposerRoot = React.forwardRef(
   function DemoComposerRoot(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <form
@@ -637,7 +602,7 @@ export const DemoComposerRoot = React.forwardRef(
 
 export const DemoComposerToolbar = React.forwardRef(
   function DemoComposerToolbar(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -688,7 +653,7 @@ export const DemoComposerInput = React.forwardRef(
 
 export const DemoComposerButton = React.forwardRef(
   function DemoComposerButton(props, ref) {
-    const { ownerState: _, style, children, disabled, ...other } = props;
+    const { ownerState, style, children, disabled, ...other } = props;
     const isPrimary = other['data-variant'] === 'primary';
 
     return (
@@ -718,7 +683,7 @@ export const DemoComposerButton = React.forwardRef(
 
 export const DemoComposerHelperText = React.forwardRef(
   function DemoComposerHelperText(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -738,7 +703,7 @@ export const DemoComposerHelperText = React.forwardRef(
 
 export const DemoTypingIndicator = React.forwardRef(
   function DemoTypingIndicator(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -762,7 +727,7 @@ export const DemoTypingIndicator = React.forwardRef(
 
 export const DemoScrollButton = React.forwardRef(
   function DemoScrollButton(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <button
@@ -790,7 +755,7 @@ export const DemoScrollButton = React.forwardRef(
 
 export const DemoScrollBadge = React.forwardRef(
   function DemoScrollBadge(props, ref) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <span

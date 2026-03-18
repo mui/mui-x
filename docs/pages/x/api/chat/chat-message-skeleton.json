@@ -5,7 +5,20 @@
     "import { ChatMessageSkeleton } from '@mui/x-chat/ChatMessageSkeleton';",
     "import { ChatMessageSkeleton } from '@mui/x-chat';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "bubble",
+      "className": "MuiChatMessageSkeleton-bubble",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatMessageSkeleton-root",
+      "description": "",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChatMessageSkeleton",

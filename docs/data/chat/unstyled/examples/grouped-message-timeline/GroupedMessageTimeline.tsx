@@ -7,7 +7,10 @@ import {
   MessageList,
 } from '@mui/x-chat-unstyled';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
-import { demoUsers, groupedTimelineMessages } from 'docsx/data/chat/unstyled/examples/shared/demoData';
+import {
+  demoUsers,
+  groupedTimelineMessages,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoMessageAuthor,
   DemoMessageAvatar,

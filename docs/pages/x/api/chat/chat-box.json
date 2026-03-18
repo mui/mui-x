@@ -1,8 +1,5 @@
 {
-  "props": {
-    "storeClass": { "type": { "name": "func" }, "default": "ChatStore" },
-    "streamFlushInterval": { "type": { "name": "number" }, "default": "16" }
-  },
+  "props": {},
   "name": "ChatBox",
   "imports": [
     "import { ChatBox } from '@mui/x-chat/ChatBox';",
@@ -38,8 +35,8 @@
     { "name": "messageListScroller", "description": "", "class": null },
     { "name": "messageListContent", "description": "", "class": null },
     { "name": "messageListOverlay", "description": "", "class": null },
-    { "name": "messageGroup", "description": "", "class": "MuiChatBox-messageGroup" },
-    { "name": "messageAuthorName", "description": "", "class": "MuiChatBox-messageAuthorName" },
+    { "name": "messageGroup", "description": "", "class": null },
+    { "name": "messageAuthorName", "description": "", "class": null },
     { "name": "messageRoot", "description": "", "class": null },
     { "name": "messageAvatar", "description": "", "class": null },
     { "name": "messageContent", "description": "", "class": null },
@@ -68,10 +65,7 @@
     { "name": "loadingState", "description": "", "class": "MuiChatBox-loadingState" },
     { "name": "errorState", "description": "", "class": "MuiChatBox-errorState" }
   ],
-  "classes": [
-    { "key": "layout", "className": "MuiChatBox-layout", "description": "", "isGlobal": false },
-    { "key": "state", "className": "MuiChatBox-state", "description": "", "isGlobal": false }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChatBox",

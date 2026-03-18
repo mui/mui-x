@@ -4,15 +4,15 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from 'docsx/data/chat/material/shared/demoUtils';
+import {
+  createEchoAdapter,
+  cloneConversations,
+  cloneMessages,
+} from 'docsx/data/chat/material/shared/demoUtils';
 import {
   inboxConversations,
   inboxThreads,
 } from 'docsx/data/chat/material/shared/demoData';
-import {
-  cloneConversations,
-  cloneMessages,
-} from 'docsx/data/chat/material/shared/demoUtils';
 
 const adapter = createEchoAdapter();
 

@@ -81,7 +81,7 @@ export interface ChatConversationsProps extends Omit<
    * The visual variant of the conversation list.
    * - `"rich"`: Shows avatar, title, preview, timestamp, and unread badge (Slack-style).
    * - `"compact"`: Shows title only with a small unread dot (ChatGPT-style).
-   * @default "rich"
+   * @default 'rich'
    */
   variant?: 'rich' | 'compact';
   slotProps?: ChatConversationsSlotProps;

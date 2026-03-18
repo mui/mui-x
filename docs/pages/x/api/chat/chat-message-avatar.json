@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ChatMessageAvatar",
+  "imports": [
+    "import { ChatMessageAvatar } from '@mui/x-chat/ChatMessage';",
+    "import { ChatMessageAvatar } from '@mui/x-chat';"
+  ],
+  "slots": [{ "name": "avatar", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiChatMessageAvatar",
+  "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAvatar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/material/messages/\">Messages</a></li></ul>",
+  "cssComponent": false
+}

@@ -16,7 +16,11 @@ import {
   formatConversationTime,
   formatMessageTime,
 } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
-import { demoUsers, inboxConversations, inboxThreads } from 'docsx/data/chat/unstyled/examples/shared/demoData';
+import {
+  demoUsers,
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import { DemoToolbarButton } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 const brand = {
@@ -48,10 +52,10 @@ const BrandConversationItem = React.forwardRef(function BrandConversationItem(
   const {
     children,
     ownerState,
-    conversation: _,
-    selected: _s,
-    unread: _u,
-    focused: _f,
+    conversation,
+    selected,
+    unread,
+    focused,
     style,
     ...other
   } = props;
@@ -101,15 +105,8 @@ const BrandConversationAvatar = React.forwardRef(function BrandConversationAvata
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    conversation,
-    ownerState: _,
-    selected: _s,
-    unread: _u,
-    focused: _f,
-    style,
-    ...other
-  } = props;
+  const { conversation, ownerState, selected, unread, focused, style, ...other } =
+    props;
   const participant = conversation?.participants?.[0];
 
   return (
@@ -149,15 +146,8 @@ const BrandConversationTitle = React.forwardRef(function BrandConversationTitle(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    conversation,
-    ownerState: _,
-    selected: _s,
-    unread: _u,
-    focused: _f,
-    style,
-    ...other
-  } = props;
+  const { conversation, ownerState, selected, unread, focused, style, ...other } =
+    props;
 
   return (
     <div
@@ -191,15 +181,8 @@ const BrandConversationPreview = React.forwardRef(function BrandConversationPrev
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    conversation,
-    ownerState,
-    selected: _s,
-    unread: _u,
-    focused: _f,
-    style,
-    ...other
-  } = props;
+  const { conversation, ownerState, selected, unread, focused, style, ...other } =
+    props;
 
   if (!conversation?.subtitle) {
     return null;
@@ -238,15 +221,8 @@ const BrandConversationTimestamp = React.forwardRef(
     },
     ref: React.Ref<HTMLDivElement>,
   ) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
 
     if (!conversation?.lastMessageAt) {
       return null;
@@ -283,15 +259,8 @@ const BrandConversationUnreadBadge = React.forwardRef(
     },
     ref: React.Ref<HTMLSpanElement>,
   ) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
     const unreadCount = conversation?.unreadCount ?? 0;
 
     if (unreadCount <= 0) {
@@ -330,7 +299,7 @@ const BrandMessageAuthor = React.forwardRef(function BrandMessageAuthor(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -411,7 +380,7 @@ const BrandMessageAvatar = React.forwardRef(function BrandMessageAvatar(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -490,7 +459,7 @@ const BrandComposerRoot = React.forwardRef(function BrandComposerRoot(
   },
   ref: React.Ref<HTMLFormElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <form
@@ -515,7 +484,7 @@ const BrandComposerInput = React.forwardRef(function BrandComposerInput(
   },
   ref: React.Ref<HTMLTextAreaElement>,
 ) {
-  const { ownerState: _, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
 
   return (
     <textarea
@@ -544,7 +513,7 @@ const BrandComposerButton = React.forwardRef(function BrandComposerButton(
   props: React.ButtonHTMLAttributes<HTMLButtonElement> & { ownerState?: unknown },
   ref: React.Ref<HTMLButtonElement>,
 ) {
-  const { ownerState: _, style, children, ...other } = props;
+  const { ownerState, style, children, ...other } = props;
   const isPrimary = other['data-variant'] === 'primary';
 
   return (

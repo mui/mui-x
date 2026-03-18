@@ -1,17 +1,18 @@
+export { ChatMessageRoot } from './ChatMessageRoot';
+export { ChatMessageAvatar } from './ChatMessageAvatar';
+export { ChatMessageContent } from './ChatMessageContent';
+export { ChatMessageMeta } from './ChatMessageMeta';
+export { ChatMessageActions } from './ChatMessageActions';
+export { ChatMessageGroup } from './ChatMessageGroup';
+export { ChatDateDivider } from './ChatDateDivider';
+
 export {
   ChatFilePartRenderer,
   ChatMarkdownTextPart,
   ChatReasoningPartRenderer,
   ChatSourceDocumentPartRenderer,
   ChatSourceUrlPartRenderer,
-  ChatDateDivider,
   ChatMessage,
-  ChatMessageActions,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageRoot,
-  ChatMessageMeta,
   ChatToolPartRenderer,
   createChatFilePartRenderer,
   createChatMarkdownTextPartRenderer,
@@ -22,6 +23,42 @@ export {
   chatMessageClasses,
   getChatMessageUtilityClass,
 } from './ChatMessage';
+
+export type {
+  ChatMessageRootProps,
+  ChatMessageRootSlotProps,
+  ChatMessageRootSlots,
+} from './ChatMessageRoot';
+export type {
+  ChatMessageAvatarProps,
+  ChatMessageAvatarSlotProps,
+  ChatMessageAvatarSlots,
+} from './ChatMessageAvatar';
+export type {
+  ChatMessageContentProps,
+  ChatMessageContentSlotProps,
+  ChatMessageContentSlots,
+} from './ChatMessageContent';
+export type {
+  ChatMessageMetaProps,
+  ChatMessageMetaSlotProps,
+  ChatMessageMetaSlots,
+} from './ChatMessageMeta';
+export type {
+  ChatMessageActionsProps,
+  ChatMessageActionsSlotProps,
+  ChatMessageActionsSlots,
+} from './ChatMessageActions';
+export type {
+  ChatMessageGroupProps,
+  ChatMessageGroupSlotProps,
+  ChatMessageGroupSlots,
+} from './ChatMessageGroup';
+export type {
+  ChatDateDividerProps,
+  ChatDateDividerSlotProps,
+  ChatDateDividerSlots,
+} from './ChatDateDivider';
 
 export type {
   ChatFilePartRendererOptions,
@@ -48,30 +85,12 @@ export type {
   ChatToolPartRendererProps,
   ChatToolPartRendererSlotProps,
   ChatToolPartRendererSlots,
-  ChatDateDividerProps,
-  ChatDateDividerSlotProps,
-  ChatDateDividerSlots,
-  ChatMessageActionsProps,
-  ChatMessageActionsSlotProps,
-  ChatMessageActionsSlots,
-  ChatMessageAvatarProps,
-  ChatMessageAvatarSlotProps,
-  ChatMessageAvatarSlots,
-  ChatMessageContentProps,
-  ChatMessageContentSlotProps,
-  ChatMessageContentSlots,
-  ChatMessageGroupProps,
-  ChatMessageGroupSlotProps,
-  ChatMessageGroupSlots,
-  ChatMessageMetaProps,
-  ChatMessageMetaSlotProps,
-  ChatMessageMetaSlots,
-  ChatMessageRootProps,
-  ChatMessageRootSlotProps,
-  ChatMessageRootSlots,
+} from './ChatMessage';
+
+export type {
   ChatMessageRootProps as ChatMessageProps,
   ChatMessageRootSlotProps as ChatMessageSlotProps,
   ChatMessageRootSlots as ChatMessageSlots,
-} from './ChatMessage';
+} from './ChatMessageRoot';
 
 export type { ChatMessageClassKey, ChatMessageClasses } from './chatMessageClasses';

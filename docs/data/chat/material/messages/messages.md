@@ -2,7 +2,7 @@
 productId: x-chat
 title: Chat - Messages
 packageName: '@mui/x-chat'
-components: ChatMessage, ChatMarkdownTextPart, ChatMessageSkeleton
+components: ChatMessageRoot, ChatMessageAvatar, ChatMessageContent, ChatMessageMeta, ChatMessageActions, ChatMessageGroup, ChatDateDivider, ChatMarkdownTextPart, ChatMessageSkeleton
 ---
 
 # Messages

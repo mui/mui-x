@@ -9,7 +9,6 @@ import type { SlotComponentProps } from '@mui/utils/types';
 import type {
   ChatDynamicToolMessagePart,
   ChatFileMessagePart,
-  ChatMessagePart,
   ChatPartRenderer,
   ChatPartRendererProps,
   ChatReasoningMessagePart,

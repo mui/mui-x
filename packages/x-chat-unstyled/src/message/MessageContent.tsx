@@ -51,6 +51,9 @@ export interface MessageContentProps extends React.HTMLAttributes<HTMLDivElement
   /**
    * @deprecated Use `partProps` instead.
    * Callback to resolve a built-in part renderer for a given part type.
+   * @param {ChatMessagePart} part The message part to resolve a renderer for.
+   * @param {ChatLocaleText} localeText The locale text for the chat.
+   * @returns {ChatPartRenderer<ChatMessagePart> | null} A renderer or null.
    */
   resolveBuiltInPartRenderer?: (
     part: ChatMessagePart,

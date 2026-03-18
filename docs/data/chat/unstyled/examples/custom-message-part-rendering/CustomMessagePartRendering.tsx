@@ -9,7 +9,10 @@ import {
 } from '@mui/x-chat-unstyled';
 import type { ChatPartRendererMap } from '@mui/x-chat-headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
-import { demoUsers, partRenderingMessages } from 'docsx/data/chat/unstyled/examples/shared/demoData';
+import {
+  demoUsers,
+  partRenderingMessages,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoDateDividerLabel,
   DemoDateDividerRoot,

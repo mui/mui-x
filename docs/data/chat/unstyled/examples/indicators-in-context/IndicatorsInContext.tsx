@@ -8,8 +8,14 @@ import {
   MessageGroup,
   MessageList,
 } from '@mui/x-chat-unstyled';
-import { createEchoAdapter, cloneMessages } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
-import { createLongThreadMessages, demoUsers } from 'docsx/data/chat/unstyled/examples/shared/demoData';
+import {
+  createEchoAdapter,
+  cloneMessages,
+} from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
+import {
+  createLongThreadMessages,
+  demoUsers,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoDateDividerLabel,
   DemoDateDividerRoot,

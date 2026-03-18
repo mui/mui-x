@@ -9,7 +9,10 @@ import {
   MessageList,
 } from '@mui/x-chat-unstyled';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
-import { minimalConversation, minimalMessages } from 'docsx/data/chat/unstyled/examples/shared/demoData';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoComposerButton,
   DemoComposerInput,

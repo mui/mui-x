@@ -1,6 +1,10 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "variant": {
+      "description": "The visual variant of the conversation list. - <code>&quot;rich&quot;</code>: Shows avatar, title, preview, timestamp, and unread badge (Slack-style). - <code>&quot;compact&quot;</code>: Shows title only with a small unread dot (ChatGPT-style)."
+    }
+  },
   "classDescriptions": { "state": { "description": "" }, "stateGlyph": { "description": "" } },
   "slotDescriptions": {
     "emptyState": "",

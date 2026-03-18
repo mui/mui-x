@@ -50,10 +50,6 @@ export const ConversationListTimestamp = React.forwardRef(function ConversationL
   };
   void ownerStateProp;
 
-  if (!conversation.lastMessageAt) {
-    return null;
-  }
-
   const Root = slots?.root ?? 'div';
   const rootProps = useSlotProps({
     elementType: Root,
@@ -64,6 +60,10 @@ export const ConversationListTimestamp = React.forwardRef(function ConversationL
       ref,
     },
   });
+
+  if (!conversation.lastMessageAt) {
+    return null;
+  }
 
   return (
     <Root {...rootProps}>

@@ -1,0 +1,18 @@
+{
+  "props": {},
+  "name": "ChatUnreadMarker",
+  "imports": [
+    "import { ChatUnreadMarker } from '@mui/x-chat/ChatIndicators';",
+    "import { ChatUnreadMarker } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "root", "description": "", "class": "MuiChatUnreadMarker-root" },
+    { "name": "label", "description": "", "class": "MuiChatUnreadMarker-label" }
+  ],
+  "classes": [],
+  "muiName": "MuiChatUnreadMarker",
+  "filename": "/packages/x-chat/src/ChatIndicators/ChatUnreadMarker.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/material/indicators/\">Indicators and skeletons</a></li></ul>",
+  "cssComponent": false
+}

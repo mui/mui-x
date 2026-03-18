@@ -64,18 +64,9 @@ export const FilePart = React.forwardRef(function FilePart(
   props: FilePartProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    className,
-    index: _index,
-    message,
-    onToolCall: _onToolCall,
-    part,
-    slots,
-    slotProps,
-    ...other
-  } = props;
-  void _index;
-  void _onToolCall;
+  const { className, index, message, onToolCall, part, slots, slotProps, ...other } = props;
+  void index;
+  void onToolCall;
   const ownerState = React.useMemo<FilePartOwnerState>(
     () => ({
       image: part.mediaType.startsWith('image/'),

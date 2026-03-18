@@ -1,8 +1,5 @@
 {
-  "props": {
-    "storeClass": { "type": { "name": "func" }, "default": "ChatStore" },
-    "streamFlushInterval": { "type": { "name": "number" }, "default": "16" }
-  },
+  "props": {},
   "name": "ChatRoot",
   "imports": [
     "import { ChatRoot } from '@mui/x-chat-unstyled/chat';",

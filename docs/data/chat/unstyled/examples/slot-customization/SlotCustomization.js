@@ -40,10 +40,10 @@ const BrandConversationItem = React.forwardRef(
     const {
       children,
       ownerState,
-      conversation: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
+      conversation,
+      selected,
+      unread,
+      focused,
       style,
       ...other
     } = props;
@@ -83,15 +83,8 @@ const BrandConversationItem = React.forwardRef(
 
 const BrandConversationAvatar = React.forwardRef(
   function BrandConversationAvatar(props, ref) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
     const participant = conversation?.participants?.[0];
 
     return (
@@ -124,15 +117,8 @@ const BrandConversationAvatar = React.forwardRef(
 
 const BrandConversationTitle = React.forwardRef(
   function BrandConversationTitle(props, ref) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
 
     return (
       <div
@@ -159,15 +145,8 @@ const BrandConversationTitle = React.forwardRef(
 
 const BrandConversationPreview = React.forwardRef(
   function BrandConversationPreview(props, ref) {
-    const {
-      conversation,
-      ownerState,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
 
     if (!conversation?.subtitle) {
       return null;
@@ -198,15 +177,8 @@ const BrandConversationPreview = React.forwardRef(
 
 const BrandConversationTimestamp = React.forwardRef(
   function BrandConversationTimestamp(props, ref) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
 
     if (!conversation?.lastMessageAt) {
       return null;
@@ -234,15 +206,8 @@ const BrandConversationTimestamp = React.forwardRef(
 
 const BrandConversationUnreadBadge = React.forwardRef(
   function BrandConversationUnreadBadge(props, ref) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
     const unreadCount = conversation?.unreadCount ?? 0;
 
     if (unreadCount <= 0) {
@@ -276,7 +241,7 @@ const BrandConversationUnreadBadge = React.forwardRef(
 );
 
 const BrandMessageAuthor = React.forwardRef(function BrandMessageAuthor(props, ref) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -338,7 +303,7 @@ const BrandMessageRoot = React.forwardRef(function BrandMessageRoot(props, ref) 
 });
 
 const BrandMessageAvatar = React.forwardRef(function BrandMessageAvatar(props, ref) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -397,7 +362,7 @@ const BrandMessageMeta = React.forwardRef(function BrandMessageMeta(props, ref) 
 });
 
 const BrandComposerRoot = React.forwardRef(function BrandComposerRoot(props, ref) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <form
@@ -417,7 +382,7 @@ const BrandComposerRoot = React.forwardRef(function BrandComposerRoot(props, ref
 });
 
 const BrandComposerInput = React.forwardRef(function BrandComposerInput(props, ref) {
-  const { ownerState: _, style, ...other } = props;
+  const { ownerState, style, ...other } = props;
 
   return (
     <textarea
@@ -444,7 +409,7 @@ const BrandComposerInput = React.forwardRef(function BrandComposerInput(props, r
 
 const BrandComposerButton = React.forwardRef(
   function BrandComposerButton(props, ref) {
-    const { ownerState: _, style, children, ...other } = props;
+    const { ownerState, style, children, ...other } = props;
     const isPrimary = other['data-variant'] === 'primary';
 
     return (

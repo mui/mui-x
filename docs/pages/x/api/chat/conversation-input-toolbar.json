@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ConversationInputToolbar",
+  "imports": [
+    "import { ConversationInputToolbar } from '@mui/x-chat-unstyled/conversation-input';",
+    "import { ConversationInputToolbar } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "toolbar", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationInputToolbar",
+  "filename": "/packages/x-chat-unstyled/src/conversation-input/ConversationInputToolbar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/composer/\">Unstyled composer</a></li></ul>",
+  "cssComponent": false
+}

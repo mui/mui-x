@@ -6,6 +6,30 @@ const chatApiPages: MuiPage[] = [
     title: 'ChatBox',
   },
   {
+    pathname: '/x/api/chat/chat-conversation',
+    title: 'ChatConversation',
+  },
+  {
+    pathname: '/x/api/chat/chat-conversation-input-attach-button',
+    title: 'ChatConversationInputAttachButton',
+  },
+  {
+    pathname: '/x/api/chat/chat-conversation-input-helper-text',
+    title: 'ChatConversationInputHelperText',
+  },
+  {
+    pathname: '/x/api/chat/chat-conversation-input-send-button',
+    title: 'ChatConversationInputSendButton',
+  },
+  {
+    pathname: '/x/api/chat/chat-conversation-input-text-area',
+    title: 'ChatConversationInputTextArea',
+  },
+  {
+    pathname: '/x/api/chat/chat-conversation-input-toolbar',
+    title: 'ChatConversationInputToolbar',
+  },
+  {
     pathname: '/x/api/chat/chat-conversations',
     title: 'ChatConversations',
   },
@@ -14,8 +38,40 @@ const chatApiPages: MuiPage[] = [
     title: 'ChatConversationSkeleton',
   },
   {
+    pathname: '/x/api/chat/chat-date-divider',
+    title: 'ChatDateDivider',
+  },
+  {
     pathname: '/x/api/chat/chat-layout',
     title: 'ChatLayout',
+  },
+  {
+    pathname: '/x/api/chat/chat-markdown-text-part',
+    title: 'ChatMarkdownTextPart',
+  },
+  {
+    pathname: '/x/api/chat/chat-message-actions',
+    title: 'ChatMessageActions',
+  },
+  {
+    pathname: '/x/api/chat/chat-message-avatar',
+    title: 'ChatMessageAvatar',
+  },
+  {
+    pathname: '/x/api/chat/chat-message-content',
+    title: 'ChatMessageContent',
+  },
+  {
+    pathname: '/x/api/chat/chat-message-group',
+    title: 'ChatMessageGroup',
+  },
+  {
+    pathname: '/x/api/chat/chat-message-meta',
+    title: 'ChatMessageMeta',
+  },
+  {
+    pathname: '/x/api/chat/chat-message-root',
+    title: 'ChatMessageRoot',
   },
   {
     pathname: '/x/api/chat/chat-message-skeleton',
@@ -26,32 +82,48 @@ const chatApiPages: MuiPage[] = [
     title: 'ChatRoot',
   },
   {
-    pathname: '/x/api/chat/chat-thread',
-    title: 'ChatThread',
+    pathname: '/x/api/chat/chat-scroll-to-bottom-affordance',
+    title: 'ChatScrollToBottomAffordance',
   },
   {
-    pathname: '/x/api/chat/composer-attach-button',
-    title: 'ComposerAttachButton',
+    pathname: '/x/api/chat/chat-typing-indicator',
+    title: 'ChatTypingIndicator',
   },
   {
-    pathname: '/x/api/chat/composer-helper-text',
-    title: 'ComposerHelperText',
+    pathname: '/x/api/chat/chat-unread-marker',
+    title: 'ChatUnreadMarker',
   },
   {
-    pathname: '/x/api/chat/composer-input',
-    title: 'ComposerInput',
+    pathname: '/x/api/chat/conversation-header',
+    title: 'ConversationHeader',
   },
   {
-    pathname: '/x/api/chat/composer-root',
-    title: 'ComposerRoot',
+    pathname: '/x/api/chat/conversation-header-actions',
+    title: 'ConversationHeaderActions',
   },
   {
-    pathname: '/x/api/chat/composer-send-button',
-    title: 'ComposerSendButton',
+    pathname: '/x/api/chat/conversation-input-attach-button',
+    title: 'ConversationInputAttachButton',
   },
   {
-    pathname: '/x/api/chat/composer-toolbar',
-    title: 'ComposerToolbar',
+    pathname: '/x/api/chat/conversation-input-helper-text',
+    title: 'ConversationInputHelperText',
+  },
+  {
+    pathname: '/x/api/chat/conversation-input-root',
+    title: 'ConversationInputRoot',
+  },
+  {
+    pathname: '/x/api/chat/conversation-input-send-button',
+    title: 'ConversationInputSendButton',
+  },
+  {
+    pathname: '/x/api/chat/conversation-input-text-area',
+    title: 'ConversationInputTextArea',
+  },
+  {
+    pathname: '/x/api/chat/conversation-input-toolbar',
+    title: 'ConversationInputToolbar',
   },
   {
     pathname: '/x/api/chat/conversation-list-item',
@@ -62,16 +134,36 @@ const chatApiPages: MuiPage[] = [
     title: 'ConversationListItemAvatar',
   },
   {
-    pathname: '/x/api/chat/conversation-list-item-meta',
-    title: 'ConversationListItemMeta',
-  },
-  {
-    pathname: '/x/api/chat/conversation-list-item-text',
-    title: 'ConversationListItemText',
+    pathname: '/x/api/chat/conversation-list-preview',
+    title: 'ConversationListPreview',
   },
   {
     pathname: '/x/api/chat/conversation-list-root',
     title: 'ConversationListRoot',
+  },
+  {
+    pathname: '/x/api/chat/conversation-list-timestamp',
+    title: 'ConversationListTimestamp',
+  },
+  {
+    pathname: '/x/api/chat/conversation-list-title',
+    title: 'ConversationListTitle',
+  },
+  {
+    pathname: '/x/api/chat/conversation-list-unread-badge',
+    title: 'ConversationListUnreadBadge',
+  },
+  {
+    pathname: '/x/api/chat/conversation-root',
+    title: 'ConversationRoot',
+  },
+  {
+    pathname: '/x/api/chat/conversation-subtitle',
+    title: 'ConversationSubtitle',
+  },
+  {
+    pathname: '/x/api/chat/conversation-title',
+    title: 'ConversationTitle',
   },
   {
     pathname: '/x/api/chat/message-actions',
@@ -108,26 +200,6 @@ const chatApiPages: MuiPage[] = [
   {
     pathname: '/x/api/chat/scroll-to-bottom-affordance',
     title: 'ScrollToBottomAffordance',
-  },
-  {
-    pathname: '/x/api/chat/thread-actions',
-    title: 'ThreadActions',
-  },
-  {
-    pathname: '/x/api/chat/thread-header',
-    title: 'ThreadHeader',
-  },
-  {
-    pathname: '/x/api/chat/thread-root',
-    title: 'ThreadRoot',
-  },
-  {
-    pathname: '/x/api/chat/thread-subtitle',
-    title: 'ThreadSubtitle',
-  },
-  {
-    pathname: '/x/api/chat/thread-title',
-    title: 'ThreadTitle',
   },
   {
     pathname: '/x/api/chat/typing-indicator',

@@ -50,15 +50,6 @@ export const ConversationListUnreadBadge = React.forwardRef(function Conversatio
   };
   void ownerStateProp;
 
-  const unreadCount =
-    conversation.unreadCount != null && conversation.unreadCount > 0
-      ? conversation.unreadCount
-      : null;
-
-  if (!unreadCount) {
-    return null;
-  }
-
   const Root = slots?.root ?? 'span';
   const rootProps = useSlotProps({
     elementType: Root,
@@ -69,6 +60,15 @@ export const ConversationListUnreadBadge = React.forwardRef(function Conversatio
       ref,
     },
   });
+
+  const unreadCount =
+    conversation.unreadCount != null && conversation.unreadCount > 0
+      ? conversation.unreadCount
+      : null;
+
+  if (!unreadCount) {
+    return null;
+  }
 
   return <Root {...rootProps}>{unreadCount > 99 ? '99+' : unreadCount}</Root>;
 }) as ConversationListUnreadBadgeComponent;

@@ -9,7 +9,10 @@ import {
 } from '@mui/x-chat-unstyled';
 import { useChatComposer } from '@mui/x-chat-headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
-import { createTextMessage, demoUsers } from 'docsx/data/chat/unstyled/examples/shared/demoData';
+import {
+  createTextMessage,
+  demoUsers,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   AttachmentPreviewList,
   DemoComposerButton,

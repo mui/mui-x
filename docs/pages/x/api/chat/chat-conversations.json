@@ -1,5 +1,10 @@
 {
-  "props": {},
+  "props": {
+    "variant": {
+      "type": { "name": "enum", "description": "'compact'<br>&#124;&nbsp;'rich'" },
+      "default": "'rich'"
+    }
+  },
   "name": "ChatConversations",
   "imports": [
     "import { ChatConversations } from '@mui/x-chat/ChatConversations';",

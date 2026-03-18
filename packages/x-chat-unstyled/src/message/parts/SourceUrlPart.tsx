@@ -61,18 +61,9 @@ export const SourceUrlPart = React.forwardRef(function SourceUrlPart(
   props: SourceUrlPartProps,
   ref: React.Ref<HTMLSpanElement>,
 ) {
-  const {
-    className,
-    index: _index,
-    message,
-    onToolCall: _onToolCall,
-    part,
-    slots,
-    slotProps,
-    ...other
-  } = props;
-  void _index;
-  void _onToolCall;
+  const { className, index, message, onToolCall, part, slots, slotProps, ...other } = props;
+  void index;
+  void onToolCall;
   const ownerState = React.useMemo<SourceUrlPartOwnerState>(
     () => ({
       messageId: message.id,

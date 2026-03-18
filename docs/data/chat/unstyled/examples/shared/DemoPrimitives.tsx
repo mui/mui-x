@@ -81,10 +81,10 @@ export const DemoConversationItem = React.forwardRef(function DemoConversationIt
   const {
     children,
     ownerState,
-    conversation: _,
-    selected: _s,
-    unread: _u,
-    focused: _f,
+    conversation,
+    selected,
+    unread,
+    focused,
     style,
     ...other
   } = props;
@@ -137,15 +137,8 @@ export const DemoConversationItemAvatar = React.forwardRef(
     },
     ref: React.Ref<HTMLDivElement>,
   ) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
     const participant = conversation?.participants?.[0];
 
     return (
@@ -185,15 +178,8 @@ export const DemoConversationTitle = React.forwardRef(function DemoConversationT
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const {
-    conversation,
-    ownerState,
-    selected: _s,
-    unread: _u,
-    focused: _f,
-    style,
-    ...other
-  } = props;
+  const { conversation, ownerState, selected, unread, focused, style, ...other } =
+    props;
 
   return (
     <div
@@ -225,15 +211,8 @@ export const DemoConversationPreview = React.forwardRef(
     },
     ref: React.Ref<HTMLDivElement>,
   ) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
 
     if (!conversation?.subtitle) {
       return null;
@@ -270,15 +249,8 @@ export const DemoConversationTimestamp = React.forwardRef(
     },
     ref: React.Ref<HTMLDivElement>,
   ) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
 
     if (!conversation?.lastMessageAt) {
       return null;
@@ -309,15 +281,8 @@ export const DemoConversationUnreadBadge = React.forwardRef(
     },
     ref: React.Ref<HTMLSpanElement>,
   ) {
-    const {
-      conversation,
-      ownerState: _,
-      selected: _s,
-      unread: _u,
-      focused: _f,
-      style,
-      ...other
-    } = props;
+    const { conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
     const unreadCount = conversation?.unreadCount ?? 0;
 
     if (unreadCount <= 0) {
@@ -354,7 +319,7 @@ export const DemoThreadHeader = React.forwardRef(function DemoThreadHeader(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -452,7 +417,7 @@ export const DemoDateDividerRoot = React.forwardRef(function DemoDateDividerRoot
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -476,7 +441,7 @@ export const DemoDateDividerLabel = React.forwardRef(function DemoDateDividerLab
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -503,7 +468,7 @@ export const DemoUnreadMarkerRoot = React.forwardRef(function DemoUnreadMarkerRo
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -530,7 +495,7 @@ export const DemoUnreadMarkerLabel = React.forwardRef(function DemoUnreadMarkerL
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -585,7 +550,7 @@ export const DemoMessageAuthor = React.forwardRef(function DemoMessageAuthor(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -641,7 +606,7 @@ export const DemoMessageAvatar = React.forwardRef(function DemoMessageAvatar(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -737,7 +702,7 @@ export const DemoComposerRoot = React.forwardRef(function DemoComposerRoot(
   },
   ref: React.Ref<HTMLFormElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <form
@@ -762,7 +727,7 @@ export const DemoComposerToolbar = React.forwardRef(function DemoComposerToolbar
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -825,7 +790,7 @@ export const DemoComposerButton = React.forwardRef(function DemoComposerButton(
   },
   ref: React.Ref<HTMLButtonElement>,
 ) {
-  const { ownerState: _, style, children, disabled, ...other } = props;
+  const { ownerState, style, children, disabled, ...other } = props;
   const isPrimary = other['data-variant'] === 'primary';
 
   return (
@@ -859,7 +824,7 @@ export const DemoComposerHelperText = React.forwardRef(
     },
     ref: React.Ref<HTMLDivElement>,
   ) {
-    const { children, ownerState: _, style, ...other } = props;
+    const { children, ownerState, style, ...other } = props;
 
     return (
       <div
@@ -883,7 +848,7 @@ export const DemoTypingIndicator = React.forwardRef(function DemoTypingIndicator
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <div
@@ -910,7 +875,7 @@ export const DemoScrollButton = React.forwardRef(function DemoScrollButton(
   },
   ref: React.Ref<HTMLButtonElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <button
@@ -941,7 +906,7 @@ export const DemoScrollBadge = React.forwardRef(function DemoScrollBadge(
   },
   ref: React.Ref<HTMLSpanElement>,
 ) {
-  const { children, ownerState: _, style, ...other } = props;
+  const { children, ownerState, style, ...other } = props;
 
   return (
     <span

@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ConversationTitle",
+  "imports": [
+    "import { ConversationTitle } from '@mui/x-chat-unstyled/conversation';",
+    "import { ConversationTitle } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "title", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationTitle",
+  "filename": "/packages/x-chat-unstyled/src/conversation/ConversationTitle.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/thread/\">Unstyled thread</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,0 +1,21 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "actions": "",
+    "emptyState": "",
+    "errorState": "",
+    "header": "",
+    "historyError": "",
+    "historyLoading": "",
+    "loadingState": "",
+    "messageList": "",
+    "messageListContent": "",
+    "messageListOverlay": "",
+    "messageListScroller": "",
+    "root": "",
+    "subtitle": "",
+    "title": ""
+  }
+}

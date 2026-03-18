@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -8,7 +7,7 @@ import { ChatMessageSkeleton, ChatConversationSkeleton } from '@mui/x-chat';
 export default function SkeletonStates() {
   return (
     <Stack spacing={2}>
-      <Box>
+      <div>
         <Typography gutterBottom variant="subtitle2">
           Message skeletons
         </Typography>
@@ -19,8 +18,8 @@ export default function SkeletonStates() {
             <ChatMessageSkeleton align="assistant" lines={2} />
           </Stack>
         </Paper>
-      </Box>
-      <Box>
+      </div>
+      <div>
         <Typography gutterBottom variant="subtitle2">
           Conversation skeletons
         </Typography>
@@ -31,7 +30,7 @@ export default function SkeletonStates() {
             <ChatConversationSkeleton dense />
           </Stack>
         </Paper>
-      </Box>
+      </div>
     </Stack>
   );
 }

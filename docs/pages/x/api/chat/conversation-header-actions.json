@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ConversationHeaderActions",
+  "imports": [
+    "import { ConversationHeaderActions } from '@mui/x-chat-unstyled/conversation';",
+    "import { ConversationHeaderActions } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "actions", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationHeaderActions",
+  "filename": "/packages/x-chat-unstyled/src/conversation/ConversationHeaderActions.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/thread/\">Unstyled thread</a></li></ul>",
+  "cssComponent": false
+}

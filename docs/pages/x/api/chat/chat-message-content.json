@@ -1,0 +1,18 @@
+{
+  "props": {},
+  "name": "ChatMessageContent",
+  "imports": [
+    "import { ChatMessageContent } from '@mui/x-chat/ChatMessage';",
+    "import { ChatMessageContent } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "content", "description": "", "class": null },
+    { "name": "bubble", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiChatMessageContent",
+  "filename": "/packages/x-chat/src/ChatMessage/ChatMessageContent.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/material/messages/\">Messages</a></li></ul>",
+  "cssComponent": false
+}

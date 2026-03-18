@@ -1,1 +1,5 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": { "bubble": { "description": "" }, "root": { "description": "" } }
+}

@@ -1,0 +1,18 @@
+{
+  "props": {},
+  "name": "ChatMessageGroup",
+  "imports": [
+    "import { ChatMessageGroup } from '@mui/x-chat/ChatMessage';",
+    "import { ChatMessageGroup } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "group", "description": "", "class": null },
+    { "name": "authorName", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiChatMessageGroup",
+  "filename": "/packages/x-chat/src/ChatMessage/ChatMessageGroup.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/material/messages/\">Messages</a></li></ul>",
+  "cssComponent": false
+}

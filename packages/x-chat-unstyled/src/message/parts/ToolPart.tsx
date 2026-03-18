@@ -118,23 +118,14 @@ function ToolPayloadSection(props: {
   );
 }
 
-export const ToolPartComponent_ = React.forwardRef(function ToolPartRenderer(
+export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
   props: ToolPartProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { addToolApprovalResponse } = useChat();
-  const {
-    className,
-    index: _index,
-    message,
-    onToolCall: _onToolCall,
-    part,
-    slots,
-    slotProps,
-    ...other
-  } = props;
-  void _index;
-  void _onToolCall;
+  const { className, index, message, onToolCall, part, slots, slotProps, ...other } = props;
+  void index;
+  void onToolCall;
   const [pendingApproval, setPendingApproval] = React.useState(false);
   const localeText = useChatLocaleText();
   const ownerState = React.useMemo<ToolPartOwnerState>(
@@ -307,12 +298,12 @@ export const ToolPartComponent_ = React.forwardRef(function ToolPartRenderer(
 }) as ToolPartComponent;
 
 // Use a separate export name to avoid conflict with the ToolPart type alias
-export { ToolPartComponent_ as ToolPart };
+export { ToolPartInner as ToolPart };
 
 export function createToolPartRenderer(
   defaultProps: ToolPartExternalProps = {},
 ): ChatPartRenderer<ToolPart> {
   return function ToolPartRendererFn(rendererProps) {
-    return <ToolPartComponent_ {...defaultProps} {...rendererProps} />;
+    return <ToolPartInner {...defaultProps} {...rendererProps} />;
   };
 }

@@ -14,7 +14,11 @@ import {
   cloneThreadMap,
   syncConversationPreview,
 } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
-import { demoUsers, inboxConversations, inboxThreads } from 'docsx/data/chat/unstyled/examples/shared/demoData';
+import {
+  demoUsers,
+  inboxConversations,
+  inboxThreads,
+} from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
   DemoComposerButton,
   DemoComposerInput,

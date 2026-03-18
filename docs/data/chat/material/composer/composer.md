@@ -2,7 +2,7 @@
 productId: x-chat
 title: Chat - Composer
 packageName: '@mui/x-chat'
-components: ChatConversationInput
+components: ChatConversationInputTextArea, ChatConversationInputSendButton, ChatConversationInputAttachButton, ChatConversationInputToolbar, ChatConversationInputHelperText
 ---
 
 # Composer

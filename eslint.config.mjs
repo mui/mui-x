@@ -108,6 +108,9 @@ const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
 ]);
 
 export default defineConfig(
+  {
+    ignores: ['.context/**'],
+  },
   createBaseConfig({
     baseDirectory: dirname,
     enableReactCompiler: isAnyReactCompilerPluginEnabled,

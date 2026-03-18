@@ -182,7 +182,7 @@ function MessagePartsInner() {
           alignItems: 'center',
         }}
       >
-        <Box>
+        <div>
           <Typography variant="subtitle1" fontWeight={700}>
             Assistant message parts
           </Typography>
@@ -190,7 +190,7 @@ function MessagePartsInner() {
             Reasoning, sources, files, and data parts all flow through the same
             message array.
           </Typography>
-        </Box>
+        </div>
         <Button
           variant="contained"
           size="small"

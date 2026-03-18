@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ConversationInputSendButton",
+  "imports": [
+    "import { ConversationInputSendButton } from '@mui/x-chat-unstyled/conversation-input';",
+    "import { ConversationInputSendButton } from '@mui/x-chat-unstyled';"
+  ],
+  "slots": [{ "name": "sendButton", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiConversationInputSendButton",
+  "filename": "/packages/x-chat-unstyled/src/conversation-input/ConversationInputSendButton.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/unstyled/composer/\">Unstyled composer</a></li></ul>",
+  "cssComponent": false
+}

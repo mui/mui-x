@@ -50,10 +50,6 @@ export const ConversationListPreview = React.forwardRef(function ConversationLis
   };
   void ownerStateProp;
 
-  if (!conversation.subtitle) {
-    return null;
-  }
-
   const Root = slots?.root ?? 'div';
   const rootProps = useSlotProps({
     elementType: Root,
@@ -64,6 +60,10 @@ export const ConversationListPreview = React.forwardRef(function ConversationLis
       ref,
     },
   });
+
+  if (!conversation.subtitle) {
+    return null;
+  }
 
   return <Root {...rootProps}>{conversation.subtitle}</Root>;
 }) as ConversationListPreviewComponent;

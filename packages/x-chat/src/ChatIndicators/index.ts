@@ -1,26 +1,34 @@
 export {
-  ChatScrollToBottomAffordance,
   ChatTypingIndicator,
-  ChatUnreadMarker,
-  chatScrollToBottomAffordanceClasses,
   chatTypingIndicatorClasses,
-  chatUnreadMarkerClasses,
-  getChatScrollToBottomAffordanceUtilityClass,
   getChatTypingIndicatorUtilityClass,
+} from './ChatTypingIndicator';
+export {
+  ChatUnreadMarker,
+  chatUnreadMarkerClasses,
   getChatUnreadMarkerUtilityClass,
-} from './ChatIndicators';
+} from './ChatUnreadMarker';
+export {
+  ChatScrollToBottomAffordance,
+  chatScrollToBottomAffordanceClasses,
+  getChatScrollToBottomAffordanceUtilityClass,
+} from './ChatScrollToBottomAffordance';
 
+export type {
+  ChatTypingIndicatorProps,
+  ChatTypingIndicatorSlotProps,
+  ChatTypingIndicatorSlots,
+} from './ChatTypingIndicator';
+export type {
+  ChatUnreadMarkerProps,
+  ChatUnreadMarkerSlotProps,
+  ChatUnreadMarkerSlots,
+} from './ChatUnreadMarker';
 export type {
   ChatScrollToBottomAffordanceProps,
   ChatScrollToBottomAffordanceSlotProps,
   ChatScrollToBottomAffordanceSlots,
-  ChatTypingIndicatorProps,
-  ChatTypingIndicatorSlotProps,
-  ChatTypingIndicatorSlots,
-  ChatUnreadMarkerProps,
-  ChatUnreadMarkerSlotProps,
-  ChatUnreadMarkerSlots,
-} from './ChatIndicators';
+} from './ChatScrollToBottomAffordance';
 export type {
   ChatScrollToBottomAffordanceClassKey,
   ChatScrollToBottomAffordanceClasses,
