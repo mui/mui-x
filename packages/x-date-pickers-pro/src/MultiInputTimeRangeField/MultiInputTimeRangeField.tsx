@@ -117,6 +117,9 @@ MultiInputTimeRangeField.propTypes = {
    * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
+  /**
+   * The ref object used to imperatively interact with the end field.
+   */
   endFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * Format of the date when rendered in the input(s).
@@ -244,6 +247,9 @@ MultiInputTimeRangeField.propTypes = {
     PropTypes.object,
     PropTypes.string,
   ]),
+  /**
+   * The ref object used to imperatively interact with the start field.
+   */
   startFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   style: PropTypes.object,
   /**

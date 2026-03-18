@@ -61,12 +61,12 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   renameProps({ root, j, props, componentNames: fieldNames });
 
   pickerNames.forEach((componentName) => {
-    root.find(j.JSXElement, { openingElement: { name: { name: componentName } } }).forEach((path) => {
-      j(path)
+    root.find(j.JSXElement, { openingElement: { name: { name: componentName } } }).forEach((elementPath) => {
+      j(elementPath)
         .find(j.JSXAttribute, { name: { name: 'fieldRef' } })
         .forEach((attr) => {
           const value = attr.node.value;
-          const slotPropsAttr = j(path)
+          const slotPropsAttr = j(elementPath)
             .find(j.JSXAttribute, { name: { name: 'slotProps' } })
             .at(0);
 
@@ -96,7 +96,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
               }
             }
           } else {
-            path.value.openingElement.attributes?.push(
+            elementPath.value.openingElement.attributes?.push(
               j.jsxAttribute(
                 j.jsxIdentifier('slotProps'),
                 j.jsxExpressionContainer(

@@ -25,7 +25,13 @@ export interface MultiInputFieldSlotRootProps {
 }
 
 export interface MultiInputFieldRefs<TValue = PickerValue> {
+  /**
+   * The ref object used to imperatively interact with the start field.
+   */
   startFieldRef?: React.Ref<FieldRef<TValue> | null>;
+  /**
+   * The ref object used to imperatively interact with the end field.
+   */
   endFieldRef?: React.Ref<FieldRef<TValue> | null>;
 }
 

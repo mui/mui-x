@@ -19,6 +19,9 @@ interface UseMultiInputRangeFieldSelectedSectionsParameters
     MultiInputFieldRefs {}
 
 export interface UseMultiInputFieldSelectedSectionsResponseItem {
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
   fieldRef?: React.Ref<FieldRef<PickerValue>>;
   selectedSections: FieldSelectedSections;
   onSelectedSectionsChange: (newSelectedSections: FieldSelectedSections) => void;
