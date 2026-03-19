@@ -99,6 +99,8 @@ This codemod does not handle:
 | `lineHighlightElementClasses.root` | `lineClasses.highlight`          |
 | `markElementClasses.root`          | `lineClasses.mark`               |
 | `markElementClasses.animate`       | `lineClasses.markAnimate`        |
+| `pieArcClasses.root`               | `pieClasses.arc`                 |
+| `pieArcClasses.focusIndicator`     | `pieClasses.focusIndicator`      |
 | `funnelSectionClasses.root`        | `funnelClasses.section`          |
 | `funnelSectionClasses.filled`      | `funnelClasses.sectionFilled`    |
 | `funnelSectionClasses.outlined`    | `funnelClasses.sectionOutlined`  |
