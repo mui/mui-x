@@ -5,7 +5,6 @@ import { useChartsLocalization } from '../hooks/useChartsLocalization';
 import { StyledText } from './common';
 
 export function ChartsLoadingOverlay(props: CommonOverlayProps) {
-  
   const { top, left, height, width } = useDrawingArea();
   const { localeText } = useChartsLocalization();
 
