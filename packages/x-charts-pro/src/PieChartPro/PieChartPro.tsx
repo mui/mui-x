@@ -13,11 +13,11 @@ import {
   PiePlot,
 } from '@mui/x-charts/PieChart';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { type ChartsSlotsPro, type ChartsSlotPropsPro } from '../internals/material';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
 import { PIE_CHART_PRO_PLUGINS, type PieChartProPluginSignatures } from './PieChartPro.plugins';
 import {
   type ChartsToolbarProSlotProps,
@@ -36,7 +36,7 @@ export interface PieChartProProps
   extends
     Omit<PieChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
-      ChartContainerProProps<'pie', PieChartProPluginSignatures>,
+      ChartsContainerProProps<'pie', PieChartProPluginSignatures>,
       'series' | 'slots' | 'slotProps'
     > {
   /**
@@ -76,7 +76,7 @@ const PieChartPro = React.forwardRef<HTMLDivElement, PieChartProProps>(
     } = props;
     const margin = defaultizeMargin(marginProps, DEFAULT_PIE_CHART_MARGIN);
 
-    const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+    const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
       'pie',
       PieChartProPluginSignatures
     >({
@@ -97,7 +97,7 @@ const PieChartPro = React.forwardRef<HTMLDivElement, PieChartProProps>(
     const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
 
     return (
-      <ChartDataProviderPro<'pie', PieChartProPluginSignatures> {...chartDataProviderProProps}>
+      <ChartsDataProviderPro<'pie', PieChartProPluginSignatures> {...chartsDataProviderProProps}>
         <ChartsWrapper
           legendPosition={slotProps?.legend?.position}
           legendDirection={slotProps?.legend?.direction ?? 'vertical'}
@@ -120,7 +120,7 @@ const PieChartPro = React.forwardRef<HTMLDivElement, PieChartProProps>(
           </ChartsSurface>
           {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
         </ChartsWrapper>
-      </ChartDataProviderPro>
+      </ChartsDataProviderPro>
     );
   },
 );

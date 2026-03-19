@@ -12,4 +12,4 @@ export * from './getPieCoordinates';
 export * from './PieChart.plugins';
 
 export { pieClasses } from './pieClasses';
-export type { PieClasses, PieClassKey } from './pieClasses';
+export type { PieClasses, PieClassKey, PieArcOwnerState } from './pieClasses';
