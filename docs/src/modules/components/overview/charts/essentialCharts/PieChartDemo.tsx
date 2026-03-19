@@ -1,4 +1,4 @@
-import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
+import { pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -67,7 +67,7 @@ function Pie() {
           },
         ]}
         sx={{
-          [`& .${pieArcLabelClasses.root}`]: {
+          [`& .${pieClasses.arcLabel}`]: {
             fontWeight: 'bold',
           },
         }}

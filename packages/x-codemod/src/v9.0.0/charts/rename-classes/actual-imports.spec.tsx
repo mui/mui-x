@@ -33,3 +33,7 @@ const cls18 = funnelSectionClasses.filled;
 import { sankeyPlotClasses } from '@mui/x-charts-pro';
 const cls19 = sankeyPlotClasses.root;
 const cls20 = sankeyPlotClasses.node;
+
+import { pieArcClasses } from '@mui/x-charts-pro';
+const cls21 = pieArcClasses.root;
+const cls22 = pieArcClasses.focusIndicator;
