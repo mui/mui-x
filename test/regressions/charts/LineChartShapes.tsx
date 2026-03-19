@@ -19,9 +19,8 @@ export default function LineChartShapes() {
       }))}
       height={400}
       width={500}
-      tooltipItem={{ type: 'line', seriesId: 'diamond', dataIndex: 5 }}
       tooltipAxis={[{ axisId: 'x-axis', dataIndex: 1 }]}
-      slotProps={{ tooltip: { trigger: 'item' } }}
+      slotProps={{ tooltip: { trigger: 'axis' } }}
     />
   );
 }
