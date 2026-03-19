@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const labels = ['Group A', 'Group B', 'Group C', 'Group D', 'Group E'];
@@ -11,14 +11,14 @@ export default function SxStyling() {
   return (
     <BarChart
       sx={(theme) => ({
-        [`.${barElementClasses.root}`]: {
+        [`.${barClasses.element}`]: {
           fill: (theme.vars || theme).palette.background.paper,
           strokeWidth: 2,
         },
-        [`.MuiBarElement-series-l_id`]: {
+        [`[data-series="l_id"] .${barClasses.element}`]: {
           stroke: colors[0],
         },
-        [`.MuiBarElement-series-r_id`]: {
+        [`[data-series="r_id"] .${barClasses.element}`]: {
           stroke: colors[1],
         },
         [`.${axisClasses.root}`]: {

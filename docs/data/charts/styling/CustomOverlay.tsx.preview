@@ -1,7 +1,5 @@
 <BarChart
-  slotProps={{
-    noDataOverlay: { message: 'No data to display in this chart' },
-  }}
+  localeText={{ noData: 'No data to display in this chart' }}
   series={[]}
   height={150}
 />

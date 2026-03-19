@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { mergeDateAndTime } from '../../internals/utils/date-utils';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
@@ -18,7 +18,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
   const { value, addPropertiesToDroppedEvent } = parameters;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);

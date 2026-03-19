@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { FunnelChart, funnelSectionClasses } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart, funnelClasses } from '@mui/x-charts-pro/FunnelChart';
 
 export default function FunnelDataAttributes() {
   return (
@@ -7,7 +7,7 @@ export default function FunnelDataAttributes() {
       <FunnelChart
         {...funnelProps}
         sx={{
-          [`[data-series="main"] .${funnelSectionClasses.root}:nth-of-type(1)`]: {
+          [`[data-series="main"] .${funnelClasses.section}:nth-of-type(1)`]: {
             fill: 'url(#pattern)',
           },
         }}

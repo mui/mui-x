@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
 import {
   AreaElement,
   type AreaElementProps,
@@ -65,7 +66,14 @@ const useAggregatedData = () => {
  * - [AreaPlot API](https://mui.com/x/api/charts/area-plot/)
  */
 function AreaPlot(props: AreaPlotProps) {
-  const { slots, slotProps, onItemClick, skipAnimation: inSkipAnimation, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    onItemClick,
+    skipAnimation: inSkipAnimation,
+    className,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
@@ -73,7 +81,7 @@ function AreaPlot(props: AreaPlotProps) {
   const classes = useUtilityClasses();
 
   return (
-    <AreaPlotRoot className={classes.root} {...other}>
+    <AreaPlotRoot className={clsx(classes.areaPlot, className)} {...other}>
       {completedData.map(
         ({ d, seriesId, color, area, gradientId }) =>
           !!area && (

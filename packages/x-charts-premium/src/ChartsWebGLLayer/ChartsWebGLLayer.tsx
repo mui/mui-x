@@ -74,7 +74,7 @@ export const ChartsWebGLLayer = React.forwardRef<
 
   return (
     <ChartsWebGLContext.Provider value={context}>
-      <CanvasPositioner>
+      <CanvasPositioner aria-hidden="true">
         <canvas
           ref={handleRef}
           {...props}
@@ -92,13 +92,17 @@ export const ChartsWebGLLayer = React.forwardRef<
   );
 });
 
-function CanvasPositioner({ children }: React.PropsWithChildren) {
+function CanvasPositioner({
+  children,
+  ...other
+}: React.PropsWithChildren<React.ComponentProps<'div'>>) {
   const store = useStore();
   const svgWidth = store.use(selectorChartSvgWidth);
   const svgHeight = store.use(selectorChartSvgHeight);
 
   return (
     <div
+      {...other}
       style={{
         position: 'absolute',
         inset: 0,

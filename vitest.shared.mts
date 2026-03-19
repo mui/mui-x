@@ -78,6 +78,10 @@ export default defineConfig({
             }
           : {
               launchOptions: {
+                args: [
+                  // Enable GPU so WebGL2 is enabled in browser tests
+                  '--enable-gpu',
+                ],
                 // Required for tests which use scrollbars.
                 ignoreDefaultArgs: ['--hide-scrollbars'],
               },

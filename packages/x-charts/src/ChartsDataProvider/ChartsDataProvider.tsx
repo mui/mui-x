@@ -24,11 +24,11 @@ export interface ChartsDataProviderSlots extends ChartsSlots {}
 export interface ChartsDataProviderSlotProps extends ChartsSlotProps {}
 
 export type ChartsDataProviderProps<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 > = React.PropsWithChildren<
-  ChartsProviderProps<TSeries, TSignatures>['pluginParams'] &
-    Pick<ChartsProviderProps<TSeries, TSignatures>, 'plugins'>
+  ChartsProviderProps<SeriesType, TSignatures>['pluginParams'] &
+    Pick<ChartsProviderProps<SeriesType, TSignatures>, 'plugins'>
 > &
   ChartsLocalizationProviderProps & {
     /**
@@ -69,14 +69,14 @@ export type ChartsDataProviderProps<
  * ```
  */
 function ChartsDataProvider<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
->(props: ChartsDataProviderProps<TSeries, TSignatures>) {
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+>(props: ChartsDataProviderProps<SeriesType, TSignatures>) {
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartsDataProviderProps(props);
 
   return (
-    <ChartsProvider<TSeries, TSignatures> {...chartProviderProps}>
+    <ChartsProvider<SeriesType, TSignatures> {...chartProviderProps}>
       <ChartsLocalizationProvider localeText={localeText}>
         <ChartsSlotsProvider
           slots={slots}
@@ -107,12 +107,6 @@ ChartsDataProvider.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

@@ -3,8 +3,9 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { RadarChart, type RadarChartProps } from '@mui/x-charts/RadarChart';
 import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
 import { chartsTooltipClasses } from '../ChartsTooltip';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
+import { radarClasses } from './radarClasses';
 
 const radarConfig: RadarChartProps = {
   height: 100,
@@ -37,14 +38,14 @@ describe('<RadarChart />', () => {
     const onHighlightChange = vi.fn();
     const { user } = render(<RadarChart {...radarConfig} onHighlightChange={onHighlightChange} />);
 
-    const path = document.querySelector<HTMLElement>('svg .MuiRadarSeriesPlot-area')!;
+    const path = document.querySelector<HTMLElement>(`svg .${radarClasses.seriesArea}`)!;
     await user.pointer({ target: path });
 
     expect(onHighlightChange.mock.calls.length).to.equal(1);
   });
 
   it.skipIf(isJSDOM)('should highlight axis on hover', async () => {
-    const { user } = render(
+    const { user, container } = render(
       <div
         style={{
           margin: -8, // Removes the body default margins
@@ -56,10 +57,14 @@ describe('<RadarChart />', () => {
       </div>,
     );
 
-    const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
-    await user.pointer([{ target: svg, coords: { clientX: 45, clientY: 45 } }]);
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
+    await user.pointer([{ target: layerContainer, coords: { clientX: 45, clientY: 45 } }]);
 
-    expect(document.querySelector<HTMLElement>('svg .MuiRadarAxisHighlight-root')!).toBeVisible();
+    expect(
+      document.querySelector<HTMLElement>(`svg .${radarClasses.axisHighlightRoot}`)!,
+    ).toBeVisible();
   });
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
@@ -68,7 +73,7 @@ describe('<RadarChart />', () => {
     async () => {
       const cellSelector = `.${chartsTooltipClasses.cell}, .${chartsTooltipClasses.root} caption`;
 
-      const { user, container } = render(
+      const { user } = render(
         <RadarChart
           {...radarConfig}
           radar={{ metrics: ['A', 'B', 'C'] }}
@@ -77,13 +82,11 @@ describe('<RadarChart />', () => {
             { data: [11, 16, 21], label: 'Series 2' },
           ]}
           slotProps={{ tooltip: { trigger: 'item' } }}
-          enableKeyboardNavigation
         />,
       );
 
-      // Focus the chart container (the div with tabIndex=0)
-      const chartContainer = container.querySelector<HTMLElement>('[tabindex="0"]')!;
-      await user.click(chartContainer);
+      // Focus the chart
+      await user.keyboard('{Tab}');
 
       // Navigate to the first item (dataIndex=0)
       await user.keyboard('[ArrowRight]');

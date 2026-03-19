@@ -5,6 +5,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { MarkElement } from './MarkElement';
 import { CircleMarkElement } from './CircleMarkElement';
+import { lineClasses } from './lineClasses';
 
 function TestWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -25,7 +26,7 @@ describe.for([
 ])('%s data attributes', ([_, MarkElementComponent]) => {
   const { render } = createRenderer();
 
-  it('should have data-series-id attribute', () => {
+  it('should have data-series attribute', () => {
     render(
       <TestWrapper>
         <MarkElementComponent
@@ -41,7 +42,7 @@ describe.for([
     );
 
     const mark = screen.getByTestId('mark');
-    expect(mark.getAttribute('data-series-id')).to.equal('s1');
+    expect(mark.getAttribute('data-series')).to.equal('s1');
   });
 
   it('should have data-index attribute', () => {
@@ -63,26 +64,6 @@ describe.for([
     expect(mark.getAttribute('data-index')).to.equal('2');
   });
 
-  it('should have both new and deprecated classes', () => {
-    render(
-      <TestWrapper>
-        <MarkElementComponent
-          seriesId="s1"
-          dataIndex={0}
-          x={10}
-          y={10}
-          color="red"
-          shape="circle"
-          data-testid="mark"
-        />
-      </TestWrapper>,
-    );
-
-    const mark = screen.getByTestId('mark');
-    expect(mark.classList.contains('MuiLineChart-mark')).to.equal(true);
-    expect(mark.classList.contains('MuiMarkElement-root')).to.equal(true);
-  });
-
   it('should apply custom classes passed via the classes prop', () => {
     render(
       <TestWrapper>
@@ -101,7 +82,7 @@ describe.for([
 
     const mark = screen.getByTestId('mark');
     expect(mark.classList.contains('my-custom-mark')).to.equal(true);
-    expect(mark.classList.contains('MuiLineChart-mark')).to.equal(true);
+    expect(mark.classList.contains(lineClasses.mark)).to.equal(true);
   });
 });
 

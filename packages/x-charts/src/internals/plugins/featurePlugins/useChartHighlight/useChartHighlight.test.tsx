@@ -2,7 +2,6 @@ import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
-import { CHART_SELECTOR } from '../../../../tests/constants';
 
 describe('highlight', () => {
   const { render } = createRenderer();
@@ -23,11 +22,9 @@ describe('highlight', () => {
         skipAnimation
         margin={0}
         series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-        enableKeyboardNavigation
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
     const firstBar = container.querySelector(
       `[data-series="A"] .${barClasses.element}:nth-child(1)`,
     );
@@ -37,7 +34,7 @@ describe('highlight', () => {
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
 
-    await user.click(svg);
+    await user.keyboard('{Tab}');
     await user.keyboard('[ArrowRight]');
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal('true');
@@ -54,12 +51,10 @@ describe('highlight', () => {
           skipAnimation
           margin={0}
           series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-          enableKeyboardNavigation
           highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
         />,
       );
 
-      const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
       const firstBar = container.querySelector(
         `[data-series="A"] .${barClasses.element}:nth-child(1)`,
       );
@@ -70,7 +65,7 @@ describe('highlight', () => {
       expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
       expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
 
-      await user.click(svg);
+      await user.keyboard('{Tab}');
       await user.keyboard('[ArrowRight]');
 
       expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
@@ -86,12 +81,10 @@ describe('highlight', () => {
         skipAnimation
         margin={0}
         series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
-        enableKeyboardNavigation
         highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
       />,
     );
 
-    const svg = container.querySelector<SVGSVGElement>(CHART_SELECTOR)!;
     const firstBar = container.querySelector(
       `[data-series="A"] .${barClasses.element}:nth-child(1)`,
     );
@@ -102,7 +95,7 @@ describe('highlight', () => {
     expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
     expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
 
-    await user.click(svg);
+    await user.keyboard('{Tab}');
     await user.keyboard('[ArrowRight]');
 
     expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);

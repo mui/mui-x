@@ -44,7 +44,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
 
-    if (!element || !params.enableKeyboardNavigation) {
+    if (!element || params.disableKeyboardNavigation) {
       return undefined;
     }
 
@@ -100,18 +100,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       element.removeEventListener('blur', removeFocus);
       element.removeEventListener('focus', restoreFocus);
     };
-  }, [chartsLayerContainerRef, removeFocus, restoreFocus, params.enableKeyboardNavigation, store]);
+  }, [chartsLayerContainerRef, removeFocus, restoreFocus, params.disableKeyboardNavigation, store]);
 
   useEnhancedEffect(() => {
-    if (
-      store.state.keyboardNavigation.enableKeyboardNavigation !== params.enableKeyboardNavigation
-    ) {
-      store.set('keyboardNavigation', {
-        ...store.state.keyboardNavigation,
-        enableKeyboardNavigation: !!params.enableKeyboardNavigation,
-      });
-    }
-  }, [store, params.enableKeyboardNavigation]);
+    store.set('keyboardNavigation', {
+      ...store.state.keyboardNavigation,
+      enabled: !params.disableKeyboardNavigation,
+    });
+  }, [store, params.disableKeyboardNavigation]);
 
   return {};
 };
@@ -120,10 +116,10 @@ useChartKeyboardNavigation.getInitialState = (params) => ({
   keyboardNavigation: {
     item: null,
     isFocused: false,
-    enableKeyboardNavigation: !!params.enableKeyboardNavigation,
+    enabled: !params.disableKeyboardNavigation,
   },
 });
 
 useChartKeyboardNavigation.params = {
-  enableKeyboardNavigation: true,
+  disableKeyboardNavigation: true,
 };

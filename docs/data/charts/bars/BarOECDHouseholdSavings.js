@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
@@ -38,7 +38,6 @@ export default function BarOECDHouseholdSavings() {
       <Typography variant="h6" textAlign="center">
         Household Savings in OECD Countries (2016)
       </Typography>
-
       <FormControl fullWidth>
         <FormLabel id="gradient-units-label">Gradient Units</FormLabel>
         <RadioGroup
@@ -60,7 +59,6 @@ export default function BarOECDHouseholdSavings() {
           />
         </RadioGroup>
       </FormControl>
-
       <BarChart
         {...settings}
         yAxis={[
@@ -81,7 +79,7 @@ export default function BarOECDHouseholdSavings() {
         sx={
           gradientUnits === 'userSpaceOnUse'
             ? {
-                [`.${barElementClasses.root}`]: {
+                [`.${barClasses.element}`]: {
                   fill: 'url(#savings-gradient-user-space)',
                 },
               }

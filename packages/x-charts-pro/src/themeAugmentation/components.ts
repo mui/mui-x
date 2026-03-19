@@ -1,6 +1,18 @@
 import { type ComponentsProps, type ComponentsOverrides } from '@mui/material/styles';
 
 export interface ChartsProComponents<Theme = unknown> {
+  // FunnelChart components
+  MuiFunnelChart?: {
+    defaultProps?: ComponentsProps['MuiFunnelChart'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiFunnelChart'];
+  };
+  MuiFunnelSection?: {
+    defaultProps?: ComponentsProps['MuiFunnelSection'];
+  };
+  MuiFunnelSectionLabel?: {
+    defaultProps?: ComponentsProps['MuiFunnelSection'];
+  };
+
   // BarChartPro components
   MuiBarChartPro?: {
     defaultProps?: ComponentsProps['MuiBarChartPro'];
@@ -9,14 +21,26 @@ export interface ChartsProComponents<Theme = unknown> {
   MuiLineChartPro?: {
     defaultProps?: ComponentsProps['MuiLineChartPro'];
   };
+
   // Heatmap components
   MuiHeatmap?: {
     defaultProps?: ComponentsProps['MuiHeatmap'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmap'];
   };
+  MuiHeatmapPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiHeatmapPlot'];
+  };
+
   // ScatterChartPro components
   MuiScatterChartPro?: {
     defaultProps?: ComponentsProps['MuiScatterChartPro'];
+  };
+
+  // SankeyChart components
+  MuiSankeyChart?: {
+    defaultProps?: ComponentsProps['MuiSankeyChart'];
+  };
+  MuiSankeyPlot?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiSankeyPlot'];
   };
 }
 

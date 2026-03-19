@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { useRadarAxis, type UseRadarAxisParams } from './useRadarAxis';
 import { getLabelAttributes } from './RadarAxis.utils';
-import { type RadarAxisClasses, useUtilityClasses } from './radarAxisClasses';
+import { type RadarClasses, useUtilityClasses } from '../radarClasses';
 
 export interface RadarAxisProps extends UseRadarAxisParams {
   /**
@@ -28,7 +28,7 @@ export interface RadarAxisProps extends UseRadarAxisParams {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<RadarAxisClasses>;
+  classes?: Partial<Pick<RadarClasses, 'axisRoot' | 'axisLine' | 'axisLabel'>>;
 }
 
 function RadarAxis(props: RadarAxisProps) {
@@ -45,12 +45,12 @@ function RadarAxis(props: RadarAxisProps) {
   const { center, angle, labels } = data;
 
   return (
-    <g className={classes.root}>
+    <g className={classes.axisRoot}>
       <path
         d={`M ${center.x} ${center.y} L ${labels[labels.length - 1].x} ${labels[labels.length - 1].y}`}
         stroke={(theme.vars ?? theme).palette.text.primary}
         strokeOpacity={0.3}
-        className={classes.line}
+        className={classes.axisLine}
       />
       {labels.map(({ x, y, formattedValue }) => (
         <text
@@ -58,7 +58,7 @@ function RadarAxis(props: RadarAxisProps) {
           fontSize={12}
           fill={(theme.vars ?? theme).palette.text.primary}
           stroke="none"
-          className={classes.label}
+          className={classes.axisLabel}
           {...getLabelAttributes({ labelOrientation, x, y, angle, textAnchor, dominantBaseline })}
         >
           {formattedValue}

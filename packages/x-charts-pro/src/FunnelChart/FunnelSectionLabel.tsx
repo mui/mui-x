@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { consumeSlots, type SeriesId } from '@mui/x-charts/internals';
-import { type FunnelSectionClasses, useLabelUtilityClasses } from './funnelSectionClasses';
+import clsx from 'clsx';
+import { useUtilityClasses, type FunnelClasses } from './funnelClasses';
 
 export interface FunnelSectionLabelConfig {
   x: number;
@@ -16,30 +17,44 @@ export interface FunnelSectionLabelProps extends Omit<
   React.SVGProps<SVGTextElement>,
   'ref' | 'id'
 > {
-  classes?: Partial<FunnelSectionClasses>;
+  classes?: Partial<FunnelClasses>;
   label: FunnelSectionLabelConfig;
+  /**
+   * Indicate if the section is filled or outlined.
+   * Can be used to apply different styles to the label.
+   */
+  variant?: 'filled' | 'outlined';
   seriesId: SeriesId;
   dataIndex: number;
 }
 
+export const FunnelSectionLabelText = styled('text', {
+  name: 'MuiFunnelChart',
+  slot: 'SectionLabel',
+})(() => ({
+  transition:
+    'opacity 0.2s ease-in, fill 0.2s ease-in, fill-opacity 0.2s ease-in, filter 0.2s ease-in',
+}));
+
 /**
  * @ignore - internal component.
  */
-const FunnelSectionLabel = consumeSlots(
+const FunnelSectionLabel = consumeSlots<FunnelSectionLabelProps, SVGTextElement>(
   'MuiFunnelSectionLabel',
   'funnelSectionLabel',
   {
-    classesResolver: useLabelUtilityClasses,
+    classesResolver: useUtilityClasses,
   },
   React.forwardRef(function FunnelSectionLabel(
     props: FunnelSectionLabelProps,
     ref: React.Ref<SVGTextElement>,
   ) {
-    const { classes, color, onClick, className, label, seriesId, dataIndex, ...other } = props;
+    const { classes, color, onClick, className, label, variant, seriesId, dataIndex, ...other } =
+      props;
     const theme = useTheme();
 
     return (
-      <text
+      <FunnelSectionLabelText
         stroke="none"
         pointerEvents="none"
         fontFamily={theme.typography.body2.fontFamily}
@@ -51,7 +66,7 @@ const FunnelSectionLabel = consumeSlots(
         fontStyle={theme.typography.body2.fontStyle}
         fontVariant={theme.typography.body2.fontVariant}
         fill={(theme.vars || theme)?.palette?.text?.primary}
-        className={classes?.label}
+        className={clsx(classes?.sectionLabel, className)}
         x={label.x}
         y={label.y}
         textAnchor={label.textAnchor ?? 'middle'}
@@ -60,7 +75,7 @@ const FunnelSectionLabel = consumeSlots(
         ref={ref}
       >
         {label.value}
-      </text>
+      </FunnelSectionLabelText>
     );
   }),
 );

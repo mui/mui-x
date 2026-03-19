@@ -1,8 +1,8 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart, funnelClasses } from '@mui/x-charts-pro/FunnelChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config = {
   series: [
@@ -51,7 +51,7 @@ describe('FunnelChart - click event', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAxisClick = vi.fn();
-      const { user } = render(
+      const { user, container } = render(
         <div
           style={{
             width: 400,
@@ -61,12 +61,13 @@ describe('FunnelChart - click event', () => {
           <FunnelChart {...config} onAxisClick={onAxisClick} />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
-
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 90, clientY: 100 },
         },
       ]);
@@ -80,7 +81,7 @@ describe('FunnelChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 120, clientY: 300 },
         },
       ]);
@@ -97,7 +98,7 @@ describe('FunnelChart - click event', () => {
       'should provide the right context as second argument with layout="horizontal"',
       async () => {
         const onAxisClick = vi.fn();
-        const { user } = render(
+        const { user, container } = render(
           <div
             style={{
               width: 400,
@@ -111,12 +112,14 @@ describe('FunnelChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 50, clientY: 100 },
           },
         ]);
@@ -130,7 +133,7 @@ describe('FunnelChart - click event', () => {
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 300, clientY: 140 },
           },
         ]);
@@ -148,7 +151,7 @@ describe('FunnelChart - click event', () => {
       'should provide the correct axis values when using category axis',
       async () => {
         const onAxisClick = vi.fn();
-        const { user } = render(
+        const { user, container } = render(
           <div
             style={{
               width: 400,
@@ -162,12 +165,15 @@ describe('FunnelChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
 
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 90, clientY: 100 },
           },
         ]);
@@ -181,7 +187,7 @@ describe('FunnelChart - click event', () => {
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 120, clientY: 300 },
           },
         ]);
@@ -198,7 +204,7 @@ describe('FunnelChart - click event', () => {
   describe('onItemClick', () => {
     it('should add cursor="pointer" to bar elements', () => {
       render(<FunnelChart {...config} onItemClick={() => {}} />);
-      const paths = document.querySelectorAll<HTMLElement>('path.MuiFunnelSection-root');
+      const paths = document.querySelectorAll<HTMLElement>(`path.${funnelClasses.section}`);
 
       expect(Array.from(paths).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -222,9 +228,11 @@ describe('FunnelChart - click event', () => {
         </div>,
       );
 
-      const pathsBig = document.querySelectorAll<HTMLElement>('path.MuiFunnelSection-series-big');
+      const pathsBig = document.querySelectorAll<HTMLElement>(
+        `[data-series="big"] path.${funnelClasses.section}`,
+      );
       const pathsSmall = document.querySelectorAll<HTMLElement>(
-        'path.MuiFunnelSection-series-small',
+        `[data-series="small"] path.${funnelClasses.section}`,
       );
 
       await user.click(pathsBig[0]);

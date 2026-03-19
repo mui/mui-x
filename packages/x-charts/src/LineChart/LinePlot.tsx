@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
 import {
   LineElement,
   type LineElementProps,
@@ -64,7 +65,14 @@ const useAggregatedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    className,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
@@ -72,7 +80,7 @@ function LinePlot(props: LinePlotProps) {
   const classes = useUtilityClasses();
 
   return (
-    <LinePlotRoot className={classes.root} {...other}>
+    <LinePlotRoot className={clsx(classes.linePlot, className)} {...other}>
       {completedData.map(({ d, seriesId, color, gradientId, hidden }) => {
         return (
           <LineElement
