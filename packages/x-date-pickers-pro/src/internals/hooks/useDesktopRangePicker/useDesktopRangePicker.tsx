@@ -34,7 +34,7 @@ export const useDesktopRangePicker = <
 }: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier({
     releaseDate: '__RELEASE_INFO__',
-    version: (process.env as any).MUI_VERSION,
+    version: process.env.MUI_VERSION!,
     name: 'x-date-pickers-pro',
   });
 

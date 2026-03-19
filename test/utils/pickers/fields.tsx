@@ -110,7 +110,7 @@ export const buildFieldInteractions = <P extends {}>({
       } as any;
 
       if (componentFamily === 'field') {
-        allProps.unstableFieldRef = fieldRef;
+        allProps.fieldRef = fieldRef;
       } else {
         if (!allProps.slotProps) {
           allProps.slotProps = {};
@@ -125,9 +125,9 @@ export const buildFieldInteractions = <P extends {}>({
           Component.render.name.includes('Range') &&
           allProps.slots?.field?.fieldType === 'multi-input';
         if (hasMultipleInputs) {
-          allProps.slotProps.field.unstableStartFieldRef = fieldRef;
+          allProps.slotProps.field.startFieldRef = fieldRef;
         } else {
-          allProps.slotProps.field.unstableFieldRef = fieldRef;
+          allProps.slotProps.field.fieldRef = fieldRef;
         }
       }
 

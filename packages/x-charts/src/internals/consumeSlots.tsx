@@ -48,7 +48,7 @@ import * as React from 'react';
 export const consumeSlots = <
   Props extends {},
   Ref extends {},
-  RenderFunction = (props: Props, ref: React.Ref<Ref>) => React.ElementType,
+  RenderFunction = React.ForwardRefExoticComponent<Props & React.RefAttributes<Ref>>,
 >(
   name: string,
   slotPropName: string,

@@ -11,3 +11,4 @@ export * from './getSeriesWithDefaultValues.types';
 export * from './identifierSerializer.types';
 export * from './identifierCleaner.types';
 export * from './getItemAtPosition.types';
+export * from './TooltipContent.types';

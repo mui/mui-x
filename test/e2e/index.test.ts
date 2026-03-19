@@ -966,18 +966,17 @@ async function initializeEnvironment(
         await page.getByRole('gridcell', { name: '11' }).click();
 
         // assert that the hours section has been selected using two APIs
-        await waitFor(async () => {
-          // firefox does not support document.getSelection().toString() on input elements
-          if (browserType.name() === 'firefox') {
-            expect(
-              await page.evaluate(
-                () => (document.activeElement as HTMLInputElement | null)?.selectionStart,
-              ),
-            ).to.equal(11);
-          } else {
+        // firefox does not support document.getSelection().toString() on input elements
+        if (browserType.name() === 'firefox') {
+          await page.waitForFunction(() => {
+            const activeElement = document.activeElement;
+            return activeElement instanceof HTMLInputElement && activeElement.selectionStart === 11;
+          });
+        } else {
+          await waitFor(async () => {
             expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
-          }
-        });
+          });
+        }
       });
     });
 

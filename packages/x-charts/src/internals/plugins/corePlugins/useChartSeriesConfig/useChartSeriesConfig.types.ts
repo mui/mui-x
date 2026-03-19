@@ -7,22 +7,25 @@ import {
 } from '../../../../models/seriesType';
 import { type VisibilityIdentifierWithType } from '../../featurePlugins/useChartVisibilityManager';
 
-export interface UseChartSeriesConfigParameters<T extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartSeriesConfigParameters<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> {
   /**
    * The configuration for the series types.
    * This is used to define how each series type should be processed, colored, and displayed.
    */
-  seriesConfig?: ChartSeriesConfig<T>;
+  seriesConfig?: ChartSeriesConfig<SeriesType>;
 }
 
-export type UseChartSeriesConfigDefaultizedParameters<T extends ChartSeriesType = ChartSeriesType> =
-  UseChartSeriesConfigParameters<T> & {
-    seriesConfig: ChartSeriesConfig<T>;
-  };
+export type UseChartSeriesConfigDefaultizedParameters<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> = UseChartSeriesConfigParameters<SeriesType> & {
+  seriesConfig: ChartSeriesConfig<SeriesType>;
+};
 
-export interface UseChartSeriesConfigState<T extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartSeriesConfigState<SeriesType extends ChartSeriesType = ChartSeriesType> {
   seriesConfig: {
-    config: ChartSeriesConfig<T>;
+    config: ChartSeriesConfig<SeriesType>;
   };
 }
 
@@ -66,10 +69,10 @@ export interface UseChartSeriesConfigInstance {
   cleanIdentifier: CleanIdentifierFunction;
 }
 
-export type UseChartSeriesConfigSignature<T extends ChartSeriesType = ChartSeriesType> =
+export type UseChartSeriesConfigSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
-    params: UseChartSeriesConfigParameters<T>;
-    defaultizedParams: UseChartSeriesConfigDefaultizedParameters<T>;
-    state: UseChartSeriesConfigState<T>;
+    params: UseChartSeriesConfigParameters<SeriesType>;
+    defaultizedParams: UseChartSeriesConfigDefaultizedParameters<SeriesType>;
+    state: UseChartSeriesConfigState<SeriesType>;
     instance: UseChartSeriesConfigInstance;
   }>;

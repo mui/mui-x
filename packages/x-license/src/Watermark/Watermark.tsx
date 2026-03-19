@@ -18,6 +18,8 @@ function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
       return 'MUI X Product not covered by plan';
     case LICENSE_STATUS.NotFound:
       return 'MUI X Missing license key';
+    case LICENSE_STATUS.NotValidForPackage:
+      return 'MUI X License key version mismatch';
     default:
       throw new Error(
         'MUI X: Unhandled license status encountered in watermark display. ' +

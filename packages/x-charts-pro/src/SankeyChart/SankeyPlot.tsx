@@ -7,7 +7,7 @@ import {
   type SankeyNodeIdentifierWithData,
 } from './sankey.types';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
+import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
 import { SankeyNodePlot } from './SankeyNodePlot';
 import { SankeyLinkPlot } from './SankeyLinkPlot';
 import { SankeyNodeLabelPlot } from './SankeyNodeLabelPlot';
@@ -17,7 +17,7 @@ export interface SankeyPlotProps {
   /**
    * Classes applied to the various elements.
    */
-  classes?: Partial<SankeyPlotClasses>;
+  classes?: Partial<SankeyClasses>;
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -39,8 +39,8 @@ export interface SankeyPlotProps {
 }
 
 const SankeyPlotRoot = styled('g', {
-  slot: 'internal',
-  shouldForwardProp: undefined,
+  name: 'MuiSankeyPlot',
+  slot: 'Root',
 })({});
 
 /**

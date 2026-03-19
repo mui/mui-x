@@ -7,20 +7,20 @@ import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/
 import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export type UseChartsContainerPropsReturnValue<
-  TSeries extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = {
-  chartDataProviderProps: ChartDataProviderProps<TSeries, TSignatures>;
+  chartDataProviderProps: ChartDataProviderProps<SeriesType, TSignatures>;
   chartsSurfaceProps: ChartsSurfaceProps;
   children: React.ReactNode;
 };
 
 export const useChartsContainerProps = <
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
-  props: ChartsContainerProps<TSeries, TSignatures>,
-): UseChartsContainerPropsReturnValue<TSeries, TSignatures> => {
+  props: ChartsContainerProps<SeriesType, TSignatures>,
+): UseChartsContainerPropsReturnValue<SeriesType, TSignatures> => {
   const {
     width,
     height,
@@ -37,7 +37,9 @@ export const useChartsContainerProps = <
     onTooltipAxisChange,
     tooltipItem,
     onTooltipItemChange,
+    disableHitArea,
     disableVoronoi,
+    hitAreaRadius,
     voronoiMaxRadius,
     onItemClick,
     disableAxisListener,
@@ -53,18 +55,18 @@ export const useChartsContainerProps = <
     radiusAxis,
     skipAnimation,
     seriesConfig,
+    experimentalFeatures,
     plugins,
     localeText,
     slots,
     slotProps,
-    experimentalFeatures,
-    enableKeyboardNavigation,
+    disableKeyboardNavigation,
     brushConfig,
     onHiddenItemsChange,
     hiddenItems,
     initialHiddenItems,
     ...other
-  } = props as ChartsContainerProps<TSeries, AllPluginSignatures<TSeries>>;
+  } = props as ChartsContainerProps<SeriesType, AllPluginSignatures<SeriesType>>;
 
   const chartsSurfaceProps: ChartsSurfaceProps = {
     title,
@@ -88,7 +90,9 @@ export const useChartsContainerProps = <
     onTooltipAxisChange,
     tooltipItem,
     onTooltipItemChange,
+    disableHitArea,
     disableVoronoi,
+    hitAreaRadius,
     voronoiMaxRadius,
     onItemClick,
     axesGap,
@@ -103,7 +107,7 @@ export const useChartsContainerProps = <
     localeText,
     seriesConfig,
     experimentalFeatures,
-    enableKeyboardNavigation,
+    disableKeyboardNavigation,
     brushConfig,
     onHiddenItemsChange,
     hiddenItems,
@@ -111,7 +115,7 @@ export const useChartsContainerProps = <
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,
-  } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
+  } as unknown as ChartDataProviderProps<SeriesType, TSignatures>;
 
   return {
     chartDataProviderProps,

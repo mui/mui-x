@@ -9,7 +9,7 @@ import { EventCalendarPremiumParameters } from './EventCalendarPremiumStore.type
 export function useEventCalendarPremium<TEvent extends object, TResource extends object>(
   parameters: EventCalendarPremiumParameters<TEvent, TResource>,
 ): EventCalendarPremiumStore<TEvent, TResource> {
-  const adapter = useAdapter();
+  const adapter = useAdapter(parameters.dateLocale);
   const store = useRefWithInit(() => new EventCalendarPremiumStore(parameters, adapter)).current;
 
   useIsoLayoutEffect(

@@ -61,7 +61,7 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
 };
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
-  version: (process.env as any).MUI_VERSION,
+  version: process.env.MUI_VERSION!,
   name: 'x-data-grid-premium' as const,
 };
 const watermark = <Watermark packageInfo={packageInfo} />;
@@ -537,7 +537,6 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    charts: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**

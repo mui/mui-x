@@ -68,12 +68,7 @@ export interface ScatterChartProps
   extends
     Omit<
       ChartContainerProps<'scatter', ScatterChartPluginSignatures>,
-      | 'series'
-      | 'plugins'
-      | 'onItemClick'
-      | 'experimentalFeatures'
-      | 'highlightedAxis'
-      | 'onHighlightedAxisChange'
+      'series' | 'plugins' | 'onItemClick' | 'highlightedAxis' | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -94,8 +89,20 @@ export interface ScatterChartProps
    */
   grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
+   * If true, the hit area interaction is disabled and falls back to hover events.
+   * @default false
+   */
+  disableHitArea?: boolean;
+  /**
+   * If true, the closest point interaction is disabled and falls back to hover events.
+   * @default false
+   * @deprecated Use `disableHitArea` instead.
+   */
+  disableClosestPoint?: boolean;
+  /**
    * If true, the interaction will not use the Voronoi cell and fall back to hover events.
    * @default false
+   * @deprecated Use `disableHitArea` instead.
    */
   disableVoronoi?: boolean;
   /**
@@ -119,7 +126,7 @@ export interface ScatterChartProps
   slotProps?: ScatterChartSlotProps;
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using hit area interaction. Or the Mouse event from the scatter element, when `disableHitArea=true`.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?:
@@ -223,6 +230,10 @@ ScatterChart.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -231,11 +242,30 @@ ScatterChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * If true, the interaction will not use the Voronoi cell and fall back to hover events.
+   * If true, the closest point interaction is disabled and falls back to hover events.
+   * @default false
+   * @deprecated Use `disableHitArea` instead.
+   */
+  disableClosestPoint: PropTypes.bool,
+  /**
+   * If true, the hit area interaction is disabled and falls back to hover events.
    * @default false
    */
+  disableHitArea: PropTypes.bool,
+  /**
+   * If `true`, disables keyboard navigation for the chart.
+   */
+  disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * If true, the interaction will not use the Voronoi cell and fall back to hover events.
+   * @default false
+   * @deprecated Use `disableHitArea` instead.
+   */
   disableVoronoi: PropTypes.bool,
-  enableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -300,6 +330,12 @@ ScatterChart.propTypes = {
       seriesId: PropTypes.string.isRequired,
     }),
   ]),
+  /**
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  hitAreaRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -384,7 +420,7 @@ ScatterChart.propTypes = {
   onHighlightChange: PropTypes.func,
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using hit area interaction. Or the Mouse event from the scatter element, when `disableHitArea=true`.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
@@ -399,7 +435,7 @@ ScatterChart.propTypes = {
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
    */
   onTooltipItemChange: PropTypes.func,
   /**
@@ -442,6 +478,10 @@ ScatterChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The controlled axis tooltip.
@@ -472,6 +512,7 @@ ScatterChart.propTypes = {
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
+   * @deprecated Use `hitAreaRadius` instead.
    */
   voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**

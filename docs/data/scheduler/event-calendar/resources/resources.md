@@ -54,10 +54,6 @@ const resources = [
 
 {{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
-Nested resources are not yet supported in the resource visibility UI in the sidebar. Only top level resource can be toggled.
-:::
-
 ## Visible resources
 
 Use the `defaultVisibleResources` prop to initialize the visible resources.
