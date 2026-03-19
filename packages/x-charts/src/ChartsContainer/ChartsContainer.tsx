@@ -50,13 +50,13 @@ const ChartsContainer = React.forwardRef(function ChartsContainer<
   SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(props: ChartsContainerProps<SeriesType, TSignatures>, ref: React.Ref<HTMLDivElement>) {
-  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartsContainerProps<
+  const { chartsDataProviderProps, children, chartsSurfaceProps } = useChartsContainerProps<
     SeriesType,
     TSignatures
   >(props);
 
   return (
-    <ChartsDataProvider {...chartDataProviderProps}>
+    <ChartsDataProvider {...chartsDataProviderProps}>
       <ChartsSurface {...chartsSurfaceProps} ref={ref}>
         {children}
       </ChartsSurface>

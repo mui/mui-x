@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
 
 describe('<ChartsLayerContainer />', () => {
   const { render } = createRenderer();
@@ -10,11 +10,11 @@ describe('<ChartsLayerContainer />', () => {
   it('should warn when ChartsSurface is used inside ChartsLayerContainer', () => {
     expect(() =>
       render(
-        <ChartProvider pluginParams={{ width: 100, height: 100, series: [] }}>
+        <ChartsProvider pluginParams={{ width: 100, height: 100, series: [] }}>
           <ChartsLayerContainer>
             <ChartsSurface />
           </ChartsLayerContainer>
-        </ChartProvider>,
+        </ChartsProvider>,
       ),
     ).toErrorDev(
       'MUI X Charts: ChartsSurface should not be used inside ChartsLayerContainer. Render a ChartsSvgLayer instead.',
@@ -23,9 +23,9 @@ describe('<ChartsLayerContainer />', () => {
 
   it('should set aria-label from title prop', () => {
     render(
-      <ChartProvider pluginParams={{ width: 100, height: 100, series: [] }}>
+      <ChartsProvider pluginParams={{ width: 100, height: 100, series: [] }}>
         <ChartsLayerContainer title="My Chart Title" />
-      </ChartProvider>,
+      </ChartsProvider>,
     );
 
     expect(screen.getByLabelText('My Chart Title')).to.not.equal(null);
@@ -33,9 +33,9 @@ describe('<ChartsLayerContainer />', () => {
 
   it('should set aria-describedby from desc prop', () => {
     render(
-      <ChartProvider pluginParams={{ width: 100, height: 100, series: [] }}>
+      <ChartsProvider pluginParams={{ width: 100, height: 100, series: [] }}>
         <ChartsLayerContainer title="Chart" desc="A detailed chart description" />
-      </ChartProvider>,
+      </ChartsProvider>,
     );
 
     const container = screen.getByLabelText('Chart');

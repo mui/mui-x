@@ -6,7 +6,7 @@ import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugi
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import { getChartPoint } from '../internals/getChartPoint';
 import { useStore } from '../internals/store/useStore';
 import { selectorBarItemAtPosition } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
@@ -19,7 +19,7 @@ export function useRegisterItemClickHandlers(
   onItemClick: ((event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void) | undefined,
 ) {
   const { instance } =
-    useChartContext<
+    useChartsContext<
       [UseChartInteractionSignature, UseChartHighlightSignature<'bar'>, UseChartTooltipSignature]
     >();
   const chartsLayerContainerRef = useChartsLayerContainerRef();

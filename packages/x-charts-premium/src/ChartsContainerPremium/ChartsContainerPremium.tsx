@@ -4,9 +4,9 @@ import { ChartsSurface, type ChartsSurfaceProps } from '@mui/x-charts/ChartsSurf
 import { type ChartAnyPluginSignature, type ChartSeriesType } from '@mui/x-charts/internals';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import {
-  ChartDataProviderPremium,
-  type ChartDataProviderPremiumProps,
-} from '../ChartDataProviderPremium';
+  ChartsDataProviderPremium,
+  type ChartsDataProviderPremiumProps,
+} from '../ChartsDataProviderPremium';
 import { useChartsContainerPremiumProps } from './useChartsContainerPremiumProps';
 
 export interface ChartsContainerPremiumSlots {}
@@ -16,7 +16,7 @@ export interface ChartsContainerPremiumSlotProps {}
 export type ChartsContainerPremiumProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
-> = ChartDataProviderPremiumProps<SeriesType, TSignatures> & ChartsSurfaceProps;
+> = ChartsDataProviderPremiumProps<SeriesType, TSignatures> & ChartsSurfaceProps;
 
 type ChartsContainerPremiumComponent = <
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -55,15 +55,15 @@ const ChartsContainerPremium = React.forwardRef(function ChartsContainerPremium<
   SeriesType extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(props: ChartsContainerPremiumProps<SeriesType, TSignatures>, ref: React.Ref<HTMLDivElement>) {
-  const { chartDataProviderPremiumProps, children, chartsSurfaceProps } =
+  const { chartsDataProviderPremiumProps, children, chartsSurfaceProps } =
     useChartsContainerPremiumProps<SeriesType, TSignatures>(props);
 
   return (
-    <ChartDataProviderPremium<SeriesType, TSignatures> {...chartDataProviderPremiumProps}>
+    <ChartsDataProviderPremium<SeriesType, TSignatures> {...chartsDataProviderPremiumProps}>
       <ChartsSurface {...chartsSurfaceProps} ref={ref}>
         {children}
       </ChartsSurface>
-    </ChartDataProviderPremium>
+    </ChartsDataProviderPremium>
   );
 }) as unknown as ChartsContainerPremiumComponent;
 

@@ -7,7 +7,7 @@ import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type UseChartInteractionSignature } from '../useChartInteraction';
 import { type UseChartHighlightSignature } from '../useChartHighlight';
 import { useStore } from '../../../store/useStore';
-import { useChartContext } from '../../../../context/ChartProvider';
+import { useChartsContext } from '../../../../context/ChartsProvider';
 import { getChartPoint } from '../../../getChartPoint';
 import type { UseChartSeriesConfigSignature } from '../../corePlugins/useChartSeriesConfig';
 import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
@@ -20,7 +20,7 @@ import type { UseChartPolarAxisSignature } from '../useChartPolarAxis';
  */
 export function useRegisterPointerInteractions() {
   const { instance } =
-    useChartContext<
+    useChartsContext<
       [
         UseChartInteractionSignature,
         UseChartHighlightSignature<ChartSeriesType>,

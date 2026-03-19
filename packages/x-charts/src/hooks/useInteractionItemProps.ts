@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { ChartSeriesType } from '../models/seriesType/config';
@@ -26,7 +26,7 @@ export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
   onPointerDown?: (event: React.PointerEvent) => void;
 } => {
   const { instance } =
-    useChartContext<
+    useChartsContext<
       [
         UseChartInteractionSignature,
         UseChartHighlightSignature<SeriesType>,
