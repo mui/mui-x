@@ -1,4 +1,3 @@
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { LineChart } from '@mui/x-charts/LineChart';
 import type { MarkShape } from '@mui/x-charts/models/seriesType/line';
 
@@ -22,8 +21,7 @@ export default function LineChartShapes() {
       width={500}
       tooltipItem={{ type: 'line', seriesId: 'diamond', dataIndex: 5 }}
       tooltipAxis={[{ axisId: 'x-axis', dataIndex: 1 }]}
-    >
-      <ChartsTooltip trigger="item" />
-    </LineChart>
+      slotProps={{ tooltip: { trigger: 'item' } }}
+    />
   );
 }
