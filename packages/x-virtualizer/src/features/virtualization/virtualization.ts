@@ -42,7 +42,7 @@ export type VirtualizationParams = {
    * @default 150 */
   columnBufferPx?: number;
   /**
-   * Layout mode for pinned columns.
+   * Controls how the container and render zones are positioned:
    * - 'uncontrolled': uses CSS sticky positioning (default)
    * - 'controlled': uses CSS absolute positioning with JS-computed offsets
    * @default 'uncontrolled'
