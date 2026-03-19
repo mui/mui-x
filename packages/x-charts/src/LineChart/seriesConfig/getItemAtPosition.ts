@@ -69,12 +69,7 @@ function getBracketIndices(
  * Interpolate the y value between two points, accounting for step curves.
  * For step curves, the value switches at midpoint/start/end depending on the variant.
  */
-function interpolateY(
-  yLeft: number,
-  yRight: number,
-  t: number,
-  curve?: CurveType,
-): number {
+function interpolateY(yLeft: number, yRight: number, t: number, curve?: CurveType): number {
   if (curve === 'stepAfter') {
     // Use left value until we reach the right point.
     return yLeft;

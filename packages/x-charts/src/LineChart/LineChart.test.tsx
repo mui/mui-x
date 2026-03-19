@@ -354,43 +354,40 @@ describe('<LineChart />', () => {
       hideLegend: true,
     };
 
-    it.skipIf(isJSDOM)(
-      'should highlight area series when pointer is inside the area',
-      async () => {
-        const onHighlightChange = vi.fn();
-        const { container, user } = render(
-          <div style={{ width: 400, height: 400 }}>
-            <LineChart
-              {...areaConfig}
-              series={[
-                {
-                  id: 's1',
-                  data: [80, 80, 80, 80],
-                  area: true,
-                },
-              ]}
-              xAxis={[{ scaleType: 'point', data: [0, 1, 2, 3], position: 'none' }]}
-              yAxis={[{ min: 0, max: 100, position: 'none' }]}
-              onHighlightChange={onHighlightChange}
-            />
-          </div>,
-        );
+    it.skipIf(isJSDOM)('should highlight area series when pointer is inside the area', async () => {
+      const onHighlightChange = vi.fn();
+      const { container, user } = render(
+        <div style={{ width: 400, height: 400 }}>
+          <LineChart
+            {...areaConfig}
+            series={[
+              {
+                id: 's1',
+                data: [80, 80, 80, 80],
+                area: true,
+              },
+            ]}
+            xAxis={[{ scaleType: 'point', data: [0, 1, 2, 3], position: 'none' }]}
+            yAxis={[{ min: 0, max: 100, position: 'none' }]}
+            onHighlightChange={onHighlightChange}
+          />
+        </div>,
+      );
 
-        const svgLayer = container.querySelector(`.${chartsSvgLayerClasses.root}`)!;
-        const layerContainer = svgLayer.parentElement!;
+      const svgLayer = container.querySelector(`.${chartsSvgLayerClasses.root}`)!;
+      const layerContainer = svgLayer.parentElement!;
 
-        // y=80 maps to pixel 80 (range [400,0]). Area spans from pixel 400 (y=0) to pixel 80 (y=80).
-        // Point at pixel y=300 is inside the area.
-        await user.pointer({
-          target: layerContainer,
-          coords: { clientX: 200, clientY: 300 },
-        });
+      // y=80 maps to pixel 80 (range [400,0]). Area spans from pixel 400 (y=0) to pixel 80 (y=80).
+      // Point at pixel y=300 is inside the area.
+      await user.pointer({
+        target: layerContainer,
+        coords: { clientX: 200, clientY: 300 },
+      });
 
-        expect(onHighlightChange).toHaveBeenCalledWith(
-          expect.objectContaining({ type: 'line', seriesId: 's1' }),
-        );
-      },
-    );
+      expect(onHighlightChange).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'line', seriesId: 's1' }),
+      );
+    });
 
     it.skipIf(isJSDOM)(
       'should fall back to closest-distance when pointer is outside all areas',
@@ -431,63 +428,60 @@ describe('<LineChart />', () => {
       },
     );
 
-    it.skipIf(isJSDOM)(
-      'should highlight correct series in stacked areas',
-      async () => {
-        const onHighlightChange = vi.fn();
-        const { container, user } = render(
-          <div style={{ width: 400, height: 400 }}>
-            <LineChart
-              {...areaConfig}
-              series={[
-                {
-                  id: 'bottom',
-                  data: [30, 30, 30, 30],
-                  area: true,
-                  stack: 'total',
-                },
-                {
-                  id: 'top',
-                  data: [30, 30, 30, 30],
-                  area: true,
-                  stack: 'total',
-                },
-              ]}
-              xAxis={[{ scaleType: 'point', data: [0, 1, 2, 3], position: 'none' }]}
-              yAxis={[{ min: 0, max: 100, position: 'none' }]}
-              onHighlightChange={onHighlightChange}
-            />
-          </div>,
-        );
+    it.skipIf(isJSDOM)('should highlight correct series in stacked areas', async () => {
+      const onHighlightChange = vi.fn();
+      const { container, user } = render(
+        <div style={{ width: 400, height: 400 }}>
+          <LineChart
+            {...areaConfig}
+            series={[
+              {
+                id: 'bottom',
+                data: [30, 30, 30, 30],
+                area: true,
+                stack: 'total',
+              },
+              {
+                id: 'top',
+                data: [30, 30, 30, 30],
+                area: true,
+                stack: 'total',
+              },
+            ]}
+            xAxis={[{ scaleType: 'point', data: [0, 1, 2, 3], position: 'none' }]}
+            yAxis={[{ min: 0, max: 100, position: 'none' }]}
+            onHighlightChange={onHighlightChange}
+          />
+        </div>,
+      );
 
-        const svgLayer = container.querySelector(`.${chartsSvgLayerClasses.root}`)!;
-        const layerContainer = svgLayer.parentElement!;
+      const svgLayer = container.querySelector(`.${chartsSvgLayerClasses.root}`)!;
+      const layerContainer = svgLayer.parentElement!;
 
-        // Bottom series: 0–30, pixels 400–280.
-        // Top series: 30–60, pixels 280–160.
-        // Point at pixel y=350 (data ~12.5) should highlight bottom series.
-        await user.pointer({
-          target: layerContainer,
-          coords: { clientX: 200, clientY: 350 },
-        });
+      // Bottom series: 0–30, pixels 400–280.
+      // Top series: 30–60, pixels 280–160.
+      // Point at pixel y=350 (data ~12.5) should highlight bottom series.
+      await user.pointer({
+        target: layerContainer,
+        coords: { clientX: 200, clientY: 350 },
+      });
 
-        expect(onHighlightChange).toHaveBeenLastCalledWith(
-          expect.objectContaining({ type: 'line', seriesId: 'bottom' }),
-        );
+      expect(onHighlightChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ type: 'line', seriesId: 'bottom' }),
+      );
 
-        onHighlightChange.mockClear();
+      onHighlightChange.mockClear();
 
-        // Point at pixel y=220 (data ~45) should highlight top series.
-        await user.pointer({
-          target: layerContainer,
-          coords: { clientX: 200, clientY: 220 },
-        });
+      // Point at pixel y=220 (data ~45) should highlight top series.
+      await user.pointer({
+        target: layerContainer,
+        coords: { clientX: 200, clientY: 220 },
+      });
 
-        expect(onHighlightChange).toHaveBeenLastCalledWith(
-          expect.objectContaining({ type: 'line', seriesId: 'top' }),
-        );
-      },
-    );
+      expect(onHighlightChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ type: 'line', seriesId: 'top' }),
+      );
+    });
 
     it.skipIf(isJSDOM)(
       'should use closest-distance behavior for non-area line series',
