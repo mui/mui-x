@@ -11,7 +11,6 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
 import { barClasses, useUtilityClasses } from './barClasses';
-import type { BarItem, BarLabelContext } from './BarLabel';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { IndividualBarPlot } from './IndividualBarPlot';
 import { BatchBarPlot } from './BatchBarPlot';
@@ -40,15 +39,6 @@ export interface BarPlotProps {
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
-  /**
-   * @deprecated Use `barLabel` in the chart series instead.
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   /**
    * The type of renderer to use for the bar plot.
    * - `svg-single`: Renders every bar in a `<rect />` element.
@@ -93,14 +83,7 @@ const BarPlotRoot = styled('g', {
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
 function BarPlot(props: BarPlotProps): React.JSX.Element {
-  const {
-    skipAnimation: inSkipAnimation,
-    onItemClick,
-    borderRadius,
-    barLabel,
-    renderer,
-    ...other
-  } = props;
+  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, renderer, ...other } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const batchSkipAnimation = useSkipAnimation(inSkipAnimation);
@@ -137,7 +120,6 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
           className={classes.seriesLabels}
           processedSeries={processedSeries}
           skipAnimation={skipAnimation}
-          barLabel={barLabel}
           {...other}
         />
       ))}
