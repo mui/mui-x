@@ -101,6 +101,8 @@ This codemod does not handle:
 | `markElementClasses.animate`       | `lineClasses.markAnimate`        |
 | `pieArcClasses.root`               | `pieClasses.arc`                 |
 | `pieArcClasses.focusIndicator`     | `pieClasses.focusIndicator`      |
+| `pieArcLabelClasses.root`          | `pieClasses.arcLabel`            |
+| `pieArcLabelClasses.animate`       | `pieClasses.animate`             |
 | `funnelSectionClasses.root`        | `funnelClasses.section`          |
 | `funnelSectionClasses.filled`      | `funnelClasses.sectionFilled`    |
 | `funnelSectionClasses.outlined`    | `funnelClasses.sectionOutlined`  |
