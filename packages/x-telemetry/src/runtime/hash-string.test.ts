@@ -10,7 +10,7 @@ describe.runIf(isJSDOM)('hashString', () => {
   it('should produce the same output as Node crypto.createHash', async () => {
     const input = 'consistency-test';
 
-    const { hashString } = await import('./utils');
+    const { hashString } = await import('./hash-string');
     const runtimeResult = await hashString(input);
 
     expect(runtimeResult).toBe(await nodeHash(input));

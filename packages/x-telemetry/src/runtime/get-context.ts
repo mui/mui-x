@@ -1,6 +1,6 @@
 import telemetryContext from '../context';
 import type { TelemetryContextType } from '../context';
-import { hashString } from './utils';
+import { hashString } from './hash-string';
 import { getWindowStorageItem, setWindowStorageItem } from './window-storage';
 
 function generateId(length: number): string {

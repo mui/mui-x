@@ -20,8 +20,11 @@ async function execCLI(command: string): Promise<string | null> {
 }
 
 export function getPackageName(): string | null {
-  let dir = process.cwd();
-  while (true) {
+  const cwd = process.cwd();
+  const segments = cwd.split(path.sep);
+
+  for (let i = segments.length; i > 0; i -= 1) {
+    const dir = segments.slice(0, i).join(path.sep) || path.sep;
     try {
       const content = fs.readFileSync(path.join(dir, 'package.json'), 'utf-8');
       const pkg = JSON.parse(content);
@@ -31,12 +34,9 @@ export function getPackageName(): string | null {
     } catch (_) {
       // No package.json at this level, continue walking up
     }
-    const parent = path.dirname(dir);
-    if (parent === dir) {
-      return null;
-    }
-    dir = parent;
   }
+
+  return null;
 }
 
 // Q: Why does MUI need a project ID? Why is it looking at my git remote?
