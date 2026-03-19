@@ -7,41 +7,7 @@
     "import { PieArcLabel } from '@mui/x-charts-pro';",
     "import { PieArcLabel } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "animate",
-      "className": "MuiPieArcLabel-animate",
-      "description": "Styles applied to the root element when animation is not skipped.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "faded",
-      "className": "MuiPieArcLabel-faded",
-      "description": "Styles applied to the root element when faded.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "highlighted",
-      "className": "MuiPieArcLabel-highlighted",
-      "description": "Styles applied to the root element when highlighted.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "root",
-      "className": "MuiPieArcLabel-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "series",
-      "className": "MuiPieArcLabel-series",
-      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${pieArcLabelClasses.series}-${seriesId}`.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiPieArcLabel",
   "filename": "/packages/x-charts/src/PieChart/PieArcLabel.tsx",
   "inheritance": null,
