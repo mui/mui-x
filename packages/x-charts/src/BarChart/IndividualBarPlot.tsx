@@ -72,6 +72,7 @@ export function IndividualBarPlot({
                   yOrigin={yOrigin}
                   width={width}
                   height={height}
+                  cursor={onItemClick ? 'pointer' : undefined}
                   {...other}
                 />
               );

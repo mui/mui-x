@@ -115,7 +115,7 @@ function BarElement(props: BarElementProps) {
       height,
       style,
       onClick,
-      cursor: onClick ? 'pointer' : 'unset',
+      cursor: onClick ? 'pointer' : undefined,
       stroke: 'none',
       fill: color,
       skipAnimation,
