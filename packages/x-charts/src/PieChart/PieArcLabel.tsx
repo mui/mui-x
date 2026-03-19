@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
@@ -104,5 +105,25 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     );
   },
 );
+
+PieArcLabel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  arcLabelRadius: PropTypes.number.isRequired,
+  classes: PropTypes.object,
+  color: PropTypes.string.isRequired,
+  cornerRadius: PropTypes.number.isRequired,
+  endAngle: PropTypes.number.isRequired,
+  formattedArcLabel: PropTypes.string,
+  hidden: PropTypes.bool,
+  isFaded: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
+  paddingAngle: PropTypes.number.isRequired,
+  seriesId: PropTypes.string.isRequired,
+  skipAnimation: PropTypes.bool.isRequired,
+  startAngle: PropTypes.number.isRequired,
+} as any;
 
 export { PieArcLabel };
