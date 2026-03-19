@@ -42,18 +42,18 @@ export default function StyledLineChart() {
         sx={{
           // Style the chart line, legend mark, and tooltip mark for pvId
           [`& .${lineClasses.line}[data-series="pvId"], [data-series="pvId"] .${labelMarkClasses.fill}`]:
-          {
-            strokeDasharray: '5 5',
-            strokeWidth: 1,
-            strokeLinecap: 'square',
-          },
+            {
+              strokeDasharray: '5 5',
+              strokeWidth: 1,
+              strokeLinecap: 'square',
+            },
           // Style the chart line, legend mark, and tooltip mark for uvId
           [`& .${lineClasses.line}[data-series="uvId"], [data-series="uvId"] .${labelMarkClasses.fill}`]:
-          {
-            strokeDasharray: '3 4 5 2',
-            strokeWidth: 1,
-            strokeLinecap: 'square',
-          },
+            {
+              strokeDasharray: '3 4 5 2',
+              strokeWidth: 1,
+              strokeLinecap: 'square',
+            },
         }}
         margin={margin}
       />

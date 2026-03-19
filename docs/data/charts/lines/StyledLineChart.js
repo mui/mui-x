@@ -37,7 +37,8 @@ export default function StyledLineChart() {
         ]}
         xAxis={[{ id: 'x-axis', scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
-        tooltipAxis={[{ axisId: 'x-axis', dataIndex: 1 }]}
+        tooltipAxis={[{ axisId: 'x-axis', dataIndex: 6 }]}
+        slotProps={{ tooltip: { position: 'left' } }}
         sx={{
           // Style the chart line, legend mark, and tooltip mark for pvId
           [`& .${lineClasses.line}[data-series="pvId"], [data-series="pvId"] .${labelMarkClasses.fill}`]:
