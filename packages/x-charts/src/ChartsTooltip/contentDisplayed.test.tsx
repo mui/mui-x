@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, type BarChartProps, barClasses } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { getCenter } from 'test/utils/charts/getCenter';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
@@ -36,11 +37,6 @@ const config: Partial<BarChartProps> = {
 //   --------
 
 const cellSelector = `.${chartsTooltipClasses.cell}, .${chartsTooltipClasses.root} caption`;
-
-function getCenter(el: Element) {
-  const rect = el.getBoundingClientRect();
-  return { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
-}
 
 // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
 describe.skipIf(isJSDOM)('ChartsTooltip', () => {

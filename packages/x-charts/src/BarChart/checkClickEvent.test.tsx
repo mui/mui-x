@@ -2,6 +2,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { getCenter } from 'test/utils/charts/getCenter';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config = {
@@ -184,11 +185,6 @@ describe('BarChart - click event', () => {
       );
 
       const rectangles = document.querySelectorAll<HTMLElement>(`rect.${barClasses.element}`);
-
-      const getCenter = (el: Element) => {
-        const rect = el.getBoundingClientRect();
-        return { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
-      };
 
       await user.pointer([
         { keys: '[MouseLeft]', target: rectangles[0], coords: getCenter(rectangles[0]) },

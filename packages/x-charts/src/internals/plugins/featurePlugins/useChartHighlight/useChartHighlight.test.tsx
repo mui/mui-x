@@ -2,6 +2,7 @@ import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
+import { getCenter } from 'test/utils/charts/getCenter';
 
 describe('highlight', () => {
   const { render } = createRenderer();
@@ -122,11 +123,6 @@ describe('highlight', () => {
     );
 
     const bars = container.querySelectorAll(`.${barClasses.element}`);
-
-    const getCenter = (el: Element) => {
-      const rect = el.getBoundingClientRect();
-      return { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
-    };
 
     await user.pointer({ target: bars[0], coords: getCenter(bars[0]) });
 
