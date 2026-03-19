@@ -157,11 +157,6 @@
         "description": "{ dataIndex: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
       }
     },
-    "voronoiMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>hitAreaRadius</code> instead."
-    },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
