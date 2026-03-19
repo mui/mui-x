@@ -416,7 +416,6 @@ Heatmap.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
-      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -530,7 +529,6 @@ Heatmap.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
-      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
