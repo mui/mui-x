@@ -123,5 +123,5 @@ export function useRegisterPointerInteractions() {
         onPointerLeave();
       }
     };
-  }, [instance, store, chartsLayerContainerRef]);
+  }, [instance, store, chartsLayerContainerRef, store.state.seriesConfig.config]);
 }
