@@ -114,8 +114,6 @@ export type PieArcLabelProps = PieArcLabelOwnerState &
   Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color'> & {
     startAngle: number;
     endAngle: number;
-    innerRadius: number;
-    outerRadius: number;
     arcLabelRadius: number;
     cornerRadius: number;
     paddingAngle: number;
@@ -134,8 +132,6 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       endAngle,
       paddingAngle,
       arcLabelRadius,
-      innerRadius,
-      outerRadius,
       cornerRadius,
       formattedArcLabel,
       isHighlighted,
@@ -161,8 +157,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       cornerRadius,
       startAngle,
       endAngle,
-      innerRadius: arcLabelRadius,
-      outerRadius: arcLabelRadius,
+      arcLabelRadius,
       paddingAngle,
       skipAnimation,
       ref,
