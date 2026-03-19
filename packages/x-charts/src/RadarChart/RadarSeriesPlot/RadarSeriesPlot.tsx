@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import { useUtilityClasses as useDeprecatedUtilityClasses } from './radarSeriesPlotClasses';
 import { useUtilityClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { getPathProps } from './RadarSeriesArea';
@@ -17,16 +16,10 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const getHighlightState = useItemHighlightStateGetter();
 
-  const newClasses = useUtilityClasses();
-  const deprecatedClasses = useDeprecatedUtilityClasses(inClasses);
-  const classes = {
-    ...deprecatedClasses,
-    area: `${newClasses.seriesArea} ${deprecatedClasses.area}`,
-    mark: `${newClasses.seriesMark} ${deprecatedClasses.mark}`,
-  };
+  const classes = useUtilityClasses(inClasses);
 
   return (
-    <g className={`${newClasses.seriesRoot} ${deprecatedClasses.root}`}>
+    <g className={classes.seriesRoot}>
       {seriesCoordinates?.map(
         ({ seriesId, points, color, hideMark, fillArea, hidden }, seriesIndex) => {
           if (hidden) {

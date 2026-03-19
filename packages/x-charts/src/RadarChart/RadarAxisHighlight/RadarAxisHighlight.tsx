@@ -2,16 +2,16 @@ import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { useRadarAxisHighlight } from './useRadarAxisHighlight';
 
-import { type RadarAxisHighlightClasses } from './radarAxisHighlightClasses';
-import { useUtilityClasses as useDeprecatedUtilityClasses } from './radarAxisHighlightClasses';
-import { useUtilityClasses } from '../radarClasses';
+import { type RadarClasses, useUtilityClasses } from '../radarClasses';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 export interface RadarAxisHighlightProps {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<RadarAxisHighlightClasses>;
+  classes?: Partial<
+    Pick<RadarClasses, 'axisHighlightRoot' | 'axisHighlightLine' | 'axisHighlightDot'>
+  >;
 }
 
 /**
@@ -31,8 +31,7 @@ const highlightMark = {
 };
 
 function RadarAxisHighlight(props: RadarAxisHighlightProps) {
-  const classes = useUtilityClasses();
-  const deprecatedClasses = useDeprecatedUtilityClasses(props.classes);
+  const classes = useUtilityClasses(props.classes);
 
   const theme = useTheme();
   const data = useRadarAxisHighlight();
@@ -45,12 +44,12 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
 
   const [x, y] = instance.polar2svg(radius, highlightedAngle);
   return (
-    <g className={`${classes.axisHighlightRoot} ${deprecatedClasses.root}`}>
+    <g className={classes.axisHighlightRoot}>
       <path
         d={`M ${center.cx} ${center.cy} L ${x} ${y}`}
         stroke={(theme.vars || theme).palette.text.primary}
         strokeWidth={1}
-        className={`${classes.axisHighlightLine} ${deprecatedClasses.line}`}
+        className={classes.axisHighlightLine}
         pointerEvents="none"
         strokeDasharray="4 4"
       />
@@ -63,7 +62,7 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
             fill={colorGetter({ value: point.value, dataIndex: highlightedIndex })}
             cx={point.x}
             cy={point.y}
-            className={`${classes.axisHighlightDot} ${deprecatedClasses.dot}`}
+            className={classes.axisHighlightDot}
             pointerEvents="none"
             {...(series[seriesIndex].hideMark ? highlightMark : highlightMarkShadow)}
           />

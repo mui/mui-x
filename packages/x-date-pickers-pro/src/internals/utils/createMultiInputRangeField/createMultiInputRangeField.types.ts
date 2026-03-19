@@ -21,7 +21,7 @@ export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
     RangeFieldSeparatorProps &
     Omit<
       PickerManagerFieldInternalProps<TManager>,
-      'unstableFieldRef' | 'clearable' | 'onClear' | 'focused'
+      'fieldRef' | 'clearable' | 'onClear' | 'focused'
     > &
     Omit<StackProps, 'position' | keyof PickerManagerFieldInternalProps<TManager>> & {
       /**

@@ -13,5 +13,4 @@ export type { UseItemTooltipReturnValue, UseRadarItemTooltipReturnValue } from '
 export { useItemTooltip, useRadarItemTooltip } from './useItemTooltip';
 export * from './useAxesTooltip';
 
-export { useMouseTracker } from './utils';
 export * from './ChartTooltip.types';

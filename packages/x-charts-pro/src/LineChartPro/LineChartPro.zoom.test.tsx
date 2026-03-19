@@ -3,6 +3,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
+import { lineClasses } from '@mui/x-charts/LineChart';
 import { LineChartPro } from './LineChartPro';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
@@ -192,7 +193,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
-    const target = container.querySelector('.MuiAreaElement-root')!;
+    const target = container.querySelector(`.${lineClasses.area}`)!;
 
     // We drag from right to left to pan the view
     await user.pointer([

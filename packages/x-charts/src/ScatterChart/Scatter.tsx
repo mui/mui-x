@@ -88,7 +88,7 @@ function Scatter(props: ScatterProps) {
   const store = useStore<[UseChartClosestPointSignature]>();
   const isVoronoiEnabled = store.use(selectorChartsIsVoronoiEnabled);
 
-  const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
+  const skipInteractionHandlers = isVoronoiEnabled;
   const getHighlightState = useItemHighlightStateGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);

@@ -1,8 +1,4 @@
-'use client';
-import * as React from 'react';
-import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useChartsContext } from '../context/ChartsProvider';
 
 type MousePosition = {
   x: number;
@@ -12,44 +8,6 @@ type MousePosition = {
 };
 
 export type UseMouseTrackerReturnValue = null | MousePosition;
-
-/**
- * @deprecated We recommend using vanilla JS to let popper track mouse position.
- */
-export function useMouseTracker(): UseMouseTrackerReturnValue {
-  const { instance } = useChartsContext();
-
-  // Use a ref to avoid rerendering on every mousemove event.
-  const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
-
-  React.useEffect(() => {
-    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
-      if (!event.detail.activeGestures.pan) {
-        setMousePosition(null);
-      }
-    });
-
-    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
-      setMousePosition({
-        x: event.detail.centroid.x,
-        y: event.detail.centroid.y,
-        height: event.detail.srcEvent.height,
-        pointerType: event.detail.srcEvent.pointerType as MousePosition['pointerType'],
-      });
-    };
-
-    const moveHandler = instance.addInteractionListener('move', gestureHandler);
-    const panHandler = instance.addInteractionListener('pan', gestureHandler);
-
-    return () => {
-      moveHandler.cleanup();
-      panHandler.cleanup();
-      moveEndHandler.cleanup();
-    };
-  }, [instance]);
-
-  return mousePosition;
-}
 
 export type TriggerOptions = 'item' | 'axis' | 'none';
 

@@ -94,15 +94,6 @@ export interface HeatmapProps
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
-   * The function called for onClick events.
-   * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
-   *
-   * @deprecated Use `onItemClick` instead to get access to both x- and y-axis values.
-   */
-  onAxisClick?: ChartsContainerProProps<'heatmap', HeatmapPluginSignatures>['onAxisClick'];
-  /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
@@ -314,15 +305,6 @@ Heatmap.propTypes = {
       top: PropTypes.number,
     }),
   ]),
-  /**
-   * The function called for onClick events.
-   * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
-   *
-   * @deprecated Use `onItemClick` instead to get access to both x- and y-axis values.
-   */
-  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
