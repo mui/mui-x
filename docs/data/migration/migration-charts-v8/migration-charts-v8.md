@@ -389,6 +389,20 @@ If you were calling it in custom chart components, you can remove the call.
 +// No longer needed — handled by ChartsLayerContainer
 ```
 
+### Removed item-level pointer handlers
+
+Individual chart elements no longer attach `onPointerEnter`/`onPointerLeave` event handlers for highlight and tooltip interactions.
+These interactions are now handled at the container level using position-based hit detection.
+
+This affects the following components:
+
+- **Line Chart**: `MarkElement`, `CircleMarkElement`, `LineElement`, `AreaElement`
+- **Bar Chart**: `BarElement`
+- **Heatmap**: Custom `cell` slots that received `onPointerEnter` via `slotProps`
+
+If you were relying on these pointer events being attached to individual SVG elements (for example, via custom slots or DOM inspection), note that they are no longer present.
+The highlight and tooltip behavior remains the same from the user's perspective.
+
 ## Line Chart
 
 ### `showMark` default value changed ✅
@@ -423,23 +437,7 @@ If you want to keep the previous behavior, set the `shape` property to `'circle'
 The data attribute used to select a given series by it's id got renamed.
 Replace the `[data-series-id="<SeriesId>"]` by `[data-series="<SeriesId>"]`.
 
-### Removed item-level pointer handlers
-
-Line chart elements (`MarkElement`, `CircleMarkElement`, `LineElement`, `AreaElement`) no longer attach `onPointerEnter`/`onPointerLeave` event handlers for highlight and tooltip interactions.
-These interactions are now handled at the container level using position-based hit detection.
-
-If you were relying on these pointer events being attached to individual SVG elements (for example, via custom slots or DOM inspection), note that they are no longer present.
-The highlight and tooltip behavior remains the same from the user's perspective.
-
 ## Bar Chart
-
-### Removed item-level pointer handlers
-
-`BarElement` no longer attaches `onPointerEnter`/`onPointerLeave` event handlers.
-Highlight and tooltip interactions are now handled at the container level using position-based hit detection.
-
-If you were relying on these pointer events on individual bar elements, note that they are no longer present.
-The highlight and tooltip behavior remains the same from the user's perspective.
 
 ### `onItemClick` event type changed
 
@@ -469,14 +467,6 @@ This improves consistency across chart components and developer experience.
 +  hideLegend
  />
 ```
-
-### Removed compatibility layer for pointer events
-
-The compatibility layer that allowed heatmap custom cell slots to use item-level React pointer event handlers (`onPointerEnter`/`onPointerLeave`) has been removed.
-Pointer interactions are now always handled at the container level using position-based hit detection.
-
-If you were using a custom `cell` slot with `onPointerEnter` in `slotProps`, these handlers will no longer be called for highlight/tooltip purposes.
-Instead, the chart container detects the hovered cell based on pointer coordinates.
 
 ### Theme style overrides use `cell` slot
 
