@@ -110,6 +110,10 @@ DateField.propTypes = {
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
+   * The ref object used to imperatively interact with the field.
+   */
+  fieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  /**
    * If `true`, the component is displayed in focused state.
    */
   focused: PropTypes.bool,
@@ -339,10 +343,6 @@ DateField.propTypes = {
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
-  /**
-   * The ref object used to imperatively interact with the field.
-   */
-  unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.
