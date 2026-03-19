@@ -34,13 +34,13 @@ import {
   selectorChartXAxisAutoSizes,
   selectorChartYAxisAutoSizes,
 } from './useChartAxisAutoSize.selectors';
-import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
+import { getDefaultTickNumber } from '../../../ticks';
 import { getNormalizedAxisScale, getRange } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtrema } from './getAxisExtrema';
 import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
-import { calculateFinalDomain, calculateInitialDomainAndTickNumber } from './domain';
+import { calculateFinalDomain, computeAxisDomainsMap } from './domain';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { Flatbush } from '../../../Flatbush';
 import {
@@ -114,45 +114,13 @@ export const selectorDefaultYAxisTickNumber = createSelector(
   },
 );
 
-type DomainDefinition = {
-  domain: ReadonlyArray<string | NumberValue>;
-  tickNumber?: number;
-};
-
 export const selectorChartXAxisWithDomains = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorChartSeriesProcessed,
   selectorDefaultXAxisTickNumber,
   selectorChartXAxisExtrema,
   function selectorChartXAxisWithDomains(axes, formattedSeries, defaultTickNumber, extremaMap) {
-    const domains: Record<AxisId, DomainDefinition> = {};
-
-    axes?.forEach((eachAxis, axisIndex) => {
-      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-
-      if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
-        domains[axis.id] = { domain: axis.data! };
-
-        if (axis.ordinalTimeTicks !== undefined) {
-          domains[axis.id].tickNumber = getTickNumber(
-            axis,
-            [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
-            defaultTickNumber,
-          );
-        }
-        return;
-      }
-
-      domains[axis.id] = calculateInitialDomainAndTickNumber(
-        axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
-        'x',
-        axisIndex,
-        formattedSeries,
-        extremaMap[axis.id],
-        defaultTickNumber,
-      );
-    });
-
+    const domains = computeAxisDomainsMap(axes, formattedSeries, defaultTickNumber, extremaMap, 'x');
     return { axes, domains };
   },
 );
@@ -163,34 +131,7 @@ export const selectorChartYAxisWithDomains = createSelectorMemoized(
   selectorDefaultYAxisTickNumber,
   selectorChartYAxisExtrema,
   function selectorChartYAxisWithDomains(axes, formattedSeries, defaultTickNumber, extremaMap) {
-    const domains: Record<AxisId, DomainDefinition> = {};
-
-    axes?.forEach((eachAxis, axisIndex) => {
-      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-
-      if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
-        domains[axis.id] = { domain: axis.data! };
-
-        if (axis.ordinalTimeTicks !== undefined) {
-          domains[axis.id].tickNumber = getTickNumber(
-            axis,
-            [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
-            defaultTickNumber,
-          );
-        }
-        return;
-      }
-
-      domains[axis.id] = calculateInitialDomainAndTickNumber(
-        axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
-        'y',
-        axisIndex,
-        formattedSeries,
-        extremaMap[axis.id],
-        defaultTickNumber,
-      );
-    });
-
+    const domains = computeAxisDomainsMap(axes, formattedSeries, defaultTickNumber, extremaMap, 'y');
     return { axes, domains };
   },
 );

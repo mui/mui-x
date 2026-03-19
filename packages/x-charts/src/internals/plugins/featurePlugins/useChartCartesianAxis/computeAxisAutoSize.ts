@@ -18,6 +18,7 @@ import {
   AXIS_AUTO_SIZE_TICK_LABEL_GAP,
   AXIS_AUTO_SIZE_GROUP_GAP,
 } from './autoSizeConstants';
+import { type DomainDefinition } from './domain';
 
 /**
  * Checks if an axis has groups defined.
@@ -43,20 +44,15 @@ function getGroupLabels(data: readonly any[], group: AxisGroup): string[] {
   return Array.from(uniqueLabels);
 }
 
-interface AxisDomainInfo {
-  domain: [number, number];
-  tickNumber: number;
-}
-
 interface ComputeAxisAutoSizeOptions {
   axis: DefaultedXAxis | DefaultedYAxis;
   direction: 'x' | 'y';
   /**
-   * The niced domain and tick number for continuous scales.
+   * The niced domain and tick number for the axis.
    * These reflect the actual displayed domain (after domainLimit processing),
    * so tick labels measured from them match what the chart renders.
    */
-  domain?: AxisDomainInfo;
+  domain?: DomainDefinition;
 }
 
 /**
@@ -139,7 +135,7 @@ function selectLargestCandidates(labels: string[]): string[] {
  * For ordinal scales (band/point), use axis.data.
  * For continuous scales, generate estimated tick values from axis min/max configuration.
  */
-function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis, domain?: AxisDomainInfo): string[] {
+function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis, domain?: DomainDefinition): string[] {
   const { valueFormatter, scaleType, data } = axis as DefaultedXAxis & DefaultedYAxis;
 
   if (scaleType === 'band' || scaleType === 'point') {
@@ -166,7 +162,7 @@ function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis, domain?: AxisDomai
   // Use niced domain values (already processed through domainLimit), or defaults.
   const minVal = domain ? domain.domain[0] : 0;
   const maxVal = domain ? domain.domain[1] : 100;
-  const tickNumber = domain ? domain.tickNumber : 2;
+  const tickNumber = domain?.tickNumber ?? 2;
 
   // Create a temporary scale for formatting (tickFormat only uses the domain, not the range)
   const continuousScaleType = (scaleType ?? 'linear') as ContinuousScaleName;
