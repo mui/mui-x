@@ -7,6 +7,7 @@ import { isInfinity } from '../internals/isInfinity';
 import { tickFrequencies } from '../utils/timeTicks';
 import { isDateData } from '../internals/dateHelpers';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { findOrdinalTicks } from '../internals/findOrdinalTicks';
 
 export interface TickParams {
   /**
@@ -170,21 +171,44 @@ function getTimeTicks<T extends { toString(): string }>(
     }
   }
 
-  const ticks: { index: number; formatter: (d: Date) => string }[] = [];
-  for (let tickIndex = Math.max(1, startIndex); tickIndex <= endIndex; tickIndex += 1) {
-    for (let i = startFrequencyIndex; i <= endFrequencyIndex; i += 1) {
-      const prevDate = domain[tickIndex - 1];
-      const currentDate = domain[tickIndex];
+  let ticks: { index: number; formatter: (d: Date) => string }[] = [];
+  for (
+    let frequencyIndex = startFrequencyIndex;
+    frequencyIndex <= endFrequencyIndex;
+    frequencyIndex += 1
+  ) {
+    if (ticks.length === 0) {
+      ticks = findOrdinalTicks<T>(
+        domain,
+        startIndex,
+        endIndex,
+        ticksFrequencies[frequencyIndex].getTickNumber,
+        ticksFrequencies[frequencyIndex].isTick,
+      ).map((index) => ({ index, formatter: ticksFrequencies[frequencyIndex].format }));
+    } else {
+      let prevTickIndex = -1;
+      while (prevTickIndex < ticks.length) {
+        // get ticks strictly between the already known ticks.
+        const ticksToAdd = findOrdinalTicks<T>(
+          domain,
+          prevTickIndex === -1 ? startIndex : ticks[prevTickIndex].index,
+          prevTickIndex + 1 >= ticks.length ? endIndex : ticks[prevTickIndex + 1].index - 1,
+          ticksFrequencies[frequencyIndex].getTickNumber,
+          ticksFrequencies[frequencyIndex].isTick,
+        );
 
-      if (
-        prevDate instanceof Date &&
-        currentDate instanceof Date &&
-        ticksFrequencies[i].isTick(prevDate, currentDate)
-      ) {
-        ticks.push({ index: tickIndex, formatter: ticksFrequencies[i].format });
+        if (ticksToAdd.length > 0) {
+          ticks = [
+            ...(prevTickIndex === -1 ? [] : ticks.slice(0, prevTickIndex + 1)),
+            ...ticksToAdd.map((index) => ({
+              index,
+              formatter: ticksFrequencies[frequencyIndex].format,
+            })),
+            ...(prevTickIndex >= ticks.length - 1 ? [] : ticks.slice(prevTickIndex + 1)),
+          ];
+        }
 
-        // once we found a matching tick space, we can break the inner loop
-        break;
+        prevTickIndex = prevTickIndex + 1 + ticksToAdd.length;
       }
     }
   }

@@ -22,7 +22,13 @@ export const tickFrequencies: Record<TickFrequency, TickFrequencyDefinition> = {
     format: (d: Date) => d.getFullYear().toString(),
   },
   quarterly: {
-    getTickNumber: (from: Date, to: Date) => Math.floor(monthNumber(from, to) / 3),
+    getTickNumber: (from: Date, to: Date) => {
+      const numberOfQuarters = Math.floor(monthNumber(from, to) / 3);
+      if (numberOfQuarters > 0) {
+        return numberOfQuarters;
+      }
+      return from.getMonth() % 3 !== to.getMonth() % 3 ? 1 : 0;
+    },
     isTick: (prev: Date, value: Date) =>
       value.getMonth() !== prev.getMonth() && value.getMonth() % 3 === 0,
     format: new Intl.DateTimeFormat('default', { month: 'short' }).format,
