@@ -111,29 +111,38 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
     ),
 
     scrollerContentProps: createSelectorMemoized(
+      Virtualization.selectors.layoutMode,
       Dimensions.selectors.dimensions,
+      Dimensions.selectors.needsVerticalScrollbar,
       Dimensions.selectors.needsHorizontalScrollbar,
-      (dimensions, needsHorizontalScrollbar) => {
-        const {
-          contentSize: { height: contentHeight },
-          topContainerHeight,
-          bottomContainerHeight,
-          minimalContentHeight,
-          columnsTotalWidth,
-        } = dimensions;
+      (layoutMode, dimensions, needsVerticalScrollbar, needsHorizontalScrollbar) => {
+        let style: React.CSSProperties | undefined;
+        if (layoutMode === 'controlled') {
+          const {
+            contentSize: { height: contentHeight },
+            scrollbarSize,
+            topContainerHeight,
+            bottomContainerHeight,
+            minimalContentHeight,
+            columnsTotalWidth,
+          } = dimensions;
 
-        const cssContentHeight = valueToCSSString(
-          contentHeight === 0 ? minimalContentHeight : contentHeight,
-        );
+          const cssContentHeight = valueToCSSString(
+            contentHeight === 0 ? minimalContentHeight : contentHeight,
+          );
 
-        const width = needsHorizontalScrollbar ? columnsTotalWidth : 'auto';
-        const height = `calc(${cssContentHeight} + ${valueToCSSString(topContainerHeight)} + ${valueToCSSString(bottomContainerHeight)})`;
+          const width = needsHorizontalScrollbar ? columnsTotalWidth : 'auto';
+          const height = `calc(${cssContentHeight} + ${valueToCSSString(topContainerHeight)} + ${valueToCSSString(bottomContainerHeight)} + ${needsVerticalScrollbar ? valueToCSSString(scrollbarSize) : '0'})`;
 
-        return {
-          style: {
+          style = {
             width,
             height,
-          } as React.CSSProperties,
+            flex: '0 0 auto',
+          } as React.CSSProperties;
+        }
+
+        return {
+          style,
           role: 'presentation',
         };
       },
@@ -156,8 +165,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
         style: {
           width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
           height: contentHeight === 0 ? minimalContentHeight : contentHeight,
-          flexBasis: contentHeight === 0 ? minimalContentHeight : contentHeight,
-          flexShrink: 0,
+          flex: '0 0 auto',
         } as React.CSSProperties,
         role: 'presentation',
       }),
