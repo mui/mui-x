@@ -80,16 +80,12 @@ export function useFieldRootProps(
       });
     } else if (!focused) {
       setFocused(true);
-      setSelectedSections(
-        internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex,
-      );
+      setSelectedSections(internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex);
     } else {
       const hasClickedOnASection = domGetters.getRoot().contains(event.target as Node);
 
       if (!hasClickedOnASection) {
-        setSelectedSections(
-          internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex,
-        );
+        setSelectedSections(internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex);
       }
     }
   });
@@ -149,9 +145,7 @@ export function useFieldRootProps(
 
     const isFocusInsideASection = domGetters.getSectionIndexFromDOMElement(activeElement) != null;
     if (!isFocusInsideASection) {
-      setSelectedSections(
-        internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex,
-      );
+      setSelectedSections(internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex);
     }
   });
 

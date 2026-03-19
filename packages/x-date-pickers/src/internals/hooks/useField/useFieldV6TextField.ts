@@ -197,9 +197,7 @@ export const useFieldV6TextField = <
       ) {
         setSelectedSections(internalPropsWithDefaults.initialFocus ?? 'all');
       } else if (input.selectionStart === 0 && input.selectionEnd === 0) {
-        setSelectedSections(
-          internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex ?? 0,
-        );
+        setSelectedSections(internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex ?? 0);
       } else {
         syncSelectionFromDOM();
       }
