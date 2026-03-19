@@ -97,7 +97,7 @@ function BrowserTextField(props: BrowserTextFieldProps) {
 
 interface BrowserMultiInputDateRangeFieldProps
   extends
-    Omit<DateRangePickerFieldProps, 'unstableFieldRef' | 'clearable' | 'onClear'>,
+    Omit<DateRangePickerFieldProps, 'fieldRef' | 'clearable' | 'onClear'>,
     MultiInputFieldRefs {
   slotProps: {
     textField: any;
