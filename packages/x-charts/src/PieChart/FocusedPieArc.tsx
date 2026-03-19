@@ -1,6 +1,4 @@
 'use client';
-import * as React from 'react';
-import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
@@ -64,7 +62,7 @@ export function FocusedPieArc(
       skipAnimation
       stroke={(theme.vars ?? theme).palette.text.primary}
       seriesId={series.id}
-      className={clsx(classes.focusIndicator)}
+      className={classes.focusIndicator}
       dataIndex={focusedItem.dataIndex}
       isFaded={false}
       isHighlighted={false}
