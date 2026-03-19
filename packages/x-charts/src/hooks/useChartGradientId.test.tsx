@@ -1,6 +1,6 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { ChartsDataProvider } from '../ChartsDataProvider';
 
 function UseGradientId() {
   const id = useChartGradientId('test-id');
@@ -17,9 +17,9 @@ describe('useChartGradientId', () => {
 
   it('should properly generate a correct id', () => {
     render(
-      <ChartDataProvider series={[]} height={100} width={100}>
+      <ChartsDataProvider series={[]} height={100} width={100}>
         <UseGradientId />
-      </ChartDataProvider>,
+      </ChartsDataProvider>,
     );
 
     expect(screen.getByText(/[«|:|_]\w+[»|:|_]-gradient-test-id/)).toBeVisible();
@@ -28,9 +28,9 @@ describe('useChartGradientId', () => {
   describe('useChartGradientIdObjectBound', () => {
     it('should properly generate a correct id', () => {
       render(
-        <ChartDataProvider series={[]} height={100} width={100}>
+        <ChartsDataProvider series={[]} height={100} width={100}>
           <UseGradientIdObjectBound />
-        </ChartDataProvider>,
+        </ChartsDataProvider>,
       );
 
       expect(screen.getByText(/[«|:|_]\w+[»|:|_]-gradient-test-id-object-bound/)).toBeVisible();

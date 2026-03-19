@@ -11,7 +11,7 @@ import {
   type ScatterPlotSlotProps,
   type ScatterPlotSlots,
 } from './ScatterPlot';
-import { type ChartContainerProps } from '../ChartContainer';
+import { type ChartsContainerProps } from '../ChartsContainer';
 import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis';
 import { type ScatterSeriesType } from '../models/seriesType/scatter';
 import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip';
@@ -30,8 +30,8 @@ import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxi
 import { type ChartsAxisSlots, type ChartsAxisSlotProps } from '../models/axis';
 import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
-import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
+import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
@@ -67,7 +67,7 @@ export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
 export interface ScatterChartProps
   extends
     Omit<
-      ChartContainerProps<'scatter', ScatterChartPluginSignatures>,
+      ChartsContainerProps<'scatter', ScatterChartPluginSignatures>,
       'series' | 'plugins' | 'onItemClick' | 'highlightedAxis' | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
@@ -151,7 +151,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChart' });
   const {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
@@ -160,14 +160,14 @@ const ScatterChart = React.forwardRef(function ScatterChart(
     axisHighlightProps,
     children,
   } = useScatterChartProps(props);
-  const { chartDataProviderProps, chartsSurfaceProps } =
-    useChartContainerProps(chartContainerProps);
+  const { chartsDataProviderProps, chartsSurfaceProps } =
+    useChartsContainerProps(chartsContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'scatter', ScatterChartPluginSignatures> {...chartDataProviderProps}>
+    <ChartsDataProvider<'scatter', ScatterChartPluginSignatures> {...chartsDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -185,7 +185,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
         </ChartsSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 });
 

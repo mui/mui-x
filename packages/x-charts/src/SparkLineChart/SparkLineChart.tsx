@@ -6,8 +6,8 @@ import { ChartsClipPath } from '../ChartsClipPath';
 import { type ChartsColor, type ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
-import { type ChartContainerProps } from '../ChartContainer';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { type ChartsContainerProps } from '../ChartsContainer';
+import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
@@ -47,7 +47,7 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 'bar'> extends Omit<
-  ChartContainerProps,
+  ChartsContainerProps,
   | 'series'
   | 'xAxis'
   | 'yAxis'
@@ -276,7 +276,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     [yAxisProps],
   );
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       series={series}
       width={width}
       height={height}
@@ -317,7 +317,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         {children}
       </ChartsSurface>
       {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 });
 
