@@ -426,11 +426,6 @@ SparkLineChart.propTypes = {
    */
   disableKeyboardNavigation: PropTypes.bool,
   /**
-   * If true, the voronoi interaction are ignored.
-   * @deprecated Use `disableHitArea` instead.
-   */
-  disableVoronoi: PropTypes.bool,
-  /**
    * Options to enable features planned for the next major.
    */
   experimentalFeatures: PropTypes.object,
@@ -809,13 +804,6 @@ SparkLineChart.propTypes = {
    * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter: PropTypes.func,
-  /**
-   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
-   * If set to `'item'`, the radius is the `markerSize`.
-   * If `undefined`, the radius is assumed to be infinite.
-   * @deprecated Use `hitAreaRadius` instead.
-   */
-  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
