@@ -34,23 +34,11 @@ export interface UseChartVoronoiParameters {
    */
   disableHitArea?: boolean;
   /**
-   * If true, the voronoi interaction are ignored.
-   * @deprecated Use `disableHitArea` instead.
-   */
-  disableVoronoi?: boolean;
-  /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
    */
   hitAreaRadius?: 'item' | number | undefined;
-  /**
-   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
-   * If set to `'item'`, the radius is the `markerSize`.
-   * If `undefined`, the radius is assumed to be infinite.
-   * @deprecated Use `hitAreaRadius` instead.
-   */
-  voronoiMaxRadius?: 'item' | number | undefined;
   /**
    * Callback fired when clicking close to an item.
    * This is only available for scatter plot for now.
@@ -62,7 +50,7 @@ export interface UseChartVoronoiParameters {
 
 export type UseChartVoronoiDefaultizedParameters = Pick<
   UseChartVoronoiParameters,
-  'hitAreaRadius' | 'voronoiMaxRadius' | 'disableHitArea' | 'disableVoronoi' | 'onItemClick'
+  'hitAreaRadius' | 'disableHitArea' | 'onItemClick'
 >;
 
 export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
