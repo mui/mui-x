@@ -28,11 +28,6 @@ export default function CustomLabels() {
           label: 'Series B1',
           barLabel,
         },
-        {
-          data: [14, 6, 5, 8, 9],
-          label: 'Series B1',
-          barLabel,
-        },
       ]}
       height={350}
       margin={{ left: 0 }}
