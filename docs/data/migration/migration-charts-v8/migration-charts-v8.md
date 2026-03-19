@@ -376,19 +376,6 @@ If you were using it, you can remove it — the hook now always returns interact
 +const interactionProps = useInteractionItemProps(identifier);
 ```
 
-### `useRegisterPointerInteractions` signature changed
-
-The `useRegisterPointerInteractions` hook no longer accepts a `getItemAtPosition` function or `onItemEnter`/`onItemLeave` callbacks.
-It now takes no arguments and automatically iterates through all series configs that provide a `getItemAtPosition` function.
-
-This hook is called internally by `ChartsLayerContainer` and should not need to be called manually.
-If you were calling it in custom chart components, you can remove the call.
-
-```diff
--useRegisterPointerInteractions(selectorBarItemAtPosition, onItemEnter, onItemLeave);
-+// No longer needed — handled by ChartsLayerContainer
-```
-
 ### Removed item-level pointer handlers
 
 Individual chart elements no longer attach `onPointerEnter`/`onPointerLeave` event handlers for highlight and tooltip interactions.
