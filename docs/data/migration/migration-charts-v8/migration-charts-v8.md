@@ -638,6 +638,17 @@ The `useSvgRef()` is replaced by `useChartsLayerContainerRef()` which returns a 
 
 The `ChartsSurface` `ref` is now propagated to the `<div />` rendered by `ChartsLayerContainer` instead of an `<svg />`.
 
+## Tooltip
+
+### Tooltip now renders inside the chart container
+
+The tooltip is now portaled into the `ChartsLayerContainer` instead of `document.body`.
+This means the tooltip DOM is a child of the chart container, making it easier to style using the chart's `sx` prop.
+
+If you were querying for the tooltip element in the DOM using selectors scoped to `document.body`, you should update them to look inside the chart container instead.
+
+The tooltip uses `position: fixed` to ensure it can still visually overflow the chart boundaries despite being rendered inside the container.
+
 ## Keyboard navigation ✅
 
 The keyboard navigation is no enabled by default.
