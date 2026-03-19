@@ -61,7 +61,6 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     colors,
     dataset,
     sx,
-    onAxisClick,
     onItemClick,
     children,
     slots,
@@ -142,7 +141,6 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     highlightedItem,
     onHighlightChange,
     disableKeyboardNavigation,
-    onAxisClick,
     onItemClick,
     plugins: HEATMAP_PLUGINS,
   };
