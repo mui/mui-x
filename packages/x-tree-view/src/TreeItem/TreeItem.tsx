@@ -208,12 +208,6 @@ const useUtilityClasses = (classesProp: Partial<TreeItemClasses> | undefined) =>
     dragAndDropOverlay: ['dragAndDropOverlay'],
     errorIcon: ['errorIcon'],
     loadingIcon: ['loadingIcon'],
-    expanded: ['expanded'],
-    editing: ['editing'],
-    editable: ['editable'],
-    selected: ['selected'],
-    focused: ['focused'],
-    disabled: ['disabled'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -295,14 +289,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     getSlotProps: getContentProps,
     externalSlotProps: slotProps.content,
     ownerState: {},
-    className: clsx(classes.content, {
-      [classes.expanded]: status.expanded,
-      [classes.selected]: status.selected,
-      [classes.focused]: status.focused,
-      [classes.disabled]: status.disabled,
-      [classes.editing]: status.editing,
-      [classes.editable]: status.editable,
-    }),
+    className: classes.content,
   });
 
   const IconContainer: React.ElementType = slots.iconContainer ?? TreeItemIconContainer;

@@ -5,10 +5,10 @@ import { styled, useTheme } from '@mui/material/styles';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import {
-  markElementClasses,
+  lineClasses,
   type MarkElementOwnerState,
-  useUtilityClasses,
-} from './markElementClasses';
+  useUtilityClasses as useLineUtilityClasses,
+} from './lineClasses';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
@@ -42,7 +42,7 @@ const Circle = styled('circle', {
   slot: 'internal',
   shouldForwardProp: undefined,
 })({
-  [`&.${markElementClasses.animate}`]: {
+  [`&.${lineClasses.markAnimate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionProperty: 'cx, cy, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -82,14 +82,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const theme = useTheme();
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
-  const ownerState = {
-    seriesId,
-    classes: innerClasses,
-    isHighlighted,
-    isFaded,
-    skipAnimation,
-  };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
 
   return (
     <Circle
@@ -100,13 +93,16 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
       strokeWidth={2}
-      className={classes.root}
+      className={classes.mark}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       pointerEvents={hidden ? 'none' : undefined}
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      data-series-id={seriesId}
+      data-series={seriesId}
+      data-index={dataIndex}
       opacity={hidden ? 0 : 1}
     />
   );

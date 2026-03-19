@@ -211,10 +211,8 @@ export const useGridRows = (
     (updates) => {
       if (props.signature === GridSignature.DataGrid && updates.length > 1) {
         throw new Error(
-          [
-            'MUI X: You cannot update several rows at once in `apiRef.current.updateRows` on the DataGrid.',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-          ].join('\n'),
+          `MUI X: You cannot update several rows at once in \`apiRef.current.updateRows\` on the DataGrid.
+You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.`,
         );
       }
 
@@ -415,10 +413,8 @@ export const useGridRows = (
     (firstRowToRender, newRows) => {
       if (props.signature === GridSignature.DataGrid && newRows.length > 1) {
         throw new Error(
-          [
-            'MUI X: You cannot replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-          ].join('\n'),
+          `MUI X: You cannot replace rows using \`apiRef.current.unstable_replaceRows\` on the DataGrid.
+You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.`,
         );
       }
 
@@ -430,7 +426,7 @@ export const useGridRows = (
 
       if (treeDepth > 1) {
         throw new Error(
-          '`apiRef.current.unstable_replaceRows` is not compatible with tree data and row grouping',
+          'MUI X: `apiRef.current.unstable_replaceRows` is not compatible with tree data and row grouping',
         );
       }
 

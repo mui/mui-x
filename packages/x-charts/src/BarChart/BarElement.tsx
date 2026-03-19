@@ -3,9 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { type BarElementOwnerState, useUtilityClasses } from './barElementClasses';
+import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
+import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
 
@@ -73,7 +73,9 @@ function BarElement(props: BarElementProps) {
     [seriesId, dataIndex],
   );
   const interactionProps = useInteractionItemProps(itemIdentifier);
-  const { isFaded, isHighlighted } = useItemHighlighted(itemIdentifier);
+  const highlightState = useItemHighlightState(itemIdentifier);
+  const isHighlighted = highlightState === 'highlighted';
+  const isFaded = highlightState === 'faded';
   const isFocused = useIsItemFocused(
     React.useMemo(
       () => ({
@@ -123,7 +125,7 @@ function BarElement(props: BarElementProps) {
       layout,
       hidden,
     },
-    className: classes.root,
+    className: classes.element,
     ownerState,
   });
 

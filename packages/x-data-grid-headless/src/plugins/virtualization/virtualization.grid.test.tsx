@@ -652,7 +652,7 @@ describe('Virtualization', () => {
       );
     });
 
-    it.skipIf(isJSDOM)('should accept initial scroll state', () => {
+    it('should accept initial scroll state', () => {
       const apiRef = React.createRef<GridInstance<VirtualizationBehaviorTestRow> | null>();
 
       const { rows, columns } = buildVirtualizationBehaviorTestData(100, 10);

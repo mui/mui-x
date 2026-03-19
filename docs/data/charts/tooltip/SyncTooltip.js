@@ -17,7 +17,7 @@ export default function SyncTooltip() {
       spacing={1}
       sx={{ width: '100%' }}
     >
-      <Stack direction="column" spacing={1}>
+      <Stack direction="column" spacing={1} flex={1}>
         <BarChart
           {...barChartsProps}
           slotProps={{ tooltip: { trigger: 'item' } }}
@@ -38,7 +38,7 @@ export default function SyncTooltip() {
           Tooltip Item: {JSON.stringify(barTooltipItem, null, 2)}
         </CodeBlock>
       </Stack>
-      <Stack direction="column" spacing={1}>
+      <Stack direction="column" spacing={1} flex={1}>
         <PieChart
           {...pieChartProps}
           tooltipItem={pieTooltipItem}

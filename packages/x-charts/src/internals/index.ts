@@ -4,7 +4,6 @@ export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 export * from '../BarChart/BarLabel/BarLabelPlot';
 export * from '../BarChart/BarClipPath';
-export * from './components/WebGLContext';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -21,6 +20,7 @@ export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartContainer/useChartContainerProps';
+export * from '../ChartsDataProvider/useChartsDataProviderProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
@@ -60,6 +60,7 @@ export * from '../PieChart/PieChart.plugins';
 // utils
 export * from './configInit';
 export * from './getLabel';
+export * from './legendUtils';
 export * from './getChartPoint';
 export * from './isDefined';
 export * from './getScale';
@@ -75,13 +76,19 @@ export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
 export * from './commonNextFocusItem';
+export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';
+export {
+  useUtilityClasses as useChartsTooltipUtilityClasses,
+  getChartsTooltipUtilityClass,
+} from '../ChartsTooltip/chartsTooltipClasses';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
+export * from '../context/ChartsProvider';
 export * from '../context/ChartProvider';
 export * from '../context/ChartsSlotsContext';
 
@@ -91,6 +98,7 @@ export * from '../models/seriesType/common';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
+export * from '../models/seriesType/composition';
 
 export * from './plugins/models';
 export * from './material';

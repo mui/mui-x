@@ -33,6 +33,7 @@ export default function BasicComposition() {
             {
               type: 'line',
               data: [4, 3, 1, 3, 4],
+              showMark: true,
             },
           ]}
           xAxis={[

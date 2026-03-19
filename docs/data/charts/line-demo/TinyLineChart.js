@@ -1,10 +1,5 @@
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
-import {
-  LinePlot,
-  MarkPlot,
-  lineElementClasses,
-  markElementClasses,
-} from '@mui/x-charts/LineChart';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
+import { LinePlot, MarkPlot, lineClasses } from '@mui/x-charts/LineChart';
 
 const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
 const xLabels = [
@@ -19,18 +14,18 @@ const xLabels = [
 
 export default function TinyLineChart() {
   return (
-    <ChartContainer
+    <ChartsContainer
       width={500}
       height={300}
-      series={[{ type: 'line', data: pData }]}
+      series={[{ type: 'line', data: pData, showMark: true }]}
       xAxis={[{ scaleType: 'point', data: xLabels, position: 'none' }]}
       yAxis={[{ position: 'none' }]}
       sx={{
-        [`& .${lineElementClasses.root}`]: {
+        [`& .${lineClasses.line}`]: {
           stroke: '#8884d8',
           strokeWidth: 2,
         },
-        [`& .${markElementClasses.root}`]: {
+        [`& .${lineClasses.mark}`]: {
           stroke: '#8884d8',
           r: 4, // Modify the circle radius
           fill: '#fff',
@@ -41,6 +36,6 @@ export default function TinyLineChart() {
     >
       <LinePlot />
       <MarkPlot />
-    </ChartContainer>
+    </ChartsContainer>
   );
 }

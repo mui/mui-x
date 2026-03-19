@@ -1,13 +1,13 @@
 'use client';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
+import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
 import { SankeyNodeLabel } from './SankeyNodeLabel';
 
 export interface SankeyNodeLabelPlotProps {
   /**
    * Classes applied to the various elements.
    */
-  classes?: Partial<SankeyPlotClasses>;
+  classes?: Partial<SankeyClasses>;
 }
 
 function SankeyNodeLabelPlot(props: SankeyNodeLabelPlotProps) {
@@ -37,7 +37,7 @@ function SankeyNodeLabelPlot(props: SankeyNodeLabelPlotProps) {
   return (
     <g className={classes.nodeLabels}>
       {layout.nodes.map((node) => (
-        <SankeyNodeLabel key={`label-node-${node.id}`} node={node} />
+        <SankeyNodeLabel key={`label-node-${node.id}`} seriesId={sankeySeries.id} node={node} />
       ))}
     </g>
   );

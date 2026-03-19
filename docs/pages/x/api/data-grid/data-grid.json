@@ -22,6 +22,7 @@
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
+    "checkboxColDef": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
@@ -36,6 +37,7 @@
     "dataSourceCache": {
       "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
     },
+    "dataSourceRevalidateMs": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
         "name": "enum",

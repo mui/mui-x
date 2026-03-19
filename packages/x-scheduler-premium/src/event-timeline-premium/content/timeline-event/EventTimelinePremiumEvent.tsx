@@ -11,6 +11,11 @@ import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.type
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
 
+const ARROW_DEPTH = 8; // px - depth of the chevron point
+const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
+const RIGHT_ARROW_CLIP = `polygon(0 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, 0 100%)`;
+const BOTH_ARROWS_CLIP = `polygon(${ARROW_DEPTH}px 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
+
 const EventTimelinePremiumEventRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Event',
@@ -20,16 +25,26 @@ const EventTimelinePremiumEventRoot = styled('div', {
   color: 'var(--event-on-surface-subtle-primary)',
   padding: theme.spacing(0.5, 1),
   position: 'relative',
-  boxSizing: 'border-box',
   width: 'var(--width)',
   marginLeft: 'var(--x-position)',
   gridRow: 'var(--row-index, 1)',
   gridColumn: 1,
+  cursor: 'pointer',
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
   '&:hover': {
     backgroundColor: 'var(--event-surface-subtle-hover)',
+  },
+  '&[data-editing]': {
+    backgroundColor: 'var(--event-surface-selected)',
+    color: 'var(--event-on-surface-selected)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-selected-hover)',
+    },
+    '&::before': {
+      background: 'var(--event-surface-selected)',
+    },
   },
   [`&:hover .${eventTimelinePremiumClasses.eventResizeHandler}`]: {
     opacity: 1,
@@ -44,6 +59,24 @@ const EventTimelinePremiumEventRoot = styled('div', {
     borderRadius: '4px 0 0 4px',
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
+  },
+  '&[data-starting-before-edge]': {
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    clipPath: LEFT_ARROW_CLIP,
+    paddingLeft: ARROW_DEPTH + 8,
+    '&::before': {
+      display: 'none',
+    },
+  },
+  '&[data-ending-after-edge]': {
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+    clipPath: RIGHT_ARROW_CLIP,
+    paddingRight: ARROW_DEPTH + 8,
+  },
+  '&[data-starting-before-edge][data-ending-after-edge]': {
+    clipPath: BOTH_ARROWS_CLIP,
   },
   variants: getPaletteVariants(theme),
 }));
@@ -89,7 +122,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
-
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(

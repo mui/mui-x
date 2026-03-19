@@ -87,7 +87,7 @@ const GridQuickFilterTrigger = styled(ToolbarButton, {
 // Currently causes react-docgen to fail
 const GridQuickFilterTextField = styled(
   (_props: GridSlotProps['baseTextField']) => {
-    throw new Error('Failed assertion: should not be rendered');
+    throw new Error('MUI X: Failed assertion: should not be rendered');
   },
   {
     name: 'MuiDataGrid',

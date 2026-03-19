@@ -9,7 +9,6 @@ const data: LineChartProps = {
     {
       label: 'Global temperature anomaly relative to 1961-1990',
       dataKey: 'anomaly',
-      showMark: false,
       valueFormatter: (value) => `${value?.toFixed(2)}°`,
     },
   ],

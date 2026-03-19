@@ -14,7 +14,6 @@ const stackStrategy = {
 const customize = {
   height: 350,
   hideLegend: true,
-  experimentalFeatures: { preferStrictDomainInLineCharts: true },
 };
 
 export default function LineDataset() {
@@ -28,7 +27,6 @@ export default function LineDataset() {
         dataKey: key,
         label: keyToLabel[key],
         color: colors[key],
-        showMark: false,
         ...stackStrategy,
       }))}
       dataset={worldElectricityProduction}

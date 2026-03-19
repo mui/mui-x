@@ -110,7 +110,7 @@ export const useFieldV6TextField = <
     disabled = false,
     autoFocus = false,
     focused,
-    unstableFieldRef,
+    fieldRef,
   } = internalPropsWithDefaults;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -495,7 +495,7 @@ export const useFieldV6TextField = <
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(inputRef.current);
   const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
 
-  React.useImperativeHandle(unstableFieldRef, () => ({
+  React.useImperativeHandle(fieldRef, () => ({
     getSections: () => state.sections,
     getActiveSectionIndex: () => {
       const browserStartIndex = inputRef.current!.selectionStart ?? 0;
@@ -515,6 +515,7 @@ export const useFieldV6TextField = <
     setSelectedSections: (newSelectedSections) => setSelectedSections(newSelectedSections),
     focusField,
     isFieldFocused: () => isFieldFocused(inputRef),
+    clearValue,
   }));
 
   return {

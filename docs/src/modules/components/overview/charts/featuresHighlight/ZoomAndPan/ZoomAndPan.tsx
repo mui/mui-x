@@ -25,7 +25,12 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 
 export default function ZoomAndPan() {
   return (
-    <Stack spacing={1} sx={sxColors} direction={{ xs: 'column-reverse', xl: 'column' }}>
+    <Stack
+      spacing={1}
+      sx={sxColors}
+      direction={{ xs: 'column-reverse', xl: 'column' }}
+      height="100%"
+    >
       <Box
         sx={{
           flexGrow: 1,
@@ -38,8 +43,8 @@ export default function ZoomAndPan() {
           colors={['var(--palette-color-0)', 'var(--palette-color-4)']}
           dataset={formattedDataset}
           series={[
-            { label: 'Google', dataKey: 'google', showMark: false },
-            { label: 'Meta', dataKey: 'meta', showMark: false },
+            { label: 'Google', dataKey: 'google' },
+            { label: 'Meta', dataKey: 'meta' },
           ]}
           margin={{ left: 0, right: 0, bottom: 0, top: 20 }}
           xAxis={[

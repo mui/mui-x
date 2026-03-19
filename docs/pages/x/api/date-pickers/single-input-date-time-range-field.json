@@ -20,6 +20,7 @@
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
+    "fieldRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
@@ -148,9 +149,6 @@
         "url": "https://mui.com/x/react-date-pickers/timezone/",
         "text": "timezones documentation"
       }
-    },
-    "unstableFieldRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
     },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "variant": {

@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
@@ -38,7 +38,7 @@ const series = [
 export default function Combining() {
   return (
     <Box sx={{ width: '100%', height: 400 }}>
-      <ChartContainer
+      <ChartsContainer
         series={series}
         xAxis={[
           {
@@ -85,7 +85,7 @@ export default function Combining() {
           tickLabelStyle={{ fontSize: 10 }}
         />
         <ChartsTooltip />
-      </ChartContainer>
+      </ChartsContainer>
     </Box>
   );
 }

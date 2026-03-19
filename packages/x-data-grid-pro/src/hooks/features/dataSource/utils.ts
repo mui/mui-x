@@ -62,22 +62,27 @@ export class NestedDataManager {
     }
   };
 
-  public queue = async (ids: GridRowId[]) => {
+  public queue = async (ids: GridRowId[], options: { showChildrenLoading?: boolean } = {}) => {
+    const { showChildrenLoading = true } = options;
     const loadingIds: Record<GridRowId, boolean> = {};
     ids.forEach((id) => {
       this.queuedRequests.add(id);
-      loadingIds[id] = true;
+      if (showChildrenLoading) {
+        loadingIds[id] = true;
+      }
     });
-    this.api.setState((state) => ({
-      ...state,
-      dataSource: {
-        ...state.dataSource,
-        loading: {
-          ...state.dataSource.loading,
-          ...loadingIds,
+    if (showChildrenLoading) {
+      this.api.setState((state) => ({
+        ...state,
+        dataSource: {
+          ...state.dataSource,
+          loading: {
+            ...state.dataSource.loading,
+            ...loadingIds,
+          },
         },
-      },
-    }));
+      }));
+    }
     this.processQueue();
   };
 

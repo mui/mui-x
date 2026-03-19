@@ -4,14 +4,22 @@ import { useStore } from '@base-ui/utils/store';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCreation } from '@mui/x-scheduler-headless/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
+import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventRowDropTarget } from './useEventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
+
+const stateAttributesMapping = {
+  resourceId: (value: SchedulerResourceId) => ({
+    [TimelineGridEventRowDataAttributes.resourceId]: String(value),
+  }),
+};
 
 export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventRow(
   componentProps: TimelineGridEventRow.Props,
@@ -30,7 +38,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   } = componentProps;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
@@ -89,11 +97,15 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     [childrenProp, placeholder, occurrencesWithPosition],
   );
 
+  const state: TimelineGridEventRow.State = { resourceId };
+
   // TODO: Add aria-rowindex using Composite.
   const props = { role: 'row', children };
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef, dropTargetRef],
+    state,
+    stateAttributesMapping,
     props: [props, eventCreationProps, elementProps],
   });
 
@@ -105,7 +117,12 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
 });
 
 export namespace TimelineGridEventRow {
-  export interface State {}
+  export interface State {
+    /**
+     * The ID of the resource for this event row.
+     */
+    resourceId: SchedulerResourceId;
+  }
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>, useEventRowDropTarget.Parameters {

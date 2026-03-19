@@ -51,7 +51,6 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
     sx,
     highlightedItem,
     onHighlightChange,
-    className,
     apiRef,
     plugins: SANKEY_CHART_PLUGINS,
   };
@@ -70,6 +69,7 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
     hideLegend: false,
+    className,
   };
 
   return {

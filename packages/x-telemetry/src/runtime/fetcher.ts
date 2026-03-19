@@ -5,7 +5,7 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = 3): P
       return response;
     }
 
-    throw new Error(`Request failed with status ${response.status}`);
+    throw new Error(`MUI X: Request failed with status ${response.status}`);
   } catch (error) {
     if (retries === 0) {
       throw error;

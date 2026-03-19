@@ -20,6 +20,7 @@ export * from '@mui/x-charts/SparkLineChart';
 export * from '@mui/x-charts/Gauge';
 export * from '@mui/x-charts/RadarChart';
 export * from '@mui/x-charts/ChartsSurface';
+export * from '@mui/x-charts/ChartsDataProvider';
 export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
 export * from '@mui/x-charts/ChartsOverlay';
@@ -49,6 +50,7 @@ export type {
   ChartContainerProSlots,
   ChartContainerProSlotProps,
 } from './ChartContainerPro';
+export * from './ChartsDataProviderPro';
 export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
 export * from './SankeyChart';
@@ -58,6 +60,7 @@ export * from './PieChartPro';
 export * from './FunnelChart';
 export * from './RadarChartPro';
 export * from './ChartZoomSlider';
+export * from './ChartsZoomSlider';
 export * from './ChartsToolbarPro';
 
 export type {

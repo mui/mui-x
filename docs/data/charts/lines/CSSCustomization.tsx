@@ -1,8 +1,4 @@
-import {
-  areaElementClasses,
-  LineChart,
-  lineElementClasses,
-} from '@mui/x-charts/LineChart';
+import { lineClasses, LineChart } from '@mui/x-charts/LineChart';
 import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function CSSCustomization() {
@@ -10,11 +6,11 @@ export default function CSSCustomization() {
     <LineChart
       dataset={dataset}
       sx={{
-        [`& .${lineElementClasses.root}`]: {
+        [`& .${lineClasses.line}`]: {
           strokeDasharray: '10 5',
           strokeWidth: 4,
         },
-        [`& .${areaElementClasses.root}[data-series="Germany"]`]: {
+        [`& .${lineClasses.area}[data-series="Germany"]`]: {
           fill: "url('#myGradient')",
           filter: 'none', // Remove the default filtering
         },
@@ -39,7 +35,6 @@ export default function CSSCustomization() {
           dataKey: 'fr',
           stack: 'total',
           area: true,
-          showMark: false,
         },
         {
           id: 'Germany',
@@ -47,7 +42,6 @@ export default function CSSCustomization() {
           dataKey: 'dl',
           stack: 'total',
           area: true,
-          showMark: false,
         },
         {
           id: 'United Kingdom',
@@ -55,10 +49,8 @@ export default function CSSCustomization() {
           dataKey: 'gb',
           stack: 'total',
           area: true,
-          showMark: false,
         },
       ]}
-      experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
       height={300}
     >
       <defs>

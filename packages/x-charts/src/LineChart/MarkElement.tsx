@@ -7,17 +7,17 @@ import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/a
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import {
-  markElementClasses,
+  lineClasses,
   type MarkElementOwnerState,
-  useUtilityClasses,
-} from './markElementClasses';
+  useUtilityClasses as useLineUtilityClasses,
+} from './lineClasses';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
 })<{ ownerState: MarkElementOwnerState }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
-  [`&.${markElementClasses.animate}`]: {
+  [`&.${lineClasses.markAnimate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionProperty: 'transform, transform-origin, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -93,7 +93,7 @@ function MarkElement(props: MarkElementProps) {
     isFaded,
     skipAnimation,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
 
   return (
     <MarkElementPath
@@ -104,7 +104,7 @@ function MarkElement(props: MarkElementProps) {
         transformOrigin: `${x}px ${y}px`,
       }}
       ownerState={ownerState}
-      className={classes.root}
+      className={classes.mark}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
@@ -112,6 +112,9 @@ function MarkElement(props: MarkElementProps) {
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      data-series-id={seriesId}
+      data-series={seriesId}
+      data-index={dataIndex}
       opacity={hidden ? 0 : 1}
       strokeWidth={2}
       stroke={color}

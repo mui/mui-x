@@ -9,7 +9,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
-import { Watermark } from '@mui/x-license';
+import { Watermark } from '@mui/x-license/internals';
 import {
   BaseDateValidationProps,
   DayCalendar,
@@ -63,7 +63,11 @@ import {
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 import { dateRangePickerDay2Classes } from '../DateRangePickerDay2';
 
-const releaseInfo = '__RELEASE_INFO__';
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-date-pickers-pro' as const,
+};
 
 const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
@@ -588,7 +592,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
       ownerState={ownerState}
       {...other}
     >
-      <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
+      <Watermark packageInfo={packageInfo} />
       {calendarMonths.map((monthIndex) => {
         const month = visibleMonths[monthIndex];
         const labelId = `${id}-grid-${monthIndex}-label`;

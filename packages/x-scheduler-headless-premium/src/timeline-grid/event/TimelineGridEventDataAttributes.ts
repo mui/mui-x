@@ -15,4 +15,12 @@ export enum TimelineGridEventDataAttributes {
    * Present when the event is being resized.
    */
   resizing = 'data-resizing',
+  /**
+   * Present when the event starts before the visible timeline range.
+   */
+  startingBeforeEdge = 'data-starting-before-edge',
+  /**
+   * Present when the event ends after the visible timeline range.
+   */
+  endingAfterEdge = 'data-ending-after-edge',
 }

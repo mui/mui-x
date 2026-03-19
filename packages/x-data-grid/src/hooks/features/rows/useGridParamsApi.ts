@@ -44,7 +44,7 @@ export function useGridParamsApi(
       const row = apiRef.current.getRow(id);
 
       if (!row) {
-        throw new MissingRowIdError(`No row with id #${id} found`);
+        throw new MissingRowIdError(`MUI X: No row with id #${id} found`);
       }
 
       const params: GridRowParams = {
@@ -106,7 +106,7 @@ export function useGridParamsApi(
       const rowNode = gridRowNodeSelector(apiRef, id);
 
       if (!row || !rowNode) {
-        throw new MissingRowIdError(`No row with id #${id} found`);
+        throw new MissingRowIdError(`MUI X: No row with id #${id} found`);
       }
 
       const cellFocus = gridFocusCellSelector(apiRef);

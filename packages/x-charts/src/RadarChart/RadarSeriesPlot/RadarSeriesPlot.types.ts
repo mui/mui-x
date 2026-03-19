@@ -1,10 +1,6 @@
 import type * as React from 'react';
-import { type RadarSeriesPlotClasses } from './radarSeriesPlotClasses';
+import { type RadarClasses } from '../radarClasses';
 import { type RadarItemIdentifier } from '../../models/seriesType/radar';
-
-export interface RadarSeriesAreaClasses extends RadarSeriesPlotClasses {}
-
-export interface RadarSeriesMarksClasses extends RadarSeriesPlotClasses {}
 
 interface CommonRadarSeriesPlotProps {
   /**
@@ -15,7 +11,7 @@ interface CommonRadarSeriesPlotProps {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<RadarSeriesPlotClasses>;
+  classes?: Partial<RadarClasses>;
 }
 
 export interface RadarSeriesPlotProps extends CommonRadarSeriesPlotProps {

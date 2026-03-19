@@ -87,10 +87,8 @@ export default function DragAndDropDemo() {
       >
         <Box
           sx={{
-            minHeight: 352,
-            minWidth: 260,
-            padding: 2,
-            width: 'fit-content',
+            height: 352,
+            width: 320,
             alignSelf: 'center',
           }}
         >

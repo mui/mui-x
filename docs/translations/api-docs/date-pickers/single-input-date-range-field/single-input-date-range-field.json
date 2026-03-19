@@ -26,6 +26,7 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
+    "fieldRef": { "description": "The ref object used to imperatively interact with the field." },
     "focused": {
       "description": "If <code>true</code>, the component is displayed in focused state."
     },
@@ -143,9 +144,6 @@
     "timezone": {
       "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
       "seeMoreText": "See the {{link}} for more details."
-    },
-    "unstableFieldRef": {
-      "description": "The ref object used to imperatively interact with the field."
     },
     "value": { "description": "The selected value. Used when the component is controlled." },
     "variant": { "description": "The variant to use." }

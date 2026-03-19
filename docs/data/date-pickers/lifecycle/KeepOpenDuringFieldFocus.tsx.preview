@@ -1,0 +1,12 @@
+<div>
+  <Typography variant="body2" gutterBottom>
+    Default behavior (closes on click/focus)
+  </Typography>
+  <DatePicker />
+</div>
+<div>
+  <Typography variant="body2" gutterBottom>
+    With <code>keepOpenDuringFieldFocus</code>
+  </Typography>
+  <DatePicker keepOpenDuringFieldFocus />
+</div>

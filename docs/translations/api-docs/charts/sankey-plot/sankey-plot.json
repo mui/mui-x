@@ -17,23 +17,5 @@
       }
     }
   },
-  "classDescriptions": {
-    "linkLabels": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the link label container"
-    },
-    "links": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the links container"
-    },
-    "nodeLabels": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the node label container"
-    },
-    "nodes": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the nodes container"
-    },
-    "root": { "description": "Styles applied to the root element." }
-  }
+  "classDescriptions": {}
 }

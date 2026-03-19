@@ -10,7 +10,7 @@ export const initialEvents = [
     end: '2025-07-02T09:30:00',
     title: 'Daily Standup',
     resource: 'work',
-    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',
   },
   {
     id: 'work-retro',
@@ -18,7 +18,7 @@ export const initialEvents = [
     end: '2025-07-01T17:00:00',
     title: 'Team Retrospective',
     resource: 'work',
-    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TU',
   },
   {
     id: 'work-backlog-grooming',
@@ -26,7 +26,7 @@ export const initialEvents = [
     end: '2025-07-09T15:00:00',
     title: 'Backlog Grooming',
     resource: 'work',
-    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['WE'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=WE',
   },
   {
     id: 'work-1on1-john',
@@ -34,7 +34,7 @@ export const initialEvents = [
     end: '2025-07-09T11:00:00',
     title: '1-on-1 with John',
     resource: 'work',
-    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['WE'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=3;BYDAY=WE',
   },
   {
     id: 'work-1on1-abigail',
@@ -42,7 +42,7 @@ export const initialEvents = [
     end: '2025-07-03T11:00:00',
     title: '1-on-1 with Abigail',
     resource: 'explore',
-    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['TH'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=3;BYDAY=TH',
   },
   {
     id: 'work-1on1-hailey',
@@ -50,7 +50,7 @@ export const initialEvents = [
     end: '2025-07-07T11:00:00',
     title: '1-on-1 with Hailey',
     resource: 'data-grid',
-    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=3;BYDAY=MO',
   },
   {
     id: 'weekly-planning-explore',
@@ -58,7 +58,7 @@ export const initialEvents = [
     end: '2025-07-08T11:00:00',
     title: 'Weekly planning',
     resource: 'explore',
-    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TU',
   },
   {
     id: 'weekly-planning-data-grid',
@@ -66,7 +66,7 @@ export const initialEvents = [
     end: '2025-07-04T11:00:00',
     title: 'Weekly planning',
     resource: 'data-grid',
-    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['FR'] },
+    rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=FR',
   },
   // Non-recurring work events
   {
@@ -135,7 +135,7 @@ export const initialEvents = [
     end: '2025-06-30T07:45:00',
     title: 'Running',
     resource: 'workout',
-    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=MO,WE',
   },
   {
     id: 'workout-long-run',
@@ -143,7 +143,7 @@ export const initialEvents = [
     end: '2025-07-06T10:30:00',
     title: 'Long run',
     resource: 'workout',
-    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['SU'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=SU',
   },
   {
     id: 'workout-gym-class',
@@ -152,7 +152,7 @@ export const initialEvents = [
     title: 'Evening Gym Class',
     allDay: false,
     resource: 'workout',
-    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['TU', 'TH'] },
+    rrule: 'FREQ=WEEKLY;BYDAY=TU,TH',
   },
   // Birthday events
   {
@@ -163,7 +163,7 @@ export const initialEvents = [
     resource: 'birthdays',
     allDay: true,
     readOnly: true,
-    rrule: { freq: 'YEARLY', interval: 1 },
+    rrule: 'FREQ=YEARLY',
   },
   {
     id: 'birthdays-bob',
@@ -173,7 +173,7 @@ export const initialEvents = [
     resource: 'birthdays',
     allDay: true,
     readOnly: true,
-    rrule: { freq: 'YEARLY', interval: 1 },
+    rrule: 'FREQ=YEARLY',
   },
   {
     id: 'birthdays-richard',
@@ -183,7 +183,7 @@ export const initialEvents = [
     resource: 'birthdays',
     allDay: true,
     readOnly: true,
-    rrule: { freq: 'YEARLY', interval: 1 },
+    rrule: 'FREQ=YEARLY',
   },
   // Personal events
   {
@@ -230,7 +230,7 @@ export const initialEvents = [
     end: '2025-07-26T12:00:00',
     title: 'Community Workshop',
     resource: 'personal',
-    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['4SA'] },
+    rrule: 'FREQ=MONTHLY;BYDAY=4SA',
   },
   // Medical events
   {

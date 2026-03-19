@@ -93,17 +93,22 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'L HH:mm',
 };
 
-const MISSING_UTC_PLUGIN = [
-  'Missing UTC plugin',
-  'To be able to use UTC or timezones, you have to enable the `utc` plugin',
-  'Find more information on https://mui.com/x/react-date-pickers/timezone/#day-js-and-utc',
-].join('\n');
+function throwMissingUTCPluginError() {
+  throw new Error(
+    'MUI X Date Pickers: Missing dayjs UTC plugin. ' +
+      'UTC and timezone support requires the dayjs UTC plugin to be enabled. ' +
+      'See https://mui.com/x/react-date-pickers/timezone/#day-js-and-utc for setup instructions.',
+  );
+}
 
-const MISSING_TIMEZONE_PLUGIN = [
-  'Missing timezone plugin',
-  'To be able to use timezones, you have to enable both the `utc` and the `timezone` plugin',
-  'Find more information on https://mui.com/x/react-date-pickers/timezone/#day-js-and-timezone',
-].join('\n');
+function throwMissingTimezonePluginError() {
+  throw new Error(
+    'MUI X Date Pickers: Missing dayjs timezone plugin. ' +
+      'Timezone support requires both the dayjs UTC and timezone plugins to be enabled. ' +
+      'See https://mui.com/x/react-date-pickers/timezone/#day-js-and-timezone for setup instructions.',
+  );
+}
+
 declare module '@mui/x-date-pickers/models' {
   interface PickerValidDateLookup {
     dayjs: Dayjs;
@@ -216,7 +221,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   private createUTCDate = (value: string | undefined): Dayjs => {
     /* v8 ignore next 3 */
     if (!this.hasUTCPlugin()) {
-      throw new Error(MISSING_UTC_PLUGIN);
+      throwMissingUTCPluginError();
     }
 
     return this.setLocaleToValue(dayjs.utc(value));
@@ -225,12 +230,12 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   private createTZDate = (value: string | undefined, timezone: PickersTimezone): Dayjs => {
     /* v8 ignore next 3 */
     if (!this.hasUTCPlugin()) {
-      throw new Error(MISSING_UTC_PLUGIN);
+      throwMissingUTCPluginError();
     }
 
     /* v8 ignore next 3 */
     if (!this.hasTimezonePlugin()) {
-      throw new Error(MISSING_TIMEZONE_PLUGIN);
+      throwMissingTimezonePluginError();
     }
 
     const keepLocalTime = value !== undefined && !value.endsWith('Z');
@@ -336,7 +341,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     if (timezone === 'UTC') {
       /* v8 ignore next 3 */
       if (!this.hasUTCPlugin()) {
-        throw new Error(MISSING_UTC_PLUGIN);
+        throwMissingUTCPluginError();
       }
 
       return value.utc();
@@ -355,7 +360,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       }
 
       /* v8 ignore next */
-      throw new Error(MISSING_TIMEZONE_PLUGIN);
+      throwMissingTimezonePluginError();
     }
 
     return this.setLocaleToValue(dayjs.tz(value, this.cleanTimezone(timezone)));

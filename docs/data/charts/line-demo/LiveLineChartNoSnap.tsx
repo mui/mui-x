@@ -49,10 +49,7 @@ export default function LiveLineChartNoSnap() {
       <LineChart
         height={300}
         skipAnimation
-        series={[
-          { data: secondData, showMark: false },
-          { data: firstData, showMark: false },
-        ]}
+        series={[{ data: secondData }, { data: firstData }]}
         xAxis={[
           {
             scaleType: 'point',
@@ -84,5 +81,6 @@ export default function LiveLineChartNoSnap() {
 }
 
 function randBetween(min: number, max: number) {
+  // eslint-disable-next-line no-restricted-properties -- live animation demo
   return Math.floor(Math.random() * (max - min + 1) + min);
 }

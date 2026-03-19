@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import type {
   UseChartVisibilityManagerSignature,
-  VisibilityIdentifier,
+  VisibilityIdentifierWithType,
   VisibilityMap,
 } from './useChartVisibilityManager.types';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
@@ -29,11 +29,11 @@ export const selectorVisibilityMap = createSelector(
   (visibilityManager) => visibilityManager?.visibilityMap ?? EMPTY_VISIBILITY_MAP,
 );
 
-const selectorIsItemVisibleFn = <T extends ChartSeriesType>(
+const selectorIsItemVisibleFn = <SeriesType extends ChartSeriesType>(
   visibilityMap: VisibilityMap,
-  seriesConfig: ChartSeriesConfig<T>,
+  seriesConfig: ChartSeriesConfig<SeriesType>,
 ) => {
-  return (identifier: VisibilityIdentifier<T>) => {
+  return (identifier: VisibilityIdentifierWithType<SeriesType>) => {
     const uniqueId = serializeIdentifier(seriesConfig, identifier);
     return !visibilityMap.has(uniqueId);
   };

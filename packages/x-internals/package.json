@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internals",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-alpha.2",
   "author": "MUI Team",
   "description": "Utility functions for the MUI X packages (internal use only).",
   "license": "MIT",
@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build --flat",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -56,5 +56,8 @@
   },
   "exports": {
     "./*": "./src/*/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "./src/formatErrorMessage/index.ts"
   }
 }

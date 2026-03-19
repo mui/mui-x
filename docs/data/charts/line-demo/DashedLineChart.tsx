@@ -1,9 +1,5 @@
 import Box from '@mui/material/Box';
-import {
-  LineChart,
-  lineElementClasses,
-  markElementClasses,
-} from '@mui/x-charts/LineChart';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 
 const margin = { right: 24 };
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
@@ -23,25 +19,25 @@ export default function DashedLineChart() {
     <Box sx={{ width: '100%', height: 300 }}>
       <LineChart
         series={[
-          { data: pData, label: 'pv', id: 'pvId' },
-          { data: uData, label: 'uv', id: 'uvId' },
+          { data: pData, label: 'pv', id: 'pvId', showMark: true },
+          { data: uData, label: 'uv', id: 'uvId', showMark: true },
         ]}
         xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
         sx={{
-          [`.${lineElementClasses.root}, .${markElementClasses.root}`]: {
+          [`.${lineClasses.line}, .${lineClasses.mark}`]: {
             strokeWidth: 1,
           },
-          [`.${lineElementClasses.root}[data-series="pvId"]`]: {
+          [`.${lineClasses.line}[data-series="pvId"]`]: {
             strokeDasharray: '5 5',
           },
-          [`.${lineElementClasses.root}[data-series="uvId"]`]: {
+          [`.${lineClasses.line}[data-series="uvId"]`]: {
             strokeDasharray: '3 4 5 2',
           },
-          [`.${markElementClasses.root}:not(.${markElementClasses.highlighted})`]: {
+          [`.${lineClasses.mark}:not([data-highlighted="true"])`]: {
             fill: '#fff',
           },
-          [`& .${markElementClasses.highlighted}`]: {
+          [`& [data-highlighted="true"]`]: {
             stroke: 'none',
           },
         }}

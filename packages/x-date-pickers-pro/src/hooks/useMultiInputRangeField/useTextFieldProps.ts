@@ -81,7 +81,7 @@ export function useTextFieldProps<
       break;
     }
     default: {
-      throw new Error(`Unknown valueType: ${valueType}`);
+      throw new Error(`MUI X: Unknown valueType: ${valueType}`);
     }
   }
 
@@ -162,9 +162,9 @@ export function useTextFieldProps<
       return;
     }
 
-    fieldPrivateContext?.fieldRef.current?.focusField();
+    fieldPrivateContext?.fieldRef?.current?.focusField();
     if (
-      !fieldPrivateContext?.fieldRef.current ||
+      !fieldPrivateContext?.fieldRef?.current ||
       pickerContext.view === pickerContext.initialView
     ) {
       // could happen when the user is switching between the inputs

@@ -2,7 +2,7 @@ import { TemporalSupportedObject, TemporalTimezone } from '../../../base-ui-copy
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import {
   RecurringEventByDayValue,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
 } from '../../../models';
 import { getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
@@ -13,10 +13,10 @@ import { getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from '
  */
 export function projectRRuleToTimezone(
   adapter: Adapter,
-  rrule: RecurringEventRecurrenceRule,
+  rrule: SchedulerProcessedEventRecurrenceRule,
   targetTimezone: TemporalTimezone,
   seriesStartDataTimezone: TemporalSupportedObject,
-): RecurringEventRecurrenceRule {
+): SchedulerProcessedEventRecurrenceRule {
   let nextRule = rrule;
 
   if (rrule.until) {

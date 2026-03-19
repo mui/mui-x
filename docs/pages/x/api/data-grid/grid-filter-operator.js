@@ -5,9 +5,9 @@ import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslation
 import jsonPageContent from './grid-filter-operator.json';
 
 export default function Page(props) {
-  const { descriptions, pageContent } = props;
+  const { descriptions } = props;
   return (
-    <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />
+    <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />
   );
 }
 
@@ -18,11 +18,5 @@ export async function getStaticProps() {
     /\.\/grid-filter-operator.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
-
-  return {
-    props: {
-      descriptions,
-      pageContent: jsonPageContent,
-    },
-  };
+  return { props: { descriptions } };
 }

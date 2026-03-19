@@ -10,18 +10,25 @@ import {
  * Create a keyboard focus handler for common use cases where focused item are defined by the series is and data index.
  */
 export function createCommonKeyboardFocusHandler<
-  TSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
->(outSeriesTypes: Set<TSeriesType>, allowCycles?: boolean) {
+  SeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  TInputSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = SeriesType,
+>(outSeriesTypes: Set<SeriesType>, allowCycles?: boolean) {
   const keyboardFocusHandler = (event: KeyboardEvent) => {
     switch (event.key) {
       case 'ArrowRight':
-        return createGetNextIndexFocusedItem(outSeriesTypes, allowCycles);
+        return createGetNextIndexFocusedItem<TInputSeriesType, SeriesType>(
+          outSeriesTypes,
+          allowCycles,
+        );
       case 'ArrowLeft':
-        return createGetPreviousIndexFocusedItem(outSeriesTypes, allowCycles);
+        return createGetPreviousIndexFocusedItem<TInputSeriesType, SeriesType>(
+          outSeriesTypes,
+          allowCycles,
+        );
       case 'ArrowDown':
-        return createGetPreviousSeriesFocusedItem(outSeriesTypes);
+        return createGetPreviousSeriesFocusedItem<TInputSeriesType, SeriesType>(outSeriesTypes);
       case 'ArrowUp':
-        return createGetNextSeriesFocusedItem(outSeriesTypes);
+        return createGetNextSeriesFocusedItem<TInputSeriesType, SeriesType>(outSeriesTypes);
       default:
         return null;
     }

@@ -105,13 +105,14 @@ function EditAction(props) {
       <IconButton aria-label="Edit" onClick={handleEdit}>
         <EditIcon />
       </IconButton>
-
       <Dialog
         open={editing}
         onClose={handleClose}
-        PaperProps={{
-          component: 'form',
-          onSubmit: handleSave,
+        slotProps={{
+          paper: {
+            component: 'form',
+            onSubmit: handleSave,
+          },
         }}
       >
         <DialogTitle>Edit Employee</DialogTitle>

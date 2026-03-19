@@ -1,4 +1,4 @@
-<ChartContainer
+<ChartsContainer
   dataset={usUnemploymentRate}
   xAxis={xAxis}
   yAxis={yAxis}
@@ -10,4 +10,4 @@
   <LinePlot />
   <ChartsXAxis />
   <ChartsYAxis />
-</ChartContainer>
+</ChartsContainer>

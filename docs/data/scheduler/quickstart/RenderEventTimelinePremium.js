@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 
-const events = [
+const initialEvents = [
   {
     id: 1,
     title: 'Project Kickoff',
@@ -31,10 +31,13 @@ const resources = [
 ];
 
 export default function RenderEventTimelinePremium() {
+  const [events, setEvents] = React.useState(initialEvents);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <EventTimelinePremium
         events={events}
+        onEventsChange={setEvents}
         resources={resources}
         defaultVisibleDate={new Date(2024, 0, 15)}
       />

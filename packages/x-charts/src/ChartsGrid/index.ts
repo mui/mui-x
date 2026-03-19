@@ -1,2 +1,3 @@
 export * from './ChartsGrid';
-export * from './chartsGridClasses';
+export { chartsGridClasses } from './chartsGridClasses';
+export type { ChartsGridClasses, ChartsGridClassKey } from './chartsGridClasses';

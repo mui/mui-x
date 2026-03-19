@@ -21,6 +21,7 @@ export * from '@mui/x-charts/SparkLineChart';
 export * from '@mui/x-charts/Gauge';
 export * from '@mui/x-charts/RadarChart';
 export * from '@mui/x-charts/ChartsSurface';
+export * from '@mui/x-charts/ChartsDataProvider';
 export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
 
@@ -30,6 +31,7 @@ export { ChartsContainerPro } from '@mui/x-charts-pro/ChartsContainerPro';
 export type { ChartsContainerProProps } from '@mui/x-charts-pro/ChartsContainerPro';
 export { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
 export type { ChartContainerProProps } from '@mui/x-charts-pro/ChartContainerPro';
+export * from '@mui/x-charts-pro/ChartsDataProviderPro';
 export * from '@mui/x-charts-pro/ChartDataProviderPro';
 export * from '@mui/x-charts-pro/ScatterChartPro';
 export * from '@mui/x-charts-pro/BarChartPro';
@@ -37,6 +39,7 @@ export * from '@mui/x-charts-pro/LineChartPro';
 export * from '@mui/x-charts-pro/PieChartPro';
 export * from '@mui/x-charts-pro/FunnelChart';
 export * from '@mui/x-charts-pro/RadarChartPro';
+export * from '@mui/x-charts-pro/ChartsZoomSlider';
 export * from '@mui/x-charts-pro/ChartZoomSlider';
 export * from '@mui/x-charts-pro/ChartsToolbarPro';
 
@@ -52,8 +55,11 @@ export * from './plugins';
 
 // Premium components
 export * from './ChartsRenderer';
+export * from './ChartsDataProviderPremium';
 export * from './ChartDataProviderPremium';
 export * from './ChartsContainerPremium';
 export * from './ChartContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';
+export * from './ChartsWebGLLayer';
+export * from './CandlestickChart';

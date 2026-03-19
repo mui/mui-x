@@ -10,7 +10,6 @@ import {
 import { type ComputedAxis, type PolarAxisDefaultized, type AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
 import { getLabel } from '../internals/getLabel';
-import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
 import {
   useRotationAxes,
@@ -30,6 +29,10 @@ import { type ChartsLabelMarkProps } from '../ChartsLabel';
 import { selectorChartsInteractionTooltipRotationAxes } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { isPolarSeriesType } from '../internals/isPolar';
 import { selectorIsItemVisibleGetter } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.selectors';
+import {
+  type ComposableCartesianChartSeriesType,
+  composableCartesianSeriesTypes,
+} from '../models/seriesType/composition';
 
 export interface UseAxesTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType | PolarChartSeriesType =
@@ -54,13 +57,14 @@ export interface UseAxesTooltipParams {
   directions?: ('x' | 'y' | 'rotation')[];
 }
 
-interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
+export interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
   seriesId: SeriesId;
   color: string;
   value: ChartsSeriesConfig[T]['valueType'];
   formattedValue: string;
   formattedLabel: string | null;
   markType: ChartsLabelMarkProps['type'];
+  markShape: ChartsLabelMarkProps['markShape'];
 }
 
 function defaultAxisTooltipConfig(
@@ -145,8 +149,10 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
   }
 
   Object.keys(series)
-    .filter(isCartesianSeriesType)
-    .forEach(<SeriesT extends CartesianChartSeriesType>(seriesType: SeriesT) => {
+    .filter((seriesType): seriesType is ComposableCartesianChartSeriesType =>
+      composableCartesianSeriesTypes.has(seriesType as ComposableCartesianChartSeriesType),
+    )
+    .forEach(<SeriesT extends ComposableCartesianChartSeriesType>(seriesType: SeriesT) => {
       const seriesOfType = series[seriesType];
       if (!seriesOfType) {
         return [];
@@ -192,6 +198,10 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
+            markShape:
+              'showMark' in seriesToAdd && seriesToAdd.showMark
+                ? (seriesToAdd.shape ?? 'circle')
+                : undefined,
           });
         }
       });
@@ -238,6 +248,7 @@ export function useAxesTooltip(params?: UseAxesTooltipParams): UseAxesTooltipRet
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
+            markShape: 'showMark' in seriesToAdd && seriesToAdd.showMark ? 'circle' : undefined,
           });
         }
       });

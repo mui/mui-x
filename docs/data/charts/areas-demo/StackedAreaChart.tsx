@@ -1,4 +1,4 @@
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import Box from '@mui/material/Box';
 
 const margin = { right: 24 };
@@ -20,20 +20,19 @@ export default function StackedAreaChart() {
     <Box sx={{ width: '100%', height: 300 }}>
       <LineChart
         series={[
-          { data: uData, label: 'uv', area: true, stack: 'total', showMark: false },
-          { data: pData, label: 'pv', area: true, stack: 'total', showMark: false },
+          { data: uData, label: 'uv', area: true, stack: 'total' },
+          { data: pData, label: 'pv', area: true, stack: 'total' },
           {
             data: amtData,
             label: 'amt',
             area: true,
             stack: 'total',
-            showMark: false,
           },
         ]}
         xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
         sx={{
-          [`& .${lineElementClasses.root}`]: {
+          [`& .${lineClasses.line}`]: {
             display: 'none',
           },
         }}

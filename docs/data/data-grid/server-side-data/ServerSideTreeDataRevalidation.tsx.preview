@@ -1,0 +1,14 @@
+<DataGridPro
+  treeData
+  columns={columns}
+  dataSource={dataSource}
+  dataSourceCache={null}
+  dataSourceRevalidateMs={2_000}
+  pagination
+  initialState={{
+    pagination: { paginationModel: { pageSize: 4, page: 0 }, rowCount: 0 },
+  }}
+  pageSizeOptions={[4, 8]}
+  disableColumnSorting
+  disableColumnFilter
+/>

@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import { TemporalSupportedObject } from '../../models';
-import { useAdapter } from '../../use-adapter/useAdapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 
 export function useCalendarGridGetDateFromPositionInColumn(
   parameters: useCalendarGridGetDateFromPositionInColumn.Parameters,
 ): useCalendarGridGetDateFromPositionInColumn.ReturnValue {
   const { elementRef, snapMinutes } = parameters;
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const { getCursorPositionInElementMs, start } = useCalendarGridTimeColumnContext();
 
   return React.useCallback(

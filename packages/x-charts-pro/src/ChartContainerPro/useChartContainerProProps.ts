@@ -1,5 +1,4 @@
 'use client';
-import type * as React from 'react';
 import { type ChartAnyPluginSignature, type ChartSeriesType } from '@mui/x-charts/internals';
 import {
   useChartsContainerProProps,
@@ -12,19 +11,18 @@ import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
  * @deprecated Use `UseChartsContainerProPropsReturnValue` instead.
  */
 export type UseChartContainerProPropsReturnValue<
-  TSeries extends ChartSeriesType,
+  SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
-> = UseChartsContainerProPropsReturnValue<TSeries, TSignatures>;
+> = UseChartsContainerProPropsReturnValue<SeriesType, TSignatures>;
 
 /**
  * @deprecated Use `useChartsContainerProProps` instead.
  */
 export const useChartContainerProProps = <
-  TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
-  props: ChartContainerProProps<TSeries, TSignatures>,
-  ref: React.Ref<SVGSVGElement>,
-): UseChartContainerProPropsReturnValue<TSeries, TSignatures> => {
-  return useChartsContainerProProps(props, ref);
+  props: ChartContainerProProps<SeriesType, TSignatures>,
+): UseChartContainerProPropsReturnValue<SeriesType, TSignatures> => {
+  return useChartsContainerProProps(props);
 };

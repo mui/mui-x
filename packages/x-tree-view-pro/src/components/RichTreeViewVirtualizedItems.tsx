@@ -63,7 +63,7 @@ export function RichTreeViewVirtualizedItems<TProps extends object>(
   const virtualizer = useVirtualizer({
     layout,
     dimensions: {
-      rowHeight: defaultItemHeight!, // The defaultItemHeight is always defined when virtualization is enabled.
+      rowHeight: defaultItemHeight ?? 32,
     },
     virtualization: {},
 

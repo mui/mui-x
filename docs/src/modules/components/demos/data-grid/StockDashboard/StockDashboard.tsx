@@ -76,7 +76,6 @@ function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPremium>
             {
               type: 'line',
               curve: 'natural',
-              showMark: false,
               data: selectedStock.history.map((h: { price: number }) => h.price),
               color:
                 selectedStock.history[selectedStock.history.length - 1].price >

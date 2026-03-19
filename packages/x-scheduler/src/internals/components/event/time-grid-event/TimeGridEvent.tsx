@@ -40,7 +40,6 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   padding: theme.spacing(0.5, 1, 0.5, 1),
   display: 'flex',
   flexDirection: 'column',
-  boxSizing: 'border-box',
   gap: theme.spacing(0.25),
   justifyContent: 'flex-start',
   alignContent: 'flex-start',
@@ -48,14 +47,11 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
-  '&[data-draggable]': {
-    cursor: 'grab',
-  },
   '&[data-under-hour="true"]': {
     flexDirection: 'row',
   },
   '&[data-under-fifteen-minutes="true"]': {
-    padding: theme.spacing(0.05, 1),
+    padding: theme.spacing(0, 1),
   },
   '&:focus-visible': {
     outline: '2px solid var(--event-surface-accent)',
@@ -63,6 +59,16 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   },
   '&:hover': {
     backgroundColor: 'var(--event-surface-subtle-hover)',
+  },
+  '&[data-editing]': {
+    backgroundColor: 'var(--event-surface-selected)',
+    color: 'var(--event-on-surface-selected)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-selected-hover)',
+    },
+    '&::before': {
+      background: 'var(--event-surface-selected)',
+    },
   },
   '&[role="button"]': {
     cursor: 'pointer',
@@ -101,9 +107,13 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   containerType: 'size',
   minHeight: 11.5,
   '&[data-under-fifteen-minutes="true"]': {
-    padding: theme.spacing(0.05, 1),
+    padding: theme.spacing(0, 1),
   },
   variants: getPaletteVariants(theme),
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+  },
 }));
 
 const TimeGridEventTitle = styled(Typography, {
@@ -121,6 +131,9 @@ const TimeGridEventTitle = styled(Typography, {
     fontSize: '11px',
     lineHeight: '11px',
   },
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
   ...linesClampStyles(1),
 }));
 
@@ -132,6 +145,9 @@ const TimeGridEventTime = styled('time', {
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
   '&[data-lines-clamp]': {
     ...linesClampStyles(1),
     paddingInlineEnd: theme.spacing(1.5),
@@ -154,6 +170,9 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   bottom: 3,
   padding: theme.spacing(0.25),
   color: 'var(--event-on-surface-subtle-secondary)',
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
   '@container (max-width: 50px)': {
     display: 'none',
   },
@@ -196,7 +215,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
-
   // Selector hooks
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
@@ -217,7 +235,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
-  const isLessThan15Minutes = durationMinutes < 15;
+  const isLessThan15Minutes = durationMinutes <= 15;
 
   const content = React.useMemo(() => {
     return (
@@ -278,7 +296,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       <TimeGridEventPlaceholder
         aria-hidden={true}
         data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-        data-draggable={isDraggable || undefined}
         data-recurrent={isRecurring || undefined}
         data-under-fifteen-minutes={isLessThan15Minutes || undefined}
         data-palette={color}
@@ -297,7 +314,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
-      data-draggable={isDraggable || undefined}
       data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
       data-palette={color}

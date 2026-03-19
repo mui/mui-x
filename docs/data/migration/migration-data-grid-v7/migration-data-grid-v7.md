@@ -161,7 +161,7 @@ You have to import it from `@mui/x-license` instead:
   +const isRowSelected = rowSelectionManager.has(rowId);
   ```
 
-  There is also a `createRowSelectionManager` utility function that can be used to manage the row selection:
+  There is also a `createRowSelectionManager()` utility function that can be used to manage the row selection:
 
   ```ts
   const rowSelectionManager = createRowSelectionManager({

@@ -8,7 +8,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
 import { checkboxPropsSelector } from '../../hooks/features/rowSelection/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
@@ -54,6 +54,7 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
         groupId: id,
         autoSelectParents: rootProps.rowSelectionPropagation?.parents ?? false,
       },
+      objectShallowCompare,
     );
 
     const disabled = !isSelectable;

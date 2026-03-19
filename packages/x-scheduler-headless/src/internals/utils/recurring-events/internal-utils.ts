@@ -4,7 +4,7 @@ import {
   RecurringEventByDayValue,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
 } from '../../../models';
 
 const adapterCache = new WeakMap<
@@ -100,7 +100,11 @@ export function tokenizeByDay(byDay: RecurringEventByDayValue): {
 } {
   const match = String(byDay).match(/^(-?[1-5])?(MO|TU|WE|TH|FR|SA|SU)$/);
   if (!match) {
-    throw new Error(`MUI: ${byDay} is not a valid value for the byDay property.`);
+    throw new Error(
+      `MUI X Scheduler: "${byDay}" is not a valid value for the byDay property. ` +
+        'Valid values are weekday codes (MO, TU, WE, TH, FR, SA, SU) optionally prefixed with an ordinal (-5 to 5). ' +
+        'Examples: "MO", "2TU", "-1FR".',
+    );
   }
   return { ord: match[1] ? Number(match[1]) : null, code: match[2] as RecurringEventWeekDayCode };
 }
@@ -112,7 +116,7 @@ export function tokenizeByDay(byDay: RecurringEventByDayValue): {
  * @throws if any ordinal is present (e.g. 1MO, -1FR).
  */
 export function parsesByDayForWeeklyFrequency(
-  ruleByDay: RecurringEventRecurrenceRule['byDay'] | undefined,
+  ruleByDay: SchedulerProcessedEventRecurrenceRule['byDay'] | undefined,
 ): RecurringEventWeekDayCode[] | null {
   if (!ruleByDay?.length) {
     return null;
@@ -120,7 +124,9 @@ export function parsesByDayForWeeklyFrequency(
   const parsed = ruleByDay.map(tokenizeByDay);
   if (parsed.some((item) => item.ord !== null)) {
     throw new Error(
-      'MUI: The byDay property must be a plain MO..SU (no ordinals like 1MO, -1FR) when used with a weekly frequency.',
+      'MUI X Scheduler: The byDay property must contain plain weekday codes (MO..SU) without ordinals when used with weekly frequency. ' +
+        'Ordinals like "1MO" or "-1FR" are only valid for monthly recurrence. ' +
+        'Remove the ordinal prefixes from the byDay values.',
     );
   }
   return parsed.map((item) => item.code);
@@ -141,7 +147,9 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 
   if (ord == null) {
     throw new Error(
-      'MUI: The byDay property must contain contain a single element with an ordinal (e.g. ["2TU"] or ["-1FR"]).',
+      'MUI X Scheduler: The byDay property for monthly recurrence must contain a single element with an ordinal. ' +
+        'Examples: ["2TU"] for the second Tuesday or ["-1FR"] for the last Friday. ' +
+        'Provide exactly one byDay value with an ordinal.',
     );
   }
 
@@ -222,7 +230,7 @@ const GET_REMAINING_OCCURRENCES_METHOD_LOOKUP = {
  */
 export function getRemainingOccurrences(
   adapter: Adapter,
-  rule: RecurringEventRecurrenceRule,
+  rule: SchedulerProcessedEventRecurrenceRule,
   seriesStart: TemporalSupportedObject,
   date: TemporalSupportedObject,
   count: number,
@@ -232,10 +240,9 @@ export function getRemainingOccurrences(
   const method = GET_REMAINING_OCCURRENCES_METHOD_LOOKUP[rule.freq];
   if (!method) {
     throw new Error(
-      [
-        `MUI: Unknown frequency ${rule.freq}.`,
-        'Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".',
-      ].join('\n'),
+      `MUI X Scheduler: Unknown frequency "${rule.freq}". ` +
+        'Supported frequencies are: "DAILY", "WEEKLY", "MONTHLY", "YEARLY". ' +
+        'Use one of the supported frequency values.',
     );
   }
 
@@ -244,7 +251,7 @@ export function getRemainingOccurrences(
 
 interface GetRemainingOccurrencesParameters {
   adapter: Adapter;
-  rule: RecurringEventRecurrenceRule;
+  rule: SchedulerProcessedEventRecurrenceRule;
   /**
    * The series start date (DTSTART).
    * This is normalized to startOfDay internally.
@@ -344,7 +351,7 @@ export function getRemainingWeeklyOccurrences(
 
 /**
  * Remaining MONTHLY occurrences after `date` (inclusive).
- * Modes: BYDAY with ordinals (e.g. 2TU, -1FR; multiple allowed) OR single BYMONTHDAY (default = DTSTART day).
+ * Modes: BYDAY with a single ordinal (e.g. "2TU" or "-1FR"; only one element) OR single BYMONTHDAY (default = DTSTART day).
  * Skips months without a match. Steps by `interval`, respecting series start and target boundaries.
  * Short-circuits when count is exhausted.
  * @throws If BYDAY is combined with BYMONTHDAY, or BYMONTHDAY has >1 value.
@@ -366,7 +373,9 @@ export function getRemainingMonthlyOccurrences(
   if (rule.byDay?.length) {
     if (rule.byMonthDay?.length) {
       throw new Error(
-        'MUI: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
+        'MUI X Scheduler: Monthly recurrences cannot have both byDay and byMonthDay properties. ' +
+          'Use either byDay for weekday-based recurrence (e.g., "2TU" for second Tuesday) ' +
+          'or byMonthDay for date-based recurrence (e.g., [15] for the 15th of each month).',
       );
     }
 
@@ -395,7 +404,9 @@ export function getRemainingMonthlyOccurrences(
   // Path B: BYMONTHDAY (single mode, default to DTSTART day)
   if ((rule.byMonthDay?.length ?? 0) > 1) {
     throw new Error(
-      "MUI: The monthly recurrences don't support byMonthDay with multiple elements.",
+      'MUI X Scheduler: Monthly recurrences only support a single byMonthDay value. ' +
+        'Multiple byMonthDay values are not supported. ' +
+        'Provide only one day of the month value.',
     );
   }
 
@@ -452,7 +463,9 @@ export function getRemainingYearlyOccurrences(
   // Any use of BYMONTH, BYMONTHDAY, or BYDAY is not allowed at the moment.
   if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
     throw new Error(
-      'MUI: The yearly recurrences must have either the byMonth, the byMonthDay or the byDay property defined.',
+      'MUI X Scheduler: Yearly recurrences only support exact same date recurrence based on DTSTART. ' +
+        'Properties byMonth, byMonthDay, and byDay are not supported for yearly frequency. ' +
+        'The event will recur on the same month and day as the start date.',
     );
   }
 

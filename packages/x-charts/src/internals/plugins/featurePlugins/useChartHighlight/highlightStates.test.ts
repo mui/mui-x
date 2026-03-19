@@ -1,19 +1,20 @@
+import type { MakeOptional } from '@mui/x-internals/types';
 import {
   isSeriesHighlighted,
   isSeriesFaded,
   getSeriesHighlightedDataIndex,
   getSeriesUnfadedDataIndex,
 } from './highlightStates';
-import { type HighlightItemData } from './useChartHighlight.types';
-import { type CommonHighlightScope } from './highlightConfig.types';
-import { type SeriesId } from '../../../../models/seriesType/common';
+import type { SeriesId, SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import type { CommonHighlightScope } from './highlightConfig.types';
 
 describe('highlightStates', () => {
   const s1: SeriesId = 's1';
   const s2: SeriesId = 's2';
   const dataIndex = 5;
 
-  const itemData1: HighlightItemData = {
+  const itemData1: SeriesItemIdentifierWithType<'bar'> = {
+    type: 'bar',
     seriesId: s1,
     dataIndex,
   };
@@ -113,7 +114,13 @@ describe('highlightStates', () => {
       });
 
       it('should handle undefined dataIndex', () => {
-        const itemWithoutDataIndex: HighlightItemData = { seriesId: s1 };
+        const itemWithoutDataIndex: MakeOptional<
+          SeriesItemIdentifierWithType<'bar'>,
+          'dataIndex'
+        > = {
+          type: 'bar',
+          seriesId: s1,
+        };
         expect(
           getSeriesHighlightedDataIndex(highlightItemScope, itemWithoutDataIndex, s1),
         ).to.equal(undefined);
@@ -178,7 +185,13 @@ describe('highlightStates', () => {
 
       it('should handle undefined dataIndex', () => {
         const scope: Partial<CommonHighlightScope> = { fade: 'global' };
-        const itemWithoutDataIndex: HighlightItemData = { seriesId: s1 };
+        const itemWithoutDataIndex: MakeOptional<
+          SeriesItemIdentifierWithType<'bar'>,
+          'dataIndex'
+        > = {
+          type: 'bar',
+          seriesId: s1,
+        };
         expect(getSeriesUnfadedDataIndex(scope, itemWithoutDataIndex, s1)).to.equal(undefined);
       });
     });

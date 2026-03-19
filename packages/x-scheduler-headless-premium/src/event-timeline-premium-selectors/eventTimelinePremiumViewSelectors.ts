@@ -28,6 +28,8 @@ export const EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS: Record<EventTimelinePremiumVie
     getStartDate: (adapter, visibleDate) => adapter.startOfDay(visibleDate),
     getEndDate: (adapter, start, unitCount) =>
       adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
+    // Each CSS unit is 1 hour (--time-cell-width), so we need days × 24 hours
+    getCssUnitCount: () => 4 * 24,
   },
   days: {
     unitCount: 8 * 7, // 8 weeks

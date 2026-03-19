@@ -19,7 +19,11 @@ function UseSkipAnimation({ localSkipAnimation }: { localSkipAnimation?: boolean
 }
 
 const createMatchMedia = (matches: boolean) => () =>
-  ({ matches, addEventListener: () => {}, removeEventListener: () => {} }) as any;
+  ({
+    matches,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  }) as any;
 
 describe('useSkipAnimation', () => {
   const { render } = createRenderer();

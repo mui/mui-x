@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useLegend } from '@mui/x-charts/hooks';
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
+import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
 
 function LineWithMark({ color, className }) {
@@ -92,7 +92,6 @@ export default function CustomLegend() {
             id: 'avg',
             label: 'temp. avg. 1991-2020 (°C)',
             dataKey: '1991_2020_avg',
-            showMark: false,
             color: theme.palette.text.primary,
             labelMarkType: DashedLine,
           },
@@ -102,11 +101,12 @@ export default function CustomLegend() {
             dataKey: '2023',
             color: theme.palette.primary.main,
             labelMarkType: LineWithMark,
+            showMark: true,
           },
         ]}
         xAxis={[{ dataKey: 'month', scaleType: 'band', id: 'x-axis' }]}
         sx={{
-          [`& .${lineElementClasses.root}[data-series="avg"]`]: {
+          [`& .${lineClasses.line}[data-series="avg"]`]: {
             strokeDasharray: '10 5',
           },
         }}

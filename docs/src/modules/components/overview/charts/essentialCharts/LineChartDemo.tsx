@@ -94,9 +94,9 @@ function Line() {
       <LineChart
         dataset={inflationData}
         series={[
-          { dataKey: 'rateDE', label: 'Germany', valueFormatter, showMark: false },
-          { dataKey: 'rateUK', label: 'United Kingdom', valueFormatter, showMark: false },
-          { dataKey: 'rateFR', label: 'France', valueFormatter, showMark: false },
+          { dataKey: 'rateDE', label: 'Germany', valueFormatter },
+          { dataKey: 'rateUK', label: 'United Kingdom', valueFormatter },
+          { dataKey: 'rateFR', label: 'France', valueFormatter },
         ]}
         grid={{ horizontal: true }}
         {...chartSetting}

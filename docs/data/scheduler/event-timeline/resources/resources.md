@@ -11,10 +11,6 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
-:::warning
-This package is not published yet.
-:::
-
 ## Define resources
 
 Use the `resources` prop to define the list of resources the events can be associated to and the `resource` property on the event model to link an event to its resource:
@@ -36,6 +32,31 @@ const resources = [
 :::success
 On the Event Timeline, events without resource are not rendered at all.
 :::
+
+## Nested resources
+
+Use the `children` property to create hierarchical resource structures:
+
+```tsx
+const resources = [
+  {
+    id: 'engineering',
+    title: 'Engineering',
+    children: [
+      {
+        id: 'frontend',
+        title: 'Frontend',
+        children: [
+          { id: 'web-app', title: 'Web App' },
+          { id: 'mobile-app', title: 'Mobile App' },
+        ],
+      },
+    ],
+  },
+];
+```
+
+{{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Visible resources
 
@@ -101,21 +122,21 @@ The effective color resolves in the following order:
 
 ### Drag interactions
 
-Use the `areEventsDraggable` property to allow dragging a resource's events to another point in time:
+Use the `areEventsDraggable` property to prevent dragging a resource's events to another point in time:
 
 ```ts
 const resource = {
   // ...other properties
-  areEventsDraggable: true,
+  areEventsDraggable: false,
 };
 ```
 
-Use the `areEventsResizable` property to allow resizing a resource's events by dragging their start or end edge:
+Use the `areEventsResizable` property to prevent resizing a resource's events by dragging their start or end edge:
 
 ```ts
 const resource = {
   // ...other properties
-  areEventsResizable: true,
+  areEventsResizable: false,
   areEventsResizable: "start" // only the start edge is draggable.
   areEventsResizable: "end" // only the end edge is draggable.
 };
@@ -123,6 +144,31 @@ const resource = {
 
 :::success
 Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-timeline/drag-interactions/).
+:::
+
+### Read-only
+
+Use the `areEventsReadOnly` property to mark all events of a resource as read-only:
+
+```ts
+const resource = {
+  // ...other properties
+  areEventsReadOnly: true,
+};
+```
+
+:::success
+Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/#read-only).
+:::
+
+## Resource column label
+
+Use the `resourceColumnLabel` prop to customize the header of the resource column:
+
+{{"demo": "ResourceColumnLabel.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+When both are provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
 :::
 
 ## Store data in custom properties

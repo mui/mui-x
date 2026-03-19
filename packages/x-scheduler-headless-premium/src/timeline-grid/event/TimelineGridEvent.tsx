@@ -18,13 +18,21 @@ import {
   generateOccurrenceFromEvent,
   useElementPositionInCollection,
 } from '@mui/x-scheduler-headless/internals';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
 import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
+
+const overflowStateAttributesMapping = {
+  startingBeforeEdge: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.startingBeforeEdge]: '' } : null,
+  endingAfterEdge: (value: boolean) =>
+    value ? { [TimelineGridEventDataAttributes.endingAfterEdge]: '' } : null,
+};
 
 export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   componentProps: TimelineGridEvent.Props,
@@ -51,7 +59,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const isInteractive = true;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
   const { getCursorPositionInElementMs } = useTimelineGridEventRowContext();
 
@@ -114,12 +122,15 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     native: nativeButton,
   });
 
-  const { position, duration } = useElementPositionInCollection({
-    start,
-    end,
-    collectionStart: viewConfig.start,
-    collectionEnd: viewConfig.end,
-  });
+  const { position, duration, startingBeforeEdge, endingAfterEdge } =
+    useElementPositionInCollection({
+      start,
+      end,
+      collectionStart: viewConfig.start,
+      collectionEnd: viewConfig.end,
+    });
+
+  const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
 
   // Rendering hooks
   const style = React.useMemo(
@@ -139,9 +150,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   );
 
   const element = useRenderElement('div', componentProps, {
-    state,
+    state: mergedState,
     ref: [forwardedRef, ref, buttonRef],
     props: [props, elementProps, getButtonProps],
+    stateAttributesMapping: overflowStateAttributesMapping,
   });
 
   return (
@@ -153,7 +165,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 });
 
 export namespace TimelineGridEvent {
-  export interface State extends useDraggableEvent.State {}
+  export interface State extends useDraggableEvent.State {
+    startingBeforeEdge: boolean;
+    endingAfterEdge: boolean;
+  }
 
   export interface Props
     extends

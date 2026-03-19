@@ -1,4 +1,4 @@
-<ChartContainer
+<ChartsContainer
   xAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
   series={[{ type: 'bar', id: 'base', data: [5, 17, 11] }]}
   height={400}
@@ -8,4 +8,4 @@
   <BarPlot barLabel="value" slots={{ barLabel: BarLabel }} />
   <ChartsXAxis />
   <ChartsYAxis />
-</ChartContainer>
+</ChartsContainer>

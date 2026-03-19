@@ -97,6 +97,7 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
+      editedEventId: null,
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingUpdateRecurringEventParameters: null,
@@ -143,8 +144,8 @@ export class SchedulerStore<
   ) {
     return {
       adapter,
-      areEventsDraggable: parameters.areEventsDraggable ?? false,
-      areEventsResizable: parameters.areEventsResizable ?? false,
+      areEventsDraggable: parameters.areEventsDraggable ?? true,
+      areEventsResizable: parameters.areEventsResizable ?? true,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
       canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
       eventColor: parameters.eventColor ?? 'teal',
@@ -402,7 +403,11 @@ export class SchedulerStore<
       schedulerOtherSelectors.areRecurringEventsAvailable(this.state) &&
       original.dataTimezone.rrule
     ) {
-      throw new Error('MUI: this event is recurring. Use updateRecurringEvent(...) instead.');
+      throw new Error(
+        'MUI X Scheduler: This event is recurring and cannot be updated with updateEvent(). ' +
+          'Recurring events require special handling to manage series and exceptions. ' +
+          'Use updateRecurringEvent() instead to update recurring events.',
+      );
     }
 
     this.updateEvents({
@@ -447,7 +452,11 @@ export class SchedulerStore<
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
     const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
     if (!original.dataTimezone.rrule) {
-      throw new Error('MUI: the original event is not recurring. Use updateEvent(...) instead.');
+      throw new Error(
+        'MUI X Scheduler: The original event is not recurring and cannot be updated with updateRecurringEvent(). ' +
+          'This method is designed for recurring events with recurrence rules. ' +
+          'Use updateEvent() instead to update non-recurring events.',
+      );
     }
 
     // IMPORTANT:
@@ -609,6 +618,14 @@ export class SchedulerStore<
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
       this.set('occurrencePlaceholder', newPlaceholder);
     }
+  };
+
+  /**
+   * Sets the ID of the currently active event (e.g. open in the event dialog).
+   * Pass `null` to clear the active event.
+   */
+  public setEditedEventId = (eventId: SchedulerEventId | null) => {
+    this.set('editedEventId', eventId);
   };
 
   /**

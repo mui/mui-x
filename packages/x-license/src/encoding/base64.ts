@@ -6,7 +6,11 @@ function utf8Encode(str: string) {
     const c = str.charCodeAt(n);
 
     if (c >= 128) {
-      throw new Error('ASCII only support');
+      throw new Error(
+        'MUI X: Only ASCII characters are supported in license encoding. ' +
+          'Non-ASCII characters cannot be encoded. ' +
+          'Ensure the input contains only ASCII characters.',
+      );
     }
   }
 

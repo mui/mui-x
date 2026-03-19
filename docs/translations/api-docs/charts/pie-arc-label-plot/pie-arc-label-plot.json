@@ -11,12 +11,12 @@
     },
     "faded": { "description": "Override the arc attributes when it is faded." },
     "highlighted": { "description": "Override the arc attributes when it is highlighted." },
-    "seriesId": { "description": "The id of this series." },
     "innerRadius": {
       "description": "The radius between circle center and the beginning of the arc."
     },
     "outerRadius": { "description": "The radius between circle center and the end of the arc." },
     "paddingAngle": { "description": "The padding angle (deg) between two arcs." },
+    "seriesId": { "description": "The id of this series." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }

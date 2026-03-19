@@ -43,6 +43,7 @@
       }
     },
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
+    "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },

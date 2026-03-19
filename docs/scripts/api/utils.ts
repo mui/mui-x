@@ -1,61 +1,44 @@
 import { kebabCase } from 'es-toolkit/string';
 import * as prettier from 'prettier';
-import { Symbol, isPropertySignature, isExportSpecifier, TypeFormatFlags } from 'typescript';
+import { Symbol } from 'typescript';
 import fs from 'node:fs/promises';
+// eslint-disable-next-line no-restricted-imports
+import {
+  getSymbolDescription as getSymbolDescriptionBase,
+  getSymbolJSDocTags as getSymbolJSDocTagsBase,
+  formatType,
+  stringifySymbol as stringifySymbolBase,
+} from '@mui/monorepo/packages/api-docs-builder/buildApiUtils';
+// eslint-disable-next-line no-restricted-imports
+import resolveExportSpecifierBase from '@mui/monorepo/packages/api-docs-builder/utils/resolveExportSpecifier';
 import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
 import { resolvePrettierConfigPath } from '../utils';
 
 export type DocumentedInterfaces = Map<string, XProjectNames[]>;
 
+// Re-export formatType from api-docs-builder
+export { formatType };
+
+// Wrap functions to use XTypeScriptProject type (which extends TypeScriptProject)
 export const getSymbolDescription = (symbol: Symbol, project: XTypeScriptProject) =>
-  symbol
-    .getDocumentationComment(project.checker)
-    .flatMap((comment) => comment.text.split('\n'))
-    .filter((line) => !line.startsWith('TODO'))
-    .join('\n');
+  getSymbolDescriptionBase(symbol, project);
 
-export const getSymbolJSDocTags = (symbol: Symbol) =>
-  Object.fromEntries(symbol.getJsDocTags().map((tag) => [tag.name, tag]));
+export const getSymbolJSDocTags = getSymbolJSDocTagsBase;
 
+export const stringifySymbol = (symbol: Symbol, project: XTypeScriptProject) =>
+  stringifySymbolBase(symbol, project);
+
+export const resolveExportSpecifier = (symbol: Symbol, project: XTypeScriptProject) =>
+  resolveExportSpecifierBase(symbol, project);
+
+/**
+ * Escapes HTML entities for display in HTML context.
+ * Note: This is different from the api-docs-builder escapeCell which also handles
+ * markdown table pipes. This version is specifically for HTML output.
+ */
 export function escapeCell(value: string) {
   return value.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r?\n/g, '<br />');
 }
-
-export const formatType = async (rawType: string) => {
-  if (!rawType) {
-    return '';
-  }
-
-  const prefix = 'type FakeType = ';
-  const signatureWithTypeName = `${prefix}${rawType}`;
-
-  const prettifiedSignatureWithTypeName = await prettier.format(signatureWithTypeName, {
-    printWidth: 999,
-    singleQuote: true,
-    semi: false,
-    trailingComma: 'none',
-    parser: 'typescript',
-  });
-
-  return prettifiedSignatureWithTypeName.slice(prefix.length).replace(/\n$/, '');
-};
-
-export const stringifySymbol = async (symbol: Symbol, project: XTypeScriptProject) => {
-  let rawType: string;
-
-  const declaration = symbol.declarations?.[0];
-  if (declaration && isPropertySignature(declaration)) {
-    rawType = declaration.type?.getText() ?? '';
-  } else {
-    rawType = project.checker.typeToString(
-      project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
-      symbol.valueDeclaration,
-      TypeFormatFlags.NoTruncation,
-    );
-  }
-
-  return formatType(rawType);
-};
 
 export function linkify(
   text: string | undefined,
@@ -96,28 +79,3 @@ export async function writePrettifiedFile(filename: string, data: string) {
     },
   );
 }
-
-/**
- * Goes to the root symbol of ExportSpecifier
- * That corresponds to one of the following patterns
- * - `export { XXX}`
- * - `export { XXX } from './modules'`
- *
- * Do not go to the root definition for TypeAlias (ie: `export type XXX = YYY`)
- * Because we usually want to keep the description and tags of the aliased symbol.
- */
-export const resolveExportSpecifier = (symbol: Symbol, project: XTypeScriptProject) => {
-  let resolvedSymbol = symbol;
-
-  while (resolvedSymbol.declarations && isExportSpecifier(resolvedSymbol.declarations[0])) {
-    const newResolvedSymbol = project.checker.getImmediateAliasedSymbol(resolvedSymbol);
-
-    if (!newResolvedSymbol) {
-      throw new Error('Impossible to resolve export specifier');
-    }
-
-    resolvedSymbol = newResolvedSymbol;
-  }
-
-  return resolvedSymbol;
-};

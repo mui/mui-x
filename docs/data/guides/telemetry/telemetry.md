@@ -5,7 +5,7 @@ packageName: '@mui/x-telemetry'
 
 # MUI X Telemetry guide [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide walks you through how to opt-in and configure telemetry.</p>
+<p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide walks you through how telemetry works and how to opt out.</p>
 
 ## Why is Telemetry collected?
 
@@ -16,7 +16,7 @@ So far, we've only been relying on manual ways such as surveys and community eng
 
 Telemetry gives us a clearer picture of how MUI X is used in the real world—what features are most helpful, what needs work, and where we should focus next. While community feedback and surveys are valuable, they only tell a part of the story. Telemetry fills in the gaps and helps us make smarter, faster product decisions.
 
-By opting in, you directly contribute to shaping the future of MUI X. You help us build better tools for you and thousands of other developers—without any impact on your production app. And of course, participation is entirely optional and telemetry is off by default.
+By keeping telemetry enabled, you directly contribute to shaping the future of MUI X. You help us build better tools for you and thousands of other developers—without any impact on your production app. And of course, participation is entirely optional and you can opt out at any time.
 
 ## What is being collected?
 
@@ -44,48 +44,12 @@ In production builds of your application, telemetry is entirely removed, ensurin
 This guarantees that your production application's performance and behavior remain unaffected.
 
 :::info
-Currently, Telemetry is disabled by default and you have full control to opt-in as per your preference.
+Telemetry is enabled by default in development mode. You have full control to opt out as per your preference.
 :::
-
-## Opting in
-
-To opt-in, you can use one of the following methods:
-
-### Setting the environment variable
-
-You can set the `MUI_X_TELEMETRY_DISABLED` environment variable to `false` to enable telemetry:
-
-```bash
-MUI_X_TELEMETRY_DISABLED=false
-```
-
-Note that some frameworks may require you to prefix the environment variable with `REACT_APP_`, `NEXT_PUBLIC_`, etc.
-
-### Import telemetry settings from `@mui/x-license` package
-
-You can use `muiXTelemetrySettings` to enable telemetry:
-
-```js
-import { muiXTelemetrySettings } from '@mui/x-license';
-
-muiXTelemetrySettings.enableTelemetry();
-```
-
-Note: You can use `muiXTelemetrySettings.enableDebug();` to log telemetry data to your browser console and inspect what's being sent.
-
-### Setting the flag in your application
-
-You can set the `__MUI_X_TELEMETRY_DISABLED__` flag in your application to `false` to enable telemetry:
-
-```js
-globalThis.__MUI_X_TELEMETRY_DISABLED__ = false;
-```
-
-<!--
 
 ## Opting out
 
-To opt-out of telemetry, you can use one of the following methods:
+To opt out of telemetry, you can use one of the following methods:
 
 ### Setting the environment variable
 
@@ -107,6 +71,8 @@ import { muiXTelemetrySettings } from '@mui/x-license';
 muiXTelemetrySettings.disableTelemetry();
 ```
 
+Note: You can use `muiXTelemetrySettings.enableDebug();` to log telemetry data to your browser console and inspect what's being sent.
+
 ### Setting the flag in your application
 
 You can set the `__MUI_X_TELEMETRY_DISABLED__` flag in your application to `true` to disable telemetry:
@@ -114,5 +80,3 @@ You can set the `__MUI_X_TELEMETRY_DISABLED__` flag in your application to `true
 ```js
 globalThis.__MUI_X_TELEMETRY_DISABLED__ = true;
 ```
-
--->

@@ -19,6 +19,9 @@
     },
     "autosizeOptions": { "description": "The options for autosize when user-initiated." },
     "cellModesModel": { "description": "Controls the modes of the cells." },
+    "checkboxColDef": {
+      "description": "Definition of the column rendered when the <code>checkboxSelection</code> prop is enabled."
+    },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
     },
@@ -46,6 +49,9 @@
     },
     "dataSource": { "description": "The data source object." },
     "dataSourceCache": { "description": "Data source cache object." },
+    "dataSourceRevalidateMs": {
+      "description": "If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired. Set to <code>0</code> to disable polling."
+    },
     "density": { "description": "Set the density of the Data Grid." },
     "disableAutosize": {
       "description": "If <code>true</code>, column autosizing on header separator double-click is disabled."

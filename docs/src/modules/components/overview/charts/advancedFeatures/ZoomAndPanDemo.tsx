@@ -34,14 +34,12 @@ function ZoomAndPan() {
           {
             label: 'Google',
             dataKey: 'google',
-            showMark: false,
             valueFormatter: (value: number | null) =>
               value === null ? '' : currencyFormatter(value),
           },
           {
             label: 'Meta',
             dataKey: 'meta',
-            showMark: false,
             valueFormatter: (value: number | null) =>
               value === null ? '' : currencyFormatter(value),
           },
