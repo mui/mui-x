@@ -677,7 +677,6 @@
   { "name": "useLineSeriesContext", "kind": "Function" },
   { "name": "UseLineSeriesContextReturnValue", "kind": "TypeAlias" },
   { "name": "UseLineSeriesReturnValue", "kind": "TypeAlias" },
-  { "name": "useMouseTracker", "kind": "Function" },
   { "name": "usePieSeries", "kind": "Function" },
   { "name": "usePieSeriesContext", "kind": "Function" },
   { "name": "UsePieSeriesContextReturnValue", "kind": "TypeAlias" },

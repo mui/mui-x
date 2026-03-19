@@ -670,7 +670,6 @@
   { "name": "useLineSeriesContext", "kind": "Function" },
   { "name": "UseLineSeriesContextReturnValue", "kind": "TypeAlias" },
   { "name": "UseLineSeriesReturnValue", "kind": "TypeAlias" },
-  { "name": "useMouseTracker", "kind": "Function" },
   { "name": "useOHLCSeries", "kind": "Function" },
   { "name": "useOHLCSeriesContext", "kind": "Function" },
   { "name": "UseOHLCSeriesContextReturnValue", "kind": "TypeAlias" },
