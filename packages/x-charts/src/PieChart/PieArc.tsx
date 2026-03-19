@@ -103,6 +103,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       strokeLinejoin="round"
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      data-index={dataIndex}
       {...other}
       {...interactionProps}
       {...animatedProps}

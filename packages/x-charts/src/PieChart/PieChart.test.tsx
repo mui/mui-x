@@ -200,13 +200,13 @@ describe('<PieChart />', () => {
     // Focus the first arc
     await user.keyboard('{ArrowRight}');
     expect(
-      container.querySelector(`.${pieClasses.focusIndicator}.MuiPieArc-data-index-0`),
+      container.querySelector(`.${pieClasses.focusIndicator}[data-index="0"]`),
     ).toBeTruthy();
 
     // Focus the second arc
     await user.keyboard('{ArrowRight}');
     expect(
-      container.querySelector(`.${pieClasses.focusIndicator}.MuiPieArc-data-index-1`),
+      container.querySelector(`.${pieClasses.focusIndicator}[data-index="1"]`),
     ).toBeTruthy();
   });
 

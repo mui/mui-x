@@ -36,7 +36,7 @@ function getVisibleBars(): Element[] {
  * Helper to get visible pie arcs from the document
  */
 function getVisiblePieArcs(): Element[] {
-  const arcs = document.querySelectorAll(`.${pieClasses.root}`);
+  const arcs = document.querySelectorAll(`.${pieClasses.arc}`);
   return Array.from(arcs).filter(isPieArcVisible);
 }
 
