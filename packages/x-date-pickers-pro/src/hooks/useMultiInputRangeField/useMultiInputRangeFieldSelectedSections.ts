@@ -19,7 +19,10 @@ interface UseMultiInputRangeFieldSelectedSectionsParameters
     MultiInputFieldRefs {}
 
 export interface UseMultiInputFieldSelectedSectionsResponseItem {
-  unstableFieldRef?: React.Ref<FieldRef<PickerValue>>;
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
+  fieldRef?: React.Ref<FieldRef<PickerValue>>;
   selectedSections: FieldSelectedSections;
   onSelectedSectionsChange: (newSelectedSections: FieldSelectedSections) => void;
 }
@@ -35,8 +38,8 @@ interface UseMultiInputFieldSelectedSectionsResponse {
 export const useMultiInputRangeFieldSelectedSections = (
   parameters: UseMultiInputRangeFieldSelectedSectionsParameters,
 ): UseMultiInputFieldSelectedSectionsResponse => {
-  const unstableEndFieldRef = React.useRef<FieldRef<PickerValue>>(null);
-  const handleUnstableEndFieldRef = useForkRef(parameters.unstableEndFieldRef, unstableEndFieldRef);
+  const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const handleEndFieldRef = useForkRef(parameters.endFieldRef, endFieldRef);
 
   const [startSelectedSection, setStartSelectedSection] = React.useState<FieldSelectedSections>(
     parameters.selectedSections ?? null,
@@ -44,7 +47,7 @@ export const useMultiInputRangeFieldSelectedSections = (
   const [endSelectedSection, setEndSelectedSection] = React.useState<FieldSelectedSections>(null);
 
   const getActiveField = () => {
-    if (unstableEndFieldRef.current && unstableEndFieldRef.current.isFieldFocused()) {
+    if (endFieldRef.current && endFieldRef.current.isFieldFocused()) {
       return 'end';
     }
 
@@ -73,7 +76,7 @@ export const useMultiInputRangeFieldSelectedSections = (
 
   return {
     start: {
-      unstableFieldRef: parameters.unstableStartFieldRef,
+      fieldRef: parameters.startFieldRef,
       selectedSections:
         activeField === 'start' && parameters.selectedSections !== undefined
           ? parameters.selectedSections
@@ -81,7 +84,7 @@ export const useMultiInputRangeFieldSelectedSections = (
       onSelectedSectionsChange: handleStartSelectedSectionChange,
     },
     end: {
-      unstableFieldRef: handleUnstableEndFieldRef,
+      fieldRef: handleEndFieldRef,
       selectedSections:
         activeField === 'end' && parameters.selectedSections !== undefined
           ? parameters.selectedSections

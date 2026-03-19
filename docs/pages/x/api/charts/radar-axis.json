@@ -28,29 +28,7 @@
     "import { RadarAxis } from '@mui/x-charts-pro';",
     "import { RadarAxis } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "label",
-      "className": "MuiRadarAxis-label",
-      "description": "Styles applied to every label element.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "line",
-      "className": "MuiRadarAxis-line",
-      "description": "Styles applied to the line element.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "root",
-      "className": "MuiRadarAxis-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false,
-      "isDeprecated": true
-    }
-  ],
+  "classes": [],
   "muiName": "MuiRadarAxis",
   "filename": "/packages/x-charts/src/RadarChart/RadarAxis/RadarAxis.tsx",
   "inheritance": null,
