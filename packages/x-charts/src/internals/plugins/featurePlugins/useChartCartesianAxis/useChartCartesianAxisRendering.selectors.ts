@@ -120,7 +120,13 @@ export const selectorChartXAxisWithDomains = createSelectorMemoized(
   selectorDefaultXAxisTickNumber,
   selectorChartXAxisExtrema,
   function selectorChartXAxisWithDomains(axes, formattedSeries, defaultTickNumber, extremaMap) {
-    const domains = computeAxisDomainsMap(axes, formattedSeries, defaultTickNumber, extremaMap, 'x');
+    const domains = computeAxisDomainsMap(
+      axes,
+      formattedSeries,
+      defaultTickNumber,
+      extremaMap,
+      'x',
+    );
     return { axes, domains };
   },
 );
@@ -131,7 +137,13 @@ export const selectorChartYAxisWithDomains = createSelectorMemoized(
   selectorDefaultYAxisTickNumber,
   selectorChartYAxisExtrema,
   function selectorChartYAxisWithDomains(axes, formattedSeries, defaultTickNumber, extremaMap) {
-    const domains = computeAxisDomainsMap(axes, formattedSeries, defaultTickNumber, extremaMap, 'y');
+    const domains = computeAxisDomainsMap(
+      axes,
+      formattedSeries,
+      defaultTickNumber,
+      extremaMap,
+      'y',
+    );
     return { axes, domains };
   },
 );
