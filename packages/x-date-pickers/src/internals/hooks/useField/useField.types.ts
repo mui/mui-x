@@ -107,7 +107,7 @@ export interface UseFieldInternalProps<
    * The index or type of the section to focus when the field is focused.
    * If `undefined`/`null`, the first section will be focused.
    */
-  initialFocusedSection?: Exclude<FieldSelectedSections, 'empty'>;
+  initialFocus?: Exclude<FieldSelectedSections, 'empty'>;
   /**
    * The ref object used to imperatively interact with the field.
    */

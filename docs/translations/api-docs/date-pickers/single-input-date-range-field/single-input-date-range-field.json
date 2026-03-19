@@ -47,7 +47,7 @@
     "id": {
       "description": "The id of the <code>input</code> element. Use this prop to make <code>label</code> and <code>helperText</code> accessible for screen readers."
     },
-    "initialFocusedSection": {
+    "initialFocus": {
       "description": "The index or type of the section to focus when the field is focused. If <code>undefined</code>/<code>null</code>, the first section will be focused."
     },
     "InputLabelProps": {

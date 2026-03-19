@@ -227,7 +227,7 @@ Learn more about the field accessible DOM structure on the MUI documentation: ht
 
     if (autoFocus && !disabled && sectionListRef.current) {
       const newParsedSelectedSections = parseSelectedSections(
-        internalPropsWithDefaults.initialFocusedSection ?? sectionOrder.startIndex,
+        internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex,
         state.sections,
       );
 
