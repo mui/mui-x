@@ -9,6 +9,9 @@ import { type UseChartHighlightSignature } from '../useChartHighlight';
 import { useStore } from '../../../store/useStore';
 import { useChartContext } from '../../../../context/ChartProvider';
 import { getChartPoint } from '../../../getChartPoint';
+import type { UseChartSeriesConfigSignature } from '../../corePlugins/useChartSeriesConfig';
+import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
+import type { UseChartPolarAxisSignature } from '../useChartPolarAxis';
 
 /**
  * Hook that registers pointer interaction handlers on the chart container.
@@ -25,7 +28,14 @@ export function useRegisterPointerInteractions() {
       ]
     >();
   const chartsLayerContainerRef = useChartsLayerContainerRef();
-  const store = useStore();
+  const store =
+    useStore<
+      [
+        UseChartSeriesConfigSignature<ChartSeriesType>,
+        UseChartCartesianAxisSignature<ChartSeriesType>,
+        UseChartPolarAxisSignature<ChartSeriesType>,
+      ]
+    >();
 
   const interactionActive = React.useRef(false);
   const lastItemRef = React.useRef<SeriesItemIdentifierWithType<ChartSeriesType> | undefined>(
@@ -77,8 +87,9 @@ export function useRegisterPointerInteractions() {
       let item: SeriesItemIdentifierWithType<ChartSeriesType> | undefined;
 
       for (const seriesType of Object.keys(store.state.seriesConfig.config)) {
-        // @ts-ignore The type inference for store.state does not support generic yet
-        item = store.state.seriesConfig.config[seriesType].getItemAtPosition?.(store.state, {
+        item = store.state.seriesConfig.config[
+          seriesType as keyof typeof store.state.seriesConfig.config
+        ].getItemAtPosition?.(store.state, {
           x: svgPoint.x,
           y: svgPoint.y,
         });
