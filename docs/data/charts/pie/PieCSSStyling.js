@@ -1,4 +1,4 @@
-import { pieArcClasses, PieChart, pieClasses } from '@mui/x-charts/PieChart';
+import { pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { useTheme } from '@mui/material/styles';
 
@@ -50,7 +50,7 @@ export default function PieCSSStyling() {
     <PieChart
       {...settings}
       sx={{
-        [`.${pieClasses.series}[data-series="outer"] .${pieArcClasses.root}`]: {
+        [`.${pieClasses.series}[data-series="outer"] .${pieClasses.arc}`]: {
           opacity: 0.6,
         },
       }}
