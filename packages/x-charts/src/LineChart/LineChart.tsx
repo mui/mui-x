@@ -16,7 +16,7 @@ import {
   type LinePlotSlotProps,
   type LinePlotSlots,
 } from './LinePlot';
-import { type ChartContainerProps } from '../ChartContainer';
+import { type ChartsContainerProps } from '../ChartsContainer';
 import {
   MarkPlot,
   type MarkPlotProps,
@@ -47,8 +47,8 @@ import {
   type ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { useLineChartProps } from './useLineChartProps';
-import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
+import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { LineChartPluginSignatures } from './LineChart.plugins';
@@ -83,7 +83,7 @@ export interface LineChartSlotProps
 export type LineSeries = MakeOptional<LineSeriesType, 'type'>;
 export interface LineChartProps
   extends
-    Omit<ChartContainerProps<'line', LineChartPluginSignatures>, 'series' | 'plugins' | 'zAxis'>,
+    Omit<ChartsContainerProps<'line', LineChartPluginSignatures>, 'series' | 'plugins' | 'zAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
@@ -160,7 +160,7 @@ const LineChart = React.forwardRef(function LineChart(
   const props = useThemeProps({ props: inProps, name: 'MuiLineChart' });
   const {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -174,14 +174,14 @@ const LineChart = React.forwardRef(function LineChart(
     legendProps,
     children,
   } = useLineChartProps(props);
-  const { chartDataProviderProps, chartsSurfaceProps } =
-    useChartContainerProps(chartContainerProps);
+  const { chartsDataProviderProps, chartsSurfaceProps } =
+    useChartsContainerProps(chartsContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'line', LineChartPluginSignatures> {...chartDataProviderProps}>
+    <ChartsDataProvider<'line', LineChartPluginSignatures> {...chartsDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -205,7 +205,7 @@ const LineChart = React.forwardRef(function LineChart(
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 });
 

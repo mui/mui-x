@@ -1,5 +1,5 @@
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickerFieldSlotProps, PickerOwnerState } from '@mui/x-date-pickers/models';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
@@ -19,6 +19,7 @@ import {
   NonStaticRangePickerHookParameters,
   UseRangePickerProps,
 } from '../../models';
+import { PickerRangeFieldSlotProps } from '../../../models';
 
 export interface UseMobileRangePickerSlots
   extends
@@ -39,9 +40,7 @@ export interface ExportedUseMobileRangePickerSlotProps<
     ExportedPickersLayoutSlotProps<PickerRangeValue>,
     PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<
-    PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> & {
-      dateSeparator?: string;
-    },
+    PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;

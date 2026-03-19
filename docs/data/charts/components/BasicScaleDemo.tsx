@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 
@@ -48,7 +48,7 @@ function DrawingAreaBox() {
 }
 export default function BasicScaleDemo() {
   return (
-    <ChartContainer
+    <ChartsContainer
       height={300}
       series={[
         {
@@ -61,6 +61,6 @@ export default function BasicScaleDemo() {
     >
       <LinePlot />
       <DrawingAreaBox />
-    </ChartContainer>
+    </ChartsContainer>
   );
 }

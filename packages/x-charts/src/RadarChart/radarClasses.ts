@@ -50,8 +50,7 @@ export const radarClasses: RadarClasses = generateUtilityClasses('MuiRadarChart'
   'axisHighlightDot',
 ]);
 
-export const useUtilityClasses = (options?: { classes?: Partial<RadarClasses> }) => {
-  const { classes } = options ?? {};
+export const useUtilityClasses = (classes?: Partial<RadarClasses>) => {
   const slots = {
     axisRoot: ['axisRoot'],
     axisLine: ['axisLine'],

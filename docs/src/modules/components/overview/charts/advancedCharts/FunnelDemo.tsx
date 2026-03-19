@@ -20,7 +20,7 @@ function Funnel() {
       </Typography>
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <FunnelChart
-          sx={{ '.MuiFunnelSection-series-2020': { filter: 'brightness(0.7)' } }}
+          sx={{ '& [data-series="2020"]': { filter: 'brightness(0.7)' } }}
           margin={{ left: 50, right: 50 }}
           series={[
             {

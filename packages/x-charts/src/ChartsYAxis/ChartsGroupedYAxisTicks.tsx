@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { type ChartsYAxisProps, type AxisGroup } from '../models/axis';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../context/ChartsProvider/useChartsContext';
 import { TICK_LABEL_GAP } from './utilities';
 import { useTicksGrouped } from '../hooks/useTicksGrouped';
 import { useAxisTicksProps } from './useAxisTicksProps';
@@ -68,7 +68,7 @@ function ChartsGroupedYAxisTicks(inProps: ChartsYAxisProps) {
   const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
   const axisId = defaultizedProps.id;
 
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
   // Get computed group tick sizes from auto-sizing (if available)

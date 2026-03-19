@@ -26,9 +26,9 @@ import {
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartContainerProProps } from '../ChartContainerPro';
-import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { BAR_CHART_PRO_PLUGINS, type BarChartProPluginSignatures } from './BarChartPro.plugins';
 
 export interface BarChartProSlots
@@ -43,7 +43,7 @@ export interface BarChartProProps
   extends
     Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins'>,
     Omit<
-      ChartContainerProProps<'bar', BarChartProPluginSignatures>,
+      ChartsContainerProProps<'bar', BarChartProPluginSignatures>,
       'series' | 'slots' | 'slotProps'
     > {
   /**
@@ -77,7 +77,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
   const {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     barPlotProps,
     gridProps,
     clipPathProps,
@@ -89,11 +89,11 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     children,
   } = useBarChartProps(other);
 
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+  const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'bar',
     BarChartProPluginSignatures
   >({
-    ...chartContainerProps,
+    ...chartsContainerProps,
     initialZoom,
     zoomData,
     onZoomChange,
@@ -105,7 +105,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro<'bar', BarChartProPluginSignatures> {...chartDataProviderProProps}>
+    <ChartsDataProviderPro<'bar', BarChartProPluginSignatures> {...chartsDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -124,7 +124,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 });
 

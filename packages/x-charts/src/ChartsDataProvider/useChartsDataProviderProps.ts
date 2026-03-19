@@ -19,7 +19,7 @@ export const useChartsDataProviderProps = <
   inProps: ChartsDataProviderProps<SeriesType, TSignatures> & ChartsLocalizationProviderProps,
 ) => {
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
-  const themedProps = useThemeProps({ props: inProps, name: 'MuiChartDataProvider' });
+  const themedProps = useThemeProps({ props: inProps, name: 'MuiChartsDataProvider' });
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: themedProps, name: 'MuiChartsDataProvider' });
 

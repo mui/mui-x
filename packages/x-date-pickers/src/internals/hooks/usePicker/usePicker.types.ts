@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import {
@@ -99,7 +100,10 @@ export interface UsePickerBaseProps<
 /**
  * Props used to handle the value of non-static Pickers.
  */
-export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextValue, 'fieldRef'> {
+export interface UsePickerNonStaticProps extends Omit<
+  PickerFieldPrivateContextValue,
+  'internalFieldRef' | 'fieldRef'
+> {
   /**
    * If `true`, the Picker will close after submitting the full date.
    * @default false
