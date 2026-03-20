@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import fs from 'fs';
+import isDocker from 'is-docker';
 import os from 'os';
 
 function sha256(value: string): string {
@@ -19,10 +20,11 @@ function sha256(value: string): string {
 //    stable across container restarts (only changes on image rebuild)
 // 3. /var/lib/dbus/machine-id — alternative Linux path, some distros
 //    use this instead of /etc/machine-id
-// 4. os.hostname() — last resort, only on macOS/Windows where hostnames
-//    are typically user-set and stable. Skipped on Linux because container
-//    runtimes (Docker, K8s) assign random hostnames per run, which would
-//    create a different hash each session — worse than returning null.
+// 4. os.hostname() — used on macOS/Windows where hostnames are user-set and stable,
+//    and in Docker where the hostname is the container ID (random but unique per container,
+//    stable for the container's lifetime). Skipped on non-Docker Linux because hostnames
+//    are often generic defaults (e.g., "localhost", "ubuntu") which would conflate
+//    different machines into the same identity.
 
 export default async function getAnonymousMachineId(): Promise<string | null> {
   // 1. Try node-machine-id (platform-specific, most reliable)
@@ -59,7 +61,7 @@ export default async function getAnonymousMachineId(): Promise<string | null> {
   // 4. Try hostname — only on macOS/Windows where it's user-set and stable.
   // On Linux, container runtimes assign random hostnames per run,
   // which would generate a different hash each session and inflate counts.
-  if (process.platform !== 'linux') {
+  if (process.platform !== 'linux' || isDocker()) {
     try {
       const hostname = os.hostname();
       if (hostname) {

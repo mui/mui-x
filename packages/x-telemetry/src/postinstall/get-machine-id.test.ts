@@ -12,6 +12,11 @@ vi.mock('node-machine-id', () => ({
   machineId: vi.fn(),
 }));
 
+const isDockerSpy = vi.fn();
+vi.mock('is-docker', () => ({
+  default: isDockerSpy,
+}));
+
 function sha256(value: string): string {
   return createHash('sha256').update(value).digest('hex');
 }
@@ -19,6 +24,8 @@ function sha256(value: string): string {
 describe('getAnonymousMachineId', () => {
   beforeEach(() => {
     readFileSyncSpy.mockReset();
+    isDockerSpy.mockReset();
+    isDockerSpy.mockReturnValue(false);
     vi.resetModules();
   });
 
@@ -79,12 +86,13 @@ describe('getAnonymousMachineId', () => {
     expect(result).toMatch(/^[a-f0-9]{64}$/);
   });
 
-  it('should skip os.hostname() on Linux', async () => {
+  it('should fall back to os.hostname() on Linux when running in Docker', async () => {
     const nodeMachineId = await import('node-machine-id');
     vi.mocked(nodeMachineId.machineId).mockRejectedValueOnce(new Error('not available'));
     readFileSyncSpy.mockImplementation(() => {
       throw new Error('ENOENT');
     });
+    isDockerSpy.mockReturnValue(true);
 
     const originalPlatform = process.platform;
     Object.defineProperty(process, 'platform', { value: 'linux', writable: true });
@@ -94,15 +102,17 @@ describe('getAnonymousMachineId', () => {
 
     Object.defineProperty(process, 'platform', { value: originalPlatform, writable: true });
 
-    expect(result).toBeNull();
+    // In Docker, os.hostname() returns the container ID — a valid hash source
+    expect(result).toMatch(/^[a-f0-9]{64}$/);
   });
 
-  it('should return null when all fallbacks fail', async () => {
+  it('should skip os.hostname() on non-Docker Linux', async () => {
     const nodeMachineId = await import('node-machine-id');
     vi.mocked(nodeMachineId.machineId).mockRejectedValueOnce(new Error('not available'));
     readFileSyncSpy.mockImplementation(() => {
       throw new Error('ENOENT');
     });
+    isDockerSpy.mockReturnValue(false);
 
     const originalPlatform = process.platform;
     Object.defineProperty(process, 'platform', { value: 'linux', writable: true });
