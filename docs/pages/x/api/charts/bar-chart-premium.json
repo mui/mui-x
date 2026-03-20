@@ -110,7 +110,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier) => void",
+        "type": "function(event: MouseEvent, itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier) => void",
         "describedArgs": ["event", "itemIdentifier"]
       }
     },

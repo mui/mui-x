@@ -60,13 +60,10 @@ export interface BarChartPremiumProps extends Omit<
   slotProps?: BarChartPremiumSlotProps;
   /**
    * Callback fired when a bar or range bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
    */
-  onItemClick?(
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier,
-  ): void;
+  onItemClick?(event: MouseEvent, itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier): void;
 
   /**
    * The series to display in the bar chart.
@@ -404,7 +401,7 @@ BarChartPremium.propTypes = {
   onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a bar or range bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
    */
   onItemClick: PropTypes.func,

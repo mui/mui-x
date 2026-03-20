@@ -132,7 +132,14 @@ describe('<BarChart />', () => {
 
       const bars = document.querySelectorAll(`.${barClasses.element}`);
 
-      await user.pointer({ target: bars[0] });
+      const barRect = bars[0].getBoundingClientRect();
+      await user.pointer({
+        target: bars[0],
+        coords: {
+          clientX: barRect.left + barRect.width / 2,
+          clientY: barRect.top + barRect.height / 2,
+        },
+      });
 
       expect([...bars].map((b) => b.getAttribute('data-highlighted'))).to.deep.equal([
         'true',
