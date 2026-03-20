@@ -13,7 +13,7 @@ async function execCLI(command: string): Promise<string | null> {
       windowsHide: true,
     });
 
-    return String(response).trim();
+    return String(response.stdout).trim();
   } catch (_) {
     return null;
   }
