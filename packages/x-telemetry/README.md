@@ -36,9 +36,9 @@ globalThis.__MUI_X_TELEMETRY_DISABLED__ = false; // enabled
 globalThis.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
 ```
 
-### How to test
+## How to test
 
-#### Postinstall output
+### Postinstall output
 
 The postinstall script writes to two places:
 
@@ -49,26 +49,111 @@ The postinstall script writes to two places:
    - **Linux:** `$XDG_CONFIG_HOME/mui-x/config.json` (defaults to `~/.config/mui-x/config.json`)
    - **CI/Docker:** `<cwd>/cache/mui-x/config.json` (ephemeral, inside the project)
 
-#### Postinstall (builds context.js with machineId, projectId, etc.)
+### Testing the postinstall locally
 
 ```bash
 # 1. Build the package
 pnpm --filter @mui/x-telemetry run build
 
-# 2. Run the postinstall script
+# 2. Clean previous output (start fresh)
+rm -f packages/x-telemetry/build/context.js packages/x-telemetry/build/context.mjs ~/Library/Preferences/mui-x/config.json
+
+# 3. Run the postinstall script
+
+# Local (macOS/Linux)
 node packages/x-telemetry/build/postinstall/index.js
 
-# 3. Check the generated context
-cat packages/x-telemetry/build/context.js
-cat packages/x-telemetry/build/context.mjs
+# Docker
+docker run --rm -v $(pwd):/repo -w /repo/packages/x-telemetry/build node:20 node ./postinstall/index.mjs
 
-# 4. Check the persistent config (macOS)
-cat ~/Library/Preferences/mui-x/config.json
+# 4. Verify the output
+cat packages/x-telemetry/build/context.js   # CJS context
+cat packages/x-telemetry/build/context.mjs  # ESM context
+cat ~/Library/Preferences/mui-x/config.json # Persistent config (macOS)
 ```
 
-#### Unit tests
+### Testing the package.json name fallback (no git)
 
 ```bash
-# Run all x-telemetry unit tests (jsdom)
+# 1. Build the package
+pnpm --filter @mui/x-telemetry run build
+
+# 2. Create a temp directory with only a package.json (no .git)
+mkdir -p /tmp/test-pkg && echo '{"name": "my-test-app"}' > /tmp/test-pkg/package.json
+
+# 3. Clean previous output
+rm -f packages/x-telemetry/build/context.js packages/x-telemetry/build/context.mjs
+
+# 4. Run postinstall from the temp directory
+cd /tmp/test-pkg && node /path/to/mui-x/packages/x-telemetry/build/postinstall/index.js
+
+# 5. Verify projectId matches sha256("my-test-app")
+grep projectId /path/to/mui-x/packages/x-telemetry/build/context.js
+echo -n "my-test-app" | shasum -a 256
+# Both should output the same hash
+
+# 6. Go back to the repo and clean up
+cd /path/to/mui-x
+rm -rf /tmp/test-pkg
+```
+
+### Testing the runtime fallback (npm_package_name)
+
+```bash
+# 1. Build the package
+pnpm --filter @mui/x-telemetry run build
+
+# 2. Run with npm_package_name set (simulates npm/pnpm run context)
+node -e "
+  process.env.npm_package_name = 'my-test-app';
+  import('./packages/x-telemetry/build/runtime/get-context.mjs').then(m =>
+    m.default().then(ctx => console.log('projectId:', ctx.traits.projectId))
+  );
+"
+
+# 3. Verify the hash matches sha256("my-test-app")
+echo -n "my-test-app" | shasum -a 256
+# Both should output: 04a0c785...
+```
+
+### Testing the runtime fallback (browser fetch)
+
+```bash
+# 1. Create a temp directory with a package.json
+mkdir -p /tmp/test-fetch && cd /tmp/test-fetch
+echo '{"name": "fetch-test-app"}' > package.json
+
+# 2. Create an index.html that simulates the runtime fetch fallback
+cat > index.html << 'HTMLEOF'
+<script type="module">
+  async function hashString(str) {
+    const data = new TextEncoder().encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  const res = await fetch('/package.json');
+  const pkg = await res.json();
+  const projectId = await hashString(pkg.name);
+  console.log('projectId:', projectId);
+  document.body.innerText = 'projectId: ' + projectId;
+</script>
+HTMLEOF
+
+# 3. Serve and open http://localhost:3000
+npx serve .
+
+# 4. Verify the browser console output matches sha256("fetch-test-app")
+echo -n "fetch-test-app" | shasum -a 256
+# Both should output: 1dcce451...
+
+# 5. Clean up
+rm -rf /tmp/test-fetch
+```
+
+### Unit tests
+
+```bash
 pnpm test:unit --project "x-telemetry" --run
 ```
