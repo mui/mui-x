@@ -57,15 +57,6 @@
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
-    "onAxisClick": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>onItemClick</code> instead to get access to both x- and y-axis values.",
-      "signature": {
-        "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
-        "describedArgs": ["event", "data"]
-      }
-    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {

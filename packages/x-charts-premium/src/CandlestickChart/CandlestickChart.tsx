@@ -132,7 +132,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
   const { showToolbar = false } = props;
   const {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     candlestickPlotProps,
     gridProps,
     clipPathProps,
@@ -143,10 +143,10 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
     legendProps,
     children,
   } = useCandlestickChartProps(props);
-  const { chartDataProviderPremiumProps, chartsSurfaceProps } = useChartsContainerPremiumProps<
+  const { chartsDataProviderPremiumProps, chartsSurfaceProps } = useChartsContainerPremiumProps<
     'ohlc',
     CandlestickChartPluginSignatures
-  >(chartContainerProps);
+  >(chartsContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -154,7 +154,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
 
   return (
     <ChartsDataProviderPremium<'ohlc', CandlestickChartPluginSignatures>
-      {...chartDataProviderPremiumProps}
+      {...chartsDataProviderPremiumProps}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}

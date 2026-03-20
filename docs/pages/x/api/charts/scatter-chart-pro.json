@@ -29,8 +29,20 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "disableClosestPoint": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use <code>disableHitArea</code> instead."
+    },
+    "disableHitArea": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "disableVoronoi": { "type": { "name": "bool" }, "default": "false" },
+    "disableVoronoi": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use <code>disableHitArea</code> instead."
+    },
     "experimentalFeatures": { "type": { "name": "object" } },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
@@ -49,6 +61,7 @@
         "description": "{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
       }
     },
+    "hitAreaRadius": { "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" } },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
@@ -143,9 +156,6 @@
         "name": "union",
         "description": "{ dataIndex: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
       }
-    },
-    "voronoiMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {

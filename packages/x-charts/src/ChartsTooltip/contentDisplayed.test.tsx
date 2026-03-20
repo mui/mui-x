@@ -448,7 +448,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root p');
+        const cells = document.querySelectorAll<HTMLElement>(`.${chartsTooltipClasses.root} p`);
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           'sum',
           '300',
@@ -467,7 +467,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root p');
+        const cells = document.querySelectorAll<HTMLElement>(`.${chartsTooltipClasses.root} p`);
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           'sum',
           '1000',

@@ -6,7 +6,7 @@ import { type DefaultizedScatterSeriesType } from '../models/seriesType/scatter'
 import { type D3Scale } from '../models/axis';
 import { useUtilityClasses } from './scatterClasses';
 import type { ScatterClasses } from './scatterClasses';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import {
@@ -46,7 +46,7 @@ function useCreatePaths(
   color: string,
   colorGetter?: ColorGetter<'scatter'>,
 ) {
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
 
@@ -142,7 +142,7 @@ const Group = styled('g', {
 export function BatchScatter(props: BatchScatterProps) {
   const { series, xScale, yScale, color, colorGetter, className } = props;
 
-  const { store } = useChartContext<[UseChartHighlightSignature<'scatter'>]>();
+  const { store } = useChartsContext<[UseChartHighlightSignature<'scatter'>]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
   const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.id);
   const seriesHighlightedItem = store.use(selectorChartSeriesHighlightedItem, series.id);

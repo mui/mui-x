@@ -33,8 +33,8 @@
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableClipping": { "type": { "name": "bool" }, "default": "false" },
+    "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "disableVoronoi": { "type": { "name": "bool" } },
     "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
@@ -55,6 +55,7 @@
         "description": "{ dataIndex?: number, seriesId: string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }"
       }
     },
+    "hitAreaRadius": { "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" } },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
@@ -153,9 +154,6 @@
         "describedArgs": ["value"],
         "returned": "string"
       }
-    },
-    "voronoiMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {

@@ -132,7 +132,7 @@ describe('ScatterChart - click event', () => {
             {...config}
             series={[{ id: 's1', data: config.dataset }]}
             onItemClick={onItemClick}
-            disableVoronoi
+            disableHitArea
           />
         </div>,
       );
@@ -163,7 +163,7 @@ describe('ScatterChart - click event', () => {
             {...config}
             series={[{ id: 's1', data: config.dataset }]}
             onItemClick={onItemClick}
-            disableVoronoi
+            disableHitArea
           />
         </div>,
       );

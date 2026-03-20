@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-
+import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { BarChartPro } from './BarChartPro';
 
 describe('<BarChartPro /> - Grid', () => {
@@ -33,10 +33,14 @@ describe('<BarChartPro /> - Grid', () => {
     );
 
     // Without zoom, 5 vertical lines (the 4 ticks + 1 at the end of the axis)
-    expect(Array.from(document.querySelectorAll(`.MuiChartsGrid-verticalLine`)).length).to.equal(5);
+    expect(
+      Array.from(document.querySelectorAll(`.${chartsGridClasses.verticalLine}`)).length,
+    ).to.equal(5);
 
     // With small zoom, first and last line should be removed
     setProps({ zoomData: [{ axisId: 'x', start: 10, end: 90 }] });
-    expect(Array.from(document.querySelectorAll(`.MuiChartsGrid-verticalLine`)).length).to.equal(3);
+    expect(
+      Array.from(document.querySelectorAll(`.${chartsGridClasses.verticalLine}`)).length,
+    ).to.equal(3);
   });
 });

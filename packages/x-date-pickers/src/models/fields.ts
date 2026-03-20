@@ -131,6 +131,10 @@ export interface FieldRef<TValue extends PickerValidValue> {
    * @returns {boolean} `true` if the field is focused.
    */
   isFieldFocused: () => boolean;
+  /**
+   * Clears the field.
+   */
+  clearValue: () => void;
 }
 
 export type FieldSelectedSections = number | FieldSectionType | null | 'all';
@@ -165,7 +169,7 @@ export type PickerFieldSlotProps<
 > = ExportedPickerFieldUIProps &
   Pick<
     UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
-    'shouldRespectLeadingZeros' | 'readOnly'
+    'shouldRespectLeadingZeros' | 'readOnly' | 'fieldRef'
   > &
   React.HTMLAttributes<HTMLDivElement> & {
     ref?: React.Ref<HTMLDivElement>;
