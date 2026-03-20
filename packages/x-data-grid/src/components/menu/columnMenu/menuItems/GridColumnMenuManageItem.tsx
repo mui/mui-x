@@ -22,11 +22,13 @@ function GridColumnMenuManageItem(props: GridColumnMenuItemProps) {
     return null;
   }
 
+  const Icon = rootProps.slots.columnMenuManageColumnsIcon ?? rootProps.slots.columnSelectorIcon;
+
   return (
     <rootProps.slots.baseMenuItem
       onClick={showColumns}
       iconStart={
-        <rootProps.slots.columnMenuManageColumnsIcon fontSize="small" />
+        <Icon fontSize="small" />
       }
     >
       {apiRef.current.getLocaleText('columnMenuManageColumns')}
