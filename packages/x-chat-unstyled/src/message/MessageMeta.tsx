@@ -4,6 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useIsHydrated } from '../chat/internals/useIsHydrated';
+import { ProgressIndicator, ProgressRoot, ProgressTrack } from '../internals/ProgressSlots';
 import { useMessageContext } from './internals/MessageContext';
 import { type MessageMetaOwnerState } from './message.types';
 
@@ -12,6 +13,17 @@ export interface MessageMetaSlots {
   timestamp: React.ElementType;
   status: React.ElementType;
   edited: React.ElementType;
+  /**
+   * The root element of the streaming progress indicator.
+   * Rendered by Base UI `Progress.Root` when `message.status === 'streaming'`.
+   * Provides `role="progressbar"` and `aria-valuetext` for screen readers.
+   * @default ProgressRoot (Base UI Progress.Root wrapper)
+   */
+  streamingProgress: React.ElementType;
+  /** The track element wrapping the streaming progress indicator. */
+  streamingProgressTrack: React.ElementType;
+  /** The animated indicator bar inside the streaming progress track. */
+  streamingProgressIndicator: React.ElementType;
 }
 
 export interface MessageMetaSlotProps {
@@ -19,6 +31,9 @@ export interface MessageMetaSlotProps {
   timestamp?: SlotComponentProps<'span', {}, MessageMetaOwnerState>;
   status?: SlotComponentProps<'span', {}, MessageMetaOwnerState>;
   edited?: SlotComponentProps<'span', {}, MessageMetaOwnerState>;
+  streamingProgress?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
+  streamingProgressTrack?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
+  streamingProgressIndicator?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
 }
 
 export interface MessageMetaProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -58,6 +73,10 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
   const Timestamp = slots?.timestamp ?? 'span';
   const Status = slots?.status ?? 'span';
   const Edited = slots?.edited ?? 'span';
+  const StreamingProgress = slots?.streamingProgress ?? ProgressRoot;
+  const StreamingProgressTrack = slots?.streamingProgressTrack ?? ProgressTrack;
+  const StreamingProgressIndicator = slots?.streamingProgressIndicator ?? ProgressIndicator;
+
   const metaProps = useSlotProps({
     elementType: Meta,
     externalSlotProps: slotProps?.meta,
@@ -82,17 +101,44 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
     externalSlotProps: slotProps?.edited,
     ownerState,
   });
+  const streamingProgressProps = useSlotProps({
+    elementType: StreamingProgress,
+    externalSlotProps: slotProps?.streamingProgress,
+    ownerState,
+    additionalProps: {
+      // value={null} → indeterminate state → aria-valuetext="loading" by default
+      value: null as number | null,
+      'aria-label': localeText.messageStatusLabel('streaming'),
+    },
+  });
+  const streamingProgressTrackProps = useSlotProps({
+    elementType: StreamingProgressTrack,
+    externalSlotProps: slotProps?.streamingProgressTrack,
+    ownerState,
+  });
+  const streamingProgressIndicatorProps = useSlotProps({
+    elementType: StreamingProgressIndicator,
+    externalSlotProps: slotProps?.streamingProgressIndicator,
+    ownerState,
+  });
 
-  if (!hasMeta) {
+  if (!hasMeta && !ownerState.streaming) {
     return null;
   }
 
   return (
     <Meta {...metaProps}>
+      {ownerState.streaming ? (
+        <StreamingProgress {...streamingProgressProps}>
+          <StreamingProgressTrack {...streamingProgressTrackProps}>
+            <StreamingProgressIndicator {...streamingProgressIndicatorProps} />
+          </StreamingProgressTrack>
+        </StreamingProgress>
+      ) : null}
       {ownerState.message?.createdAt && timestampLabel ? (
         <Timestamp {...timestampProps}>{timestampLabel}</Timestamp>
       ) : null}
-      {ownerState.message?.status && statusLabel ? (
+      {ownerState.message?.status && statusLabel && !ownerState.streaming ? (
         <Status {...statusProps}>{statusLabel}</Status>
       ) : null}
       {ownerState.message?.editedAt ? (

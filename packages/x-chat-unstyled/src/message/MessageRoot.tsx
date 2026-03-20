@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage } from '@mui/x-chat-headless';
+import { useChatVariant } from '../chat/internals/ChatVariantContext';
 import { MessageContextProvider } from './internals/MessageContext';
 import { type MessageRootOwnerState } from './message.types';
 
@@ -31,6 +32,7 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
 ) {
   const { messageId, isGrouped = false, slots, slotProps, children, ...other } = props;
   const message = useMessage(messageId);
+  const variant = useChatVariant();
   const ownerState = React.useMemo<MessageRootOwnerState>(
     () => ({
       messageId,
@@ -40,8 +42,9 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
       streaming: message?.status === 'streaming',
       error: message?.status === 'error',
       isGrouped,
+      variant,
     }),
-    [isGrouped, message, messageId],
+    [isGrouped, message, messageId, variant],
   );
   const Root = slots?.root ?? 'div';
   const rootProps = useSlotProps({
@@ -51,6 +54,11 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
     ownerState,
     additionalProps: {
       ref,
+      // `article` is the correct landmark for a self-contained unit of content
+      // (each chat message is a discrete piece of content in a feed).
+      // Screen readers announce "article" when entering, which helps users
+      // understand the structural boundary between messages.
+      role: 'article',
     },
   });
 

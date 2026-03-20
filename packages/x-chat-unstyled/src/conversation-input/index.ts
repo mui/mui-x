@@ -1,5 +1,6 @@
 import { ConversationInputAttachButton } from './ConversationInputAttachButton';
 import { ConversationInputHelperText } from './ConversationInputHelperText';
+import { ConversationInputLabel } from './ConversationInputLabel';
 import { ConversationInputTextArea } from './ConversationInputTextArea';
 import { ConversationInputRoot } from './ConversationInputRoot';
 import { ConversationInputSendButton } from './ConversationInputSendButton';
@@ -11,6 +12,7 @@ export { ConversationInputSendButton } from './ConversationInputSendButton';
 export { ConversationInputAttachButton } from './ConversationInputAttachButton';
 export { ConversationInputToolbar } from './ConversationInputToolbar';
 export { ConversationInputHelperText } from './ConversationInputHelperText';
+export { ConversationInputLabel } from './ConversationInputLabel';
 
 export type {
   ConversationInputRootProps,
@@ -43,6 +45,11 @@ export type {
   ConversationInputHelperTextSlots,
 } from './ConversationInputHelperText';
 export type {
+  ConversationInputLabelProps,
+  ConversationInputLabelSlotProps,
+  ConversationInputLabelSlots,
+} from './ConversationInputLabel';
+export type {
   ConversationInputAttachButtonOwnerState,
   ConversationInputHelperTextOwnerState,
   ConversationInputTextAreaOwnerState,
@@ -54,6 +61,7 @@ export type {
 
 export const ConversationInput = {
   Root: ConversationInputRoot,
+  Label: ConversationInputLabel,
   TextArea: ConversationInputTextArea,
   SendButton: ConversationInputSendButton,
   AttachButton: ConversationInputAttachButton,

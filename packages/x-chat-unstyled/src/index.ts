@@ -12,6 +12,7 @@ export {
   ConversationInput,
   ConversationInputAttachButton,
   ConversationInputHelperText,
+  ConversationInputLabel,
   ConversationInputRoot,
   ConversationInputSendButton,
   ConversationInputTextArea,
@@ -21,6 +22,7 @@ export {
   ConversationList,
   ConversationListItem,
   ConversationListItemAvatar,
+  ConversationListItemContent,
   ConversationListPreview,
   ConversationListRoot,
   ConversationListTimestamp,
@@ -32,6 +34,15 @@ export {
   FilePart,
   Message,
   MessageActions,
+  MessageActionsMenu,
+  MessageActionsMenuGroup,
+  MessageActionsMenuGroupLabel,
+  MessageActionsMenuItem,
+  MessageActionsMenuPopup,
+  MessageActionsMenuPositioner,
+  MessageActionsMenuRoot,
+  MessageActionsMenuTrigger,
+  MessageAuthorLabel,
   MessageAvatar,
   MessageContent,
   MessageMeta,
@@ -102,6 +113,9 @@ export type {
   ConversationInputHelperTextProps,
   ConversationInputHelperTextSlotProps,
   ConversationInputHelperTextSlots,
+  ConversationInputLabelProps,
+  ConversationInputLabelSlotProps,
+  ConversationInputLabelSlots,
   ConversationInputRootProps,
   ConversationInputRootSlotProps,
   ConversationInputRootSlots,
@@ -119,6 +133,9 @@ export type {
   ConversationListItemAvatarProps,
   ConversationListItemAvatarSlotProps,
   ConversationListItemAvatarSlots,
+  ConversationListItemContentProps,
+  ConversationListItemContentSlotProps,
+  ConversationListItemContentSlots,
   ConversationListItemProps,
   ConversationListItemSlotProps,
   ConversationListItemSlots,
@@ -158,6 +175,16 @@ export type {
   MessageActionsProps,
   MessageActionsSlotProps,
   MessageActionsSlots,
+  MessageActionsMenuGroupLabelProps,
+  MessageActionsMenuGroupProps,
+  MessageActionsMenuItemProps,
+  MessageActionsMenuPopupProps,
+  MessageActionsMenuPositionerProps,
+  MessageActionsMenuRootProps,
+  MessageActionsMenuTriggerProps,
+  MessageAuthorLabelProps,
+  MessageAuthorLabelSlotProps,
+  MessageAuthorLabelSlots,
   MessageAvatarProps,
   MessageAvatarSlotProps,
   MessageAvatarSlots,
@@ -223,9 +250,11 @@ export type {
   ConversationInputSendButtonOwnerState,
   ConversationInputTextAreaOwnerState,
   ConversationInputToolbarOwnerState,
+  // ConversationInputLabel uses ConversationInputOwnerState (no separate type needed)
 } from './conversation-input';
 export type {
   ConversationListItemAvatarOwnerState,
+  ConversationListItemContentOwnerState,
   ConversationListItemOwnerState,
   ConversationListPreviewOwnerState,
   ConversationListRootOwnerState,
@@ -240,6 +269,7 @@ export type {
 } from './indicators';
 export type {
   MessageActionsOwnerState,
+  MessageAuthorLabelOwnerState,
   MessageAvatarOwnerState,
   MessageContentOwnerState,
   MessageMetaOwnerState,
@@ -252,3 +282,7 @@ export type { MessageListDateDividerOwnerState, MessageListRootOwnerState } from
 
 // Locale types
 export type { ChatLocaleText, ChatLocaleTypingUser } from './chat';
+
+// Variant types
+export type { ChatVariant } from './chat';
+export { ChatVariantProvider, useChatVariant } from './chat';
