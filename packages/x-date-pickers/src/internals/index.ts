@@ -202,7 +202,7 @@ export { useCalendarState } from '../DateCalendar/useCalendarState';
 
 export { DateTimePickerToolbarOverrideContext } from '../DateTimePicker/DateTimePickerToolbar';
 
-export { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
+export { usePickerDayOwnerState } from './hooks/usePickerDayOwnerState';
 
 export { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 export { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';

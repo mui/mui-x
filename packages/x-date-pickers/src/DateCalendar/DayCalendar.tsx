@@ -31,7 +31,7 @@ import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarCla
 import { PickerValidDate, TimezoneProps } from '../models';
 import { DateCalendarClasses } from './dateCalendarClasses';
 import { FormProps } from '../internals/models/formProps';
-import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
+import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
 
 export interface DayCalendarSlots {
   /**

@@ -18,7 +18,6 @@ const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
 })<CustomPickerDayProps>(({ theme, isSelected, isHovered, day }) => ({
   borderRadius: 0,
-  display: 'flex',
   ...(isSelected && {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,

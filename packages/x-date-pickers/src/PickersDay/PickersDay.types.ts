@@ -1,65 +1,16 @@
 import { ButtonBaseProps } from '@mui/material/ButtonBase';
-import { PickerOwnerState, PickerValidDate } from '../models/pickers';
-import { ExtendMui } from '../internals/models/helpers';
+import { PickerValidDate } from '../models';
 import { PickersDayClasses } from './pickersDayClasses';
-
-export interface PickerDayOwnerState extends PickerOwnerState {
-  /**
-   * The object representing the day.
-   */
-  day: PickerValidDate;
-  /**
-   * Whether the day is selected.
-   */
-  isDaySelected: boolean;
-  /**
-   * Whether the day is disabled.
-   */
-  isDayDisabled: boolean;
-  /**
-   * Whether the day is equal to today.
-   */
-  isDayCurrent: boolean;
-  /**
-   * Whether the day is outside the month it's being rendered in.
-   */
-  isDayOutsideMonth: boolean;
-  /**
-   * Whether the day is the first day of the week.
-   */
-  isDayStartOfWeek: boolean;
-  /**
-   * Whether the day is the last day of the week.
-   */
-  isDayEndOfWeek: boolean;
-  /**
-   * Whether the margin around the day should be removed.
-   */
-  disableMargin: boolean;
-  /**
-   * Whether the visual indication around the current day should be removed.
-   */
-  disableHighlightToday: boolean;
-  /**
-   * Whether the day outside of the month they are being rendered in should be visible.
-   */
-  showDaysOutsideCurrentMonth: boolean;
-}
+import { PickerDayOwnerState } from '../internals/hooks/PickersDay.types';
 
 export interface ExportedPickersDayProps {
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday?: boolean;
   /**
-   * If `true`, days outside the current month are rendered:
-   *
-   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
-   *
-   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
-   *
-   * - ignored if `calendars` equals more than `1` on range pickers.
+   * If `true`, days outside the current month are shown.
    * @default false
    */
   showDaysOutsideCurrentMonth?: boolean;
@@ -69,55 +20,113 @@ export interface PickersDayProps
   extends
     ExportedPickersDayProps,
     Omit<
-      ExtendMui<ButtonBaseProps>,
-      'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent'
+      ButtonBaseProps,
+      'classes' | 'onFocus' | 'onBlur' | 'onKeyDown' | 'onMouseDown' | 'onClick' | 'onMouseEnter'
     > {
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<PickersDayClasses>;
   /**
    * The date to show.
    */
   day: PickerValidDate;
-  /**
-   * If `true`, renders as disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * If `true`, days are rendering without margin. Useful for displaying linked range of days.
-   * @default false
-   */
-  disableMargin?: boolean;
-  isAnimating?: boolean;
-  onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
-  onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: PickerValidDate) => void;
-  onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: PickerValidDate) => void;
-  onDaySelect: (day: PickerValidDate) => void;
-  /**
-   * If `true`, day is outside of month and will be hidden.
-   */
-  outsideCurrentMonth: boolean;
-  /**
-   * If `true`, day is the first visible cell of the month.
-   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
-   */
-  isFirstVisibleCell: boolean;
-  /**
-   * If `true`, day is the last visible cell of the month.
-   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
-   */
-  isLastVisibleCell: boolean;
   /**
    * If `true`, renders as selected.
    * @default false
    */
   selected?: boolean;
   /**
-   * If `true`, renders as today date.
+   * If `true`, the day is disabled.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
+   * If `true`, today's day is highlighted.
    * @default false
    */
   today?: boolean;
+  /**
+   * If `true`, the day is outside the current month.
+   * @default false
+   */
+  outsideCurrentMonth: boolean;
+  /**
+   * If `true`, the day is the first visible cell of the month.
+   * @default false
+   */
+  isFirstVisibleCell: boolean;
+  /**
+   * If `true`, the day is the last visible cell of the month.
+   * @default false
+   */
+  isLastVisibleCell: boolean;
+  /**
+   * If `true`, the margin between days is disabled.
+   * @default false
+   */
+  disableMargin?: boolean;
+  /**
+   * If `true`, the day is being animated.
+   * @default false
+   */
+  isAnimating?: boolean;
+  /**
+   * Callback fired when the day is selected.
+   * @param {PickerValidDate} day The day to select.
+   */
+  onDaySelect: (day: PickerValidDate) => void;
+  /**
+   * Callback fired when a key is pressed.
+   * @param {React.KeyboardEvent<HTMLButtonElement>} event The event object.
+   * @param {PickerValidDate} day The day.
+   * @default () => {}
+   */
+  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  /**
+   * Callback fired when the component is focused.
+   * @param {React.FocusEvent<HTMLButtonElement>} event The event object.
+   * @param {PickerValidDate} day The day.
+   * @default () => {}
+   */
+  onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  /**
+   * Callback fired when the component is blurred.
+   * @param {React.FocusEvent<HTMLButtonElement>} event The event object.
+   * @param {PickerValidDate} day The day.
+   * @default () => {}
+   */
+  onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  /**
+   * Callback fired when the mouse enters the component.
+   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @param {PickerValidDate} day The day.
+   * @default () => {}
+   */
+  onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  /**
+   * Callback fired when the component is clicked.
+   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @default () => {}
+   */
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  /**
+   * Callback fired when the mouse button is pressed.
+   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @default () => {}
+   */
+  onMouseDown?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<PickersDayClasses>;
+  /**
+   * Indicates if the day should be visually selected.
+   */
+  isVisuallySelected?: boolean;
 }
+
+export interface PickersDayOwnerState extends PickerDayOwnerState {
+  /**
+   * Whether the day is a filler day (its content is hidden).
+   */
+  isDayFillerCell: boolean;
+}
+
+export type { PickerDayOwnerState };

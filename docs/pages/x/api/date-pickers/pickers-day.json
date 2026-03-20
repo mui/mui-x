@@ -1,9 +1,14 @@
 {
   "props": {
     "day": { "type": { "name": "object" }, "required": true },
-    "isFirstVisibleCell": { "type": { "name": "bool" }, "required": true },
-    "isLastVisibleCell": { "type": { "name": "bool" }, "required": true },
-    "outsideCurrentMonth": { "type": { "name": "bool" }, "required": true },
+    "isFirstVisibleCell": { "type": { "name": "bool" }, "default": "false", "required": true },
+    "isLastVisibleCell": { "type": { "name": "bool" }, "default": "false", "required": true },
+    "onDaySelect": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(day: PickerValidDate) => void", "describedArgs": ["day"] }
+    },
+    "outsideCurrentMonth": { "type": { "name": "bool" }, "default": "false", "required": true },
     "action": {
       "type": {
         "name": "union",
@@ -19,7 +24,58 @@
     "disableTouchRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusVisibleClassName": { "type": { "name": "string" } },
+    "isAnimating": { "type": { "name": "bool" }, "default": "false" },
+    "isVisuallySelected": { "type": { "name": "bool" } },
+    "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
+    "onBlur": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
+    "onClick": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLButtonElement>) => void",
+        "describedArgs": ["event"]
+      }
+    },
+    "onFocus": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
     "onFocusVisible": { "type": { "name": "func" } },
+    "onKeyDown": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.KeyboardEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
+    "onMouseDown": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLButtonElement>) => void",
+        "describedArgs": ["event"]
+      }
+    },
+    "onMouseEnter": {
+      "type": { "name": "func" },
+      "default": "() => {}",
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLButtonElement>, day: PickerValidDate) => void",
+        "describedArgs": ["event", "day"]
+      }
+    },
     "selected": { "type": { "name": "bool" }, "default": "false" },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
@@ -52,20 +108,14 @@
       "isGlobal": false
     },
     {
-      "key": "dayWithMargin",
-      "className": "MuiPickersDay-dayWithMargin",
-      "description": "Styles applied to the root element if `disableMargin=false`.",
-      "isGlobal": false
-    },
-    {
       "key": "disabled",
       "className": "Mui-disabled",
       "description": "State class applied to the root element if `disabled=true`.",
       "isGlobal": true
     },
     {
-      "key": "hiddenDaySpacingFiller",
-      "className": "MuiPickersDay-hiddenDaySpacingFiller",
+      "key": "fillerCell",
+      "className": "MuiPickersDay-fillerCell",
       "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
       "isGlobal": false
     },
@@ -94,6 +144,6 @@
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers/src/PickersDay/PickersDay.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li>\n<li><a href=\"/x/react-date-pickers/playground/\">Customization playground</a></li></ul>",
   "cssComponent": false
 }

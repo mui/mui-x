@@ -1,10 +1,8 @@
-import { PickerDayOwnerState, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickersDayOwnerState, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRangePickerDayClasses } from './dateRangePickerDayClasses';
 
-export interface DateRangePickerDayProps extends Omit<
-  PickersDayProps,
-  'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'
-> {
+export interface DateRangePickerDayProps extends Omit<PickersDayProps, 'classes'> {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
@@ -42,9 +40,49 @@ export interface DateRangePickerDayProps extends Omit<
    * @default false
    */
   draggable?: boolean;
+  /**
+   * Callback fired when the mouse enters the component.
+   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @param {PickerValidDate} day The day.
+   * @default () => {}
+   */
+  onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  /**
+   * Callback fired when the component is focused.
+   * @param {React.FocusEvent<HTMLButtonElement>} event The event object.
+   * @param {PickerValidDate} day The day.
+   * @default () => {}
+   */
+  onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  /**
+   * Callback fired when the component is blurred.
+   * @param {React.FocusEvent<HTMLButtonElement>} event The event object.
+   * @param {PickerValidDate} day The day.
+   * @default () => {}
+   */
+  onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  /**
+   * Callback fired when a key is pressed.
+   * @param {React.KeyboardEvent<HTMLButtonElement>} event The event object.
+   * @param {PickerValidDate} day The day.
+   * @default () => {}
+   */
+  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  /**
+   * Callback fired when the mouse button is pressed.
+   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @default () => {}
+   */
+  onMouseDown?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  /**
+   * Callback fired when the component is clicked.
+   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @default () => {}
+   */
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export interface DateRangePickerDayOwnerState extends PickerDayOwnerState {
+export interface DateRangePickerDayOwnerState extends PickersDayOwnerState {
   /**
    * Whether the day is the first day of the selected range.
    */
@@ -74,6 +112,11 @@ export interface DateRangePickerDayOwnerState extends PickerDayOwnerState {
    */
   isDayInsidePreview: boolean;
   /**
+   * If `true`, the day can be dragged to change the current date range.
+   * @default false
+   */
+  isDayDraggable?: boolean;
+  /**
    * Whether the day is the first day of the month.
    */
   isDayStartOfMonth: boolean;
@@ -89,8 +132,4 @@ export interface DateRangePickerDayOwnerState extends PickerDayOwnerState {
    * Whether the day is the last visible cell of the month it's being rendered in.
    */
   isDayLastVisibleCell: boolean;
-  /**
-   * Whether the day is a filler day (its content is hidden).
-   */
-  isDayFillerCell: boolean;
 }

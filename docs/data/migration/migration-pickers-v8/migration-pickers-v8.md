@@ -98,10 +98,31 @@ const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
 fieldRef.current?.clearValue();
 ```
 
-## Codemod
+## Components breaking changes
 
-The `rename-field-ref` codemod can be used to automatically apply these changes to your codebase.
+### Day slot
+
+The `PickerDay2` and `DateRangePickerDay2` components have been renamed to `PickersDay` and `DateRangePickerDay` respectively, replacing the old components.
+They are now the default components for the `day` slot, so you no longer need to pass them to `slots`.
+
+The `PickersDay` and `DateRangePickerDay` components now use `display: flex`.
+
+## Codemods
+
+The following codemods can be used to automatically apply these changes to your codebase:
+
+### `rename-field-ref`
+
+Renames `unstable field refs` to stable ones.
 
 ```bash
 npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
+```
+
+### `remove-picker-day-2`
+
+Removes the unnecessary `slots={{ day: PickerDay2 }}` and `slots={{ day: DateRangePickerDay2 }}` usages.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
 ```

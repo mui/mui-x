@@ -61,7 +61,6 @@ import {
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
-import { dateRangePickerDay2Classes } from '../DateRangePickerDay2';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -95,7 +94,7 @@ const InnerDayCalendarForRange = styled(DayCalendar, {
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
-    [`& .${dateRangePickerDay2Classes.root}, & .${dayClasses.day}`]: {
+    [`& .${dayClasses.root}, & .${dayClasses.day}`]: {
       cursor: 'grabbing',
     },
     [`& .${dayClasses.root}:not(.${dayClasses.rangeIntervalDayHighlightStart}):not(.${dayClasses.rangeIntervalDayHighlightEnd}) .${dayClasses.day}:not(.${dayClasses.notSelectedDate})`]:
@@ -715,7 +714,7 @@ DateRangeCalendar.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -832,13 +831,7 @@ DateRangeCalendar.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * If `true`, days outside the current month are rendered:
-   *
-   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
-   *
-   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
-   *
-   * - ignored if `calendars` equals more than `1` on range pickers.
+   * If `true`, days outside the current month are shown.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,

@@ -6,7 +6,7 @@ import { ClockNumberOwnerState } from '../TimeClock/ClockNumber';
 import { ClockPointerOwnerState } from '../TimeClock/ClockPointer';
 import { PickerOwnerState } from '../models/pickers';
 import { PickerToolbarOwnerState } from '../internals/hooks/useToolbarOwnerState';
-import { PickerDayOwnerState } from '../PickersDay';
+import { PickerDayOwnerState, PickersDayOwnerState } from '../PickersDay';
 import { DigitalClockOwnerState } from '../DigitalClock/DigitalClock.types';
 import { MultiSectionDigitalClockSectionOwnerState } from '../MultiSectionDigitalClock/MultiSectionDigitalClockSection';
 import { PickerPopperOwnerState } from '../internals/components/PickerPopper/PickerPopper';
@@ -93,11 +93,7 @@ export interface PickerComponents<Theme = unknown> {
   };
   MuiPickersDay?: {
     defaultProps?: ComponentsProps['MuiPickersDay'];
-    styleOverrides?: ComponentsOverrides<Theme, PickerDayOwnerState>['MuiPickersDay'];
-  };
-  MuiPickerDay2?: {
-    defaultProps?: ComponentsProps['MuiPickerDay2'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPickerDay2'];
+    styleOverrides?: ComponentsOverrides<Theme, PickersDayOwnerState>['MuiPickersDay'];
   };
   MuiPickersFadeTransitionGroup?: {
     defaultProps?: ComponentsProps['MuiPickersFadeTransitionGroup'];
