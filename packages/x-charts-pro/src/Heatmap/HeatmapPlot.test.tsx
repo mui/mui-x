@@ -1,4 +1,4 @@
-import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer } from '@mui/internal-test-utils';
 import { HeatmapPlot, heatmapClasses } from '@mui/x-charts-pro/Heatmap';
 import { Heatmap } from './Heatmap';
 

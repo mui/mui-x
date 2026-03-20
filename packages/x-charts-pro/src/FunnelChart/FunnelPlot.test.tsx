@@ -1,4 +1,4 @@
-import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer } from '@mui/internal-test-utils';
 import { FunnelPlot, funnelClasses, FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 describe('<FunnelPlot />', () => {

@@ -45,10 +45,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
       {shouldRegisterPointerInteractionsGlobally(props.slots, props.slotProps) ? (
         <RegisterHeatmapPointerInteractions />
       ) : null}
-      <HeatmapPlotRoot
-        className={clsx(heatmapClasses.root, props.className)}
-        data-series={seriesToDisplay.id}
-      >
+      <HeatmapPlotRoot className={clsx(heatmapClasses.root, props.className)}>
         {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
           const x = xScale(xDomain[xIndex]);
           const y = yScale(yDomain[yIndex]);
