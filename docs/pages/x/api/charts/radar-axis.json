@@ -29,6 +29,8 @@
     "import { RadarAxis } from '@mui/x-charts-premium';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiRadarAxis",
   "filename": "/packages/x-charts/src/RadarChart/RadarAxis/RadarAxis.tsx",
   "inheritance": null,

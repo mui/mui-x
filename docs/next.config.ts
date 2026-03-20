@@ -38,7 +38,6 @@ const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
 const MONOREPO_ALIASES = {
   '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
-  '@mui/internal-markdown': path.resolve(MONOREPO_PATH, './packages/markdown'),
 };
 
 function loadPkg(pkgPath: string): { version: string } {
@@ -120,7 +119,9 @@ export default withDeploymentConfig({
           ...config.resolve.alias,
           ...MONOREPO_ALIASES,
           '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
-          // TODO: get rid of this, replace with @mui/docs
+          'docs/src/modules/utils/mapApiPageTranslations': path.resolve(
+            'src/modules/utils/mapApiPageTranslations.js',
+          ),
           docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },
