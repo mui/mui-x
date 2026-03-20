@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.27.6
+## 8.28.0
 
 _Mar 19, 2026_
 
@@ -18,17 +18,17 @@ The following team members contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.27.6`
+#### `@mui/x-data-grid@8.28.0`
 
 - [DataGrid] Move `elementOverrides` to constants and remove duplicates (@sai6855) (#21752) @github-actions[bot]
 
-#### `@mui/x-data-grid-pro@8.27.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.28.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.27.6`.
+Same changes as in `@mui/x-data-grid@8.28.0`.
 
-#### `@mui/x-data-grid-premium@8.27.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.28.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.27.6`.
+Same changes as in `@mui/x-data-grid-pro@8.28.0`.
 
 ### Date and Time Pickers
 
@@ -42,7 +42,7 @@ Same changes as in `@mui/x-date-pickers@8.27.2`.
 
 ### Charts
 
-#### `@mui/x-charts@8.27.6`
+#### `@mui/x-charts@8.28.0`
 
 - [charts] Improve deprecation warnings (#21760) (#21767) @alexfauquette
 - [charts] Refactor `FunnelChart` classes structure (@JCQuintas) (#21763) @github-actions[bot]
@@ -52,15 +52,15 @@ Same changes as in `@mui/x-date-pickers@8.27.2`.
 - [charts] Refactor `SankeyChart` classes structure (#21654) (#21726) @JCQuintas
 - [charts] Rename `data-series-id` by `data-series` (#21761) (#21772) @alexfauquette
 
-#### `@mui/x-charts-pro@8.27.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.28.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.27.6`, plus:
+Same changes as in `@mui/x-charts@8.28.0`, plus:
 
 - [charts-pro] Allow `brush` interaction to accept `requiredKeys/pointerMode` (#21723) @JCQuintas
 
-#### `@mui/x-charts-premium@8.27.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@8.28.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@8.27.6`.
+Same changes as in `@mui/x-charts-pro@8.28.0`.
 
 ### Tree View
 
