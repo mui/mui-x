@@ -113,7 +113,11 @@ function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesTyp
   }
 
   return (
-    <ChartsTooltipRow className={classes.row}>
+    <ChartsTooltipRow
+      className={classes.row}
+      data-series={item.seriesId}
+      data-index={'dataIndex' in item ? item.dataIndex : undefined}
+    >
       <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
         <div className={classes.markContainer}>
           <ChartsLabelMark

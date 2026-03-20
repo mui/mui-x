@@ -121,6 +121,9 @@ RadarChartPro.propTypes = {
       exportAsPrint: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
