@@ -60,6 +60,12 @@ declare module '@mui/x-charts/internals' {
       valueType: OHLCValueType | null;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: OHLCItemIdentifier;
+        xAxis: ComputedXAxis;
+        yAxis: ComputedYAxis;
+        series: DefaultizedOHLCSeriesType;
+      };
       highlightIdentifier: {
         type: 'ohlc';
         seriesId: SeriesId;
