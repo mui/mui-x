@@ -387,7 +387,6 @@ These interactions are now handled at the container level using position-based h
 
 This affects the following components:
 
-- **Line Chart**: `MarkElement`, `CircleMarkElement`, `LineElement`, `AreaElement`
 - **Bar Chart**: `BarElement`
 - **Heatmap**: Custom `cell` slots that received `onPointerEnter` via `slotProps`
 
