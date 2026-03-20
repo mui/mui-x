@@ -336,5 +336,4 @@ describe('<LineChart />', () => {
       expect(markPlotRoot).toHaveComputedStyle({ strokeDashoffset: '10px' });
     });
   });
-
 });
