@@ -35,3 +35,11 @@ AGENTS.local.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# compiled JavaScript output from TypeScript packages (these are build artifacts)
+packages/x-charts/src/**/*.js
+packages/x-charts-premium/src/**/*.js
+packages/x-charts-pro/src/**/*.js
+packages/x-internal-gestures/src/**/*.js
+packages/x-internals/src/**/*.js
+test/utils/**/*.js

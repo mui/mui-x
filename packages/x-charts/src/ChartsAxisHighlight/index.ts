@@ -1,4 +1,5 @@
 export * from './ChartsAxisHighlight';
+export * from './ChartsAxisHighlightLabel';
 export { chartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 export type {
   ChartsAxisHighlightClasses,
