@@ -39,4 +39,6 @@ export type OHLCItemIdentifier = {
 export interface DefaultizedOHLCSeriesType extends DefaultizedProps<
   OHLCSeriesType,
   CommonDefaultizedProps | 'color'
-> {}
+> {
+  hidden: boolean;
+}

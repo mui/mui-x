@@ -5,7 +5,7 @@ import { type DefaultizedOHLCSeriesType, type OHLCValueType } from '../../models
 const candlestickValueFormatter = (v: OHLCValueType | null) =>
   v == null ? '' : `[${v[0]}, ${v[1]}, ${v[2]}, ${v[3]}]`;
 
-const seriesProcessor: SeriesProcessor<'ohlc'> = (params) => {
+const seriesProcessor: SeriesProcessor<'ohlc'> = (params, _dataset, isItemVisible) => {
   const { seriesOrder, series } = params;
 
   const completedSeries: Record<SeriesId, DefaultizedOHLCSeriesType> = {};
@@ -26,6 +26,7 @@ const seriesProcessor: SeriesProcessor<'ohlc'> = (params) => {
       ...series[id],
       valueFormatter: series[id].valueFormatter ?? candlestickValueFormatter,
       data: series[id].data!,
+      hidden: !isItemVisible?.({ type: 'ohlc', seriesId: id }),
     } satisfies DefaultizedOHLCSeriesType;
   }
 

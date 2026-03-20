@@ -27,7 +27,7 @@ function CandlestickWebGLPlot() {
 
   const seriesToDisplay = series?.series[series.seriesOrder[0]];
 
-  if (!gl || !seriesToDisplay) {
+  if (!gl || !seriesToDisplay || seriesToDisplay.hidden) {
     return null;
   }
 
