@@ -185,9 +185,8 @@ export interface GridIconSlotsComponent {
   /**
    * Icon displayed in column menu for showing all columns
    * @default GridViewColumnIcon
-   * @deprecated Use `columnSelectorIcon` instead. This icon is unified with `columnSelectorIcon` to provide a single point of configuration.
    */
-  columnMenuManageColumnsIcon?: React.JSXElementConstructor<IconProps>;
+  columnMenuManageColumnsIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed in column menu for clearing values
    * @default GridClearIcon
@@ -218,24 +217,4 @@ export interface GridIconSlotsComponent {
    * @default GridLongTextCellCollapseIcon
    */
   longTextCellCollapseIcon: React.JSXElementConstructor<IconProps>;
-  /**
-   * Icon displayed on the first page button in pagination.
-   * @default GridFirstPageIcon
-   */
-  paginationFirstIcon: React.JSXElementConstructor<IconProps>;
-  /**
-   * Icon displayed on the previous page button in pagination.
-   * @default GridKeyboardArrowLeft
-   */
-  paginationPreviousIcon: React.JSXElementConstructor<IconProps>;
-  /**
-   * Icon displayed on the next page button in pagination.
-   * @default GridKeyboardArrowRight
-   */
-  paginationNextIcon: React.JSXElementConstructor<IconProps>;
-  /**
-   * Icon displayed on the last page button in pagination.
-   * @default GridLastPageIcon
-   */
-  paginationLastIcon: React.JSXElementConstructor<IconProps>;
 }

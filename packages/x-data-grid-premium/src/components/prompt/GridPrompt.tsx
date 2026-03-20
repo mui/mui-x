@@ -339,7 +339,7 @@ function GridPrompt(props: GridPromptProps) {
             pivoting.columns.length,
           ),
           icon:
-            rootProps.slots.columnMenuManageColumnsIcon ?? rootProps.slots.columnSelectorIcon,
+            rootProps.slots.columnMenuManageColumnsIcon,
           description: pivoting.columns
             .map((column) =>
               apiRef.current.getLocaleText('promptChangePivotColumnsDescription')(
