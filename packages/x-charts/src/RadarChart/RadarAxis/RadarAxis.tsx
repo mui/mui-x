@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { useRadarAxis, type UseRadarAxisParams } from './useRadarAxis';
 import { getLabelAttributes } from './RadarAxis.utils';
@@ -26,13 +27,17 @@ export interface RadarAxisProps extends UseRadarAxisParams {
     | React.SVGProps<SVGTextElement>['dominantBaseline']
     | ((angle: number) => React.SVGProps<SVGTextElement>['dominantBaseline']);
   /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
+  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<Pick<RadarClasses, 'axisRoot' | 'axisLine' | 'axisLabel'>>;
 }
 
 function RadarAxis(props: RadarAxisProps) {
-  const { labelOrientation = 'horizontal', textAnchor, dominantBaseline } = props;
+  const { className, labelOrientation = 'horizontal', textAnchor, dominantBaseline } = props;
 
   const classes = useUtilityClasses(props.classes);
   const theme = useTheme();
@@ -45,7 +50,7 @@ function RadarAxis(props: RadarAxisProps) {
   const { center, angle, labels } = data;
 
   return (
-    <g className={classes.axisRoot}>
+    <g className={clsx(classes.axisRoot, className)}>
       <path
         d={`M ${center.x} ${center.y} L ${labels[labels.length - 1].x} ${labels[labels.length - 1].y}`}
         stroke={(theme.vars ?? theme).palette.text.primary}

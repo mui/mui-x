@@ -28,6 +28,18 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           animate: 'labelAnimate',
         },
       },
+      pieArcClasses: {
+        newClassName: 'pieClasses',
+        properties: {
+          root: 'arc',
+        },
+      },
+      pieArcLabelClasses: {
+        newClassName: 'pieClasses',
+        properties: {
+          root: 'arcLabel',
+        },
+      },
       radarSeriesPlotClasses: {
         newClassName: 'radarClasses',
         properties: {

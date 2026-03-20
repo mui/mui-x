@@ -11,6 +11,13 @@ export default mergeConfig(
         enabled: true,
         instances: [{ browser: 'chromium' }],
       },
+      exclude: [
+        '**/*.spec.{js,ts,tsx}',
+        '**/node_modules/**',
+        '**/dist/**',
+        // Postinstall tests use Node-only modules (child_process, fs, crypto.createHash)
+        '**/postinstall/**',
+      ],
     },
   }),
 );

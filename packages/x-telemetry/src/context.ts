@@ -4,6 +4,8 @@
 export interface TelemetryContextType {
   config: {
     isInitialized: boolean;
+    /** Tracks whether we've already attempted runtime projectId resolution (avoids repeated fetch) */
+    runtimeProjectIdResolved?: boolean;
   };
   traits: Record<string, any> & {
     // A hash of value that is meant to be stable between different machine boots.
