@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useTheme } from '@mui/material/styles';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import {
   lineClasses,
@@ -78,6 +79,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     ...other
   } = props;
 
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
   const theme = useTheme();
 
   const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
@@ -85,6 +87,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   return (
     <Circle
       {...other}
+      {...interactionProps}
       cx={x}
       cy={y}
       r={5}

@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
 import { type SeriesId } from '../models/seriesType/common';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
@@ -75,6 +76,7 @@ function LineElement(props: LineElementProps) {
   } = props;
 
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
+  const interactionProps = useInteractionItemProps(identifier);
 
   const highlightState = useItemHighlightState(identifier);
   const isHighlighted = highlightState === 'highlighted';
@@ -96,6 +98,7 @@ function LineElement(props: LineElementProps) {
     elementType: Line,
     externalSlotProps: slotProps?.line,
     additionalProps: {
+      ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,

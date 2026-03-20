@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { getSymbol } from '../internals/getSymbol';
 import {
   lineClasses,
@@ -83,6 +84,8 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
+
   const ownerState = {
     seriesId,
     classes: innerClasses,
@@ -95,6 +98,7 @@ function MarkElement(props: MarkElementProps) {
   return (
     <MarkElementPath
       {...other}
+      {...interactionProps}
       style={{
         ...style,
         transform: `translate(${x}px, ${y}px)`,
