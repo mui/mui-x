@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { type BarElementSlotProps, type BarElementSlots } from './BarElement';
 import { type BarItemIdentifier } from '../models';
@@ -22,6 +23,10 @@ export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
 export interface BarPlotProps {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
   /**
    * If `true`, animations are skipped.
    * @default undefined
@@ -94,6 +99,7 @@ const BarPlotRoot = styled('g', {
  */
 function BarPlot(props: BarPlotProps): React.JSX.Element {
   const {
+    className,
     skipAnimation: inSkipAnimation,
     onItemClick,
     borderRadius,
@@ -113,7 +119,7 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
   const BarElementPlot = renderer === 'svg-batch' ? BatchBarPlot : IndividualBarPlot;
 
   return (
-    <BarPlotRoot className={classes.root}>
+    <BarPlotRoot className={clsx(classes.root, className)}>
       <BarElementPlot
         completedData={completedData}
         masksData={masksData}
@@ -163,6 +169,10 @@ BarPlot.propTypes = {
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
