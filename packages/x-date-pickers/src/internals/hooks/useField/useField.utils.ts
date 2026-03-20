@@ -684,3 +684,39 @@ export const parseSelectedSections = (
 
   return selectedSections;
 };
+
+export const validateFocusedSection = (
+  focusedSection: Exclude<FieldSelectedSections, null> | undefined,
+  sections: FieldSection[],
+): Exclude<FieldSelectedSections, null> | undefined => {
+  if (focusedSection == null || focusedSection === 'all') {
+    return focusedSection;
+  }
+
+  if (typeof focusedSection === 'string') {
+    const exists = sections.some((section) => section.type === focusedSection);
+    if (!exists) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          `MUI X: The \`initialFocusedSection\` prop is invalid.
+The section type "${focusedSection}" does not exist in the current field.
+The first section will be focused instead.`,
+        );
+      }
+      return undefined;
+    }
+  } else if (typeof focusedSection === 'number') {
+    if (focusedSection < 0 || focusedSection >= sections.length) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          `MUI X: The \`initialFocusedSection\` prop is invalid.
+The section index "${focusedSection}" is out of bounds (0-${sections.length - 1}).
+The first section will be focused instead.`,
+        );
+      }
+      return undefined;
+    }
+  }
+
+  return focusedSection;
+};

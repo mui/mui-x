@@ -3,7 +3,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { parseSelectedSections } from './useField.utils';
+import { parseSelectedSections, validateFocusedSection } from './useField.utils';
 import {
   UseFieldDOMGetters,
   UseFieldParameters,
@@ -102,7 +102,7 @@ export const useFieldV7TextField = <
   const openPickerAriaLabel = useOpenPickerButtonAriaLabel(value);
   const [focused, setFocused] = React.useState(false);
 
-  function focusField(newSelectedSections: number | FieldSectionType = 0) {
+  function focusField(newSelectedSection: number | FieldSectionType = 0) {
     if (
       disabled ||
       !sectionListRef.current ||
@@ -113,7 +113,7 @@ export const useFieldV7TextField = <
     }
 
     const newParsedSelectedSections = parseSelectedSections(
-      newSelectedSections,
+      newSelectedSection,
       state.sections,
     ) as number;
 
@@ -226,8 +226,12 @@ Learn more about the field accessible DOM structure on the MUI documentation: ht
     }
 
     if (autoFocus && !disabled && sectionListRef.current) {
+      const validatedFocusedSection = validateFocusedSection(
+        internalPropsWithDefaults.initialFocusedSection,
+        state.sections,
+      );
       const newParsedSelectedSections = parseSelectedSections(
-        internalPropsWithDefaults.initialFocus ?? sectionOrder.startIndex,
+        validatedFocusedSection ?? sectionOrder.startIndex,
         state.sections,
       );
 
