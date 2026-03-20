@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
@@ -9,7 +10,7 @@ import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
-  const { seriesId: inSeriesId, classes: inClasses, onAreaClick, onMarkClick } = props;
+  const { seriesId: inSeriesId, className, classes: inClasses, onAreaClick, onMarkClick } = props;
   const seriesCoordinates = useRadarSeriesData(inSeriesId);
   const getRotationIndex = useRadarRotationIndex();
 
@@ -19,7 +20,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const classes = useUtilityClasses(inClasses);
 
   return (
-    <g className={classes.seriesRoot}>
+    <g className={clsx(classes.seriesRoot, className)}>
       {seriesCoordinates?.map(
         ({ seriesId, points, color, hideMark, fillArea, hidden }, seriesIndex) => {
           if (hidden) {

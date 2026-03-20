@@ -1,6 +1,7 @@
 {
   "props": {
     "borderRadius": { "type": { "name": "number" } },
+    "className": { "type": { "name": "string" } },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {

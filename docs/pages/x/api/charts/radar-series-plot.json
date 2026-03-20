@@ -25,6 +25,8 @@
     "import { RadarSeriesPlot } from '@mui/x-charts-premium';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiRadarSeriesPlot",
   "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesPlot.tsx",
   "inheritance": null,

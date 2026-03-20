@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { useRadarAxisHighlight } from './useRadarAxisHighlight';
 
@@ -6,6 +7,10 @@ import { type RadarClasses, useUtilityClasses } from '../radarClasses';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 export interface RadarAxisHighlightProps {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -31,6 +36,7 @@ const highlightMark = {
 };
 
 function RadarAxisHighlight(props: RadarAxisHighlightProps) {
+  const { className } = props;
   const classes = useUtilityClasses(props.classes);
 
   const theme = useTheme();
@@ -44,7 +50,7 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
 
   const [x, y] = instance.polar2svg(radius, highlightedAngle);
   return (
-    <g className={classes.axisHighlightRoot}>
+    <g className={clsx(classes.axisHighlightRoot, className)}>
       <path
         d={`M ${center.cx} ${center.cy} L ${x} ${y}`}
         stroke={(theme.vars || theme).palette.text.primary}
