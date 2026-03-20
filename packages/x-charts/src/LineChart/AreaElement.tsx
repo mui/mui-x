@@ -5,6 +5,8 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
 import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
 import { type SeriesId } from '../models/seriesType/common';
 import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
@@ -70,6 +72,9 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
+  const store = useStore();
+  const enablePositionBasedPointerInteraction =
+    store.use(selectorChartExperimentalFeaturesState)?.enablePositionBasedPointerInteraction;
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
   const interactionProps = useInteractionItemProps(identifier);
   const highlightState = useItemHighlightState(identifier);
@@ -91,7 +96,7 @@ function AreaElement(props: AreaElementProps) {
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...interactionProps,
+      ...(enablePositionBasedPointerInteraction ? {} : interactionProps),
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,

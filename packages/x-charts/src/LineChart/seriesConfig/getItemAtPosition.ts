@@ -12,6 +12,7 @@ import { isOrdinalScale } from '../../internals/scaleGuards';
 import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
 import type { ComputedAxis } from '../../models/axis';
 import type { CurveType } from '../../models/curve';
+import { getCurveFactory } from '../../internals/getCurve';
 
 /**
  * For a continuous x-axis, find the two data indices that bracket the pointer's x position.
@@ -65,26 +66,150 @@ function getBracketIndices(
   return { left: leftIndex, right: leftIndex + 1 };
 }
 
+// --- Curve evaluation via d3 curve factories ---
+
 /**
- * Interpolate the y value between two points, accounting for step curves.
- * For step curves, the value switches at midpoint/start/end depending on the variant.
+ * A captured path segment — either a straight line or a cubic bezier.
  */
-function interpolateY(yLeft: number, yRight: number, t: number, curve?: CurveType): number {
-  if (curve === 'stepAfter') {
-    // Use left value until we reach the right point.
-    return yLeft;
+interface CurveSegment {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  /** Control points for cubic bezier. Undefined for line segments. */
+  cpx1?: number;
+  cpy1?: number;
+  cpx2?: number;
+  cpy2?: number;
+}
+
+/**
+ * A minimal d3 path context that captures line/bezier segments
+ * instead of producing an SVG path string.
+ */
+class SegmentCapture {
+  segments: CurveSegment[] = [];
+
+  private cx = 0;
+
+  private cy = 0;
+
+  moveTo(x: number, y: number) {
+    this.cx = x;
+    this.cy = y;
   }
-  if (curve === 'stepBefore') {
-    // Use right value for the entire segment.
-    return yRight;
+
+  lineTo(x: number, y: number) {
+    this.segments.push({ x0: this.cx, y0: this.cy, x1: x, y1: y });
+    this.cx = x;
+    this.cy = y;
   }
-  if (curve === 'step') {
-    // Switch at midpoint.
-    return t < 0.5 ? yLeft : yRight;
+
+  bezierCurveTo(
+    cpx1: number,
+    cpy1: number,
+    cpx2: number,
+    cpy2: number,
+    x: number,
+    y: number,
+  ) {
+    this.segments.push({
+      x0: this.cx,
+      y0: this.cy,
+      cpx1,
+      cpy1,
+      cpx2,
+      cpy2,
+      x1: x,
+      y1: y,
+    });
+    this.cx = x;
+    this.cy = y;
   }
-  // Linear interpolation for all other curves (linear, monotoneX, etc.)
-  // This is an approximation for non-linear curves, but good enough for hit detection.
-  return yLeft + t * (yRight - yLeft);
+
+  closePath() {}
+}
+
+/** Evaluate a cubic Bezier at parameter t. */
+function cubicBezier(t: number, p0: number, p1: number, p2: number, p3: number): number {
+  const mt = 1 - t;
+  return mt * mt * mt * p0 + 3 * mt * mt * t * p1 + 3 * mt * t * t * p2 + t * t * t * p3;
+}
+
+/**
+ * Find parameter t such that the segment's x(t) ≈ targetX using bisection.
+ * 20 iterations gives ~1e-6 precision relative to the segment's x range.
+ */
+function findTForX(segment: CurveSegment, targetX: number): number {
+  if (segment.cpx1 === undefined) {
+    // Linear segment.
+    const dx = segment.x1 - segment.x0;
+    return dx === 0 ? 0 : (targetX - segment.x0) / dx;
+  }
+
+  // Cubic bezier — bisect.
+  let lo = 0;
+  let hi = 1;
+  for (let iter = 0; iter < 20; iter += 1) {
+    const mid = (lo + hi) / 2;
+    const x = cubicBezier(mid, segment.x0, segment.cpx1, segment.cpx2!, segment.x1);
+    if (x < targetX) {
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+  return (lo + hi) / 2;
+}
+
+/** Evaluate the segment's y at parameter t. */
+function evaluateSegmentY(segment: CurveSegment, t: number): number {
+  if (segment.cpx1 === undefined) {
+    return segment.y0 + t * (segment.y1 - segment.y0);
+  }
+  return cubicBezier(t, segment.y0, segment.cpy1!, segment.cpy2!, segment.y1);
+}
+
+/**
+ * Build the curve segments for a set of pixel-coordinate points
+ * using d3's curve factory, then evaluate y at the given pixel x.
+ *
+ * Returns null if targetX is outside the curve's x range.
+ */
+function evaluateCurveY(
+  points: Array<{ x: number; y: number }>,
+  targetX: number,
+  curveType?: CurveType,
+): number | null {
+  if (points.length === 0) {
+    return null;
+  }
+  if (points.length === 1) {
+    return points[0].y;
+  }
+
+  const capture = new SegmentCapture();
+  const factory = getCurveFactory(curveType);
+  const curveInstance = factory(capture as any);
+
+  curveInstance.lineStart();
+  for (const p of points) {
+    curveInstance.point(p.x, p.y);
+  }
+  curveInstance.lineEnd();
+
+  // Find the segment containing targetX.
+  for (const segment of capture.segments) {
+    const xMin = Math.min(segment.x0, segment.x1);
+    const xMax = Math.max(segment.x0, segment.x1);
+
+    if (targetX >= xMin - 0.5 && targetX <= xMax + 0.5) {
+      const t = findTForX(segment, targetX);
+      return evaluateSegmentY(segment, t);
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -113,10 +238,61 @@ function getBaselinePixelY(
   return value;
 }
 
+// Collect the pixel-coordinate points for a contiguous (non-null) segment
+// of a series that contains the bracket indices.
+//
+// When connectNulls is true, all non-null points are returned.
+// When connectNulls is false, only the contiguous run containing [left, right] is returned.
+function collectCurvePoints(
+  data: ArrayLike<number | null | undefined>,
+  getPixelX: (index: number) => number,
+  getPixelY: (index: number) => number | null,
+  left: number,
+  right: number,
+  connectNulls: boolean | undefined,
+): Array<{ x: number; y: number }> {
+  const points: Array<{ x: number; y: number }> = [];
+
+  if (connectNulls) {
+    // All non-null points form one continuous curve.
+    for (let i = 0; i < data.length; i += 1) {
+      if (data[i] != null) {
+        const y = getPixelY(i);
+        if (y != null && !Number.isNaN(y)) {
+          points.push({ x: getPixelX(i), y });
+        }
+      }
+    }
+    return points;
+  }
+
+  // Find the contiguous non-null run containing [left, right].
+  let start = left;
+  while (start > 0 && data[start - 1] != null) {
+    start -= 1;
+  }
+  let end = right;
+  while (end < data.length - 1 && data[end + 1] != null) {
+    end += 1;
+  }
+
+  for (let i = start; i <= end; i += 1) {
+    const y = getPixelY(i);
+    if (y != null && !Number.isNaN(y)) {
+      points.push({ x: getPixelX(i), y });
+    }
+  }
+  return points;
+}
+
 export default function getItemAtPosition(
   state: ChartState<[UseChartCartesianAxisSignature]>,
   point: { x: number; y: number },
 ): SeriesItemIdentifierWithType<'line'> | undefined {
+  if (!state.experimentalFeatures?.enablePositionBasedPointerInteraction) {
+    return undefined;
+  }
+
   const { axis: xAxes, axisIds: xAxisIds } = selectorChartXAxis(state);
   const { axis: yAxes, axisIds: yAxisIds } = selectorChartYAxis(state);
   const series = selectorAllSeriesOfType(state, 'line') as ProcessedSeries['line'];
@@ -170,37 +346,8 @@ export default function getItemAtPosition(
         continue;
       }
 
-      // Handle null gaps: if connectNulls, find the nearest non-null points to bridge.
-      let effectiveLeft = left;
-      let effectiveRight = right;
-
-      if (leftIsNull || rightIsNull) {
-        if (!connectNulls) {
-          continue;
-        }
-        // Find nearest non-null points.
-        if (leftIsNull) {
-          for (let j = left - 1; j >= 0; j -= 1) {
-            if (data[j] != null) {
-              effectiveLeft = j;
-              break;
-            }
-          }
-          if (data[effectiveLeft] == null) {
-            continue;
-          }
-        }
-        if (rightIsNull) {
-          for (let j = right + 1; j < data.length; j += 1) {
-            if (data[j] != null) {
-              effectiveRight = j;
-              break;
-            }
-          }
-          if (data[effectiveRight] == null) {
-            continue;
-          }
-        }
+      if ((leftIsNull || rightIsNull) && !connectNulls) {
+        continue;
       }
 
       const xScale = xAxis.scale;
@@ -212,59 +359,79 @@ export default function getItemAtPosition(
         continue;
       }
 
-      const xLeft = xPosition(xData[effectiveLeft]);
-      const xRight = effectiveLeft === effectiveRight ? xLeft : xPosition(xData[effectiveRight]);
+      const getPixelX = (idx: number) => xPosition(xData[idx]);
 
-      // Get stacked y values (y0 = baseline, y1 = top) for each bracket point.
-      const stackedLeft = visibleStackedData[effectiveLeft];
-      const stackedRight = visibleStackedData[effectiveRight];
-
-      if (!stackedLeft || !stackedRight) {
-        continue;
-      }
-
-      const y0Left = getBaselinePixelY(baseline, yScale, stackedLeft[0]);
-      const y1Left = yScale(stackedLeft[1]) as number;
-      const y0Right = getBaselinePixelY(baseline, yScale, stackedRight[0]);
-      const y1Right = yScale(stackedRight[1]) as number;
-
-      if ([y0Left, y1Left, y0Right, y1Right].some((v) => v == null || Number.isNaN(v))) {
-        continue;
-      }
-
-      let yBottom: number;
-      let yTop: number;
-
-      if (effectiveLeft === effectiveRight) {
+      if (left === right) {
         // Ordinal axis or pointer exactly on a data point.
-        yBottom = y0Left;
-        yTop = y1Left;
-      } else {
-        // Interpolate between the two bracket points.
-        const xRange = xRight - xLeft;
-        const t = xRange === 0 ? 0 : (point.x - xLeft) / xRange;
-
-        yBottom = interpolateY(y0Left, y0Right, t, curve);
-        yTop = interpolateY(y1Left, y1Right, t, curve);
+        const stacked = visibleStackedData[left];
+        if (!stacked) {
+          continue;
+        }
+        const yBottom = getBaselinePixelY(baseline, yScale, stacked[0]);
+        const yTop = yScale(stacked[1]) as number;
+        if ([yBottom, yTop].some((v) => v == null || Number.isNaN(v))) {
+          continue;
+        }
+        const yMin = Math.min(yBottom, yTop);
+        const yMax = Math.max(yBottom, yTop);
+        if (point.y >= yMin && point.y <= yMax) {
+          return { type: 'line', seriesId, dataIndex: left };
+        }
+        continue;
       }
 
-      // Account for inverted y-axis (screen coordinates: y increases downward).
+      // Build pixel-coordinate points for the top and bottom curves,
+      // then evaluate them at the pointer's x using the actual d3 curve.
+      const topPoints = collectCurvePoints(
+        data,
+        getPixelX,
+        (idx) => {
+          const stacked = visibleStackedData[idx];
+          return stacked ? (yScale(stacked[1]) as number) : null;
+        },
+        left,
+        right,
+        connectNulls,
+      );
+
+      const bottomPoints = collectCurvePoints(
+        data,
+        getPixelX,
+        (idx) => {
+          const stacked = visibleStackedData[idx];
+          return stacked ? getBaselinePixelY(baseline, yScale, stacked[0]) : null;
+        },
+        left,
+        right,
+        connectNulls,
+      );
+
+      if (topPoints.length < 2 || bottomPoints.length < 2) {
+        continue;
+      }
+
+      const yTop = evaluateCurveY(topPoints, point.x, curve);
+      const yBottom = evaluateCurveY(bottomPoints, point.x, curve);
+
+      if (yTop == null || yBottom == null) {
+        continue;
+      }
+
       const yMin = Math.min(yBottom, yTop);
       const yMax = Math.max(yBottom, yTop);
 
       if (point.y >= yMin && point.y <= yMax) {
-        // Return the nearest data index within the bracket.
         const dataIndex = getAxisIndex(xAxis, point.x);
         return {
           type: 'line',
           seriesId,
-          dataIndex: dataIndex === -1 ? effectiveLeft : dataIndex,
+          dataIndex: dataIndex === -1 ? left : dataIndex,
         };
       }
     }
   }
 
-  // Pass 2: Fallback — use closest-distance-to-point behavior for all series.
+  // Pass 2: Fallback — use closest-distance-to-curve behavior for all series.
   // This covers non-area line series and also area series when the pointer
   // is outside the area polygon (e.g. above the top line), which is needed
   // for tooltips with trigger='item' to still work.
@@ -284,33 +451,71 @@ export default function getItemAtPosition(
     const xAxis = xAxes[xAxisId];
     const yAxis = yAxes[yAxisId];
 
-    const dataIndex = getAxisIndex(xAxis, point.x);
+    const bracket = getBracketIndices(xAxis, point.x);
+    if (!bracket) {
+      continue;
+    }
 
+    const { left, right } = bracket;
+    const { visibleStackedData, data, connectNulls, curve } = seriesItem;
+
+    const dataIndex = getAxisIndex(xAxis, point.x);
     if (dataIndex === -1) {
       continue;
     }
 
-    const yValue = seriesItem.visibleStackedData[dataIndex]?.[1];
-
-    if (yValue == null) {
+    // For ordinal or pointer exactly on a data point, use the data point directly.
+    if (left === right) {
+      const yValue = visibleStackedData[left]?.[1];
+      if (yValue == null) {
+        continue;
+      }
+      const yPosition = yAxis.scale(yValue);
+      if (yPosition == null) {
+        continue;
+      }
+      const distance = Math.abs(point.y - yPosition);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestItem = { type: 'line', seriesId, dataIndex };
+      }
       continue;
     }
 
-    const yPosition = yAxis.scale(yValue);
+    // Evaluate the actual curve at the pointer's x for precise distance.
+    const xData = xAxis.data;
+    if (!xData) {
+      continue;
+    }
 
+    const xPosition = getValueToPositionMapper(xAxis.scale);
+    const getPixelX = (idx: number) => xPosition(xData[idx]);
+
+    const curvePoints = collectCurvePoints(
+      data,
+      getPixelX,
+      (idx) => {
+        const stacked = visibleStackedData[idx];
+        return stacked ? (yAxis.scale(stacked[1]) as number) : null;
+      },
+      left,
+      right,
+      connectNulls,
+    );
+
+    if (curvePoints.length < 2) {
+      continue;
+    }
+
+    const yPosition = evaluateCurveY(curvePoints, point.x, curve);
     if (yPosition == null) {
       continue;
     }
 
     const distance = Math.abs(point.y - yPosition);
-
     if (distance < closestDistance) {
       closestDistance = distance;
-      closestItem = {
-        type: 'line',
-        seriesId,
-        dataIndex,
-      };
+      closestItem = { type: 'line', seriesId, dataIndex };
     }
   }
 

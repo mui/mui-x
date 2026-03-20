@@ -7,6 +7,8 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
 import { type SeriesId } from '../models/seriesType/common';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
 import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
 export interface LineElementOwnerState {
@@ -75,6 +77,9 @@ function LineElement(props: LineElementProps) {
     ...other
   } = props;
 
+  const store = useStore();
+  const enablePositionBasedPointerInteraction =
+    store.use(selectorChartExperimentalFeaturesState)?.enablePositionBasedPointerInteraction;
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
   const interactionProps = useInteractionItemProps(identifier);
 
@@ -98,7 +103,7 @@ function LineElement(props: LineElementProps) {
     elementType: Line,
     externalSlotProps: slotProps?.line,
     additionalProps: {
-      ...interactionProps,
+      ...(enablePositionBasedPointerInteraction ? {} : interactionProps),
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
       'data-highlighted': isHighlighted || undefined,
