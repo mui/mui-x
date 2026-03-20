@@ -78,8 +78,9 @@ function LineElement(props: LineElementProps) {
   } = props;
 
   const store = useStore();
-  const enablePositionBasedPointerInteraction =
-    store.use(selectorChartExperimentalFeaturesState)?.enablePositionBasedPointerInteraction;
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+  )?.enablePositionBasedPointerInteraction;
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
   const interactionProps = useInteractionItemProps(identifier);
 

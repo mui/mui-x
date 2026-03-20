@@ -16,7 +16,7 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": { "type": { "name": "any" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {

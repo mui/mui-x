@@ -35,7 +35,9 @@
     "disableClipping": { "type": { "name": "bool" }, "default": "false" },
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ enablePositionBasedPointerInteraction?: bool }" }
+    },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {

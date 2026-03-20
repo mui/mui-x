@@ -82,8 +82,9 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   } = props;
 
   const store = useStore();
-  const enablePositionBasedPointerInteraction =
-    store.use(selectorChartExperimentalFeaturesState)?.enablePositionBasedPointerInteraction;
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+  )?.enablePositionBasedPointerInteraction;
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
   const theme = useTheme();
 

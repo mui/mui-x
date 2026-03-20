@@ -105,14 +105,7 @@ class SegmentCapture {
     this.cy = y;
   }
 
-  bezierCurveTo(
-    cpx1: number,
-    cpy1: number,
-    cpx2: number,
-    cpy2: number,
-    x: number,
-    y: number,
-  ) {
+  bezierCurveTo(cpx1: number, cpy1: number, cpx2: number, cpy2: number, x: number, y: number) {
     this.segments.push({
       x0: this.cx,
       y0: this.cy,
