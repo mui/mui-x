@@ -258,6 +258,10 @@ The definition of `myGradient` is passed as a children of the chart component.
 
 {{"demo": "CSSCustomization.js"}}
 
+The next example shows how to apply a dashed stroke to the chart line, legend mark, and tooltip mark for each series using the `[data-series]` attribute selector.
+
+{{"demo": "StyledLineChart.js"}}
+
 ## Animation
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
