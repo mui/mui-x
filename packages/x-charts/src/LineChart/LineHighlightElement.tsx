@@ -3,62 +3,16 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import reactMajor from '@mui/x-internals/reactMajor';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import composeClasses from '@mui/utils/composeClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { type SeriesId } from '../models/seriesType/common';
 import { getSymbol } from '../internals/getSymbol';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
-
-/**
- * @deprecated Use `LineClasses` instead.
- */
-export interface LineHighlightElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-}
-
-/**
- * @deprecated Use `LineClassKey` instead.
- */
-export type HighlightElementClassKey = keyof LineHighlightElementClasses;
 
 interface LineHighlightElementCommonProps {
   seriesId: SeriesId;
   color: string;
   x: number;
   y: number;
-  classes?: Partial<LineHighlightElementClasses>;
 }
-
-/**
- * @deprecated Use `getLineUtilityClass` instead.
- */
-export function getHighlightElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiHighlightElement', slot);
-}
-
-/**
- * @deprecated Use `lineClasses` instead.
- */
-export const lineHighlightElementClasses: LineHighlightElementClasses = generateUtilityClasses(
-  'MuiHighlightElement',
-  ['root'],
-);
-
-/**
- * @deprecated Use `useUtilityClasses` instead.
- */
-const useDeprecatedUtilityClasses = (
-  ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'seriesId'>,
-) => {
-  const { classes, seriesId } = ownerState;
-  const slots = {
-    root: ['root', `series-${seriesId}`],
-  };
-
-  return composeClasses(slots, getHighlightElementUtilityClass, classes);
-};
 
 export type LineHighlightElementProps =
   | (LineHighlightElementCommonProps & { shape: 'circle' } & Omit<
@@ -80,10 +34,9 @@ export type LineHighlightElementProps =
  * - [LineHighlightElement API](https://mui.com/x/api/charts/line-highlight-element/)
  */
 function LineHighlightElement(props: LineHighlightElementProps) {
-  const { x, y, seriesId, classes: innerClasses, color, shape, ...other } = props;
+  const { x, y, seriesId, color, shape, ...other } = props;
 
   const classes = useLineUtilityClasses();
-  const deprecatedClasses = useDeprecatedUtilityClasses(props);
 
   const Element = shape === 'circle' ? 'circle' : 'path';
 
@@ -101,7 +54,7 @@ function LineHighlightElement(props: LineHighlightElementProps) {
   return (
     <Element
       pointerEvents="none"
-      className={`${classes.highlight} ${deprecatedClasses.root}`}
+      className={classes.highlight}
       transform={`translate(${x} ${y})`}
       fill={color}
       {...transformOrigin}

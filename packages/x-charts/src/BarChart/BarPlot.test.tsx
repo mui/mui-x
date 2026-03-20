@@ -1,14 +1,15 @@
 import { screen, createRenderer } from '@mui/internal-test-utils';
 import * as React from 'react';
-import { ChartContainer } from '../ChartContainer';
+import { ChartsContainer } from '../ChartsContainer';
 import { BarPlot } from './BarPlot';
+import { barClasses } from './barClasses';
 
 describe('BarPlot', () => {
   const { render } = createRenderer();
 
   it('`barLabel` prop works', () => {
     render(
-      <ChartContainer
+      <ChartsContainer
         series={[{ type: 'bar', data: [1] }]}
         width={100}
         height={100}
@@ -16,7 +17,7 @@ describe('BarPlot', () => {
         yAxis={[]}
       >
         <BarPlot barLabel={() => 'Bar label from prop'} />
-      </ChartContainer>,
+      </ChartsContainer>,
     );
 
     expect(screen.getByText('Bar label from prop')).toBeVisible();
@@ -24,7 +25,7 @@ describe('BarPlot', () => {
 
   it('prioritizes `barLabel` from series over `barLabel` prop', () => {
     render(
-      <ChartContainer
+      <ChartsContainer
         series={[{ type: 'bar', data: [1], barLabel: () => 'Bar label from series' }]}
         width={100}
         height={100}
@@ -32,7 +33,7 @@ describe('BarPlot', () => {
         yAxis={[]}
       >
         <BarPlot barLabel={() => 'Bar label from prop'} />
-      </ChartContainer>,
+      </ChartsContainer>,
     );
 
     expect(screen.getByText('Bar label from series')).toBeVisible();
@@ -40,7 +41,7 @@ describe('BarPlot', () => {
 
   it("defaults to `barLabel` prop when `barLabel` from series isn't defined", () => {
     render(
-      <ChartContainer
+      <ChartsContainer
         series={[
           { type: 'bar', data: [1] },
           { type: 'bar', data: [1], barLabel: () => 'Bar label from 2nd series' },
@@ -51,10 +52,26 @@ describe('BarPlot', () => {
         yAxis={[]}
       >
         <BarPlot barLabel={() => 'Bar label from prop'} />
-      </ChartContainer>,
+      </ChartsContainer>,
     );
 
     expect(screen.getByText('Bar label from prop')).toBeVisible();
     expect(screen.getByText('Bar label from 2nd series')).toBeVisible();
+  });
+
+  it('should apply className to root element', () => {
+    const { container } = render(
+      <ChartsContainer
+        series={[{ type: 'bar', data: [1] }]}
+        width={100}
+        height={100}
+        xAxis={[{ scaleType: 'band', data: ['A'] }]}
+      >
+        <BarPlot className="custom-bar-plot" />
+      </ChartsContainer>,
+    );
+
+    const root = container.querySelector(`.${barClasses.root}.custom-bar-plot`);
+    expect(root).not.to.equal(null);
   });
 });

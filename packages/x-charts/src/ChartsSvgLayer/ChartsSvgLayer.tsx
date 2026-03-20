@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import {
   selectorChartSvgWidth,
   selectorChartSvgHeight,
@@ -46,7 +46,7 @@ const ChartsSvgLayerStyles = styled('svg', {
  */
 const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
   function ChartsSvgLayer(inProps, ref) {
-    const { store } = useChartContext<
+    const { store } = useChartsContext<
       [],
       [UseChartInteractionSignature, UseChartItemClickSignature]
     >();

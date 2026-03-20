@@ -20,7 +20,7 @@ import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
-import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
+import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 
@@ -45,7 +45,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
 
   const {
-    chartDataProviderPremiumProps,
+    chartsDataProviderPremiumProps,
     chartsWrapperProps,
     chartsAxisProps,
     clipPathProps,
@@ -61,8 +61,8 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   const renderer = heatmapPlotPremiumProps.renderer;
 
   return (
-    <ChartDataProviderPremium<'heatmap', HeatmapPremiumPluginSignatures>
-      {...chartDataProviderPremiumProps}
+    <ChartsDataProviderPremium<'heatmap', HeatmapPremiumPluginSignatures>
+      {...chartsDataProviderPremiumProps}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
@@ -87,7 +87,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
         </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPremium>
+    </ChartsDataProviderPremium>
   );
 });
 
@@ -211,15 +211,6 @@ HeatmapPremium.propTypes = {
     }),
   ]),
   /**
-   * The function called for onClick events.
-   * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
-   *
-   * @deprecated Use `onItemClick` instead to get access to both x- and y-axis values.
-   */
-  onAxisClick: PropTypes.func,
-  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
@@ -337,6 +328,7 @@ HeatmapPremium.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -450,6 +442,7 @@ HeatmapPremium.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

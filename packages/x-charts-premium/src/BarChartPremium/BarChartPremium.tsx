@@ -24,7 +24,7 @@ import { seriesPreviewPlotMap, useChartsContainerProProps } from '@mui/x-charts-
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
-import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
+import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import {
   type BarItemIdentifier,
   type RangeBarItemIdentifier,
@@ -95,7 +95,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
 
   const {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     barPlotProps,
     rangeBarPlotProps,
     gridProps,
@@ -108,11 +108,11 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
     children,
   } = useBarChartPremiumProps(other);
 
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
+  const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'bar' | 'rangeBar',
     BarChartPremiumPluginSignatures
   >({
-    ...chartContainerProps,
+    ...chartsContainerProps,
     initialZoom,
     zoomData,
     onZoomChange,
@@ -124,8 +124,8 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPremium<'bar' | 'rangeBar', BarChartPremiumPluginSignatures>
-      {...chartDataProviderProProps}
+    <ChartsDataProviderPremium<'bar' | 'rangeBar', BarChartPremiumPluginSignatures>
+      {...chartsDataProviderProProps}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
@@ -148,7 +148,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPremium>
+    </ChartsDataProviderPremium>
   );
 });
 
@@ -523,6 +523,7 @@ BarChartPremium.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -629,6 +630,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -735,6 +737,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -817,6 +820,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -900,6 +904,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -982,6 +987,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1064,6 +1070,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1156,6 +1163,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1248,6 +1256,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1341,6 +1350,7 @@ BarChartPremium.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1446,6 +1456,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1551,6 +1562,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1632,6 +1644,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1714,6 +1727,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1795,6 +1809,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1876,6 +1891,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1967,6 +1983,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -2058,6 +2075,7 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([

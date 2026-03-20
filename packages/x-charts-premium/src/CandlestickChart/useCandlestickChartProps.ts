@@ -7,7 +7,7 @@ import { type ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
 import { type ChartsAxisProps, type XAxis } from '@mui/x-charts/internals';
 import { type ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import type { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
-import { type ChartContainerPremiumProps } from '../ChartContainerPremium';
+import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 import { type CandlestickChartProps } from './CandlestickChart';
 import { type CandlestickPlotProps } from './CandlestickPlot';
 import {
@@ -72,22 +72,24 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     y: axisHighlight?.y ?? ('line' as const),
   } satisfies ChartsAxisHighlightProps;
 
-  const chartContainerProps: ChartContainerPremiumProps<'ohlc', CandlestickChartPluginSignatures> =
-    {
-      ...other,
-      series: seriesWithDefault,
-      width,
-      height,
-      margin,
-      colors,
-      dataset,
-      xAxis: xAxisWithDefault,
-      yAxis,
-      disableAxisListener: axisHighlightProps.x === 'none' && axisHighlightProps.y === 'none',
-      className,
-      skipAnimation,
-      plugins: CANDLESTICK_CHART_PLUGINS,
-    };
+  const chartsContainerProps: ChartsContainerPremiumProps<
+    'ohlc',
+    CandlestickChartPluginSignatures
+  > = {
+    ...other,
+    series: seriesWithDefault,
+    width,
+    height,
+    margin,
+    colors,
+    dataset,
+    xAxis: xAxisWithDefault,
+    yAxis,
+    disableAxisListener: axisHighlightProps.x === 'none' && axisHighlightProps.y === 'none',
+    className,
+    skipAnimation,
+    plugins: CANDLESTICK_CHART_PLUGINS,
+  };
 
   const candlestickPlotProps: CandlestickPlotProps = {
     slots,
@@ -129,7 +131,7 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
 
   return {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     candlestickPlotProps,
     gridProps,
     clipPathProps,
