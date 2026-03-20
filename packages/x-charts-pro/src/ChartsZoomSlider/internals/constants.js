@@ -1,0 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ZOOM_SLIDER_SIZE = exports.ZOOM_SLIDER_THUMB_WIDTH = exports.ZOOM_SLIDER_THUMB_HEIGHT = exports.ZOOM_SLIDER_ACTIVE_TRACK_SIZE = exports.ZOOM_SLIDER_TRACK_SIZE = void 0;
+exports.ZOOM_SLIDER_TRACK_SIZE = 8;
+exports.ZOOM_SLIDER_ACTIVE_TRACK_SIZE = 10;
+exports.ZOOM_SLIDER_THUMB_HEIGHT = 20;
+exports.ZOOM_SLIDER_THUMB_WIDTH = 10;
+exports.ZOOM_SLIDER_SIZE = Math.max(exports.ZOOM_SLIDER_TRACK_SIZE, exports.ZOOM_SLIDER_ACTIVE_TRACK_SIZE, exports.ZOOM_SLIDER_THUMB_HEIGHT, exports.ZOOM_SLIDER_THUMB_WIDTH);
