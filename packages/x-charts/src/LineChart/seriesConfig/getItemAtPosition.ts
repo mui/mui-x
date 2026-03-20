@@ -426,7 +426,7 @@ export default function getItemAtPosition(
 
   // Pass 2: Fallback — use closest-distance-to-curve behavior for all series.
   // This covers non-area line series and also area series when the pointer
-  // is outside the area polygon (e.g. above the top line), which is needed
+  // is outside the area polygon (for example, above the top line), which is needed
   // for tooltips with trigger='item' to still work.
   let closestDistance = Infinity;
   let closestItem: SeriesItemIdentifierWithType<'line'> | undefined;

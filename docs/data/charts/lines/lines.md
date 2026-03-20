@@ -163,7 +163,7 @@ Enabling `experimentalFeatures.enablePositionBasedPointerInteraction` switches t
 For area series, it detects whether the pointer is inside the filled area.
 For line series (without area), it finds the series whose curve is closest to the pointer's vertical position.
 
-This uses the same curve interpolation as the rendered line (e.g., `monotoneX`, `catmullRom`), so the hit detection matches the visual shape.
+This uses the same curve interpolation as the rendered line (for example, `monotoneX`, `catmullRom`), so the hit detection matches the visual shape.
 
 {{"demo": "LinePointerInteraction.js"}}
 
