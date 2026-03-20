@@ -35,3 +35,40 @@ globalThis.__MUI_X_TELEMETRY_DISABLED__ = false; // enabled
 // or
 globalThis.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
 ```
+
+### How to test
+
+#### Postinstall output
+
+The postinstall script writes to two places:
+
+1. **`<pkg-root>/context.js` + `<pkg-root>/context.mjs`** — all traits (`machineId`, `projectId`, `anonymousId`, `sessionId`, `isDocker`, `isCI`). Lives inside `node_modules` and gets regenerated on each install.
+2. **Platform-specific config directory** — persists `anonymousId` and `notifiedAt` across reinstalls, so the `anonymousId` stays stable even if `node_modules` is wiped.
+   - **macOS:** `~/Library/Preferences/mui-x/config.json`
+   - **Windows:** `%APPDATA%\mui-x\Config\config.json`
+   - **Linux:** `$XDG_CONFIG_HOME/mui-x/config.json` (defaults to `~/.config/mui-x/config.json`)
+   - **CI/Docker:** `<cwd>/cache/mui-x/config.json` (ephemeral, inside the project)
+
+#### Postinstall (builds context.js with machineId, projectId, etc.)
+
+```bash
+# 1. Build the package
+pnpm --filter @mui/x-telemetry run build
+
+# 2. Run the postinstall script
+node packages/x-telemetry/build/postinstall/index.js
+
+# 3. Check the generated context
+cat packages/x-telemetry/build/context.js
+cat packages/x-telemetry/build/context.mjs
+
+# 4. Check the persistent config (macOS)
+cat ~/Library/Preferences/mui-x/config.json
+```
+
+#### Unit tests
+
+```bash
+# Run all x-telemetry unit tests (jsdom)
+pnpm test:unit --project "x-telemetry" --run
+```
