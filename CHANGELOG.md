@@ -68,6 +68,10 @@ Same changes as in `@mui/x-date-pickers@9.0.0-alpha.4`.
 - [charts] Rename `voronoiMaxRadius`/`disableVoronoi` to `hitAreaRadius`/`disableHitArea` (#21750) @bernardobelchior
 - [charts] Update pt-PT locale (#21296) @bernardobelchior
 - [charts] Use different shape per series by default (#21713) @alexfauquette
+- [charts] Add className prop to Radar components (#21794) @JCQuintas
+- [charts] Add className prop to shared chart components (#21792) @JCQuintas
+- [charts] Add className prop to BarPlot (#21791) @JCQuintas
+- [charts] Portal tooltip into ChartsLayerContainer (#21801) @JCQuintas
 
 #### `@mui/x-charts-pro@9.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
