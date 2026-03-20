@@ -12,7 +12,7 @@ import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import {
   selectorIsItemVisibleGetter,
   type VisibilityIdentifierWithType,
@@ -109,7 +109,7 @@ const ChartsLegend = consumeSlots(
     ref: React.Ref<HTMLUListElement>,
   ) {
     const data = useLegend();
-    const { instance } = useChartContext<[UseChartVisibilityManagerSignature]>();
+    const { instance } = useChartsContext<[UseChartVisibilityManagerSignature]>();
     const store = useStore<[UseChartVisibilityManagerSignature]>();
     const isItemVisible = store.use(selectorIsItemVisibleGetter);
     const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;

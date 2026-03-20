@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docs/config';
+import { LANGUAGES } from 'docsx/config';
 import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
 import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
@@ -46,7 +46,7 @@ export const projectChartsSettings: ProjectSettings = {
       .filter((page): page is PageType => page !== null)
       .sort((a: PageType, b: PageType) => a.title.localeCompare(b.title));
 
-    return `import type { MuiPage } from 'docs/src/MuiPage';
+    return `import type { MuiPage } from '@mui/docs/MuiPage';
 
 const chartsApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
 export default chartsApiPages;
