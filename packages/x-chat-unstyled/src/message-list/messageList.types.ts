@@ -3,7 +3,6 @@ import * as React from 'react';
 
 export interface MessageListRootOwnerState {
   messageCount: number;
-  virtualization: boolean;
   isAtBottom: boolean;
 }
 

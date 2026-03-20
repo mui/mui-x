@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
+  ConversationInput,
   Message,
   MessageGroup,
   MessageList,
@@ -10,34 +11,26 @@ import {
 
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
+  demoLocaleText,
+  demoSlotProps,
+} from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
+import {
   demoUsers,
   partRenderingMessages,
 } from 'docsx/data/chat/unstyled/examples/shared/demoData';
-import {
-  DemoDateDividerLabel,
-  DemoDateDividerRoot,
-  DemoMessageAuthor,
-  DemoMessageAvatar,
-  DemoMessageContent,
-  DemoMessageGroup,
-  DemoMessageMeta,
-  DemoMessageRoot,
-  DemoThreadHeader,
-} from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 const partRenderers = {
   reasoning: ({ part }) => (
     <details
       open
       style={{
-        border: '1px solid #d7dee7',
-        borderRadius: 14,
-        background: '#f8fbff',
-        color: '#10263d',
+        border: '1px solid #e0e0e0',
+        background: '#fafafa',
+        color: '#111111',
         padding: '10px 12px',
       }}
     >
-      <summary style={{ cursor: 'pointer', fontWeight: 800 }}>
+      <summary style={{ cursor: 'pointer', fontWeight: 700 }}>
         Reasoning trace
       </summary>
       <div style={{ marginTop: 8 }}>{part.text}</div>
@@ -49,18 +42,17 @@ const partRenderers = {
     return (
       <div
         style={{
-          border: '1px solid #d7dee7',
-          borderRadius: 14,
+          border: '1px solid #e0e0e0',
           padding: '10px 12px',
           background: '#ffffff',
-          color: '#10263d',
+          color: '#111111',
         }}
       >
         <div
           style={{
             fontSize: 11,
-            fontWeight: 800,
-            color: '#5c6b7c',
+            fontWeight: 700,
+            color: '#666666',
             marginBottom: 6,
           }}
         >
@@ -73,8 +65,7 @@ const partRenderers = {
   'data-summary': ({ part }) => (
     <div
       style={{
-        borderRadius: 14,
-        background: '#0b4f8a',
+        background: '#111111',
         color: '#ffffff',
         padding: '10px 12px',
         display: 'grid',
@@ -84,7 +75,7 @@ const partRenderers = {
       <div
         style={{
           fontSize: 11,
-          fontWeight: 800,
+          fontWeight: 700,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
         }}
@@ -117,14 +108,12 @@ export default function CustomMessagePartRendering() {
       ]}
       defaultActiveConversationId="parts"
       defaultMessages={partRenderingMessages}
+      localeText={demoLocaleText}
       partRenderers={partRenderers}
       slotProps={{
         root: {
           style: {
             background: '#ffffff',
-            border: '1px solid #d7dee7',
-            borderRadius: 24,
-            padding: 16,
             display: 'grid',
             gap: 14,
           },
@@ -135,27 +124,22 @@ export default function CustomMessagePartRendering() {
         slotProps={{
           root: {
             style: {
-              minHeight: 520,
+              height: 520,
               display: 'grid',
-              gridTemplateRows: 'auto minmax(0, 1fr)',
+              gridTemplateRows: 'auto minmax(0, 1fr) auto',
               gap: 14,
             },
           },
         }}
       >
-        <Conversation.Header slots={{ root: DemoThreadHeader }}>
+        <Conversation.Header
+          slotProps={{
+            root: demoSlotProps.conversationHeader,
+          }}
+        >
           <div style={{ minWidth: 0 }}>
-            <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
-            <Conversation.Subtitle
-              style={{
-                color: '#5c6b7c',
-                fontSize: 13,
-                marginTop: 4,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            />
+            <Conversation.Title style={demoSlotProps.conversationTitle} />
+            <Conversation.Subtitle style={demoSlotProps.conversationSubtitle} />
           </div>
         </Conversation.Header>
         <MessageList.Root
@@ -171,24 +155,69 @@ export default function CustomMessagePartRendering() {
                 }
                 index={index}
                 messageId={id}
-                slots={{ label: DemoDateDividerLabel, root: DemoDateDividerRoot }}
+                slotProps={{
+                  root: demoSlotProps.dateDividerRoot,
+                  label: demoSlotProps.dateDividerLabel,
+                }}
               />
               <MessageGroup
                 index={index}
                 messageId={id}
-                slots={{ authorName: DemoMessageAuthor, root: DemoMessageGroup }}
+                slotProps={{
+                  root: demoSlotProps.messageGroupRoot,
+                  authorName: demoSlotProps.messageGroupAuthorName,
+                }}
               >
-                <Message.Root messageId={id} slots={{ root: DemoMessageRoot }}>
-                  <Message.Avatar slots={{ root: DemoMessageAvatar }} />
-                  <Message.Content slots={{ root: DemoMessageContent }} />
-                  <Message.Meta slots={{ root: DemoMessageMeta }} />
+                <Message.Root
+                  messageId={id}
+                  slotProps={{
+                    root: demoSlotProps.messageRoot,
+                  }}
+                >
+                  <Message.Avatar
+                    slotProps={{
+                      avatar: demoSlotProps.messageAvatar,
+                      image: demoSlotProps.messageAvatarImage,
+                    }}
+                  />
+                  <Message.Content
+                    slotProps={{
+                      bubble: demoSlotProps.messageBubble,
+                    }}
+                  />
+                  <Message.Meta
+                    slotProps={{
+                      meta: demoSlotProps.messageMeta,
+                    }}
+                  />
                 </Message.Root>
               </MessageGroup>
             </React.Fragment>
           )}
-          style={{ minHeight: 0 }}
-          virtualization={false}
         />
+        <ConversationInput.Root
+          slotProps={{
+            root: demoSlotProps.conversationInputRoot,
+          }}
+        >
+          <ConversationInput.TextArea
+            aria-label="Message"
+            placeholder="Type a message"
+            slotProps={{
+              input: demoSlotProps.conversationInputTextArea,
+            }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ConversationInput.SendButton
+              data-variant="primary"
+              slotProps={{
+                sendButton: demoSlotProps.conversationInputSendButton,
+              }}
+            >
+              Send
+            </ConversationInput.SendButton>
+          </div>
+        </ConversationInput.Root>
       </Conversation.Root>
     </Chat.Root>
   );

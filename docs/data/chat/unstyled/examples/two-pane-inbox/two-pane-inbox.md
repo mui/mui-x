@@ -54,4 +54,3 @@ It is especially applicable when users need to switch threads frequently without
 ## Next steps
 
 - Continue with [Conversation list](/x/react-chat/unstyled/conversation-list/) for list semantics and keyboard behavior.
-- Continue with [Virtualized thread](/x/react-chat/unstyled/examples/virtualized-thread/) when the thread pane needs long-list behavior.

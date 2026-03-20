@@ -99,7 +99,7 @@ This gives you a complete structural shell while keeping the visual treatment in
 - [Layout](/x/react-chat/unstyled/layout/) for `Chat.Root` and `Chat.Layout`
 - [Conversation list](/x/react-chat/unstyled/conversation-list/) for list semantics, selection, and roving focus
 - [Conversation](/x/react-chat/unstyled/thread/) for active-conversation context and thread header primitives
-- [Message list](/x/react-chat/unstyled/message-list/) for virtualization, history loading, date dividers, and scroll behavior
+- [Message list](/x/react-chat/unstyled/message-list/) for history loading, date dividers, and scroll behavior
 - [Messages](/x/react-chat/unstyled/messages/) for `MessageGroup`, message subparts, and default part renderers
 - [ConversationInput](/x/react-chat/unstyled/composer/) for form submission, autosizing, attachments, and IME-safe input
 - [Indicators](/x/react-chat/unstyled/indicators/) for typing, unread, and scroll affordances

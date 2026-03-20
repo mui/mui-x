@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import type { ChatConversation } from '@mui/x-chat-headless';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { type ConversationListTimestampOwnerState } from './conversationList.types';
 
 export interface ConversationListTimestampSlots {
@@ -50,6 +51,8 @@ export const ConversationListTimestamp = React.forwardRef(function ConversationL
   };
   void ownerStateProp;
 
+  const localeText = useChatLocaleText();
+
   const Root = slots?.root ?? 'div';
   const rootProps = useSlotProps({
     elementType: Root,
@@ -67,7 +70,9 @@ export const ConversationListTimestamp = React.forwardRef(function ConversationL
 
   return (
     <Root {...rootProps}>
-      <time dateTime={conversation.lastMessageAt}>{conversation.lastMessageAt}</time>
+      <time dateTime={conversation.lastMessageAt}>
+        {localeText.conversationTimestampLabel(conversation.lastMessageAt)}
+      </time>
     </Root>
   );
 }) as ConversationListTimestampComponent;

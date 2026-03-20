@@ -101,7 +101,6 @@ export default function BrandedChat() {
     </ThemeProvider>
   );
 }
-
 ```
 
 ## What this example demonstrates

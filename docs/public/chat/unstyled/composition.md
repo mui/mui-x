@@ -117,7 +117,6 @@ export default function MinimalUnstyledShell() {
               </MessageGroup>
             )}
             style={{ minHeight: 0 }}
-            virtualization={false}
           />
           <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
             <ConversationInput.TextArea
@@ -139,7 +138,6 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
-
 ```
 
 The canonical unstyled shell combines a provider-backed root, a pane layout, a conversation rail, a thread view, a message list, and a composer.

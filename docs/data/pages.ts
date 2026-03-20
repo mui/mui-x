@@ -830,7 +830,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-chat', title: 'Overview' },
       {
         pathname: '/x/react-chat/headless-group',
-        subheader: 'Headless',
+        title: 'Headless',
         children: [
           { pathname: '/x/react-chat/headless', title: 'Overview' },
           { pathname: '/x/react-chat/headless/state', title: 'State and store' },
@@ -893,7 +893,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/react-chat/unstyled-group',
-        subheader: 'Unstyled',
+        title: 'Unstyled',
         children: [
           { pathname: '/x/react-chat/unstyled', title: 'Overview' },
           { pathname: '/x/react-chat/unstyled/composition', title: 'Composition' },
@@ -920,10 +920,7 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-chat/unstyled/examples/two-pane-inbox',
                 title: 'Two-pane inbox',
               },
-              {
-                pathname: '/x/react-chat/unstyled/examples/virtualized-thread',
-                title: 'Virtualized thread',
-              },
+
               {
                 pathname: '/x/react-chat/unstyled/examples/grouped-message-timeline',
                 title: 'Grouped message timeline',
@@ -944,59 +941,13 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-chat/unstyled/examples/slot-customization',
                 title: 'Slot customization',
               },
-            ],
-          },
-        ],
-      },
-      {
-        pathname: '/x/react-chat/material-group',
-        subheader: 'Material UI',
-        children: [
-          { pathname: '/x/react-chat/material', title: 'Overview' },
-          { pathname: '/x/react-chat/material/chat-box', title: 'ChatBox' },
-          { pathname: '/x/react-chat/material/composition', title: 'Composition' },
-          { pathname: '/x/react-chat/material/conversations', title: 'Conversations' },
-          { pathname: '/x/react-chat/material/messages', title: 'Messages' },
-          { pathname: '/x/react-chat/material/composer', title: 'Composer' },
-          { pathname: '/x/react-chat/material/indicators', title: 'Indicators' },
-          { pathname: '/x/react-chat/material/slots', title: 'Slots' },
-          { pathname: '/x/react-chat/material/theming', title: 'Theming' },
-          { pathname: '/x/react-chat/material/localization', title: 'Localization' },
-          {
-            pathname: '/x/react-chat/material/examples',
-            title: 'Examples',
-            children: [
               {
-                pathname: '/x/react-chat/material/examples/ai-assistant',
-                title: 'AI assistant',
+                pathname: '/x/react-chat/unstyled/examples/intercom-style',
+                title: 'Intercom-style widget',
               },
               {
-                pathname: '/x/react-chat/material/examples/customer-support-inbox',
-                title: 'Customer support inbox',
-              },
-              {
-                pathname: '/x/react-chat/material/examples/dark-mode-chat',
-                title: 'Dark mode chat',
-              },
-              {
-                pathname: '/x/react-chat/material/examples/branded-chat',
-                title: 'Branded chat',
-              },
-              {
-                pathname: '/x/react-chat/material/examples/thread-only-copilot',
-                title: 'Thread-only copilot',
-              },
-              {
-                pathname: '/x/react-chat/material/examples/skeleton-loading',
-                title: 'Skeleton loading',
-              },
-              {
-                pathname: '/x/react-chat/material/examples/custom-message-actions',
-                title: 'Custom message actions',
-              },
-              {
-                pathname: '/x/react-chat/material/examples/rtl-chat',
-                title: 'RTL chat',
+                pathname: '/x/react-chat/unstyled/examples/chatgpt-style',
+                title: 'ChatGPT-style layout',
               },
             ],
           },

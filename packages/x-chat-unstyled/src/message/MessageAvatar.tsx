@@ -7,10 +7,12 @@ import { type MessageAvatarOwnerState } from './message.types';
 
 export interface MessageAvatarSlots {
   avatar: React.ElementType;
+  image: React.ElementType;
 }
 
 export interface MessageAvatarSlotProps {
   avatar?: SlotComponentProps<'div', {}, MessageAvatarOwnerState>;
+  image?: SlotComponentProps<'img', {}, MessageAvatarOwnerState>;
 }
 
 export interface MessageAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -48,6 +50,17 @@ export const MessageAvatar = React.forwardRef(function MessageAvatar(
     },
   });
 
+  const Image = slots?.image ?? 'img';
+  const imageProps = useSlotProps({
+    elementType: Image,
+    externalSlotProps: slotProps?.image,
+    ownerState,
+    additionalProps: {
+      alt: displayName ?? '',
+      src: avatarUrl ?? undefined,
+    },
+  });
+
   if (ownerState.isGrouped || ownerState.role === 'system' || ownerState.message == null) {
     return null;
   }
@@ -56,9 +69,5 @@ export const MessageAvatar = React.forwardRef(function MessageAvatar(
     return null;
   }
 
-  return (
-    <Avatar {...avatarProps}>
-      {avatarUrl ? <img alt={displayName ?? ''} src={avatarUrl} /> : null}
-    </Avatar>
-  );
+  return <Avatar {...avatarProps}>{avatarUrl ? <Image {...imageProps} /> : null}</Avatar>;
 }) as MessageAvatarComponent;

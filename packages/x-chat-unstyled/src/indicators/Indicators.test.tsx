@@ -100,7 +100,6 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
   props: React.PropsWithChildren<MessageListRootProps> & {
     ownerState?: {
       messageCount: number;
-      virtualization: boolean;
       isAtBottom: boolean;
     };
   },
@@ -113,11 +112,9 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
     items,
     overlay,
     onReachTop,
-    overscan,
     renderItem,
     slotProps,
     slots,
-    virtualization,
     estimatedItemSize,
     ...other
   } = props;
@@ -126,12 +123,10 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
   void items;
   void overlay;
   void onReachTop;
-  void overscan;
   void ownerState;
   void renderItem;
   void slotProps;
   void slots;
-  void virtualization;
 
   return (
     <div ref={ref} {...other}>
@@ -173,7 +168,6 @@ function ControlledMessageListWithAffordance() {
         )}
         slots={{ messageList: RootWithAffordance }}
         style={{ height: 160, overflowY: 'auto' }}
-        virtualization={false}
       />
     </ChatRoot>
   );
@@ -341,10 +335,10 @@ describe('Indicators', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Alice schreibt')).to.have.attribute('aria-live', 'polite');
+      expect(screen.getByText('Alice is typing')).to.have.attribute('aria-live', 'polite');
     });
 
-    expect(screen.getByText('Neue Nachrichten')).not.to.equal(null);
+    expect(screen.getByText('New messages')).not.to.equal(null);
 
     const scrollToBottom = vi.fn();
     const { rerender } = render(
@@ -363,7 +357,9 @@ describe('Indicators', () => {
       </MessageListContextProvider>,
     );
 
-    expect(screen.getByRole('button', { name: 'Nach unten, 2 neu' })).to.have.text('Nach unten2');
+    expect(screen.getByRole('button', { name: 'Scroll to bottom, 2 new messages' })).to.have.text(
+      'Scroll to bottom2',
+    );
 
     rerender(
       <MessageListContextProvider
@@ -381,7 +377,9 @@ describe('Indicators', () => {
       </MessageListContextProvider>,
     );
 
-    expect(screen.getByRole('button', { name: 'Nach unten' })).to.have.text('Nach unten');
+    expect(screen.getByRole('button', { name: 'Scroll to bottom' })).to.have.text(
+      'Scroll to bottom',
+    );
   });
 
   it('UnreadMarker renders at the unread boundary derived from unreadCount', () => {

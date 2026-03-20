@@ -1,8 +1,0 @@
-<Paper
-  elevation={0}
-  sx={{ border: 1, borderColor: 'divider', overflow: 'hidden' }}
->
-  <Box sx={{ height: 480 }}>
-    <ChatBox adapter={adapter} defaultMessages={messages} />
-  </Box>
-</Paper>

@@ -9,6 +9,7 @@
     { "name": "root", "description": "", "class": null },
     { "name": "item", "description": "", "class": null },
     { "name": "itemAvatar", "description": "", "class": null },
+    { "name": "itemContent", "description": "", "class": null },
     { "name": "title", "description": "", "class": null },
     { "name": "preview", "description": "", "class": null },
     { "name": "timestamp", "description": "", "class": null },

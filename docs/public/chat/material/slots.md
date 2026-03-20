@@ -116,7 +116,6 @@ export default function SlotCustomization() {
     </Paper>
   );
 }
-
 ```
 
 ### Conversations region
@@ -266,7 +265,6 @@ export default function OwnerStateDemo() {
     </Paper>
   );
 }
-
 ```
 
 Common owner state values:

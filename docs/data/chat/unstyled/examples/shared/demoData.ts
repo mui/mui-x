@@ -1,7 +1,7 @@
 import type { ChatConversation, ChatMessage, ChatUser } from '@mui/x-chat-headless';
 
 function createAvatarDataUrl(label: string, background: string, foreground = '#ffffff') {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="${background}"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="${foreground}">${label}</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="${background}"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="${foreground}">${label}</text></svg>`;
 
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
@@ -10,31 +10,31 @@ export const demoUsers = {
   you: {
     id: 'you',
     displayName: 'You',
-    avatarUrl: createAvatarDataUrl('Y', '#0b4f8a'),
+    avatarUrl: createAvatarDataUrl('Y', '#111111'),
     isOnline: true,
   } satisfies ChatUser,
   alice: {
     id: 'alice',
     displayName: 'Alice Chen',
-    avatarUrl: createAvatarDataUrl('A', '#2563eb'),
+    avatarUrl: createAvatarDataUrl('A', '#111111'),
     isOnline: true,
   } satisfies ChatUser,
   marco: {
     id: 'marco',
     displayName: 'Marco Diaz',
-    avatarUrl: createAvatarDataUrl('M', '#0f766e'),
+    avatarUrl: createAvatarDataUrl('M', '#111111'),
     isOnline: false,
   } satisfies ChatUser,
   priya: {
     id: 'priya',
     displayName: 'Priya Singh',
-    avatarUrl: createAvatarDataUrl('P', '#b45309'),
+    avatarUrl: createAvatarDataUrl('P', '#111111'),
     isOnline: true,
   } satisfies ChatUser,
   agent: {
     id: 'agent',
     displayName: 'MUI Guide',
-    avatarUrl: createAvatarDataUrl('G', '#4338ca'),
+    avatarUrl: createAvatarDataUrl('G', '#111111'),
     isOnline: true,
   } satisfies ChatUser,
 } as const;

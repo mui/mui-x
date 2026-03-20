@@ -42,7 +42,6 @@ const CustomRoot = React.forwardRef(function CustomRoot(
   props: React.PropsWithChildren<MessageListRootProps> & {
     ownerState?: {
       messageCount: number;
-      virtualization: boolean;
       isAtBottom: boolean;
     };
   },
@@ -55,11 +54,9 @@ const CustomRoot = React.forwardRef(function CustomRoot(
     items,
     overlay,
     onReachTop,
-    overscan,
     renderItem,
     slotProps,
     slots,
-    virtualization,
     estimatedItemSize,
     ...other
   } = props;
@@ -67,11 +64,9 @@ const CustomRoot = React.forwardRef(function CustomRoot(
   void items;
   void overlay;
   void onReachTop;
-  void overscan;
   void renderItem;
   void slotProps;
   void slots;
-  void virtualization;
   void estimatedItemSize;
 
   return (
@@ -79,7 +74,6 @@ const CustomRoot = React.forwardRef(function CustomRoot(
       data-bottom={String(ownerState?.isAtBottom)}
       data-message-count={String(ownerState?.messageCount)}
       data-testid="custom-message-list-root"
-      data-virtualization={String(ownerState?.virtualization)}
       ref={ref}
       {...other}
     >
@@ -104,7 +98,6 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
   props: React.PropsWithChildren<MessageListRootProps> & {
     ownerState?: {
       messageCount: number;
-      virtualization: boolean;
       isAtBottom: boolean;
     };
   },
@@ -117,11 +110,9 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
     items,
     overlay,
     onReachTop,
-    overscan,
     renderItem,
     slotProps,
     slots,
-    virtualization,
     estimatedItemSize,
     ...other
   } = props;
@@ -129,12 +120,10 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
   void items;
   void overlay;
   void onReachTop;
-  void overscan;
   void ownerState;
   void renderItem;
   void slotProps;
   void slots;
-  void virtualization;
   void estimatedItemSize;
 
   return (
@@ -147,10 +136,9 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
 });
 
 function ControlledMessageList(props: {
-  virtualization?: boolean;
   slots?: MessageListRootProps['slots'];
 }) {
-  const { virtualization = false, slots } = props;
+  const { slots } = props;
   const [messages, setMessages] = React.useState([
     createMessage('m1', 'assistant'),
     createMessage('m2', 'assistant'),
@@ -237,7 +225,6 @@ function ControlledMessageList(props: {
         }}
         slots={slots}
         style={{ height: 160, overflowY: 'auto' }}
-        virtualization={virtualization}
       />
     </ChatRoot>
   );
@@ -252,7 +239,6 @@ describe('MessageListRoot', () => {
       >
         <MessageListRoot
           renderItem={({ id }) => <DefaultRenderItem id={id} />}
-          virtualization={false}
         />
       </ChatRoot>,
     );
@@ -273,7 +259,6 @@ describe('MessageListRoot', () => {
           renderItem={({ id }) => <DefaultRenderItem id={id} />}
           slots={{ messageList: CustomRoot }}
           style={{ overflowY: 'auto' }}
-          virtualization={false}
         />
       </ChatRoot>,
     );
@@ -281,7 +266,6 @@ describe('MessageListRoot', () => {
     const customRoot = screen.getByTestId('custom-message-list-root');
 
     expect(customRoot).to.have.attribute('data-message-count', '2');
-    expect(customRoot).to.have.attribute('data-virtualization', 'false');
     expect(screen.getAllByTestId(/message-m[12]/).map((node) => node.textContent)).to.deep.equal([
       'm2',
       'm1',
@@ -297,7 +281,6 @@ describe('MessageListRoot', () => {
           ref={handleRef}
           renderItem={({ id }) => <DefaultRenderItem id={id} />}
           style={{ overflowY: 'auto' }}
-          virtualization={false}
         />
       </ChatRoot>,
     );
@@ -345,7 +328,6 @@ describe('MessageListRoot', () => {
         <MessageListRoot
           overlay={<div data-testid="message-list-overlay">Overlay</div>}
           renderItem={({ id }) => <DefaultRenderItem id={id} />}
-          virtualization={false}
         />
       </ChatRoot>,
     );
@@ -387,7 +369,6 @@ describe('MessageListRoot', () => {
           onReachTop={onReachTop}
           renderItem={({ id }) => <DefaultRenderItem id={id} />}
           style={{ overflowY: 'auto' }}
-          virtualization={false}
         />
       </ChatRoot>,
     );
@@ -418,32 +399,7 @@ describe('MessageListRoot', () => {
     expect(onReachTop).toHaveBeenCalledTimes(2);
   });
 
-  it.skipIf(isJSDOM)('windows rows when virtualization is enabled', async () => {
-    const messages = Array.from({ length: 50 }, (_, index) =>
-      createMessage(`m${index + 1}`, 'assistant'),
-    );
-
-    render(
-      <ChatRoot adapter={createAdapter()} defaultMessages={messages}>
-        <MessageListRoot
-          estimatedItemSize={40}
-          renderItem={({ id }) => (
-            <div data-testid={`message-${id}`} style={{ height: 40 }}>
-              {id}
-            </div>
-          )}
-          style={{ height: 160, overflowY: 'auto' }}
-        />
-      </ChatRoot>,
-    );
-
-    await waitFor(() => {
-      expect(screen.getAllByTestId(/message-m\d+/).length).toBeLessThan(50);
-    });
-  });
-
   it.skipIf(isJSDOM)('preserves the viewport anchor when history is prepended', async () => {
-    render(<ControlledMessageList virtualization={false} />);
 
     const log = screen.getByRole('log');
 
@@ -462,7 +418,6 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('auto-scrolls on append when already near the bottom', async () => {
-    render(<ControlledMessageList virtualization={false} />);
 
     const log = screen.getByRole('log');
 
@@ -481,7 +436,6 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('auto-scrolls on user append even when away from the bottom', async () => {
-    render(<ControlledMessageList virtualization={false} />);
 
     const log = screen.getByRole('log');
 
@@ -502,7 +456,6 @@ describe('MessageListRoot', () => {
   it.skipIf(isJSDOM)(
     'does not auto-scroll for assistant appends when away from the bottom',
     async () => {
-      render(<ControlledMessageList virtualization={false} />);
 
       const log = screen.getByRole('log');
 
@@ -527,7 +480,6 @@ describe('MessageListRoot', () => {
       render(
         <ControlledMessageList
           slots={{ messageList: RootWithBottomState }}
-          virtualization={false}
         />,
       );
 
@@ -556,7 +508,6 @@ describe('MessageListRoot', () => {
   );
 
   it.skipIf(isJSDOM)('restores the anchor when a row above the viewport grows', async () => {
-    render(<ControlledMessageList virtualization={false} />);
 
     const log = screen.getByRole('log');
 
@@ -596,7 +547,6 @@ describe('MessageListRoot', () => {
           )}
           slots={{ messageList: RootWithBottomState }}
           style={{ height: 160, overflowY: 'auto' }}
-          virtualization={false}
         />
       </ChatRoot>,
     );

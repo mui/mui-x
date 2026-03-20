@@ -183,7 +183,6 @@ export default function TwoPaneInbox() {
               </MessageGroup>
             )}
             style={{ minHeight: 0 }}
-            virtualization={false}
           />
           <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
             <ConversationInput.TextArea
@@ -205,7 +204,6 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## What it shows
@@ -248,4 +246,3 @@ It is especially applicable when users need to switch threads frequently without
 ## Next steps
 
 - Continue with [Conversation list](/x/react-chat/unstyled/conversation-list/) for list semantics and keyboard behavior.
-- Continue with [Virtualized thread](/x/react-chat/unstyled/examples/virtualized-thread/) when the thread pane needs long-list behavior.

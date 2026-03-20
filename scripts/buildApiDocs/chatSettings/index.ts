@@ -84,6 +84,7 @@ export default chatApiPages;
       'message/parts/SourceUrlPart.tsx',
       // Unstyled internal components without demos
       'conversation/ConversationHeaderInfo.tsx',
+      'conversation-list/ConversationListItemContent.tsx',
     ];
     if (compoundFiles.some((f) => filename.includes(f))) {
       return true;

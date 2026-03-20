@@ -377,7 +377,6 @@ export default function ConversationHistoryHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Key takeaways

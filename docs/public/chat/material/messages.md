@@ -77,7 +77,6 @@ export default function MessageAnatomy() {
     </Paper>
   );
 }
-
 ```
 
 ## Markdown rendering
@@ -110,7 +109,6 @@ export default function MarkdownMessages() {
     </Paper>
   );
 }
-
 ```
 
 ## AI part renderers
@@ -145,7 +143,6 @@ export default function AiPartRenderers() {
     </Paper>
   );
 }
-
 ```
 
 ## Custom part renderers
@@ -229,7 +226,6 @@ export default function CustomPartRenderer() {
     </Paper>
   );
 }
-
 ```
 
 ## Date dividers

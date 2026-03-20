@@ -10,6 +10,7 @@ import type {
 export interface ChatStartMessageChunk {
   type: 'start';
   messageId: string;
+  author?: import('./chat-entities').ChatUser;
 }
 
 export interface ChatFinishMessageChunk {

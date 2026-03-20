@@ -68,7 +68,6 @@ export default function SkeletonLoading() {
     </Stack>
   );
 }
-
 ```
 
 ## What this example demonstrates

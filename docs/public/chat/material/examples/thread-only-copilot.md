@@ -82,7 +82,6 @@ export default function ThreadOnlyCopilot() {
     </Paper>
   );
 }
-
 ```
 
 ## What this example demonstrates

@@ -107,7 +107,6 @@ function ComposerDemoBody() {
           </MessageGroup>
         )}
         style={{ minHeight: 0 }}
-        virtualization={false}
       />
       <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
         <AttachmentPreviewList />
@@ -188,7 +187,6 @@ export default function ComposerWithAttachments() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## What it shows

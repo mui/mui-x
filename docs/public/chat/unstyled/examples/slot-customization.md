@@ -740,7 +740,6 @@ export default function SlotCustomization() {
               </MessageGroup>
             )}
             style={{ minHeight: 0 }}
-            virtualization={false}
           />
           <ConversationInput.Root slots={{ root: BrandComposerRoot }}>
             <ConversationInput.TextArea
@@ -767,7 +766,6 @@ export default function SlotCustomization() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## What it shows

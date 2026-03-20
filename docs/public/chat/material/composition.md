@@ -66,7 +66,6 @@ export default function ModularComposition() {
     </Paper>
   );
 }
-
 ```
 
 ## Thread-only composition
@@ -115,7 +114,6 @@ export default function ThreadOnlyComposition() {
     </Paper>
   );
 }
-
 ```
 
 ## Component relationships

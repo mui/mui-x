@@ -116,7 +116,6 @@ export default function MinimalUnstyledShell() {
               </MessageGroup>
             )}
             style={{ minHeight: 0 }}
-            virtualization={false}
           />
           <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
             <ConversationInput.TextArea
@@ -138,7 +137,6 @@ export default function MinimalUnstyledShell() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## `Chat.Root`

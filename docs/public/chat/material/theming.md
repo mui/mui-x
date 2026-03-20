@@ -127,7 +127,6 @@ export default function ThemeOverrides() {
     </ThemeProvider>
   );
 }
-
 ```
 
 ## Dark mode
@@ -216,7 +215,6 @@ export default function DarkMode() {
     </ThemeProvider>
   );
 }
-
 ```
 
 ## RTL support
@@ -288,7 +286,6 @@ export default function RtlSupport() {
     </ThemeProvider>
   );
 }
-
 ```
 
 ## CSS variables

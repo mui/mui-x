@@ -105,7 +105,6 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
     ownerState?: {
       isAtBottom: boolean;
       messageCount: number;
-      virtualization: boolean;
     };
   },
   ref: React.Ref<HTMLDivElement>,
@@ -116,11 +115,9 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
     getItemKey,
     items,
     onReachTop,
-    overscan,
     renderItem,
     slotProps,
     slots,
-    virtualization,
     ownerState,
     ...other
   } = props;
@@ -128,11 +125,9 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
   void getItemKey;
   void items;
   void onReachTop;
-  void overscan;
   void renderItem;
   void slotProps;
   void slots;
-  void virtualization;
   void ownerState;
 
   return (
@@ -234,7 +229,6 @@ const ChatCompositionHarness = React.forwardRef(function ChatCompositionHarness(
             )}
             slots={{ messageList: RootWithAffordance }}
             style={{ height: 180, overflowY: 'auto' }}
-            virtualization={false}
           />
           {includeBeforeAfterButtons ? <button type="button">After list</button> : null}
           <ConversationInputRoot>

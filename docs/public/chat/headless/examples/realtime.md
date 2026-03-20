@@ -370,7 +370,6 @@ export default function RealtimeHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Key takeaways

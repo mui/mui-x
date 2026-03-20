@@ -148,12 +148,24 @@ export const ChatLayout = React.forwardRef(function ChatLayout(
     ownerState: {
       pane: 'conversations',
     },
+    additionalProps: {
+      style: {
+        minHeight: 0,
+        minWidth: 0,
+      },
+    },
   });
   const threadPaneProps = useSlotProps({
     elementType: ThreadPane,
     externalSlotProps: slotProps?.threadPane,
     ownerState: {
       pane: 'thread',
+    },
+    additionalProps: {
+      style: {
+        minHeight: 0,
+        minWidth: 0,
+      },
     },
   });
 

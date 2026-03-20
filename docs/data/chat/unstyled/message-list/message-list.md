@@ -7,9 +7,7 @@ components: MessageListRoot
 
 # Unstyled message list
 
-<p class="description">Render ordered thread rows with optional virtualization, date boundaries, history loading, scroll anchoring, and unseen-message tracking.</p>
-
-{{"demo": "../examples/virtualized-thread/VirtualizedThread.js"}}
+<p class="description">Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.</p>
 
 ## Primitive set
 
@@ -39,7 +37,6 @@ By default it sources row ids from `useMessageIds()`, but you can also pass a cu
 It supports:
 
 - row rendering through `renderItem({ id, index })`
-- optional virtualization
 - item reordering through the `items` prop
 - `onReachTop`
 - automatic history loading when the list reaches the top edge
@@ -50,24 +47,10 @@ It supports:
 
 Those behaviors make `MessageList.Root` the main place where the unstyled layer turns store-backed thread data into a real scrolling chat log.
 
-## Virtualization and history
+## History loading
 
-Virtualization is useful for long threads, while the non-virtualized mode is useful for simpler layouts and debugging.
 When the list reaches the top, `MessageList.Root` can both fire `onReachTop` and trigger history loading through the runtime.
-
-Use virtualization when:
-
-- the thread can grow large
-- row heights are reasonably predictable
-- the page should avoid rendering every message at once
-
-Use `virtualization={false}` when:
-
-- you want the simplest possible DOM
-- the thread is small
-- the page is primarily a reference or debugging surface
-
-Because the list owns the history-loading trigger, virtualization and top-loading remain coordinated instead of being split across separate helpers.
+Because the list owns the history-loading trigger, top-loading remains coordinated instead of being split across separate helpers.
 
 ## Scroll behavior
 
@@ -108,10 +91,9 @@ That makes it safe to keep in the row pipeline for every message without extra f
 
 - Use `MessageList.Root` as the single source of truth for thread scrolling behavior.
 - Render `MessageList.DateDivider` and `Indicators.UnreadMarker` alongside each row in `renderItem`.
-- Keep grouping and row composition inside the message-list render path so ordering, virtualization, and affordances stay aligned.
+- Keep grouping and row composition inside the message-list render path so ordering and affordances stay aligned.
 
 ## Adjacent pages
 
 - Continue with [Messages](/x/react-chat/unstyled/messages/) for the row-level primitives that usually appear inside `renderItem`.
 - Continue with [Indicators](/x/react-chat/unstyled/indicators/) for unread and scroll affordances powered by the list.
-- Continue with [Virtualized thread](/x/react-chat/unstyled/examples/virtualized-thread/) for the recipe version of this page.

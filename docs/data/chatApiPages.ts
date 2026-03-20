@@ -2,96 +2,12 @@ import type { MuiPage } from 'docs/src/MuiPage';
 
 const chatApiPages: MuiPage[] = [
   {
-    pathname: '/x/api/chat/chat-box',
-    title: 'ChatBox',
-  },
-  {
-    pathname: '/x/api/chat/chat-conversation',
-    title: 'ChatConversation',
-  },
-  {
-    pathname: '/x/api/chat/chat-conversation-input-attach-button',
-    title: 'ChatConversationInputAttachButton',
-  },
-  {
-    pathname: '/x/api/chat/chat-conversation-input-helper-text',
-    title: 'ChatConversationInputHelperText',
-  },
-  {
-    pathname: '/x/api/chat/chat-conversation-input-send-button',
-    title: 'ChatConversationInputSendButton',
-  },
-  {
-    pathname: '/x/api/chat/chat-conversation-input-text-area',
-    title: 'ChatConversationInputTextArea',
-  },
-  {
-    pathname: '/x/api/chat/chat-conversation-input-toolbar',
-    title: 'ChatConversationInputToolbar',
-  },
-  {
-    pathname: '/x/api/chat/chat-conversations',
-    title: 'ChatConversations',
-  },
-  {
-    pathname: '/x/api/chat/chat-conversation-skeleton',
-    title: 'ChatConversationSkeleton',
-  },
-  {
-    pathname: '/x/api/chat/chat-date-divider',
-    title: 'ChatDateDivider',
-  },
-  {
     pathname: '/x/api/chat/chat-layout',
     title: 'ChatLayout',
   },
   {
-    pathname: '/x/api/chat/chat-markdown-text-part',
-    title: 'ChatMarkdownTextPart',
-  },
-  {
-    pathname: '/x/api/chat/chat-message-actions',
-    title: 'ChatMessageActions',
-  },
-  {
-    pathname: '/x/api/chat/chat-message-avatar',
-    title: 'ChatMessageAvatar',
-  },
-  {
-    pathname: '/x/api/chat/chat-message-content',
-    title: 'ChatMessageContent',
-  },
-  {
-    pathname: '/x/api/chat/chat-message-group',
-    title: 'ChatMessageGroup',
-  },
-  {
-    pathname: '/x/api/chat/chat-message-meta',
-    title: 'ChatMessageMeta',
-  },
-  {
-    pathname: '/x/api/chat/chat-message-root',
-    title: 'ChatMessageRoot',
-  },
-  {
-    pathname: '/x/api/chat/chat-message-skeleton',
-    title: 'ChatMessageSkeleton',
-  },
-  {
     pathname: '/x/api/chat/chat-root',
     title: 'ChatRoot',
-  },
-  {
-    pathname: '/x/api/chat/chat-scroll-to-bottom-affordance',
-    title: 'ChatScrollToBottomAffordance',
-  },
-  {
-    pathname: '/x/api/chat/chat-typing-indicator',
-    title: 'ChatTypingIndicator',
-  },
-  {
-    pathname: '/x/api/chat/chat-unread-marker',
-    title: 'ChatUnreadMarker',
   },
   {
     pathname: '/x/api/chat/conversation-header',
@@ -168,6 +84,10 @@ const chatApiPages: MuiPage[] = [
   {
     pathname: '/x/api/chat/message-actions',
     title: 'MessageActions',
+  },
+  {
+    pathname: '/x/api/chat/message-author-label',
+    title: 'MessageAuthorLabel',
   },
   {
     pathname: '/x/api/chat/message-avatar',

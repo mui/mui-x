@@ -426,7 +426,6 @@ export default function RealtimeThreadSyncHeadlessChat() {
     </ChatProvider>
   );
 }
-
 ```
 
 ## Key takeaways

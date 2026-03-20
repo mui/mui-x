@@ -736,7 +736,6 @@ export default function SlotCustomization() {
               </MessageGroup>
             )}
             style={{ minHeight: 0 }}
-            virtualization={false}
           />
           <ConversationInput.Root slots={{ root: BrandComposerRoot }}>
             <ConversationInput.TextArea
@@ -763,7 +762,6 @@ export default function SlotCustomization() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Customization model
@@ -823,7 +821,7 @@ Common examples include:
 
 - conversation item state such as `selected`, `unread`, and `focused`
 - thread state such as `conversationId` and `hasConversation`
-- message-list state such as `isAtBottom`, `messageCount`, and `virtualization`
+- message-list state such as `isAtBottom` and `messageCount`
 - message state such as `role`, `status`, `streaming`, and `isGrouped`
 - composer state such as `hasValue`, `isSubmitting`, `isStreaming`, and `attachmentCount`
 - indicator state such as typing users, unread boundaries, and unseen-message counts
@@ -876,6 +874,13 @@ The important boundary is:
 - headless owns runtime state and contracts
 - unstyled owns structure, semantics, and interaction behavior
 - your app owns visual design
+
+## Real-world examples
+
+These examples show how slot customization can replicate the look and feel of well-known chat products:
+
+- [Intercom-style widget](/x/react-chat/unstyled/examples/intercom-style/) — a compact support widget with branded header, bubble messages, and "Powered by" footer
+- [ChatGPT-style layout](/x/react-chat/unstyled/examples/chatgpt-style/) — a full two-pane layout with dark sidebar, flat messages, and centered composer
 
 ## Adjacent pages
 

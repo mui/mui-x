@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage, useMessageIds, type ChatMessage } from '@mui/x-chat-headless';
+import { useChatVariant } from '../chat/internals/ChatVariantContext';
 import { MessageAvatar } from '../message/MessageAvatar';
 import { MessageContent } from '../message/MessageContent';
 import { MessageMeta } from '../message/MessageMeta';
@@ -130,6 +131,7 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const message = useMessage(messageId);
   const previousMessage = useMessage(previousMessageId ?? '');
   const nextMessage = useMessage(nextMessageId ?? '');
+  const variant = useChatVariant();
   const isFirst = !areMessagesGrouped(previousMessage, message, groupingWindowMs);
   const isLast = !areMessagesGrouped(message, nextMessage, groupingWindowMs);
   const ownerState = React.useMemo<MessageGroupOwnerState>(
@@ -138,8 +140,9 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
       isLast,
       authorRole: message?.role,
       authorId: message?.author?.id,
+      variant,
     }),
-    [isFirst, isLast, message?.author?.id, message?.role],
+    [isFirst, isLast, message?.author?.id, message?.role, variant],
   );
   const Group = slots?.group ?? 'div';
   const AuthorName = slots?.authorName ?? 'div';
@@ -159,9 +162,15 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   });
   const authorLabel = getAuthorLabel(message);
 
+  // In compact mode, the author name is rendered inline inside MessageRoot
+  // via MessageAuthorLabel (a sibling of MessageAvatar), so we skip it here.
+  const showGroupAuthorName = isFirst && authorLabel && variant !== 'compact';
+
   return (
     <Group {...groupProps}>
-      {isFirst && authorLabel ? <AuthorName {...authorNameProps}>{authorLabel}</AuthorName> : null}
+      {showGroupAuthorName ? (
+        <AuthorName {...authorNameProps}>{authorLabel}</AuthorName>
+      ) : null}
       <MessageRoot isGrouped={!isFirst} messageId={messageId}>
         {children ?? (
           <React.Fragment>

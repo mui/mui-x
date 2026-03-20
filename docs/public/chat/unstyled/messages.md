@@ -166,13 +166,11 @@ export default function GroupedMessageTimeline() {
             </MessageGroup>
           )}
           style={{ minHeight: 0 }}
-          virtualization={false}
         />
       </Conversation.Root>
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set

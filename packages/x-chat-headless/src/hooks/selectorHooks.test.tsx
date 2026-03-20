@@ -178,6 +178,10 @@ describe('selector hooks', () => {
       isStreaming: false,
       hasMoreHistory: false,
       error: null,
+      conversationError: null,
+      isLoadingConversations: false,
+      isLoadingMessages: false,
+      isRealtimeConnecting: false,
       typingUserIds: [],
     });
 
@@ -201,6 +205,10 @@ describe('selector hooks', () => {
       isStreaming: false,
       hasMoreHistory: true,
       error: null,
+      conversationError: null,
+      isLoadingConversations: false,
+      isLoadingMessages: false,
+      isRealtimeConnecting: false,
       typingUserIds: [],
     });
 
@@ -216,6 +224,10 @@ describe('selector hooks', () => {
       isStreaming: true,
       hasMoreHistory: true,
       error: streamError,
+      conversationError: null,
+      isLoadingConversations: false,
+      isLoadingMessages: false,
+      isRealtimeConnecting: false,
       typingUserIds: [],
     });
   });

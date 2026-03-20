@@ -8,6 +8,7 @@ export interface ChatLocaleText {
   composerInputAriaLabel: string;
   composerSendButtonLabel: string;
   composerAttachButtonLabel: string;
+  messageCopyButtonLabel: string;
   messageCopyCodeButtonLabel: string;
   messageCopiedCodeButtonLabel: string;
   messageEditedLabel: string;
@@ -39,6 +40,31 @@ function getUserLabel(user: ChatLocaleTypingUser) {
   return user.displayName ?? user.id;
 }
 
+function formatMessageTimestamp(dateTime: string): string {
+  const d = new Date(dateTime);
+  if (Number.isNaN(d.getTime())) {
+    return dateTime;
+  }
+  return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatConversationTimestamp(dateTime: string): string {
+  const d = new Date(dateTime);
+  if (Number.isNaN(d.getTime())) {
+    return dateTime;
+  }
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const messageDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.round((today.getTime() - messageDay.getTime()) / 86400000);
+
+  if (diffDays === 0) {
+    return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  }
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
 const messageStatusLabels: Record<ChatMessageStatus, string> = {
   pending: 'Pending',
   sending: 'Sending',
@@ -63,6 +89,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   composerInputAriaLabel: 'Message',
   composerSendButtonLabel: 'Send message',
   composerAttachButtonLabel: 'Add attachment',
+  messageCopyButtonLabel: 'Copy',
   messageCopyCodeButtonLabel: 'Copy code',
   messageCopiedCodeButtonLabel: 'Copied',
   messageEditedLabel: 'Edited',
@@ -84,8 +111,8 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   loadingLabel: 'Loading...',
   messageStatusLabel: (status) => messageStatusLabels[status],
   toolStateLabel: (state) => toolStateLabels[state],
-  messageTimestampLabel: (dateTime) => dateTime,
-  conversationTimestampLabel: (dateTime) => dateTime,
+  messageTimestampLabel: (dateTime) => formatMessageTimestamp(dateTime),
+  conversationTimestampLabel: (dateTime) => formatConversationTimestamp(dateTime),
   typingIndicatorLabel: (users) => {
     const names = users.map(getUserLabel).join(', ');
 

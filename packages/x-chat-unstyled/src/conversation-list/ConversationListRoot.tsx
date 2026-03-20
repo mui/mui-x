@@ -9,12 +9,24 @@ import {
   type ChatConversation,
 } from '@mui/x-chat-headless';
 import { markChatLayoutPane } from '../chat/internals/chatLayoutPaneKind';
+import {
+  ScrollRoot,
+  ScrollViewport,
+  ScrollScrollbar,
+  ScrollThumb,
+  scrollbarStyle,
+  thumbStyle,
+} from '../internals/ScrollAreaSlots';
 import { mergeReactProps } from '../internals/mergeReactProps';
 import { ConversationListItem, type ConversationListItemProps } from './ConversationListItem';
 import {
   ConversationListItemAvatar,
   type ConversationListItemAvatarProps,
 } from './ConversationListItemAvatar';
+import {
+  ConversationListItemContent,
+  type ConversationListItemContentProps,
+} from './ConversationListItemContent';
 import { ConversationListTitle, type ConversationListTitleProps } from './ConversationListTitle';
 import {
   ConversationListPreview,
@@ -37,8 +49,13 @@ const lastFocusedConversationIdByStore = new WeakMap<object, string>();
 
 export interface ConversationListRootSlots {
   root: React.ElementType;
+  scroller: React.ElementType;
+  viewport: React.ElementType;
+  scrollbar: React.ElementType;
+  scrollbarThumb: React.ElementType;
   item: React.JSXElementConstructor<ConversationListItemProps>;
   itemAvatar: React.JSXElementConstructor<ConversationListItemAvatarProps>;
+  itemContent: React.JSXElementConstructor<ConversationListItemContentProps>;
   title: React.JSXElementConstructor<ConversationListTitleProps>;
   preview: React.JSXElementConstructor<ConversationListPreviewProps>;
   timestamp: React.JSXElementConstructor<ConversationListTimestampProps>;
@@ -47,9 +64,18 @@ export interface ConversationListRootSlots {
 
 export interface ConversationListRootSlotProps {
   root?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  scroller?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  viewport?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  scrollbar?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  scrollbarThumb?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
   item?: SlotComponentProps<typeof ConversationListItem, {}, ConversationListItemOwnerState>;
   itemAvatar?: SlotComponentProps<
     typeof ConversationListItemAvatar,
+    {},
+    ConversationListItemOwnerState
+  >;
+  itemContent?: SlotComponentProps<
+    typeof ConversationListItemContent,
     {},
     ConversationListItemOwnerState
   >;
@@ -109,6 +135,7 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
   };
   const Item = slots?.item ?? ConversationListItem;
   const ItemAvatar = slots?.itemAvatar ?? ConversationListItemAvatar;
+  const ItemContent = slots?.itemContent ?? ConversationListItemContent;
   const Title = slots?.title ?? ConversationListTitle;
   const Preview = slots?.preview ?? ConversationListPreview;
   const Timestamp = slots?.timestamp ?? ConversationListTimestamp;
@@ -145,6 +172,17 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
   const itemAvatarProps = useSlotProps({
     elementType: ItemAvatar,
     externalSlotProps: slotProps?.itemAvatar,
+    ownerState,
+    additionalProps: {
+      conversation,
+      selected,
+      unread,
+      focused,
+    },
+  });
+  const itemContentProps = useSlotProps({
+    elementType: ItemContent,
+    externalSlotProps: slotProps?.itemContent,
     ownerState,
     additionalProps: {
       conversation,
@@ -201,8 +239,10 @@ function ConversationListRenderedItem(props: ConversationListRenderedItemProps) 
   return (
     <Item {...itemProps}>
       <ItemAvatar {...itemAvatarProps} />
-      <Title {...titleProps} />
-      <Preview {...previewProps} />
+      <ItemContent {...itemContentProps}>
+        <Title {...titleProps} />
+        <Preview {...previewProps} />
+      </ItemContent>
       <Timestamp {...timestampProps} />
       <UnreadBadge {...unreadBadgeProps} />
     </Item>
@@ -231,6 +271,22 @@ function getInitialFocusedConversationId(
 
   return conversations[0]?.id;
 }
+
+// ---------------------------------------------------------------------------
+// Functional default styles for the scroll slots.
+// ---------------------------------------------------------------------------
+
+const clScrollRootStyle: React.CSSProperties = {
+  overflow: 'hidden',
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: 0,
+};
+
+const clScrollViewportStyle: React.CSSProperties = {
+  overscrollBehavior: 'contain',
+};
 
 export const ConversationListRoot = markChatLayoutPane(
   React.forwardRef(function ConversationListRoot(
@@ -263,7 +319,44 @@ export const ConversationListRoot = markChatLayoutPane(
       conversationCount: conversations.length,
       activeConversationId,
     };
+    const Scroller = slots?.scroller ?? ScrollRoot;
+    const Viewport = slots?.viewport ?? ScrollViewport;
+    const ListScrollbar = slots?.scrollbar ?? ScrollScrollbar;
+    const ListScrollbarThumb = slots?.scrollbarThumb ?? ScrollThumb;
     const Root = slots?.root ?? 'div';
+    const scrollerProps = useSlotProps({
+      elementType: Scroller,
+      externalSlotProps: slotProps?.scroller,
+      ownerState,
+      additionalProps: {
+        style: clScrollRootStyle,
+      },
+    });
+    const viewportProps = useSlotProps({
+      elementType: Viewport,
+      externalSlotProps: slotProps?.viewport,
+      ownerState,
+      additionalProps: {
+        style: clScrollViewportStyle,
+      },
+    });
+    const scrollbarProps = useSlotProps({
+      elementType: ListScrollbar,
+      externalSlotProps: slotProps?.scrollbar,
+      ownerState,
+      additionalProps: {
+        orientation: 'vertical' as const,
+        style: scrollbarStyle,
+      },
+    });
+    const scrollbarThumbProps = useSlotProps({
+      elementType: ListScrollbarThumb,
+      externalSlotProps: slotProps?.scrollbarThumb,
+      ownerState,
+      additionalProps: {
+        style: thumbStyle,
+      },
+    });
     const rootProps = useSlotProps({
       elementType: Root,
       externalSlotProps: slotProps?.root,
@@ -389,29 +482,36 @@ export const ConversationListRoot = markChatLayoutPane(
     );
 
     return (
-      <Root {...rootProps}>
-        {conversations.map((conversation) => {
-          const unread =
-            (conversation.unreadCount != null && conversation.unreadCount > 0) ||
-            conversation.readState === 'unread';
+      <Scroller {...scrollerProps}>
+        <Viewport {...viewportProps}>
+          <Root {...rootProps}>
+            {conversations.map((conversation) => {
+              const unread =
+                (conversation.unreadCount != null && conversation.unreadCount > 0) ||
+                conversation.readState === 'unread';
 
-          return (
-            <ConversationListRenderedItem
-              conversation={conversation}
-              focused={focusedConversationId === conversation.id}
-              key={conversation.id}
-              onFocus={handleFocusedConversationChange}
-              onKeyDown={handleKeyDown}
-              onSelect={handleSelect}
-              registerItemRef={registerItemRef}
-              selected={activeConversationId === conversation.id}
-              slotProps={slotProps}
-              slots={slots}
-              unread={unread}
-            />
-          );
-        })}
-      </Root>
+              return (
+                <ConversationListRenderedItem
+                  conversation={conversation}
+                  focused={focusedConversationId === conversation.id}
+                  key={conversation.id}
+                  onFocus={handleFocusedConversationChange}
+                  onKeyDown={handleKeyDown}
+                  onSelect={handleSelect}
+                  registerItemRef={registerItemRef}
+                  selected={activeConversationId === conversation.id}
+                  slotProps={slotProps}
+                  slots={slots}
+                  unread={unread}
+                />
+              );
+            })}
+          </Root>
+        </Viewport>
+        <ListScrollbar {...scrollbarProps}>
+          <ListScrollbarThumb {...scrollbarThumbProps} />
+        </ListScrollbar>
+      </Scroller>
     );
   }) as ConversationListRootComponent,
   'conversations',

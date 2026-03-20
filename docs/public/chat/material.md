@@ -100,7 +100,6 @@ export default function ChatBoxOneLiner() {
     </Paper>
   );
 }
-
 ```
 
 ### What it renders
@@ -253,7 +252,6 @@ export default function ChatBoxSlotCustomization() {
     </Paper>
   );
 }
-
 ```
 
 The most common slot entry points are:

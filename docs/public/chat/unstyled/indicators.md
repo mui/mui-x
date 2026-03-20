@@ -242,13 +242,11 @@ export default function IndicatorsInContext() {
             },
           }}
           slots={{ root: DemoMessageListRoot }}
-          virtualization={false}
         />
       </Conversation.Root>
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set

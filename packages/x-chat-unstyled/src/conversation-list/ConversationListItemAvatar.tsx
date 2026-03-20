@@ -7,10 +7,12 @@ import { type ConversationListItemAvatarOwnerState } from './conversationList.ty
 
 export interface ConversationListItemAvatarSlots {
   root: React.ElementType;
+  image: React.ElementType;
 }
 
 export interface ConversationListItemAvatarSlotProps {
   root?: SlotComponentProps<'div', {}, ConversationListItemAvatarOwnerState>;
+  image?: SlotComponentProps<'img', {}, ConversationListItemAvatarOwnerState>;
 }
 
 export interface ConversationListItemAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -61,11 +63,16 @@ export const ConversationListItemAvatar = React.forwardRef(function Conversation
     },
   });
 
-  return (
-    <Root {...rootProps}>
-      {participant?.avatarUrl ? (
-        <img alt={participant.displayName ?? ''} src={participant.avatarUrl} />
-      ) : null}
-    </Root>
-  );
+  const Image = slots?.image ?? 'img';
+  const imageProps = useSlotProps({
+    elementType: Image,
+    externalSlotProps: slotProps?.image,
+    ownerState,
+    additionalProps: {
+      alt: participant?.displayName ?? '',
+      src: participant?.avatarUrl ?? undefined,
+    },
+  });
+
+  return <Root {...rootProps}>{participant?.avatarUrl ? <Image {...imageProps} /> : null}</Root>;
 }) as ConversationListItemAvatarComponent;

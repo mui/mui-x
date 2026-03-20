@@ -11,7 +11,7 @@ A production-ready AI assistant with streaming responses, markdown rendering, re
 This example shows the full Material chat surface configured as an AI coding assistant.
 The adapter streams text with markdown formatting, emits reasoning parts, and simulates a tool call.
 
-```tsx
+````tsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -141,8 +141,7 @@ export default function AiAssistant() {
     </Paper>
   );
 }
-
-```
+````
 
 ## What this example demonstrates
 

@@ -10,6 +10,7 @@ const MessageContext = React.createContext<MessageOwnerState>({
   streaming: false,
   error: false,
   isGrouped: false,
+  variant: 'default',
 });
 
 export function MessageContextProvider(props: {

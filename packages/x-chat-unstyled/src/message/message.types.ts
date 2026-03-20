@@ -1,5 +1,6 @@
 'use client';
 import type { ChatMessage, ChatMessageStatus, ChatRole } from '@mui/x-chat-headless';
+import type { ChatVariant } from '../chat/internals/ChatVariantContext';
 
 export interface MessageOwnerState {
   messageId: string;
@@ -9,11 +10,14 @@ export interface MessageOwnerState {
   streaming: boolean;
   error: boolean;
   isGrouped: boolean;
+  variant: ChatVariant;
 }
 
 export interface MessageRootOwnerState extends MessageOwnerState {}
 
 export interface MessageAvatarOwnerState extends MessageOwnerState {}
+
+export interface MessageAuthorLabelOwnerState extends MessageOwnerState {}
 
 export interface MessageContentOwnerState extends MessageOwnerState {}
 

@@ -26,12 +26,13 @@ export function splitText(text: string, size = 18) {
 export function createTextResponseChunks(
   messageId: string,
   text: string,
-  finishReason = 'stop',
+  options?: { finishReason?: string; author?: ChatUser },
 ): ChatMessageChunk[] {
+  const finishReason = options?.finishReason ?? 'stop';
   const partId = `${messageId}-text`;
 
   return [
-    { type: 'start', messageId },
+    { type: 'start', messageId, ...(options?.author ? { author: options.author } : undefined) },
     { type: 'text-start', id: partId },
     ...splitText(text).map(
       (delta) =>
@@ -186,13 +187,18 @@ export function createEchoAdapter(
 
   return {
     async sendMessage({ attachments, message }) {
-      const responseText = respond(getMessageText(message), {
+      const textOnly = message.parts
+        .map((part) => (part.type === 'text' ? part.text : null))
+        .filter(Boolean)
+        .join('\n');
+      const responseText = respond(textOnly || getMessageText(message), {
         attachments: attachments?.length ?? 0,
       });
 
-      return createChunkStream(createTextResponseChunks(`assistant-${message.id}`, responseText), {
-        delayMs,
-      });
+      return createChunkStream(
+        createTextResponseChunks(`assistant-${message.id}`, responseText, { author: agent }),
+        { delayMs },
+      );
     },
   };
 }

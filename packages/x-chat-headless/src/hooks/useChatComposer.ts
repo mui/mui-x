@@ -149,19 +149,39 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
 
     const messageId = createLocalId();
 
+    // Optimistic clear: release preview URL ownership and clear composer
+    // immediately so the UI feels responsive.  The URLs are still
+    // referenced by the message parts we are about to send, so we must
+    // NOT revoke them — just stop tracking ownership.
+    for (const attachment of nextAttachments) {
+      ownedPreviewUrlsRef.current.delete(attachment.localId);
+    }
+    store.clearComposer();
+
     await actions.sendMessage({
       id: messageId,
       parts,
       attachments: [...nextAttachments],
     });
 
-    if (store.state.messagesById[messageId]?.status === 'sent') {
-      // Release ownership of preview URLs so clearComposer's cleanup effect
-      // does not revoke them — they are now referenced by the stored message.
+    // If the send errored, restore the draft so the user can retry —
+    // but only when the composer is still empty (the user hasn't started
+    // typing a new message while the send was in flight).
+    const messageStatus = store.state.messagesById[messageId]?.status;
+
+    if (
+      messageStatus === 'error' &&
+      store.state.composerValue === '' &&
+      store.state.composerAttachments.length === 0
+    ) {
+      store.setComposerValue(nextValue);
       for (const attachment of nextAttachments) {
-        ownedPreviewUrlsRef.current.delete(attachment.localId);
+        store.addComposerAttachment(attachment);
+        // Re-claim preview URL ownership so cleanup revokes them if needed.
+        if (attachment.previewUrl) {
+          ownedPreviewUrlsRef.current.set(attachment.localId, attachment.previewUrl);
+        }
       }
-      store.clearComposer();
     }
   }, [actions, store]);
 

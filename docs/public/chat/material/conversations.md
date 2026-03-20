@@ -48,7 +48,6 @@ export default function ConversationsBasic() {
     </Paper>
   );
 }
-
 ```
 
 ## Dense mode
@@ -88,7 +87,6 @@ export default function ConversationsDense() {
     </Paper>
   );
 }
-
 ```
 
 ## Loading, empty, and error states
@@ -177,7 +175,6 @@ export default function ConversationsStates() {
     </Box>
   );
 }
-
 ```
 
 ## Slot customization

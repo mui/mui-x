@@ -36,8 +36,8 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@mui/x-chat-headless": "workspace:*",
-    "@mui/x-virtualizer": "workspace:*"
+    "@base-ui/react": "^1.0.0",
+    "@mui/x-chat-headless": "workspace:*"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",

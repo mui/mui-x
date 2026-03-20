@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
+  ConversationInput,
   Message,
   MessageGroup,
   MessageList,
@@ -12,13 +13,8 @@ import {
   groupedTimelineMessages,
 } from 'docsx/data/chat/unstyled/examples/shared/demoData';
 import {
-  DemoMessageAuthor,
-  DemoMessageAvatar,
-  DemoMessageContent,
-  DemoMessageGroup,
-  DemoMessageMeta,
-  DemoMessageRoot,
-  DemoThreadHeader,
+  demoLocaleText,
+  demoSlotProps,
   DemoToolbarButton,
 } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
@@ -42,13 +38,11 @@ export default function GroupedMessageTimeline() {
       ]}
       defaultActiveConversationId="timeline"
       defaultMessages={groupedTimelineMessages}
+      localeText={demoLocaleText}
       slotProps={{
         root: {
           style: {
             background: '#ffffff',
-            border: '1px solid #d7dee7',
-            borderRadius: 24,
-            padding: 16,
             display: 'grid',
             gap: 14,
           },
@@ -59,27 +53,22 @@ export default function GroupedMessageTimeline() {
         slotProps={{
           root: {
             style: {
-              minHeight: 520,
+              height: 520,
               display: 'grid',
-              gridTemplateRows: 'auto minmax(0, 1fr)',
+              gridTemplateRows: 'auto minmax(0, 1fr) auto',
               gap: 14,
             },
           },
         }}
       >
-        <Conversation.Header slots={{ root: DemoThreadHeader }}>
+        <Conversation.Header
+          slotProps={{
+            root: demoSlotProps.conversationHeader,
+          }}
+        >
           <div style={{ minWidth: 0 }}>
-            <Conversation.Title style={{ fontSize: 18, fontWeight: 800 }} />
-            <Conversation.Subtitle
-              style={{
-                color: '#5c6b7c',
-                fontSize: 13,
-                marginTop: 4,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            />
+            <Conversation.Title style={demoSlotProps.conversationTitle} />
+            <Conversation.Subtitle style={demoSlotProps.conversationSubtitle} />
           </div>
           <Conversation.HeaderActions style={{ display: 'flex', gap: 8 }}>
             <DemoToolbarButton
@@ -98,64 +87,136 @@ export default function GroupedMessageTimeline() {
         </Conversation.Header>
         <MessageList.Root
           estimatedItemSize={96}
-          renderItem={({ id, index }) => (
-            <MessageGroup
-              groupingWindowMs={groupingWindowMs}
-              index={index}
-              key={id}
-              messageId={id}
-              slots={{ authorName: DemoMessageAuthor, root: DemoMessageGroup }}
-            >
-              <Message.Root messageId={id} slots={{ root: DemoMessageRoot }}>
-                <Message.Avatar slots={{ root: DemoMessageAvatar }} />
-                <Message.Content slots={{ root: DemoMessageContent }} />
-                <Message.Meta slots={{ root: DemoMessageMeta }} />
-                <Message.Actions
-                  style={{
-                    display: 'flex',
-                    gap: 8,
-                    marginTop: 4,
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
+          renderItem={({ id, index }) => {
+            const isUser =
+              groupedTimelineMessages.find((m) => m.id === id)?.role === 'user';
+
+            return (
+              <MessageGroup
+                groupingWindowMs={groupingWindowMs}
+                index={index}
+                key={id}
+                messageId={id}
+                slotProps={{
+                  root: demoSlotProps.messageGroupRoot,
+                  authorName: demoSlotProps.messageGroupAuthorName,
+                }}
+              >
+                <Message.Root
+                  messageId={id}
+                  slotProps={{
+                    root: demoSlotProps.messageRoot,
                   }}
                 >
-                  <button
-                    type="button"
-                    style={{
-                      borderRadius: 999,
-                      padding: '4px 10px',
-                      fontSize: 11,
-                      fontWeight: 700,
-                      border: '1px solid #b8c7d7',
-                      background: '#ffffff',
-                      color: '#5c6b7c',
-                      cursor: 'pointer',
+                  <Message.Avatar
+                    slotProps={{
+                      avatar: demoSlotProps.messageAvatar,
+                      image: demoSlotProps.messageAvatarImage,
                     }}
-                  >
-                    Reply
-                  </button>
-                  <button
-                    type="button"
-                    style={{
-                      borderRadius: 999,
-                      padding: '4px 10px',
-                      fontSize: 11,
-                      fontWeight: 700,
-                      border: '1px solid #b8c7d7',
-                      background: '#ffffff',
-                      color: '#5c6b7c',
-                      cursor: 'pointer',
+                  />
+                  <Message.Content
+                    slotProps={{
+                      bubble: demoSlotProps.messageBubble,
                     }}
-                  >
-                    Pin
-                  </button>
-                </Message.Actions>
-              </Message.Root>
-            </MessageGroup>
-          )}
-          style={{ minHeight: 0 }}
-          virtualization={false}
+                  />
+                  {isUser ? (
+                    <Message.Meta
+                      slotProps={{
+                        meta: (ownerState: { role: string }) => ({
+                          ...demoSlotProps.messageMeta(ownerState),
+                          style: {
+                            ...demoSlotProps.messageMeta(ownerState).style,
+                            marginBottom: 4,
+                          },
+                        }),
+                      }}
+                    />
+                  ) : (
+                    <Message.Actions
+                      slotProps={{
+                        actions: {
+                          style: {
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            gridColumn: 2,
+                            gridRow: 2,
+                            marginBottom: 4,
+                          },
+                        },
+                      }}
+                    >
+                      <Message.Meta
+                        slotProps={{
+                          meta: {
+                            style: {
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 6,
+                              fontSize: 11,
+                              color: '#666666',
+                            },
+                          },
+                        }}
+                      />
+                      <button
+                        type="button"
+                        style={{
+                          padding: '3px 10px',
+                          fontSize: 11,
+                          fontWeight: 600,
+                          border: '1px solid #bdbdbd',
+                          background: '#ffffff',
+                          color: '#666666',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Reply
+                      </button>
+                      <button
+                        type="button"
+                        style={{
+                          padding: '3px 10px',
+                          fontSize: 11,
+                          fontWeight: 600,
+                          border: '1px solid #bdbdbd',
+                          background: '#ffffff',
+                          color: '#666666',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Pin
+                      </button>
+                    </Message.Actions>
+                  )}
+                </Message.Root>
+              </MessageGroup>
+            );
+          }}
         />
+        <ConversationInput.Root
+          slotProps={{
+            root: demoSlotProps.conversationInputRoot,
+          }}
+        >
+          <ConversationInput.TextArea
+            aria-label="Message"
+            placeholder="Type a message"
+            slotProps={{
+              input: demoSlotProps.conversationInputTextArea,
+            }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ConversationInput.SendButton
+              data-variant="primary"
+              slotProps={{
+                sendButton: demoSlotProps.conversationInputSendButton,
+              }}
+            >
+              Send
+            </ConversationInput.SendButton>
+          </div>
+        </ConversationInput.Root>
       </Conversation.Root>
     </Chat.Root>
   );

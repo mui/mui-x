@@ -91,7 +91,6 @@ export default function RtlChat() {
     </ThemeProvider>
   );
 }
-
 ```
 
 ## What this example demonstrates

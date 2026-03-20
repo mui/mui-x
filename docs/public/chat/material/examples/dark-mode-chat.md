@@ -90,7 +90,6 @@ export default function DarkModeChat() {
     </ThemeProvider>
   );
 }
-
 ```
 
 ## What this example demonstrates

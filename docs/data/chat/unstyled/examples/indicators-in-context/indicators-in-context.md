@@ -55,4 +55,3 @@ This pattern is common in shared support queues, collaborative assistant surface
 ## Next steps
 
 - Continue with [Indicators](/x/react-chat/unstyled/indicators/) for the reference page.
-- Continue with [Virtualized thread](/x/react-chat/unstyled/examples/virtualized-thread/) when the same thread also needs long-list behavior.

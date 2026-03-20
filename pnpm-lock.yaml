@@ -480,6 +480,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.6
+      '@base-ui/react':
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@date-fns/tz':
         specifier: 'catalog:'
         version: 1.4.1
@@ -1208,12 +1211,12 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.6
+      '@base-ui/react':
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/x-chat-headless':
         specifier: workspace:*
         version: link:../x-chat-headless/build
-      '@mui/x-virtualizer':
-        specifier: workspace:*
-        version: link:../x-virtualizer/build
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'

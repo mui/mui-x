@@ -22,3 +22,5 @@ export interface ConversationListPreviewOwnerState extends ConversationListItemO
 export interface ConversationListTimestampOwnerState extends ConversationListItemOwnerState {}
 
 export interface ConversationListUnreadBadgeOwnerState extends ConversationListItemOwnerState {}
+
+export interface ConversationListItemContentOwnerState extends ConversationListItemOwnerState {}

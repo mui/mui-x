@@ -1,5 +1,6 @@
 import { ConversationListItem } from './ConversationListItem';
 import { ConversationListItemAvatar } from './ConversationListItemAvatar';
+import { ConversationListItemContent } from './ConversationListItemContent';
 import { ConversationListPreview } from './ConversationListPreview';
 import { ConversationListRoot } from './ConversationListRoot';
 import { ConversationListTimestamp } from './ConversationListTimestamp';
@@ -9,6 +10,7 @@ import { ConversationListUnreadBadge } from './ConversationListUnreadBadge';
 export { ConversationListRoot } from './ConversationListRoot';
 export { ConversationListItem } from './ConversationListItem';
 export { ConversationListItemAvatar } from './ConversationListItemAvatar';
+export { ConversationListItemContent } from './ConversationListItemContent';
 export { ConversationListTitle } from './ConversationListTitle';
 export { ConversationListPreview } from './ConversationListPreview';
 export { ConversationListTimestamp } from './ConversationListTimestamp';
@@ -29,6 +31,11 @@ export type {
   ConversationListItemAvatarSlotProps,
   ConversationListItemAvatarSlots,
 } from './ConversationListItemAvatar';
+export type {
+  ConversationListItemContentProps,
+  ConversationListItemContentSlotProps,
+  ConversationListItemContentSlots,
+} from './ConversationListItemContent';
 export type {
   ConversationListTitleProps,
   ConversationListTitleSlotProps,
@@ -51,6 +58,7 @@ export type {
 } from './ConversationListUnreadBadge';
 export type {
   ConversationListItemAvatarOwnerState,
+  ConversationListItemContentOwnerState,
   ConversationListItemOwnerState,
   ConversationListPreviewOwnerState,
   ConversationListRootOwnerState,
@@ -63,6 +71,7 @@ export const ConversationList = {
   Root: ConversationListRoot,
   Item: ConversationListItem,
   ItemAvatar: ConversationListItemAvatar,
+  ItemContent: ConversationListItemContent,
   Title: ConversationListTitle,
   Preview: ConversationListPreview,
   Timestamp: ConversationListTimestamp,

@@ -72,6 +72,7 @@ function getOrCreateMessage(
   store: ChatStore<any>,
   messageId: string,
   conversationId: string | undefined,
+  author?: ChatMessage['author'],
 ): ChatMessage {
   const existingMessage = store.state.messagesById[messageId];
 
@@ -98,6 +99,7 @@ function getOrCreateMessage(
     role: 'assistant',
     parts: [],
     status: 'streaming',
+    ...(author ? { author } : undefined),
   };
 
   store.addMessage(nextMessage);
@@ -242,12 +244,14 @@ export async function processStream<Cursor = string>(
     return result;
   };
 
+  let startAuthor: ChatMessage['author'];
+
   const ensureAssistantMessage = () => {
     if (!targetMessageId) {
       throw new Error('Stream processing requires a target assistant message id.');
     }
 
-    const message = getOrCreateMessage(store, targetMessageId, options.conversationId);
+    const message = getOrCreateMessage(store, targetMessageId, options.conversationId, startAuthor);
 
     if (!didStartMessage) {
       didStartMessage = true;
@@ -468,6 +472,7 @@ export async function processStream<Cursor = string>(
     switch (chunk.type) {
       case 'start':
         targetMessageId = chunk.messageId;
+        startAuthor = chunk.author;
         ensureAssistantMessage();
         return;
 

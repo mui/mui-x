@@ -67,7 +67,7 @@ Common examples include:
 
 - conversation item state such as `selected`, `unread`, and `focused`
 - thread state such as `conversationId` and `hasConversation`
-- message-list state such as `isAtBottom`, `messageCount`, and `virtualization`
+- message-list state such as `isAtBottom` and `messageCount`
 - message state such as `role`, `status`, `streaming`, and `isGrouped`
 - composer state such as `hasValue`, `isSubmitting`, `isStreaming`, and `attachmentCount`
 - indicator state such as typing users, unread boundaries, and unseen-message counts

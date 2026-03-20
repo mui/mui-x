@@ -299,7 +299,13 @@ const CustomActions = React.forwardRef(function CustomActions(
 describe('MessageRoot', () => {
   it('renders the default part pipeline for built-in parts and falls back for unknown parts', () => {
     render(
-      <ChatRoot adapter={createAdapter()} defaultMessages={[fullMessage]}>
+      <ChatRoot
+        adapter={createAdapter()}
+        defaultMessages={[fullMessage]}
+        localeText={{
+          messageTimestampLabel: (dateTime) => dateTime,
+        }}
+      >
         <MessageRoot messageId="m1">
           <MessageAvatar data-testid="message-avatar" />
           <MessageContent data-testid="message-content" />

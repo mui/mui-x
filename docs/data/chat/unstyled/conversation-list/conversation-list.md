@@ -2,7 +2,7 @@
 productId: x-chat
 title: Chat - Unstyled conversation list
 packageName: '@mui/x-chat-unstyled'
-components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
+components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListItemContent, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
 ---
 
 # Unstyled conversation list
@@ -18,6 +18,7 @@ The conversation list surface is built from:
 - `ConversationList.Root`
 - `ConversationList.Item`
 - `ConversationList.ItemAvatar`
+- `ConversationList.ItemContent`
 - `ConversationList.Title`
 - `ConversationList.Preview`
 - `ConversationList.Timestamp`
@@ -45,6 +46,7 @@ The root is also the conversation-pane marker recognized by `Chat.Layout`, so it
 Each rendered row is composed from:
 
 - `ItemAvatar` for participant identity
+- `ItemContent` wrapper that groups title and preview
 - `Title` for the conversation name
 - `Preview` for the last message subtitle
 - `Timestamp` for the last-message time
@@ -59,6 +61,7 @@ The default structure is useful for inbox-like sidebars, but the slot model make
   slots={{
     item: MyConversationRow,
     itemAvatar: MyAvatar,
+    itemContent: MyItemContent,
     title: MyTitle,
     preview: MyPreview,
     timestamp: MyTimestamp,

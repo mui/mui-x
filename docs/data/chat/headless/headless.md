@@ -33,7 +33,7 @@ Headless does not own:
 - visual slots or compound components
 - Material UI theming or styling
 
-Those concerns belong to [Unstyled](/x/react-chat/unstyled/) and later to [Material UI](/x/react-chat/material/).
+Those concerns belong to [Unstyled](/x/react-chat/unstyled/).
 
 ## Mental model
 
@@ -145,4 +145,3 @@ Move from the smallest setup to the more specialized runtime patterns:
 
 - Stay on headless when you want runtime primitives and complete control over UI.
 - Move to [Unstyled](/x/react-chat/unstyled/) when you want structure and composition primitives.
-- Move to [Material UI](/x/react-chat/material/) when you want styled components aligned with the MUI design system.

@@ -180,7 +180,6 @@ export default function TwoPaneInbox() {
               </MessageGroup>
             )}
             style={{ minHeight: 0 }}
-            virtualization={false}
           />
           <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
             <ConversationInput.TextArea
@@ -202,7 +201,6 @@ export default function TwoPaneInbox() {
     </Chat.Root>
   );
 }
-
 ```
 
 ## Primitive set

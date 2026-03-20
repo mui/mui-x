@@ -72,7 +72,6 @@ export default function IndicatorsDemo() {
     </Paper>
   );
 }
-
 ```
 
 ## Message skeleton
@@ -122,7 +121,6 @@ export default function SkeletonStates() {
     </Stack>
   );
 }
-
 ```
 
 ## Adjacent pages

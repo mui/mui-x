@@ -8,7 +8,7 @@ packageName: '@mui/x-chat-unstyled'
 
 <p class="description">Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.</p>
 
-`@mui/x-chat-unstyled` sits between the headless runtime and the future Material layer.
+`@mui/x-chat-unstyled` builds on the headless runtime.
 It combines `@mui/x-chat-headless` state with structural components such as lists, threads, messages, composers, and indicators.
 
 ## When to use the unstyled layer
@@ -21,7 +21,6 @@ Use the unstyled layer when you want:
 - full control over visual design and styling
 
 Use the headless layer when you want to own all DOM structure yourself.
-Use the Material layer when you want a styled, MUI-native surface.
 
 ## Package surface
 
@@ -99,7 +98,7 @@ This gives you a complete structural shell while keeping the visual treatment in
 - [Layout](/x/react-chat/unstyled/layout/) for `Chat.Root` and `Chat.Layout`
 - [Conversation list](/x/react-chat/unstyled/conversation-list/) for list semantics, selection, and roving focus
 - [Conversation](/x/react-chat/unstyled/thread/) for active-conversation context and thread header primitives
-- [Message list](/x/react-chat/unstyled/message-list/) for virtualization, history loading, date dividers, and scroll behavior
+- [Message list](/x/react-chat/unstyled/message-list/) for history loading, date dividers, and scroll behavior
 - [Messages](/x/react-chat/unstyled/messages/) for `MessageGroup`, message subparts, and default part renderers
 - [ConversationInput](/x/react-chat/unstyled/composer/) for form submission, autosizing, attachments, and IME-safe input
 - [Indicators](/x/react-chat/unstyled/indicators/) for typing, unread, and scroll affordances
@@ -137,4 +136,3 @@ Use direct imports when a codebase prefers local, explicit symbols or when only 
 ## Package boundary
 
 - Runtime contracts, adapters, store semantics, and headless hooks belong in [Headless](/x/react-chat/headless/).
-- Styled defaults, theming, and high-level product surfaces belong in [Material UI](/x/react-chat/material/).

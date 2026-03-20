@@ -126,7 +126,6 @@ export default function CustomMessageActions() {
     </Paper>
   );
 }
-
 ```
 
 ## What this example demonstrates

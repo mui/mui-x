@@ -41,7 +41,6 @@ export default function CustomerSupportInbox() {
     </Paper>
   );
 }
-
 ```
 
 ## What this example demonstrates

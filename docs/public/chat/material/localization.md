@@ -57,7 +57,6 @@ export default function LocaleTextDemo() {
     </Paper>
   );
 }
-
 ```
 
 ## Available locale keys

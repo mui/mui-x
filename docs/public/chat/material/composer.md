@@ -52,7 +52,6 @@ export default function ComposerBasic() {
     </Paper>
   );
 }
-
 ```
 
 ## Toolbar and helper text
@@ -100,7 +99,6 @@ export default function ComposerWithToolbar() {
     </Paper>
   );
 }
-
 ```
 
 ## Sub-components

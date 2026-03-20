@@ -24,15 +24,15 @@ import {
 import { DemoToolbarButton } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
 const brand = {
-  background: '#fff8ef',
-  surface: '#fffdf8',
-  rail: '#fff3dc',
-  border: '#efcc8f',
-  text: '#3d2500',
-  muted: '#7a5a24',
-  accent: '#b55400',
-  accentSoft: '#fff0d6',
-  user: '#3d2500',
+  background: '#f0f2f5',
+  surface: '#ffffff',
+  rail: '#e8ebed',
+  border: '#d0d4da',
+  text: '#1c1e21',
+  muted: '#65676b',
+  accent: '#333333',
+  accentSoft: '#f0f2f5',
+  user: '#333333',
 } as const;
 
 const BrandConversationItem = React.forwardRef(function BrandConversationItem(
@@ -59,14 +59,6 @@ const BrandConversationItem = React.forwardRef(function BrandConversationItem(
     style,
     ...other
   } = props;
-  let borderColor = 'transparent';
-
-  if (ownerState?.selected) {
-    borderColor = brand.accent;
-  } else if (ownerState?.focused) {
-    borderColor = brand.border;
-  }
-
   return (
     <div
       ref={ref}
@@ -76,11 +68,12 @@ const BrandConversationItem = React.forwardRef(function BrandConversationItem(
         gridTemplateRows: 'auto auto',
         columnGap: 10,
         rowGap: 2,
-        padding: 12,
-        borderRadius: 18,
-        background: ownerState?.selected ? brand.surface : 'transparent',
-        border: `1px solid ${borderColor}`,
-        boxShadow: ownerState?.focused ? '0 0 0 3px rgba(181, 84, 0, 0.12)' : 'none',
+        padding: '10px 12px',
+        background: ownerState?.selected ? brand.accentSoft : 'transparent',
+        borderLeft: ownerState?.selected
+          ? `2px solid ${brand.accent}`
+          : '2px solid transparent',
+        borderBottom: `1px solid ${brand.border}`,
         ...style,
       }}
       {...other}
@@ -115,12 +108,10 @@ const BrandConversationAvatar = React.forwardRef(function BrandConversationAvata
       style={{
         gridColumn: 1,
         gridRow: '1 / 3',
-        width: 44,
-        height: 44,
-        borderRadius: 16,
+        width: 40,
+        height: 40,
         overflow: 'hidden',
-        border: `1px solid ${brand.border}`,
-        background: brand.surface,
+        background: brand.border,
         ...style,
       }}
       {...other}
@@ -129,12 +120,51 @@ const BrandConversationAvatar = React.forwardRef(function BrandConversationAvata
         <img
           alt={participant.displayName ?? ''}
           src={participant.avatarUrl}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            filter: 'grayscale(100%)',
+          }}
         />
       ) : null}
     </div>
   );
 });
+
+const BrandConversationItemContent = React.forwardRef(
+  function BrandConversationItemContent(
+    props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
+      conversation?: unknown;
+      ownerState?: unknown;
+      selected?: boolean;
+      unread?: boolean;
+      focused?: boolean;
+    },
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    const { children, conversation, ownerState, selected, unread, focused, style, ...other } =
+      props;
+    return (
+      <div
+        ref={ref}
+        style={{
+          gridColumn: 2,
+          gridRow: '1 / 3',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          minWidth: 0,
+          gap: 2,
+          ...style,
+        }}
+        {...other}
+      >
+        {children}
+      </div>
+    );
+  },
+);
 
 const BrandConversationTitle = React.forwardRef(function BrandConversationTitle(
   props: React.HTMLAttributes<HTMLDivElement> & {
@@ -153,9 +183,6 @@ const BrandConversationTitle = React.forwardRef(function BrandConversationTitle(
     <div
       ref={ref}
       style={{
-        gridColumn: 2,
-        gridRow: 1,
-        alignSelf: 'end',
         minWidth: 0,
         fontWeight: 800,
         color: brand.text,
@@ -192,9 +219,6 @@ const BrandConversationPreview = React.forwardRef(function BrandConversationPrev
     <div
       ref={ref}
       style={{
-        gridColumn: 2,
-        gridRow: 2,
-        alignSelf: 'start',
         minWidth: 0,
         color: ownerState?.unread ? brand.text : brand.muted,
         fontSize: 12,
@@ -275,11 +299,10 @@ const BrandConversationUnreadBadge = React.forwardRef(
           gridRow: 2,
           alignSelf: 'start',
           justifySelf: 'end',
-          borderRadius: 999,
           background: brand.accent,
           color: '#ffffff',
-          minWidth: 22,
-          padding: '2px 7px',
+          minWidth: 18,
+          padding: '1px 5px',
           textAlign: 'center',
           fontWeight: 800,
           fontSize: 11,
@@ -295,17 +318,22 @@ const BrandConversationUnreadBadge = React.forwardRef(
 
 const BrandMessageAuthor = React.forwardRef(function BrandMessageAuthor(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
+    ownerState?: {
+      role?: 'user' | 'assistant' | 'system';
+    };
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { children, ownerState, style, ...other } = props;
+  const isUser = ownerState?.role === 'user';
 
   return (
     <div
       ref={ref}
       style={{
-        marginLeft: 46,
+        marginLeft: isUser ? 0 : 44,
+        marginRight: isUser ? 44 : 0,
+        textAlign: isUser ? 'right' : 'left',
         color: brand.muted,
         fontSize: 11,
         fontWeight: 800,
@@ -361,10 +389,11 @@ const BrandMessageRoot = React.forwardRef(function BrandMessageRoot(
     <div
       ref={ref}
       style={{
-        display: 'flex',
-        gap: 12,
-        alignItems: 'flex-end',
-        flexDirection: isUser ? 'row-reverse' : 'row',
+        display: 'grid',
+        gridTemplateColumns: isUser ? 'minmax(0, 1fr) 32px' : '32px minmax(0, 1fr)',
+        gridTemplateRows: 'auto auto',
+        gap: '4px 12px',
+        alignItems: 'start',
         ...style,
       }}
       {...other}
@@ -376,22 +405,27 @@ const BrandMessageRoot = React.forwardRef(function BrandMessageRoot(
 
 const BrandMessageAvatar = React.forwardRef(function BrandMessageAvatar(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
+    ownerState?: {
+      role?: 'user' | 'assistant' | 'system';
+    };
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { children, ownerState, style, ...other } = props;
+  const isUser = ownerState?.role === 'user';
 
   return (
     <div
       ref={ref}
       style={{
-        width: 34,
-        height: 34,
-        borderRadius: 14,
+        width: 32,
+        height: 32,
         overflow: 'hidden',
-        border: `1px solid ${brand.border}`,
-        background: brand.surface,
+        background: brand.border,
+        gridColumn: isUser ? 2 : 1,
+        gridRow: '1 / 3',
+        alignSelf: 'start',
+        filter: 'grayscale(100%)',
         ...style,
       }}
       {...other}
@@ -416,13 +450,14 @@ const BrandMessageContent = React.forwardRef(function BrandMessageContent(
     <div
       ref={ref}
       style={{
-        maxWidth: '70%',
-        padding: '12px 14px',
-        borderRadius: 20,
+        padding: '10px 14px',
         background: isUser ? brand.user : brand.surface,
         color: isUser ? '#ffffff' : brand.text,
         border: `1px solid ${isUser ? brand.user : brand.border}`,
-        boxShadow: '0 12px 24px rgba(61, 37, 0, 0.08)',
+        gridColumn: isUser ? 1 : 2,
+        gridRow: 1,
+        justifySelf: isUser ? 'end' : 'start',
+        maxWidth: '90%',
         ...style,
       }}
       {...other}
@@ -435,6 +470,7 @@ const BrandMessageContent = React.forwardRef(function BrandMessageContent(
 const BrandMessageMeta = React.forwardRef(function BrandMessageMeta(
   props: React.HTMLAttributes<HTMLDivElement> & {
     ownerState?: {
+      role?: 'user' | 'assistant' | 'system';
       message?: {
         createdAt?: string;
         status?: string;
@@ -444,9 +480,21 @@ const BrandMessageMeta = React.forwardRef(function BrandMessageMeta(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { ownerState, style, ...other } = props;
+  const isUser = ownerState?.role === 'user';
 
   return (
-    <div ref={ref} style={{ color: brand.muted, fontSize: 11, ...style }} {...other}>
+    <div
+      ref={ref}
+      style={{
+        color: brand.muted,
+        fontSize: 11,
+        gridColumn: isUser ? 1 : 2,
+        gridRow: 2,
+        justifySelf: isUser ? 'end' : 'start',
+        ...style,
+      }}
+      {...other}
+    >
       {formatMessageTime(ownerState?.message?.createdAt)}{' '}
       {ownerState?.message?.status ? `· ${ownerState.message.status}` : ''}
     </div>
@@ -491,17 +539,17 @@ const BrandComposerInput = React.forwardRef(function BrandComposerInput(
       ref={ref}
       style={{
         width: '100%',
-        minHeight: 86,
+        minHeight: 48,
         maxHeight: 180,
         resize: 'none',
-        borderRadius: 18,
-        background: brand.surface,
+        background: brand.rail,
         border: `1px solid ${brand.border}`,
         color: brand.text,
-        padding: '12px 14px',
+        padding: '10px 12px',
         fontFamily: 'inherit',
         fontSize: 14,
         outline: 'none',
+        boxSizing: 'border-box',
         ...style,
       }}
       {...other}
@@ -513,19 +561,23 @@ const BrandComposerButton = React.forwardRef(function BrandComposerButton(
   props: React.ButtonHTMLAttributes<HTMLButtonElement> & { ownerState?: unknown },
   ref: React.Ref<HTMLButtonElement>,
 ) {
-  const { ownerState, style, children, ...other } = props;
+  const { ownerState, style, children, disabled, ...other } = props;
   const isPrimary = other['data-variant'] === 'primary';
 
   return (
     <button
       ref={ref}
+      disabled={disabled}
       style={{
-        borderRadius: 999,
         border: `1px solid ${isPrimary ? brand.accent : brand.border}`,
         background: isPrimary ? brand.accent : brand.surface,
         color: isPrimary ? '#ffffff' : brand.text,
-        padding: '8px 14px',
-        fontWeight: 800,
+        padding: '8px 18px',
+        fontWeight: 600,
+        fontSize: 13,
+        fontFamily: 'inherit',
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.4 : 1,
         ...style,
       }}
       type={other.type === 'submit' ? 'submit' : 'button'}
@@ -578,9 +630,6 @@ export default function SlotCustomization() {
         root: {
           style: {
             background: brand.surface,
-            border: `1px solid ${brand.border}`,
-            borderRadius: 28,
-            padding: 18,
             display: 'grid',
             gap: 16,
             color: brand.text,
@@ -608,14 +657,13 @@ export default function SlotCustomization() {
       <Chat.Layout
         style={{ display: 'grid', gridTemplateColumns: 'auto 1fr' }}
         slotProps={{
-          root: { style: { minHeight: 600 } },
+          root: { style: { height: 600 } },
           conversationsPane: {
             style: {
-              width: 300,
-              padding: 16,
-              borderRadius: 24,
+              width: 280,
+              paddingRight: 16,
+              borderRight: `1px solid ${brand.border}`,
               background: brand.rail,
-              border: `1px solid ${brand.border}`,
             },
           },
           threadPane: {
@@ -635,6 +683,7 @@ export default function SlotCustomization() {
           slots={{
             item: BrandConversationItem,
             itemAvatar: BrandConversationAvatar,
+            itemContent: BrandConversationItemContent,
             preview: BrandConversationPreview,
             timestamp: BrandConversationTimestamp,
             title: BrandConversationTitle,
@@ -679,10 +728,9 @@ export default function SlotCustomization() {
               <button
                 type="button"
                 style={{
-                  borderRadius: 999,
-                  padding: '6px 12px',
+                  padding: '5px 12px',
                   fontSize: 12,
-                  fontWeight: 700,
+                  fontWeight: 600,
                   border: `1px solid ${brand.border}`,
                   background: brand.surface,
                   color: brand.muted,
@@ -694,10 +742,9 @@ export default function SlotCustomization() {
               <button
                 type="button"
                 style={{
-                  borderRadius: 999,
-                  padding: '6px 12px',
+                  padding: '5px 12px',
                   fontSize: 12,
-                  fontWeight: 700,
+                  fontWeight: 600,
                   border: `1px solid ${brand.border}`,
                   background: brand.surface,
                   color: brand.muted,
@@ -718,14 +765,12 @@ export default function SlotCustomization() {
                 slots={{ authorName: BrandMessageAuthor, root: BrandMessageGroup }}
               >
                 <Message.Root messageId={id} slots={{ root: BrandMessageRoot }}>
-                  <Message.Avatar slots={{ root: BrandMessageAvatar }} />
-                  <Message.Content slots={{ root: BrandMessageContent }} />
-                  <Message.Meta slots={{ root: BrandMessageMeta }} />
+                  <Message.Avatar slots={{ avatar: BrandMessageAvatar }} />
+                  <Message.Content slots={{ bubble: BrandMessageContent }} />
+                  <Message.Meta slots={{ meta: BrandMessageMeta }} />
                 </Message.Root>
               </MessageGroup>
             )}
-            style={{ minHeight: 0 }}
-            virtualization={false}
           />
           <ConversationInput.Root slots={{ root: BrandComposerRoot }}>
             <ConversationInput.TextArea

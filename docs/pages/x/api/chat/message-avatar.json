@@ -5,7 +5,10 @@
     "import { MessageAvatar } from '@mui/x-chat-unstyled/message';",
     "import { MessageAvatar } from '@mui/x-chat-unstyled';"
   ],
-  "slots": [{ "name": "avatar", "description": "", "class": null }],
+  "slots": [
+    { "name": "avatar", "description": "", "class": null },
+    { "name": "image", "description": "", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiMessageAvatar",
   "filename": "/packages/x-chat-unstyled/src/message/MessageAvatar.tsx",

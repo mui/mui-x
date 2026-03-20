@@ -1,20 +1,26 @@
 import * as React from 'react';
-import { type MessageListRootProps, Indicators } from '@mui/x-chat-unstyled';
+import { ScrollArea } from '@base-ui/react/scroll-area';
+import { Indicators } from '@mui/x-chat-unstyled';
 import { useChatComposer, useChatStatus } from '@mui/x-chat-headless';
 import { formatBytes, formatConversationTime, formatMessageTime } from './demoUtils';
 
-const palette = {
-  background: '#f4f7fb',
+export const demoLocaleText = {
+  messageTimestampLabel: formatMessageTime,
+  conversationTimestampLabel: formatConversationTime,
+};
+
+export const palette = {
+  background: '#f5f5f5',
   surface: '#ffffff',
-  surfaceAlt: '#f8fbff',
-  border: '#d7dee7',
-  borderStrong: '#b8c7d7',
-  text: '#10263d',
-  muted: '#5c6b7c',
-  accent: '#0b4f8a',
-  accentSoft: '#eef6ff',
-  success: '#0f766e',
-  warm: '#b45309',
+  surfaceAlt: '#fafafa',
+  border: '#e0e0e0',
+  borderStrong: '#bdbdbd',
+  text: '#111111',
+  muted: '#666666',
+  accent: '#111111',
+  accentSoft: '#f5f5f5',
+  success: '#2e7d32',
+  warm: '#c62828',
 } as const;
 
 export function DemoFrame(
@@ -26,8 +32,6 @@ export function DemoFrame(
     <div
       style={{
         background: palette.background,
-        border: `1px solid ${palette.border}`,
-        borderRadius: 20,
         padding: 16,
         ...style,
       }}
@@ -51,12 +55,11 @@ export function DemoToolbarButton(
         border: `1px solid ${tone === 'accent' ? palette.accent : palette.borderStrong}`,
         background: tone === 'accent' ? palette.accent : palette.surface,
         color: tone === 'accent' ? '#ffffff' : palette.text,
-        borderRadius: 999,
-        padding: '8px 12px',
+        padding: '6px 12px',
         fontSize: 12,
-        fontWeight: 700,
+        fontWeight: 600,
         cursor: other.disabled ? 'not-allowed' : 'pointer',
-        opacity: other.disabled ? 0.6 : 1,
+        opacity: other.disabled ? 0.5 : 1,
         ...style,
       }}
       type="button"
@@ -64,871 +67,92 @@ export function DemoToolbarButton(
   );
 }
 
-export const DemoConversationItem = React.forwardRef(function DemoConversationItem(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: {
-      selected?: boolean;
-      unread?: boolean;
-      focused?: boolean;
-    };
-    conversation?: unknown;
-    selected?: boolean;
-    unread?: boolean;
-    focused?: boolean;
-  },
-  ref: React.Ref<HTMLDivElement>,
+export function DemoScrollArea(
+  props: React.PropsWithChildren<{ style?: React.CSSProperties }>,
 ) {
-  const {
-    children,
-    ownerState,
-    conversation,
-    selected,
-    unread,
-    focused,
-    style,
-    ...other
-  } = props;
-  let borderColor = 'transparent';
-
-  if (ownerState?.selected) {
-    borderColor = palette.accent;
-  } else if (ownerState?.focused) {
-    borderColor = palette.borderStrong;
-  }
+  const { children, style } = props;
 
   return (
-    <div
-      ref={ref}
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '40px minmax(0, 1fr) auto',
-        gap: 10,
-        alignItems: 'center',
-        padding: 12,
-        borderRadius: 16,
-        background: ownerState?.selected ? palette.accentSoft : palette.surface,
-        border: `1px solid ${borderColor}`,
-        boxShadow: ownerState?.focused
-          ? '0 0 0 3px rgba(11, 79, 138, 0.12)'
-          : 'none',
-        cursor: 'pointer',
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoConversationItemAvatar = React.forwardRef(
-  function DemoConversationItemAvatar(
-    props: React.HTMLAttributes<HTMLDivElement> & {
-      conversation?: {
-        participants?: Array<{
-          avatarUrl?: string;
-          displayName?: string;
-        }>;
-      };
-      ownerState?: unknown;
-      selected?: boolean;
-      unread?: boolean;
-      focused?: boolean;
-    },
-    ref: React.Ref<HTMLDivElement>,
-  ) {
-    const { conversation, ownerState, selected, unread, focused, style, ...other } =
-      props;
-    const participant = conversation?.participants?.[0];
-
-    return (
-      <div
-        ref={ref}
+    <ScrollArea.Root style={{ ...style, overflow: 'hidden' }}>
+      <ScrollArea.Viewport
         style={{
-          width: 40,
-          height: 40,
-          borderRadius: 14,
-          overflow: 'hidden',
-          background: palette.accentSoft,
-          display: 'grid',
-          placeItems: 'center',
-          ...style,
+          overscrollBehavior: 'contain',
         }}
-        {...other}
       >
-        {participant?.avatarUrl ? (
-          <img
-            alt={participant.displayName ?? ''}
-            src={participant.avatarUrl}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-        ) : null}
-      </div>
-    );
-  },
-);
-
-export const DemoConversationTitle = React.forwardRef(function DemoConversationTitle(
-  props: React.HTMLAttributes<HTMLDivElement> & {
-    conversation?: { title?: string; id?: string };
-    ownerState?: { unread?: boolean };
-    selected?: boolean;
-    unread?: boolean;
-    focused?: boolean;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { conversation, ownerState, selected, unread, focused, style, ...other } =
-    props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        fontWeight: ownerState?.unread ? 800 : 700,
-        color: palette.text,
-        minWidth: 0,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        ...style,
-      }}
-      {...other}
-    >
-      {conversation?.title ?? conversation?.id}
-    </div>
-  );
-});
-
-export const DemoConversationPreview = React.forwardRef(
-  function DemoConversationPreview(
-    props: React.HTMLAttributes<HTMLDivElement> & {
-      conversation?: { subtitle?: string };
-      ownerState?: unknown;
-      selected?: boolean;
-      unread?: boolean;
-      focused?: boolean;
-    },
-    ref: React.Ref<HTMLDivElement>,
-  ) {
-    const { conversation, ownerState, selected, unread, focused, style, ...other } =
-      props;
-
-    if (!conversation?.subtitle) {
-      return null;
-    }
-
-    return (
-      <div
-        ref={ref}
+        <ScrollArea.Content>{children}</ScrollArea.Content>
+      </ScrollArea.Viewport>
+      <ScrollArea.Scrollbar
+        orientation="vertical"
         style={{
-          fontSize: 12,
-          color: palette.muted,
-          minWidth: 0,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          ...style,
-        }}
-        {...other}
-      >
-        {conversation.subtitle}
-      </div>
-    );
-  },
-);
-
-export const DemoConversationTimestamp = React.forwardRef(
-  function DemoConversationTimestamp(
-    props: React.HTMLAttributes<HTMLDivElement> & {
-      conversation?: { lastMessageAt?: string };
-      ownerState?: unknown;
-      selected?: boolean;
-      unread?: boolean;
-      focused?: boolean;
-    },
-    ref: React.Ref<HTMLDivElement>,
-  ) {
-    const { conversation, ownerState, selected, unread, focused, style, ...other } =
-      props;
-
-    if (!conversation?.lastMessageAt) {
-      return null;
-    }
-
-    return (
-      <div
-        ref={ref}
-        style={{ fontSize: 11, color: palette.muted, textAlign: 'end', ...style }}
-        {...other}
-      >
-        <time dateTime={conversation.lastMessageAt}>
-          {formatConversationTime(conversation.lastMessageAt)}
-        </time>
-      </div>
-    );
-  },
-);
-
-export const DemoConversationUnreadBadge = React.forwardRef(
-  function DemoConversationUnreadBadge(
-    props: React.HTMLAttributes<HTMLSpanElement> & {
-      conversation?: { unreadCount?: number };
-      ownerState?: unknown;
-      selected?: boolean;
-      unread?: boolean;
-      focused?: boolean;
-    },
-    ref: React.Ref<HTMLSpanElement>,
-  ) {
-    const { conversation, ownerState, selected, unread, focused, style, ...other } =
-      props;
-    const unreadCount = conversation?.unreadCount ?? 0;
-
-    if (unreadCount <= 0) {
-      return null;
-    }
-
-    return (
-      <span
-        ref={ref}
-        style={{
-          display: 'inline-block',
-          minWidth: 20,
-          padding: '2px 7px',
-          borderRadius: 999,
-          background: palette.accent,
-          color: '#ffffff',
-          fontWeight: 700,
-          fontSize: 11,
-          textAlign: 'center',
-          justifySelf: 'end',
-          ...style,
-        }}
-        {...other}
-      >
-        {unreadCount > 99 ? '99+' : unreadCount}
-      </span>
-    );
-  },
-);
-
-export const DemoThreadHeader = React.forwardRef(function DemoThreadHeader(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 12,
-        justifyContent: 'space-between',
-        paddingBottom: 14,
-        borderBottom: `1px solid ${palette.border}`,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoMessageListRoot = React.forwardRef(function DemoMessageListRoot(
-  props: React.PropsWithChildren<MessageListRootProps> & {
-    ownerState?: {
-      isAtBottom: boolean;
-      messageCount: number;
-      virtualization: boolean;
-    };
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const {
-    children,
-    estimatedItemSize,
-    getItemKey,
-    items,
-    onReachTop,
-    overscan,
-    ownerState,
-    renderItem,
-    slotProps,
-    slots,
-    virtualization,
-    style,
-    ...other
-  } = props;
-  void estimatedItemSize;
-  void getItemKey;
-  void items;
-  void onReachTop;
-  void overscan;
-  void ownerState;
-  void renderItem;
-  void slotProps;
-  void slots;
-  void virtualization;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        position: 'relative',
-        overflowY: 'auto',
-        minHeight: 0,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-      <div
-        style={{
-          position: 'sticky',
-          bottom: 12,
           display: 'flex',
           justifyContent: 'center',
-          pointerEvents: 'none',
-          paddingBottom: 12,
+          width: 8,
+          paddingBlock: 2,
+          boxSizing: 'border-box',
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          right: 0,
         }}
       >
-        <div style={{ pointerEvents: 'auto' }}>
-          <Indicators.ScrollToBottomAffordance
-            slots={{
-              badge: DemoScrollBadge,
-              root: DemoScrollButton,
-            }}
-          />
-        </div>
-      </div>
+        <ScrollArea.Thumb
+          style={{
+            background: palette.borderStrong,
+            borderRadius: 20,
+            flex: 1,
+          }}
+        />
+      </ScrollArea.Scrollbar>
+    </ScrollArea.Root>
+  );
+}
+
+export function DemoScrollToBottomOverlay() {
+  return (
+    <div style={{ pointerEvents: 'auto' }}>
+      <Indicators.ScrollToBottomAffordance
+        slotProps={{
+          root: {
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              border: `1px solid ${palette.borderStrong}`,
+              background: palette.surface,
+              color: palette.text,
+              padding: '6px 12px',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            },
+          },
+          badge: {
+            style: {
+              minWidth: 18,
+              height: 18,
+              display: 'inline-grid',
+              placeItems: 'center',
+              background: palette.accent,
+              color: '#ffffff',
+              fontSize: 11,
+              fontWeight: 700,
+            },
+          },
+        }}
+      />
     </div>
   );
-});
+}
 
-export const DemoDateDividerRoot = React.forwardRef(function DemoDateDividerRoot(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        margin: '14px 0',
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoDateDividerLabel = React.forwardRef(function DemoDateDividerLabel(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        borderRadius: 999,
-        background: '#edf2f8',
-        color: palette.muted,
-        padding: '4px 10px',
-        fontSize: 11,
-        fontWeight: 700,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoUnreadMarkerRoot = React.forwardRef(function DemoUnreadMarkerRoot(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        margin: '10px 0',
-        ...style,
-      }}
-      {...other}
-    >
-      <div style={{ height: 1, flex: 1, background: palette.borderStrong }} />
-      {children}
-      <div style={{ height: 1, flex: 1, background: palette.borderStrong }} />
-    </div>
-  );
-});
-
-export const DemoUnreadMarkerLabel = React.forwardRef(function DemoUnreadMarkerLabel(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        borderRadius: 999,
-        background: '#fff3e6',
-        color: palette.warm,
-        padding: '4px 10px',
-        fontSize: 11,
-        fontWeight: 800,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoMessageGroup = React.forwardRef(function DemoMessageGroup(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: {
-      isFirst?: boolean;
-      isLast?: boolean;
-    };
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        display: 'grid',
-        gap: 4,
-        marginTop: ownerState?.isFirst ? 16 : 4,
-        marginBottom: ownerState?.isLast ? 4 : 0,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoMessageAuthor = React.forwardRef(function DemoMessageAuthor(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        color: palette.muted,
-        fontSize: 11,
-        fontWeight: 800,
-        letterSpacing: '0.04em',
-        textTransform: 'uppercase',
-        marginLeft: 42,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoMessageRoot = React.forwardRef(function DemoMessageRoot(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: {
-      role?: 'user' | 'assistant' | 'system';
-      error?: boolean;
-    };
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-  const isUser = ownerState?.role === 'user';
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        display: 'flex',
-        gap: 10,
-        alignItems: 'flex-end',
-        flexDirection: isUser ? 'row-reverse' : 'row',
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoMessageAvatar = React.forwardRef(function DemoMessageAvatar(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        width: 32,
-        height: 32,
-        borderRadius: 12,
-        overflow: 'hidden',
-        background: palette.accentSoft,
-        flexShrink: 0,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoMessageContent = React.forwardRef(function DemoMessageContent(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: {
-      role?: 'user' | 'assistant' | 'system';
-      streaming?: boolean;
-    };
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-  const isUser = ownerState?.role === 'user';
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        maxWidth: '72%',
-        display: 'grid',
-        gap: 8,
-        padding: '12px 14px',
-        borderRadius: 18,
-        border: `1px solid ${isUser ? palette.accent : palette.border}`,
-        background: isUser ? palette.accent : palette.surface,
-        color: isUser ? '#ffffff' : palette.text,
-        boxShadow: ownerState?.streaming
-          ? '0 0 0 2px rgba(11, 79, 138, 0.08)'
-          : 'none',
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoMessageMeta = React.forwardRef(function DemoMessageMeta(
-  props: React.HTMLAttributes<HTMLDivElement> & {
-    ownerState?: {
-      role?: 'user' | 'assistant' | 'system';
-      message?: {
-        createdAt?: string;
-        status?: string;
-      };
-    };
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        fontSize: 11,
-        color: palette.muted,
-        ...style,
-      }}
-      {...other}
-    >
-      <span>{formatMessageTime(ownerState?.message?.createdAt)}</span>
-      {ownerState?.message?.status ? <span>{ownerState.message.status}</span> : null}
-    </div>
-  );
-});
-
-export const DemoComposerRoot = React.forwardRef(function DemoComposerRoot(
-  props: React.PropsWithChildren<React.FormHTMLAttributes<HTMLFormElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLFormElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <form
-      ref={ref}
-      style={{
-        display: 'grid',
-        gap: 10,
-        paddingTop: 14,
-        borderTop: `1px solid ${palette.border}`,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </form>
-  );
-});
-
-export const DemoComposerToolbar = React.forwardRef(function DemoComposerToolbar(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        justifyContent: 'space-between',
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoComposerInput = React.forwardRef(function DemoComposerInput(
-  props: React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-    ownerState?: {
-      hasValue?: boolean;
-      isStreaming?: boolean;
-    };
-  },
-  ref: React.Ref<HTMLTextAreaElement>,
-) {
-  const { ownerState, style, ...other } = props;
-
-  return (
-    <textarea
-      ref={ref}
-      style={{
-        width: '100%',
-        minHeight: 84,
-        maxHeight: 180,
-        resize: 'none',
-        borderRadius: 16,
-        border: `1px solid ${ownerState?.isStreaming ? palette.accent : palette.border}`,
-        background: palette.surface,
-        color: palette.text,
-        padding: '12px 14px',
-        fontFamily: 'inherit',
-        fontSize: 14,
-        lineHeight: 1.5,
-        outline: 'none',
-        ...style,
-      }}
-      {...other}
-    />
-  );
-});
-
-export const DemoComposerButton = React.forwardRef(function DemoComposerButton(
-  props: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    ownerState?: {
-      hasValue?: boolean;
-      isStreaming?: boolean;
-    };
-  },
-  ref: React.Ref<HTMLButtonElement>,
-) {
-  const { ownerState, style, children, disabled, ...other } = props;
-  const isPrimary = other['data-variant'] === 'primary';
-
-  return (
-    <button
-      ref={ref}
-      disabled={disabled}
-      style={{
-        borderRadius: 999,
-        border: `1px solid ${isPrimary ? palette.accent : palette.borderStrong}`,
-        background: isPrimary ? palette.accent : palette.surface,
-        color: isPrimary ? '#ffffff' : palette.text,
-        padding: '8px 14px',
-        fontSize: 13,
-        fontWeight: 800,
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        opacity: disabled ? 0.6 : 1,
-        ...style,
-      }}
-      type={other.type === 'submit' ? 'submit' : 'button'}
-      {...other}
-    >
-      {children}
-    </button>
-  );
-});
-
-export const DemoComposerHelperText = React.forwardRef(
-  function DemoComposerHelperText(
-    props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-      ownerState?: unknown;
+export const demoMessageListSlotProps = {
+  messageListOverlay: {
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      paddingBottom: 12,
     },
-    ref: React.Ref<HTMLDivElement>,
-  ) {
-    const { children, ownerState, style, ...other } = props;
-
-    return (
-      <div
-        ref={ref}
-        style={{
-          color: palette.muted,
-          fontSize: 12,
-          ...style,
-        }}
-        {...other}
-      >
-        {children}
-      </div>
-    );
   },
-);
-
-export const DemoTypingIndicator = React.forwardRef(function DemoTypingIndicator(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        borderRadius: 999,
-        background: palette.surfaceAlt,
-        color: palette.success,
-        padding: '6px 10px',
-        fontSize: 12,
-        fontWeight: 700,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-});
-
-export const DemoScrollButton = React.forwardRef(function DemoScrollButton(
-  props: React.PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLButtonElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <button
-      ref={ref}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        borderRadius: 999,
-        border: `1px solid ${palette.borderStrong}`,
-        background: palette.surface,
-        color: palette.text,
-        padding: '8px 12px',
-        boxShadow: '0 8px 24px rgba(16, 38, 61, 0.12)',
-        ...style,
-      }}
-      type="button"
-      {...other}
-    >
-      {children}
-    </button>
-  );
-});
-
-export const DemoScrollBadge = React.forwardRef(function DemoScrollBadge(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLSpanElement>> & {
-    ownerState?: unknown;
-  },
-  ref: React.Ref<HTMLSpanElement>,
-) {
-  const { children, ownerState, style, ...other } = props;
-
-  return (
-    <span
-      ref={ref}
-      style={{
-        minWidth: 20,
-        height: 20,
-        borderRadius: 999,
-        display: 'inline-grid',
-        placeItems: 'center',
-        background: palette.accent,
-        color: '#ffffff',
-        fontSize: 11,
-        fontWeight: 800,
-        ...style,
-      }}
-      {...other}
-    >
-      {children}
-    </span>
-  );
-});
+} satisfies Record<string, { style: React.CSSProperties }>;
 
 export function AttachmentPreviewList() {
   const composer = useChatComposer();
@@ -944,8 +168,7 @@ export function AttachmentPreviewList() {
         display: 'grid',
         gap: 8,
         padding: 12,
-        borderRadius: 16,
-        background: '#f8fafc',
+        background: palette.surfaceAlt,
         border: `1px solid ${palette.border}`,
       }}
     >
@@ -967,9 +190,8 @@ export function AttachmentPreviewList() {
                 alt={attachment.file.name}
                 src={attachment.previewUrl}
                 style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
+                  width: 40,
+                  height: 40,
                   objectFit: 'cover',
                   background: palette.surface,
                 }}
@@ -977,16 +199,15 @@ export function AttachmentPreviewList() {
             ) : (
               <div
                 style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
+                  width: 40,
+                  height: 40,
                   background: palette.surface,
                   border: `1px solid ${palette.border}`,
                   display: 'grid',
                   placeItems: 'center',
                   color: palette.muted,
                   fontSize: 11,
-                  fontWeight: 700,
+                  fontWeight: 600,
                 }}
               >
                 FILE
@@ -996,7 +217,7 @@ export function AttachmentPreviewList() {
               <div
                 style={{
                   fontSize: 13,
-                  fontWeight: 700,
+                  fontWeight: 600,
                   color: palette.text,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -1016,7 +237,7 @@ export function AttachmentPreviewList() {
               border: 'none',
               background: 'transparent',
               color: status.isStreaming ? palette.borderStrong : palette.warm,
-              fontWeight: 700,
+              fontWeight: 600,
               cursor: status.isStreaming ? 'not-allowed' : 'pointer',
             }}
             type="button"
@@ -1029,28 +250,296 @@ export function AttachmentPreviewList() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Shared slot props — identical across all unstyled demos
+// ---------------------------------------------------------------------------
+
+export const demoSlotProps = {
+  messageRoot: (ownerState: { role: string }) => ({
+    style: {
+      display: 'grid',
+      gridTemplateColumns:
+        ownerState.role === 'user' ? 'minmax(0, 1fr) 32px' : '32px minmax(0, 1fr)',
+      gridTemplateRows: 'auto auto',
+      gap: '4px 10px',
+      alignItems: 'start',
+    },
+  }),
+  messageAvatar: (ownerState: { role: string }) => ({
+    style: {
+      width: 32,
+      height: 32,
+      background: palette.accent,
+      flexShrink: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gridColumn: ownerState.role === 'user' ? 2 : 1,
+      gridRow: '1 / 3',
+      alignSelf: 'start',
+    },
+  }),
+  messageAvatarImage: {
+    style: { width: 20, height: 20, filter: 'grayscale(1) invert(1)' },
+  },
+  messageContent: {
+    style: { display: 'contents' },
+  },
+  messageBubble: (ownerState: { role: string }) => ({
+    style: {
+      display: 'grid',
+      gap: 8,
+      padding: '10px 14px',
+      border: `1px solid ${ownerState.role === 'user' ? palette.accent : palette.border}`,
+      background: ownerState.role === 'user' ? palette.accent : palette.surface,
+      color: ownerState.role === 'user' ? '#ffffff' : palette.text,
+      gridColumn: ownerState.role === 'user' ? 1 : 2,
+      gridRow: 1,
+      justifySelf: ownerState.role === 'user' ? 'end' : 'start',
+      width: 'fit-content',
+      maxWidth: '90%',
+    },
+  }),
+  messageMeta: (ownerState: { role: string }) => ({
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      fontSize: 11,
+      color: palette.muted,
+      gridColumn: ownerState.role === 'user' ? 1 : 2,
+      gridRow: 2,
+      justifySelf: ownerState.role === 'user' ? 'end' : 'start',
+    },
+  }),
+  messageGroupRoot: (ownerState: { isFirst: boolean; isLast: boolean }) => ({
+    style: {
+      display: 'grid',
+      gap: 4,
+      marginTop: ownerState.isFirst ? 16 : 4,
+      marginBottom: ownerState.isLast ? 4 : 0,
+    },
+  }),
+  messageGroupAuthorName: (ownerState: { authorRole: string }) => ({
+    style: {
+      color: palette.muted,
+      fontSize: 11,
+      fontWeight: 700,
+      letterSpacing: '0.04em',
+      textTransform: 'uppercase' as const,
+      marginLeft: ownerState.authorRole === 'user' ? 0 : 42,
+      textAlign: (ownerState.authorRole === 'user' ? 'right' : 'left') as
+        | 'right'
+        | 'left',
+      marginRight: ownerState.authorRole === 'user' ? 42 : 0,
+    },
+  }),
+  conversationHeader: {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      justifyContent: 'space-between',
+      paddingBottom: 12,
+      borderBottom: `1px solid ${palette.border}`,
+    },
+  },
+  conversationTitle: {
+    fontSize: 18,
+    fontWeight: 800,
+  } satisfies React.CSSProperties,
+  conversationSubtitle: {
+    color: palette.muted,
+    fontSize: 13,
+    marginTop: 4,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  } satisfies React.CSSProperties,
+  conversationInputRoot: {
+    style: {
+      display: 'grid',
+      gap: 10,
+      paddingTop: 12,
+      borderTop: `1px solid ${palette.border}`,
+    },
+  },
+  conversationInputTextArea: {
+    style: {
+      width: '100%',
+      minHeight: 48,
+      maxHeight: 180,
+      resize: 'none',
+      border: `1px solid ${palette.border}`,
+      background: palette.surfaceAlt,
+      color: palette.text,
+      padding: '10px 12px',
+      fontFamily: 'inherit',
+      fontSize: 14,
+      lineHeight: 1.5,
+      outline: 'none',
+      boxSizing: 'border-box',
+    },
+  },
+  conversationInputSendButton: (ownerState: { disabled: boolean }) => ({
+    style: {
+      border: `1px solid ${palette.accent}`,
+      background: palette.accent,
+      color: '#ffffff',
+      padding: '8px 20px',
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: ownerState.disabled ? 'not-allowed' : 'pointer',
+      opacity: ownerState.disabled ? 0.4 : 1,
+      fontFamily: 'inherit',
+    },
+  }),
+  conversationListItem: (ownerState: { selected: boolean }) => ({
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '36px minmax(0, 1fr) auto',
+      gridTemplateRows: 'auto auto',
+      gap: '2px 10px',
+      alignItems: 'center',
+      padding: '10px 12px',
+      background: ownerState.selected ? palette.accentSoft : palette.surface,
+      borderLeft: ownerState.selected
+        ? `2px solid ${palette.accent}`
+        : '2px solid transparent',
+      borderBottom: `1px solid ${palette.border}`,
+      cursor: 'pointer',
+    },
+  }),
+  conversationListItemAvatar: {
+    style: {
+      width: 36,
+      height: 36,
+      background: palette.accent,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+      alignSelf: 'center',
+    },
+    slotProps: {
+      image: {
+        style: { width: 22, height: 22, filter: 'grayscale(1) invert(1)' },
+      },
+    },
+  },
+  conversationListItemContent: {
+    style: {
+      gridColumn: 2,
+      gridRow: '1 / 3',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      justifyContent: 'center',
+      minWidth: 0,
+      gap: 2,
+    },
+  },
+  conversationListTitle: (ownerState: { unread: boolean }) => ({
+    style: {
+      fontWeight: ownerState.unread ? 700 : 500,
+      color: palette.text,
+      minWidth: 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      fontSize: 14,
+    },
+  }),
+  conversationListPreview: {
+    style: {
+      fontSize: 12,
+      color: palette.muted,
+      minWidth: 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+  },
+  conversationListTimestamp: {
+    style: {
+      fontSize: 11,
+      color: palette.muted,
+      textAlign: 'end' as const,
+      gridColumn: 3,
+      gridRow: 1,
+      alignSelf: 'end',
+    },
+  },
+  conversationListUnreadBadge: {
+    style: {
+      display: 'inline-block',
+      minWidth: 18,
+      padding: '1px 5px',
+      background: palette.accent,
+      color: '#ffffff',
+      fontWeight: 600,
+      fontSize: 11,
+      textAlign: 'center' as const,
+      gridColumn: 3,
+      gridRow: 2,
+      justifySelf: 'end',
+      alignSelf: 'start',
+    },
+  },
+  dateDividerRoot: {
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      margin: '14px 0',
+    },
+  },
+  dateDividerLabel: {
+    style: {
+      background: palette.accentSoft,
+      color: palette.muted,
+      padding: '3px 10px',
+      fontSize: 11,
+      fontWeight: 600,
+    },
+  },
+  unreadMarkerRoot: {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      margin: '10px 0',
+    },
+  },
+  unreadMarkerLabel: {
+    style: {
+      background: '#fce4ec',
+      color: palette.warm,
+      padding: '3px 10px',
+      fontSize: 11,
+      fontWeight: 700,
+    },
+  },
+};
+
 export const demoSurfaceStyles = {
   chatRoot: {
     display: 'grid',
-    gap: 16,
+    gap: 0,
+    margin: '-12px',
     background: palette.surface,
-    border: `1px solid ${palette.border}`,
-    borderRadius: 24,
-    padding: 16,
     color: palette.text,
   } satisfies React.CSSProperties,
   layout: {
-    minHeight: 560,
+    height: 560,
+    overflow: 'hidden',
   } satisfies React.CSSProperties,
   conversationsPane: {
-    width: 300,
+    width: 280,
     paddingRight: 16,
     borderRight: `1px solid ${palette.border}`,
     display: 'grid',
     gap: 12,
   } satisfies React.CSSProperties,
   threadPane: {
-    minWidth: 0,
     paddingLeft: 16,
     display: 'grid',
     gridTemplateRows: 'minmax(0, 1fr)',
@@ -1058,8 +547,11 @@ export const demoSurfaceStyles = {
   } satisfies React.CSSProperties,
   conversationList: {
     display: 'grid',
-    gap: 10,
+    gap: 0,
     alignContent: 'start',
+    minHeight: 0,
+    overflow: 'auto',
+    overscrollBehavior: 'contain',
   } satisfies React.CSSProperties,
   threadRoot: {
     minWidth: 0,

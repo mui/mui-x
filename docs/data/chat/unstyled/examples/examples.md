@@ -39,7 +39,6 @@ These recipes map well to common product surfaces such as:
 
 - [Minimal unstyled shell](/x/react-chat/unstyled/examples/minimal-shell/) for the smallest complete chat surface
 - [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/) for the default split-pane application layout
-- [Virtualized thread](/x/react-chat/unstyled/examples/virtualized-thread/) for long conversation threads with date dividers and top-loading history
 
 ## Message and thread patterns
 
@@ -57,7 +56,6 @@ These recipes map well to common product surfaces such as:
 1. Start with [Minimal unstyled shell](/x/react-chat/unstyled/examples/minimal-shell/) to learn the canonical component stack.
 2. Move to [Two-pane inbox](/x/react-chat/unstyled/examples/two-pane-inbox/) to understand the most common application layout.
 3. Choose a specialization:
-   - [Virtualized thread](/x/react-chat/unstyled/examples/virtualized-thread/) for long threads
    - [Grouped message timeline](/x/react-chat/unstyled/examples/grouped-message-timeline/) for message presentation
    - [Composer with attachments](/x/react-chat/unstyled/examples/composer-with-attachments/) for draft interactions
    - [Indicators in context](/x/react-chat/unstyled/examples/indicators-in-context/) for unread and typing affordances

@@ -384,6 +384,42 @@ describe('useChatComposer', () => {
     });
   });
 
+  it('clears composer optimistically before send completes', async () => {
+    const objectUrls = mockObjectUrlApis();
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createPendingStream()),
+      stop: vi.fn(),
+    });
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        defaultActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setValue('Hello there');
+        result.current.addAttachment(new File(['img'], 'photo.png', { type: 'image/png' }));
+      });
+
+      expect(result.current.value).toBe('Hello there');
+      expect(result.current.attachments).toHaveLength(1);
+
+      act(() => {
+        void result.current.submit();
+      });
+
+      // Composer should be cleared immediately, even though the send is still in flight.
+      await waitFor(() => {
+        expect(result.current.isSubmitting).toBe(true);
+        expect(result.current.value).toBe('');
+        expect(result.current.attachments).toEqual([]);
+      });
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
   it('revokes owned preview URLs on unmount', () => {
     const objectUrls = mockObjectUrlApis();
 

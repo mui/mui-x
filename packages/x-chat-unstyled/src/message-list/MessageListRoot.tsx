@@ -1,21 +1,20 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import useLazyRef from '@mui/utils/useLazyRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChat, useMessageIds, type ChatMessage } from '@mui/x-chat-headless';
-import { LayoutList, useVirtualizer } from '@mui/x-virtualizer';
+import {
+  ScrollRoot,
+  ScrollViewport,
+  ScrollScrollbar,
+  ScrollThumb,
+  scrollbarStyle,
+  thumbStyle,
+} from '../internals/ScrollAreaSlots';
 import { MessageListContextProvider } from './internals/MessageListContext';
 import { type MessageListRootOwnerState } from './messageList.types';
 
 const DEFAULT_ESTIMATED_ITEM_SIZE = 84;
-const DEFAULT_OVERSCAN = 5;
-
-type MessageListRowModel = {
-  id: string;
-  index: number;
-};
 
 type ScrollAnchor = {
   id: string;
@@ -33,6 +32,8 @@ export interface MessageListRootSlots {
   messageListScroller: React.ElementType;
   messageListContent: React.ElementType;
   messageListOverlay: React.ElementType;
+  messageListScrollbar: React.ElementType;
+  messageListScrollbarThumb: React.ElementType;
 }
 
 export interface MessageListRootSlotProps {
@@ -40,6 +41,8 @@ export interface MessageListRootSlotProps {
   messageListScroller?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
   messageListContent?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
   messageListOverlay?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListScrollbar?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListScrollbarThumb?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
 
 export interface MessageListRootProps extends Omit<
@@ -51,9 +54,7 @@ export interface MessageListRootProps extends Omit<
   renderItem(params: { id: string; index: number }): React.ReactNode;
   getItemKey?: (id: string, index: number) => React.Key;
   estimatedItemSize?: number;
-  overscan?: number;
   onReachTop?: () => void;
-  virtualization?: boolean;
   slots?: Partial<MessageListRootSlots>;
   slotProps?: MessageListRootSlotProps;
 }
@@ -75,11 +76,9 @@ interface MessageListViewProps {
     | 'getItemKey'
     | 'items'
     | 'onReachTop'
-    | 'overscan'
     | 'renderItem'
     | 'slotProps'
     | 'slots'
-    | 'virtualization'
   >;
   behavior: ReturnType<typeof useMessageListBehavior>;
 }
@@ -134,24 +133,12 @@ function isScrollableToBottom(root: HTMLElement | null, threshold: number) {
   return root.scrollHeight - root.clientHeight - root.scrollTop <= threshold;
 }
 
-function createRows(ids: string[]) {
-  return ids.map((id, index) => ({
-    id,
-    model: {
-      id,
-      index,
-    },
-  }));
-}
-
 interface MessageListRenderedRowProps {
   id: string;
   index: number;
   renderItem: MessageListRootProps['renderItem'];
   registerRowElement(id: string, element: HTMLDivElement | null): void;
   onRowResize(): void;
-  observeRowHeight?: (element: HTMLDivElement, rowId: string) => (() => void) | void;
-  setLastMeasuredRowIndex?: (index: number) => void;
 }
 
 function MessageListRenderedRow(props: MessageListRenderedRowProps) {
@@ -161,8 +148,6 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
     renderItem,
     registerRowElement,
     onRowResize,
-    observeRowHeight,
-    setLastMeasuredRowIndex,
   } = props;
   const rowRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -173,16 +158,6 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
       registerRowElement(id, null);
     };
   }, [id, registerRowElement]);
-
-  React.useLayoutEffect(() => {
-    if (!rowRef.current || !observeRowHeight) {
-      return undefined;
-    }
-
-    setLastMeasuredRowIndex?.(index);
-
-    return observeRowHeight(rowRef.current, id);
-  }, [id, index, observeRowHeight, setLastMeasuredRowIndex]);
 
   React.useEffect(() => {
     if (!rowRef.current || typeof ResizeObserver === 'undefined') {
@@ -216,7 +191,6 @@ function useMessageListBehavior(parameters: {
   itemIds: string[];
   estimatedItemSize: number;
   onReachTop?: () => void;
-  virtualizationEnabled: boolean;
   messages: ChatMessage[];
   hasMoreHistory: boolean;
   loadMoreHistory(): Promise<void>;
@@ -225,7 +199,6 @@ function useMessageListBehavior(parameters: {
     itemIds,
     estimatedItemSize,
     onReachTop,
-    virtualizationEnabled,
     messages,
     hasMoreHistory,
     loadMoreHistory,
@@ -484,7 +457,6 @@ function useMessageListBehavior(parameters: {
     handleScroll,
     ownerState: {
       messageCount: itemIds.length,
-      virtualization: virtualizationEnabled,
       isAtBottom,
     } satisfies MessageListRootOwnerState,
     registerRowElement,
@@ -494,16 +466,67 @@ function useMessageListBehavior(parameters: {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Functional default styles for the scroll slots.
+// These are applied via `additionalProps` so consumers can override them
+// through `slotProps` or direct `style` props (which take higher priority
+// in the `mergeSlotProps` merge order).
+// ---------------------------------------------------------------------------
+
+const scrollRootStyle: React.CSSProperties = {
+  overflow: 'hidden',
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: 0,
+};
+
+const scrollViewportStyle: React.CSSProperties = {
+  overscrollBehavior: 'contain',
+  paddingRight: 8,
+};
+
+const overlayStyle: React.CSSProperties = {
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  pointerEvents: 'none',
+};
+
+// Fallback styles used when the outer `messageList` slot is overridden
+// (which removes the ScrollArea context).
+const fallbackRootStyle: React.CSSProperties = {
+  position: 'relative',
+  minHeight: 0,
+};
+
+const fallbackScrollerStyle: React.CSSProperties = {
+  overflowY: 'auto',
+  overscrollBehavior: 'contain',
+};
+
 function StaticMessageListView(props: MessageListViewProps) {
   const { itemIds, overlay, renderItem, getItemKey, slots, slotProps, other, behavior } = props;
-  const MessageList = slots?.messageList ?? 'div';
-  const MessageListScroller = slots?.messageListScroller ?? 'div';
+  // When the outer messageList slot is overridden, the ScrollArea context is
+  // absent, so the scroller / scrollbar must fall back to plain elements.
+  const hasScrollArea = slots?.messageList == null;
+  const MessageList = slots?.messageList ?? ScrollRoot;
+  const MessageListScroller =
+    slots?.messageListScroller ?? (hasScrollArea ? ScrollViewport : 'div');
   const MessageListContent = slots?.messageListContent ?? 'div';
   const MessageListOverlay = slots?.messageListOverlay ?? 'div';
+  const MessageListScrollbar =
+    slots?.messageListScrollbar ?? (hasScrollArea ? ScrollScrollbar : 'div');
+  const MessageListScrollbarThumb =
+    slots?.messageListScrollbarThumb ?? (hasScrollArea ? ScrollThumb : 'div');
   const messageListProps = useSlotProps({
     elementType: MessageList,
     externalSlotProps: slotProps?.messageList,
     ownerState: behavior.ownerState,
+    additionalProps: {
+      style: hasScrollArea ? scrollRootStyle : fallbackRootStyle,
+    },
   });
   const messageListScrollerProps = useSlotProps({
     elementType: MessageListScroller,
@@ -515,6 +538,7 @@ function StaticMessageListView(props: MessageListViewProps) {
       role: 'log',
       'aria-live': 'polite',
       onScroll: behavior.handleScroll,
+      style: hasScrollArea ? scrollViewportStyle : fallbackScrollerStyle,
     },
   });
   const messageListContentProps = useSlotProps({
@@ -526,6 +550,26 @@ function StaticMessageListView(props: MessageListViewProps) {
     elementType: MessageListOverlay,
     externalSlotProps: slotProps?.messageListOverlay,
     ownerState: behavior.ownerState,
+    additionalProps: {
+      style: overlayStyle,
+    },
+  });
+  const scrollbarProps = useSlotProps({
+    elementType: MessageListScrollbar,
+    externalSlotProps: slotProps?.messageListScrollbar,
+    ownerState: behavior.ownerState,
+    additionalProps: {
+      orientation: 'vertical' as const,
+      style: scrollbarStyle,
+    },
+  });
+  const thumbProps = useSlotProps({
+    elementType: MessageListScrollbarThumb,
+    externalSlotProps: slotProps?.messageListScrollbarThumb,
+    ownerState: behavior.ownerState,
+    additionalProps: {
+      style: thumbStyle,
+    },
   });
 
   return (
@@ -545,116 +589,11 @@ function StaticMessageListView(props: MessageListViewProps) {
             ))}
           </MessageListContent>
         </MessageListScroller>
-        {overlay != null ? (
-          <MessageListOverlay {...messageListOverlayProps}>{overlay}</MessageListOverlay>
+        {hasScrollArea ? (
+          <MessageListScrollbar {...scrollbarProps}>
+            <MessageListScrollbarThumb {...thumbProps} />
+          </MessageListScrollbar>
         ) : null}
-      </MessageList>
-    </MessageListContextProvider>
-  );
-}
-
-function VirtualizedMessageListView(
-  props: MessageListViewProps & {
-    estimatedItemSize: number;
-    overscan: number;
-  },
-) {
-  const {
-    itemIds,
-    overlay,
-    renderItem,
-    getItemKey,
-    slots,
-    slotProps,
-    other,
-    behavior,
-    estimatedItemSize,
-    overscan,
-  } = props;
-  const rows = React.useMemo(() => createRows(itemIds), [itemIds]);
-  const range = React.useMemo(
-    () => ({
-      firstRowIndex: 0,
-      lastRowIndex: rows.length,
-    }),
-    [rows.length],
-  );
-  const refs = React.useRef({
-    container: React.createRef<HTMLDivElement>(),
-    scroller: React.createRef<HTMLDivElement>(),
-  }).current;
-  const layout = useLazyRef(() => new LayoutList(refs)).current;
-  const virtualizer = useVirtualizer({
-    layout,
-    dimensions: {
-      rowHeight: estimatedItemSize,
-    },
-    virtualization: {
-      rowBufferPx: overscan * estimatedItemSize,
-    },
-    rows,
-    range,
-    rowCount: rows.length,
-    renderRow: ({ id, model }) => (
-      <MessageListRenderedRow
-        id={id}
-        index={(model as MessageListRowModel).index}
-        key={getItemKey(id, (model as MessageListRowModel).index)}
-        onRowResize={behavior.scheduleResizeRestore}
-        registerRowElement={behavior.registerRowElement}
-        renderItem={renderItem}
-      />
-    ),
-  });
-  const containerProps = virtualizer.store.use(LayoutList.selectors.containerProps);
-  const contentProps = virtualizer.store.use(LayoutList.selectors.contentProps);
-  const positionerProps = virtualizer.store.use(LayoutList.selectors.positionerProps);
-  const MessageList = slots?.messageList ?? 'div';
-  const MessageListScroller = slots?.messageListScroller ?? 'div';
-  const MessageListContent = slots?.messageListContent ?? 'div';
-  const MessageListOverlay = slots?.messageListOverlay ?? 'div';
-  const mergedRootRef = useForkRef(
-    containerProps.ref as React.Ref<HTMLDivElement>,
-    behavior.setRootElement,
-  );
-  const messageListProps = useSlotProps({
-    elementType: MessageList,
-    externalSlotProps: slotProps?.messageList,
-    ownerState: behavior.ownerState,
-  });
-  const messageListScrollerProps = useSlotProps({
-    elementType: MessageListScroller,
-    externalSlotProps: slotProps?.messageListScroller,
-    externalForwardedProps: other,
-    ownerState: behavior.ownerState,
-    additionalProps: {
-      ...containerProps,
-      ref: mergedRootRef,
-      role: 'log',
-      'aria-live': 'polite',
-      onScroll: behavior.handleScroll,
-    },
-  });
-  const messageListContentProps = useSlotProps({
-    elementType: MessageListContent,
-    externalSlotProps: slotProps?.messageListContent,
-    ownerState: behavior.ownerState,
-  });
-  const messageListOverlayProps = useSlotProps({
-    elementType: MessageListOverlay,
-    externalSlotProps: slotProps?.messageListOverlay,
-    ownerState: behavior.ownerState,
-  });
-  const renderedRows = virtualizer.api.getters.getRows();
-
-  return (
-    <MessageListContextProvider value={behavior.contextValue}>
-      <MessageList {...messageListProps}>
-        <MessageListScroller {...messageListScrollerProps}>
-          <div className="MessageList-filler" {...contentProps} />
-          <div className="MessageList-positioner" {...positionerProps} />
-          <MessageListContent {...messageListContentProps}>{renderedRows}</MessageListContent>
-        </MessageListScroller>
         {overlay != null ? (
           <MessageListOverlay {...messageListOverlayProps}>{overlay}</MessageListOverlay>
         ) : null}
@@ -673,9 +612,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     renderItem,
     getItemKey = (id) => id,
     estimatedItemSize = DEFAULT_ESTIMATED_ITEM_SIZE,
-    overscan = DEFAULT_OVERSCAN,
     onReachTop,
-    virtualization = true,
     slots,
     slotProps,
     ...other
@@ -683,19 +620,10 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
   const defaultItems = useMessageIds();
   const { hasMoreHistory, loadMoreHistory, messages } = useChat();
   const itemIds = itemsProp ?? defaultItems;
-  // Defer virtualization to after hydration so the first client render
-  // matches the server render (which always uses the static view).
-  const [isHydrated, setIsHydrated] = React.useState(false);
-  React.useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-  const virtualizationEnabled =
-    virtualization && isHydrated && typeof ResizeObserver !== 'undefined';
   const behavior = useMessageListBehavior({
     itemIds,
     estimatedItemSize,
     onReachTop,
-    virtualizationEnabled,
     messages,
     hasMoreHistory,
     loadMoreHistory,
@@ -709,30 +637,13 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     [behavior.scrollToBottom],
   );
 
-  if (!virtualizationEnabled) {
-    return (
-      <StaticMessageListView
-        behavior={behavior}
-        getItemKey={getItemKey}
-        itemIds={itemIds}
-        overlay={overlay}
-        other={other}
-        renderItem={renderItem}
-        slotProps={slotProps}
-        slots={slots}
-      />
-    );
-  }
-
   return (
-    <VirtualizedMessageListView
+    <StaticMessageListView
       behavior={behavior}
-      estimatedItemSize={estimatedItemSize}
       getItemKey={getItemKey}
       itemIds={itemIds}
       overlay={overlay}
       other={other}
-      overscan={overscan}
       renderItem={renderItem}
       slotProps={slotProps}
       slots={slots}

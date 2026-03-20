@@ -44,7 +44,6 @@ export default function ChatBoxBasic() {
     </Paper>
   );
 }
-
 ```
 
 ## Thread-only layout
@@ -101,7 +100,6 @@ export default function ChatBoxThreadOnly() {
     </Paper>
   );
 }
-
 ```
 
 ## Controlled state
@@ -164,7 +162,6 @@ export default function ChatBoxControlled() {
     </Box>
   );
 }
-
 ```
 
 ## Default props

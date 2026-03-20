@@ -12,8 +12,7 @@
     "types": ["../../mui-env.d.ts"]
   },
   "references": [
-    { "path": "../x-chat-headless/tsconfig.build.json" },
-    { "path": "../x-virtualizer/tsconfig.build.json" }
+    { "path": "../x-chat-headless/tsconfig.build.json" }
   ],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/**/tests/**/*"]
