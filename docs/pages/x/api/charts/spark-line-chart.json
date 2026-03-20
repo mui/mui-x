@@ -35,11 +35,6 @@
     "disableClipping": { "type": { "name": "bool" }, "default": "false" },
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "disableVoronoi": {
-      "type": { "name": "bool" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>disableHitArea</code> instead."
-    },
     "experimentalFeatures": { "type": { "name": "object" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
@@ -159,11 +154,6 @@
         "describedArgs": ["value"],
         "returned": "string"
       }
-    },
-    "voronoiMaxRadius": {
-      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>hitAreaRadius</code> instead."
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {

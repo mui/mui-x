@@ -21,9 +21,9 @@ import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { type ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+import { type ChartsContainerProProps } from '../ChartsContainerPro/ChartsContainerPro';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import {
   SCATTER_CHART_PRO_PLUGINS,
   type ScatterChartProPluginSignatures,
@@ -51,7 +51,7 @@ export interface ScatterChartProProps
   extends
     Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
-      ChartContainerProProps<'scatter', ScatterChartProPluginSignatures>,
+      ChartsContainerProProps<'scatter', ScatterChartProPluginSignatures>,
       | 'series'
       | 'onItemClick'
       | 'slots'
@@ -89,7 +89,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
   const {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
@@ -98,11 +98,11 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     axisHighlightProps,
     children,
   } = useScatterChartProps(other);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+  const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'scatter',
     ScatterChartProPluginSignatures
   >({
-    ...chartContainerProps,
+    ...chartsContainerProps,
     initialZoom,
     zoomData,
     onZoomChange,
@@ -114,8 +114,8 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro<'scatter', ScatterChartProPluginSignatures>
-      {...chartDataProviderProProps}
+    <ChartsDataProviderPro<'scatter', ScatterChartProPluginSignatures>
+      {...chartsDataProviderProProps}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
@@ -135,7 +135,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         </ChartsSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 });
 
@@ -480,13 +480,6 @@ ScatterChartPro.propTypes = {
       seriesId: PropTypes.string.isRequired,
     }),
   ]),
-  /**
-   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
-   * If set to `'item'`, the radius is the `markerSize`.
-   * If `undefined`, the radius is assumed to be infinite.
-   * @deprecated Use `hitAreaRadius` instead.
-   */
-  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

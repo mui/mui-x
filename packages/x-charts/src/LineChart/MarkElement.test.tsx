@@ -2,21 +2,21 @@ import { createRenderer, screen } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import * as React from 'react';
 import { isJSDOM } from 'test/utils/skipIf';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { ChartsDataProvider } from '../ChartsDataProvider';
 import { MarkElement } from './MarkElement';
 import { CircleMarkElement } from './CircleMarkElement';
 import { lineClasses } from './lineClasses';
 
 function TestWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       series={[{ type: 'line', data: [1, 2, 3], id: 's1' }]}
       width={100}
       height={100}
       xAxis={[{ scaleType: 'point', data: ['A', 'B', 'C'] }]}
     >
       <svg>{children}</svg>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 }
 

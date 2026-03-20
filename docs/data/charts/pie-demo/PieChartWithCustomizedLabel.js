@@ -1,4 +1,4 @@
-import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
+import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 
 const data = [
   { label: 'Group A', value: 400, color: '#0088FE' },
@@ -31,7 +31,7 @@ export default function PieChartWithCustomizedLabel() {
         },
       ]}
       sx={{
-        [`& .${pieArcLabelClasses.root}`]: {
+        [`& .${pieClasses.arcLabel}`]: {
           fill: 'white',
           fontSize: 14,
         },

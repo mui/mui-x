@@ -14,7 +14,7 @@ import type { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { HEATMAP_PLUGINS, type HeatmapPluginSignatures } from './Heatmap.plugins';
 import { type HeatmapProps } from './Heatmap';
 import { heatmapSeriesConfig } from './seriesConfig';
-import { type ChartDataProviderProProps } from '../ChartDataProviderPro';
+import { type ChartsDataProviderProProps } from '../ChartsDataProviderPro';
 import { type HeatmapSeriesType } from '../models/seriesType';
 import { type HeatmapPlotProps } from './HeatmapPlot';
 
@@ -125,25 +125,26 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     hideLegend,
   };
 
-  const chartDataProviderProProps: ChartDataProviderProProps<'heatmap', HeatmapPluginSignatures> = {
-    apiRef,
-    seriesConfig,
-    series: seriesWithDefault,
-    width,
-    height,
-    margin,
-    xAxis: xAxisWithDefault,
-    yAxis: yAxisWithDefault,
-    zAxis: zAxisWithDefault,
-    colors,
-    dataset,
-    disableAxisListener: true,
-    highlightedItem,
-    onHighlightChange,
-    disableKeyboardNavigation,
-    onItemClick,
-    plugins: HEATMAP_PLUGINS,
-  };
+  const chartsDataProviderProProps: ChartsDataProviderProProps<'heatmap', HeatmapPluginSignatures> =
+    {
+      apiRef,
+      seriesConfig,
+      series: seriesWithDefault,
+      width,
+      height,
+      margin,
+      xAxis: xAxisWithDefault,
+      yAxis: yAxisWithDefault,
+      zAxis: zAxisWithDefault,
+      colors,
+      dataset,
+      disableAxisListener: true,
+      highlightedItem,
+      onHighlightChange,
+      disableKeyboardNavigation,
+      onItemClick,
+      plugins: HEATMAP_PLUGINS,
+    };
 
   const heatmapPlotProps: HeatmapPlotProps = {
     borderRadius,
@@ -177,7 +178,7 @@ export function useHeatmapProps(props: UseHeatmapProps) {
   };
 
   return {
-    chartDataProviderProProps,
+    chartsDataProviderProProps,
     chartsWrapperProps,
     heatmapPlotProps,
     clipPathProps,

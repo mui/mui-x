@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -47,12 +47,12 @@ function MiniChart({ title, children }: { title: string; children: React.ReactNo
       <Typography variant="caption" sx={{ textAlign: 'center' }}>
         {title}
       </Typography>
-      <ChartContainer {...chartProps}>
+      <ChartsContainer {...chartProps}>
         <LinePlot />
         {children}
         <ChartsXAxis />
         <ChartsYAxis />
-      </ChartContainer>
+      </ChartsContainer>
     </Box>
   );
 }

@@ -9,7 +9,7 @@ import { type UseChartInteractionSignature } from '../useChartInteraction';
 import { type UseChartHighlightSignature } from '../useChartHighlight';
 import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 import { useStore } from '../../../store/useStore';
-import { useChartContext } from '../../../../context/ChartProvider';
+import { useChartsContext } from '../../../../context/ChartsProvider';
 import { getChartPoint } from '../../../getChartPoint';
 import { type ChartState } from '../../models';
 
@@ -25,7 +25,7 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
   onItemLeave?: () => void,
 ) {
   const { instance } =
-    useChartContext<
+    useChartsContext<
       [
         UseChartInteractionSignature,
         UseChartHighlightSignature<SeriesType>,
