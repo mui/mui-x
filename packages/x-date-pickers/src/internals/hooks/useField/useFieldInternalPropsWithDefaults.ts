@@ -66,7 +66,7 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
         enableAccessibleFieldDOMStructure: fieldPrivateContext.enableAccessibleFieldDOMStructure,
         selectedSections: fieldPrivateContext.selectedSections,
         onSelectedSectionsChange: fieldPrivateContext.onSelectedSectionsChange,
-        initialFocus: fieldPrivateContext.initialFocus,
+        initialFocusedSection: fieldPrivateContext.initialFocusedSection,
         fieldRef: handleFieldRef,
         ...internalProps,
       };

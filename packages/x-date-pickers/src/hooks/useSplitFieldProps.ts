@@ -19,7 +19,7 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'shouldRespectLeadingZeros',
   'selectedSections',
   'onSelectedSectionsChange',
-  'initialFocus',
+  'initialFocusedSection',
   'fieldRef',
   'startFieldRef',
   'endFieldRef',

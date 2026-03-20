@@ -178,12 +178,13 @@ SingleInputDateTimeRangeField.propTypes = {
   id: PropTypes.string,
   /**
    * The index or type of the section to focus when the field is focused.
-   * If `undefined`/`null`, the first section will be focused.
+   * If `undefined`, the first section will be focused.
    */
-  initialFocus: PropTypes.oneOfType([
+  initialFocusedSection: PropTypes.oneOfType([
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
