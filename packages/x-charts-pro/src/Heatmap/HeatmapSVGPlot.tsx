@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
@@ -34,7 +35,7 @@ export function HeatmapSVGPlot(props: HeatmapRendererPlotProps) {
   const seriesToDisplay = series.series[series.seriesOrder[0]];
 
   return (
-    <HeatmapPlotRoot className={heatmapClasses.root} data-series={seriesToDisplay.id}>
+    <HeatmapPlotRoot className={clsx(heatmapClasses.root, props.className)}>
       {seriesToDisplay.data.map(([xIndex, yIndex, value]) => {
         const x = xScale(xDomain[xIndex]);
         const y = yScale(yDomain[yIndex]);
