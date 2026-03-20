@@ -17,7 +17,7 @@ The following team members contributed to this release:
 
 - [DataGrid] Mark charts integration as stable (#21764) @JCQuintas
 - [DataGrid] Move `elementOverrides` to constants and remove duplicates (#21618) @sai6855
-- [DataGrid] Migrate from deprecated Material UI APIs (#21682) @siriwatknp
+- [DataGrid] Migrate from deprecated Material UI APIs (#21682) @siriwatknp
 
 #### `@mui/x-data-grid-pro@9.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
