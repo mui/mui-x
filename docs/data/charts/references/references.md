@@ -57,7 +57,7 @@ Omitted coordinates also default to the full axis range.
 For customization, use the associated `useReferenceArea()` which returns the coordinates of the rectangle.
 This allows for example adding some labels to the area.
 
-Notice the usage of composition to be able to put the reference area bellow the plots
+Notice the usage of composition to be able to put the reference area below the plots
 
 {{"demo": "ReferenceAreaBasic.js"}}
 
