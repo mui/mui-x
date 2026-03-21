@@ -32,8 +32,17 @@ export interface MessageContentSlotProps {
   bubble?: SlotComponentProps<'div', {}, MessageContentOwnerState>;
 }
 
+export interface TextPartExternalProps {
+  /**
+   * Custom renderer for text message parts.
+   * When provided, this overrides the default plain-text rendering and
+   * receives the raw text string (e.g. for markdown-to-JSX conversion).
+   */
+  renderText?: (text: string) => React.ReactNode;
+}
+
 export interface MessageContentPartProps {
-  text?: Record<string, unknown>;
+  text?: TextPartExternalProps;
   reasoning?: ReasoningPartExternalProps;
   tool?: ToolPartExternalProps;
   'dynamic-tool'?: ToolPartExternalProps;
@@ -71,6 +80,15 @@ function DefaultPartFallback(props: { part: ChatMessagePart }) {
   const { part } = props;
 
   return <div data-part-type={part.type} />;
+}
+
+function TextPart(props: {
+  text: string;
+  renderText: (text: string) => React.ReactNode;
+}) {
+  const { text, renderText } = props;
+  const rendered = React.useMemo(() => renderText(text), [text, renderText]);
+  return <>{rendered}</>;
 }
 
 function JsonBlock(props: { value: unknown }) {
@@ -122,8 +140,9 @@ function MessageRenderedPart(props: {
   const baseProps = { part, message, index, onToolCall };
   switch (part.type) {
     case 'text':
-      // Text part: simple div renderer, can be overridden via partProps or custom renderer.
-      // Material layer overrides this with markdown rendering.
+      if (partProps?.text?.renderText) {
+        return <TextPart text={part.text} renderText={partProps.text.renderText} />;
+      }
       return <div>{part.text}</div>;
     case 'reasoning':
       return <ReasoningPart {...partProps?.reasoning} {...baseProps} part={part} />;

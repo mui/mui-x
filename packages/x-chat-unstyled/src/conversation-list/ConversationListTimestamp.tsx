@@ -70,7 +70,8 @@ export const ConversationListTimestamp = React.forwardRef(function ConversationL
 
   return (
     <Root {...rootProps}>
-      <time dateTime={conversation.lastMessageAt}>
+      {/* suppressHydrationWarning: locale-sensitive formatting can differ between server and browser */}
+      <time dateTime={conversation.lastMessageAt} suppressHydrationWarning>
         {localeText.conversationTimestampLabel(conversation.lastMessageAt)}
       </time>
     </Root>

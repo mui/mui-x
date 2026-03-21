@@ -168,9 +168,7 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
 
   return (
     <Group {...groupProps}>
-      {showGroupAuthorName ? (
-        <AuthorName {...authorNameProps}>{authorLabel}</AuthorName>
-      ) : null}
+      {showGroupAuthorName ? <AuthorName {...authorNameProps}>{authorLabel}</AuthorName> : null}
       <MessageRoot isGrouped={!isFirst} messageId={messageId}>
         {children ?? (
           <React.Fragment>

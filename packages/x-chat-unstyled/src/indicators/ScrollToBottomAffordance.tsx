@@ -17,11 +17,13 @@ function createAriaLabel(unseenMessageCount: number) {
 export interface ScrollToBottomAffordanceSlots {
   root: React.ElementType;
   badge: React.ElementType;
+  icon?: React.ElementType;
 }
 
 export interface ScrollToBottomAffordanceSlotProps {
   root?: SlotComponentProps<'button', {}, ScrollToBottomAffordanceOwnerState>;
   badge?: SlotComponentProps<'span', {}, ScrollToBottomAffordanceOwnerState>;
+  icon?: SlotComponentProps<'svg', {}, ScrollToBottomAffordanceOwnerState>;
 }
 
 export interface ScrollToBottomAffordanceProps extends Omit<
@@ -54,6 +56,7 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
   );
   const Root = slots?.root ?? 'button';
   const Badge = slots?.badge ?? 'span';
+  const Icon = slots?.icon;
   const rootSlotProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
@@ -77,6 +80,11 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
     externalSlotProps: slotProps?.badge,
     ownerState,
   });
+  const iconProps = useSlotProps({
+    elementType: Icon ?? 'svg',
+    externalSlotProps: slotProps?.icon,
+    ownerState,
+  });
 
   if (isAtBottom) {
     return null;
@@ -84,7 +92,7 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
 
   return (
     <Root {...rootProps}>
-      <span>Scroll to bottom</span>
+      {Icon ? <Icon {...iconProps} /> : <span>Scroll to bottom</span>}
       {unseenMessageCount > 0 ? <Badge {...badgeProps}>{unseenMessageCount}</Badge> : null}
     </Root>
   );

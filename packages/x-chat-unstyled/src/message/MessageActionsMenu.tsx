@@ -106,12 +106,11 @@ export const MessageActionsMenuPopup = React.forwardRef<
  */
 export type MessageActionsMenuItemProps = Menu.Item.Props;
 
-export const MessageActionsMenuItem = React.forwardRef<
-  HTMLDivElement,
-  MessageActionsMenuItemProps
->(function MessageActionsMenuItem(props, ref) {
-  return <Menu.Item {...props} ref={ref} />;
-});
+export const MessageActionsMenuItem = React.forwardRef<HTMLDivElement, MessageActionsMenuItemProps>(
+  function MessageActionsMenuItem(props, ref) {
+    return <Menu.Item {...props} ref={ref} />;
+  },
+);
 
 // ---------------------------------------------------------------------------
 

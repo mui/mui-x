@@ -40,6 +40,7 @@ export type {
   MessageContentProps,
   MessageContentSlotProps,
   MessageContentSlots,
+  TextPartExternalProps,
 } from './MessageContent';
 export type { MessageMetaProps, MessageMetaSlotProps, MessageMetaSlots } from './MessageMeta';
 export type {

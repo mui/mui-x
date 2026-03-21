@@ -28,10 +28,7 @@ export const ScrollScrollbar = React.forwardRef<HTMLDivElement>(function ScrollS
   return <ScrollArea.Scrollbar {...other} ref={ref} />;
 });
 
-export const ScrollThumb = React.forwardRef<HTMLDivElement>(function ScrollThumb(
-  props: any,
-  ref,
-) {
+export const ScrollThumb = React.forwardRef<HTMLDivElement>(function ScrollThumb(props: any, ref) {
   const { ownerState, ...other } = props;
   return <ScrollArea.Thumb {...other} ref={ref} />;
 });

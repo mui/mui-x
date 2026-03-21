@@ -26,42 +26,40 @@ type ConversationListItemContentComponent = ((
   props: ConversationListItemContentProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-export const ConversationListItemContent = React.forwardRef(
-  function ConversationListItemContent(
-    props: ConversationListItemContentProps,
-    ref: React.Ref<HTMLDivElement>,
-  ) {
-    const {
-      children,
-      conversation,
-      selected = false,
-      unread = false,
-      focused = false,
-      ownerState: ownerStateProp,
-      slots,
-      slotProps,
-      ...other
-    } = props as ConversationListItemContentProps & {
-      ownerState?: ConversationListItemContentOwnerState;
-    };
-    const ownerState: ConversationListItemContentOwnerState = {
-      conversation,
-      selected,
-      unread,
-      focused,
-    };
-    void ownerStateProp;
-    const Root = slots?.root ?? 'div';
-    const rootProps = useSlotProps({
-      elementType: Root,
-      externalSlotProps: slotProps?.root,
-      externalForwardedProps: other,
-      ownerState,
-      additionalProps: {
-        ref,
-      },
-    });
+export const ConversationListItemContent = React.forwardRef(function ConversationListItemContent(
+  props: ConversationListItemContentProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const {
+    children,
+    conversation,
+    selected = false,
+    unread = false,
+    focused = false,
+    ownerState: ownerStateProp,
+    slots,
+    slotProps,
+    ...other
+  } = props as ConversationListItemContentProps & {
+    ownerState?: ConversationListItemContentOwnerState;
+  };
+  const ownerState: ConversationListItemContentOwnerState = {
+    conversation,
+    selected,
+    unread,
+    focused,
+  };
+  void ownerStateProp;
+  const Root = slots?.root ?? 'div';
+  const rootProps = useSlotProps({
+    elementType: Root,
+    externalSlotProps: slotProps?.root,
+    externalForwardedProps: other,
+    ownerState,
+    additionalProps: {
+      ref,
+    },
+  });
 
-    return <Root {...rootProps}>{children}</Root>;
-  },
-) as ConversationListItemContentComponent;
+  return <Root {...rootProps}>{children}</Root>;
+}) as ConversationListItemContentComponent;

@@ -14,8 +14,10 @@ export interface ConversationInputLabelSlotProps {
   label?: SlotComponentProps<'label', {}, ConversationInputOwnerState>;
 }
 
-export interface ConversationInputLabelProps
-  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'children'> {
+export interface ConversationInputLabelProps extends Omit<
+  React.LabelHTMLAttributes<HTMLLabelElement>,
+  'children'
+> {
   /**
    * The `id` of the textarea this label is associated with.
    * Passed directly to the native `htmlFor` attribute.
@@ -96,7 +98,5 @@ export const ConversationInputLabel = React.forwardRef(function ConversationInpu
     },
   });
 
-  return (
-    <Label {...labelProps}>{children ?? localeText.composerInputAriaLabel}</Label>
-  );
+  return <Label {...labelProps}>{children ?? localeText.composerInputAriaLabel}</Label>;
 }) as ConversationInputLabelComponent;

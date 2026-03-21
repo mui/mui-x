@@ -135,9 +135,7 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
   );
 });
 
-function ControlledMessageList(props: {
-  slots?: MessageListRootProps['slots'];
-}) {
+function ControlledMessageList(props: { slots?: MessageListRootProps['slots'] }) {
   const { slots } = props;
   const [messages, setMessages] = React.useState([
     createMessage('m1', 'assistant'),
@@ -237,9 +235,7 @@ describe('MessageListRoot', () => {
         adapter={createAdapter()}
         defaultMessages={[createMessage('m1', 'assistant'), createMessage('m2', 'user')]}
       >
-        <MessageListRoot
-          renderItem={({ id }) => <DefaultRenderItem id={id} />}
-        />
+        <MessageListRoot renderItem={({ id }) => <DefaultRenderItem id={id} />} />
       </ChatRoot>,
     );
 
@@ -400,7 +396,6 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('preserves the viewport anchor when history is prepended', async () => {
-
     const log = screen.getByRole('log');
 
     await waitFor(() => {
@@ -418,7 +413,6 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('auto-scrolls on append when already near the bottom', async () => {
-
     const log = screen.getByRole('log');
 
     await waitFor(() => {
@@ -436,7 +430,6 @@ describe('MessageListRoot', () => {
   });
 
   it.skipIf(isJSDOM)('auto-scrolls on user append even when away from the bottom', async () => {
-
     const log = screen.getByRole('log');
 
     await waitFor(() => {
@@ -456,7 +449,6 @@ describe('MessageListRoot', () => {
   it.skipIf(isJSDOM)(
     'does not auto-scroll for assistant appends when away from the bottom',
     async () => {
-
       const log = screen.getByRole('log');
 
       await waitFor(() => {
@@ -477,11 +469,7 @@ describe('MessageListRoot', () => {
   it.skipIf(isJSDOM)(
     'tracks unseen appended messages while away from the bottom and resets at the bottom',
     async () => {
-      render(
-        <ControlledMessageList
-          slots={{ messageList: RootWithBottomState }}
-        />,
-      );
+      render(<ControlledMessageList slots={{ messageList: RootWithBottomState }} />);
 
       const log = screen.getByRole('log');
 
@@ -508,7 +496,6 @@ describe('MessageListRoot', () => {
   );
 
   it.skipIf(isJSDOM)('restores the anchor when a row above the viewport grows', async () => {
-
     const log = screen.getByRole('log');
 
     await waitFor(() => {

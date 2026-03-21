@@ -142,13 +142,7 @@ interface MessageListRenderedRowProps {
 }
 
 function MessageListRenderedRow(props: MessageListRenderedRowProps) {
-  const {
-    id,
-    index,
-    renderItem,
-    registerRowElement,
-    onRowResize,
-  } = props;
+  const { id, index, renderItem, registerRowElement, onRowResize } = props;
   const rowRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useLayoutEffect(() => {
@@ -195,14 +189,8 @@ function useMessageListBehavior(parameters: {
   hasMoreHistory: boolean;
   loadMoreHistory(): Promise<void>;
 }) {
-  const {
-    itemIds,
-    estimatedItemSize,
-    onReachTop,
-    messages,
-    hasMoreHistory,
-    loadMoreHistory,
-  } = parameters;
+  const { itemIds, estimatedItemSize, onReachTop, messages, hasMoreHistory, loadMoreHistory } =
+    parameters;
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const rowElementsRef = React.useRef(new Map<string, HTMLDivElement | null>());
   const previousItemIdsRef = React.useRef<string[]>(itemIds);

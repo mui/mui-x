@@ -1,4 +1,4 @@
-export { Chat, ChatLayout, ChatRoot } from './chat';
+export { Chat, ChatLayout, ChatRoot, useChatLocaleText } from './chat';
 export {
   Conversation,
   ConversationHeader,

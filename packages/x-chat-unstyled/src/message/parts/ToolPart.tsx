@@ -21,6 +21,7 @@ export interface ToolPartOwnerState {
   pendingApproval: boolean;
   role: ChatRole;
   state: ChatToolInvocationState;
+  toolName: string;
 }
 
 export interface ToolPartSectionOwnerState extends ToolPartOwnerState {
@@ -32,6 +33,7 @@ export interface ToolPartSlots {
   header: React.ElementType;
   title: React.ElementType;
   state: React.ElementType;
+  icon?: React.ElementType;
   section: React.ElementType;
   sectionContent: React.ElementType;
   error: React.ElementType;
@@ -45,6 +47,7 @@ export interface ToolPartSlotProps {
   header?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
   title?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
   state?: SlotComponentProps<'span', {}, ToolPartOwnerState>;
+  icon?: SlotComponentProps<'span', {}, ToolPartOwnerState>;
   section?: SlotComponentProps<'div', {}, ToolPartSectionOwnerState>;
   sectionContent?: SlotComponentProps<'pre', {}, ToolPartSectionOwnerState>;
   error?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
@@ -57,6 +60,18 @@ export interface ToolPartProps extends ChatPartRendererProps<ToolPart> {
   className?: string;
   slots?: Partial<ToolPartSlots>;
   slotProps?: ToolPartSlotProps;
+  /**
+   * Per-tool-name slot overrides, merged on top of `slots`.
+   * Keyed by `toolInvocation.toolName`.
+   * @example
+   * toolSlots={{ bash: { icon: TerminalIcon }, glob: { icon: FolderSearchIcon } }}
+   */
+  toolSlots?: Record<string, Partial<ToolPartSlots>>;
+  /**
+   * Per-tool-name slotProps overrides, merged on top of `slotProps`.
+   * Keyed by `toolInvocation.toolName`.
+   */
+  toolSlotProps?: Record<string, ToolPartSlotProps>;
 }
 
 export type ToolPartExternalProps = Omit<
@@ -123,31 +138,55 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { addToolApprovalResponse } = useChat();
-  const { className, index, message, onToolCall, part, slots, slotProps, ...other } = props;
+  const {
+    className,
+    index,
+    message,
+    onToolCall,
+    part,
+    slots,
+    slotProps,
+    toolSlots,
+    toolSlotProps,
+    ...other
+  } = props;
   void index;
   void onToolCall;
   const [pendingApproval, setPendingApproval] = React.useState(false);
   const localeText = useChatLocaleText();
+  const toolName = part.toolInvocation.toolName;
+  const resolvedSlots = React.useMemo(
+    () => ({ ...slots, ...toolSlots?.[toolName] }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [slots, toolSlots, toolName],
+  );
+  const resolvedSlotProps = React.useMemo(
+    () => ({ ...slotProps, ...toolSlotProps?.[toolName] }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [slotProps, toolSlotProps, toolName],
+  );
   const ownerState = React.useMemo<ToolPartOwnerState>(
     () => ({
       messageId: message.id,
       pendingApproval,
       role: message.role,
       state: part.toolInvocation.state,
+      toolName: part.toolInvocation.toolName,
     }),
-    [message.id, message.role, part.toolInvocation.state, pendingApproval],
+    [message.id, message.role, part.toolInvocation.state, part.toolInvocation.toolName, pendingApproval],
   );
-  const Root = slots?.root ?? 'div';
-  const Header = slots?.header ?? 'div';
-  const Title = slots?.title ?? 'div';
-  const State = slots?.state ?? 'span';
-  const Error = slots?.error ?? 'div';
-  const Actions = slots?.actions ?? 'div';
-  const ApproveButton = slots?.approveButton ?? 'button';
-  const DenyButton = slots?.denyButton ?? 'button';
+  const Root = resolvedSlots?.root ?? 'div';
+  const Header = resolvedSlots?.header ?? 'div';
+  const Title = resolvedSlots?.title ?? 'div';
+  const State = resolvedSlots?.state ?? 'span';
+  const Icon = resolvedSlots?.icon;
+  const Error = resolvedSlots?.error ?? 'div';
+  const Actions = resolvedSlots?.actions ?? 'div';
+  const ApproveButton = resolvedSlots?.approveButton ?? 'button';
+  const DenyButton = resolvedSlots?.denyButton ?? 'button';
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: slotProps?.root,
+    externalSlotProps: resolvedSlotProps?.root,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
@@ -157,37 +196,43 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
   });
   const headerProps = useSlotProps({
     elementType: Header,
-    externalSlotProps: slotProps?.header,
+    externalSlotProps: resolvedSlotProps?.header,
     ownerState,
   });
   const titleProps = useSlotProps({
     elementType: Title,
-    externalSlotProps: slotProps?.title,
+    externalSlotProps: resolvedSlotProps?.title,
     ownerState,
   });
   const stateProps = useSlotProps({
     elementType: State,
-    externalSlotProps: slotProps?.state,
+    externalSlotProps: resolvedSlotProps?.state,
+    ownerState,
+  });
+  // Always call unconditionally (hooks rule); only render when Icon slot is provided
+  const iconProps = useSlotProps({
+    elementType: Icon ?? 'span',
+    externalSlotProps: resolvedSlotProps?.icon,
     ownerState,
   });
   const errorProps = useSlotProps({
     elementType: Error,
-    externalSlotProps: slotProps?.error,
+    externalSlotProps: resolvedSlotProps?.error,
     ownerState,
   });
   const actionsProps = useSlotProps({
     elementType: Actions,
-    externalSlotProps: slotProps?.actions,
+    externalSlotProps: resolvedSlotProps?.actions,
     ownerState,
   });
   const approveButtonProps = useSlotProps({
     elementType: ApproveButton,
-    externalSlotProps: slotProps?.approveButton,
+    externalSlotProps: resolvedSlotProps?.approveButton,
     ownerState,
   });
   const denyButtonProps = useSlotProps({
     elementType: DenyButton,
-    externalSlotProps: slotProps?.denyButton,
+    externalSlotProps: resolvedSlotProps?.denyButton,
     ownerState,
   });
   const { toolInvocation } = part;
@@ -224,6 +269,7 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
   return (
     <Root {...rootProps}>
       <Header {...headerProps}>
+        {Icon != null ? <Icon {...iconProps} /> : null}
         <Title {...titleProps}>{toolTitle}</Title>
         {stateLabel ? <State {...stateProps}>{stateLabel}</State> : null}
       </Header>
@@ -232,8 +278,8 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
           label={localeText.messageToolInputLabel}
           ownerState={ownerState}
           section="input"
-          slotProps={slotProps}
-          slots={slots}
+          slotProps={resolvedSlotProps}
+          slots={resolvedSlots}
           value={toolInvocation.input}
         />
       ) : null}
@@ -242,8 +288,8 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
           label={localeText.messageToolOutputLabel}
           ownerState={ownerState}
           section="output"
-          slotProps={slotProps}
-          slots={slots}
+          slotProps={resolvedSlotProps}
+          slots={resolvedSlots}
           value={toolInvocation.output}
         />
       ) : null}
