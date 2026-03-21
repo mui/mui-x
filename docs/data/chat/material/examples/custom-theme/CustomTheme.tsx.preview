@@ -1,0 +1,15 @@
+<ThemeProvider theme={tealTheme}>
+  <CssBaseline />
+  <ChatBox
+    adapter={adapter}
+    defaultActiveConversationId={minimalConversation.id}
+    defaultConversations={[minimalConversation]}
+    defaultMessages={minimalMessages}
+    sx={{
+      height: 500,
+      border: '1px solid',
+      borderColor: 'divider',
+      borderRadius: '12px',
+    }}
+  />
+</ThemeProvider>
