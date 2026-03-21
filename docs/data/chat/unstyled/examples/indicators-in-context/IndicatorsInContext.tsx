@@ -25,7 +25,6 @@ import {
   DemoToolbarButton,
 } from 'docsx/data/chat/unstyled/examples/shared/DemoPrimitives';
 
-
 function createRealtimeController() {
   let emit: ((event: ChatRealtimeEvent) => void) | null = null;
 

@@ -30,14 +30,19 @@ const agent = demoUsers.agent;
 const adapter: ChatAdapter = {
   async sendMessage({ attachments, message }) {
     const textOnly = message.parts
-      .filter((part): part is Extract<typeof part, { type: 'text' }> => part.type === 'text')
+      .filter(
+        (part): part is Extract<typeof part, { type: 'text' }> =>
+          part.type === 'text',
+      )
       .map((part) => part.text)
       .join('\n');
     const attachmentCount = attachments?.length ?? 0;
     const responseText = `Draft received: "${textOnly}". The composer stayed inside the unstyled layer while the runtime tracked ${attachmentCount} attachment${attachmentCount === 1 ? '' : 's'}.`;
 
     return createChunkStream(
-      createTextResponseChunks(`assistant-${message.id}`, responseText, { author: agent }),
+      createTextResponseChunks(`assistant-${message.id}`, responseText, {
+        author: agent,
+      }),
       { delayMs: 170 },
     );
   },

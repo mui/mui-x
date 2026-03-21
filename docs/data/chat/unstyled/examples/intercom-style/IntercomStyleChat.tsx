@@ -253,9 +253,7 @@ const IntercomMeta = React.forwardRef(function IntercomMeta(
       }}
       {...other}
     >
-      {!isUser && author?.displayName
-        ? `${author.displayName} · AI Agent · `
-        : null}
+      {!isUser && author?.displayName ? `${author.displayName} · AI Agent · ` : null}
       {formatMessageTime(ownerState?.message?.createdAt)}
     </div>
   );
@@ -464,10 +462,7 @@ export default function IntercomStyleChat() {
                 root: IntercomMessageGroup,
               }}
             >
-              <Message.Root
-                messageId={id}
-                slots={{ root: IntercomMessageRoot }}
-              >
+              <Message.Root messageId={id} slots={{ root: IntercomMessageRoot }}>
                 <Message.Avatar slots={{ avatar: IntercomAvatar }} />
                 <Message.Content slots={{ bubble: IntercomBubble }} />
                 <Message.Meta slots={{ meta: IntercomMeta }} />
@@ -507,13 +502,28 @@ export default function IntercomStyleChat() {
               fontSize: 18,
             }}
           >
-            <span style={{ cursor: 'pointer' }} title="Attach">{'\ud83d\udcce'}</span>
-            <span style={{ cursor: 'pointer' }} title="Emoji">{'\u263a'}</span>
-            <span style={{ cursor: 'pointer', fontSize: 12, fontWeight: 700, border: `1px solid ${intercom.border}`, borderRadius: 4, padding: '0 4px', lineHeight: '22px' }} title="GIF">GIF</span>
+            <span style={{ cursor: 'pointer' }} title="Attach">
+              {'\ud83d\udcce'}
+            </span>
+            <span style={{ cursor: 'pointer' }} title="Emoji">
+              {'\u263a'}
+            </span>
+            <span
+              style={{
+                cursor: 'pointer',
+                fontSize: 12,
+                fontWeight: 700,
+                border: `1px solid ${intercom.border}`,
+                borderRadius: 4,
+                padding: '0 4px',
+                lineHeight: '22px',
+              }}
+              title="GIF"
+            >
+              GIF
+            </span>
           </div>
-          <ConversationInput.SendButton
-            slots={{ root: IntercomSendButton }}
-          />
+          <ConversationInput.SendButton slots={{ root: IntercomSendButton }} />
         </div>
       </ConversationInput.Root>
 

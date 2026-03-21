@@ -143,8 +143,16 @@ const BrandConversationItemContent = React.forwardRef(
     },
     ref: React.Ref<HTMLDivElement>,
   ) {
-    const { children, conversation, ownerState, selected, unread, focused, style, ...other } =
-      props;
+    const {
+      children,
+      conversation,
+      ownerState,
+      selected,
+      unread,
+      focused,
+      style,
+      ...other
+    } = props;
     return (
       <div
         ref={ref}

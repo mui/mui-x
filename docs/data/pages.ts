@@ -954,6 +954,72 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/react-chat/material-group',
+        title: 'Material UI',
+        children: [
+          { pathname: '/x/react-chat/material', title: 'Overview' },
+          { pathname: '/x/react-chat/material/customization', title: 'Customization' },
+          {
+            pathname: '/x/react-chat/material/examples',
+            title: 'Examples',
+            children: [
+              {
+                pathname: '/x/react-chat/material/examples/basic-ai-chat',
+                title: 'Basic AI chat',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/multi-conversation',
+                title: 'Multi-conversation',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/custom-theme',
+                title: 'Custom theme',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/slot-overrides',
+                title: 'Slot overrides',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/empty-state',
+                title: 'Empty state',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/long-messages',
+                title: 'Long messages',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/many-messages',
+                title: 'Many messages',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/error-state',
+                title: 'Error state',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/slow-streaming',
+                title: 'Slow streaming',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/no-conversation-history',
+                title: 'No conversation history',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/message-feed',
+                title: 'Message feed',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/split-layout',
+                title: 'Split layout',
+              },
+              {
+                pathname: '/x/react-chat/material/examples/agentic-code',
+                title: 'Agentic code assistant',
+              },
+            ],
+          },
+        ],
+      },
+      {
         pathname: '/x/api/chat-resources',
         subheader: 'Resources',
         children: [

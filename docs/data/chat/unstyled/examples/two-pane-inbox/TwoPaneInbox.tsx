@@ -81,7 +81,14 @@ export default function TwoPaneInbox() {
           },
         }}
       >
-        <div style={{ display: 'grid', gap: 12, minHeight: 0, gridTemplateRows: 'auto minmax(0, 1fr)' }}>
+        <div
+          style={{
+            display: 'grid',
+            gap: 12,
+            minHeight: 0,
+            gridTemplateRows: 'auto minmax(0, 1fr)',
+          }}
+        >
           <div>
             <div style={{ fontSize: 18, fontWeight: 800, color: '#111111' }}>
               Inbox

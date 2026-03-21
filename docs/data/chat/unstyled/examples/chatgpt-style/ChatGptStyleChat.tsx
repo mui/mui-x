@@ -128,7 +128,7 @@ const allThreads: Record<string, ChatMessage[]> = {
         },
         {
           type: 'text',
-          text: "One of history's most fascinating yet overlooked figures is **Srinivasa Ramanujan** (1887\u20131920), an Indian mathematician who made extraordinary contributions to number theory, continued fractions, and infinite series.\n\nHere are some remarkable facts about him:\n\n- He had almost no formal training in mathematics, yet independently compiled nearly 3,900 results\n- Many of his theorems were so ahead of their time that mathematicians are still proving them correct today\n- He famously wrote a letter to G.H. Hardy at Cambridge, which Hardy described as \"the most remarkable letter I have ever received\"\n- The number 1729 is known as the \"Hardy-Ramanujan number\" \u2014 the smallest number expressible as the sum of two cubes in two different ways",
+          text: 'One of history\'s most fascinating yet overlooked figures is **Srinivasa Ramanujan** (1887\u20131920), an Indian mathematician who made extraordinary contributions to number theory, continued fractions, and infinite series.\n\nHere are some remarkable facts about him:\n\n- He had almost no formal training in mathematics, yet independently compiled nearly 3,900 results\n- Many of his theorems were so ahead of their time that mathematicians are still proving them correct today\n- He famously wrote a letter to G.H. Hardy at Cambridge, which Hardy described as "the most remarkable letter I have ever received"\n- The number 1729 is known as the "Hardy-Ramanujan number" \u2014 the smallest number expressible as the sum of two cubes in two different ways',
         },
       ],
     },
@@ -141,7 +141,12 @@ const allThreads: Record<string, ChatMessage[]> = {
       status: 'sent',
       createdAt: '2026-03-14T09:55:00.000Z',
       author: you,
-      parts: [{ type: 'text', text: 'What is a quick pasta recipe I can make in 15 minutes?' }],
+      parts: [
+        {
+          type: 'text',
+          text: 'What is a quick pasta recipe I can make in 15 minutes?',
+        },
+      ],
     },
     {
       id: 'c-a1',
@@ -217,10 +222,17 @@ function ConversationMenu({
   const rect = anchorEl.getBoundingClientRect();
   const menuItems = [
     { icon: <IosShareIcon style={{ fontSize: 15 }} />, label: 'Share' },
-    { icon: <DriveFileRenameOutlineOutlinedIcon style={{ fontSize: 15 }} />, label: 'Rename' },
+    {
+      icon: <DriveFileRenameOutlineOutlinedIcon style={{ fontSize: 15 }} />,
+      label: 'Rename',
+    },
     { icon: <PushPinOutlinedIcon style={{ fontSize: 15 }} />, label: 'Pin chat' },
     { icon: <ArchiveOutlinedIcon style={{ fontSize: 15 }} />, label: 'Archive' },
-    { icon: <DeleteOutlinedIcon style={{ fontSize: 15 }} />, label: 'Delete', color: '#ef4444' },
+    {
+      icon: <DeleteOutlinedIcon style={{ fontSize: 15 }} />,
+      label: 'Delete',
+      color: '#ef4444',
+    },
   ];
 
   return (
@@ -275,7 +287,16 @@ function ConversationMenu({
               (e.currentTarget as HTMLElement).style.background = 'none';
             }}
           >
-            <span style={{ width: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.icon}</span>
+            <span
+              style={{
+                width: 18,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {item.icon}
+            </span>
             {item.label}
           </button>
         ))}
@@ -297,7 +318,16 @@ const GptConversationItem = React.forwardRef(function GptConversationItem(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { children, ownerState, conversation, selected, unread, focused, style, ...other } = props;
+  const {
+    children,
+    ownerState,
+    conversation,
+    selected,
+    unread,
+    focused,
+    style,
+    ...other
+  } = props;
   const [hovered, setHovered] = React.useState(false);
   const [menuAnchor, setMenuAnchor] = React.useState<HTMLElement | null>(null);
   const hasUnread = (conversation as { unreadCount?: number })?.unreadCount
@@ -394,7 +424,8 @@ const GptConversationAvatar = React.forwardRef(function GptConversationAvatar(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { ownerState, conversation, selected, unread, focused, style, ...other } = props;
+  const { ownerState, conversation, selected, unread, focused, style, ...other } =
+    props;
   return <div ref={ref} style={{ display: 'none', ...style }} {...other} />;
 });
 
@@ -408,7 +439,8 @@ const GptConversationTitle = React.forwardRef(function GptConversationTitle(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { conversation, ownerState, selected, unread, focused, style, ...other } = props;
+  const { conversation, ownerState, selected, unread, focused, style, ...other } =
+    props;
   return (
     <div
       ref={ref}
@@ -456,19 +488,21 @@ const GptConversationTimestamp = React.forwardRef(function GptConversationTimest
   return <div ref={ref} style={{ display: 'none' }} {...other} />;
 });
 
-const GptConversationUnreadBadge = React.forwardRef(function GptConversationUnreadBadge(
-  props: React.HTMLAttributes<HTMLSpanElement> & {
-    ownerState?: unknown;
-    conversation?: unknown;
-    selected?: boolean;
-    unread?: boolean;
-    focused?: boolean;
+const GptConversationUnreadBadge = React.forwardRef(
+  function GptConversationUnreadBadge(
+    props: React.HTMLAttributes<HTMLSpanElement> & {
+      ownerState?: unknown;
+      conversation?: unknown;
+      selected?: boolean;
+      unread?: boolean;
+      focused?: boolean;
+    },
+    ref: React.Ref<HTMLSpanElement>,
+  ) {
+    const { ownerState, conversation, selected, unread, focused, ...other } = props;
+    return <span ref={ref} style={{ display: 'none' }} {...other} />;
   },
-  ref: React.Ref<HTMLSpanElement>,
-) {
-  const { ownerState, conversation, selected, unread, focused, ...other } = props;
-  return <span ref={ref} style={{ display: 'none' }} {...other} />;
-});
+);
 
 // ---------------------------------------------------------------------------
 // Slot components — Messages
@@ -544,7 +578,12 @@ const GptAvatar = React.forwardRef(function GptAvatar(
   },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { ownerState: _ownerState, children: _children, style: _style, ...other } = props;
+  const {
+    ownerState: _ownerState,
+    children: _children,
+    style: _style,
+    ...other
+  } = props;
 
   return <div ref={ref} style={{ display: 'none' }} {...other} />;
 });
@@ -605,7 +644,9 @@ const GptMeta = React.forwardRef(function GptMeta(
 // Slot components — Reasoning (thinking block)
 // ---------------------------------------------------------------------------
 const GptReasoningRoot = React.forwardRef(function GptReasoningRoot(
-  props: React.HTMLAttributes<HTMLDetailsElement> & { ownerState?: ReasoningPartOwnerState },
+  props: React.HTMLAttributes<HTMLDetailsElement> & {
+    ownerState?: ReasoningPartOwnerState;
+  },
   ref: React.Ref<HTMLDetailsElement>,
 ) {
   const { ownerState: _ownerState, style, ...other } = props;
@@ -628,7 +669,9 @@ const GptReasoningRoot = React.forwardRef(function GptReasoningRoot(
 });
 
 const GptReasoningSummary = React.forwardRef(function GptReasoningSummary(
-  props: React.HTMLAttributes<HTMLElement> & { ownerState?: ReasoningPartOwnerState },
+  props: React.HTMLAttributes<HTMLElement> & {
+    ownerState?: ReasoningPartOwnerState;
+  },
   ref: React.Ref<HTMLElement>,
 ) {
   const { ownerState: _ownerState, children, style, ...other } = props;
@@ -656,7 +699,9 @@ const GptReasoningSummary = React.forwardRef(function GptReasoningSummary(
 });
 
 const GptReasoningContent = React.forwardRef(function GptReasoningContent(
-  props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: ReasoningPartOwnerState },
+  props: React.HTMLAttributes<HTMLDivElement> & {
+    ownerState?: ReasoningPartOwnerState;
+  },
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { ownerState: _ownerState, style, ...other } = props;
@@ -774,7 +819,9 @@ const GptToolState = React.forwardRef(function GptToolState(
 });
 
 const GptToolSection = React.forwardRef(function GptToolSection(
-  props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: ToolPartSectionOwnerState },
+  props: React.HTMLAttributes<HTMLDivElement> & {
+    ownerState?: ToolPartSectionOwnerState;
+  },
   ref: React.Ref<HTMLDivElement>,
 ) {
   const { ownerState: _ownerState, style, ...other } = props;
@@ -792,7 +839,9 @@ const GptToolSection = React.forwardRef(function GptToolSection(
 });
 
 const GptToolSectionContent = React.forwardRef(function GptToolSectionContent(
-  props: React.HTMLAttributes<HTMLPreElement> & { ownerState?: ToolPartSectionOwnerState },
+  props: React.HTMLAttributes<HTMLPreElement> & {
+    ownerState?: ToolPartSectionOwnerState;
+  },
   ref: React.Ref<HTMLPreElement>,
 ) {
   const { ownerState: _ownerState, style, ...other } = props;
@@ -919,7 +968,8 @@ const GptSendButton = React.forwardRef(function GptSendButton(
 // Main component
 // ---------------------------------------------------------------------------
 export default function ChatGptStyleChat() {
-  const [activeConversationId, setActiveConversationId] = React.useState('historical');
+  const [activeConversationId, setActiveConversationId] =
+    React.useState('historical');
   const [convos, setConvos] = React.useState(() =>
     cloneConversations(conversations),
   );
@@ -1209,7 +1259,9 @@ export default function ChatGptStyleChat() {
                   >
                     <MicNoneRoundedIcon style={{ fontSize: 20 }} />
                   </button>
-                  <ConversationInput.SendButton slots={{ sendButton: GptSendButton }} />
+                  <ConversationInput.SendButton
+                    slots={{ sendButton: GptSendButton }}
+                  />
                 </div>
               </div>
             </ConversationInput.Root>
