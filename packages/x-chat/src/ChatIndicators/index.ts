@@ -5,8 +5,29 @@ export type { ChatUnreadMarkerProps } from './ChatUnreadMarker';
 export { ChatScrollToBottomAffordance } from './ChatScrollToBottomAffordance';
 export type { ChatScrollToBottomAffordanceProps } from './ChatScrollToBottomAffordance';
 export {
-  chatIndicatorClasses,
-  getChatIndicatorUtilityClass,
-  useChatIndicatorUtilityClasses,
-} from './chatIndicatorClasses';
-export type { ChatIndicatorClasses, ChatIndicatorClassKey } from './chatIndicatorClasses';
+  chatTypingIndicatorClasses,
+  getChatTypingIndicatorUtilityClass,
+  useChatTypingIndicatorUtilityClasses,
+} from './chatTypingIndicatorClasses';
+export type {
+  ChatTypingIndicatorClasses,
+  ChatTypingIndicatorClassKey,
+} from './chatTypingIndicatorClasses';
+export {
+  chatScrollToBottomAffordanceClasses,
+  getChatScrollToBottomAffordanceUtilityClass,
+  useChatScrollToBottomAffordanceUtilityClasses,
+} from './chatScrollToBottomAffordanceClasses';
+export type {
+  ChatScrollToBottomAffordanceClasses,
+  ChatScrollToBottomAffordanceClassKey,
+} from './chatScrollToBottomAffordanceClasses';
+export {
+  chatUnreadMarkerClasses,
+  getChatUnreadMarkerUtilityClass,
+  useChatUnreadMarkerUtilityClasses,
+} from './chatUnreadMarkerClasses';
+export type {
+  ChatUnreadMarkerClasses,
+  ChatUnreadMarkerClassKey,
+} from './chatUnreadMarkerClasses';

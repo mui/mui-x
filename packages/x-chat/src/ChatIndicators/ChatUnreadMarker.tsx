@@ -1,19 +1,25 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { UnreadMarker, type UnreadMarkerProps } from '@mui/x-chat-unstyled';
-import { useChatIndicatorUtilityClasses, type ChatIndicatorClasses } from './chatIndicatorClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+import {
+  useChatUnreadMarkerUtilityClasses,
+  type ChatUnreadMarkerClasses,
+} from './chatUnreadMarkerClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatUnreadMarker');
 
 export interface ChatUnreadMarkerProps extends UnreadMarkerProps {
   className?: string;
-  classes?: Partial<ChatIndicatorClasses>;
+  classes?: Partial<ChatUnreadMarkerClasses>;
 }
 
 const ChatUnreadMarkerStyled = styled('div', {
-  name: 'MuiChatIndicator',
-  slot: 'UnreadMarker',
-  overridesResolver: (_, styles) => styles.unreadMarker,
+  name: 'MuiChatUnreadMarker',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -23,8 +29,9 @@ const ChatUnreadMarkerStyled = styled('div', {
 }));
 
 const ChatUnreadMarkerLabelStyled = styled('div', {
-  name: 'MuiChatIndicator',
-  slot: 'UnreadMarkerLabel',
+  name: 'MuiChatUnreadMarker',
+  slot: 'Label',
+  overridesResolver: (_, styles) => styles.label,
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
@@ -32,11 +39,11 @@ const ChatUnreadMarkerLabelStyled = styled('div', {
   whiteSpace: 'nowrap',
 }));
 
-export const ChatUnreadMarker = React.forwardRef<HTMLDivElement, ChatUnreadMarkerProps>(
+const ChatUnreadMarker = React.forwardRef<HTMLDivElement, ChatUnreadMarkerProps>(
   function ChatUnreadMarker(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatIndicator' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatUnreadMarker' });
     const { slots, slotProps, className, classes: classesProp, ...other } = props;
-    const classes = useChatIndicatorUtilityClasses(classesProp);
+    const classes = useChatUnreadMarkerUtilityClasses(classesProp);
 
     return (
       <UnreadMarker
@@ -50,11 +57,32 @@ export const ChatUnreadMarker = React.forwardRef<HTMLDivElement, ChatUnreadMarke
         slotProps={{
           ...slotProps,
           root: {
-            className: clsx(classes.unreadMarker, className),
+            className: clsx(classes.root, className),
             ...(slotProps?.root as object),
+          } as any,
+          label: {
+            className: classes.label,
+            ...(slotProps?.label as object),
           } as any,
         }}
       />
     );
   },
 );
+
+ChatUnreadMarker.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  index: PropTypes.number,
+  items: PropTypes.arrayOf(PropTypes.string),
+  label: PropTypes.node,
+  messageId: PropTypes.string.isRequired,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
+
+export { ChatUnreadMarker };

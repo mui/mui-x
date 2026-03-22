@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatMessage');
 import { MessageContent, type MessageContentProps } from '@mui/x-chat-unstyled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 import { renderMarkdown } from './renderMarkdown';
@@ -30,7 +34,6 @@ const ChatMessageBubbleStyled = styled('div', {
   overridesResolver: (_, styles) => styles.bubble,
 })<{ ownerState?: { role?: string } }>(({ theme, ownerState }) => {
   const isUser = ownerState?.role === 'user';
-  const isDarkMode = theme.palette.mode === 'dark';
 
   return {
     padding: theme.spacing(1, 1.5),
@@ -43,7 +46,6 @@ const ChatMessageBubbleStyled = styled('div', {
     whiteSpace: isUser ? 'pre-wrap' : 'normal',
     maxWidth: '100%',
     boxSizing: 'border-box',
-
     '& p': {
       margin: 0,
     },
@@ -53,24 +55,24 @@ const ChatMessageBubbleStyled = styled('div', {
       overflow: 'auto',
       padding: theme.spacing(1),
       fontSize: theme.typography.caption.fontSize,
-      background: isUser ? 'rgba(0,0,0,0.15)' : (theme.vars || theme).palette.action.hover,
+      background: isUser ? 'rgba(255,255,255,0.15)' : (theme.vars || theme).palette.action.hover,
     },
     '& code': {
       fontFamily: 'monospace',
       fontSize: '0.875em',
-      background: isUser ? 'rgba(0,0,0,0.15)' : (theme.vars || theme).palette.action.hover,
+      background: isUser ? 'rgba(255,255,255,0.15)' : (theme.vars || theme).palette.action.hover,
       padding: '0.1em 0.3em',
     },
     '& pre code': {
       background: 'none',
       padding: 0,
     },
-
     backgroundColor: isUser
       ? (theme.vars || theme).palette.primary.main
-      : isDarkMode
-        ? (theme.vars || theme).palette.grey[800]
-        : (theme.vars || theme).palette.grey[100],
+      : (theme.vars || theme).palette.grey[100],
+    ...(!isUser && theme.applyStyles('dark', {
+      backgroundColor: (theme.vars || theme).palette.grey[800],
+    })),
     color: isUser
       ? (theme.vars || theme).palette.primary.contrastText
       : (theme.vars || theme).palette.text.primary,
@@ -167,7 +169,6 @@ const ChatToolPartIconStyled = styled('span', {
   userSelect: 'none',
   lineHeight: 1,
   transition: 'opacity 100ms',
-
   // Collapsed + hovering summary: hide icon char, show '+' hint
   'details:not([open]) summary:hover &': {
     fontSize: 0,
@@ -178,7 +179,6 @@ const ChatToolPartIconStyled = styled('span', {
       lineHeight: 1,
     },
   },
-
   // Expanded + hovering summary: hide icon char, show '−' hint
   'details[open] summary:hover &': {
     fontSize: 0,
@@ -210,6 +210,16 @@ const ChatToolPartIconComponent = React.forwardRef<HTMLSpanElement, ChatToolPart
     );
   },
 );
+
+ChatToolPartIconComponent.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  ownerState: PropTypes.shape({
+    toolName: PropTypes.string,
+  }),
+} as any;
 
 const ChatToolPartTitle = styled('div', {
   name: 'MuiChatMessage',
@@ -466,7 +476,7 @@ const reasoningPartSlots = {
 // ChatMessageContent
 // ---------------------------------------------------------------------------
 
-export const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentProps>(
+const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentProps>(
   function ChatMessageContent(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
     const {
@@ -492,11 +502,13 @@ export const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageCo
           ...slotProps,
           content: {
             className: clsx(classes.content, className),
-            ...(slotProps?.content as object),
+            ...slotProps?.content,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           bubble: {
             className: classes.bubble,
-            ...(slotProps?.bubble as object),
+            ...slotProps?.bubble,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         }}
         partProps={{
@@ -525,3 +537,67 @@ export const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageCo
     );
   },
 );
+
+ChatMessageContent.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  /**
+   * Props forwarded to the built-in unstyled part renderer components.
+   * Use this to pass `slots` and `slotProps` to individual part type renderers.
+   */
+  partProps: PropTypes.shape({
+    'dynamic-tool': PropTypes.shape({
+      className: PropTypes.string,
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+      toolSlotProps: PropTypes.object,
+      toolSlots: PropTypes.object,
+    }),
+    file: PropTypes.shape({
+      className: PropTypes.string,
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+    }),
+    reasoning: PropTypes.shape({
+      className: PropTypes.string,
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+    }),
+    'source-document': PropTypes.shape({
+      className: PropTypes.string,
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+    }),
+    'source-url': PropTypes.shape({
+      className: PropTypes.string,
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+    }),
+    text: PropTypes.shape({
+      renderText: PropTypes.func,
+    }),
+    tool: PropTypes.shape({
+      className: PropTypes.string,
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
+      toolSlotProps: PropTypes.object,
+      toolSlots: PropTypes.object,
+    }),
+  }),
+  /**
+   * @deprecated Use `partProps` instead.
+   * Callback to resolve a built-in part renderer for a given part type.
+   * @param {ChatMessagePart} part The message part to resolve a renderer for.
+   * @param {ChatLocaleText} localeText The locale text for the chat.
+   * @returns {ChatPartRenderer<ChatMessagePart> | null} A renderer or null.
+   */
+  resolveBuiltInPartRenderer: PropTypes.func,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
+
+export { ChatMessageContent };

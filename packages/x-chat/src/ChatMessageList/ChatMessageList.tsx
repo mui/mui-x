@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatMessageList');
 import { SxProps, Theme } from '@mui/system';
 import {
   MessageListRoot,
@@ -56,7 +59,7 @@ const ChatMessageListContentStyled = styled('div', {
   boxSizing: 'border-box',
 }));
 
-export const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListProps>(
+const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListProps>(
   function ChatMessageList(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageList' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
@@ -77,18 +80,63 @@ export const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessa
           messageList: {
             className: clsx(classes.root, className),
             sx,
-            ...(slotProps?.messageList as object),
+            ...slotProps?.messageList,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           messageListScroller: {
             className: classes.scroller,
-            ...(slotProps?.messageListScroller as object),
+            ...slotProps?.messageListScroller,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           messageListContent: {
             className: classes.content,
-            ...(slotProps?.messageListContent as object),
+            ...slotProps?.messageListContent,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         }}
       />
     );
   },
 );
+
+ChatMessageList.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Controls automatic scrolling to the bottom when new messages arrive or
+   * streaming content grows, as long as the user is within `buffer` pixels of
+   * the bottom.
+   *
+   * - `true` – enable with the default buffer (150 px).
+   * - `{ buffer: number }` – enable with a custom threshold.
+   * - `false` – disable (the scroll-to-bottom affordance is still available).
+   *
+   * Scrolling when the *user* sends a message is always active.
+   * @default true
+   */
+  autoScroll: PropTypes.oneOfType([
+    PropTypes.shape({
+      buffer: PropTypes.number,
+    }),
+    PropTypes.bool,
+  ]),
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  estimatedItemSize: PropTypes.number,
+  getItemKey: PropTypes.func,
+  items: PropTypes.arrayOf(PropTypes.string),
+  onReachTop: PropTypes.func,
+  overlay: PropTypes.node,
+  renderItem: PropTypes.func.isRequired,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { ChatMessageList };

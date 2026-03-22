@@ -4,7 +4,9 @@ import { type ChatMessageListClassKey } from '../ChatMessageList/chatMessageList
 import { type ChatConversationClassKey } from '../ChatConversation/chatConversationClasses';
 import { type ChatConversationInputClassKey } from '../ChatConversationInput/chatConversationInputClasses';
 import { type ChatConversationListClassKey } from '../ChatConversationList/chatConversationListClasses';
-import { type ChatIndicatorClassKey } from '../ChatIndicators/chatIndicatorClasses';
+import { type ChatTypingIndicatorClassKey } from '../ChatIndicators/chatTypingIndicatorClasses';
+import { type ChatScrollToBottomAffordanceClassKey } from '../ChatIndicators/chatScrollToBottomAffordanceClasses';
+import { type ChatUnreadMarkerClassKey } from '../ChatIndicators/chatUnreadMarkerClasses';
 
 // prettier-ignore
 export interface ChatComponentNameToClassKey {
@@ -14,7 +16,9 @@ export interface ChatComponentNameToClassKey {
   MuiChatConversation: ChatConversationClassKey;
   MuiChatConversationInput: ChatConversationInputClassKey;
   MuiChatConversationList: ChatConversationListClassKey;
-  MuiChatIndicator: ChatIndicatorClassKey;
+  MuiChatTypingIndicator: ChatTypingIndicatorClassKey;
+  MuiChatScrollToBottomAffordance: ChatScrollToBottomAffordanceClassKey;
+  MuiChatUnreadMarker: ChatUnreadMarkerClassKey;
 }
 
 declare module '@mui/material/styles' {

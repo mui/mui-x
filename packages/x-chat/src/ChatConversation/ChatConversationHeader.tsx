@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatConversation');
 import { ConversationHeader, type ConversationHeaderProps } from '@mui/x-chat-unstyled';
 import {
   useChatConversationUtilityClasses,
@@ -30,7 +33,7 @@ const ChatConversationHeaderStyled = styled('header', {
   boxSizing: 'border-box',
 }));
 
-export const ChatConversationHeader = React.forwardRef<HTMLElement, ChatConversationHeaderProps>(
+const ChatConversationHeader = React.forwardRef<HTMLElement, ChatConversationHeaderProps>(
   function ChatConversationHeader(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatConversation' });
     const { slots, slotProps, className, classes: classesProp, ...other } = props;
@@ -55,3 +58,17 @@ export const ChatConversationHeader = React.forwardRef<HTMLElement, ChatConversa
     );
   },
 );
+
+ChatConversationHeader.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
+
+export { ChatConversationHeader };

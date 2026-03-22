@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatConversationInput');
 import { SxProps, Theme } from '@mui/system';
 import {
   ConversationInputAttachButton,
@@ -42,22 +45,18 @@ const ChatConversationInputAttachButtonStyled = styled('button', {
   },
   padding: 0,
   fontSize: '1.25rem',
-
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
     color: (theme.vars || theme).palette.text.primary,
   },
-
   '&:focus-visible': {
     outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
     outlineOffset: 2,
   },
-
   '&:disabled': {
     color: (theme.vars || theme).palette.action.disabled,
     cursor: 'not-allowed',
   },
-
   '& svg': {
     width: '1em',
     height: '1em',
@@ -65,7 +64,7 @@ const ChatConversationInputAttachButtonStyled = styled('button', {
   },
 }));
 
-export const ChatConversationInputAttachButton = React.forwardRef<
+const ChatConversationInputAttachButton = React.forwardRef<
   HTMLButtonElement,
   ChatConversationInputAttachButtonProps
 >(function ChatConversationInputAttachButton(inProps, ref) {
@@ -92,3 +91,21 @@ export const ChatConversationInputAttachButton = React.forwardRef<
     />
   );
 });
+
+ChatConversationInputAttachButton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { ChatConversationInputAttachButton };

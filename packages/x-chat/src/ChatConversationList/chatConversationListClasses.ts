@@ -21,6 +21,12 @@ export interface ChatConversationListClasses {
   itemTimestamp: string;
   /** Styles applied to the item unread badge element. */
   itemUnreadBadge: string;
+  /** Applied to a selected conversation item */
+  itemSelected: string;
+  /** Applied to an unread conversation item */
+  itemUnread: string;
+  /** Applied to a focused conversation item */
+  itemFocused: string;
 }
 
 export type ChatConversationListClassKey = keyof ChatConversationListClasses;
@@ -41,6 +47,9 @@ export const chatConversationListClasses: ChatConversationListClasses = generate
     'itemPreview',
     'itemTimestamp',
     'itemUnreadBadge',
+    'itemSelected',
+    'itemUnread',
+    'itemFocused',
   ],
 );
 
@@ -54,6 +63,9 @@ const slots: Record<ChatConversationListClassKey, string[]> = {
   itemPreview: ['itemPreview'],
   itemTimestamp: ['itemTimestamp'],
   itemUnreadBadge: ['itemUnreadBadge'],
+  itemSelected: ['itemSelected'],
+  itemUnread: ['itemUnread'],
+  itemFocused: ['itemFocused'],
 };
 
 export const useChatConversationListUtilityClasses = (

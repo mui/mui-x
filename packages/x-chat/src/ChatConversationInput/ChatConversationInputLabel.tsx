@@ -6,58 +6,64 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationInput');
 import { SxProps, Theme } from '@mui/system';
-import { ConversationInputToolbar, type ConversationInputToolbarProps } from '@mui/x-chat-unstyled';
+import {
+  ConversationInputLabel,
+  type ConversationInputLabelProps,
+} from '@mui/x-chat-unstyled';
 import {
   useChatConversationInputUtilityClasses,
   type ChatConversationInputClasses,
 } from './chatConversationInputClasses';
 
-export interface ChatConversationInputToolbarProps extends ConversationInputToolbarProps {
+export interface ChatConversationInputLabelProps extends ConversationInputLabelProps {
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatConversationInputClasses>;
 }
 
-const ChatConversationInputToolbarStyled = styled('div', {
+const ChatConversationInputLabelStyled = styled('label', {
   name: 'MuiChatConversationInput',
-  slot: 'Toolbar',
-  overridesResolver: (_, styles) => styles.toolbar,
+  slot: 'Label',
+  overridesResolver: (_, styles) => styles.label,
 })(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  gap: theme.spacing(0.5),
+  display: 'block',
+  fontSize: theme.typography.caption.fontSize,
+  lineHeight: theme.typography.caption.lineHeight,
+  color: (theme.vars || theme).palette.text.secondary,
+  marginBottom: theme.spacing(0.5),
+  paddingInline: theme.spacing(0.5),
 }));
 
-const ChatConversationInputToolbar = React.forwardRef<
-  HTMLDivElement,
-  ChatConversationInputToolbarProps
->(function ChatConversationInputToolbar(inProps, ref) {
+const ChatConversationInputLabel = React.forwardRef<
+  HTMLLabelElement,
+  ChatConversationInputLabelProps
+>(function ChatConversationInputLabel(inProps, ref) {
   const props = useThemeProps({ props: inProps, name: 'MuiChatConversationInput' });
   const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
   const classes = useChatConversationInputUtilityClasses(classesProp);
 
   return (
-    <ConversationInputToolbar
+    <ConversationInputLabel
       ref={ref}
       {...other}
       slots={{
-        toolbar: slots?.toolbar ?? ChatConversationInputToolbarStyled,
+        label: slots?.label ?? ChatConversationInputLabelStyled,
         ...slots,
       }}
       slotProps={{
         ...slotProps,
-        toolbar: {
-          className: clsx(classes.toolbar, className),
+        label: {
+          className: clsx(classes.label, className),
           sx,
-          ...(slotProps?.toolbar as object),
+          ...slotProps?.label,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
       }}
     />
   );
 });
 
-ChatConversationInputToolbar.propTypes = {
+ChatConversationInputLabel.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -73,4 +79,4 @@ ChatConversationInputToolbar.propTypes = {
   ]),
 } as any;
 
-export { ChatConversationInputToolbar };
+export { ChatConversationInputLabel };

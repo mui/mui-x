@@ -19,8 +19,18 @@ export interface ChatMessageClasses {
   actions: string;
   /** Styles applied to the message group element. */
   group: string;
+  /** Class applied to the group author name element. */
+  groupAuthorName: string;
   /** Styles applied to the date divider element. */
   dateDivider: string;
+  /** Applied when the message role is 'user' */
+  roleUser: string;
+  /** Applied when the message role is 'assistant' */
+  roleAssistant: string;
+  /** Applied while the message is streaming */
+  streaming: string;
+  /** Applied when the message has an error status */
+  error: string;
 }
 
 export type ChatMessageClassKey = keyof ChatMessageClasses;
@@ -38,7 +48,12 @@ export const chatMessageClasses: ChatMessageClasses = generateUtilityClasses('Mu
   'meta',
   'actions',
   'group',
+  'groupAuthorName',
   'dateDivider',
+  'roleUser',
+  'roleAssistant',
+  'streaming',
+  'error',
 ]);
 
 const slots: Record<ChatMessageClassKey, string[]> = {
@@ -50,7 +65,12 @@ const slots: Record<ChatMessageClassKey, string[]> = {
   meta: ['meta'],
   actions: ['actions'],
   group: ['group'],
+  groupAuthorName: ['groupAuthorName'],
   dateDivider: ['dateDivider'],
+  roleUser: ['roleUser'],
+  roleAssistant: ['roleAssistant'],
+  streaming: ['streaming'],
+  error: ['error'],
 };
 
 export const useChatMessageUtilityClasses = (

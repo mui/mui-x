@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatConversationList');
 import { SxProps, Theme } from '@mui/system';
 import {
   ConversationListRoot,
@@ -29,6 +32,7 @@ const ChatConversationListStyled = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
+  '--ChatBox-conversationListWidth': '260px',
   display: 'flex',
   flexDirection: 'column',
   padding: theme.spacing(0.5, 0),
@@ -48,7 +52,7 @@ const ChatConversationListScrollerStyled = styled('div', {
   borderRight: '1px solid',
   borderRightColor: (theme.vars || theme).palette.divider,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-  width: 260,
+  width: 'var(--ChatBox-conversationListWidth, 260px)',
   height: '100%',
   overflow: 'hidden',
   flexShrink: 0,
@@ -80,6 +84,7 @@ const NoopScrollbar = React.forwardRef<HTMLDivElement>(function NoopScrollbar() 
 // They are intentionally NOT forwarded to the DOM to avoid React unknown-prop warnings.
 // NOTE: providing a custom shouldForwardProp REPLACES MUI's default exclusion list, so we
 // must also explicitly exclude 'ownerState', 'theme', 'sx', and 'as' here.
+
 const itemSlotShouldForwardProp = (prop: string) =>
   !['conversation', 'selected', 'unread', 'focused', 'ownerState', 'theme', 'sx', 'as'].includes(
     prop,
@@ -90,7 +95,7 @@ const ChatConversationListItemStyled = styled('div', {
   slot: 'Item',
   shouldForwardProp: itemSlotShouldForwardProp,
   overridesResolver: (_, styles) => styles.item,
-})<{ ownerState?: { selected?: boolean; unread?: boolean } }>(({ theme, ownerState }) => ({
+})<{ ownerState?: { selected?: boolean; unread?: boolean; focused?: boolean } }>(({ theme, ownerState }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1.5),
@@ -107,18 +112,15 @@ const ChatConversationListItemStyled = styled('div', {
   backgroundColor: ownerState?.selected
     ? (theme.vars || theme).palette.action.selected
     : 'transparent',
-
   '&:hover': {
     backgroundColor: ownerState?.selected
       ? (theme.vars || theme).palette.action.selected
       : (theme.vars || theme).palette.action.hover,
   },
-
   '&:focus-visible': {
     outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
     outlineOffset: -2,
   },
-
   ...(ownerState?.unread &&
     !ownerState?.selected && {
       backgroundColor: (theme.vars || theme).palette.action.focus,
@@ -148,7 +150,6 @@ const ChatConversationListItemAvatarRoot = styled('div', {
   fontSize: theme.typography.body2.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
   color: (theme.vars || theme).palette.text.secondary,
-
   '& img': {
     width: '100%',
     height: '100%',
@@ -312,7 +313,7 @@ const ChatConversationListUnreadBadgeStyled = React.forwardRef<HTMLDivElement>(
   },
 );
 
-export const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationListProps>(
+const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationListProps>(
   function ChatConversationList(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatConversationList' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
@@ -342,42 +343,77 @@ export const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConvers
           root: {
             className: clsx(classes.root, className),
             sx,
-            ...(slotProps?.root as object),
+            ...slotProps?.root,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           scroller: {
             className: classes.scroller,
-            ...(slotProps?.scroller as object),
+            ...slotProps?.scroller,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
-          item: {
-            className: classes.item,
-            ...(slotProps?.item as object),
-          } as any,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          item: ((ownerState: any) => ({
+            className: clsx(
+              classes.item,
+              ownerState?.selected && classes.itemSelected,
+              ownerState?.unread && classes.itemUnread,
+              ownerState?.focused && classes.itemFocused,
+            ),
+            ...(typeof slotProps?.item === 'function'
+              ? (slotProps.item as (s: any) => any)(ownerState)
+              : slotProps?.item),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          })) as any,
           itemAvatar: {
             className: classes.itemAvatar,
-            ...(slotProps?.itemAvatar as object),
+            ...slotProps?.itemAvatar,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           itemContent: {
             className: classes.itemContent,
-            ...(slotProps?.itemContent as object),
+            ...slotProps?.itemContent,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           title: {
             className: classes.itemTitle,
-            ...(slotProps?.title as object),
+            ...slotProps?.title,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           preview: {
             className: classes.itemPreview,
-            ...(slotProps?.preview as object),
+            ...slotProps?.preview,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           timestamp: {
             className: classes.itemTimestamp,
-            ...(slotProps?.timestamp as object),
+            ...slotProps?.timestamp,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           unreadBadge: {
             className: classes.itemUnreadBadge,
-            ...(slotProps?.unreadBadge as object),
+            ...slotProps?.unreadBadge,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         }}
       />
     );
   },
 );
+
+ChatConversationList.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { ChatConversationList };

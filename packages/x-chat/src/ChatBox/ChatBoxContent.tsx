@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useMessageIds, useConversations } from '@mui/x-chat-headless';
-import { styled } from '@mui/material/styles';
+import { styled } from '../internals/zero-styled';
 import { ChatLayout, useChatLocaleText } from '@mui/x-chat-unstyled';
 import { ChatConversation } from '../ChatConversation/ChatConversation';
 import { ChatConversationHeader } from '../ChatConversation/ChatConversationHeader';
@@ -159,22 +159,23 @@ function DefaultComposer({
     ChatConversationInputAttachButton) as typeof ChatConversationInputAttachButton;
   const ComposerHelperTextComponent = (slots?.composerHelperText ??
     ChatConversationInputHelperText) as typeof ChatConversationInputHelperText;
+  const localeText = useChatLocaleText();
 
   return (
     <ComposerRootComponent {...(slotProps?.composerRoot ?? {})}>
-      <ComposerInputComponent placeholder="Type a message…" {...(slotProps?.composerInput ?? {})} />
+      <ComposerInputComponent placeholder={localeText.composerInputPlaceholder} {...(slotProps?.composerInput ?? {})} />
       {showHelperText && <ComposerHelperTextComponent {...(slotProps?.composerHelperText ?? {})} />}
       <ComposerToolbarComponent {...(slotProps?.composerToolbar ?? {})}>
         {showAttachButton && (
           <ComposerAttachButtonComponent
-            aria-label="Attach file"
+            aria-label={localeText.composerAttachButtonLabel}
             {...(slotProps?.composerAttachButton ?? {})}
           >
             <DefaultAttachIcon />
           </ComposerAttachButtonComponent>
         )}
         <ComposerSendButtonComponent
-          aria-label="Send message"
+          aria-label={localeText.composerSendButtonLabel}
           {...(slotProps?.composerSendButton ?? {})}
         >
           <DefaultSendIcon />

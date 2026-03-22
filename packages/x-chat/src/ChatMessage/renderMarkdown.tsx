@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { normalizeMarkdownForRender } from '@mui/x-chat-unstyled';
+import { normalizeMarkdownForRender } from '@mui/x-chat-unstyled/internals';
 
 // ---------------------------------------------------------------------------
 // Inline parser — bold, italic, inline-code, links

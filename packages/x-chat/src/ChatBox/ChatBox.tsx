@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatBox');
 import { ChatRoot } from '@mui/x-chat-unstyled';
 import { useChatBoxUtilityClasses } from './chatBoxClasses';
 import { ChatBoxContent } from './ChatBoxContent';
@@ -31,7 +34,7 @@ type ChatBoxComponent = (<Cursor = string>(
   props: ChatBoxProps<Cursor> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-export const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
+const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   inProps: ChatBoxProps<Cursor>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -110,3 +113,347 @@ export const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     </ChatRoot>
   );
 }) as ChatBoxComponent;
+
+ChatBox.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  activeConversationId: PropTypes.string,
+  adapter: PropTypes.shape({
+    addToolApprovalResponse: PropTypes.func,
+    listConversations: PropTypes.func,
+    listMessages: PropTypes.func,
+    loadMore: PropTypes.func,
+    markRead: PropTypes.func,
+    reconnectToStream: PropTypes.func,
+    sendMessage: PropTypes.func.isRequired,
+    setTyping: PropTypes.func,
+    stop: PropTypes.func,
+    subscribe: PropTypes.func,
+  }).isRequired,
+  children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  composerValue: PropTypes.string,
+  conversations: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      lastMessageAt: PropTypes.string,
+      metadata: PropTypes.object,
+      participants: PropTypes.arrayOf(
+        PropTypes.shape({
+          avatarUrl: PropTypes.string,
+          displayName: PropTypes.string,
+          id: PropTypes.string.isRequired,
+          isOnline: PropTypes.bool,
+          metadata: PropTypes.object,
+        }),
+      ),
+      readState: PropTypes.oneOf(['read', 'unread']),
+      subtitle: PropTypes.string,
+      title: PropTypes.string,
+      unreadCount: PropTypes.number,
+    }),
+  ),
+  defaultActiveConversationId: PropTypes.string,
+  defaultComposerValue: PropTypes.string,
+  defaultConversations: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      lastMessageAt: PropTypes.string,
+      metadata: PropTypes.object,
+      participants: PropTypes.arrayOf(
+        PropTypes.shape({
+          avatarUrl: PropTypes.string,
+          displayName: PropTypes.string,
+          id: PropTypes.string.isRequired,
+          isOnline: PropTypes.bool,
+          metadata: PropTypes.object,
+        }),
+      ),
+      readState: PropTypes.oneOf(['read', 'unread']),
+      subtitle: PropTypes.string,
+      title: PropTypes.string,
+      unreadCount: PropTypes.number,
+    }),
+  ),
+  defaultMessages: PropTypes.arrayOf(
+    PropTypes.shape({
+      author: PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+      }),
+      conversationId: PropTypes.string,
+      createdAt: PropTypes.string,
+      editedAt: PropTypes.string,
+      id: PropTypes.string.isRequired,
+      metadata: PropTypes.object,
+      parts: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.shape({
+            state: PropTypes.oneOf(['done', 'streaming']),
+            text: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['text']).isRequired,
+          }),
+          PropTypes.shape({
+            state: PropTypes.oneOf(['done', 'streaming']),
+            text: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['reasoning']).isRequired,
+          }),
+          PropTypes.shape({
+            filename: PropTypes.string,
+            mediaType: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['file']).isRequired,
+            url: PropTypes.string.isRequired,
+          }),
+          PropTypes.shape({
+            sourceId: PropTypes.string.isRequired,
+            title: PropTypes.string,
+            type: PropTypes.oneOf(['source-url']).isRequired,
+            url: PropTypes.string.isRequired,
+          }),
+          PropTypes.shape({
+            sourceId: PropTypes.string.isRequired,
+            text: PropTypes.string,
+            title: PropTypes.string,
+            type: PropTypes.oneOf(['source-document']).isRequired,
+          }),
+          PropTypes.shape({
+            data: PropTypes.any.isRequired,
+            id: PropTypes.string,
+            transient: PropTypes.bool,
+            type: PropTypes.object.isRequired,
+          }),
+          PropTypes.shape({
+            type: PropTypes.oneOf(['step-start']).isRequired,
+          }),
+          PropTypes.shape({
+            toolInvocation: PropTypes.shape({
+              approval: PropTypes.object,
+              callProviderMetadata: PropTypes.object,
+              errorText: PropTypes.string,
+              input: PropTypes.any,
+              output: PropTypes.any,
+              preliminary: PropTypes.bool,
+              providerExecuted: PropTypes.bool,
+              state: PropTypes.oneOf([
+                'approval-requested',
+                'approval-responded',
+                'input-available',
+                'input-streaming',
+                'output-available',
+                'output-denied',
+                'output-error',
+              ]).isRequired,
+              title: PropTypes.string,
+              toolCallId: PropTypes.string.isRequired,
+              toolName: PropTypes.string.isRequired,
+            }).isRequired,
+            type: PropTypes.oneOf(['tool']).isRequired,
+          }),
+          PropTypes.shape({
+            toolInvocation: PropTypes.shape({
+              approval: PropTypes.object,
+              callProviderMetadata: PropTypes.object,
+              errorText: PropTypes.string,
+              input: PropTypes.any,
+              output: PropTypes.any,
+              preliminary: PropTypes.bool,
+              providerExecuted: PropTypes.bool,
+              state: PropTypes.oneOf([
+                'approval-requested',
+                'approval-responded',
+                'input-available',
+                'input-streaming',
+                'output-available',
+                'output-denied',
+                'output-error',
+              ]).isRequired,
+              title: PropTypes.string,
+              toolCallId: PropTypes.string.isRequired,
+              toolName: PropTypes.string.isRequired,
+            }).isRequired,
+            type: PropTypes.oneOf(['dynamic-tool']).isRequired,
+          }),
+        ]).isRequired,
+      ).isRequired,
+      role: PropTypes.oneOf(['assistant', 'system', 'user']).isRequired,
+      status: PropTypes.oneOf(['cancelled', 'error', 'pending', 'sending', 'sent', 'streaming']),
+      updatedAt: PropTypes.string,
+    }),
+  ),
+  /**
+   * Feature flags to enable or disable built-in ChatBox behaviours.
+   */
+  features: PropTypes.shape({
+    attachButton: PropTypes.bool,
+    autoScroll: PropTypes.oneOfType([
+      PropTypes.shape({
+        buffer: PropTypes.number,
+      }),
+      PropTypes.bool,
+    ]),
+    conversationHeader: PropTypes.bool,
+    helperText: PropTypes.bool,
+    scrollToBottom: PropTypes.bool,
+  }),
+  localeText: PropTypes.object,
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      author: PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+      }),
+      conversationId: PropTypes.string,
+      createdAt: PropTypes.string,
+      editedAt: PropTypes.string,
+      id: PropTypes.string.isRequired,
+      metadata: PropTypes.object,
+      parts: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.shape({
+            state: PropTypes.oneOf(['done', 'streaming']),
+            text: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['text']).isRequired,
+          }),
+          PropTypes.shape({
+            state: PropTypes.oneOf(['done', 'streaming']),
+            text: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['reasoning']).isRequired,
+          }),
+          PropTypes.shape({
+            filename: PropTypes.string,
+            mediaType: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['file']).isRequired,
+            url: PropTypes.string.isRequired,
+          }),
+          PropTypes.shape({
+            sourceId: PropTypes.string.isRequired,
+            title: PropTypes.string,
+            type: PropTypes.oneOf(['source-url']).isRequired,
+            url: PropTypes.string.isRequired,
+          }),
+          PropTypes.shape({
+            sourceId: PropTypes.string.isRequired,
+            text: PropTypes.string,
+            title: PropTypes.string,
+            type: PropTypes.oneOf(['source-document']).isRequired,
+          }),
+          PropTypes.shape({
+            data: PropTypes.any.isRequired,
+            id: PropTypes.string,
+            transient: PropTypes.bool,
+            type: PropTypes.object.isRequired,
+          }),
+          PropTypes.shape({
+            type: PropTypes.oneOf(['step-start']).isRequired,
+          }),
+          PropTypes.shape({
+            toolInvocation: PropTypes.shape({
+              approval: PropTypes.object,
+              callProviderMetadata: PropTypes.object,
+              errorText: PropTypes.string,
+              input: PropTypes.any,
+              output: PropTypes.any,
+              preliminary: PropTypes.bool,
+              providerExecuted: PropTypes.bool,
+              state: PropTypes.oneOf([
+                'approval-requested',
+                'approval-responded',
+                'input-available',
+                'input-streaming',
+                'output-available',
+                'output-denied',
+                'output-error',
+              ]).isRequired,
+              title: PropTypes.string,
+              toolCallId: PropTypes.string.isRequired,
+              toolName: PropTypes.string.isRequired,
+            }).isRequired,
+            type: PropTypes.oneOf(['tool']).isRequired,
+          }),
+          PropTypes.shape({
+            toolInvocation: PropTypes.shape({
+              approval: PropTypes.object,
+              callProviderMetadata: PropTypes.object,
+              errorText: PropTypes.string,
+              input: PropTypes.any,
+              output: PropTypes.any,
+              preliminary: PropTypes.bool,
+              providerExecuted: PropTypes.bool,
+              state: PropTypes.oneOf([
+                'approval-requested',
+                'approval-responded',
+                'input-available',
+                'input-streaming',
+                'output-available',
+                'output-denied',
+                'output-error',
+              ]).isRequired,
+              title: PropTypes.string,
+              toolCallId: PropTypes.string.isRequired,
+              toolName: PropTypes.string.isRequired,
+            }).isRequired,
+            type: PropTypes.oneOf(['dynamic-tool']).isRequired,
+          }),
+        ]).isRequired,
+      ).isRequired,
+      role: PropTypes.oneOf(['assistant', 'system', 'user']).isRequired,
+      status: PropTypes.oneOf(['cancelled', 'error', 'pending', 'sending', 'sent', 'streaming']),
+      updatedAt: PropTypes.string,
+    }),
+  ),
+  onActiveConversationChange: PropTypes.func,
+  onComposerValueChange: PropTypes.func,
+  onConversationsChange: PropTypes.func,
+  onData: PropTypes.func,
+  onError: PropTypes.func,
+  onFinish: PropTypes.func,
+  onMessagesChange: PropTypes.func,
+  onToolCall: PropTypes.func,
+  partRenderers: PropTypes.shape({
+    'dynamic-tool': PropTypes.func,
+    file: PropTypes.func,
+    reasoning: PropTypes.func,
+    'source-document': PropTypes.func,
+    'source-url': PropTypes.func,
+    'step-start': PropTypes.func,
+    text: PropTypes.func,
+    tool: PropTypes.func,
+  }),
+  /**
+   * The extra props for the slot components.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * The components used for each slot inside the ChatBox.
+   */
+  slots: PropTypes.object,
+  /**
+   * The store class to use for this provider.
+   * @default ChatStore
+   */
+  storeClass: PropTypes.func,
+  /**
+   * Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store.
+   * @default 16
+   */
+  streamFlushInterval: PropTypes.number,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { ChatBox };

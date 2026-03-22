@@ -1,20 +1,26 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { ScrollToBottomAffordance, type ScrollToBottomAffordanceProps } from '@mui/x-chat-unstyled';
-import { useChatIndicatorUtilityClasses, type ChatIndicatorClasses } from './chatIndicatorClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+import {
+  useChatScrollToBottomAffordanceUtilityClasses,
+  type ChatScrollToBottomAffordanceClasses,
+} from './chatScrollToBottomAffordanceClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatScrollToBottomAffordance');
 
 export interface ChatScrollToBottomAffordanceProps extends ScrollToBottomAffordanceProps {
   className?: string;
-  classes?: Partial<ChatIndicatorClasses>;
+  classes?: Partial<ChatScrollToBottomAffordanceClasses>;
 }
 
 const ChatScrollToBottomAffordanceStyled = styled(IconButton, {
-  name: 'MuiChatIndicator',
-  slot: 'ScrollToBottom',
-  overridesResolver: (_, styles) => styles.scrollToBottom,
+  name: 'MuiChatScrollToBottomAffordance',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   position: 'absolute',
   bottom: theme.spacing(1),
@@ -32,7 +38,6 @@ const ChatScrollToBottomAffordanceStyled = styled(IconButton, {
   '@media (prefers-reduced-motion: reduce)': {
     transition: 'none',
   },
-
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.background.paper,
     boxShadow: theme.shadows[4],
@@ -53,13 +58,13 @@ function DefaultScrollToBottomIcon() {
   );
 }
 
-export const ChatScrollToBottomAffordance = React.forwardRef<
+const ChatScrollToBottomAffordance = React.forwardRef<
   HTMLButtonElement,
   ChatScrollToBottomAffordanceProps
 >(function ChatScrollToBottomAffordance(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatIndicator' });
+  const props = useThemeProps({ props: inProps, name: 'MuiChatScrollToBottomAffordance' });
   const { slots, slotProps, className, classes: classesProp, ...other } = props;
-  const classes = useChatIndicatorUtilityClasses(classesProp);
+  const classes = useChatScrollToBottomAffordanceUtilityClasses(classesProp);
 
   return (
     <ScrollToBottomAffordance
@@ -74,10 +79,24 @@ export const ChatScrollToBottomAffordance = React.forwardRef<
         ...slotProps,
         root: {
           size: 'small',
-          className: clsx(classes.scrollToBottom, className),
+          className: clsx(classes.root, className),
           ...(slotProps?.root as object),
         } as any,
       }}
     />
   );
 });
+
+ChatScrollToBottomAffordance.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  scrollBehavior: PropTypes.oneOf(['auto', 'instant', 'smooth']),
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
+
+export { ChatScrollToBottomAffordance };

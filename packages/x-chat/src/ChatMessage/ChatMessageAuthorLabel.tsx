@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatMessage');
 import { MessageAuthorLabel, type MessageAuthorLabelProps } from '@mui/x-chat-unstyled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
@@ -23,29 +26,41 @@ const ChatMessageAuthorLabelStyled = styled('span', {
   lineHeight: 1.4,
 }));
 
-export const ChatMessageAuthorLabel = React.forwardRef<
-  HTMLSpanElement,
-  ChatMessageAuthorLabelProps
->(function ChatMessageAuthorLabel(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
-  const { slots, slotProps, className, classes: classesProp, ...other } = props;
-  const classes = useChatMessageUtilityClasses(classesProp);
+const ChatMessageAuthorLabel = React.forwardRef<HTMLSpanElement, ChatMessageAuthorLabelProps>(
+  function ChatMessageAuthorLabel(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
+    const { slots, slotProps, className, classes: classesProp, ...other } = props;
+    const classes = useChatMessageUtilityClasses(classesProp);
 
-  return (
-    <MessageAuthorLabel
-      ref={ref}
-      {...other}
-      slots={{
-        authorLabel: slots?.authorLabel ?? ChatMessageAuthorLabelStyled,
-        ...slots,
-      }}
-      slotProps={{
-        ...slotProps,
-        authorLabel: {
-          className: clsx(classes.authorLabel, className),
-          ...(slotProps?.authorLabel as object),
-        } as any,
-      }}
-    />
-  );
-});
+    return (
+      <MessageAuthorLabel
+        ref={ref}
+        {...other}
+        slots={{
+          authorLabel: slots?.authorLabel ?? ChatMessageAuthorLabelStyled,
+          ...slots,
+        }}
+        slotProps={{
+          ...slotProps,
+          authorLabel: {
+            className: clsx(classes.authorLabel, className),
+            ...(slotProps?.authorLabel as object),
+          } as any,
+        }}
+      />
+    );
+  },
+);
+
+ChatMessageAuthorLabel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
+
+export { ChatMessageAuthorLabel };

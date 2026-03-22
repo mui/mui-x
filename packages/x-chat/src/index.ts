@@ -4,7 +4,6 @@ export type { ChatBoxProps, ChatBoxSlots, ChatBoxSlotProps } from './ChatBox/Cha
 export {
   chatBoxClasses,
   getChatBoxUtilityClass,
-  useChatBoxUtilityClasses,
 } from './ChatBox/chatBoxClasses';
 export type { ChatBoxClasses, ChatBoxClassKey } from './ChatBox/chatBoxClasses';
 
@@ -22,7 +21,6 @@ export type { ChatConversationHeaderActionsProps } from './ChatConversation/Chat
 export {
   chatConversationClasses,
   getChatConversationUtilityClass,
-  useChatConversationUtilityClasses,
 } from './ChatConversation/chatConversationClasses';
 export type {
   ChatConversationClasses,
@@ -42,10 +40,10 @@ export { ChatConversationInputToolbar } from './ChatConversationInput/ChatConver
 export type { ChatConversationInputToolbarProps } from './ChatConversationInput/ChatConversationInputToolbar';
 export { ChatConversationInputHelperText } from './ChatConversationInput/ChatConversationInputHelperText';
 export type { ChatConversationInputHelperTextProps } from './ChatConversationInput/ChatConversationInputHelperText';
+export { ChatConversationInputLabel } from './ChatConversationInput/ChatConversationInputLabel';
 export {
   chatConversationInputClasses,
   getChatConversationInputUtilityClass,
-  useChatConversationInputUtilityClasses,
 } from './ChatConversationInput/chatConversationInputClasses';
 export type {
   ChatConversationInputClasses,
@@ -58,7 +56,6 @@ export type { ChatConversationListProps } from './ChatConversationList/ChatConve
 export {
   chatConversationListClasses,
   getChatConversationListUtilityClass,
-  useChatConversationListUtilityClasses,
 } from './ChatConversationList/chatConversationListClasses';
 export type {
   ChatConversationListClasses,
@@ -85,7 +82,6 @@ export type { ChatDateDividerProps } from './ChatMessage/ChatDateDivider';
 export {
   chatMessageClasses,
   getChatMessageUtilityClass,
-  useChatMessageUtilityClasses,
 } from './ChatMessage/chatMessageClasses';
 export type { ChatMessageClasses, ChatMessageClassKey } from './ChatMessage/chatMessageClasses';
 
@@ -95,7 +91,6 @@ export type { ChatMessageListProps } from './ChatMessageList/ChatMessageList';
 export {
   chatMessageListClasses,
   getChatMessageListUtilityClass,
-  useChatMessageListUtilityClasses,
 } from './ChatMessageList/chatMessageListClasses';
 export type {
   ChatMessageListClasses,
@@ -110,11 +105,26 @@ export type { ChatUnreadMarkerProps } from './ChatIndicators/ChatUnreadMarker';
 export { ChatScrollToBottomAffordance } from './ChatIndicators/ChatScrollToBottomAffordance';
 export type { ChatScrollToBottomAffordanceProps } from './ChatIndicators/ChatScrollToBottomAffordance';
 export {
-  chatIndicatorClasses,
-  getChatIndicatorUtilityClass,
-  useChatIndicatorUtilityClasses,
-} from './ChatIndicators/chatIndicatorClasses';
+  chatTypingIndicatorClasses,
+  getChatTypingIndicatorUtilityClass,
+} from './ChatIndicators/chatTypingIndicatorClasses';
 export type {
-  ChatIndicatorClasses,
-  ChatIndicatorClassKey,
-} from './ChatIndicators/chatIndicatorClasses';
+  ChatTypingIndicatorClasses,
+  ChatTypingIndicatorClassKey,
+} from './ChatIndicators/chatTypingIndicatorClasses';
+export {
+  chatScrollToBottomAffordanceClasses,
+  getChatScrollToBottomAffordanceUtilityClass,
+} from './ChatIndicators/chatScrollToBottomAffordanceClasses';
+export type {
+  ChatScrollToBottomAffordanceClasses,
+  ChatScrollToBottomAffordanceClassKey,
+} from './ChatIndicators/chatScrollToBottomAffordanceClasses';
+export {
+  chatUnreadMarkerClasses,
+  getChatUnreadMarkerUtilityClass,
+} from './ChatIndicators/chatUnreadMarkerClasses';
+export type {
+  ChatUnreadMarkerClasses,
+  ChatUnreadMarkerClassKey,
+} from './ChatIndicators/chatUnreadMarkerClasses';

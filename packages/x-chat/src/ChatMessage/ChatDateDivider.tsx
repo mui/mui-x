@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatMessage');
 import { MessageListDateDivider, type MessageListDateDividerProps } from '@mui/x-chat-unstyled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
@@ -43,7 +46,7 @@ const ChatDateDividerLabelStyled = styled('div', {
   whiteSpace: 'nowrap',
 }));
 
-export const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerProps>(
+const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerProps>(
   function ChatDateDivider(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
     const { slots, slotProps, className, classes: classesProp, ...other } = props;
@@ -70,3 +73,20 @@ export const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerP
     );
   },
 );
+
+ChatDateDivider.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  formatDate: PropTypes.func,
+  index: PropTypes.number,
+  items: PropTypes.arrayOf(PropTypes.string),
+  messageId: PropTypes.string.isRequired,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
+
+export { ChatDateDivider };

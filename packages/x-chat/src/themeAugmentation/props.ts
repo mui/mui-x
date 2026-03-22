@@ -5,6 +5,8 @@ import { type ChatConversationProps } from '../ChatConversation/ChatConversation
 import { type ChatConversationInputProps } from '../ChatConversationInput/ChatConversationInput';
 import { type ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
 import { type ChatTypingIndicatorProps } from '../ChatIndicators/ChatTypingIndicator';
+import { type ChatScrollToBottomAffordanceProps } from '../ChatIndicators/ChatScrollToBottomAffordance';
+import { type ChatUnreadMarkerProps } from '../ChatIndicators/ChatUnreadMarker';
 
 export interface ChatComponentsPropsList {
   MuiChatBox: ChatBoxProps<any>;
@@ -13,7 +15,9 @@ export interface ChatComponentsPropsList {
   MuiChatConversation: ChatConversationProps;
   MuiChatConversationInput: ChatConversationInputProps;
   MuiChatConversationList: ChatConversationListProps;
-  MuiChatIndicator: ChatTypingIndicatorProps;
+  MuiChatTypingIndicator: ChatTypingIndicatorProps;
+  MuiChatScrollToBottomAffordance: ChatScrollToBottomAffordanceProps;
+  MuiChatUnreadMarker: ChatUnreadMarkerProps;
 }
 
 declare module '@mui/material/styles' {

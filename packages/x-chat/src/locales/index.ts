@@ -1,1 +1,1 @@
-export { enUS } from './enUS';
+export { chatEnUS } from './enUS';

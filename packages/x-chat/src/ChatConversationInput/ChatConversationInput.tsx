@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatConversationInput');
 import { SxProps, Theme } from '@mui/system';
 import { ConversationInputRoot, type ConversationInputRootProps } from '@mui/x-chat-unstyled';
 import {
@@ -31,7 +34,7 @@ const ChatConversationInputStyled = styled('form', {
   flexShrink: 0,
 }));
 
-export const ChatConversationInput = React.forwardRef<HTMLFormElement, ChatConversationInputProps>(
+const ChatConversationInput = React.forwardRef<HTMLFormElement, ChatConversationInputProps>(
   function ChatConversationInput(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatConversationInput' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
@@ -50,10 +53,30 @@ export const ChatConversationInput = React.forwardRef<HTMLFormElement, ChatConve
           root: {
             className: clsx(classes.root, className),
             sx,
-            ...(slotProps?.root as object),
+            ...slotProps?.root,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         }}
       />
     );
   },
 );
+
+ChatConversationInput.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { ChatConversationInput };

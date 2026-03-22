@@ -1,36 +1,50 @@
-import {
-  ComponentsProps,
-  ComponentsOverrides as MuiComponentsOverrides,
-} from '@mui/material/styles';
+import { ComponentsProps, ComponentsOverrides, ComponentsVariants } from '@mui/material/styles';
 
 export interface ChatComponents<Theme = unknown> {
   MuiChatBox?: {
     defaultProps?: ComponentsProps['MuiChatBox'];
-    styleOverrides?: MuiComponentsOverrides<Theme>['MuiChatBox'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatBox'];
+    variants?: ComponentsVariants<Theme>['MuiChatBox'];
   };
   MuiChatMessage?: {
     defaultProps?: ComponentsProps['MuiChatMessage'];
-    styleOverrides?: MuiComponentsOverrides<Theme>['MuiChatMessage'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessage'];
+    variants?: ComponentsVariants<Theme>['MuiChatMessage'];
   };
   MuiChatMessageList?: {
     defaultProps?: ComponentsProps['MuiChatMessageList'];
-    styleOverrides?: MuiComponentsOverrides<Theme>['MuiChatMessageList'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessageList'];
+    variants?: ComponentsVariants<Theme>['MuiChatMessageList'];
   };
   MuiChatConversation?: {
     defaultProps?: ComponentsProps['MuiChatConversation'];
-    styleOverrides?: MuiComponentsOverrides<Theme>['MuiChatConversation'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversation'];
+    variants?: ComponentsVariants<Theme>['MuiChatConversation'];
   };
   MuiChatConversationInput?: {
     defaultProps?: ComponentsProps['MuiChatConversationInput'];
-    styleOverrides?: MuiComponentsOverrides<Theme>['MuiChatConversationInput'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversationInput'];
+    variants?: ComponentsVariants<Theme>['MuiChatConversationInput'];
   };
   MuiChatConversationList?: {
     defaultProps?: ComponentsProps['MuiChatConversationList'];
-    styleOverrides?: MuiComponentsOverrides<Theme>['MuiChatConversationList'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversationList'];
+    variants?: ComponentsVariants<Theme>['MuiChatConversationList'];
   };
-  MuiChatIndicator?: {
-    defaultProps?: ComponentsProps['MuiChatIndicator'];
-    styleOverrides?: MuiComponentsOverrides<Theme>['MuiChatIndicator'];
+  MuiChatTypingIndicator?: {
+    defaultProps?: ComponentsProps['MuiChatTypingIndicator'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatTypingIndicator'];
+    variants?: ComponentsVariants<Theme>['MuiChatTypingIndicator'];
+  };
+  MuiChatScrollToBottomAffordance?: {
+    defaultProps?: ComponentsProps['MuiChatScrollToBottomAffordance'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatScrollToBottomAffordance'];
+    variants?: ComponentsVariants<Theme>['MuiChatScrollToBottomAffordance'];
+  };
+  MuiChatUnreadMarker?: {
+    defaultProps?: ComponentsProps['MuiChatUnreadMarker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatUnreadMarker'];
+    variants?: ComponentsVariants<Theme>['MuiChatUnreadMarker'];
   };
 }
 

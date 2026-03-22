@@ -1,19 +1,25 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
 import { TypingIndicator, type TypingIndicatorProps } from '@mui/x-chat-unstyled';
-import { useChatIndicatorUtilityClasses, type ChatIndicatorClasses } from './chatIndicatorClasses';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+import {
+  useChatTypingIndicatorUtilityClasses,
+  type ChatTypingIndicatorClasses,
+} from './chatTypingIndicatorClasses';
+
+const useThemeProps = createUseThemeProps('MuiChatTypingIndicator');
 
 export interface ChatTypingIndicatorProps extends TypingIndicatorProps {
   className?: string;
-  classes?: Partial<ChatIndicatorClasses>;
+  classes?: Partial<ChatTypingIndicatorClasses>;
 }
 
 const ChatTypingIndicatorStyled = styled('div', {
-  name: 'MuiChatIndicator',
-  slot: 'TypingIndicator',
-  overridesResolver: (_, styles) => styles.typingIndicator,
+  name: 'MuiChatTypingIndicator',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   display: 'inline-flex',
   alignItems: 'center',
@@ -24,11 +30,11 @@ const ChatTypingIndicatorStyled = styled('div', {
   fontStyle: 'italic',
 }));
 
-export const ChatTypingIndicator = React.forwardRef<HTMLDivElement, ChatTypingIndicatorProps>(
+const ChatTypingIndicator = React.forwardRef<HTMLDivElement, ChatTypingIndicatorProps>(
   function ChatTypingIndicator(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiChatIndicator' });
+    const props = useThemeProps({ props: inProps, name: 'MuiChatTypingIndicator' });
     const { slots, slotProps, className, classes: classesProp, ...other } = props;
-    const classes = useChatIndicatorUtilityClasses(classesProp);
+    const classes = useChatTypingIndicatorUtilityClasses(classesProp);
 
     return (
       <TypingIndicator
@@ -41,7 +47,7 @@ export const ChatTypingIndicator = React.forwardRef<HTMLDivElement, ChatTypingIn
         slotProps={{
           ...slotProps,
           root: {
-            className: clsx(classes.typingIndicator, className),
+            className: clsx(classes.root, className),
             ...(slotProps?.root as object),
           } as any,
         }}
@@ -49,3 +55,16 @@ export const ChatTypingIndicator = React.forwardRef<HTMLDivElement, ChatTypingIn
     );
   },
 );
+
+ChatTypingIndicator.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
+
+export { ChatTypingIndicator };

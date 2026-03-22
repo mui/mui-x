@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, createUseThemeProps } from '../internals/zero-styled';
+
+const useThemeProps = createUseThemeProps('MuiChatMessage');
 import { MessageAvatar, type MessageAvatarProps } from '@mui/x-chat-unstyled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 
@@ -30,7 +33,6 @@ const ChatMessageAvatarStyled = styled('div', {
   fontSize: theme.typography.caption.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
   color: (theme.vars || theme).palette.text.secondary,
-
   '& img': {
     width: '100%',
     height: '100%',
@@ -38,7 +40,7 @@ const ChatMessageAvatarStyled = styled('div', {
   },
 }));
 
-export const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProps>(
+const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProps>(
   function ChatMessageAvatar(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
     const { slots, slotProps, className, classes: classesProp, ...other } = props;
@@ -63,3 +65,16 @@ export const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAva
     );
   },
 );
+
+ChatMessageAvatar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
+
+export { ChatMessageAvatar };
