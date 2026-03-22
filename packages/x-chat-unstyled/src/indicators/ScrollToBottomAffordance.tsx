@@ -2,17 +2,11 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import { getDataAttributes } from '../internals/getDataAttributes';
 import { mergeReactProps } from '../internals/mergeReactProps';
 import { useMessageListContext } from '../message-list/internals/MessageListContext';
 import { type ScrollToBottomAffordanceOwnerState } from './indicators.types';
-
-function createAriaLabel(unseenMessageCount: number) {
-  if (unseenMessageCount > 0) {
-    return `Scroll to bottom, ${unseenMessageCount} new messages`;
-  }
-
-  return 'Scroll to bottom';
-}
 
 export interface ScrollToBottomAffordanceSlots {
   root: React.ElementType;
@@ -45,7 +39,14 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
 ) {
   const { scrollBehavior, slots, slotProps, ...other } = props;
   const { isAtBottom, scrollToBottom, unseenMessageCount } = useMessageListContext();
-  const label = React.useMemo(() => createAriaLabel(unseenMessageCount), [unseenMessageCount]);
+  const localeText = useChatLocaleText();
+  const label = React.useMemo(
+    () =>
+      unseenMessageCount > 0
+        ? localeText.scrollToBottomWithCountLabel(unseenMessageCount)
+        : localeText.scrollToBottomLabel,
+    [localeText, unseenMessageCount],
+  );
   const ownerState = React.useMemo<ScrollToBottomAffordanceOwnerState>(
     () => ({
       isAtBottom,
@@ -66,6 +67,10 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
       ref,
       type: 'button',
       'aria-label': label,
+      ...getDataAttributes({
+        isAtBottom: ownerState.isAtBottom,
+        unseenMessageCount: ownerState.unseenMessageCount,
+      }),
     },
   });
   const rootProps = mergeReactProps(rootSlotProps, {
@@ -92,7 +97,7 @@ export const ScrollToBottomAffordance = React.forwardRef(function ScrollToBottom
 
   return (
     <Root {...rootProps}>
-      {Icon ? <Icon {...iconProps} /> : <span>Scroll to bottom</span>}
+      {Icon ? <Icon {...iconProps} /> : <span>{localeText.scrollToBottomLabel}</span>}
       {unseenMessageCount > 0 ? <Badge {...badgeProps}>{unseenMessageCount}</Badge> : null}
     </Root>
   );

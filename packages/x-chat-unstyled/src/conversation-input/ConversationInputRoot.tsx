@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChatComposer, useChatStatus, useChatStore } from '@mui/x-chat-headless';
+import { getDataAttributes } from '../internals/getDataAttributes';
 import { ConversationInputContextProvider } from './internals/ConversationInputContext';
 import { type ConversationInputRootOwnerState } from './conversation-input.types';
 
@@ -81,6 +82,12 @@ export const ConversationInputRoot = React.forwardRef(function ConversationInput
     ownerState,
     additionalProps: {
       ref,
+      ...getDataAttributes({
+        isSubmitting: ownerState.isSubmitting,
+        hasValue: ownerState.hasValue,
+        isStreaming: ownerState.isStreaming,
+        disabled: ownerState.disabled,
+      }),
     },
   }) as React.FormHTMLAttributes<HTMLFormElement> & React.RefAttributes<HTMLFormElement>;
   const externalOnSubmit = rootProps.onSubmit as

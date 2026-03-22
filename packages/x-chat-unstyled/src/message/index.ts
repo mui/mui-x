@@ -1,12 +1,3 @@
-import { MessageActions } from './MessageActions';
-import { MessageActionsMenu } from './MessageActionsMenu';
-import { MessageAuthorLabel } from './MessageAuthorLabel';
-import { MessageAvatar } from './MessageAvatar';
-import { MessageContent } from './MessageContent';
-import { MessageMeta } from './MessageMeta';
-import { MessageRoot } from './MessageRoot';
-import { FilePart, ReasoningPart, SourceDocumentPart, SourceUrlPart, ToolPart } from './parts';
-
 export { MessageRoot } from './MessageRoot';
 export { MessageAvatar } from './MessageAvatar';
 export { MessageAuthorLabel } from './MessageAuthorLabel';
@@ -119,19 +110,3 @@ export {
   safeUri,
   shouldCollapsePayload,
 } from './parts';
-
-export const Message = {
-  Root: MessageRoot,
-  Avatar: MessageAvatar,
-  AuthorLabel: MessageAuthorLabel,
-  Content: MessageContent,
-  Meta: MessageMeta,
-  Actions: MessageActions,
-  ActionsMenu: MessageActionsMenu,
-  // Part renderer components
-  FilePart,
-  ReasoningPart,
-  SourceDocumentPart,
-  SourceUrlPart,
-  ToolPart,
-} as const;

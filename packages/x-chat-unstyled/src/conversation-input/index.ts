@@ -1,11 +1,3 @@
-import { ConversationInputAttachButton } from './ConversationInputAttachButton';
-import { ConversationInputHelperText } from './ConversationInputHelperText';
-import { ConversationInputLabel } from './ConversationInputLabel';
-import { ConversationInputTextArea } from './ConversationInputTextArea';
-import { ConversationInputRoot } from './ConversationInputRoot';
-import { ConversationInputSendButton } from './ConversationInputSendButton';
-import { ConversationInputToolbar } from './ConversationInputToolbar';
-
 export { ConversationInputRoot } from './ConversationInputRoot';
 export { ConversationInputTextArea } from './ConversationInputTextArea';
 export { ConversationInputSendButton } from './ConversationInputSendButton';
@@ -58,13 +50,3 @@ export type {
   ConversationInputSendButtonOwnerState,
   ConversationInputToolbarOwnerState,
 } from './conversation-input.types';
-
-export const ConversationInput = {
-  Root: ConversationInputRoot,
-  Label: ConversationInputLabel,
-  TextArea: ConversationInputTextArea,
-  SendButton: ConversationInputSendButton,
-  AttachButton: ConversationInputAttachButton,
-  Toolbar: ConversationInputToolbar,
-  HelperText: ConversationInputHelperText,
-} as const;

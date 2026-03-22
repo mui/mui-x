@@ -3,6 +3,8 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChat, useMessageIds } from '@mui/x-chat-headless';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import { getDataAttributes } from '../internals/getDataAttributes';
 import { type UnreadMarkerOwnerState } from './indicators.types';
 
 function resolveMessageIndex(messageId: string, index: number | undefined, items: string[]) {
@@ -44,11 +46,13 @@ export const UnreadMarker = React.forwardRef(function UnreadMarker(
     messageId,
     index,
     items: itemsProp,
-    label = 'New messages',
+    label: labelProp,
     slots,
     slotProps,
     ...other
   } = props;
+  const localeText = useChatLocaleText();
+  const label = labelProp ?? localeText.unreadMarkerLabel;
   const defaultItems = useMessageIds();
   const { activeConversationId, conversations } = useChat();
   const items = itemsProp ?? defaultItems;
@@ -94,6 +98,9 @@ export const UnreadMarker = React.forwardRef(function UnreadMarker(
     additionalProps: {
       ref,
       role: 'separator',
+      ...getDataAttributes({
+        hasBoundary: ownerState.hasBoundary,
+      }),
     },
   });
   const labelProps = useSlotProps({

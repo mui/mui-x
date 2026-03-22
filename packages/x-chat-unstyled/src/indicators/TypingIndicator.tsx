@@ -3,6 +3,8 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChat, useChatStatus, type ChatUser } from '@mui/x-chat-headless';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import { getDataAttributes } from '../internals/getDataAttributes';
 import { type TypingIndicatorOwnerState } from './indicators.types';
 
 function resolveTypingUser(
@@ -14,16 +16,6 @@ function resolveTypingUser(
     participants?.find((participant) => participant.id === userId) ??
     messageAuthors.find((author) => author.id === userId) ?? { id: userId }
   );
-}
-
-function createTypingLabel(users: ChatUser[]) {
-  const names = users.map((user) => user.displayName ?? user.id).join(', ');
-
-  if (users.length === 1) {
-    return `${names} is typing`;
-  }
-
-  return `${names} are typing`;
 }
 
 export interface TypingIndicatorSlots {
@@ -53,6 +45,7 @@ export const TypingIndicator = React.forwardRef(function TypingIndicator(
   const { slots, slotProps, ...other } = props;
   const { activeConversationId, conversations, messages } = useChat();
   const { typingUserIds } = useChatStatus();
+  const localeText = useChatLocaleText();
   const conversation = React.useMemo(
     () =>
       activeConversationId == null
@@ -78,7 +71,10 @@ export const TypingIndicator = React.forwardRef(function TypingIndicator(
       ),
     [conversation?.participants, messageAuthors, typingUserIds],
   );
-  const label = React.useMemo(() => (users.length === 0 ? '' : createTypingLabel(users)), [users]);
+  const label = React.useMemo(
+    () => (users.length === 0 ? '' : localeText.typingIndicatorLabel(users)),
+    [localeText, users],
+  );
   const ownerState = React.useMemo<TypingIndicatorOwnerState>(
     () => ({
       activeConversationId,
@@ -97,6 +93,9 @@ export const TypingIndicator = React.forwardRef(function TypingIndicator(
     additionalProps: {
       ref,
       'aria-live': 'polite',
+      ...getDataAttributes({
+        count: ownerState.count,
+      }),
     },
   });
 

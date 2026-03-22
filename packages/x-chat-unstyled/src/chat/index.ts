@@ -1,6 +1,3 @@
-import { ChatLayout } from './ChatLayout';
-import { ChatRoot } from './ChatRoot';
-
 export { ChatRoot } from './ChatRoot';
 export { ChatLayout } from './ChatLayout';
 export { CHAT_DEFAULT_LOCALE_TEXT } from './internals/chatLocaleText';
@@ -22,8 +19,3 @@ export type {
   ChatRootSlotProps,
   ChatRootSlots,
 } from './ChatRoot';
-
-export const Chat = {
-  Root: ChatRoot,
-  Layout: ChatLayout,
-} as const;

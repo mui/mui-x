@@ -1,6 +1,5 @@
-export { Chat, ChatLayout, ChatRoot, useChatLocaleText } from './chat';
+export { ChatLayout, ChatRoot, useChatLocaleText } from './chat';
 export {
-  Conversation,
   ConversationHeader,
   ConversationHeaderActions,
   ConversationHeaderInfo,
@@ -9,7 +8,6 @@ export {
   ConversationTitle,
 } from './conversation';
 export {
-  ConversationInput,
   ConversationInputAttachButton,
   ConversationInputHelperText,
   ConversationInputLabel,
@@ -19,7 +17,6 @@ export {
   ConversationInputToolbar,
 } from './conversation-input';
 export {
-  ConversationList,
   ConversationListItem,
   ConversationListItemAvatar,
   ConversationListItemContent,
@@ -29,10 +26,9 @@ export {
   ConversationListTitle,
   ConversationListUnreadBadge,
 } from './conversation-list';
-export { Indicators, ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
+export { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
 export {
   FilePart,
-  Message,
   MessageActions,
   MessageActionsMenu,
   MessageActionsMenuGroup,
@@ -56,27 +52,10 @@ export {
   createSourceDocumentPartRenderer,
   createSourceUrlPartRenderer,
   createToolPartRenderer,
-  extractLanguage,
-  formatStructuredValue,
-  normalizeCodeContent,
-  normalizeMarkdownForRender,
-  safeUri,
-  shouldCollapsePayload,
 } from './message';
-export {
-  getDefaultMessagePartRenderer,
-  renderDefaultDataPart,
-  renderDefaultDynamicToolPart,
-  renderDefaultFilePart,
-  renderDefaultReasoningPart,
-  renderDefaultSourceDocumentPart,
-  renderDefaultSourceUrlPart,
-  renderDefaultStepStartPart,
-  renderDefaultTextPart,
-  renderDefaultToolPart,
-} from './message/defaultMessagePartRenderers';
+export { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
 export { MessageGroup } from './message-group';
-export { MessageList, MessageListDateDivider, MessageListRoot } from './message-list';
+export { MessageListDateDivider, MessageListRoot } from './message-list';
 
 export type {
   ChatLayoutProps,

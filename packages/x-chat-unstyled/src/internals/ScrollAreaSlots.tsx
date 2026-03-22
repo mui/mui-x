@@ -42,8 +42,6 @@ export const ScrollThumb = React.forwardRef<HTMLDivElement>(function ScrollThumb
 export const scrollbarStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
-  width: 8,
-  paddingBlock: 2,
   boxSizing: 'border-box',
   position: 'absolute',
   top: 0,
@@ -53,6 +51,4 @@ export const scrollbarStyle: React.CSSProperties = {
 
 export const thumbStyle: React.CSSProperties = {
   flex: 1,
-  borderRadius: 20,
-  background: 'rgba(0, 0, 0, 0.28)',
 };

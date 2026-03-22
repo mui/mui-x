@@ -1,7 +1,6 @@
 {
   "name": "@mui/x-chat-unstyled",
-  "version": "9.0.0-alpha.0",
-  "private": true,
+  "version": "9.0.0-alpha.3",
   "author": "MUI Team",
   "description": "The community edition of the unstyled MUI X Chat components.",
   "license": "MIT",
@@ -37,6 +36,7 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@base-ui/react": "^1.0.0",
+    "@mui/utils": "catalog:",
     "@mui/x-chat-headless": "workspace:*"
   },
   "peerDependencies": {
@@ -54,6 +54,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./internals": "./src/internals/index.ts",
     "./*": "./src/*/index.ts"
   }
 }

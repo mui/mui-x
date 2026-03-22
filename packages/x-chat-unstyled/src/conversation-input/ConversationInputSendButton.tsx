@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import { getDataAttributes } from '../internals/getDataAttributes';
 import { useConversationInputContext } from './internals/ConversationInputContext';
 import { type ConversationInputSendButtonOwnerState } from './conversation-input.types';
 
@@ -48,6 +49,12 @@ export const ConversationInputSendButton = React.forwardRef(function Conversatio
     ownerState,
     additionalProps: {
       ref,
+      ...getDataAttributes({
+        isSubmitting: ownerState.isSubmitting,
+        hasValue: ownerState.hasValue,
+        isStreaming: ownerState.isStreaming,
+        disabled: ownerState.disabled,
+      }),
     },
   }) as React.ButtonHTMLAttributes<HTMLButtonElement> & React.RefAttributes<HTMLButtonElement>;
 

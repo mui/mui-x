@@ -5,7 +5,7 @@ import type { ChatAdapter, ChatMessage, ChatRealtimeEvent } from '@mui/x-chat-he
 import { ChatRoot } from '../chat/ChatRoot';
 import { MessageListRoot, type MessageListRootProps } from '../message-list/MessageListRoot';
 import { MessageListContextProvider } from '../message-list/internals/MessageListContext';
-import { Indicators, ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './index';
+import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './index';
 
 const { render } = createRenderer();
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -174,12 +174,6 @@ function ControlledMessageListWithAffordance() {
 }
 
 describe('Indicators', () => {
-  it('exports the indicator namespace', () => {
-    expect(Indicators.TypingIndicator).toBe(TypingIndicator);
-    expect(Indicators.UnreadMarker).toBe(UnreadMarker);
-    expect(Indicators.ScrollToBottomAffordance).toBe(ScrollToBottomAffordance);
-  });
-
   it('TypingIndicator shows and hides based on typing events and resolves users', async () => {
     let onEvent: ((event: ChatRealtimeEvent) => void) | undefined;
     const adapter = createAdapter({

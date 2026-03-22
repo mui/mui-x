@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import type { ChatConversation } from '@mui/x-chat-headless';
+import { getDataAttributes } from '../internals/getDataAttributes';
 import { type ConversationListItemOwnerState } from './conversationList.types';
 
 export interface ConversationListItemSlots {
@@ -62,6 +63,11 @@ export const ConversationListItem = React.forwardRef(function ConversationListIt
     ownerState,
     additionalProps: {
       ref,
+      ...getDataAttributes({
+        selected: ownerState.selected,
+        unread: ownerState.unread,
+        focused: ownerState.focused,
+      }),
     },
   });
 

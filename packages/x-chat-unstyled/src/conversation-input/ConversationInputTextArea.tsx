@@ -63,21 +63,32 @@ export const ConversationInputTextArea = React.forwardRef(function ConversationI
     additionalProps: {
       ref: handleRef,
       value: composer.value,
+      onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (!event.defaultPrevented) {
+          composer.setValue(event.target.value);
+        }
+      },
+      onKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (
+          !event.defaultPrevented &&
+          event.key === 'Enter' &&
+          !event.shiftKey &&
+          !event.nativeEvent.isComposing &&
+          !composer.disabled
+        ) {
+          event.preventDefault();
+          void composer.submit();
+        }
+      },
+      onCompositionStart: () => {
+        composer.setComposerIsComposing(true);
+      },
+      onCompositionEnd: () => {
+        composer.setComposerIsComposing(false);
+      },
     },
   }) as React.TextareaHTMLAttributes<HTMLTextAreaElement> &
     React.RefAttributes<HTMLTextAreaElement>;
-  const externalOnChange = rootProps.onChange as
-    | React.ChangeEventHandler<HTMLTextAreaElement>
-    | undefined;
-  const externalOnKeyDown = rootProps.onKeyDown as
-    | React.KeyboardEventHandler<HTMLTextAreaElement>
-    | undefined;
-  const externalOnCompositionStart = rootProps.onCompositionStart as
-    | React.CompositionEventHandler<HTMLTextAreaElement>
-    | undefined;
-  const externalOnCompositionEnd = rootProps.onCompositionEnd as
-    | React.CompositionEventHandler<HTMLTextAreaElement>
-    | undefined;
   const previousActiveConversationIdRef = React.useRef(activeConversationId);
 
   React.useLayoutEffect(() => {
@@ -117,49 +128,6 @@ export const ConversationInputTextArea = React.forwardRef(function ConversationI
       }
       disabled={Boolean(rootProps.disabled) || composer.disabled}
       placeholder={rootProps.placeholder ?? localeText.composerInputPlaceholder}
-      onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        externalOnChange?.(event);
-
-        if (event.defaultPrevented) {
-          return;
-        }
-
-        composer.setValue(event.target.value);
-      }}
-      onCompositionEnd={(event: React.CompositionEvent<HTMLTextAreaElement>) => {
-        externalOnCompositionEnd?.(event);
-
-        if (event.defaultPrevented) {
-          return;
-        }
-
-        composer.setComposerIsComposing(false);
-      }}
-      onCompositionStart={(event: React.CompositionEvent<HTMLTextAreaElement>) => {
-        externalOnCompositionStart?.(event);
-
-        if (event.defaultPrevented) {
-          return;
-        }
-
-        composer.setComposerIsComposing(true);
-      }}
-      onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        externalOnKeyDown?.(event);
-
-        if (
-          event.defaultPrevented ||
-          event.key !== 'Enter' ||
-          event.shiftKey ||
-          event.nativeEvent.isComposing ||
-          composer.disabled
-        ) {
-          return;
-        }
-
-        event.preventDefault();
-        void composer.submit();
-      }}
     />
   );
 }) as ConversationInputTextAreaComponent;

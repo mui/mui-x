@@ -34,6 +34,7 @@ export const ConversationInputHelperText = React.forwardRef(function Conversatio
     isStreaming: composer.isStreaming,
     attachmentCount: composer.attachmentCount,
     disabled: composer.disabled,
+    error: composer.error != null,
   };
   const HelperText = slots?.helperText ?? 'div';
   const rootProps = useSlotProps({

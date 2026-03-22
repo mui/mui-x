@@ -1,6 +1,3 @@
-import { MessageListDateDivider } from './MessageListDateDivider';
-import { MessageListRoot } from './MessageListRoot';
-
 export { MessageListRoot } from './MessageListRoot';
 export { MessageListDateDivider } from './MessageListDateDivider';
 
@@ -20,8 +17,3 @@ export type {
   MessageListDateDividerOwnerState,
   MessageListRootOwnerState,
 } from './messageList.types';
-
-export const MessageList = {
-  DateDivider: MessageListDateDivider,
-  Root: MessageListRoot,
-} as const;

@@ -1,10 +1,3 @@
-import { ConversationHeaderActions } from './ConversationHeaderActions';
-import { ConversationHeader } from './ConversationHeader';
-import { ConversationHeaderInfo } from './ConversationHeaderInfo';
-import { ConversationRoot } from './ConversationRoot';
-import { ConversationSubtitle } from './ConversationSubtitle';
-import { ConversationTitle } from './ConversationTitle';
-
 export { ConversationRoot } from './ConversationRoot';
 export { ConversationHeader } from './ConversationHeader';
 export { ConversationHeaderInfo } from './ConversationHeaderInfo';
@@ -51,12 +44,3 @@ export type {
   ConversationSubtitleOwnerState,
   ConversationTitleOwnerState,
 } from './conversation.types';
-
-export const Conversation = {
-  Root: ConversationRoot,
-  Header: ConversationHeader,
-  HeaderInfo: ConversationHeaderInfo,
-  Title: ConversationTitle,
-  Subtitle: ConversationSubtitle,
-  HeaderActions: ConversationHeaderActions,
-} as const;

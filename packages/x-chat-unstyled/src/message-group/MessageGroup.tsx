@@ -4,6 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage, useMessageIds, type ChatMessage } from '@mui/x-chat-headless';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
+import { getDataAttributes } from '../internals/getDataAttributes';
 import { MessageAvatar } from '../message/MessageAvatar';
 import { MessageContent } from '../message/MessageContent';
 import { MessageMeta } from '../message/MessageMeta';
@@ -153,6 +154,11 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
     ownerState,
     additionalProps: {
       ref,
+      ...getDataAttributes({
+        isFirst: ownerState.isFirst,
+        isLast: ownerState.isLast,
+        authorRole: ownerState.authorRole,
+      }),
     },
   });
   const authorNameProps = useSlotProps({

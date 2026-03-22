@@ -55,7 +55,7 @@ function ErrorSetter() {
     <button
       onClick={() => {
         store.setError({
-          code: 'ERR_SEND',
+          code: 'SEND_ERROR',
           message: 'Network down',
           recoverable: true,
           source: 'send',

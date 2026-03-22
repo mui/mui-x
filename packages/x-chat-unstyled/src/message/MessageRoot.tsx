@@ -4,6 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage } from '@mui/x-chat-headless';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
+import { getDataAttributes } from '../internals/getDataAttributes';
 import { MessageContextProvider } from './internals/MessageContext';
 import { type MessageRootOwnerState } from './message.types';
 
@@ -60,6 +61,13 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
       // Screen readers announce "article" when entering, which helps users
       // understand the structural boundary between messages.
       role: 'article',
+      ...getDataAttributes({
+        role: ownerState.role,
+        status: ownerState.status,
+        streaming: ownerState.streaming,
+        error: ownerState.error,
+        isGrouped: ownerState.isGrouped,
+      }),
     },
   });
 

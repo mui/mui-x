@@ -18,4 +18,7 @@ export interface ConversationInputAttachButtonOwnerState extends ConversationInp
 
 export interface ConversationInputToolbarOwnerState extends ConversationInputOwnerState {}
 
-export interface ConversationInputHelperTextOwnerState extends ConversationInputOwnerState {}
+export interface ConversationInputHelperTextOwnerState extends ConversationInputOwnerState {
+  /** Whether the input currently has an error. */
+  error: boolean;
+}

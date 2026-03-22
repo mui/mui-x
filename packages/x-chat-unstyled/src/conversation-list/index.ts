@@ -1,12 +1,3 @@
-import { ConversationListItem } from './ConversationListItem';
-import { ConversationListItemAvatar } from './ConversationListItemAvatar';
-import { ConversationListItemContent } from './ConversationListItemContent';
-import { ConversationListPreview } from './ConversationListPreview';
-import { ConversationListRoot } from './ConversationListRoot';
-import { ConversationListTimestamp } from './ConversationListTimestamp';
-import { ConversationListTitle } from './ConversationListTitle';
-import { ConversationListUnreadBadge } from './ConversationListUnreadBadge';
-
 export { ConversationListRoot } from './ConversationListRoot';
 export { ConversationListItem } from './ConversationListItem';
 export { ConversationListItemAvatar } from './ConversationListItemAvatar';
@@ -66,14 +57,3 @@ export type {
   ConversationListTitleOwnerState,
   ConversationListUnreadBadgeOwnerState,
 } from './conversationList.types';
-
-export const ConversationList = {
-  Root: ConversationListRoot,
-  Item: ConversationListItem,
-  ItemAvatar: ConversationListItemAvatar,
-  ItemContent: ConversationListItemContent,
-  Title: ConversationListTitle,
-  Preview: ConversationListPreview,
-  Timestamp: ConversationListTimestamp,
-  UnreadBadge: ConversationListUnreadBadge,
-} as const;
