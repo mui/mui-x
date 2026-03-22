@@ -225,6 +225,7 @@ export type {
   MessageListDateDividerProps,
   MessageListDateDividerSlotProps,
   MessageListDateDividerSlots,
+  MessageListRootAutoScrollConfig,
   MessageListRootHandle,
   MessageListRootProps,
   MessageListRootSlotProps,

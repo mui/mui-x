@@ -195,6 +195,8 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   } = props;
   const showScrollToBottom = features?.scrollToBottom !== false;
 
+  const autoScrollProp = features?.autoScroll ?? true;
+
   const messageIds = useMessageIds();
   const conversations = useConversations();
   const localeText = useChatLocaleText();
@@ -254,6 +256,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
         <MessageListComponent
           renderItem={renderItem}
           items={messageIds}
+          autoScroll={autoScrollProp}
           overlay={
             <React.Fragment>
               {messageIds.length === 0 && (

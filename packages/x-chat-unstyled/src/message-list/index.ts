@@ -10,6 +10,7 @@ export type {
   MessageListDateDividerSlots,
 } from './MessageListDateDivider';
 export type {
+  MessageListRootAutoScrollConfig,
   MessageListRootHandle,
   MessageListRootProps,
   MessageListRootSlotProps,

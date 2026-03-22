@@ -15,6 +15,7 @@ import { MessageListContextProvider } from './internals/MessageListContext';
 import { type MessageListRootOwnerState } from './messageList.types';
 
 const DEFAULT_ESTIMATED_ITEM_SIZE = 84;
+const DEFAULT_AUTO_SCROLL_BUFFER = 150;
 
 type ScrollAnchor = {
   id: string;
@@ -45,6 +46,15 @@ export interface MessageListRootSlotProps {
   messageListScrollbarThumb?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
 
+export interface MessageListRootAutoScrollConfig {
+  /**
+   * Distance in pixels from the bottom of the scroll container within which the
+   * user is still considered "at the bottom" and auto-scroll will trigger.
+   * @default 150
+   */
+  buffer?: number;
+}
+
 export interface MessageListRootProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
@@ -55,6 +65,19 @@ export interface MessageListRootProps extends Omit<
   getItemKey?: (id: string, index: number) => React.Key;
   estimatedItemSize?: number;
   onReachTop?: () => void;
+  /**
+   * Controls automatic scrolling to the bottom when new messages arrive or
+   * streaming content grows, as long as the user is within `buffer` pixels of
+   * the bottom.
+   *
+   * - `true` – enable with the default buffer (150 px).
+   * - `{ buffer: number }` – enable with a custom threshold.
+   * - `false` – disable (the scroll-to-bottom affordance is still available).
+   *
+   * Scrolling when the *user* sends a message is always active.
+   * @default true
+   */
+  autoScroll?: boolean | MessageListRootAutoScrollConfig;
   slots?: Partial<MessageListRootSlots>;
   slotProps?: MessageListRootSlotProps;
 }
@@ -188,9 +211,19 @@ function useMessageListBehavior(parameters: {
   messages: ChatMessage[];
   hasMoreHistory: boolean;
   loadMoreHistory(): Promise<void>;
+  autoScrollEnabled: boolean;
+  autoScrollBuffer: number;
 }) {
-  const { itemIds, estimatedItemSize, onReachTop, messages, hasMoreHistory, loadMoreHistory } =
-    parameters;
+  const {
+    itemIds,
+    estimatedItemSize,
+    onReachTop,
+    messages,
+    hasMoreHistory,
+    loadMoreHistory,
+    autoScrollEnabled,
+    autoScrollBuffer,
+  } = parameters;
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const rowElementsRef = React.useRef(new Map<string, HTMLDivElement | null>());
   const previousItemIdsRef = React.useRef<string[]>(itemIds);
@@ -218,13 +251,13 @@ function useMessageListBehavior(parameters: {
   }, [messages]);
 
   const updateIsAtBottom = React.useCallback(() => {
-    const nextIsAtBottom = isScrollableToBottom(rootRef.current, estimatedItemSize);
+    const nextIsAtBottom = isScrollableToBottom(rootRef.current, autoScrollBuffer);
 
     isAtBottomRef.current = nextIsAtBottom;
     setIsAtBottom((previous) => (previous === nextIsAtBottom ? previous : nextIsAtBottom));
 
     return nextIsAtBottom;
-  }, [estimatedItemSize]);
+  }, [autoScrollBuffer]);
 
   const updateUnseenMessageCount = React.useCallback((nextCount: number) => {
     unseenMessageCountRef.current = nextCount;
@@ -318,14 +351,19 @@ function useMessageListBehavior(parameters: {
   const scheduleResizeRestore = React.useCallback(() => {
     cancelAnimationFrame(resizeFrameRef.current);
     resizeFrameRef.current = requestAnimationFrame(() => {
-      if (!isAtBottomRef.current) {
-        restoreAnchor(anchorRef.current);
+      if (isAtBottomRef.current && autoScrollEnabled) {
+        // Follow streaming content: the row grew (new tokens), scroll to stay at bottom.
+        // scrollToBottom() already calls updateIsAtBottom() and captureAnchor() internally.
+        scrollToBottom();
+      } else {
+        if (!isAtBottomRef.current) {
+          restoreAnchor(anchorRef.current);
+        }
+        updateIsAtBottom();
+        anchorRef.current = captureAnchor(itemIdsRef.current);
       }
-
-      updateIsAtBottom();
-      anchorRef.current = captureAnchor(itemIdsRef.current);
     });
-  }, [captureAnchor, restoreAnchor, updateIsAtBottom]);
+  }, [autoScrollEnabled, captureAnchor, restoreAnchor, scrollToBottom, updateIsAtBottom]);
 
   const maybeLoadMoreHistory = React.useCallback(async () => {
     const root = rootRef.current;
@@ -399,7 +437,7 @@ function useMessageListBehavior(parameters: {
         ? messageById.get(appendedIds[appendedIds.length - 1])
         : null;
 
-      if (isAtBottomRef.current || lastAppendedMessage?.role === 'user') {
+      if ((autoScrollEnabled && isAtBottomRef.current) || lastAppendedMessage?.role === 'user') {
         scrollToBottom();
       } else if (appendedIds.length > 0) {
         updateUnseenMessageCount(unseenMessageCountRef.current + appendedIds.length);
@@ -416,6 +454,7 @@ function useMessageListBehavior(parameters: {
     topReachedRef.current = false;
     previousItemIdsRef.current = itemIds;
   }, [
+    autoScrollEnabled,
     captureAnchor,
     itemIds,
     messageById,
@@ -601,6 +640,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     getItemKey = (id) => id,
     estimatedItemSize = DEFAULT_ESTIMATED_ITEM_SIZE,
     onReachTop,
+    autoScroll = true,
     slots,
     slotProps,
     ...other
@@ -608,6 +648,12 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
   const defaultItems = useMessageIds();
   const { hasMoreHistory, loadMoreHistory, messages } = useChat();
   const itemIds = itemsProp ?? defaultItems;
+
+  const autoScrollEnabled = autoScroll !== false;
+  const autoScrollBuffer = autoScrollEnabled
+    ? (typeof autoScroll === 'object' ? (autoScroll.buffer ?? DEFAULT_AUTO_SCROLL_BUFFER) : DEFAULT_AUTO_SCROLL_BUFFER)
+    : estimatedItemSize; // fall back to estimatedItemSize so isAtBottom tracking still works
+
   const behavior = useMessageListBehavior({
     itemIds,
     estimatedItemSize,
@@ -615,6 +661,8 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     messages,
     hasMoreHistory,
     loadMoreHistory,
+    autoScrollEnabled,
+    autoScrollBuffer,
   });
 
   React.useImperativeHandle(

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils/types';
-import { type ChatRootProps } from '@mui/x-chat-unstyled';
+import { type ChatRootProps, type MessageListRootAutoScrollConfig } from '@mui/x-chat-unstyled';
 import type { ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
 import type { ChatConversationHeaderProps } from '../ChatConversation/ChatConversationHeader';
 import type { ChatConversationTitleProps } from '../ChatConversation/ChatConversationTitle';
@@ -132,6 +132,20 @@ export interface ChatBoxFeatures {
    * @default true
    */
   helperText?: boolean;
+  /**
+   * Controls automatic scrolling to the bottom when new messages arrive or streaming
+   * content grows, as long as the user is within `buffer` pixels of the bottom.
+   *
+   * - `true` – enable with the default buffer (150 px).
+   * - `{ buffer: number }` – enable with a custom threshold.
+   * - `false` – disable all automatic scrolling (the user can still use the
+   *   scroll-to-bottom affordance button manually).
+   *
+   * Note: scrolling to the bottom when the *user* sends a message is always
+   * active regardless of this setting.
+   * @default true
+   */
+  autoScroll?: boolean | MessageListRootAutoScrollConfig;
 }
 
 export interface ChatBoxProps<Cursor = string> extends Omit<
