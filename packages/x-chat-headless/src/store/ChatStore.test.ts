@@ -256,7 +256,7 @@ describe('ChatStore', () => {
   it('setActiveConversation, setStreaming, and setError update their flags', () => {
     const store = new ChatStore();
     const error: ChatError = {
-      code: 'CHAT_ERROR',
+      code: 'STREAM_ERROR',
       message: 'Stream failed',
       source: 'stream',
       recoverable: true,
@@ -439,7 +439,7 @@ describe('ChatStore', () => {
       hasMoreHistory: true,
       historyCursor: 'cursor-1',
       error: {
-        code: 'CHAT_ERROR',
+        code: 'STREAM_ERROR',
         message: 'Oops',
         source: 'send',
         recoverable: false,

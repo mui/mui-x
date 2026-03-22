@@ -11,7 +11,7 @@ import { chatSelectors } from './selectors';
 import { ChatStore, type ChatStoreParameters } from './store';
 import type { ChatConversation, ChatMessage } from './types/chat-entities';
 import { ChatProvider, type ChatProviderProps } from './ChatProvider';
-import { useChatStoreContext } from './use-chat-store-context';
+import { useChatStoreContext } from './internals/useChatStoreContext';
 
 const message1: ChatMessage = {
   id: 'm1',

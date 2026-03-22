@@ -69,7 +69,7 @@ function isDynamicToolChunk(
 }
 
 function getOrCreateMessage(
-  store: ChatStore<any>,
+  store: ChatStore<unknown>,
   messageId: string,
   conversationId: string | undefined,
   author?: ChatMessage['author'],
@@ -107,7 +107,7 @@ function getOrCreateMessage(
 }
 
 function getFinishMessage(
-  store: ChatStore<any>,
+  store: ChatStore<unknown>,
   messageId: string | undefined,
   conversationId: string | undefined,
   status: ChatMessage['status'],
@@ -148,7 +148,7 @@ function finalizeStreamingParts(parts: ChatMessagePart[]): ChatMessagePart[] {
 }
 
 function updateMessageParts(
-  store: ChatStore<any>,
+  store: ChatStore<unknown>,
   messageId: string,
   updater: (parts: ChatMessagePart[]) => ChatMessagePart[],
 ) {
@@ -166,7 +166,7 @@ function updateMessageParts(
 }
 
 function updateMessage(
-  store: ChatStore<any>,
+  store: ChatStore<unknown>,
   messageId: string,
   updater: (message: ChatMessage) => Partial<ChatMessage> | null,
 ) {
@@ -200,6 +200,9 @@ export async function processStream<Cursor = string>(
   stream: ReadableStream<ChatMessageChunk | ChatStreamEnvelope>,
   options: ProcessStreamOptions = {},
 ): Promise<ProcessStreamResult> {
+  // Cast to ChatStore<unknown> for cursor-agnostic helper functions.
+  // processStream never calls setHistoryState, so the cursor type is irrelevant here.
+  const storeUnknown = store as unknown as ChatStore<unknown>;
   let targetMessageId = options.messageId;
   let finishReason: string | undefined;
   let didReceiveTerminalChunk = false;
@@ -232,7 +235,7 @@ export async function processStream<Cursor = string>(
 
     if (options.onFinish) {
       await options.onFinish({
-        message: getFinishMessage(store, targetMessageId, options.conversationId, result.status),
+        message: getFinishMessage(storeUnknown, targetMessageId, options.conversationId, result.status),
         messages: store.state.messageIds.map((id) => store.state.messagesById[id]).filter(Boolean),
         isAbort: result.isAbort,
         isDisconnect: result.isDisconnect,
@@ -251,7 +254,7 @@ export async function processStream<Cursor = string>(
       throw new Error('Stream processing requires a target assistant message id.');
     }
 
-    const message = getOrCreateMessage(store, targetMessageId, options.conversationId, startAuthor);
+    const message = getOrCreateMessage(storeUnknown, targetMessageId, options.conversationId, startAuthor);
 
     if (!didStartMessage) {
       didStartMessage = true;
@@ -267,7 +270,7 @@ export async function processStream<Cursor = string>(
       return;
     }
 
-    updateMessage(store, targetMessageId, (message) => {
+    updateMessage(storeUnknown, targetMessageId, (message) => {
       const nextParts = finalizeStreamingParts(message.parts);
       const didChange = nextParts !== message.parts || message.status !== status;
 
@@ -354,7 +357,7 @@ export async function processStream<Cursor = string>(
       partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
     const partIndex = resolveTextLikePartIndex(partType, streamId, indexMap);
 
-    updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
+    updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => {
       const currentPart = parts[partIndex];
 
       if (currentPart?.type !== partType) {
@@ -425,7 +428,7 @@ export async function processStream<Cursor = string>(
 
     let updatedInvocation: ChatToolInvocation | ChatDynamicToolInvocation | undefined;
 
-    updateMessageParts(store, message.id, (parts) => {
+    updateMessageParts(storeUnknown, message.id, (parts) => {
       const partIndex = parts.findIndex(
         (part) =>
           (part.type === 'tool' || part.type === 'dynamic-tool') &&
@@ -501,7 +504,7 @@ export async function processStream<Cursor = string>(
           partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
         const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
 
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
+        updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => {
           const currentPart = parts[partIndex];
 
           if (currentPart?.type !== partType || currentPart.state === 'streaming') {
@@ -535,7 +538,7 @@ export async function processStream<Cursor = string>(
           partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
         const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
 
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => {
+        updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => {
           const currentPart = parts[partIndex];
 
           if (currentPart?.type !== partType || currentPart.state === 'done') {
@@ -687,7 +690,7 @@ export async function processStream<Cursor = string>(
         return;
 
       case 'source-url':
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => [
+        updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => [
           ...parts,
           {
             type: 'source-url',
@@ -699,7 +702,7 @@ export async function processStream<Cursor = string>(
         return;
 
       case 'source-document':
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => [
+        updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => [
           ...parts,
           {
             type: 'source-document',
@@ -711,7 +714,7 @@ export async function processStream<Cursor = string>(
         return;
 
       case 'file':
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => [
+        updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => [
           ...parts,
           {
             type: 'file',
@@ -723,7 +726,7 @@ export async function processStream<Cursor = string>(
         return;
 
       case 'start-step':
-        updateMessageParts(store, ensureAssistantMessage().id, (parts) => [
+        updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => [
           ...parts,
           { type: 'step-start' },
         ]);
@@ -734,7 +737,7 @@ export async function processStream<Cursor = string>(
         return;
 
       case 'message-metadata':
-        updateMessage(store, ensureAssistantMessage().id, (message) => ({
+        updateMessage(storeUnknown, ensureAssistantMessage().id, (message) => ({
           metadata: {
             ...message.metadata,
             ...chunk.metadata,
@@ -752,7 +755,7 @@ export async function processStream<Cursor = string>(
             transient: chunk.transient,
           } as ChatDataMessagePart;
 
-          updateMessageParts(store, message.id, (parts) => [...parts, part]);
+          updateMessageParts(storeUnknown, message.id, (parts) => [...parts, part]);
 
           if (options.onData) {
             await options.onData(part);

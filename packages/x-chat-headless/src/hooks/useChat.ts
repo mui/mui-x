@@ -8,9 +8,9 @@ import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type { ChatInternalState } from '../types/chat-state';
 import { useChatStore } from './useChatStore';
-import type { UseChatSendMessageInput } from '../internals/useChatController';
+import type { UseChatSendMessageInput } from '../types/chat-callbacks';
 
-export type { UseChatSendMessageInput } from '../internals/useChatController';
+export type { UseChatSendMessageInput } from '../types/chat-callbacks';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface UseChatValue<Cursor = string> {
@@ -19,13 +19,8 @@ export interface UseChatValue<Cursor = string> {
   activeConversationId: string | undefined;
   isStreaming: boolean;
   hasMoreHistory: boolean;
+  /** Unified error from any operation (send, load history, realtime). */
   error: ChatError | null;
-  /** Error that occurred while loading conversations. */
-  conversationError: ChatError | null;
-  /** Error that occurred while loading messages. */
-  messageError: ChatError | null;
-  /** Error that occurred with the realtime connection. */
-  realtimeError: ChatError | null;
   sendMessage(input: UseChatSendMessageInput): Promise<void>;
   stopStreaming(): void;
   loadMoreHistory(): Promise<void>;
@@ -81,9 +76,6 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
       isStreaming,
       hasMoreHistory,
       error,
-      conversationError: null,
-      messageError: null,
-      realtimeError: null,
       sendMessage: actions.sendMessage,
       stopStreaming: actions.stopStreaming,
       loadMoreHistory: actions.loadMoreHistory,
@@ -91,9 +83,30 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
       retry: actions.retry,
       setError: actions.setError,
       addToolApprovalResponse: actions.addToolApprovalResponse,
-      reloadConversations: noopAsync,
-      reloadMessages: noopAsyncWithArg,
-      reconnectRealtime: noopAsync,
+      reloadConversations: process.env.NODE_ENV !== 'production'
+        ? async () => {
+            throw new Error(
+              'MUI X Chat: reloadConversations is not yet implemented.\n' +
+              'This method is a planned API stub. Remove the call until it is implemented.',
+            );
+          }
+        : noopAsync,
+      reloadMessages: process.env.NODE_ENV !== 'production'
+        ? async (_arg?: string) => {
+            throw new Error(
+              'MUI X Chat: reloadMessages is not yet implemented.\n' +
+              'This method is a planned API stub. Remove the call until it is implemented.',
+            );
+          }
+        : noopAsyncWithArg,
+      reconnectRealtime: process.env.NODE_ENV !== 'production'
+        ? async () => {
+            throw new Error(
+              'MUI X Chat: reconnectRealtime is not yet implemented.\n' +
+              'This method is a planned API stub. Remove the call until it is implemented.',
+            );
+          }
+        : noopAsync,
     }),
     [
       actions.addToolApprovalResponse,

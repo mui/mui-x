@@ -57,7 +57,7 @@ describe('chatSelectors', () => {
     store.setActiveConversation('c2');
     store.setStreaming(true);
     store.setError({
-      code: 'CHAT_ERROR',
+      code: 'STREAM_ERROR',
       message: 'Oops',
       source: 'stream',
       recoverable: true,

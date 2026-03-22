@@ -1,6 +1,6 @@
 'use client';
 import type { ChatStore } from '../store';
-import { useChatStoreContext } from '../use-chat-store-context';
+import { useChatStoreContext } from '../internals/useChatStoreContext';
 
 export function useChatStore<Cursor = string>(): ChatStore<Cursor> {
   const store = useChatStoreContext<Cursor>(true);

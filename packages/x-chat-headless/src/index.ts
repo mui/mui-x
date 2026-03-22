@@ -8,7 +8,27 @@ export { useChatStore } from './hooks/useChatStore';
 export { useConversation, useConversations } from './hooks/useConversation';
 export { useMessage, useMessageIds } from './hooks/useMessage';
 
-export { chatSelectors } from './selectors/chatSelectors';
+export {
+  chatSelectors,
+  selectMessageIds,
+  selectMessagesById,
+  selectConversationIds,
+  selectConversationsById,
+  selectActiveConversationId,
+  selectIsStreaming,
+  selectHasMoreHistory,
+  selectError,
+  selectMessages,
+  selectMessage,
+  selectConversations,
+  selectConversation,
+  selectActiveConversation,
+  selectMessageCount,
+  selectConversationCount,
+  selectComposerValue,
+  selectComposerAttachments,
+  selectTypingUserIds,
+} from './selectors/chatSelectors';
 
 export type { ChatProviderProps } from './ChatProvider';
 
@@ -27,6 +47,7 @@ export type {
   ChatOnFinishPayload,
   ChatOnToolCall,
   ChatOnToolCallPayload,
+  UseChatSendMessageInput,
 } from './types/chat-callbacks';
 
 export type {
@@ -41,7 +62,7 @@ export type {
   ConversationReadState,
 } from './types/chat-entities';
 
-export type { ChatError } from './types/chat-error';
+export type { ChatError, ChatErrorCode } from './types/chat-error';
 
 export type {
   ChatBuiltInMessagePart,
@@ -66,6 +87,6 @@ export type {
 
 export type { ChatRealtimeEvent } from './types/chat-realtime';
 
-export type { ChatInternalState, ChatPublicState } from './types/chat-state';
+export type { ChatPublicState } from './types/chat-state';
 
 export type { ChatMessageChunk, ChatStreamEnvelope } from './types/chat-stream';

@@ -68,3 +68,22 @@ export const chatSelectors = {
     },
   ),
 } as const;
+
+export const selectMessageIds = chatSelectors.messageIds;
+export const selectMessagesById = chatSelectors.messagesById;
+export const selectConversationIds = chatSelectors.conversationIds;
+export const selectConversationsById = chatSelectors.conversationsById;
+export const selectActiveConversationId = chatSelectors.activeConversationId;
+export const selectIsStreaming = chatSelectors.isStreaming;
+export const selectHasMoreHistory = chatSelectors.hasMoreHistory;
+export const selectError = chatSelectors.error;
+export const selectMessages = chatSelectors.messages;
+export const selectMessage = chatSelectors.message;
+export const selectConversations = chatSelectors.conversations;
+export const selectConversation = chatSelectors.conversation;
+export const selectActiveConversation = chatSelectors.activeConversation;
+export const selectMessageCount = chatSelectors.messageCount;
+export const selectConversationCount = chatSelectors.conversationCount;
+export const selectComposerValue = chatSelectors.composerValue;
+export const selectComposerAttachments = chatSelectors.composerAttachments;
+export const selectTypingUserIds = chatSelectors.typingUserIds;

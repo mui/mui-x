@@ -9,14 +9,6 @@ export interface UseChatStatusValue {
   isStreaming: boolean;
   hasMoreHistory: boolean;
   error: ChatError | null;
-  /** Error that occurred while loading conversations. */
-  conversationError: ChatError | null;
-  /** Whether conversations are currently being loaded. */
-  isLoadingConversations: boolean;
-  /** Whether messages are currently being loaded. */
-  isLoadingMessages: boolean;
-  /** Whether the realtime connection is being established. */
-  isRealtimeConnecting: boolean;
   /** IDs of users currently typing in the active conversation. */
   typingUserIds: string[];
 }
@@ -33,10 +25,6 @@ export function useChatStatus(): UseChatStatusValue {
       isStreaming,
       hasMoreHistory,
       error,
-      conversationError: null,
-      isLoadingConversations: false,
-      isLoadingMessages: false,
-      isRealtimeConnecting: false,
       typingUserIds,
     }),
     [error, hasMoreHistory, isStreaming, typingUserIds],

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { ChatStore } from '../store';
+import type { ChatStore } from '../../store';
 
 export type ChatStoreInContext<Cursor = string> = ChatStore<Cursor>;
 

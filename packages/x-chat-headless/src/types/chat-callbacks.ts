@@ -1,9 +1,16 @@
 import type {
   ChatDataMessagePart,
   ChatDynamicToolInvocation,
+  ChatMessagePart,
   ChatToolInvocation,
 } from './chat-message-parts';
-import type { ChatMessage } from './chat-entities';
+import type {
+  ChatDateTimeString,
+  ChatDraftAttachment,
+  ChatMessage,
+  ChatUser,
+} from './chat-entities';
+import type { ChatMessageMetadata } from './chat-type-registry';
 
 export interface ChatOnToolCallPayload {
   toolCall: ChatToolInvocation | ChatDynamicToolInvocation;
@@ -28,4 +35,14 @@ export interface ChatAddToolApproveResponseInput {
   id: string;
   approved: boolean;
   reason?: string;
+}
+
+export interface UseChatSendMessageInput {
+  id?: string;
+  conversationId?: string;
+  parts: ChatMessagePart[];
+  metadata?: ChatMessageMetadata;
+  author?: ChatUser;
+  createdAt?: ChatDateTimeString;
+  attachments?: ChatDraftAttachment[];
 }

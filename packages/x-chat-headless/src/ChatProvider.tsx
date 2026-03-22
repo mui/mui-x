@@ -12,7 +12,7 @@ import { defaultPartRenderers } from './renderers/defaultPartRenderers';
 import { type ChatStoreConstructor, type ChatStoreParameters } from './store';
 import type { ChatOnData, ChatOnFinish, ChatOnToolCall } from './types';
 import type { ChatError } from './types/chat-error';
-import { ChatStoreContext } from './use-chat-store-context';
+import { ChatStoreContext } from './internals/useChatStoreContext';
 
 export interface ChatProviderProps<Cursor = string> extends ChatStoreParameters<Cursor> {
   children: React.ReactNode;
@@ -45,8 +45,50 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     streamFlushInterval,
     partRenderers,
     storeClass,
-    ...parameters
+    messages,
+    defaultMessages,
+    conversations,
+    defaultConversations,
+    activeConversationId,
+    defaultActiveConversationId,
+    composerValue,
+    defaultComposerValue,
+    onMessagesChange,
+    onConversationsChange,
+    onActiveConversationChange,
+    onComposerValueChange,
   } = props;
+
+  const parameters = React.useMemo(
+    () => ({
+      messages,
+      defaultMessages,
+      conversations,
+      defaultConversations,
+      activeConversationId,
+      defaultActiveConversationId,
+      composerValue,
+      defaultComposerValue,
+      onMessagesChange,
+      onConversationsChange,
+      onActiveConversationChange,
+      onComposerValueChange,
+    }),
+    [
+      messages,
+      defaultMessages,
+      conversations,
+      defaultConversations,
+      activeConversationId,
+      defaultActiveConversationId,
+      composerValue,
+      defaultComposerValue,
+      onMessagesChange,
+      onConversationsChange,
+      onActiveConversationChange,
+      onComposerValueChange,
+    ],
+  );
   const store = useChatInstance(parameters, storeClass);
   const actions = useChatController({
     store,

@@ -7,28 +7,17 @@ import type { ChatStore } from '../../store';
 import type {
   ChatAddToolApproveResponseInput,
   ChatMessage,
-  ChatMessageMetadata,
-  ChatDateTimeString,
-  ChatUser,
   ChatOnData,
   ChatOnFinish,
   ChatOnToolCall,
 } from '../../types';
-import type { ChatConversation, ChatDraftAttachment } from '../../types/chat-entities';
-import type { ChatError } from '../../types/chat-error';
-import type { ChatMessagePart } from '../../types/chat-message-parts';
+import type { ChatDraftAttachment } from '../../types/chat-entities';
+import type { ChatError, ChatErrorCode } from '../../types/chat-error';
 import type { ChatRealtimeEvent } from '../../types/chat-realtime';
+import type { UseChatSendMessageInput } from '../../types/chat-callbacks';
 import { createLocalId } from '../createLocalId';
 
-export interface UseChatSendMessageInput {
-  id?: string;
-  conversationId?: string;
-  parts: ChatMessagePart[];
-  metadata?: ChatMessageMetadata;
-  author?: ChatUser;
-  createdAt?: ChatDateTimeString;
-  attachments?: ChatDraftAttachment[];
-}
+export type { UseChatSendMessageInput };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface ChatRuntimeActions<Cursor = string> {
@@ -51,14 +40,14 @@ interface UseChatControllerParameters<Cursor = string> {
   streamFlushInterval?: number;
 }
 
-function getMessages(store: ChatStore<any>): ChatMessage[] {
+function getMessages(store: ChatStore<unknown>): ChatMessage[] {
   return store.state.messageIds
     .map((id) => store.state.messagesById[id])
     .filter((message): message is ChatMessage => message != null);
 }
 
 function createRuntimeError(
-  code: string,
+  code: ChatErrorCode,
   message: string,
   source: ChatError['source'],
   recoverable: boolean,
@@ -80,7 +69,7 @@ function getErrorMessage(fallbackMessage: string, error: unknown): string {
 }
 
 function findAssistantMessageIdsForRetry(
-  store: ChatStore<any>,
+  store: ChatStore<unknown>,
   userMessageId: string,
   assistantMessageIdByUserMessageId: Map<string, string>,
 ): string[] {
@@ -119,7 +108,7 @@ function findAssistantMessageIdsForRetry(
 }
 
 function removeAssistantMessageIds(
-  store: ChatStore<any>,
+  store: ChatStore<unknown>,
   assistantMessageIds: string[],
   assistantMessageIdByUserMessageId: Map<string, string>,
 ) {
@@ -141,14 +130,14 @@ function removeAssistantMessageIds(
 }
 
 function applyPresenceUpdate(
-  store: ChatStore<any>,
+  store: ChatStore<unknown>,
   event: Extract<ChatRealtimeEvent, { type: 'presence' }>,
 ) {
-  const nextConversations = store.state.conversationIds.map((conversationId) => {
+  for (const conversationId of store.state.conversationIds) {
     const conversation = store.state.conversationsById[conversationId];
 
     if (!conversation?.participants?.length) {
-      return conversation;
+      continue;
     }
 
     let didChange = false;
@@ -156,36 +145,18 @@ function applyPresenceUpdate(
       if (participant.id !== event.userId || participant.isOnline === event.isOnline) {
         return participant;
       }
-
       didChange = true;
-      return {
-        ...participant,
-        isOnline: event.isOnline,
-      };
+      return { ...participant, isOnline: event.isOnline };
     });
 
-    if (!didChange) {
-      return conversation;
+    if (didChange) {
+      store.updateConversation(conversationId, { participants });
     }
-
-    return {
-      ...conversation,
-      participants,
-    };
-  });
-
-  const didChange = nextConversations.some(
-    (conversation, index) =>
-      conversation !== store.state.conversationsById[store.state.conversationIds[index]],
-  );
-
-  if (didChange) {
-    store.setConversations(nextConversations.filter(Boolean) as ChatConversation[]);
   }
 }
 
 function applyReadUpdate(
-  store: ChatStore<any>,
+  store: ChatStore<unknown>,
   event: Extract<ChatRealtimeEvent, { type: 'read' }>,
 ) {
   const conversation = store.state.conversationsById[event.conversationId];
@@ -218,8 +189,10 @@ export function useChatController<Cursor = string>({
     streamFlushInterval,
   });
   const assistantMessageIdByUserMessageIdRef = React.useRef(new Map<string, string>());
-  const skipNextConversationEffectRef = React.useRef(false);
+  const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
+  // Cursor type is irrelevant for the cursor-agnostic helper functions below.
+  const storeUnknown = store as unknown as ChatStore<unknown>;
 
   runtimeRef.current = {
     adapter,
@@ -340,7 +313,7 @@ export function useChatController<Cursor = string>({
         const stream = await runtimeRef.current.adapter.sendMessage({
           conversationId,
           message: nextMessage,
-          messages: getMessages(store),
+          messages: getMessages(storeUnknown),
           attachments,
           signal: abortController.signal,
         });
@@ -435,13 +408,13 @@ export function useChatController<Cursor = string>({
       }
 
       const assistantMessageIds = findAssistantMessageIdsForRetry(
-        store,
+        storeUnknown,
         messageId,
         assistantMessageIdByUserMessageIdRef.current,
       );
 
       removeAssistantMessageIds(
-        store,
+        storeUnknown,
         assistantMessageIds,
         assistantMessageIdByUserMessageIdRef.current,
       );
@@ -509,7 +482,7 @@ export function useChatController<Cursor = string>({
       }
 
       stopStreaming();
-      skipNextConversationEffectRef.current = true;
+      conversationNavigationRequestIdRef.current += 1;
       store.setActiveConversation(id);
       await loadConversationMessages(id);
     },
@@ -532,7 +505,7 @@ export function useChatController<Cursor = string>({
     ChatRuntimeActions<Cursor>['addToolApprovalResponse']
   >(
     async ({ id, approved, reason }) => {
-      const assistantMessage = getMessages(store).find(
+      const assistantMessage = getMessages(storeUnknown).find(
         (message) =>
           message.role === 'assistant' &&
           message.parts.some(
@@ -576,7 +549,7 @@ export function useChatController<Cursor = string>({
       } catch (error) {
         setRuntimeError(
           createRuntimeError(
-            'ADAPTER_ERROR',
+            'SEND_ERROR',
             getErrorMessage('Unable to send the tool approval response.', error),
             'adapter',
             true,
@@ -619,16 +592,16 @@ export function useChatController<Cursor = string>({
           store.removeConversation(event.conversationId);
 
           if (store.state.activeConversationId === event.conversationId) {
-            skipNextConversationEffectRef.current = true;
+            conversationNavigationRequestIdRef.current += 1;
             store.setActiveConversation(undefined);
             store.resetMessages();
           }
           return;
         case 'presence':
-          applyPresenceUpdate(store, event);
+          applyPresenceUpdate(storeUnknown, event);
           return;
         case 'read':
-          applyReadUpdate(store, event);
+          applyReadUpdate(storeUnknown, event);
           return;
         case 'typing':
           store.setTypingUser(event.conversationId, event.userId, event.isTyping);
@@ -662,7 +635,7 @@ export function useChatController<Cursor = string>({
 
         setRuntimeError(
           createRuntimeError(
-            'ADAPTER_ERROR',
+            'HISTORY_ERROR',
             getErrorMessage('Unable to load conversations.', error),
             'adapter',
             true,
@@ -700,7 +673,7 @@ export function useChatController<Cursor = string>({
 
         setRuntimeError(
           createRuntimeError(
-            'ADAPTER_ERROR',
+            'REALTIME_ERROR',
             getErrorMessage('Unable to subscribe to chat updates.', error),
             'adapter',
             true,
@@ -719,8 +692,10 @@ export function useChatController<Cursor = string>({
     store,
     (state) => state.activeConversationId,
     (_, nextActiveConversationId) => {
-      if (skipNextConversationEffectRef.current) {
-        skipNextConversationEffectRef.current = false;
+      const navId = conversationNavigationRequestIdRef.current;
+
+      if (navId > 0) {
+        conversationNavigationRequestIdRef.current = 0;
         return;
       }
 

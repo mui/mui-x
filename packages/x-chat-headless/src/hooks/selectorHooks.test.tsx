@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { ChatStore } from '../store';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
-import { ChatStoreContext } from '../use-chat-store-context';
+import { ChatStoreContext } from '../internals/useChatStoreContext';
 import { useChatStatus } from './useChatStatus';
 import { useConversation, useConversations } from './useConversation';
 import { useMessage, useMessageIds } from './useMessage';
