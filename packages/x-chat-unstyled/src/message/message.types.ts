@@ -11,6 +11,12 @@ export interface MessageOwnerState {
   error: boolean;
   isGrouped: boolean;
   variant: ChatVariant;
+  /**
+   * Whether the message has an avatar to display.
+   * Drives the `--MuiChatMessage-avatarSize` CSS variable so the opposite-side
+   * phantom column collapses when no avatar is present.
+   */
+  showAvatar: boolean;
 }
 
 export interface MessageRootOwnerState extends MessageOwnerState {}

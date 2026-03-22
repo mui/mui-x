@@ -43,6 +43,7 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
       error: message?.status === 'error',
       isGrouped,
       variant,
+      showAvatar: message?.author?.avatarUrl != null,
     }),
     [isGrouped, message, messageId, variant],
   );

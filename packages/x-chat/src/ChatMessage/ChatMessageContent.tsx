@@ -500,6 +500,10 @@ export const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageCo
           } as any,
         }}
         partProps={{
+          // Spread first so the specific entries below always override.
+          // This lets unknown part types (file, source-url, …) pass through
+          // without clobbering the Material-slot merges for the known ones.
+          ...userPartProps,
           text: {
             renderText: renderMarkdown,
             ...userPartProps?.text,
@@ -516,7 +520,6 @@ export const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageCo
             slots: reasoningPartSlots,
             ...userPartProps?.reasoning,
           },
-          ...userPartProps,
         }}
       />
     );

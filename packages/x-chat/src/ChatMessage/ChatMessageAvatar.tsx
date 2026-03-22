@@ -16,8 +16,8 @@ const ChatMessageAvatarStyled = styled('div', {
   overridesResolver: (_, styles) => styles.avatar,
 })(({ theme }) => ({
   gridArea: 'avatar',
-  width: 36,
-  height: 36,
+  width: 'var(--MuiChatMessage-avatarSize, 36px)',
+  height: 'var(--MuiChatMessage-avatarSize, 36px)',
   borderRadius: '50%',
   overflow: 'hidden',
   flexShrink: 0,

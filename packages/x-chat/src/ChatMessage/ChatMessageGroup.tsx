@@ -17,6 +17,7 @@ const ChatMessageGroupStyled = styled('div', {
   slot: 'Group',
   overridesResolver: (_, styles) => styles.group,
 })(({ theme }) => ({
+  '--MuiChatMessage-avatarSize': '36px',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(0.1),
@@ -34,10 +35,10 @@ const ChatMessageGroupAuthorNameStyled = styled('div', {
   ...(ownerState?.authorRole === 'user'
     ? {
         textAlign: 'right' as const,
-        paddingInlineEnd: `calc(36px + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
+        paddingInlineEnd: `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
       }
     : {
-        paddingInlineStart: `calc(36px + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
+        paddingInlineStart: `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
       }),
 }));
 

@@ -11,6 +11,7 @@ const MessageContext = React.createContext<MessageOwnerState>({
   error: false,
   isGrouped: false,
   variant: 'default',
+  showAvatar: false,
 });
 
 export function MessageContextProvider(props: {
