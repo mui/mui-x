@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
+import { type SeriesId } from '@mui/x-charts/internals';
 import { useUtilityClasses } from './heatmapClasses';
 import { HeatmapCell, type HeatmapCellOwnerState, type HeatmapCellProps } from './HeatmapCell';
-import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
 export interface HeatmapItemSlots {
   /**
@@ -64,17 +63,6 @@ function HeatmapItem(props: HeatmapItemProps) {
     ...other
   } = props;
 
-  // If we aren't using the default cell, we skip adding interaction props because we have a more efficient way to
-  // calculate them. To avoid breaking changes, we need to keep this behavior. We can remove this in v9.
-  const skipInteractionItemProps = shouldRegisterPointerInteractionsGlobally(
-    props.slots,
-    props.slotProps,
-  );
-  const interactionProps = useInteractionItemProps(
-    { type: 'heatmap', seriesId, xIndex, yIndex },
-    skipInteractionItemProps,
-  );
-
   const ownerState: HeatmapCellOwnerState = {
     seriesId,
     color,
@@ -89,7 +77,6 @@ function HeatmapItem(props: HeatmapItemProps) {
   const cellProps = useSlotProps({
     elementType: Cell,
     additionalProps: {
-      ...interactionProps,
       rx: borderRadius,
       ry: borderRadius,
       'data-highlighted': isHighlighted || undefined,
