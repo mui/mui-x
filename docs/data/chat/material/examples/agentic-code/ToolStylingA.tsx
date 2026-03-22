@@ -1,9 +1,6 @@
 'use client';
 import * as React from 'react';
 import { nanoid } from 'nanoid';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
 import type {
   ChatAdapter,
@@ -356,7 +353,7 @@ function createAgenticChunks(messageId: string): ChatMessageChunk[] {
   return chunks;
 }
 
-// ── Icon slot components ──────────────────────────────────────────────────────
+// ── Icon slot component ───────────────────────────────────────────────────────
 
 type IconProps = { ownerState?: { toolName?: string } } & React.HTMLAttributes<HTMLSpanElement>;
 
@@ -368,147 +365,7 @@ const TOOL_COLORS: Record<string, string> = {
   bash: '#c62828',
 };
 
-const TOOL_EMOJIS: Record<string, string> = {
-  glob: '🔍',
-  read_file: '📖',
-  edit_file: '✏️',
-  write_file: '📝',
-  bash: '⚡',
-};
-
-const TOOL_SYMBOLS: Record<string, string> = {
-  glob: '◎',
-  read_file: '☰',
-  edit_file: '◈',
-  write_file: '⊞',
-  bash: '❯',
-};
-
-// Emoji per tool
-const EmojiIcon = React.forwardRef<HTMLSpanElement, IconProps>(function EmojiIcon(
-  { ownerState, style, ...rest },
-  ref,
-) {
-  const emoji = TOOL_EMOJIS[ownerState?.toolName ?? ''] ?? '🔧';
-  return (
-    <span
-      ref={ref}
-      {...rest}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 18,
-        height: 18,
-        fontSize: '0.82rem',
-        lineHeight: 1,
-        flexShrink: 0,
-        ...style,
-      }}
-    >
-      {emoji}
-    </span>
-  );
-});
-
-// Colored circle with tool initial
-const MonogramIcon = React.forwardRef<HTMLSpanElement, IconProps>(function MonogramIcon(
-  { ownerState, style, ...rest },
-  ref,
-) {
-  const toolName = ownerState?.toolName ?? '';
-  const color = TOOL_COLORS[toolName] ?? '#757575';
-  const letter = toolName.charAt(0).toUpperCase() || '⚙';
-  return (
-    <span
-      ref={ref}
-      {...rest}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 18,
-        height: 18,
-        borderRadius: '50%',
-        background: color,
-        color: '#fff',
-        fontSize: '0.55rem',
-        fontWeight: 700,
-        fontFamily: 'sans-serif',
-        flexShrink: 0,
-        ...style,
-      }}
-    >
-      {letter}
-    </span>
-  );
-});
-
-// Dark square with color-coded letter
-const TerminalIcon = React.forwardRef<HTMLSpanElement, IconProps>(function TerminalIcon(
-  { ownerState, style, ...rest },
-  ref,
-) {
-  const toolName = ownerState?.toolName ?? '';
-  const color = TOOL_COLORS[toolName] ?? '#4ade80';
-  const letter = toolName.charAt(0).toUpperCase() || '⚙';
-  return (
-    <span
-      ref={ref}
-      {...rest}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 18,
-        height: 18,
-        borderRadius: 3,
-        background: '#111827',
-        color,
-        fontSize: '0.55rem',
-        fontWeight: 700,
-        fontFamily: 'monospace',
-        flexShrink: 0,
-        border: `1px solid ${color}55`,
-        ...style,
-      }}
-    >
-      {letter}
-    </span>
-  );
-});
-
-// Unicode symbol per tool
-const SymbolIcon = React.forwardRef<HTMLSpanElement, IconProps>(function SymbolIcon(
-  { ownerState, style, ...rest },
-  ref,
-) {
-  const toolName = ownerState?.toolName ?? '';
-  const symbol = TOOL_SYMBOLS[toolName] ?? '⚙';
-  const color = TOOL_COLORS[toolName] ?? '#757575';
-  return (
-    <span
-      ref={ref}
-      {...rest}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 18,
-        height: 18,
-        color,
-        fontSize: '0.7rem',
-        lineHeight: 1,
-        flexShrink: 0,
-        ...style,
-      }}
-    >
-      {symbol}
-    </span>
-  );
-});
-
-// Colored outline ring with tool initial
+// Outlined ring with tool initial — colored border + tinted background
 const RingIcon = React.forwardRef<HTMLSpanElement, IconProps>(function RingIcon(
   { ownerState, style, ...rest },
   ref,
@@ -541,94 +398,17 @@ const RingIcon = React.forwardRef<HTMLSpanElement, IconProps>(function RingIcon(
   );
 });
 
-// ── Variation registry ────────────────────────────────────────────────────────
+// ── Per-tool icon slots ───────────────────────────────────────────────────────
 
 const KNOWN_TOOLS = ['glob', 'read_file', 'edit_file', 'write_file', 'bash'];
 
-function makeToolSlots(
-  icon: React.ElementType,
-): Record<string, { icon: React.ElementType }> {
-  return Object.fromEntries(KNOWN_TOOLS.map((name) => [name, { icon }]));
-}
-
-interface Variation {
-  label: string;
-  description: string;
-  toolSlots?: Record<string, { icon: React.ElementType }>;
-}
-
-const VARIATIONS: Variation[] = [
-  {
-    label: 'Default',
-    description: 'Built-in first-letter icon on a gray square',
-    toolSlots: undefined,
-  },
-  {
-    label: 'Emoji',
-    description: 'Tool-specific emoji — no code required',
-    toolSlots: makeToolSlots(EmojiIcon),
-  },
-  {
-    label: 'Monogram',
-    description: 'Colored circles with the tool initial',
-    toolSlots: makeToolSlots(MonogramIcon),
-  },
-  {
-    label: 'Terminal',
-    description: 'Dark square with a color-coded letter',
-    toolSlots: makeToolSlots(TerminalIcon),
-  },
-  {
-    label: 'Symbol',
-    description: 'Unicode glyphs — one per tool category',
-    toolSlots: makeToolSlots(SymbolIcon),
-  },
-  {
-    label: 'Ring',
-    description: 'Outlined ring — colored border with the tool initial',
-    toolSlots: makeToolSlots(RingIcon),
-  },
-];
-
-// ── Variation switcher ────────────────────────────────────────────────────────
-
-function ChevronLeft() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M10 12L6 8l4-4"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ChevronRight() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M6 12l4-4-4-4"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const ringToolSlots = Object.fromEntries(KNOWN_TOOLS.map((name) => [name, { icon: RingIcon }]));
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 type SetThreads = React.Dispatch<React.SetStateAction<Record<string, ChatMessage[]>>>;
 
 export default function ToolStylingA() {
-  const [variantIdx, setVariantIdx] = React.useState(0);
-  const total = VARIATIONS.length;
-  const variant = VARIATIONS[variantIdx];
-
   const setThreadsRef = React.useRef<SetThreads | null>(null);
 
   const adapter = React.useMemo<ChatAdapter>(
@@ -686,78 +466,33 @@ export default function ToolStylingA() {
   const messages = threads[activeId] ?? [];
 
   return (
-    <Box>
-      {/* Variation switcher */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          mb: 1,
-          px: 0.5,
-          py: 0.25,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-          backgroundColor: 'action.hover',
-        }}
-      >
-        <IconButton
-          size="small"
-          onClick={() => setVariantIdx((i) => (i - 1 + total) % total)}
-          aria-label="Previous variation"
-        >
-          <ChevronLeft />
-        </IconButton>
-        <Box sx={{ flex: 1, textAlign: 'center' }}>
-          <Typography variant="caption" fontWeight={600} display="block" lineHeight={1.5}>
-            Icon style {variantIdx + 1}/{total} — {variant.label}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" display="block" lineHeight={1.5}>
-            {variant.description}
-          </Typography>
-        </Box>
-        <IconButton
-          size="small"
-          onClick={() => setVariantIdx((i) => (i + 1) % total)}
-          aria-label="Next variation"
-        >
-          <ChevronRight />
-        </IconButton>
-      </Box>
-
-      {/* Chat — identical to AgenticCode, plus toolSlots override */}
-      <ChatBox
-        adapter={adapter}
-        activeConversationId={activeId}
-        conversations={conversations}
-        messages={messages}
-        onActiveConversationChange={(nextId) => {
-          if (nextId) {
-            setActiveId(nextId);
-          }
-        }}
-        onMessagesChange={(nextMessages) => {
-          setThreads((prev) => ({ ...prev, [activeId]: nextMessages }));
-          setConversations((prev) => syncConversationPreview(prev, activeId, nextMessages));
-        }}
-        slotProps={
-          variant.toolSlots != null
-            ? {
-                messageContent: {
-                  partProps: {
-                    'dynamic-tool': { toolSlots: variant.toolSlots },
-                  },
-                },
-              }
-            : undefined
+    <ChatBox
+      adapter={adapter}
+      activeConversationId={activeId}
+      conversations={conversations}
+      messages={messages}
+      onActiveConversationChange={(nextId) => {
+        if (nextId) {
+          setActiveId(nextId);
         }
-        sx={{
-          height: 620,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-        }}
-      />
-    </Box>
+      }}
+      onMessagesChange={(nextMessages) => {
+        setThreads((prev) => ({ ...prev, [activeId]: nextMessages }));
+        setConversations((prev) => syncConversationPreview(prev, activeId, nextMessages));
+      }}
+      slotProps={{
+        messageContent: {
+          partProps: {
+            'dynamic-tool': { toolSlots: ringToolSlots },
+          },
+        },
+      }}
+      sx={{
+        height: 620,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
   );
 }

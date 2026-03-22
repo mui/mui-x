@@ -1,9 +1,6 @@
 'use client';
 import * as React from 'react';
 import { nanoid } from 'nanoid';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
 import type {
   ChatAdapter,
@@ -357,196 +354,110 @@ function createAgenticChunks(messageId: string): ChatMessageChunk[] {
   return chunks;
 }
 
-// ── Block theme variations ────────────────────────────────────────────────────
+// ── Tool accent palette ───────────────────────────────────────────────────────
 
-const TOOL_ACCENTS: Record<string, { light: string; mid: string; border: string; text: string }> =
-  {
-    glob: { light: '#e8eaf6', mid: '#9fa8da', border: '#7986cb', text: '#3949ab' },
-    read_file: { light: '#e1f5fe', mid: '#81d4fa', border: '#4fc3f7', text: '#0277bd' },
-    edit_file: { light: '#fff3e0', mid: '#ffcc80', border: '#ffa726', text: '#e65100' },
-    write_file: { light: '#e8f5e9', mid: '#a5d6a7', border: '#66bb6a', text: '#2e7d32' },
-    bash: { light: '#fce4ec', mid: '#f48fb1', border: '#f06292', text: '#ad1457' },
-  };
-
-interface Variation {
-  label: string;
-  description: string;
-  slotProps?: ToolPartSlotProps;
-  toolSlotProps?: Record<string, ToolPartSlotProps>;
+interface ToolAccent {
+  /** Light tint for gradient/fill backgrounds */
+  light: string;
+  /** Mid tone for gradient end / borders */
+  mid: string;
+  /** Saturated border / icon background */
+  border: string;
+  /** Dark readable text */
+  text: string;
+  /** Solid vivid background */
+  vivid: string;
 }
 
-const VARIATIONS: Variation[] = [
-  // 1 — Subtle: no box, left border only
-  {
-    label: 'Subtle',
-    description: 'No box, left border accent — minimal chrome',
-    slotProps: {
-      root: {
-        style: {
-          border: 'none',
-          borderLeft: '2px solid #e0e0e0',
-          borderRadius: 0,
-          margin: '4px 0',
-          overflow: 'visible',
-        },
-      },
-      header: { style: { background: 'transparent', padding: '4px 10px' } },
-      state: {
-        style: { background: 'transparent', color: '#9e9e9e', fontSize: '0.58rem', padding: 0 },
-      },
-    },
+const ACCENTS: Record<string, ToolAccent> = {
+  glob: {
+    light: '#ede7f6',
+    mid: '#b39ddb',
+    border: '#7e57c2',
+    text: '#4527a0',
+    vivid: '#7e57c2',
   },
-
-  // 2 — Dark: Catppuccin Mocha palette
-  {
-    label: 'Dark',
-    description: 'Catppuccin Mocha palette — dark regardless of parent theme',
-    slotProps: {
-      root: { style: { background: '#1e1e2e', border: '1px solid #313244', borderRadius: 6 } },
-      header: { style: { background: '#181825', borderBottom: '1px solid #313244' } },
-      title: { style: { color: '#cdd6f4', fontFamily: 'monospace' } },
-      state: { style: { background: '#313244', color: '#89b4fa', border: 'none' } },
-      section: { style: { borderTop: '1px solid #313244' } },
-      sectionContent: {
-        style: { background: '#11111b', color: '#89dceb', border: '1px solid #313244' },
-      },
-      error: { style: { background: '#11111b', color: '#f38ba8', borderTop: '1px solid #313244' } },
-    },
+  read_file: {
+    light: '#e1f5fe',
+    mid: '#81d4fa',
+    border: '#0288d1',
+    text: '#01579b',
+    vivid: '#0288d1',
   },
+  edit_file: {
+    light: '#fff8e1',
+    mid: '#ffcc80',
+    border: '#f57c00',
+    text: '#e65100',
+    vivid: '#f57c00',
+  },
+  write_file: {
+    light: '#e8f5e9',
+    mid: '#a5d6a7',
+    border: '#388e3c',
+    text: '#1b5e20',
+    vivid: '#388e3c',
+  },
+  bash: {
+    light: '#fce4ec',
+    mid: '#f48fb1',
+    border: '#c62828',
+    text: '#b71c1c',
+    vivid: '#c62828',
+  },
+};
 
-  // 3 — Colorful: per-tool gradient headers via toolSlotProps
-  {
-    label: 'Colorful',
-    description: 'Per-tool gradient header + colored title via toolSlotProps',
-    toolSlotProps: Object.fromEntries(
-      Object.entries(TOOL_ACCENTS).map(([name, c]) => [
-        name,
-        {
-          header: {
-            style: {
-              background: `linear-gradient(135deg, ${c.light} 0%, ${c.mid}66 100%)`,
-              borderBottom: `1px solid ${c.border}55`,
-            },
+// ── Variation builder helpers ─────────────────────────────────────────────────
+
+function makeColorfulSlots(): Record<string, ToolPartSlotProps> {
+  return Object.fromEntries(
+    Object.entries(ACCENTS).map(([name, c]) => [
+      name,
+      {
+        root: {
+          style: {
+            borderLeftColor: c.border,
+            borderLeftWidth: 3,
           },
-          title: { style: { color: c.text, fontWeight: 600 } },
-          icon: { style: { background: c.border, color: '#fff', borderRadius: '50%' } },
-        } satisfies ToolPartSlotProps,
-      ]),
-    ),
-  },
-
-  // 4 — Glass: frosted-glass card
-  {
-    label: 'Glass',
-    description: 'Frosted glass with backdrop blur and soft shadow',
-    slotProps: {
-      root: {
-        style: {
-          background: 'rgba(255,255,255,0.72)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,255,255,0.5)',
-          boxShadow: '0 2px 16px rgba(0,0,0,0.08)',
-          borderRadius: 10,
         },
-      },
-      header: { style: { background: 'rgba(255,255,255,0.45)', borderBottom: '1px solid rgba(0,0,0,0.06)' } },
-      sectionContent: {
-        style: { background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 6 },
-      },
-    },
-  },
-
-  // 5 — Retro: amber-on-black terminal
-  {
-    label: 'Retro',
-    description: 'Amber-on-black terminal aesthetic',
-    slotProps: {
-      root: { style: { background: '#0d0d00', border: '1px solid #4a3500', borderRadius: 4 } },
-      header: { style: { background: '#1a0e00', borderBottom: '1px solid #4a3500' } },
-      title: {
-        style: {
-          color: '#ffb300',
-          fontFamily: '"Courier New", Courier, monospace',
-          textTransform: 'lowercase' as const,
-          letterSpacing: '0.03em',
+        header: {
+          style: {
+            background: `linear-gradient(135deg, ${c.light} 0%, ${c.mid}44 100%)`,
+            borderBottom: `1px solid ${c.border}33`,
+          },
         },
-      },
-      state: {
-        style: {
-          background: '#2a1c00',
-          color: '#ff8f00',
-          fontFamily: '"Courier New", Courier, monospace',
-          border: '1px solid #4a3500',
-          borderRadius: 2,
-          letterSpacing: '0.08em',
+        title: {
+          style: { color: c.text, fontWeight: 600 },
         },
-      },
-      icon: {
-        style: {
-          background: '#2a1c00',
-          color: '#ff8f00',
-          border: '1px solid #4a3500',
-          fontFamily: 'monospace',
-          borderRadius: 2,
+        icon: {
+          style: {
+            background: c.border,
+            color: '#fff',
+            borderRadius: '50%',
+            fontSize: '0.55rem',
+          },
         },
-      },
-      section: { style: { borderTop: '1px solid #3d2200' } },
-      sectionContent: {
-        style: {
-          background: '#080800',
-          color: '#ffcc44',
-          fontFamily: '"Courier New", Courier, monospace',
-          border: '1px solid #3d2200',
-          borderRadius: 2,
+        state: {
+          style: {
+            background: `${c.border}18`,
+            color: c.text,
+            border: `1px solid ${c.border}44`,
+          },
         },
-      },
-      error: {
-        style: { background: '#1a0000', color: '#ff4444', borderTop: '1px solid #3d2200' },
-      },
-    },
-  },
-];
-
-// ── Variation switcher ────────────────────────────────────────────────────────
-
-function ChevronLeft() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M10 12L6 8l4-4"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+      } satisfies ToolPartSlotProps,
+    ]),
   );
 }
 
-function ChevronRight() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M6 12l4-4-4-4"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+// ── Per-tool slot props (Colorful theme) ─────────────────────────────────────
+
+const colorfulToolSlotProps = makeColorfulSlots();
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 type SetThreads = React.Dispatch<React.SetStateAction<Record<string, ChatMessage[]>>>;
 
 export default function ToolStylingB() {
-  const [variantIdx, setVariantIdx] = React.useState(0);
-  const total = VARIATIONS.length;
-  const variant = VARIATIONS[variantIdx];
-
   const setThreadsRef = React.useRef<SetThreads | null>(null);
 
   const adapter = React.useMemo<ChatAdapter>(
@@ -604,77 +515,35 @@ export default function ToolStylingB() {
   const messages = threads[activeId] ?? [];
 
   return (
-    <Box>
-      {/* Variation switcher */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          mb: 1,
-          px: 0.5,
-          py: 0.25,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-          backgroundColor: 'action.hover',
-        }}
-      >
-        <IconButton
-          size="small"
-          onClick={() => setVariantIdx((i) => (i - 1 + total) % total)}
-          aria-label="Previous variation"
-        >
-          <ChevronLeft />
-        </IconButton>
-        <Box sx={{ flex: 1, textAlign: 'center' }}>
-          <Typography variant="caption" fontWeight={600} display="block" lineHeight={1.5}>
-            Block theme {variantIdx + 1}/{total} — {variant.label}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" display="block" lineHeight={1.5}>
-            {variant.description}
-          </Typography>
-        </Box>
-        <IconButton
-          size="small"
-          onClick={() => setVariantIdx((i) => (i + 1) % total)}
-          aria-label="Next variation"
-        >
-          <ChevronRight />
-        </IconButton>
-      </Box>
-
-      {/* Chat — identical to AgenticCode, plus slotProps/toolSlotProps override */}
-      <ChatBox
-        adapter={adapter}
-        activeConversationId={activeId}
-        conversations={conversations}
-        messages={messages}
-        onActiveConversationChange={(nextId) => {
-          if (nextId) {
-            setActiveId(nextId);
-          }
-        }}
-        onMessagesChange={(nextMessages) => {
-          setThreads((prev) => ({ ...prev, [activeId]: nextMessages }));
-          setConversations((prev) => syncConversationPreview(prev, activeId, nextMessages));
-        }}
-        slotProps={{
-          messageContent: {
-            partProps: {
-              'dynamic-tool': {
-                slotProps: variant.slotProps,
-                toolSlotProps: variant.toolSlotProps,
-              },
+    <ChatBox
+      adapter={adapter}
+      activeConversationId={activeId}
+      conversations={conversations}
+      messages={messages}
+      onActiveConversationChange={(nextId) => {
+        if (nextId) {
+          setActiveId(nextId);
+        }
+      }}
+      onMessagesChange={(nextMessages) => {
+        setThreads((prev) => ({ ...prev, [activeId]: nextMessages }));
+        setConversations((prev) => syncConversationPreview(prev, activeId, nextMessages));
+      }}
+      slotProps={{
+        messageContent: {
+          partProps: {
+            'dynamic-tool': {
+              toolSlotProps: colorfulToolSlotProps,
             },
           },
-        }}
-        sx={{
-          height: 620,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-        }}
-      />
-    </Box>
+        },
+      }}
+      sx={{
+        height: 620,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 1,
+      }}
+    />
   );
 }

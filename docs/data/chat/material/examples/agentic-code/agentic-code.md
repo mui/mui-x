@@ -96,11 +96,24 @@ receives `ownerState.toolName` so a single component can branch on the tool type
 
 ### Block themes
 
-Five visual themes applied via `slotProps` (global, all tools) and `toolSlotProps`
-(per tool name). Covers borderless minimal, dark Catppuccin palette, per-tool
-gradient headers, frosted glass, and a retro amber terminal look.
+Five color themes, all built on `toolSlotProps` — per-tool overrides that style
+the header, icon, title, state chip, and root border without touching the global
+slots. This keeps collapse/expand and all other built-in behaviours intact while
+giving each tool its own distinct accent: **Colorful** (gradient + circular icon),
+**Pastel** (light fills), **Vivid** (solid saturated header, white text),
+**Outlined** (transparent fill, colored border), and **Dark** (dark background
+with glowing accents).
 
 {{"demo": "ToolStylingB.js"}}
+
+### Custom renderer
+
+Replace the tool block entirely by providing a custom `root` slot component via
+`toolSlots`. The component receives `ownerState.toolName` and `ownerState.state`
+from the slot system — no default markup, no expand/collapse. Here each call
+renders as a single-line process trace: tool name, a dotted rule, and a state badge.
+
+{{"demo": "ToolStylingC.js"}}
 
 ## Related
 
