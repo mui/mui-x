@@ -114,6 +114,7 @@ function CanvasPositioner({
         height: '100%',
         margin: 'auto',
       }}
+      aria-hidden
     >
       {children}
     </div>

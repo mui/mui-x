@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -15,8 +16,10 @@ import { type UseChartItemClickSignature } from '../internals/plugins/featurePlu
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartsContext } from '../context/ChartsProvider';
 import { useChartsLayerContainerRef } from '../hooks';
+import { useRegisterPointerInteractions } from '../internals/plugins/featurePlugins/shared/useRegisterPointerInteractions';
 // eslint-disable-next-line import/no-cycle
 import { ChartsSurface } from '../ChartsSurface';
+import { ChartsAccessibilityProxy } from '../internals/components/ChartsAccessibilityProxy';
 
 const ChartsLayerContainerDiv = styled('div', {
   name: 'MuiChartsLayerContainer',
@@ -68,6 +71,8 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     const propsHeight = store.use(selectorChartPropsHeight);
     const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
 
+    useRegisterPointerInteractions();
+
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
     const { children, title, desc, className, ...other } = themeProps;
 
@@ -97,7 +102,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
       <ChartsLayerContainerDiv
         ref={handleRef}
         ownerState={{ width: propsWidth, height: propsHeight }}
-        tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
+        role="presentation"
         aria-label={title}
         aria-describedby={desc ? descId : undefined}
         className={clsx(classes.root, className)}
@@ -115,6 +120,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
           instance.handleClick?.(event);
         }}
       >
+        {isKeyboardNavigationEnabled && <ChartsAccessibilityProxy />}
         {desc && (
           <span id={descId} style={{ display: 'none' }}>
             {desc}

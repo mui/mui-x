@@ -2,6 +2,7 @@
   "componentDescription": "Renders a Sankey diagram plot.",
   "propDescriptions": {
     "classes": { "description": "Classes applied to the various elements." },
+    "className": { "description": "A CSS class name applied to the root element." },
     "onLinkClick": {
       "description": "Callback fired when a sankey item is clicked.",
       "typeDescriptions": {
