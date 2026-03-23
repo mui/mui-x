@@ -1,2 +1,2 @@
-<DateField label="Focuses 'day' section" initialFocus="day" />
-<DatePicker label="Focuses 'year' section" initialFocus="year" />
+<DateField label="Focuses 'day' section" initialFocusedSection="day" />
+<DatePicker label="Focuses 'year' section" initialFocusedSection="year" />
