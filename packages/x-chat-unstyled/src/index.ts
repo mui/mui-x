@@ -1,5 +1,5 @@
-export { ChatLayout, ChatRoot, useChatLocaleText } from './chat';
-export {
+import { ChatLayout, ChatRoot, useChatLocaleText } from './chat';
+import {
   ConversationHeader,
   ConversationHeaderActions,
   ConversationHeaderInfo,
@@ -7,7 +7,7 @@ export {
   ConversationSubtitle,
   ConversationTitle,
 } from './conversation';
-export {
+import {
   ConversationInputAttachButton,
   ConversationInputHelperText,
   ConversationInputLabel,
@@ -16,7 +16,7 @@ export {
   ConversationInputTextArea,
   ConversationInputToolbar,
 } from './conversation-input';
-export {
+import {
   ConversationListItem,
   ConversationListItemAvatar,
   ConversationListItemContent,
@@ -26,8 +26,8 @@ export {
   ConversationListTitle,
   ConversationListUnreadBadge,
 } from './conversation-list';
-export { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
-export {
+import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
+import {
   FilePart,
   MessageActions,
   MessageActionsMenu,
@@ -53,10 +53,70 @@ export {
   createSourceUrlPartRenderer,
   createToolPartRenderer,
 } from './message';
-export { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
-export { SuggestionItem, SuggestionsRoot } from './suggestions';
-export { MessageGroup } from './message-group';
-export { MessageListDateDivider, MessageListRoot } from './message-list';
+import { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
+import { SuggestionItem, SuggestionsRoot } from './suggestions';
+import { MessageGroup } from './message-group';
+import { MessageListDateDivider, MessageListRoot } from './message-list';
+
+export {
+  ChatLayout,
+  ChatRoot,
+  useChatLocaleText,
+  ConversationHeader,
+  ConversationHeaderActions,
+  ConversationHeaderInfo,
+  ConversationRoot,
+  ConversationSubtitle,
+  ConversationTitle,
+  ConversationInputAttachButton,
+  ConversationInputHelperText,
+  ConversationInputLabel,
+  ConversationInputRoot,
+  ConversationInputSendButton,
+  ConversationInputTextArea,
+  ConversationInputToolbar,
+  ConversationListItem,
+  ConversationListItemAvatar,
+  ConversationListItemContent,
+  ConversationListPreview,
+  ConversationListRoot,
+  ConversationListTimestamp,
+  ConversationListTitle,
+  ConversationListUnreadBadge,
+  ScrollToBottomAffordance,
+  TypingIndicator,
+  UnreadMarker,
+  FilePart,
+  MessageActions,
+  MessageActionsMenu,
+  MessageActionsMenuGroup,
+  MessageActionsMenuGroupLabel,
+  MessageActionsMenuItem,
+  MessageActionsMenuPopup,
+  MessageActionsMenuPositioner,
+  MessageActionsMenuRoot,
+  MessageActionsMenuTrigger,
+  MessageAuthorLabel,
+  MessageAvatar,
+  MessageContent,
+  MessageMeta,
+  MessageRoot,
+  ReasoningPart,
+  SourceDocumentPart,
+  SourceUrlPart,
+  ToolPart,
+  createFilePartRenderer,
+  createReasoningPartRenderer,
+  createSourceDocumentPartRenderer,
+  createSourceUrlPartRenderer,
+  createToolPartRenderer,
+  getDefaultMessagePartRenderer,
+  SuggestionItem,
+  SuggestionsRoot,
+  MessageGroup,
+  MessageListDateDivider,
+  MessageListRoot,
+};
 
 export type {
   ChatLayoutProps,
