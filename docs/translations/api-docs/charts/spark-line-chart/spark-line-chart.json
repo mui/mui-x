@@ -16,16 +16,21 @@
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
     "disableClipping": {
       "description": "When <code>true</code>, the chart&#39;s drawing area will not be clipped and elements within can visually overflow the chart."
     },
+    "disableHitArea": {
+      "description": "If true, the hit area interaction is disabled and falls back to hover events."
+    },
     "disableKeyboardNavigation": {
       "description": "If <code>true</code>, disables keyboard navigation for the chart."
     },
-    "disableVoronoi": { "description": "If true, the voronoi interaction are ignored." },
     "experimentalFeatures": {
       "description": "Options to enable features planned for the next major."
     },
@@ -40,6 +45,9 @@
     },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
+    },
+    "hitAreaRadius": {
+      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
@@ -122,6 +130,9 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    },
     "tooltipAxis": {
       "description": "The controlled axis tooltip. Identified by the axis id, and data index."
     },
@@ -132,9 +143,6 @@
         "value": { "name": "value", "description": "The value to format." },
         "string": { "name": "string", "description": "the formatted value." }
       }
-    },
-    "voronoiMaxRadius": {
-      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."

@@ -139,8 +139,6 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
           startAngle={item.startAngle}
           endAngle={item.endAngle}
           paddingAngle={item.paddingAngle}
-          innerRadius={item.innerRadius}
-          outerRadius={item.outerRadius}
           arcLabelRadius={item.arcLabelRadius}
           cornerRadius={item.cornerRadius}
           hidden={item.hidden}

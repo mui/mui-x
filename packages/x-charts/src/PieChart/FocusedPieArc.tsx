@@ -1,10 +1,8 @@
 'use client';
-import * as React from 'react';
-import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
-import { PieArc, pieArcClasses, type PieArcProps } from './PieArc';
+import { PieArc, type PieArcProps } from './PieArc';
 import { useUtilityClasses } from './pieClasses';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { getModifiedArcProperties } from './dataTransform/getModifiedArcProperties';
@@ -64,7 +62,7 @@ export function FocusedPieArc(
       skipAnimation
       stroke={(theme.vars ?? theme).palette.text.primary}
       seriesId={series.id}
-      className={clsx(classes.focusIndicator, pieArcClasses.focusIndicator)}
+      className={classes.focusIndicator}
       dataIndex={focusedItem.dataIndex}
       isFaded={false}
       isHighlighted={false}

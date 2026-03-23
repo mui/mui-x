@@ -11,10 +11,12 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "className": { "type": { "name": "string" } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
@@ -118,6 +120,7 @@
         "returned": "string"
       }
     },
+    "title": { "type": { "name": "string" } },
     "tooltipItem": {
       "type": {
         "name": "union",

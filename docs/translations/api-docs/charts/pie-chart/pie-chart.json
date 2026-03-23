@@ -5,6 +5,9 @@
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
     "disableKeyboardNavigation": {
       "description": "If <code>true</code>, disables keyboard navigation for the chart."
     },
@@ -66,6 +69,9 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    },
     "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
