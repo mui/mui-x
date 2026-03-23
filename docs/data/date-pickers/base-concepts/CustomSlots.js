@@ -2,7 +2,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { PickerDay } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import EditCalendarRoundedIcon from '@mui/icons-material/EditCalendarRounded';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';

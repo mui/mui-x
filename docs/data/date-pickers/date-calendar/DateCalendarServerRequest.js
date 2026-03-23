@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import Badge from '@mui/material/Badge';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickerDay } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
