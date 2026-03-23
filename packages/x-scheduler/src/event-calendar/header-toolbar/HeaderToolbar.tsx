@@ -94,7 +94,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       {...props}
       className={clsx(props.className, classes.headerToolbar)}
     >
-      <HeaderToolbarLeftElement {...props} className={classes.headerToolbarLeftElement}>
+      <HeaderToolbarLeftElement className={classes.headerToolbarLeftElement}>
         <IconButton
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
