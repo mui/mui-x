@@ -2,6 +2,7 @@ import { screen, waitFor } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
   EventBuilder,
+  ResourceBuilder,
   withinMonthView,
   dateLocaleFr,
 } from 'test/utils/scheduler';
@@ -49,25 +50,25 @@ describe('EventCalendar', () => {
   });
 
   it('should allow to show / hide resources using the UI', async () => {
+    const sportResource = ResourceBuilder.new().title('Sport').build();
+    const workResource = ResourceBuilder.new().title('Work').build();
+
     const event1WithResource = EventBuilder.new()
       .title('Running')
       .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
-      .resource('1')
+      .resource(sportResource)
       .build();
 
     const event2WithResource = EventBuilder.new()
       .title('Weekly')
       .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
-      .resource('2')
+      .resource(workResource)
       .build();
 
     const { user } = render(
       <EventCalendar
         events={[event1WithResource, event2WithResource]}
-        resources={[
-          { id: '1', title: 'Sport' },
-          { id: '2', title: 'Work' },
-        ]}
+        resources={[sportResource, workResource]}
       />,
     );
 

@@ -29,13 +29,6 @@ export interface ScatterSeriesType
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
-   * If true, the interaction will not use element hover for this series.
-   * @default false
-   * @deprecated This prop will be removed in a future version because it is ambiguous. You can select what to disable
-   *             on hover by disabling the highlight or the tooltip separately.
-   */
-  disableHover?: boolean;
-  /**
    * The id of the z-axis used to render the series.
    */
   zAxisId?: string;

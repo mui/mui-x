@@ -24,40 +24,9 @@
     "import { RadarSeriesPlot } from '@mui/x-charts-pro';",
     "import { RadarSeriesPlot } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "area",
-      "className": "MuiRadarSeriesPlot-area",
-      "description": "Styles applied to the series area element.",
-      "isGlobal": false
-    },
-    {
-      "key": "faded",
-      "className": "MuiRadarSeriesPlot-faded",
-      "description": "Styles applied to the series element if it is faded.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "highlighted",
-      "className": "MuiRadarSeriesPlot-highlighted",
-      "description": "Styles applied to the series element if it is highlighted.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "mark",
-      "className": "MuiRadarSeriesPlot-mark",
-      "description": "Styles applied to the series mark element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiRadarSeriesPlot-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiRadarSeriesPlot",
   "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesPlot.tsx",
   "inheritance": null,
