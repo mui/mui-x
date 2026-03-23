@@ -94,12 +94,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       {...props}
       className={clsx(props.className, classes.headerToolbar)}
     >
-      <HeaderToolbarLeftElement
-        ref={forwardedRef}
-        role="navigation"
-        {...props}
-        className={classes.headerToolbarLeftElement}
-      >
+      <HeaderToolbarLeftElement {...props} className={classes.headerToolbarLeftElement}>
         <IconButton
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
@@ -115,7 +110,10 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         </HeaderToolbarLabel>
       </HeaderToolbarLeftElement>
       <HeaderToolbarActions className={classes.headerToolbarActions}>
-        <HeaderToolbarDateNavigator className={classes.headerToolbarDateNavigator}>
+        <HeaderToolbarDateNavigator
+          role="navigation"
+          className={classes.headerToolbarDateNavigator}
+        >
           <IconButton
             className={classes.headerToolbarPreviousButton}
             onClick={store.goToPreviousVisibleDate}
