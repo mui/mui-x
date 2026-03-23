@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography';
-import IconImage from 'docs/src/components/icon/IconImage';
+import IconImage from '@mui/docs/IconImage';
 
 export default function XLogo() {
   return (

@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
-import { useChartsLayerContainerRef } from '../../hooks';
 import type { BarItemIdentifier } from '../../models';
 import { type ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
 import { type IndividualBarPlotProps } from '../IndividualBarPlot';
-import { useChartContext } from '../../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
@@ -16,8 +15,6 @@ import {
 import { useRegisterItemClickHandlers } from '../useRegisterItemClickHandlers';
 import { createPath, useCreateBarPaths } from './useCreateBarPaths';
 import { BarGroup } from './BarGroup';
-import { useRegisterPointerInteractions } from '../../internals/plugins/featurePlugins/shared/useRegisterPointerInteractions';
-import { selectorBarItemAtPosition } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 
 interface BatchBarPlotProps extends Omit<IndividualBarPlotProps, 'onItemClick'> {
   onItemClick?: (event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void;
@@ -29,41 +26,6 @@ export function BatchBarPlot({
   onItemClick,
   skipAnimation = false,
 }: BatchBarPlotProps) {
-  const prevCursorRef = React.useRef<string | null>(null);
-  const chartsLayerContainerRef = useChartsLayerContainerRef();
-
-  const onItemEnter = onItemClick
-    ? () => {
-        const svg = chartsLayerContainerRef.current;
-
-        if (!svg) {
-          return;
-        }
-
-        if (prevCursorRef.current == null) {
-          prevCursorRef.current = svg.style.cursor;
-          // eslint-disable-next-line react-compiler/react-compiler
-          svg.style.cursor = 'pointer';
-        }
-      }
-    : undefined;
-
-  const onItemLeave = onItemClick
-    ? () => {
-        const svg = chartsLayerContainerRef.current;
-
-        if (!svg) {
-          return;
-        }
-
-        if (prevCursorRef.current != null) {
-          svg.style.cursor = prevCursorRef.current;
-          prevCursorRef.current = null;
-        }
-      }
-    : undefined;
-
-  useRegisterPointerInteractions(selectorBarItemAtPosition, onItemEnter, onItemLeave);
   useRegisterItemClickHandlers(onItemClick);
 
   return (
@@ -92,7 +54,7 @@ function SeriesBatchPlot({
   skipAnimation: boolean;
 }) {
   const classes = useUtilityClasses();
-  const { store } = useChartContext<[UseChartHighlightSignature<'bar'>]>();
+  const { store } = useChartsContext<[UseChartHighlightSignature<'bar'>]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.seriesId);
   const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.seriesId);
 
@@ -143,7 +105,7 @@ function FadedHighlightedBars({
   processedSeries: ProcessedBarSeriesData;
   borderRadius: number;
 }) {
-  const { store } = useChartContext<[UseChartHighlightSignature<'bar'>]>();
+  const { store } = useChartsContext<[UseChartHighlightSignature<'bar'>]>();
   const seriesHighlightedDataIndex = store.use(
     selectorChartSeriesHighlightedItem,
     processedSeries.seriesId,

@@ -1,4 +1,9 @@
 export * from './envConstants';
 export * from './localeTextConstants';
-export * from './gridClasses';
+export {
+  type GridClassKey,
+  type GridClasses,
+  getDataGridUtilityClass,
+  gridClasses,
+} from './gridClasses';
 export * from './signature';

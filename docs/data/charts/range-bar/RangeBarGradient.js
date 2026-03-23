@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { barElementClasses } from '@mui/x-charts/BarChart';
+import { barClasses } from '@mui/x-charts/BarChart';
 import {
   BarChartPremium,
   rangeBarClasses,
@@ -45,10 +45,9 @@ export default function RangeBarGradient() {
     <BarChartPremium
       {...settings}
       sx={{
-        [`& .${rangeBarClasses.series}[data-series="2"] .${barElementClasses.root}`]:
-          {
-            fill: 'url(#bar-gradient)',
-          },
+        [`& .${rangeBarClasses.series}[data-series="2"] .${barClasses.element}`]: {
+          fill: 'url(#bar-gradient)',
+        },
       }}
     >
       <defs>

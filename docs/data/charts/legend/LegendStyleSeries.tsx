@@ -1,8 +1,4 @@
-import {
-  LineChart,
-  LineChartProps,
-  lineElementClasses,
-} from '@mui/x-charts/LineChart';
+import { LineChart, LineChartProps, lineClasses } from '@mui/x-charts/LineChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
 
@@ -50,14 +46,14 @@ export default function LegendStyleSeries() {
     <LineChart
       {...settings}
       sx={{
-        [`.${lineElementClasses.root}, .${labelMarkClasses.fill}`]: {
+        [`.${lineClasses.line}, .${labelMarkClasses.fill}`]: {
           strokeWidth: 1,
         },
-        [`.${lineElementClasses.root}[data-series="a"], .${legendClasses.item}[data-series="a"] .${labelMarkClasses.fill}`]:
+        [`.${lineClasses.line}[data-series="a"], .${legendClasses.item}[data-series="a"] .${labelMarkClasses.fill}`]:
           {
             strokeDasharray: '5 5',
           },
-        [`.${lineElementClasses.root}[data-series="b"], .${legendClasses.item}[data-series="b"] .${labelMarkClasses.fill}`]:
+        [`.${lineClasses.line}[data-series="b"], .${legendClasses.item}[data-series="b"] .${labelMarkClasses.fill}`]:
           {
             strokeDasharray: '3 2',
           },

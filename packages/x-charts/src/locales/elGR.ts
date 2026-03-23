@@ -115,6 +115,12 @@ export const elGRLocaleText: Partial<ChartsLocaleText> = {
   chartConfigurationOptionStepAfter: 'Βήμα Μετά',
   chartConfigurationOptionBumpX: 'Κυρτότητα Χ',
   chartConfigurationOptionBumpY: 'Κυρτότητα Υ',
+
+  // OHLC/Candlestick
+  // open: 'Open',
+  // high: 'High',
+  // low: 'Low',
+  // close: 'Close',
 };
 
 export const elGR = getChartsLocalization(elGRLocaleText);

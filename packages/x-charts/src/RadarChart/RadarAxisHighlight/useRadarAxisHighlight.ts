@@ -2,7 +2,7 @@ import { useRadiusAxes } from '../../hooks/useAxis';
 import { useRadarSeries } from '../../hooks/useRadarSeries';
 import { useRotationScale } from '../../hooks/useScale';
 import { useStore } from '../../internals/store/useStore';
-import { useChartContext } from '../../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
@@ -65,7 +65,7 @@ export function useRadarAxisHighlight(): UseRadarAxisHighlightReturnValue | null
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis, radiusAxisIds } = useRadiusAxes();
 
-  const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
+  const { instance } = useChartsContext<[UseChartPolarAxisSignature]>();
 
   const store = useStore<[UseChartPolarAxisSignature]>();
   const rotationAxisIndex = store.use(selectorChartsInteractionRotationAxisIndex);

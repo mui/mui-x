@@ -2,7 +2,7 @@ import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer'
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { ScatterChart, scatterClasses } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const cellSelector = '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th';
 
@@ -49,7 +49,7 @@ describe('<ScatterChart />', () => {
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   it.skipIf(isJSDOM)('should show the tooltip without errors in default config', async () => {
-    const { user } = render(
+    const { user, container } = render(
       <div
         style={{
           margin: -8, // Removes the body default margins
@@ -64,10 +64,12 @@ describe('<ScatterChart />', () => {
         />
       </div>,
     );
-    const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+    const layerContainer = container.querySelector<HTMLElement>(
+      `.${chartsSvgLayerClasses.root}`,
+    )!.parentElement!;
     await user.pointer([
       // Set tooltip position voronoi value
-      { target: svg, coords: { clientX: 10, clientY: 10 } },
+      { target: layerContainer, coords: { clientX: 10, clientY: 10 } },
     ]);
 
     let cells: NodeListOf<HTMLElement> = [] as any;
@@ -78,7 +80,7 @@ describe('<ScatterChart />', () => {
 
     await user.pointer([
       // Set tooltip position voronoi value
-      { target: svg, coords: { clientX: 40, clientY: 60 } },
+      { target: layerContainer, coords: { clientX: 40, clientY: 60 } },
     ]);
 
     await screen.findByRole('tooltip');
@@ -95,7 +97,7 @@ describe('<ScatterChart />', () => {
           height: 100,
         }}
       >
-        <ScatterChart {...config} disableVoronoi series={[{ id: 's1', data: config.dataset }]} />
+        <ScatterChart {...config} disableHitArea series={[{ id: 's1', data: config.dataset }]} />
       </div>,
     );
     const marks = document.querySelectorAll<HTMLElement>('circle');

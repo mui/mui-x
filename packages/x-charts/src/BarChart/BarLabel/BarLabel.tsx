@@ -3,7 +3,6 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useAnimateBarLabel } from '../../hooks/animation/useAnimateBarLabel';
-import { barLabelClasses } from './barLabelClasses';
 import { type BarLabelOwnerState } from './BarLabel.types';
 import {
   ANIMATION_DURATION_MS,
@@ -13,13 +12,6 @@ import {
 export const BarLabelComponent = styled('text', {
   name: 'MuiBarLabel',
   slot: 'Root',
-  overridesResolver: (_, styles) => [
-    { [`&.${barLabelClasses.faded}`]: styles.faded },
-    { [`&.${barLabelClasses.highlighted}`]: styles.highlighted },
-    { [`&[data-faded]`]: styles.faded },
-    { [`&[data-highlighted]`]: styles.highlighted },
-    styles.root,
-  ],
 })(({ theme }) => ({
   ...theme?.typography?.body2,
   stroke: 'none',
