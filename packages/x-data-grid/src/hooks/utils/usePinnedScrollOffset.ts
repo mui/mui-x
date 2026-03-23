@@ -11,8 +11,6 @@ export function usePinnedScrollOffset(
   // SAFETY: For performance reasons, we only add store selectors for pinned cells in controlled
   // mode. Both pinnedPosition and layoutMode are stable (never change for a given instance),
   // so the hook call order is consistent across renders.
-  /* eslint-disable react-hooks/rules-of-hooks */
-
   if (pinnedPosition !== undefined) {
     const layoutMode = store.use(Virtualization.selectors.layoutMode);
     if (layoutMode === 'controlled') {
@@ -24,8 +22,6 @@ export function usePinnedScrollOffset(
       }
     }
   }
-
-  /* eslint-enable react-hooks/rules-of-hooks */
 
   return 0;
 }
