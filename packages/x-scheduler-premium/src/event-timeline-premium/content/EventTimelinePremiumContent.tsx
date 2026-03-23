@@ -79,6 +79,14 @@ const EventTimelinePremiumEventsHeaderCell = styled(TimelineGrid.Cell, {
   overflowX: 'clip',
 });
 
+const EventTimelinePremiumEventsHeaderCellContent = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'EventsHeaderCellContent',
+})({
+  overflowX: 'hidden',
+  height: '100%',
+});
+
 const EventTimelinePremiumBodyScroller = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'BodyScroller',
@@ -176,8 +184,6 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(
   height: 8,
   borderRadius: '50%',
   backgroundColor: theme.palette.primary.main,
-  zIndex: 3,
-  pointerEvents: 'none',
 }));
 
 const EventTimelinePremiumTitleScrollbar = styled('div', {
@@ -424,9 +430,12 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               ref={eventsHeaderCellRef}
               className={classes.eventsHeaderCell}
             >
-              <div ref={eventsHeaderRef} style={{ overflowX: 'hidden', height: '100%' }}>
+              <EventTimelinePremiumEventsHeaderCellContent
+                ref={eventsHeaderRef}
+                className={classes.eventsHeaderCellContent}
+              >
                 {header}
-              </div>
+              </EventTimelinePremiumEventsHeaderCellContent>
               {showCurrentTimeIndicator && (
                 <EventTimelinePremiumCurrentTimeIndicatorCircle
                   className={classes.currentTimeIndicatorCircle}
