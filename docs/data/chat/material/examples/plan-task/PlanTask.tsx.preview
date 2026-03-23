@@ -1,0 +1,13 @@
+<Paper variant="outlined" sx={{ p: 2 }}>
+  <Typography variant="overline" color="text.secondary" display="block" gutterBottom>
+    Agent task plan
+  </Typography>
+  <ChatPlan steps={steps} />
+</Paper>
+<ChatBox
+  adapter={adapter}
+  defaultActiveConversationId={minimalConversation.id}
+  defaultConversations={[minimalConversation]}
+  defaultMessages={minimalMessages}
+  sx={{ flex: 1, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}
+/>

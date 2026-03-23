@@ -12,30 +12,35 @@ export const demoUsers = {
     displayName: 'You',
     avatarUrl: createAvatarDataUrl('Y', '#1976d2'),
     isOnline: true,
+    role: 'user',
   },
   agent: {
     id: 'agent',
     displayName: 'MUI Assistant',
     avatarUrl: createAvatarDataUrl('M', '#9c27b0'),
     isOnline: true,
+    role: 'assistant',
   },
   alice: {
     id: 'alice',
     displayName: 'Alice Chen',
     avatarUrl: createAvatarDataUrl('A', '#0288d1'),
     isOnline: true,
+    role: 'user',
   },
   marco: {
     id: 'marco',
     displayName: 'Marco Diaz',
     avatarUrl: createAvatarDataUrl('M', '#388e3c'),
     isOnline: false,
+    role: 'user',
   },
   priya: {
     id: 'priya',
     displayName: 'Priya Singh',
     avatarUrl: createAvatarDataUrl('P', '#f57c00'),
     isOnline: true,
+    role: 'user',
   },
 };
 
@@ -60,6 +65,12 @@ export function createTextMessage(params) {
     parts: [{ type: 'text', text }],
   };
 }
+
+// ---------------------------------------------------------------------------
+// Conversation IDs — generated once per module load so every demo instance
+// on the same page gets the same set of IDs within a session, but they are
+// guaranteed unique across different demos / page reloads.
+// ---------------------------------------------------------------------------
 
 const starterConvId = nanoid();
 const componentQConvId = nanoid();

@@ -162,6 +162,7 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       id: messageId,
       parts,
       attachments: [...nextAttachments],
+      author: store.currentUser,
     });
 
     // If the send errored, restore the draft so the user can retry —

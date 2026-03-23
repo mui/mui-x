@@ -25,6 +25,8 @@ export interface ChatUser {
   displayName?: string;
   avatarUrl?: string;
   isOnline?: boolean;
+  /** The role this user plays in the conversation. Use `'user'` for the local human sender and `'assistant'` for AI participants. */
+  role?: ChatRole;
   metadata?: ChatUserMetadata;
 }
 

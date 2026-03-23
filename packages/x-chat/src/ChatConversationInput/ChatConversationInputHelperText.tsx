@@ -62,7 +62,7 @@ const ChatConversationInputHelperText = React.forwardRef<
           className: clsx(classes.helperText, className),
           sx,
           ...slotProps?.helperText,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
       }}
     />

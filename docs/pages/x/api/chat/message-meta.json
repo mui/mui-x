@@ -9,7 +9,23 @@
     { "name": "meta", "description": "", "class": null },
     { "name": "timestamp", "description": "", "class": null },
     { "name": "status", "description": "", "class": null },
-    { "name": "edited", "description": "", "class": null }
+    { "name": "edited", "description": "", "class": null },
+    {
+      "name": "streamingProgress",
+      "description": "The root element of the streaming progress indicator.\nRendered by Base UI `Progress.Root` when `message.status === 'streaming'`.\nProvides `role=\"progressbar\"` and `aria-valuetext` for screen readers.",
+      "default": "ProgressRoot (Base UI Progress.Root wrapper)",
+      "class": null
+    },
+    {
+      "name": "streamingProgressTrack",
+      "description": "The track element wrapping the streaming progress indicator.",
+      "class": null
+    },
+    {
+      "name": "streamingProgressIndicator",
+      "description": "The animated indicator bar inside the streaming progress track.",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiMessageMeta",

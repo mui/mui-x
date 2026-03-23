@@ -81,17 +81,17 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
             className: clsx(classes.root, className),
             sx,
             ...slotProps?.messageList,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           messageListScroller: {
             className: classes.scroller,
             ...slotProps?.messageListScroller,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           messageListContent: {
             className: classes.content,
             ...slotProps?.messageListContent,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         }}
       />

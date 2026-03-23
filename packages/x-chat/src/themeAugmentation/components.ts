@@ -1,6 +1,16 @@
 import { ComponentsProps, ComponentsOverrides, ComponentsVariants } from '@mui/material/styles';
 
 export interface ChatComponents<Theme = unknown> {
+  MuiChatCodeBlock?: {
+    defaultProps?: ComponentsProps['MuiChatCodeBlock'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatCodeBlock'];
+    variants?: ComponentsVariants<Theme>['MuiChatCodeBlock'];
+  };
+  MuiChatConfirmation?: {
+    defaultProps?: ComponentsProps['MuiChatConfirmation'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatConfirmation'];
+    variants?: ComponentsVariants<Theme>['MuiChatConfirmation'];
+  };
   MuiChatBox?: {
     defaultProps?: ComponentsProps['MuiChatBox'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatBox'];
@@ -41,10 +51,30 @@ export interface ChatComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatScrollToBottomAffordance'];
     variants?: ComponentsVariants<Theme>['MuiChatScrollToBottomAffordance'];
   };
+  MuiChatSuggestions?: {
+    defaultProps?: ComponentsProps['MuiChatSuggestions'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatSuggestions'];
+    variants?: ComponentsVariants<Theme>['MuiChatSuggestions'];
+  };
   MuiChatUnreadMarker?: {
     defaultProps?: ComponentsProps['MuiChatUnreadMarker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatUnreadMarker'];
     variants?: ComponentsVariants<Theme>['MuiChatUnreadMarker'];
+  };
+  MuiChatMessageSources?: {
+    defaultProps?: ComponentsProps['MuiChatMessageSources'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessageSources'];
+    variants?: ComponentsVariants<Theme>['MuiChatMessageSources'];
+  };
+  MuiChatMessageSource?: {
+    defaultProps?: ComponentsProps['MuiChatMessageSource'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessageSource'];
+    variants?: ComponentsVariants<Theme>['MuiChatMessageSource'];
+  };
+  MuiChatMessageSkeleton?: {
+    defaultProps?: ComponentsProps['MuiChatMessageSkeleton'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessageSkeleton'];
+    variants?: ComponentsVariants<Theme>['MuiChatMessageSkeleton'];
   };
 }
 

@@ -8,8 +8,12 @@
     "itemContent": "",
     "preview": "",
     "root": "",
+    "scrollbar": "",
+    "scrollbarThumb": "",
+    "scroller": "",
     "timestamp": "",
     "title": "",
-    "unreadBadge": ""
+    "unreadBadge": "",
+    "viewport": ""
   }
 }

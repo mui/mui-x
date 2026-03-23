@@ -7,6 +7,30 @@ export {
 } from './ChatBox/chatBoxClasses';
 export type { ChatBoxClasses, ChatBoxClassKey } from './ChatBox/chatBoxClasses';
 
+// ─── ChatCodeBlock ────────────────────────────────────────────────────────────
+export { ChatCodeBlock } from './ChatCodeBlock/ChatCodeBlock';
+export type { ChatCodeBlockProps } from './ChatCodeBlock/ChatCodeBlock';
+export {
+  chatCodeBlockClasses,
+  getChatCodeBlockUtilityClass,
+} from './ChatCodeBlock/chatCodeBlockClasses';
+export type {
+  ChatCodeBlockClasses,
+  ChatCodeBlockClassKey,
+} from './ChatCodeBlock/chatCodeBlockClasses';
+
+// ─── ChatConfirmation ─────────────────────────────────────────────────────────
+export { ChatConfirmation } from './ChatConfirmation/ChatConfirmation';
+export type { ChatConfirmationProps } from './ChatConfirmation/ChatConfirmation';
+export {
+  chatConfirmationClasses,
+  getChatConfirmationUtilityClass,
+} from './ChatConfirmation/chatConfirmationClasses';
+export type {
+  ChatConfirmationClasses,
+  ChatConfirmationClassKey,
+} from './ChatConfirmation/chatConfirmationClasses';
+
 // ─── ChatConversation ─────────────────────────────────────────────────────────
 export { ChatConversation } from './ChatConversation/ChatConversation';
 export type { ChatConversationProps } from './ChatConversation/ChatConversation';
@@ -96,6 +120,82 @@ export type {
   ChatMessageListClasses,
   ChatMessageListClassKey,
 } from './ChatMessageList/chatMessageListClasses';
+
+// ─── ChatPlan ─────────────────────────────────────────────────────────────────
+export { ChatPlan } from './ChatPlan/ChatPlan';
+export type { ChatPlanProps, PlanStep } from './ChatPlan/ChatPlan';
+export {
+  chatPlanClasses,
+  getChatPlanUtilityClass,
+} from './ChatPlan/chatPlanClasses';
+export type { ChatPlanClasses, ChatPlanClassKey } from './ChatPlan/chatPlanClasses';
+
+// ─── ChatSuggestions ─────────────────────────────────────────────────────────
+export { ChatSuggestions } from './ChatSuggestions/ChatSuggestions';
+export type { ChatSuggestionsProps } from './ChatSuggestions/ChatSuggestions';
+export {
+  chatSuggestionsClasses,
+  getChatSuggestionsUtilityClass,
+} from './ChatSuggestions/chatSuggestionsClasses';
+export type {
+  ChatSuggestionsClasses,
+  ChatSuggestionsClassKey,
+} from './ChatSuggestions/chatSuggestionsClasses';
+
+// ─── ChatMessageSources ───────────────────────────────────────────────────────
+export { ChatMessageSources } from './ChatMessageSources/ChatMessageSources';
+export type {
+  ChatMessageSourcesProps,
+  ChatMessageSourcesSlots,
+  ChatMessageSourcesSlotProps,
+} from './ChatMessageSources/ChatMessageSources';
+export { ChatMessageSource } from './ChatMessageSources/ChatMessageSource';
+export type {
+  ChatMessageSourceProps,
+  ChatMessageSourceSlots,
+  ChatMessageSourceSlotProps,
+} from './ChatMessageSources/ChatMessageSource';
+export {
+  chatMessageSourcesClasses,
+  getChatMessageSourcesUtilityClass,
+} from './ChatMessageSources/chatMessageSourcesClasses';
+export type {
+  ChatMessageSourcesClasses,
+  ChatMessageSourcesClassKey,
+} from './ChatMessageSources/chatMessageSourcesClasses';
+export {
+  chatMessageSourceClasses,
+  getChatMessageSourceUtilityClass,
+} from './ChatMessageSources/chatMessageSourceClasses';
+export type {
+  ChatMessageSourceClasses,
+  ChatMessageSourceClassKey,
+} from './ChatMessageSources/chatMessageSourceClasses';
+
+// ─── ChatTask ─────────────────────────────────────────────────────────────────
+export { ChatTask } from './ChatTask/ChatTask';
+export type { ChatTaskProps, ChatTaskStatus } from './ChatTask/ChatTask';
+export {
+  chatTaskClasses,
+  getChatTaskUtilityClass,
+} from './ChatTask/chatTaskClasses';
+export type { ChatTaskClasses, ChatTaskClassKey } from './ChatTask/chatTaskClasses';
+
+// ─── ChatMessageSkeleton ──────────────────────────────────────────────────────
+export { ChatMessageSkeleton } from './ChatMessageSkeleton';
+export type {
+  ChatMessageSkeletonProps,
+  ChatMessageSkeletonSlots,
+  ChatMessageSkeletonSlotProps,
+} from './ChatMessageSkeleton';
+export {
+  chatMessageSkeletonClasses,
+  getChatMessageSkeletonUtilityClass,
+} from './ChatMessageSkeleton';
+export type {
+  ChatMessageSkeletonClasses,
+  ChatMessageSkeletonClassKey,
+} from './ChatMessageSkeleton';
 
 // ─── ChatIndicators ───────────────────────────────────────────────────────────
 export { ChatTypingIndicator } from './ChatIndicators/ChatTypingIndicator';

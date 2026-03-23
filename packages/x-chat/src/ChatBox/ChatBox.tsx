@@ -43,6 +43,8 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   const {
     // ChatRoot / provider props
     adapter,
+    members,
+    currentUser,
     messages,
     defaultMessages,
     onMessagesChange,
@@ -63,6 +65,9 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     partRenderers,
     storeClass,
     localeText,
+    // Suggestions
+    suggestions,
+    suggestionsAutoSubmit,
     // Styled / visual props
     className,
     classes: classesProp,
@@ -78,6 +83,8 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   return (
     <ChatRoot
       adapter={adapter}
+      members={members}
+      currentUser={currentUser}
       messages={messages}
       defaultMessages={defaultMessages}
       onMessagesChange={onMessagesChange}
@@ -105,6 +112,8 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
           slots={slots}
           slotProps={slotProps}
           features={features}
+          suggestions={suggestions}
+          suggestionsAutoSubmit={suggestionsAutoSubmit}
           layoutClassName={classes.layout}
           conversationsPaneClassName={classes.conversationsPane}
           threadPaneClassName={classes.threadPane}
@@ -151,6 +160,7 @@ ChatBox.propTypes = {
           id: PropTypes.string.isRequired,
           isOnline: PropTypes.bool,
           metadata: PropTypes.object,
+          role: PropTypes.oneOf(['assistant', 'system', 'user']),
         }),
       ),
       readState: PropTypes.oneOf(['read', 'unread']),
@@ -159,6 +169,17 @@ ChatBox.propTypes = {
       unreadCount: PropTypes.number,
     }),
   ),
+  /**
+   * The local user sending messages. If omitted, derived from `members` by finding the entry with `role === 'user'`.
+   */
+  currentUser: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    displayName: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    isOnline: PropTypes.bool,
+    metadata: PropTypes.object,
+    role: PropTypes.oneOf(['assistant', 'system', 'user']),
+  }),
   defaultActiveConversationId: PropTypes.string,
   defaultComposerValue: PropTypes.string,
   defaultConversations: PropTypes.arrayOf(
@@ -173,6 +194,7 @@ ChatBox.propTypes = {
           id: PropTypes.string.isRequired,
           isOnline: PropTypes.bool,
           metadata: PropTypes.object,
+          role: PropTypes.oneOf(['assistant', 'system', 'user']),
         }),
       ),
       readState: PropTypes.oneOf(['read', 'unread']),
@@ -189,6 +211,7 @@ ChatBox.propTypes = {
         id: PropTypes.string.isRequired,
         isOnline: PropTypes.bool,
         metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
       }),
       conversationId: PropTypes.string,
       createdAt: PropTypes.string,
@@ -303,8 +326,22 @@ ChatBox.propTypes = {
     conversationHeader: PropTypes.bool,
     helperText: PropTypes.bool,
     scrollToBottom: PropTypes.bool,
+    suggestions: PropTypes.bool,
   }),
   localeText: PropTypes.object,
+  /**
+   * All participants in the chat. The current (local) user is derived as the first member with `role === 'user'`, unless `currentUser` is provided explicitly.
+   */
+  members: PropTypes.arrayOf(
+    PropTypes.shape({
+      avatarUrl: PropTypes.string,
+      displayName: PropTypes.string,
+      id: PropTypes.string.isRequired,
+      isOnline: PropTypes.bool,
+      metadata: PropTypes.object,
+      role: PropTypes.oneOf(['assistant', 'system', 'user']),
+    }),
+  ),
   messages: PropTypes.arrayOf(
     PropTypes.shape({
       author: PropTypes.shape({
@@ -313,6 +350,7 @@ ChatBox.propTypes = {
         id: PropTypes.string.isRequired,
         isOnline: PropTypes.bool,
         metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
       }),
       conversationId: PropTypes.string,
       createdAt: PropTypes.string,
@@ -449,6 +487,24 @@ ChatBox.propTypes = {
    * @default 16
    */
   streamFlushInterval: PropTypes.number,
+  /**
+   * Prompt suggestions displayed in the empty state.
+   * Clicking a suggestion pre-fills the composer.
+   */
+  suggestions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        label: PropTypes.string,
+        value: PropTypes.string.isRequired,
+      }),
+      PropTypes.string,
+    ]).isRequired,
+  ),
+  /**
+   * Whether clicking a suggestion automatically submits the message.
+   * @default false
+   */
+  suggestionsAutoSubmit: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

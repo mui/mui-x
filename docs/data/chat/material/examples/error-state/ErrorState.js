@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { minimalConversation, minimalMessages } from '../shared/demoData';
+import { minimalConversation, minimalMessages, demoUsers } from '../shared/demoData';
+
+const demoMembers = [demoUsers.you, demoUsers.agent];
 
 const failingAdapter = {
   async sendMessage() {
@@ -22,6 +24,7 @@ export default function ErrorState() {
     <div style={{ width: '100%' }}>
       <ChatBox
         adapter={failingAdapter}
+        members={demoMembers}
         defaultActiveConversationId={minimalConversation.id}
         defaultConversations={[minimalConversation]}
         defaultMessages={minimalMessages}

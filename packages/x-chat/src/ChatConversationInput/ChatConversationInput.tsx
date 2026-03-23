@@ -54,7 +54,7 @@ const ChatConversationInput = React.forwardRef<HTMLFormElement, ChatConversation
             className: clsx(classes.root, className),
             sx,
             ...slotProps?.root,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         }}
       />

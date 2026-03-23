@@ -87,7 +87,7 @@ const ChatConversationInputSendButton = React.forwardRef<
           className: clsx(classes.sendButton, className),
           sx,
           ...slotProps?.sendButton,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
       }}
     />

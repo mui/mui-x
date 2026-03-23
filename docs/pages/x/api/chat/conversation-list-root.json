@@ -7,6 +7,10 @@
   ],
   "slots": [
     { "name": "root", "description": "", "class": null },
+    { "name": "scroller", "description": "", "class": null },
+    { "name": "viewport", "description": "", "class": null },
+    { "name": "scrollbar", "description": "", "class": null },
+    { "name": "scrollbarThumb", "description": "", "class": null },
     { "name": "item", "description": "", "class": null },
     { "name": "itemAvatar", "description": "", "class": null },
     { "name": "itemContent", "description": "", "class": null },

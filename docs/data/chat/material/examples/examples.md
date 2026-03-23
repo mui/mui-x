@@ -29,11 +29,15 @@ Replace it with your real adapter to connect to a backend.
 ## Agentic
 
 - [Agentic code assistant](/x/react-chat/material/examples/agentic-code/) — streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning parts, step boundaries, and an interactive tool-approval flow — all via the adapter API
+- [Plan & task](/x/react-chat/material/examples/plan-task/) for displaying a structured agent execution plan with live step status via `ChatPlan` and `ChatTask`
+- [Code Block](/x/react-chat/material/examples/code-block/) for displaying code with language label and copy-to-clipboard via `ChatCodeBlock`
+- [Confirmation](/x/react-chat/material/examples/confirmation/) for human-in-the-loop checkpoints before irreversible actions via `ChatConfirmation`
 
 ## Theming and customization
 
 - [Custom theme](/x/react-chat/material/examples/custom-theme/) for changing palette, shape, and typography via `ThemeProvider`
 - [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for replacing inner sub-components with custom implementations
+- [Model selector](/x/react-chat/material/examples/model-selector/) for adding a model picker to the conversation header via `slots.conversationHeaderActions`
 
 ## Recommended progression
 

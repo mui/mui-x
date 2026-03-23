@@ -1,0 +1,15 @@
+<ChatBox
+  adapter={adapter}
+  defaultActiveConversationId={CONVERSATION_ID}
+  defaultConversations={[minimalConversation]}
+  defaultMessages={INITIAL_MESSAGES}
+  sx={{ height: 480, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}
+/>
+<div>
+  <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
+    Standalone with custom highlighter
+  </Typography>
+  <ChatCodeBlock language="python" highlighter={highlightPython}>
+    {PYTHON_SNIPPET}
+  </ChatCodeBlock>
+</div>

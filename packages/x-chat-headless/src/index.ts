@@ -90,3 +90,5 @@ export type { ChatRealtimeEvent } from './types/chat-realtime';
 export type { ChatPublicState } from './types/chat-state';
 
 export type { ChatMessageChunk, ChatStreamEnvelope } from './types/chat-stream';
+
+export { ChatStreamError } from './stream/ChatStreamError';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils/types';
-import { type ChatRootProps, type MessageListRootAutoScrollConfig } from '@mui/x-chat-unstyled';
+import { type ChatRootProps, type MessageListRootAutoScrollConfig, type ChatSuggestion } from '@mui/x-chat-unstyled';
 import type { ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
 import type { ChatConversationHeaderProps } from '../ChatConversation/ChatConversationHeader';
 import type { ChatConversationTitleProps } from '../ChatConversation/ChatConversationTitle';
@@ -25,6 +25,7 @@ import type { ChatConversationInputHelperTextProps } from '../ChatConversationIn
 import type { ChatTypingIndicatorProps } from '../ChatIndicators/ChatTypingIndicator';
 import type { ChatUnreadMarkerProps } from '../ChatIndicators/ChatUnreadMarker';
 import type { ChatScrollToBottomAffordanceProps } from '../ChatIndicators/ChatScrollToBottomAffordance';
+import type { ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
 import { type ChatBoxClasses } from './chatBoxClasses';
 
 export interface ChatBoxSlots {
@@ -80,6 +81,8 @@ export interface ChatBoxSlots {
   unreadMarker: React.ElementType;
   /** Override the scroll-to-bottom affordance component. */
   scrollToBottom: React.ElementType;
+  /** Override the prompt suggestions container component. */
+  suggestions: React.ElementType;
 }
 
 export interface ChatBoxSlotProps {
@@ -109,6 +112,7 @@ export interface ChatBoxSlotProps {
   typingIndicator?: Partial<ChatTypingIndicatorProps>;
   unreadMarker?: Partial<ChatUnreadMarkerProps>;
   scrollToBottom?: Partial<ChatScrollToBottomAffordanceProps>;
+  suggestions?: Partial<ChatSuggestionsProps>;
 }
 
 export interface ChatBoxFeatures {
@@ -146,6 +150,11 @@ export interface ChatBoxFeatures {
    * @default true
    */
   autoScroll?: boolean | MessageListRootAutoScrollConfig;
+  /**
+   * Whether to show prompt suggestions in the empty state.
+   * @default true
+   */
+  suggestions?: boolean;
 }
 
 export interface ChatBoxProps<Cursor = string> extends Omit<
@@ -170,4 +179,14 @@ export interface ChatBoxProps<Cursor = string> extends Omit<
    * Feature flags to enable or disable built-in ChatBox behaviours.
    */
   features?: ChatBoxFeatures;
+  /**
+   * Prompt suggestions displayed in the empty state.
+   * Clicking a suggestion pre-fills the composer.
+   */
+  suggestions?: Array<ChatSuggestion | string>;
+  /**
+   * Whether clicking a suggestion automatically submits the message.
+   * @default false
+   */
+  suggestionsAutoSubmit?: boolean;
 }

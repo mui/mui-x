@@ -67,12 +67,26 @@ const ChatMessageBubbleStyled = styled('div', {
       background: 'none',
       padding: 0,
     },
+    // Reset bubble's pre/code overrides when inside a ChatCodeBlock
+    '& .MuiChatCodeBlock-root': {
+      background: 'none',
+    },
+    '& .MuiChatCodeBlock-root pre': {
+      background: 'none',
+      padding: 0,
+      borderRadius: 0,
+    },
+    '& .MuiChatCodeBlock-root code': {
+      background: 'none',
+      padding: 0,
+    },
     backgroundColor: isUser
       ? (theme.vars || theme).palette.primary.main
       : (theme.vars || theme).palette.grey[100],
-    ...(!isUser && theme.applyStyles('dark', {
-      backgroundColor: (theme.vars || theme).palette.grey[800],
-    })),
+    ...(!isUser &&
+      theme.applyStyles('dark', {
+        backgroundColor: (theme.vars || theme).palette.grey[800],
+      })),
     color: isUser
       ? (theme.vars || theme).palette.primary.contrastText
       : (theme.vars || theme).palette.text.primary,
@@ -473,6 +487,86 @@ const reasoningPartSlots = {
 };
 
 // ---------------------------------------------------------------------------
+// Source URL Part — MUI-styled slot overrides
+// ---------------------------------------------------------------------------
+
+const ChatSourceUrlPartRoot = styled('span', {
+  name: 'MuiChatMessage',
+  slot: 'SourceUrlRoot',
+})(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: theme.spacing(0.5),
+  verticalAlign: 'middle',
+}));
+
+const ChatSourceUrlPartIcon = styled('span', {
+  name: 'MuiChatMessage',
+  slot: 'SourceUrlIcon',
+})(({ theme }) => ({
+  display: 'inline-flex',
+  fontSize: '0.75em',
+  color: (theme.vars || theme).palette.text.secondary,
+}));
+
+const ChatSourceUrlPartLink = styled('a', {
+  name: 'MuiChatMessage',
+  slot: 'SourceUrlLink',
+})(({ theme }) => ({
+  color: (theme.vars || theme).palette.primary.main,
+  textDecoration: 'none',
+  fontSize: theme.typography.caption.fontSize,
+  '&:hover': {
+    textDecoration: 'underline',
+  },
+}));
+
+const sourceUrlPartSlots = {
+  root: ChatSourceUrlPartRoot,
+  icon: ChatSourceUrlPartIcon,
+  link: ChatSourceUrlPartLink,
+};
+
+// ---------------------------------------------------------------------------
+// Source Document Part — MUI-styled slot overrides
+// ---------------------------------------------------------------------------
+
+const ChatSourceDocumentPartRoot = styled('div', {
+  name: 'MuiChatMessage',
+  slot: 'SourceDocumentRoot',
+})(({ theme }) => ({
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  padding: theme.spacing(1, 1.5),
+  margin: theme.spacing(0.5, 0),
+}));
+
+const ChatSourceDocumentPartTitle = styled('div', {
+  name: 'MuiChatMessage',
+  slot: 'SourceDocumentTitle',
+})(({ theme }) => ({
+  fontSize: theme.typography.caption.fontSize,
+  fontWeight: theme.typography.fontWeightMedium,
+  color: (theme.vars || theme).palette.text.primary,
+}));
+
+const ChatSourceDocumentPartExcerpt = styled('div', {
+  name: 'MuiChatMessage',
+  slot: 'SourceDocumentExcerpt',
+})(({ theme }) => ({
+  fontSize: theme.typography.caption.fontSize,
+  color: (theme.vars || theme).palette.text.secondary,
+  marginTop: theme.spacing(0.5),
+  lineHeight: 1.5,
+}));
+
+const sourceDocumentPartSlots = {
+  root: ChatSourceDocumentPartRoot,
+  title: ChatSourceDocumentPartTitle,
+  excerpt: ChatSourceDocumentPartExcerpt,
+};
+
+// ---------------------------------------------------------------------------
 // ChatMessageContent
 // ---------------------------------------------------------------------------
 
@@ -503,12 +597,12 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
           content: {
             className: clsx(classes.content, className),
             ...slotProps?.content,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           bubble: {
             className: classes.bubble,
             ...slotProps?.bubble,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         }}
         partProps={{
@@ -531,6 +625,14 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
           reasoning: {
             slots: reasoningPartSlots,
             ...userPartProps?.reasoning,
+          },
+          'source-url': {
+            slots: sourceUrlPartSlots,
+            ...userPartProps?.['source-url'],
+          },
+          'source-document': {
+            slots: sourceDocumentPartSlots,
+            ...userPartProps?.['source-document'],
           },
         }}
       />

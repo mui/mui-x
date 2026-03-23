@@ -76,7 +76,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
             className: clsx(classes.root, stateClasses, className),
             sx,
             ...slotProps?.root,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         }}
       />

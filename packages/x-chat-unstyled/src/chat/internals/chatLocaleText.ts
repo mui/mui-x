@@ -33,6 +33,9 @@ export interface ChatLocaleText {
   conversationTimestampLabel(dateTime: string): string;
   typingIndicatorLabel(users: ChatLocaleTypingUser[]): string;
   scrollToBottomWithCountLabel(unseenCount: number): string;
+  suggestionsLabel: string;
+  messageListLabel: string;
+  messageLabel: string;
 }
 
 function getUserLabel(user: ChatLocaleTypingUser) {
@@ -122,4 +125,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
     return `${names} are typing`;
   },
   scrollToBottomWithCountLabel: (unseenCount) => `Scroll to bottom, ${unseenCount} new messages`,
+  suggestionsLabel: 'Suggested prompts',
+  messageListLabel: 'Message log',
+  messageLabel: 'Message',
 };

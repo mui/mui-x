@@ -6,10 +6,7 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationInput');
 import { SxProps, Theme } from '@mui/system';
-import {
-  ConversationInputLabel,
-  type ConversationInputLabelProps,
-} from '@mui/x-chat-unstyled';
+import { ConversationInputLabel, type ConversationInputLabelProps } from '@mui/x-chat-unstyled';
 import {
   useChatConversationInputUtilityClasses,
   type ChatConversationInputClasses,
@@ -56,7 +53,7 @@ const ChatConversationInputLabel = React.forwardRef<
           className: clsx(classes.label, className),
           sx,
           ...slotProps?.label,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
       }}
     />
@@ -68,8 +65,20 @@ ChatConversationInputLabel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Label text. Falls back to the locale text `composerInputAriaLabel` when
+   * omitted, so the default is consistent with the textarea's `aria-label`.
+   */
+  children: PropTypes.node,
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The `id` of the textarea this label is associated with.
+   * Passed directly to the native `htmlFor` attribute.
+   * When provided, the label is semantically linked to the textarea so that
+   * clicking the label focuses the input and screen readers announce it on focus.
+   */
+  htmlFor: PropTypes.string,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
   sx: PropTypes.oneOfType([

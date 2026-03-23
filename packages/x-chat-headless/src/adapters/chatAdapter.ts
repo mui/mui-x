@@ -86,6 +86,12 @@ export interface ChatAdapter<Cursor = string> {
 
   subscribe?(input: ChatSubscribeInput): Promise<ChatSubscriptionCleanup> | ChatSubscriptionCleanup;
 
+  /**
+   * @deprecated Use `listMessages` with `direction: 'backward'` instead.
+   * `loadMoreHistory` now prefers `listMessages` for consistency with initial
+   * message loading. `loadMore` is kept for backward compatibility only.
+   * @see {@link ChatAdapter.listMessages}
+   */
   loadMore?(cursor?: Cursor): Promise<ChatLoadMoreResult<Cursor>>;
 
   addToolApprovalResponse?(input: ChatAddToolApproveResponseInput): Promise<void>;

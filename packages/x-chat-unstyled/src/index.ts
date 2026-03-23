@@ -54,6 +54,7 @@ export {
   createToolPartRenderer,
 } from './message';
 export { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
+export { SuggestionItem, SuggestionsRoot } from './suggestions';
 export { MessageGroup } from './message-group';
 export { MessageListDateDivider, MessageListRoot } from './message-list';
 
@@ -199,6 +200,15 @@ export type {
   ToolPartSlotProps,
   ToolPartSlots,
 } from './message';
+export type {
+  ChatSuggestion,
+  SuggestionItemProps,
+  SuggestionItemSlotProps,
+  SuggestionItemSlots,
+  SuggestionsRootProps,
+  SuggestionsRootSlotProps,
+  SuggestionsRootSlots,
+} from './suggestions';
 export type { MessageGroupProps, MessageGroupSlotProps, MessageGroupSlots } from './message-group';
 export type {
   MessageListDateDividerProps,
@@ -257,6 +267,7 @@ export type {
   MessageRootOwnerState,
 } from './message';
 // Part renderer OwnerState types are exported via the type block above (FilePartOwnerState, etc.)
+export type { SuggestionItemOwnerState, SuggestionsRootOwnerState } from './suggestions';
 export type { MessageGroupOwnerState } from './message-group';
 export type { MessageListDateDividerOwnerState, MessageListRootOwnerState } from './message-list';
 

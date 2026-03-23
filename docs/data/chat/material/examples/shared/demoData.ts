@@ -13,30 +13,35 @@ export const demoUsers = {
     displayName: 'You',
     avatarUrl: createAvatarDataUrl('Y', '#1976d2'),
     isOnline: true,
+    role: 'user',
   } satisfies ChatUser,
   agent: {
     id: 'agent',
     displayName: 'MUI Assistant',
     avatarUrl: createAvatarDataUrl('M', '#9c27b0'),
     isOnline: true,
+    role: 'assistant',
   } satisfies ChatUser,
   alice: {
     id: 'alice',
     displayName: 'Alice Chen',
     avatarUrl: createAvatarDataUrl('A', '#0288d1'),
     isOnline: true,
+    role: 'user',
   } satisfies ChatUser,
   marco: {
     id: 'marco',
     displayName: 'Marco Diaz',
     avatarUrl: createAvatarDataUrl('M', '#388e3c'),
     isOnline: false,
+    role: 'user',
   } satisfies ChatUser,
   priya: {
     id: 'priya',
     displayName: 'Priya Singh',
     avatarUrl: createAvatarDataUrl('P', '#f57c00'),
     isOnline: true,
+    role: 'user',
   } satisfies ChatUser,
 } as const;
 

@@ -1,10 +1,14 @@
 import { Store } from '@mui/x-internals/store';
-import type { ChatConversation, ChatDraftAttachment, ChatMessage } from '../types/chat-entities';
+import type { ChatConversation, ChatDraftAttachment, ChatMessage, ChatUser } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type { ChatInternalState } from '../types/chat-state';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface ChatStoreParameters<Cursor = string> {
+  /** All participants in the chat. The current (local) user is derived as the first member with `role === 'user'`, unless `currentUser` is provided explicitly. */
+  members?: ChatUser[];
+  /** The local user sending messages. If omitted, derived from `members` by finding the entry with `role === 'user'`. */
+  currentUser?: ChatUser;
   messages?: ChatMessage[];
   defaultMessages?: ChatMessage[];
   onMessagesChange?: (messages: ChatMessage[]) => void;
@@ -116,6 +120,28 @@ function deriveStateFromParameters<Cursor = string>(parameters: ChatStoreParamet
 export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>> {
   public parameters: ChatStoreParameters<Cursor>;
 
+  /** Local (sending) user: explicit prop → members list → active conversation participants. */
+  get currentUser(): ChatUser | undefined {
+    return this.getMemberByRole('user', this.parameters.currentUser);
+  }
+
+  /** Assistant member: members list → active conversation participants. */
+  get assistantUser(): ChatUser | undefined {
+    return this.getMemberByRole('assistant');
+  }
+
+  private getMemberByRole(role: 'user' | 'assistant', explicit?: ChatUser): ChatUser | undefined {
+    if (explicit) {
+      return explicit;
+    }
+    if (this.parameters.members) {
+      return this.parameters.members.find((m) => m.role === role);
+    }
+    const convId = this.state.activeConversationId;
+    const conv = convId ? this.state.conversationsById[convId] : undefined;
+    return conv?.participants?.find((p) => p.role === role);
+  }
+
   private dirtyControlledModels = new Set<ControlledModel>();
 
   public constructor(parameters: ChatStoreParameters<Cursor> = {}) {
@@ -197,8 +223,16 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.update(newState);
   };
 
-  public disposeEffect = () => {
-    return () => {};
+  /**
+   * Returns a cleanup function to be used as a React effect teardown.
+   * Called by `useChatInstance` when the store instance changes or the component unmounts.
+   * Currently a no-op; extend this when the store manages subscriptions or timers
+   * that need explicit teardown on disposal.
+   */
+  public disposeEffect = (): (() => void) => {
+    return () => {
+      // TODO: cancel any pending store subscriptions or timers here
+    };
   };
 
   public registerStoreEffect = <Value>(

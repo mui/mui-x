@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { normalizeMarkdownForRender } from '@mui/x-chat-unstyled/internals';
+import { ChatCodeBlock } from '../ChatCodeBlock';
 
 // ---------------------------------------------------------------------------
 // Inline parser — bold, italic, inline-code, links
@@ -26,6 +27,11 @@ const INLINE_PATTERNS: InlinePattern[] = [
     // Italic: *text* or _text_ (not preceded/followed by same char)
     regex: /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)|(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/,
     render: (m, k) => <em key={k}>{parseInline(m[1] ?? m[2])}</em>,
+  },
+  {
+    // Footnote citation: [^1] → superscript marker
+    regex: /\[\^(\d+)\]/,
+    render: (m, k) => <sup key={k}>[{m[1]}]</sup>,
   },
   {
     // Link: [label](url)
@@ -114,9 +120,9 @@ function parseBlocks(text: string): React.ReactNode[] {
       }
       i += 1;
       result.push(
-        <pre key={key}>
-          <code className={lang ? `language-${lang}` : undefined}>{codeLines.join('\n')}</code>
-        </pre>,
+        <ChatCodeBlock key={key} language={lang || undefined}>
+          {codeLines.join('\n')}
+        </ChatCodeBlock>,
       );
       key += 1;
       continue;

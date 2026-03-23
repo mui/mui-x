@@ -88,7 +88,7 @@ const ChatConversationInputTextArea = React.forwardRef<
           className: clsx(classes.textArea, className),
           sx,
           ...slotProps?.input,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
       }}
     />

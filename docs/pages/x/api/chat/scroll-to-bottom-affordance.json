@@ -7,7 +7,8 @@
   ],
   "slots": [
     { "name": "root", "description": "", "class": null },
-    { "name": "badge", "description": "", "class": null }
+    { "name": "badge", "description": "", "class": null },
+    { "name": "icon", "description": "", "class": null }
   ],
   "classes": [],
   "muiName": "MuiScrollToBottomAffordance",

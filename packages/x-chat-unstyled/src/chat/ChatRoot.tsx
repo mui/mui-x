@@ -39,6 +39,8 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     slotProps,
     adapter,
     localeText,
+    members,
+    currentUser,
     messages,
     defaultMessages,
     onMessagesChange,
@@ -75,6 +77,8 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
   return (
     <ChatProvider
       adapter={adapter}
+      members={members}
+      currentUser={currentUser}
       messages={messages}
       defaultMessages={defaultMessages}
       onMessagesChange={onMessagesChange}

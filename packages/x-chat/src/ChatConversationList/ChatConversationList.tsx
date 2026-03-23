@@ -95,37 +95,35 @@ const ChatConversationListItemStyled = styled('div', {
   slot: 'Item',
   shouldForwardProp: itemSlotShouldForwardProp,
   overridesResolver: (_, styles) => styles.item,
-})<{ ownerState?: { selected?: boolean; unread?: boolean; focused?: boolean } }>(({ theme, ownerState }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1.5),
-  padding: theme.spacing(1, 2),
-  cursor: 'pointer',
-  outline: 'none',
-  borderRadius: 0,
-  transition: theme.transitions.create('background-color', {
-    duration: theme.transitions.duration.shortest,
-  }),
-  '@media (prefers-reduced-motion: reduce)': {
-    transition: 'none',
-  },
-  backgroundColor: ownerState?.selected
-    ? (theme.vars || theme).palette.action.selected
-    : 'transparent',
-  '&:hover': {
+})<{ ownerState?: { selected?: boolean; unread?: boolean; focused?: boolean } }>(
+  ({ theme, ownerState }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(1, 2),
+    cursor: 'pointer',
+    outline: 'none',
+    borderRadius: 0,
+    transition: theme.transitions.create('background-color', {
+      duration: theme.transitions.duration.shortest,
+    }),
+    '@media (prefers-reduced-motion: reduce)': {
+      transition: 'none',
+    },
     backgroundColor: ownerState?.selected
       ? (theme.vars || theme).palette.action.selected
-      : (theme.vars || theme).palette.action.hover,
-  },
-  '&:focus-visible': {
-    outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
-    outlineOffset: -2,
-  },
-  ...(ownerState?.unread &&
-    !ownerState?.selected && {
-      backgroundColor: (theme.vars || theme).palette.action.focus,
-    }),
-}));
+      : 'transparent',
+    '&:hover': {
+      backgroundColor: ownerState?.selected
+        ? (theme.vars || theme).palette.action.selected
+        : (theme.vars || theme).palette.action.hover,
+    },
+    '&:focus-visible': {
+      outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+      outlineOffset: -2,
+    },
+  }),
+);
 
 // ---------------------------------------------------------------------------
 // Styled inner roots — pure styling, no rendering logic.
@@ -344,12 +342,12 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
             className: clsx(classes.root, className),
             sx,
             ...slotProps?.root,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           scroller: {
             className: classes.scroller,
             ...slotProps?.scroller,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           item: ((ownerState: any) => ({
@@ -362,37 +360,37 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
             ...(typeof slotProps?.item === 'function'
               ? (slotProps.item as (s: any) => any)(ownerState)
               : slotProps?.item),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           })) as any,
           itemAvatar: {
             className: classes.itemAvatar,
             ...slotProps?.itemAvatar,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           itemContent: {
             className: classes.itemContent,
             ...slotProps?.itemContent,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           title: {
             className: classes.itemTitle,
             ...slotProps?.title,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           preview: {
             className: classes.itemPreview,
             ...slotProps?.preview,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           timestamp: {
             className: classes.itemTimestamp,
             ...slotProps?.timestamp,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           unreadBadge: {
             className: classes.itemUnreadBadge,
             ...slotProps?.unreadBadge,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         }}
       />

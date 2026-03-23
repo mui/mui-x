@@ -2,5 +2,13 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {},
-  "slotDescriptions": { "edited": "", "meta": "", "status": "", "timestamp": "" }
+  "slotDescriptions": {
+    "edited": "",
+    "meta": "",
+    "status": "",
+    "streamingProgress": "The root element of the streaming progress indicator. Rendered by Base UI <code>Progress.Root</code> when <code>message.status === &#39;streaming&#39;</code>. Provides <code>role=&quot;progressbar&quot;</code> and <code>aria-valuetext</code> for screen readers.",
+    "streamingProgressIndicator": "The animated indicator bar inside the streaming progress track.",
+    "streamingProgressTrack": "The track element wrapping the streaming progress indicator.",
+    "timestamp": ""
+  }
 }

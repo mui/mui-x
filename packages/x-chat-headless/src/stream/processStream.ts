@@ -17,6 +17,15 @@ import type {
   ChatToolInputStartChunk,
 } from '../types/chat-stream';
 import type { ChatOnData, ChatOnFinish, ChatOnToolCall } from '../types/chat-callbacks';
+import { ChatStreamError } from './ChatStreamError';
+import {
+  getOrCreateMessage,
+  getFinishMessage,
+  finalizeStreamingParts,
+  updateMessageParts,
+  updateMessage,
+} from './streamHelpers';
+import { createTextDeltaBuffer } from './streamTextDeltaBuffer';
 
 export interface ProcessStreamOptions {
   conversationId?: string;
@@ -68,132 +77,6 @@ function isDynamicToolChunk(
   return 'dynamic' in chunk && chunk.dynamic === true;
 }
 
-function getOrCreateMessage(
-  store: ChatStore<unknown>,
-  messageId: string,
-  conversationId: string | undefined,
-  author?: ChatMessage['author'],
-): ChatMessage {
-  const existingMessage = store.state.messagesById[messageId];
-
-  if (existingMessage) {
-    const nextMessage: ChatMessage =
-      existingMessage.status === 'streaming'
-        ? existingMessage
-        : {
-            ...existingMessage,
-            conversationId: existingMessage.conversationId ?? conversationId,
-            status: 'streaming',
-          };
-
-    if (nextMessage !== existingMessage) {
-      store.updateMessage(messageId, nextMessage);
-    }
-
-    return store.state.messagesById[messageId] ?? nextMessage;
-  }
-
-  const nextMessage: ChatMessage = {
-    id: messageId,
-    conversationId,
-    role: 'assistant',
-    parts: [],
-    status: 'streaming',
-    ...(author ? { author } : undefined),
-  };
-
-  store.addMessage(nextMessage);
-  return store.state.messagesById[messageId] ?? nextMessage;
-}
-
-function getFinishMessage(
-  store: ChatStore<unknown>,
-  messageId: string | undefined,
-  conversationId: string | undefined,
-  status: ChatMessage['status'],
-): ChatMessage {
-  if (messageId) {
-    const existingMessage = store.state.messagesById[messageId];
-
-    if (existingMessage) {
-      return existingMessage;
-    }
-  }
-
-  return {
-    id: messageId ?? '',
-    conversationId,
-    role: 'assistant',
-    parts: [],
-    status,
-  };
-}
-
-function finalizeStreamingParts(parts: ChatMessagePart[]): ChatMessagePart[] {
-  let didChange = false;
-
-  const nextParts = parts.map((part) => {
-    if ((part.type === 'text' || part.type === 'reasoning') && part.state === 'streaming') {
-      didChange = true;
-      return {
-        ...part,
-        state: 'done' as const,
-      } satisfies ChatMessagePart;
-    }
-
-    return part;
-  });
-
-  return didChange ? nextParts : parts;
-}
-
-function updateMessageParts(
-  store: ChatStore<unknown>,
-  messageId: string,
-  updater: (parts: ChatMessagePart[]) => ChatMessagePart[],
-) {
-  const message = store.state.messagesById[messageId];
-
-  if (!message) {
-    return;
-  }
-
-  const nextParts = updater(message.parts);
-
-  if (nextParts !== message.parts) {
-    store.updateMessage(messageId, { parts: nextParts });
-  }
-}
-
-function updateMessage(
-  store: ChatStore<unknown>,
-  messageId: string,
-  updater: (message: ChatMessage) => Partial<ChatMessage> | null,
-) {
-  const message = store.state.messagesById[messageId];
-
-  if (!message) {
-    return;
-  }
-
-  const patch = updater(message);
-
-  if (patch) {
-    store.updateMessage(messageId, patch);
-  }
-}
-
-function findLastStreamingPartIndex(parts: ChatMessagePart[], type: 'text' | 'reasoning') {
-  for (let index = parts.length - 1; index >= 0; index -= 1) {
-    const part = parts[index];
-
-    if (part.type === type && part.state === 'streaming') {
-      return index;
-    }
-  }
-
-  return -1;
-}
 
 export async function processStream<Cursor = string>(
   store: ChatStore<Cursor>,
@@ -214,15 +97,7 @@ export async function processStream<Cursor = string>(
 
   const seenEventIds = new Set<string>();
   const bufferedChunksBySequence = new Map<number, ChatMessageChunk>();
-  const textPartIndexesByStreamId = new Map<string, number>();
-  const reasoningPartIndexesByStreamId = new Map<string, number>();
   const flushInterval = Math.max(0, options.flushInterval ?? DEFAULT_STREAM_FLUSH_INTERVAL);
-  let pendingTextLikeDelta: {
-    partType: 'text' | 'reasoning';
-    streamId: string;
-    delta: string;
-  } | null = null;
-  let pendingTextLikeDeltaTimer: ReturnType<typeof setTimeout> | null = null;
 
   const reader = stream.getReader();
 
@@ -251,7 +126,7 @@ export async function processStream<Cursor = string>(
 
   const ensureAssistantMessage = () => {
     if (!targetMessageId) {
-      throw new Error('Stream processing requires a target assistant message id.');
+      throw failStream('Stream processing requires a target assistant message id.');
     }
 
     const message = getOrCreateMessage(storeUnknown, targetMessageId, options.conversationId, startAuthor);
@@ -285,17 +160,17 @@ export async function processStream<Cursor = string>(
     });
   };
 
-  const failStream = (message: string, details?: Record<string, unknown>) => {
-    const error = createStreamError(message, details);
+  const failStream = (message: string, details?: Record<string, unknown>): ChatStreamError => {
+    const chatError = createStreamError(message, details);
 
     if (targetMessageId) {
       finalizeMessage('error');
     }
 
     store.setStreaming(false);
-    store.setError(error);
+    store.setError(chatError);
 
-    return error;
+    return new ChatStreamError(chatError);
   };
 
   const handleAbort = (): Promise<ProcessStreamResult> => {
@@ -314,108 +189,15 @@ export async function processStream<Cursor = string>(
     });
   };
 
-  const resolveTextLikePartIndex = (
-    partType: 'text' | 'reasoning',
-    streamId: string,
-    partIndexesByStreamId: Map<string, number>,
-  ) => {
-    const message = ensureAssistantMessage();
-    const mappedIndex = partIndexesByStreamId.get(streamId);
-
-    if (mappedIndex != null && message.parts[mappedIndex]?.type === partType) {
-      return mappedIndex;
-    }
-
-    const fallbackIndex = findLastStreamingPartIndex(message.parts, partType);
-
-    if (fallbackIndex !== -1) {
-      partIndexesByStreamId.set(streamId, fallbackIndex);
-      return fallbackIndex;
-    }
-
-    const nextIndex = message.parts.length;
-    const nextPart =
-      partType === 'text'
-        ? ({ type: 'text', text: '', state: 'streaming' } as const)
-        : ({ type: 'reasoning', text: '', state: 'streaming' } as const);
-
-    store.updateMessage(message.id, { parts: [...message.parts, nextPart] });
-    partIndexesByStreamId.set(streamId, nextIndex);
-
-    return nextIndex;
-  };
-
-  const clearPendingTextLikeDeltaTimer = () => {
-    if (pendingTextLikeDeltaTimer) {
-      clearTimeout(pendingTextLikeDeltaTimer);
-      pendingTextLikeDeltaTimer = null;
-    }
-  };
-
-  const applyTextLikeDelta = (partType: 'text' | 'reasoning', streamId: string, delta: string) => {
-    const indexMap =
-      partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
-    const partIndex = resolveTextLikePartIndex(partType, streamId, indexMap);
-
-    updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => {
-      const currentPart = parts[partIndex];
-
-      if (currentPart?.type !== partType) {
-        return parts;
-      }
-
-      const nextParts = [...parts];
-      nextParts[partIndex] = {
-        ...currentPart,
-        text: `${currentPart.text}${delta}`,
-        state: 'streaming',
-      };
-      return nextParts;
-    });
-  };
-
-  const flushPendingTextLikeDelta = () => {
-    if (!pendingTextLikeDelta) {
-      return;
-    }
-
-    const { partType, streamId, delta } = pendingTextLikeDelta;
-    pendingTextLikeDelta = null;
-    clearPendingTextLikeDeltaTimer();
-    applyTextLikeDelta(partType, streamId, delta);
-  };
-
-  const scheduleTextLikeDelta = (
-    partType: 'text' | 'reasoning',
-    streamId: string,
-    delta: string,
-  ) => {
-    if (
-      pendingTextLikeDelta &&
-      (pendingTextLikeDelta.partType !== partType || pendingTextLikeDelta.streamId !== streamId)
-    ) {
-      flushPendingTextLikeDelta();
-    }
-
-    if (!pendingTextLikeDelta) {
-      pendingTextLikeDelta = {
-        partType,
-        streamId,
-        delta,
-      };
-
-      clearPendingTextLikeDeltaTimer();
-      pendingTextLikeDeltaTimer = setTimeout(() => {
-        flushPendingTextLikeDelta();
-      }, flushInterval);
-      return;
-    }
-
-    pendingTextLikeDelta = {
-      ...pendingTextLikeDelta,
-      delta: `${pendingTextLikeDelta.delta}${delta}`,
-    };
-  };
+  const {
+    resolveTextLikePartIndex,
+    applyTextLikeDelta,
+    flushPendingTextLikeDelta,
+    scheduleTextLikeDelta,
+    clearPendingTextLikeDeltaTimer,
+    textPartIndexesByStreamId,
+    reasoningPartIndexesByStreamId,
+  } = createTextDeltaBuffer(storeUnknown, ensureAssistantMessage, flushInterval);
 
   const withToolInvocation = async (
     toolCallId: string,
@@ -887,9 +669,13 @@ export async function processStream<Cursor = string>(
     }
 
     flushPendingTextLikeDelta();
-    const streamError = error instanceof Error ? error : new Error('Stream processing failed.');
 
-    failStream(streamError.message || 'Stream processing failed.');
+    // ChatStreamError means failStream() already updated the store — avoid double-handling.
+    if (!(error instanceof ChatStreamError)) {
+      const streamError = error instanceof Error ? error : new Error('Stream processing failed.');
+      failStream(streamError.message || 'Stream processing failed.');
+    }
+
     await finish({
       messageId: targetMessageId,
       status: 'error',

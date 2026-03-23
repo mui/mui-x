@@ -45,6 +45,8 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     streamFlushInterval,
     partRenderers,
     storeClass,
+    members,
+    currentUser,
     messages,
     defaultMessages,
     conversations,
@@ -61,6 +63,8 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
 
   const parameters = React.useMemo(
     () => ({
+      members,
+      currentUser,
       messages,
       defaultMessages,
       conversations,
@@ -75,6 +79,8 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       onComposerValueChange,
     }),
     [
+      members,
+      currentUser,
       messages,
       defaultMessages,
       conversations,
