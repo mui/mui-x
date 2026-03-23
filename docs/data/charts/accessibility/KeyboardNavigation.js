@@ -61,7 +61,13 @@ export default function KeyboardNavigation() {
             <MenuItem value="pie">Pie</MenuItem>
           </Select>
         </FormControl>
-        <Button onClick={() => chartRef.current?.focus()} variant="contained">
+        <Button
+          onClick={() => {
+            const element = chartRef.current?.querySelector('[tabindex="0"]');
+            element?.focus();
+          }}
+          variant="contained"
+        >
           Focus chart
         </Button>
       </Stack>

@@ -18,6 +18,7 @@ import { type KeyboardFocusHandler } from '../../../featurePlugins/useChartKeybo
 import { type IdentifierSerializer } from './identifierSerializer.types';
 import { type IdentifierCleaner } from './identifierCleaner.types';
 import { type GetItemAtPosition } from './getItemAtPosition.types';
+import { type DescriptionGetter } from './descriptionGetter.types';
 import { type UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
 import { type UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
 import { type HighlightCreator } from '../../../featurePlugins/useChartHighlight/highlightCreator.types';
@@ -57,6 +58,7 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
    */
   identifierCleaner: IdentifierCleaner<SeriesType>;
   getItemAtPosition?: GetItemAtPosition<SeriesType>;
+  descriptionGetter?: DescriptionGetter<SeriesType>;
   isHighlightedCreator: HighlightCreator<SeriesType>;
   isFadedCreator: HighlightCreator<SeriesType>;
 } & (SeriesType extends CartesianChartSeriesType

@@ -65,9 +65,9 @@ const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
       <ChartsSvgLayerStyles
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         className={clsx(classes.root, className)}
-        aria-hidden="true"
         {...other}
         ref={ref}
+        aria-hidden
       >
         <ChartsAxesGradients />
         {hasIntrinsicSize && children}
