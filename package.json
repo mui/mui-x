@@ -158,9 +158,6 @@
           "stylis": "4.2.0"
         }
       }
-    },
-    "patchedDependencies": {
-      "@mui/internal-markdown@2.0.15": "patches/@mui__internal-markdown@2.0.15.patch"
     }
   }
 }
