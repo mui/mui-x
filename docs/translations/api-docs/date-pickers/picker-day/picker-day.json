@@ -104,6 +104,9 @@
       "nodeName": "the root element",
       "conditions": "<code>outsideCurrentMonth=true</code> and <code>showDaysOutsideCurrentMonth=true</code>"
     },
+    "dayWithoutMargin": {
+      "description": "Styles applied the root element when <code>disableMargin=true</code>"
+    },
     "disabled": {
       "description": "State class applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",

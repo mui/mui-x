@@ -108,6 +108,12 @@
       "isGlobal": false
     },
     {
+      "key": "dayWithoutMargin",
+      "className": "MuiPickerDay-dayWithoutMargin",
+      "description": "Styles applied the root element when `disableMargin=true`",
+      "isGlobal": false
+    },
+    {
       "key": "disabled",
       "className": "Mui-disabled",
       "description": "State class applied to the root element if `disabled=true`.",
