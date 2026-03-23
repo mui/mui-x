@@ -1147,6 +1147,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.8.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 7.3.7(@types/react@19.2.9)(react@19.2.3)
       '@mui/x-chat-headless':
         specifier: workspace:*
         version: link:../x-chat-headless/build
@@ -1159,6 +1162,9 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1214,6 +1220,9 @@ importers:
       '@base-ui/react':
         specifier: ^1.0.0
         version: 1.0.0(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 7.3.7(@types/react@19.2.9)(react@19.2.3)
       '@mui/x-chat-headless':
         specifier: workspace:*
         version: link:../x-chat-headless/build
@@ -17643,7 +17652,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.19.3)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
+      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.5.2)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jsdom@27.4.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
 
   '@vitest/utils@4.0.18':
     dependencies:

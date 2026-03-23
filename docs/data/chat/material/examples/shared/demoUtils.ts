@@ -96,12 +96,13 @@ export function createEchoAdapter(
     respond?: (text: string) => string;
   } = {},
 ): ChatAdapter {
-  const agent = options.agent ?? { id: 'assistant', displayName: 'Assistant' };
+  const { agent } = options;
+  const agentName = agent?.displayName ?? 'Assistant';
   const delayMs = options.delayMs ?? 170;
   const respond =
     options.respond ??
     ((text: string) =>
-      `${agent.displayName ?? 'Assistant'} received "${text}". Material UI styles applied automatically from the active theme.`);
+      `${agentName} received "${text}". Material UI styles applied automatically from the active theme.`);
 
   return {
     async sendMessage({ message }) {
@@ -112,7 +113,7 @@ export function createEchoAdapter(
       const responseText = respond(textOnly || getMessageText(message));
 
       return createChunkStream(
-        createTextResponseChunks(nanoid(), responseText, { author: agent }),
+        createTextResponseChunks(nanoid(), responseText, agent ? { author: agent } : undefined),
         { delayMs },
       );
     },

@@ -3,6 +3,9 @@ import * as React from 'react';
 import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from '../shared/demoUtils';
+import { demoUsers } from '../shared/demoData';
+
+const demoMembers = [demoUsers.you, demoUsers.agent];
 
 const adapter = createEchoAdapter();
 
@@ -20,6 +23,7 @@ export default function EmptyState() {
   return (
     <ChatBox
       adapter={adapter}
+      members={demoMembers}
       defaultActiveConversationId={emptyConversation.id}
       defaultConversations={[emptyConversation]}
       defaultMessages={[]}

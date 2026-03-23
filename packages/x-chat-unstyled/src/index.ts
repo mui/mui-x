@@ -277,3 +277,49 @@ export type { ChatLocaleText, ChatLocaleTypingUser } from './chat';
 // Variant types
 export type { ChatVariant } from './chat';
 export { ChatVariantProvider, useChatVariant } from './chat';
+
+// Namespace exports for dot-notation usage (e.g. <Chat.Root />, <Message.Avatar />)
+export const Chat = {
+  Root: ChatRoot,
+  Layout: ChatLayout,
+};
+
+export const Conversation = {
+  Root: ConversationRoot,
+  Header: ConversationHeader,
+  HeaderActions: ConversationHeaderActions,
+  Title: ConversationTitle,
+  Subtitle: ConversationSubtitle,
+};
+
+export const ConversationList = {
+  Root: ConversationListRoot,
+};
+
+export const ConversationInput = {
+  Root: ConversationInputRoot,
+  TextArea: ConversationInputTextArea,
+  SendButton: ConversationInputSendButton,
+  AttachButton: ConversationInputAttachButton,
+  Toolbar: ConversationInputToolbar,
+  HelperText: ConversationInputHelperText,
+};
+
+export const Message = {
+  Root: MessageRoot,
+  Avatar: MessageAvatar,
+  Content: MessageContent,
+  Meta: MessageMeta,
+  Actions: MessageActions,
+};
+
+export const MessageList = {
+  Root: MessageListRoot,
+  DateDivider: MessageListDateDivider,
+};
+
+export const Indicators = {
+  TypingIndicator,
+  UnreadMarker,
+  ScrollToBottomAffordance,
+};
