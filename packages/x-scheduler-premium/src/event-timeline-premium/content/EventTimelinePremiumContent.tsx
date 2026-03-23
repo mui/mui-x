@@ -266,7 +266,7 @@ function useSyncedHorizontalScroll(
   contentRef: React.RefObject<HTMLElement | null>,
   scrollbarRef: React.RefObject<HTMLElement | null>,
   headerRef?: React.RefObject<HTMLElement | null>,
-  scrollLeftCssVarTargetRef?: React.RefObject<HTMLElement | null>,
+  onScrollLeft?: (scrollLeft: number) => void,
 ) {
   React.useEffect(() => {
     const content = contentRef.current;
@@ -278,16 +278,6 @@ function useSyncedHorizontalScroll(
     let syncing = false;
 
     const header = headerRef?.current;
-    const cssVarTarget = scrollLeftCssVarTargetRef?.current;
-
-    const syncScrollLeft = (scrollLeft: number) => {
-      if (header) {
-        header.scrollLeft = scrollLeft;
-      }
-      if (cssVarTarget) {
-        cssVarTarget.style.setProperty('--events-scroll-left', String(scrollLeft));
-      }
-    };
 
     const handleContentScroll = () => {
       if (syncing) {
@@ -296,7 +286,10 @@ function useSyncedHorizontalScroll(
       syncing = true;
       const { scrollLeft } = content;
       scrollbar.scrollLeft = scrollLeft;
-      syncScrollLeft(scrollLeft);
+      if (header) {
+        header.scrollLeft = scrollLeft;
+      }
+      onScrollLeft?.(scrollLeft);
       requestAnimationFrame(() => {
         syncing = false;
       });
@@ -309,20 +302,23 @@ function useSyncedHorizontalScroll(
       syncing = true;
       const { scrollLeft } = scrollbar;
       content.scrollLeft = scrollLeft;
-      syncScrollLeft(scrollLeft);
+      if (header) {
+        header.scrollLeft = scrollLeft;
+      }
+      onScrollLeft?.(scrollLeft);
       requestAnimationFrame(() => {
         syncing = false;
       });
     };
 
-    syncScrollLeft(content.scrollLeft);
+    onScrollLeft?.(content.scrollLeft);
     content.addEventListener('scroll', handleContentScroll, { passive: true });
     scrollbar.addEventListener('scroll', handleScrollbarScroll, { passive: true });
     return () => {
       content.removeEventListener('scroll', handleContentScroll);
       scrollbar.removeEventListener('scroll', handleScrollbarScroll);
     };
-  }, [contentRef, scrollbarRef, headerRef, scrollLeftCssVarTargetRef]);
+  }, [contentRef, scrollbarRef, headerRef, onScrollLeft]);
 }
 
 export const EventTimelinePremiumContent = React.forwardRef(function EventTimelinePremiumContent(
@@ -360,9 +356,13 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
+  // Track scrollLeft as CSS variable on header cell for the current time indicator circle
+  const syncCircleScroll = React.useCallback((scrollLeft: number) => {
+    eventsHeaderCellRef.current?.style.setProperty('--events-scroll-left', String(scrollLeft));
+  }, []);
+
   // Sync horizontal scroll: events body ↔ events scrollbar + events header
-  // Also tracks scrollLeft as CSS variable on header cell for the current time indicator circle
-  useSyncedHorizontalScroll(eventsScrollerRef, eventsScrollbarRef, eventsHeaderRef, eventsHeaderCellRef);
+  useSyncedHorizontalScroll(eventsScrollerRef, eventsScrollbarRef, eventsHeaderRef, syncCircleScroll);
 
   // Sync horizontal scroll: title body ↔ title scrollbar + title header
   useSyncedHorizontalScroll(titleSubGridRef, titleScrollbarRef, titleHeaderRef);
