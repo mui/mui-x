@@ -90,7 +90,7 @@ The demo below uses a white line in dark mode and a black line in light mode.
 The default stroke width for sparkline lines is 2px.
 With clipping enabled, a line drawn at the chart edge can be partially clipped.
 
-Clipping is on by default. 
+Clipping is on by default.
 `clipAreaOffset` defaults to 1 to reduce visible clipping.
 Set `disableClipping` to `true` to turn clipping off.
 
