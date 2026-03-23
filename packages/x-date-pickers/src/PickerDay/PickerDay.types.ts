@@ -1,9 +1,9 @@
 import { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { PickerValidDate } from '../models';
-import { PickersDayClasses } from './pickersDayClasses';
-import { PickerDayOwnerState } from '../internals/hooks/PickersDay.types';
+import { PickerDayClasses } from './pickerDayClasses.ts';
+import { PickerDayOwnerState as PickerDayOwnerStateBase } from '../internals/hooks/PickerDay.types';
 
-export interface ExportedPickersDayProps {
+export interface ExportedPickerDayProps {
   /**
    * If `true`, today's day is not highlighted.
    * @default false
@@ -16,9 +16,9 @@ export interface ExportedPickersDayProps {
   showDaysOutsideCurrentMonth?: boolean;
 }
 
-export interface PickersDayProps
+export interface PickerDayProps
   extends
-    ExportedPickersDayProps,
+    ExportedPickerDayProps,
     Omit<
       ButtonBaseProps,
       'classes' | 'onFocus' | 'onBlur' | 'onKeyDown' | 'onMouseDown' | 'onClick' | 'onMouseEnter'
@@ -115,18 +115,18 @@ export interface PickersDayProps
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<PickersDayClasses>;
+  classes?: Partial<PickerDayClasses>;
   /**
    * Indicates if the day should be visually selected.
    */
   isVisuallySelected?: boolean;
 }
 
-export interface PickersDayOwnerState extends PickerDayOwnerState {
+export interface PickerDayOwnerState extends PickerDayOwnerStateBase {
   /**
    * Whether the day is a filler day (its content is hidden).
    */
-  isDayFillerCell: boolean;
+  isDayFillerCell?: boolean;
 }
 
-export type { PickerDayOwnerState };
+export type { PickerDayOwnerStateBase };

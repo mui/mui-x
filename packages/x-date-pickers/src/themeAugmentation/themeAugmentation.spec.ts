@@ -16,7 +16,7 @@ import { datePickerToolbarClasses } from '../DatePicker';
 import { dateTimePickerToolbarClasses } from '../DateTimePicker';
 import { pickersArrowSwitcherClasses } from '../internals/components/PickersArrowSwitcher';
 import { pickerPopperClasses } from '../internals/components/PickerPopper';
-import { pickersDayClasses } from '../PickersDay';
+import { pickerDayClasses } from '../PickerDay';
 import { timePickerToolbarClasses } from '../TimePicker';
 import { digitalClockClasses } from '../DigitalClock';
 import {
@@ -336,20 +336,20 @@ createTheme({
         },
       },
     },
-    MuiPickersDay: {
+    MuiPickerDay: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiPickersDay prop
+        // @ts-expect-error invalid MuiPickerDay prop
         someRandomProp: true,
       },
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${pickersDayClasses.today}`]: {
+          [`.${pickerDayClasses.today}`]: {
             backgroundColor: 'green',
           },
         },
-        // @ts-expect-error invalid MuiPickersDay class key
+        // @ts-expect-error invalid MuiPickerDay class key
         content: {
           backgroundColor: 'blue',
         },

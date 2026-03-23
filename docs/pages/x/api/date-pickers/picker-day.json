@@ -94,16 +94,16 @@
       }
     }
   },
-  "name": "PickersDay",
+  "name": "PickerDay",
   "imports": [
-    "import { PickersDay } from '@mui/x-date-pickers/PickersDay';",
-    "import { PickersDay } from '@mui/x-date-pickers';",
-    "import { PickersDay } from '@mui/x-date-pickers-pro';"
+    "import { PickerDay } from '@mui/x-date-pickers/PickerDay';",
+    "import { PickerDay } from '@mui/x-date-pickers';",
+    "import { PickerDay } from '@mui/x-date-pickers-pro';"
   ],
   "classes": [
     {
       "key": "dayOutsideMonth",
-      "className": "MuiPickersDay-dayOutsideMonth",
+      "className": "MuiPickerDay-dayOutsideMonth",
       "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
       "isGlobal": false
     },
@@ -115,13 +115,13 @@
     },
     {
       "key": "fillerCell",
-      "className": "MuiPickersDay-fillerCell",
+      "className": "MuiPickerDay-fillerCell",
       "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiPickersDay-root",
+      "className": "MuiPickerDay-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
@@ -133,16 +133,16 @@
     },
     {
       "key": "today",
-      "className": "MuiPickersDay-today",
+      "className": "MuiPickerDay-today",
       "description": "Styles applied to the root element if `disableHighlightToday=false` and `today=true`.",
       "isGlobal": false
     }
   ],
   "spread": true,
   "themeDefaultProps": true,
-  "muiName": "MuiPickersDay",
+  "muiName": "MuiPickerDay",
   "forwardsRefTo": "HTMLButtonElement",
-  "filename": "/packages/x-date-pickers/src/PickersDay/PickersDay.tsx",
+  "filename": "/packages/x-date-pickers/src/PickerDay/PickerDay.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li>\n<li><a href=\"/x/react-date-pickers/playground/\">Customization playground</a></li></ul>",
   "cssComponent": false

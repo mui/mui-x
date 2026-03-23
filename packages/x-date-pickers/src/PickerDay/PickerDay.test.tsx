@@ -1,15 +1,15 @@
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import ButtonBase from '@mui/material/ButtonBase';
-import { PickersDay, pickersDayClasses as classes } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay, pickerDayClasses as classes } from '@mui/x-date-pickers/PickerDay';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
-describe('<PickersDay />', () => {
+describe('<PickerDay />', () => {
   const { render } = createPickerRenderer();
 
   describeConformance(
-    <PickersDay
+    <PickerDay
       day={adapterToUse.date()}
       outsideCurrentMonth={false}
       isFirstVisibleCell={false}
@@ -21,7 +21,7 @@ describe('<PickersDay />', () => {
       classes,
       inheritComponent: ButtonBase,
       render,
-      muiName: 'MuiPickersDay',
+      muiName: 'MuiPickerDay',
       refInstanceof: window.HTMLButtonElement,
       testVariantProps: { variant: 'disableMargin' },
       skip: ['componentProp', 'componentsProp'],
@@ -32,7 +32,7 @@ describe('<PickersDay />', () => {
     const handleDaySelect = spy();
     const day = adapterToUse.date();
     render(
-      <PickersDay
+      <PickerDay
         day={day}
         outsideCurrentMonth={false}
         isFirstVisibleCell={false}
@@ -57,7 +57,7 @@ describe('<PickersDay />', () => {
 
   it('renders the day of the month by default', () => {
     render(
-      <PickersDay
+      <PickerDay
         day={adapterToUse.date('2020-02-02T02:02:02.000')}
         onDaySelect={() => {}}
         outsideCurrentMonth={false}
@@ -73,7 +73,7 @@ describe('<PickersDay />', () => {
 
   it('should render children instead of the day of the month when children prop is present', () => {
     render(
-      <PickersDay
+      <PickerDay
         day={adapterToUse.date('2020-02-02T02:02:02.000')}
         outsideCurrentMonth={false}
         isFirstVisibleCell={false}
@@ -81,7 +81,7 @@ describe('<PickersDay />', () => {
         onDaySelect={() => {}}
       >
         2 (free)
-      </PickersDay>,
+      </PickerDay>,
     );
 
     const day = screen.getByRole('button');

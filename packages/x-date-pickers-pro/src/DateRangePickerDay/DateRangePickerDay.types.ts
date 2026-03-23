@@ -1,8 +1,8 @@
-import { PickersDayOwnerState, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickerDayOwnerState, PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRangePickerDayClasses } from './dateRangePickerDayClasses';
 
-export interface DateRangePickerDayProps extends Omit<PickersDayProps, 'classes'> {
+export interface DateRangePickerDayProps extends Omit<PickerDayProps, 'classes'> {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
@@ -82,7 +82,7 @@ export interface DateRangePickerDayProps extends Omit<PickersDayProps, 'classes'
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export interface DateRangePickerDayOwnerState extends PickersDayOwnerState {
+export interface DateRangePickerDayOwnerState extends PickerDayOwnerState {
   /**
    * Whether the day is the first day of the selected range.
    */

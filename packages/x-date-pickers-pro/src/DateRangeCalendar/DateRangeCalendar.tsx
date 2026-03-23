@@ -99,7 +99,7 @@ const InnerDayCalendarForRange = styled(DayCalendar, {
     },
     [`& .${dayClasses.root}:not(.${dayClasses.rangeIntervalDayHighlightStart}):not(.${dayClasses.rangeIntervalDayHighlightEnd}) .${dayClasses.day}:not(.${dayClasses.notSelectedDate})`]:
       {
-        // we can't override `PickersDay` background color here, because it's styles take precedence
+        // we can't override `PickerDay` background color here, because it's styles take precedence
         opacity: 0.6,
       },
   },
@@ -501,7 +501,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const slotPropsForDayCalendar = {
     ...slotProps,
     day: (dayOwnerState) => {
-      const { day, isDaySelected } = dayOwnerState;
+      const { day, isDaySelected, isDayOutsideMonth } = dayOwnerState;
       const isSelectedStartDate = isStartOfRange(adapter, day, valueDayRange);
       const isSelectedEndDate = isEndOfRange(adapter, day, valueDayRange);
       const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
@@ -538,6 +538,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         'data-position': datePosition,
         ...dragEventHandlers,
         draggable: isElementDraggable ? true : undefined,
+        isDayFillerCell: isDayOutsideMonth && !showDaysOutsideCurrentMonth,
         ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
       };
     },

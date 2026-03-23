@@ -10,18 +10,18 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { MuiEvent } from '@mui/x-internals/types';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import {
-  pickersDayClasses,
-  PickersDayClassKey,
-  getPickersDayUtilityClass,
-  PickersDayClasses,
-} from './pickersDayClasses';
+  pickerDayClasses,
+  PickerDayClassKey,
+  getPickerDayUtilityClass,
+  PickerDayClasses,
+} from './pickerDayClasses';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { PickersDayOwnerState, PickersDayProps } from './PickersDay.types';
+import { PickerDayOwnerState, PickerDayProps } from './PickerDay.types';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
 
 const useUtilityClasses = (
-  ownerState: PickersDayOwnerState,
-  classes?: Partial<PickersDayClasses>,
+  ownerState: PickerDayOwnerState,
+  classes?: Partial<PickerDayClasses>,
 ) => {
   const {
     isDaySelected,
@@ -43,15 +43,15 @@ const useUtilityClasses = (
     ],
   };
 
-  return composeClasses(slots, getPickersDayUtilityClass, classes);
+  return composeClasses(slots, getPickerDayUtilityClass, classes);
 };
 
-const PickersDayRoot = styled(ButtonBase, {
-  name: 'MuiPickersDay',
+const PickerDayRoot = styled(ButtonBase, {
+  name: 'MuiPickerDay',
   slot: 'Root',
   overridesResolver: (
-    props: { ownerState: PickersDayOwnerState },
-    styles: Record<PickersDayClassKey, CSSInterpolation>,
+    props: { ownerState: PickerDayOwnerState },
+    styles: Record<PickerDayClassKey, CSSInterpolation>,
   ) => {
     const { ownerState } = props;
     return [
@@ -61,7 +61,7 @@ const PickersDayRoot = styled(ButtonBase, {
       ownerState.isDayFillerCell && styles.fillerCell,
     ];
   },
-})<{ ownerState: PickersDayOwnerState }>(({ theme }) => ({
+})<{ ownerState: PickerDayOwnerState }>(({ theme }) => ({
   '--PickerDay-horizontalMargin': `${DAY_MARGIN}px`,
   '--PickerDay-size': `${DAY_SIZE}px`,
   ...theme.typography.caption,
@@ -101,7 +101,7 @@ const PickersDayRoot = styled(ButtonBase, {
           willChange: 'background-color',
           backgroundColor: (theme.vars || theme).palette.primary.dark,
         },
-        [`&.${pickersDayClasses.disabled}`]: {
+        [`&.${pickerDayClasses.disabled}`]: {
           opacity: 0.6,
         },
       },
@@ -140,19 +140,19 @@ const PickersDayRoot = styled(ButtonBase, {
   ],
 }));
 
-type PickersDayComponent = ((
-  props: PickersDayProps & React.RefAttributes<HTMLButtonElement>,
+type PickerDayComponent = ((
+  props: PickerDayProps & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const noop = () => {};
 
-const PickersDayRaw = React.forwardRef(function PickersDay(
-  inProps: PickersDayProps,
+const PickerDayRaw = React.forwardRef(function PickerDay(
+  inProps: PickerDayProps,
   forwardedRef: React.Ref<HTMLButtonElement>,
 ) {
   const props = useThemeProps({
     props: inProps,
-    name: 'MuiPickersDay',
+    name: 'MuiPickerDay',
   });
 
   const adapter = usePickerAdapter();
@@ -185,7 +185,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
     ...other
   } = props;
 
-  const pickersDayOwnerState = usePickerDayOwnerState({
+  const pickerDayOwnerState = usePickerDayOwnerState({
     day,
     selected,
     disabled,
@@ -196,8 +196,8 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
     showDaysOutsideCurrentMonth,
   });
 
-  const ownerState: PickersDayOwnerState = {
-    ...pickersDayOwnerState,
+  const ownerState: PickerDayOwnerState = {
+    ...pickerDayOwnerState,
     // Properties specific to the MUI implementation (some might be removed in the next major)
     isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
   };
@@ -241,7 +241,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
   };
 
   return (
-    <PickersDayRoot
+    <PickerDayRoot
       ref={handleRef}
       centerRipple
       disabled={disabled}
@@ -253,20 +253,20 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       {...other}
-      // compat with PickersDay for tests
+      // compat with PickerDay for tests
       data-testid={
         ownerState.isDayFillerCell ? undefined : ((other as any)['data-testid'] ?? 'day')
       }
       ownerState={ownerState}
       className={clsx(classes.root, className)}
     >
-      {/* `ownerState.isDayFillerCell` is used for compat with `PickersDay` for tests */}
+      {/* `ownerState.isDayFillerCell` is used for compat with `PickerDay` for tests */}
       {children ?? (ownerState.isDayFillerCell ? null : adapter.format(day, 'dayOfMonth'))}
-    </PickersDayRoot>
+    </PickerDayRoot>
   );
 });
 
-PickersDayRaw.propTypes = {
+PickerDayRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -467,4 +467,4 @@ PickersDayRaw.propTypes = {
   ]),
 } as any;
 
-export const PickersDay = React.memo(PickersDayRaw) as PickersDayComponent;
+export const PickerDay = React.memo(PickerDayRaw) as PickerDayComponent;

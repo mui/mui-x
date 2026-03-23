@@ -6,7 +6,7 @@ import {
 import { DayCalendarSkeletonProps } from '../DayCalendarSkeleton';
 import { ClockNumberProps, TimeClockProps, ClockPointerProps, ClockProps } from '../TimeClock';
 import { MonthCalendarProps } from '../MonthCalendar';
-import { PickersDayProps } from '../PickersDay';
+import { PickerDayProps } from '../PickerDay';
 import { YearCalendarProps } from '../YearCalendar';
 import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
@@ -72,7 +72,7 @@ export interface PickersComponentsPropsList {
   MuiMultiSectionDigitalClockSection: ExportedMultiSectionDigitalClockSectionProps;
   MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
   MuiPickersCalendarHeader: ExportedPickersCalendarHeaderProps;
-  MuiPickersDay: PickersDayProps;
+  MuiPickerDay: PickerDayProps;
   MuiPickersFadeTransitionGroup: ExportedPickersFadeTransitionGroupProps;
   MuiPickerPopper: ExportedPickerPopperProps;
   MuiPickersSlideTransition: ExportedSlideTransitionProps;

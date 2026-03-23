@@ -1,7 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
-export interface PickersDayClasses {
+export interface PickerDayClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`. */
@@ -16,13 +16,13 @@ export interface PickersDayClasses {
   disabled: string;
 }
 
-export type PickersDayClassKey = keyof PickersDayClasses;
+export type PickerDayClassKey = keyof PickerDayClasses;
 
-export function getPickersDayUtilityClass(slot: string) {
-  return generateUtilityClass('MuiPickersDay', slot);
+export function getPickerDayUtilityClass(slot: string) {
+  return generateUtilityClass('MuiPickerDay', slot);
 }
 
-export const pickersDayClasses = generateUtilityClasses<PickersDayClassKey>('MuiPickersDay', [
+export const pickerDayClasses = generateUtilityClasses<PickerDayClassKey>('MuiPickerDay', [
   'root',
   'dayOutsideMonth',
   'today',

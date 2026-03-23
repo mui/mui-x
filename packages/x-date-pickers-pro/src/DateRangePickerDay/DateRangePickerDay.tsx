@@ -401,7 +401,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     ...other
   } = props;
 
-  const pickersDayOwnerState = usePickerDayOwnerState({
+  const pickerDayOwnerState = usePickerDayOwnerState({
     day,
     selected,
     disabled,
@@ -413,7 +413,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
   });
 
   const ownerState: DateRangePickerDayOwnerState = {
-    ...pickersDayOwnerState,
+    ...pickerDayOwnerState,
     // Properties that the Base UI implementation will have
     isDaySelectionStart: isStartOfHighlighting,
     isDaySelectionEnd: isEndOfHighlighting,

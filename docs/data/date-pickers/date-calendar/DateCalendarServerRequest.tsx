@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import Badge from '@mui/material/Badge';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay, PickerDayProps } from '@mui/x-date-pickers/PickersDay';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
@@ -34,7 +34,7 @@ function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
 
 const initialValue = dayjs('2022-04-17');
 
-function ServerDay(props: PickersDayProps & { highlightedDays?: number[] }) {
+function ServerDay(props: PickerDayProps & { highlightedDays?: number[] }) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
   const isSelected =
@@ -46,7 +46,7 @@ function ServerDay(props: PickersDayProps & { highlightedDays?: number[] }) {
       overlap="circular"
       badgeContent={isSelected ? '🌚' : undefined}
     >
-      <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
+      <PickerDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
     </Badge>
   );
 }

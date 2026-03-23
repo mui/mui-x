@@ -7,12 +7,6 @@ function App() {
     <React.Fragment>
       <DatePicker />
       <DateRangePicker />
-      <DatePicker
-        slots={{
-          calendarHeader: () => null,
-        }}
-      />
-      <DatePicker slots={{ day: MyCustomDay }} />
     </React.Fragment>
   );
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { usePickerPrivateContext } from './usePickerPrivateContext';
-import { PickerDayOwnerState } from './PickersDay.types';
+import { PickerDayOwnerState } from './PickerDay.types';
 import { PickerValidDate } from '../../models/pickers';
 import { usePickerAdapter } from '../../hooks/usePickerAdapter';
 

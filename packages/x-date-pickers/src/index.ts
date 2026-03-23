@@ -4,7 +4,7 @@ export * from './DigitalClock';
 export * from './MultiSectionDigitalClock';
 
 export * from './LocalizationProvider';
-export * from './PickersDay';
+export * from './PickerDay';
 export * from './locales/utils/pickersLocaleTextApi';
 
 // Fields
