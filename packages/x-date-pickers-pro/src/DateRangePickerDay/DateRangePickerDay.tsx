@@ -24,6 +24,7 @@ const useUtilityClasses = (
   const {
     isDaySelected,
     disableHighlightToday,
+    disableMargin,
     isDayCurrent,
     isDayDisabled,
     isDayOutsideMonth,
@@ -48,6 +49,7 @@ const useUtilityClasses = (
       isDayDisabled && 'disabled',
       !disableHighlightToday && isDayCurrent && !isDaySelected && !isDayFillerCell && 'today',
       isDayOutsideMonth && 'dayOutsideMonth',
+      disableMargin && 'dayWithoutMargin',
       isDayFillerCell && 'fillerCell',
       isDaySelected && 'selected',
       isDayPreviewStart && 'previewStart',
@@ -186,6 +188,13 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       props: { isDayOutsideMonth: true },
       style: {
         color: (theme.vars || theme).palette.text.secondary,
+      },
+    },
+    {
+      props: { disableMargin: true },
+      style: {
+        marginLeft: 0,
+        marginRight: 0,
       },
     },
     {
