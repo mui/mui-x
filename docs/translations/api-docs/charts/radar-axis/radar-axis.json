@@ -5,6 +5,7 @@
       "description": "The absolute rotation angle of the metrics (in degree) If not defined the metric angle will be used."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "className": { "description": "A CSS class name applied to the root element." },
     "divisions": { "description": "The number of divisions with label." },
     "dominantBaseline": {
       "description": "The labels dominant baseline or a function returning the dominant baseline for a given axis angle (in degree)."
@@ -19,20 +20,5 @@
       "description": "The labels text anchor or a function returning the text anchor for a given axis angle (in degree)."
     }
   },
-  "classDescriptions": {
-    "label": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "every label element",
-      "deprecationInfo": "Use <code>radarClasses.axisLabel</code> instead."
-    },
-    "line": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the line element",
-      "deprecationInfo": "Use <code>radarClasses.axisLine</code> instead."
-    },
-    "root": {
-      "description": "Styles applied to the root element.",
-      "deprecationInfo": "Use <code>radarClasses.axisRoot</code> instead."
-    }
-  }
+  "classDescriptions": {}
 }

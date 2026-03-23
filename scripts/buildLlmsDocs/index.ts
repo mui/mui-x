@@ -78,8 +78,8 @@ import { ComponentInfo, ProjectSettings } from '@mui-internal/api-docs-builder';
 import { getHeaders } from '@mui/internal-markdown';
 import findComponents from '@mui-internal/api-docs-builder/utils/findComponents';
 import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
-import { pageToTitleI18n } from 'docs/src/modules/utils/helpers';
-import type { MuiPage } from 'docs/src/MuiPage';
+import { pageToTitleI18n } from '@mui/docs/helpers';
+import type { MuiPage } from '@mui/docs/MuiPage';
 import pages from 'docsx/data/pages';
 
 function processApiFile(filePath: string): string {

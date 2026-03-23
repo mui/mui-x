@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "className": { "description": "A CSS class name applied to the root element." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "desc": {
       "description": "The description of the chart. Used to provide an accessible description for the chart."

@@ -31,7 +31,6 @@
     "disableKeyboardNavigation": {
       "description": "If <code>true</code>, disables keyboard navigation for the chart."
     },
-    "disableVoronoi": { "description": "If true, the voronoi interaction are ignored." },
     "experimentalFeatures": {
       "description": "Options to enable features planned for the next major."
     },
@@ -144,9 +143,6 @@
         "value": { "name": "value", "description": "The value to format." },
         "string": { "name": "string", "description": "the formatted value." }
       }
-    },
-    "voronoiMaxRadius": {
-      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."

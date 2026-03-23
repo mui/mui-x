@@ -82,13 +82,6 @@ createTheme({
         someRandomProp: true,
       },
     },
-    // @deprecated Use MuiChartsDataProvider instead
-    MuiChartDataProvider: {
-      defaultProps: {
-        // @ts-expect-error invalid MuiChartDataProvider prop
-        someRandomProp: true,
-      },
-    },
 
     // BarChart components
     MuiBarChart: {
@@ -97,19 +90,15 @@ createTheme({
         // @ts-expect-error invalid MuiBarChart prop
         someRandomProp: true,
       },
+    },
+    MuiBarPlot: {
       styleOverrides: {
         root: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiBarChart class key
+        // @ts-expect-error invalid MuiBarPlot class key
         constent: { color: 'red' },
       },
     },
-    MuiBarElement: {
-      styleOverrides: {
-        root: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiBarElement class key
-        constent: { color: 'red' },
-      },
-    },
+
     // LineChart components
     MuiLineChart: {
       defaultProps: {
@@ -139,27 +128,7 @@ createTheme({
         constent: { color: 'red' },
       },
     },
-    MuiAreaElement: {
-      styleOverrides: {
-        root: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiAreaElement class key
-        constent: { color: 'red' },
-      },
-    },
-    MuiLineElement: {
-      styleOverrides: {
-        root: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiLineElement class key
-        constent: { color: 'red' },
-      },
-    },
-    MuiMarkElement: {
-      styleOverrides: {
-        root: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiMarkElement class key
-        constent: { color: 'red' },
-      },
-    },
+
     // PieChart components
     MuiPieArcPlot: {
       styleOverrides: {

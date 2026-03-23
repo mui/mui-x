@@ -124,7 +124,7 @@ describe('RadarChart - click event', () => {
   describe('onMarkClick', () => {
     it('should add cursor="pointer" to mark elements', () => {
       render(<RadarChart {...config} onMarkClick={() => {}} />);
-      const marks = document.querySelectorAll<HTMLElement>('circle.MuiRadarSeriesPlot-mark');
+      const marks = document.querySelectorAll<HTMLElement>(`circle.${radarClasses.seriesMark}`);
 
       expect(Array.from(marks).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
         'pointer',

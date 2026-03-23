@@ -38,7 +38,6 @@ const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
 const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo');
 const MONOREPO_ALIASES = {
   '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
-  '@mui/internal-markdown': path.resolve(MONOREPO_PATH, './packages/markdown'),
 };
 
 function loadPkg(pkgPath: string): { version: string } {
@@ -123,7 +122,9 @@ export default withDeploymentConfig({
           '@mui/x-chat-headless': path.resolve(currentDirectory, '../packages/x-chat-headless/src'),
           '@mui/x-chat-unstyled': path.resolve(currentDirectory, '../packages/x-chat-unstyled/src'),
           '@mui/x-chat': path.resolve(currentDirectory, '../packages/x-chat/src'),
-          // TODO: get rid of this, replace with @mui/docs
+          'docs/src/modules/utils/mapApiPageTranslations': path.resolve(
+            'src/modules/utils/mapApiPageTranslations.js',
+          ),
           docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
         },

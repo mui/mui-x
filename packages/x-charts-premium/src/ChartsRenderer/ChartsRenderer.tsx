@@ -5,6 +5,7 @@ import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { configurationOptions } from './configuration';
 import { colorPaletteLookup } from './colors';
+import { type BarSeries } from '../BarChart';
 
 const getLegendPosition = (position: string) => {
   let horizontal: 'start' | 'center' | 'end' | undefined = 'center';
@@ -155,11 +156,20 @@ function ChartsRenderer({
       [seriesAxis]: [seriesAxisConfig],
     };
 
-    const seriesProp = chartConfiguration.stacked
-      ? values.map((value) => ({ ...value, stack: 'stack' }))
+    const seriesProp: BarSeries[] = chartConfiguration.stacked
+      ? values.map((value) => ({
+          ...value,
+          stack: 'stack',
+        }))
       : values;
 
     const barLabel = chartConfiguration.itemLabel === 'value' ? ('value' as const) : undefined;
+    if (barLabel) {
+      seriesProp.forEach((series) => {
+        series.barLabel = series.barLabel ?? barLabel;
+      });
+    }
+
     const legendPosition = getLegendPosition(
       chartConfiguration.legendDirection === 'vertical'
         ? chartConfiguration.legendPositionVertical
@@ -179,7 +189,6 @@ function ChartsRenderer({
       },
       skipAnimation: chartConfiguration.skipAnimation,
       showToolbar: chartConfiguration.showToolbar,
-      barLabel,
       slotProps: {
         tooltip: {
           trigger: chartConfiguration.tooltipTrigger,
