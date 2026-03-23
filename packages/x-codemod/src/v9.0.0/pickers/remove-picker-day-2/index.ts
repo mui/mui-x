@@ -75,8 +75,8 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   // Remove imports if no longer used
   dayComponents.forEach((componentName) => {
-    const usages = root.find(j.Identifier, { name: componentName }).filter((path) => {
-      const { parent } = path;
+    const usages = root.find(j.Identifier, { name: componentName }).filter((componentPath) => {
+      const { parent } = componentPath;
       if (parent.value.type === 'ImportSpecifier') {
         return false;
       }
@@ -86,16 +86,16 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     if (usages.length === 0) {
       root
         .find(j.ImportSpecifier, { imported: { name: componentName } })
-        .filter((path) => {
-          const importDeclaration = path.parentPath.parentPath.value;
+        .filter((componentPath) => {
+          const importDeclaration = componentPath.parentPath.parentPath.value;
           return (
             importDeclaration.source.value.startsWith('@mui/x-date-pickers') ||
             importDeclaration.source.value.startsWith('@mui/x-date-pickers-pro')
           );
         })
-        .forEach((path) => {
-          const importDeclaration = path.parentPath.parentPath;
-          j(path).remove();
+        .forEach((componentPath) => {
+          const importDeclaration = componentPath.parentPath.parentPath;
+          j(componentPath).remove();
           if (importDeclaration.value.specifiers.length === 0) {
             j(importDeclaration).remove();
           }
