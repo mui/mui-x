@@ -1,9 +1,8 @@
 <LineChart {...chartsConfig}>
-  <ChartsReferenceLine
+  <StyledReferenceLine
     y={6}
     label="Threshold"
     labelAlign="start"
-    lineStyle={{ strokeDasharray: '10 5', stroke: 'red' }}
     labelStyle={{ fill: 'red', fontSize: 12 }}
   />
   <ChartsReferenceLine

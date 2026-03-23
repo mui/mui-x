@@ -47,5 +47,5 @@ export function resolveValue(
   }
 
   // The value clamped between the drawing area boundaries.
-  return Math.max(drawingStart, Math.min(drawingEnd, coordinate)) ?? 0;
+  return Math.max(drawingStart, Math.min(drawingEnd, coordinate)) || 0;
 }

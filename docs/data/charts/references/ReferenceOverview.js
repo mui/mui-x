@@ -33,11 +33,11 @@ const recessions = [
 ];
 
 const elections = [
-  { year: 2001, label: 'George W. Bush' },
-  { year: 2009, label: 'Barack Obama' },
-  { year: 2017, label: 'Donald Trump' },
-  { year: 2021, label: 'Joe Biden' },
-  { year: 2025, label: 'Donald Trump' },
+  { year: 2001, label: 'George\nW. Bush' },
+  { year: 2009, label: 'Barack\nObama' },
+  { year: 2017, label: 'Donald\nTrump' },
+  { year: 2021, label: 'Joe\nBiden' },
+  { year: 2025, label: 'Donald\nTrump' },
 ];
 
 function AreaWithLabel(period) {
