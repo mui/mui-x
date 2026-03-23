@@ -2,6 +2,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { getCenter } from 'test/utils/charts/getCenter';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config = {
@@ -142,7 +143,7 @@ describe('BarChart - click event', () => {
   });
 
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', () => {
+    it('should add cursor="pointer" to bar elements when onItemClick is provided', () => {
       render(
         <BarChart
           {...config}
@@ -185,21 +186,27 @@ describe('BarChart - click event', () => {
 
       const rectangles = document.querySelectorAll<HTMLElement>(`rect.${barClasses.element}`);
 
-      await user.click(rectangles[0]);
+      await user.pointer([
+        { keys: '[MouseLeft]', target: rectangles[0], coords: getCenter(rectangles[0]) },
+      ]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 0,
       });
 
-      await user.click(rectangles[1]);
+      await user.pointer([
+        { keys: '[MouseLeft]', target: rectangles[1], coords: getCenter(rectangles[1]) },
+      ]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 1,
       });
 
-      await user.click(rectangles[2]);
+      await user.pointer([
+        { keys: '[MouseLeft]', target: rectangles[2], coords: getCenter(rectangles[2]) },
+      ]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'bar',
         seriesId: 's2',

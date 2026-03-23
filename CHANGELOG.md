@@ -1,5 +1,128 @@
 # Changelog
 
+## 9.0.0-alpha.4
+
+_Mar 19, 2026_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes and internal improvements
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @bernardobelchior, @Janpot, @JCQuintas, @LukasTy, @mapache-salvaje, @michelengelen, @noraleonte, @rita-codes, @sai6855, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.0-alpha.4`
+
+- [DataGrid] Mark charts integration as stable (#21764) @JCQuintas
+- [DataGrid] Move `elementOverrides` to constants and remove duplicates (#21618) @sai6855
+- [DataGrid] Migrate from deprecated Material UI APIs (#21682) @siriwatknp
+
+#### `@mui/x-data-grid-pro@9.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.0-alpha.4`.
+
+#### `@mui/x-data-grid-premium@9.0.0-alpha.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.0-alpha.4`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.0.0-alpha.4`
+
+- [pickers] Avoid stealing focus on click away (#13434) @LukasTy
+- [pickers] Promote `fieldRef` to stable and add `clearValue` method (#21655) @michelengelen
+
+#### `@mui/x-date-pickers-pro@9.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.0-alpha.4`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.0-alpha.4`
+
+- [charts] Add v9 chart series types and helper functions migration (#21009) @bernardobelchior
+- [charts] Extract event listener to the layer container (#21751) @alexfauquette
+- [charts] Fix WebGL print export canvas stretching (#21738) @JCQuintas
+- [charts] Improve deprecation warnings (#21760) @alexfauquette
+- [charts] Improve type safety in `identifierCleaner` (#21719) @bernardobelchior
+- [charts] Make `preferStrictDomainInLineCharts` the default (#21744) @JCQuintas
+- [charts] Move title and description to the layer container (#21757) @alexfauquette
+- [charts] Refactor `FunnelChart` classes structure (#21652) @JCQuintas
+- [charts] Refactor `Heatmap` classes structure (#21653) @JCQuintas
+- [charts] Refactor `RadarChart` classes structure (#21650) @JCQuintas
+- [charts] Refactor `SankeyChart` classes structure (#21654) @JCQuintas
+- [charts] Refactor legend getters to use utility functions (#21628) @sai6855
+- [charts] Remove deprecated `ChartContainer` and `ChartDataProvider` (#21777) @alexfauquette
+- [charts] Remove deprecated `itemId` from `SeriesLegendItemContext` (#21788) @alexfauquette
+- [charts] Remove deprecated `useMouseTracker()` (#21787) @alexfauquette
+- [charts] Remove deprecated classes (#21775) @alexfauquette
+- [charts] Remove deprecated props from PieArcLabel animation (#21789) @alexfauquette
+- [charts] Remove get*UtilityClass from public exports (#21769) @JCQuintas
+- [charts] Remove the deprecated `disableHover` property (#21785) @alexfauquette
+- [charts] Remove the deprecated `message` prop (#21784) @alexfauquette
+- [charts] Remove deprecated props about voronoi (#21796) @alexfauquette
+- [charts] Remove deprecated pieArcClasses (#21795) @alexfauquette
+- [charts] Rename `data-series-id` by `data-series` (#21761) @alexfauquette
+- [charts] Rename `voronoiMaxRadius`/`disableVoronoi` to `hitAreaRadius`/`disableHitArea` (#21750) @bernardobelchior
+- [charts] Update pt-PT locale (#21296) @bernardobelchior
+- [charts] Use different shape per series by default (#21713) @alexfauquette
+- [charts] Add className prop to Radar components (#21794) @JCQuintas
+- [charts] Add className prop to shared chart components (#21792) @JCQuintas
+- [charts] Add className prop to BarPlot (#21791) @JCQuintas
+- [charts] Portal tooltip into ChartsLayerContainer (#21801) @JCQuintas
+
+#### `@mui/x-charts-pro@9.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.0-alpha.4`, plus:
+
+- [charts-pro] Allow `brush` interaction to accept `requiredKeys/pointerMode` (#21716) @JCQuintas
+- [charts-pro] Remove deprecated `onAxisClick` for Heatmap (#21786) @alexfauquette
+
+#### `@mui/x-charts-premium@9.0.0-alpha.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.0-alpha.4`, plus:
+
+- [charts-premium] Add candlestick chart (#21129) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.0-alpha.4`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.0-alpha.4`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.0-alpha.4`
+
+Internal changes.
+
+### Docs
+
+- [docs-infra] Exclude `ServerSideLazyLoadingRevalidation` from argos (#21734) @sai6855
+- [docs] Update charts v9 migration guide to include premium package (#21743) @bernardobelchior
+- [docs] Update v9 migration guides to install next tag (#21741) @bernardobelchior
+- [docs] Revise the Pie chart docs (#21565) @mapache-salvaje
+- [docs] Revise the Bar Chart docs (#21482) @mapache-salvaje
+- [docs] Removed a `console.log` from an aggregation demo (#21698) @michelengelen
+
+### Core
+
+- [code-infra] Add pkg-pr-new as dev dependency (#21754) @Janpot
+- [code-infra] Prevent `combiner` to have default parameters (#21707) @JCQuintas
+- [code-infra] Remove CI coverage collection and upload to Codecov (#21671) @Janpot
+- [internal] Remove @bernardobelchior from Charts CODEOWNERS (#21776) @Copilot
+
+### Miscellaneous
+
+- [x-license] Fix process.env.MUI_VERSION not being replaced during build (#21727) @aemartos
+- [x-license] Add new watermark license status message (#21720) @aemartos
+
 ## 9.0.0-alpha.3
 
 _Mar 12, 2026_

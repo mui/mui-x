@@ -12,7 +12,6 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
 import { barClasses, useUtilityClasses } from './barClasses';
-import type { BarItem, BarLabelContext } from './BarLabel';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { IndividualBarPlot } from './IndividualBarPlot';
 import { BatchBarPlot } from './BatchBarPlot';
@@ -34,26 +33,14 @@ export interface BarPlotProps {
   skipAnimation?: boolean;
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
-  onItemClick?(
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    barItemIdentifier: BarItemIdentifier,
-  ): void;
+  onItemClick?(event: MouseEvent, barItemIdentifier: BarItemIdentifier): void;
   /**
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
-  /**
-   * @deprecated Use `barLabel` in the chart series instead.
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   /**
    * The type of renderer to use for the bar plot.
    * - `svg-single`: Renders every bar in a `<rect />` element.
@@ -103,7 +90,6 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
     skipAnimation: inSkipAnimation,
     onItemClick,
     borderRadius,
-    barLabel,
     renderer,
     ...other
   } = props;
@@ -126,14 +112,7 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
         /* The batch renderer doesn't animate bars after the initial mount. Providing skipAnimation was causing an issue
          * where bars would animate again after a zoom interaction because skipAnimation would change from true to false. */
         skipAnimation={renderer === 'svg-batch' ? batchSkipAnimation : skipAnimation}
-        onItemClick={
-          /* `onItemClick` accepts a `MouseEvent` when the renderer is "svg-batch" and a `React.MouseEvent` otherwise,
-           * so we need this cast to prevent TypeScript from complaining. */
-          onItemClick as (
-            event: MouseEvent | React.MouseEvent<SVGElement, MouseEvent>,
-            barItemIdentifier: BarItemIdentifier,
-          ) => void
-        }
+        onItemClick={onItemClick}
         borderRadius={borderRadius}
         {...other}
       />
@@ -143,7 +122,6 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
           className={classes.seriesLabels}
           processedSeries={processedSeries}
           skipAnimation={skipAnimation}
-          barLabel={barLabel}
           {...other}
         />
       ))}
@@ -157,15 +135,6 @@ BarPlot.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * @deprecated Use `barLabel` in the chart series instead.
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
-  /**
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
@@ -175,7 +144,7 @@ BarPlot.propTypes = {
   className: PropTypes.string,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
