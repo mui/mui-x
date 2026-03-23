@@ -6,20 +6,22 @@ components: SparkLineChart
 
 # Charts - Sparkline
 
-<p class="description">Show data trends in a compact form without axes or coordinates.</p>
+<p class="description">Use sparklines to show value trends in a compact chart without axes or coordinates.</p>
 
-A sparkline is a small, axis-free chart that plots a sequence of values.
-It stays compact so it can sit inline (for eample, in a table cell, a dashboard widget, or next to text) and the shape of the curve or bars conveys the trend without scales or labels.
+## Overview
 
-As shown below, npm uses a sparkline to display a package's weekly
-downloads trend.
+A sparkline is a small chart without axes that plots a sequence of values.
+It stays compact so you can place it inline (for example, in a table cell, a dashboard widget, or next to text).
+The curve or bar shape conveys the trend without scales or labels.
+
+The demo below shows how npm displays a package's weekly download trend in a sparkline.
 
 {{"demo": "NpmSparkLine.js"}}
 
 ## Basics
 
 `SparkLineChart` only needs the `data` prop, which is an array of numbers.
-Use `plotType="bar"` to switch from a line to a bar plot.
+Set `plotType` to `"bar"` to switch from a line chart to a bar chart.
 
 {{"demo": "BasicSparkLine.js"}}
 
@@ -27,15 +29,16 @@ Use `plotType="bar"` to switch from a line to a bar plot.
 
 Set the `area` prop to fill the area under the curve.
 Use the `curve` prop to change how the line is interpolated between points.
-See the [line charts—Interpolation](/x/react-charts/lines/#interpolation) section for curve options.
+See [Lines—Interpolation](/x/react-charts/lines/#interpolation) for curve options.
 
 {{"demo": "AreaSparkLine.js"}}
 
 ## Interaction
 
-The sparkline has extra props to configure interaction: `showTooltip` and `showHighlight` turn on the default tooltip and highlight.
+Use the `showTooltip` and `showHighlight` props to enable the default tooltip and highlight.
 
-For more control, pass custom props to the `tooltip` and `highlight` slots as described on the [Tooltip](/x/react-charts/tooltip/) page.
+For more control, pass custom props to the `tooltip` and `highlight` slots.
+See [Tooltip](/x/react-charts/tooltip/) for details.
 
 {{"demo": "BasicSparkLineCustomization.js"}}
 
@@ -43,9 +46,9 @@ For more control, pass custom props to the `tooltip` and `highlight` slots as de
 
 ### X-axis data
 
-By default, the sparkline uses an ascending integer sequence starting from 0 (0, 1, 2, …) for the x-axis.
+By default, the sparkline uses an ascending integer sequence starting at 0 (0, 1, 2, …) for the x-axis.
 Those values are hidden in the tooltip.
-Use the `xAxis` prop when your data are not evenly spaced or when you need custom labels.
+Use the `xAxis` prop when your data points are not evenly spaced or when you need custom labels.
 
 The sparkline has a single axis, so `xAxis` takes one axis configuration object, not an array.
 
@@ -64,7 +67,7 @@ The demo below shows two sparklines with different value scales: the first row u
 {{"demo": "CustomYAxis.js"}}
 
 Use the `domainLimit` option in the `yAxis` configuration to adjust the y-axis range relative to the data.
-See the [Axis—Relative axis subdomain](/x/react-charts/axis/#relative-axis-subdomain) section for details.
+See [Axis—Relative axis subdomain](/x/react-charts/axis/#relative-axis-subdomain) for details.
 
 The demo below uses the same data (values from -15 to 92) with different `domainLimit` settings.
 
@@ -87,7 +90,8 @@ The demo below uses a white line in dark mode and a black line in light mode.
 The default stroke width for sparkline lines is 2px.
 With clipping enabled, a line drawn at the chart edge can be partially clipped.
 
-Clipping is on by default; `clipAreaOffset` defaults to 1 to reduce visible clipping.
+Clipping is on by default. 
+`clipAreaOffset` defaults to 1 to reduce visible clipping.
 Set `disableClipping` to `true` to turn clipping off.
 
 The demo below shows how stroke width, `disableClipping`, and `clipAreaOffset` affect the result.
