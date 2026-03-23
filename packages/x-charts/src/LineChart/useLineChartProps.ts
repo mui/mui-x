@@ -8,7 +8,7 @@ import { type ChartsGridProps } from '../ChartsGrid';
 import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import { type ChartsOverlayProps } from '../ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { type ChartContainerProps } from '../ChartContainer';
+import { type ChartsContainerProps } from '../ChartsContainer';
 import { type AreaPlotProps } from './AreaPlot';
 import type { LineChartProps } from './LineChart';
 import { type LineHighlightPlotProps } from './LineHighlightPlot';
@@ -67,7 +67,7 @@ export const useLineChartProps = (props: LineChartProps) => {
       })),
     [disableLineItemHighlight, series],
   );
-  const chartContainerProps: ChartContainerProps<'line', LineChartPluginSignatures> = {
+  const chartsContainerProps: ChartsContainerProps<'line', LineChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
     width,
@@ -165,7 +165,7 @@ export const useLineChartProps = (props: LineChartProps) => {
 
   return {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,

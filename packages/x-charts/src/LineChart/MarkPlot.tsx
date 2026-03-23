@@ -15,7 +15,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import { useMarkPlotData } from './useMarkPlotData';
 import { useUtilityClasses } from './lineClasses';
 
@@ -80,7 +80,7 @@ function MarkPlot(props: MarkPlotProps) {
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
 
-  const { store } = useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const { store } = useChartsContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const getHighlightState = useItemHighlightStateGetter();
   const xAxisHighlightIndexes = store.use(selectorChartsHighlightXAxisIndex);
 

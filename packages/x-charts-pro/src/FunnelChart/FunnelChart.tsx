@@ -16,10 +16,10 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { FunnelPlot, type FunnelPlotProps } from './FunnelPlot';
 import { type FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
-import { type ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
 import { funnelSeriesConfig } from './seriesConfig';
-import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { type FunnelChartSlotExtension } from './funnelSlots.types';
 import { type CategoryAxis } from './categoryAxis.types';
 import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
@@ -29,7 +29,7 @@ export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
   extends
     Omit<
-      ChartContainerProProps<'funnel', FunnelChartPluginSignatures>,
+      ChartsContainerProProps<'funnel', FunnelChartPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'zAxis'
@@ -42,7 +42,6 @@ export interface FunnelChartProps
       | 'radiusAxis'
       | 'slots'
       | 'slotProps'
-      | 'experimentalFeatures'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -82,7 +81,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   const themedProps = useThemeProps({ props, name: 'MuiFunnelChart' });
 
   const {
-    chartContainerProps,
+    chartsContainerProps,
     funnelPlotProps,
     overlayProps,
     legendProps,
@@ -91,14 +90,14 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     axisHighlightProps,
     children,
   } = useFunnelChartProps(themedProps);
-  const { chartDataProviderProProps, chartsSurfaceProps } =
-    useChartContainerProProps(chartContainerProps);
+  const { chartsDataProviderProProps, chartsSurfaceProps } =
+    useChartsContainerProProps(chartsContainerProps);
 
   const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProviderPro<'funnel', FunnelChartPluginSignatures>
-      {...chartDataProviderProProps}
+    <ChartsDataProviderPro<'funnel', FunnelChartPluginSignatures>
+      {...chartsDataProviderProProps}
       gap={themedProps.gap}
       seriesConfig={seriesConfig}
       plugins={FUNNEL_CHART_PLUGINS}
@@ -115,7 +114,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
         </ChartsSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 });
 
@@ -241,6 +240,10 @@ FunnelChart.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -252,6 +255,10 @@ FunnelChart.propTypes = {
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * The gap, in pixels, between funnel sections.
    * @default 0
@@ -435,6 +442,10 @@ FunnelChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The tooltip item.

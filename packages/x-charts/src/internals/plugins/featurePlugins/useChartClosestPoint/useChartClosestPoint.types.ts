@@ -30,15 +30,15 @@ export interface UseChartVoronoiState {
 
 export interface UseChartVoronoiParameters {
   /**
-   * If true, the voronoi interaction are ignored.
+   * If true, the hit area interaction is disabled and falls back to hover events.
    */
-  disableVoronoi?: boolean;
+  disableHitArea?: boolean;
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
    */
-  voronoiMaxRadius?: 'item' | number | undefined;
+  hitAreaRadius?: 'item' | number | undefined;
   /**
    * Callback fired when clicking close to an item.
    * This is only available for scatter plot for now.
@@ -50,13 +50,8 @@ export interface UseChartVoronoiParameters {
 
 export type UseChartVoronoiDefaultizedParameters = Pick<
   UseChartVoronoiParameters,
-  'voronoiMaxRadius' | 'onItemClick'
-> & {
-  /**
-   * If true, the voronoi plugin is disabled.
-   */
-  disableVoronoi: boolean;
-};
+  'hitAreaRadius' | 'disableHitArea' | 'onItemClick'
+>;
 
 export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{

@@ -20,6 +20,7 @@ import { type ChartsDataProviderProProps } from '@mui/x-charts-pro/ChartsDataPro
 import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderPremiumProps } from './useChartsDataProviderPremiumProps';
+import { ohlcSeriesConfig } from '../CandlestickChart/seriesConfig';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -47,10 +48,11 @@ export type ChartsDataProviderPremiumProps<
   };
 
 export const defaultSeriesConfigPremium: ChartSeriesConfig<
-  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie'
+  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie' | 'ohlc'
 > = {
   ...defaultSeriesConfigPro,
   rangeBar: rangeBarSeriesConfig,
+  ohlc: ohlcSeriesConfig,
 };
 
 /**
@@ -126,12 +128,6 @@ ChartsDataProviderPremium.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

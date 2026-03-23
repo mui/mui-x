@@ -1,4 +1,4 @@
-import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
+import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { desktopOS, valueFormatter } from './webUsageStats';
 
 export default function PieArcLabel() {
@@ -13,7 +13,7 @@ export default function PieArcLabel() {
         },
       ]}
       sx={{
-        [`& .${pieArcLabelClasses.root}`]: {
+        [`& .${pieClasses.arcLabel}`]: {
           fontWeight: 'bold',
         },
       }}
