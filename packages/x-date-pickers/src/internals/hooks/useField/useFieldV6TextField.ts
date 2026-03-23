@@ -7,7 +7,7 @@ import useTimeout from '@mui/utils/useTimeout';
 import useForkRef from '@mui/utils/useForkRef';
 import { UseFieldParameters, UseFieldProps, UseFieldReturnValue } from './useField.types';
 import { useSplitFieldProps } from '../../../hooks';
-import { FieldSelectedSections, InferFieldSection } from '../../../models';
+import { FieldSectionType, InferFieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid, validateFocusedSection } from './useField.utils';
 import { PickerValidValue } from '../../models';

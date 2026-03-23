@@ -1,4 +1,3 @@
-import { act, waitFor } from '@mui/internal-test-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   createPickerRenderer,
