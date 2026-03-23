@@ -4,6 +4,10 @@ import { type RadarItemIdentifier } from '../../models/seriesType/radar';
 
 interface CommonRadarSeriesPlotProps {
   /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
+  /**
    * The id of the series to display.
    * If undefined all series are displayed.
    */

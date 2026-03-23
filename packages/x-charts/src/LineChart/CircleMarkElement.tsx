@@ -2,8 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useTheme } from '@mui/material/styles';
-import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import {
   lineClasses,
   type MarkElementOwnerState,
@@ -79,14 +79,15 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     ...other
   } = props;
 
-  const theme = useTheme();
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
+  const theme = useTheme();
 
   const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
 
   return (
     <Circle
       {...other}
+      {...interactionProps}
       cx={x}
       cy={y}
       r={5}
@@ -97,7 +98,6 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       pointerEvents={hidden ? 'none' : undefined}
-      {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
       data-series-id={seriesId}
