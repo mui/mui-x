@@ -86,7 +86,9 @@ describe('<DateField /> - initialFocusedSection', () => {
       });
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM');
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringMatching(/The section index "99" is out of bounds/));
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringMatching(/The section index "99" is out of bounds/),
+      );
       view.unmount();
       warnSpy.mockRestore();
     });
@@ -100,7 +102,9 @@ describe('<DateField /> - initialFocusedSection', () => {
       });
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM');
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringMatching(/The section type "weekDay" does not exist/));
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringMatching(/The section type "weekDay" does not exist/),
+      );
       view.unmount();
       warnSpy.mockRestore();
     });
