@@ -21,7 +21,7 @@ import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSerie
 import { useUtilityClasses } from './scatterClasses';
 import type { ScatterClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
@@ -78,7 +78,7 @@ function Scatter(props: ScatterProps) {
   } = props;
 
   const { instance } =
-    useChartContext<
+    useChartsContext<
       [
         UseChartInteractionSignature,
         UseChartHighlightSignature<'scatter'>,

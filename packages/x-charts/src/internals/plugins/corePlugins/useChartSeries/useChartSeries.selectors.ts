@@ -19,7 +19,7 @@ export const selectorChartDefaultizedSeries = createSelector(
  * Get the dataset from the series state.
  * @returns {DatasetType | undefined} The dataset.
  */
-export const selectorChartDataset = createSelector(
+export const selectorChartsDataset = createSelector(
   selectorChartSeriesState,
   (seriesState) => seriesState.dataset,
 );
@@ -32,7 +32,7 @@ export const selectorChartDataset = createSelector(
 export const selectorChartSeriesProcessed = createSelectorMemoized(
   selectorChartDefaultizedSeries,
   selectorChartSeriesConfig,
-  selectorChartDataset,
+  selectorChartsDataset,
   selectorIsItemVisibleGetter,
   function selectorChartSeriesProcessed(defaultizedSeries, seriesConfig, dataset, isItemVisible) {
     return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, isItemVisible);

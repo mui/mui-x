@@ -133,8 +133,7 @@ You can pass these props to the tooltip using `slotProps.tooltip`, or directly t
 ## Style modification
 
 Similar to other chart elements, you can style the tooltip using CSS classes.
-However, there is one caveat regarding the use of [portals](https://react.dev/reference/react-dom/createPortal):
-The tooltip renders as a child of the document's body element.This means that from a DOM perspective, it's not inside the chart, so using the chart's `sx` prop as follows does not work:
+The tooltip is rendered inside the chart container, so you can use the chart's `sx` prop to style it:
 
 ```tsx
 import { chartsTooltipClasses } from '@mui/x-charts';
@@ -148,12 +147,9 @@ import { chartsTooltipClasses } from '@mui/x-charts';
 />;
 ```
 
-To apply the same style as above, use the `sx` prop of the tooltip itself, which should be set in `slotProps.tooltip`.
+You can also use the `sx` prop of the tooltip itself via `slotProps.tooltip`.
 
 {{"demo": "TooltipStyle.js"}}
-
-You can also disable the portal by setting `slotProps.tooltip.disablePortal` to `true`.
-In that case, the tooltip renders as a child of the chart, and CSS rules are applied as expected.
 
 ## Using a custom tooltip
 

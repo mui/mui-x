@@ -11,7 +11,7 @@ import {
   type ScatterPlotSlotProps,
   type ScatterPlotSlots,
 } from './ScatterPlot';
-import { type ChartContainerProps } from '../ChartContainer';
+import { type ChartsContainerProps } from '../ChartsContainer';
 import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis';
 import { type ScatterSeriesType } from '../models/seriesType/scatter';
 import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip';
@@ -30,8 +30,8 @@ import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxi
 import { type ChartsAxisSlots, type ChartsAxisSlotProps } from '../models/axis';
 import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
-import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
+import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
@@ -67,7 +67,7 @@ export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
 export interface ScatterChartProps
   extends
     Omit<
-      ChartContainerProps<'scatter', ScatterChartPluginSignatures>,
+      ChartsContainerProps<'scatter', ScatterChartPluginSignatures>,
       'series' | 'plugins' | 'onItemClick' | 'highlightedAxis' | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
@@ -151,7 +151,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChart' });
   const {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
@@ -160,14 +160,14 @@ const ScatterChart = React.forwardRef(function ScatterChart(
     axisHighlightProps,
     children,
   } = useScatterChartProps(props);
-  const { chartDataProviderProps, chartsSurfaceProps } =
-    useChartContainerProps(chartContainerProps);
+  const { chartsDataProviderProps, chartsSurfaceProps } =
+    useChartsContainerProps(chartsContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'scatter', ScatterChartPluginSignatures> {...chartDataProviderProps}>
+    <ChartsDataProvider<'scatter', ScatterChartPluginSignatures> {...chartsDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -185,7 +185,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
         </ChartsSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 });
 
@@ -509,13 +509,6 @@ ScatterChart.propTypes = {
     }),
   ]),
   /**
-   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
-   * If set to `'item'`, the radius is the `markerSize`.
-   * If `undefined`, the radius is assumed to be infinite.
-   * @deprecated Use `hitAreaRadius` instead.
-   */
-  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
-  /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
   width: PropTypes.number,
@@ -531,6 +524,7 @@ ScatterChart.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -619,6 +613,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -707,6 +702,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -771,6 +767,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -836,6 +833,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -900,6 +898,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -964,6 +963,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1038,6 +1038,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1112,6 +1113,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1187,6 +1189,7 @@ ScatterChart.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1274,6 +1277,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1361,6 +1365,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1424,6 +1429,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1488,6 +1494,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1551,6 +1558,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1614,6 +1622,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1687,6 +1696,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1760,6 +1770,7 @@ ScatterChart.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([

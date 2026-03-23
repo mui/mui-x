@@ -1,6 +1,6 @@
 'use client';
 import { type ChartsSurfaceProps } from '../ChartsSurface';
-import { type ChartDataProviderProps } from '../ChartDataProvider';
+import { type ChartsDataProviderProps } from '../ChartsDataProvider';
 import type { ChartsContainerProps } from './ChartsContainer';
 import { type ChartSeriesType } from '../models/seriesType/config';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
@@ -10,7 +10,7 @@ export type UseChartsContainerPropsReturnValue<
   SeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = {
-  chartDataProviderProps: ChartDataProviderProps<SeriesType, TSignatures>;
+  chartsDataProviderProps: ChartsDataProviderProps<SeriesType, TSignatures>;
   chartsSurfaceProps: ChartsSurfaceProps;
   children: React.ReactNode;
 };
@@ -38,9 +38,7 @@ export const useChartsContainerProps = <
     tooltipItem,
     onTooltipItemChange,
     disableHitArea,
-    disableVoronoi,
     hitAreaRadius,
-    voronoiMaxRadius,
     onItemClick,
     disableAxisListener,
     highlightedItem,
@@ -75,7 +73,7 @@ export const useChartsContainerProps = <
     ...other,
   };
 
-  const chartDataProviderProps = {
+  const chartsDataProviderProps = {
     margin,
     series,
     colors,
@@ -91,9 +89,7 @@ export const useChartsContainerProps = <
     tooltipItem,
     onTooltipItemChange,
     disableHitArea,
-    disableVoronoi,
     hitAreaRadius,
-    voronoiMaxRadius,
     onItemClick,
     axesGap,
     xAxis,
@@ -115,10 +111,10 @@ export const useChartsContainerProps = <
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,
-  } as unknown as ChartDataProviderProps<SeriesType, TSignatures>;
+  } as unknown as ChartsDataProviderProps<SeriesType, TSignatures>;
 
   return {
-    chartDataProviderProps,
+    chartsDataProviderProps,
     chartsSurfaceProps,
     children,
   };

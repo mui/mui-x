@@ -27,13 +27,13 @@ import {
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
-import { type ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
 import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { HeatmapTooltip, type HeatmapTooltipProps } from './HeatmapTooltip';
 import { type HeatmapItemSlotProps, type HeatmapItemSlots } from './HeatmapItem';
 import { type HeatmapPluginSignatures } from './Heatmap.plugins';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
   type ChartsToolbarProSlotProps,
@@ -77,7 +77,7 @@ export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
 export interface HeatmapProps
   extends
     Omit<
-      ChartContainerProProps<'heatmap', HeatmapPluginSignatures>,
+      ChartsContainerProProps<'heatmap', HeatmapPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'xAxis'
@@ -148,7 +148,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
 
   const {
-    chartDataProviderProProps,
+    chartsDataProviderProProps,
     chartsWrapperProps,
     chartsAxisProps,
     clipPathProps,
@@ -163,7 +163,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro<'heatmap', HeatmapPluginSignatures> {...chartDataProviderProProps}>
+    <ChartsDataProviderPro<'heatmap', HeatmapPluginSignatures> {...chartsDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
@@ -182,7 +182,7 @@ const Heatmap = React.forwardRef(function Heatmap(
         </ChartsLayerContainer>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 });
 
@@ -416,6 +416,7 @@ Heatmap.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -529,6 +530,7 @@ Heatmap.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

@@ -29,9 +29,9 @@ import {
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartContainerProProps } from '../ChartContainerPro';
-import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { LINE_CHART_PRO_PLUGINS, type LineChartProPluginSignatures } from './LineChartPro.plugins';
 
 export interface LineChartProSlots
@@ -46,7 +46,7 @@ export interface LineChartProProps
   extends
     Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
-      ChartContainerProProps<'line', LineChartProPluginSignatures>,
+      ChartsContainerProProps<'line', LineChartProPluginSignatures>,
       'series' | 'slots' | 'slotProps'
     > {
   /**
@@ -79,7 +79,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
   const {
     chartsWrapperProps,
-    chartContainerProps,
+    chartsContainerProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -93,11 +93,11 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     legendProps,
     children,
   } = useLineChartProps(other);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
+  const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'line',
     LineChartProPluginSignatures
   >({
-    ...chartContainerProps,
+    ...chartsContainerProps,
     initialZoom,
     zoomData,
     onZoomChange,
@@ -109,7 +109,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro<'line', LineChartProPluginSignatures> {...chartDataProviderProProps}>
+    <ChartsDataProviderPro<'line', LineChartProPluginSignatures> {...chartsDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -134,7 +134,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartsDataProviderPro>
   );
 });
 
@@ -491,6 +491,7 @@ LineChartPro.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -597,6 +598,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -703,6 +705,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -785,6 +788,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -868,6 +872,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -950,6 +955,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1032,6 +1038,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1124,6 +1131,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1216,6 +1224,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['x']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1309,6 +1318,7 @@ LineChartPro.propTypes = {
         barGapRatio: PropTypes.number,
         categoryGapRatio: PropTypes.number,
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1414,6 +1424,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1519,6 +1530,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1600,6 +1612,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1682,6 +1695,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1763,6 +1777,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1844,6 +1859,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -1935,6 +1951,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([
@@ -2026,6 +2043,7 @@ LineChartPro.propTypes = {
       PropTypes.shape({
         axis: PropTypes.oneOf(['y']),
         classes: PropTypes.object,
+        className: PropTypes.string,
         colorMap: PropTypes.oneOfType([
           PropTypes.shape({
             color: PropTypes.oneOfType([

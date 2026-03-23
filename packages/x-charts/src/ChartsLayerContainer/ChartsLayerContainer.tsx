@@ -13,8 +13,9 @@ import {
 import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { type UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import { useChartsLayerContainerRef } from '../hooks';
+import { useRegisterPointerInteractions } from '../internals/plugins/featurePlugins/shared/useRegisterPointerInteractions';
 // eslint-disable-next-line import/no-cycle
 import { ChartsSurface } from '../ChartsSurface';
 
@@ -60,13 +61,15 @@ export interface ChartsLayerContainerProps extends React.ComponentProps<'div'> {
  */
 const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContainerProps>(
   function ChartsLayerContainer(inProps, ref) {
-    const { store, instance } = useChartContext<
+    const { store, instance } = useChartsContext<
       [],
       [UseChartInteractionSignature, UseChartItemClickSignature]
     >();
     const propsWidth = store.use(selectorChartPropsWidth);
     const propsHeight = store.use(selectorChartPropsHeight);
     const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
+
+    useRegisterPointerInteractions();
 
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsLayerContainer' });
     const { children, title, desc, className, ...other } = themeProps;

@@ -7,7 +7,7 @@ import {
   invertScale,
   selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
-  useChartContext,
+  useChartsContext,
   useDrawingArea,
   useStore,
   type ZoomData,
@@ -77,7 +77,7 @@ export function ChartsAxisZoomSliderActiveTrack({
   onPointerEnter,
   onPointerLeave,
 }: ChartsAxisZoomSliderActiveTrackProps) {
-  const { instance } = useChartContext<[UseChartProZoomSignature]>();
+  const { instance } = useChartsContext<[UseChartProZoomSignature]>();
   const { chartsLayerContainerRef } = instance;
   const store = useStore<[UseChartProZoomSignature]>();
   const axis = store.use(selectorChartAxis, axisId);

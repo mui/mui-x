@@ -96,6 +96,10 @@ export interface ChartsAxisSlotProps {
 
 export interface ChartsAxisProps extends TickParams {
   /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
+  /**
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
    */
