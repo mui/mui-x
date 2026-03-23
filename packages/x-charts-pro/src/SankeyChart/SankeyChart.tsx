@@ -6,7 +6,7 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
 import type { SankeySeriesType } from './sankey.types';
@@ -15,7 +15,7 @@ import type { SankeyChartSlotExtension } from './sankeySlots.types';
 import { FocusedSankeyNode } from './FocusedSankeyNode';
 import { FocusedSankeyLink } from './FocusedSankeyLink';
 import { SankeyDataProvider } from './SankeyDataProvider';
-import type { ChartContainerProProps } from '../ChartContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import type { SankeyChartPluginSignatures } from './SankeyChart.plugins';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
@@ -23,7 +23,7 @@ export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 export interface SankeyChartProps
   extends
     Omit<
-      ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
+      ChartsContainerProProps<'sankey', SankeyChartPluginSignatures>,
       'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
     >,
     Omit<SankeyPlotProps, 'data'>,
@@ -56,17 +56,17 @@ const SankeyChart = React.forwardRef(function SankeyChart(
 ) {
   const themedProps = useThemeProps({ props, name: 'MuiSankeyChart' });
 
-  const { chartContainerProps, sankeyPlotProps, overlayProps, chartsWrapperProps, children } =
+  const { chartsContainerProps, sankeyPlotProps, overlayProps, chartsWrapperProps, children } =
     useSankeyChartProps(themedProps);
   const {
-    chartDataProviderProProps: { series, ...chartDataProviderProProps },
+    chartsDataProviderProProps: { series, ...chartsDataProviderProProps },
     chartsSurfaceProps,
-  } = useChartContainerProProps<'sankey', SankeyChartPluginSignatures>(chartContainerProps);
+  } = useChartsContainerProProps<'sankey', SankeyChartPluginSignatures>(chartsContainerProps);
 
   const Tooltip = themedProps.slots?.tooltip ?? SankeyTooltip;
 
   return (
-    <SankeyDataProvider series={series as SankeySeriesType[]} {...chartDataProviderProProps}>
+    <SankeyDataProvider series={series as SankeySeriesType[]} {...chartsDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         <ChartsSurface {...chartsSurfaceProps}>
           <SankeyPlot {...sankeyPlotProps} />
@@ -102,6 +102,10 @@ SankeyChart.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, disables keyboard navigation for the chart.
@@ -110,9 +114,7 @@ SankeyChart.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.shape({
-    preferStrictDomainInLineCharts: PropTypes.bool,
-  }),
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -241,6 +243,10 @@ SankeyChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The tooltip item.

@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
-import { useUtilityClasses as useDeprecatedUtilityClasses } from './barElementClasses';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
@@ -73,7 +71,6 @@ function BarElement(props: BarElementProps) {
     () => ({ type: 'bar' as const, seriesId, dataIndex }),
     [seriesId, dataIndex],
   );
-  const interactionProps = useInteractionItemProps(itemIdentifier);
   const highlightState = useItemHighlightState(itemIdentifier);
   const isHighlighted = highlightState === 'highlighted';
   const isFaded = highlightState === 'faded';
@@ -99,7 +96,6 @@ function BarElement(props: BarElementProps) {
   };
 
   const classes = useUtilityClasses(ownerState);
-  const deprecatedClasses = useDeprecatedUtilityClasses(ownerState);
 
   const Bar = slots?.bar ?? AnimatedBarElement;
 
@@ -108,7 +104,6 @@ function BarElement(props: BarElementProps) {
     externalSlotProps: slotProps?.bar,
     externalForwardedProps: other,
     additionalProps: {
-      ...interactionProps,
       seriesId,
       dataIndex,
       color,
@@ -120,14 +115,14 @@ function BarElement(props: BarElementProps) {
       height,
       style,
       onClick,
-      cursor: onClick ? 'pointer' : 'unset',
+      cursor: onClick ? 'pointer' : undefined,
       stroke: 'none',
       fill: color,
       skipAnimation,
       layout,
       hidden,
     },
-    className: `${classes.element} ${deprecatedClasses.root}`,
+    className: classes.element,
     ownerState,
   });
 

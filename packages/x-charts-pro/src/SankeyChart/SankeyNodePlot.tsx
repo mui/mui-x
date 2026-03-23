@@ -4,13 +4,13 @@ import { styled } from '@mui/material/styles';
 import type { SankeyNodeIdentifierWithData } from './sankey.types';
 import { SankeyNodeElement } from './SankeyNodeElement';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
+import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
 
 export interface SankeyNodePlotProps {
   /**
    * Classes applied to the various elements.
    */
-  classes?: Partial<SankeyPlotClasses>;
+  classes?: Partial<SankeyClasses>;
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -41,7 +41,7 @@ function SankeyNodePlot(props: SankeyNodePlotProps) {
 
   if (!sankeySeries) {
     throw new Error(
-      `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartDataProviderPro.`,
+      `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartsDataProviderPro.`,
     );
   }
 

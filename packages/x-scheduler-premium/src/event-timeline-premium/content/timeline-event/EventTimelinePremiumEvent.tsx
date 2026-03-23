@@ -36,6 +36,16 @@ const EventTimelinePremiumEventRoot = styled('div', {
   '&:hover': {
     backgroundColor: 'var(--event-surface-subtle-hover)',
   },
+  '&[data-editing]': {
+    backgroundColor: 'var(--event-surface-selected)',
+    color: 'var(--event-on-surface-selected)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-selected-hover)',
+    },
+    '&::before': {
+      background: 'var(--event-surface-selected)',
+    },
+  },
   [`&:hover .${eventTimelinePremiumClasses.eventResizeHandler}`]: {
     opacity: 1,
   },
@@ -112,7 +122,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
-
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(

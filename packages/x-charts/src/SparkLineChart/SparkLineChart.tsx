@@ -6,8 +6,8 @@ import { ChartsClipPath } from '../ChartsClipPath';
 import { type ChartsColor, type ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
-import { type ChartContainerProps } from '../ChartContainer';
-import { ChartDataProvider } from '../ChartDataProvider';
+import { type ChartsContainerProps } from '../ChartsContainer';
+import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
@@ -47,7 +47,7 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 'bar'> extends Omit<
-  ChartContainerProps,
+  ChartsContainerProps,
   | 'series'
   | 'xAxis'
   | 'yAxis'
@@ -60,7 +60,6 @@ export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 
   | 'colors'
   | 'slots'
   | 'slotProps'
-  | 'experimentalFeatures'
 > {
   /**
    * The xAxis configuration.
@@ -277,7 +276,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     [yAxisProps],
   );
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       series={series}
       width={width}
       height={height}
@@ -318,7 +317,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         {children}
       </ChartsSurface>
       {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 });
 
@@ -401,6 +400,10 @@ SparkLineChart.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * The description of the chart.
+   * Used to provide an accessible description for the chart.
+   */
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -415,13 +418,17 @@ SparkLineChart.propTypes = {
    */
   disableClipping: PropTypes.bool,
   /**
+   * If true, the hit area interaction is disabled and falls back to hover events.
+   */
+  disableHitArea: PropTypes.bool,
+  /**
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
   /**
-   * If true, the voronoi interaction are ignored.
+   * Options to enable features planned for the next major.
    */
-  disableVoronoi: PropTypes.bool,
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -545,6 +552,12 @@ SparkLineChart.propTypes = {
       type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
+  /**
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  hitAreaRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -730,6 +743,10 @@ SparkLineChart.propTypes = {
     PropTypes.object,
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The title of the chart.
+   * Used to provide an accessible label for the chart.
+   */
   title: PropTypes.string,
   /**
    * The controlled axis tooltip.
@@ -788,12 +805,6 @@ SparkLineChart.propTypes = {
    */
   valueFormatter: PropTypes.func,
   /**
-   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
-   * If set to `'item'`, the radius is the `markerSize`.
-   * If `undefined`, the radius is assumed to be infinite.
-   */
-  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
-  /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
   width: PropTypes.number,
@@ -807,6 +818,7 @@ SparkLineChart.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -893,6 +905,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -979,6 +992,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1041,6 +1055,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1104,6 +1119,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1166,6 +1182,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1228,6 +1245,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1300,6 +1318,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1372,6 +1391,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['x']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1442,6 +1462,7 @@ SparkLineChart.propTypes = {
       barGapRatio: PropTypes.number,
       categoryGapRatio: PropTypes.number,
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1527,6 +1548,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -1612,6 +1634,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1673,6 +1696,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1735,6 +1759,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1796,6 +1821,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1857,6 +1883,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1928,6 +1955,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
@@ -1999,6 +2027,7 @@ SparkLineChart.propTypes = {
     PropTypes.shape({
       axis: PropTypes.oneOf(['y']),
       classes: PropTypes.object,
+      className: PropTypes.string,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
           color: PropTypes.oneOfType([
