@@ -1,15 +1,25 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
-import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
+import {
+  ChartsReferenceLine,
+  referenceLineClasses,
+} from '@mui/x-charts/ChartsReferenceLine';
+
+const StyledReferenceLine = styled(ChartsReferenceLine)(() => ({
+  [`& .${referenceLineClasses.line}`]: {
+    strokeDasharray: '10 5',
+    stroke: 'red',
+  },
+}));
 
 export default function ReferenceLineStyled() {
   return (
     <LineChart {...chartsConfig}>
-      <ChartsReferenceLine
+      <StyledReferenceLine
         y={6}
         label="Threshold"
         labelAlign="start"
-        lineStyle={{ strokeDasharray: '10 5', stroke: 'red' }}
         labelStyle={{ fill: 'red', fontSize: 12 }}
       />
       <ChartsReferenceLine
