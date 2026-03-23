@@ -6,6 +6,8 @@ export interface PickerDayClasses {
   root: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`. */
   dayOutsideMonth: string;
+  /** Styles applied the root element when `disableMargin=true` */
+  dayWithoutMargin: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`. */
   fillerCell: string;
   /** Styles applied to the root element if `disableHighlightToday=false` and `today=true`. */
@@ -25,6 +27,7 @@ export function getPickerDayUtilityClass(slot: string) {
 export const pickerDayClasses = generateUtilityClasses<PickerDayClassKey>('MuiPickerDay', [
   'root',
   'dayOutsideMonth',
+  'dayWithoutMargin',
   'today',
   'selected',
   'disabled',
