@@ -14,6 +14,7 @@ import {
   GridColumnsManagement,
   GridColumnHeaderSortIcon,
   GridNoColumnsOverlay,
+  GridRowCheckbox,
 } from '../components';
 import { GridCell } from '../components/cell/GridCell';
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
@@ -51,4 +52,5 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   columnsManagement: GridColumnsManagement,
   panel: GridPanel,
   row: GridRow,
+  rowCheckbox: GridRowCheckbox,
 };
