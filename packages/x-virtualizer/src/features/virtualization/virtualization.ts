@@ -102,11 +102,14 @@ const selectors = (() => {
       Dimensions.selectors.dimensions,
       Dimensions.selectors.columnsTotalWidth,
       Dimensions.selectors.needsVerticalScrollbar,
-      (scrollPosition, dimensions, columnsTotalWidth, needsVerticalScrollbar) =>
-        Math.max(columnsTotalWidth, dimensions.viewportOuterSize.width) -
-        dimensions.viewportOuterSize.width -
-        scrollPosition.current.left +
-        (needsVerticalScrollbar ? dimensions.scrollbarSize : 0),
+      (scrollPosition, dimensions, columnsTotalWidth, needsVerticalScrollbar) => {
+        return (
+          Math.max(columnsTotalWidth, dimensions.viewportOuterSize.width) -
+          dimensions.viewportOuterSize.width -
+          scrollPosition.current.left +
+          (needsVerticalScrollbar ? dimensions.scrollbarSize : 0)
+        );
+      },
     ),
   };
 })();

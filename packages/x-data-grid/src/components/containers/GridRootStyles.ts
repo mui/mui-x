@@ -165,6 +165,7 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-headersTotalHeight': '0px',
     '--DataGrid-topContainerHeight': '0px',
     '--DataGrid-bottomContainerHeight': '0px',
+    '--DataGrid-horizontalFiller': '0px',
 
     flex: 1,
     boxSizing: 'border-box',
@@ -750,6 +751,9 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['filler--borderBottom']}`]: {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
+    },
+    [`& .${c['filler--horizontal']}`]: {
+      width: 'var(--DataGrid-horizontalFiller)',
     },
     [`& .${c.columnHeaders} .${c.filler}`]: {
       backgroundColor: headerBackground,

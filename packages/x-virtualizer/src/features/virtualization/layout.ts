@@ -119,7 +119,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
         let style: React.CSSProperties | undefined;
         if (layoutMode === 'controlled') {
           const {
-            contentSize: { height: contentHeight },
+            contentSize,
             scrollbarSize,
             topContainerHeight,
             bottomContainerHeight,
@@ -127,12 +127,20 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
             columnsTotalWidth,
           } = dimensions;
 
-          const cssContentHeight = valueToCSSString(
-            contentHeight === 0 ? minimalContentHeight : contentHeight,
-          );
+          const verticalScrollbarSize = needsVerticalScrollbar ? scrollbarSize : 0;
+          const horizontalScrollbarSize = needsHorizontalScrollbar ? scrollbarSize : 0;
 
-          const width = needsHorizontalScrollbar ? columnsTotalWidth : 'auto';
-          const height = `calc(${cssContentHeight} + ${valueToCSSString(topContainerHeight)} + ${valueToCSSString(bottomContainerHeight)} + ${needsVerticalScrollbar ? valueToCSSString(scrollbarSize) : '0'})`;
+          const contentHeight =
+            contentSize.height === 0 ? minimalContentHeight : contentSize.height;
+
+          const width = needsHorizontalScrollbar
+            ? verticalScrollbarSize + columnsTotalWidth
+            : 'auto';
+
+          const height = cssAdd(
+            cssAdd(cssAdd(contentHeight, topContainerHeight), bottomContainerHeight),
+            horizontalScrollbarSize,
+          );
 
           style = {
             width,
@@ -391,6 +399,13 @@ function useScrollbarRefCallback(
       scrollbar.removeEventListener('scroll', onScrollbarScroll);
     };
   });
+}
+
+function cssAdd(a: string | number | undefined, b: string | number | undefined) {
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a + b;
+  }
+  return `calc(${valueToCSSString(a)} + ${valueToCSSString(b)})`;
 }
 
 function valueToCSSString(value: string | number | undefined) {

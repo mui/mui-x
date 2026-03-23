@@ -412,6 +412,11 @@ export interface GridClasses {
    */
   'filler--pinnedRight': string;
   /**
+   * Styles applied to the horizontal filler element.
+   * @ignore - do not document.
+   */
+  'filler--horizontal': string;
+  /**
    * Styles applied to the root of the filter form component.
    */
   filterForm: string;
@@ -1166,6 +1171,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'filterFormColumnInput',
   'filterFormOperatorInput',
   'filterFormValueInput',
+  'filler--horizontal',
   'footerContainer',
   'iconButtonContainer',
   'main',

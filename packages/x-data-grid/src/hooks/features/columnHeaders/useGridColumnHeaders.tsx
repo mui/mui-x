@@ -207,6 +207,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             role="presentation"
             className={clsx(
               gridClasses.filler,
+              gridClasses['filler--horizontal'],
               borderBottom && gridClasses['filler--borderBottom'],
             )}
           />
