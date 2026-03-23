@@ -1,4 +1,4 @@
-import type { MuiPage } from 'docs/src/MuiPage';
+import type { MuiPage } from '@mui/docs/MuiPage';
 import chartsComponentApi from './chartsApiPages';
 import dataGridComponentApi from './dataGridApiPages';
 import pickersComponentApi from './datePickersApiPages';
@@ -302,7 +302,7 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/charts-integration',
             plan: 'premium',
-            unstable: true,
+            newFeature: true,
             title: 'Charts integration',
           },
           {
@@ -703,7 +703,7 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-charts/data-grid-integration',
                 title: 'Data Grid integration',
                 plan: 'premium',
-                unstable: true,
+                newFeature: true,
               },
               {
                 pathname: '/x/react-charts/export',

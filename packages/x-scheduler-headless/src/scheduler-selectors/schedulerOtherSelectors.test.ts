@@ -3,6 +3,34 @@ import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 storeClasses.forEach((storeClass) => {
   describe(`schedulerOtherSelectors - ${storeClass.name}`, () => {
+    describe('isEditedEvent', () => {
+      it('should return false when no event is active', () => {
+        const store = new storeClass.Value({ events: [] }, adapter);
+        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
+      });
+
+      it('should return true when the given event ID matches the active event', () => {
+        const store = new storeClass.Value({ events: [] }, adapter);
+        store.setEditedEventId('event-1');
+        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);
+      });
+
+      it('should return false when a different event is active', () => {
+        const store = new storeClass.Value({ events: [] }, adapter);
+        store.setEditedEventId('event-2');
+        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
+      });
+
+      it('should return false after the active event is cleared', () => {
+        const store = new storeClass.Value({ events: [] }, adapter);
+        store.setEditedEventId('event-1');
+        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);
+
+        store.setEditedEventId(null);
+        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
+      });
+    });
+
     describe('visibleDate', () => {
       it('should return the visibleDate with the default display timezone applied', () => {
         const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');

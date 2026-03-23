@@ -59,12 +59,7 @@ You need to make sure the input is focused before imperatively updating the sele
 #### Usage with single input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 For single input range fields, you won't be able to use the section name to select a single section because each section is present both in the start and in the end date.
-Instead, you can pass the index of the section using the `unstableFieldRef` prop to access the full list of sections:
-
-:::warning
-The `unstableFieldRef` is not stable yet. More specifically, the shape of the `section` object might be modified in the near future.
-Please only use it if needed.
-:::
+Instead, you can pass the index of the section using the `fieldRef` prop to access the full list of sections:
 
 {{"demo": "ControlledSelectedSectionsSingleInputRangeField.js", "defaultCodeOpen": false }}
 
@@ -88,3 +83,9 @@ For **multi-input** range fields the clearable behavior is not supported yet.
 You can also customize the icon you want to be displayed inside the clear `IconButton`.
 
 {{"demo": "CustomizeClearIcon.js"}}
+
+#### Imperative API
+
+You can also interact with the field's value or sections programmatically using the `clearValue`, `focusField`, and other methods of the `fieldRef` (or `startFieldRef` and `endFieldRef` for multi-input fields).
+
+{{"demo": "ImperativeClear.js"}}

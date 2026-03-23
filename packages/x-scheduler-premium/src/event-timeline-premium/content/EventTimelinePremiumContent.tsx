@@ -12,7 +12,7 @@ import {
 } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
   EventDialogProvider,
   EventDialogTrigger,
@@ -326,7 +326,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   // Selector hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const view = useStore(store, eventTimelinePremiumViewSelectors.view);
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const showCurrentTimeIndicatorSetting = useStore(

@@ -1,5 +1,6 @@
 import telemetryContext from '../context';
 import type { TelemetryContextType } from '../context';
+import { hashString } from './hash-string';
 import { getWindowStorageItem, setWindowStorageItem } from './window-storage';
 
 function generateId(length: number): string {
@@ -105,6 +106,31 @@ function getSessionId(): string {
   return `sestp_${generateId(32)}`;
 }
 
+async function getRuntimeProjectId(): Promise<string | null> {
+  // npm/pnpm scripts automatically set npm_package_name
+  if (typeof process !== 'undefined' && process.env?.npm_package_name) {
+    return hashString(process.env.npm_package_name);
+  }
+
+  // Dev servers often serve package.json from project root
+  // (works with Vite, webpack-dev-server, and most static dev setups)
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/package.json');
+      if (res.ok) {
+        const pkg = await res.json();
+        if (pkg.name && typeof pkg.name === 'string') {
+          return hashString(pkg.name);
+        }
+      }
+    } catch (_) {
+      // Not served by this dev server, skip
+    }
+  }
+
+  return null;
+}
+
 async function getTelemetryContext(): Promise<TelemetryContextType> {
   telemetryContext.traits.sessionId = getSessionId();
 
@@ -115,6 +141,11 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
     telemetryContext.config.isInitialized = true;
   }
 
+  if (!telemetryContext.traits.projectId && !telemetryContext.config.runtimeProjectIdResolved) {
+    telemetryContext.config.runtimeProjectIdResolved = true;
+    telemetryContext.traits.projectId = await getRuntimeProjectId();
+  }
+
   if (!telemetryContext.traits.fingerprint) {
     telemetryContext.traits.fingerprint = await getBrowserFingerprint();
   }
@@ -122,5 +153,5 @@ async function getTelemetryContext(): Promise<TelemetryContextType> {
   return telemetryContext;
 }
 
-export { TelemetryContextType };
+export { TelemetryContextType, getRuntimeProjectId };
 export default getTelemetryContext;

@@ -7,7 +7,7 @@
     },
   ]}
   sx={{
-    [`& .${pieArcLabelClasses.root}`]: {
+    [`& .${pieClasses.arcLabel}`]: {
       fill: 'white',
       fontSize: 14,
     },

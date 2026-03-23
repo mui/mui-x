@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type AxisId,
-  useChartContext,
+  useChartsContext,
   getChartPoint,
   selectorChartAxisZoomOptionsLookup,
   useStore,
@@ -58,7 +58,7 @@ export function ChartsAxisZoomSliderTrack({
   ...other
 }: ChartsAxisZoomSliderTrackProps) {
   const ref = React.useRef<SVGRectElement>(null);
-  const { instance } = useChartContext<[UseChartProZoomSignature]>();
+  const { instance } = useChartsContext<[UseChartProZoomSignature]>();
   const { chartsLayerContainerRef } = instance;
   const store = useStore<[UseChartProZoomSignature]>();
   const [isSelecting, setIsSelecting] = React.useState(false);

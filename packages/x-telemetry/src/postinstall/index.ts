@@ -8,15 +8,11 @@ import getAnonymousProjectId from './get-project-id';
 import getAnonymousMachineId from './get-machine-id';
 import { TelemetryStorage } from './storage';
 
+// It's a flat build, both CJS and ESM files live in the same directory.
+// postinstall/index.mjs is at <pkg-root>/postinstall/index.mjs,
+// so we go up one level to reach the package root.
 const dirname =
-  typeof __dirname === 'string'
-    ? __dirname // cjs build in root dir
-    : (() => {
-        const filename = fileURLToPath(import.meta.url);
-
-        // esm build in `esm` directory, so we need to go up two levels
-        return path.dirname(path.dirname(filename));
-      })();
+  typeof __dirname === 'string' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 (async () => {
   // If Node.js support permissions, we need to check if the current user has
@@ -51,13 +47,15 @@ const dirname =
     },
   };
 
-  const writeContextData = (filePath: string, format: (content: string) => string) => {
-    const targetPath = path.resolve(dirname, '..', filePath, 'context.js');
-    fs.writeFileSync(targetPath, format(JSON.stringify(contextData, null, 2)));
-  };
+  const packageRoot = path.resolve(dirname, '..');
+  const content = JSON.stringify(contextData, null, 2);
 
-  writeContextData('esm', (content) => `export default ${content};`);
-  writeContextData('', (content) =>
+  // ESM: context.mjs
+  fs.writeFileSync(path.resolve(packageRoot, 'context.mjs'), `export default ${content};`);
+
+  // CJS: context.js
+  fs.writeFileSync(
+    path.resolve(packageRoot, 'context.js'),
     [
       `"use strict";`,
       `Object.defineProperty(exports, "__esModule", { value: true });`,

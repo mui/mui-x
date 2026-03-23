@@ -8,7 +8,7 @@
     },
   ]}
   sx={{
-    [`& .${pieArcLabelClasses.root}`]: {
+    [`& .${pieClasses.arcLabel}`]: {
       fontWeight: 'bold',
     },
   }}

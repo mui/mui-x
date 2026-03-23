@@ -7,6 +7,7 @@ import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import {
   MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
@@ -140,6 +141,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
     const containerRef = React.useRef<HTMLUListElement>(null);
     const handleRef = useForkRef(ref, containerRef);
     const previousActive = React.useRef<HTMLElement | null>(null);
+    const shouldRefocusOnNextRender = React.useRef(false);
 
     const props = useThemeProps({
       props: inProps,
@@ -178,13 +180,32 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       const activeItem = containerRef.current.querySelector<HTMLElement>(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
-      if (active && autoFocus && activeItem) {
-        activeItem.focus();
-      }
-      if (!activeItem || previousActive.current === activeItem) {
+      if (!activeItem) {
         return;
       }
-      previousActive.current = activeItem;
+
+      const activeElement = document.activeElement;
+      const isSameItemAsPrevious = previousActive.current === activeItem;
+      const isFocusInsideSection = !!activeElement && containerRef.current.contains(activeElement);
+      const shouldRefocusSameItem = isSameItemAsPrevious && shouldRefocusOnNextRender.current;
+
+      if (
+        active &&
+        autoFocus &&
+        (!isSameItemAsPrevious || shouldRefocusSameItem) &&
+        (previousActive.current == null ||
+          shouldRefocusOnNextRender.current ||
+          isFocusInsideSection)
+      ) {
+        previousActive.current = activeItem;
+        shouldRefocusOnNextRender.current = false;
+        activeItem.focus();
+      }
+
+      if (isSameItemAsPrevious) {
+        return;
+      }
+
       const offsetTop = activeItem.offsetTop;
       const itemHeight = activeItem.offsetHeight;
       const containerHeight = containerRef.current.clientHeight;
@@ -203,10 +224,44 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       containerRef.current.scrollTop = Math.max(0, scrollPosition);
     });
 
+    const handleBlur = useEventCallback((event: React.FocusEvent<HTMLElement>) => {
+      // Keep focus restoration only for in-picker keyboard navigation.
+      // Do not restore focus after leaving the picker, which would steal focus from external inputs.
+      const relatedTarget = event.relatedTarget as HTMLElement | null;
+      const blurParent = relatedTarget?.parentElement;
+      const relatedTargetRole = relatedTarget?.getAttribute('role');
+      const shouldRefocus =
+        (blurParent?.nodeName === 'UL' && blurParent !== containerRef.current) ||
+        relatedTargetRole === 'gridcell';
+
+      shouldRefocusOnNextRender.current = shouldRefocus;
+
+      if (
+        previousActive.current &&
+        blurParent?.nodeName === 'UL' &&
+        blurParent !== containerRef.current
+      ) {
+        previousActive.current = null;
+      }
+    });
+
+    // Reset tracking when section becomes inactive
+    // so focus can be reapplied when user returns via keyboard
+    React.useEffect(() => {
+      if (!active) {
+        previousActive.current = null;
+      }
+    }, [active]);
+
     const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
+    const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
       switch (event.key) {
+        case 'Tab': {
+          // Preserve focus restoration when leaving the section with keyboard navigation.
+          shouldRefocusOnNextRender.current = true;
+          break;
+        }
         case 'PageUp': {
           const newIndex = getFocusedListItemIndex(containerRef.current!) - 5;
           const children = containerRef.current!.children;
@@ -232,17 +287,18 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
           break;
         }
         default:
+          break;
       }
-    };
+    });
 
     return (
       <MultiSectionDigitalClockSectionRoot
         ref={handleRef}
         className={clsx(classes.root, className)}
         ownerState={ownerState}
-        autoFocusItem={autoFocus && active}
         role="listbox"
         onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
         {...other}
       >
         {items.map((option, index) => {
