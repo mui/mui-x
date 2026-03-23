@@ -170,13 +170,10 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   pointerEvents: 'none',
 }));
 
-const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(
-  TimelineGrid.CurrentTimeIndicator,
-  {
-    name: 'MuiEventTimeline',
-    slot: 'CurrentTimeIndicatorCircle',
-  },
-)(({ theme }) => ({
+const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.CurrentTimeIndicator, {
+  name: 'MuiEventTimeline',
+  slot: 'CurrentTimeIndicatorCircle',
+})(({ theme }) => ({
   position: 'absolute',
   bottom: -5,
   left: 'calc(var(--unit-count) * var(--unit-width) * var(--x-position) - var(--events-scroll-left, 0) * 1px - 3px)',
@@ -362,7 +359,12 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   }, []);
 
   // Sync horizontal scroll: events body ↔ events scrollbar + events header
-  useSyncedHorizontalScroll(eventsScrollerRef, eventsScrollbarRef, eventsHeaderRef, syncCircleScroll);
+  useSyncedHorizontalScroll(
+    eventsScrollerRef,
+    eventsScrollbarRef,
+    eventsHeaderRef,
+    syncCircleScroll,
+  );
 
   // Sync horizontal scroll: title body ↔ title scrollbar + title header
   useSyncedHorizontalScroll(titleSubGridRef, titleScrollbarRef, titleHeaderRef);
