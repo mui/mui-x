@@ -31,6 +31,9 @@ declare module '@mui/x-data-grid' {
   interface BaseCheckboxPropsOverrides {
     material?: Partial<CheckboxProps>;
   }
+  interface RowCheckboxPropsOverrides {
+    material?: Partial<CheckboxProps>;
+  }
   interface BaseChipPropsOverrides {
     material?: Partial<ChipProps>;
   }
