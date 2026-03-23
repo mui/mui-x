@@ -1,6 +1,6 @@
 import { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { PickerValidDate } from '../models';
-import { PickerDayClasses } from './pickerDayClasses.ts';
+import { PickerDayClasses } from './pickerDayClasses';
 import { PickerDayOwnerState as PickerDayOwnerStateBase } from '../internals/hooks/PickerDay.types';
 
 export interface ExportedPickerDayProps {

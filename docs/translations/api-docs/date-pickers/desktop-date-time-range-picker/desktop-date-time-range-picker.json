@@ -260,7 +260,7 @@
     "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display in the button used to clean the value.",
-    "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
+    "day": "Custom component for day in range pickers. Check the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickerDay</a> component.",
     "desktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
     "desktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "desktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
