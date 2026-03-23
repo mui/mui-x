@@ -67,10 +67,6 @@ export class ResourceBuilder {
     return this;
   }
 
-  // ─────────────────────────────────────────────
-  // Build
-  // ─────────────────────────────────────────────
-
   build(): SchedulerResource {
     return this.resource;
   }
