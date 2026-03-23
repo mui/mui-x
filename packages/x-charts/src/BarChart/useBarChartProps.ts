@@ -56,7 +56,6 @@ export const useBarChartProps = (props: UseBarChartProps) => {
     highlightedItem,
     onHighlightChange,
     borderRadius,
-    barLabel,
     className,
     hideLegend,
     showToolbar,
@@ -159,7 +158,6 @@ export const useBarChartProps = (props: UseBarChartProps) => {
     slotProps,
     borderRadius,
     renderer,
-    barLabel,
   };
 
   const gridProps: ChartsGridProps = {

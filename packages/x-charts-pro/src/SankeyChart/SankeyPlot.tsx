@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import {
   type SankeyLinkIdentifierWithData,
@@ -14,6 +15,10 @@ import { SankeyNodeLabelPlot } from './SankeyNodeLabelPlot';
 import { SankeyLinkLabelPlot } from './SankeyLinkLabelPlot';
 
 export interface SankeyPlotProps {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
   /**
    * Classes applied to the various elements.
    */
@@ -47,7 +52,7 @@ const SankeyPlotRoot = styled('g', {
  * Renders a Sankey diagram plot.
  */
 function SankeyPlot(props: SankeyPlotProps) {
-  const { classes: inputClasses, onLinkClick, onNodeClick } = props;
+  const { className, classes: inputClasses, onLinkClick, onNodeClick } = props;
 
   const classes = useUtilityClasses({ classes: inputClasses });
 
@@ -69,7 +74,7 @@ function SankeyPlot(props: SankeyPlotProps) {
 
   const showNodeLabels = nodeOptions?.showLabels ?? true;
   return (
-    <SankeyPlotRoot className={classes.root}>
+    <SankeyPlotRoot className={clsx(classes.root, className)}>
       <SankeyLinkPlot classes={classes} onClick={onLinkClick} />
       <SankeyNodePlot classes={classes} onClick={onNodeClick} />
 
