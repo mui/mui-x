@@ -22,6 +22,8 @@
     "import { SankeyPlot } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiSankeyPlot",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyPlot.tsx",
   "inheritance": null,

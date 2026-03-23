@@ -107,7 +107,12 @@ function DefaultMultipleValueContent({
   return (
     <React.Fragment>
       {item.values.map((value) => (
-        <ChartsTooltipRow key={value.label} className={classes.row}>
+        <ChartsTooltipRow
+          key={value.label}
+          className={classes.row}
+          data-series={item.identifier.seriesId}
+          data-index={item.identifier.dataIndex}
+        >
           <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
             {value.label}
           </ChartsTooltipCell>
@@ -135,7 +140,11 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
   const classes = useUtilityClasses(propClasses);
 
   return (
-    <ChartsTooltipRow className={classes.row}>
+    <ChartsTooltipRow
+      className={classes.row}
+      data-series={item.identifier.seriesId}
+      data-index={'dataIndex' in item.identifier ? item.identifier.dataIndex : undefined}
+    >
       <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
         <div className={classes.markContainer}>
           <ChartsLabelMark
