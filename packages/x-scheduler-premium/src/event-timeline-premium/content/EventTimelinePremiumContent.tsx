@@ -181,6 +181,7 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   height: 8,
   borderRadius: '50%',
   backgroundColor: theme.palette.primary.main,
+  zIndex: 1,
 }));
 
 const EventTimelinePremiumTitleScrollbar = styled('div', {
@@ -276,6 +277,13 @@ function useSyncedHorizontalScroll(
 
     const header = headerRef?.current;
 
+    const syncScrollLeft = (scrollLeft: number) => {
+      if (header) {
+        header.scrollLeft = scrollLeft;
+      }
+      onScrollLeft?.(scrollLeft);
+    };
+
     const handleContentScroll = () => {
       if (syncing) {
         return;
@@ -283,10 +291,7 @@ function useSyncedHorizontalScroll(
       syncing = true;
       const { scrollLeft } = content;
       scrollbar.scrollLeft = scrollLeft;
-      if (header) {
-        header.scrollLeft = scrollLeft;
-      }
-      onScrollLeft?.(scrollLeft);
+      syncScrollLeft(scrollLeft);
       requestAnimationFrame(() => {
         syncing = false;
       });
@@ -299,16 +304,13 @@ function useSyncedHorizontalScroll(
       syncing = true;
       const { scrollLeft } = scrollbar;
       content.scrollLeft = scrollLeft;
-      if (header) {
-        header.scrollLeft = scrollLeft;
-      }
-      onScrollLeft?.(scrollLeft);
+      syncScrollLeft(scrollLeft);
       requestAnimationFrame(() => {
         syncing = false;
       });
     };
 
-    onScrollLeft?.(content.scrollLeft);
+    syncScrollLeft(content.scrollLeft);
     content.addEventListener('scroll', handleContentScroll, { passive: true });
     scrollbar.addEventListener('scroll', handleScrollbarScroll, { passive: true });
     return () => {
