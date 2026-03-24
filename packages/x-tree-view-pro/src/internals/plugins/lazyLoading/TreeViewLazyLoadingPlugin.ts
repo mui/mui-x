@@ -149,13 +149,17 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
     this.store.set('lazyLoadedItems', { ...this.store.state.lazyLoadedItems, errors });
   };
 
-  private callOnItemsLazyLoaded(items: R[], parentId: TreeViewItemId | null) {
+  private callOnItemsLazyLoaded(
+    items: R[],
+    parentId: TreeViewItemId | null,
+    isCacheHit: boolean,
+  ) {
     if (this.isInsideOnItemsLazyLoaded) {
       return;
     }
     this.isInsideOnItemsLazyLoaded = true;
     try {
-      this.store.parameters.onItemsLazyLoaded?.(items, parentId);
+      this.store.parameters.onItemsLazyLoaded?.({ items, parentId, isCacheHit });
     } finally {
       this.isInsideOnItemsLazyLoaded = false;
     }
@@ -251,7 +255,7 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
         }
         this.store.items.setItemChildren({ items: cachedData, parentId: itemId, getChildrenCount });
         this.setItemLoading(itemId, false);
-        this.callOnItemsLazyLoaded(cachedData, itemId);
+        this.callOnItemsLazyLoaded(cachedData, itemId, true);
         return;
       }
 
@@ -283,7 +287,7 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       // pre-cache any inline nested children so expanding them requires no extra network call
       this.processNestedItemChildren(response);
       // notify the user that new items have been loaded
-      this.callOnItemsLazyLoaded(response, itemId);
+      this.callOnItemsLazyLoaded(response, itemId, false);
     } catch (error) {
       const childrenFetchError = error as Error;
       // set the item error in the state

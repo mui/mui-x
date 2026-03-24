@@ -200,8 +200,11 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
 
         await awaitMockFetch();
-        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal([{ id: '1', childrenCount: 1 }]);
-        expect(onItemsLazyLoaded.lastCall.args[1]).to.equal(null);
+        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal({
+          items: [{ id: '1', childrenCount: 1 }],
+          parentId: null,
+          isCacheHit: false,
+        });
       });
 
       it('should call onItemsLazyLoaded with (items, parentId) when child items are fetched', async () => {
@@ -220,8 +223,11 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
         expect(onItemsLazyLoaded.callCount).to.equal(1);
-        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal([{ id: '1-1', childrenCount: 1 }]);
-        expect(onItemsLazyLoaded.lastCall.args[1]).to.equal('1');
+        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal({
+          items: [{ id: '1-1', childrenCount: 1 }],
+          parentId: '1',
+          isCacheHit: false,
+        });
       });
 
       it('should call onItemsLazyLoaded on cache hit when the same item is expanded again', async () => {
@@ -239,6 +245,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
         expect(onItemsLazyLoaded.callCount).to.equal(1);
+        expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(false);
 
         // Collapse
         fireEvent.click(view.getItemContent('1'));
@@ -246,13 +253,14 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
         expect(onItemsLazyLoaded.callCount).to.equal(2);
-        expect(onItemsLazyLoaded.lastCall.args[1]).to.equal('1');
+        expect(onItemsLazyLoaded.lastCall.args[0].parentId).to.equal('1');
+        expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(true);
       });
 
       it('should pre-cache inline nested children so expanding them requires no extra fetch', async () => {
         let fetchCount = 0;
         let view: ReturnType<typeof render>;
-        const onItemsLazyLoaded = spy((items, _parentId) => {
+        const onItemsLazyLoaded = spy(({ items }) => {
           items.forEach((item) => {
             if (item.children && item.children.length > 0) {
               view.apiRef.current.setItemExpansion({

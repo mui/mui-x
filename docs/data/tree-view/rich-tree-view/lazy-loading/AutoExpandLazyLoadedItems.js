@@ -56,7 +56,7 @@ export default function AutoExpandLazyLoadedItems() {
           getChildrenCount: (item) => item?.childrenCount,
           getTreeItems: fetchChildren,
         }}
-        onItemsLazyLoaded={(items) => {
+        onItemsLazyLoaded={({ items }) => {
           // Expand any item whose children were already included in the server response.
           // Because the children are pre-cached, no additional network request is made.
           items.forEach((item) => {

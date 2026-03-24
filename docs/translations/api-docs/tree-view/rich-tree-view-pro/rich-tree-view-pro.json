@@ -206,10 +206,18 @@
     "onItemsLazyLoaded": {
       "description": "Callback fired when the children of an item are loaded from the data source. Only relevant for lazy-loaded tree views.",
       "typeDescriptions": {
-        "items": { "name": "items", "description": "The items that were loaded." },
-        "parentId": {
-          "name": "parentId",
+        "parameters": { "name": "parameters", "description": "The parameters of the callback." },
+        "parameters.items": {
+          "name": "parameters.items",
+          "description": "The items that were loaded."
+        },
+        "parameters.parentId": {
+          "name": "parameters.parentId",
           "description": "The id of the parent item whose children were loaded. <code>null</code> if the root items were loaded."
+        },
+        "parameters.isCacheHit": {
+          "name": "parameters.isCacheHit",
+          "description": "<code>true</code> if the items were loaded from the cache, <code>false</code> if they were fetched from the data source."
         }
       }
     },

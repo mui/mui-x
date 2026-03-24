@@ -74,10 +74,16 @@ export interface RichTreeViewProStoreParameters<
   /**
    * Callback fired when the children of an item are loaded from the data source.
    * Only relevant for lazy-loaded tree views.
-   * @param {R[]} items The items that were loaded.
-   * @param {TreeViewItemId | null} parentId The id of the parent item whose children were loaded. `null` if the root items were loaded.
+   * @param {object} parameters The parameters of the callback.
+   * @param {R[]} parameters.items The items that were loaded.
+   * @param {TreeViewItemId | null} parameters.parentId The id of the parent item whose children were loaded. `null` if the root items were loaded.
+   * @param {boolean} parameters.isCacheHit `true` if the items were loaded from the cache, `false` if they were fetched from the data source.
    */
-  onItemsLazyLoaded?: (items: R[], parentId: TreeViewItemId | null) => void;
+  onItemsLazyLoaded?: (parameters: {
+    items: R[];
+    parentId: TreeViewItemId | null;
+    isCacheHit: boolean;
+  }) => void;
   /**
    * Callback fired when a Tree Item is moved in the tree.
    * @param {object} parameters The params describing the item re-ordering.
