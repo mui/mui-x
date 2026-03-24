@@ -504,6 +504,23 @@ export interface ChartsLocaleText {
     formattedValue: string;
     seriesLabel?: string;
   }) => string;
+  /**
+   * The description of a radar series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the radar item.
+   * @param {string} params.formattedValue - The formatted value of the radar item.
+   * @param {string|number|null} params.categoryValue - The category value associated with the radar item.
+   * @param {string} params.formattedCategoryValue - The formatted category value.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the radar item.
+   */
+  radarDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    categoryValue: string | number | null;
+    formattedCategoryValue: string;
+    seriesLabel?: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

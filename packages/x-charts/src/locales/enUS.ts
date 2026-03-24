@@ -139,6 +139,11 @@ export const enUSLocaleText: ChartsLocaleText = {
   pieDescription: ({ value, formattedValue, seriesLabel }) => {
     return [seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
   },
+  radarDescription: ({ value, formattedValue, formattedCategoryValue, seriesLabel }) => {
+    return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue]
+      .filter(Boolean)
+      .join('; ');
+  },
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;
