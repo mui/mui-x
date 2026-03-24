@@ -108,10 +108,7 @@
     },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ charts?: bool, warnIfFocusStateIsNotSynced?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -1008,6 +1005,12 @@
       "description": "Component rendered for each row.",
       "default": "GridRow",
       "class": "MuiDataGridPremium-row"
+    },
+    {
+      "name": "rowCheckbox",
+      "description": "Component rendered for each row selection checkbox.",
+      "default": "GridRowCheckbox",
+      "class": null
     },
     {
       "name": "baseAutocomplete",

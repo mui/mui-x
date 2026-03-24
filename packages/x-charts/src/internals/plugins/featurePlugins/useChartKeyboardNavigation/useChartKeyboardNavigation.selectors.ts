@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
@@ -41,6 +41,16 @@ export const selectorChartsFocusedItem = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState) =>
     keyboardNavigationState?.isFocused === true ? (keyboardNavigationState?.item ?? null) : null,
+);
+
+/**
+ * The item that is either
+ * - currently focused
+ * - will be focused when user focuses the chart
+ */
+export const selectorChartsFocusedOrToFocusedItem = createSelector(
+  selectKeyboardNavigation,
+  (keyboardNavigationState) => keyboardNavigationState?.item ?? null,
 );
 
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
@@ -94,7 +104,7 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
   createSelectAxisHighlight('y'),
 );
 
-export const selectorChartsKeyboardItem = createSelector(
+export const selectorChartsKeyboardItem = createSelectorMemoized(
   selectKeyboardNavigation,
   function selectorChartsKeyboardItem(keyboardState) {
     if (keyboardState?.isFocused !== true || keyboardState?.item == null) {

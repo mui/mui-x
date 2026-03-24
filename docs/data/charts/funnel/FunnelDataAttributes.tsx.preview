@@ -1,7 +1,7 @@
 <FunnelChart
   {...funnelProps}
   sx={{
-    [`[data-series="main"] .${funnelSectionClasses.root}:nth-of-type(1)`]: {
+    [`[data-series="main"] .${funnelClasses.section}:nth-of-type(1)`]: {
       fill: 'url(#pattern)',
     },
   }}

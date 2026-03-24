@@ -25,19 +25,9 @@ export interface SankeyClasses {
 
 export type SankeyClassKey = keyof SankeyClasses;
 
-/**
- * @deprecated Use `SankeyClasses` instead.
- */
-export type SankeyPlotClasses = SankeyClasses;
-
 export function getSankeyUtilityClass(slot: string) {
   return generateUtilityClass('MuiSankeyChart', slot);
 }
-
-/**
- * @deprecated Use `getSankeyUtilityClass` instead.
- */
-export const getSankeyPlotUtilityClass = getSankeyUtilityClass;
 
 export const sankeyClasses: SankeyClasses = generateUtilityClasses('MuiSankeyChart', [
   'root',
@@ -50,11 +40,6 @@ export const sankeyClasses: SankeyClasses = generateUtilityClasses('MuiSankeyCha
   'nodeLabel',
   'linkLabel',
 ]);
-
-/**
- * @deprecated Use `sankeyClasses` instead.
- */
-export const sankeyPlotClasses: SankeyClasses = sankeyClasses;
 
 export const useUtilityClasses = (options?: { classes?: Partial<SankeyClasses> }) => {
   const { classes } = options ?? {};

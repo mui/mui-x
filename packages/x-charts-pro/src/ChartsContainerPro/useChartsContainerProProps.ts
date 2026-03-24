@@ -5,7 +5,7 @@ import {
   useChartsContainerProps,
   type UseChartsContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
-import type { ChartDataProviderProProps } from '../ChartDataProviderPro';
+import type { ChartsDataProviderProProps } from '../ChartsDataProviderPro';
 import type { ChartsContainerProProps } from './ChartsContainerPro';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
@@ -16,7 +16,7 @@ export type UseChartsContainerProPropsReturnValue<
   UseChartsContainerPropsReturnValue<SeriesType, TSignatures>,
   'chartsSurfaceProps' | 'children'
 > & {
-  chartDataProviderProProps: ChartDataProviderProProps<SeriesType, TSignatures>;
+  chartsDataProviderProProps: ChartsDataProviderProProps<SeriesType, TSignatures>;
 };
 
 export const useChartsContainerProProps = <
@@ -35,21 +35,21 @@ export const useChartsContainerProProps = <
     ...baseProps
   } = props as ChartsContainerProProps<SeriesType, AllPluginSignatures<SeriesType>>;
 
-  const { chartDataProviderProps, chartsSurfaceProps, children } =
+  const { chartsDataProviderProps, chartsSurfaceProps, children } =
     useChartsContainerProps<SeriesType>(baseProps);
 
-  const chartDataProviderProProps = {
-    ...chartDataProviderProps,
+  const chartsDataProviderProProps = {
+    ...chartsDataProviderProps,
     initialZoom,
     zoomData,
     onZoomChange,
     zoomInteractionConfig,
     apiRef,
     plugins: plugins ?? DEFAULT_PLUGINS,
-  } as unknown as ChartDataProviderProProps<SeriesType, TSignatures>;
+  } as unknown as ChartsDataProviderProProps<SeriesType, TSignatures>;
 
   return {
-    chartDataProviderProProps,
+    chartsDataProviderProProps,
     chartsSurfaceProps,
     children,
   };

@@ -28,12 +28,18 @@ function BrushRect(props: React.SVGProps<SVGRectElement>) {
   );
 }
 
-export interface ChartsBrushOverlayProps {}
+export interface ChartsBrushOverlayProps {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
+}
 
 /**
  * Component that renders visual feedback during brush interaction
  */
 export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
+  const { className } = props;
   const store = useStore<[UseChartBrushSignature]>();
   const drawingArea = store.use(selectorChartDrawingArea);
 
@@ -73,14 +79,20 @@ export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
     const rectHeight = currentY - startY;
 
     return (
-      <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.x, brushOverlayClasses.y)}>
+      <g
+        className={clsx(
+          brushOverlayClasses.root,
+          brushOverlayClasses.x,
+          brushOverlayClasses.y,
+          className,
+        )}
+      >
         <BrushRect
           fill={rectColor}
           x={rectWidth >= 0 ? startX : currentX}
           y={rectHeight >= 0 ? startY : currentY}
           width={Math.abs(rectWidth)}
           height={Math.abs(rectHeight)}
-          {...props}
         />
       </g>
     );
@@ -92,15 +104,8 @@ export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
     const rectHeight = maxY - minY;
 
     return (
-      <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.y)}>
-        <BrushRect
-          fill={rectColor}
-          x={left}
-          y={minY}
-          width={width}
-          height={rectHeight}
-          {...props}
-        />
+      <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.y, className)}>
+        <BrushRect fill={rectColor} x={left} y={minY} width={width} height={rectHeight} />
       </g>
     );
   }
@@ -110,8 +115,8 @@ export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
   const rectWidth = maxX - minX;
 
   return (
-    <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.x)}>
-      <BrushRect fill={rectColor} x={minX} y={top} width={rectWidth} height={height} {...props} />
+    <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.x, className)}>
+      <BrushRect fill={rectColor} x={minX} y={top} width={rectWidth} height={height} />
     </g>
   );
 }

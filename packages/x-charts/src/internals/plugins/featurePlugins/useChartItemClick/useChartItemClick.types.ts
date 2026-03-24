@@ -7,17 +7,17 @@ export interface UseChartItemClickParameters<SeriesType extends ChartSeriesType 
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
    * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     item: SeriesItemIdentifierWithType<SeriesType>,
   ) => void;
 }
 
 export interface UseChartItemClickInstance {
-  handleClick?: (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => void;
+  handleClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 export interface UseChartItemClickState {}

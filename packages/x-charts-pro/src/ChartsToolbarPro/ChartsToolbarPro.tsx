@@ -4,7 +4,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Toolbar, type ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
-  useChartContext,
+  useChartsContext,
   useChartsSlots,
   type UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
@@ -41,7 +41,7 @@ function ChartsToolbarPro({
   ...other
 }: ChartsToolbarProProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
-  const { store } = useChartContext<[UseChartCartesianAxisSignature]>();
+  const { store } = useChartsContext<[UseChartCartesianAxisSignature]>();
   const { localeText } = useChartsLocalization();
   const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);

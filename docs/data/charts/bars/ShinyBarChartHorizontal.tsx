@@ -23,6 +23,7 @@ export default function ShinyBarChartHorizontal() {
             dataKey: 'turnout',
             stack: 'voter turnout',
             valueFormatter: (value: number | null) => `${value}%`,
+            barLabel: (v) => `${v.value}%`,
           },
         ]}
         layout="horizontal"
@@ -39,7 +40,6 @@ export default function ShinyBarChartHorizontal() {
             valueFormatter: (value: number) => `${value}%`,
           },
         ]}
-        barLabel={(v) => `${v.value}%`}
         yAxis={[
           {
             scaleType: 'band',
@@ -74,8 +74,16 @@ export default function ShinyBarChartHorizontal() {
 }
 
 export function BarShadedBackground(props: BarProps) {
-  const { ownerState, skipAnimation, id, dataIndex, xOrigin, yOrigin, ...other } =
-    props;
+  const {
+    ownerState,
+    skipAnimation,
+    id,
+    dataIndex,
+    xOrigin,
+    yOrigin,
+    seriesId,
+    ...other
+  } = props;
   const theme = useTheme();
 
   const animatedProps = useAnimateBar(props);
