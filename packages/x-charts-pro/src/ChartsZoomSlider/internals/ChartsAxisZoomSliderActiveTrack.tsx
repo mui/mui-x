@@ -23,7 +23,11 @@ import {
 import { ChartsAxisZoomSliderThumb } from './ChartsAxisZoomSliderThumb';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
 import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';
-import { ZOOM_SLIDER_THUMB_HEIGHT, ZOOM_SLIDER_THUMB_WIDTH, ZOOM_SLIDER_TOUCH_TARGET } from './constants';
+import {
+  ZOOM_SLIDER_THUMB_HEIGHT,
+  ZOOM_SLIDER_THUMB_WIDTH,
+  ZOOM_SLIDER_TOUCH_TARGET,
+} from './constants';
 import { useUtilityClasses } from './chartsAxisZoomSliderTrackClasses';
 
 /**
@@ -181,7 +185,16 @@ export function ChartsAxisZoomSliderActiveTrack({
       group.removeEventListener('pointerdown', onPointerDown);
       onPointerMove.clear();
     };
-  }, [axisDirection, axisId, instance, reverse, store, chartsLayerContainerRef, onInteractionStart, onInteractionEnd]);
+  }, [
+    axisDirection,
+    axisId,
+    instance,
+    reverse,
+    store,
+    chartsLayerContainerRef,
+    onInteractionStart,
+    onInteractionEnd,
+  ]);
 
   const onStartThumbMove = (event: PointerEvent) => {
     const element = chartsLayerContainerRef.current;

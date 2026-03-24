@@ -184,9 +184,7 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
     it('should render invisible touch target on active track that is at least ZOOM_SLIDER_TOUCH_TARGET in the thin dimension', () => {
       render(<LineChartPro {...lineChartProps} />, options);
 
-      const activeTrack = document.querySelector(
-        `.${chartsAxisZoomSliderTrackClasses.active}`,
-      )!;
+      const activeTrack = document.querySelector(`.${chartsAxisZoomSliderTrackClasses.active}`)!;
 
       // The touch target rect is the next sibling of the visible active track rect
       const touchTarget = activeTrack.nextElementSibling!;
@@ -198,14 +196,18 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
   });
 
   describe('tooltip', () => {
-    const getZoomSliderTooltips = () =>
-      document.querySelectorAll('[data-popper-placement]');
+    const getZoomSliderTooltips = () => document.querySelectorAll('[data-popper-placement]');
 
     it('should show tooltip when showTooltip is "always"', async () => {
       render(
         <LineChartPro
           {...lineChartProps}
-          xAxis={[{ ...lineChartProps.xAxis![0], zoom: { slider: { enabled: true, showTooltip: 'always' } } }]}
+          xAxis={[
+            {
+              ...lineChartProps.xAxis![0],
+              zoom: { slider: { enabled: true, showTooltip: 'always' } },
+            },
+          ]}
         />,
         options,
       );
@@ -219,7 +221,12 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       const { user } = render(
         <LineChartPro
           {...lineChartProps}
-          xAxis={[{ ...lineChartProps.xAxis![0], zoom: { slider: { enabled: true, showTooltip: 'hover' } } }]}
+          xAxis={[
+            {
+              ...lineChartProps.xAxis![0],
+              zoom: { slider: { enabled: true, showTooltip: 'hover' } },
+            },
+          ]}
         />,
         options,
       );
@@ -236,7 +243,12 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       const { user } = render(
         <LineChartPro
           {...lineChartProps}
-          xAxis={[{ ...lineChartProps.xAxis![0], zoom: { slider: { enabled: true, showTooltip: 'hover' } } }]}
+          xAxis={[
+            {
+              ...lineChartProps.xAxis![0],
+              zoom: { slider: { enabled: true, showTooltip: 'hover' } },
+            },
+          ]}
         />,
         options,
       );
@@ -271,7 +283,12 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       const { user } = render(
         <LineChartPro
           {...lineChartProps}
-          xAxis={[{ ...lineChartProps.xAxis![0], zoom: { slider: { enabled: true, showTooltip: 'never' } } }]}
+          xAxis={[
+            {
+              ...lineChartProps.xAxis![0],
+              zoom: { slider: { enabled: true, showTooltip: 'never' } },
+            },
+          ]}
         />,
         options,
       );
@@ -288,7 +305,12 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       const { user } = render(
         <LineChartPro
           {...lineChartProps}
-          xAxis={[{ ...lineChartProps.xAxis![0], zoom: { slider: { enabled: true, showTooltip: 'hover' } } }]}
+          xAxis={[
+            {
+              ...lineChartProps.xAxis![0],
+              zoom: { slider: { enabled: true, showTooltip: 'hover' } },
+            },
+          ]}
         />,
         options,
       );
