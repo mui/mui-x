@@ -202,7 +202,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           prevDimensions.bottomContainerHeight;
         const isRootEffectivelyAutoHeight =
           prevDimensions.isReady &&
-          Math.abs(prevDimensions.root.height - prevExpectedMinHeight) <= scrollbarSize + 1;
+          Math.abs(prevDimensions.root.height - prevExpectedMinHeight) <= scrollbarSize;
 
         if (isRootEffectivelyAutoHeight) {
           // Root height follows content — no vertical scroll is possible.
