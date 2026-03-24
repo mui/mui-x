@@ -45,6 +45,8 @@ export function useCandlestickPlotData(
     [theme.palette.error.main],
   );
 
+  const { colorGetter } = series;
+
   return React.useMemo(() => {
     const candleCenters = new Float32Array(series.data.length * 2);
     const candleHeights = new Float32Array(series.data.length);
@@ -94,19 +96,17 @@ export function useCandlestickPlotData(
       wickCenters[lowerWickIndex * 2 + 1] = (candleTop + wickBottom) / 2;
       wickHeights[lowerWickIndex] = candleTop - wickBottom;
 
-      if (close >= open) {
-        // Bullish - green
-        candleColors[dataIndex * 4] = bullishColor[0];
-        candleColors[dataIndex * 4 + 1] = bullishColor[1];
-        candleColors[dataIndex * 4 + 2] = bullishColor[2];
-        candleColors[dataIndex * 4 + 3] = bullishColor[3];
+      let candleColor: ReturnType<typeof parseColor>;
+      if (colorGetter) {
+        candleColor = parseColor(colorGetter({ value: datum, dataIndex }));
       } else {
-        // Bearish - red
-        candleColors[dataIndex * 4] = bearishColor[0];
-        candleColors[dataIndex * 4 + 1] = bearishColor[1];
-        candleColors[dataIndex * 4 + 2] = bearishColor[2];
-        candleColors[dataIndex * 4 + 3] = bearishColor[3];
+        candleColor = close >= open ? bullishColor : bearishColor;
       }
+
+      candleColors[dataIndex * 4] = candleColor[0];
+      candleColors[dataIndex * 4 + 1] = candleColor[1];
+      candleColors[dataIndex * 4 + 2] = candleColor[2];
+      candleColors[dataIndex * 4 + 3] = candleColor[3];
 
       for (let w = 0; w < 2; w += 1) {
         const wickIdx = (dataIndex * 2 + w) * 4;
@@ -152,6 +152,7 @@ export function useCandlestickPlotData(
   }, [
     bearishColor,
     bullishColor,
+    colorGetter,
     drawingArea.left,
     drawingArea.top,
     getHighlightState,

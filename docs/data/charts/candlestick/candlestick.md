@@ -50,6 +50,13 @@ The example below shows how to define the formatting of values in both axes.
 
 {{"demo": "CustomizedCandlestick.js"}}
 
+### Color
+
+Use the `colorGetter` property on the series to customize the color of each candle.
+The function receives the OHLC value and data index, so you can return different colors for bullish and bearish candles.
+
+{{"demo": "ColorCandlestick.js"}}
+
 ## Composition
 
 Similar to other chart types, candlestick charts can be composed using multiple components to create more complex visualizations.
