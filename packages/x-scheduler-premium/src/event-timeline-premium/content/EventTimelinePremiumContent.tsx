@@ -176,6 +176,7 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
 })(({ theme }) => ({
   position: 'absolute',
   bottom: -5,
+  // 3px = half the circle's width (4px) minus half the line's width (1px), to center the circle on the line.
   left: 'calc(var(--unit-count) * var(--unit-width) * var(--x-position) - var(--events-scroll-left, 0) * 1px - 3px)',
   width: 8,
   height: 8,
