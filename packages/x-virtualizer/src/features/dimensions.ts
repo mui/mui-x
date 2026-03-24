@@ -191,15 +191,11 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         };
 
         // Detect if the root is effectively auto-height (its height follows content
-        // rather than being constrained by a fixed parent). We check whether the
-        // previous root height matched the expected content height — if it did, the
-        // root is unconstrained and will grow/shrink with content.
+        // rather than being constrained by a fixed parent).
         //
         // This prevents scrollbar oscillation (https://github.com/mui/mui-x/issues/20539):
         // when content height changes (e.g. auto-height rows measured), rootSize lags
-        // behind (ResizeObserver is async). The standard logic would compare the new
-        // contentSize against the stale rootSize and falsely trigger hasScrollY, which
-        // changes the layout, which flips hasScrollY back — ad infinitum.
+        // behind (ResizeObserver is async).
         const prevExpectedMinHeight =
           prevDimensions.topContainerHeight +
           prevDimensions.contentSize.height +
@@ -210,12 +206,11 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
 
         if (isRootEffectivelyAutoHeight) {
           // Root height follows content — no vertical scroll is possible.
-          // Use content-based viewport to avoid stale-rootSize false positives.
+          // Use content-based viewport to avoid stale rootSize false positives.
           hasScrollY = false;
           hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
 
-          const expectedMinHeight =
-            topContainerHeight + contentSize.height + bottomContainerHeight;
+          const expectedMinHeight = topContainerHeight + contentSize.height + bottomContainerHeight;
           viewportOuterSize.height = expectedMinHeight;
           viewportInnerSize.height = Math.max(viewportInnerSize.height, contentSize.height);
 
@@ -223,8 +218,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
             viewportInnerSize.height -= scrollbarSize;
           }
         } else {
-          // Root is constrained (fixed/max height from parent) — standard detection.
-          // rootSize is stable here so the timing mismatch does not apply.
+          // Root is constrained (fixed/max height from parent)
           const content = contentSize;
           const container = viewportInnerSize;
 
