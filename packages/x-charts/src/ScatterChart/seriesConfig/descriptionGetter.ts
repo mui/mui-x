@@ -7,15 +7,17 @@ const descriptionGetter: DescriptionGetter<'scatter'> = (params) => {
   const label = getLabel(series.label, 'tooltip');
   const item = series.data[identifier.dataIndex];
 
-  const formattedXValue = xAxis.valueFormatter?.(item?.x, {
-    location: 'tooltip',
-    scale: xAxis.scale,
-  }) ?? '';
+  const formattedXValue =
+    xAxis.valueFormatter?.(item?.x, {
+      location: 'tooltip',
+      scale: xAxis.scale,
+    }) ?? '';
 
-  const formattedYValue = yAxis.valueFormatter?.(item?.y, {
-    location: 'tooltip',
-    scale: yAxis.scale,
-  }) ?? '';
+  const formattedYValue =
+    yAxis.valueFormatter?.(item?.y, {
+      location: 'tooltip',
+      scale: yAxis.scale,
+    }) ?? '';
 
   return localeText.scatterDescription({
     x: item?.x ?? null,

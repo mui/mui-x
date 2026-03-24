@@ -8,7 +8,7 @@ const descriptionGetter: DescriptionGetter<'line'> = (params) => {
   const dataIndex = identifier.dataIndex;
 
   if (dataIndex === undefined) {
-    return ''
+    return '';
   }
 
   const xValue = xAxis.data?.[dataIndex] ?? null;
