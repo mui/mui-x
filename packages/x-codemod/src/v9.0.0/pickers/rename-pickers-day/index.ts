@@ -66,7 +66,10 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   root.find(j.ImportDeclaration).forEach((importPath) => {
     if (typeof importPath.value.source.value === 'string') {
       if (importPath.value.source.value.includes('/PickersDay')) {
-        importPath.value.source.value = importPath.value.source.value.replace('/PickersDay', '/PickerDay');
+        importPath.value.source.value = importPath.value.source.value.replace(
+          '/PickersDay',
+          '/PickerDay',
+        );
       }
     }
   });

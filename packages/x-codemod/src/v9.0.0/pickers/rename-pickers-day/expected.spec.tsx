@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PickerDay, pickerDayClasses, PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { createTheme } from '@mui/material/styles';
+import '@mui/x-date-pickers/themeAugmentation';
 
 const theme = createTheme({
   components: {
