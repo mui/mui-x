@@ -71,6 +71,6 @@
   "muiName": "MuiChartsReferenceLine",
   "filename": "/packages/x-charts/src/ChartsReferenceLine/ChartsReferenceLine.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li>\n<li><a href=\"/x/react-charts/references/\">Charts - Reference elements</a></li></ul>",
   "cssComponent": false
 }

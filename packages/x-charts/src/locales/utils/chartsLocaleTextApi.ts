@@ -437,6 +437,24 @@ export interface ChartsLocaleText {
    * Label for the "Close" value in the context of an OHLC/Candlestick chart.
    */
   close: string;
+
+  /**
+   * The description of a bar series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the bar item.
+   * @param {string} params.formattedValue - The formatted value of the bar item, as it appears in tooltips or labels.
+   * @param {string|number|null} params.categoryValue - The category value associated with the bar item.
+   * @param {string} params.formattedCategoryValue - The formatted category value, as it appears in tooltips or labels.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the bar item.
+   */
+  barDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    categoryValue: string | number | null;
+    formattedCategoryValue: string;
+    seriesLabel?: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

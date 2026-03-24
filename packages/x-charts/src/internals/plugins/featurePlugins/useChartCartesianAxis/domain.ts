@@ -1,5 +1,15 @@
 import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
-import { type ContinuousScaleName, type DefaultedAxis } from '../../../../models/axis';
+import {
+  type AxisId,
+  type ChartsAxisProps,
+  type ContinuousScaleName,
+  type DefaultedAxis,
+  type DefaultedXAxis,
+  type DefaultedYAxis,
+  isBandScaleConfig,
+  isPointScaleConfig,
+  type ScaleName,
+} from '../../../../models/axis';
 import { getScale } from '../../../getScale';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
@@ -108,4 +118,57 @@ function getActualAxisExtrema(
     return [min, max];
   }
   return [axisExtrema.min ?? min, axisExtrema.max ?? max];
+}
+
+export interface DomainDefinition {
+  domain: ReadonlyArray<string | NumberValue>;
+  tickNumber?: number;
+}
+
+/**
+ * Computes the domain map for a list of axes.
+ * Shared between the rendering selectors and the auto-size domain selectors
+ * to ensure consistent domain computation logic.
+ */
+export function computeAxisDomainsMap(
+  axes: DefaultedXAxis[] | DefaultedYAxis[] | undefined,
+  formattedSeries: ProcessedSeries,
+  defaultTickNumber: number,
+  extremaMap: Record<AxisId, [number, number]>,
+  axisDirection: 'x' | 'y',
+): Record<AxisId, DomainDefinition> {
+  const domains: Record<AxisId, DomainDefinition> = {};
+
+  axes?.forEach((eachAxis, axisIndex) => {
+    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+    if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
+      domains[axis.id] = { domain: axis.data! };
+
+      if (axis.ordinalTimeTicks !== undefined) {
+        domains[axis.id].tickNumber = getTickNumber(
+          axis,
+          [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
+          defaultTickNumber,
+        );
+      }
+      return;
+    }
+
+    const extrema = extremaMap[axis.id];
+    if (!extrema) {
+      return;
+    }
+
+    domains[axis.id] = calculateInitialDomainAndTickNumber(
+      axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
+      axisDirection,
+      axisIndex,
+      formattedSeries,
+      extrema,
+      defaultTickNumber,
+    );
+  });
+
+  return domains;
 }
