@@ -553,6 +553,34 @@ export interface ChartsLocaleText {
     formattedXValue: string;
     formattedYValue: string;
   }) => string;
+  /**
+   * The description of a sankey node for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the sankey node. Corresponds to the sum of the incoming links values.
+   * @param {string} params.formattedValue - The formatted value of the sankey node.
+   * @param {string} params.nodeLabel - The label for the node.
+   * @returns {string} The localized description for the sankey node.
+   */
+  sankeyNodeDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    nodeLabel: string;
+  }) => string;
+  /**
+   * The description of a sankey link for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the sankey link.
+   * @param {string} params.formattedValue - The formatted value of the sankey link.
+   * @param {string} params.sourceLabel - The label for the source node.
+   * @param {string} params.targetLabel - The label for the target node.
+   * @returns {string} The localized description for the sankey link.
+   */
+  sankeyLinkDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    sourceLabel: string;
+    targetLabel: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

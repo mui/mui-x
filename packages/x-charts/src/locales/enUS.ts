@@ -152,6 +152,17 @@ export const enUSLocaleText: ChartsLocaleText = {
       .filter(Boolean)
       .join('; ');
   },
+  sankeyNodeDescription: ({ formattedValue, nodeLabel }) => {
+    return [nodeLabel, formattedValue].filter(Boolean).join('; ');
+  },
+  sankeyLinkDescription: ({ formattedValue, sourceLabel, targetLabel }) => {
+    return [
+      sourceLabel && targetLabel ? `${sourceLabel} to ${targetLabel}` : (sourceLabel ?? targetLabel),
+      formattedValue,
+    ]
+      .filter(Boolean)
+      .join(': ');
+  },
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;
