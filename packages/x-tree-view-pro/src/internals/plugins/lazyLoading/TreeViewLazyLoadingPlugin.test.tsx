@@ -257,6 +257,48 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(true);
       });
 
+      it('should call onItemsLazyLoaded on mount when items=[] and root items are auto-fetched', async () => {
+        const onItemsLazyLoaded = spy();
+        render({
+          items: [],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          onItemsLazyLoaded,
+        });
+
+        await awaitMockFetch();
+        expect(onItemsLazyLoaded.callCount).to.equal(1);
+        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal({
+          items: [{ id: '1', childrenCount: 1 }],
+          parentId: null,
+          isCacheHit: false,
+        });
+      });
+
+      it('should not call onItemsLazyLoaded when getTreeItems throws', async () => {
+        const onItemsLazyLoaded = spy();
+        const errorFetchData = async (): Promise<ItemType[]> => {
+          return new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Failed')), 0);
+          });
+        };
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: errorFetchData,
+          },
+          onItemsLazyLoaded,
+        });
+
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+        expect(onItemsLazyLoaded.callCount).to.equal(0);
+      });
+
       it('should pre-cache inline nested children so expanding them requires no extra fetch', async () => {
         let fetchCount = 0;
         let view: ReturnType<typeof render>;
@@ -330,6 +372,30 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
       });
+      it('should call onItemsLazyLoaded with isCacheHit=false when updateItemChildren is called', async () => {
+        const onItemsLazyLoaded = spy();
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          onItemsLazyLoaded,
+        });
+
+        await act(async () => {
+          await view.apiRef.current.updateItemChildren('1');
+        });
+        await awaitMockFetch();
+
+        expect(onItemsLazyLoaded.callCount).to.equal(1);
+        expect(onItemsLazyLoaded.lastCall.args[0]).to.deep.equal({
+          items: [{ id: '1-1', childrenCount: 1 }],
+          parentId: '1',
+          isCacheHit: false,
+        });
+      });
+
       it('should refresh specific item children when updateItemChildren is called with an id', async () => {
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
