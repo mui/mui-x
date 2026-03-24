@@ -123,39 +123,69 @@ export const enUSLocaleText: ChartsLocaleText = {
   low: 'Low',
   close: 'Close',
 
-  barDescription: ({ value, formattedValue, formattedCategoryValue, seriesLabel }) => {
-    return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue]
+  // Accessibility descriptions
+  a11yNoValue: 'no value',
+  a11yConnector: '; ',
+  barDescription: function barDescription({
+    value,
+    formattedValue,
+    formattedCategoryValue,
+    seriesLabel,
+  }) {
+    return [formattedCategoryValue, seriesLabel, value === null ? this.a11yNoValue : formattedValue]
       .filter(Boolean)
-      .join('; ');
+      .join(this.a11yConnector);
   },
-  lineDescription: ({ y, formattedXValue, formattedYValue, seriesLabel }) => {
-    return [formattedXValue, seriesLabel, y === null ? 'no value' : formattedYValue]
+  lineDescription: function lineDescription({ y, formattedXValue, formattedYValue, seriesLabel }) {
+    return [formattedXValue, seriesLabel, y === null ? this.a11yNoValue : formattedYValue]
       .filter(Boolean)
-      .join('; ');
+      .join(this.a11yConnector);
   },
-  scatterDescription: ({ formattedXValue, formattedYValue, seriesLabel }) => {
-    return [seriesLabel, formattedXValue, formattedYValue].filter(Boolean).join('; ');
+  scatterDescription: function scatterDescription({
+    formattedXValue,
+    formattedYValue,
+    seriesLabel,
+  }) {
+    return [seriesLabel, formattedXValue, formattedYValue].filter(Boolean).join(this.a11yConnector);
   },
-  pieDescription: ({ value, formattedValue, seriesLabel }) => {
-    return [seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
-  },
-  radarDescription: ({ value, formattedValue, formattedCategoryValue, seriesLabel }) => {
-    return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue]
+  pieDescription: function pieDescription({ value, formattedValue, seriesLabel }) {
+    return [seriesLabel, value === null ? this.a11yNoValue : formattedValue]
       .filter(Boolean)
-      .join('; ');
+      .join(this.a11yConnector);
   },
-  funnelDescription: ({ value, formattedValue, seriesLabel }) => {
-    return [seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
-  },
-  heatmapDescription: ({ value, formattedValue, formattedXValue, formattedYValue }) => {
-    return [formattedXValue, formattedYValue, value === null ? 'no value' : formattedValue]
+  radarDescription: function radarDescription({
+    value,
+    formattedValue,
+    formattedCategoryValue,
+    seriesLabel,
+  }) {
+    return [formattedCategoryValue, seriesLabel, value === null ? this.a11yNoValue : formattedValue]
       .filter(Boolean)
-      .join('; ');
+      .join(this.a11yConnector);
   },
-  sankeyNodeDescription: ({ formattedValue, nodeLabel }) => {
-    return [nodeLabel, formattedValue].filter(Boolean).join('; ');
+  funnelDescription: function funnelDescription({ value, formattedValue, seriesLabel }) {
+    return [seriesLabel, value === null ? this.a11yNoValue : formattedValue]
+      .filter(Boolean)
+      .join(this.a11yConnector);
   },
-  sankeyLinkDescription: ({ formattedValue, sourceLabel, targetLabel }) => {
+  heatmapDescription: function heatmapDescription({
+    value,
+    formattedValue,
+    formattedXValue,
+    formattedYValue,
+  }) {
+    return [formattedXValue, formattedYValue, value === null ? this.a11yNoValue : formattedValue]
+      .filter(Boolean)
+      .join(this.a11yConnector);
+  },
+  sankeyNodeDescription: function sankeyNodeDescription({ formattedValue, nodeLabel }) {
+    return [nodeLabel, formattedValue].filter(Boolean).join(this.a11yConnector);
+  },
+  sankeyLinkDescription: function sankeyLinkDescription({
+    formattedValue,
+    sourceLabel,
+    targetLabel,
+  }) {
     return [
       sourceLabel && targetLabel
         ? `${sourceLabel} to ${targetLabel}`
@@ -163,22 +193,34 @@ export const enUSLocaleText: ChartsLocaleText = {
       formattedValue,
     ]
       .filter(Boolean)
-      .join(': ');
+      .join(this.a11yConnector);
   },
-  rangeBarDescription: ({ value, formattedValue, formattedCategoryValue, seriesLabel }) => {
-    return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue]
+  rangeBarDescription: function rangeBarDescription({
+    value,
+    formattedValue,
+    formattedCategoryValue,
+    seriesLabel,
+  }) {
+    return [formattedCategoryValue, seriesLabel, value === null ? this.a11yNoValue : formattedValue]
       .filter(Boolean)
-      .join('; ');
+      .join(this.a11yConnector);
   },
-  ohlcDescription: ({ open, high, low, close, formattedDate, seriesLabel }) => {
+  ohlcDescription: function ohlcDescription({
+    open,
+    high,
+    low,
+    close,
+    formattedDate,
+    seriesLabel,
+  }) {
     const hasValues = open !== null && high !== null && low !== null && close !== null;
     return [
       formattedDate,
       seriesLabel,
-      hasValues ? `O: ${open}, H: ${high}, L: ${low}, C: ${close}` : 'no value',
+      hasValues ? `Open: ${open}, High: ${high}, Low: ${low}, Close: ${close}` : this.a11yNoValue,
     ]
       .filter(Boolean)
-      .join('; ');
+      .join(this.a11yConnector);
   },
 };
 

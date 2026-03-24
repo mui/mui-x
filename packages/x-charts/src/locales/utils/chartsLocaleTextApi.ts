@@ -439,6 +439,14 @@ export interface ChartsLocaleText {
   close: string;
 
   /**
+   * The description functions return a string that describes the chart element for screen readers.
+   */
+  a11yNoValue: string;
+  /**
+   * The string used to merge description values.
+   */
+  a11yConnector: string;
+  /**
    * The description of a bar series item for accessibility purpose.
    * @param {object} params - The parameters for the description getter.
    * @param {number|null} params.value - The value of the bar item.
