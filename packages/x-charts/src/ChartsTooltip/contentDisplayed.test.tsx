@@ -47,7 +47,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
 
   describe('axis trigger - keyboard navigation', () => {
     it('should show tooltip when navigating with keyboard', async () => {
-      const { user, container } = render(
+      const { user } = render(
         <BarChart
           {...config}
           series={[
@@ -59,10 +59,8 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         />,
         { wrapper },
       );
-      const svg = container.querySelector('svg')!;
 
-      // Click to focus the chart
-      await user.click(svg);
+      await user.keyboard('{Tab}');
       await user.keyboard('[ArrowRight]');
 
       await waitFor(() => {
