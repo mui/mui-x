@@ -10,6 +10,7 @@ import { getSeriesWithDefaultValues } from './bar/getSeriesWithDefaultValues';
 import { selectorBarItemAtPosition } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
+import descriptionGetter from './bar/descriptionGetter';
 import {
   createIsHighlighted,
   createIsFaded,
@@ -26,9 +27,10 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
   getItemAtPosition: selectorBarItemAtPosition,
-  keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
+  keyboardFocusHandler,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };
