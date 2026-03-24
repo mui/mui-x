@@ -15,6 +15,10 @@ import type {
   OHLCValueType,
 } from '../models';
 import type {
+  OHLCTooltipValue,
+  OHLCTooltipFormattedValue,
+} from '../CandlestickChart/seriesConfig/tooltip';
+import type {
   DefaultizedRangeBarSeriesType,
   RangeBarItemIdentifier,
 } from '../models/seriesType/rangeBar';
@@ -58,6 +62,8 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: OHLCItemIdentifier;
       itemIdentifierWithData: OHLCItemIdentifier;
       valueType: OHLCValueType | null;
+      tooltipValue: OHLCTooltipValue;
+      tooltipFormattedValue: OHLCTooltipFormattedValue;
       axisType: 'cartesian';
       highlightScope: CommonHighlightScope;
       descriptionGetterParams: {

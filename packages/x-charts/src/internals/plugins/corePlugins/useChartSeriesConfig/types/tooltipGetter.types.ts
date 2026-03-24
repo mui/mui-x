@@ -16,6 +16,24 @@ import {
 import { type ChartsLabelMarkProps } from '../../../../../ChartsLabel/ChartsLabelMark';
 import { type ColorGetter } from './colorProcessor.types';
 
+/**
+ * Resolves the tooltip value type for a given series type.
+ * If the series config defines a `tooltipValue`, it is used.
+ * Otherwise falls back to `valueType`.
+ */
+type ResolveTooltipValue<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends { tooltipValue: infer TV }
+    ? TV
+    : ChartsSeriesConfig[SeriesType]['valueType'];
+
+/**
+ * Resolves the tooltip formatted value type for a given series type.
+ * If the series config defines a `tooltipFormattedValue`, it is used.
+ * Otherwise falls back to `string | null`.
+ */
+type ResolveTooltipFormattedValue<SeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType] extends { tooltipFormattedValue: infer TFV } ? TFV : string | null;
+
 export interface ItemTooltipValue<SeriesType extends ChartSeriesType> {
   /**
    * The metric label.
@@ -24,11 +42,11 @@ export interface ItemTooltipValue<SeriesType extends ChartSeriesType> {
   /**
    * The value.
    */
-  value: SeriesType extends 'heatmap' ? number | null : ChartsSeriesConfig[SeriesType]['valueType'];
+  value: ResolveTooltipValue<SeriesType>;
   /**
    * The value formatted with context set to "tooltip".
    */
-  formattedValue: string | null;
+  formattedValue: ResolveTooltipFormattedValue<SeriesType>;
   /**
    * The series mark type.
    */

@@ -1,7 +1,18 @@
 import { type AxisTooltipGetter, getLabel, type TooltipGetter } from '@mui/x-charts/internals';
-import { type OHLCField } from '../../models';
 
-const OHLC_FIELDS: OHLCField[] = ['open', 'high', 'low', 'close'];
+export interface OHLCTooltipValue {
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+}
+
+export interface OHLCTooltipFormattedValue {
+  open: string;
+  high: string;
+  low: string;
+  close: string;
+}
 
 const tooltipGetter: TooltipGetter<'ohlc'> = (params) => {
   const { series, getColor, identifier } = params;
@@ -11,15 +22,23 @@ const tooltipGetter: TooltipGetter<'ohlc'> = (params) => {
   }
 
   const label = getLabel(series.label, 'tooltip');
-  const value = series.data[identifier.dataIndex];
+  const rawValue = series.data[identifier.dataIndex];
 
-  if (value == null) {
+  if (rawValue == null) {
     return null;
   }
 
-  const formattedValue = OHLC_FIELDS.map((field, i) =>
-    series.valueFormatter(value[i], { dataIndex: identifier.dataIndex, field }),
-  ).join(', ');
+  const [open, high, low, close] = rawValue;
+  const dataIndex = identifier.dataIndex;
+
+  const value: OHLCTooltipValue = { open, high, low, close };
+
+  const formattedValue: OHLCTooltipFormattedValue = {
+    open: series.valueFormatter(open, { dataIndex, field: 'open' }),
+    high: series.valueFormatter(high, { dataIndex, field: 'high' }),
+    low: series.valueFormatter(low, { dataIndex, field: 'low' }),
+    close: series.valueFormatter(close, { dataIndex, field: 'close' }),
+  };
 
   return {
     identifier,

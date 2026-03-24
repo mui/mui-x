@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import tooltipGetter from './tooltip';
+import { type OHLCTooltipValue, type OHLCTooltipFormattedValue } from './tooltip';
 
 describe('Candlestick tooltipGetter', () => {
   const baseSeries = {
@@ -22,7 +23,7 @@ describe('Candlestick tooltipGetter', () => {
 
   const getColor = () => 'red';
 
-  it('should format each OHLC value and join them in formattedValue', () => {
+  it('should return value as an object with OHLC fields', () => {
     const result = tooltipGetter({
       series: baseSeries as any,
       axesConfig: {},
@@ -31,7 +32,29 @@ describe('Candlestick tooltipGetter', () => {
     });
 
     expect(result).not.toBeNull();
-    expect(result!.formattedValue).toBe('$100, $110, $90, $105');
+    expect(result!.value as unknown as OHLCTooltipValue).toEqual({
+      open: 100,
+      high: 110,
+      low: 90,
+      close: 105,
+    });
+  });
+
+  it('should return formattedValue as an object with OHLC fields', () => {
+    const result = tooltipGetter({
+      series: baseSeries as any,
+      axesConfig: {},
+      getColor,
+      identifier: baseIdentifier,
+    });
+
+    expect(result).not.toBeNull();
+    expect(result!.formattedValue as unknown as OHLCTooltipFormattedValue).toEqual({
+      open: '$100',
+      high: '$110',
+      low: '$90',
+      close: '$105',
+    });
   });
 
   it('should pass the correct field context to valueFormatter', () => {

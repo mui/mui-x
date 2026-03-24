@@ -157,7 +157,7 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
         {label}
       </ChartsTooltipCell>
       <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-        {formattedValue}
+        {String(formattedValue)}
       </ChartsTooltipCell>
     </ChartsTooltipRow>
   );
