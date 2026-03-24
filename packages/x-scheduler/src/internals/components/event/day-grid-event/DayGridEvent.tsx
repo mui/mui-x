@@ -156,6 +156,7 @@ const DayGridEventTime = styled('time', {
   whiteSpace: 'nowrap',
   paddingInlineEnd: theme.spacing(0.5),
   '@container (width < 300px)': {
+    paddingInlineEnd: 0,
     display: 'inline',
     '& > span:last-of-type': {
       display: 'none',
@@ -360,7 +361,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 <DayGridEventTime className={classes.dayGridEventTime}>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
                   <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
-                </DayGridEventTime>{' '}
+                </DayGridEventTime>
                 <DayGridEventTitle className={classes.dayGridEventTitle} as="span">
                   {occurrence.title}
                 </DayGridEventTitle>
