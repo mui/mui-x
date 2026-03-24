@@ -344,7 +344,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
           }),
         },
       },
-      MuiPickersDay: {
+      MuiPickerDay: {
         styleOverrides: {
           root: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
