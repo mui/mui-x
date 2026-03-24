@@ -82,7 +82,8 @@ Charts use a proxy strategy to support screen reader when user navigate with key
 
 The description of the focused element is localized.
 You can customize it by using [localization key](/x/react-charts/localization/#localize-text).
-The `[type]Description` localization key are function that for a given series type takes input about the focused item, and return the description to display.
+The `[type]Description` localization keys are functions for a given series type, for example, `pieDescription` for pie charts. 
+These functions receives values related to the focused item, and should return the description to display.
 
 ### Composition
 
