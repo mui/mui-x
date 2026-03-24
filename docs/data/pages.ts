@@ -648,6 +648,11 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           {
+            pathname: '/x/react-charts/candlestick',
+            plan: 'premium',
+            unstable: true,
+          },
+          {
             pathname: '/x/react-charts-funnel',
             title: 'Funnel',
             plan: 'pro',
