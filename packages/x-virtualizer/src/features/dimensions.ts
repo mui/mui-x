@@ -119,6 +119,15 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
+  // Lock to prevent scrollbar state oscillation. Uses the same pattern as the
+  // scroll position sync between the scroller and the custom scrollbar elements
+  // (see useScrollbarRefCallback in layout.ts): when updateDimensions changes
+  // hasScrollY/X, it sets the lock. The next updateDimensions call — triggered by
+  // the layout change from the scrollbar state change — sees the lock and keeps
+  // the previous scrollbar state instead of flipping it back.
+  // https://github.com/mui/mui-x/issues/20539
+  const isScrollbarLocked = React.useRef(false);
+
   const {
     layout,
     dimensions: {
@@ -157,6 +166,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         width: columnsTotalWidth,
         height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
       };
+
+      const prevDimensions = store.state.dimensions;
 
       let viewportOuterSize: Size;
       let viewportInnerSize: Size;
@@ -201,6 +212,20 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           // We recalculate the scroll y to consider the size of the x scrollbar.
           if (hasScrollX) {
             hasScrollY = content.height + scrollbarSize > container.height;
+          }
+        }
+
+        // Prevent scrollbar state oscillation
+        if (prevDimensions.isReady && scrollbarSize > 0) {
+          const scrollbarChanged =
+            hasScrollY !== prevDimensions.hasScrollY || hasScrollX !== prevDimensions.hasScrollX;
+
+          if (isScrollbarLocked.current) {
+            hasScrollY = prevDimensions.hasScrollY;
+            hasScrollX = prevDimensions.hasScrollX;
+            isScrollbarLocked.current = false;
+          } else if (scrollbarChanged) {
+            isScrollbarLocked.current = true;
           }
         }
 
@@ -251,8 +276,6 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         minimalContentHeight: params.dimensions.minimalContentHeight,
       };
 
-      const prevDimensions = store.state.dimensions;
-
       if (isDeepEqual(prevDimensions as any, newDimensions)) {
         return;
       }
@@ -286,7 +309,12 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(updateDimensions, [updateDimensions]);
+  useLayoutEffect(() => {
+    // Clear the lock when layout parameters change (e.g., column widths, row height)
+    // so that scrollbar state can be freely recalculated for genuine layout changes.
+    isScrollbarLocked.current = false;
+    updateDimensions();
+  }, [updateDimensions]);
 
   useLayoutEffect(() => {
     store.update({
