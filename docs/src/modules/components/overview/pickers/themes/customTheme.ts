@@ -389,44 +389,13 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
         styleOverrides: {
           root: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
-            ':first-of-type': {
-              [`& .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-                borderRadius: theme.shape.borderRadius,
-                borderColor: 'transparent',
-              },
-              [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]: {
-                borderRadius: theme.shape.borderRadius,
-              },
+            [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightStart}`]: {
+              borderRadius: theme.shape.borderRadius,
             },
-            ':last-of-type': {
-              [`& .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-                borderRadius: theme.shape.borderRadius,
-                borderColor: 'transparent',
-              },
-              [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]: {
-                borderRadius: theme.shape.borderRadius,
-              },
+            [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]: {
+              borderRadius: theme.shape.borderRadius,
             },
           }),
-          rangeIntervalPreview: {
-            border: 'none',
-          },
-          rangeIntervalDayPreview: ({ theme }) => ({
-            borderRadius: theme.shape.borderRadius,
-            borderColor: 'transparent',
-            backgroundColor: theme.palette.grey[100],
-            ...theme.applyStyles('dark', {
-              backgroundColor: theme.palette.grey[700],
-            }),
-          }),
-
-          rangeIntervalDayHighlight: ({ theme }) => ({
-            backgroundColor: alpha(theme.palette.primary.light, 0.4),
-            ...theme.applyStyles('dark', {
-              backgroundColor: alpha(theme.palette.primary.main, 0.3),
-            }),
-          }),
-          dayInsideRangeInterval: { transform: 'none' },
           dayOutsideRangeInterval: { transform: 'none' },
         },
       },
