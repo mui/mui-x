@@ -60,10 +60,8 @@ export interface UseAxesTooltipParams {
 export interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
   seriesId: SeriesId;
   color: string;
-  value: ChartsSeriesConfig[T] extends { tooltipValue: infer TV }
-    ? TV
-    : ChartsSeriesConfig[T]['valueType'];
-  formattedValue: ChartsSeriesConfig[T] extends { tooltipFormattedValue: infer TFV } ? TFV : string;
+  value: ChartsSeriesConfig[T]['valueType'];
+  formattedValue: string;
   formattedLabel: string | null;
   markType: ChartsLabelMarkProps['type'];
   markShape: ChartsLabelMarkProps['markShape'];
