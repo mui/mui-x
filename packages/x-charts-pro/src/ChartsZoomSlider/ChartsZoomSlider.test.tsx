@@ -248,7 +248,7 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       // Simulate a touch press on the thumb
       await user.pointer([
         {
-          keys: '[MouseLeft>]',
+          keys: '[TouchA>]',
           target: startThumb,
           coords: { x: 0, y: 0 },
         },
@@ -260,7 +260,7 @@ describe.skipIf(isJSDOM)('<ChartsZoomSlider />', () => {
       // Release
       await user.pointer([
         {
-          keys: '[/MouseLeft]',
+          keys: '[/TouchA]',
           target: startThumb,
           coords: { x: 0, y: 0 },
         },
