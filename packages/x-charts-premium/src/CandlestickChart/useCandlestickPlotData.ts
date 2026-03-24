@@ -37,7 +37,6 @@ export function useCandlestickPlotData(
     () => parseColor(theme.palette.text.primary),
     [theme.palette.text.primary],
   );
-
   const colorGetter = React.useMemo(() => getColor(series, undefined), [series]);
 
   return React.useMemo(() => {

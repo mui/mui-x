@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
+import { useTheme } from '@mui/material/styles';
 import { type ChartsGridProps } from '@mui/x-charts/ChartsGrid';
 import { type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
@@ -15,6 +16,7 @@ import {
   type CandlestickChartPluginSignatures,
 } from './CandlestickChart.plugins';
 import { candlestickPalette } from '../colorPalettes/complementary/candlestick';
+import { type OHLCValueType } from '../models';
 
 /**
  * A helper function that extracts CandlestickChartProps from the input props
@@ -47,6 +49,7 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
+  const theme = useTheme();
 
   const xAxisWithDefault: XAxis[] | undefined = React.useMemo(
     () =>
@@ -58,13 +61,33 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     [xAxis],
   );
 
+  const paletteColors = React.useMemo(() => {
+    if (!colors) {
+      return null;
+    }
+    return typeof colors === 'function' ? colors(theme.palette.mode) : colors;
+  }, [colors, theme.palette.mode]);
+
   const seriesWithDefault = React.useMemo(
     () =>
-      series.map((s) => ({
-        type: 'ohlc' as const,
-        ...s,
-      })),
-    [series],
+      series.map((s) => {
+        const base = { type: 'ohlc' as const, ...s };
+
+        if (!base.colorGetter && paletteColors) {
+          const bullish = paletteColors[0];
+          const bearish = paletteColors[1] ?? paletteColors[0];
+          base.colorGetter = ({ value }: { value: OHLCValueType | null }) => {
+            if (value === null) {
+              return bullish;
+            }
+            const [open, , , close] = value;
+            return close >= open ? bullish : bearish;
+          };
+        }
+
+        return base;
+      }),
+    [series, paletteColors],
   );
 
   const axisHighlightProps = {

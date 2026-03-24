@@ -1,4 +1,5 @@
 import { type ColorProcessor, getSeriesColorFn } from '@mui/x-charts/internals';
+import { candlestickPaletteLight } from '../../colorPalettes/complementary/candlestick';
 
 const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
   const bandColorScale = xAxis?.colorScale;
@@ -22,6 +23,17 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
     };
   }
 
+  if (series.colorGetter) {
+    return (dataIndex?: number) => {
+      if (dataIndex === undefined) {
+        return series.color;
+      }
+
+      const value = series.data[dataIndex];
+      return getSeriesColor({ value, dataIndex });
+    };
+  }
+
   return (dataIndex?: number) => {
     if (dataIndex === undefined) {
       return series.color;
@@ -29,7 +41,12 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
 
     const value = series.data[dataIndex];
 
-    return getSeriesColor({ value, dataIndex });
+    if (value === null) {
+      return series.color;
+    }
+
+    const [open, , , close] = value;
+    return close >= open ? candlestickPaletteLight[0] : candlestickPaletteLight[1];
   };
 };
 
