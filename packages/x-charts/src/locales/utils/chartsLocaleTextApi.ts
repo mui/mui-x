@@ -598,6 +598,27 @@ export interface ChartsLocaleText {
     formattedCategoryValue: string;
     seriesLabel?: string;
   }) => string;
+  /**
+   * The description of an OHLC/Candlestick series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.open - The open value.
+   * @param {number|null} params.high - The high value.
+   * @param {number|null} params.low - The low value.
+   * @param {number|null} params.close - The close value.
+   * @param {Date|null} params.date - The date associated to the candle value.
+   * @param {string} params.formattedDate - The formatted date value.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the OHLC item.
+   */
+  ohlcDescription: (params: {
+    open: number | null;
+    high: number | null;
+    low: number | null;
+    close: number | null;
+    date: Date | null;
+    formattedDate: string;
+    seriesLabel?: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

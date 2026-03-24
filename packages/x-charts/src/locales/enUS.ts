@@ -168,6 +168,16 @@ export const enUSLocaleText: ChartsLocaleText = {
       .filter(Boolean)
       .join('; ');
   },
+  ohlcDescription: ({ open, high, low, close, formattedDate, seriesLabel }) => {
+    const hasValues = open !== null && high !== null && low !== null && close !== null;
+    return [
+      formattedDate,
+      seriesLabel,
+      hasValues ? `O: ${open}, H: ${high}, L: ${low}, C: ${close}` : 'no value',
+    ]
+      .filter(Boolean)
+      .join('; ');
+  },
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;
