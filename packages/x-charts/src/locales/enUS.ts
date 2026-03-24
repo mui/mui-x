@@ -144,6 +144,9 @@ export const enUSLocaleText: ChartsLocaleText = {
       .filter(Boolean)
       .join('; ');
   },
+  funnelDescription: ({ value, formattedValue, seriesLabel }) => {
+    return [seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
+  },
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;

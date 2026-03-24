@@ -521,6 +521,19 @@ export interface ChartsLocaleText {
     formattedCategoryValue: string;
     seriesLabel?: string;
   }) => string;
+  /**
+   * The description of a funnel series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the funnel item.
+   * @param {string} params.formattedValue - The formatted value of the funnel item.
+   * @param {string} [params.seriesLabel] - An optional label for the funnel item.
+   * @returns {string} The localized description for the funnel item.
+   */
+  funnelDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    seriesLabel?: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;
