@@ -278,6 +278,12 @@ function collectCurvePoints(
   return points;
 }
 
+/**
+ * The maximum pixel distance from a line curve at which the line is still
+ * considered "close enough" to be selected over an area.
+ */
+const LINE_PROXIMITY_THRESHOLD = 15;
+
 export default function getItemAtPosition(
   state: ChartState<[UseChartCartesianAxisSignature]>,
   point: { x: number; y: number },
@@ -297,7 +303,97 @@ export default function getItemAtPosition(
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
-  // Pass 1: Check area series (priority) — iterate stacking groups in reverse
+  // Step 1: Find the closest line (curve) across all series.
+  let closestDistance = Infinity;
+  let closestItem: SeriesItemIdentifierWithType<'line'> | undefined;
+
+  for (const seriesId of series.seriesOrder) {
+    const seriesItem = series.series[seriesId];
+
+    if (seriesItem.hidden) {
+      continue;
+    }
+
+    const xAxisId = seriesItem.xAxisId ?? defaultXAxisId;
+    const yAxisId = seriesItem.yAxisId ?? defaultYAxisId;
+
+    const xAxis = xAxes[xAxisId];
+    const yAxis = yAxes[yAxisId];
+
+    const bracket = getBracketIndices(xAxis, point.x);
+    if (!bracket) {
+      continue;
+    }
+
+    const { left, right } = bracket;
+    const { visibleStackedData, data, connectNulls, curve } = seriesItem;
+
+    const dataIndex = getAxisIndex(xAxis, point.x);
+    if (dataIndex === -1) {
+      continue;
+    }
+
+    // For ordinal or pointer exactly on a data point, use the data point directly.
+    if (left === right) {
+      const yValue = visibleStackedData[left]?.[1];
+      if (yValue == null) {
+        continue;
+      }
+      const yPosition = yAxis.scale(yValue);
+      if (yPosition == null) {
+        continue;
+      }
+      const distance = Math.abs(point.y - yPosition);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestItem = { type: 'line', seriesId, dataIndex };
+      }
+      continue;
+    }
+
+    // Evaluate the actual curve at the pointer's x for precise distance.
+    const xData = xAxis.data;
+    if (!xData) {
+      continue;
+    }
+
+    const xPosition = getValueToPositionMapper(xAxis.scale);
+    const getPixelX = (idx: number) => xPosition(xData[idx]);
+
+    const curvePoints = collectCurvePoints(
+      data,
+      getPixelX,
+      (idx) => {
+        const stacked = visibleStackedData[idx];
+        return stacked ? (yAxis.scale(stacked[1]) as number) : null;
+      },
+      left,
+      right,
+      connectNulls,
+    );
+
+    if (curvePoints.length < 2) {
+      continue;
+    }
+
+    const yPosition = evaluateCurveY(curvePoints, point.x, curve);
+    if (yPosition == null) {
+      continue;
+    }
+
+    const distance = Math.abs(point.y - yPosition);
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestItem = { type: 'line', seriesId, dataIndex };
+    }
+  }
+
+  // Step 2: If the closest line is within the proximity threshold, pick it.
+  if (closestItem && closestDistance <= LINE_PROXIMITY_THRESHOLD) {
+    return closestItem;
+  }
+
+  // Step 3: Check area series — iterate stacking groups in reverse
   // so that topmost (last rendered) area is checked first.
   const { stackingGroups } = series;
 
@@ -424,93 +520,6 @@ export default function getItemAtPosition(
     }
   }
 
-  // Pass 2: Fallback — use closest-distance-to-curve behavior for all series.
-  // This covers non-area line series and also area series when the pointer
-  // is outside the area polygon (for example, above the top line), which is needed
-  // for tooltips with trigger='item' to still work.
-  let closestDistance = Infinity;
-  let closestItem: SeriesItemIdentifierWithType<'line'> | undefined;
-
-  for (const seriesId of series.seriesOrder) {
-    const seriesItem = series.series[seriesId];
-
-    if (seriesItem.hidden) {
-      continue;
-    }
-
-    const xAxisId = seriesItem.xAxisId ?? defaultXAxisId;
-    const yAxisId = seriesItem.yAxisId ?? defaultYAxisId;
-
-    const xAxis = xAxes[xAxisId];
-    const yAxis = yAxes[yAxisId];
-
-    const bracket = getBracketIndices(xAxis, point.x);
-    if (!bracket) {
-      continue;
-    }
-
-    const { left, right } = bracket;
-    const { visibleStackedData, data, connectNulls, curve } = seriesItem;
-
-    const dataIndex = getAxisIndex(xAxis, point.x);
-    if (dataIndex === -1) {
-      continue;
-    }
-
-    // For ordinal or pointer exactly on a data point, use the data point directly.
-    if (left === right) {
-      const yValue = visibleStackedData[left]?.[1];
-      if (yValue == null) {
-        continue;
-      }
-      const yPosition = yAxis.scale(yValue);
-      if (yPosition == null) {
-        continue;
-      }
-      const distance = Math.abs(point.y - yPosition);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestItem = { type: 'line', seriesId, dataIndex };
-      }
-      continue;
-    }
-
-    // Evaluate the actual curve at the pointer's x for precise distance.
-    const xData = xAxis.data;
-    if (!xData) {
-      continue;
-    }
-
-    const xPosition = getValueToPositionMapper(xAxis.scale);
-    const getPixelX = (idx: number) => xPosition(xData[idx]);
-
-    const curvePoints = collectCurvePoints(
-      data,
-      getPixelX,
-      (idx) => {
-        const stacked = visibleStackedData[idx];
-        return stacked ? (yAxis.scale(stacked[1]) as number) : null;
-      },
-      left,
-      right,
-      connectNulls,
-    );
-
-    if (curvePoints.length < 2) {
-      continue;
-    }
-
-    const yPosition = evaluateCurveY(curvePoints, point.x, curve);
-    if (yPosition == null) {
-      continue;
-    }
-
-    const distance = Math.abs(point.y - yPosition);
-    if (distance < closestDistance) {
-      closestDistance = distance;
-      closestItem = { type: 'line', seriesId, dataIndex };
-    }
-  }
-
+  // Step 4: No area matched — return the closest line regardless of threshold.
   return closestItem;
 }
