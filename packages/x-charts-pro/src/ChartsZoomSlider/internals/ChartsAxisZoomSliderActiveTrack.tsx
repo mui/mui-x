@@ -23,7 +23,7 @@ import {
 import { ChartsAxisZoomSliderThumb } from './ChartsAxisZoomSliderThumb';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
 import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';
-import { ZOOM_SLIDER_THUMB_HEIGHT, ZOOM_SLIDER_THUMB_WIDTH } from './constants';
+import { ZOOM_SLIDER_THUMB_HEIGHT, ZOOM_SLIDER_THUMB_WIDTH, ZOOM_SLIDER_TOUCH_TARGET } from './constants';
 import { useUtilityClasses } from './chartsAxisZoomSliderTrackClasses';
 
 /**
@@ -93,7 +93,7 @@ export function ChartsAxisZoomSliderActiveTrack({
   const store = useStore<[UseChartProZoomSignature]>();
   const axis = store.use(selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
-  const activePreviewRectRef = React.useRef<SVGRectElement>(null);
+  const activePreviewRectRef = React.useRef<SVGGElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
   const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
   const { tooltipStart, tooltipEnd } = getZoomSliderTooltipsText(axis, drawingArea);
@@ -292,19 +292,42 @@ export function ChartsAxisZoomSliderActiveTrack({
 
   const previewOffset = ZOOM_SLIDER_THUMB_HEIGHT > size ? (ZOOM_SLIDER_THUMB_HEIGHT - size) / 2 : 0;
 
+  const activeTrackX = previewX + (axisDirection === 'x' ? 0 : previewOffset);
+  const activeTrackY = previewY + (axisDirection === 'x' ? previewOffset : 0);
+
+  // Compute a larger invisible touch target centered on the visible active track
+  const touchWidth =
+    axisDirection === 'y' ? Math.max(previewWidth, ZOOM_SLIDER_TOUCH_TARGET) : previewWidth;
+  const touchHeight =
+    axisDirection === 'x' ? Math.max(previewHeight, ZOOM_SLIDER_TOUCH_TARGET) : previewHeight;
+  const touchX = activeTrackX - (touchWidth - previewWidth) / 2;
+  const touchY = activeTrackY - (touchHeight - previewHeight) / 2;
+
   return (
     <React.Fragment>
-      <ZoomSliderActiveTrackRect
-        ref={activePreviewRectRef}
-        x={previewX + (axisDirection === 'x' ? 0 : previewOffset)}
-        y={previewY + (axisDirection === 'x' ? previewOffset : 0)}
-        preview={preview}
-        width={previewWidth}
-        height={previewHeight}
-        onPointerEnter={onPointerEnter}
-        onPointerLeave={onPointerLeave}
-        className={classes.active}
-      />
+      <g ref={activePreviewRectRef}>
+        {/* Invisible touch target for easier interaction on touch devices */}
+        <rect
+          x={touchX}
+          y={touchY}
+          width={touchWidth}
+          height={touchHeight}
+          fill="transparent"
+          stroke="none"
+          onPointerEnter={onPointerEnter}
+          onPointerLeave={onPointerLeave}
+        />
+        <ZoomSliderActiveTrackRect
+          x={activeTrackX}
+          y={activeTrackY}
+          preview={preview}
+          width={previewWidth}
+          height={previewHeight}
+          onPointerEnter={onPointerEnter}
+          onPointerLeave={onPointerLeave}
+          className={classes.active}
+        />
+      </g>
       <ChartsAxisZoomSliderThumb
         ref={setStartThumbEl}
         x={startThumbX}

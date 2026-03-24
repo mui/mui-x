@@ -10,7 +10,7 @@ import {
   chartsAxisZoomSliderThumbClasses,
   useUtilityClasses,
 } from './chartsAxisZoomSliderThumbClasses';
-import { ZOOM_SLIDER_THUMB_TOUCH_TARGET } from './constants';
+import { ZOOM_SLIDER_TOUCH_TARGET } from './constants';
 
 const Rect = styled('rect', {
   slot: 'internal',
@@ -114,8 +114,8 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
   const numHeight = Number(height) || 0;
 
   // Compute a larger invisible touch target centered on the visible thumb
-  const touchWidth = Math.max(numWidth, ZOOM_SLIDER_THUMB_TOUCH_TARGET);
-  const touchHeight = Math.max(numHeight, ZOOM_SLIDER_THUMB_TOUCH_TARGET);
+  const touchWidth = Math.max(numWidth, ZOOM_SLIDER_TOUCH_TARGET);
+  const touchHeight = Math.max(numHeight, ZOOM_SLIDER_TOUCH_TARGET);
   const touchX = numX - (touchWidth - numWidth) / 2;
   const touchY = numY - (touchHeight - numHeight) / 2;
 
