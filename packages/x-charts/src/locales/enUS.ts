@@ -157,7 +157,9 @@ export const enUSLocaleText: ChartsLocaleText = {
   },
   sankeyLinkDescription: ({ formattedValue, sourceLabel, targetLabel }) => {
     return [
-      sourceLabel && targetLabel ? `${sourceLabel} to ${targetLabel}` : (sourceLabel ?? targetLabel),
+      sourceLabel && targetLabel
+        ? `${sourceLabel} to ${targetLabel}`
+        : (sourceLabel ?? targetLabel),
       formattedValue,
     ]
       .filter(Boolean)

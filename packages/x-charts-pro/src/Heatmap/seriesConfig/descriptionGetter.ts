@@ -13,15 +13,17 @@ const descriptionGetter: DescriptionGetter<'heatmap'> = (params) => {
     yIndex: identifier.yIndex,
   });
 
-  const formattedXValue = xAxis.valueFormatter?.(xValue, {
-    location: 'tooltip',
-    scale: xAxis.scale,
-  }) ?? '';
+  const formattedXValue =
+    xAxis.valueFormatter?.(xValue, {
+      location: 'tooltip',
+      scale: xAxis.scale,
+    }) ?? '';
 
-  const formattedYValue = yAxis.valueFormatter?.(yValue, {
-    location: 'tooltip',
-    scale: yAxis.scale,
-  }) ?? '';
+  const formattedYValue =
+    yAxis.valueFormatter?.(yValue, {
+      location: 'tooltip',
+      scale: yAxis.scale,
+    }) ?? '';
 
   return localeText.heatmapDescription({
     x: xValue,

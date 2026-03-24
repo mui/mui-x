@@ -11,10 +11,11 @@ const descriptionGetter: DescriptionGetter<'rangeBar'> = (params) => {
   const categoryValue = categoryAxis.data?.[identifier.dataIndex] ?? null;
 
   const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex }) ?? '';
-  const formattedCategoryValue = categoryAxis.valueFormatter?.(categoryValue, {
-    location: 'tooltip',
-    scale: categoryAxis.scale,
-  }) ?? '';
+  const formattedCategoryValue =
+    categoryAxis.valueFormatter?.(categoryValue, {
+      location: 'tooltip',
+      scale: categoryAxis.scale,
+    }) ?? '';
 
   return localeText.rangeBarDescription({
     value,

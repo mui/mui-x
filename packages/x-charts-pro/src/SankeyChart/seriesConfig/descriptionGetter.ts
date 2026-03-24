@@ -14,11 +14,11 @@ const descriptionGetter: DescriptionGetter<'sankey'> = (params) => {
 
     const formattedValue =
       value !== null
-        ? series.valueFormatter(value, {
-          location: 'tooltip',
-          type: 'node',
-          nodeId: identifier.nodeId,
-        }) ?? ''
+        ? (series.valueFormatter(value, {
+            location: 'tooltip',
+            type: 'node',
+            nodeId: identifier.nodeId,
+          }) ?? '')
         : '';
 
     return localeText.sankeyNodeDescription({
@@ -39,12 +39,12 @@ const descriptionGetter: DescriptionGetter<'sankey'> = (params) => {
   const value = link.value;
   const formattedValue =
     value !== null
-      ? series.valueFormatter(value, {
-        location: 'tooltip',
-        type: 'link',
-        sourceId: identifier.sourceId,
-        targetId: identifier.targetId,
-      }) ?? ''
+      ? (series.valueFormatter(value, {
+          location: 'tooltip',
+          type: 'link',
+          sourceId: identifier.sourceId,
+          targetId: identifier.targetId,
+        }) ?? '')
       : '';
 
   return localeText.sankeyLinkDescription({

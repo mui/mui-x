@@ -8,10 +8,11 @@ const descriptionGetter: DescriptionGetter<'ohlc'> = (params) => {
 
   const date = xAxis.data?.[identifier.dataIndex] ?? null;
 
-  const formattedDate = xAxis.valueFormatter?.(date, {
-    location: 'tooltip',
-    scale: xAxis.scale,
-  }) ?? '';
+  const formattedDate =
+    xAxis.valueFormatter?.(date, {
+      location: 'tooltip',
+      scale: xAxis.scale,
+    }) ?? '';
 
   return localeText.ohlcDescription({
     open: value?.[0] ?? null,
