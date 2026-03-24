@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
+import { useTheme } from '@mui/material/styles';
 import { type ChartsGridProps } from '@mui/x-charts/ChartsGrid';
 import { type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
@@ -46,6 +47,7 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
+  const theme = useTheme();
 
   const xAxisWithDefault: XAxis[] | undefined = React.useMemo(
     () =>
@@ -57,13 +59,18 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     [xAxis],
   );
 
+  const defaultBullishColor = theme.palette.success.main;
+  const defaultBearishColor = theme.palette.error.main;
+
   const seriesWithDefault = React.useMemo(
     () =>
       series.map((s) => ({
         type: 'ohlc' as const,
+        bullishColor: defaultBullishColor,
+        bearishColor: defaultBearishColor,
         ...s,
       })),
-    [series],
+    [series, defaultBullishColor, defaultBearishColor],
   );
 
   const axisHighlightProps = {

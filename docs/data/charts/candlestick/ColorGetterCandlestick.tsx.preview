@@ -1,0 +1,16 @@
+<CandlestickChart
+  series={[
+    {
+      data,
+      colorGetter: ({ value }) => {
+        if (!value) { return 'transparent'; }
+        const [open, high, low, close] = value;
+        const intensity = Math.min(high - low / 5, 1);
+        const r = close < open ? Math.round(180 + 75 * intensity) : 100;
+        const g = close >= open ? Math.round(140 + 115 * intensity) : 100;
+        return `rgb(${r}, ${g}, ${100})`;
+      },
+    },
+  ]}
+  {...chartConfig}
+/>

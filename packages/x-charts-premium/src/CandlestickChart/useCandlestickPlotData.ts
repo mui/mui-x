@@ -9,6 +9,7 @@ import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
 import type { DefaultizedOHLCSeriesType } from '../models';
 import { parseColor } from '../utils/webgl/parseColor';
+import getColor from './seriesConfig/getColor';
 
 const FADE_OPACITY = 0.3;
 const HIGHLIGHT_BRIGHTNESS = 1.2;
@@ -32,20 +33,12 @@ export function useCandlestickPlotData(
   const store = useStore();
   const getHighlightState = store.use(selectorChartsHighlightStateCallback);
 
-  const lineColor = React.useMemo(
+  const wickColor = React.useMemo(
     () => parseColor(theme.palette.text.primary),
     [theme.palette.text.primary],
   );
-  const bullishColor = React.useMemo(
-    () => parseColor(theme.palette.success.main),
-    [theme.palette.success.main],
-  );
-  const bearishColor = React.useMemo(
-    () => parseColor(theme.palette.error.main),
-    [theme.palette.error.main],
-  );
 
-  const { colorGetter } = series;
+  const colorGetter = React.useMemo(() => getColor(series, undefined), [series]);
 
   return React.useMemo(() => {
     const candleCenters = new Float32Array(series.data.length * 2);
@@ -96,12 +89,7 @@ export function useCandlestickPlotData(
       wickCenters[lowerWickIndex * 2 + 1] = (candleTop + wickBottom) / 2;
       wickHeights[lowerWickIndex] = candleTop - wickBottom;
 
-      let candleColor: ReturnType<typeof parseColor>;
-      if (colorGetter) {
-        candleColor = parseColor(colorGetter({ value: datum, dataIndex }));
-      } else {
-        candleColor = close >= open ? bullishColor : bearishColor;
-      }
+      const candleColor = parseColor(colorGetter(dataIndex));
 
       candleColors[dataIndex * 4] = candleColor[0];
       candleColors[dataIndex * 4 + 1] = candleColor[1];
@@ -110,10 +98,10 @@ export function useCandlestickPlotData(
 
       for (let w = 0; w < 2; w += 1) {
         const wickIdx = (dataIndex * 2 + w) * 4;
-        wickColors[wickIdx] = lineColor[0];
-        wickColors[wickIdx + 1] = lineColor[1];
-        wickColors[wickIdx + 2] = lineColor[2];
-        wickColors[wickIdx + 3] = lineColor[3];
+        wickColors[wickIdx] = wickColor[0];
+        wickColors[wickIdx + 1] = wickColor[1];
+        wickColors[wickIdx + 2] = wickColor[2];
+        wickColors[wickIdx + 3] = wickColor[3];
       }
 
       const identifier = { type: 'ohlc', seriesId: series.id, dataIndex } as const;
@@ -150,13 +138,11 @@ export function useCandlestickPlotData(
       wickColors,
     };
   }, [
-    bearishColor,
-    bullishColor,
     colorGetter,
     drawingArea.left,
     drawingArea.top,
     getHighlightState,
-    lineColor,
+    wickColor,
     series.data,
     series.id,
     xScale,

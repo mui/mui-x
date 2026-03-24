@@ -52,10 +52,14 @@ The example below shows how to define the formatting of values in both axes.
 
 ### Color
 
-Use the `colorGetter` property on the series to customize the color of each candle.
-The function receives the OHLC value and data index, so you can return different colors for bullish and bearish candles.
+You can set `bullishColor` and `bearishColor` on the series to change the colors of bullish and bearish candles.
+These also default to the first two values of the chart's `colors` palette.
 
 {{"demo": "ColorCandlestick.js"}}
+
+For more advanced use cases, the `colorGetter` property allows you to compute a color for each candle based on its OHLC value and data index.
+
+{{"demo": "ColorGetterCandlestick.js"}}
 
 ## Composition
 
