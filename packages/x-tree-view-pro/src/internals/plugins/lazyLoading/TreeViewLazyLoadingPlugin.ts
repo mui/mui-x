@@ -149,11 +149,7 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
     this.store.set('lazyLoadedItems', { ...this.store.state.lazyLoadedItems, errors });
   };
 
-  private callOnItemsLazyLoaded(
-    items: R[],
-    parentId: TreeViewItemId | null,
-    isCacheHit: boolean,
-  ) {
+  private callOnItemsLazyLoaded(items: R[], parentId: TreeViewItemId | null, isCacheHit: boolean) {
     if (this.isInsideOnItemsLazyLoaded) {
       return;
     }
