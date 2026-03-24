@@ -133,6 +133,9 @@ export const enUSLocaleText: ChartsLocaleText = {
       .filter(Boolean)
       .join('; ');
   },
+  scatterDescription: ({ formattedXValue, formattedYValue, seriesLabel }) => {
+    return [seriesLabel, formattedXValue, formattedYValue].filter(Boolean).join('; ');
+  },
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;
