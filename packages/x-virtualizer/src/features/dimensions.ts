@@ -119,6 +119,17 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
+  // Vertical scrollbar oscillation detector.
+  // Counts consecutive hasScrollY flips that happen with no row-height change.
+  // After 2 flips it is certainly a layout feedback loop, so every further flip
+  // is forced to false (no scrollbar). The counter resets when row heights change.
+  // Only vertical scrollbar can oscillate because column widths are never 'auto'.
+  // https://github.com/mui/mui-x/issues/20539
+  const scrollYOscillation = React.useRef({
+    counter: 0,
+    heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
+  });
+
   const {
     layout,
     dimensions: {
@@ -190,57 +201,62 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           ),
         };
 
-        // Detect if the root is effectively auto-height (its height follows content
-        // rather than being constrained by a fixed parent).
-        //
-        // This prevents scrollbar oscillation (https://github.com/mui/mui-x/issues/20539):
-        // when content height changes (e.g. auto-height rows measured), rootSize lags
-        // behind (ResizeObserver is async).
-        const prevExpectedMinHeight =
-          prevDimensions.topContainerHeight +
-          prevDimensions.contentSize.height +
-          prevDimensions.bottomContainerHeight;
-        const isRootEffectivelyAutoHeight =
-          prevDimensions.isReady &&
-          Math.abs(prevDimensions.root.height - prevExpectedMinHeight) <= scrollbarSize;
+        const content = contentSize;
+        const container = viewportInnerSize;
 
-        if (isRootEffectivelyAutoHeight) {
-          // Root height follows content — no vertical scroll is possible.
-          // Use content-based viewport to avoid stale rootSize false positives.
-          hasScrollY = false;
-          hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
+        const hasScrollXIfNoYScrollBar = content.width > container.width;
+        const hasScrollYIfNoXScrollBar = content.height > container.height;
 
-          const expectedMinHeight = topContainerHeight + contentSize.height + bottomContainerHeight;
-          viewportOuterSize.height = expectedMinHeight;
-          viewportInnerSize.height = Math.max(viewportInnerSize.height, contentSize.height);
+        if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
+          hasScrollY = hasScrollYIfNoXScrollBar;
+          hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
 
+          // We recalculate the scroll y to consider the size of the x scrollbar.
           if (hasScrollX) {
-            viewportInnerSize.height -= scrollbarSize;
+            hasScrollY = content.height + scrollbarSize > container.height;
           }
-        } else {
-          // Root is constrained (fixed/max height from parent)
-          const content = contentSize;
-          const container = viewportInnerSize;
+        }
 
-          const hasScrollXIfNoYScrollBar = content.width > container.width;
-          const hasScrollYIfNoXScrollBar = content.height > container.height;
+        // Detect vertical scrollbar oscillation.
+        // Track consecutive hasScrollY flips with no row-height change.
+        // Once confirmed (≥ 2 flips), force hasScrollY off — the scrollbar is
+        // not genuinely needed, it is a layout feedback loop caused by stale
+        // rootSize or the horizontal scrollbar's height cascading.
+        {
+          const osc = scrollYOscillation.current;
+          const heightsChanged =
+            rowsMeta.currentPageTotalHeight !== osc.heights.content ||
+            rowsMeta.pinnedTopRowsTotalHeight !== osc.heights.pinnedTop ||
+            rowsMeta.pinnedBottomRowsTotalHeight !== osc.heights.pinnedBottom;
 
-          if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
-            hasScrollY = hasScrollYIfNoXScrollBar;
-            hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
+          if (heightsChanged) {
+            osc.counter = 0;
+            osc.heights = {
+              content: rowsMeta.currentPageTotalHeight,
+              pinnedTop: rowsMeta.pinnedTopRowsTotalHeight,
+              pinnedBottom: rowsMeta.pinnedBottomRowsTotalHeight,
+            };
+          }
 
-            // We recalculate the scroll y to consider the size of the x scrollbar.
-            if (hasScrollX) {
-              hasScrollY = content.height + scrollbarSize > container.height;
+          if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
+            if (!heightsChanged) {
+              osc.counter += 1;
+            }
+            if (osc.counter >= 2) {
+              hasScrollY = false;
+              // Recompute hasScrollX without the vertical scrollbar's width impact,
+              // otherwise the cascade (hasScrollY → narrower viewport → hasScrollX)
+              // keeps the horizontal scrollbar/filler alive and the root keeps resizing.
+              hasScrollX = hasScrollXIfNoYScrollBar;
             }
           }
+        }
 
-          if (hasScrollY) {
-            viewportInnerSize.width -= scrollbarSize;
-          }
-          if (hasScrollX) {
-            viewportInnerSize.height -= scrollbarSize;
-          }
+        if (hasScrollY) {
+          viewportInnerSize.width -= scrollbarSize;
+        }
+        if (hasScrollX) {
+          viewportInnerSize.height -= scrollbarSize;
         }
       }
 
