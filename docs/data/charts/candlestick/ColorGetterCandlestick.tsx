@@ -14,7 +14,7 @@ const data: Array<OHLCValueType> = sp500.map((entry) => [
 const chartConfig = {
   xAxis: [{ data: xData, zoom: { minSpan: 1, filterMode: 'discard' } }],
   height: 400,
-} as const
+} as const;
 
 export default function ColorGetterCandlestick() {
   return (

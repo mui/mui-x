@@ -15,7 +15,8 @@ export default function ColorCandlestick() {
   return (
     <CandlestickChart
       xAxis={[{ data: xData, zoom: { minSpan: 1, filterMode: 'discard' } }]}
-      series={[{ data, bullishColor: '#7B2FBE', bearishColor: '#F28C28' }]}
+      series={[{ data }]}
+      colors={['#7B2FBE', '#F28C28']}
       height={400}
     />
   );

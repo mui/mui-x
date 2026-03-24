@@ -52,8 +52,7 @@ The example below shows how to define the formatting of values in both axes.
 
 ### Color
 
-You can set `bullishColor` and `bearishColor` on the series to change the colors of bullish and bearish candles.
-These also default to the first two values of the chart's `colors` palette.
+The `colors` prop accepts an array where the first value is used for bullish candles (close ≥ open) and the second for bearish candles (close < open).
 
 {{"demo": "ColorCandlestick.js"}}
 

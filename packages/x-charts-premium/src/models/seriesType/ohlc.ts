@@ -24,16 +24,6 @@ export interface OHLCSeriesType
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
-  /**
-   * The color of the candle body when the close price is greater than or equal to the open price (bullish).
-   * Falls back to the first color from the `colors` palette.
-   */
-  bullishColor?: string;
-  /**
-   * The color of the candle body when the close price is less than the open price (bearish).
-   * Falls back to the second color from the `colors` palette.
-   */
-  bearishColor?: string;
 }
 
 /**
