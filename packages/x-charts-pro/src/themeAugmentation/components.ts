@@ -1,6 +1,18 @@
 import { type ComponentsProps, type ComponentsOverrides } from '@mui/material/styles';
 
 export interface ChartsProComponents<Theme = unknown> {
+  // FunnelChart components
+  MuiFunnelChart?: {
+    defaultProps?: ComponentsProps['MuiFunnelChart'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiFunnelChart'];
+  };
+  MuiFunnelSection?: {
+    defaultProps?: ComponentsProps['MuiFunnelSection'];
+  };
+  MuiFunnelSectionLabel?: {
+    defaultProps?: ComponentsProps['MuiFunnelSection'];
+  };
+
   // BarChartPro components
   MuiBarChartPro?: {
     defaultProps?: ComponentsProps['MuiBarChartPro'];

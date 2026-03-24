@@ -16,8 +16,5 @@ export * from './FocusedLineMark';
 export * from './LineHighlightElement';
 export * from './LineChart.plugins';
 
-export type { MarkElementClasses, MarkElementClassKey } from './markElementClasses';
-export { getMarkElementUtilityClass, markElementClasses } from './markElementClasses';
-
 export { lineClasses } from './lineClasses';
 export type { LineClassKey, LineClasses } from './lineClasses';

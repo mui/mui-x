@@ -17,6 +17,13 @@ import type {
 } from './pie';
 import type { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
 import type { SeriesColor, SeriesId } from './common';
+import type {
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+  ComputedXAxis,
+  ComputedYAxis,
+  PolarAxisDefaultized,
+} from '../axis';
 import type { CommonHighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 
 export interface ChartsSeriesConfig {
@@ -51,6 +58,12 @@ export interface ChartsSeriesConfig {
     canBeStacked: true;
     axisType: 'cartesian';
     highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: BarItemIdentifier;
+      xAxis: ComputedXAxis;
+      yAxis: ComputedYAxis;
+      series: DefaultizedBarSeriesType;
+    };
     highlightIdentifier: {
       type: 'bar';
       seriesId: SeriesId;
@@ -69,6 +82,12 @@ export interface ChartsSeriesConfig {
     canBeStacked: true;
     axisType: 'cartesian';
     highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: LineItemIdentifier;
+      xAxis: ComputedXAxis;
+      yAxis: ComputedYAxis;
+      series: DefaultizedLineSeriesType;
+    };
     highlightIdentifier: {
       type: 'line';
       seriesId: SeriesId;
@@ -86,6 +105,11 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: ScatterItemIdentifier;
     axisType: 'cartesian';
     highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: ScatterItemIdentifier;
+      yAxis: ComputedYAxis;
+      series: DefaultizedScatterSeriesType;
+    };
     highlightIdentifier: {
       type: 'scatter';
       seriesId: SeriesId;
@@ -105,6 +129,10 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
     highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: PieItemIdentifier;
+      series: DefaultizedPieSeriesType;
+    };
     highlightIdentifier: {
       type: 'pie';
       seriesId: SeriesId;
@@ -122,6 +150,12 @@ export interface ChartsSeriesConfig {
     valueType: number;
     axisType: 'polar';
     highlightScope: CommonHighlightScope;
+    descriptionGetterParams: {
+      identifier: RadarItemIdentifier;
+      rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+      radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+      series: DefaultizedRadarSeriesType;
+    };
     highlightIdentifier: {
       type: 'radar';
       seriesId: SeriesId;

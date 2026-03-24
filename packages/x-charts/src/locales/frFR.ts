@@ -114,6 +114,20 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
   chartConfigurationOptionStepAfter: 'Palier après',
   chartConfigurationOptionBumpX: 'Bosse X',
   chartConfigurationOptionBumpY: 'Bosse Y',
+
+  // OHLC/Candlestick
+  open: 'Ouvertue',
+  high: 'Haut',
+  low: 'Bas',
+  close: 'Cloture',
+  // barDescription: ({
+  //   value,
+  //   formattedValue,
+  //   formattedCategoryValue,
+  //   seriesLabel
+  // }) => {
+  //   return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
+  // },
 };
 
 export const frFR = getChartsLocalization(frFRLocalText);

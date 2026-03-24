@@ -116,6 +116,18 @@ export const enUSLocaleText: ChartsLocaleText = {
   chartConfigurationOptionStepAfter: 'Step After',
   chartConfigurationOptionBumpX: 'Bump X',
   chartConfigurationOptionBumpY: 'Bump Y',
+
+  // OHLC/Candlestick
+  open: 'Open',
+  high: 'High',
+  low: 'Low',
+  close: 'Close',
+
+  barDescription: ({ value, formattedValue, formattedCategoryValue, seriesLabel }) => {
+    return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue]
+      .filter(Boolean)
+      .join('; ');
+  },
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;

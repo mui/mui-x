@@ -62,6 +62,12 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       '&:hover': {
         backgroundColor: 'var(--event-surface-bold-hover)',
       },
+      '&[data-editing]': {
+        backgroundColor: 'var(--event-surface-selected)',
+        '&:hover': {
+          backgroundColor: 'var(--event-surface-selected-hover)',
+        },
+      },
       [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
         color: 'var(--event-on-surface-bold)',
       },
@@ -92,6 +98,12 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       '&:active': {},
       '&:hover': {
         backgroundColor: (theme.vars || theme).palette.action.hover,
+      },
+      '&[data-editing]': {
+        backgroundColor: 'var(--event-surface-subtle)',
+        '&:hover': {
+          backgroundColor: 'var(--event-surface-subtle-hover)',
+        },
       },
     },
   }),
@@ -124,6 +136,12 @@ const DayGridEventTitle = styled('p', {
   '[data-variant="compact"] &': {
     color: (theme.vars || theme).palette.text.primary,
   },
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
+  '[data-variant="compact"][data-editing] &': {
+    color: 'var(--event-on-surface-subtle-primary)',
+  },
 }));
 
 const DayGridEventTime = styled('time', {
@@ -138,6 +156,7 @@ const DayGridEventTime = styled('time', {
   whiteSpace: 'nowrap',
   paddingInlineEnd: theme.spacing(0.5),
   '@container (width < 300px)': {
+    paddingInlineEnd: 0,
     display: 'inline',
     '& > span:last-of-type': {
       display: 'none',
@@ -145,6 +164,12 @@ const DayGridEventTime = styled('time', {
   },
   '[data-variant="compact"] &': {
     color: (theme.vars || theme).palette.text.secondary,
+  },
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
+  '[data-variant="compact"][data-editing] &': {
+    color: 'var(--event-on-surface-subtle-secondary)',
   },
 }));
 
@@ -155,6 +180,12 @@ const DayGridEventRecurringIcon = styled(RepeatRounded, {
   color: (theme.vars || theme).palette.text.primary,
   fontSize: '1rem',
   justifySelf: 'flex-end',
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
+  '[data-variant="compact"][data-editing] &': {
+    color: 'var(--event-on-surface-bold)',
+  },
 }));
 
 const DayGridEventResizeHandler = styled(CalendarGrid.DayEventResizeHandler, {
@@ -266,7 +297,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(store, isResizableSelector, 'start', occurrence);
@@ -331,7 +361,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 <DayGridEventTime className={classes.dayGridEventTime}>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
                   <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
-                </DayGridEventTime>{' '}
+                </DayGridEventTime>
                 <DayGridEventTitle className={classes.dayGridEventTitle} as="span">
                   {occurrence.title}
                 </DayGridEventTitle>

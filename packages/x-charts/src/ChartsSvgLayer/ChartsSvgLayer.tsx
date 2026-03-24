@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import {
   selectorChartSvgWidth,
   selectorChartSvgHeight,
@@ -18,8 +18,6 @@ export interface ChartsSvgLayerProps extends Omit<
   'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
 > {
   className?: string;
-  title?: string;
-  desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
 }
@@ -38,8 +36,6 @@ const ChartsSvgLayerStyles = styled('svg', {
  * A layer that provides the drawing area SVG the chart elements.
  * Must be wrapped in a `<ChartsLayerContainer>`.
  *
- * It provides the `title` and `desc` elements for the chart.
- *
  * Demos:
  *
  * - [Composition](https://mui.com/x/api/charts/composition/)
@@ -50,7 +46,7 @@ const ChartsSvgLayerStyles = styled('svg', {
  */
 const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
   function ChartsSvgLayer(inProps, ref) {
-    const { store } = useChartContext<
+    const { store } = useChartsContext<
       [],
       [UseChartInteractionSignature, UseChartItemClickSignature]
     >();
@@ -60,7 +56,7 @@ const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
 
     const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSvgLayer' });
 
-    const { children, className, title, desc, ...other } = themeProps;
+    const { children, className, ...other } = themeProps;
 
     const classes = useUtilityClasses();
     const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
@@ -71,9 +67,8 @@ const ChartsSvgLayer = React.forwardRef<SVGSVGElement, ChartsSvgLayerProps>(
         className={clsx(classes.root, className)}
         {...other}
         ref={ref}
+        aria-hidden
       >
-        {title && <title>{title}</title>}
-        {desc && <desc>{desc}</desc>}
         <ChartsAxesGradients />
         {hasIntrinsicSize && children}
       </ChartsSvgLayerStyles>
@@ -88,13 +83,11 @@ ChartsSvgLayer.propTypes = {
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   className: PropTypes.string,
-  desc: PropTypes.string,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
-  title: PropTypes.string,
 } as any;
 
 export { ChartsSvgLayer };
