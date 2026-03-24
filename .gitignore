@@ -4,7 +4,6 @@
 .vscode
 .cursor
 .claude/settings.local.json
-.junie
 
 __diff_output__
 .DS_STORE
@@ -36,12 +35,3 @@ AGENTS.local.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# compiled JS files from TypeScript source (auto-generated, not to be committed)
-packages/x-charts/src/**/*.js
-packages/x-charts-pro/src/**/*.js
-packages/x-charts-premium/src/**/*.js
-packages/x-internals/src/**/*.js
-packages/x-internal-gestures/src/**/*.js
-test/utils/*.js
-test/utils/**/*.js
