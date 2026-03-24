@@ -39,8 +39,7 @@ export interface ChartsZoomSliderThumbOwnerState {
 }
 
 export interface ChartsZoomSliderThumbProps
-  extends Omit<React.ComponentProps<'rect'>, 'orientation'>,
-    ChartsZoomSliderThumbOwnerState {
+  extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartsZoomSliderThumbOwnerState {
   onInteractionStart?: () => void;
   onInteractionEnd?: () => void;
 }
@@ -57,7 +56,23 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
   SVGRectElement,
   ChartsZoomSliderThumbProps
 >(function ChartsAxisZoomSliderThumb(
-  { className, onMove, orientation, placement, rx = 4, ry = 4, x, y, width, height, onInteractionStart, onInteractionEnd, onPointerEnter, onPointerLeave, ...other },
+  {
+    className,
+    onMove,
+    orientation,
+    placement,
+    rx = 4,
+    ry = 4,
+    x,
+    y,
+    width,
+    height,
+    onInteractionStart,
+    onInteractionEnd,
+    onPointerEnter,
+    onPointerLeave,
+    ...other
+  },
   forwardedRef,
 ) {
   const classes = useUtilityClasses({ onMove, orientation, placement });
@@ -94,7 +109,13 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
       // Prevent text selection when dragging the thumb
       event.preventDefault();
       event.stopPropagation();
-      group.setPointerCapture(event.pointerId);
+      try {
+        group.setPointerCapture(event.pointerId);
+      } catch {
+        // setPointerCapture can fail if the pointer is no longer active,
+        // e.g., during touch→mouse compatibility events.
+        return;
+      }
       onInteractionStart?.();
 
       group.addEventListener('pointermove', onPointerMove);
