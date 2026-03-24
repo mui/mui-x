@@ -48,6 +48,7 @@ export default function CustomDateRangePickerDay() {
         <DateRangeCalendar
           defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
           slots={{ day: DateRangePickerDay }}
+          slotProps={{ day: { disableMargin: true, sx: { px: 2.5 } } }}
         />
       </DemoContainer>
     </LocalizationProvider>

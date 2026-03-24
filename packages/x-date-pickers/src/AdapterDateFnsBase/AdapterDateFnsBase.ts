@@ -72,6 +72,10 @@ const formatTokenMap: FieldFormatTokenMap = {
   HH: 'hours',
   h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   hh: 'hours',
+  K: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
+  KK: 'hours',
+  k: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
+  kk: 'hours',
 
   // Minutes
   m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
