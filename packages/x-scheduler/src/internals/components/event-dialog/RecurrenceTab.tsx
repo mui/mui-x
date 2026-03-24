@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox, { checkboxClasses } from '@mui/material/Checkbox';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
@@ -141,7 +141,7 @@ const WeekDaySelectorCheckbox = styled(Checkbox, {
   margin: theme.spacing(0.5),
   borderRadius: theme.shape.borderRadius,
   color: theme.palette.action.active,
-  '&.Mui-checked': {
+  [`&.${checkboxClasses.checked}`]: {
     color: theme.palette.text.primary,
     backgroundColor: theme.palette.action.selected,
   },
