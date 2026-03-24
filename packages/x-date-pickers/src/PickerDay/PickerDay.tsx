@@ -63,7 +63,6 @@ const PickerDayRoot = styled(ButtonBase, {
     ];
   },
 })<{ ownerState: PickerDayOwnerState }>(({ theme }) => ({
-  '--PickerDay-verticalMargin': `${DAY_MARGIN}px`,
   '--PickerDay-horizontalMargin': `${DAY_MARGIN}px`,
   '--PickerDay-size': `${DAY_SIZE}px`,
   ...theme.typography.caption,

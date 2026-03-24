@@ -131,7 +131,6 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
     ];
   },
 })<{ ownerState: DateRangePickerDayOwnerState }>(({ theme }) => ({
-  '--PickerDay-verticalMargin': '2px',
   '--PickerDay-horizontalMargin': '2px',
   '--PickerDay-size': '36px',
   ...theme.typography.caption,
