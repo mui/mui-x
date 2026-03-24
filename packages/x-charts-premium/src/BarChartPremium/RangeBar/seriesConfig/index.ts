@@ -14,6 +14,7 @@ import legendGetter from './legend';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import tooltipItemPositionGetter from './tooltipPosition';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
+import descriptionGetter from './descriptionGetter';
 
 export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   seriesProcessor,
@@ -28,6 +29,7 @@ export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };
