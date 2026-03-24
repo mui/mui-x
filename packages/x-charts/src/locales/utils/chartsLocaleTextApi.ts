@@ -489,6 +489,21 @@ export interface ChartsLocaleText {
     formattedYValue: string;
     seriesLabel?: string;
   }) => string;
+  /**
+   * The description of a pie series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the pie item.
+   * @param {number} params.totalValue - The total value of all pie items.
+   * @param {string} params.formattedValue - The formatted value of the pie item, as it appears in tooltips or labels.
+   * @param {string} [params.seriesLabel] - An optional label for the pie item.
+   * @returns {string} The localized description for the pie item.
+   */
+  pieDescription: (params: {
+    value: number | null;
+    totalValue: number;
+    formattedValue: string;
+    seriesLabel?: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;
