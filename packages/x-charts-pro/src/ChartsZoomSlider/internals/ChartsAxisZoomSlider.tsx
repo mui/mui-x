@@ -46,6 +46,29 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
   const { yAxis } = useYAxes();
   const showPreview = zoomOptions.slider.preview;
 
+  const sliderRef = React.useRef<SVGGElement>(null);
+
+  // CSS `touch-action: none` does not work on SVG elements.
+  // Prevent scrolling on touch devices by calling preventDefault on touch events.
+  React.useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) {
+      return undefined;
+    }
+
+    function preventTouchDefault(event: TouchEvent) {
+      event.preventDefault();
+    }
+
+    slider.addEventListener('touchstart', preventTouchDefault, { passive: false });
+    slider.addEventListener('touchmove', preventTouchDefault, { passive: false });
+
+    return () => {
+      slider.removeEventListener('touchstart', preventTouchDefault);
+      slider.removeEventListener('touchmove', preventTouchDefault);
+    };
+  }, []);
+
   if (!zoomData) {
     return null;
   }
@@ -122,7 +145,7 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
   );
 
   return (
-    <g data-charts-zoom-slider transform={`translate(${x} ${y})`} style={{ touchAction: 'none' }}>
+    <g ref={sliderRef} data-charts-zoom-slider transform={`translate(${x} ${y})`}>
       {track}
       <ChartsAxisZoomSliderActiveTrack
         zoomData={zoomData}

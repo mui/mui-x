@@ -26,6 +26,17 @@ import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './
 import { ZOOM_SLIDER_THUMB_HEIGHT, ZOOM_SLIDER_THUMB_WIDTH } from './constants';
 import { useUtilityClasses } from './chartsAxisZoomSliderTrackClasses';
 
+/**
+ * Tooltip placement is inverted relative to the axis position so that
+ * the tooltip appears away from the user's finger on touch devices.
+ */
+const OPPOSITE_PLACEMENT = {
+  top: 'bottom',
+  bottom: 'top',
+  left: 'right',
+  right: 'left',
+} as const;
+
 const ZoomSliderActiveTrackRect = styled('rect', {
   slot: 'internal',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'preview',
@@ -321,14 +332,14 @@ export function ChartsAxisZoomSliderActiveTrack({
       <ChartsTooltipZoomSliderValue
         anchorEl={startThumbEl}
         open={showTooltip && tooltipStart !== ''}
-        placement={axisPosition}
+        placement={OPPOSITE_PLACEMENT[axisPosition]}
       >
         {tooltipStart}
       </ChartsTooltipZoomSliderValue>
       <ChartsTooltipZoomSliderValue
         anchorEl={endThumbEl}
         open={showTooltip && tooltipEnd !== ''}
-        placement={axisPosition}
+        placement={OPPOSITE_PLACEMENT[axisPosition]}
       >
         {tooltipEnd}
       </ChartsTooltipZoomSliderValue>
