@@ -39,7 +39,11 @@ export interface ChartsZoomSliderThumbOwnerState {
 }
 
 export interface ChartsZoomSliderThumbProps
-  extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartsZoomSliderThumbOwnerState {}
+  extends Omit<React.ComponentProps<'rect'>, 'orientation'>,
+    ChartsZoomSliderThumbOwnerState {
+  onInteractionStart?: () => void;
+  onInteractionEnd?: () => void;
+}
 
 function preventDefault(event: Event) {
   event.preventDefault();
@@ -53,7 +57,7 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
   SVGRectElement,
   ChartsZoomSliderThumbProps
 >(function ChartsAxisZoomSliderThumb(
-  { className, onMove, orientation, placement, rx = 4, ry = 4, x, y, width, height, ...other },
+  { className, onMove, orientation, placement, rx = 4, ry = 4, x, y, width, height, onInteractionStart, onInteractionEnd, ...other },
   forwardedRef,
 ) {
   const classes = useUtilityClasses({ onMove, orientation, placement });
@@ -83,6 +87,7 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
       group.removeEventListener('pointerup', onPointerEnd);
       group.removeEventListener('pointercancel', onPointerEnd);
       group.releasePointerCapture(event.pointerId);
+      onInteractionEnd?.();
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -90,6 +95,7 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
       event.preventDefault();
       event.stopPropagation();
       group.setPointerCapture(event.pointerId);
+      onInteractionStart?.();
 
       group.addEventListener('pointermove', onPointerMove);
       group.addEventListener('pointercancel', onPointerEnd);
@@ -106,7 +112,7 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
       group.removeEventListener('touchmove', preventDefault);
       onPointerMove.clear();
     };
-  }, [onMoveEvent, orientation]);
+  }, [onMoveEvent, orientation, onInteractionStart, onInteractionEnd]);
 
   const numX = Number(x) || 0;
   const numY = Number(y) || 0;

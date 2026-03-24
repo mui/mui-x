@@ -69,6 +69,14 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
     };
   }, []);
 
+  const tooltipOn = React.useCallback(() => {
+    setShowTooltip(true);
+  }, []);
+
+  const tooltipOff = React.useCallback(() => {
+    setShowTooltip(false);
+  }, []);
+
   if (!zoomData) {
     return null;
   }
@@ -139,8 +147,8 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
       axisId={axisId}
       axisDirection={axisDirection}
       reverse={reverse}
-      onSelectStart={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
-      onSelectEnd={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
+      onSelectStart={tooltipConditions === 'hover' ? tooltipOn : undefined}
+      onSelectEnd={tooltipConditions === 'hover' ? tooltipOff : undefined}
     />
   );
 
@@ -158,8 +166,10 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
         }
         size={showPreview ? ZOOM_SLIDER_PREVIEW_SIZE : ZOOM_SLIDER_ACTIVE_TRACK_SIZE}
         preview={showPreview}
-        onPointerEnter={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
-        onPointerLeave={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
+        onPointerEnter={tooltipConditions === 'hover' ? tooltipOn : undefined}
+        onPointerLeave={tooltipConditions === 'hover' ? tooltipOff : undefined}
+        onInteractionStart={tooltipConditions === 'hover' ? tooltipOn : undefined}
+        onInteractionEnd={tooltipConditions === 'hover' ? tooltipOff : undefined}
       />
     </g>
   );
