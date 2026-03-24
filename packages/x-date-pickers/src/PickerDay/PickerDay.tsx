@@ -191,6 +191,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
     isVisuallySelected,
+    isDayFillerCell: isDayFillerCellProp,
     ...other
   } = props;
 
@@ -208,7 +209,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
   const ownerState: PickerDayOwnerState = {
     ...pickerDayOwnerState,
     // Properties specific to the MUI implementation (some might be removed in the next major)
-    isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
+    isDayFillerCell: isDayFillerCellProp ?? (outsideCurrentMonth && !showDaysOutsideCurrentMonth),
   };
 
   const classes = useUtilityClasses(ownerState, classesProp);
@@ -249,6 +250,17 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     }
   };
 
+  if (ownerState.isDayFillerCell) {
+    return (
+      <PickerDayRoot
+        ref={handleRef}
+        ownerState={ownerState}
+        className={clsx(classes.root, className)}
+        as="div"
+      />
+    );
+  }
+
   return (
     <PickerDayRoot
       ref={handleRef}
@@ -263,14 +275,11 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
       onMouseDown={handleMouseDown}
       {...other}
       // compat with PickerDay for tests
-      data-testid={
-        ownerState.isDayFillerCell ? undefined : ((other as any)['data-testid'] ?? 'day')
-      }
+      data-testid={(other as any)['data-testid'] ?? 'day'}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
     >
-      {/* `ownerState.isDayFillerCell` is used for compat with `PickerDay` for tests */}
-      {children ?? (ownerState.isDayFillerCell ? null : adapter.format(day, 'dayOfMonth'))}
+      {children ?? adapter.format(day, 'dayOfMonth')}
     </PickerDayRoot>
   );
 });
@@ -355,6 +364,11 @@ PickerDayRaw.propTypes = {
    * @default false
    */
   isAnimating: PropTypes.bool,
+  /**
+   * If `true`, the day is a filler day (its content is hidden).
+   * @default false
+   */
+  isDayFillerCell: PropTypes.bool,
   /**
    * If `true`, the day is the first visible cell of the month.
    * @default false

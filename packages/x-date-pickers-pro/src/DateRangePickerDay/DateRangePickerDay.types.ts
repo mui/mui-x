@@ -41,6 +41,11 @@ export interface DateRangePickerDayProps extends Omit<PickerDayProps, 'classes'>
    */
   draggable?: boolean;
   /**
+   * If `true`, the day is a filler day (its content is hidden).
+   * @default false
+   */
+  isDayFillerCell?: boolean;
+  /**
    * Callback fired when the mouse enters the component.
    * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
    * @param {PickerValidDate} day The day.

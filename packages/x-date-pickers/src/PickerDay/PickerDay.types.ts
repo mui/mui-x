@@ -120,6 +120,11 @@ export interface PickerDayProps
    * Indicates if the day should be visually selected.
    */
   isVisuallySelected?: boolean;
+  /**
+   * If `true`, the day is a filler day (its content is hidden).
+   * @default false
+   */
+  isDayFillerCell?: boolean;
 }
 
 export interface PickerDayOwnerState extends PickerDayOwnerStateBase {

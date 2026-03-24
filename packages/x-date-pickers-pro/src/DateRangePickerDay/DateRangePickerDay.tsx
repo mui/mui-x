@@ -105,6 +105,12 @@ const selectedDayStyles = (theme: Theme) => ({
   },
 });
 
+const insideSelectionStyle = () => ({
+  [`&.${dateRangePickerDayClasses.disabled}`]: {
+    opacity: 0.6,
+  },
+});
+
 const DateRangePickerDayRoot = styled(ButtonBase, {
   name: 'MuiDateRangePickerDay',
   slot: 'Root',
@@ -280,6 +286,7 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         '::before': {
           ...highlightStyles(theme),
         },
+        ...insideSelectionStyle(),
       },
     },
     {
@@ -408,6 +415,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     isStartOfPreviewing,
     isVisuallySelected,
     draggable,
+    isDayFillerCell: isDayFillerCellProp,
     ...other
   } = props;
 
@@ -438,7 +446,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     isDayEndOfMonth: adapter.isSameDay(day, adapter.endOfMonth(day)),
     isDayFirstVisibleCell: isFirstVisibleCell,
     isDayLastVisibleCell: isLastVisibleCell,
-    isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
+    isDayFillerCell: isDayFillerCellProp ?? (outsideCurrentMonth && !showDaysOutsideCurrentMonth),
     isDayDraggable: Boolean(draggable),
   };
 
@@ -479,13 +487,24 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     }
   };
 
+  if (ownerState.isDayFillerCell) {
+    return (
+      <DateRangePickerDayRoot
+        ref={handleRef}
+        ownerState={ownerState}
+        className={clsx(classes.root, className)}
+        as="div"
+      />
+    );
+  }
+
   return (
     <DateRangePickerDayRoot
       ref={handleRef}
       centerRipple
       // compat with DateRangePickerDay for tests
-      data-testid={ownerState.isDayFillerCell ? undefined : 'DateRangePickerDay'}
-      disabled={ownerState.isDayFillerCell ? undefined : disabled}
+      data-testid="DateRangePickerDay"
+      disabled={disabled}
       tabIndex={selected ? 0 : -1}
       onKeyDown={(event) => onKeyDown(event, day)}
       onFocus={(event) => onFocus(event, day)}
@@ -498,13 +517,13 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       ownerState={ownerState}
       className={clsx(classes.root, className)}
     >
-      {!ownerState.isDayFillerCell && isHighlighting && (
+      {isHighlighting && (
         <span
           data-testid="DateRangeHighlight"
           style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
         />
       )}
-      {children ?? (ownerState.isDayFillerCell ? null : adapter.format(day, 'dayOfMonth'))}
+      {children ?? adapter.format(day, 'dayOfMonth')}
     </DateRangePickerDayRoot>
   );
 });
@@ -594,6 +613,11 @@ DateRangePickerDayRaw.propTypes = {
    * @default false
    */
   isAnimating: PropTypes.bool,
+  /**
+   * If `true`, the day is a filler day (its content is hidden).
+   * @default false
+   */
+  isDayFillerCell: PropTypes.bool,
   /**
    * Set to `true` if the `day` is the end of a highlighted date range.
    */

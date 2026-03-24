@@ -32,6 +32,7 @@
     "focusRipple": { "type": { "name": "bool" }, "default": "false" },
     "focusVisibleClassName": { "type": { "name": "string" } },
     "isAnimating": { "type": { "name": "bool" }, "default": "false" },
+    "isDayFillerCell": { "type": { "name": "bool" }, "default": "false" },
     "isVisuallySelected": { "type": { "name": "bool" } },
     "LinkComponent": { "type": { "name": "elementType" }, "default": "'a'" },
     "onBlur": {
