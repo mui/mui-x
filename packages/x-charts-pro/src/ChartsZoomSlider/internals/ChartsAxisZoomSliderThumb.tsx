@@ -57,7 +57,7 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
   SVGRectElement,
   ChartsZoomSliderThumbProps
 >(function ChartsAxisZoomSliderThumb(
-  { className, onMove, orientation, placement, rx = 4, ry = 4, x, y, width, height, onInteractionStart, onInteractionEnd, ...other },
+  { className, onMove, orientation, placement, rx = 4, ry = 4, x, y, width, height, onInteractionStart, onInteractionEnd, onPointerEnter, onPointerLeave, ...other },
   forwardedRef,
 ) {
   const classes = useUtilityClasses({ onMove, orientation, placement });
@@ -125,17 +125,19 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
   const touchX = numX - (touchWidth - numWidth) / 2;
   const touchY = numY - (touchHeight - numHeight) / 2;
 
+  // These are used as a fallback for when the React synthetic event reaches
+  // the root before stopPropagation in the imperative handler blocks it.
+  // On real devices, one of these two mechanisms will fire.
+  const handlePointerDown = React.useCallback(() => {
+    onInteractionStart?.();
+  }, [onInteractionStart]);
+
+  const handlePointerUp = React.useCallback(() => {
+    onInteractionEnd?.();
+  }, [onInteractionEnd]);
+
   return (
-    <g ref={groupRef}>
-      {/* Invisible touch target for easier interaction on touch devices */}
-      <rect
-        x={touchX}
-        y={touchY}
-        width={touchWidth}
-        height={touchHeight}
-        fill="transparent"
-        stroke="none"
-      />
+    <g ref={groupRef} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}>
       <Rect
         ref={ref}
         className={clsx(classes.root, className)}
@@ -145,7 +147,21 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
         y={y}
         width={width}
         height={height}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
         {...other}
+      />
+      {/* Invisible touch target rendered on top for easier interaction on touch devices */}
+      <rect
+        x={touchX}
+        y={touchY}
+        width={touchWidth}
+        height={touchHeight}
+        fill="transparent"
+        stroke="none"
+        cursor={orientation === 'horizontal' ? 'ew-resize' : 'ns-resize'}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
       />
     </g>
   );

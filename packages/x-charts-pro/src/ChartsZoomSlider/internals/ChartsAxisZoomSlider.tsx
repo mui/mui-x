@@ -69,11 +69,27 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
     };
   }, []);
 
+  const isDraggingRef = React.useRef(false);
+
   const tooltipOn = React.useCallback(() => {
     setShowTooltip(true);
   }, []);
 
   const tooltipOff = React.useCallback(() => {
+    // Don't hide tooltip while dragging — pointerleave fires when the pointer
+    // moves away from the element during drag, but we want to keep the tooltip visible.
+    if (!isDraggingRef.current) {
+      setShowTooltip(false);
+    }
+  }, []);
+
+  const interactionStart = React.useCallback(() => {
+    isDraggingRef.current = true;
+    setShowTooltip(true);
+  }, []);
+
+  const interactionEnd = React.useCallback(() => {
+    isDraggingRef.current = false;
     setShowTooltip(false);
   }, []);
 
@@ -147,8 +163,8 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
       axisId={axisId}
       axisDirection={axisDirection}
       reverse={reverse}
-      onSelectStart={tooltipConditions === 'hover' ? tooltipOn : undefined}
-      onSelectEnd={tooltipConditions === 'hover' ? tooltipOff : undefined}
+      onSelectStart={tooltipConditions === 'hover' ? interactionStart : undefined}
+      onSelectEnd={tooltipConditions === 'hover' ? interactionEnd : undefined}
     />
   );
 
@@ -168,8 +184,8 @@ export function ChartsAxisZoomSlider({ axisDirection, axisId }: ChartsZoomSlider
         preview={showPreview}
         onPointerEnter={tooltipConditions === 'hover' ? tooltipOn : undefined}
         onPointerLeave={tooltipConditions === 'hover' ? tooltipOff : undefined}
-        onInteractionStart={tooltipConditions === 'hover' ? tooltipOn : undefined}
-        onInteractionEnd={tooltipConditions === 'hover' ? tooltipOff : undefined}
+        onInteractionStart={tooltipConditions === 'hover' ? interactionStart : undefined}
+        onInteractionEnd={tooltipConditions === 'hover' ? interactionEnd : undefined}
       />
     </g>
   );

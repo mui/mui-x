@@ -97,7 +97,8 @@ export function ChartsAxisZoomSliderActiveTrack({
   const store = useStore<[UseChartProZoomSignature]>();
   const axis = store.use(selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
-  const activePreviewRectRef = React.useRef<SVGRectElement>(null);
+  const activeTrackGroupRef = React.useRef<SVGGElement>(null);
+  const touchTargetRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
   const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
   const { tooltipStart, tooltipEnd } = getZoomSliderTooltipsText(axis, drawingArea);
@@ -109,9 +110,10 @@ export function ChartsAxisZoomSliderActiveTrack({
     axisDirection === 'x' ? ZOOM_SLIDER_THUMB_HEIGHT : ZOOM_SLIDER_THUMB_WIDTH;
 
   React.useEffect(() => {
-    const activePreviewRect = activePreviewRectRef.current;
+    const group = activeTrackGroupRef.current;
+    const touchTarget = touchTargetRef.current;
 
-    if (!activePreviewRect) {
+    if (!group || !touchTarget) {
       return;
     }
 
@@ -138,7 +140,7 @@ export function ChartsAxisZoomSliderActiveTrack({
     });
 
     const onPointerUp = () => {
-      activePreviewRect.removeEventListener('pointermove', onPointerMove);
+      group.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
       onInteractionEnd?.();
     };
@@ -146,7 +148,9 @@ export function ChartsAxisZoomSliderActiveTrack({
     const onPointerDown = (event: PointerEvent) => {
       // Prevent text selection when dragging
       event.preventDefault();
-      activePreviewRect.setPointerCapture(event.pointerId);
+      // Use the touch target rect for pointer capture as setPointerCapture
+      // does not work reliably on SVG <g> elements on touch devices.
+      touchTarget.setPointerCapture(event.pointerId);
       onInteractionStart?.();
 
       const axisZoomData = selectorChartAxisZoomData(store.state, axisId);
@@ -166,14 +170,15 @@ export function ChartsAxisZoomSliderActiveTrack({
       prevPointerZoom = pointerDownZoom;
 
       document.addEventListener('pointerup', onPointerUp);
-      activePreviewRect.addEventListener('pointermove', onPointerMove);
+      group.addEventListener('pointermove', onPointerMove);
     };
 
-    activePreviewRect.addEventListener('pointerdown', onPointerDown);
+    // Listen on the group so events from both the visible rect and touch target are captured
+    group.addEventListener('pointerdown', onPointerDown);
 
     // eslint-disable-next-line consistent-return
     return () => {
-      activePreviewRect.removeEventListener('pointerdown', onPointerDown);
+      group.removeEventListener('pointerdown', onPointerDown);
       onPointerMove.clear();
     };
   }, [axisDirection, axisId, instance, reverse, store, chartsLayerContainerRef, onInteractionStart, onInteractionEnd]);
@@ -311,27 +316,31 @@ export function ChartsAxisZoomSliderActiveTrack({
 
   return (
     <React.Fragment>
-      <ZoomSliderActiveTrackRect
-        x={activeTrackX}
-        y={activeTrackY}
-        preview={preview}
-        width={previewWidth}
-        height={previewHeight}
-        className={classes.active}
-      />
-      {/* Invisible touch target rendered on top for easier interaction on touch devices */}
-      <rect
-        ref={activePreviewRectRef}
-        x={touchX}
-        y={touchY}
-        width={touchWidth}
-        height={touchHeight}
-        fill="transparent"
-        stroke="none"
-        cursor="grab"
-        onPointerEnter={onPointerEnter}
-        onPointerLeave={onPointerLeave}
-      />
+      <g ref={activeTrackGroupRef}>
+        <ZoomSliderActiveTrackRect
+          x={activeTrackX}
+          y={activeTrackY}
+          preview={preview}
+          width={previewWidth}
+          height={previewHeight}
+          onPointerEnter={onPointerEnter}
+          onPointerLeave={onPointerLeave}
+          className={classes.active}
+        />
+        {/* Invisible touch target rendered on top for easier interaction on touch devices */}
+        <rect
+          ref={touchTargetRef}
+          x={touchX}
+          y={touchY}
+          width={touchWidth}
+          height={touchHeight}
+          fill="transparent"
+          stroke="none"
+          cursor="grab"
+          onPointerEnter={onPointerEnter}
+          onPointerLeave={onPointerLeave}
+        />
+      </g>
       <ChartsAxisZoomSliderThumb
         ref={setStartThumbEl}
         x={startThumbX}
