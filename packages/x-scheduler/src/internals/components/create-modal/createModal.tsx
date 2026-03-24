@@ -24,7 +24,7 @@ export function createModal<TData>(config: CreateModalConfig) {
   }
 
   function Provider(props: ProviderProps<TData>) {
-    const { children, render, onClose: onCloseProp } = props;
+    const { children, render, onOpen: onOpenProp, onClose: onCloseProp } = props;
     const anchorRef = React.useRef<HTMLElement | null>(null);
     const eventManager = React.useRef(new EventManager());
 
@@ -37,6 +37,7 @@ export function createModal<TData>(config: CreateModalConfig) {
       (forwardedAnchorRef: React.RefObject<HTMLElement | null>, data: TData) => {
         anchorRef.current = forwardedAnchorRef?.current ?? null;
         setState({ isOpen: true, data });
+        onOpenProp?.(data);
         eventManager.current.emit('open', { data, anchorRef: anchorRef.current });
       },
     );
@@ -55,8 +56,14 @@ export function createModal<TData>(config: CreateModalConfig) {
     }, []);
 
     const contextValue = React.useMemo(
-      () => ({ onOpen, onClose, isOpen: state.isOpen || false, subscribeCloseHandler }),
-      [onOpen, onClose, state.isOpen, subscribeCloseHandler],
+      () => ({
+        onOpen,
+        onClose,
+        isOpen: state.isOpen || false,
+        data: state.data,
+        subscribeCloseHandler,
+      }),
+      [onOpen, onClose, state.isOpen, state.data, subscribeCloseHandler],
     );
 
     return (

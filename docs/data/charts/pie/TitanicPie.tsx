@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
+import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -230,7 +230,7 @@ export default function TitanicPie(): React.ReactElement {
               },
             ]}
             sx={{
-              [`& .${pieArcLabelClasses.root}`]: {
+              [`& .${pieClasses.arcLabel}`]: {
                 fontSize: '12px',
               },
             }}
@@ -271,7 +271,7 @@ export default function TitanicPie(): React.ReactElement {
               },
             ]}
             sx={{
-              [`& .${pieArcLabelClasses.root}`]: {
+              [`& .${pieClasses.arcLabel}`]: {
                 fontSize: '12px',
               },
             }}

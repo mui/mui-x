@@ -6,7 +6,7 @@ export { LICENSE_MODELS, type LicenseModel } from '../utils/licenseModel';
 export type { KeyVersion, LicenseDetails, NullableLicenseDetails } from '../utils/licenseDetails';
 export type { LicenseStatus } from '../utils/licenseStatus';
 export type { MuiLicenseInfo } from '../utils/licenseInfo';
-export type { MuiCommercialPackageName } from '../utils/commercialPackages';
+export type { MuiCommercialPackageName, CommercialPackageInfo } from '../utils/commercialPackages';
 export { Watermark } from '../Watermark/Watermark';
 export {
   useLicenseVerifier,

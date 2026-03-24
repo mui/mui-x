@@ -63,7 +63,7 @@ export default function ControlledSelectedSectionsSingleInputRangeField() {
         </Stack>
         <SingleInputDateRangeField
           sx={{ minWidth: 300 }}
-          unstableFieldRef={fieldRef}
+          fieldRef={fieldRef}
           inputRef={inputRef}
           selectedSections={selectedSections}
           onSelectedSectionsChange={setSelectedSections}

@@ -4,22 +4,38 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
-import type { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
+import {
+  selectorChartXAxisAutoSizes,
+  selectorChartYAxisAutoSizes,
+} from './useChartAxisAutoSize.selectors';
+import type { AxisId, DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
+import {
+  DEFAULT_AXIS_SIZE_HEIGHT,
+  DEFAULT_AXIS_SIZE_WIDTH,
+  AXIS_LABEL_DEFAULT_HEIGHT,
+} from '../../../../constants';
 
-function selectAxisSize(
-  axes: DefaultedYAxis[] | undefined,
-  axesGap: number,
-  position: 'left' | 'right',
-): number;
-function selectAxisSize(
+/**
+ * Returns the default fallback height for an X axis when auto-sizing is not available.
+ * This function ensures consistent fallback values between axis size calculation and rendering.
+ */
+export function getDefaultXAxisHeight(axis: DefaultedXAxis): number {
+  return DEFAULT_AXIS_SIZE_HEIGHT + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
+}
+
+/**
+ * Returns the default fallback width for a Y axis when auto-sizing is not available.
+ * This function ensures consistent fallback values between axis size calculation and rendering.
+ */
+export function getDefaultYAxisWidth(axis: DefaultedYAxis): number {
+  return DEFAULT_AXIS_SIZE_WIDTH + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
+}
+
+function selectXAxisSize(
   axes: DefaultedXAxis[] | undefined,
   axesGap: number,
   position: 'top' | 'bottom',
-): number;
-function selectAxisSize(
-  axes: DefaultedXAxis[] | DefaultedYAxis[] | undefined,
-  axesGap: number,
-  position: 'left' | 'right' | 'top' | 'bottom',
+  autoSizes: Record<AxisId, number>,
 ): number {
   let axesSize = 0;
   let nbOfAxes = 0;
@@ -28,11 +44,43 @@ function selectAxisSize(
     if (axis.position !== position) {
       continue;
     }
-    const axisSize =
-      position === 'top' || position === 'bottom'
-        ? (axis as DefaultedXAxis).height
-        : (axis as DefaultedYAxis).width;
-    axesSize += (axisSize || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0);
+
+    let axisSize: number;
+    if (axis.height === 'auto') {
+      axisSize = autoSizes[axis.id] ?? getDefaultXAxisHeight(axis);
+    } else {
+      axisSize = axis.height ?? 0;
+    }
+
+    axesSize += axisSize + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0);
+    nbOfAxes += 1;
+  }
+
+  return axesSize + axesGap * Math.max(0, nbOfAxes - 1);
+}
+
+function selectYAxisSize(
+  axes: DefaultedYAxis[] | undefined,
+  axesGap: number,
+  position: 'left' | 'right',
+  autoSizes: Record<AxisId, number>,
+): number {
+  let axesSize = 0;
+  let nbOfAxes = 0;
+
+  for (const axis of axes ?? []) {
+    if (axis.position !== position) {
+      continue;
+    }
+
+    let axisSize: number;
+    if (axis.width === 'auto') {
+      axisSize = autoSizes[axis.id] ?? getDefaultYAxisWidth(axis);
+    } else {
+      axisSize = axis.width ?? 0;
+    }
+
+    axesSize += axisSize + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0);
     nbOfAxes += 1;
   }
 
@@ -42,32 +90,36 @@ function selectAxisSize(
 export const selectorChartLeftAxisSize = createSelector(
   selectorChartRawYAxis,
   selectorChartCartesianAxesGap,
-  function selectorChartLeftAxisSize(yAxis, axesGap) {
-    return selectAxisSize(yAxis, axesGap, 'left');
+  selectorChartYAxisAutoSizes,
+  function selectorChartLeftAxisSize(yAxis, axesGap, autoSizes) {
+    return selectYAxisSize(yAxis, axesGap, 'left', autoSizes);
   },
 );
 
 export const selectorChartRightAxisSize = createSelector(
   selectorChartRawYAxis,
   selectorChartCartesianAxesGap,
-  function selectorChartRightAxisSize(yAxis, axesGap) {
-    return selectAxisSize(yAxis, axesGap, 'right');
+  selectorChartYAxisAutoSizes,
+  function selectorChartRightAxisSize(yAxis, axesGap, autoSizes) {
+    return selectYAxisSize(yAxis, axesGap, 'right', autoSizes);
   },
 );
 
 export const selectorChartTopAxisSize = createSelector(
   selectorChartRawXAxis,
   selectorChartCartesianAxesGap,
-  function selectorChartTopAxisSize(xAxis, axesGap) {
-    return selectAxisSize(xAxis, axesGap, 'top');
+  selectorChartXAxisAutoSizes,
+  function selectorChartTopAxisSize(xAxis, axesGap, autoSizes) {
+    return selectXAxisSize(xAxis, axesGap, 'top', autoSizes);
   },
 );
 
 export const selectorChartBottomAxisSize = createSelector(
   selectorChartRawXAxis,
   selectorChartCartesianAxesGap,
-  function selectorChartBottomAxisSize(xAxis, axesGap) {
-    return selectAxisSize(xAxis, axesGap, 'bottom');
+  selectorChartXAxisAutoSizes,
+  function selectorChartBottomAxisSize(xAxis, axesGap, autoSizes) {
+    return selectXAxisSize(xAxis, axesGap, 'bottom', autoSizes);
   },
 );
 

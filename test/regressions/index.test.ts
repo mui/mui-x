@@ -308,6 +308,40 @@ async function main() {
         });
       });
     });
+
+    it('should export a chart as PNG when page is zoomed out', async () => {
+      const route = '/docs-charts-export/ExportChartAsImage';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedOutPNG.png`);
+
+      page = await newTestPage(browser, { deviceScaleFactor: 0.8 });
+      await navigateToTest(route);
+
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Export Image' }).click();
+
+      const download = await downloadPromise;
+
+      await download.saveAs(screenshotPath);
+
+      await page.close();
+    });
+
+    it('should export a chart as PNG when page is zoomed in', async () => {
+      const route = '/docs-charts-export/ExportChartAsImage';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedInPNG.png`);
+
+      page = await newTestPage(browser, { deviceScaleFactor: 1.25 });
+      await navigateToTest(route);
+
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Export Image' }).click();
+
+      const download = await downloadPromise;
+
+      await download.saveAs(screenshotPath);
+
+      await page.close();
+    });
   });
 }
 
@@ -358,10 +392,12 @@ function screenshotPrintDialogPreview(
   });
 }
 
-async function newTestPage(browser: Browser): Promise<Page> {
+type NewPageOptions = Parameters<Browser['newPage']>[0];
+
+async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}): Promise<Page> {
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
-  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+  const page = await browser.newPage({ viewport: { width: 1000, height: 700 }, ...newPageOptions });
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos

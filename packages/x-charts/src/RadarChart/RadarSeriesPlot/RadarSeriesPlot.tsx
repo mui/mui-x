@@ -1,25 +1,26 @@
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
 import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { useUtilityClasses } from './radarSeriesPlotClasses';
+import { useUtilityClasses } from '../radarClasses';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
-  const { seriesId: inSeriesId, classes: inClasses, onAreaClick, onMarkClick } = props;
+  const { seriesId: inSeriesId, className, classes: inClasses, onAreaClick, onMarkClick } = props;
   const seriesCoordinates = useRadarSeriesData(inSeriesId);
   const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const getHighlightState = useItemHighlightStateGetter();
 
   const classes = useUtilityClasses(inClasses);
 
   return (
-    <g className={classes.root}>
+    <g className={clsx(classes.seriesRoot, className)}>
       {seriesCoordinates?.map(
         ({ seriesId, points, color, hideMark, fillArea, hidden }, seriesIndex) => {
           if (hidden) {
@@ -36,8 +37,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                     points,
                     color,
                     fillArea,
-                    isFaded,
-                    isHighlighted,
+                    getHighlightState,
                     classes,
                   })}
                   onClick={(event) =>
@@ -60,8 +60,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       point,
                       color: point.color,
                       fillArea,
-                      isFaded,
-                      isHighlighted,
+                      getHighlightState,
                       classes,
                     })}
                     onClick={(event) =>

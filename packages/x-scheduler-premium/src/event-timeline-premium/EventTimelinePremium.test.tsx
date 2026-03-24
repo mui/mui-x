@@ -9,6 +9,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  ResourceBuilder,
 } from 'test/utils/scheduler';
 import {
   SchedulerEvent,
@@ -18,19 +19,19 @@ import {
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
-const baseResources: SchedulerResource[] = [
-  { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
-  { id: 'resource-2', title: 'Design', eventColor: 'teal' },
-];
+const engineering = ResourceBuilder.new().build();
+const design = ResourceBuilder.new().build();
 
-const event1 = EventBuilder.new().singleDay('2025-07-03T09:00:00Z').resource('resource-1').build();
+const baseResources: SchedulerResource[] = [engineering, design];
+
+const event1 = EventBuilder.new().singleDay('2025-07-03T09:00:00Z').resource(engineering).build();
 const event2 = EventBuilder.new()
   .span('2025-07-03T11:00:00Z', '2025-07-06T12:00:00Z')
-  .resource('resource-2')
+  .resource(design)
   .build();
 const event3 = EventBuilder.new()
   .span('2025-07-04T13:00:00Z', '2025-08-04T14:30:00Z')
-  .resource('resource-1')
+  .resource(engineering)
   .build();
 
 const baseEvents = [event1, event2, event3];
@@ -182,7 +183,7 @@ describe('<EventTimelinePremium />', () => {
       const nextMonthEvent = EventBuilder.new()
         .title('Next month')
         .span('2025-08-04T13:00:00Z', '2025-09-04T14:30:00Z')
-        .resource('resource-1')
+        .resource(engineering)
         .build();
       const extendedEvents: SchedulerEvent[] = [...baseEvents, nextMonthEvent];
 
@@ -210,11 +211,11 @@ describe('<EventTimelinePremium />', () => {
     it('should render events correctly in the year view', () => {
       const thisYearEvent = EventBuilder.new()
         .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')
-        .resource('resource-1')
+        .resource(engineering)
         .build();
       const nextYearEvent = EventBuilder.new()
         .span('2026-08-03T13:00:00Z', '2026-09-04T14:30:00Z')
-        .resource('resource-1')
+        .resource(engineering)
         .build();
 
       renderTimeline({ events: [thisYearEvent, nextYearEvent], view: 'years' });

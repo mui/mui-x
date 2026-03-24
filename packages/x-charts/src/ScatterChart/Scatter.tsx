@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type ScatterMarkerSlotProps, type ScatterMarkerSlots } from './ScatterMarker.types';
 import {
@@ -10,16 +11,17 @@ import {
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { type D3Scale } from '../models/axis';
-import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
+import { useItemHighlightStateGetter } from '../hooks/useItemHighlightStateGetter';
 import {
   selectorChartsIsVoronoiEnabled,
   type UseChartClosestPointSignature,
 } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
 import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
+import { useUtilityClasses } from './scatterClasses';
+import type { ScatterClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
@@ -76,7 +78,7 @@ function Scatter(props: ScatterProps) {
   } = props;
 
   const { instance } =
-    useChartContext<
+    useChartsContext<
       [
         UseChartInteractionSignature,
         UseChartHighlightSignature<'scatter'>,
@@ -86,8 +88,8 @@ function Scatter(props: ScatterProps) {
   const store = useStore<[UseChartClosestPointSignature]>();
   const isVoronoiEnabled = store.use(selectorChartsIsVoronoiEnabled);
 
-  const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const skipInteractionHandlers = isVoronoiEnabled;
+  const getHighlightState = useItemHighlightStateGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
 
@@ -102,17 +104,19 @@ function Scatter(props: ScatterProps) {
     ownerState: {},
   });
 
-  const classes = useUtilityClasses(inClasses);
+  const classes = useUtilityClasses({ classes: inClasses });
 
   return (
-    <g data-series={series.id} className={classes.root}>
+    <g data-series={series.id} className={classes.series}>
       {scatterPlotData.map((dataPoint) => {
-        const isItemHighlighted = isHighlighted(dataPoint);
-        const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
+        const highlightState = getHighlightState(dataPoint);
+        const isItemHighlighted = highlightState === 'highlighted';
+        const isItemFaded = highlightState === 'faded';
 
         return (
           <Marker
             key={dataPoint.id ?? dataPoint.dataIndex}
+            className={clsx(classes.marker, markerProps.className)}
             dataIndex={dataPoint.dataIndex}
             color={colorGetter(dataPoint.dataIndex)}
             isHighlighted={isItemHighlighted}

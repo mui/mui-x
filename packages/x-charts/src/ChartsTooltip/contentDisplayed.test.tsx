@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
-import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart, type BarChartProps, barClasses } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { getCenter } from 'test/utils/charts/getCenter';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
@@ -384,11 +385,12 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         />,
         { wrapper },
       );
-      const rectangles = document.querySelectorAll<HTMLElement>('rect');
+      const bars = document.querySelectorAll<HTMLElement>(`.${barClasses.element}`);
 
       // Trigger the tooltip
       await user.pointer({
-        target: rectangles[0],
+        target: bars[0],
+        coords: getCenter(bars[0]),
       });
 
       await waitFor(() => {
@@ -398,7 +400,8 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
 
       // Trigger the tooltip
       await user.pointer({
-        target: rectangles[3],
+        target: bars[3],
+        coords: getCenter(bars[3]),
       });
 
       await waitFor(() => {
@@ -422,10 +425,11 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         { wrapper },
       );
 
-      const rectangles = document.querySelectorAll<HTMLElement>('rect');
+      const bars = document.querySelectorAll<HTMLElement>(`.${barClasses.element}`);
 
       await user.pointer({
-        target: rectangles[0],
+        target: bars[0],
+        coords: getCenter(bars[0]),
       });
 
       await waitFor(() => {
@@ -434,7 +438,8 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       });
 
       await user.pointer({
-        target: rectangles[3],
+        target: bars[3],
+        coords: getCenter(bars[3]),
       });
 
       await waitFor(() => {
@@ -485,19 +490,16 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         />,
         { wrapper },
       );
-      const rectangles = document.querySelectorAll<HTMLElement>('rect');
+      const bars = document.querySelectorAll<HTMLElement>(`.${barClasses.element}`);
 
-      // Trigger the tooltip
+      // Trigger the tooltip for bar at dataIndex 1 (value 200)
       await user.pointer({
-        target: rectangles[1],
-        coords: {
-          x: 50,
-          y: 350,
-        },
+        target: bars[1],
+        coords: getCenter(bars[1]),
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root p');
+        const cells = document.querySelectorAll<HTMLElement>(`.${chartsTooltipClasses.root} p`);
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           'sum',
           '300',
@@ -506,17 +508,14 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         ]);
       });
 
-      // Trigger the tooltip
+      // Trigger the tooltip for bar at dataIndex 3 (value 400)
       await user.pointer({
-        target: rectangles[3],
-        coords: {
-          x: 350,
-          y: 350,
-        },
+        target: bars[3],
+        coords: getCenter(bars[3]),
       });
 
       await waitFor(() => {
-        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root p');
+        const cells = document.querySelectorAll<HTMLElement>(`.${chartsTooltipClasses.root} p`);
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
           'sum',
           '1000',

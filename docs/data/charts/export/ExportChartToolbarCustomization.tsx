@@ -22,13 +22,16 @@ const series = continents.map(
   (continent) =>
     ({
       label: continent,
+
       data: populationGdpPerCapitaData[continent].map((p) => ({
         x: p.population,
         y: p.gdpPerCapita,
         id: countryData[p.code].country,
       })),
+
       valueFormatter: (value: ScatterValueType | null) =>
         `${value!.id}: ${populationFormatter.format(value!.x)} people, ${gdpPerCapitaFormatter.format(value!.y)} GDP per capita`,
+
       highlightScope: {
         highlight: 'item',
         fade: 'global',
