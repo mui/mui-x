@@ -1,4 +1,11 @@
-import { useRadiusAxes, useRotationAxes, useSeries, useXAxes, useYAxes } from '../../../hooks';
+import {
+  useChartsLocalization,
+  useRadiusAxes,
+  useRotationAxes,
+  useSeries,
+  useXAxes,
+  useYAxes,
+} from '../../../hooks';
 import { useStore } from '../../store/useStore';
 import { selectorChartSeriesConfig } from '../../plugins/corePlugins/useChartSeriesConfig';
 import { isCartesianSeries } from '../../isCartesian';
@@ -15,6 +22,8 @@ export function useDescription(): string | null {
   const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const seriesState = useSeries();
+
+  const { localeText } = useChartsLocalization();
 
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
@@ -40,6 +49,7 @@ export function useDescription(): string | null {
   const descriptionParams: Record<string, unknown> = {
     identifier: focusedItem,
     series: focusedSeries,
+    localeText,
   };
 
   if (isCartesianSeries(focusedSeries)) {
