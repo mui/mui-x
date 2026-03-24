@@ -120,6 +120,14 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
   high: 'Haut',
   low: 'Bas',
   close: 'Cloture',
+  // barDescription: ({
+  //   value,
+  //   formattedValue,
+  //   formattedCategoryValue,
+  //   seriesLabel
+  // }) => {
+  //   return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
+  // },
 };
 
 export const frFR = getChartsLocalization(frFRLocalText);
