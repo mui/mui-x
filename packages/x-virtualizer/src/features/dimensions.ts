@@ -119,15 +119,6 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
-  // Lock to prevent scrollbar state oscillation. Uses the same pattern as the
-  // scroll position sync between the scroller and the custom scrollbar elements
-  // (see useScrollbarRefCallback in layout.ts): when updateDimensions changes
-  // hasScrollY/X, it sets the lock. The next updateDimensions call — triggered by
-  // the layout change from the scrollbar state change — sees the lock and keeps
-  // the previous scrollbar state instead of flipping it back.
-  // https://github.com/mui/mui-x/issues/20539
-  const isScrollbarLocked = React.useRef(false);
-
   const {
     layout,
     dimensions: {
@@ -199,41 +190,63 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           ),
         };
 
-        const content = contentSize;
-        const container = viewportInnerSize;
+        // Detect if the root is effectively auto-height (its height follows content
+        // rather than being constrained by a fixed parent). We check whether the
+        // previous root height matched the expected content height — if it did, the
+        // root is unconstrained and will grow/shrink with content.
+        //
+        // This prevents scrollbar oscillation (https://github.com/mui/mui-x/issues/20539):
+        // when content height changes (e.g. auto-height rows measured), rootSize lags
+        // behind (ResizeObserver is async). The standard logic would compare the new
+        // contentSize against the stale rootSize and falsely trigger hasScrollY, which
+        // changes the layout, which flips hasScrollY back — ad infinitum.
+        const prevExpectedMinHeight =
+          prevDimensions.topContainerHeight +
+          prevDimensions.contentSize.height +
+          prevDimensions.bottomContainerHeight;
+        const isRootEffectivelyAutoHeight =
+          prevDimensions.isReady &&
+          Math.abs(prevDimensions.root.height - prevExpectedMinHeight) <= scrollbarSize + 1;
 
-        const hasScrollXIfNoYScrollBar = content.width > container.width;
-        const hasScrollYIfNoXScrollBar = content.height > container.height;
+        if (isRootEffectivelyAutoHeight) {
+          // Root height follows content — no vertical scroll is possible.
+          // Use content-based viewport to avoid stale-rootSize false positives.
+          hasScrollY = false;
+          hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
 
-        if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
-          hasScrollY = hasScrollYIfNoXScrollBar;
-          hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
+          const expectedMinHeight =
+            topContainerHeight + contentSize.height + bottomContainerHeight;
+          viewportOuterSize.height = expectedMinHeight;
+          viewportInnerSize.height = Math.max(viewportInnerSize.height, contentSize.height);
 
-          // We recalculate the scroll y to consider the size of the x scrollbar.
           if (hasScrollX) {
-            hasScrollY = content.height + scrollbarSize > container.height;
+            viewportInnerSize.height -= scrollbarSize;
           }
-        }
+        } else {
+          // Root is constrained (fixed/max height from parent) — standard detection.
+          // rootSize is stable here so the timing mismatch does not apply.
+          const content = contentSize;
+          const container = viewportInnerSize;
 
-        // Prevent scrollbar state oscillation
-        if (prevDimensions.isReady && scrollbarSize > 0) {
-          const scrollbarChanged =
-            hasScrollY !== prevDimensions.hasScrollY || hasScrollX !== prevDimensions.hasScrollX;
+          const hasScrollXIfNoYScrollBar = content.width > container.width;
+          const hasScrollYIfNoXScrollBar = content.height > container.height;
 
-          if (isScrollbarLocked.current) {
-            hasScrollY = prevDimensions.hasScrollY;
-            hasScrollX = prevDimensions.hasScrollX;
-            isScrollbarLocked.current = false;
-          } else if (scrollbarChanged) {
-            isScrollbarLocked.current = true;
+          if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
+            hasScrollY = hasScrollYIfNoXScrollBar;
+            hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
+
+            // We recalculate the scroll y to consider the size of the x scrollbar.
+            if (hasScrollX) {
+              hasScrollY = content.height + scrollbarSize > container.height;
+            }
           }
-        }
 
-        if (hasScrollY) {
-          viewportInnerSize.width -= scrollbarSize;
-        }
-        if (hasScrollX) {
-          viewportInnerSize.height -= scrollbarSize;
+          if (hasScrollY) {
+            viewportInnerSize.width -= scrollbarSize;
+          }
+          if (hasScrollX) {
+            viewportInnerSize.height -= scrollbarSize;
+          }
         }
       }
 
@@ -309,12 +322,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(() => {
-    // Clear the lock when layout parameters change (e.g., column widths, row height)
-    // so that scrollbar state can be freely recalculated for genuine layout changes.
-    isScrollbarLocked.current = false;
-    updateDimensions();
-  }, [updateDimensions]);
+  useLayoutEffect(updateDimensions, [updateDimensions]);
 
   useLayoutEffect(() => {
     store.update({

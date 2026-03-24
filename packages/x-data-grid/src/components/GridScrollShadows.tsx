@@ -140,21 +140,16 @@ function GridScrollShadows(props: GridScrollShadowsProps) {
     }
   };
 
-  const handleSizeChange = React.useCallback(() => {
+  useGridEvent(apiRef, 'scrollPositionChange', handleScrolling);
+  useGridEvent(apiRef, 'columnResizeStop', handleColumnResizeStop);
+
+  React.useEffect(() => {
     updateScrollShadowVisibility(
       (position === 'horizontal'
         ? apiRef.current.virtualScrollerRef?.current?.scrollLeft
         : apiRef.current.virtualScrollerRef?.current?.scrollTop) ?? 0,
     );
   }, [updateScrollShadowVisibility, apiRef, position]);
-
-  useGridEvent(apiRef, 'scrollPositionChange', handleScrolling);
-  useGridEvent(apiRef, 'columnResizeStop', handleColumnResizeStop);
-  useGridEvent(apiRef, 'debouncedResize', handleSizeChange);
-
-  React.useEffect(() => {
-    handleSizeChange();
-  }, [handleSizeChange]);
 
   return (
     <ScrollShadow
