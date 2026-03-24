@@ -42,6 +42,13 @@ You can specify the time period with the `xAxis` prop. This axis must have a ban
 
 {{"demo": "BasicCandlestick.js"}}
 
+## Value formatter
+
+Use the `valueFormatter` property of the series to customize how individual OHLC values are displayed in the tooltip.
+The formatter receives each value individually along with context about which field it belongs to (`open`, `high`, `low`, or `close`).
+
+{{"demo": "ValueFormatterCandlestick.js"}}
+
 ## Customization
 
 Similarly to other chart types, you can customize the appearance and behavior of the candlestick chart.

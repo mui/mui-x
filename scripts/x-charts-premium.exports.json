@@ -400,6 +400,7 @@
   { "name": "MarkPlotSlots", "kind": "Interface" },
   { "name": "MarkShape", "kind": "TypeAlias" },
   { "name": "NumberValue", "kind": "TypeAlias" },
+  { "name": "OHLCField", "kind": "TypeAlias" },
   { "name": "OHLCItemIdentifier", "kind": "TypeAlias" },
   { "name": "OHLCSeries", "kind": "TypeAlias" },
   { "name": "OHLCSeriesType", "kind": "Interface" },
