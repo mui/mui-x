@@ -121,6 +121,14 @@ export const ptPTLocaleText: Partial<ChartsLocaleText> = {
   high: 'Máximo',
   low: 'Mínimo',
   close: 'Fecho',
+  // barDescription: ({
+  //   value,
+  //   formattedValue,
+  //   formattedCategoryValue,
+  //   seriesLabel
+  // }) => {
+  //   return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
+  // },
 };
 
 export const ptPT = getChartsLocalization(ptPTLocaleText);
