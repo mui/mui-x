@@ -56,7 +56,6 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
           ]}
           xAxis={[{ dataKey: 'x', position: 'none' }]}
           slotProps={{ tooltip: { trigger: 'axis' } }}
-          enableKeyboardNavigation
         />,
         { wrapper },
       );
