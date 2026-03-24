@@ -129,6 +129,28 @@ export const elGRLocaleText: Partial<ChartsLocaleText> = {
   // }) => {
   //   return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
   // },
+  // lineDescription: ({
+  //   y,
+  //   formattedXValue,
+  //   formattedYValue,
+  //   seriesLabel
+  // }) => {
+  //   return [formattedXValue, seriesLabel, y === null ? 'no value' : formattedYValue].filter(Boolean).join('; ');
+  // },
+  // scatterDescription: ({
+  //   formattedXValue,
+  //   formattedYValue,
+  //   seriesLabel
+  // }) => {
+  //   return [seriesLabel, formattedXValue, formattedYValue].filter(Boolean).join('; ');
+  // },
+  // pieDescription: ({
+  //   value,
+  //   formattedValue,
+  //   seriesLabel
+  // }) => {
+  //   return [seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
+  // },
 };
 
 export const elGR = getChartsLocalization(elGRLocaleText);

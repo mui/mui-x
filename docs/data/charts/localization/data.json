@@ -3,48 +3,48 @@
     "languageTag": "fr-FR",
     "importName": "frFR",
     "localeName": "French",
-    "missingKeysCount": 6,
-    "totalKeysCount": 108,
+    "missingKeysCount": 9,
+    "totalKeysCount": 111,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/frFR.ts"
   },
   {
     "languageTag": "el-GR",
     "importName": "elGR",
     "localeName": "Greek",
-    "missingKeysCount": 5,
-    "totalKeysCount": 108,
+    "missingKeysCount": 8,
+    "totalKeysCount": 111,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/elGR.ts"
   },
   {
     "languageTag": "nb-NO",
     "importName": "nbNO",
     "localeName": "Norwegian (Bokmål)",
-    "missingKeysCount": 5,
-    "totalKeysCount": 108,
+    "missingKeysCount": 8,
+    "totalKeysCount": 111,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/nbNO.ts"
   },
   {
     "languageTag": "pt-PT",
     "importName": "ptPT",
     "localeName": "Portuguese",
-    "missingKeysCount": 1,
-    "totalKeysCount": 108,
+    "missingKeysCount": 4,
+    "totalKeysCount": 111,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/ptPT.ts"
   },
   {
     "languageTag": "pt-BR",
     "importName": "ptBR",
     "localeName": "Portuguese (Brazil)",
-    "missingKeysCount": 5,
-    "totalKeysCount": 108,
+    "missingKeysCount": 8,
+    "totalKeysCount": 111,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/ptBR.ts"
   },
   {
     "languageTag": "sv-SE",
     "importName": "svSE",
     "localeName": "Swedish",
-    "missingKeysCount": 101,
-    "totalKeysCount": 108,
+    "missingKeysCount": 104,
+    "totalKeysCount": 111,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/svSE.ts"
   }
 ]
