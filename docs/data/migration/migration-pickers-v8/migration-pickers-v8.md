@@ -139,6 +139,40 @@ const theme = createTheme({
 });
 ```
 
+### `DateRangePickerDay` classes
+
+The `DateRangePickerDay` classes have been updated to be more consistent with the other components and to better describe their purpose.
+
+- `rangeIntervalDayHighlight` has been renamed to `rangeIntervalDayHighlightStart` and `rangeIntervalDayHighlightEnd`.
+- `dayInsideRangeInterval` has been removed. You can now use `insideSelection` instead.
+
+```tsx
+// Before
+const theme = createTheme({
+  components: {
+    MuiDateRangePickerDay: {
+      styleOverrides: {
+        rangeIntervalDayHighlight: { backgroundColor: 'red' },
+        dayInsideRangeInterval: { color: 'blue' },
+      },
+    },
+  },
+});
+
+// After
+const theme = createTheme({
+  components: {
+    MuiDateRangePickerDay: {
+      styleOverrides: {
+        rangeIntervalDayHighlightStart: { backgroundColor: 'red' },
+        rangeIntervalDayHighlightEnd: { backgroundColor: 'red' },
+        insideSelection: { color: 'blue' },
+      },
+    },
+  },
+});
+```
+
 ## Codemods
 
 The following codemods can be used to automatically apply these changes to your codebase:
