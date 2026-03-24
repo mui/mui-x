@@ -58,7 +58,7 @@ const PickerDayRoot = styled(ButtonBase, {
       styles.root,
       !ownerState.disableMargin && styles.dayWithoutMargin,
       !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
-      !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
+      ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
       ownerState.isDayFillerCell && styles.fillerCell,
     ];
   },

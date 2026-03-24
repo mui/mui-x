@@ -122,7 +122,7 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
     return [
       styles.root,
       !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
-      !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
+      ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
       ownerState.isDayFillerCell && styles.fillerCell,
       ownerState.isDaySelected && !ownerState.isDayInsideSelection && styles.selected,
       ownerState.isDayPreviewStart && styles.previewStart,
