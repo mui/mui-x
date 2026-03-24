@@ -121,6 +121,14 @@ export const nbNOLocaleText: Partial<ChartsLocaleText> = {
   // high: 'High',
   // low: 'Low',
   // close: 'Close',
+  // barDescription: ({
+  //   value,
+  //   formattedValue,
+  //   formattedCategoryValue,
+  //   seriesLabel
+  // }) => {
+  //   return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
+  // },
 };
 
 export const nbNO = getChartsLocalization(nbNOLocaleText);
