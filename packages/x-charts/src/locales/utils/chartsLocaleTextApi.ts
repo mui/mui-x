@@ -455,6 +455,23 @@ export interface ChartsLocaleText {
     formattedCategoryValue: string;
     seriesLabel?: string;
   }) => string;
+  /**
+   * The description of a line series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.x - The x value of the line item.
+   * @param {number|null} params.y - The y value of the line item.
+   * @param {string} params.formattedXValue - The formatted x value of the line item, as it appears in tooltips.
+   * @param {string} params.formattedYValue - The formatted y value of the line item, as it appears in tooltips.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the line item.
+   */
+  lineDescription: (params: {
+    x: number | null;
+    y: number | null;
+    formattedXValue: string;
+    formattedYValue: string;
+    seriesLabel?: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

@@ -128,6 +128,11 @@ export const enUSLocaleText: ChartsLocaleText = {
       .filter(Boolean)
       .join('; ');
   },
+  lineDescription: ({ y, formattedXValue, formattedYValue, seriesLabel }) => {
+    return [formattedXValue, seriesLabel, y === null ? 'no value' : formattedYValue]
+      .filter(Boolean)
+      .join('; ');
+  },
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;
