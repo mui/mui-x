@@ -13,6 +13,7 @@ import {
   createIsHighlighted,
   createIsFaded,
 } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import descriptionGetter from './descriptionGetter';
 
 export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   colorProcessor: getColor,
@@ -27,6 +28,7 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };
