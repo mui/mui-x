@@ -581,6 +581,23 @@ export interface ChartsLocaleText {
     sourceLabel: string;
     targetLabel: string;
   }) => string;
+  /**
+   * The description of a range bar series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {[number, number]|null} params.value - The value of the range bar item.
+   * @param {string} params.formattedValue - The formatted value of the range bar item.
+   * @param {string|number|null} params.categoryValue - The category value associated with the range bar item.
+   * @param {string} params.formattedCategoryValue - The formatted category value.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the range bar item.
+   */
+  rangeBarDescription: (params: {
+    value: [number, number] | null;
+    formattedValue: string;
+    categoryValue: string | number | null;
+    formattedCategoryValue: string;
+    seriesLabel?: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

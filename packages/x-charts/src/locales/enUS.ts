@@ -163,6 +163,11 @@ export const enUSLocaleText: ChartsLocaleText = {
       .filter(Boolean)
       .join(': ');
   },
+  rangeBarDescription: ({ value, formattedValue, formattedCategoryValue, seriesLabel }) => {
+    return [formattedCategoryValue, seriesLabel, value === null ? 'no value' : formattedValue]
+      .filter(Boolean)
+      .join('; ');
+  },
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;
