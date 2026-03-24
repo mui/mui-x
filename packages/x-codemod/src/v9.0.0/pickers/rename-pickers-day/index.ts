@@ -26,45 +26,47 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // Rename imports and usages
   renameKeys.forEach((oldName) => {
     const newName = renames[oldName as keyof typeof renames];
-    root.find(j.Identifier, { name: oldName }).forEach((path) => {
+    root.find(j.Identifier, { name: oldName }).forEach((keyPath) => {
       // Avoid renaming property keys in objects unless they are shorthand or identifiers in other contexts
       if (
-        path.parent.value.type === 'Property' &&
-        path.parent.value.key === path.node &&
-        !path.parent.value.shorthand
+        keyPath.parent.value.type === 'Property' &&
+        keyPath.parent.value.key === keyPath.node &&
+        !keyPath.parent.value.shorthand
       ) {
         return;
       }
       // Avoid renaming member expressions like something.PickersDay
       if (
-        path.parent.value.type === 'MemberExpression' &&
-        path.parent.value.property === path.node &&
-        !path.parent.value.computed
+        keyPath.parent.value.type === 'MemberExpression' &&
+        keyPath.parent.value.property === keyPath.node &&
+        !keyPath.parent.value.computed
       ) {
         return;
       }
 
-      j(path).replaceWith(j.identifier(newName));
+      j(keyPath).replaceWith(j.identifier(newName));
     });
   });
 
   // Rename theme components in createTheme / theme augmentation
-  root.find(j.Identifier, { name: 'MuiPickersDay' }).forEach((path) => {
-    j(path).replaceWith(j.identifier('MuiPickerDay'));
+  root.find(j.Identifier, { name: 'MuiPickersDay' }).forEach((keyPath) => {
+    j(keyPath).replaceWith(j.identifier('MuiPickerDay'));
   });
 
   // Also handle string literals for MuiPickersDay if any (e.g. in theme overrides or sx)
-  root.find(j.StringLiteral).forEach((path) => {
-    if (path.value.value.includes('MuiPickersDay')) {
-      j(path).replaceWith(j.stringLiteral(path.value.value.replace(/MuiPickersDay/g, 'MuiPickerDay')));
+  root.find(j.StringLiteral).forEach((keyPath) => {
+    if (keyPath.value.value.includes('MuiPickersDay')) {
+      j(keyPath).replaceWith(
+        j.stringLiteral(keyPath.value.value.replace(/MuiPickersDay/g, 'MuiPickerDay')),
+      );
     }
   });
 
   // Update import sources if they point to PickersDay (though usually they point to @mui/x-date-pickers)
-  root.find(j.ImportDeclaration).forEach((path) => {
-    if (typeof path.value.source.value === 'string') {
-      if (path.value.source.value.includes('/PickersDay')) {
-        path.value.source.value = path.value.source.value.replace('/PickersDay', '/PickerDay');
+  root.find(j.ImportDeclaration).forEach((importPath) => {
+    if (typeof importPath.value.source.value === 'string') {
+      if (importPath.value.source.value.includes('/PickersDay')) {
+        importPath.value.source.value = importPath.value.source.value.replace('/PickersDay', '/PickerDay');
       }
     }
   });
