@@ -14,6 +14,7 @@ import legendGetter from './legend';
 import tooltipItemPositionGetter from './tooltipPosition';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import { OHLCTooltipContent } from './OHLCTooltipContent';
+import descriptionGetter from './descriptionGetter';
 
 export const ohlcSeriesConfig: ChartSeriesTypeConfig<'ohlc'> = {
   seriesProcessor,
@@ -29,6 +30,7 @@ export const ohlcSeriesConfig: ChartSeriesTypeConfig<'ohlc'> = {
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };
