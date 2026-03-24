@@ -14,7 +14,7 @@ import {
   CANDLESTICK_CHART_PLUGINS,
   type CandlestickChartPluginSignatures,
 } from './CandlestickChart.plugins';
-import { candlestickPalette } from './candlestickPalette';
+import { candlestickPalette } from '../colorPalettes/complementary/candlestick';
 
 /**
  * A helper function that extracts CandlestickChartProps from the input props
