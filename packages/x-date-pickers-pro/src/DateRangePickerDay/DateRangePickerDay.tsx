@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { useLicenseVerifier } from '@mui/x-license/internals';
 import { alpha, styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
@@ -380,6 +381,12 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
   const props = useThemeProps({
     props: inProps,
     name: 'MuiDateRangePickerDay',
+  });
+
+  useLicenseVerifier({
+    releaseDate: '__RELEASE_INFO__',
+    version: process.env.MUI_VERSION!,
+    name: 'x-date-pickers-pro',
   });
 
   const adapter = usePickerAdapter();
