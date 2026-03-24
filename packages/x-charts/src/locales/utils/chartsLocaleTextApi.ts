@@ -534,6 +534,25 @@ export interface ChartsLocaleText {
     formattedValue: string;
     seriesLabel?: string;
   }) => string;
+  /**
+   * The description of a heatmap cell for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the heatmap cell.
+   * @param {number|string|null} params.x - The x value of the heatmap cell.
+   * @param {number|string|null} params.y - The y value of the heatmap cell.
+   * @param {string} params.formattedValue - The formatted value of the heatmap cell.
+   * @param {string} params.formattedXValue - The formatted x axis value.
+   * @param {string} params.formattedYValue - The formatted y axis value.
+   * @returns {string} The localized description for the heatmap cell.
+   */
+  heatmapDescription: (params: {
+    x: number | string | null;
+    y: number | string | null;
+    value: number | null;
+    formattedValue: string;
+    formattedXValue: string;
+    formattedYValue: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

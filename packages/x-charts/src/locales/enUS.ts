@@ -147,6 +147,11 @@ export const enUSLocaleText: ChartsLocaleText = {
   funnelDescription: ({ value, formattedValue, seriesLabel }) => {
     return [seriesLabel, value === null ? 'no value' : formattedValue].filter(Boolean).join('; ');
   },
+  heatmapDescription: ({ value, formattedValue, formattedXValue, formattedYValue }) => {
+    return [formattedXValue, formattedYValue, value === null ? 'no value' : formattedValue]
+      .filter(Boolean)
+      .join('; ');
+  },
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;
