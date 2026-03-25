@@ -398,7 +398,7 @@ PickerDayRaw.propTypes = {
   onBlur: PropTypes.func,
   /**
    * Callback fired when the component is clicked.
-   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @param {MuiEvent<React.MouseEvent<HTMLButtonElement>>} event The event object.
    * @default () => {}
    */
   onClick: PropTypes.func,

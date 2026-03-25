@@ -40,7 +40,7 @@
       "type": { "name": "func" },
       "default": "() => {}",
       "signature": {
-        "type": "function(event: React.MouseEvent<HTMLButtonElement>) => void",
+        "type": "function(event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => void",
         "describedArgs": ["event"]
       }
     },

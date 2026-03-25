@@ -8,6 +8,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { MuiEvent } from '@mui/x-internals/types';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { DateRangePickerDayOwnerState, DateRangePickerDayProps } from './DateRangePickerDay.types';
@@ -483,7 +484,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     }
   };
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => {
+    event.defaultMuiPrevented = true;
     if (!disabled) {
       onDaySelect(day);
     }
@@ -677,7 +679,7 @@ DateRangePickerDayRaw.propTypes = {
   onBlur: PropTypes.func,
   /**
    * Callback fired when the component is clicked.
-   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @param {MuiEvent<React.MouseEvent<HTMLButtonElement>>} event The event object.
    * @default () => {}
    */
   onClick: PropTypes.func,

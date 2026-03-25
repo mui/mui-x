@@ -1,4 +1,5 @@
 import { ButtonBaseProps } from '@mui/material/ButtonBase';
+import { MuiEvent } from '@mui/x-internals/types';
 import { PickerValidDate } from '../models';
 import { PickerDayClasses } from './pickerDayClasses';
 import { PickerDayOwnerState as PickerDayOwnerStateBase } from '../internals/hooks/PickerDay.types';
@@ -102,10 +103,10 @@ export interface PickerDayProps
   onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: PickerValidDate) => void;
   /**
    * Callback fired when the component is clicked.
-   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @param {MuiEvent<React.MouseEvent<HTMLButtonElement>>} event The event object.
    * @default () => {}
    */
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => void;
   /**
    * Callback fired when the mouse button is pressed.
    * @param {React.MouseEvent<HTMLButtonElement>} event The event object.

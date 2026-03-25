@@ -1,5 +1,6 @@
 import { PickerDayOwnerState, PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { MuiEvent } from '@mui/x-internals/types';
 import { DateRangePickerDayClasses } from './dateRangePickerDayClasses';
 
 export interface DateRangePickerDayProps extends Omit<PickerDayProps, 'classes'> {
@@ -81,10 +82,10 @@ export interface DateRangePickerDayProps extends Omit<PickerDayProps, 'classes'>
   onMouseDown?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /**
    * Callback fired when the component is clicked.
-   * @param {React.MouseEvent<HTMLButtonElement>} event The event object.
+   * @param {MuiEvent<React.MouseEvent<HTMLButtonElement>>} event The event object.
    * @default () => {}
    */
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => void;
 }
 
 export interface DateRangePickerDayOwnerState extends PickerDayOwnerState {
