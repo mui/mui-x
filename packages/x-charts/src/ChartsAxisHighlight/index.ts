@@ -1,5 +1,5 @@
 export * from './ChartsAxisHighlight';
-export * from './ChartsAxisValueTooltip';
+export * from './ChartsAxisHighlightValue';
 export { chartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 export type {
   ChartsAxisHighlightClasses,
