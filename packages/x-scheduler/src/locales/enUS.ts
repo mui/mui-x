@@ -68,7 +68,7 @@ const enUSDialog: EventDialogLocaleText = {
   title: 'Apply this change to:',
 
   // General
-  loading: 'Loading...',
+  loading: 'Loading…',
 };
 
 const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {
