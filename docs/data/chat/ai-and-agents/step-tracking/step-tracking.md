@@ -72,7 +72,7 @@ const adapter: ChatAdapter = {
         controller.enqueue({
           type: 'tool-output-available',
           toolCallId: 'call-1',
-          output: { results: ['...'] },
+          output: { results: ['…'] },
         });
         controller.enqueue({ type: 'finish-step' });
 
@@ -87,12 +87,12 @@ const adapter: ChatAdapter = {
           type: 'tool-input-available',
           toolCallId: 'call-2',
           toolName: 'analyze',
-          input: { data: '...' },
+          input: { data: '…' },
         });
         controller.enqueue({
           type: 'tool-output-available',
           toolCallId: 'call-2',
-          output: { summary: '...' },
+          output: { summary: '…' },
         });
         controller.enqueue({ type: 'finish-step' });
 
@@ -102,7 +102,7 @@ const adapter: ChatAdapter = {
         controller.enqueue({
           type: 'text-delta',
           id: 'text-1',
-          delta: 'Based on my research, here is the answer...',
+          delta: 'Based on my research, here is the answer…',
         });
         controller.enqueue({ type: 'text-end', id: 'text-1' });
         controller.enqueue({ type: 'finish-step' });
@@ -199,7 +199,7 @@ After streaming, the message's `parts` array contains `step-start` entries inter
     },
   }, // Step 2 content
   { type: 'step-start' }, // Step 3 delimiter
-  { type: 'text', text: 'Final answer...' }, // Step 3 content
+  { type: 'text', text: 'Final answer…' }, // Step 3 content
 ];
 ```
 
