@@ -413,6 +413,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     today,
     outsideCurrentMonth,
     disableHighlightToday,
+    disableMargin,
     showDaysOutsideCurrentMonth,
     isEndOfHighlighting,
     isEndOfPreviewing,
@@ -432,7 +433,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     disabled,
     today,
     outsideCurrentMonth,
-    disableMargin: false,
+    disableMargin,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
   });
