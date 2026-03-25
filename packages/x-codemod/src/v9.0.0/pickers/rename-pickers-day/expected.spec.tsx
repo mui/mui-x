@@ -24,4 +24,10 @@ const sx = {
   '& .MuiPickerDay-root': {
     backgroundColor: 'blue',
   },
+  [`& .MuiPickerDay-root`]: {
+    backgroundColor: 'blue',
+  },
 };
+
+const cls = `${prefix}MuiPickerDay-root`;
+const other = 'MuiPickersDayExtra';

@@ -53,13 +53,24 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     j(keyPath).replaceWith(j.identifier('MuiPickerDay'));
   });
 
-  // Also handle string literals for MuiPickersDay if any (e.g. in theme overrides or sx)
+  // Also handle string literals and template literals for MuiPickersDay if any (e.g. in theme overrides or sx)
+  const replaceClass = (value: string) => value.replace(/MuiPickersDay\b/g, 'MuiPickerDay');
+
   root.find(j.StringLiteral).forEach((keyPath) => {
     if (keyPath.value.value.includes('MuiPickersDay')) {
-      j(keyPath).replaceWith(
-        j.stringLiteral(keyPath.value.value.replace(/MuiPickersDay/g, 'MuiPickerDay')),
-      );
+      j(keyPath).replaceWith(j.stringLiteral(replaceClass(keyPath.value.value)));
     }
+  });
+
+  root.find(j.TemplateLiteral).forEach((keyPath) => {
+    keyPath.value.quasis.forEach((quasi) => {
+      if (quasi.value.raw.includes('MuiPickersDay')) {
+        quasi.value.raw = replaceClass(quasi.value.raw);
+      }
+      if (quasi.value.cooked && quasi.value.cooked.includes('MuiPickersDay')) {
+        quasi.value.cooked = replaceClass(quasi.value.cooked);
+      }
+    });
   });
 
   // Update import sources if they point to PickersDay (though usually they point to @mui/x-date-pickers)
