@@ -1,5 +1,6 @@
+import * as React from 'react';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { adapterToUse, createPickerRenderer, openPickerAsync } from 'test/utils/pickers';
 
@@ -192,6 +193,44 @@ describe('<DesktopTimePicker />', () => {
       await user.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
+    });
+  });
+
+  describe('focus behavior', () => {
+    it('should close the Picker and move focus to the text field when clicking it', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <input aria-label="decoy" />
+          <DesktopTimePicker />
+        </React.Fragment>,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Choose time' }));
+
+      const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
+      await user.click(decoyInput);
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
+      // the input should be focused—the new active element
+      expect(document.activeElement!).to.equal(decoyInput);
+    });
+
+    it('should close the Picker with digital clock and move focus to the text field when clicking it', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <input aria-label="decoy" />
+          <DesktopTimePicker timeSteps={{ minutes: 60 }} />
+        </React.Fragment>,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Choose time' }));
+
+      const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
+      await user.click(decoyInput);
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
+      // the input should be focused—the new active element
+      expect(document.activeElement!).to.equal(decoyInput);
     });
   });
 });

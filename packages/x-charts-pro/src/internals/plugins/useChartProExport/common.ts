@@ -42,16 +42,11 @@ export function copyCanvasesContent(original: Element, clone: Element) {
 
         const img = cloneCanvas.ownerDocument.createElement('img');
         img.src = dataURL;
-        img.width = cloneCanvas.width;
-        img.height = cloneCanvas.height;
+        // Use the CSS dimensions (not canvas.width/height which are in device pixels)
+        img.width = originalCanvas.clientWidth;
+        img.height = originalCanvas.clientHeight;
 
-        for (const styleKey in cloneCanvas.style) {
-          if (!Object.hasOwn(img.style, styleKey) || !Object.hasOwn(cloneCanvas.style, styleKey)) {
-            continue;
-          }
-
-          img.style[styleKey] = cloneCanvas.style[styleKey];
-        }
+        img.style.cssText = cloneCanvas.style.cssText;
 
         cloneCanvas.replaceWith(img);
 

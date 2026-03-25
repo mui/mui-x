@@ -1,0 +1,15 @@
+<LineChart {...chartsConfig}>
+  <StyledReferenceLine
+    y={6}
+    label="Threshold"
+    labelAlign="start"
+    labelStyle={{ fill: 'red', fontSize: 12 }}
+  />
+  <ChartsReferenceLine
+    x="Apr"
+    label="Target"
+    lineStyle={{ stroke: 'green', strokeWidth: 2 }}
+    labelStyle={{ fill: 'green', fontSize: 12 }}
+    labelAlign="end"
+  />
+</LineChart>

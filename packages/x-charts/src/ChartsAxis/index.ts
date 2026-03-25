@@ -1,2 +1,3 @@
 export * from './ChartsAxis';
-export * from './axisClasses';
+export { axisClasses } from './axisClasses';
+export type { ChartsAxisClasses, ChartsAxisClassKey } from './axisClasses';

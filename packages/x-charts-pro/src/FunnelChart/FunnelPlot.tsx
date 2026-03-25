@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { cartesianSeriesTypes, useStore } from '@mui/x-charts/internals';
@@ -7,6 +8,7 @@ import { type FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
 import { type FunnelPlotSlotExtension } from './funnelPlotSlots.types';
+import { useUtilityClasses } from './funnelClasses';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
 import { getFunnelCurve, type Point } from './curves';
 import { FunnelSectionLabel } from './FunnelSectionLabel';
@@ -21,6 +23,10 @@ import { get2DExtrema } from './get2DExtrema';
 cartesianSeriesTypes.addType('funnel');
 
 export interface FunnelPlotProps extends FunnelPlotSlotExtension {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
   /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -132,12 +138,13 @@ const useAggregatedData = () => {
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { onItemClick, ...other } = props;
+  const { className, onItemClick, ...other } = props;
 
   const data = useAggregatedData();
+  const classes = useUtilityClasses();
 
   return (
-    <React.Fragment>
+    <g className={clsx(classes.root, className)}>
       {data.map((series) => {
         if (series.length === 0) {
           return null;
@@ -172,7 +179,7 @@ function FunnelPlot(props: FunnelPlotProps) {
 
         return (
           <g data-series={series[0].seriesId} key={series[0].seriesId}>
-            {series.map(({ id, label, seriesId, dataIndex }) => {
+            {series.map(({ id, label, seriesId, dataIndex, variant }) => {
               if (!label || !label.value) {
                 return null;
               }
@@ -183,6 +190,7 @@ function FunnelPlot(props: FunnelPlotProps) {
                   label={label}
                   dataIndex={dataIndex}
                   seriesId={seriesId}
+                  variant={variant}
                   {...other}
                 />
               );
@@ -190,7 +198,7 @@ function FunnelPlot(props: FunnelPlotProps) {
           </g>
         );
       })}
-    </React.Fragment>
+    </g>
   );
 }
 

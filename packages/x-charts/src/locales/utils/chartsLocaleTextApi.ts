@@ -420,6 +420,213 @@ export interface ChartsLocaleText {
    * Label for the "Bump Y" interpolation option.
    */
   chartConfigurationOptionBumpY: string;
+
+  /**
+   * Label for the "Open" value in the context of an OHLC/Candlestick chart.
+   */
+  open: string;
+  /**
+   * Label for the "High" value in the context of an OHLC/Candlestick chart.
+   */
+  high: string;
+  /**
+   * Label for the "Low" value in the context of an OHLC/Candlestick chart.
+   */
+  low: string;
+  /**
+   * Label for the "Close" value in the context of an OHLC/Candlestick chart.
+   */
+  close: string;
+
+  /**
+   * The description functions return a string that describes the chart element for screen readers.
+   */
+  a11yNoValue: string;
+  /**
+   * The string used to merge description values.
+   */
+  a11yConnector: string;
+  /**
+   * The description of a bar series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the bar item.
+   * @param {string} params.formattedValue - The formatted value of the bar item, as it appears in tooltips or labels.
+   * @param {string|number|null} params.categoryValue - The category value associated with the bar item.
+   * @param {string} params.formattedCategoryValue - The formatted category value, as it appears in tooltips or labels.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the bar item.
+   */
+  barDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    categoryValue: string | number | null;
+    formattedCategoryValue: string;
+    seriesLabel?: string;
+  }) => string;
+  /**
+   * The description of a line series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.x - The x value of the line item.
+   * @param {number|null} params.y - The y value of the line item.
+   * @param {string} params.formattedXValue - The formatted x value of the line item, as it appears in tooltips.
+   * @param {string} params.formattedYValue - The formatted y value of the line item, as it appears in tooltips.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the line item.
+   */
+  lineDescription: (params: {
+    x: number | null;
+    y: number | null;
+    formattedXValue: string;
+    formattedYValue: string;
+    seriesLabel?: string;
+  }) => string;
+  /**
+   * The description of a scatter series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.x - The x value of the scatter item.
+   * @param {number|null} params.y - The y value of the scatter item.
+   * @param {string} params.formattedXValue - The formatted x value of the scatter item, as it appears in tooltips.
+   * @param {string} params.formattedYValue - The formatted y value of the scatter item, as it appears in tooltips.
+   * @param {string} params.seriesLabel - The series label.
+   * @returns {string} The localized description for the scatter item.
+   */
+  scatterDescription: (params: {
+    x: number | null;
+    y: number | null;
+    formattedXValue: string;
+    formattedYValue: string;
+    seriesLabel?: string;
+  }) => string;
+  /**
+   * The description of a pie series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the pie item.
+   * @param {number} params.totalValue - The total value of all pie items.
+   * @param {string} params.formattedValue - The formatted value of the pie item, as it appears in tooltips or labels.
+   * @param {string} [params.seriesLabel] - An optional label for the pie item.
+   * @returns {string} The localized description for the pie item.
+   */
+  pieDescription: (params: {
+    value: number | null;
+    totalValue: number;
+    formattedValue: string;
+    seriesLabel?: string;
+  }) => string;
+  /**
+   * The description of a radar series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the radar item.
+   * @param {string} params.formattedValue - The formatted value of the radar item.
+   * @param {string|number|null} params.categoryValue - The category value associated with the radar item.
+   * @param {string} params.formattedCategoryValue - The formatted category value.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the radar item.
+   */
+  radarDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    categoryValue: string | number | null;
+    formattedCategoryValue: string;
+    seriesLabel?: string;
+  }) => string;
+  /**
+   * The description of a funnel series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the funnel item.
+   * @param {string} params.formattedValue - The formatted value of the funnel item.
+   * @param {string} [params.seriesLabel] - An optional label for the funnel item.
+   * @returns {string} The localized description for the funnel item.
+   */
+  funnelDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    seriesLabel?: string;
+  }) => string;
+  /**
+   * The description of a heatmap cell for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the heatmap cell.
+   * @param {number|string|null} params.x - The x value of the heatmap cell.
+   * @param {number|string|null} params.y - The y value of the heatmap cell.
+   * @param {string} params.formattedValue - The formatted value of the heatmap cell.
+   * @param {string} params.formattedXValue - The formatted x axis value.
+   * @param {string} params.formattedYValue - The formatted y axis value.
+   * @returns {string} The localized description for the heatmap cell.
+   */
+  heatmapDescription: (params: {
+    x: number | string | null;
+    y: number | string | null;
+    value: number | null;
+    formattedValue: string;
+    formattedXValue: string;
+    formattedYValue: string;
+  }) => string;
+  /**
+   * The description of a sankey node for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the sankey node. Corresponds to the sum of the incoming links values.
+   * @param {string} params.formattedValue - The formatted value of the sankey node.
+   * @param {string} params.nodeLabel - The label for the node.
+   * @returns {string} The localized description for the sankey node.
+   */
+  sankeyNodeDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    nodeLabel: string;
+  }) => string;
+  /**
+   * The description of a sankey link for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.value - The value of the sankey link.
+   * @param {string} params.formattedValue - The formatted value of the sankey link.
+   * @param {string} params.sourceLabel - The label for the source node.
+   * @param {string} params.targetLabel - The label for the target node.
+   * @returns {string} The localized description for the sankey link.
+   */
+  sankeyLinkDescription: (params: {
+    value: number | null;
+    formattedValue: string;
+    sourceLabel: string;
+    targetLabel: string;
+  }) => string;
+  /**
+   * The description of a range bar series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {[number, number]|null} params.value - The value of the range bar item.
+   * @param {string} params.formattedValue - The formatted value of the range bar item.
+   * @param {string|number|null} params.categoryValue - The category value associated with the range bar item.
+   * @param {string} params.formattedCategoryValue - The formatted category value.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the range bar item.
+   */
+  rangeBarDescription: (params: {
+    value: [number, number] | null;
+    formattedValue: string;
+    categoryValue: string | number | null;
+    formattedCategoryValue: string;
+    seriesLabel?: string;
+  }) => string;
+  /**
+   * The description of an OHLC/Candlestick series item for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number|null} params.open - The open value.
+   * @param {number|null} params.high - The high value.
+   * @param {number|null} params.low - The low value.
+   * @param {number|null} params.close - The close value.
+   * @param {Date|null} params.date - The date associated to the candle value.
+   * @param {string} params.formattedDate - The formatted date value.
+   * @param {string} [params.seriesLabel] - An optional label for the series.
+   * @returns {string} The localized description for the OHLC item.
+   */
+  ohlcDescription: (params: {
+    open: number | null;
+    high: number | null;
+    low: number | null;
+    close: number | null;
+    date: Date | null;
+    formattedDate: string;
+    seriesLabel?: string;
+  }) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

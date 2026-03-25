@@ -74,22 +74,24 @@ function AutocompleteField(props: AutocompleteFieldProps) {
             focused={open}
             label={label}
             name={name}
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: React.cloneElement(endAdornment, {
-                children: (
-                  <React.Fragment>
-                    <IconButton
-                      onClick={() => setOpen((prev) => !prev)}
-                      aria-label={openPickerAriaLabel}
-                      size="small"
-                    >
-                      <CalendarIcon />
-                    </IconButton>
-                    {endAdornment.props.children}
-                  </React.Fragment>
-                ),
-              }),
+            slotProps={{
+              input: {
+                ...params.InputProps,
+                endAdornment: React.cloneElement(endAdornment, {
+                  children: (
+                    <React.Fragment>
+                      <IconButton
+                        onClick={() => setOpen((prev) => !prev)}
+                        aria-label={openPickerAriaLabel}
+                        size="small"
+                      >
+                        <CalendarIcon />
+                      </IconButton>
+                      {endAdornment.props.children}
+                    </React.Fragment>
+                  ),
+                }),
+              },
             }}
           />
         );

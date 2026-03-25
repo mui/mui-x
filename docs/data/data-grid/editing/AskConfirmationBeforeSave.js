@@ -101,8 +101,10 @@ export default function AskConfirmationBeforeSave() {
     return (
       <Dialog
         maxWidth="xs"
-        TransitionProps={{ onEntered: handleEntered }}
         open={!!promiseArguments}
+        slotProps={{
+          transition: { onEntered: handleEntered },
+        }}
       >
         <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent dividers>

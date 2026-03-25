@@ -14,8 +14,8 @@ type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
   dataIndex: number;
 } | null;
 
-type StateParameters<TSeriesType extends ChartSeriesType> = Pick<
-  ChartState<[UseChartKeyboardNavigationSignature], [], TSeriesType>,
+type StateParameters<SeriesType extends ChartSeriesType> = Pick<
+  ChartState<[UseChartKeyboardNavigationSignature], [], SeriesType>,
   'series'
 >;
 export function createGetNextIndexFocusedItem<

@@ -1,4 +1,4 @@
-<ChartContainer
+<ChartsContainer
   height={300}
   series={[
     {
@@ -11,4 +11,4 @@
 >
   <LinePlot />
   <DrawingAreaBox />
-</ChartContainer>
+</ChartsContainer>

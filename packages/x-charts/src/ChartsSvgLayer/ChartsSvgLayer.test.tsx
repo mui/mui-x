@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { isJSDOM } from 'test/utils/skipIf';
-import { ChartProvider } from '../context/ChartProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
 
 // JSDOM doesn't implement SVGElement
 describe.skipIf(isJSDOM)('<ChartsSurface />', () => {
@@ -12,11 +12,11 @@ describe.skipIf(isJSDOM)('<ChartsSurface />', () => {
     const ref = React.createRef<HTMLDivElement>();
 
     render(
-      <ChartProvider pluginParams={{ width: 100, height: 100, series: [] }}>
+      <ChartsProvider pluginParams={{ width: 100, height: 100, series: [] }}>
         <ChartsSurface ref={ref}>
           <rect width={100} height={100} />
         </ChartsSurface>
-      </ChartProvider>,
+      </ChartsProvider>,
     );
 
     expect(ref.current instanceof HTMLDivElement, 'ref is a HTMLDivElement').to.equal(true);

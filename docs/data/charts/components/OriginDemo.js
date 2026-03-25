@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 
@@ -54,7 +54,7 @@ function CartesianAxis() {
 }
 export default function OriginDemo() {
   return (
-    <ChartContainer
+    <ChartsContainer
       margin={{ top: 5, left: 5, right: 5, bottom: 5 }}
       height={300}
       series={[
@@ -72,6 +72,6 @@ export default function OriginDemo() {
     >
       <CartesianAxis />
       <LinePlot />
-    </ChartContainer>
+    </ChartsContainer>
   );
 }

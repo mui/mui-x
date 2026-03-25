@@ -80,6 +80,26 @@ The corresponding sub-sections are listed below
 
 - [`preset-safe-for-charts`](#preset-safe-for-charts-v900)
 
+### Data Grid codemods
+
+#### `remove-stabilized-experimentalFeatures`
+
+Removes the `charts` property from the `experimentalFeatures` prop of `DataGridPremium`.
+If `charts` is the only property, the entire `experimentalFeatures` prop is removed.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/data-grid/remove-stabilized-experimentalFeatures <path|folder>
+```
+
+```diff
+ <DataGridPremium
+-  experimentalFeatures={{ charts: true }}
+   chartsIntegration
+ />
+```
+
 ### Charts codemods
 
 #### 🚀 `preset-safe` for Charts v9.0.0
@@ -102,8 +122,12 @@ The list includes these transformers
 - [`rename-chart-container`](#rename-chart-container)
 - [`rename-chart-data-provider`](#rename-chart-data-provider)
 - [`rename-chart-zoom-slider`](#rename-chart-zoom-slider)
+- [`remove-enable-keyboard-navigation`](#remove-enable-keyboard-navigation)
+- [`remove-stabilized-experimentalFeatures`](#remove-stabilized-experimentalfeatures)
+- [`remove-deprecated-series-types`](#remove-deprecated-series-types)
+- [`remove-is-bar-series-helpers`](#remove-is-bar-series-helpers)
 
-### `replace-heatmap-hide-legend-false`
+#### `replace-heatmap-hide-legend-false`
 
 The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9. This improves consistency across chart components and developer experience.
 
@@ -113,7 +137,7 @@ The default value of the `hideLegend` prop in the `Heatmap` component has change
  />
 ```
 
-### `rename-axis-tooltip-hook`
+#### `rename-axis-tooltip-hook`
 
 The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
 
@@ -138,7 +162,7 @@ After running the codemod to do the renaming make sure to adapt the hook returne
  }
 ```
 
-### `rename-chart-api-import`
+#### `rename-chart-api-import`
 
 Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-charts/context`.
 
@@ -227,6 +251,64 @@ Renames the `ChartDataProvider` component and related exports to `ChartsDataProv
 
 -import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 +import { ChartsDataProviderPro } from '@mui/x-charts-pro/ChartsDataProviderPro';
+```
+
+#### `remove-enable-keyboard-navigation`
+
+Removes the `enableKeyboardNavigation` props set to `true` since it's now the default behavior.
+
+```diff
+ <LineChart
+-  enableKeyboardNavigation
+ />
+```
+
+#### `remove-stabilized-experimentalFeatures`
+
+Removes the `preferStrictDomainInLineCharts` property from the `experimentalFeatures` prop since it's now the default behavior.
+If `preferStrictDomainInLineCharts` is the only property in the object, the entire `experimentalFeatures` prop is removed.
+
+```diff
+ <LineChart
+-  experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+   series={[]}
+ />
+```
+
+#### `remove-deprecated-series-types`
+
+Replaces deprecated series type aliases (`CartesianSeriesType`, `DefaultizedCartesianSeriesType`, `StackableSeriesType`) with their new equivalents using generic types.
+
+```diff
+-import { CartesianSeriesType, DefaultizedCartesianSeriesType, StackableSeriesType } from '@mui/x-charts';
++import { AllSeriesType, DefaultizedSeriesType, CartesianChartSeriesType, StackableChartSeriesType } from '@mui/x-charts';
+
+-function processCartesian(series: CartesianSeriesType) {}
++function processCartesian(series: AllSeriesType<CartesianChartSeriesType>) {}
+
+-function processDefaultizedCartesian(series: DefaultizedCartesianSeriesType) {}
++function processDefaultizedCartesian(series: DefaultizedSeriesType<CartesianChartSeriesType>) {}
+
+-function processStackable(series: StackableSeriesType) {}
++function processStackable(series: DefaultizedSeriesType<StackableChartSeriesType>) {}
+```
+
+#### `remove-is-bar-series-helpers`
+
+Replaces the deprecated `isBarSeries()` and `isDefaultizedBarSeries()` helper functions with direct `series.type === 'bar'` checks and removes the corresponding imports.
+
+```diff
+-import { isBarSeries, isDefaultizedBarSeries } from '@mui/x-charts';
+-
+-if (isBarSeries(series)) {
++if (series.type === 'bar') {
+   console.log('bar series');
+ }
+
+-if (isDefaultizedBarSeries(series)) {
++if (series.type === 'bar') {
+   console.log('defaultized bar series');
+ }
 ```
 
 ## v8.0.0

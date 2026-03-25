@@ -6,7 +6,7 @@ import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import type { ChartsYAxisProps } from '../models/axis';
 import type { OrdinalTimeTicks } from '../models/timeTicks';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import { shortenLabels } from './shortenLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
 import { useAxisTicksProps } from './useAxisTicksProps';
@@ -47,7 +47,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
   } = defaultizedProps;
 
   const drawingArea = useDrawingArea();
-  const { instance } = useChartContext();
+  const { instance } = useChartsContext();
   const isHydrated = useIsHydrated();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;

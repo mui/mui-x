@@ -1,13 +1,14 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import {
   type SankeyLinkIdentifierWithData,
   type SankeyNodeIdentifierWithData,
 } from './sankey.types';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
+import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
 import { SankeyNodePlot } from './SankeyNodePlot';
 import { SankeyLinkPlot } from './SankeyLinkPlot';
 import { SankeyNodeLabelPlot } from './SankeyNodeLabelPlot';
@@ -15,9 +16,13 @@ import { SankeyLinkLabelPlot } from './SankeyLinkLabelPlot';
 
 export interface SankeyPlotProps {
   /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
+  /**
    * Classes applied to the various elements.
    */
-  classes?: Partial<SankeyPlotClasses>;
+  classes?: Partial<SankeyClasses>;
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -39,15 +44,15 @@ export interface SankeyPlotProps {
 }
 
 const SankeyPlotRoot = styled('g', {
-  slot: 'internal',
-  shouldForwardProp: undefined,
+  name: 'MuiSankeyPlot',
+  slot: 'Root',
 })({});
 
 /**
  * Renders a Sankey diagram plot.
  */
 function SankeyPlot(props: SankeyPlotProps) {
-  const { classes: inputClasses, onLinkClick, onNodeClick } = props;
+  const { className, classes: inputClasses, onLinkClick, onNodeClick } = props;
 
   const classes = useUtilityClasses({ classes: inputClasses });
 
@@ -56,7 +61,7 @@ function SankeyPlot(props: SankeyPlotProps) {
 
   if (!sankeySeries) {
     throw new Error(
-      `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartDataProviderPro.`,
+      `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartsDataProviderPro.`,
     );
   }
 
@@ -69,7 +74,7 @@ function SankeyPlot(props: SankeyPlotProps) {
 
   const showNodeLabels = nodeOptions?.showLabels ?? true;
   return (
-    <SankeyPlotRoot className={classes.root}>
+    <SankeyPlotRoot className={clsx(classes.root, className)}>
       <SankeyLinkPlot classes={classes} onClick={onLinkClick} />
       <SankeyNodePlot classes={classes} onClick={onNodeClick} />
 
