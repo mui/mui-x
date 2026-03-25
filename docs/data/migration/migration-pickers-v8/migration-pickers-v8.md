@@ -116,9 +116,6 @@ These highlights are now rendered using `::before` and `::after` pseudo-elements
 This change might affect your custom styles if you were targeting the nested elements.
 For example, in `DateRangePickerDay`, the `day` class has been removed as there is no longer a separate element for the day content.
 
-Additionally, the `data-testid="DateRangeHighlight"` attribute that was previously on the nested `<span>` in `DateRangePickerDay` has been moved to the root element.
-When a day is highlighted, its `data-testid` will be `DateRangeHighlight` instead of `DateRangePickerDay`.
-
 ### `DateRangePickerDay` selection behavior
 
 The `isDaySelected` condition in `DateRangePickerDay` has been updated to also include individually selected days, not just days within a valid range.
@@ -225,6 +222,16 @@ const theme = createTheme({
 The `PickerDay` classes have also been updated:
 
 - `dayWithMargin` has been removed and replaced by `dayWithoutMargin`. Note that the logic is inverted: `dayWithoutMargin` is applied when the day does **not** have a margin.
+
+### `data-testid` changes
+
+The `data-testid` attributes on several components have been updated, which may break your unit or integration tests if you are querying for these specific IDs.
+
+- In `DateRangePickerDay`, the `data-testid="DateRangeHighlight"` attribute that was previously on a nested `<span>` has been moved to the root element.
+  - When a day is highlighted, its `data-testid` will be `DateRangeHighlight` instead of `DateRangePickerDay`.
+  - Tests querying for a nested button inside `DateRangeHighlight` will break as `DateRangePickerDay` is now a single element.
+- The `DateRangePreview` test ID has been removed entirely.
+- `PickerDay` (formerly `PickersDay`) now respects a custom `data-testid` prop if provided, falling back to its default value `"day"`.
 
 ## Codemods
 
