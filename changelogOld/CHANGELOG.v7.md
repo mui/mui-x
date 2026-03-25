@@ -21,8 +21,6 @@ The following is the team member who have contributed to this release:
 
 Same changes as in `@mui/x-tree-view@7.29.10`.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ## 7.29.9
 
 _Aug 7, 2025_
@@ -36,8 +34,6 @@ Special thanks go out to the community members for their valuable contributions:
 
 The following are all team members who have contributed to this release:
 @cherniavskii, @mapache-salvaje, @MBilalShafi, @rita-codes
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -144,8 +140,6 @@ _Jun 6, 2025_
 
 We'd like to extend a big thank you to @arminmeh, who made this release possible.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.29.6`
@@ -169,8 +163,6 @@ Same changes as in `@mui/x-data-grid-pro@7.29.6`.
 _May 29, 2025_
 
 We'd like to extend a big thank you to @cherniavskii, who made this release possible.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -199,8 +191,6 @@ Special thanks go out to the community members for their valuable contributions:
 
 Following are all team members who have contributed to this release:
 @mapache-salvaje, @cherniavskii, @noraleonte.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -246,8 +236,6 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 Team members who have contributed to this release:
 @arminmeh, @LukasTy, and @MBilalShafi.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.29.3`
@@ -288,8 +276,6 @@ Special thanks go out to the community contributors who have helped make this re
 
 Following are all team members who have contributed to this release:
 @arminmeh, @JCQuintas, @KenanYusuf, @MBilalShafi, @oliviertassinari.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -340,8 +326,6 @@ Special thanks go out to the community contributors who have helped make this re
 
 Following are all team members who have contributed to this release:
 @arminmeh, @cherniavskii, @flaviendelangle, @LukasTy, @romgrk.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -420,8 +404,6 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @michelengelen, @oliviertassinari, @michelengelen, @LukasTy.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.29.0`
@@ -493,8 +475,6 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 Team members who have contributed to this release:
 @cherniavskii, @LukasTy, @MBilalShafi.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.28.3`
@@ -537,8 +517,6 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 Team members who have contributed to this release:
 @flaviendelangle, @LukasTy, @arminmeh.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.28.2`
@@ -580,8 +558,6 @@ Special thanks go out to the community contributors who have helped make this re
 
 Following are all team members who have contributed to this release:
 @arminmeh, @KenanYusuf.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -633,8 +609,6 @@ Special thanks go out to the community contributors who have helped make this re
 @Blake-McCullough, @hlavacz, @yelahj, @k-rajat19, @nusr.
 Following are all team members who have contributed to this release:
 @arminmeh, @flaviendelangle, @LukasTy, @michelengelen, @MBilalShafi.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -715,8 +689,6 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 Team members who have contributed to this release:
 @arminmeh, @cherniavskii, @LukasTy, @michelengelen.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.27.3`
@@ -762,8 +734,6 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @MBilalShafi, @KenanYusuf.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@v7.27.2`
@@ -795,8 +765,6 @@ Special thanks go out to the community contributors who have helped make this re
 @nusr, @officialkidmax.
 Following are all team members who have contributed to this release:
 @bernardobelchior, @MBilalShafi, @KenanYusuf.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -911,8 +879,6 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @arminmeh, @noraleonte, @LukasTy, @KenanYusuf, @flaviendelangle.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.26.0`
@@ -980,8 +946,6 @@ Special thanks go out to the community contributors who have helped make this re
 @k-rajat19, @lauri865.
 Following are all team members who have contributed to this release:
 @KenanYusuf, @MBilalShafi, @arminmeh.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -1130,8 +1094,6 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @KenanYusuf, @arminmeh, @cherniavskii, @michelengelen, @samuelsycamore, @LukasTy.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.24.0`
@@ -1211,8 +1173,6 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @flaviendelangle, @LukasTy, @MBilalShafi, @arminmeh, @oliviertassinari, @cherniavskii.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.23.6`
@@ -1283,8 +1243,6 @@ Here are some highlights ✨:
 
 - 🐞 Fix version mismatch issue in Data Grid CodeSandbox/StackBlitz demos
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.23.5`
@@ -1312,8 +1270,6 @@ Special thanks go out to the community contributor who has helped make this rele
 @JoepVerkoelen.
 Following are all team members who have contributed to this release:
 @arminmeh, @oliviertassinari.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -1350,8 +1306,6 @@ Special thanks go out to the community contributors who have helped make this re
 @k-rajat19, @good-jinu.
 Following are all team members who have contributed to this release:
 @KenanYusuf, @MBilalShafi, @arminmeh, @flaviendelangle.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -1401,8 +1355,6 @@ Special thanks go out to the community contributors who have helped make this re
 
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -1481,8 +1433,6 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy and @MBilalShafi.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.23.1`
@@ -1552,8 +1502,6 @@ Special thanks go out to the community contributors who have helped make this re
 @dloeda, @headironc, @mathzdev, @nphmuller, @lhilgert9, @lauri865.
 Following are all team members who have contributed to this release:
 @oliviertassinari, @arminmeh, @KenanYusuf, @flaviendelangle, @MBilalShafi.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -1641,8 +1589,6 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @alexfauquette, @LukasTy, @MBilalShafi, @flaviendelangle.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.22.3`
@@ -1719,8 +1665,6 @@ Following are all team members who have contributed to this release:
 
 Keep an eye out for the MUI⠀X `v8.0.0-aplha.0` release soon. It will follow a weekly release schedule as always until it is stable.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.22.2`
@@ -1779,8 +1723,6 @@ Special thanks go out to the community contributors who have helped make this re
 @wojtkolos, @dpak-maurya, @k-rajat19.
 Following are all team members who have contributed to this release:
 @LukasTy, @arminmeh, @MBilalShafi, @KenanYusuf, @flaviendelangle.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -1842,8 +1784,6 @@ Special thanks go out to the community contributors who have helped make this re
 @clins1994, @GITPHLAP, @k-rajat19, @kalyan90, @merotosc, @yash49.
 Following are all team members who have contributed to this release:
 @cherniavskii, @flaviendelangle, @LukasTy, @MBilalShafi, @romgrk.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -1921,8 +1861,6 @@ Special thanks go out to the community contributors who have helped make this re
 @k-rajat19, @kalyan90, @rotembarsela, @wangkailang.
 Following are all team members who have contributed to this release:
 @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @arminmeh, @romgrk, @KenanYusuf, @oliviertassinari, @samuelsycamore.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -2014,8 +1952,6 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release: @alelthomas, @arminmeh, @arthurbalduini,
 @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @noraleonte, @oliviertassinari, @samuelsycamore, @siriwatknp.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.20.0`
@@ -2104,8 +2040,6 @@ Special thanks goes out to our community contributors who have helped make this 
 @AWAIS97, @chucamphong, @GMchris, @JakubSveda, @k-rajat19, @k725, @lhilgert9, @ruiaraujo012, @Sanderand, @thomasmoon, @vallereaugabriel.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @arthurbalduini, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @romgrk, @sai6855, @samuelsycamore.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -2211,8 +2145,6 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.18.0`
@@ -2301,8 +2233,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 📚 Documentation improvements
 - 🌍 Improve Hungarian (hu-HU) locale on the Data Grid
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.17.0`
@@ -2387,8 +2317,6 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - 🌍 Improve Chinese (zh-CN) and Dutch (nl-NL) locales on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -2557,8 +2485,6 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - 🌍 Improve Chinese (zh-HK), Hebrew (he-IL), and Vietnamese (vi-VN) locales on the Date and Time Pickers
 - 🐞 Bugfixes
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.14.0`
@@ -2635,8 +2561,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🔧 Improve rows accessibility on the Data Grid features "Tree Data" and "Row Grouping". Certain "Row Grouping" accessibility updates will only be applied if experimental feature flag is enabled. See the [documentation](https://mui.com/x/react-data-grid/row-grouping/#accessibility-changes-in-v8) for more information.
 - 🌍 Improve Vietnamese (vi-VN) locale on the Data Grid
 - 🐞 Bugfixes
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -2715,8 +2639,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   - The zoom interaction on the bar, line, and scatter charts
 - 🌍 Improve Dutch (nl-NL) locale on the Date and Time Pickers
 - 🐞 Bugfixes
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -2815,8 +2737,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.12.0`
@@ -2890,8 +2810,6 @@ We'd like to offer a big thanks to the 18 contributors who made this release pos
 - 🌍 Add Norwegian Nynorsk (nn-NO) locale on the Date and Time Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -2973,8 +2891,6 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - 🌍 Improve Russian (ru-RU) locale on the Date and Time Pickers and Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -3059,8 +2975,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.10.0`
@@ -3131,8 +3045,6 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - 🌳 Add `selectItem` and `getItemDOMElement` methods to the TreeView component public API
 - ⛏️ Make the `usePickersTranslations` hook public in the pickers component
 - 🐞 Bugfixes
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -3228,8 +3140,6 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - ↕️ Support custom column sort icons on the Data Grid
 - 🖱️ Support modifying the expansion trigger on the Tree View components
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.8.0`
@@ -3296,8 +3206,6 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - 🌍 Improve Danish (da-DK) locale on the Date and Time Pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
@@ -3380,8 +3288,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.7.0`
@@ -3459,8 +3365,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.6.2`
@@ -3523,8 +3427,6 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 🐞 Address the `@mui/internal-test-utils` added as a direct dependency to `@mui/x-data-grid` by mistake.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
 #### `@mui/x-data-grid@7.6.1`
@@ -3551,8 +3453,6 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - 🌍 Improve Persian (fa-IR) locale on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
 
