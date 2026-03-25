@@ -46,7 +46,7 @@ Please don't hesitate to leave a comment there to describe your needs, especiall
 
 With this feature, users would be able to view and manage events across an entire year.
 
-### Resource view [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
+### Resource views [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21599) to help us prioritize it.
