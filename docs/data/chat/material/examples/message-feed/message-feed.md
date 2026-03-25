@@ -24,7 +24,7 @@ Common use cases:
 ## How it works
 
 Only `ChatRoot` (the adapter wrapper) and `ChatMessageList` are needed.
-`ChatConversationInput` is simply not rendered — there is no prop to "hide" it.
+`ChatComposer` is simply not rendered — there is no prop to "hide" it.
 
 To send a message programmatically, call `useChat().sendMessage()` from any component inside `ChatRoot`:
 

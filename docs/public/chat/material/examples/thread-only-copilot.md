@@ -12,7 +12,7 @@ A minimal embedded AI copilot with streaming markdown responses — ideal for da
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import type { ChatAdapter, ChatMessageChunk } from '@mui/x-chat-headless';
+import type { ChatAdapter, ChatMessageChunk } from '@mui/x-chat/headless';
 import { ChatBox } from '@mui/x-chat';
 import { createChunkStream } from 'docsx/data/chat/material/shared/demoUtils';
 import { demoUsers } from 'docsx/data/chat/material/shared/demoData';

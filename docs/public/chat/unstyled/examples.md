@@ -1,15 +1,15 @@
 ---
 title: Chat - Unstyled examples
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Unstyled examples
 
-<p class="description">Recipe-first examples for building chat interfaces with <code>@mui/x-chat-unstyled</code> structural primitives.</p>
+<p class="description">Recipe-first examples for building chat interfaces with <code>@mui/x-chat/unstyled</code> structural primitives.</p>
 
 These recipes focus on end-to-end composition patterns rather than isolated component references.
-Each recipe stays inside the unstyled layer: the runtime comes from `@mui/x-chat-headless`, but the learning surface is the structural component model exposed by `@mui/x-chat-unstyled`.
+Each recipe stays inside the unstyled layer: the runtime comes from `@mui/x-chat/headless`, but the learning surface is the structural component model exposed by `@mui/x-chat/unstyled`.
 
 The section is meant to answer real product questions, not just API questions.
 Each page shows where a pattern fits in an actual chat surface and why a team would choose it over a simpler or lower-level approach.

@@ -3,7 +3,7 @@ import type {
   ChatConversation,
   ChatMessage,
   ChatMessagePart,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 
 const styles = {
   frame: {

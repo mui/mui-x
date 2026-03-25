@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled layout
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Unstyled layout
@@ -13,12 +13,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -117,21 +117,21 @@ export default function MinimalUnstyledShell() {
             )}
             style={{ minHeight: 0 }}
           />
-          <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
-            <ConversationInput.TextArea
+          <Composer.Root slots={{ root: DemoComposerRoot }}>
+            <Composer.TextArea
               aria-label="Message"
               placeholder="Ask the starter thread a question"
               slots={{ root: DemoComposerInput }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ConversationInput.SendButton
+              <Composer.SendButton
                 data-variant="primary"
                 slots={{ root: DemoComposerButton }}
               >
                 Send
-              </ConversationInput.SendButton>
+              </Composer.SendButton>
             </div>
-          </ConversationInput.Root>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>

@@ -1,7 +1,7 @@
 ---
 title: Chat - ChatGPT-style layout
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # ChatGPT-style layout

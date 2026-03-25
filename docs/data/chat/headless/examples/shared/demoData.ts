@@ -1,4 +1,4 @@
-import type { ChatConversation, ChatMessage, ChatUser } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage, ChatUser } from '@mui/x-chat/headless';
 
 export const demoUsers = {
   alice: {

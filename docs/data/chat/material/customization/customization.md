@@ -132,12 +132,12 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 | `messageActions`       | `Partial<ChatMessageActionsProps>`                | Message action menu     |
 | `messageGroup`         | `Partial<ChatMessageGroupProps>`                  | Message group container |
 | `dateDivider`          | `Partial<ChatDateDividerProps>`                   | Date separator          |
-| `composerRoot`         | `Partial<ChatConversationInputProps>`             | Composer form root      |
-| `composerInput`        | `Partial<ChatConversationInputTextAreaProps>`     | Composer textarea       |
-| `composerSendButton`   | `Partial<ChatConversationInputSendButtonProps>`   | Send button             |
-| `composerAttachButton` | `Partial<ChatConversationInputAttachButtonProps>` | Attach button           |
-| `composerToolbar`      | `Partial<ChatConversationInputToolbarProps>`      | Toolbar container       |
-| `composerHelperText`   | `Partial<ChatConversationInputHelperTextProps>`   | Helper text below input |
+| `composerRoot`         | `Partial<ChatComposerProps>`             | Composer form root      |
+| `composerInput`        | `Partial<ChatComposerTextAreaProps>`     | Composer textarea       |
+| `composerSendButton`   | `Partial<ChatComposerSendButtonProps>`   | Send button             |
+| `composerAttachButton` | `Partial<ChatComposerAttachButtonProps>` | Attach button           |
+| `composerToolbar`      | `Partial<ChatComposerToolbarProps>`      | Toolbar container       |
+| `composerHelperText`   | `Partial<ChatComposerHelperTextProps>`   | Helper text below input |
 | `typingIndicator`      | `Partial<ChatTypingIndicatorProps>`               | Typing indicator        |
 | `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`                  | Unread marker           |
 | `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>`      | Scroll to bottom button |
@@ -187,12 +187,12 @@ const CustomMessageContent = React.forwardRef(
 | `messageActions`            | `ChatMessageActions`                | Message action menu          |
 | `messageGroup`              | `ChatMessageGroup`                  | Groups consecutive messages  |
 | `dateDivider`               | `ChatDateDivider`                   | Date boundary separator      |
-| `composerRoot`              | `ChatConversationInput`             | Composer form                |
-| `composerInput`             | `ChatConversationInputTextArea`     | Textarea input               |
-| `composerSendButton`        | `ChatConversationInputSendButton`   | Send button                  |
-| `composerAttachButton`      | `ChatConversationInputAttachButton` | Attach button                |
-| `composerToolbar`           | `ChatConversationInputToolbar`      | Toolbar container            |
-| `composerHelperText`        | `ChatConversationInputHelperText`   | Helper text                  |
+| `composerRoot`              | `ChatComposer`             | Composer form                |
+| `composerInput`             | `ChatComposerTextArea`     | Textarea input               |
+| `composerSendButton`        | `ChatComposerSendButton`   | Send button                  |
+| `composerAttachButton`      | `ChatComposerAttachButton` | Attach button                |
+| `composerToolbar`           | `ChatComposerToolbar`      | Toolbar container            |
+| `composerHelperText`        | `ChatComposerHelperText`   | Helper text                  |
 | `typingIndicator`           | `ChatTypingIndicator`               | Typing indicator             |
 | `unreadMarker`              | `ChatUnreadMarker`                  | Unread message marker        |
 | `scrollToBottom`            | `ChatScrollToBottomAffordance`      | Scroll to bottom affordance  |

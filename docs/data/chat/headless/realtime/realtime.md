@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Headless realtime
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Headless realtime

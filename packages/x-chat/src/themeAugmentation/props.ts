@@ -4,7 +4,7 @@ import { type ChatBoxProps } from '../ChatBox/ChatBox.types';
 import { type ChatMessageProps } from '../ChatMessage/ChatMessage';
 import { type ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
 import { type ChatConversationProps } from '../ChatConversation/ChatConversation';
-import { type ChatConversationInputProps } from '../ChatConversationInput/ChatConversationInput';
+import { type ChatComposerProps } from '../ChatComposer/ChatComposer';
 import { type ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
 import { type ChatTypingIndicatorProps } from '../ChatIndicators/ChatTypingIndicator';
 import { type ChatScrollToBottomAffordanceProps } from '../ChatIndicators/ChatScrollToBottomAffordance';
@@ -21,7 +21,7 @@ export interface ChatComponentsPropsList {
   MuiChatMessage: ChatMessageProps;
   MuiChatMessageList: ChatMessageListProps;
   MuiChatConversation: ChatConversationProps;
-  MuiChatConversationInput: ChatConversationInputProps;
+  MuiChatComposer: ChatComposerProps;
   MuiChatConversationList: ChatConversationListProps;
   MuiChatTypingIndicator: ChatTypingIndicatorProps;
   MuiChatScrollToBottomAffordance: ChatScrollToBottomAffordanceProps;

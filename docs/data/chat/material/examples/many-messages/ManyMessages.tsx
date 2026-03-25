@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter } from '../shared/demoUtils';
 import { createTextMessage, demoUsers } from '../shared/demoData';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const adapter = createEchoAdapter();
 

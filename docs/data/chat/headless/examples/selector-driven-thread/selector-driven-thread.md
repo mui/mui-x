@@ -1,7 +1,7 @@
 ---
 title: Chat - Selector-driven thread
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Selector-driven thread

@@ -1,7 +1,7 @@
 ---
 title: Chat - Custom message part rendering
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Custom message part rendering

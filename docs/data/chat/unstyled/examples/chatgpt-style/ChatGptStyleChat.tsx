@@ -14,17 +14,17 @@ import type {
   ReasoningPartOwnerState,
   ToolPartOwnerState,
   ToolPartSectionOwnerState,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
-import type { ChatMessage, ChatUser } from '@mui/x-chat-headless';
+} from '@mui/x-chat/unstyled';
+import type { ChatMessage, ChatUser } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -1202,8 +1202,8 @@ export default function ChatGptStyleChat() {
 
           {/* Composer */}
           <div style={{ padding: '12px 24px 16px' }}>
-            <ConversationInput.Root slots={{ root: GptComposerRoot }}>
-              <ConversationInput.TextArea
+            <Composer.Root slots={{ root: GptComposerRoot }}>
+              <Composer.TextArea
                 aria-label="Message ChatGPT"
                 placeholder="Ask anything"
                 slots={{ input: GptTextArea }}
@@ -1259,12 +1259,12 @@ export default function ChatGptStyleChat() {
                   >
                     <MicNoneRoundedIcon style={{ fontSize: 20 }} />
                   </button>
-                  <ConversationInput.SendButton
+                  <Composer.SendButton
                     slots={{ sendButton: GptSendButton }}
                   />
                 </div>
               </div>
-            </ConversationInput.Root>
+            </Composer.Root>
           </div>
         </Conversation.Root>
       </Chat.Layout>

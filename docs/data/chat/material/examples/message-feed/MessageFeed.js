@@ -13,9 +13,9 @@ import {
   ChatMessageMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useChat, useMessageIds } from '@mui/x-chat-headless';
+import { useChat, useMessageIds } from '@mui/x-chat/headless';
 
-import { ChatRoot } from '@mui/x-chat-unstyled';
+import { ChatRoot } from '@mui/x-chat/unstyled';
 import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
 import { createTextMessage, demoUsers } from '../shared/demoData';
 
@@ -40,7 +40,7 @@ const defaultMessages = [
     role: 'assistant',
     author: demoUsers.agent,
     createdAt: '2026-03-15T09:58:00.000Z',
-    text: 'This is a read-only message feed — no ChatConversationInput is rendered anywhere on the page.',
+    text: 'This is a read-only message feed — no ChatComposer is rendered anywhere on the page.',
   }),
   createTextMessage({
     id: nanoid(),
@@ -87,7 +87,7 @@ function Feed() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      {/* Only the message list — no ChatConversationInput */}
+      {/* Only the message list — no ChatComposer */}
       <ChatConversation sx={{ flex: 1, minHeight: 0 }}>
         <ChatMessageList renderItem={renderItem} items={messageIds} />
       </ChatConversation>

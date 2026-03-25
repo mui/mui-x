@@ -112,7 +112,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import { ChatBox } from '@mui/x-chat';
 import {
   createEchoAdapter,
@@ -183,7 +183,7 @@ The component manages internal state until you lift it.
 `ChatBox` forwards the adapter to the underlying provider.
 When the adapter implements `listConversations` and `listMessages`, `ChatBox` bootstraps entirely from the adapter without requiring default data.
 
-See the [Material UI overview](/x/react-chat/material/) for a custom adapter example.
+See the [Overview](/x/react-chat/) for a custom adapter example.
 
 ## Adjacent pages
 

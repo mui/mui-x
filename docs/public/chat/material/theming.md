@@ -16,7 +16,7 @@ Import the theme augmentation module to enable TypeScript autocompletion for cha
 import type {} from '@mui/x-chat/themeAugmentation';
 ```
 
-This adds `MuiChatBox`, `MuiChatConversation`, `MuiChatConversationInput`, `MuiChatConversations`, `MuiChatMessage`, and other chat component keys to the theme's `components` type.
+This adds `MuiChatBox`, `MuiChatConversation`, `MuiChatComposer`, `MuiChatConversations`, `MuiChatMessage`, and other chat component keys to the theme's `components` type.
 
 ## Palette tokens
 
@@ -49,7 +49,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatBox } from '@mui/x-chat';
 import type {} from '@mui/x-chat/themeAugmentation';
 import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
@@ -142,7 +142,7 @@ import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatBox } from '@mui/x-chat';
 import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
 
@@ -227,7 +227,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatBox } from '@mui/x-chat';
 import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
 

@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled thread
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
 ---
 
@@ -14,12 +14,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -181,21 +181,21 @@ export default function TwoPaneInbox() {
             )}
             style={{ minHeight: 0 }}
           />
-          <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
-            <ConversationInput.TextArea
+          <Composer.Root slots={{ root: DemoComposerRoot }}>
+            <Composer.TextArea
               aria-label="Reply"
               placeholder="Reply in the active thread"
               slots={{ root: DemoComposerInput }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ConversationInput.SendButton
+              <Composer.SendButton
                 data-variant="primary"
                 slots={{ root: DemoComposerButton }}
               >
                 Send reply
-              </ConversationInput.SendButton>
+              </Composer.SendButton>
             </div>
-          </ConversationInput.Root>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
@@ -205,11 +205,11 @@ export default function TwoPaneInbox() {
 
 ```tsx
 import {
-  ConversationInput,
+  Composer,
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 
 <Conversation.Root>
   <Conversation.Header>
@@ -220,10 +220,10 @@ import {
   <MessageList.Root
     renderItem={({ id, index }) => <MessageGroup index={index} messageId={id} />}
   />
-  <ConversationInput.Root>
-    <ConversationInput.TextArea />
-    <ConversationInput.SendButton />
-  </ConversationInput.Root>
+  <Composer.Root>
+    <Composer.TextArea />
+    <Composer.SendButton />
+  </Composer.Root>
 </Conversation.Root>;
 ```
 
@@ -311,7 +311,7 @@ It is intentionally light on policy so the app can decide which actions belong t
 
 - Use `Conversation.Root` as the shell for the active conversation region.
 - Keep header composition inside `Conversation.Root` so title, subtitle, and actions stay in sync with the active conversation.
-- Pair `Conversation.Root` with `MessageList.Root` and `ConversationInput.Root` for the canonical thread surface.
+- Pair `Conversation.Root` with `MessageList.Root` and `Composer.Root` for the canonical thread surface.
 
 ## Adjacent pages
 

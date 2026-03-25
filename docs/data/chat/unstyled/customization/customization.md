@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled customization
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Unstyled customization
@@ -12,7 +12,7 @@ packageName: '@mui/x-chat-unstyled'
 
 ## Customization model
 
-`@mui/x-chat-unstyled` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
+`@mui/x-chat/unstyled` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
 
 The main tools are:
 

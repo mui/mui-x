@@ -139,7 +139,17 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
     const convId = this.state.activeConversationId;
     const conv = convId ? this.state.conversationsById[convId] : undefined;
-    return conv?.participants?.find((p) => p.role === role);
+    const fromParticipants = conv?.participants?.find((p) => p.role === role);
+    if (fromParticipants) {
+      return fromParticipants;
+    }
+    // Derive from message authors as last resort
+    for (const msg of Object.values(this.state.messagesById)) {
+      if (msg.author?.role === role) {
+        return msg.author;
+      }
+    }
+    return undefined;
   }
 
   private dirtyControlledModels = new Set<ControlledModel>();

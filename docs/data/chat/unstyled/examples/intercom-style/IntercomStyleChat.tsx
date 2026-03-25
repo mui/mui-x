@@ -2,12 +2,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
-import type { ChatMessage, ChatUser } from '@mui/x-chat-headless';
+} from '@mui/x-chat/unstyled';
+import type { ChatMessage, ChatUser } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   formatMessageTime,
@@ -481,8 +481,8 @@ export default function IntercomStyleChat() {
       </Conversation.Root>
 
       {/* Composer */}
-      <ConversationInput.Root slots={{ root: IntercomComposerRoot }}>
-        <ConversationInput.TextArea
+      <Composer.Root slots={{ root: IntercomComposerRoot }}>
+        <Composer.TextArea
           aria-label="Message"
           placeholder="Message..."
           slots={{ root: IntercomTextArea }}
@@ -523,9 +523,9 @@ export default function IntercomStyleChat() {
               GIF
             </span>
           </div>
-          <ConversationInput.SendButton slots={{ root: IntercomSendButton }} />
+          <Composer.SendButton slots={{ root: IntercomSendButton }} />
         </div>
-      </ConversationInput.Root>
+      </Composer.Root>
 
       {/* Footer */}
       <div

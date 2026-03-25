@@ -93,7 +93,11 @@ export function createEchoAdapter(options = {}) {
       const responseText = respond(textOnly || getMessageText(message));
 
       return createChunkStream(
-        createTextResponseChunks(nanoid(), responseText, agent ? { author: agent } : undefined),
+        createTextResponseChunks(
+          nanoid(),
+          responseText,
+          agent ? { author: agent } : undefined,
+        ),
         { delayMs },
       );
     },

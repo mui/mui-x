@@ -8,8 +8,8 @@ import type {
   ChatMessage,
   ChatMessageChunk,
   ChatMessagePart,
-} from '@mui/x-chat-headless';
-import type { ToolPartSlotProps } from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/headless';
+import type { ToolPartSlotProps } from '@mui/x-chat/unstyled';
 import { createChunkStream, splitText, syncConversationPreview } from '../shared/demoUtils';
 
 // ── Avatar helper ─────────────────────────────────────────────────────────────

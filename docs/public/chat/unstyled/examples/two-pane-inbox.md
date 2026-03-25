@@ -1,7 +1,7 @@
 ---
 title: Chat - Two-pane inbox
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Two-pane inbox
@@ -17,12 +17,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -184,21 +184,21 @@ export default function TwoPaneInbox() {
             )}
             style={{ minHeight: 0 }}
           />
-          <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
-            <ConversationInput.TextArea
+          <Composer.Root slots={{ root: DemoComposerRoot }}>
+            <Composer.TextArea
               aria-label="Reply"
               placeholder="Reply in the active thread"
               slots={{ root: DemoComposerInput }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ConversationInput.SendButton
+              <Composer.SendButton
                 data-variant="primary"
                 slots={{ root: DemoComposerButton }}
               >
                 Send reply
-              </ConversationInput.SendButton>
+              </Composer.SendButton>
             </div>
-          </ConversationInput.Root>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
@@ -212,14 +212,14 @@ export default function TwoPaneInbox() {
 - `ConversationList.Root` selection behavior
 - `Conversation.Header`, `Conversation.Title`, and `Conversation.Subtitle`
 - `MessageList.Root`
-- `ConversationInput.Root`
+- `Composer.Root`
 
 ## Key primitives
 
 - `Chat.Layout` provides the two-pane frame.
 - `ConversationList.Root` owns selection, keyboard navigation, and focus restoration.
 - `Conversation.Header` gives the thread a stable title and metadata region.
-- `MessageList.Root` and `ConversationInput.Root` complete the active thread pane.
+- `MessageList.Root` and `Composer.Root` complete the active thread pane.
 
 ## When to use this pattern
 

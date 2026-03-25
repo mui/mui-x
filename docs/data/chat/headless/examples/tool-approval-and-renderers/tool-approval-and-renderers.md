@@ -1,7 +1,7 @@
 ---
 title: Chat - Tool approval and renderers
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Tool approval and renderers

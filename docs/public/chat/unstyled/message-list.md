@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled message list
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 components: MessageListRoot
 ---
 
@@ -19,7 +19,7 @@ import {
   MessageGroup,
   MessageList,
   type MessageListRootHandle,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import {
   createEchoAdapter,
   cloneMessages,

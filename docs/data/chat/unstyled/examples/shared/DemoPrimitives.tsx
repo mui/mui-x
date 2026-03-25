@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScrollArea } from '@base-ui/react/scroll-area';
-import { Indicators } from '@mui/x-chat-unstyled';
-import { useChatComposer, useChatStatus } from '@mui/x-chat-headless';
+import { Indicators } from '@mui/x-chat/unstyled';
+import { useChatComposer, useChatStatus } from '@mui/x-chat/headless';
 import { formatBytes, formatConversationTime, formatMessageTime } from './demoUtils';
 
 export const demoLocaleText = {
@@ -356,7 +356,7 @@ export const demoSlotProps = {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   } satisfies React.CSSProperties,
-  conversationInputRoot: {
+  composerRoot: {
     style: {
       display: 'grid',
       gap: 10,
@@ -364,7 +364,7 @@ export const demoSlotProps = {
       borderTop: `1px solid ${palette.border}`,
     },
   },
-  conversationInputTextArea: {
+  composerTextArea: {
     style: {
       width: '100%',
       minHeight: 48,
@@ -381,7 +381,7 @@ export const demoSlotProps = {
       boxSizing: 'border-box',
     },
   },
-  conversationInputSendButton: (ownerState: { disabled: boolean }) => ({
+  composerSendButton: (ownerState: { disabled: boolean }) => ({
     style: {
       border: `1px solid ${palette.accent}`,
       background: palette.accent,

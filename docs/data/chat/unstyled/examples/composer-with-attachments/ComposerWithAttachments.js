@@ -2,12 +2,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
-import { useChatComposer } from '@mui/x-chat-headless';
+} from '@mui/x-chat/unstyled';
+import { useChatComposer } from '@mui/x-chat/headless';
 
 import {
   createTextResponseChunks,
@@ -160,20 +160,20 @@ function ComposerDemoBody() {
           </MessageGroup>
         )}
       />
-      <ConversationInput.Root
+      <Composer.Root
         slotProps={{
-          root: demoSlotProps.conversationInputRoot,
+          root: demoSlotProps.composerRoot,
         }}
       >
         <AttachmentPreviewList />
-        <ConversationInput.TextArea
+        <Composer.TextArea
           aria-label="Draft"
           placeholder="Write the update and attach any supporting files"
           slotProps={{
-            input: demoSlotProps.conversationInputTextArea,
+            input: demoSlotProps.composerTextArea,
           }}
         />
-        <ConversationInput.Toolbar
+        <Composer.Toolbar
           slotProps={{
             toolbar: {
               style: {
@@ -186,7 +186,7 @@ function ComposerDemoBody() {
           }}
         >
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <ConversationInput.AttachButton
+            <Composer.AttachButton
               slotProps={{
                 attachButton: {
                   style: {
@@ -203,7 +203,7 @@ function ComposerDemoBody() {
               }}
             >
               Attach file
-            </ConversationInput.AttachButton>
+            </Composer.AttachButton>
             <DemoToolbarButton
               onClick={() =>
                 addSampleAttachment('architecture-note.txt', 'text/plain')
@@ -217,16 +217,16 @@ function ComposerDemoBody() {
               Add image
             </DemoToolbarButton>
           </div>
-          <ConversationInput.SendButton
+          <Composer.SendButton
             data-variant="primary"
             slotProps={{
-              sendButton: demoSlotProps.conversationInputSendButton,
+              sendButton: demoSlotProps.composerSendButton,
             }}
           >
             Send message
-          </ConversationInput.SendButton>
-        </ConversationInput.Toolbar>
-        <ConversationInput.HelperText
+          </Composer.SendButton>
+        </Composer.Toolbar>
+        <Composer.HelperText
           slotProps={{
             helperText: {
               style: {
@@ -238,8 +238,8 @@ function ComposerDemoBody() {
         >
           Press Enter to send. Shift+Enter keeps a new line, and the file trigger
           stays connected to the hidden input.
-        </ConversationInput.HelperText>
-      </ConversationInput.Root>
+        </Composer.HelperText>
+      </Composer.Root>
     </Conversation.Root>
   );
 }

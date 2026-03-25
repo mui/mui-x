@@ -1,7 +1,7 @@
 ---
 title: Chat - Realtime
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Realtime
@@ -98,7 +98,7 @@ import {
   useConversations,
   type ChatAdapter,
   type ChatRealtimeEvent,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';

@@ -6,7 +6,7 @@ packageName: '@mui/x-chat'
 
 # Split layout
 
-<p class="description">Place <code>ChatMessageList</code> and <code>ChatConversationInput</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them.</p>
+<p class="description">Place <code>ChatMessageList</code> and <code>ChatComposer</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them.</p>
 
 {{"demo": "SplitLayout.js"}}
 
@@ -15,7 +15,7 @@ packageName: '@mui/x-chat'
 `ChatRoot` sets up a `ChatProvider` context. Any descendant can read from that context
 via headless hooks — regardless of where it sits in the DOM tree.
 
-This means `ChatMessageList` and `ChatConversationInput` don't need to be siblings
+This means `ChatMessageList` and `ChatComposer` don't need to be siblings
 or share a parent component. Place them wherever your layout requires:
 
 ```tsx
@@ -25,7 +25,7 @@ or share a parent component. Place them wherever your layout requires:
   <MessagePane />   {/* calls useMessageIds() */}
 
   {/* Could be in a toolbar, sidebar, or page footer */}
-  <InputPane />     {/* ChatConversationInput uses useChatComposer() */}
+  <InputPane />     {/* ChatComposer uses useChatComposer() */}
 
 </ChatRoot>
 ```

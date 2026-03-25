@@ -2,11 +2,11 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   demoUsers,
@@ -194,29 +194,29 @@ export default function GroupedMessageTimeline() {
             );
           }}
         />
-        <ConversationInput.Root
+        <Composer.Root
           slotProps={{
-            root: demoSlotProps.conversationInputRoot,
+            root: demoSlotProps.composerRoot,
           }}
         >
-          <ConversationInput.TextArea
+          <Composer.TextArea
             aria-label="Message"
             placeholder="Type a message"
             slotProps={{
-              input: demoSlotProps.conversationInputTextArea,
+              input: demoSlotProps.composerTextArea,
             }}
           />
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <ConversationInput.SendButton
+            <Composer.SendButton
               data-variant="primary"
               slotProps={{
-                sendButton: demoSlotProps.conversationInputSendButton,
+                sendButton: demoSlotProps.composerSendButton,
               }}
             >
               Send
-            </ConversationInput.SendButton>
+            </Composer.SendButton>
           </div>
-        </ConversationInput.Root>
+        </Composer.Root>
       </Conversation.Root>
     </Chat.Root>
   );

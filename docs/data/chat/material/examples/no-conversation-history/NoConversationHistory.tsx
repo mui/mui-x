@@ -3,10 +3,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import {
   ChatConversation,
-  ChatConversationInput,
-  ChatConversationInputSendButton,
-  ChatConversationInputTextArea,
-  ChatConversationInputToolbar,
+  ChatComposer,
+  ChatComposerSendButton,
+  ChatComposerTextArea,
+  ChatComposerToolbar,
   ChatMessage,
   ChatMessageAvatar,
   ChatMessageContent,
@@ -14,9 +14,9 @@ import {
   ChatMessageMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useMessageIds } from '@mui/x-chat-headless';
-import type { ChatAdapter } from '@mui/x-chat-headless';
-import { ChatRoot } from '@mui/x-chat-unstyled';
+import { useMessageIds } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
+import { ChatRoot } from '@mui/x-chat/unstyled';
 import { nanoid } from 'nanoid';
 import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
 import { createTextMessage, demoUsers } from '../shared/demoData';
@@ -97,14 +97,14 @@ function ThreadContent() {
   return (
     <ChatConversation>
       <ChatMessageList renderItem={renderItem} items={messageIds} />
-      <ChatConversationInput>
-        <ChatConversationInputTextArea placeholder="Type a message…" />
-        <ChatConversationInputToolbar>
-          <ChatConversationInputSendButton aria-label="Send message">
+      <ChatComposer>
+        <ChatComposerTextArea placeholder="Type a message…" />
+        <ChatComposerToolbar>
+          <ChatComposerSendButton aria-label="Send message">
             <SendIcon />
-          </ChatConversationInputSendButton>
-        </ChatConversationInputToolbar>
-      </ChatConversationInput>
+          </ChatComposerSendButton>
+        </ChatComposerToolbar>
+      </ChatComposer>
     </ChatConversation>
   );
 }

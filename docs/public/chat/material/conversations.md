@@ -100,7 +100,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatBox } from '@mui/x-chat';
 
 type DemoState = 'loading' | 'empty' | 'loaded';

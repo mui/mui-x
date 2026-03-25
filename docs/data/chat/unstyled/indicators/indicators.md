@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled indicators
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 components: TypingIndicator, UnreadMarker, ScrollToBottomAffordance
 ---
 
@@ -37,7 +37,7 @@ It renders a polite live region and shows labels such as:
 ### Typical placement
 
 ```tsx
-import { Indicators, Conversation } from '@mui/x-chat-unstyled';
+import { Indicators, Conversation } from '@mui/x-chat/unstyled';
 
 <Conversation.Header>
   <Conversation.Title />

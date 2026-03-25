@@ -1,7 +1,7 @@
 ---
 title: Chat - Minimal headless chat
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Minimal headless chat
@@ -62,7 +62,7 @@ const { messages, sendMessage, isStreaming } = useChat();
 
 ```tsx
 import * as React from 'react';
-import { ChatProvider, useChat, type ChatAdapter } from '@mui/x-chat-headless';
+import { ChatProvider, useChat, type ChatAdapter } from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';

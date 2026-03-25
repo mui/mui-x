@@ -1,7 +1,7 @@
 ---
 title: Chat - Composer with attachments
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Composer with attachments
@@ -16,20 +16,20 @@ That is useful because chat composers often look simple but hide a lot of behavi
 
 ## What it shows
 
-- `ConversationInput.Root`
-- `ConversationInput.TextArea`
-- `ConversationInput.AttachButton`
-- `ConversationInput.HelperText`
-- `ConversationInput.SendButton`
+- `Composer.Root`
+- `Composer.TextArea`
+- `Composer.AttachButton`
+- `Composer.HelperText`
+- `Composer.SendButton`
 - attachment flows and IME-safe input behavior
 
 ## Key primitives
 
-- `ConversationInput.Root` for form submission and shared composer context
-- `ConversationInput.TextArea` for autosizing textarea behavior and IME-safe submit
-- `ConversationInput.AttachButton` for the visible trigger plus hidden file input
-- `ConversationInput.HelperText` for error or helper messaging
-- `ConversationInput.SendButton` for runtime-aware disabled and submit state
+- `Composer.Root` for form submission and shared composer context
+- `Composer.TextArea` for autosizing textarea behavior and IME-safe submit
+- `Composer.AttachButton` for the visible trigger plus hidden file input
+- `Composer.HelperText` for error or helper messaging
+- `Composer.SendButton` for runtime-aware disabled and submit state
 
 ## Implementation notes
 
@@ -49,9 +49,9 @@ This applies to support chat with screenshots, copilots that accept reference fi
 
 ## What to pay attention to
 
-- `ConversationInput.AttachButton` owns the visible-trigger plus hidden-input relationship, so the page layer does not need attachment plumbing.
-- `ConversationInput.HelperText` is the natural place for both authored guidance and runtime error fallback.
-- `ConversationInput.TextArea` already handles the IME and Enter behavior that teams often reimplement by hand.
+- `Composer.AttachButton` owns the visible-trigger plus hidden-input relationship, so the page layer does not need attachment plumbing.
+- `Composer.HelperText` is the natural place for both authored guidance and runtime error fallback.
+- `Composer.TextArea` already handles the IME and Enter behavior that teams often reimplement by hand.
 
 ## Next steps
 

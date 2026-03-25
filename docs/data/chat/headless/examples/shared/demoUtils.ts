@@ -1,4 +1,4 @@
-import type { ChatMessage, ChatMessageChunk, ChatStreamEnvelope } from '@mui/x-chat-headless';
+import type { ChatMessage, ChatMessageChunk, ChatStreamEnvelope } from '@mui/x-chat/headless';
 
 export function wait(ms: number) {
   return new Promise<void>((resolve) => {

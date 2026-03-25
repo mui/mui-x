@@ -1,7 +1,7 @@
 ---
 title: Chat - Two-pane inbox
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Two-pane inbox
@@ -20,14 +20,14 @@ For most teams, this is the first production-ready composition pattern rather th
 - `ConversationList.Root` selection behavior
 - `Conversation.Header`, `Conversation.Title`, and `Conversation.Subtitle`
 - `MessageList.Root`
-- `ConversationInput.Root`
+- `Composer.Root`
 
 ## Key primitives
 
 - `Chat.Layout` provides the two-pane frame.
 - `ConversationList.Root` owns selection, keyboard navigation, and focus restoration.
 - `Conversation.Header` gives the thread a stable title and metadata region.
-- `MessageList.Root` and `ConversationInput.Root` complete the active thread pane.
+- `MessageList.Root` and `Composer.Root` complete the active thread pane.
 
 ## When to use this pattern
 

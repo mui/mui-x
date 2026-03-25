@@ -31,10 +31,10 @@ export interface ChatComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversation'];
     variants?: ComponentsVariants<Theme>['MuiChatConversation'];
   };
-  MuiChatConversationInput?: {
-    defaultProps?: ComponentsProps['MuiChatConversationInput'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversationInput'];
-    variants?: ComponentsVariants<Theme>['MuiChatConversationInput'];
+  MuiChatComposer?: {
+    defaultProps?: ComponentsProps['MuiChatComposer'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatComposer'];
+    variants?: ComponentsVariants<Theme>['MuiChatComposer'];
   };
   MuiChatConversationList?: {
     defaultProps?: ComponentsProps['MuiChatConversationList'];

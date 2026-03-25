@@ -1,7 +1,7 @@
 ---
 title: Chat - Grouped message timeline
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Grouped message timeline
@@ -21,7 +21,7 @@ import {
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   demoUsers,

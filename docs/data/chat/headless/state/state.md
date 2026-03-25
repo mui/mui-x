@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - State and store
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # State and store

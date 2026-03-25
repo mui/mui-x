@@ -1,7 +1,7 @@
 ---
 title: Chat - Composer
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Composer

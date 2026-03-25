@@ -2,12 +2,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -108,29 +108,29 @@ export default function MinimalUnstyledShell() {
               </MessageGroup>
             )}
           />
-          <ConversationInput.Root
+          <Composer.Root
             slotProps={{
-              root: demoSlotProps.conversationInputRoot,
+              root: demoSlotProps.composerRoot,
             }}
           >
-            <ConversationInput.TextArea
+            <Composer.TextArea
               aria-label="Message"
               placeholder="Ask the starter thread a question"
               slotProps={{
-                input: demoSlotProps.conversationInputTextArea,
+                input: demoSlotProps.composerTextArea,
               }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ConversationInput.SendButton
+              <Composer.SendButton
                 data-variant="primary"
                 slotProps={{
-                  sendButton: demoSlotProps.conversationInputSendButton,
+                  sendButton: demoSlotProps.composerSendButton,
                 }}
               >
                 Send
-              </ConversationInput.SendButton>
+              </Composer.SendButton>
             </div>
-          </ConversationInput.Root>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>

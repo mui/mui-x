@@ -1,5 +1,6 @@
 <ChatBox
   adapter={adapter}
+  members={demoMembers}
   defaultActiveConversationId={emptyConversation.id}
   defaultConversations={[emptyConversation]}
   defaultMessages={[]}

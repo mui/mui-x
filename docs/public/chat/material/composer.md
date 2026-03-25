@@ -2,12 +2,12 @@
 productId: x-chat
 title: Chat - Composer
 packageName: '@mui/x-chat'
-components: ChatConversationInputTextArea, ChatConversationInputSendButton, ChatConversationInputAttachButton, ChatConversationInputToolbar, ChatConversationInputHelperText
+components: ChatComposerTextArea, ChatComposerSendButton, ChatComposerAttachButton, ChatComposerToolbar, ChatComposerHelperText
 ---
 
 # Composer
 
-<p class="description"><code>ChatConversationInput</code> provides a styled message input with auto-growing textarea, send button, attachment button, toolbar, and helper text.</p>
+<p class="description"><code>ChatComposer</code> provides a styled message input with auto-growing textarea, send button, attachment button, toolbar, and helper text.</p>
 
 ## Default layout
 
@@ -103,13 +103,13 @@ export default function ComposerWithToolbar() {
 
 ## Sub-components
 
-`ChatConversationInput` is composed from:
+`ChatComposer` is composed from:
 
-- `ChatConversationInputTextArea` — auto-growing textarea with IME-safe Enter behavior
-- `ChatConversationInputSendButton` — submit button that disables when the draft is empty or streaming
-- `ChatConversationInputAttachButton` — file input trigger with hidden file picker
-- `ChatConversationInputToolbar` — toolbar row for action buttons
-- `ChatConversationInputHelperText` — status text below the input
+- `ChatComposerTextArea` — auto-growing textarea with IME-safe Enter behavior
+- `ChatComposerSendButton` — submit button that disables when the draft is empty or streaming
+- `ChatComposerAttachButton` — file input trigger with hidden file picker
+- `ChatComposerToolbar` — toolbar row for action buttons
+- `ChatComposerHelperText` — status text below the input
 
 Each sub-component can be used independently for custom layouts or replaced through slots.
 
@@ -118,7 +118,7 @@ Each sub-component can be used independently for custom layouts or replaced thro
 Replace individual parts through the `slots` prop:
 
 ```tsx
-<ChatConversationInput
+<ChatComposer
   slots={{
     input: CustomTextarea,
     sendButton: CustomSendButton,

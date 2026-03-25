@@ -9,12 +9,12 @@ import { ChatConversationTitle } from '../ChatConversation/ChatConversationTitle
 import { ChatConversationSubtitle } from '../ChatConversation/ChatConversationSubtitle';
 import { ChatConversationHeaderActions } from '../ChatConversation/ChatConversationHeaderActions';
 import { ChatConversationList } from '../ChatConversationList/ChatConversationList';
-import { ChatConversationInput } from '../ChatConversationInput/ChatConversationInput';
-import { ChatConversationInputTextArea } from '../ChatConversationInput/ChatConversationInputTextArea';
-import { ChatConversationInputSendButton } from '../ChatConversationInput/ChatConversationInputSendButton';
-import { ChatConversationInputAttachButton } from '../ChatConversationInput/ChatConversationInputAttachButton';
-import { ChatConversationInputToolbar } from '../ChatConversationInput/ChatConversationInputToolbar';
-import { ChatConversationInputHelperText } from '../ChatConversationInput/ChatConversationInputHelperText';
+import { ChatComposer } from '../ChatComposer/ChatComposer';
+import { ChatComposerTextArea } from '../ChatComposer/ChatComposerTextArea';
+import { ChatComposerSendButton } from '../ChatComposer/ChatComposerSendButton';
+import { ChatComposerAttachButton } from '../ChatComposer/ChatComposerAttachButton';
+import { ChatComposerToolbar } from '../ChatComposer/ChatComposerToolbar';
+import { ChatComposerHelperText } from '../ChatComposer/ChatComposerHelperText';
 import { ChatMessageList } from '../ChatMessageList/ChatMessageList';
 import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
 import { ChatMessageContent } from '../ChatMessage/ChatMessageContent';
@@ -126,17 +126,17 @@ function DefaultComposer({
   const showAttachButton = features?.attachButton !== false;
   const showHelperText = features?.helperText !== false;
   const ComposerRootComponent = (slots?.composerRoot ??
-    ChatConversationInput) as typeof ChatConversationInput;
+    ChatComposer) as typeof ChatComposer;
   const ComposerInputComponent = (slots?.composerInput ??
-    ChatConversationInputTextArea) as typeof ChatConversationInputTextArea;
+    ChatComposerTextArea) as typeof ChatComposerTextArea;
   const ComposerToolbarComponent = (slots?.composerToolbar ??
-    ChatConversationInputToolbar) as typeof ChatConversationInputToolbar;
+    ChatComposerToolbar) as typeof ChatComposerToolbar;
   const ComposerSendButtonComponent = (slots?.composerSendButton ??
-    ChatConversationInputSendButton) as typeof ChatConversationInputSendButton;
+    ChatComposerSendButton) as typeof ChatComposerSendButton;
   const ComposerAttachButtonComponent = (slots?.composerAttachButton ??
-    ChatConversationInputAttachButton) as typeof ChatConversationInputAttachButton;
+    ChatComposerAttachButton) as typeof ChatComposerAttachButton;
   const ComposerHelperTextComponent = (slots?.composerHelperText ??
-    ChatConversationInputHelperText) as typeof ChatConversationInputHelperText;
+    ChatComposerHelperText) as typeof ChatComposerHelperText;
   const localeText = useChatLocaleText();
 
   return (

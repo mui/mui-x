@@ -1,19 +1,19 @@
 ---
 productId: x-chat
 title: Chat - Headless
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Chat - Headless
 
 <p class="description">The headless layer provides the runtime, adapter contract, hooks, selectors, and stream processing for fully custom chat UIs.</p>
 
-`@mui/x-chat-headless` is the runtime-focused layer in the chat package family.
+`@mui/x-chat/headless` is the runtime-focused layer in the chat package family.
 It gives you chat state, streaming, adapters, selectors, and composer logic without imposing any rendered UI.
 
 ## Where headless fits
 
-Use `@mui/x-chat-headless` when you want chat behavior but you want to own the markup, layout, styling, and interaction model yourself.
+Use `@mui/x-chat/headless` when you want chat behavior but you want to own the markup, layout, styling, and interaction model yourself.
 
 Headless owns:
 
@@ -66,7 +66,7 @@ import {
   useConversations,
   useMessage,
   useMessageIds,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 ```
 
 ## State and store

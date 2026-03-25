@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled messages
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 components: MessageRoot, MessageAvatar, MessageAuthorLabel, MessageContent, MessageMeta, MessageActions, MessageGroup, MessageListDateDivider
 ---
 

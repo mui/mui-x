@@ -1,7 +1,7 @@
 ---
 title: Chat - Indicators in context
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Indicators in context

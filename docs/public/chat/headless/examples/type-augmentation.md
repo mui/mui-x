@@ -1,7 +1,7 @@
 ---
 title: Chat - Type augmentation
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Type augmentation
@@ -11,7 +11,7 @@ packageName: '@mui/x-chat-headless'
 ## What this example shows
 
 Headless chat does not use provider props for type overrides.
-Instead, extend `@mui/x-chat-headless/types` with [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
+Instead, extend `@mui/x-chat/headless/types` with [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
 
 This recipe keeps the example intentionally small while showing how one augmentation affects the whole stack:
 
@@ -24,10 +24,10 @@ This recipe keeps the example intentionally small while showing how one augmenta
 
 ### Declaring custom types
 
-Create a `declare module` block targeting `@mui/x-chat-headless/types`:
+Create a `declare module` block targeting `@mui/x-chat/headless/types`:
 
 ```ts
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/headless/types' {
   interface ChatMessageMetadata {
     model?: 'gpt-4.1' | 'gpt-5';
     confidence?: 'medium' | 'high';
@@ -101,7 +101,7 @@ import {
   type ChatMessage,
   type ChatPartRendererMap,
   type ChatUser,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -111,7 +111,7 @@ import Typography from '@mui/material/Typography';
 import { demoUsers } from '../shared/demoData';
 import { createChunkStream } from '../shared/demoUtils';
 
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/headless/types' {
   interface ChatUserMetadata {
     team: 'support' | 'ops';
     shift: 'day' | 'night';

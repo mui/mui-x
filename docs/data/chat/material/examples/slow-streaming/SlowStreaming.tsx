@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { createTextResponseChunks, createChunkStream } from '../shared/demoUtils';
 import { minimalConversation, minimalMessages, demoUsers } from '../shared/demoData';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const slowAdapter: ChatAdapter = {
   async sendMessage({ message }) {

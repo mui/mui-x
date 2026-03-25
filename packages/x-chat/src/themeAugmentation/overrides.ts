@@ -4,7 +4,7 @@ import { type ChatBoxClassKey } from '../ChatBox/chatBoxClasses';
 import { type ChatMessageClassKey } from '../ChatMessage/chatMessageClasses';
 import { type ChatMessageListClassKey } from '../ChatMessageList/chatMessageListClasses';
 import { type ChatConversationClassKey } from '../ChatConversation/chatConversationClasses';
-import { type ChatConversationInputClassKey } from '../ChatConversationInput/chatConversationInputClasses';
+import { type ChatComposerClassKey } from '../ChatComposer/chatComposerClasses';
 import { type ChatConversationListClassKey } from '../ChatConversationList/chatConversationListClasses';
 import { type ChatTypingIndicatorClassKey } from '../ChatIndicators/chatTypingIndicatorClasses';
 import { type ChatScrollToBottomAffordanceClassKey } from '../ChatIndicators/chatScrollToBottomAffordanceClasses';
@@ -22,7 +22,7 @@ export interface ChatComponentNameToClassKey {
   MuiChatMessage: ChatMessageClassKey;
   MuiChatMessageList: ChatMessageListClassKey;
   MuiChatConversation: ChatConversationClassKey;
-  MuiChatConversationInput: ChatConversationInputClassKey;
+  MuiChatComposer: ChatComposerClassKey;
   MuiChatConversationList: ChatConversationListClassKey;
   MuiChatTypingIndicator: ChatTypingIndicatorClassKey;
   MuiChatScrollToBottomAffordance: ChatScrollToBottomAffordanceClassKey;

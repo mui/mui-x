@@ -1,7 +1,7 @@
 ---
 title: Chat - Custom message part rendering
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Custom message part rendering
@@ -21,8 +21,8 @@ import {
   MessageGroup,
   MessageList,
   getDefaultMessagePartRenderer,
-} from '@mui/x-chat-unstyled';
-import type { ChatPartRendererMap } from '@mui/x-chat-headless';
+} from '@mui/x-chat/unstyled';
+import type { ChatPartRendererMap } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   demoUsers,

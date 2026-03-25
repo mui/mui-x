@@ -3,7 +3,7 @@ import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
-import { ConversationInputTextArea, ConversationInputRoot } from '../conversation-input';
+import { ComposerTextArea, ComposerRoot } from '../composer';
 import { ConversationListRoot } from '../conversation-list';
 import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from '../indicators';
 import {
@@ -231,9 +231,9 @@ const ChatCompositionHarness = React.forwardRef(function ChatCompositionHarness(
             style={{ height: 180, overflowY: 'auto' }}
           />
           {includeBeforeAfterButtons ? <button type="button">After list</button> : null}
-          <ConversationInputRoot>
-            <ConversationInputTextArea data-testid="composer-input" />
-          </ConversationInputRoot>
+          <ComposerRoot>
+            <ComposerTextArea data-testid="composer-input" />
+          </ComposerRoot>
         </ConversationRoot>
       </ChatLayout>
     </ChatRoot>

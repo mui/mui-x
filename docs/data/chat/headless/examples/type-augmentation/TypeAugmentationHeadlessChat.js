@@ -4,7 +4,7 @@ import {
   useChat,
   useChatPartRenderer,
   useConversation,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';

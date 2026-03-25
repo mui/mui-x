@@ -1,14 +1,14 @@
 import * as React from 'react';
-import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat-headless';
+import type { ChatAdapter, ChatRealtimeEvent } from '@mui/x-chat/headless';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   Indicators,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import {
   createEchoAdapter,
   cloneMessages,
@@ -247,29 +247,29 @@ export default function IndicatorsInContext() {
             ...demoMessageListSlotProps,
           }}
         />
-        <ConversationInput.Root
+        <Composer.Root
           slotProps={{
-            root: demoSlotProps.conversationInputRoot,
+            root: demoSlotProps.composerRoot,
           }}
         >
-          <ConversationInput.TextArea
+          <Composer.TextArea
             aria-label="Message"
             placeholder="Type a message"
             slotProps={{
-              input: demoSlotProps.conversationInputTextArea,
+              input: demoSlotProps.composerTextArea,
             }}
           />
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <ConversationInput.SendButton
+            <Composer.SendButton
               data-variant="primary"
               slotProps={{
-                sendButton: demoSlotProps.conversationInputSendButton,
+                sendButton: demoSlotProps.composerSendButton,
               }}
             >
               Send
-            </ConversationInput.SendButton>
+            </Composer.SendButton>
           </div>
-        </ConversationInput.Root>
+        </Composer.Root>
       </Conversation.Root>
     </Chat.Root>
   );

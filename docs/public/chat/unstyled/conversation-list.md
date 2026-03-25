@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled conversation list
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
 ---
 
@@ -14,12 +14,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -181,21 +181,21 @@ export default function TwoPaneInbox() {
             )}
             style={{ minHeight: 0 }}
           />
-          <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
-            <ConversationInput.TextArea
+          <Composer.Root slots={{ root: DemoComposerRoot }}>
+            <Composer.TextArea
               aria-label="Reply"
               placeholder="Reply in the active thread"
               slots={{ root: DemoComposerInput }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ConversationInput.SendButton
+              <Composer.SendButton
                 data-variant="primary"
                 slots={{ root: DemoComposerButton }}
               >
                 Send reply
-              </ConversationInput.SendButton>
+              </Composer.SendButton>
             </div>
-          </ConversationInput.Root>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>

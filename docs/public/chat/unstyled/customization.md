@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled customization
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Unstyled customization
@@ -13,12 +13,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -737,8 +737,8 @@ export default function SlotCustomization() {
             )}
             style={{ minHeight: 0 }}
           />
-          <ConversationInput.Root slots={{ root: BrandComposerRoot }}>
-            <ConversationInput.TextArea
+          <Composer.Root slots={{ root: BrandComposerRoot }}>
+            <Composer.TextArea
               aria-label="Brand message"
               placeholder="Reply using the product-specific markup"
               slots={{ root: BrandComposerInput }}
@@ -746,17 +746,17 @@ export default function SlotCustomization() {
             <div
               style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}
             >
-              <ConversationInput.AttachButton slots={{ root: BrandComposerButton }}>
+              <Composer.AttachButton slots={{ root: BrandComposerButton }}>
                 Attach
-              </ConversationInput.AttachButton>
-              <ConversationInput.SendButton
+              </Composer.AttachButton>
+              <Composer.SendButton
                 data-variant="primary"
                 slots={{ root: BrandComposerButton }}
               >
                 Send
-              </ConversationInput.SendButton>
+              </Composer.SendButton>
             </div>
-          </ConversationInput.Root>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
@@ -766,7 +766,7 @@ export default function SlotCustomization() {
 
 ## Customization model
 
-`@mui/x-chat-unstyled` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
+`@mui/x-chat/unstyled` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
 
 The main tools are:
 

@@ -1,7 +1,7 @@
 ---
 title: Chat - Grouped message timeline
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Grouped message timeline

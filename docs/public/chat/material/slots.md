@@ -30,7 +30,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatBox } from '@mui/x-chat';
 import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
 
@@ -185,7 +185,7 @@ Custom slot components receive `ownerState` with runtime values for conditional 
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 import { ChatBox } from '@mui/x-chat';
 import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
 

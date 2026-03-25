@@ -1,7 +1,7 @@
 ---
 title: Chat - Minimal headless chat
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Minimal headless chat

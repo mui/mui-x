@@ -24,7 +24,7 @@ Replace it with your real adapter to connect to a backend.
 ## Composable parts
 
 - [Message feed](/x/react-chat/material/examples/message-feed/) for a display-only embed with no input — trigger messages via `useChat().sendMessage()`
-- [Split layout](/x/react-chat/material/examples/split-layout/) for placing `ChatMessageList` and `ChatConversationInput` in separate DOM zones, connected only by `ChatRoot`
+- [Split layout](/x/react-chat/material/examples/split-layout/) for placing `ChatMessageList` and `ChatComposer` in separate DOM zones, connected only by `ChatRoot`
 
 ## Agentic
 

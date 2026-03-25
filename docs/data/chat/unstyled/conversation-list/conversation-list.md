@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled conversation list
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListItemContent, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
 ---
 

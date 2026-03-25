@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled thread
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
 ---
 
@@ -13,11 +13,11 @@ components: ConversationRoot, ConversationHeader, ConversationTitle, Conversatio
 
 ```tsx
 import {
-  ConversationInput,
+  Composer,
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 
 <Conversation.Root>
   <Conversation.Header>
@@ -28,10 +28,10 @@ import {
   <MessageList.Root
     renderItem={({ id, index }) => <MessageGroup index={index} messageId={id} />}
   />
-  <ConversationInput.Root>
-    <ConversationInput.TextArea />
-    <ConversationInput.SendButton />
-  </ConversationInput.Root>
+  <Composer.Root>
+    <Composer.TextArea />
+    <Composer.SendButton />
+  </Composer.Root>
 </Conversation.Root>;
 ```
 
@@ -119,7 +119,7 @@ It is intentionally light on policy so the app can decide which actions belong t
 
 - Use `Conversation.Root` as the shell for the active conversation region.
 - Keep header composition inside `Conversation.Root` so title, subtitle, and actions stay in sync with the active conversation.
-- Pair `Conversation.Root` with `MessageList.Root` and `ConversationInput.Root` for the canonical thread surface.
+- Pair `Conversation.Root` with `MessageList.Root` and `Composer.Root` for the canonical thread surface.
 
 ## Adjacent pages
 

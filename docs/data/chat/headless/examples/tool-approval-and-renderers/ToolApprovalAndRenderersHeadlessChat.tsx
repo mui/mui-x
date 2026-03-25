@@ -7,7 +7,7 @@ import {
   type ChatMessage,
   type ChatRealtimeEvent,
   type ChatPartRendererMap,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import { demoUsers } from '../shared/demoData';
 import { createChunkStream } from '../shared/demoUtils';
 
-declare module '@mui/x-chat-headless/types' {
+declare module '@mui/x-chat/headless/types' {
   interface ChatCustomMessagePartMap {
     poll: {
       type: 'poll';

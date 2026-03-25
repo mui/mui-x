@@ -6,7 +6,7 @@ import type {
   ChatMessageChunk,
   ChatStreamEnvelope,
   ChatUser,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 
 export function splitText(text: string, size = 18) {
   const chunks: string[] = [];

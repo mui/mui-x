@@ -8,14 +8,14 @@ import {
   ConversationTitle,
 } from './conversation';
 import {
-  ConversationInputAttachButton,
-  ConversationInputHelperText,
-  ConversationInputLabel,
-  ConversationInputRoot,
-  ConversationInputSendButton,
-  ConversationInputTextArea,
-  ConversationInputToolbar,
-} from './conversation-input';
+  ComposerAttachButton,
+  ComposerHelperText,
+  ComposerLabel,
+  ComposerRoot,
+  ComposerSendButton,
+  ComposerTextArea,
+  ComposerToolbar,
+} from './composer';
 import {
   ConversationListItem,
   ConversationListItemAvatar,
@@ -68,13 +68,13 @@ export {
   ConversationRoot,
   ConversationSubtitle,
   ConversationTitle,
-  ConversationInputAttachButton,
-  ConversationInputHelperText,
-  ConversationInputLabel,
-  ConversationInputRoot,
-  ConversationInputSendButton,
-  ConversationInputTextArea,
-  ConversationInputToolbar,
+  ComposerAttachButton,
+  ComposerHelperText,
+  ComposerLabel,
+  ComposerRoot,
+  ComposerSendButton,
+  ComposerTextArea,
+  ComposerToolbar,
   ConversationListItem,
   ConversationListItemAvatar,
   ConversationListItemContent,
@@ -147,28 +147,28 @@ export type {
   ConversationTitleSlots,
 } from './conversation';
 export type {
-  ConversationInputAttachButtonProps,
-  ConversationInputAttachButtonSlotProps,
-  ConversationInputAttachButtonSlots,
-  ConversationInputHelperTextProps,
-  ConversationInputHelperTextSlotProps,
-  ConversationInputHelperTextSlots,
-  ConversationInputLabelProps,
-  ConversationInputLabelSlotProps,
-  ConversationInputLabelSlots,
-  ConversationInputRootProps,
-  ConversationInputRootSlotProps,
-  ConversationInputRootSlots,
-  ConversationInputSendButtonProps,
-  ConversationInputSendButtonSlotProps,
-  ConversationInputSendButtonSlots,
-  ConversationInputTextAreaProps,
-  ConversationInputTextAreaSlotProps,
-  ConversationInputTextAreaSlots,
-  ConversationInputToolbarProps,
-  ConversationInputToolbarSlotProps,
-  ConversationInputToolbarSlots,
-} from './conversation-input';
+  ComposerAttachButtonProps,
+  ComposerAttachButtonSlotProps,
+  ComposerAttachButtonSlots,
+  ComposerHelperTextProps,
+  ComposerHelperTextSlotProps,
+  ComposerHelperTextSlots,
+  ComposerLabelProps,
+  ComposerLabelSlotProps,
+  ComposerLabelSlots,
+  ComposerRootProps,
+  ComposerRootSlotProps,
+  ComposerRootSlots,
+  ComposerSendButtonProps,
+  ComposerSendButtonSlotProps,
+  ComposerSendButtonSlots,
+  ComposerTextAreaProps,
+  ComposerTextAreaSlotProps,
+  ComposerTextAreaSlots,
+  ComposerToolbarProps,
+  ComposerToolbarSlotProps,
+  ComposerToolbarSlots,
+} from './composer';
 export type {
   ConversationListItemAvatarProps,
   ConversationListItemAvatarSlotProps,
@@ -293,15 +293,15 @@ export type {
   ConversationTitleOwnerState,
 } from './conversation';
 export type {
-  ConversationInputAttachButtonOwnerState,
-  ConversationInputHelperTextOwnerState,
-  ConversationInputOwnerState,
-  ConversationInputRootOwnerState,
-  ConversationInputSendButtonOwnerState,
-  ConversationInputTextAreaOwnerState,
-  ConversationInputToolbarOwnerState,
-  // ConversationInputLabel uses ConversationInputOwnerState (no separate type needed)
-} from './conversation-input';
+  ComposerAttachButtonOwnerState,
+  ComposerHelperTextOwnerState,
+  ComposerOwnerState,
+  ComposerRootOwnerState,
+  ComposerSendButtonOwnerState,
+  ComposerTextAreaOwnerState,
+  ComposerToolbarOwnerState,
+  // ComposerLabel uses ComposerOwnerState (no separate type needed)
+} from './composer';
 export type {
   ConversationListItemAvatarOwnerState,
   ConversationListItemContentOwnerState,
@@ -356,13 +356,13 @@ export const ConversationList = {
   Root: ConversationListRoot,
 };
 
-export const ConversationInput = {
-  Root: ConversationInputRoot,
-  TextArea: ConversationInputTextArea,
-  SendButton: ConversationInputSendButton,
-  AttachButton: ConversationInputAttachButton,
-  Toolbar: ConversationInputToolbar,
-  HelperText: ConversationInputHelperText,
+export const Composer = {
+  Root: ComposerRoot,
+  TextArea: ComposerTextArea,
+  SendButton: ComposerSendButton,
+  AttachButton: ComposerAttachButton,
+  Toolbar: ComposerToolbar,
+  HelperText: ComposerHelperText,
 };
 
 export const Message = {

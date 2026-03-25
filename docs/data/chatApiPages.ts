@@ -18,28 +18,28 @@ const chatApiPages: MuiPage[] = [
     title: 'ConversationHeaderActions',
   },
   {
-    pathname: '/x/api/chat/conversation-input-attach-button',
-    title: 'ConversationInputAttachButton',
+    pathname: '/x/api/chat/composer-attach-button',
+    title: 'ComposerAttachButton',
   },
   {
-    pathname: '/x/api/chat/conversation-input-helper-text',
-    title: 'ConversationInputHelperText',
+    pathname: '/x/api/chat/composer-helper-text',
+    title: 'ComposerHelperText',
   },
   {
-    pathname: '/x/api/chat/conversation-input-root',
-    title: 'ConversationInputRoot',
+    pathname: '/x/api/chat/composer-root',
+    title: 'ComposerRoot',
   },
   {
-    pathname: '/x/api/chat/conversation-input-send-button',
-    title: 'ConversationInputSendButton',
+    pathname: '/x/api/chat/composer-send-button',
+    title: 'ComposerSendButton',
   },
   {
-    pathname: '/x/api/chat/conversation-input-text-area',
-    title: 'ConversationInputTextArea',
+    pathname: '/x/api/chat/composer-text-area',
+    title: 'ComposerTextArea',
   },
   {
-    pathname: '/x/api/chat/conversation-input-toolbar',
-    title: 'ConversationInputToolbar',
+    pathname: '/x/api/chat/composer-toolbar',
+    title: 'ComposerToolbar',
   },
   {
     pathname: '/x/api/chat/conversation-list-item',

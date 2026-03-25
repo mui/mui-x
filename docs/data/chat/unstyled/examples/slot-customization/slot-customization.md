@@ -1,7 +1,7 @@
 ---
 title: Chat - Slot customization
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Slot customization

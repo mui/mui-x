@@ -1,19 +1,19 @@
 ---
 productId: x-chat
 title: Chat - Headless
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Chat - Headless
 
 The headless layer provides the runtime, adapter contract, hooks, selectors, and stream processing for fully custom chat UIs.
 
-`@mui/x-chat-headless` is the runtime-focused layer in the chat package family.
+`@mui/x-chat/headless` is the runtime-focused layer in the chat package family.
 It gives you chat state, streaming, adapters, selectors, and composer logic without imposing any rendered UI.
 
 ## Where headless fits
 
-Use `@mui/x-chat-headless` when you want chat behavior but you want to own the markup, layout, styling, and interaction model yourself.
+Use `@mui/x-chat/headless` when you want chat behavior but you want to own the markup, layout, styling, and interaction model yourself.
 
 Headless owns:
 
@@ -33,7 +33,7 @@ Headless does not own:
 - visual slots or compound components
 - Material UI theming or styling
 
-Those concerns belong to [Unstyled](/x/react-chat/unstyled/) and later to [Material UI](/x/react-chat/material/).
+Those concerns belong to [Unstyled](/x/react-chat/unstyled/) and later to [Material UI](/x/react-chat/).
 
 ## Mental model
 
@@ -66,7 +66,7 @@ import {
   useConversations,
   useMessage,
   useMessageIds,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 ```
 
 ## State and store
@@ -145,4 +145,4 @@ Move from the smallest setup to the more specialized runtime patterns:
 
 - Stay on headless when you want runtime primitives and complete control over UI.
 - Move to [Unstyled](/x/react-chat/unstyled/) when you want structure and composition primitives.
-- Move to [Material UI](/x/react-chat/material/) when you want styled components aligned with the MUI design system.
+- Move to [Material UI](/x/react-chat/) when you want styled components aligned with the MUI design system.

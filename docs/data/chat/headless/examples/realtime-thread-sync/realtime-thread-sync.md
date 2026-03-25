@@ -1,7 +1,7 @@
 ---
 title: Chat - Realtime thread sync
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Realtime thread sync

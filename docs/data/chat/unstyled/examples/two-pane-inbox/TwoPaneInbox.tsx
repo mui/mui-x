@@ -2,12 +2,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import {
   createEchoAdapter,
   cloneConversations,
@@ -179,29 +179,29 @@ export default function TwoPaneInbox() {
               </MessageGroup>
             )}
           />
-          <ConversationInput.Root
+          <Composer.Root
             slotProps={{
-              root: demoSlotProps.conversationInputRoot,
+              root: demoSlotProps.composerRoot,
             }}
           >
-            <ConversationInput.TextArea
+            <Composer.TextArea
               aria-label="Reply"
               placeholder="Reply in the active thread"
               slotProps={{
-                input: demoSlotProps.conversationInputTextArea,
+                input: demoSlotProps.composerTextArea,
               }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ConversationInput.SendButton
+              <Composer.SendButton
                 data-variant="primary"
                 slotProps={{
-                  sendButton: demoSlotProps.conversationInputSendButton,
+                  sendButton: demoSlotProps.composerSendButton,
                 }}
               >
                 Send reply
-              </ConversationInput.SendButton>
+              </Composer.SendButton>
             </div>
-          </ConversationInput.Root>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>

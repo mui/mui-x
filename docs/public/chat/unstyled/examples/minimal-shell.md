@@ -1,14 +1,14 @@
 ---
 title: Chat - Minimal unstyled shell
 productId: x-chat
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Minimal unstyled shell
 
 Start with the smallest complete chat surface built from unstyled primitives.
 
-This is the entry-point recipe for `@mui/x-chat-unstyled`.
+This is the entry-point recipe for `@mui/x-chat/unstyled`.
 It shows the smallest surface that still feels like a real chat UI: a root, a pane layout, a conversation list, a thread container, a message log, and a composer.
 
 It is intentionally simple so the structural responsibilities are easy to see before any advanced customization is introduced.
@@ -18,12 +18,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -122,21 +122,21 @@ export default function MinimalUnstyledShell() {
             )}
             style={{ minHeight: 0 }}
           />
-          <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
-            <ConversationInput.TextArea
+          <Composer.Root slots={{ root: DemoComposerRoot }}>
+            <Composer.TextArea
               aria-label="Message"
               placeholder="Ask the starter thread a question"
               slots={{ root: DemoComposerInput }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ConversationInput.SendButton
+              <Composer.SendButton
                 data-variant="primary"
                 slots={{ root: DemoComposerButton }}
               >
                 Send
-              </ConversationInput.SendButton>
+              </Composer.SendButton>
             </div>
-          </ConversationInput.Root>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
@@ -151,7 +151,7 @@ export default function MinimalUnstyledShell() {
 - `ConversationList.Root`
 - `Conversation.Root`
 - `MessageList.Root`
-- `ConversationInput.Root`
+- `Composer.Root`
 
 ## Why start here
 
@@ -179,7 +179,7 @@ This pattern is a good fit for:
 - `ConversationList.Root` renders the selectable list of conversations.
 - `Conversation.Root` holds the active conversation surface.
 - `MessageList.Root` renders the thread log.
-- `ConversationInput.Root` holds the draft surface and submit flow.
+- `Composer.Root` holds the draft surface and submit flow.
 
 ## Implementation notes
 

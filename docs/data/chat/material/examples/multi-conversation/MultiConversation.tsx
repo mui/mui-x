@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import { createEchoAdapter, syncConversationPreview } from '../shared/demoUtils';
 import { inboxConversations, inboxThreads } from '../shared/demoData';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const adapter = createEchoAdapter({
   respond: (text) =>

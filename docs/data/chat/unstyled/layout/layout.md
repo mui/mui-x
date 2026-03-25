@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled layout
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Unstyled layout

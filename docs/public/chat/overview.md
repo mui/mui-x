@@ -13,7 +13,7 @@ It has one product entry point, then splits implementation details by layer:
 
 - [Headless](/x/react-chat/headless/): runtime, adapters, store, hooks, selectors, and renderer contracts.
 - [Unstyled](/x/react-chat/unstyled/): structural primitives, slots, and accessibility-oriented DOM wiring.
-- [Material UI](/x/react-chat/material/): the styled layer for `@mui/x-chat`, including the `ChatBox` one-liner API.
+- [Material UI](/x/react-chat/): the styled layer for `@mui/x-chat`, including the `ChatBox` one-liner API.
 
 ## Package model
 
@@ -21,8 +21,8 @@ The package family currently follows this dependency direction:
 
 ```text
 @mui/x-chat
-  -> @mui/x-chat-unstyled
-    -> @mui/x-chat-headless
+  -> @mui/x-chat/unstyled
+    -> @mui/x-chat/headless
 ```
 
 That split should be reflected directly in the docs:
@@ -66,6 +66,6 @@ That split should be reflected directly in the docs:
 
 The docs split above is intentionally ahead of the final implementation.
 
-- `@mui/x-chat-headless` already has a concrete runtime surface.
-- `@mui/x-chat-unstyled` now has concrete structural primitives and bridge exports.
+- `@mui/x-chat/headless` already has a concrete runtime surface.
+- `@mui/x-chat/unstyled` now has concrete structural primitives and bridge exports.
 - `@mui/x-chat` now exposes the styled layer, with `ChatBox` as the highest-level entry point and modular components for deeper customization.

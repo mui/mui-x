@@ -12,7 +12,7 @@ components: ChatConversation
 ## When to compose manually
 
 Use `ChatBox` when the default two-pane or thread-only layout is a good fit.
-Compose from `ChatConversation`, `ChatConversationInput`, and `ChatConversations` individually when:
+Compose from `ChatConversation`, `ChatComposer`, and `ChatConversations` individually when:
 
 - the layout is non-standard (e.g. conversations in a drawer, thread in a panel)
 - you need to place the composer outside the thread container
@@ -27,11 +27,11 @@ The styled components are designed to be used inside an unstyled `ChatRoot` prov
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { Chat } from '@mui/x-chat-unstyled';
+import { Chat } from '@mui/x-chat/unstyled';
 import {
   ChatConversations,
   ChatConversation,
-  ChatConversationInput,
+  ChatComposer,
 } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/shared/demoUtils';
 import {
@@ -59,7 +59,7 @@ export default function ModularComposition() {
           </Box>
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <ChatConversation sx={{ flex: 1 }} />
-            <ChatConversationInput />
+            <ChatComposer />
           </Box>
         </Box>
       </Chat.Root>
@@ -70,14 +70,14 @@ export default function ModularComposition() {
 
 ## Thread-only composition
 
-When you do not need a conversations sidebar, compose `ChatConversation` and `ChatConversationInput` directly.
+When you do not need a conversations sidebar, compose `ChatConversation` and `ChatComposer` directly.
 
 ```tsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { Chat } from '@mui/x-chat-unstyled';
-import { ChatConversation, ChatConversationInput } from '@mui/x-chat';
+import { Chat } from '@mui/x-chat/unstyled';
+import { ChatConversation, ChatComposer } from '@mui/x-chat';
 import { createEchoAdapter } from 'docsx/data/chat/material/shared/demoUtils';
 import { demoUsers } from 'docsx/data/chat/material/shared/demoData';
 
@@ -108,7 +108,7 @@ export default function ThreadOnlyComposition() {
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', height: 480 }}>
           <ChatConversation sx={{ flex: 1 }} />
-          <ChatConversationInput />
+          <ChatComposer />
         </Box>
       </Chat.Root>
     </Paper>
@@ -122,7 +122,7 @@ export default function ThreadOnlyComposition() {
 | :---------------------- | :--------------------------------------- | :--------------------------------- |
 | `ChatConversations`     | `ConversationList.Root`                  | `useConversations`, `useChatStore` |
 | `ChatConversation`      | `Conversation.Root` + `MessageList.Root` | `useMessageIds`, `useMessage`      |
-| `ChatConversationInput` | `ConversationInput.Root`                 | `useChatComposer`                  |
+| `ChatComposer` | `Composer.Root`                 | `useChatComposer`                  |
 
 Each styled component adds Material UI surface treatment (elevation, padding, typography, icon buttons) while preserving the slot and owner-state model from the unstyled layer.
 

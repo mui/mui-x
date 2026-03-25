@@ -1,12 +1,12 @@
 ---
 title: Chat - Headless examples
 productId: x-chat
-packageName: '@mui/x-chat-headless'
+packageName: '@mui/x-chat/headless'
 ---
 
 # Headless examples
 
-<p class="description">Recipe-first examples for building custom chat UIs with <code>@mui/x-chat-headless</code> and plain React markup.</p>
+<p class="description">Recipe-first examples for building custom chat UIs with <code>@mui/x-chat/headless</code> and plain React markup.</p>
 
 These recipes stay strictly within the headless layer.
 They use the runtime, hooks, selectors, callbacks, and adapter contract without relying on unstyled or Material UI primitives.

@@ -51,28 +51,28 @@ export type {
   ChatConversationClassKey,
 } from './ChatConversation/chatConversationClasses';
 
-// ─── ChatConversationInput ────────────────────────────────────────────────────
-export { ChatConversationInput } from './ChatConversationInput/ChatConversationInput';
-export type { ChatConversationInputProps } from './ChatConversationInput/ChatConversationInput';
-export { ChatConversationInputTextArea } from './ChatConversationInput/ChatConversationInputTextArea';
-export type { ChatConversationInputTextAreaProps } from './ChatConversationInput/ChatConversationInputTextArea';
-export { ChatConversationInputSendButton } from './ChatConversationInput/ChatConversationInputSendButton';
-export type { ChatConversationInputSendButtonProps } from './ChatConversationInput/ChatConversationInputSendButton';
-export { ChatConversationInputAttachButton } from './ChatConversationInput/ChatConversationInputAttachButton';
-export type { ChatConversationInputAttachButtonProps } from './ChatConversationInput/ChatConversationInputAttachButton';
-export { ChatConversationInputToolbar } from './ChatConversationInput/ChatConversationInputToolbar';
-export type { ChatConversationInputToolbarProps } from './ChatConversationInput/ChatConversationInputToolbar';
-export { ChatConversationInputHelperText } from './ChatConversationInput/ChatConversationInputHelperText';
-export type { ChatConversationInputHelperTextProps } from './ChatConversationInput/ChatConversationInputHelperText';
-export { ChatConversationInputLabel } from './ChatConversationInput/ChatConversationInputLabel';
+// ─── ChatComposer ────────────────────────────────────────────────────
+export { ChatComposer } from './ChatComposer/ChatComposer';
+export type { ChatComposerProps } from './ChatComposer/ChatComposer';
+export { ChatComposerTextArea } from './ChatComposer/ChatComposerTextArea';
+export type { ChatComposerTextAreaProps } from './ChatComposer/ChatComposerTextArea';
+export { ChatComposerSendButton } from './ChatComposer/ChatComposerSendButton';
+export type { ChatComposerSendButtonProps } from './ChatComposer/ChatComposerSendButton';
+export { ChatComposerAttachButton } from './ChatComposer/ChatComposerAttachButton';
+export type { ChatComposerAttachButtonProps } from './ChatComposer/ChatComposerAttachButton';
+export { ChatComposerToolbar } from './ChatComposer/ChatComposerToolbar';
+export type { ChatComposerToolbarProps } from './ChatComposer/ChatComposerToolbar';
+export { ChatComposerHelperText } from './ChatComposer/ChatComposerHelperText';
+export type { ChatComposerHelperTextProps } from './ChatComposer/ChatComposerHelperText';
+export { ChatComposerLabel } from './ChatComposer/ChatComposerLabel';
 export {
-  chatConversationInputClasses,
-  getChatConversationInputUtilityClass,
-} from './ChatConversationInput/chatConversationInputClasses';
+  chatComposerClasses,
+  getChatComposerUtilityClass,
+} from './ChatComposer/chatComposerClasses';
 export type {
-  ChatConversationInputClasses,
-  ChatConversationInputClassKey,
-} from './ChatConversationInput/chatConversationInputClasses';
+  ChatComposerClasses,
+  ChatComposerClassKey,
+} from './ChatComposer/chatComposerClasses';
 
 // ─── ChatConversationList ─────────────────────────────────────────────────────
 export { ChatConversationList } from './ChatConversationList/ChatConversationList';

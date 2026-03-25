@@ -1,15 +1,15 @@
 ---
 productId: x-chat
 title: Chat - Unstyled
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 ---
 
 # Chat - Unstyled
 
 <p class="description">Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.</p>
 
-`@mui/x-chat-unstyled` builds on the headless runtime.
-It combines `@mui/x-chat-headless` state with structural components such as lists, threads, messages, composers, and indicators.
+`@mui/x-chat/unstyled` builds on the headless runtime.
+It combines `@mui/x-chat/headless` state with structural components such as lists, threads, messages, composers, and indicators.
 
 ## When to use the unstyled layer
 
@@ -32,7 +32,7 @@ The unstyled package is organized into structural namespaces:
 - `MessageList`
 - `MessageGroup`
 - `Message`
-- `ConversationInput`
+- `Composer`
 - `Indicators`
 
 It also exports helpers for default message-part rendering, which are documented in
@@ -40,7 +40,7 @@ It also exports helpers for default message-part rendering, which are documented
 
 ## What the unstyled layer owns
 
-- structural React primitives such as `Chat.Root`, `ConversationList.Root`, `Conversation.Root`, and `ConversationInput.Root`
+- structural React primitives such as `Chat.Root`, `ConversationList.Root`, `Conversation.Root`, and `Composer.Root`
 - semantics such as `listbox`, `option`, `log`, and `separator`
 - keyboard and focus behavior for conversation navigation
 - scroll behavior, unseen-message tracking, and history-loading hooks in the message list
@@ -54,12 +54,12 @@ Most unstyled apps compose the surface like this:
 ```tsx
 import {
   Chat,
-  ConversationInput,
+  Composer,
   ConversationList,
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 
 function Inbox(props: ChatRootProps) {
   return (
@@ -76,13 +76,13 @@ function Inbox(props: ChatRootProps) {
               <MessageGroup index={index} messageId={id} />
             )}
           />
-          <ConversationInput.Root>
-            <ConversationInput.TextArea />
-            <ConversationInput.Toolbar>
-              <ConversationInput.AttachButton />
-              <ConversationInput.SendButton />
-            </ConversationInput.Toolbar>
-          </ConversationInput.Root>
+          <Composer.Root>
+            <Composer.TextArea />
+            <Composer.Toolbar>
+              <Composer.AttachButton />
+              <Composer.SendButton />
+            </Composer.Toolbar>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
@@ -100,7 +100,7 @@ This gives you a complete structural shell while keeping the visual treatment in
 - [Conversation](/x/react-chat/unstyled/thread/) for active-conversation context and thread header primitives
 - [Message list](/x/react-chat/unstyled/message-list/) for history loading, date dividers, and scroll behavior
 - [Messages](/x/react-chat/unstyled/messages/) for `MessageGroup`, message subparts, and default part renderers
-- [ConversationInput](/x/react-chat/unstyled/composer/) for form submission, autosizing, attachments, and IME-safe input
+- [Composer](/x/react-chat/unstyled/composer/) for form submission, autosizing, attachments, and IME-safe input
 - [Indicators](/x/react-chat/unstyled/indicators/) for typing, unread, and scroll affordances
 - [Customization](/x/react-chat/unstyled/customization/) for slots, owner state, and styling strategy
 - [Examples](/x/react-chat/unstyled/examples/) for end-to-end composition recipes
@@ -117,12 +117,12 @@ import {
   MessageList,
   MessageGroup,
   Message,
-  ConversationInput,
+  Composer,
   Indicators,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 ```
 
-You can also import individual components such as `ChatRoot`, `MessageListRoot`, or `ConversationInputTextArea` when you prefer explicit component names in your codebase.
+You can also import individual components such as `ChatRoot`, `MessageListRoot`, or `ComposerTextArea` when you prefer explicit component names in your codebase.
 
 Use namespaced imports when you want the API to read like a component family.
 Use direct imports when a codebase prefers local, explicit symbols or when only one or two primitives are needed in a file.

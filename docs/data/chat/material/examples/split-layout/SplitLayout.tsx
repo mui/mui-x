@@ -5,10 +5,10 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import {
   ChatConversation,
-  ChatConversationInput,
-  ChatConversationInputSendButton,
-  ChatConversationInputTextArea,
-  ChatConversationInputToolbar,
+  ChatComposer,
+  ChatComposerSendButton,
+  ChatComposerTextArea,
+  ChatComposerToolbar,
   ChatMessage,
   ChatMessageAvatar,
   ChatMessageContent,
@@ -16,9 +16,9 @@ import {
   ChatMessageMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useMessageIds } from '@mui/x-chat-headless';
-import type { ChatAdapter } from '@mui/x-chat-headless';
-import { ChatRoot } from '@mui/x-chat-unstyled';
+import { useMessageIds } from '@mui/x-chat/headless';
+import type { ChatAdapter } from '@mui/x-chat/headless';
+import { ChatRoot } from '@mui/x-chat/unstyled';
 import { nanoid } from 'nanoid';
 import { createChunkStream, createTextResponseChunks } from '../shared/demoUtils';
 import { createTextMessage, demoUsers } from '../shared/demoData';
@@ -101,7 +101,7 @@ function MessagePane() {
 }
 
 // Right column — composer. Sibling of MessagePane, still inside ChatRoot.
-// ChatConversationInput uses useChatComposer() from the shared context.
+// ChatComposer uses useChatComposer() from the shared context.
 function InputPane() {
   return (
     <Box
@@ -122,14 +122,14 @@ function InputPane() {
       </Typography>
       <Divider />
       <Box sx={{ flex: 1 }} />
-      <ChatConversationInput>
-        <ChatConversationInputTextArea placeholder="Type a message…" />
-        <ChatConversationInputToolbar>
-          <ChatConversationInputSendButton aria-label="Send message">
+      <ChatComposer>
+        <ChatComposerTextArea placeholder="Type a message…" />
+        <ChatComposerToolbar>
+          <ChatComposerSendButton aria-label="Send message">
             <SendIcon />
-          </ChatConversationInputSendButton>
-        </ChatConversationInputToolbar>
-      </ChatConversationInput>
+          </ChatComposerSendButton>
+        </ChatComposerToolbar>
+      </ChatComposer>
     </Box>
   );
 }

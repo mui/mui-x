@@ -57,9 +57,9 @@ createTheme({
         root: { backgroundColor: 'red' },
       },
     },
-    MuiChatConversationInput: {
+    MuiChatComposer: {
       defaultProps: {
-        // @ts-expect-error invalid MuiChatConversationInput prop
+        // @ts-expect-error invalid MuiChatComposer prop
         someRandomProp: true,
       },
       styleOverrides: {

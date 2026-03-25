@@ -8,7 +8,7 @@ import type {
   ChatMessage,
   ChatMessageChunk,
   ChatMessagePart,
-} from '@mui/x-chat-headless';
+} from '@mui/x-chat/headless';
 import { createChunkStream, splitText, syncConversationPreview } from '../shared/demoUtils';
 
 // --- Avatar helper ------------------------------------------------------------

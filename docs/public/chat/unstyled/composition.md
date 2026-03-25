@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Chat - Unstyled composition
-packageName: '@mui/x-chat-unstyled'
+packageName: '@mui/x-chat/unstyled'
 components: ChatRoot, ChatLayout
 ---
 
@@ -14,12 +14,12 @@ import * as React from 'react';
 import {
   Chat,
   Conversation,
-  ConversationInput,
+  Composer,
   ConversationList,
   Message,
   MessageGroup,
   MessageList,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 import { createEchoAdapter } from 'docsx/data/chat/unstyled/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -118,21 +118,21 @@ export default function MinimalUnstyledShell() {
             )}
             style={{ minHeight: 0 }}
           />
-          <ConversationInput.Root slots={{ root: DemoComposerRoot }}>
-            <ConversationInput.TextArea
+          <Composer.Root slots={{ root: DemoComposerRoot }}>
+            <Composer.TextArea
               aria-label="Message"
               placeholder="Ask the starter thread a question"
               slots={{ root: DemoComposerInput }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ConversationInput.SendButton
+              <Composer.SendButton
                 data-variant="primary"
                 slots={{ root: DemoComposerButton }}
               >
                 Send
-              </ConversationInput.SendButton>
+              </Composer.SendButton>
             </div>
-          </ConversationInput.Root>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
@@ -145,12 +145,12 @@ The canonical unstyled shell combines a provider-backed root, a pane layout, a c
 ```tsx
 import {
   Chat,
-  ConversationInput,
+  Composer,
   ConversationList,
   MessageGroup,
   MessageList,
   Conversation,
-} from '@mui/x-chat-unstyled';
+} from '@mui/x-chat/unstyled';
 
 function ChatSurface(props: ChatRootProps) {
   return (
@@ -168,13 +168,13 @@ function ChatSurface(props: ChatRootProps) {
               <MessageGroup index={index} messageId={id} />
             )}
           />
-          <ConversationInput.Root>
-            <ConversationInput.TextArea />
-            <ConversationInput.Toolbar>
-              <ConversationInput.AttachButton />
-              <ConversationInput.SendButton />
-            </ConversationInput.Toolbar>
-          </ConversationInput.Root>
+          <Composer.Root>
+            <Composer.TextArea />
+            <Composer.Toolbar>
+              <Composer.AttachButton />
+              <Composer.SendButton />
+            </Composer.Toolbar>
+          </Composer.Root>
         </Conversation.Root>
       </Chat.Layout>
     </Chat.Root>
@@ -187,7 +187,7 @@ function ChatSurface(props: ChatRootProps) {
 Composition is the best entry point when you are starting from a blank screen.
 It shows how the primitive groups fit together before you drill into individual pages such as
 [Layout](/x/react-chat/unstyled/layout/), [Messages](/x/react-chat/unstyled/messages/), or
-[ConversationInput](/x/react-chat/unstyled/composer/).
+[Composer](/x/react-chat/unstyled/composer/).
 
 ## What composition gives you
 
@@ -219,7 +219,7 @@ The namespaced exports are useful when you want the API to read like a component
 - `Conversation.Root`, `Conversation.Header`, `Conversation.Title`, `Conversation.Subtitle`, and `Conversation.HeaderActions`
 - `MessageList.Root` and `MessageList.DateDivider`
 - `Message.Root`, `Message.Avatar`, `Message.Content`, `Message.Meta`, and `Message.Actions`
-- `ConversationInput.Root`, `ConversationInput.TextArea`, `ConversationInput.Toolbar`, `ConversationInput.AttachButton`, `ConversationInput.HelperText`, and `ConversationInput.SendButton`
+- `Composer.Root`, `Composer.TextArea`, `Composer.Toolbar`, `Composer.AttachButton`, `Composer.HelperText`, and `Composer.SendButton`
 - `Indicators.TypingIndicator`, `Indicators.UnreadMarker`, and `Indicators.ScrollToBottomAffordance`
 
 Direct imports are useful when a codebase prefers explicit component names or tree-local imports.
@@ -243,10 +243,10 @@ Use only the thread pane when a page already chooses the active conversation els
       <MessageList.Root
         renderItem={({ id, index }) => <MessageGroup index={index} messageId={id} />}
       />
-      <ConversationInput.Root>
-        <ConversationInput.TextArea />
-        <ConversationInput.SendButton />
-      </ConversationInput.Root>
+      <Composer.Root>
+        <Composer.TextArea />
+        <Composer.SendButton />
+      </Composer.Root>
     </Conversation.Root>
   </Chat.Layout>
 </Chat.Root>
