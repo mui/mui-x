@@ -2,7 +2,6 @@
 productId: x-chat
 title: Chat - Thread
 packageName: '@mui/x-chat'
-components: ChatConversation, ChatConversationHeader, ChatConversationTitle, ChatConversationSubtitle, ChatConversationHeaderActions, ChatMessageList, ChatMessageGroup, ChatMessage, ChatMessageAvatar, ChatMessageContent, ChatMessageMeta, ChatMessageActions, ChatComposer, ChatComposerTextArea, ChatComposerToolbar, ChatComposerAttachButton, ChatComposerSendButton
 githubLabel: 'scope: chat'
 ---
 

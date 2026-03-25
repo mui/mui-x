@@ -2,7 +2,6 @@
 productId: x-chat
 title: Chat - Message list
 packageName: '@mui/x-chat'
-components: ChatMessageList, ChatMessageGroup, ChatMessage, ChatMessageAvatar, ChatMessageContent, ChatMessageMeta, ChatMessageActions, ChatDateDivider
 githubLabel: 'scope: chat'
 ---
 
