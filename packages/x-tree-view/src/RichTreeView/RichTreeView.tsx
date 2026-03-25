@@ -109,7 +109,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
 
   if (isLoading) {
-    return <Typography>Loading...</Typography>;
+    return <Typography>Loading…</Typography>;
   }
 
   if (error) {
