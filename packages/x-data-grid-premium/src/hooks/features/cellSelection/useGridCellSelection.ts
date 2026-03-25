@@ -82,11 +82,17 @@ export const useGridCellSelection = (
   const isFillDragging = React.useRef(false);
   const fillSourceCells = React.useRef<{ id: GridRowId; field: string }[]>([]);
   const fillTargetRowIds = React.useRef<GridRowId[]>([]);
-  const fillFields = React.useRef<string[]>([]);
+  const fillSourceFields = React.useRef<string[]>([]);
   const fillTargetFields = React.useRef<string[]>([]);
   const fillDirection = React.useRef<'vertical' | 'horizontal' | null>(null);
-  const fillSourceRowRange = React.useRef<{ min: number; max: number }>({ min: 0, max: 0 });
-  const fillSourceColumnRange = React.useRef<{ min: number; max: number }>({ min: 0, max: 0 });
+  const fillSourceRowIndexRange = React.useRef<{ start: number; end: number }>({
+    start: 0,
+    end: 0,
+  });
+  const fillSourceColumnIndexRange = React.useRef<{ start: number; end: number }>({
+    start: 0,
+    end: 0,
+  });
   const fillDecoratedElements = React.useRef<Set<Element>>(new Set());
   const fillMoveRAF = React.useRef<number | null>(null);
   const fillDocRef = React.useRef<Document | null>(null);
@@ -529,21 +535,18 @@ export const useGridCellSelection = (
     apiRef.current.selectCellRange({ id, field }, cellWithVirtualFocus.current);
   });
 
-  const serializeCellForClipboard = React.useCallback(
-    (id: GridRowId, field: string) => {
-      const cellParams = apiRef.current.getCellParams(id, field);
+  const serializeCellForClipboard = useEventCallback((id: GridRowId, field: string) => {
+    const cellParams = apiRef.current.getCellParams(id, field);
 
-      return serializeCellValue(cellParams, {
-        csvOptions: {
-          delimiter: clipboardCopyCellDelimiter,
-          shouldAppendQuotes: false,
-          escapeFormulas: false,
-        },
-        ignoreValueFormatter,
-      });
-    },
-    [apiRef, clipboardCopyCellDelimiter, ignoreValueFormatter],
-  );
+    return serializeCellValue(cellParams, {
+      csvOptions: {
+        delimiter: clipboardCopyCellDelimiter,
+        shouldAppendQuotes: false,
+        escapeFormulas: false,
+      },
+      ignoreValueFormatter,
+    });
+  });
 
   // Helper: get source values for a specific field from stored source cells
   const getSourceValuesForField = React.useCallback(
@@ -665,7 +668,7 @@ export const useGridCellSelection = (
       }
     } else if (direction === 'horizontal') {
       // Map source columns to target columns by position offset
-      const sourceFields = fillFields.current;
+      const sourceFields = fillSourceFields.current;
       targetFields.forEach((targetField, colOffset) => {
         const sourceField = sourceFields[colOffset % sourceFields.length];
         if (!sourceField) {
@@ -748,10 +751,10 @@ export const useGridCellSelection = (
     }
     isFillDragging.current = false;
     fillTargetRowIds.current = [];
-    fillFields.current = [];
+    fillSourceFields.current = [];
     fillTargetFields.current = [];
     fillDirection.current = null;
-    fillSourceColumnRange.current = { min: 0, max: 0 };
+    fillSourceColumnIndexRange.current = { start: 0, end: 0 };
     fillSourceCells.current = [];
     fillRowIdMap.current.clear();
 
@@ -772,9 +775,7 @@ export const useGridCellSelection = (
       if (!rootEl) {
         return;
       }
-      const cellElement = rootEl.querySelector(
-        `[data-id="${CSS.escape(String(params.id))}"] [data-field="${CSS.escape(params.field)}"]`,
-      ) as HTMLElement | null;
+      const cellElement = apiRef.current.getCellElement(params.id, params.field);
       if (!cellElement || !cellElement.classList.contains(gridClasses['cell--withFillHandle'])) {
         return;
       }
@@ -817,16 +818,16 @@ export const useGridCellSelection = (
       sourceFields.sort(
         (a, b) => (columnFieldToIndex.get(a) ?? 0) - (columnFieldToIndex.get(b) ?? 0),
       );
-      fillFields.current = sourceFields;
+      fillSourceFields.current = sourceFields;
       fillTargetFields.current = [];
       fillTargetRowIds.current = [];
       fillDirection.current = null;
 
       // Pre-compute source column index range
       const sourceColIndices = sourceFields.map((f) => columnFieldToIndex.get(f) ?? 0);
-      fillSourceColumnRange.current = {
-        min: Math.min(...sourceColIndices),
-        max: Math.max(...sourceColIndices),
+      fillSourceColumnIndexRange.current = {
+        start: Math.min(...sourceColIndices),
+        end: Math.max(...sourceColIndices),
       };
 
       // Pre-compute source row range (doesn't change during drag)
@@ -834,9 +835,9 @@ export const useGridCellSelection = (
       const sourceRowIndices = sourceRowIds.map((id) =>
         apiRef.current.getRowIndexRelativeToVisibleRows(id),
       );
-      fillSourceRowRange.current = {
-        min: Math.min(...sourceRowIndices),
-        max: Math.max(...sourceRowIndices),
+      fillSourceRowIndexRange.current = {
+        start: Math.min(...sourceRowIndices),
+        end: Math.max(...sourceRowIndices),
       };
 
       // Build row ID lookup map for O(1) resolution during mousemove
@@ -900,8 +901,9 @@ export const useGridCellSelection = (
             return;
           }
 
-          const { min: minSourceRowIdx, max: maxSourceRowIdx } = fillSourceRowRange.current;
-          const { min: minSourceColIdx, max: maxSourceColIdx } = fillSourceColumnRange.current;
+          const { start: minSourceRowIdx, end: maxSourceRowIdx } = fillSourceRowIndexRange.current;
+          const { start: minSourceColIdx, end: maxSourceColIdx } =
+            fillSourceColumnIndexRange.current;
           const currentVisibleRows = getVisibleRows(apiRef);
           const currentVisibleColumns = apiRef.current.getVisibleColumns();
           const targetRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(targetRowId);
@@ -919,7 +921,7 @@ export const useGridCellSelection = (
           if (isOutsideRowRange) {
             // Vertical fill: extend rows, keep all source columns
             fillDirection.current = 'vertical';
-            newTargetFields = fillFields.current;
+            newTargetFields = fillSourceFields.current;
 
             if (targetRowIndex > maxSourceRowIdx) {
               // Filling down
