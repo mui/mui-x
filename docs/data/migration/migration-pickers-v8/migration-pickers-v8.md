@@ -253,6 +253,14 @@ Renames `unstable field refs` to stable ones.
 npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
 ```
 
+### `rename-picker-day-2`
+
+Renames `PickerDay2` and `DateRangePickerDay2` components and their related types/classes to `PickerDay` and `DateRangePickerDay`.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/pickers/rename-picker-day-2 <path>
+```
+
 ### `remove-picker-day-2`
 
 Removes the unnecessary `slots={{ day: PickerDay2 }}` and `slots={{ day: DateRangePickerDay2 }}` usages.
