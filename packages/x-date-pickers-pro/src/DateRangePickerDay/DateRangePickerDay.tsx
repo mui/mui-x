@@ -442,7 +442,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     isDaySelectionStart: isStartOfHighlighting,
     isDaySelectionEnd: isEndOfHighlighting,
     isDayInsideSelection: isHighlighting && !isStartOfHighlighting && !isEndOfHighlighting,
-    isDaySelected: isHighlighting || Boolean(selected),
+    isDaySelected: isVisuallySelected ?? (isHighlighting || Boolean(selected)),
     isDayPreviewed: isPreviewing,
     isDayPreviewStart: isStartOfPreviewing,
     isDayPreviewEnd: isEndOfPreviewing,

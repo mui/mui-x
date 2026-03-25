@@ -116,6 +116,16 @@ These highlights are now rendered using `::before` and `::after` pseudo-elements
 This change might affect your custom styles if you were targeting the nested elements.
 For example, in `DateRangePickerDay`, the `day` class has been removed as there is no longer a separate element for the day content.
 
+### `DateRangePickerDay` selection behavior
+
+The `isDaySelected` condition in `DateRangePickerDay` has been updated to also include individually selected days, not just days within a valid range.
+Previously, a day was only considered "selected" (receiving the `.Mui-selected` class) if it was part of a fully defined and valid range.
+
+Now, if a `DateRangePicker` has only one date selected (e.g., `[Jan 1st, null]`), that date will now visually appear as selected with the primary color circle, even if the range is not yet complete.
+This makes the behavior more consistent with the single date picker (`PickerDay`).
+
+This change might affect your custom CSS if you were targeting the `.Mui-selected` state of `DateRangePickerDay` and expected it to only be present for complete ranges.
+
 ### Renamed `PickersDay`
 
 The `PickersDay` component has been renamed to `PickerDay` to be consistent with the other components.
