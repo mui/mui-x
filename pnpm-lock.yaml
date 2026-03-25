@@ -198,9 +198,6 @@ catalogs:
     tsx:
       specifier: ^4.21.0
       version: 4.21.0
-    type-fest:
-      specifier: ^5.4.4
-      version: 5.4.4
     use-sync-external-store:
       specifier: ^1.6.0
       version: 1.6.0
@@ -779,43 +776,6 @@ importers:
         specifier: ^7.0.4
         version: 7.3.1(@types/node@24.5.2)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
 
-  examples/data-grid-headless:
-    dependencies:
-      '@mui/x-data-grid-headless':
-        specifier: workspace:@mui/x-data-grid-headless@*
-        version: link:../../packages/x-data-grid-headless/build
-      '@mui/x-data-grid-headless-premium':
-        specifier: workspace:@mui/x-data-grid-headless-premium@*
-        version: link:../../packages/x-data-grid-headless-premium/build
-      '@mui/x-data-grid-headless-pro':
-        specifier: workspace:@mui/x-data-grid-headless-pro@*
-        version: link:../../packages/x-data-grid-headless-pro/build
-      '@mui/x-virtualizer':
-        specifier: workspace:@mui/x-virtualizer@*
-        version: link:../../packages/x-virtualizer/build
-      react:
-        specifier: 'catalog:'
-        version: 19.2.3
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.2.3(react@19.2.3)
-    devDependencies:
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.9
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.2.3(@types/react@19.2.9)
-      '@vitejs/plugin-react':
-        specifier: 'catalog:'
-        version: 5.1.4(vite@7.3.1(@types/node@24.5.2)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vite:
-        specifier: 'catalog:'
-        version: 7.3.1(@types/node@24.5.2)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
-
   packages/eslint-plugin-mui-x:
     dependencies:
       '@typescript-eslint/utils':
@@ -1257,117 +1217,6 @@ importers:
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.7
-      react:
-        specifier: 'catalog:'
-        version: 19.2.3
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.2.3(react@19.2.3)
-      rimraf:
-        specifier: 'catalog:'
-        version: 6.1.3
-    publishDirectory: build
-
-  packages/x-data-grid-headless:
-    dependencies:
-      '@babel/runtime':
-        specifier: 'catalog:'
-        version: 7.28.6
-      '@base-ui/utils':
-        specifier: 0.2.4
-        version: 0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@mui/x-virtualizer':
-        specifier: workspace:*
-        version: link:../x-virtualizer/build
-      prop-types:
-        specifier: 'catalog:'
-        version: 15.8.1
-      type-fest:
-        specifier: 'catalog:'
-        version: 5.4.4
-    devDependencies:
-      '@mui/internal-test-utils':
-        specifier: 'catalog:'
-        version: 2.0.18-canary.12(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@24.5.2)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
-      '@mui/x-data-grid-generator':
-        specifier: workspace:*
-        version: link:../x-data-grid-generator/build
-      '@types/prop-types':
-        specifier: 'catalog:'
-        version: 15.7.15
-      react:
-        specifier: 'catalog:'
-        version: 19.2.3
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.2.3(react@19.2.3)
-      rimraf:
-        specifier: 'catalog:'
-        version: 6.1.3
-    publishDirectory: build
-
-  packages/x-data-grid-headless-premium:
-    dependencies:
-      '@babel/runtime':
-        specifier: 'catalog:'
-        version: 7.28.6
-      '@mui/x-data-grid-headless':
-        specifier: workspace:*
-        version: link:../x-data-grid-headless/build
-      '@mui/x-data-grid-headless-pro':
-        specifier: workspace:*
-        version: link:../x-data-grid-headless-pro/build
-      '@mui/x-internals':
-        specifier: workspace:*
-        version: link:../x-internals/build
-      '@mui/x-license':
-        specifier: workspace:*
-        version: link:../x-license/build
-      prop-types:
-        specifier: 'catalog:'
-        version: 15.8.1
-    devDependencies:
-      '@mui/internal-test-utils':
-        specifier: 'catalog:'
-        version: 2.0.18-canary.12(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@24.5.2)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
-      '@types/prop-types':
-        specifier: 'catalog:'
-        version: 15.7.15
-      react:
-        specifier: 'catalog:'
-        version: 19.2.3
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.2.3(react@19.2.3)
-      rimraf:
-        specifier: 'catalog:'
-        version: 6.1.3
-    publishDirectory: build
-
-  packages/x-data-grid-headless-pro:
-    dependencies:
-      '@babel/runtime':
-        specifier: 'catalog:'
-        version: 7.28.6
-      '@mui/x-data-grid-headless':
-        specifier: workspace:*
-        version: link:../x-data-grid-headless/build
-      '@mui/x-internals':
-        specifier: workspace:*
-        version: link:../x-internals/build
-      '@mui/x-license':
-        specifier: workspace:*
-        version: link:../x-license/build
-      prop-types:
-        specifier: 'catalog:'
-        version: 15.8.1
-    devDependencies:
-      '@mui/internal-test-utils':
-        specifier: 'catalog:'
-        version: 2.0.18-canary.12(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@playwright/test@1.58.2)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(@vitest/utils@4.0.18)(chai@6.2.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@24.5.2)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.18)
-      '@types/prop-types':
-        specifier: 'catalog:'
-        version: 15.7.15
       react:
         specifier: 'catalog:'
         version: 19.2.3
@@ -3459,16 +3308,6 @@ packages:
       '@types/react':
         optional: true
 
-  '@base-ui/utils@0.2.4':
-    resolution: {integrity: sha512-smZwpMhjO29v+jrZusBSc5T+IJ3vBb9cjIiBjtKcvWmRj9Z4DWGVR3efr1eHR56/bqY5a4qyY9ElkOY5ljo3ng==}
-    peerDependencies:
-      '@types/react': ^17 || ^18 || ^19
-      react: ^17 || ^18 || ^19
-      react-dom: ^17 || ^18 || ^19
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   '@base-ui/utils@0.2.5':
     resolution: {integrity: sha512-oYC7w0gp76RI5MxprlGLV0wze0SErZaRl3AAkeP3OnNB/UBMb6RqNf6ZSIlxOc9Qp68Ab3C2VOcJQyRs7Xc7Vw==}
     peerDependencies:
@@ -4468,6 +4307,7 @@ packages:
   '@lerna/create@9.0.4':
     resolution: {integrity: sha512-WxedGD98G8/a6HztCXNWquaM0x17oSvfvuqDsLxNNX1qXGyrzmMUmd1mQikF/47uy80X6qyWdaRtaAHlwkvEUA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    deprecated: This package is an implementation detail of Lerna and is no longer published separately.
 
   '@mdn/browser-compat-data@5.7.6':
     resolution: {integrity: sha512-7xdrMX0Wk7grrTZQwAoy1GkvPMFoizStUoL+VmtUkAxegbCCec+3FKwOM6yc/uGU5+BEczQHXAlWiqvM8JeENg==}
@@ -4478,7 +4318,7 @@ packages:
   '@mui/base@5.0.0-beta.40-1':
     resolution: {integrity: sha512-agKXuNNy0bHUmeU7pNmoZwNFr7Hiyhojkb9+2PVyDG5+6RafYuyMgbrav8CndsB7KUc/U51JAw9vKNDLYBzaUA==}
     engines: {node: '>=12.0.0'}
-    deprecated: This package has been replaced by @base-ui/react
+    deprecated: This package has been replaced by @base-ui-components/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -11787,10 +11627,6 @@ packages:
     resolution: {integrity: sha512-9kY+CygyYM6j02t5YFHbNz2FN5QmYGv9zAjVp4lCDjlCw7amdckXlEt/bjMhUIfj4ThGRE4gCUH5+yGnNuPo5A==}
     engines: {node: '>=10.0.0'}
 
-  tagged-tag@1.0.0:
-    resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
-    engines: {node: '>=20'}
-
   tapable@2.2.2:
     resolution: {integrity: sha512-Re10+NauLTMCudc7T5WLFLAwDhQ0JWdrMK+9B2M8zR5hRExKmsRDCBA7/aV/pNJFltmBFO5BAMlQFi/vq3nKOg==}
     engines: {node: '>=6'}
@@ -11805,7 +11641,6 @@ packages:
   tar@7.5.7:
     resolution: {integrity: sha512-fov56fJiRuThVFXD6o6/Q354S7pnWMJIVlDBYijsTNx6jKSE4pvrDTs6lUnmGvNyfJwFQQwWy3owKz1ucIhveQ==}
     engines: {node: '>=18'}
-    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   temp-dir@1.0.0:
     resolution: {integrity: sha512-xZFXEGbG7SNC3itwBzI3RYjq/cEhBkx2hJuKGIUOcEULmkQExXiHat2z/qkISYsuR+IKumhEfKKbV5qXmhICFQ==}
@@ -12025,10 +11860,6 @@ packages:
   type-fest@2.19.0:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
-
-  type-fest@5.4.4:
-    resolution: {integrity: sha512-JnTrzGu+zPV3aXIUhnyWJj4z/wigMsdYajGLIYakqyOW1nPllzXEJee0QQbHj+CTIQtXGlAjuK0UY+2xTyjVAw==}
-    engines: {node: '>=20'}
 
   type-is@2.0.1:
     resolution: {integrity: sha512-OZs6gsjF4vMp32qrCbiVSkrFmXtG/AZhY3t0iAMrMBiAZyV9oALtXO8hsrHbMXF9x6L3grlFuwW2oAz7cav+Gw==}
@@ -14215,17 +14046,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.9
 
-  '@base-ui/utils@0.2.4(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
-    dependencies:
-      '@babel/runtime': 7.28.6
-      '@floating-ui/utils': 0.2.10
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-      reselect: 5.1.1
-      use-sync-external-store: 1.6.0(react@19.2.3)
-    optionalDependencies:
-      '@types/react': 19.2.9
-
   '@base-ui/utils@0.2.5(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@babel/runtime': 7.28.6
@@ -15106,7 +14926,7 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@lerna/create@9.0.4(@swc/core@1.15.13)(@types/node@22.19.3)(babel-plugin-macros@3.1.0)(typescript@5.9.3)':
+  '@lerna/create@9.0.4(@swc/core@1.15.13)(@types/node@22.19.3)(babel-plugin-macros@3.1.0)(typescript@5.8.3)':
     dependencies:
       '@npmcli/arborist': 9.1.6
       '@npmcli/package-json': 7.0.2
@@ -15123,7 +14943,7 @@ snapshots:
       console-control-strings: 1.1.0
       conventional-changelog-core: 5.0.1
       conventional-recommended-bump: 7.0.1
-      cosmiconfig: 9.0.0(typescript@5.9.3)
+      cosmiconfig: 9.0.0(typescript@5.8.3)
       dedent: 1.5.3(babel-plugin-macros@3.1.0)
       execa: 5.0.0
       fs-extra: 11.3.2
@@ -18790,6 +18610,15 @@ snapshots:
       path-type: 4.0.0
       yaml: 1.10.2
 
+  cosmiconfig@9.0.0(typescript@5.8.3):
+    dependencies:
+      env-paths: 2.2.1
+      import-fresh: 3.3.1
+      js-yaml: 4.1.1
+      parse-json: 5.2.0
+    optionalDependencies:
+      typescript: 5.8.3
+
   cosmiconfig@9.0.0(typescript@5.9.3):
     dependencies:
       env-paths: 2.2.1
@@ -20989,7 +20818,7 @@ snapshots:
 
   lerna@9.0.4(@swc/core@1.15.13)(@types/node@22.19.3)(babel-plugin-macros@3.1.0):
     dependencies:
-      '@lerna/create': 9.0.4(@swc/core@1.15.13)(@types/node@22.19.3)(babel-plugin-macros@3.1.0)(typescript@5.9.3)
+      '@lerna/create': 9.0.4(@swc/core@1.15.13)(@types/node@22.19.3)(babel-plugin-macros@3.1.0)(typescript@5.8.3)
       '@npmcli/arborist': 9.1.6
       '@npmcli/package-json': 7.0.2
       '@npmcli/run-script': 10.0.3
@@ -21006,7 +20835,7 @@ snapshots:
       conventional-changelog-angular: 7.0.0
       conventional-changelog-core: 5.0.1
       conventional-recommended-bump: 7.0.1
-      cosmiconfig: 9.0.0(typescript@5.9.3)
+      cosmiconfig: 9.0.0(typescript@5.8.3)
       dedent: 1.5.3(babel-plugin-macros@3.1.0)
       envinfo: 7.13.0
       execa: 5.0.0
@@ -21056,7 +20885,7 @@ snapshots:
       temp-dir: 1.0.0
       through: 2.3.8
       tinyglobby: 0.2.12
-      typescript: 5.9.3
+      typescript: 5.8.3
       upath: 2.0.1
       uuid: 11.1.0
       validate-npm-package-license: 3.0.4
@@ -22703,7 +22532,7 @@ snapshots:
   postcss-styled-syntax@0.7.1(postcss@8.5.8):
     dependencies:
       postcss: 8.5.8
-      typescript: 5.9.3
+      typescript: 5.8.3
 
   postcss-value-parser@4.2.0: {}
 
@@ -23925,8 +23754,6 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
 
-  tagged-tag@1.0.0: {}
-
   tapable@2.2.2: {}
 
   tar-stream@2.2.0:
@@ -24133,10 +23960,6 @@ snapshots:
   type-fest@1.4.0: {}
 
   type-fest@2.19.0: {}
-
-  type-fest@5.4.4:
-    dependencies:
-      tagged-tag: 1.0.0
 
   type-is@2.0.1:
     dependencies:
