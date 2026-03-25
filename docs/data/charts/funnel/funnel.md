@@ -6,33 +6,35 @@ components: FunnelChart, FunnelPlot, FocusedFunnelSection
 
 # Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Show how quantities change through a process, such as audience engagement or conversion stages.</p>
+<p class="description">Use funnel charts to show how quantities change through sequential steps, such as conversion or engagement stages.</p>
 
 ## Overview
 
-A funnel chart shows how a quantity narrows or evolves through sequential steps.
-Use it for processes like audience engagement, education levels, or conversion pipelines.
+A funnel chart shows how a quantity narrows or grows through sequential steps.
+Use it for flows like audience engagement, education levels, or conversion pipelines.
+
+The demo below shows a simple funnel with four decreasing values.
+
+{{"demo": "BasicFunnel.js"}}
 
 ## Basics
 
 A funnel chart series must include a `data` property with an array of objects.
-Each object is one section and must have a `value`.
+Each object is one section and must have a `value` property.
 You can add optional properties such as `label` and `id`.
 
-{{"demo": "BasicFunnel.js"}}
-
-### Display legends
+### Legend
 
 The funnel shows a legend by default.
-Provide a `label` in each data object.
+Provide a `label` in each data object for the legend text.
 
-Set `hideLegend` to `true` to hide it.
+Set `hideLegend` to `true` to hide the legend.
 
 {{"demo": "FunnelLegend.js"}}
 
 ## Pyramid chart
 
-A pyramid chart is a funnel with an inverted shape.
+A pyramid chart is a funnel with an inverted profile.
 
 Set the `curve` property to `'pyramid'` on the series.
 
@@ -40,7 +42,7 @@ Set the `curve` property to `'pyramid'` on the series.
 
 ## Labels
 
-The funnel shows labels by default (the `value` of each section).
+The funnel shows labels by default (each section's `value`).
 Use the `valueFormatter` prop to format them.
 
 {{"demo": "FunnelLabels.js"}}
@@ -90,7 +92,7 @@ The `bump` curve ignores border radius.
 The `linear`, `linear-sharp`, and `pyramid` curves respect it partly, depending on section angles.
 The `step` and `step-pyramid` curves respect it fully.
 
-See the [curve interpolation](/x/react-charts/funnel/#curve-interpolation) section above for how `curve` and `borderRadius` interact.
+See [Curve interpolation](#curve-interpolation) for how `curve` and `borderRadius` interact.
 
 If `gap` is 0, radius applies only to corners not connected to another section.
 If `gap` is greater than 0, radius applies to all corners.
@@ -135,15 +137,15 @@ The first series is at the bottom, the last at the top.
 
 ## Highlight
 
-Set `highlightScope.highlight` to highlight the hovered section.
-Set `highlightScope.fade` to fade sections that are not hovered.
+Set `highlightScope.highlight` to `'item'` to highlight the hovered section.
+Set `highlightScope.fade` to `'global'` to fade the other sections.
 
 {{"demo": "HighlightFunnel.js"}}
 
 ## Category axis
 
 The funnel uses a category axis that follows the chart orientation.
-By default the axis is hidden.
+By default, the axis is hidden.
 
 To show it, pass `position` and `categories` to the `categoryAxis` prop.
 
@@ -151,7 +153,7 @@ To show it, pass `position` and `categories` to the `categoryAxis` prop.
 
 ### Scaled sections
 
-By default sections use the `band` scale (equal width).
-Set `scaleType` to `'linear'` in the `categoryAxis` to scale sections by their values.
+By default, sections use the `band` scale (equal width).
+Set `scaleType` to `'linear'` in the `categoryAxis` configuration to scale section width by value.
 
 {{"demo": "FunnelLinearScale.js"}}
