@@ -224,7 +224,7 @@
     },
     {
       "name": "day",
-      "description": "Custom component for day.\nCheck the [PickerDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+      "description": "Custom component for day.\nCheck the [PickerDay](https://mui.com/x/api/date-pickers/picker-day/) component.",
       "default": "PickerDay",
       "class": null
     },

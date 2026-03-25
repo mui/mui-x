@@ -36,7 +36,7 @@ import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerStat
 export interface DayCalendarSlots {
   /**
    * Custom component for day.
-   * Check the [PickerDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
+   * Check the [PickerDay](https://mui.com/x/api/date-pickers/picker-day/) component.
    * @default PickerDay
    */
   day?: React.ElementType<PickerDayProps>;

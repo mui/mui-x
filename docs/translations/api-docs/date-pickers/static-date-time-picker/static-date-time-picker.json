@@ -235,7 +235,7 @@
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "calendarHeader": "Custom component for calendar header. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
-    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickerDay</a> component.",
+    "day": "Custom component for day. Check the <a href=\"https://mui.com/x/api/date-pickers/picker-day/\">PickerDay</a> component.",
     "digitalClockItem": "Component responsible for rendering a single digital clock item.",
     "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
