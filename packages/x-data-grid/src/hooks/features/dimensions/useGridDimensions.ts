@@ -123,6 +123,17 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
   const isFirstSizing = React.useRef(true);
 
+  // Vertical scrollbar oscillation detector.
+  // Counts consecutive hasScrollY flips that happen with no row-height change.
+  // After 2 flips it is certainly a layout feedback loop, so every further flip
+  // is forced to false (no scrollbar). The counter resets when row heights change.
+  // Only vertical scrollbar can oscillate because column widths are never 'auto'.
+  // https://github.com/mui/mui-x/issues/20539
+  const scrollYOscillation = React.useRef({
+    counter: 0,
+    heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
+  });
+
   const {
     rowHeight,
     headerHeight,
@@ -219,6 +230,8 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
     };
 
+    const prevDimensions = apiRef.current.state.dimensions;
+
     let viewportOuterSize: ElementSize;
     let viewportInnerSize: ElementSize;
     let hasScrollX = false;
@@ -262,6 +275,41 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
         }
       }
 
+      // Detect vertical scrollbar oscillation.
+      // Track consecutive hasScrollY flips with no row-height change.
+      // Once confirmed (≥ 2 flips), force hasScrollY off — the scrollbar is
+      // not genuinely needed, it is a layout feedback loop caused by stale
+      // rootSize or the horizontal scrollbar's height cascading.
+      {
+        const osc = scrollYOscillation.current;
+        const heightsChanged =
+          rowsMeta.currentPageTotalHeight !== osc.heights.content ||
+          rowsMeta.pinnedTopRowsTotalHeight !== osc.heights.pinnedTop ||
+          rowsMeta.pinnedBottomRowsTotalHeight !== osc.heights.pinnedBottom;
+
+        if (heightsChanged) {
+          osc.counter = 0;
+          osc.heights = {
+            content: rowsMeta.currentPageTotalHeight,
+            pinnedTop: rowsMeta.pinnedTopRowsTotalHeight,
+            pinnedBottom: rowsMeta.pinnedBottomRowsTotalHeight,
+          };
+        }
+
+        if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
+          if (!heightsChanged) {
+            osc.counter += 1;
+          }
+          if (osc.counter >= 2) {
+            hasScrollY = false;
+            // Recompute hasScrollX without the vertical scrollbar's width impact,
+            // otherwise the cascade (hasScrollY → narrower viewport → hasScrollX)
+            // keeps the horizontal scrollbar/filler alive and the root keeps resizing.
+            hasScrollX = hasScrollXIfNoYScrollBar;
+          }
+        }
+      }
+
       if (hasScrollY) {
         viewportInnerSize.width -= scrollbarSize;
       }
@@ -302,8 +350,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       topContainerHeight,
       bottomContainerHeight,
     };
-
-    const prevDimensions = apiRef.current.state.dimensions;
 
     if (isDeepEqual(prevDimensions as any, newDimensions)) {
       return;
