@@ -389,11 +389,45 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
         styleOverrides: {
           root: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
-            [`&.${dateRangePickerDayClasses.selectionStart}`]: {
-              borderRadius: theme.shape.borderRadius,
+            fontSize: '0.8rem',
+            fontWeight: 500,
+            border: 'none',
+            width: theme.mixins.density.width,
+            height: theme.mixins.density.height,
+
+            '&:hover': {
+              border: 'none',
             },
-            [`&.${dateRangePickerDayClasses.selectionEnd}`]: {
+            '&.Mui-selected': {
+              transform: 'none',
+            },
+
+            '::before, ::after': {
               borderRadius: theme.shape.borderRadius,
+              left: 0,
+              right: 0,
+            },
+
+            [`&.${dateRangePickerDayClasses.insidePreviewing}`]: {
+              '::after': {
+                border: 'none',
+              },
+              backgroundColor: theme.palette.grey[100],
+              ...theme.applyStyles('dark', {
+                backgroundColor: theme.palette.grey[700],
+              }),
+            },
+
+            [`&.${dateRangePickerDayClasses.previewStart}::after`]: {
+              border: 'none',
+            },w
+
+            [`&.${dateRangePickerDayClasses.previewEnd}::after`]: {
+              border: 'none',
+            },
+
+            [`&.${dateRangePickerDayClasses.insideSelection}::before`]: {
+              backgroundColor: theme.palette.primary.main,
             },
           }),
         },

@@ -119,6 +119,9 @@ export default function CustomLayoutPicker({ layout }: { layout: Layout }) {
         shortcuts: {
           items: shortcutsItems,
         },
+        day: {
+          disableMargin: true,
+        },
         layout: { layout } as CustomLayoutProps,
         actionBar: { actions: ['accept', 'clear', 'cancel'] },
       }}
