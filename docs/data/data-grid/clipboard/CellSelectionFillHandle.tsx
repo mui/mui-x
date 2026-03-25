@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { DataGridPremium, GridColDef, GridPastedValueParser } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridColDef,
+  GridPastedValueParser,
+} from '@mui/x-data-grid-premium';
 
 const numberPastedValueParser: GridPastedValueParser = (value, _, column) => {
   if (column.type === 'number' && Number.isNaN(Number(value))) {
@@ -68,8 +72,6 @@ const initialRows = [
   { id: 7, product: '', region: '', q1: 0, q2: 0, q3: 0, q4: 0 },
   { id: 8, product: '', region: '', q1: 0, q2: 0, q3: 0, q4: 0 },
 ];
-
-
 
 export default function CellSelectionFillHandle() {
   const [rows, setRows] = React.useState(initialRows);
