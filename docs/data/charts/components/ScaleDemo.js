@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from '@mui/material/styles';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { useDrawingArea, useYScale } from '@mui/x-charts/hooks';
@@ -95,7 +95,7 @@ function ValueHighlight(props) {
 export default function ScaleDemo() {
   const chartRef = React.useRef(null);
   return (
-    <ChartContainer
+    <ChartsContainer
       ref={chartRef}
       height={300}
       series={[
@@ -128,6 +128,6 @@ export default function ScaleDemo() {
       <ChartsYAxis axisId="left_axis_id" />
       <ChartsYAxis axisId="right_axis_id" />
       <ValueHighlight chartRef={chartRef} />
-    </ChartContainer>
+    </ChartsContainer>
   );
 }

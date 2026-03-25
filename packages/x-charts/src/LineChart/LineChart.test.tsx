@@ -89,8 +89,8 @@ describe('<LineChart />', () => {
     expect(labelY).toBeVisible();
   });
 
-  describe('data-series-id', () => {
-    it('should add data-series-id to area elements', () => {
+  describe('data-series', () => {
+    it('should add data-series to area elements', () => {
       render(
         <LineChart
           {...config}
@@ -103,11 +103,11 @@ describe('<LineChart />', () => {
       );
       const areas = document.querySelectorAll<HTMLElement>(`.${lineClasses.area}`);
 
-      expect(areas[0].getAttribute('data-series-id')).to.equal('s1');
-      expect(areas[1].getAttribute('data-series-id')).to.equal('s2');
+      expect(areas[0].getAttribute('data-series')).to.equal('s1');
+      expect(areas[1].getAttribute('data-series')).to.equal('s2');
     });
 
-    it('should add data-series-id to line elements', () => {
+    it('should add data-series to line elements', () => {
       render(
         <LineChart
           {...config}
@@ -120,11 +120,11 @@ describe('<LineChart />', () => {
       );
       const lines = document.querySelectorAll<HTMLElement>(`.${lineClasses.line}`);
 
-      expect(lines[0].getAttribute('data-series-id')).to.equal('s1');
-      expect(lines[1].getAttribute('data-series-id')).to.equal('s2');
+      expect(lines[0].getAttribute('data-series')).to.equal('s1');
+      expect(lines[1].getAttribute('data-series')).to.equal('s2');
     });
 
-    it('should add data-series-id to mark elements', () => {
+    it('should add data-series to mark elements', () => {
       render(
         <LineChart
           {...config}
@@ -139,10 +139,10 @@ describe('<LineChart />', () => {
 
       // First 4 marks belong to s1, next 4 to s2
       for (let i = 0; i < 4; i += 1) {
-        expect(marks[i].getAttribute('data-series-id')).to.equal('s1');
+        expect(marks[i].getAttribute('data-series')).to.equal('s1');
       }
       for (let i = 4; i < 8; i += 1) {
-        expect(marks[i].getAttribute('data-series-id')).to.equal('s2');
+        expect(marks[i].getAttribute('data-series')).to.equal('s2');
       }
     });
   });
@@ -207,7 +207,7 @@ describe('<LineChart />', () => {
   });
 
   describe('Plot root elements', () => {
-    it('should apply MuiLineChart-root class to AreaPlot root', () => {
+    it('should apply MuiLineChart-areaPlot class to AreaPlot root', () => {
       render(
         <LineChart
           {...config}
@@ -215,9 +215,35 @@ describe('<LineChart />', () => {
           xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
         />,
       );
-      const areaPlotRoots = document.querySelectorAll<HTMLElement>(`.${lineClasses.root}`);
+      const areaPlotRoot = document.querySelector<HTMLElement>(`.${lineClasses.areaPlot}`);
 
-      expect(areaPlotRoots.length).toBeGreaterThan(0);
+      expect(areaPlotRoot).not.to.equal(null);
+    });
+
+    it('should apply MuiLineChart-linePlot class to LinePlot root', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1' }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const linePlotRoot = document.querySelector<HTMLElement>(`.${lineClasses.linePlot}`);
+
+      expect(linePlotRoot).not.to.equal(null);
+    });
+
+    it('should apply MuiLineChart-markPlot class to MarkPlot root', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', showMark: true }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+      const markPlotRoot = document.querySelector<HTMLElement>(`.${lineClasses.markPlot}`);
+
+      expect(markPlotRoot).not.to.equal(null);
     });
   });
 

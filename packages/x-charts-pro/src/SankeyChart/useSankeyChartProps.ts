@@ -3,7 +3,7 @@ import { defaultizeMargin } from '@mui/x-charts/internals';
 import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import type { SankeyChartProps } from './SankeyChart';
-import type { ChartContainerProProps } from '../ChartContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 
 /**
@@ -36,7 +36,7 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
 
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
-  const chartContainerProps: ChartContainerProProps<'sankey', SankeyChartPluginSignatures> = {
+  const chartsContainerProps: ChartsContainerProProps<'sankey', SankeyChartPluginSignatures> = {
     ...other,
     series: [
       {
@@ -73,7 +73,7 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
   };
 
   return {
-    chartContainerProps,
+    chartsContainerProps,
     sankeyPlotProps,
     overlayProps,
     chartsWrapperProps,

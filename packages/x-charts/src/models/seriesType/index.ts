@@ -3,25 +3,23 @@ import type { ChartSeriesType, ChartsSeriesConfig } from './config';
 
 // Series definition
 
-type AllSeriesType<T extends ChartSeriesType = ChartSeriesType> =
-  ChartsSeriesConfig[T]['seriesProp'];
+type AllSeriesType<SeriesType extends ChartSeriesType = ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType]['seriesProp'];
 
-type DefaultizedSeriesType<T extends ChartSeriesType = ChartSeriesType> =
-  ChartsSeriesConfig[T]['series'];
+type DefaultizedSeriesType<SeriesType extends ChartSeriesType = ChartSeriesType> =
+  ChartsSeriesConfig[SeriesType]['series'];
 
 // item identifier
 
-export type SeriesItemIdentifier<T extends ChartSeriesType> = T extends any
-  ? DistributiveOmit<ChartsSeriesConfig[T]['itemIdentifier'], 'type'>
+export type SeriesItemIdentifier<SeriesType extends ChartSeriesType> = SeriesType extends any
+  ? DistributiveOmit<ChartsSeriesConfig[SeriesType]['itemIdentifier'], 'type'>
   : never;
 
-export type SeriesItemIdentifierWithType<T extends ChartSeriesType> = T extends any
-  ? ChartsSeriesConfig[T]['itemIdentifier']
-  : never;
+export type SeriesItemIdentifierWithType<SeriesType extends ChartSeriesType> =
+  SeriesType extends any ? ChartsSeriesConfig[SeriesType]['itemIdentifier'] : never;
 
-export type SeriesItemIdentifierWithData<T extends ChartSeriesType> = T extends any
-  ? ChartsSeriesConfig[T]['itemIdentifierWithData']
-  : never;
+export type SeriesItemIdentifierWithData<SeriesType extends ChartSeriesType> =
+  SeriesType extends any ? ChartsSeriesConfig[SeriesType]['itemIdentifierWithData'] : never;
 
 // For now the difference between highlight-identifiers and identifiers is the optional `dataIndex` that allows highlighting a series without specifying a given point.
 // If we get more different behaviors, we can move to a pattern similar to `SeriesItemIdentifierWithData` and `SeriesItemIdentifier`.
@@ -29,21 +27,19 @@ export type SeriesItemIdentifierWithData<T extends ChartSeriesType> = T extends 
 /**
  * Identifies an highlighted item or series.
  */
-export type HighlightItemIdentifier<T extends ChartSeriesType> = T extends any
-  ? DistributiveOmit<ChartsSeriesConfig[T]['highlightIdentifier'], 'type'>
+export type HighlightItemIdentifier<SeriesType extends ChartSeriesType> = SeriesType extends any
+  ? DistributiveOmit<ChartsSeriesConfig[SeriesType]['highlightIdentifier'], 'type'>
   : never;
 
-export type HighlightItemIdentifierWithType<T extends ChartSeriesType> = T extends any
-  ? ChartsSeriesConfig[T]['highlightIdentifier']
-  : never;
+export type HighlightItemIdentifierWithType<SeriesType extends ChartSeriesType> =
+  SeriesType extends any ? ChartsSeriesConfig[SeriesType]['highlightIdentifier'] : never;
 
-export type FocusedItemIdentifier<T extends ChartSeriesType = ChartSeriesType> = T extends
-  | 'line'
-  | 'radar'
-  ? DefaultizedProps<ChartsSeriesConfig[T]['itemIdentifier'], 'dataIndex'>
-  : T extends 'heatmap'
-    ? DefaultizedProps<ChartsSeriesConfig[T]['itemIdentifier'], 'xIndex' | 'yIndex'>
-    : ChartsSeriesConfig[T]['itemIdentifier'];
+export type FocusedItemIdentifier<SeriesType extends ChartSeriesType = ChartSeriesType> =
+  SeriesType extends 'line' | 'radar'
+    ? DefaultizedProps<ChartsSeriesConfig[SeriesType]['itemIdentifier'], 'dataIndex'>
+    : SeriesType extends 'heatmap'
+      ? DefaultizedProps<ChartsSeriesConfig[SeriesType]['itemIdentifier'], 'xIndex' | 'yIndex'>
+      : ChartsSeriesConfig[SeriesType]['itemIdentifier'];
 
 export { type SeriesId } from './common';
 export type { CartesianChartSeriesType, StackableChartSeriesType } from './config';

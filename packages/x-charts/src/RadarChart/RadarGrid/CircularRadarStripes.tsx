@@ -36,7 +36,7 @@ export function CircularRadarStripes(props: RadarGridStripeRenderProps) {
             fillRule="evenodd"
             fill={stripeColor?.(index) ?? 'none'}
             fillOpacity={0.1}
-            className={classes?.stripe}
+            className={classes?.gridStripe}
           />
         );
       })}

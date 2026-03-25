@@ -49,9 +49,6 @@ export default function GridChartsIntegrationBasic() {
                 },
               },
             }}
-            experimentalFeatures={{
-              charts: true,
-            }}
           />
         </div>
         <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />

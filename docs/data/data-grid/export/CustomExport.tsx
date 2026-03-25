@@ -93,8 +93,10 @@ function ExportMenu() {
         anchorEl={triggerRef.current}
         open={open}
         onClose={() => setOpen(false)}
-        MenuListProps={{
-          'aria-labelledby': 'export-menu-trigger',
+        slotProps={{
+          list: {
+            'aria-labelledby': 'export-menu-trigger',
+          },
         }}
       >
         <ExportCsv render={<MenuItem />}>Download as CSV</ExportCsv>
