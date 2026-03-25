@@ -13,6 +13,7 @@ import {
   createIsHighlighted,
   createIsFaded,
 } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import descriptionGetter from './descriptionGetter';
 
 export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   seriesProcessor,
@@ -26,6 +27,7 @@ export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,
 };

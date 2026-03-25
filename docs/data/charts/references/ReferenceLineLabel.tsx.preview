@@ -1,0 +1,12 @@
+<LineChart {...chartsConfig}>
+  <ChartsReferenceLine y={7} label="Max" labelAlign="end" />
+  <ChartsReferenceLine y={4} label="Average" labelAlign="middle" />
+  <ChartsReferenceLine
+    y={1}
+    label="Min"
+    labelAlign="start"
+    // Move label below the line.
+    spacing={{ y: -5 }}
+    labelStyle={{ dominantBaseline: 'hanging' }}
+  />
+</LineChart>

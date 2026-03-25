@@ -1,7 +1,7 @@
 ---
 title: Charts - Axis
 productId: x-charts
-components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxis, ChartsReferenceLine
+components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxis
 ---
 
 # Charts - Axis
@@ -390,5 +390,7 @@ You can provide an `x` or a `y` prop for a vertical or horizontal line, respecti
 
 You can also add a `label` to this reference line, and position it using the `labelAlign` prop which accepts `'start'`, `'middle'`, and `'end'` values.
 Elements can be styled with the `lineStyle` and `labelStyle` props.
+
+More examples are available in [docs page about references](/x/react-charts/references/).
 
 {{"demo": "ReferenceLine.js"}}
