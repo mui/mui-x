@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
-    "@mui/types": "7.4.10",
+    "@mui/types": "7.4.12",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "6.1.3"
