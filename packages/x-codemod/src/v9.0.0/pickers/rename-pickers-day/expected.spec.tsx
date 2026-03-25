@@ -21,13 +21,11 @@ function CustomDay(props: PickerDayProps) {
 }
 
 const sx = {
-  '& .MuiPickerDay-root': {
-    backgroundColor: 'blue',
-  },
   [`& .MuiPickerDay-root`]: {
     backgroundColor: 'blue',
   },
 };
 
+const prefix = 'CustomPrefix-';
 const cls = `${prefix}MuiPickerDay-root`;
 const other = 'MuiPickersDayExtra';
