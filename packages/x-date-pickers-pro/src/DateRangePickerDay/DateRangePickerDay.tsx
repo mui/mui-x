@@ -88,7 +88,6 @@ const previewStyles = (theme: Theme) => ({
   borderLeftColor: 'transparent',
   borderRightColor: 'transparent',
   boxSizing: 'border-box',
-  borderOffset: '-1px',
   left: 'calc(-1 * var(--PickerDay-horizontalMargin))',
   right: 'calc(-1 * var(--PickerDay-horizontalMargin))',
 });
