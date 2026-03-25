@@ -769,4 +769,11 @@ DateRangePickerDayRaw.propTypes = {
   ]),
 } as any;
 
+/**
+ * Demos:
+ * - [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/)
+ *
+ * API:
+ * - [DateRangePickerDay API](https://mui.com/x/api/date-pickers/date-range-picker-day/)
+ */
 export const DateRangePickerDay = React.memo(DateRangePickerDayRaw) as DateRangePickerDayComponent;

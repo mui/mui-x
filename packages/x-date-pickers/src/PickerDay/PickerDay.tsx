@@ -490,4 +490,11 @@ PickerDayRaw.propTypes = {
   ]),
 } as any;
 
+/**
+ * Demos:
+ * - [DatePicker](https://mui.com/x/react-date-pickers/date-picker/)
+ *
+ * API:
+ * - [PickerDay API](https://mui.com/x/api/date-pickers/picker-day/)
+ */
 export const PickerDay = React.memo(PickerDayRaw) as PickerDayComponent;
