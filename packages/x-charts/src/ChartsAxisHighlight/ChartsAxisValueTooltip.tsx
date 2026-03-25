@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
@@ -15,10 +16,11 @@ import { useDrawingArea } from '../hooks';
 import { type AxisId } from '../models/axis';
 import { utcFormatter } from '../ChartsTooltip/utils';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
 
-export type ChartsAxisHighlightLabelPosition = 'start' | 'end' | 'both' | 'none';
+export type ChartsAxisValueTooltipPosition = 'start' | 'end' | 'both' | 'none';
 
-export interface ChartsAxisHighlightLabelProps {
+export interface ChartsAxisValueTooltipProps {
   /**
    * The axis direction.
    */
@@ -36,7 +38,7 @@ export interface ChartsAxisHighlightLabelProps {
    * - `'none'`: no label is displayed.
    * @default 'end'
    */
-  labelPosition?: ChartsAxisHighlightLabelPosition;
+  labelPosition?: ChartsAxisValueTooltipPosition;
   /**
    * The value to display.
    * If not defined, tracks the axis highlight value from user interaction.
@@ -51,8 +53,8 @@ export interface ChartsAxisHighlightLabelProps {
   valueFormatter?: (value: number | Date | string) => string;
 }
 
-const ChartsAxisHighlightLabelText = styled('text', {
-  name: 'MuiChartsAxisHighlightLabel',
+const ChartsAxisValueTooltipText = styled('text', {
+  name: 'MuiChartsAxisValueTooltip',
   slot: 'Root',
 })(({ theme }) => ({
   ...theme.typography.caption,
@@ -88,7 +90,9 @@ function getAxisValueFormatter(
     axis.scaleType === 'utc' ? utcFormatter(v) : `${v instanceof Date ? v.toLocaleString() : v}`;
 }
 
-function ChartsXAxisHighlightLabel(props: Omit<ChartsAxisHighlightLabelProps, 'axisDirection'>) {
+function ChartsXAxisValueTooltipContent(
+  props: Omit<ChartsAxisValueTooltipProps, 'axisDirection'>,
+) {
   const { axisId, labelPosition = 'end', value, valueFormatter } = props;
 
   const { top, height } = useDrawingArea();
@@ -133,31 +137,33 @@ function ChartsXAxisHighlightLabel(props: Omit<ChartsAxisHighlightLabelProps, 'a
     return (
       <React.Fragment key={`${itemAxisId}-${String(itemValue)}`}>
         {(labelPosition === 'start' || labelPosition === 'both') && (
-          <ChartsAxisHighlightLabelText
+          <ChartsAxisValueTooltipText
             x={xPosition}
             y={top}
             textAnchor="middle"
             dominantBaseline="auto"
           >
             {formattedValue}
-          </ChartsAxisHighlightLabelText>
+          </ChartsAxisValueTooltipText>
         )}
         {(labelPosition === 'end' || labelPosition === 'both') && (
-          <ChartsAxisHighlightLabelText
+          <ChartsAxisValueTooltipText
             x={xPosition}
             y={top + height}
             textAnchor="middle"
             dominantBaseline="hanging"
           >
             {formattedValue}
-          </ChartsAxisHighlightLabelText>
+          </ChartsAxisValueTooltipText>
         )}
       </React.Fragment>
     );
   });
 }
 
-function ChartsYAxisHighlightLabel(props: Omit<ChartsAxisHighlightLabelProps, 'axisDirection'>) {
+function ChartsYAxisValueTooltipContent(
+  props: Omit<ChartsAxisValueTooltipProps, 'axisDirection'>,
+) {
   const { axisId, labelPosition = 'end', value, valueFormatter } = props;
 
   const { left, width } = useDrawingArea();
@@ -202,24 +208,24 @@ function ChartsYAxisHighlightLabel(props: Omit<ChartsAxisHighlightLabelProps, 'a
     return (
       <React.Fragment key={`${itemAxisId}-${String(itemValue)}`}>
         {(labelPosition === 'start' || labelPosition === 'both') && (
-          <ChartsAxisHighlightLabelText
+          <ChartsAxisValueTooltipText
             x={left}
             y={yPosition}
             textAnchor="end"
             dominantBaseline="central"
           >
             {formattedValue}
-          </ChartsAxisHighlightLabelText>
+          </ChartsAxisValueTooltipText>
         )}
         {(labelPosition === 'end' || labelPosition === 'both') && (
-          <ChartsAxisHighlightLabelText
+          <ChartsAxisValueTooltipText
             x={left + width}
             y={yPosition}
             textAnchor="start"
             dominantBaseline="central"
           >
             {formattedValue}
-          </ChartsAxisHighlightLabelText>
+          </ChartsAxisValueTooltipText>
         )}
       </React.Fragment>
     );
@@ -227,8 +233,10 @@ function ChartsYAxisHighlightLabel(props: Omit<ChartsAxisHighlightLabelProps, 'a
 }
 
 /**
- * A label component that displays the axis value at the edge of the drawing area,
+ * A tooltip component that displays the axis value at the edge of the drawing area,
  * aligned with the current axis highlight position.
+ *
+ * Renders as a portal into the ChartsLayerContainer, appearing as the last child.
  *
  * Demos:
  *
@@ -236,19 +244,42 @@ function ChartsYAxisHighlightLabel(props: Omit<ChartsAxisHighlightLabelProps, 'a
  *
  * API:
  *
- * - [ChartsAxisHighlightLabel API](https://mui.com/x/api/charts/charts-axis-highlight-label/)
+ * - [ChartsAxisValueTooltip API](https://mui.com/x/api/charts/charts-axis-value-tooltip/)
  */
-function ChartsAxisHighlightLabel(props: ChartsAxisHighlightLabelProps) {
+function ChartsAxisValueTooltip(props: ChartsAxisValueTooltipProps) {
   const { axisDirection, ...rest } = props;
+  const chartsLayerContainerRef = useChartsLayerContainerRef();
 
-  if (axisDirection === 'x') {
-    return <ChartsXAxisHighlightLabel {...rest} />;
+  const content =
+    axisDirection === 'x' ? (
+      <ChartsXAxisValueTooltipContent {...rest} />
+    ) : (
+      <ChartsYAxisValueTooltipContent {...rest} />
+    );
+
+  if (!chartsLayerContainerRef.current) {
+    return content;
   }
 
-  return <ChartsYAxisHighlightLabel {...rest} />;
+  return ReactDOM.createPortal(
+    <svg
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        overflow: 'visible',
+      }}
+    >
+      {content}
+    </svg>,
+    chartsLayerContainerRef.current,
+  );
 }
 
-ChartsAxisHighlightLabel.propTypes = {
+ChartsAxisValueTooltip.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -285,4 +316,4 @@ ChartsAxisHighlightLabel.propTypes = {
   valueFormatter: PropTypes.func,
 } as any;
 
-export { ChartsAxisHighlightLabel };
+export { ChartsAxisValueTooltip };
