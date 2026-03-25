@@ -102,10 +102,19 @@ fieldRef.current?.clearValue();
 
 ### Day slot
 
-The `PickersDay2` and `DateRangePickerDay2` components have been renamed to `PickerDay` and `DateRangePickerDay` respectively, replacing the old components.
+The `PickerDay2` and `DateRangePickerDay2` components have been renamed to `PickerDay` and `DateRangePickerDay` respectively, replacing the old components.
 They are now the default components for the `day` slot, so you no longer need to pass them to `slots`.
 
 The `PickerDay` and `DateRangePickerDay` components now use `display: flex`.
+
+### Component structure change
+
+The `PickerDay` and `DateRangePickerDay` components have been simplified and now use a single `ButtonBase` element.
+Previously, they used multiple nested elements to render the selection and preview highlights.
+These highlights are now rendered using `::before` and `::after` pseudo-elements on the root element.
+
+This change might affect your custom styles if you were targeting the nested elements.
+For example, in `DateRangePickerDay`, the `day` class has been removed as there is no longer a separate element for the day content.
 
 ### Renamed `PickersDay`
 
@@ -142,10 +151,15 @@ const theme = createTheme({
 ### `DateRangePickerDay` classes
 
 The `DateRangePickerDay` classes have been updated to be more consistent with the other components and to better describe their purpose.
+Several keys have been removed from the `DateRangePickerDayClasses` interface.
 
 - `day`, `notSelectedDate`, and `dayOutsideRangeInterval` have been removed.
 - `rangeIntervalDayHighlight`, `rangeIntervalDayHighlightStart`, and `rangeIntervalDayHighlightEnd` have been removed. You can now use `selectionStart` and `selectionEnd` instead.
+- `rangeIntervalDayPreview`, `rangeIntervalDayPreviewStart`, and `rangeIntervalDayPreviewEnd` have been removed. You can now use `previewStart` and `previewEnd` instead.
 - `dayInsideRangeInterval` has been removed. You can now use `insideSelection` instead.
+- `rangeIntervalPreview` has been removed. You can now use `insidePreviewing` instead.
+
+If you have custom `styleOverrides` for these classes, you need to update them to use the new class names.
 
 ```tsx
 // Before
@@ -188,7 +202,7 @@ npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
 
 ### `remove-picker-day-2`
 
-Removes the unnecessary `slots={{ day: PickersDay2 }}` and `slots={{ day: DateRangePickerDay2 }}` usages.
+Removes the unnecessary `slots={{ day: PickerDay2 }}` and `slots={{ day: DateRangePickerDay2 }}` usages.
 
 ```bash
 npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
