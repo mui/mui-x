@@ -40,37 +40,35 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   const dayComponents = ['PickerDay2', 'DateRangePickerDay2'];
 
-  pickerNames.forEach((componentName) => {
-    root
-      .find(j.JSXElement, { openingElement: { name: { name: componentName } } })
-      .forEach((elementPath) => {
-        j(elementPath)
-          .find(j.JSXAttribute, { name: { name: 'slots' } })
-          .forEach((attrPath) => {
-            const { value } = attrPath.node;
-            if (
-              value?.type === 'JSXExpressionContainer' &&
-              value.expression.type === 'ObjectExpression'
-            ) {
-              const properties = value.expression.properties;
-              const dayPropIndex = properties.findIndex((prop: any) => {
-                const keyName = prop.key.name || prop.key.value;
-                if (keyName !== 'day') {
-                  return false;
-                }
-                const val = prop.value;
-                return val.type === 'Identifier' && dayComponents.includes(val.name);
-              });
+  root.find(j.ObjectExpression).forEach((objectExpressionPath) => {
+    const properties = objectExpressionPath.node.properties;
+    const dayPropIndex = properties.findIndex((prop: any) => {
+      const keyName = prop.key?.name || prop.key?.value;
+      if (keyName !== 'day') {
+        return false;
+      }
+      const val = prop.value;
+      return val.type === 'Identifier' && dayComponents.includes(val.name);
+    });
 
-              if (dayPropIndex !== -1) {
-                properties.splice(dayPropIndex, 1);
-                if (properties.length === 0) {
-                  j(attrPath).remove();
-                }
-              }
+    if (dayPropIndex !== -1) {
+      properties.splice(dayPropIndex, 1);
+      if (properties.length === 0) {
+        const attrCollection = j(objectExpressionPath).closest(j.JSXAttribute, {
+          name: { name: 'slots' },
+        });
+        if (attrCollection.length > 0) {
+          const openingElement = j(objectExpressionPath).closest(j.JSXOpeningElement);
+          if (openingElement.length > 0) {
+            const nameNode = openingElement.get().value.name;
+            const componentName = nameNode.type === 'JSXIdentifier' ? nameNode.name : null;
+            if (componentName && pickerNames.includes(componentName)) {
+              attrCollection.remove();
             }
-          });
-      });
+          }
+        }
+      }
+    }
   });
 
   // Remove imports if no longer used

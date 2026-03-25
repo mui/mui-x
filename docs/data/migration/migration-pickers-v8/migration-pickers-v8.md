@@ -217,6 +217,11 @@ npx @mui/x-codemod@next v9.0.0/pickers/rename-field-ref <path>
 
 Removes the unnecessary `slots={{ day: PickerDay2 }}` and `slots={{ day: DateRangePickerDay2 }}` usages.
 
+:::info
+The codemod also handles objects passed through variables (e.g., `const slots = { day: PickerDay2 }`).
+In this case, it will remove the property from the object, but might leave the empty object and the `slots` prop on the component if they are now empty.
+:::
+
 ```bash
 npx @mui/x-codemod@next v9.0.0/pickers/remove-picker-day-2 <path>
 ```
