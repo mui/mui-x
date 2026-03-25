@@ -53,7 +53,7 @@ catalog:
   es-toolkit: ^1.45.1
   date-fns: ^4.1.0
   date-fns-jalali: ^4.1.0-0
-  dayjs: ^1.11.18
+  dayjs: ^1.11.20
   jscodeshift: 17.3.0
   luxon: ^3.7.2
   moment: ^2.30.1
